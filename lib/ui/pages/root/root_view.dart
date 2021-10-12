@@ -1,8 +1,10 @@
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
+import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
@@ -35,8 +37,11 @@ class Root extends StatelessWidget {
             children: [
               HomeBackground(),
               FelloAppBar(
-                leading: ProfileImage(
-                  height: 0.5,
+                leading: InkWell(
+                  onTap: model.showDrawer,
+                  child: ProfileImage(
+                    height: 0.4,
+                  ),
                 ),
                 actions: [
                   FelloCurrency(),
@@ -46,7 +51,7 @@ class Root extends StatelessWidget {
               ),
               SafeArea(
                 child: Container(
-                  margin: EdgeInsets.only(top: kToolbarHeight * 1.6),
+                  margin: EdgeInsets.only(top: kToolbarHeight * 1.2),
                   child: IndexedStack(
                       children: model.pages,
                       index: AppState.getCurrentTabIndex),
@@ -162,27 +167,17 @@ class BottomNavBar extends StatelessWidget {
                 color: UiConstants.primaryColor,
                 borderRadius: BorderRadius.circular(32),
               ),
-              padding: EdgeInsets.symmetric(
-                  vertical: 8, horizontal: SizeConfig.blockSizeHorizontal * 5),
+              padding: EdgeInsets.symmetric(vertical: 8),
               child: NavBar(
                 itemTapped: (int index) => model.onItemTapped(index),
                 currentIndex: AppState.getCurrentTabIndex,
                 items: [
-                  NavBarItemData(
-                    "Play",
-                    Icons.home,
-                    "images/svgs/game.svg",
-                  ),
-                  NavBarItemData(
-                    "Save",
-                    Icons.games,
-                    "images/svgs/save.svg",
-                  ),
-                  NavBarItemData(
-                    "Win",
-                    Icons.wallet_giftcard,
-                    "images/svgs/home.svg",
-                  ),
+                  NavBarItemData("Finance", Icons.home, "images/svgs/save.svg",
+                      SizeConfig.screenWidth * 0.36),
+                  NavBarItemData("Save", Icons.games, "images/svgs/game.svg",
+                      SizeConfig.screenWidth * 0.28),
+                  NavBarItemData("Win", Icons.wallet_giftcard,
+                      "images/svgs/home.svg", SizeConfig.screenWidth * 0.28),
                 ],
               ),
             ),
@@ -262,27 +257,43 @@ class FelloCurrency extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: kToolbarHeight,
-      padding: EdgeInsets.symmetric(
-        horizontal: SizeConfig.globalMargin,
-      ),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(100),
-        color: Colors.white.withOpacity(0.4),
-      ),
-      child: Row(
-        children: [
-          Icon(
-            Icons.airplane_ticket,
-            color: UiConstants.tertiarySolid,
-          ),
-          Text("40"),
-          Icon(
-            Icons.add_circle,
-            color: UiConstants.primaryColor,
-          ),
-        ],
+    return GestureDetector(
+      onTap: () {
+        AppState.screenStack.add(ScreenItem.dialog);
+        showModalBottomSheet(
+            backgroundColor: Colors.transparent,
+            context: context,
+            builder: (ctx) {
+              return WantMoreTicketsModalSheet();
+            });
+      },
+      child: Container(
+        height: kToolbarHeight * 0.8,
+        padding: EdgeInsets.symmetric(
+          horizontal: SizeConfig.globalMargin,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(100),
+          color: Colors.white.withOpacity(0.4),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              Icons.airplane_ticket,
+              size: 30,
+              color: UiConstants.tertiarySolid,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+              child: Text("200", style: TextStyles.body2.bold),
+            ),
+            Icon(
+              Icons.add_circle,
+              size: 30,
+              color: UiConstants.primaryColor,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -293,11 +304,11 @@ class NotificationButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return CircleAvatar(
       backgroundColor: Colors.black,
-      radius: kToolbarHeight * 0.5,
+      radius: kToolbarHeight * 0.4,
       child: Icon(
         Icons.notifications,
         color: Colors.white,
-        size: kToolbarHeight * 0.54,
+        size: kToolbarHeight * 0.4,
       ),
     );
   }

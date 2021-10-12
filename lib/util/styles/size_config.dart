@@ -49,14 +49,19 @@ class SizeConfig {
       bottomLeft: Radius.circular(SizeConfig.blockSizeHorizontal * 10),
       bottomRight: Radius.circular(SizeConfig.blockSizeHorizontal * 10),
     );
+    print("Screen Height: $screenHeight");
+    print("Screen Width: $screenWidth");
   }
 
   static double get title1 => 36;
   static double get title2 => 32;
   static double get title3 => 28;
+  static double get title4 => 24;
+  static double get title5 => 20;
   static double get body1 => 18;
   static double get body2 => 16;
   static double get body3 => 14;
+  static double get body4 => 12;
 
   // static double get headline1 => 40;
   // static double get headline2 => 38;

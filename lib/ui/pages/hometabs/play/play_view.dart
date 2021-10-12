@@ -60,14 +60,14 @@ class Play extends StatelessWidget {
                               children: [
                                 Text(
                                   "WIN",
-                                  style: TextStyles.title3
+                                  style: TextStyles.title5
                                       .colour(Colors.white)
                                       .bold,
                                 ),
                                 SizedBox(height: 4),
                                 Text(
                                   "4 Tickets Now",
-                                  style: TextStyles.title3
+                                  style: TextStyles.title5
                                       .colour(Colors.white)
                                       .bold,
                                 ),
@@ -84,7 +84,7 @@ class Play extends StatelessWidget {
                                   padding: EdgeInsets.symmetric(vertical: 12),
                                   child: Text(
                                     "Explore",
-                                    style: TextStyles.body1
+                                    style: TextStyles.body4
                                         .colour(Colors.white)
                                         .bold,
                                   ),
@@ -149,7 +149,7 @@ class GameCard extends StatelessWidget {
         margin: EdgeInsets.all(SizeConfig.scaffoldMargin),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(68),
+          borderRadius: BorderRadius.circular(54),
         ),
         padding: EdgeInsets.all(SizeConfig.globalMargin / 2),
         child: Column(

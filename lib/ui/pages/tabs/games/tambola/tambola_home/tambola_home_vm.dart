@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 
 class TambolaHomeViewModel extends BaseModel {
   int currentPage = 0;
-  PageController _pageController = new PageController(initialPage: 0);
+  PageController pageController = new PageController(initialPage: 0);
 
   viewpage(int index) {
     currentPage = index;
     print(currentPage);
-    _pageController.animateToPage(currentPage,
+    pageController.animateToPage(currentPage,
         duration: Duration(milliseconds: 200), curve: Curves.decelerate);
     refresh();
   }

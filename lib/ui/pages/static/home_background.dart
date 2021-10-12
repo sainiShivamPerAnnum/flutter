@@ -30,12 +30,12 @@ class WhiteBackground extends StatelessWidget {
       child: Container(
         width: SizeConfig.screenWidth,
         height: AppState.getCurrentTabIndex == 0
-            ? SizeConfig.screenHeight * 0.72
+            ? SizeConfig.screenHeight * 0.76
             : SizeConfig.screenHeight * 0.82,
         decoration: BoxDecoration(
           color: Color(0xffF1F6FF),
           borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+              topLeft: Radius.circular(40), topRight: Radius.circular(40)),
         ),
       ),
     );

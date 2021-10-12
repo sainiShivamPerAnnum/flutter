@@ -105,11 +105,19 @@ class _NavbarButtonState extends State<NavbarButton>
         //Rotate the icon using the current animation value
         Rotation3d(
           rotationY: 180 * _iconAnimController.value,
-          child: SvgPicture.asset(
-            widget.data.iconImage,
-            height: 28,
-            color: widget.isSelected ? Colors.white : Color(0xffC2EDE4),
-          ),
+          child: widget.isSelected
+              ? Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white, shape: BoxShape.circle),
+                  padding: EdgeInsets.all(10),
+                  child: SvgPicture.asset(widget.data.iconImage,
+                      height: 20, color: UiConstants.primaryColor),
+                )
+              : SvgPicture.asset(
+                  widget.data.iconImage,
+                  height: 32,
+                  color: Color(0xffC2EDE4),
+                ),
         ),
         //Add some hz spacing
         SizedBox(width: SizeConfig.blockSizeHorizontal * 2),
@@ -118,7 +126,7 @@ class _NavbarButtonState extends State<NavbarButton>
           fit: BoxFit.scaleDown,
           child: Text(
             widget.data.title,
-            style: TextStyles.body1.colour(Colors.white).bold,
+            style: TextStyles.body2.colour(Colors.white).bold,
           ),
         ),
       ],
@@ -143,12 +151,12 @@ class _NavbarButtonState extends State<NavbarButton>
         ),
         //Wrap in an animated container, so changes to width & color automatically animate into place
         child: AnimatedContainer(
-          alignment: Alignment.center,
+          alignment: Alignment.centerLeft,
 
           //Determine target width, selected item is wider
-          width: widget.isSelected ? SizeConfig.screenWidth * 0.28 : 60,
+          width: widget.isSelected ? widget.data.width : 60,
           curve: Curves.easeOutCubic,
-          padding: EdgeInsets.all(12),
+          padding: EdgeInsets.symmetric(horizontal: 12),
           duration: Duration(milliseconds: 1400),
           //Use BoxDecoration top create a rounded container
           decoration: BoxDecoration(
@@ -156,9 +164,6 @@ class _NavbarButtonState extends State<NavbarButton>
                 color: widget.isSelected
                     ? Colors.white
                     : UiConstants.primaryColor),
-            // color: widget.isSelected
-            //     ? UiConstants.primaryColor
-            //     : UiConstants.bottomNavBarColor,
             borderRadius: BorderRadius.all(
               Radius.circular(100),
             ),
@@ -236,10 +241,7 @@ class NavBarItemData {
   final String title;
   final IconData icon;
   final String iconImage;
+  final double width;
 
-  NavBarItemData(
-    this.title,
-    this.icon,
-    this.iconImage,
-  );
+  NavBarItemData(this.title, this.icon, this.iconImage, this.width);
 }

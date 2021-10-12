@@ -21,10 +21,15 @@ class TextStyles {
       titleFont.copyWith(fontSize: SizeConfig.title2);
   static TextStyle get title3 =>
       titleFont.copyWith(fontSize: SizeConfig.title3);
+  static TextStyle get title4 =>
+      titleFont.copyWith(fontSize: SizeConfig.title4);
+  static TextStyle get title5 =>
+      titleFont.copyWith(fontSize: SizeConfig.title5);
 
   static TextStyle get body1 => bodyFont.copyWith(fontSize: SizeConfig.body1);
   static TextStyle get body2 => bodyFont.copyWith(fontSize: SizeConfig.body2);
   static TextStyle get body3 => bodyFont.copyWith(fontSize: SizeConfig.body3);
+  static TextStyle get body4 => bodyFont.copyWith(fontSize: SizeConfig.body4);
 }
 
 extension TextStyleHelpers on TextStyle {

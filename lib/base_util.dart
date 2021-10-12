@@ -607,7 +607,6 @@ class BaseUtil extends ChangeNotifier {
   }
 
   void openTambolaHome() async {
-    AppState.delegate.appState.setCurrentTabIndex = 1;
     if (await getDrawStatus()) {
       await _lModel.saveDailyPicksAnimStatus(DateTime.now().weekday).then(
             (value) =>
@@ -617,7 +616,7 @@ class BaseUtil extends ChangeNotifier {
           PageAction(state: PageState.addPage, page: TPickDrawPageConfig);
     } else
       AppState.delegate.appState.currentAction =
-          PageAction(state: PageState.addPage, page: THomePageConfig);
+          PageAction(state: PageState.addPage, page: TGamePageConfig);
   }
 
   bool isOldCustomer() {
