@@ -602,6 +602,15 @@ class Api {
     }
   }
 
+  //FLC
+  Future<DocumentSnapshot> getUserCoinWalletDocById(String id) {
+    ref = _db
+        .collection(Constants.COLN_USERS)
+        .doc(id)
+        .collection(Constants.SUBCOLN_USER_WALLET);
+    return ref.doc(Constants.DOC_USER_WALLET_COIN_BALANCE).get();
+  }
+
   //---------------------------------------REALTIME DATABASE-------------------------------------------//
 
   Future<bool> checkUserNameAvailability(String username) async {

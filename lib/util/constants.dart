@@ -38,6 +38,7 @@ class Constants {
   static final String DOC_USER_AUGMONT_DETAIL = "detail";
   static final String DOC_USER_WALLET_FUND_BALANCE = "fndbalance";
   static final String DOC_USER_WALLET_TICKET_BALANCE = "tckbalance";
+  static final String DOC_USER_WALLET_COIN_BALANCE = "coinbalance";
 
   static const int CORNERS_COMPLETED = 0;
   static const int ROW_ONE_COMPLETED = 1;
