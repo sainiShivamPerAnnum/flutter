@@ -25,7 +25,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    return BaseView<UserProfileViewModel>(
+    return BaseView<UserProfileVM>(
       onModelReady: (model) {
         model.init();
       },

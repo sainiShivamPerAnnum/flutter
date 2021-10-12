@@ -1,7 +1,6 @@
 import 'package:felloapp/core/enums/user_coin_service_enum.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
-import 'package:felloapp/core/repository/fcl_actions_repo.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:logger/logger.dart';

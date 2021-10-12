@@ -15,7 +15,8 @@ class FlcActionsRepo {
 
   Future<ApiResponse<FlcModel>> getCoinBalance() async {
     try {
-      final response = await _api.getUserCoinWalletDocById(_userService.baseUser.uid);
+      final response =
+          await _api.getUserCoinWalletDocById(_userService.baseUser.uid);
       _logger.d(response.data().toString());
       return ApiResponse(model: FlcModel.fromMap(response.data()), code: 200);
     } catch (e) {
@@ -24,19 +25,24 @@ class FlcActionsRepo {
     }
   }
 
-  Future<ApiResponse<FlcModel>> substractFlc() async {
+  Future<ApiResponse<FlcModel>> substractFlc(int flcAmount) async {
     Map<String, dynamic> _body = {
       "user_id": _userService.baseUser.uid,
-      "flcAmount": -10,
+      "flc_amount": flcAmount,
       "type": "SUBTRACT",
-      "subType": "GM_CRIC2020"
+      "sub_type": "GM_CRIC2020"
     };
     _logger.d("Substract FLC : $_body");
     try {
       final response = await APIService.instance
           .postData(_apiPaths.kSubstractFlcPreGameApi, body: _body);
       _logger.d(response.toString());
-      return ApiResponse(model: FlcModel.fromMap(response), code: 200);
+      FlcModel _flcModel = FlcModel.fromMap(response);
+      // if (_flcModel.flcBalance != null) {
+      //   _userCoinService.setFlcBalance(_flcModel.flcBalance);
+      //   _logger.d("New flc balance updated from flc action repo");
+      // }
+      return ApiResponse(model: _flcModel, code: 200);
     } catch (e) {
       _logger.e(e);
       return ApiResponse.withError(e.toString(), 400);

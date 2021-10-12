@@ -6,7 +6,7 @@ import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
-import 'package:felloapp/core/repository/fcl_actions_repo.dart';
+import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/connectivity_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
@@ -88,7 +88,7 @@ void setupLocator() {
   //REST
   locator.registerFactory(() => TransactionsHistoryViewModel());
   locator.registerFactory(() => DailyPicksDrawViewModel());
-  locator.registerFactory(() => UserProfileViewModel());
+  locator.registerFactory(() => UserProfileVM());
   locator.registerFactory(() => KYCDetailsViewModel());
   locator.registerFactory(() => BankDetailsViewModel());
   locator.registerFactory(() => AugmontGoldBuyViewModel());

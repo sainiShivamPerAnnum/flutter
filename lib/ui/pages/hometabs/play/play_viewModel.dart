@@ -2,7 +2,9 @@ import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/model/game_model.dart';
-import 'package:felloapp/core/repository/fcl_actions_repo.dart';
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/repository/flc_actions_repo.dart';
+import 'package:felloapp/core/service/user_coin_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -60,7 +62,9 @@ class PlayViewModel extends BaseModel {
             "https://www.mpl.live/blog/wp-content/uploads/2020/09/WCC2-mobile-game-becomes-the-worlds-No.1-cricket-game-silently-1.png")
   ];
   final _fclActionRepo = locator<FlcActionsRepo>();
+  final _userCoinService = locator<UserCoinService>();
   final _logger = locator<Logger>();
+  final _baseUtil = locator<BaseUtil>();
 
   String _message;
 
@@ -78,10 +82,17 @@ class PlayViewModel extends BaseModel {
         });
   }
 
+  // void showMessage(context) {
+  //   _baseUtil.showNegativeAlert('Permission Denied', _message, context);
+  // }
+
   Future<bool> openWebView() async {
     setState(ViewState.Busy);
-    ApiResponse<FlcModel> _flcResponse = await _fclActionRepo.substractFlc();
+    ApiResponse<FlcModel> _flcResponse = await _fclActionRepo.substractFlc(-10);
     _message = _flcResponse.model.message;
+    if (_flcResponse.model.flcBalance != null) {
+      _userCoinService.setFlcBalance(_flcResponse.model.flcBalance);
+    }
     if (_flcResponse.model.canUserPlay) {
       setState(ViewState.Idle);
       return true;

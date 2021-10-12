@@ -31,7 +31,7 @@ import 'package:lottie/lottie.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class UserProfileViewModel extends BaseModel {
+class UserProfileVM extends BaseModel {
   Log log = new Log('User Profile');
   bool inEditMode = false;
   final _userService = locator<UserService>();
