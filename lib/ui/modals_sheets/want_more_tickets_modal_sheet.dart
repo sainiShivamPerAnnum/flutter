@@ -32,13 +32,15 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                     horizontal: SizeConfig.scaffoldMargin,
                     vertical: SizeConfig.scaffoldMargin / 2),
                 decoration: BoxDecoration(
-                  color: UiConstants.primaryColor.withOpacity(0.2),
+                  color: Color(0xffF6F9FF),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: ListTile(
-                  contentPadding: EdgeInsets.all(8),
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 12, horizontal: 8),
                   leading: CircleAvatar(
-                    backgroundColor: UiConstants.primaryColor.withOpacity(0.4),
+                    radius: kToolbarHeight * 0.5,
+                    backgroundColor: Color(0xffE3F4F7),
                     child: Icon(
                       Icons.account_balance_wallet,
                       color: UiConstants.primaryColor,

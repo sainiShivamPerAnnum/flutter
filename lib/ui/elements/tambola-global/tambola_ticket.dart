@@ -1,9 +1,7 @@
 import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/ui/elements/custom-art/tambola_ticket_painter.dart';
-import 'package:felloapp/ui/pages/tabs/games/tambola/tambola-home.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
 class Ticket extends StatelessWidget {

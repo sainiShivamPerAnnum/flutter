@@ -1,15 +1,9 @@
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/user_service.dart';
-import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/widgets/buttons/buy_gold_button/buyGoldBtn_view.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
 import 'package:felloapp/ui/widgets/buttons/sell_gold_button/sellGoldBtn_view.dart';
-import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
-import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/ui/widgets/mini_trans_card/mini_trans_card_view.dart';
 import 'package:felloapp/util/styles/palette.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -200,20 +194,12 @@ class Save extends StatelessWidget {
               margin: EdgeInsets.all(SizeConfig.scaffoldMargin),
               child: Stack(
                 children: [
-                  Container(
-                    height: SizeConfig.screenWidth * 0.3,
-                    child: Opacity(
-                      opacity: 0.1,
-                      child: CustomPaint(
-                        size: Size(
-                            (SizeConfig.screenWidth -
-                                SizeConfig.scaffoldMargin * 2),
-                            ((SizeConfig.screenWidth -
-                                        SizeConfig.scaffoldMargin * 2) *
-                                    0.45344571428571423)
-                                .toDouble()), //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
-                        painter: RPSCustomPainter(),
-                      ),
+                  Opacity(
+                    opacity: 0.1,
+                    child: Image.asset(
+                      "assets/images/white_rays.png",
+                      fit: BoxFit.cover,
+                      width: SizeConfig.screenWidth,
                     ),
                   ),
                   Container(
@@ -317,7 +303,17 @@ class Save extends StatelessWidget {
               ),
             ),
             SizedBox(height: kBottomNavigationBarHeight * 4),
-            // Row(
+          ],
+        );
+      },
+    );
+  }
+}
+
+
+// FELLO BUTTON IMPLEMENTATION
+
+// Row(
             //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             //   children: [
             //     FelloButton(
@@ -392,66 +388,3 @@ class Save extends StatelessWidget {
             //     )
             //   ],
             // ),
-          ],
-        );
-      },
-    );
-  }
-}
-
-//Copy this CustomPainter code to the Bottom of the File
-class RPSCustomPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    Path path_0 = Path();
-    path_0.moveTo(size.width * -0.1639344, size.height * 2.289474);
-    path_0.lineTo(size.width * -0.1639344, size.height * 1.919658);
-    path_0.lineTo(size.width * 0.2180746, size.height * 1.554193);
-    path_0.lineTo(size.width * -0.1639344, size.height * 1.583614);
-    path_0.lineTo(size.width * -0.1639344, size.height * 1.237184);
-    path_0.lineTo(size.width * 0.2180746, size.height * 1.266623);
-    path_0.lineTo(size.width * -0.1639344, size.height * 0.9011404);
-    path_0.lineTo(size.width * -0.1639344, size.height * 0.5313228);
-    path_0.lineTo(size.width * 0.2458109, size.height * 0.9931316);
-    path_0.lineTo(size.width * -0.1639344, size.height * 0.08654518);
-    path_0.lineTo(size.width * -0.1639344, size.height * -0.3717061);
-    path_0.lineTo(size.width * 0.2985546, size.height * 0.7604693);
-    path_0.lineTo(size.width * -0.1639344, size.height * -1.179623);
-    path_0.lineTo(size.width * -0.1639344, size.height * -1.892053);
-    path_0.lineTo(size.width * 0.3711530, size.height * 0.5914447);
-    path_0.lineTo(size.width * -0.001787383, size.height * -2.850877);
-    path_0.lineTo(size.width * 0.1425762, size.height * -2.850877);
-    path_0.lineTo(size.width * 0.4564973, size.height * 0.5025833);
-    path_0.lineTo(size.width * 0.4342240, size.height * -2.850877);
-    path_0.lineTo(size.width * 0.5685082, size.height * -2.850877);
-    path_0.lineTo(size.width * 0.5462350, size.height * 0.5025833);
-    path_0.lineTo(size.width * 0.8621530, size.height * -2.850877);
-    path_0.lineTo(size.width * 1.006516, size.height * -2.850877);
-    path_0.lineTo(size.width * 0.6315792, size.height * 0.5914447);
-    path_0.lineTo(size.width * 1.166667, size.height * -1.892053);
-    path_0.lineTo(size.width * 1.166667, size.height * -1.179623);
-    path_0.lineTo(size.width * 0.7041776, size.height * 0.7604693);
-    path_0.lineTo(size.width * 1.166667, size.height * -0.3717061);
-    path_0.lineTo(size.width * 1.166667, size.height * 0.08654518);
-    path_0.lineTo(size.width * 0.7569208, size.height * 0.9931316);
-    path_0.lineTo(size.width * 1.166667, size.height * 0.5313228);
-    path_0.lineTo(size.width * 1.166667, size.height * 0.9011404);
-    path_0.lineTo(size.width * 0.7846585, size.height * 1.266623);
-    path_0.lineTo(size.width * 1.166667, size.height * 1.237184);
-    path_0.lineTo(size.width * 1.166667, size.height * 1.583614);
-    path_0.lineTo(size.width * 0.7846585, size.height * 1.554193);
-    path_0.lineTo(size.width * 1.166667, size.height * 1.919658);
-    path_0.lineTo(size.width * 1.166667, size.height * 2.289474);
-    path_0.lineTo(size.width * -0.1639344, size.height * 2.289474);
-    path_0.close();
-
-    Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
-    paint_0_fill.color = Colors.white.withOpacity(1.0);
-    canvas.drawPath(path_0, paint_0_fill);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
-  }
-}

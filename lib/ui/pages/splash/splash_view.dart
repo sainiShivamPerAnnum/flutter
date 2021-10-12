@@ -43,7 +43,7 @@ class LauncherView extends StatelessWidget {
                   children: [
                     Image.asset(
                       Assets.logoMaxSize,
-                      width: SizeConfig.screenWidth / 2.5,
+                      width: SizeConfig.screenWidth / 3,
                     ),
                     Text(
                       locale.splashTagline,

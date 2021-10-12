@@ -5,33 +5,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class HomeBackground extends StatelessWidget {
+  final Widget child;
+  HomeBackground({
+    this.child,
+  });
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
+        Container(color: UiConstants.primaryColor),
         const RadialGradientLeft(),
         const RadialGradientRight(),
         const Thunderstorm(),
-        const WhiteBackground(),
+        child,
       ],
     );
   }
 }
 
 class WhiteBackground extends StatelessWidget {
-  const WhiteBackground({
-    Key key,
-  }) : super(key: key);
-
+  const WhiteBackground({this.height});
+  final double height;
   @override
   Widget build(BuildContext context) {
+    var query = MediaQuery.of(context);
     return Positioned(
       bottom: 0,
       child: Container(
         width: SizeConfig.screenWidth,
-        height: AppState.getCurrentTabIndex == 0
-            ? SizeConfig.screenHeight * 0.76
-            : SizeConfig.screenHeight * 0.82,
+        height: (SizeConfig.screenHeight - query.padding.top) - height,
         decoration: BoxDecoration(
           color: Color(0xffF1F6FF),
           borderRadius: BorderRadius.only(

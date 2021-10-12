@@ -61,6 +61,7 @@ class RootViewModel extends BaseModel {
   }
 
   showDrawer() {
+    print("drawer opened");
     scaffoldKey.currentState.openDrawer();
   }
 
