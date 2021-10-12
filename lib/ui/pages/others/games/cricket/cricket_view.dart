@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -19,8 +20,8 @@ class CricketView extends StatelessWidget {
       ),
       body: SafeArea(
         child: WebView(
-          initialUrl: "https://www.google.com",
-          //"https://play.famobi.com/om-nom-run",
+          //TODO customize url
+          initialUrl: '${Constants.GAME_CRICKET_URI}?userId=yzam&userName=test&sessionId=234',
           javascriptMode: JavascriptMode.unrestricted,
           onWebViewCreated: (WebViewController controller) {
             _controller.complete(controller);

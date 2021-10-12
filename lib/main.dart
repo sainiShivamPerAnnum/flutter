@@ -2,9 +2,8 @@
 //Project imports
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
+import 'package:felloapp/core/enums/user_coin_service_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
-import 'package:felloapp/core/fcm_handler.dart';
-import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
@@ -12,6 +11,8 @@ import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/core/service/connectivity_service.dart';
+import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
+import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
@@ -32,6 +33,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logger/logger.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
+
+import 'core/service/user_coin_service.dart';
 
 Future mainInit() async {
   setupLocator();
@@ -92,22 +95,25 @@ class _MyAppState extends State<MyApp> {
         ),
         ChangeNotifierProvider(create: (_) => appState),
       ],
-      child: PropertyChangeProvider<UserService, UserServiceProperties>(
-        value: locator<UserService>(),
-        child: MaterialApp.router(
-          title: Constants.APP_NAME,
-          theme: FelloTheme.lightMode(),
-          debugShowCheckedModeBanner: false,
-          backButtonDispatcher: backButtonDispatcher,
-          routerDelegate: delegate,
-          routeInformationParser: parser,
-          localizationsDelegates: [
-            S.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: S.delegate.supportedLocales,
+      child: PropertyChangeProvider<UserCoinService, UserCoinServiceProperties>(
+        value: locator<UserCoinService>(),
+        child: PropertyChangeProvider<UserService, UserServiceProperties>(
+          value: locator<UserService>(),
+          child: MaterialApp.router(
+            title: Constants.APP_NAME,
+            theme: FelloTheme.lightMode(),
+            debugShowCheckedModeBanner: false,
+            backButtonDispatcher: backButtonDispatcher,
+            routerDelegate: delegate,
+            routeInformationParser: parser,
+            localizationsDelegates: [
+              S.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: S.delegate.supportedLocales,
+          ),
         ),
       ),
     );

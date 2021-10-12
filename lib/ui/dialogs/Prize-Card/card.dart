@@ -1,4 +1,8 @@
 //Project Imports
+//Flutter & Dart Imports
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/tambola_winners_details.dart';
@@ -21,7 +25,6 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-
 //Pub Imports
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -507,7 +510,7 @@ class _CloseCardState extends State<CloseCard> {
                         ),
                         shape: BoxShape.circle,
                       ),
-                      child: ProfileImage(
+                      child: ProfileImageSE(
                         height: 2,
                       ),
                     ),

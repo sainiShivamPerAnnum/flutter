@@ -1,33 +1,20 @@
 //Project Imports
+//Flutter & Dart Imports
+import 'dart:ui';
+
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/enums/screen_item_enum.dart';
-import 'package:felloapp/core/fcm_listener.dart';
-import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/dialogs/update_name_dialog.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_viewModel.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
-import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
-import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-
-//Flutter & Dart Imports
-import 'dart:ui';
 import 'package:flutter/material.dart';
-
-//Pub Imports
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/rendering.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 
 class UserProfileDetails extends StatefulWidget {
   @override
@@ -112,7 +99,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                         shape: BoxShape.circle,
                                       ),
                                       padding: EdgeInsets.all(12),
-                                      child: ProfileImage(
+                                      child: ProfileImageSE(
                                         height: 1.4,
                                       ),
                                     ),

@@ -121,7 +121,7 @@ class FelloAppBarBackButton extends StatelessWidget {
     return InkWell(
       onTap: onBackPress ?? () => AppState.backButtonDispatcher.didPopRoute(),
       child: CircleAvatar(
-        radius: kToolbarHeight * 0.5,
+        radius: kToolbarHeight * 0.4,
         backgroundColor: Colors.white.withOpacity(0.4),
         child: Icon(Icons.arrow_back_rounded, color: UiConstants.primaryColor),
       ),

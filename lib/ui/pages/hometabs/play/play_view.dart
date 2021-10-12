@@ -89,7 +89,7 @@ class Play extends StatelessWidget {
                                         .colour(Colors.white)
                                         .bold,
                                   ),
-                                )
+                                ),
                               ],
                             ),
                           ),

@@ -1,6 +1,3 @@
-import 'package:felloapp/core/enums/screen_item_enum.dart';
-import 'package:felloapp/core/enums/user_service_enum.dart';
-import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
@@ -9,13 +6,12 @@ import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
+import 'package:felloapp/ui/widgets/appbars/fello_appbar_view.dart';
 import 'package:felloapp/ui/widgets/drawer/drawer_view.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:property_change_notifier/property_change_notifier.dart';
 
 class Root extends StatelessWidget {
   @override
@@ -39,7 +35,7 @@ class Root extends StatelessWidget {
                 FelloAppBar(
                   leading: InkWell(
                     onTap: () => model.showDrawer(),
-                    child: ProfileImage(
+                    child: ProfileImageSE(
                       height: 0.4,
                     ),
                   ),

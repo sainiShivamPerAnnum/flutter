@@ -72,10 +72,5 @@ class Constants {
   static const int UNLOCK_REFERRAL_AMT = 100;
   static final DateTime VERSION_2_RELEASE_DATE = DateTime(2021, 4, 1);
 
-  ///STAGES - IMPORTANT
-  static AWSIciciStage activeAwsIciciStage = AWSIciciStage.PROD;
-  static FreshchatStage activeFreshchatStage = FreshchatStage.DEV;
-  static AWSAugmontStage activeAwsAugmontStage = AWSAugmontStage.PROD;
-  static SignzyStage activeSignzyStage = SignzyStage.PROD;
-  static RazorpayStage activeRazorpayStage = RazorpayStage.PROD;
+  static final String GAME_CRICKET_URI = 'https://live.gameskite.com/fello/cricket-2021';
 }

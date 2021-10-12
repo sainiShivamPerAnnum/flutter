@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
-class ProfileImage extends StatelessWidget {
+class ProfileImageSE extends StatelessWidget {
   final height;
-  const ProfileImage({this.height = 0.3});
+  const ProfileImageSE({this.height = 0.3});
 
   @override
   Widget build(BuildContext context) {
