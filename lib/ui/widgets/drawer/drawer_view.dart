@@ -35,7 +35,7 @@ class FDrawer extends StatelessWidget {
                             // },
                             ));
                   },
-                  leading: ProfileImage(),
+                  leading: ProfileImageSE(),
                   title: PropertyChangeConsumer<UserService,
                       UserServiceProperties>(
                     properties: [UserServiceProperties.myUserName],

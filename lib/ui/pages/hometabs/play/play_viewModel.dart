@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
 class PlayViewModel extends BaseModel {
-  final _fclActionRepo = locator<FclActionsRepo>();
+  final _fclActionRepo = locator<FlcActionsRepo>();
   final _logger = locator<Logger>();
 
   List<String> _gamesList = ["Tambola", "Google"];

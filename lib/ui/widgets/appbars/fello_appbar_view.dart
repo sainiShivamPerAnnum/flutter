@@ -1,5 +1,3 @@
-import 'package:felloapp/core/enums/user_coin_service_enum.dart';
-import 'package:felloapp/core/service/user_coin_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/service_elements/user_coin_service/coin_balance_text.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
@@ -8,7 +6,6 @@ import 'package:felloapp/ui/widgets/appbars/fello_appbar_vm.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:property_change_notifier/property_change_notifier.dart';
 
 class FelloAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Text title;
@@ -20,7 +17,10 @@ class FelloAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BaseView<FelloAppBarViewModel>(
+    return BaseView<FelloAppBarVM>(
+      onModelReady: (model) {
+        model.getFlc();
+      },
       builder: (context, model, child) => AppBar(
         backgroundColor: ThemeData().scaffoldBackgroundColor,
         leading: Padding(
@@ -42,7 +42,11 @@ class FelloAppBar extends StatelessWidget implements PreferredSizeWidget {
               padding: EdgeInsets.symmetric(horizontal: 8),
               child: Row(
                 children: [
-                  CoinBalanceTextSE(),
+                  model.isLoadingFlc
+                      ? CircularProgressIndicator(
+                          color: Colors.white,
+                        )
+                      : CoinBalanceTextSE(),
                   SizedBox(width: 8),
                   Icon(
                     Icons.control_point_rounded,

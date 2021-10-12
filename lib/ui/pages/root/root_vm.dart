@@ -1,5 +1,4 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/pagestate.dart';
 import 'package:felloapp/core/enums/screen_item.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
@@ -7,16 +6,13 @@ import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/golden_ticket_claim.dart';
 import 'package:felloapp/ui/modals/security_modal_sheet.dart';
-import 'package:felloapp/ui/modals/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
 import 'package:felloapp/util/constants.dart';
-import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -54,25 +50,6 @@ class RootViewModel extends BaseModel {
   onDispose() {
     if (_baseUtil != null) _baseUtil.cancelIncomingNotifications();
     _fcmListener.addIncomingMessageListener(null);
-  }
-
-  openAlertsScreen() {
-    Haptic.vibrate();
-    AppState.delegate.appState.currentAction =
-        PageAction(state: PageState.addPage, page: NotificationsConfig);
-  }
-
-  showDrawer() {
-    scaffoldKey.currentState.openDrawer();
-  }
-
-  showTicketModal(BuildContext context) {
-    AppState.screenStack.add(ScreenItem.dialog);
-    showModalBottomSheet(
-        context: context,
-        builder: (ctx) {
-          return WantMoreTicketsModalSheet();
-        });
   }
 
   void onItemTapped(int index) {

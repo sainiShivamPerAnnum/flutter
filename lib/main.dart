@@ -2,6 +2,7 @@
 //Project imports
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status.dart';
+import 'package:felloapp/core/enums/user_coin_service_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -32,6 +33,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logger/logger.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
+
+import 'core/service/user_coin_service.dart';
 
 Future mainInit() async {
   setupLocator();
@@ -92,22 +95,25 @@ class _MyAppState extends State<MyApp> {
         ),
         ChangeNotifierProvider(create: (_) => appState),
       ],
-      child: PropertyChangeProvider<UserService, UserServiceProperties>(
-        value: locator<UserService>(),
-        child: MaterialApp.router(
-          title: Constants.APP_NAME,
-          theme: FelloTheme.lightMode(),
-          debugShowCheckedModeBanner: false,
-          backButtonDispatcher: backButtonDispatcher,
-          routerDelegate: delegate,
-          routeInformationParser: parser,
-          localizationsDelegates: [
-            S.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: S.delegate.supportedLocales,
+      child: PropertyChangeProvider<UserCoinService,UserCoinServiceProperties>(
+        value: locator<UserCoinService>(),
+        child: PropertyChangeProvider<UserService, UserServiceProperties>(
+          value: locator<UserService>(),
+          child: MaterialApp.router(
+            title: Constants.APP_NAME,
+            theme: FelloTheme.lightMode(),
+            debugShowCheckedModeBanner: false,
+            backButtonDispatcher: backButtonDispatcher,
+            routerDelegate: delegate,
+            routeInformationParser: parser,
+            localizationsDelegates: [
+              S.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: S.delegate.supportedLocales,
+          ),
         ),
       ),
     );

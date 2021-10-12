@@ -20,7 +20,7 @@ abstract class API {
 }
 
 class APIService implements API {
-  String _baseUrl;
+  String _baseUrl = "https://asia-south1-fello-dev-station.cloudfunctions.net";
   String _versionString;
   final logger = locator<Logger>();
 
@@ -77,7 +77,7 @@ class APIService implements API {
     await metric.start();
 
     var responseJson;
-    _baseUrl = "https://asia-south1-fello-dev-station.cloudfunctions.net";
+
     // token = Preference.getString('token');
     try {
       logger.d("response from $url");
