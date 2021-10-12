@@ -85,8 +85,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
             key: 'token', value: _idToken, type: CacheType.string);
       }
     }
-
-    _idToken = await _firebaseUser?.getIdToken(); //TODO cache
     _myUserName = _baseUser?.name;
     _logger.d("Base user initialized, UID: ${_baseUser?.uid}");
   }
