@@ -1,6 +1,7 @@
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/main_dev.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -54,6 +55,7 @@ class FDrawer extends StatelessWidget {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              // Text(model.name, style: TextStyles.body2.bold),
                               PropertyChangeConsumer<UserService,
                                   UserServiceProperties>(
                                 properties: [UserServiceProperties.myUserName],
@@ -76,19 +78,25 @@ class FDrawer extends StatelessWidget {
                   ),
                   Expanded(
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: List.generate(
-                        6,
-                        (index) => Container(
+                        model.drawerList.length,
+                        (i) => Container(
                           margin: EdgeInsets.symmetric(vertical: 16),
                           child: TextButton.icon(
-                            onPressed: () {},
+                            onPressed: () {
+                              AppState.delegate.appState.currentAction =
+                                  PageAction(
+                                      state: PageState.addPage,
+                                      page: model.drawerList[i].pageConfig);
+                            },
                             icon: Icon(
                               Icons.account_tree,
                               size: 20,
                               color: Colors.grey[400],
                             ),
                             label: Text(
-                              "Share and earn",
+                              model.drawerList[i].title,
                               style: TextStyles.body2.colour(Colors.black),
                             ),
                           ),
@@ -97,10 +105,16 @@ class FDrawer extends StatelessWidget {
                     ),
                   ),
                   Container(
+                    width: SizeConfig.screenWidth,
                     margin: EdgeInsets.symmetric(vertical: 24),
-                    child: Text(
-                      "Version 1.0.0.1",
-                      style: TextStyles.body3.colour(Colors.black45),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Version 1.0.0.1",
+                          style: TextStyles.body3.colour(Colors.black45),
+                        ),
+                      ],
                     ),
                   )
                 ],

@@ -18,6 +18,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 //Flutter & Dart Imports
@@ -39,37 +40,68 @@ class UserProfileViewModel extends BaseModel {
   double picSize;
   XFile selectedProfilePicture;
   ValueChanged<bool> upload;
-  final RootViewModel _rootViewModel = locator<RootViewModel>();
-
-  //Define this in constants
-  String defaultPan = "**********";
-  String pan = "**********";
-
-  bool isPanVisible = false;
+  bool isUpdaingUserDetails = false;
+  final GlobalKey<FormState> formKey = new GlobalKey<FormState>();
 
   get myUserDpUrl => _userService.myUserDpUrl;
   get myname => _userService.baseUser.name;
   get myUsername => _userService.baseUser.username;
+  get myAge => _userService.baseUser.dob;
+  get myEmail => _userService.baseUser.email;
+  get myGender => _userService.baseUser.gender;
+  get myMobile => _userService.baseUser.mobile;
 
   //controllers
 
-  TextEditingController nameController;
+  TextEditingController nameController,
+      dobController,
+      genderController,
+      emailController,
+      mobileController;
+
   init() {
     nameController = new TextEditingController(text: myname);
+    dobController = new TextEditingController(text: myAge);
+    genderController = new TextEditingController(text: myGender);
+    emailController = new TextEditingController(text: myEmail);
+    mobileController = new TextEditingController(text: myMobile);
   }
 
-  showHidePan() {
-    if (isPanVisible) {
-      //Hide the pan
-      pan = defaultPan;
-      isPanVisible = false;
+  enableEdit() {
+    inEditMode = true;
+    notifyListeners();
+  }
+
+  updateDetails() async {
+    if (_checkForChanges()) {
+      isUpdaingUserDetails = true;
       notifyListeners();
-    } else {
-      //show pan
-      pan = _baseUtil.userRegdPan;
-      isPanVisible = true;
-      notifyListeners();
-    }
+      _userService.baseUser.name = nameController.text.trim();
+      _userService.baseUser.dob = dobController.text.trim();
+      _userService.baseUser.gender = genderController.text.trim()[0];
+      await _dbModel.updateUser(_userService.baseUser).then((res) {
+        if (res) {
+          isUpdaingUserDetails = false;
+          inEditMode = false;
+          notifyListeners();
+          BaseUtil.showPositiveAlert(
+              "Updated Successfully", "Profile updated successfully");
+        } else {
+          isUpdaingUserDetails = false;
+          notifyListeners();
+          BaseUtil.showNegativeAlert(
+              "Ahh Snap", "Please try again in some time");
+        }
+      });
+    } else
+      BaseUtil.showNegativeAlert("No changes found", "make some changes bruh");
+  }
+
+  bool _checkForChanges() {
+    if (myname != nameController.text.trim() ||
+        myAge != dobController.text.trim() ||
+        myGender != genderController.text.trim()[0]) return true;
+    return false;
   }
 
   signout() async {
@@ -87,58 +119,6 @@ class UserProfileViewModel extends BaseModel {
       bankCreds = {"name": "N/A", "number": "N/A", "ifsc": "N/A"};
     }
     return bankCreds;
-  }
-
-  Widget getPanContent(BuildContext context) {
-    if (_baseUtil.userRegdPan != null && _baseUtil.userRegdPan != "") {
-      return InkWell(
-        onTap: () => showHidePan(),
-        child: Row(
-          children: [
-            Text(
-              pan,
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: SizeConfig.mediumTextSize,
-              ),
-            ),
-            SizedBox(width: 4),
-            !isPanVisible
-                ? Lottie.asset("images/lottie/eye.json",
-                    height: SizeConfig.largeTextSize, repeat: false)
-                : Icon(
-                    Icons.remove_red_eye_outlined,
-                    color: UiConstants.primaryColor,
-                    size: SizeConfig.largeTextSize,
-                  ),
-          ],
-        ),
-      );
-    } else
-      return Wrap(
-        children: [
-          ElevatedButton(
-            onPressed: () async {
-              if (await BaseUtil.showNoInternetAlert()) return;
-              AppState.screenStack.add(ScreenItem.dialog);
-              showModalBottomSheet(
-                  isDismissible: false,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  context: context,
-                  isScrollControlled: true,
-                  builder: (context) {
-                    return SimpleKycModalSheet();
-                  });
-            },
-            child: Text(
-              "Verify",
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ],
-      );
   }
 
   String getGender() {
@@ -197,11 +177,11 @@ class UserProfileViewModel extends BaseModel {
               ),
               confirmAction: () {
                 Navigator.pop(context);
-                chooseprofilePicture();
+                _chooseprofilePicture();
               },
               cancelAction: () => Navigator.pop(context)));
     } else if (_status.isGranted) {
-      await chooseprofilePicture();
+      await _chooseprofilePicture();
       // needsRefresh(true);
     } else {
       BaseUtil.showNegativeAlert('Permission Unavailable',
@@ -210,7 +190,7 @@ class UserProfileViewModel extends BaseModel {
   }
 
 //Model should never user Widgets in it. We should never pass context here...
-  chooseprofilePicture() async {
+  _chooseprofilePicture() async {
     selectedProfilePicture = await ImagePicker()
         .pickImage(source: ImageSource.gallery, imageQuality: 45);
     if (selectedProfilePicture != null) {
@@ -223,8 +203,8 @@ class UserProfileViewModel extends BaseModel {
           image: File(selectedProfilePicture.path),
           upload: (value) {
             if (value)
-              updateProfilePicture()
-                  .then((flag) => postProfilePictureUpdate(flag));
+              _updateProfilePicture()
+                  .then((flag) => _postProfilePictureUpdate(flag));
           },
         ),
       );
@@ -233,7 +213,7 @@ class UserProfileViewModel extends BaseModel {
     }
   }
 
-  Future<bool> updateProfilePicture() async {
+  Future<bool> _updateProfilePicture() async {
     Directory supportDir;
     UploadTask uploadTask;
     try {
@@ -287,8 +267,7 @@ class UserProfileViewModel extends BaseModel {
     }
   }
 
-  postProfilePictureUpdate(bool flag) {
-    BuildContext context;
+  _postProfilePictureUpdate(bool flag) {
     if (flag) {
       BaseAnalytics.logProfilePictureAdded();
       BaseUtil.showPositiveAlert(

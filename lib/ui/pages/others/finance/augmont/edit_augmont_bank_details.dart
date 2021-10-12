@@ -7,10 +7,14 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/augmont_confirm_register_dialog.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
+import 'package:felloapp/ui/pages/static/fello_appbar.dart';
+import 'package:felloapp/ui/pages/static/home_background.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/palette.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 
 //Dart and Flutter Imports
@@ -109,199 +113,237 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
         return true;
       },
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          elevation: 0,
-        ),
-        body: Theme(
-          data: ThemeData.light().copyWith(
-            textTheme: GoogleFonts.montserratTextTheme(),
-            colorScheme: ColorScheme.light(
-                primary: FelloColorPalette.augmontFundPalette().primaryColor),
-          ),
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.blockSizeHorizontal * 5, vertical: 10),
-              child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Text(
-                          (baseProvider.augmontDetail.bankAccNo == '')
-                              ? 'Enter your bank account details'
-                              : 'Update your bank account details',
-                          style: TextStyle(
-                              fontSize: SizeConfig.largeTextSize,
-                              fontWeight: FontWeight.w600),
-                        ),
+        backgroundColor: UiConstants.primaryColor,
+        body: HomeBackground(
+          child: Column(
+            children: [
+              FelloAppBar(
+                leading: FelloAppBarBackButton(),
+                title: "Bank Account Details",
+              ),
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(40),
+                        topRight: Radius.circular(40),
                       ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(8, 3, 8, 8),
-                        child: Text(
-                          'This is where the amount received from selling your gold shall be credited.',
-                          style: TextStyle(
-                              fontSize: SizeConfig.mediumTextSize,
-                              fontWeight: FontWeight.w400),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      TextFormField(
-                        controller: _bankHolderNameController,
-                        keyboardType: TextInputType.name,
-                        textCapitalization: TextCapitalization.characters,
-                        decoration: augmontFieldInputDecoration(
-                            'Bank holder\'s name', Icons.person),
-                        // InputDecoration(
-                        //   labelText: 'Bank holder\'s name',
-                        //   errorBorder: OutlineInputBorder(
-                        //     borderRadius: BorderRadius.circular(10),
-                        //   ),
-                        //   prefixIcon: Icon(Icons.person),
-                        //   focusColor:  FelloColorPalette.augmontFundPalette().primaryColor2,
-                        //   border: OutlineInputBorder(
-                        //     borderRadius: BorderRadius.circular(10),
-                        //   ),
-                        // ),
-                        validator: (value) {
-                          return (value.isEmpty || value.length < 4)
-                              ? 'Please enter you name as per your bank'
-                              : null;
-                        },
-                        onFieldSubmitted: (v) {
-                          FocusScope.of(context).nextFocus();
-                        },
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      //Text("Email"),
-                      TextFormField(
-                        controller: _bankAccNoController,
-                        keyboardType: TextInputType.number,
-                        decoration: augmontFieldInputDecoration(
-                            'Bank Account Number', Icons.keyboard),
-                        // InputDecoration(
-                        //   labelText: 'Bank Account Number',
-                        //   focusColor:  FelloColorPalette.augmontFundPalette().primaryColor2,
-                        //   border: OutlineInputBorder(
-                        //     borderRadius: BorderRadius.circular(10),
-                        //   ),
-                        //   prefixIcon: Icon(Icons.keyboard),
-                        // ),
-                        validator: (value) {
-                          print(value);
-                          return (value != null && value.isNotEmpty)
-                              ? null
-                              : 'Please enter a valid account number';
-                        },
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      TextFormField(
-                        controller: _bankAccNoConfirmController,
-                        keyboardType: TextInputType.visiblePassword,
-                        obscureText: true,
-                        decoration: augmontFieldInputDecoration(
-                            'Confirm Bank Account Number', Icons.keyboard),
-                        //  InputDecoration(
-                        //   labelText: 'Confirm Bank Account Number',
-                        //   focusColor:  FelloColorPalette.augmontFundPalette().primaryColor2,
-                        //   border: OutlineInputBorder(
-                        //     borderRadius: BorderRadius.circular(10),
-                        //   ),
-                        //   prefixIcon: Icon(Icons.keyboard),
-                        // ),
-                        validator: (value) {
-                          print(value);
-                          return (value != null && value.isNotEmpty)
-                              ? null
-                              : 'Field cannot be empty';
-                        },
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      TextFormField(
-                        controller: _bankIfscController,
-                        keyboardType: TextInputType.streetAddress,
-                        textCapitalization: TextCapitalization.characters,
-                        decoration: augmontFieldInputDecoration(
-                            'Bank IFSC Code', Icons.account_balance),
-                        //  InputDecoration(
-                        //   labelText: 'Bank IFSC Code',
-                        //   focusColor:  FelloColorPalette.augmontFundPalette().primaryColor2,
-                        //   border: OutlineInputBorder(
-                        //     borderRadius: BorderRadius.circular(10),
-                        //   ),
-                        //   prefixIcon: Icon(Icons.account_balance),
-                        // ),
-                        validator: (value) {
-                          print(value);
-                          return (value != null && value.isNotEmpty)
-                              ? null
-                              : 'Please enter a valid bank IFSC';
-                        },
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      new Container(
-                        height: 50.0,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          gradient: new LinearGradient(
-                              colors: [
-                                FelloColorPalette.augmontFundPalette()
-                                    .primaryColor,
-                                FelloColorPalette.augmontFundPalette()
-                                    .primaryColor2
-                              ],
-                              begin: Alignment(0.5, -1.0),
-                              end: Alignment(0.5, 1.0)),
-                          borderRadius: new BorderRadius.circular(10.0),
-                        ),
-                        child: new Material(
-                          child: MaterialButton(
-                            child: (!baseProvider
-                                    .isEditAugmontBankDetailInProgress)
-                                ? Text(
-                                    (baseProvider.augmontDetail.bankAccNo == '')
-                                        ? 'WITHDRAW'
-                                        : 'UPDATE',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .button
-                                        .copyWith(color: Colors.white),
-                                  )
-                                : SpinKitThreeBounce(
-                                    color: UiConstants.spinnerColor2,
-                                    size: 18.0,
+                      color: Colors.white),
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.blockSizeHorizontal * 5,
+                          vertical: 10),
+                      child: Form(
+                          key: _formKey,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              // Padding(
+                              //   padding: EdgeInsets.all(8),
+                              //   child: Text(
+                              //     (baseProvider.augmontDetail.bankAccNo == '')
+                              //         ? 'Enter your bank account details'
+                              //         : 'Update your bank account details',
+                              //     style: TextStyle(
+                              //         fontSize: SizeConfig.largeTextSize,
+                              //         fontWeight: FontWeight.w600),
+                              //   ),
+                              // ),
+                              // Padding(
+                              //   padding: EdgeInsets.fromLTRB(8, 3, 8, 8),
+                              //   child: Text(
+                              //     'This is where the amount received from selling your gold shall be credited.',
+                              //     style: TextStyle(
+                              //         fontSize: SizeConfig.mediumTextSize,
+                              //         fontWeight: FontWeight.w400),
+                              //   ),
+                              // ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Bank Holder's Name",
+                                    style: TextStyles.body3,
                                   ),
-                            onPressed: () {
-                              FocusScope.of(context).unfocus();
-                              if (BaseUtil.showNoInternetAlert()) return;
-                              if (_formKey.currentState.validate()) {
-                                _onUpdateClicked();
-                              }
-                            },
-                            highlightColor: Colors.white30,
-                            splashColor: Colors.white30,
-                          ),
-                          color: Colors.transparent,
-                          borderRadius: new BorderRadius.circular(30.0),
-                        ),
-                      ),
-                    ],
-                  )),
-            ),
+                                  SizedBox(height: 6),
+                                  TextFormField(
+                                    keyboardType: TextInputType.name,
+                                    textCapitalization:
+                                        TextCapitalization.characters,
+                                    controller: _bankAccNoConfirmController,
+                                    validator: (value) {
+                                      return (value.isEmpty || value.length < 4)
+                                          ? 'Please enter you name as per your bank'
+                                          : null;
+                                    },
+                                    onFieldSubmitted: (v) {
+                                      FocusScope.of(context).nextFocus();
+                                    },
+                                  ),
+                                ],
+                              ),
+
+                              SizedBox(
+                                height: 16,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Bank Account Number",
+                                    style: TextStyles.body3,
+                                  ),
+                                  SizedBox(height: 6),
+                                  TextFormField(
+                                    controller: _bankAccNoController,
+                                    keyboardType: TextInputType.number,
+                                    validator: (value) {
+                                      print(value);
+                                      return (value != null && value.isNotEmpty)
+                                          ? null
+                                          : 'Please enter a valid account number';
+                                    },
+                                  ),
+                                ],
+                              ),
+
+                              SizedBox(
+                                height: 16,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Confirm Account Number",
+                                    style: TextStyles.body3,
+                                  ),
+                                  SizedBox(height: 6),
+                                  TextFormField(
+                                    controller: _bankAccNoConfirmController,
+                                    keyboardType: TextInputType.visiblePassword,
+                                    obscureText: true,
+                                    validator: (value) {
+                                      print(value);
+                                      return (value != null && value.isNotEmpty)
+                                          ? null
+                                          : 'Field cannot be empty';
+                                    },
+                                  ),
+                                ],
+                              ),
+
+                              SizedBox(height: 16),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Bank IFSC Code',
+                                    style: TextStyles.body3,
+                                  ),
+                                  SizedBox(height: 6),
+                                  TextFormField(
+                                    controller: _bankIfscController,
+                                    keyboardType: TextInputType.streetAddress,
+                                    textCapitalization:
+                                        TextCapitalization.characters,
+                                    validator: (value) {
+                                      print(value);
+                                      return (value != null && value.isNotEmpty)
+                                          ? null
+                                          : 'Please enter a valid bank IFSC';
+                                    },
+                                  ),
+                                ],
+                              ),
+
+                              SizedBox(height: 24),
+
+                              FelloButtonLg(
+                                child: (!baseProvider
+                                        .isEditAugmontBankDetailInProgress)
+                                    ? Text(
+                                        (baseProvider.augmontDetail.bankAccNo ==
+                                                '')
+                                            ? 'WITHDRAW'
+                                            : 'UPDATE',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .button
+                                            .copyWith(color: Colors.white),
+                                      )
+                                    : SpinKitThreeBounce(
+                                        color: UiConstants.spinnerColor2,
+                                        size: 18.0,
+                                      ),
+                                onPressed: () {
+                                  FocusScope.of(context).unfocus();
+                                  if (BaseUtil.showNoInternetAlert()) return;
+                                  if (_formKey.currentState.validate()) {
+                                    _onUpdateClicked();
+                                  }
+                                },
+                              ),
+                              // new Container(
+                              //   height: 50.0,
+                              //   width: double.infinity,
+                              //   decoration: BoxDecoration(
+                              //     gradient: new LinearGradient(
+                              //         colors: [
+                              //           FelloColorPalette.augmontFundPalette()
+                              //               .primaryColor,
+                              //           FelloColorPalette.augmontFundPalette()
+                              //               .primaryColor2
+                              //         ],
+                              //         begin: Alignment(0.5, -1.0),
+                              //         end: Alignment(0.5, 1.0)),
+                              //     borderRadius: new BorderRadius.circular(10.0),
+                              //   ),
+                              //   child: new Material(
+                              //     child: MaterialButton(
+                              //       child: (!baseProvider
+                              //               .isEditAugmontBankDetailInProgress)
+                              //           ? Text(
+                              //               (baseProvider.augmontDetail
+                              //                           .bankAccNo ==
+                              //                       '')
+                              //                   ? 'WITHDRAW'
+                              //                   : 'UPDATE',
+                              //               style: Theme.of(context)
+                              //                   .textTheme
+                              //                   .button
+                              //                   .copyWith(color: Colors.white),
+                              //             )
+                              //           : SpinKitThreeBounce(
+                              //               color: UiConstants.spinnerColor2,
+                              //               size: 18.0,
+                              //             ),
+                              //       onPressed: () {
+                              //         FocusScope.of(context).unfocus();
+                              //         if (BaseUtil.showNoInternetAlert())
+                              //           return;
+                              //         if (_formKey.currentState.validate()) {
+                              //           _onUpdateClicked();
+                              //         }
+                              //       },
+                              //       highlightColor: Colors.white30,
+                              //       splashColor: Colors.white30,
+                              //     ),
+                              //     color: Colors.transparent,
+                              //     borderRadius: new BorderRadius.circular(30.0),
+                              //   ),
+                              // ),
+                            ],
+                          )),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

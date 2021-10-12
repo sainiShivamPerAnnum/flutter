@@ -23,8 +23,6 @@ class PageAction {
 
 class AppState extends ChangeNotifier {
   static int _rootIndex = 0;
-  static int _gameTabIndex = 0;
-  static int _gameIndex = 0;
   static ScrollController homeCardListController = ScrollController();
   static String _fcmData;
   static bool isFirstTime = true;
@@ -64,10 +62,9 @@ class AppState extends ChangeNotifier {
 
 // GETTERS AND SETTERS
 
-  static int get getCurrentTabIndex => _rootIndex;
+  static int get getCurrentTabIndex => _rootIndex ?? 0;
 
   set setCurrentTabIndex(int index) {
-    _gameTabIndex = 0;
     _rootIndex = index;
     _saveLastTapIndex(index);
     print(_rootIndex);
@@ -76,22 +73,6 @@ class AppState extends ChangeNotifier {
 
   returnHome() {
     _rootIndex = 0;
-    notifyListeners();
-  }
-
-  int get getCurrentGameTabIndex => _gameTabIndex;
-
-  set setCurrentGameTabIndex(int index) {
-    _gameTabIndex = index;
-    print(_gameTabIndex);
-    notifyListeners();
-  }
-
-  int get getCurrentGameIndex => _gameIndex;
-
-  set setCurrentGameIndex(int index) {
-    _gameIndex = index;
-    print(_gameIndex);
     notifyListeners();
   }
 
@@ -107,16 +88,14 @@ class AppState extends ChangeNotifier {
   }
 
   _saveLastTapIndex(int index) {
-    if (index == 1 || index == 2) {
-      SharedPreferences.getInstance().then((instance) {
-        instance.setInt('lastTab', index);
-      });
-    }
+    SharedPreferences.getInstance().then((instance) {
+      instance.setInt('lastTab', index);
+    });
   }
 
   static setLastTapIndex() {
     SharedPreferences.getInstance().then((instance) {
-      _rootIndex = instance.getInt('lastTab') ?? 0;
+      _rootIndex = instance.getInt('lastTab');
     });
   }
 }

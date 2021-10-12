@@ -22,7 +22,7 @@ import 'package:intl/intl.dart';
 
 enum TranFilterType { Type, Subtype }
 
-class TranViewModel extends BaseModel {
+class TransactionsHistoryViewModel extends BaseModel {
   int _subfilter = 1;
   int _filter = 1;
   bool _init = true;
@@ -225,6 +225,7 @@ class TranViewModel extends BaseModel {
         ),
         trailing: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
               (filteredList[index].type == "WITHDRAWAL" ? "- " : "+ ") +
@@ -234,6 +235,7 @@ class TranViewModel extends BaseModel {
                 fontSize: SizeConfig.mediumTextSize,
               ),
             ),
+            SizedBox(height: 4),
             Text(
               _getFormattedTime(filteredList[index].timestamp),
               style: TextStyle(

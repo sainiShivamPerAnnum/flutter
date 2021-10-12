@@ -1,10 +1,6 @@
-import 'package:felloapp/core/enums/screen_item_enum.dart';
-import 'package:felloapp/core/enums/user_service_enum.dart';
-import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
-import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
@@ -14,8 +10,6 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:property_change_notifier/property_change_notifier.dart';
 
 class Root extends StatelessWidget {
   @override
@@ -50,6 +44,7 @@ class Root extends StatelessWidget {
                   ],
                 ),
                 WhiteBackground(
+                  color: Color(0xffF1F6FF),
                   height: AppState.getCurrentTabIndex == 0
                       ? kToolbarHeight * 3.6
                       : kToolbarHeight * 2.8,
@@ -91,66 +86,6 @@ class Root extends StatelessWidget {
       },
     );
   }
-
-//   AppBar appBar(RootViewModel model, BuildContext context) {
-//     return AppBar(
-//       backgroundColor: ThemeData().scaffoldBackgroundColor,
-//       leading: Padding(
-//         padding: const EdgeInsets.symmetric(vertical: 8),
-//         child: InkWell(
-//           onTap: model.showDrawer,
-//           child: ProfileImage(),
-//         ),
-//       ),
-//       title: PropertyChangeConsumer<UserService, UserServiceProperties>(
-//         properties: [UserServiceProperties.myUserName],
-//         builder: (context, model, property) => Text(
-//           "Hi, ${model.myUserName?.split(' ')?.first ?? "user"}",
-//           style: TextStyles.body1.bold,
-//         ),
-//       ),
-//       actions: [
-//         InkWell(
-//           onTap: () => model.showTicketModal(context),
-//           child: Container(
-//             margin: const EdgeInsets.all(10),
-//             decoration: BoxDecoration(
-//                 borderRadius: BorderRadius.circular(100),
-//                 color: UiConstants.primaryColor),
-//             padding: EdgeInsets.symmetric(horizontal: 8),
-//             child: Row(
-//               children: [
-//                 PropertyChangeConsumer<UserService, UserServiceProperties>(
-//                   builder: (context, model, property) => Text(
-//                       model.userTicketWallet.getActiveTickets().toString() ?? 0,
-//                       style: TextStyles.body3.bold),
-//                 ),
-//                 SizedBox(width: 8),
-//                 Icon(
-//                   Icons.control_point_rounded,
-//                   color: Colors.white,
-//                   size: kToolbarHeight / 2.5,
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ),
-//         InkWell(
-//           child: Icon(
-//             Icons.notifications,
-//             size: kToolbarHeight * 0.5,
-//             color: Color(0xff4C4C4C),
-//           ),
-//           //icon: Icon(Icons.contact_support_outlined),
-//           // iconSize: kToolbarHeight * 0.5,
-//           onTap: model.openAlertsScreen,
-//         ),
-//         SizedBox(
-//           width: SizeConfig.globalMargin,
-//         )
-//       ],
-//     );
-//  }
 }
 
 class BottomNavBar extends StatelessWidget {

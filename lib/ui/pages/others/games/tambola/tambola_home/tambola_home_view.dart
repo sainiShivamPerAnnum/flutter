@@ -30,6 +30,7 @@ class TambolaHomeView extends StatelessWidget {
                   ],
                 ),
                 WhiteBackground(
+                  color: Color(0xffF1F6FF),
                   height: kToolbarHeight * 3.6,
                 ),
                 SafeArea(
@@ -233,30 +234,21 @@ class TambolaHomeView extends StatelessWidget {
                     bottom: 0,
                     child: Container(
                       width: SizeConfig.screenWidth,
-                      padding: EdgeInsets.fromLTRB(0, 10, 0, 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: <Widget>[
-                          new Container(
-                            width: SizeConfig.screenWidth -
-                                SizeConfig.blockSizeHorizontal * 10,
-                            child: FelloButtonLg(
-                              child: Text(
-                                'PLAY',
-                                style: TextStyles.body2.colour(Colors.white),
-                              )
-                              // : SpinKitThreeBounce(
-                              //     color: UiConstants.spinnerColor2,
-                              //     size: 18.0,
-                              //   )
-                              ,
-                              onPressed: () {
-                                BaseUtil().openTambolaHome();
-                              },
-                            ),
-                          ),
-                        ],
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.scaffoldMargin, vertical: 16),
+                      child: FelloButtonLg(
+                        child: Text(
+                          'PLAY',
+                          style: TextStyles.body2.colour(Colors.white),
+                        )
+                        // : SpinKitThreeBounce(
+                        //     color: UiConstants.spinnerColor2,
+                        //     size: 18.0,
+                        //   )
+                        ,
+                        onPressed: () {
+                          BaseUtil().openTambolaHome();
+                        },
                       ),
                     ))
               ],

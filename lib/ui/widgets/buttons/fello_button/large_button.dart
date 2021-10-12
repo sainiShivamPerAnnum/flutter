@@ -1,5 +1,6 @@
 import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +13,8 @@ class FelloButtonLg extends StatelessWidget {
   Widget build(BuildContext context) {
     return FelloButton(
       activeButtonUI: Container(
-        height: 70.0,
+        width: SizeConfig.screenWidth,
+        height: 60.0,
         decoration: BoxDecoration(
           color: color ?? UiConstants.primaryColor,
           borderRadius: new BorderRadius.circular(16.0),
@@ -28,10 +30,16 @@ class FelloButtonLg extends StatelessWidget {
         ),
       ),
       offlineButtonUI: Container(
-        height: 50.0,
+        width: SizeConfig.screenWidth,
+        height: 60.0,
         decoration: BoxDecoration(
           color: Colors.grey,
-          borderRadius: new BorderRadius.circular(10.0),
+          borderRadius: new BorderRadius.circular(16.0),
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          "Offline",
+          style: TextStyles.body2.bold,
         ),
       ),
     );

@@ -73,7 +73,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     else if (AppState.screenStack.length == 1 &&
         AppState.getCurrentTabIndex != 0 &&
         _baseUtil.isUserOnboarded) {
-      _routerDelegate.appState.setCurrentGameTabIndex = 0;
+      //_routerDelegate.appState.setCurrentGameTabIndex = 0;
       _routerDelegate.appState.returnHome();
       return Future.value(true);
     }

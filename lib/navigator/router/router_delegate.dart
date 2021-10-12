@@ -29,9 +29,12 @@ import 'package:felloapp/ui/pages/others/games/tambola/tambola_game/tambola_game
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_walkthrough.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_result.dart';
+import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/claim_username.dart';
+import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/referrals_page.dart';
-import 'package:felloapp/ui/pages/others/profile/transactions/transactions_view.dart';
+import 'package:felloapp/ui/pages/others/profile/transactions_history/transactions_history_view.dart';
+import 'package:felloapp/ui/pages/static/transactions_view.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_view.dart';
 import 'package:felloapp/ui/pages/others/profile/verify_email.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
@@ -166,7 +169,16 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         //   _addPageData(AugmontDetailsPage(), AugDetailsPageConfig);
         //   break;
         case Pages.Transaction:
-          _addPageData(Transactions(), MfDetailsPageConfig);
+          _addPageData(Transactions(), TransactionPageConfig);
+          break;
+        case Pages.TxnHistory:
+          _addPageData(TransactionsHistory(), TransactionsHistoryPageConfig);
+          break;
+        case Pages.KycDetails:
+          _addPageData(KYCDetailsView(), KycDetailsPageConfig);
+          break;
+        case Pages.BankDetails:
+          _addPageData(BankDetailsView(), BankDetailsPageConfig);
           break;
         case Pages.Referral:
           _addPageData(ReferralsPage(), ReferralPageConfig);
@@ -317,6 +329,16 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.Transaction:
         TransactionPageConfig.currentPageAction = action;
         break;
+      case Pages.TxnHistory:
+        TransactionsHistoryPageConfig.currentPageAction = action;
+        break;
+      case Pages.KycDetails:
+        KycDetailsPageConfig.currentPageAction = action;
+        break;
+      case Pages.BankDetails:
+        BankDetailsPageConfig.currentPageAction = action;
+        break;
+
       case Pages.Referral:
         ReferralPageConfig.currentPageAction = action;
         break;
@@ -499,7 +521,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case 'scoreboard':
         appState.setCurrentTabIndex = 1;
-        appState.setCurrentGameTabIndex = 1;
+        //appState.setCurrentGameTabIndex = 1;
         break;
       case 'finance':
         appState.setCurrentTabIndex = 2;

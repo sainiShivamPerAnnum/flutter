@@ -33,6 +33,9 @@ const String TPickDraw = 'tPickDraw';
 const String TWeeklyResult = 'tWeeklyResult';
 const String TSummaryDetails = 'tSummaryDetails';
 const String CricketHomePath = 'cricketHome';
+const String TransactionsHistoryPath = 'transHistory';
+const String KycDetailsPath = 'kycDetails';
+const String BankDetailsPath = 'bankDetails';
 
 enum Pages {
   Splash,
@@ -67,6 +70,9 @@ enum Pages {
   TSummaryDetails,
   Notifications,
   CricketHome,
+  TxnHistory,
+  KycDetails,
+  BankDetails
 }
 
 class PageConfiguration {
@@ -246,4 +252,21 @@ PageConfiguration CricketHomePageConfig = PageConfiguration(
   key: 'CricketHome',
   path: CricketHomePath,
   uiPage: Pages.CricketHome,
+);
+
+PageConfiguration TransactionsHistoryPageConfig = PageConfiguration(
+  key: 'TxnHistory',
+  path: TransactionsHistoryPath,
+  uiPage: Pages.TxnHistory,
+);
+PageConfiguration KycDetailsPageConfig = PageConfiguration(
+  key: 'KycDetails',
+  path: KycDetailsPath,
+  uiPage: Pages.KycDetails,
+);
+
+PageConfiguration BankDetailsPageConfig = PageConfiguration(
+  key: 'BankDetails',
+  path: BankDetailsPath,
+  uiPage: Pages.BankDetails,
 );

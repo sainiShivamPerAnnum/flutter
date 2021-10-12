@@ -22,7 +22,9 @@ import 'package:felloapp/ui/pages/others/games/tambola/dailyPicksDraw/dailyPicks
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_game/tambola_game_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/picks_card/picks_card_vm.dart';
-import 'package:felloapp/ui/pages/others/profile/transactions/tran_viewModel.dart';
+import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_vm.dart';
+import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_vm.dart';
+import 'package:felloapp/ui/pages/others/profile/transactions_history/transaction_history_vm.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_viewModel.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/splash/splash_vm.dart';
@@ -66,9 +68,11 @@ void setupLocator() {
   locator.registerFactory(() => WinViewModel());
 
   //REST
-  locator.registerFactory(() => TranViewModel());
+  locator.registerFactory(() => TransactionsHistoryViewModel());
   locator.registerFactory(() => DailyPicksDrawViewModel());
   locator.registerFactory(() => UserProfileViewModel());
+  locator.registerFactory(() => KYCDetailsViewModel());
+  locator.registerFactory(() => BankDetailsViewModel());
 
   locator.registerFactory(() => TambolaHomeViewModel());
   locator.registerFactory(() => TambolaGameViewModel());

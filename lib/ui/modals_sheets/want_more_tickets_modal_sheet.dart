@@ -59,21 +59,6 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                 ),
               ),
             ),
-
-            //   ListTile(
-            //     leading: Icon(Icons.share),
-            //     title: Text("Refer your friends",
-            //         style: TextStyles.body2.bold),
-            //     subtitle: Text("Get 10 tickets per referral",
-            //         style: TextStyles.body3),
-            //   ),
-            //   ListTile(
-            //     leading: Icon(Icons.repeat),
-            //     title: Text("Set up SIP", style: TextStyles.body2.bold),
-            //     subtitle: Text("Earn tickets on the go",
-            //         style: TextStyles.body3),
-            //   )
-            // ],
           ),
         ),
       ),
