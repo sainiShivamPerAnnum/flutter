@@ -43,6 +43,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "onboardText3" : MessageLookupByLibrary.simpleMessage("Your money keeps growing with great returns while you play fun games and win prizes!"),
     "onboardTitle" : MessageLookupByLibrary.simpleMessage("Game based Savings \n & Investments🎉"),
     "onboradButton" : MessageLookupByLibrary.simpleMessage("GET STARTED"),
+    "playTrendingGames" : MessageLookupByLibrary.simpleMessage("Trending Games"),
     "resultsPageAppBarTitle" : MessageLookupByLibrary.simpleMessage("Dosages"),
     "resultsPageFirstDisclaimer" : m0,
     "resultsPageLethalDosageMessage" : m1,

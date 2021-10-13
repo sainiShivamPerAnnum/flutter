@@ -14,8 +14,6 @@ class SizeConfig {
   static double blockSizeHorizontal;
   static double blockSizeVertical;
 
-// text sizes
-
 // old text sizes
   static double smallTextSize;
   static double mediumTextSize;
@@ -53,15 +51,41 @@ class SizeConfig {
     print("Screen Width: $screenWidth");
   }
 
+  // TEXT SIZES
   static double get title1 => 36;
   static double get title2 => 32;
   static double get title3 => 28;
-  static double get title4 => 24;
-  static double get title5 => 20;
+  static double get title4 => screenWidth * 0.058; //24
+  static double get title5 => screenWidth * 0.048; //20
   static double get body1 => 18;
-  static double get body2 => 16;
-  static double get body3 => 14;
-  static double get body4 => 12;
+  static double get body2 => screenWidth * 0.038; // 16
+  static double get body3 => screenWidth * 0.033; //14
+  static double get body4 => screenWidth * 0.028; //12;
+
+  // ICON SIZES
+  static double get iconSize1 => screenWidth * 0.038; //16
+  static double get iconSize2 => screenWidth * 0.033; //14
+  static double get iconSize3 => screenWidth * 0.028; //12
+
+  // PADDINGS
+  static double get padding4 => screenWidth * 0.0096;
+  static double get padding6 => screenWidth * 0.014;
+  static double get padding8 => screenWidth * 0.019;
+  static double get padding12 => screenWidth * 0.029;
+  static double get padding16 => screenWidth * 0.038;
+  static double get padding24 => screenWidth * 0.058;
+
+  // MARGINS
+  static double get pageHorizontalMargins => screenWidth * 0.0579;
+
+  //BORDER RADIUS
+
+  static double get roundness32 => screenWidth * 0.077; //32
+  static double get roundness56 => screenWidth * 0.135; //56
+
+  //SPECIFIC
+
+  static double get navBarHeight => screenWidth * 0.212;
 
   // static double get headline1 => 40;
   // static double get headline2 => 38;

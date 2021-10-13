@@ -41,8 +41,7 @@ class TambolaHomeView extends StatelessWidget {
                     child: Column(
                       children: [
                         GameCard(
-                          name: "Tambola",
-                          tag: "tambola",
+                          gameData: model.gameData,
                         ),
                         Expanded(
                           child: Container(

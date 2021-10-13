@@ -1,85 +1,90 @@
-import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class GameCard extends StatelessWidget {
-  final String name;
-  final String tag;
-  GameCard({this.name, this.tag});
+  final GameModel gameData;
+  GameCard({this.gameData});
 
   @override
   Widget build(BuildContext context) {
     return Hero(
-      tag: tag,
+      tag: gameData.tag,
       child: Container(
         width: SizeConfig.screenWidth,
-        height: SizeConfig.screenWidth * 0.64,
-        margin: EdgeInsets.all(SizeConfig.scaffoldMargin),
+        height: SizeConfig.screenWidth * 0.62,
+        margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(54),
+          borderRadius: BorderRadius.circular(SizeConfig.roundness56),
         ),
-        padding: EdgeInsets.all(SizeConfig.globalMargin / 2),
+        padding: EdgeInsets.all(SizeConfig.padding8),
         child: Column(
           children: [
             ClipPath(
               clipper: GameThumbnailClipper(),
               child: Container(
                 width: SizeConfig.screenWidth,
-                height: SizeConfig.screenWidth * 0.36,
+                height: SizeConfig.screenWidth * 0.4,
                 decoration: BoxDecoration(
                   color: UiConstants.tertiarySolid,
                   image: DecorationImage(
-                      image: AssetImage("images/prize-share-bg.png"),
+                      image:
+                          CachedNetworkImageProvider(gameData.thumbnailImage),
                       fit: BoxFit.fitWidth),
                 ),
               ),
             ),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(height: 8),
-                  Text(
-                    name,
-                    style:
-                        TextStyles.title3.bold.colour(UiConstants.primaryColor),
-                  ),
-                  Spacer(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      TextButton.icon(
-                        icon: CircleAvatar(
-                          backgroundColor: Colors.black.withOpacity(0.2),
-                          child: Icon(
-                            Icons.airplane_ticket,
-                            color: Colors.black,
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(height: SizeConfig.padding4),
+                Text(
+                  gameData.gameName,
+                  style:
+                      TextStyles.title5.bold.colour(UiConstants.primaryColor),
+                ),
+                SizedBox(height: SizeConfig.padding8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton.icon(
+                      icon: CircleAvatar(
+                        radius: SizeConfig.screenWidth * 0.029,
+                        backgroundColor:
+                            UiConstants.tertiarySolid.withOpacity(0.2),
+                        child: RotatedBox(
+                          quarterTurns: 1,
+                          child: SvgPicture.asset(
+                            "assets/vectors/icons/tickets.svg",
+                            height: SizeConfig.iconSize3,
                           ),
                         ),
-                        label: Text("5 tickets",
-                            style: TextStyles.body3.colour(Colors.black54)),
-                        onPressed: () {},
                       ),
-                      SizedBox(width: 16),
-                      TextButton.icon(
-                          icon: CircleAvatar(
-                            backgroundColor: Colors.black.withOpacity(0.2),
-                            child: Icon(
-                              Icons.money,
-                              color: Colors.black,
-                            ),
+                      label: Text("5 tickets",
+                          style: TextStyles.body3.colour(Colors.black54)),
+                      onPressed: () {},
+                    ),
+                    SizedBox(width: 16),
+                    TextButton.icon(
+                        icon: CircleAvatar(
+                          radius: SizeConfig.screenWidth * 0.029,
+                          backgroundColor: UiConstants.primaryLight,
+                          child: Image.asset(
+                            "assets/images/icons/money.png",
+                            height: SizeConfig.iconSize3,
                           ),
-                          label: Text("Rs 10K",
-                              style: TextStyles.body3.colour(Colors.black54)),
-                          onPressed: () {}),
-                    ],
-                  ),
-                  Spacer(),
-                ],
-              ),
+                        ),
+                        label: Text("Rs 10K",
+                            style: TextStyles.body3.colour(Colors.black54)),
+                        onPressed: () {}),
+                  ],
+                ),
+              ],
             )
           ],
         ),

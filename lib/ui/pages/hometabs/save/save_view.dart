@@ -208,8 +208,8 @@ class Save extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SvgPicture.asset(
-                            "assets/vectors/gift_box_open.svg",
+                          Image.asset(
+                            "assets/images/icons/money.png",
                             width: SizeConfig.screenWidth * 0.24,
                           ),
                           SizedBox(width: 24),

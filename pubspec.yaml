@@ -95,8 +95,11 @@ flutter:
     - resources/fello-email-verification.html
 
     - assets/images/
+    - assets/images/icons/
     - assets/vectors/
+    - assets/vectors/icons/
     - assets/lotties/
+
 
 
   fonts:

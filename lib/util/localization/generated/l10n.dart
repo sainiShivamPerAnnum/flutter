@@ -75,6 +75,16 @@ class S {
     );
   }
 
+  /// `Trending Games`
+  String get playTrendingGames {
+    return Intl.message(
+      'Trending Games',
+      name: 'playTrendingGames',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Game based Savings \n & Investments🎉`
   String get onboardTitle {
     return Intl.message(

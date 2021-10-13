@@ -24,6 +24,11 @@ class Assets {
   static final String dummyCancelledCheque = 'images/Cancelled_cheque.png';
   static final String kycUnavailableAsset = 'images/kyc_unavailable.png';
 
+  //HOME TAB
+
+  // PLAY
+  static final String germsPattern = "assets/images/bg_pattern.png";
+
   static final List<String> onboardingSlide = [
     'images/save-small.png',
     'images/grow-small.png',

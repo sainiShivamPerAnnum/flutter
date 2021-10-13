@@ -5,6 +5,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class FelloAppBar extends StatelessWidget {
   final Widget leading;
@@ -19,7 +20,7 @@ class FelloAppBar extends StatelessWidget {
         width: SizeConfig.screenWidth,
         child: Container(
           margin: EdgeInsets.symmetric(
-            vertical: kToolbarHeight / 3,
+            vertical: kToolbarHeight / 4,
             horizontal: SizeConfig.scaffoldMargin,
           ),
           child: Row(
@@ -76,18 +77,17 @@ class FelloCurrency extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(
-              Icons.airplane_ticket,
-              size: 30,
-              color: UiConstants.tertiarySolid,
+            SvgPicture.asset(
+              "assets/vectors/icons/tickets.svg",
+              height: SizeConfig.iconSize1,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4.0),
-              child: Text("200", style: TextStyles.body2.bold),
+              padding: const EdgeInsets.symmetric(horizontal: 6.0),
+              child: Text("200", style: TextStyles.body1.bold),
             ),
             Icon(
               Icons.add_circle,
-              size: 30,
+              size: SizeConfig.iconSize1,
               color: UiConstants.primaryColor,
             ),
           ],
@@ -103,10 +103,9 @@ class NotificationButton extends StatelessWidget {
     return CircleAvatar(
       backgroundColor: Colors.black,
       radius: kToolbarHeight * 0.4,
-      child: Icon(
-        Icons.notifications,
-        color: Colors.white,
-        size: kToolbarHeight * 0.4,
+      child: SvgPicture.asset(
+        "assets/vectors/icons/alerts.svg",
+        height: kToolbarHeight * 0.32,
       ),
     );
   }

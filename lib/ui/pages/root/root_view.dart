@@ -46,7 +46,7 @@ class Root extends StatelessWidget {
                 WhiteBackground(
                   color: Color(0xffF1F6FF),
                   height: AppState.getCurrentTabIndex == 0
-                      ? kToolbarHeight * 3.6
+                      ? kToolbarHeight * 3
                       : kToolbarHeight * 2.8,
                 ),
                 SafeArea(
@@ -55,24 +55,6 @@ class Root extends StatelessWidget {
                     child: IndexedStack(
                         children: model.pages,
                         index: AppState.getCurrentTabIndex),
-                  ),
-                ),
-                Positioned(
-                  bottom: 0,
-                  child: Container(
-                    width: SizeConfig.screenWidth,
-                    height: kBottomNavigationBarHeight * 4,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                        colors: [
-                          Color(0xffF1F6FF),
-                          Color(0xffF1F6FF).withOpacity(0.2),
-                          Colors.white.withOpacity(0)
-                        ],
-                      ),
-                    ),
                   ),
                 ),
                 if (AppState.getCurrentTabIndex == 0) WantMoreTickets(),
@@ -99,25 +81,34 @@ class BottomNavBar extends StatelessWidget {
         child: Container(
           width: SizeConfig.screenWidth,
           child: Padding(
-            padding: EdgeInsets.all(SizeConfig.scaffoldMargin),
+            padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
             child: Container(
-              height: kBottomNavigationBarHeight * 1.6,
+              height: SizeConfig.navBarHeight,
               width: SizeConfig.screenWidth,
               decoration: BoxDecoration(
                 color: UiConstants.primaryColor,
                 borderRadius: BorderRadius.circular(32),
               ),
-              padding: EdgeInsets.symmetric(vertical: 8),
               child: NavBar(
                 itemTapped: (int index) => model.onItemTapped(index),
                 currentIndex: AppState.getCurrentTabIndex,
                 items: [
-                  NavBarItemData("Finance", Icons.home, "images/svgs/save.svg",
+                  NavBarItemData(
+                      "Finance",
+                      Icons.home,
+                      "assets/vectors/icons/wallet.svg",
                       SizeConfig.screenWidth * 0.36),
-                  NavBarItemData("Save", Icons.games, "images/svgs/game.svg",
+                  NavBarItemData(
+                      "Save",
+                      Icons.games,
+                      "assets/vectors/icons/support.svg",
                       SizeConfig.screenWidth * 0.28),
-                  NavBarItemData("Win", Icons.wallet_giftcard,
-                      "images/svgs/home.svg", SizeConfig.screenWidth * 0.28),
+                  NavBarItemData(
+                    "Win",
+                    Icons.wallet_giftcard,
+                    "assets/vectors/icons/medal.svg",
+                    SizeConfig.screenWidth * 0.28,
+                  ),
                 ],
               ),
             ),
@@ -136,24 +127,26 @@ class WantMoreTickets extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      bottom: kBottomNavigationBarHeight * 1.5,
-      left: SizeConfig.scaffoldMargin,
-      right: SizeConfig.scaffoldMargin,
+      bottom: SizeConfig.pageHorizontalMargins,
+      left: SizeConfig.pageHorizontalMargins,
+      right: SizeConfig.pageHorizontalMargins,
       child: Container(
-        height: kBottomNavigationBarHeight * 1.8,
+        height: SizeConfig.screenWidth * 0.362,
         width: SizeConfig.screenWidth,
         decoration: BoxDecoration(
-          color: Color(0xffCBECED),
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(32),
-            topRight: Radius.circular(32),
+          color: UiConstants.primaryLight,
+          borderRadius: BorderRadius.circular(
+            SizeConfig.roundness32,
           ),
         ),
-        alignment: Alignment.center,
-        padding: EdgeInsets.only(bottom: kBottomNavigationBarHeight / 2),
-        child: Text(
-          "Want more tickets",
-          style: TextStyles.body1.colour(UiConstants.primaryColor).bold,
+        alignment: Alignment.topCenter,
+        child: Container(
+          height: SizeConfig.screenWidth * 0.15,
+          alignment: Alignment.center,
+          child: Text(
+            "Want more tickets",
+            style: TextStyles.body1.colour(UiConstants.primaryColor).bold,
+          ),
         ),
       ),
     );

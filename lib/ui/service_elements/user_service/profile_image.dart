@@ -26,15 +26,22 @@ class ProfileImage extends StatelessWidget {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
         properties: [UserServiceProperties.myUserDpUrl],
         builder: (context, model, properties) {
-          return CircleAvatar(
-            radius: kToolbarHeight * height,
-            backgroundImage: model.myUserDpUrl == null
-                ? AssetImage(
-                    "images/profile.png",
-                  )
-                : CachedNetworkImageProvider(
-                    model.myUserDpUrl,
-                  ),
+          return Container(
+            padding: EdgeInsets.all(2),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.white, width: 1),
+            ),
+            child: CircleAvatar(
+              radius: kToolbarHeight * height,
+              backgroundImage: model.myUserDpUrl == null
+                  ? AssetImage(
+                      "images/profile.png",
+                    )
+                  : CachedNetworkImageProvider(
+                      model.myUserDpUrl,
+                    ),
+            ),
           );
         });
   }

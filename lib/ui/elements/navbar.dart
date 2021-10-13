@@ -109,13 +109,14 @@ class _NavbarButtonState extends State<NavbarButton>
               ? Container(
                   decoration: BoxDecoration(
                       color: Colors.white, shape: BoxShape.circle),
-                  padding: EdgeInsets.all(10),
+                  padding: EdgeInsets.all(SizeConfig.padding8),
                   child: SvgPicture.asset(widget.data.iconImage,
-                      height: 20, color: UiConstants.primaryColor),
+                      height: SizeConfig.screenWidth * 0.048,
+                      color: UiConstants.primaryColor),
                 )
               : SvgPicture.asset(
                   widget.data.iconImage,
-                  height: 32,
+                  height: SizeConfig.screenWidth * 0.077,
                   color: Color(0xffC2EDE4),
                 ),
         ),
@@ -146,15 +147,13 @@ class _NavbarButtonState extends State<NavbarButton>
       //Wrap in a bit of extra padding to make it easier to tap
       child: Container(
         color: UiConstants.primaryColor,
-        margin: EdgeInsets.symmetric(
-          vertical: kBottomNavigationBarHeight * 0.16,
-        ),
+        margin: EdgeInsets.symmetric(vertical: SizeConfig.padding16),
         //Wrap in an animated container, so changes to width & color automatically animate into place
         child: AnimatedContainer(
           alignment: Alignment.centerLeft,
 
           //Determine target width, selected item is wider
-          width: widget.isSelected ? widget.data.width : 60,
+          width: widget.isSelected ? widget.data.width : 64,
           curve: Curves.easeOutCubic,
           padding: EdgeInsets.symmetric(horizontal: 12),
           duration: Duration(milliseconds: 1400),

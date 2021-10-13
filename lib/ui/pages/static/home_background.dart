@@ -58,7 +58,10 @@ class Thunderstorm extends StatelessWidget {
       top: -20,
       height: SizeConfig.screenHeight * 0.3,
       width: SizeConfig.screenWidth,
-      child: SvgPicture.asset("assets/vectors/home_bg_shape.svg"),
+      child: SvgPicture.asset(
+        "assets/vectors/home_bg_shape.svg",
+        fit: BoxFit.cover,
+      ),
     );
   }
 }
