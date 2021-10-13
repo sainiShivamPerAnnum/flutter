@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/service/api.dart';
@@ -15,7 +16,7 @@ class FlcActionsRepo {
 
   Future<ApiResponse<FlcModel>> getCoinBalance() async {
     try {
-      final response =
+      final DocumentSnapshot response =
           await _api.getUserCoinWalletDocById(_userService.baseUser.uid);
       _logger.d(response.data().toString());
       return ApiResponse(model: FlcModel.fromMap(response.data()), code: 200);
@@ -38,10 +39,6 @@ class FlcActionsRepo {
           .postData(_apiPaths.kSubstractFlcPreGameApi, body: _body);
       _logger.d(response.toString());
       FlcModel _flcModel = FlcModel.fromMap(response);
-      // if (_flcModel.flcBalance != null) {
-      //   _userCoinService.setFlcBalance(_flcModel.flcBalance);
-      //   _logger.d("New flc balance updated from flc action repo");
-      // }
       return ApiResponse(model: _flcModel, code: 200);
     } catch (e) {
       _logger.e(e);

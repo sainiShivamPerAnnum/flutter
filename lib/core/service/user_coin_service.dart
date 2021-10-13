@@ -15,9 +15,6 @@ class UserCoinService
 
   int get flcBalance => _flcBalance;
 
-  init() async {
-    await getUserCoinBalance();
-  }
 
   void setFlcBalance(int balance) {
     if (_flcBalance == null) {
