@@ -238,9 +238,8 @@ class ClippedView extends StatelessWidget {
 
 class NavBarItemData {
   final String title;
-  final IconData icon;
   final String iconImage;
   final double width;
 
-  NavBarItemData(this.title, this.icon, this.iconImage, this.width);
+  NavBarItemData(this.title, this.iconImage, this.width);
 }

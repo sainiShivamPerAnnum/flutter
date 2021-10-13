@@ -8,6 +8,7 @@ import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -23,6 +24,7 @@ class UserProfileDetails extends StatefulWidget {
 class _UserProfileDetailsState extends State<UserProfileDetails> {
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return BaseView<UserProfileViewModel>(
       onModelReady: (model) {
         model.init();
@@ -34,21 +36,21 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
             children: [
               FelloAppBar(
                 leading: FelloAppBarBackButton(),
-                title: "My Profile",
+                title: locale.profileTitle,
               ),
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(40),
-                      topRight: Radius.circular(40),
+                      topLeft: Radius.circular(SizeConfig.roundness40),
+                      topRight: Radius.circular(SizeConfig.roundness40),
                     ),
                   ),
                   width: SizeConfig.screenWidth,
                   padding: EdgeInsets.only(
-                    left: SizeConfig.scaffoldMargin,
-                    right: SizeConfig.scaffoldMargin,
+                    left: SizeConfig.pageHorizontalMargins,
+                    right: SizeConfig.pageHorizontalMargins,
                   ),
                   child: SingleChildScrollView(
                     child: Form(
@@ -56,15 +58,18 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          SizedBox(height: SizeConfig.scaffoldMargin),
                           Container(
-                            width: SizeConfig.screenWidth / 2.4,
-                            height: SizeConfig.screenWidth / 2.4,
-                            margin: EdgeInsets.only(bottom: 16),
+                            width: SizeConfig.screenWidth * 0.31,
+                            height: SizeConfig.screenWidth * 0.33,
+                            margin: EdgeInsets.only(
+                              top: SizeConfig.globalMargin,
+                              bottom: SizeConfig.padding8,
+                            ),
                             child: Stack(
                               children: [
                                 Container(
-                                  width: SizeConfig.screenWidth / 2.4,
+                                  width: SizeConfig.screenWidth * 0.31,
+                                  height: SizeConfig.screenWidth * 0.31,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     gradient: LinearGradient(
@@ -76,15 +81,16 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                       ],
                                     ),
                                   ),
-                                  padding: EdgeInsets.all(4),
+                                  padding: EdgeInsets.all(3),
                                   child: Container(
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       shape: BoxShape.circle,
                                     ),
-                                    padding: EdgeInsets.all(12),
+                                    padding:
+                                        EdgeInsets.all(SizeConfig.padding12),
                                     child: ProfileImage(
-                                      height: 1.4,
+                                      radius: SizeConfig.screenWidth * 0.25,
                                     ),
                                   ),
                                 ),
@@ -93,16 +99,18 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                   child: InkWell(
                                     onTap: model.handleDPOperation,
                                     child: Container(
-                                      height: kToolbarHeight * 1.4,
-                                      width: kToolbarHeight * 1.4,
+                                      height: SizeConfig.screenWidth * 0.096,
+                                      width: SizeConfig.screenWidth * 0.096,
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         color: UiConstants.primaryColor,
                                         border: Border.all(
-                                            width: 8, color: Colors.white),
+                                            width: SizeConfig.padding4,
+                                            color: Colors.white),
                                       ),
                                       child: Icon(
-                                        Icons.camera,
+                                        Icons.camera_alt_rounded,
+                                        size: SizeConfig.screenWidth * 0.05,
                                         color: Colors.white,
                                       ),
                                     ),

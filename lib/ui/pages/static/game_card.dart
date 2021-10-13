@@ -16,7 +16,7 @@ class GameCard extends StatelessWidget {
       tag: gameData.tag,
       child: Container(
         width: SizeConfig.screenWidth,
-        height: SizeConfig.screenWidth * 0.62,
+        height: SizeConfig.screenWidth * 0.64,
         margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -48,7 +48,7 @@ class GameCard extends StatelessWidget {
                   style:
                       TextStyles.title5.bold.colour(UiConstants.primaryColor),
                 ),
-                SizedBox(height: SizeConfig.padding8),
+                SizedBox(height: SizeConfig.padding4),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

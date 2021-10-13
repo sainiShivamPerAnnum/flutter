@@ -27,31 +27,16 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
-    "firstSuggestedDrinkName" : MessageLookupByLibrary.simpleMessage("Café Coado (Xícara)"),
-    "formPageActionButtonTitle" : MessageLookupByLibrary.simpleMessage("CALCULAR"),
-    "formPageAppBarTitle" : MessageLookupByLibrary.simpleMessage("Calculadora de Morte por Cafeína"),
-    "formPageCustomDrinkCaffeineAmountInputLabel" : MessageLookupByLibrary.simpleMessage("Cafeína"),
-    "formPageCustomDrinkCaffeineAmountInputSuffix" : MessageLookupByLibrary.simpleMessage("mg"),
-    "formPageCustomDrinkRadioTitle" : MessageLookupByLibrary.simpleMessage("Outra"),
-    "formPageCustomDrinkServingSizeInputLabel" : MessageLookupByLibrary.simpleMessage("Tamanho"),
-    "formPageCustomDrinkServingSizeInputSuffix" : MessageLookupByLibrary.simpleMessage("fl. oz"),
-    "formPageRadioListLabel" : MessageLookupByLibrary.simpleMessage("Escolha uma bebida"),
-    "formPageWeightInputLabel" : MessageLookupByLibrary.simpleMessage("Peso Corporal"),
-    "formPageWeightInputSuffix" : MessageLookupByLibrary.simpleMessage("libras"),
     "onboardText1" : MessageLookupByLibrary.simpleMessage("Economize ou invista \$ 100 e ganhe 1 ingresso de jogo todas as segundas-feiras"),
     "onboardText2" : MessageLookupByLibrary.simpleMessage("Use os ingressos para participar de jogos semanais emocionantes"),
     "onboardText3" : MessageLookupByLibrary.simpleMessage("Seu dinheiro continua crescendo com grandes retornos enquanto você joga jogos divertidos e ganha prêmios!"),
     "onboardTitle" : MessageLookupByLibrary.simpleMessage("Poupança baseada em jogos \n e investimentos🎉"),
     "onboradButton" : MessageLookupByLibrary.simpleMessage("INICIAR"),
-    "resultsPageAppBarTitle" : MessageLookupByLibrary.simpleMessage("Dosagens"),
     "resultsPageFirstDisclaimer" : m0,
     "resultsPageLethalDosageMessage" : m1,
-    "resultsPageLethalDosageTitle" : MessageLookupByLibrary.simpleMessage("Dose Letal"),
     "resultsPageSafeDosageMessage" : m2,
     "resultsPageSafeDosageTitle" : MessageLookupByLibrary.simpleMessage("Limite Seguro Diário"),
     "resultsPageSecondDisclaimer" : MessageLookupByLibrary.simpleMessage("*Se aplica a pessoas com 18 anos ou mais. Essa calculadora não substitui conselhos médicos profissionais."),
-    "secondSuggestedDrinkName" : MessageLookupByLibrary.simpleMessage("Espresso (Shot)"),
-    "splashSlowConnection" : MessageLookupByLibrary.simpleMessage("A conexão está demorando mais do que o normal"),
-    "thirdSuggestedDrinkName" : MessageLookupByLibrary.simpleMessage("Latte (Caneca)")
+    "splashSlowConnection" : MessageLookupByLibrary.simpleMessage("A conexão está demorando mais do que o normal")
   };
 }

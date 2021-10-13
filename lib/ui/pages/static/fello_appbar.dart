@@ -1,6 +1,7 @@
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -67,24 +68,20 @@ class FelloCurrency extends StatelessWidget {
             });
       },
       child: Container(
-        height: kToolbarHeight * 0.8,
-        padding: EdgeInsets.symmetric(
-          horizontal: SizeConfig.globalMargin,
-        ),
+        height: SizeConfig.avatarRadius * 2,
+        width: SizeConfig.screenWidth * 0.258,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(100),
           color: Colors.white.withOpacity(0.4),
         ),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             SvgPicture.asset(
-              "assets/vectors/icons/tickets.svg",
+              Assets.tickets,
               height: SizeConfig.iconSize1,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 6.0),
-              child: Text("200", style: TextStyles.body1.bold),
-            ),
+            Text("200", style: TextStyles.body2.bold),
             Icon(
               Icons.add_circle,
               size: SizeConfig.iconSize1,
@@ -102,10 +99,12 @@ class NotificationButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return CircleAvatar(
       backgroundColor: Colors.black,
-      radius: kToolbarHeight * 0.4,
-      child: SvgPicture.asset(
-        "assets/vectors/icons/alerts.svg",
-        height: kToolbarHeight * 0.32,
+      radius: SizeConfig.avatarRadius,
+      child: Padding(
+        padding: EdgeInsets.all(SizeConfig.padding12),
+        child: SvgPicture.asset(
+          Assets.alerts,
+        ),
       ),
     );
   }
@@ -120,9 +119,13 @@ class FelloAppBarBackButton extends StatelessWidget {
     return InkWell(
       onTap: onBackPress ?? () => AppState.backButtonDispatcher.didPopRoute(),
       child: CircleAvatar(
-        radius: kToolbarHeight * 0.4,
+        radius: SizeConfig.avatarRadius,
         backgroundColor: Colors.white.withOpacity(0.4),
-        child: Icon(Icons.arrow_back_rounded, color: UiConstants.primaryColor),
+        child: Padding(
+          padding: EdgeInsets.all(SizeConfig.padding4),
+          child:
+              Icon(Icons.arrow_back_rounded, color: UiConstants.primaryColor),
+        ),
       ),
     );
   }

@@ -85,6 +85,56 @@ class S {
     );
   }
 
+  /// `Finance`
+  String get navBarFinance {
+    return Intl.message(
+      'Finance',
+      name: 'navBarFinance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Play`
+  String get navBarPlay {
+    return Intl.message(
+      'Play',
+      name: 'navBarPlay',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save`
+  String get navBarWin {
+    return Intl.message(
+      'Save',
+      name: 'navBarWin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Want more tickets`
+  String get navWMT {
+    return Intl.message(
+      'Want more tickets',
+      name: 'navWMT',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `My Profile`
+  String get profileTitle {
+    return Intl.message(
+      'My Profile',
+      name: 'profileTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Game based Savings \n & Investments🎉`
   String get onboardTitle {
     return Intl.message(
@@ -130,156 +180,6 @@ class S {
     return Intl.message(
       'GET STARTED',
       name: 'onboradButton',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Death by Caffeine Calculator`
-  String get formPageAppBarTitle {
-    return Intl.message(
-      'Death by Caffeine Calculator',
-      name: 'formPageAppBarTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Drip Coffee (Cup)`
-  String get firstSuggestedDrinkName {
-    return Intl.message(
-      'Drip Coffee (Cup)',
-      name: 'firstSuggestedDrinkName',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Espresso (Shot)`
-  String get secondSuggestedDrinkName {
-    return Intl.message(
-      'Espresso (Shot)',
-      name: 'secondSuggestedDrinkName',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Latte (Mug)`
-  String get thirdSuggestedDrinkName {
-    return Intl.message(
-      'Latte (Mug)',
-      name: 'thirdSuggestedDrinkName',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Body Weight`
-  String get formPageWeightInputLabel {
-    return Intl.message(
-      'Body Weight',
-      name: 'formPageWeightInputLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `pounds`
-  String get formPageWeightInputSuffix {
-    return Intl.message(
-      'pounds',
-      name: 'formPageWeightInputSuffix',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Choose a drink`
-  String get formPageRadioListLabel {
-    return Intl.message(
-      'Choose a drink',
-      name: 'formPageRadioListLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `CALCULATE`
-  String get formPageActionButtonTitle {
-    return Intl.message(
-      'CALCULATE',
-      name: 'formPageActionButtonTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Other`
-  String get formPageCustomDrinkRadioTitle {
-    return Intl.message(
-      'Other',
-      name: 'formPageCustomDrinkRadioTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Serving Size`
-  String get formPageCustomDrinkServingSizeInputLabel {
-    return Intl.message(
-      'Serving Size',
-      name: 'formPageCustomDrinkServingSizeInputLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `fl. oz`
-  String get formPageCustomDrinkServingSizeInputSuffix {
-    return Intl.message(
-      'fl. oz',
-      name: 'formPageCustomDrinkServingSizeInputSuffix',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Caffeine`
-  String get formPageCustomDrinkCaffeineAmountInputLabel {
-    return Intl.message(
-      'Caffeine',
-      name: 'formPageCustomDrinkCaffeineAmountInputLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `mg`
-  String get formPageCustomDrinkCaffeineAmountInputSuffix {
-    return Intl.message(
-      'mg',
-      name: 'formPageCustomDrinkCaffeineAmountInputSuffix',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Dosages`
-  String get resultsPageAppBarTitle {
-    return Intl.message(
-      'Dosages',
-      name: 'resultsPageAppBarTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Lethal Dosage`
-  String get resultsPageLethalDosageTitle {
-    return Intl.message(
-      'Lethal Dosage',
-      name: 'resultsPageLethalDosageTitle',
       desc: '',
       args: [],
     );

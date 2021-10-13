@@ -7,8 +7,8 @@ import 'package:logger/logger.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class ProfileImage extends StatelessWidget {
-  final height;
-  const ProfileImage({this.height = 0.3});
+  final radius;
+  const ProfileImage({@required this.radius});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class ProfileImage extends StatelessWidget {
               border: Border.all(color: Colors.white, width: 1),
             ),
             child: CircleAvatar(
-              radius: kToolbarHeight * height,
+              radius: radius,
               backgroundImage: model.myUserDpUrl == null
                   ? AssetImage(
                       "images/profile.png",

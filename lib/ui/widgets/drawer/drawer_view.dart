@@ -39,18 +39,18 @@ class FDrawer extends StatelessWidget {
                       child: Row(
                         children: [
                           Container(
-                            padding: EdgeInsets.all(5),
+                            padding: EdgeInsets.all(SizeConfig.padding6),
                             decoration: BoxDecoration(
                               border: Border.all(
                                   color: UiConstants.primaryColor, width: 2),
                               shape: BoxShape.circle,
                             ),
                             child: ProfileImage(
-                              height: 0.5,
+                              radius: SizeConfig.screenWidth * 0.058,
                             ),
                           ),
                           SizedBox(
-                            width: 12,
+                            width: SizeConfig.padding12,
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,7 +82,8 @@ class FDrawer extends StatelessWidget {
                       children: List.generate(
                         model.drawerList.length,
                         (i) => Container(
-                          margin: EdgeInsets.symmetric(vertical: 16),
+                          margin: EdgeInsets.symmetric(
+                              vertical: SizeConfig.padding8),
                           child: TextButton.icon(
                             onPressed: () {
                               AppState.delegate.appState.currentAction =

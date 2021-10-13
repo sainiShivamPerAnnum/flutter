@@ -24,6 +24,16 @@ class Assets {
   static final String dummyCancelledCheque = 'images/Cancelled_cheque.png';
   static final String kycUnavailableAsset = 'images/kyc_unavailable.png';
 
+  //APPBAR
+
+  static final String alerts = "assets/vectors/icons/alerts.svg";
+  static final String tickets = "assets/vectors/icons/tickets.svg";
+  //NAVBAR
+
+  static final String navPlay = "assets/vectors/icons/support.svg";
+  static final String navSave = "assets/vectors/icons/wallet.svg";
+  static final String navWin = "assets/vectors/icons/medal.svg";
+
   //HOME TAB
 
   // PLAY

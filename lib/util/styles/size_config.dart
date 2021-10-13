@@ -63,7 +63,7 @@ class SizeConfig {
   static double get body4 => screenWidth * 0.028; //12;
 
   // ICON SIZES
-  static double get iconSize1 => screenWidth * 0.038; //16
+  static double get iconSize1 => screenWidth * 0.048; //16
   static double get iconSize2 => screenWidth * 0.033; //14
   static double get iconSize3 => screenWidth * 0.028; //12
 
@@ -82,10 +82,12 @@ class SizeConfig {
 
   static double get roundness32 => screenWidth * 0.077; //32
   static double get roundness56 => screenWidth * 0.135; //56
+  static double get roundness40 => screenWidth * 0.096; //40
 
   //SPECIFIC
 
   static double get navBarHeight => screenWidth * 0.212;
+  static double get avatarRadius => screenWidth * 0.048;
 
   // static double get headline1 => 40;
   // static double get headline2 => 38;

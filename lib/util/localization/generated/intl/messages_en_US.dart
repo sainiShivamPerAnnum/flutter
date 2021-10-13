@@ -27,35 +27,25 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
-    "firstSuggestedDrinkName" : MessageLookupByLibrary.simpleMessage("Drip Coffee (Cup)"),
-    "formPageActionButtonTitle" : MessageLookupByLibrary.simpleMessage("CALCULATE"),
-    "formPageAppBarTitle" : MessageLookupByLibrary.simpleMessage("Death by Caffeine Calculator"),
-    "formPageCustomDrinkCaffeineAmountInputLabel" : MessageLookupByLibrary.simpleMessage("Caffeine"),
-    "formPageCustomDrinkCaffeineAmountInputSuffix" : MessageLookupByLibrary.simpleMessage("mg"),
-    "formPageCustomDrinkRadioTitle" : MessageLookupByLibrary.simpleMessage("Other"),
-    "formPageCustomDrinkServingSizeInputLabel" : MessageLookupByLibrary.simpleMessage("Serving Size"),
-    "formPageCustomDrinkServingSizeInputSuffix" : MessageLookupByLibrary.simpleMessage("fl. oz"),
-    "formPageRadioListLabel" : MessageLookupByLibrary.simpleMessage("Choose a drink"),
-    "formPageWeightInputLabel" : MessageLookupByLibrary.simpleMessage("Body Weight"),
-    "formPageWeightInputSuffix" : MessageLookupByLibrary.simpleMessage("pounds"),
+    "navBarFinance" : MessageLookupByLibrary.simpleMessage("Finance"),
+    "navBarPlay" : MessageLookupByLibrary.simpleMessage("Play"),
+    "navBarWin" : MessageLookupByLibrary.simpleMessage("Save"),
+    "navWMT" : MessageLookupByLibrary.simpleMessage("Want more tickets"),
     "onboardText1" : MessageLookupByLibrary.simpleMessage("Save or invest ₹100 and get 1 game ticket every Monday"),
     "onboardText2" : MessageLookupByLibrary.simpleMessage("Use the tickets to participate in exciting weekly games"),
     "onboardText3" : MessageLookupByLibrary.simpleMessage("Your money keeps growing with great returns while you play fun games and win prizes!"),
     "onboardTitle" : MessageLookupByLibrary.simpleMessage("Game based Savings \n & Investments🎉"),
     "onboradButton" : MessageLookupByLibrary.simpleMessage("GET STARTED"),
     "playTrendingGames" : MessageLookupByLibrary.simpleMessage("Trending Games"),
-    "resultsPageAppBarTitle" : MessageLookupByLibrary.simpleMessage("Dosages"),
+    "profileTitle" : MessageLookupByLibrary.simpleMessage("My Profile"),
     "resultsPageFirstDisclaimer" : m0,
     "resultsPageLethalDosageMessage" : m1,
-    "resultsPageLethalDosageTitle" : MessageLookupByLibrary.simpleMessage("Lethal Dosage"),
     "resultsPageSafeDosageMessage" : m2,
     "resultsPageSafeDosageTitle" : MessageLookupByLibrary.simpleMessage("Daily Safe Maximum"),
     "resultsPageSecondDisclaimer" : MessageLookupByLibrary.simpleMessage("*Applies to age 18 and over. This calculator does not replace professional medical advice."),
-    "secondSuggestedDrinkName" : MessageLookupByLibrary.simpleMessage("Espresso (Shot)"),
     "splashNoInternet" : MessageLookupByLibrary.simpleMessage("No active internet connection"),
     "splashSecureText" : MessageLookupByLibrary.simpleMessage("100% safe and secure"),
     "splashSlowConnection" : MessageLookupByLibrary.simpleMessage("Connection taking longer than usual"),
-    "splashTagline" : MessageLookupByLibrary.simpleMessage("Your savings and gaming app"),
-    "thirdSuggestedDrinkName" : MessageLookupByLibrary.simpleMessage("Latte (Mug)")
+    "splashTagline" : MessageLookupByLibrary.simpleMessage("Your savings and gaming app")
   };
 }
