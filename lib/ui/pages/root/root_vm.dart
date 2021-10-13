@@ -5,6 +5,7 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
+import 'package:felloapp/core/service/user_coin_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -29,6 +30,7 @@ class RootViewModel extends BaseModel {
   final FcmHandler _fcmListener = locator<FcmHandler>();
   final LocalDBModel _localDBModel = locator<LocalDBModel>();
   final UserService _userService = locator<UserService>();
+  final UserCoinService _userCoinService = locator<UserCoinService>();
   final Logger _logger = locator<Logger>();
 
   BuildContext rootContext;
@@ -36,13 +38,13 @@ class RootViewModel extends BaseModel {
 
   String get myUserDpUrl => _userService.myUserDpUrl;
 
-  refresh() {
-    notifyListeners();
+  Future<void> refresh() async {
+    await _userCoinService.getUserCoinBalance();
   }
 
   String get userTicketCount =>
       _baseUtil.userTicketWallet?.getActiveTickets()?.toString();
-      
+
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   List<Widget> pages;
 
