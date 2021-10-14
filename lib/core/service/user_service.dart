@@ -70,16 +70,10 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     return false;
   }
 
-  // UserService() {}
-
   Future<void> init() async {
     _firebaseUser = FirebaseAuth.instance.currentUser;
-    if (_firebaseUser != null) {
-      await setBaseUser();
-      setProfilePicture();
-      getUserTicketWalletData();
-      getUserFundWalletData();
-    }
+    await setBaseUser();
+    await setProfilePicture();
   }
 
   Future<bool> signout() async {
@@ -104,15 +98,22 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   Future<void> setBaseUser() async {
     if (_firebaseUser != null) {
       _baseUser = await _dbModel.getUser(_firebaseUser?.uid);
+      _logger.d("Base user initialized, UID: ${_baseUser?.uid}");
+
       _idToken = await CacheManager.readCache(key: 'token');
-      if (_idToken == null) {
-        _idToken = await _firebaseUser?.getIdToken();
-        CacheManager.writeCache(
-            key: 'token', value: _idToken, type: CacheType.string);
-      }
+      _idToken == null
+          ? _logger.d("No FCM token in pref")
+          : _logger.d("FCM token from pref: $_idToken");
+
+      _baseUser?.client_token != null
+          ? _logger
+              .d("Current FCM token from baseUser : ${_baseUser?.client_token}")
+          : _logger.d("No FCM token in firestored");
+
+      _myUserName = _baseUser?.name;
+    } else {
+      _logger.d("Firebase User is null");
     }
-    _myUserName = _baseUser?.name;
-    _logger.d("Base user initialized, UID: ${_baseUser?.uid}");
   }
 
   Future<void> setProfilePicture() async {

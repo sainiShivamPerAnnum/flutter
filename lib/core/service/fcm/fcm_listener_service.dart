@@ -1,8 +1,13 @@
+import 'dart:developer';
 import 'dart:io';
+
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/fcm_topics.dart';
@@ -18,6 +23,8 @@ class FcmListener extends ChangeNotifier {
   final DBModel _dbModel = locator<DBModel>();
   final Logger logger = locator<Logger>();
   final FcmHandler _handler = locator<FcmHandler>();
+  final UserService _userService = locator<UserService>();
+  // final FcmTokenService _fcmTokenService = locator<FcmTokenService>();
 
   FirebaseMessaging _fcm;
   bool isTambolaNotificationLoading = false;
@@ -44,6 +51,43 @@ class FcmListener extends ChangeNotifier {
 
   Future<FirebaseMessaging> setupFcm() async {
     _fcm = FirebaseMessaging.instance;
+    _fcm != null
+        ? logger.d("Fcm instance created")
+        : logger.d("Fcm instance not created");
+
+    String idToken = await CacheManager.readCache(key: 'token');
+
+    idToken == null
+        ? logger.d("No FCM token in pref")
+        : logger.d("FCM token from pref: $idToken");
+
+    if (idToken == null) {
+      idToken = await _fcm.getToken();
+      await CacheManager.writeCache(
+          key: 'token', value: idToken, type: CacheType.string);
+      logger.d("fcm token added to pref: $idToken");
+    }
+
+    if (_userService.baseUser != null) {
+      if (_userService.baseUser.client_token != idToken) {
+        _saveDeviceToken(idToken);
+        logger.d("User fcm token updated in firestore");
+      } else {
+        logger.d("Current device fcm and firestore fcm is same");
+      }
+    } else {
+      logger.d("BaseUser null in user service.");
+    }
+
+    // ///update fcm user token if required
+    // Stream<String> fcmStream = _fcm.onTokenRefresh;
+    // fcmStream.listen((token) async {
+    //   logger.d("OnTokenRefresh called, updated FCM token: $token");
+    //   await CacheManager.writeCache(
+    //       key: 'token', value: token, type: CacheType.string);
+    //   logger.d("FCM token added to prefs.");
+    // });
+
     _fcm.getInitialMessage().then((RemoteMessage message) {
       logger.d("onMessage recieved: " + message.toString());
       if (message != null && message.data != null) {
@@ -81,15 +125,6 @@ class FcmListener extends ChangeNotifier {
     ///setup android notification channels
     if (Platform.isAndroid) {
       _androidNativeSetup();
-    }
-
-    ///update fcm user token if required
-    if (_baseUtil.myUser != null && _baseUtil.myUser.mobile != null) {
-      Stream<String> fcmStream = _fcm.onTokenRefresh;
-      fcmStream.listen((token) async {
-        logger.d("Updating fcm token");
-        await _saveDeviceToken(token);
-      });
     }
 
     return _fcm;

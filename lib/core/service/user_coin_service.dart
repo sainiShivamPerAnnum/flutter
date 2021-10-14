@@ -15,7 +15,6 @@ class UserCoinService
 
   int get flcBalance => _flcBalance;
 
-
   void setFlcBalance(int balance) {
     if (_flcBalance == null) {
       _flcBalance = balance;
@@ -30,7 +29,7 @@ class UserCoinService
   Future<void> getUserCoinBalance() async {
     final ApiResponse<FlcModel> response =
         await _flcActionsRepo.getCoinBalance();
-    _logger.d(response..model);
+    _logger.d(response.model);
     setFlcBalance(response.model?.flcBalance);
   }
 }

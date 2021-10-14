@@ -618,9 +618,12 @@ class _LoginControllerState extends State<LoginController>
   Future _onSignUpComplete() async {
     await BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
     await BaseAnalytics.logUserProfile(baseProvider.myUser);
-    await userService.init();
+    final UserService _userService = locator<UserService>();
+
     await baseProvider.init();
+    await _userService.init();
     await fcmProvider.setupFcm();
+
     AppState.isOnboardingInProgress = false;
     if (baseProvider.isLoginNextInProgress == true) {
       baseProvider.isLoginNextInProgress = false;
