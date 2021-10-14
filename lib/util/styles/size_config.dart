@@ -73,16 +73,21 @@ class SizeConfig {
   static double get padding8 => screenWidth * 0.019;
   static double get padding12 => screenWidth * 0.029;
   static double get padding16 => screenWidth * 0.038;
+  static double get padding20 => screenWidth * 0.048;
   static double get padding24 => screenWidth * 0.058;
+  static double get padding32 => screenWidth * 0.077;
+  static double get padding54 => screenWidth * 0.130;
 
   // MARGINS
   static double get pageHorizontalMargins => screenWidth * 0.0579;
 
   //BORDER RADIUS
 
+  static double get roundness12 => screenWidth * 0.028; //12
+  static double get roundness24 => screenWidth * 0.058; //24
   static double get roundness32 => screenWidth * 0.077; //32
-  static double get roundness56 => screenWidth * 0.135; //56
   static double get roundness40 => screenWidth * 0.096; //40
+  static double get roundness56 => screenWidth * 0.135; //56
 
   //SPECIFIC
 

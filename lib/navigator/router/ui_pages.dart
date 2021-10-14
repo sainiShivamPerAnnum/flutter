@@ -36,6 +36,7 @@ const String CricketHomePath = 'cricketHome';
 const String TransactionsHistoryPath = 'transHistory';
 const String KycDetailsPath = 'kycDetails';
 const String BankDetailsPath = 'bankDetails';
+const String AugmontGoldBuyPath = '/augBuy';
 
 enum Pages {
   Splash,
@@ -72,7 +73,8 @@ enum Pages {
   CricketHome,
   TxnHistory,
   KycDetails,
-  BankDetails
+  BankDetails,
+  AugGoldBuy
 }
 
 class PageConfiguration {
@@ -269,4 +271,10 @@ PageConfiguration BankDetailsPageConfig = PageConfiguration(
   key: 'BankDetails',
   path: BankDetailsPath,
   uiPage: Pages.BankDetails,
+);
+
+PageConfiguration AugmontGoldBuyPageConfig = PageConfiguration(
+  key: 'augGoldBuy',
+  path: AugmontGoldBuyPath,
+  uiPage: Pages.AugGoldBuy,
 );

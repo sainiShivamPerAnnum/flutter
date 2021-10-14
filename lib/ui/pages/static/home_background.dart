@@ -5,10 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class HomeBackground extends StatelessWidget {
+  final WhiteBackground whiteBackground;
   final Widget child;
-  HomeBackground({
-    this.child,
-  });
+  HomeBackground({this.whiteBackground, this.child});
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -17,6 +16,7 @@ class HomeBackground extends StatelessWidget {
         const RadialGradientLeft(),
         const RadialGradientRight(),
         const Thunderstorm(),
+        if (whiteBackground != null) whiteBackground,
         child,
       ],
     );

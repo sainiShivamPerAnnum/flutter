@@ -12,73 +12,8 @@ class FelloTheme {
       primaryColor: UiConstants.primaryColor,
       primarySwatch: UiConstants.kPrimaryColor,
       visualDensity: VisualDensity.adaptivePlatformDensity,
-      textTheme: GoogleFonts.montserratTextTheme(
-          // //For titles and headings
-          // headline1: GoogleFonts.montserrat(
-          //   color: UiConstants.primaryColor,
-          //   fontWeight: FontWeight.w700,
-          //   fontSize: SizeConfig.title1,
-          // ),
-          // headline2: GoogleFonts.montserrat(
-          //   color: UiConstants.primaryColor,
-          //   fontWeight: FontWeight.w700,
-          //   fontSize: SizeConfig.title2,
-          // ),
-          // headline3: GoogleFonts.montserrat(
-          //   color: UiConstants.primaryColor,
-          //   fontWeight: FontWeight.w700,
-          //   fontSize: SizeConfig.title3,
-          // ),
-          // // headline4: GoogleFonts.montserrat(
-          // //   color: UiConstants.primaryColor,
-          // //   fontWeight: FontWeight.w500,
-          // //   fontSize: SizeConfig.headline4,
-          // // ),
-          // // headline5: GoogleFonts.montserrat(
-          // //   color: UiConstants.primaryColor,
-          // //   fontWeight: FontWeight.w500,
-          // //   fontSize: SizeConfig.headline5,
-          // // ),
-          // // headline6: GoogleFonts.montserrat(
-          // //   color: UiConstants.primaryColor,
-          // //   fontWeight: FontWeight.w500,
-          // //   fontSize: SizeConfig.headline6,
-          // // ),
-
-          // // For body and overall content
-          // bodyText1: GoogleFonts.montserrat(
-          //   color: Color(0xff333333),
-          //   fontSize: SizeConfig.body1,
-          // ),
-          // bodyText2: GoogleFonts.montserrat(
-          //   color: Color(0xff333333),
-          //   fontSize: SizeConfig.body2,
-          // ),
-
-          // // For mini texts
-          // subtitle1: GoogleFonts.montserrat(
-          //   color: Color(0xff333333),
-          //   fontSize: SizeConfig.body3,
-          // ),
-          // // subtitle2: GoogleFonts.montserrat(
-          // //   color: Color(0xff333333),
-          // //   fontSize: SizeConfig.subtitle2,
-          // // ),
-
-          // // Area specific
-          // // button: GoogleFonts.montserrat(
-          // //   color: Color(0xff333333),
-          // //   fontSize: SizeConfig.button,
-          // // ),
-          // // overline: GoogleFonts.montserrat(
-          // //   color: Color(0xff333333),
-          // //   fontSize: SizeConfig.caption,
-          // // ),
-          // // caption: GoogleFonts.montserrat(
-          // //   color: Color(0xff333333),
-          // //   fontSize: SizeConfig.caption,
-          // // ),
-          ),
+      colorScheme: ColorScheme.fromSwatch(accentColor: Colors.white),
+      textTheme: GoogleFonts.montserratTextTheme(),
       inputDecorationTheme: InputDecorationTheme(
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(

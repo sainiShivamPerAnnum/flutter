@@ -23,12 +23,28 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
 
-class BuyGoldBtnVM extends BaseModel {
+class AugmontGoldBuyViewModel extends BaseModel {
+  bool isGoldBuyInProgress = false;
+  TextEditingController goldAmountController;
+
+  init() {
+    goldAmountController = TextEditingController();
+  }
+
+  initiateBuy() async {
+    isGoldBuyInProgress = true;
+    notifyListeners();
+    if (await BaseUtil.showNoInternetAlert()) return;
+    Haptic.vibrate();
+    _baseUtil.isAugDepositRouteLogicInProgress = true;
+    _onDepositClicked();
+  }
+
   static const int STATUS_UNAVAILABLE = 0;
   static const int STATUS_REGISTER = 1;
   static const int STATUS_OPEN = 2;
   final Log log = new Log("AugmontService");
-  GlobalKey<AugmontDepositModalSheetState> _modalKey2 = GlobalKey();
+  // GlobalKey<AugmontDepositModalSheetState> _modalKey2 = GlobalKey();
   BuildContext augContext;
   BaseUtil _baseUtil = locator<BaseUtil>();
   DBModel _dbModel = locator<DBModel>();
@@ -107,18 +123,6 @@ class BuyGoldBtnVM extends BaseModel {
           addToScreenStack: true,
           content: AugmontRegisterModalSheet(),
           isBarrierDismissable: false);
-      // showModalBottomSheet(
-      //     isDismissible: false,
-      //     // backgroundColor: Colors.transparent,
-      //     shape: RoundedRectangleBorder(
-      //       borderRadius: BorderRadius.circular(16),
-      //     ),
-      //     context: augContext,
-      //     isScrollControlled: true,
-      //     builder: (context) {
-      //       return AugmontRegisterModalSheet();
-      //     });
-
       _baseUtil.isAugDepositRouteLogicInProgress = false;
       setState(ViewState.Idle);
 
@@ -136,19 +140,24 @@ class BuyGoldBtnVM extends BaseModel {
         );
         return false;
       } else {
-        BaseUtil.openModalBottomSheet(
-            isBarrierDismissable: false,
-            content: AugmontDepositModalSheet(
-              key: _modalKey2,
-              onDepositConfirmed: (double amount) {
-                _augmontModel.initiateGoldPurchase(
-                    _baseUtil.augmontGoldRates, amount);
-                _augmontModel.setAugmontTxnProcessListener(
-                    _onDepositTransactionComplete);
-              },
-              currentRates: _baseUtil.augmontGoldRates,
-            ),
-            addToScreenStack: true);
+        await _augmontModel.initiateGoldPurchase(_baseUtil.augmontGoldRates,
+            double.tryParse(goldAmountController.text));
+
+        await _augmontModel
+            .setAugmontTxnProcessListener(_onDepositTransactionComplete);
+        // BaseUtil.openModalBottomSheet(
+        //     isBarrierDismissable: false,
+        //     content: AugmontDepositModalSheet(
+        //       key: _modalKey2,
+        //       onDepositConfirmed: (double amount) {
+        //         _augmontModel.initiateGoldPurchase(
+        //             _baseUtil.augmontGoldRates, amount);
+        //         _augmontModel.setAugmontTxnProcessListener(
+        //             _onDepositTransactionComplete);
+        //       },
+        //       currentRates: _baseUtil.augmontGoldRates,
+        //     ),
+        //     addToScreenStack: true);
         // showModalBottomSheet(
         //     isDismissible: false,
         //     // backgroundColor: Colors.transparent,
@@ -275,7 +284,7 @@ class BuyGoldBtnVM extends BaseModel {
         }
 
         ///update UI
-        _modalKey2.currentState.onDepositComplete(true);
+        onDepositComplete(true);
         _augmontModel.completeTransaction();
         _baseUtil.refreshAugmontBalance();
         return true;
@@ -284,14 +293,14 @@ class BuyGoldBtnVM extends BaseModel {
       //razorpay payment failed
       log.debug('Payment cancelled');
       if (_baseUtil.currentAugmontTxn != null) {
-        _modalKey2.currentState.onDepositComplete(false);
+        onDepositComplete(false);
         _augmontModel.completeTransaction();
       }
     } else if (txn.tranStatus == UserTransaction.TRAN_STATUS_PENDING) {
       //razorpay completed but augmont purchase didnt go through
       log.debug('Payment pending');
       if (_baseUtil.currentAugmontTxn != null) {
-        _modalKey2.currentState.onDepositComplete(false);
+        onDepositComplete(false);
         _augmontModel.completeTransaction();
       }
     }
@@ -300,17 +309,17 @@ class BuyGoldBtnVM extends BaseModel {
   onDepositComplete(bool flag) {
     // _isDepositInProgress = false;
     // setState(() {});
-
+    isGoldBuyInProgress = false;
+    notifyListeners();
     if (flag) {
       // BaseUtil.showPositiveAlert(
       //     'SUCCESS', 'You gold deposit was confirmed!', context);
-      AppState.screenStack.add(ScreenItem.dialog);
       Haptic.vibrate();
-      showDialog(
-        context: augContext,
-        barrierDismissible: false,
-        builder: (BuildContext context) => SuccessDialog(),
-      );
+
+      BaseUtil.openDialog(
+          addToScreenStack: true,
+          content: SuccessDialog(),
+          isBarrierDismissable: false);
     } else {
       AppState.backButtonDispatcher.didPopRoute();
       BaseUtil.showNegativeAlert('Failed',

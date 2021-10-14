@@ -1,22 +1,25 @@
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
-import 'package:felloapp/ui/widgets/buttons/buy_gold_button/buyGoldBtn_view.dart';
 import 'package:felloapp/ui/widgets/buttons/sell_gold_button/sellGoldBtn_view.dart';
 import 'package:felloapp/ui/widgets/mini_trans_card/mini_trans_card_view.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/palette.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class Save extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return BaseView<SaveViewModel>(
       onModelReady: (model) {},
       builder: (ctx, model, child) {
@@ -55,85 +58,134 @@ class Save extends StatelessWidget {
                       child: Row(
                         children: [
                           Expanded(
-                            child: BuyGoldBtn(
-                              activeButtonUI: Container(
+                              child: Center(
+                            child: InkWell(
+                              onTap: () {
+                                AppState.delegate.appState.currentAction =
+                                    PageAction(
+                                        state: PageState.addPage,
+                                        page: AugmontGoldBuyPageConfig);
+                              },
+                              child: Container(
+                                width: SizeConfig.screenWidth * 0.367,
+                                height: SizeConfig.screenWidth * 0.12,
                                 decoration: BoxDecoration(
-                                  color: UiConstants.primaryColor,
-                                  borderRadius: BorderRadius.circular(100),
-                                ),
-                                padding: EdgeInsets.symmetric(vertical: 16),
-                                alignment: Alignment.center,
-                                child: Text("BUY",
-                                    style: TextStyles.title3.bold
-                                        .colour(Colors.white)),
-                              ),
-                              loadingButtonUI: Container(
-                                decoration: BoxDecoration(
-                                  color: UiConstants.primaryColor,
-                                  borderRadius: BorderRadius.circular(100),
-                                ),
-                                padding: EdgeInsets.symmetric(vertical: 16),
-                                alignment: Alignment.center,
-                                child: SpinKitThreeBounce(
-                                  color: Colors.white,
-                                ),
-                              ),
-                              disabledButtonUI: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[400],
-                                  borderRadius: BorderRadius.circular(100),
-                                ),
-                                padding: EdgeInsets.symmetric(vertical: 16),
+                                    borderRadius: BorderRadius.circular(100),
+                                    color: UiConstants.primaryColor),
                                 alignment: Alignment.center,
                                 child: Text(
-                                  "Offline",
-                                  style: TextStyles.title3.bold
-                                      .colour(Colors.white),
+                                  locale.saveBuyButton,
+                                  style: TextStyles.title5
+                                      .colour(Colors.white)
+                                      .bold,
                                 ),
                               ),
                             ),
-                          ),
+                          )
+                              // BuyGoldBtn(
+                              //   activeButtonUI: Container(
+                              //     decoration: BoxDecoration(
+                              //       color: UiConstants.primaryColor,
+                              //       borderRadius: BorderRadius.circular(100),
+                              //     ),
+                              //     padding: EdgeInsets.symmetric(vertical: 16),
+                              //     alignment: Alignment.center,
+                              //     child: Text("BUY",
+                              //         style: TextStyles.title3.bold
+                              //             .colour(Colors.white)),
+                              //   ),
+                              //   loadingButtonUI: Container(
+                              //     decoration: BoxDecoration(
+                              //       color: UiConstants.primaryColor,
+                              //       borderRadius: BorderRadius.circular(100),
+                              //     ),
+                              //     padding: EdgeInsets.symmetric(vertical: 16),
+                              //     alignment: Alignment.center,
+                              //     child: SpinKitThreeBounce(
+                              //       color: Colors.white,
+                              //     ),
+                              //   ),
+                              //   disabledButtonUI: Container(
+                              //     decoration: BoxDecoration(
+                              //       color: Colors.grey[400],
+                              //       borderRadius: BorderRadius.circular(100),
+                              //     ),
+                              //     padding: EdgeInsets.symmetric(vertical: 16),
+                              //     alignment: Alignment.center,
+                              //     child: Text(
+                              //       "Offline",
+                              //       style: TextStyles.title3.bold
+                              //           .colour(Colors.white),
+                              //     ),
+                              //   ),
+                              // ),
+                              ),
                           SizedBox(width: 24),
                           Expanded(
-                            child: SellGoldBtn(
-                              activeButtonUI: Container(
+                              child: Center(
+                            child: InkWell(
+                              onTap: () {
+                                AppState.delegate.appState.currentAction =
+                                    PageAction(
+                                        state: PageState.addPage,
+                                        page: AugmontGoldBuyPageConfig);
+                              },
+                              child: Container(
+                                width: SizeConfig.screenWidth * 0.367,
+                                height: SizeConfig.screenWidth * 0.12,
                                 decoration: BoxDecoration(
                                   border: Border.all(
-                                      color: UiConstants.tertiarySolid),
+                                      color: UiConstants.tertiarySolid,
+                                      width: 2),
                                   borderRadius: BorderRadius.circular(100),
                                 ),
-                                padding: EdgeInsets.symmetric(vertical: 16),
-                                alignment: Alignment.center,
-                                child:
-                                    Text("SELL", style: TextStyles.title3.bold),
-                              ),
-                              loadingButtonUI: Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: UiConstants.tertiarySolid),
-                                  borderRadius: BorderRadius.circular(100),
-                                ),
-                                padding: EdgeInsets.symmetric(vertical: 16),
-                                alignment: Alignment.center,
-                                child: SpinKitThreeBounce(
-                                  color: UiConstants.tertiarySolid,
-                                ),
-                              ),
-                              disabledButtonUI: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[400],
-                                  borderRadius: BorderRadius.circular(100),
-                                ),
-                                padding: EdgeInsets.symmetric(vertical: 16),
                                 alignment: Alignment.center,
                                 child: Text(
-                                  "Offline",
-                                  style: TextStyles.title3.bold
-                                      .colour(Colors.white),
+                                  locale.saveSellButton,
+                                  style: TextStyles.title5.bold,
                                 ),
                               ),
                             ),
-                          ),
+                          )
+                              // SellGoldBtn(
+                              //   activeButtonUI: Container(
+                              //     decoration: BoxDecoration(
+                              //       border: Border.all(
+                              //           color: UiConstants.tertiarySolid),
+                              //       borderRadius: BorderRadius.circular(100),
+                              //     ),
+                              //     padding: EdgeInsets.symmetric(vertical: 16),
+                              //     alignment: Alignment.center,
+                              //     child:
+                              //         Text("SELL", style: TextStyles.title3.bold),
+                              //   ),
+                              //   loadingButtonUI: Container(
+                              //     decoration: BoxDecoration(
+                              //       border: Border.all(
+                              //           color: UiConstants.tertiarySolid),
+                              //       borderRadius: BorderRadius.circular(100),
+                              //     ),
+                              //     padding: EdgeInsets.symmetric(vertical: 16),
+                              //     alignment: Alignment.center,
+                              //     child: SpinKitThreeBounce(
+                              //       color: UiConstants.tertiarySolid,
+                              //     ),
+                              //   ),
+                              //   disabledButtonUI: Container(
+                              //     decoration: BoxDecoration(
+                              //       color: Colors.grey[400],
+                              //       borderRadius: BorderRadius.circular(100),
+                              //     ),
+                              //     padding: EdgeInsets.symmetric(vertical: 16),
+                              //     alignment: Alignment.center,
+                              //     child: Text(
+                              //       "Offline",
+                              //       style: TextStyles.title3.bold
+                              //           .colour(Colors.white),
+                              //     ),
+                              //   ),
+                              // ),
+                              ),
                         ],
                       ),
                     ),

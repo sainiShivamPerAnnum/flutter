@@ -43,6 +43,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "resultsPageSafeDosageMessage" : m2,
     "resultsPageSafeDosageTitle" : MessageLookupByLibrary.simpleMessage("Daily Safe Maximum"),
     "resultsPageSecondDisclaimer" : MessageLookupByLibrary.simpleMessage("*Applies to age 18 and over. This calculator does not replace professional medical advice."),
+    "saveBuyButton" : MessageLookupByLibrary.simpleMessage("BUY"),
+    "saveSellButton" : MessageLookupByLibrary.simpleMessage("SELL"),
     "splashNoInternet" : MessageLookupByLibrary.simpleMessage("No active internet connection"),
     "splashSecureText" : MessageLookupByLibrary.simpleMessage("100% safe and secure"),
     "splashSlowConnection" : MessageLookupByLibrary.simpleMessage("Connection taking longer than usual"),

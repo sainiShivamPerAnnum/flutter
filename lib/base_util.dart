@@ -2,6 +2,7 @@
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
@@ -24,6 +25,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fail_types.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -469,16 +471,36 @@ class BaseUtil extends ChangeNotifier {
     )..show(context);
   }
 
-  Future<void> openDialog(
+  static Future<void> openDialog(
       {Widget content,
+      bool addToScreenStack,
+      bool hapticVibrate,
       bool isBarrierDismissable,
       ValueChanged<dynamic> callback}) async {
+    if (addToScreenStack != null && addToScreenStack == true)
+      AppState.screenStack.add(ScreenItem.dialog);
+    if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
     await showDialog(
       context: AppState.delegate.navigatorKey.currentContext,
       barrierDismissible: isBarrierDismissable,
       builder: (ctx) => content,
       useSafeArea: true,
     );
+  }
+
+  static Future<void> openModalBottomSheet({
+    Widget content,
+    bool addToScreenStack,
+    bool hapticVibrate,
+    bool isBarrierDismissable,
+  }) {
+    if (addToScreenStack != null && addToScreenStack == true)
+      AppState.screenStack.add(ScreenItem.dialog);
+    if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
+    showModalBottomSheet(
+        isDismissible: isBarrierDismissable,
+        context: AppState.delegate.navigatorKey.currentContext,
+        builder: (ctx) => content);
   }
 
   AuthCredential generateAuthCredential(String verificationId, String smsCode) {

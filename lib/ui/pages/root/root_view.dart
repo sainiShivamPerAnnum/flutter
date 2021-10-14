@@ -29,6 +29,12 @@ class Root extends StatelessWidget {
           key: model.scaffoldKey,
           drawer: FDrawer(),
           body: HomeBackground(
+            whiteBackground: WhiteBackground(
+              color: Color(0xffF1F6FF),
+              height: AppState.getCurrentTabIndex == 0
+                  ? kToolbarHeight * 2.7
+                  : kToolbarHeight * 2.8,
+            ),
             child: Stack(
               children: [
                 FelloAppBar(
@@ -43,12 +49,6 @@ class Root extends StatelessWidget {
                     SizedBox(width: 16),
                     NotificationButton(),
                   ],
-                ),
-                WhiteBackground(
-                  color: Color(0xffF1F6FF),
-                  height: AppState.getCurrentTabIndex == 0
-                      ? kToolbarHeight * 2.7
-                      : kToolbarHeight * 2.8,
                 ),
                 SafeArea(
                   child: Container(

@@ -125,6 +125,26 @@ class S {
     );
   }
 
+  /// `BUY`
+  String get saveBuyButton {
+    return Intl.message(
+      'BUY',
+      name: 'saveBuyButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `SELL`
+  String get saveSellButton {
+    return Intl.message(
+      'SELL',
+      name: 'saveSellButton',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `My Profile`
   String get profileTitle {
     return Intl.message(

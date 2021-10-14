@@ -37,7 +37,7 @@ class TambolaHomeView extends StatelessWidget {
                   child: Container(
                     width: SizeConfig.screenWidth,
                     height: SizeConfig.screenHeight,
-                    margin: EdgeInsets.only(top: kToolbarHeight * 1.6),
+                    margin: EdgeInsets.only(top: kToolbarHeight),
                     child: Column(
                       children: [
                         GameCard(

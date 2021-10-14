@@ -163,7 +163,7 @@ class UserProfileViewModel extends BaseModel {
     if (await BaseUtil.showNoInternetAlert()) return;
     var _status = await Permission.photos.status;
     if (_status.isRestricted || _status.isLimited || _status.isDenied) {
-      _baseUtil.openDialog(
+      BaseUtil.openDialog(
           isBarrierDismissable: false,
           content: ConfirmActionDialog(
               title: "Request Permission",
@@ -196,8 +196,8 @@ class UserProfileViewModel extends BaseModel {
     if (selectedProfilePicture != null) {
       print(File(selectedProfilePicture.path).lengthSync() / 1024);
       Haptic.vibrate();
-      AppState.screenStack.add(ScreenItem.dialog);
-      await _baseUtil.openDialog(
+      await BaseUtil.openDialog(
+        addToScreenStack: true,
         isBarrierDismissable: false,
         content: ChangeProfilePicture(
           image: File(selectedProfilePicture.path),
