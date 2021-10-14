@@ -43,6 +43,7 @@ class FDrawerVM extends BaseModel {
     DrawerModel(
       icon: Icon(Icons.ac_unit),
       title: "About Digital Gold",
+      pageConfig: AugmontGoldDetailsPageConfig,
     ),
   ];
 

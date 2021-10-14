@@ -19,10 +19,12 @@ import 'package:felloapp/ui/pages/onboarding/getstarted/get_started_page.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_page.dart';
 import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_view.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/edit_augmont_bank_details.dart';
 import 'package:felloapp/ui/pages/others/finance/finance_report.dart';
 import 'package:felloapp/ui/pages/others/finance/icici/mf_details_page.dart';
-import 'package:felloapp/ui/pages/others/games/cricket/cricket_view.dart';
+import 'package:felloapp/ui/pages/others/games/cricket/cricket_game/cricket_game_view.dart';
+import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/dailyPicksDraw/dailyPicksDraw_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/show_all_tickets.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/summary_tickets_display.dart';
@@ -245,10 +247,16 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(NotficationsPage(), NotificationsConfig);
           break;
         case Pages.CricketHome:
-          _addPageData(CricketView(), CricketHomePageConfig);
+          _addPageData(CricketHomeView(), CricketHomePageConfig);
+          break;
+        case Pages.CricketGame:
+          _addPageData(CricketGameView(), CricketGamePageConfig);
           break;
         case Pages.AugGoldBuy:
           _addPageData(AugmontGoldBuyView(), CricketHomePageConfig);
+          break;
+        case Pages.AugGoldDetails:
+          _addPageData(AugmontGoldDetailsView(), AugmontGoldDetailsPageConfig);
           break;
         default:
           break;
@@ -414,8 +422,14 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.CricketHome:
         CricketHomePageConfig.currentPageAction = action;
         break;
+      case Pages.CricketGame:
+        CricketGamePageConfig.currentPageAction = action;
+        break;
       case Pages.AugGoldBuy:
         AugmontGoldBuyPageConfig.currentPageAction = action;
+        break;
+      case Pages.AugGoldDetails:
+        AugmontGoldDetailsPageConfig.currentPageAction = action;
         break;
       default:
         break;

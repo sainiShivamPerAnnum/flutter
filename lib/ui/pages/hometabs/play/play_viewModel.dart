@@ -54,7 +54,7 @@ class PlayViewModel extends BaseModel {
             "https://store-images.s-microsoft.com/image/apps.7421.14526104391731353.3efa198c-600d-47e2-a495-171846e34e31.74622fdc-08ff-434d-9cec-a4b5266dc24c?mode=scale&q=90&h=1080&w=1920"),
     GameModel(
         gameName: "Cricket",
-        pageConfig: THomePageConfig,
+        pageConfig: CricketHomePageConfig,
         tag: 'cricket',
         thumbnailImage:
             "https://www.mpl.live/blog/wp-content/uploads/2020/09/WCC2-mobile-game-becomes-the-worlds-No.1-cricket-game-silently-1.png")

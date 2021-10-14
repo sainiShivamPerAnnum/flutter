@@ -33,10 +33,12 @@ const String TPickDraw = 'tPickDraw';
 const String TWeeklyResult = 'tWeeklyResult';
 const String TSummaryDetails = 'tSummaryDetails';
 const String CricketHomePath = 'cricketHome';
+const String CricketGamePath = 'cricketGame';
 const String TransactionsHistoryPath = 'transHistory';
 const String KycDetailsPath = 'kycDetails';
 const String BankDetailsPath = 'bankDetails';
 const String AugmontGoldBuyPath = '/augBuy';
+const String AugmontGoldDetailsPath = '/augDetails';
 
 enum Pages {
   Splash,
@@ -71,10 +73,12 @@ enum Pages {
   TSummaryDetails,
   Notifications,
   CricketHome,
+  CricketGame,
   TxnHistory,
   KycDetails,
   BankDetails,
-  AugGoldBuy
+  AugGoldBuy,
+  AugGoldDetails
 }
 
 class PageConfiguration {
@@ -256,6 +260,12 @@ PageConfiguration CricketHomePageConfig = PageConfiguration(
   uiPage: Pages.CricketHome,
 );
 
+PageConfiguration CricketGamePageConfig = PageConfiguration(
+  key: 'CricketGame',
+  path: CricketGamePath,
+  uiPage: Pages.CricketGame,
+);
+
 PageConfiguration TransactionsHistoryPageConfig = PageConfiguration(
   key: 'TxnHistory',
   path: TransactionsHistoryPath,
@@ -277,4 +287,10 @@ PageConfiguration AugmontGoldBuyPageConfig = PageConfiguration(
   key: 'augGoldBuy',
   path: AugmontGoldBuyPath,
   uiPage: Pages.AugGoldBuy,
+);
+
+PageConfiguration AugmontGoldDetailsPageConfig = PageConfiguration(
+  key: 'augGoldDetails',
+  path: AugmontGoldDetailsPath,
+  uiPage: Pages.AugGoldDetails,
 );
