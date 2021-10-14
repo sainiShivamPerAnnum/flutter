@@ -87,10 +87,16 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                       color: Colors.white,
                                       shape: BoxShape.circle,
                                     ),
-                                    padding:
-                                        EdgeInsets.all(SizeConfig.padding12),
-                                    child: ProfileImage(
-                                      radius: SizeConfig.screenWidth * 0.25,
+                                    padding: EdgeInsets.all(4),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      padding: EdgeInsets.all(12),
+                                      child: ProfileImageSE(
+                                        radius: SizeConfig.screenWidth * 0.25,
+                                      ),
                                     ),
                                   ),
                                 ),

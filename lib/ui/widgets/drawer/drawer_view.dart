@@ -6,7 +6,6 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_view.dart';
-
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/ui/widgets/drawer/drawer_vm.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -45,7 +44,7 @@ class FDrawer extends StatelessWidget {
                                   color: UiConstants.primaryColor, width: 2),
                               shape: BoxShape.circle,
                             ),
-                            child: ProfileImage(
+                            child: ProfileImageSE(
                               radius: SizeConfig.screenWidth * 0.058,
                             ),
                           ),

@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
-class ProfileImage extends StatelessWidget {
+class ProfileImageSE extends StatelessWidget {
   final radius;
-  const ProfileImage({@required this.radius});
+  ProfileImageSE({@required this.radius});
 
   @override
   Widget build(BuildContext context) {

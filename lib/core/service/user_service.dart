@@ -60,8 +60,13 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   }
 
   bool get isUserOnborded {
-    if (_firebaseUser != null && _baseUser != null && _baseUser.uid.isNotEmpty)
+    if (_firebaseUser != null &&
+        _baseUser != null &&
+        _baseUser.uid.isNotEmpty) {
+      _logger.d("Onborded User: ${_baseUser.uid}");
       return true;
+    }
+
     return false;
   }
 
@@ -79,9 +84,11 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   Future<bool> signout() async {
     try {
+      await CacheManager.deleteCache(key: 'token');
       await FirebaseAuth.instance.signOut();
       await CacheManager.clearCacheMemory();
       _logger.d("Firebase user signed out");
+      _logger.d("Firebase user signed out, Token cleared");
       _firebaseUser = null;
       _baseUser = null;
       _myUserDpUrl = null;
@@ -95,10 +102,17 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   }
 
   Future<void> setBaseUser() async {
-    _baseUser = await _dbModel.getUser(_firebaseUser?.uid);
-    _idToken = await _firebaseUser?.getIdToken();
+    if (_firebaseUser != null) {
+      _baseUser = await _dbModel.getUser(_firebaseUser?.uid);
+      _idToken = await CacheManager.readCache(key: 'token');
+      if (_idToken == null) {
+        _idToken = await _firebaseUser?.getIdToken();
+        CacheManager.writeCache(
+            key: 'token', value: _idToken, type: CacheType.string);
+      }
+    }
     _myUserName = _baseUser?.name;
-    _logger.d("Base user initialized");
+    _logger.d("Base user initialized, UID: ${_baseUser?.uid}");
   }
 
   Future<void> setProfilePicture() async {

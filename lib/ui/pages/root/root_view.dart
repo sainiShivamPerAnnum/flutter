@@ -5,6 +5,7 @@ import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
+import 'package:felloapp/ui/widgets/appbars/fello_appbar_view.dart';
 import 'package:felloapp/ui/widgets/drawer/drawer_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -40,7 +41,7 @@ class Root extends StatelessWidget {
                 FelloAppBar(
                   leading: InkWell(
                     onTap: () => model.showDrawer(),
-                    child: ProfileImage(
+                    child: ProfileImageSE(
                       radius: SizeConfig.avatarRadius,
                     ),
                   ),
