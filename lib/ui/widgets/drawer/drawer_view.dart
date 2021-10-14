@@ -80,7 +80,7 @@ class FDrawer extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: List.generate(
                         model.drawerList.length,
-                        (i) => Container(
+                            (i) => Container(
                           margin: EdgeInsets.symmetric(
                               vertical: SizeConfig.padding8),
                           child: TextButton.icon(

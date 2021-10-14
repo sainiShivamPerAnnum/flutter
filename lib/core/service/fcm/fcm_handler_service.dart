@@ -1,36 +1,60 @@
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/tabs/profile/userProfile/userProfile_view.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 class FcmHandler extends ChangeNotifier {
+  final Logger logger = locator<Logger>();
   Log log = new Log("FcmHandler");
   ValueChanged<Map> notifListener;
   String url;
   int tab;
 
   Future<bool> handleMessage(Map data) async {
-    log.debug(data.toString());
+    logger.d(data.toString());
     if (data['command'] != null) {
       String title = data['dialog_title'];
       String body = data['dialog_body'];
+      String command = data['command'];
+
       if (title != null &&
           title.isNotEmpty &&
           body != null &&
           body.isNotEmpty) {
-        log.debug('Recevied message from server: $title $body');
+        logger.d('Recevied message from server: $title $body');
         Map<String, String> _map = {'title': title, 'body': body};
         if (this.notifListener != null) this.notifListener(_map);
       }
+
+      switch (command) {
+        case 'cric2020GameEnd':
+          {
+            //Navigate back to CricketView 
+            AppState.delegate.appState.currentAction = PageAction(
+              state: PageState.addPage,
+              page: NotificationsConfig,
+            );
+          }
+          break;
+        default:
+      }
     }
+
     try {
       url = data["deep_uri"] ?? '';
       print("------------------->" + url);
-      AppState().setFcmData = url;
-
+      if (url.isNotEmpty) {
+        AppState().setFcmData = url;
+      }
       tab = int.tryParse(data["misc_data"]) ?? 0;
-    }catch(e) {
+    } catch (e) {
       log.error('$e');
     }
+
     return true;
   }
 
