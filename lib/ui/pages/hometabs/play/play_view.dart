@@ -31,20 +31,19 @@ class Play extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: List.generate(
                       model.offerList.length,
-                          (i) {
+                      (i) {
                         return OfferCard(
                           model: model,
                           i: i,
                         );
                       },
-
                     ),
                   ),
                 ),
               ),
               Padding(
                 padding:
-                EdgeInsets.only(left: SizeConfig.pageHorizontalMargins),
+                    EdgeInsets.only(left: SizeConfig.pageHorizontalMargins),
                 child: Text(
                   locale.playTrendingGames,
                   style: TextStyles.title3,
@@ -54,7 +53,7 @@ class Play extends StatelessWidget {
                 Column(
                   children: List.generate(
                     2,
-                        (index) => GestureDetector(
+                    (index) => GestureDetector(
                       onTap: () => AppState.delegate.appState.currentAction =
                           PageAction(
                               state: PageState.addPage,

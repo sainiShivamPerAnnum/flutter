@@ -39,7 +39,8 @@ class MiniTransactionCard extends StatelessWidget {
                                   return ListTile(
                                     onTap: () {
                                       Haptic.vibrate();
-                                      bool freeBeerStatus = model.getBeerTicketStatus(m.txnList[i]);
+                                      bool freeBeerStatus = model
+                                          .getBeerTicketStatus(m.txnList[i]);
                                       showDialog(
                                           context: AppState.delegate
                                               .navigatorKey.currentContext,

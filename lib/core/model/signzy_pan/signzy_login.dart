@@ -4,7 +4,7 @@ class SignzyPanLogin {
   String userId;
   String baseUrl;
 
-  SignzyPanLogin({this.accessToken, this.ttl,  this.userId,this.baseUrl});
+  SignzyPanLogin({this.accessToken, this.ttl, this.userId, this.baseUrl});
 
   SignzyPanLogin.fromJson(Map<String, dynamic> json) {
     accessToken = json['id'];

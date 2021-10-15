@@ -21,22 +21,31 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m0(servingSize) => "*Baseado em uma porção de ${servingSize} fl. oz.";
 
-  static m1(quantity, formattedNumber) => "${Intl.plural(quantity, one: 'Uma porção.', other: '${formattedNumber} porções no seu sistema de uma vez.')}";
+  static m1(quantity, formattedNumber) =>
+      "${Intl.plural(quantity, one: 'Uma porção.', other: '${formattedNumber} porções no seu sistema de uma vez.')}";
 
-  static m2(quantity, formattedNumber) => "${Intl.plural(quantity, one: 'Uma porção por dia.', other: '${formattedNumber} porções por dia.')}";
+  static m2(quantity, formattedNumber) =>
+      "${Intl.plural(quantity, one: 'Uma porção por dia.', other: '${formattedNumber} porções por dia.')}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
-  static _notInlinedMessages(_) => <String, Function> {
-    "onboardText1" : MessageLookupByLibrary.simpleMessage("Economize ou invista \$ 100 e ganhe 1 ingresso de jogo todas as segundas-feiras"),
-    "onboardText2" : MessageLookupByLibrary.simpleMessage("Use os ingressos para participar de jogos semanais emocionantes"),
-    "onboardText3" : MessageLookupByLibrary.simpleMessage("Seu dinheiro continua crescendo com grandes retornos enquanto você joga jogos divertidos e ganha prêmios!"),
-    "onboardTitle" : MessageLookupByLibrary.simpleMessage("Poupança baseada em jogos \n e investimentos🎉"),
-    "onboradButton" : MessageLookupByLibrary.simpleMessage("INICIAR"),
-    "resultsPageFirstDisclaimer" : m0,
-    "resultsPageLethalDosageMessage" : m1,
-    "resultsPageSafeDosageMessage" : m2,
-    "resultsPageSafeDosageTitle" : MessageLookupByLibrary.simpleMessage("Limite Seguro Diário"),
-    "resultsPageSecondDisclaimer" : MessageLookupByLibrary.simpleMessage("*Se aplica a pessoas com 18 anos ou mais. Essa calculadora não substitui conselhos médicos profissionais."),
-    "splashSlowConnection" : MessageLookupByLibrary.simpleMessage("A conexão está demorando mais do que o normal")
-  };
+  static _notInlinedMessages(_) => <String, Function>{
+        "onboardText1": MessageLookupByLibrary.simpleMessage(
+            "Economize ou invista \$ 100 e ganhe 1 ingresso de jogo todas as segundas-feiras"),
+        "onboardText2": MessageLookupByLibrary.simpleMessage(
+            "Use os ingressos para participar de jogos semanais emocionantes"),
+        "onboardText3": MessageLookupByLibrary.simpleMessage(
+            "Seu dinheiro continua crescendo com grandes retornos enquanto você joga jogos divertidos e ganha prêmios!"),
+        "onboardTitle": MessageLookupByLibrary.simpleMessage(
+            "Poupança baseada em jogos \n e investimentos🎉"),
+        "onboradButton": MessageLookupByLibrary.simpleMessage("INICIAR"),
+        "resultsPageFirstDisclaimer": m0,
+        "resultsPageLethalDosageMessage": m1,
+        "resultsPageSafeDosageMessage": m2,
+        "resultsPageSafeDosageTitle":
+            MessageLookupByLibrary.simpleMessage("Limite Seguro Diário"),
+        "resultsPageSecondDisclaimer": MessageLookupByLibrary.simpleMessage(
+            "*Se aplica a pessoas com 18 anos ou mais. Essa calculadora não substitui conselhos médicos profissionais."),
+        "splashSlowConnection": MessageLookupByLibrary.simpleMessage(
+            "A conexão está demorando mais do que o normal")
+      };
 }

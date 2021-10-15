@@ -362,81 +362,80 @@ class Save extends StatelessWidget {
   }
 }
 
-
 // FELLO BUTTON IMPLEMENTATION
 
 // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //   children: [
-            //     FelloButton(
-            //         textStyle: TextStyle(color: Colors.white),
-            //         action: (val) {
-            //           if (val) print("I Changed");
-            //         },
-            //         offlineButtonUI: Container(
-            //           width: 300,
-            //           height: 50,
-            //           decoration: BoxDecoration(
-            //             borderRadius: BorderRadius.circular(100),
-            //             color: Colors.grey,
-            //           ),
-            //           alignment: Alignment.center,
-            //           child: Text("Fello Button"),
-            //         ),
-            //         activeButtonUI: Container(
-            //           width: 150,
-            //           height: 50,
-            //           decoration: BoxDecoration(
-            //             borderRadius: BorderRadius.circular(100),
-            //             color: UiConstants.primaryColor,
-            //           ),
-            //           alignment: Alignment.center,
-            //           child: Text("Fello Button"),
-            //         ),
-            //         onPressed: () {
-            //           showDialog(
-            //             context: context,
-            //             builder: (ctx) => FelloConfirmationDialog(
-            //               content: Padding(
-            //                 padding:
-            //                     EdgeInsets.all(SizeConfig.globalMargin * 3),
-            //                 child: SvgPicture.asset("images/svgs/offline.svg"),
-            //               ),
-            //               onAccept: () async {
-            //                 Navigator.pop(context);
+//   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//   children: [
+//     FelloButton(
+//         textStyle: TextStyle(color: Colors.white),
+//         action: (val) {
+//           if (val) print("I Changed");
+//         },
+//         offlineButtonUI: Container(
+//           width: 300,
+//           height: 50,
+//           decoration: BoxDecoration(
+//             borderRadius: BorderRadius.circular(100),
+//             color: Colors.grey,
+//           ),
+//           alignment: Alignment.center,
+//           child: Text("Fello Button"),
+//         ),
+//         activeButtonUI: Container(
+//           width: 150,
+//           height: 50,
+//           decoration: BoxDecoration(
+//             borderRadius: BorderRadius.circular(100),
+//             color: UiConstants.primaryColor,
+//           ),
+//           alignment: Alignment.center,
+//           child: Text("Fello Button"),
+//         ),
+//         onPressed: () {
+//           showDialog(
+//             context: context,
+//             builder: (ctx) => FelloConfirmationDialog(
+//               content: Padding(
+//                 padding:
+//                     EdgeInsets.all(SizeConfig.globalMargin * 3),
+//                 child: SvgPicture.asset("images/svgs/offline.svg"),
+//               ),
+//               onAccept: () async {
+//                 Navigator.pop(context);
 
-            //                 AppState.delegate.appState.currentAction =
-            //                     PageAction(
-            //                   page: TransactionPageConfig,
-            //                   state: PageState.addPage,
-            //                 );
-            //               },
-            //               onReject: () => Navigator.pop(context),
-            //               result: (res) {
-            //                 if (res) print("I Changed");
-            //               },
-            //             ),
-            //           );
-            //         }),
-            //     FelloButton(
-            //       onPressedAsync: () async {
-            //         await Future.delayed(Duration(seconds: 3));
-            //       },
-            //       onPressed: () {
-            //         AppState.delegate.appState.currentAction = PageAction(
-            //           state: PageState.addPage,
-            //           page: SplashPageConfig,
-            //         );
-            //       },
-            //       // onPressed: () => showDialog(
-            //       //   context: context,
-            //       //   builder: (ctx) => FelloInfoDialog(
-            //       //     title: "Info Dialog",
-            //       //     subtitle: "This is the subtitle",
-            //       //     body:
-            //       //         "What other ways do you use to minimize the app size ??with tooling and language features that allow developers to eliminate a whole class of errors, increase app performance and reduce package size.",
-            //       //   ),
-            //       // ),
-            //     )
-            //   ],
-            // ),
+//                 AppState.delegate.appState.currentAction =
+//                     PageAction(
+//                   page: TransactionPageConfig,
+//                   state: PageState.addPage,
+//                 );
+//               },
+//               onReject: () => Navigator.pop(context),
+//               result: (res) {
+//                 if (res) print("I Changed");
+//               },
+//             ),
+//           );
+//         }),
+//     FelloButton(
+//       onPressedAsync: () async {
+//         await Future.delayed(Duration(seconds: 3));
+//       },
+//       onPressed: () {
+//         AppState.delegate.appState.currentAction = PageAction(
+//           state: PageState.addPage,
+//           page: SplashPageConfig,
+//         );
+//       },
+//       // onPressed: () => showDialog(
+//       //   context: context,
+//       //   builder: (ctx) => FelloInfoDialog(
+//       //     title: "Info Dialog",
+//       //     subtitle: "This is the subtitle",
+//       //     body:
+//       //         "What other ways do you use to minimize the app size ??with tooling and language features that allow developers to eliminate a whole class of errors, increase app performance and reduce package size.",
+//       //   ),
+//       // ),
+//     )
+//   ],
+// ),

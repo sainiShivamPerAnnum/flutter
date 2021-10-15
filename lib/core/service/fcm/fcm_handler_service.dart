@@ -1,7 +1,6 @@
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/tabs/profile/userProfile/userProfile_view.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +32,7 @@ class FcmHandler extends ChangeNotifier {
       switch (command) {
         case 'cric2020GameEnd':
           {
-            //Navigate back to CricketView 
+            //Navigate back to CricketView
             AppState.delegate.appState.currentAction = PageAction(
               state: PageState.addPage,
               page: NotificationsConfig,

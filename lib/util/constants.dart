@@ -74,6 +74,6 @@ class Constants {
   static const int UNLOCK_REFERRAL_AMT = 100;
   static final DateTime VERSION_2_RELEASE_DATE = DateTime(2021, 4, 1);
 
-
-  static final String GAME_CRICKET_URI = 'https://live.gameskite.com/fello/cricket-2021';
+  static final String GAME_CRICKET_URI =
+      'https://live.gameskite.com/fello/cricket-2021';
 }

@@ -5,6 +5,6 @@ class ApiPath {
 
   get kSubstractFlcPreGameApi =>
       "/felloCoins/$stage/api/felloCoin/updateWallet/preGame";
-      
+
   get kGetCoinBalance => "/felloCoins/$stage/api/felloCoin/balance";
 }

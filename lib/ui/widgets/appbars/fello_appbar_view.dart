@@ -6,7 +6,6 @@
 // import 'package:felloapp/util/styles/size_config.dart';
 // import 'package:felloapp/util/styles/ui_constants.dart';
 
-
 //   @override
 //   Widget build(BuildContext context) {
 //     return BaseView<FelloAppBarVM>(

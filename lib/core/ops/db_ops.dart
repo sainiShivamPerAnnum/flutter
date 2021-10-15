@@ -442,7 +442,9 @@ class DBModel extends ChangeNotifier {
       keyIndex = 1;
     }
     QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
-        'aws-icici', FlavorConfig.instance.values.awsIciciStage.value(), keyIndex);
+        'aws-icici',
+        FlavorConfig.instance.values.awsIciciStage.value(),
+        keyIndex);
     if (querySnapshot != null && querySnapshot.docs.length == 1) {
       DocumentSnapshot snapshot = querySnapshot.docs[0];
       Map<String, dynamic> _doc = snapshot.data();
@@ -467,7 +469,9 @@ class DBModel extends ChangeNotifier {
       keyIndex = 1;
     }
     QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
-        'aws-augmont', FlavorConfig.instance.values.awsAugmontStage.value(), keyIndex);
+        'aws-augmont',
+        FlavorConfig.instance.values.awsAugmontStage.value(),
+        keyIndex);
     if (querySnapshot != null && querySnapshot.docs.length == 1) {
       DocumentSnapshot snapshot = querySnapshot.docs[0];
       Map<String, dynamic> _doc = snapshot.data();
@@ -483,7 +487,9 @@ class DBModel extends ChangeNotifier {
   Future<SignzyPanLogin> getActiveSignzyPanApiKey() async {
     int keyIndex = 1;
     QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
-        'signzy-pan', FlavorConfig.instance.values.signzyPanStage.value(), keyIndex);
+        'signzy-pan',
+        FlavorConfig.instance.values.signzyPanStage.value(),
+        keyIndex);
     if (querySnapshot != null && querySnapshot.docs.length == 1) {
       DocumentSnapshot snapshot = querySnapshot.docs[0];
       Map<String, dynamic> _doc = snapshot.data();
@@ -521,7 +527,9 @@ class DBModel extends ChangeNotifier {
   Future<Map<String, String>> getActiveFreshchatKey() async {
     int keyIndex = 1;
     QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
-        'freshchat', FlavorConfig.instance.values.freshchatStage.value(), keyIndex);
+        'freshchat',
+        FlavorConfig.instance.values.freshchatStage.value(),
+        keyIndex);
     if (querySnapshot != null && querySnapshot.docs.length == 1) {
       DocumentSnapshot snapshot = querySnapshot.docs[0];
       if (snapshot.exists) {

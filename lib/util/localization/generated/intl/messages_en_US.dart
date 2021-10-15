@@ -21,33 +21,46 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m0(servingSize) => "*Based on ${servingSize} fl. oz serving.";
 
-  static m1(quantity, formattedNumber) => "${Intl.plural(quantity, one: 'One serving.', other: '${formattedNumber} servings in your system at one time.')}";
+  static m1(quantity, formattedNumber) =>
+      "${Intl.plural(quantity, one: 'One serving.', other: '${formattedNumber} servings in your system at one time.')}";
 
-  static m2(quantity, formattedNumber) => "${Intl.plural(quantity, one: 'One serving per day.', other: '${formattedNumber} servings per day.')}";
+  static m2(quantity, formattedNumber) =>
+      "${Intl.plural(quantity, one: 'One serving per day.', other: '${formattedNumber} servings per day.')}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
-  static _notInlinedMessages(_) => <String, Function> {
-    "navBarFinance" : MessageLookupByLibrary.simpleMessage("Finance"),
-    "navBarPlay" : MessageLookupByLibrary.simpleMessage("Play"),
-    "navBarWin" : MessageLookupByLibrary.simpleMessage("Save"),
-    "navWMT" : MessageLookupByLibrary.simpleMessage("Want more tickets"),
-    "onboardText1" : MessageLookupByLibrary.simpleMessage("Save or invest ₹100 and get 1 game ticket every Monday"),
-    "onboardText2" : MessageLookupByLibrary.simpleMessage("Use the tickets to participate in exciting weekly games"),
-    "onboardText3" : MessageLookupByLibrary.simpleMessage("Your money keeps growing with great returns while you play fun games and win prizes!"),
-    "onboardTitle" : MessageLookupByLibrary.simpleMessage("Game based Savings \n & Investments🎉"),
-    "onboradButton" : MessageLookupByLibrary.simpleMessage("GET STARTED"),
-    "playTrendingGames" : MessageLookupByLibrary.simpleMessage("Trending Games"),
-    "profileTitle" : MessageLookupByLibrary.simpleMessage("My Profile"),
-    "resultsPageFirstDisclaimer" : m0,
-    "resultsPageLethalDosageMessage" : m1,
-    "resultsPageSafeDosageMessage" : m2,
-    "resultsPageSafeDosageTitle" : MessageLookupByLibrary.simpleMessage("Daily Safe Maximum"),
-    "resultsPageSecondDisclaimer" : MessageLookupByLibrary.simpleMessage("*Applies to age 18 and over. This calculator does not replace professional medical advice."),
-    "saveBuyButton" : MessageLookupByLibrary.simpleMessage("BUY"),
-    "saveSellButton" : MessageLookupByLibrary.simpleMessage("SELL"),
-    "splashNoInternet" : MessageLookupByLibrary.simpleMessage("No active internet connection"),
-    "splashSecureText" : MessageLookupByLibrary.simpleMessage("100% safe and secure"),
-    "splashSlowConnection" : MessageLookupByLibrary.simpleMessage("Connection taking longer than usual"),
-    "splashTagline" : MessageLookupByLibrary.simpleMessage("Your savings and gaming app")
-  };
+  static _notInlinedMessages(_) => <String, Function>{
+        "navBarFinance": MessageLookupByLibrary.simpleMessage("Finance"),
+        "navBarPlay": MessageLookupByLibrary.simpleMessage("Play"),
+        "navBarWin": MessageLookupByLibrary.simpleMessage("Save"),
+        "navWMT": MessageLookupByLibrary.simpleMessage("Want more tickets"),
+        "onboardText1": MessageLookupByLibrary.simpleMessage(
+            "Save or invest ₹100 and get 1 game ticket every Monday"),
+        "onboardText2": MessageLookupByLibrary.simpleMessage(
+            "Use the tickets to participate in exciting weekly games"),
+        "onboardText3": MessageLookupByLibrary.simpleMessage(
+            "Your money keeps growing with great returns while you play fun games and win prizes!"),
+        "onboardTitle": MessageLookupByLibrary.simpleMessage(
+            "Game based Savings \n & Investments🎉"),
+        "onboradButton": MessageLookupByLibrary.simpleMessage("GET STARTED"),
+        "playTrendingGames":
+            MessageLookupByLibrary.simpleMessage("Trending Games"),
+        "profileTitle": MessageLookupByLibrary.simpleMessage("My Profile"),
+        "resultsPageFirstDisclaimer": m0,
+        "resultsPageLethalDosageMessage": m1,
+        "resultsPageSafeDosageMessage": m2,
+        "resultsPageSafeDosageTitle":
+            MessageLookupByLibrary.simpleMessage("Daily Safe Maximum"),
+        "resultsPageSecondDisclaimer": MessageLookupByLibrary.simpleMessage(
+            "*Applies to age 18 and over. This calculator does not replace professional medical advice."),
+        "saveBuyButton": MessageLookupByLibrary.simpleMessage("BUY"),
+        "saveSellButton": MessageLookupByLibrary.simpleMessage("SELL"),
+        "splashNoInternet": MessageLookupByLibrary.simpleMessage(
+            "No active internet connection"),
+        "splashSecureText":
+            MessageLookupByLibrary.simpleMessage("100% safe and secure"),
+        "splashSlowConnection": MessageLookupByLibrary.simpleMessage(
+            "Connection taking longer than usual"),
+        "splashTagline":
+            MessageLookupByLibrary.simpleMessage("Your savings and gaming app")
+      };
 }
