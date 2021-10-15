@@ -13,6 +13,8 @@ import 'package:felloapp/ui/pages/login/screens/mobile_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/username.dart';
+import 'package:felloapp/ui/pages/static/fello_appbar.dart';
+import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -200,149 +202,187 @@ class _LoginControllerState extends State<LoginController>
     fcmProvider = Provider.of<FcmListener>(context, listen: false);
     appStateProvider = Provider.of<AppState>(context, listen: false);
     return Scaffold(
-      body: SafeArea(
-          child: Stack(
-        children: <Widget>[
-          Positioned(
-            top: kToolbarHeight / 3,
-            child: Container(
-              alignment: Alignment.center,
+      resizeToAvoidBottomInset: false,
+      backgroundColor: UiConstants.primaryColor,
+      body: HomeBackground(
+        child: SafeArea(
+            child: Stack(
+          children: <Widget>[
+            Container(
               width: SizeConfig.screenWidth,
-              child: Image.asset("images/fello_logo.png", height: 40),
-            ),
-          ),
-          new PageView.builder(
-            physics: new NeverScrollableScrollPhysics(),
-            scrollDirection: Axis.vertical,
-            controller: _controller,
-            itemCount: _pages.length,
-            itemBuilder: (BuildContext context, int index) {
-              //print(index - _controller.page);
-              return ValueListenableBuilder(
-                  valueListenable: _pageNotifier,
-                  builder: (ctx, value, _) {
-                    final factorChange = value - index;
-                    return Padding(
-                      padding: EdgeInsets.only(
-                          top: kToolbarHeight * 1.5,
-                          left: SizeConfig.blockSizeHorizontal * 16,
-                          right: SizeConfig.blockSizeHorizontal * 5),
-                      child: Opacity(
-                          opacity: (1 - factorChange.abs()).clamp(0.0, 1.0),
-                          child: _pages[index % _pages.length]),
-                    );
-                  });
-            },
-            onPageChanged: (int index) {
-              setState(() {
-                _formProgress = 0.2 * (index + 1);
-                _currentPage = index;
-              });
-            },
-          ),
-          ValueListenableBuilder<double>(
-              valueListenable: _pageNotifier,
-              builder: (ctx, value, child) {
-                return Stack(
-                  children: [
-                    Positioned(
-                      left: SizeConfig.blockSizeHorizontal * 4 + 14,
-                      top: kToolbarHeight * 2 + 8,
-                      width: 1,
-                      child: Container(
-                        height:
-                            ((SizeConfig.screenHeight - kToolbarHeight * 2) /
-                                    4) *
-                                value,
-                        color: UiConstants.primaryColor,
+              height: SizeConfig.screenHeight,
+              child: Column(
+                children: [
+                  ValueListenableBuilder(
+                      valueListenable: _pageNotifier,
+                      builder: (ctx, value, child) {
+                        return value < 2.0
+                            ? SizedBox(
+                                height: kToolbarHeight,
+                              )
+                            : FelloAppBar(
+                                leading: FelloAppBarBackButton(onBackPress: () {
+                                  if (value == 3)
+                                    _controller.previousPage(
+                                        duration: Duration(milliseconds: 600),
+                                        curve: Curves.easeInOut);
+                                  else
+                                    AppState.delegate.appState.currentAction =
+                                        PageAction(
+                                            state: PageState.replaceAll,
+                                            page: SplashPageConfig);
+                                }),
+                                title: value < 3
+                                    ? "Complete your profile"
+                                    : "Gaming Name",
+                              );
+                      }),
+                  Expanded(
+                    child: AnimatedContainer(
+                      duration: Duration(milliseconds: 500),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.pageHorizontalMargins),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(SizeConfig.roundness40),
+                          topRight: Radius.circular(SizeConfig.roundness40),
+                        ),
+                        color: Colors.white,
+                      ),
+                      child: PageView.builder(
+                        physics: new NeverScrollableScrollPhysics(),
+                        scrollDirection: Axis.vertical,
+                        controller: _controller,
+                        itemCount: _pages.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          //print(index - _controller.page);
+                          return ValueListenableBuilder(
+                              valueListenable: _pageNotifier,
+                              builder: (ctx, value, _) {
+                                final factorChange = value - index;
+                                return Opacity(
+                                    opacity: (1 - factorChange.abs())
+                                        .clamp(0.0, 1.0),
+                                    child: _pages[index % _pages.length]);
+                              });
+                        },
+                        onPageChanged: (int index) {
+                          setState(() {
+                            _formProgress = 0.2 * (index + 1);
+                            _currentPage = index;
+                          });
+                        },
                       ),
                     ),
-                    ProgressBarItem(value: value, index: 0, icon: Icons.phone),
-                    ProgressBarItem(
-                        value: value, index: 1, icon: Icons.password),
-                    ProgressBarItem(
-                        value: value,
-                        index: 2,
-                        icon: Icons.account_circle_rounded),
-                    ProgressBarItem(
-                        value: value, index: 3, icon: Icons.alternate_email),
-                  ],
-                );
-              }),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                (_currentPage == MobileInputScreen.index)
-                    ? Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                        child: RichText(
-                          text: new TextSpan(
-                            children: [
-                              new TextSpan(
-                                text: 'By continuing, you agree to our ',
-                                style: GoogleFonts.montserrat(
-                                    fontSize: SizeConfig.smallTextSize * 1.2,
-                                    color: Colors.black45),
-                              ),
-                              new TextSpan(
-                                text: 'Terms of Service',
-                                style: GoogleFonts.montserrat(
-                                    color: Colors.black45,
-                                    fontSize: SizeConfig.smallTextSize * 1.2,
-                                    decoration: TextDecoration.underline),
-                                recognizer: new TapGestureRecognizer()
-                                  ..onTap = () {
-                                    Haptic.vibrate();
-                                    BaseUtil.launchUrl(
-                                        'https://fello.in/policy/tnc');
-                                    // appStateProvider.currentAction = PageAction(
-                                    //     state: PageState.addPage,
-                                    //     page: TncPageConfig);
-                                  },
-                              ),
-                            ],
+                  ),
+                ],
+              ),
+            ),
+            // ValueListenableBuilder<double>(
+            //     valueListenable: _pageNotifier,
+            //     builder: (ctx, value, child) {
+            //       return Stack(
+            //         children: [
+            //           Positioned(
+            //             left: SizeConfig.blockSizeHorizontal * 4 + 14,
+            //             top: kToolbarHeight * 2 + 8,
+            //             width: 1,
+            //             child: Container(
+            //               height:
+            //                   ((SizeConfig.screenHeight - kToolbarHeight * 2) /
+            //                           4) *
+            //                       value,
+            //               color: UiConstants.primaryColor,
+            //             ),
+            //           ),
+            //           ProgressBarItem(value: value, index: 0, icon: Icons.phone),
+            //           ProgressBarItem(
+            //               value: value, index: 1, icon: Icons.password),
+            //           ProgressBarItem(
+            //               value: value,
+            //               index: 2,
+            //               icon: Icons.account_circle_rounded),
+            //           ProgressBarItem(
+            //               value: value, index: 3, icon: Icons.alternate_email),
+            //         ],
+            //       );
+            //     }),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  // (_currentPage == MobileInputScreen.index)
+                  //     ? Padding(
+                  //         padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                  //         child: RichText(
+                  //           text: new TextSpan(
+                  //             children: [
+                  //               new TextSpan(
+                  //                 text: 'By continuing, you agree to our ',
+                  //                 style: GoogleFonts.montserrat(
+                  //                     fontSize: SizeConfig.smallTextSize * 1.2,
+                  //                     color: Colors.black45),
+                  //               ),
+                  //               new TextSpan(
+                  //                 text: 'Terms of Service',
+                  //                 style: GoogleFonts.montserrat(
+                  //                     color: Colors.black45,
+                  //                     fontSize: SizeConfig.smallTextSize * 1.2,
+                  //                     decoration: TextDecoration.underline),
+                  //                 recognizer: new TapGestureRecognizer()
+                  //                   ..onTap = () {
+                  //                     Haptic.vibrate();
+                  //                     BaseUtil.launchUrl(
+                  //                         'https://fello.in/policy/tnc');
+                  //                     // appStateProvider.currentAction = PageAction(
+                  //                     //     state: PageState.addPage,
+                  //                     //     page: TncPageConfig);
+                  //                   },
+                  //               ),
+                  //             ],
+                  //           ),
+                  //         ),
+                  //       )
+                  //     : Container(),
+                  Container(
+                    width: SizeConfig.screenWidth,
+                    padding: EdgeInsets.fromLTRB(0, 10, 0, 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        new Container(
+                          width: SizeConfig.screenWidth -
+                              SizeConfig.blockSizeHorizontal * 10,
+                          child: FelloButtonLg(
+                            child: (!baseProvider.isLoginNextInProgress)
+                                ? Text(
+                                    _currentPage == Username.index
+                                        ? 'FINISH'
+                                        : 'NEXT',
+                                    style:
+                                        TextStyles.body2.colour(Colors.white),
+                                  )
+                                : SpinKitThreeBounce(
+                                    color: UiConstants.spinnerColor2,
+                                    size: 18.0,
+                                  ),
+                            onPressed: () {
+                              if (!baseProvider.isLoginNextInProgress)
+                                _processScreenInput(_currentPage);
+                            },
                           ),
                         ),
-                      )
-                    : Container(),
-                Container(
-                  width: SizeConfig.screenWidth,
-                  padding: EdgeInsets.fromLTRB(0, 10, 0, 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      new Container(
-                        width: SizeConfig.screenWidth -
-                            SizeConfig.blockSizeHorizontal * 10,
-                        child: FelloButtonLg(
-                          child: (!baseProvider.isLoginNextInProgress)
-                              ? Text(
-                                  _currentPage == Username.index
-                                      ? 'FINISH'
-                                      : 'NEXT',
-                                  style: TextStyles.body2.colour(Colors.white),
-                                )
-                              : SpinKitThreeBounce(
-                                  color: UiConstants.spinnerColor2,
-                                  size: 18.0,
-                                ),
-                          onPressed: () {
-                            if (!baseProvider.isLoginNextInProgress)
-                              _processScreenInput(_currentPage);
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
-          ),
-        ],
-      )),
+          ],
+        )),
+      ),
     );
   }
 

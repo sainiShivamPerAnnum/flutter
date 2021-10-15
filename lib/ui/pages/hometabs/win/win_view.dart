@@ -39,7 +39,8 @@ class Win extends StatelessWidget {
                           PropertyChangeConsumer<UserService,
                               UserServiceProperties>(
                             builder: (ctx, model, child) => Text(
-                              "₹ ${model.userFundWallet.unclaimedBalance}",
+                              "₹ 0.00",
+                              // "₹ ${model.userFundWallet.unclaimedBalance}",
                               style: TextStyles.body2.bold
                                   .colour(UiConstants.primaryColor),
                             ),
@@ -50,18 +51,18 @@ class Win extends StatelessWidget {
                       // Widgets().getBodyBold("Redeem for", Colors.black),
                       SizedBox(height: 12),
                       // if (model.getUnclaimedPrizeBalance() > 0)
-                      PropertyChangeConsumer<UserService,
-                          UserServiceProperties>(
-                        builder: (ctx, m, child) => FelloButton(
-                          defaultButtonText:
-                              m.userFundWallet.isPrizeBalanceUnclaimed()
-                                  ? "Redeem"
-                                  : "Share",
-                          onPressedAsync: () =>
-                              model.prizeBalanceAction(context),
-                          defaultButtonColor: Colors.orange,
-                        ),
-                      ),
+                      // PropertyChangeConsumer<UserService,
+                      //     UserServiceProperties>(
+                      //   builder: (ctx, m, child) => FelloButton(
+                      //     defaultButtonText:
+                      //         m.userFundWallet.isPrizeBalanceUnclaimed()
+                      //             ? "Redeem"
+                      //             : "Share",
+                      //     onPressedAsync: () =>
+                      //         model.prizeBalanceAction(context),
+                      //     defaultButtonColor: Colors.orange,
+                      //   ),
+                      // ),
 
                       // Row(
                       //   children: [

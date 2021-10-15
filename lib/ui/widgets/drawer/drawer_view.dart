@@ -19,105 +19,117 @@ class FDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseView<FDrawerVM>(
       builder: (ctx, model, child) {
-        return Drawer(
-          child: SafeArea(
-            child: Container(
-              margin: EdgeInsets.only(
-                  top: 24, left: SizeConfig.scaffoldMargin, right: 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  InkWell(
-                      onTap: () {
-                        AppState.delegate.appState.currentAction = PageAction(
-                          state: PageState.addWidget,
-                          page: UserProfileDetailsConfig,
-                          widget: UserProfileDetails(),
-                        );
-                      },
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(SizeConfig.padding6),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: UiConstants.primaryColor, width: 2),
-                              shape: BoxShape.circle,
-                            ),
-                            child: ProfileImageSE(
-                              radius: SizeConfig.screenWidth * 0.058,
-                            ),
-                          ),
-                          SizedBox(
-                            width: SizeConfig.padding12,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Text(model.name, style: TextStyles.body2.bold),
-                              PropertyChangeConsumer<UserService,
-                                  UserServiceProperties>(
-                                properties: [UserServiceProperties.myUserName],
-                                builder: (context, model, properties) => Text(
-                                    model.myUserName,
-                                    style: TextStyles.body2.bold),
+        return Container(
+          width: SizeConfig.screenWidth * 0.7,
+          child: Drawer(
+            child: SafeArea(
+              child: Container(
+                margin: EdgeInsets.only(
+                    top: 24, left: SizeConfig.scaffoldMargin, right: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    InkWell(
+                        onTap: () {
+                          AppState.delegate.appState.currentAction = PageAction(
+                            state: PageState.addWidget,
+                            page: UserProfileDetailsConfig,
+                            widget: UserProfileDetails(),
+                          );
+                        },
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(SizeConfig.padding2),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: UiConstants.primaryColor, width: 2),
+                                shape: BoxShape.circle,
                               ),
-                              SizedBox(height: 6),
-                              Text(
-                                "@${model.username}",
-                                style: TextStyles.body3
-                                    .colour(UiConstants.primaryColor),
+                              child: ProfileImageSE(
+                                radius: SizeConfig.screenWidth * 0.058,
                               ),
-                            ],
-                          )
-                        ],
-                      )),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: List.generate(
-                        model.drawerList.length,
-                        (i) => Container(
-                          margin: EdgeInsets.symmetric(
-                              vertical: SizeConfig.padding8),
-                          child: TextButton.icon(
-                            onPressed: () {
-                              AppState.delegate.appState.currentAction =
-                                  PageAction(
-                                      state: PageState.addPage,
-                                      page: model.drawerList[i].pageConfig);
-                            },
-                            icon: Icon(
-                              Icons.account_tree,
-                              size: 20,
-                              color: Colors.grey[400],
                             ),
-                            label: Text(
-                              model.drawerList[i].title,
-                              style: TextStyles.body2.colour(Colors.black),
+                            SizedBox(
+                              width: SizeConfig.padding12,
+                            ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Text(model.name, style: TextStyles.body2.bold),
+                                  PropertyChangeConsumer<UserService,
+                                      UserServiceProperties>(
+                                    properties: [
+                                      UserServiceProperties.myUserName
+                                    ],
+                                    builder: (context, model, properties) =>
+                                        FittedBox(
+                                          child: Text(model.myUserName,
+                                              overflow: TextOverflow.clip,
+                                              style: TextStyles.body2.bold),
+                                        ),
+                                  ),
+                                  SizedBox(height: 6),
+                                  FittedBox(
+                                    child: Text(
+                                      "@${model.username}",
+                                      style: TextStyles.body3
+                                          .colour(UiConstants.primaryColor),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        )),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: List.generate(
+                          model.drawerList.length,
+                              (i) => Container(
+                            margin: EdgeInsets.symmetric(
+                                vertical: SizeConfig.padding8),
+                            child: TextButton.icon(
+                              onPressed: () {
+                                AppState.delegate.appState.currentAction =
+                                    PageAction(
+                                        state: PageState.addPage,
+                                        page: model.drawerList[i].pageConfig);
+                              },
+                              icon: Icon(
+                                Icons.account_tree,
+                                size: 20,
+                                color: Colors.grey[400],
+                              ),
+                              label: Text(
+                                model.drawerList[i].title,
+                                style: TextStyles.body2.colour(Colors.black),
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  Container(
-                    width: SizeConfig.screenWidth,
-                    margin: EdgeInsets.symmetric(vertical: 24),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Version 1.0.0.1",
-                          style: TextStyles.body3.colour(Colors.black45),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
+                    Container(
+                      width: SizeConfig.screenWidth,
+                      margin: EdgeInsets.symmetric(vertical: 24),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Version 1.0.0.1",
+                            style: TextStyles.body3.colour(Colors.black45),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           ),

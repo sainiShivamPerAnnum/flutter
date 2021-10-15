@@ -2,11 +2,13 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/change_profile_picture_dialog.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
@@ -105,7 +107,41 @@ class UserProfileVM extends BaseModel {
   }
 
   signout() async {
-    await _userService.signout();
+    if (await BaseUtil.showNoInternetAlert()) return;
+    BaseUtil.openDialog(
+      isBarrierDismissable: false,
+      addToScreenStack: true,
+      content: WillPopScope(
+        onWillPop: () {
+          AppState.backButtonDispatcher.didPopRoute();
+          return Future.value(true);
+        },
+        child: ConfirmActionDialog(
+          title: 'Confirm',
+          description: 'Are you sure you want to sign out?',
+          buttonText: 'Yes',
+          confirmAction: () {
+            Haptic.vibrate();
+            _userService.signout().then((flag) {
+              if (flag) {
+                //log.debug('Sign out process complete');
+                AppState.delegate.appState.currentAction = PageAction(
+                    state: PageState.replaceAll, page: SplashPageConfig);
+                BaseUtil.showPositiveAlert(
+                  'Signed out',
+                  'Hope to see you soon',
+                );
+              } else {
+                BaseUtil.showNegativeAlert(
+                    'Sign out failed', 'Couldn\'t signout. Please try again');
+                //log.error('Sign out process failed');
+              }
+            });
+          },
+          cancelAction: () {},
+        ),
+      ),
+    );
   }
 
   Map<String, String> getBankDetail() {

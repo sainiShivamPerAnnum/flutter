@@ -87,16 +87,10 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                       color: Colors.white,
                                       shape: BoxShape.circle,
                                     ),
-                                    padding: EdgeInsets.all(4),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      padding: EdgeInsets.all(12),
-                                      child: ProfileImageSE(
-                                        radius: SizeConfig.screenWidth * 0.25,
-                                      ),
+                                    padding:
+                                        EdgeInsets.all(SizeConfig.padding6),
+                                    child: ProfileImageSE(
+                                      radius: SizeConfig.screenWidth * 0.25,
                                     ),
                                   ),
                                 ),
@@ -251,6 +245,16 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                 model.enableEdit();
                               }
                             },
+                          ),
+                          SizedBox(height: 24),
+                          TextButton(
+                            onPressed: model.signout,
+                            child: Text(
+                              "SIGN OUT",
+                              style: TextStyles.title5
+                                  .colour(Colors.red[200])
+                                  .letterSpace(5),
+                            ),
                           ),
                           SizedBox(height: 24),
                         ],

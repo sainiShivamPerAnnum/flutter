@@ -1,9 +1,12 @@
 import 'dart:io';
 
+import 'package:country_code_picker/country_code_picker.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 
 class MobileInputScreen extends StatefulWidget {
@@ -22,6 +25,7 @@ class MobileInputScreenState extends State<MobileInputScreen> {
   Log log = new Log("MobileInputScreen");
   static final GlobalKey<FormFieldState<String>> _phoneFieldKey =
       GlobalKey<FormFieldState<String>>();
+  String code = "+91";
 
   void showAvailablePhoneNumbers() async {
     if (Platform.isAndroid && showAvailableMobileNos) {
@@ -40,55 +44,122 @@ class MobileInputScreenState extends State<MobileInputScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.symmetric(
+        // horizontal: SizeConfig.pageHorizontalMargins,
+        vertical: SizeConfig.pageHorizontalMargins * 2,
+      ),
       child: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            SvgPicture.asset(
+              "assets/vectors/enter_phone.svg",
+              width: SizeConfig.screenWidth * 0.28,
+            ),
+            SizedBox(height: SizeConfig.padding64),
             Text(
-              "Let's get you onboarded ✅",
-              style: TextStyle(
-                  fontSize: SizeConfig.mediumTextSize, color: Colors.black54),
+              "Enter the phone number",
+              textAlign: TextAlign.center,
+              style: TextStyles.title4.bold,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 24,
-              ),
-              child: Text(
-                "Please share your mobile number",
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: SizeConfig.screenWidth * 0.06,
+            SizedBox(height: SizeConfig.padding12),
+            Text(
+              "For verification purposes, an OTP shall be sent to this number.",
+              textAlign: TextAlign.center,
+              style: TextStyles.body2,
+            ),
+            SizedBox(height: SizeConfig.padding40),
+            Row(
+              children: [
+                Text(
+                  "Mobile Number",
+                  textAlign: TextAlign.start,
+                  style: TextStyles.body3.colour(Colors.grey),
                 ),
-              ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 24),
-              child: Form(
-                key: _formKey,
-                child: TextFormField(
-                  key: _phoneFieldKey,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    labelText: "Mobile",
-                    prefixIcon: Icon(Icons.phone),
-                    focusColor: UiConstants.primaryColor,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+            SizedBox(height: SizeConfig.padding6),
+            Form(
+              key: _formKey,
+              child: Container(
+                decoration: BoxDecoration(
+                  border:
+                      Border.all(color: UiConstants.primaryColor, width: 0.5),
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+                ),
+                child: Row(
+                  children: [
+                    CountryCodePicker(
+                      onChanged: (val) {
+                        code = val.toString();
+                        FocusScope.of(context).unfocus();
+                      },
+                      initialSelection: '+91',
+                      favorite: ['+91'],
+                      showCountryOnly: false,
+                      showOnlyCountryWhenClosed: false,
+                      alignLeft: false,
                     ),
-                  ),
-                  onTap: showAvailablePhoneNumbers,
-                  controller: _mobileController,
-                  validator: (value) => _validateMobile(),
-                  onFieldSubmitted: (v) {
-                    FocusScope.of(context).requestFocus(FocusNode());
-                  },
+                    Expanded(
+                      child: TextFormField(
+                        key: _phoneFieldKey,
+                        controller: _mobileController,
+                        keyboardType: TextInputType.phone,
+                        //autofocus: true,
+                        onTap: showAvailablePhoneNumbers,
+                        validator: (value) => _validateMobile(),
+                        onFieldSubmitted: (v) {
+                          FocusScope.of(context).requestFocus(FocusNode());
+                        },
+                        onChanged: (val) {
+                          if (val.length == 10)
+                            FocusScope.of(context).unfocus();
+                        },
+                        cursorColor: UiConstants.primaryColor,
+                        cursorWidth: 1,
+                        cursorHeight: SizeConfig.title4,
+                        decoration: InputDecoration(
+                          enabledBorder:
+                              OutlineInputBorder(borderSide: BorderSide.none),
+                          focusedBorder:
+                              OutlineInputBorder(borderSide: BorderSide.none),
+                          focusedErrorBorder:
+                              OutlineInputBorder(borderSide: BorderSide.none),
+                          errorBorder:
+                              OutlineInputBorder(borderSide: BorderSide.none),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
+            // Padding(
+            //   padding: const EdgeInsets.only(top: 24),
+            //   child: Form(
+            //     key: _formKey,
+            //     child: TextFormField(
+            //       key: _phoneFieldKey,
+            //       keyboardType: TextInputType.number,
+            //       decoration: InputDecoration(
+            //         labelText: "Mobile",
+            //         prefixIcon: Icon(Icons.phone),
+            //         focusColor: UiConstants.primaryColor,
+            //         border: OutlineInputBorder(
+            //           borderRadius: BorderRadius.circular(10),
+            //         ),
+            //       ),
+            //       onTap: showAvailablePhoneNumbers,
+            //       controller: _mobileController,
+            // validator: (value) => _validateMobile(),
+            // onFieldSubmitted: (v) {
+            //   FocusScope.of(context).requestFocus(FocusNode());
+            // },
+            //     ),
+            //   ),
+            // ),
             const SizedBox(height: 24),
-            const Text(
-                "For verification purposes, an OTP shall be sent to this number."),
           ],
           //)
         ),

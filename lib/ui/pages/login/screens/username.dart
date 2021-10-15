@@ -1,8 +1,11 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class Username extends StatefulWidget {
@@ -104,24 +107,19 @@ class UsernameState extends State<Username> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     return Container(
+      padding:
+          EdgeInsets.symmetric(vertical: SizeConfig.pageHorizontalMargins * 2),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: Text(
-                "Pick a username",
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: SizeConfig.screenWidth * 0.06,
-                ),
-              ),
+            SvgPicture.asset(
+              "assets/vectors/username.svg",
+              width: SizeConfig.screenWidth * 0.28,
             ),
-            const Text("This is going to be your unique ID✨"),
-            const SizedBox(
-              height: 16,
-            ),
+            SizedBox(height: SizeConfig.padding40),
+            TextFieldLabel("Unique usename"),
+            SizedBox(height: SizeConfig.padding6),
             Form(
               key: _formKey,
               child: Container(
@@ -137,7 +135,7 @@ class UsernameState extends State<Username> {
                     return null;
                   },
                   decoration: InputDecoration(
-                    hintText: "username",
+                    hintText: "Enter your username",
                     prefixIcon: Icon(
                       Icons.alternate_email_rounded,
                       size: 20,
@@ -158,30 +156,27 @@ class UsernameState extends State<Username> {
               height: 40,
               child: showResult(),
             ),
-            SizedBox(height: SizeConfig.screenHeight * .1),
-            const Text(
+            SizedBox(height: SizeConfig.padding40),
+            Text(
               "Rules for a valid username",
-              style: TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 16,
-              ),
+              style: TextStyles.title4.bold,
             ),
-            const SizedBox(
-              height: 8,
+            SizedBox(
+              height: SizeConfig.padding16,
             ),
             const RuleTile(
-                rule: "• must be more than 4 and less than 20 letters"),
+                rule: "must be more than 4 and less than 20 letters"),
             const RuleTile(
                 rule:
-                    "• only lowercase alphabets, numbers and dot(.) symbols allowed."),
+                    "only lowercase alphabets, numbers and dot(.) symbols allowed."),
             const RuleTile(
                 rule:
-                    "• consecutive dot(.) are not allowed. example: abc..xyz is an invalid username"),
+                    "consecutive dot(.) are not allowed. example: abc..xyz is an invalid username"),
             const RuleTile(
                 rule:
-                    "• dot(.) are not allowed at the beginning and at the end example: .abc , abcd. are invalid usernames "),
-            const SizedBox(
-              height: kToolbarHeight * 2,
+                    "dot(.) are not allowed at the beginning and at the end example: .abc , abcd. are invalid usernames "),
+            SizedBox(
+              height: SizeConfig.viewInsets.bottom,
             )
           ],
         ),
@@ -200,10 +195,20 @@ class RuleTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Text(
-        rule,
-        style: TextStyle(color: Colors.black26),
+      padding: EdgeInsets.only(bottom: SizeConfig.padding16),
+      child: Row(
+        children: [
+          CircleAvatar(
+              backgroundColor: UiConstants.primaryColor,
+              radius: SizeConfig.padding4),
+          SizedBox(width: SizeConfig.padding4 * 2),
+          Expanded(
+            child: Text(
+              rule,
+              style: TextStyle(color: Colors.black26),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -130,3 +130,22 @@ class FelloAppBarBackButton extends StatelessWidget {
     );
   }
 }
+
+class TextFieldLabel extends StatelessWidget {
+  final String text;
+  TextFieldLabel(this.text);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: SizeConfig.padding6,
+        top: SizeConfig.padding16,
+      ),
+      child: Text(
+        text,
+        style: TextStyles.body3.colour(Colors.grey),
+      ),
+    );
+  }
+}

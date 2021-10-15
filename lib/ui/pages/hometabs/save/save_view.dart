@@ -45,7 +45,8 @@ class Save extends StatelessWidget {
                         PropertyChangeConsumer<UserService,
                             UserServiceProperties>(
                           builder: (ctx, model, child) => Text(
-                            "${model.userFundWallet.augGoldQuantity} gm",
+                            "0.00 gm",
+                            //"${model.userFundWallet.augGoldQuantity} gm",
                             style: TextStyles.body1.bold.colour(
                                 FelloColorPalette.augmontFundPalette()
                                     .primaryColor),

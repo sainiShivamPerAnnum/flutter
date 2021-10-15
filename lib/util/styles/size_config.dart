@@ -26,6 +26,7 @@ class SizeConfig {
   static double scaffoldMargin;
   static BorderRadius homeViewBorder;
   static bool isGamefirstTime;
+  static EdgeInsets viewInsets;
 
   void init(BuildContext context) {
     _mediaQueryData = MediaQuery.of(context);
@@ -33,6 +34,9 @@ class SizeConfig {
     screenHeight = _mediaQueryData.size.height;
     pixelRatio = _mediaQueryData.devicePixelRatio;
     textScaleFactor = _mediaQueryData.textScaleFactor;
+    viewInsets = EdgeInsets.fromWindowPadding(
+        WidgetsBinding.instance.window.viewInsets,
+        WidgetsBinding.instance.window.devicePixelRatio);
     blockSizeHorizontal = screenWidth / 100;
     blockSizeVertical = screenHeight / 100;
     smallTextSize = blockSizeHorizontal * 2.4;
@@ -68,6 +72,7 @@ class SizeConfig {
   static double get iconSize3 => screenWidth * 0.028; //12
 
   // PADDINGS
+  static double get padding2 => screenWidth * 0.0048;
   static double get padding4 => screenWidth * 0.0096;
   static double get padding6 => screenWidth * 0.014;
   static double get padding8 => screenWidth * 0.019;
@@ -77,6 +82,8 @@ class SizeConfig {
   static double get padding24 => screenWidth * 0.058;
   static double get padding32 => screenWidth * 0.077;
   static double get padding54 => screenWidth * 0.130;
+  static double get padding64 => screenWidth * 0.154; //56
+  static double get padding80 => screenWidth * 0.193; //56
 
   // MARGINS
   static double get pageHorizontalMargins => screenWidth * 0.0579;

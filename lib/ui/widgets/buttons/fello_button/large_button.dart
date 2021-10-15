@@ -14,7 +14,7 @@ class FelloButtonLg extends StatelessWidget {
     return FelloButton(
       activeButtonUI: Container(
         width: SizeConfig.screenWidth,
-        height: SizeConfig.screenWidth * 0.144,
+        height: SizeConfig.screenWidth * 0.13,
         decoration: BoxDecoration(
           color: color ?? UiConstants.primaryColor,
           borderRadius: new BorderRadius.circular(16.0),
