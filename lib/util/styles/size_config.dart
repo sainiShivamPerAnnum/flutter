@@ -61,7 +61,7 @@ class SizeConfig {
   static double get title3 => 28;
   static double get title4 => screenWidth * 0.058; //24
   static double get title5 => screenWidth * 0.048; //20
-  static double get body1 => 18;
+  static double get body1 => screenWidth * 0.043;
   static double get body2 => screenWidth * 0.038; // 16
   static double get body3 => screenWidth * 0.033; //14
   static double get body4 => screenWidth * 0.028; //12;
@@ -81,17 +81,18 @@ class SizeConfig {
   static double get padding20 => screenWidth * 0.048;
   static double get padding24 => screenWidth * 0.058;
   static double get padding32 => screenWidth * 0.077;
-  static double get padding40 => screenWidth * 0.196;
+  static double get padding40 => screenWidth * 0.096;
   static double get padding54 => screenWidth * 0.130;
   static double get padding64 => screenWidth * 0.154; //56
   static double get padding80 => screenWidth * 0.193; //56
 
   // MARGINS
-  static double get pageHorizontalMargins => screenWidth * 0.0579;
+  static double get pageHorizontalMargins => screenWidth * 0.0579; //
 
   //BORDER RADIUS
 
   static double get roundness12 => screenWidth * 0.028; //12
+  static double get roundness16 => screenWidth * 0.038; //12
   static double get roundness24 => screenWidth * 0.058; //24
   static double get roundness32 => screenWidth * 0.077; //32
   static double get roundness40 => screenWidth * 0.096; //40
@@ -101,6 +102,7 @@ class SizeConfig {
 
   static double get navBarHeight => screenWidth * 0.212;
   static double get avatarRadius => screenWidth * 0.048;
+  static double get tileAvatarRadius => screenWidth * 0.057;
 
   // static double get headline1 => 40;
   // static double get headline2 => 38;

@@ -46,7 +46,7 @@ class VerifyEmailState extends State<VerifyEmail> {
 
   @override
   void initState() {
-    email = TextEditingController();
+    email = TextEditingController(text: "1000");
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       showEmailOptions();
     });

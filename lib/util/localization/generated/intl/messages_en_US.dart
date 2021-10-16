@@ -19,22 +19,35 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en_US';
 
-  static m0(number) => "Please enter the 6 digit code sent to your mobile number +91 ******${number}";
+  static m0(version) => "Version ${version}";
 
-  static m1(servingSize) => "*Based on ${servingSize} fl. oz serving.";
+  static m1(number) => "Please enter the 6 digit code sent to your mobile number +91 ******${number}";
 
-  static m2(quantity, formattedNumber) => "${Intl.plural(quantity, one: 'One serving.', other: '${formattedNumber} servings in your system at one time.')}";
+  static m2(servingSize) => "*Based on ${servingSize} fl. oz serving.";
 
-  static m3(quantity, formattedNumber) => "${Intl.plural(quantity, one: 'One serving per day.', other: '${formattedNumber} servings per day.')}";
+  static m3(quantity, formattedNumber) => "${Intl.plural(quantity, one: 'One serving.', other: '${formattedNumber} servings in your system at one time.')}";
+
+  static m4(quantity, formattedNumber) => "${Intl.plural(quantity, one: 'One serving per day.', other: '${formattedNumber} servings per day.')}";
+
+  static m5(goldAmount) => "${goldAmount} gm";
+
+  static m6(winningsAmout) => "₹ ${winningsAmout}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
     "abCompleteYourProfile" : MessageLookupByLibrary.simpleMessage("Complete your profile"),
     "abGamingName" : MessageLookupByLibrary.simpleMessage("Gaming Name"),
     "abMyProfile" : MessageLookupByLibrary.simpleMessage("My Profile"),
+    "abNotifications" : MessageLookupByLibrary.simpleMessage("Notifications"),
+    "app_version" : m0,
+    "dAbtDigGold" : MessageLookupByLibrary.simpleMessage("About Digital Gold"),
+    "dReferNEarn" : MessageLookupByLibrary.simpleMessage("Refer and Earn"),
+    "dTransactions" : MessageLookupByLibrary.simpleMessage("Transactions"),
+    "dhowitworks" : MessageLookupByLibrary.simpleMessage("How it works?"),
     "navBarFinance" : MessageLookupByLibrary.simpleMessage("Finance"),
     "navBarPlay" : MessageLookupByLibrary.simpleMessage("Play"),
-    "navBarWin" : MessageLookupByLibrary.simpleMessage("Save"),
+    "navBarSave" : MessageLookupByLibrary.simpleMessage("Save"),
+    "navBarWin" : MessageLookupByLibrary.simpleMessage("Win"),
     "navWMT" : MessageLookupByLibrary.simpleMessage("Want more tickets"),
     "obDidntGetOtp" : MessageLookupByLibrary.simpleMessage("Didn\'t get an OTP? "),
     "obDobLabel" : MessageLookupByLibrary.simpleMessage("Date of Birth"),
@@ -51,7 +64,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "obMobileLabel" : MessageLookupByLibrary.simpleMessage("Mobile Number"),
     "obNameHint" : MessageLookupByLibrary.simpleMessage("Enter your full name"),
     "obNameLabel" : MessageLookupByLibrary.simpleMessage("Name as per PAN"),
-    "obOtpDesc" : m0,
+    "obOtpDesc" : m1,
     "obOtpLabel" : MessageLookupByLibrary.simpleMessage("OTP Authentication"),
     "obOtpTryExceed" : MessageLookupByLibrary.simpleMessage("OTP requests exceeded. Please try again in sometime or contact us."),
     "obResend" : MessageLookupByLibrary.simpleMessage(" Resend"),
@@ -68,13 +81,20 @@ class MessageLookup extends MessageLookupByLibrary {
     "onboardTitle" : MessageLookupByLibrary.simpleMessage("Game based Savings \n & Investments🎉"),
     "onboradButton" : MessageLookupByLibrary.simpleMessage("GET STARTED"),
     "playTrendingGames" : MessageLookupByLibrary.simpleMessage("Trending Games"),
-    "resultsPageFirstDisclaimer" : m1,
-    "resultsPageLethalDosageMessage" : m2,
-    "resultsPageSafeDosageMessage" : m3,
+    "resultsPageFirstDisclaimer" : m2,
+    "resultsPageLethalDosageMessage" : m3,
+    "resultsPageSafeDosageMessage" : m4,
     "resultsPageSafeDosageTitle" : MessageLookupByLibrary.simpleMessage("Daily Safe Maximum"),
     "resultsPageSecondDisclaimer" : MessageLookupByLibrary.simpleMessage("*Applies to age 18 and over. This calculator does not replace professional medical advice."),
+    "saveBaseline" : MessageLookupByLibrary.simpleMessage("You get 1 ticket for every ₹ 100 invested"),
     "saveBuyButton" : MessageLookupByLibrary.simpleMessage("BUY"),
+    "saveGoldBalanceValue" : m5,
+    "saveGoldBalancelabel" : MessageLookupByLibrary.simpleMessage("My Gold Balance:"),
+    "saveHistory" : MessageLookupByLibrary.simpleMessage("History"),
     "saveSellButton" : MessageLookupByLibrary.simpleMessage("SELL"),
+    "saveViewAll" : MessageLookupByLibrary.simpleMessage("View All"),
+    "saveWinningsLabel" : MessageLookupByLibrary.simpleMessage("Your winnings"),
+    "saveWinningsValue" : m6,
     "splashNoInternet" : MessageLookupByLibrary.simpleMessage("No active internet connection"),
     "splashSecureText" : MessageLookupByLibrary.simpleMessage("100% safe and secure"),
     "splashSlowConnection" : MessageLookupByLibrary.simpleMessage("Connection taking longer than usual"),

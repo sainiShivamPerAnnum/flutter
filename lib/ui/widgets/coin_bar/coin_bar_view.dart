@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -20,13 +21,13 @@ class FelloCoinBar extends StatelessWidget {
           ? CircularProgressIndicator()
           : GestureDetector(
               onTap: () {
-                AppState.screenStack.add(ScreenItem.dialog);
-                showModalBottomSheet(
-                    backgroundColor: Colors.transparent,
-                    context: context,
-                    builder: (ctx) {
-                      return WantMoreTicketsModalSheet();
-                    });
+                BaseUtil.openModalBottomSheet(
+                  addToScreenStack: true,
+                  backgroundColor: Colors.transparent,
+                  content: WantMoreTicketsModalSheet(),
+                  hapticVibrate: true,
+                  isBarrierDismissable: true,
+                );
               },
               child: Container(
                 height: SizeConfig.avatarRadius * 2,

@@ -8,6 +8,7 @@ class Assets {
   static final String iciciGraphic = 'images/icici.png';
   static final String augmontGraphic = 'images/augmont.png';
   static final String augmontLogo = "images/augmont-logo.jpg";
+  static final String augLogo = "images/aug-logo.png";
   static final String sebiGraphic = 'images/sebi.png';
   static final String amfiGraphic = 'images/amfi.png';
   static final String prizesGraphic = 'images/prizes-small.png';
@@ -43,6 +44,10 @@ class Assets {
 
   // PLAY
   static final String germsPattern = "assets/images/bg_pattern.png";
+
+  // SAVE
+  static final String whiteRays = "assets/images/white_rays.png";
+  static final String moneyIcon = "assets/images/icons/money.png";
 
   static final List<String> onboardingSlide = [
     'images/save-small.png',

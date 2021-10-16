@@ -62,7 +62,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                             width: SizeConfig.screenWidth * 0.31,
                             height: SizeConfig.screenWidth * 0.33,
                             margin: EdgeInsets.only(
-                              top: SizeConfig.globalMargin,
+                              top: SizeConfig.pageHorizontalMargins,
                               bottom: SizeConfig.padding8,
                             ),
                             child: Stack(

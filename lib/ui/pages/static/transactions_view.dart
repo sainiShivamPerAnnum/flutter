@@ -24,8 +24,8 @@ class Transactions extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(40),
-                    topRight: Radius.circular(40),
+                    topLeft: Radius.circular(SizeConfig.padding40),
+                    topRight: Radius.circular(SizeConfig.padding40),
                   ),
                   color: Colors.white,
                 ),

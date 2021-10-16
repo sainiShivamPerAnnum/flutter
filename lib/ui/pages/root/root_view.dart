@@ -1,6 +1,8 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
+import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
@@ -32,9 +34,7 @@ class Root extends StatelessWidget {
           body: HomeBackground(
             whiteBackground: WhiteBackground(
               color: Color(0xffF1F6FF),
-              height: AppState.getCurrentTabIndex == 0
-                  ? kToolbarHeight * 2.7
-                  : kToolbarHeight * 2.8,
+              height: kToolbarHeight * 2.8,
             ),
             child: Stack(
               children: [
@@ -52,6 +52,8 @@ class Root extends StatelessWidget {
                   ],
                 ),
                 RefreshIndicator(
+                  color: UiConstants.primaryColor,
+                  backgroundColor: Colors.black,
                   onRefresh: model.refresh,
                   child: SafeArea(
                     child: Container(
@@ -125,25 +127,34 @@ class WantMoreTickets extends StatelessWidget {
       bottom: SizeConfig.pageHorizontalMargins,
       left: SizeConfig.pageHorizontalMargins,
       right: SizeConfig.pageHorizontalMargins,
-      child: AnimatedContainer(
-        duration: Duration(seconds: 1),
-        height: AppState.getCurrentTabIndex == 0
-            ? SizeConfig.screenWidth * 0.362
-            : SizeConfig.navBarHeight,
-        width: SizeConfig.screenWidth,
-        decoration: BoxDecoration(
-          color: UiConstants.primaryLight,
-          borderRadius: BorderRadius.circular(
-            SizeConfig.roundness32,
-          ),
+      child: InkWell(
+        onTap: () => BaseUtil.openModalBottomSheet(
+          addToScreenStack: true,
+          content: WantMoreTicketsModalSheet(),
+          hapticVibrate: true,
+          backgroundColor: Colors.transparent,
+          isBarrierDismissable: true,
         ),
-        alignment: Alignment.topCenter,
-        child: Container(
-          height: SizeConfig.screenWidth * 0.15,
-          alignment: Alignment.center,
-          child: Text(
-            locale.navWMT,
-            style: TextStyles.body1.colour(UiConstants.primaryColor).bold,
+        child: AnimatedContainer(
+          duration: Duration(seconds: 1),
+          height: AppState.getCurrentTabIndex == 1
+              ? SizeConfig.screenWidth * 0.362
+              : SizeConfig.navBarHeight,
+          width: SizeConfig.screenWidth,
+          decoration: BoxDecoration(
+            color: UiConstants.primaryLight,
+            borderRadius: BorderRadius.circular(
+              SizeConfig.roundness32,
+            ),
+          ),
+          alignment: Alignment.topCenter,
+          child: Container(
+            height: SizeConfig.screenWidth * 0.15,
+            alignment: Alignment.center,
+            child: Text(
+              locale.navWMT,
+              style: TextStyles.body1.colour(UiConstants.primaryColor).bold,
+            ),
           ),
         ),
       ),

@@ -366,9 +366,19 @@ class S {
   }
 
   /// `Save`
-  String get navBarWin {
+  String get navBarSave {
     return Intl.message(
       'Save',
+      name: 'navBarSave',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Win`
+  String get navBarWin {
+    return Intl.message(
+      'Win',
       name: 'navBarWin',
       desc: '',
       args: [],
@@ -405,6 +415,76 @@ class S {
     );
   }
 
+  /// `My Gold Balance:`
+  String get saveGoldBalancelabel {
+    return Intl.message(
+      'My Gold Balance:',
+      name: 'saveGoldBalancelabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{goldAmount} gm`
+  String saveGoldBalanceValue(Object goldAmount) {
+    return Intl.message(
+      '$goldAmount gm',
+      name: 'saveGoldBalanceValue',
+      desc: '',
+      args: [goldAmount],
+    );
+  }
+
+  /// `You get 1 ticket for every ₹ 100 invested`
+  String get saveBaseline {
+    return Intl.message(
+      'You get 1 ticket for every ₹ 100 invested',
+      name: 'saveBaseline',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your winnings`
+  String get saveWinningsLabel {
+    return Intl.message(
+      'Your winnings',
+      name: 'saveWinningsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `₹ {winningsAmout}`
+  String saveWinningsValue(Object winningsAmout) {
+    return Intl.message(
+      '₹ $winningsAmout',
+      name: 'saveWinningsValue',
+      desc: '',
+      args: [winningsAmout],
+    );
+  }
+
+  /// `History`
+  String get saveHistory {
+    return Intl.message(
+      'History',
+      name: 'saveHistory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `View All`
+  String get saveViewAll {
+    return Intl.message(
+      'View All',
+      name: 'saveViewAll',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Complete your profile`
   String get abCompleteYourProfile {
     return Intl.message(
@@ -432,6 +512,70 @@ class S {
       name: 'abMyProfile',
       desc: '',
       args: [],
+    );
+  }
+
+  /// `Notifications`
+  String get abNotifications {
+    return Intl.message(
+      'Notifications',
+      name: 'abNotifications',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Refer and Earn`
+  String get dReferNEarn {
+    return Intl.message(
+      'Refer and Earn',
+      name: 'dReferNEarn',
+      desc: '',
+      args: [],
+    );
+  }
+
+  // skipped getter for the 'dPan&kyc' key
+
+  /// `Transactions`
+  String get dTransactions {
+    return Intl.message(
+      'Transactions',
+      name: 'dTransactions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  // skipped getter for the 'dHelp&sprt' key
+
+  /// `How it works?`
+  String get dhowitworks {
+    return Intl.message(
+      'How it works?',
+      name: 'dhowitworks',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `About Digital Gold`
+  String get dAbtDigGold {
+    return Intl.message(
+      'About Digital Gold',
+      name: 'dAbtDigGold',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Version {version}`
+  String app_version(Object version) {
+    return Intl.message(
+      'Version $version',
+      name: 'app_version',
+      desc: '',
+      args: [version],
     );
   }
 

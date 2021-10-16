@@ -1,8 +1,13 @@
 //Project Imports
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/dialogs/feedback_dialog.dart';
+import 'package:felloapp/ui/pages/static/FelloTile.dart';
+import 'package:felloapp/ui/pages/static/fello_appbar.dart';
+import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -68,239 +73,352 @@ class _SupportPageState extends State<SupportPage> {
       init();
     }
     return Scaffold(
-      body: Column(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              gradient: new LinearGradient(
-                begin: Alignment.topRight,
-                end: Alignment.bottomLeft,
-                stops: [0.1, 0.6],
-                colors: [
-                  UiConstants.primaryColor.withGreen(190),
-                  UiConstants.primaryColor,
-                ],
-              ),
+      body: HomeBackground(
+        child: Column(
+          children: [
+            FelloAppBar(
+              leading: FelloAppBarBackButton(),
+              title: "Help & Support",
             ),
-            width: SizeConfig.screenWidth,
-            height: SizeConfig.screenHeight * 0.3,
-            child: Stack(
-              children: [
-                Positioned(
-                  bottom: 0,
-                  right: 0,
-                  child: Opacity(
-                    opacity: 0.5,
-                    child: SvgPicture.asset(
-                      'images/svgs/contact_bg_illustration.svg',
-                      width: SizeConfig.screenWidth * 0.6,
-                    ),
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(40),
+                    topRight: Radius.circular(40),
                   ),
+                  color: Colors.white,
                 ),
-                SafeArea(
-                  child: Container(
-                    height: double.infinity,
-                    width: SizeConfig.screenWidth * 0.6,
-                    padding: EdgeInsets.only(
-                        left: SizeConfig.blockSizeHorizontal * 5),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: FittedBox(
-                                child: Text(
-                                  "Support 👩🏼‍🔧",
-                                  style: GoogleFonts.montserrat(
-                                      fontSize:
-                                          SizeConfig.cardTitleTextSize * 2,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.white),
-                                ),
-                              ),
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: [
+                    FelloBriefTile(
+                      leadingIcon: Icons.account_balance_wallet,
+                      title: "Customer Support",
+                      onTap: () {
+                        Haptic.vibrate();
+                        appState.currentAction = PageAction(
+                            state: PageState.addPage,
+                            page: ChatSupportPageConfig);
+                      },
+                    ),
+                    FelloBriefTile(
+                      leadingIcon: Icons.account_balance_wallet,
+                      title: "FAQs",
+                      onTap: () {
+                        Haptic.vibrate();
+                        appState.currentAction = PageAction(
+                            state: PageState.addPage, page: FaqPageConfig);
+                      },
+                    ),
+                    FelloBriefTile(
+                      leadingIcon: Icons.account_balance_wallet,
+                      title: "Email us your query",
+                      onTap: () {
+                        Haptic.vibrate();
+                        try {
+                          _launchEmail();
+                        } catch (e) {
+                          BaseUtil.showNegativeAlert(
+                            'Error',
+                            'Something went wrong, could not launch email right now. Please try again later',
+                          );
+                        }
+                      },
+                    ),
+                    FelloBriefTile(
+                      leadingIcon: Icons.account_balance_wallet,
+                      title: "Request a Callback",
+                      onTap: () {
+                        Haptic.vibrate();
+                        if (connectivityStatus != ConnectivityStatus.Offline)
+                          _showRequestCallSheet();
+                        else
+                          BaseUtil.showNoInternetAlert();
+                      },
+                    ),
+                    FelloBriefTile(
+                      leadingIcon: Icons.account_balance_wallet,
+                      title: "Feedback",
+                      onTap: () {
+                        AppState.screenStack.add(ScreenItem.dialog);
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) => WillPopScope(
+                            onWillPop: () {
+                              AppState.backButtonDispatcher.didPopRoute();
+                              return Future.value(true);
+                            },
+                            child: FeedbackDialog(
+                              title: "Tell us what you think",
+                              description: "We'd love to hear from you",
+                              buttonText: "Submit",
+                              dialogAction: (String fdbk) {
+                                if (fdbk != null && fdbk.isNotEmpty) {
+                                  //feedback submission allowed even if user not signed in
+                                  dbProvider
+                                      .submitFeedback(
+                                          (baseProvider.firebaseUser == null ||
+                                                  baseProvider
+                                                          .firebaseUser.uid ==
+                                                      null)
+                                              ? 'UNKNOWN'
+                                              : baseProvider.firebaseUser.uid,
+                                          fdbk)
+                                      .then((flag) {
+                                    AppState.backButtonDispatcher.didPopRoute();
+                                    if (flag) {
+                                      BaseUtil.showPositiveAlert(
+                                        'Thank You',
+                                        'We appreciate your feedback!',
+                                      );
+                                    }
+                                  });
+                                }
+                              },
                             ),
-                            Text(
-                              "( 24 x 7 )",
-                              style: GoogleFonts.montserrat(
-                                fontWeight: FontWeight.w300,
-                                color: Colors.white,
-                              ),
-                            )
-                          ],
-                        ),
-                        Text(
-                          "We're just a click and text away. Always.",
-                          style: TextStyle(
-                            color: Colors.white,
-                            height: 1.4,
-                            fontSize: SizeConfig.mediumTextSize,
                           ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                SafeArea(
-                  child: Container(
-                    width: SizeConfig.screenWidth,
-                    height: kToolbarHeight,
-                    child: Row(
-                      children: [
-                        SizedBox(width: SizeConfig.blockSizeHorizontal),
-                        IconButton(
-                          iconSize: 30,
-                          color: Colors.white,
-                          icon: Icon(
-                            Icons.arrow_back_rounded,
-                          ),
-                          onPressed: () =>
-                              AppState.backButtonDispatcher.didPopRoute(),
-                        ),
-                        Spacer(),
-                        Image.asset(
-                          "images/fello_logo.png",
-                          width: SizeConfig.screenWidth * 0.1,
-                          color: Colors.white,
-                        ),
-                        Spacer(),
-                        IconButton(
-                          iconSize: 30,
-                          color: Colors.white,
-                          icon: SizedBox(),
-                          onPressed: () {},
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(
-                      top: 16,
-                      left: SizeConfig.blockSizeHorizontal * 4,
-                    ),
-                    child: Text(
-                      "Reach Out",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: UiConstants.primaryColor.withOpacity(0.5),
-                        fontSize: SizeConfig.largeTextSize,
-                      ),
-                    ),
-                  ),
-                  Divider(),
-                  ListTile(
-                    title: Text('Chat with Us',
-                        style: TextStyle(color: UiConstants.textColor)),
-                    tileColor: Colors.transparent,
-                    trailing: Icon(
-                      Icons.arrow_forward_ios,
-                      size: 16,
-                    ),
-                    onTap: () {
-                      Haptic.vibrate();
-                      appState.currentAction = PageAction(
-                          state: PageState.addPage,
-                          page: ChatSupportPageConfig);
-                    },
-                  ),
-                  ListTile(
-                    title: Text('Email Us',
-                        style: TextStyle(color: UiConstants.textColor)),
-                    tileColor: Colors.transparent,
-                    trailing: Icon(
-                      Icons.arrow_forward_ios,
-                      size: 16,
-                    ),
-                    onTap: () {
-                      Haptic.vibrate();
-                      try {
-                        _launchEmail();
-                      } catch (e) {
-                        BaseUtil.showNegativeAlert(
-                          'Error',
-                          'Something went wrong, could not launch email right now. Please try again later',
                         );
-                      }
-                    },
-                  ),
-                  ListTile(
-                    title: Text('Request a callback',
-                        style: TextStyle(
-                          color: UiConstants.textColor,
-                        )),
-                    tileColor: Colors.transparent,
-                    trailing: Icon(
-                      Icons.arrow_forward_ios,
-                      size: 16,
+                      },
                     ),
-                    onTap: () {
-                      Haptic.vibrate();
-                      if (connectivityStatus != ConnectivityStatus.Offline)
-                        _showRequestCallSheet();
-                      else
-                        BaseUtil.showNoInternetAlert();
-                    },
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      top: 16,
-                      left: SizeConfig.blockSizeHorizontal * 4,
-                    ),
-                    child: Text(
-                      "Self-serve",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: UiConstants.primaryColor.withOpacity(0.5),
-                        fontSize: SizeConfig.largeTextSize,
-                      ),
-                    ),
-                  ),
-                  Divider(),
-                  ListTile(
-                    title: Text('Play Walkthrough',
-                        style: TextStyle(color: UiConstants.textColor)),
-                    tileColor: Colors.transparent,
-                    trailing: Icon(
-                      Icons.arrow_forward_ios,
-                      size: 16,
-                    ),
-                    onTap: () {
-                      Haptic.vibrate();
-                      appState.currentAction = PageAction(
-                          state: PageState.addPage, page: WalkThroughConfig);
-                    },
-                  ),
-                  ListTile(
-                    title: Text('FAQs',
-                        style: TextStyle(color: UiConstants.textColor)),
-                    tileColor: Colors.transparent,
-                    trailing: Icon(
-                      Icons.arrow_forward_ios,
-                      size: 16,
-                    ),
-                    onTap: () {
-                      Haptic.vibrate();
-                      appState.currentAction = PageAction(
-                          state: PageState.addPage, page: FaqPageConfig);
-                    },
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          )
-        ],
+
+            // Container(
+            //   decoration: BoxDecoration(
+            //     gradient: new LinearGradient(
+            //       begin: Alignment.topRight,
+            //       end: Alignment.bottomLeft,
+            //       stops: [0.1, 0.6],
+            //       colors: [
+            //         UiConstants.primaryColor.withGreen(190),
+            //         UiConstants.primaryColor,
+            //       ],
+            //     ),
+            //   ),
+            //   width: SizeConfig.screenWidth,
+            //   height: SizeConfig.screenHeight * 0.3,
+            //   child: Stack(
+            //     children: [
+            //       Positioned(
+            //         bottom: 0,
+            //         right: 0,
+            //         child: Opacity(
+            //           opacity: 0.5,
+            //           child: SvgPicture.asset(
+            //             'images/svgs/contact_bg_illustration.svg',
+            //             width: SizeConfig.screenWidth * 0.6,
+            //           ),
+            //         ),
+            //       ),
+            //       SafeArea(
+            //         child: Container(
+            //           height: double.infinity,
+            //           width: SizeConfig.screenWidth * 0.6,
+            //           padding: EdgeInsets.only(
+            //               left: SizeConfig.blockSizeHorizontal * 5),
+            //           child: Column(
+            //             mainAxisAlignment: MainAxisAlignment.center,
+            //             crossAxisAlignment: CrossAxisAlignment.end,
+            //             children: [
+            //               Row(
+            //                 crossAxisAlignment: CrossAxisAlignment.start,
+            //                 children: [
+            //                   Expanded(
+            //                     child: FittedBox(
+            //                       child: Text(
+            //                         "Support 👩🏼‍🔧",
+            //                         style: GoogleFonts.montserrat(
+            //                             fontSize:
+            //                                 SizeConfig.cardTitleTextSize * 2,
+            //                             fontWeight: FontWeight.w500,
+            //                             color: Colors.white),
+            //                       ),
+            //                     ),
+            //                   ),
+            //                   Text(
+            //                     "( 24 x 7 )",
+            //                     style: GoogleFonts.montserrat(
+            //                       fontWeight: FontWeight.w300,
+            //                       color: Colors.white,
+            //                     ),
+            //                   )
+            //                 ],
+            //               ),
+            //               Text(
+            //                 "We're just a click and text away. Always.",
+            //                 style: TextStyle(
+            //                   color: Colors.white,
+            //                   height: 1.4,
+            //                   fontSize: SizeConfig.mediumTextSize,
+            //                 ),
+            //               )
+            //             ],
+            //           ),
+            //         ),
+            //       ),
+            //       SafeArea(
+            //         child: Container(
+            //           width: SizeConfig.screenWidth,
+            //           height: kToolbarHeight,
+            //           child: Row(
+            //             children: [
+            //               SizedBox(width: SizeConfig.blockSizeHorizontal),
+            //               IconButton(
+            //                 iconSize: 30,
+            //                 color: Colors.white,
+            //                 icon: Icon(
+            //                   Icons.arrow_back_rounded,
+            //                 ),
+            //                 onPressed: () =>
+            //                     AppState.backButtonDispatcher.didPopRoute(),
+            //               ),
+            //               Spacer(),
+            //               Image.asset(
+            //                 "images/fello_logo.png",
+            //                 width: SizeConfig.screenWidth * 0.1,
+            //                 color: Colors.white,
+            //               ),
+            //               Spacer(),
+            //               IconButton(
+            //                 iconSize: 30,
+            //                 color: Colors.white,
+            //                 icon: SizedBox(),
+            //                 onPressed: () {},
+            //               ),
+            //             ],
+            //           ),
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            // Expanded(
+            //   child: SingleChildScrollView(
+            //     physics: BouncingScrollPhysics(),
+            //     child: Column(
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: [
+            //         Padding(
+            //           padding: EdgeInsets.only(
+            //             top: 16,
+            //             left: SizeConfig.blockSizeHorizontal * 4,
+            //           ),
+            //           child: Text(
+            //             "Reach Out",
+            //             style: TextStyle(
+            //               fontWeight: FontWeight.w700,
+            //               color: UiConstants.primaryColor.withOpacity(0.5),
+            //               fontSize: SizeConfig.largeTextSize,
+            //             ),
+            //           ),
+            //         ),
+            //         Divider(),
+            //         ListTile(
+            //           title: Text('Chat with Us',
+            //               style: TextStyle(color: UiConstants.textColor)),
+            //           tileColor: Colors.transparent,
+            //           trailing: Icon(
+            //             Icons.arrow_forward_ios,
+            //             size: 16,
+            //           ),
+            // onTap: () {
+            //   Haptic.vibrate();
+            //   appState.currentAction = PageAction(
+            //       state: PageState.addPage,
+            //       page: ChatSupportPageConfig);
+            // },
+            //         ),
+            //         ListTile(
+            //           title: Text('Email Us',
+            //               style: TextStyle(color: UiConstants.textColor)),
+            //           tileColor: Colors.transparent,
+            //           trailing: Icon(
+            //             Icons.arrow_forward_ios,
+            //             size: 16,
+            //           ),
+            // onTap: () {
+            //   Haptic.vibrate();
+            //   try {
+            //     _launchEmail();
+            //   } catch (e) {
+            //     BaseUtil.showNegativeAlert(
+            //       'Error',
+            //       'Something went wrong, could not launch email right now. Please try again later',
+            //     );
+            //   }
+            // },
+            //         ),
+            //         ListTile(
+            //           title: Text('Request a callback',
+            //               style: TextStyle(
+            //                 color: UiConstants.textColor,
+            //               )),
+            //           tileColor: Colors.transparent,
+            //           trailing: Icon(
+            //             Icons.arrow_forward_ios,
+            //             size: 16,
+            //           ),
+            // onTap: () {
+            //   Haptic.vibrate();
+            //   if (connectivityStatus != ConnectivityStatus.Offline)
+            //     _showRequestCallSheet();
+            //   else
+            //     BaseUtil.showNoInternetAlert();
+            // },
+            //         ),
+            //         Padding(
+            //           padding: EdgeInsets.only(
+            //             top: 16,
+            //             left: SizeConfig.blockSizeHorizontal * 4,
+            //           ),
+            //           child: Text(
+            //             "Self-serve",
+            //             style: TextStyle(
+            //               fontWeight: FontWeight.w700,
+            //               color: UiConstants.primaryColor.withOpacity(0.5),
+            //               fontSize: SizeConfig.largeTextSize,
+            //             ),
+            //           ),
+            //         ),
+            //         Divider(),
+            //         ListTile(
+            //           title: Text('Play Walkthrough',
+            //               style: TextStyle(color: UiConstants.textColor)),
+            //           tileColor: Colors.transparent,
+            //           trailing: Icon(
+            //             Icons.arrow_forward_ios,
+            //             size: 16,
+            //           ),
+            //           onTap: () {
+            //             Haptic.vibrate();
+            //             appState.currentAction = PageAction(
+            //                 state: PageState.addPage, page: WalkThroughConfig);
+            //           },
+            //         ),
+            //         ListTile(
+            //           title: Text('FAQs',
+            //               style: TextStyle(color: UiConstants.textColor)),
+            //           tileColor: Colors.transparent,
+            //           trailing: Icon(
+            //             Icons.arrow_forward_ios,
+            //             size: 16,
+            //           ),
+            // onTap: () {
+            //   Haptic.vibrate();
+            //   appState.currentAction = PageAction(
+            //       state: PageState.addPage, page: FaqPageConfig);
+            // },
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // )
+          ],
+        ),
       ),
     );
   }

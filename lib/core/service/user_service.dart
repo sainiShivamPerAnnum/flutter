@@ -74,6 +74,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     _firebaseUser = FirebaseAuth.instance.currentUser;
     await setBaseUser();
     await setProfilePicture();
+    //await getUserFundWalletData();
+    //await getUserTicketWalletData();
   }
 
   Future<bool> signout() async {
@@ -153,11 +155,15 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   }
 
   Future<void> getUserFundWalletData() async {
-    userFundWallet = await _dbModel.getUserFundWallet(firebaseUser.uid);
-    if (_userFundWallet == null) _compileUserWallet();
+    UserFundWallet temp = await _dbModel.getUserFundWallet(firebaseUser.uid);
+    if (temp == null)
+      _compileUserWallet();
+    else
+      userFundWallet = temp;
   }
 
   _compileUserWallet() {
+    _logger.d("Creating new fund wallet");
     userFundWallet = (_userFundWallet == null)
         ? UserFundWallet.newWallet()
         : _userFundWallet;
