@@ -7,6 +7,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_view.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
+import 'package:felloapp/ui/service_elements/user_service/user_name_text.dart';
 import 'package:felloapp/ui/widgets/drawer/drawer_vm.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -58,17 +59,8 @@ class FDrawer extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   // Text(model.name, style: TextStyles.body2.bold),
-                                  PropertyChangeConsumer<UserService,
-                                      UserServiceProperties>(
-                                    properties: [
-                                      UserServiceProperties.myUserName
-                                    ],
-                                    builder: (context, model, properties) =>
-                                        FittedBox(
-                                          child: Text(model.myUserName,
-                                              overflow: TextOverflow.clip,
-                                              style: TextStyles.body2.bold),
-                                        ),
+                                  FittedBox(
+                                    child: UserNameTextSE(),
                                   ),
                                   SizedBox(height: 6),
                                   FittedBox(
@@ -91,7 +83,7 @@ class FDrawer extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: List.generate(
                           model.drawerList.length,
-                              (i) => Container(
+                          (i) => Container(
                             margin: EdgeInsets.symmetric(
                                 vertical: SizeConfig.padding8),
                             child: TextButton.icon(

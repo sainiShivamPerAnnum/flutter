@@ -1,6 +1,4 @@
-import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -44,50 +42,6 @@ class FelloAppBar extends StatelessWidget {
                 )
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class FelloCurrency extends StatelessWidget {
-  const FelloCurrency({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        AppState.screenStack.add(ScreenItem.dialog);
-        showModalBottomSheet(
-            backgroundColor: Colors.transparent,
-            context: context,
-            builder: (ctx) {
-              return WantMoreTicketsModalSheet();
-            });
-      },
-      child: Container(
-        height: SizeConfig.avatarRadius * 2,
-        width: SizeConfig.screenWidth * 0.258,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(100),
-          color: Colors.white.withOpacity(0.4),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            SvgPicture.asset(
-              Assets.tickets,
-              height: SizeConfig.iconSize1,
-            ),
-            Text("200", style: TextStyles.body2.bold),
-            Icon(
-              Icons.add_circle,
-              size: SizeConfig.iconSize1,
-              color: UiConstants.primaryColor,
-            ),
-          ],
         ),
       ),
     );

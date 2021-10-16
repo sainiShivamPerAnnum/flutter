@@ -33,26 +33,23 @@ class FcmHandler extends ChangeNotifier {
         case 'cric2020GameEnd':
           {
             //Navigate back to CricketView
-            AppState.delegate.appState.currentAction = PageAction(
-              state: PageState.addPage,
-              page: NotificationsConfig,
-            );
+            AppState.backButtonDispatcher.didPopRoute();
           }
           break;
         default:
       }
     }
 
-    try {
-      url = data["deep_uri"] ?? '';
-      print("------------------->" + url);
-      if (url.isNotEmpty) {
-        AppState().setFcmData = url;
-      }
-      tab = int.tryParse(data["misc_data"]) ?? 0;
-    } catch (e) {
-      log.error('$e');
-    }
+    // try {
+    //   url = data["deep_uri"] ?? '';
+    //   print("------------------->" + url);
+    //   if (url.isNotEmpty) {
+    //     AppState().setFcmData = url;
+    //   }
+    //   tab = int.tryParse(data["misc_data"]) ?? 0;
+    // } catch (e) {
+    //   log.error('$e');
+    // }
 
     return true;
   }

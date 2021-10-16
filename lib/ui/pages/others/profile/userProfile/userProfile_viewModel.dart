@@ -83,6 +83,7 @@ class UserProfileVM extends BaseModel {
       _userService.baseUser.gender = genderController.text.trim()[0];
       await _dbModel.updateUser(_userService.baseUser).then((res) {
         if (res) {
+          _userService.setMyUserName(_userService.baseUser.name);
           isUpdaingUserDetails = false;
           inEditMode = false;
           notifyListeners();

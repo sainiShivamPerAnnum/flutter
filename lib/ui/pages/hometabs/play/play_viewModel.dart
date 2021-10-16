@@ -11,6 +11,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
+import 'package:felloapp/ui/pages/others/games/cricket/cricket_game/cricket_game_view.dart';
 import 'package:felloapp/ui/pages/tabs/games/cricket/cricket_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -96,8 +97,8 @@ class PlayViewModel extends BaseModel {
   void navigateToCricketView() {
     AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,
-        page: CricketHomePageConfig,
-        widget: CricketView(
+        page: CricketGamePageConfig,
+        widget: CricketGameView(
           sessionId: _sessionId,
           userId: _userService.baseUser.uid,
           userName: _userService.baseUser.username,

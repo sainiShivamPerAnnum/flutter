@@ -11,7 +11,7 @@ class UserNameTextSE extends StatelessWidget {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
       properties: [UserServiceProperties.myUserName],
       builder: (context, model, property) => Text(
-        "Hi, ${model.myUserName?.split(' ')?.first ?? "user"}",
+        "${model.myUserName?.split(' ')?.first ?? "user"}",
         style: GoogleFonts.montserrat(
             fontWeight: FontWeight.w500, fontSize: SizeConfig.largeTextSize),
       ),
