@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -8,6 +9,7 @@ import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -26,7 +28,7 @@ class CricketHomeView extends StatelessWidget {
                 FelloAppBar(
                   leading: FelloAppBarBackButton(),
                   actions: [
-                    FelloCurrency(),
+                    FelloCoinBar(),
                     SizedBox(width: 16),
                     NotificationButton(),
                   ],
@@ -238,19 +240,23 @@ class CricketHomeView extends StatelessWidget {
                     padding: EdgeInsets.symmetric(
                         horizontal: SizeConfig.scaffoldMargin, vertical: 16),
                     child: FelloButtonLg(
-                      child: Text(
-                        'PLAY',
-                        style: TextStyles.body2.colour(Colors.white),
-                      )
+                      child: model.state == ViewState.Busy
+                          ? CircularProgressIndicator()
+                          : Text(
+                              'PLAY',
+                              style: TextStyles.body2.colour(Colors.white),
+                            )
                       // : SpinKitThreeBounce(
                       //     color: UiConstants.spinnerColor2,
                       //     size: 18.0,
                       //   )
                       ,
-                      onPressed: () {
-                        AppState.delegate.appState.currentAction = PageAction(
-                            state: PageState.addPage,
-                            page: CricketGamePageConfig);
+                      onPressed: () async {
+                        if (await model.openWebView())
+                          model.startGame();
+                        else
+                          BaseUtil.showNegativeAlert(
+                              "Something went wrong", model.message);
                       },
                     ),
                   ),

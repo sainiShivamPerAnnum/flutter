@@ -81,6 +81,7 @@ class SizeConfig {
   static double get padding20 => screenWidth * 0.048;
   static double get padding24 => screenWidth * 0.058;
   static double get padding32 => screenWidth * 0.077;
+  static double get padding40 => screenWidth * 0.196;
   static double get padding54 => screenWidth * 0.130;
   static double get padding64 => screenWidth * 0.154; //56
   static double get padding80 => screenWidth * 0.193; //56

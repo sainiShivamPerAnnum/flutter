@@ -1,6 +1,8 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
+import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -104,6 +106,7 @@ class UsernameState extends State<Username> {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     return Container(
@@ -114,11 +117,11 @@ class UsernameState extends State<Username> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SvgPicture.asset(
-              "assets/vectors/username.svg",
+              Assets.username,
               width: SizeConfig.screenWidth * 0.28,
             ),
             SizedBox(height: SizeConfig.padding40),
-            TextFieldLabel("Unique usename"),
+            TextFieldLabel(locale.obUsernameLabel),
             SizedBox(height: SizeConfig.padding6),
             Form(
               key: _formKey,
@@ -135,7 +138,7 @@ class UsernameState extends State<Username> {
                     return null;
                   },
                   decoration: InputDecoration(
-                    hintText: "Enter your username",
+                    hintText: locale.obUsernameHint,
                     prefixIcon: Icon(
                       Icons.alternate_email_rounded,
                       size: 20,
@@ -158,23 +161,16 @@ class UsernameState extends State<Username> {
             ),
             SizedBox(height: SizeConfig.padding40),
             Text(
-              "Rules for a valid username",
+              locale.obUsernameRulesTitle,
               style: TextStyles.title4.bold,
             ),
             SizedBox(
               height: SizeConfig.padding16,
             ),
-            const RuleTile(
-                rule: "must be more than 4 and less than 20 letters"),
-            const RuleTile(
-                rule:
-                    "only lowercase alphabets, numbers and dot(.) symbols allowed."),
-            const RuleTile(
-                rule:
-                    "consecutive dot(.) are not allowed. example: abc..xyz is an invalid username"),
-            const RuleTile(
-                rule:
-                    "dot(.) are not allowed at the beginning and at the end example: .abc , abcd. are invalid usernames "),
+            RuleTile(rule: locale.obUsernameRule1),
+            RuleTile(rule: locale.obUsernameRule2),
+            RuleTile(rule: locale.obUsernameRule3),
+            RuleTile(rule: locale.obUsernameRule4),
             SizedBox(
               height: SizeConfig.viewInsets.bottom,
             )

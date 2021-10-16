@@ -39,6 +39,8 @@ import 'package:felloapp/ui/pages/splash/splash_vm.dart';
 import 'package:felloapp/ui/widgets/appbars/fello_appbar_vm.dart';
 import 'package:felloapp/ui/widgets/buttons/buy_gold_button/buyGoldBtn_vm.dart';
 import 'package:felloapp/ui/widgets/buttons/sell_gold_button/sellGoldBtn_vm.dart';
+import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
+import 'package:felloapp/ui/widgets/coin_bar/coin_bar_vm.dart';
 import 'package:felloapp/ui/widgets/drawer/drawer_vm.dart';
 import 'package:felloapp/ui/widgets/mini_trans_card/mini_trans_card_vm.dart';
 import 'package:get_it/get_it.dart';
@@ -106,6 +108,7 @@ void setupLocator() {
   locator.registerFactory(() => FDrawerVM());
   locator.registerFactory(() => FelloAppBarVM());
   locator.registerFactory(() => MiniTransactionCardViewModel());
+  locator.registerFactory(() => FelloCoinBarViewModel());
 
   //....
 }

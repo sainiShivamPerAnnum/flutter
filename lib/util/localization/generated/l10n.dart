@@ -14,23 +14,22 @@ import 'intl/messages_all.dart';
 
 class S {
   S();
-
+  
   static S current;
-
-  static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
+  
+  static const AppLocalizationDelegate delegate =
+    AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name = (locale.countryCode?.isEmpty ?? false)
-        ? locale.languageCode
-        : locale.toString();
-    final localeName = Intl.canonicalizedLocale(name);
+    final name = (locale.countryCode?.isEmpty ?? false) ? locale.languageCode : locale.toString();
+    final localeName = Intl.canonicalizedLocale(name); 
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
       S.current = S();
-
+      
       return S.current;
     });
-  }
+  } 
 
   static S of(BuildContext context) {
     return Localizations.of<S>(context, S);
@@ -71,6 +70,266 @@ class S {
     return Intl.message(
       'No active internet connection',
       name: 'splashNoInternet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter the phone number`
+  String get obEnterMobile {
+    return Intl.message(
+      'Enter the phone number',
+      name: 'obEnterMobile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `For verification purposes, an OTP shall be sent to this number.`
+  String get obMobileDesc {
+    return Intl.message(
+      'For verification purposes, an OTP shall be sent to this number.',
+      name: 'obMobileDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mobile Number`
+  String get obMobileLabel {
+    return Intl.message(
+      'Mobile Number',
+      name: 'obMobileLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `OTP Authentication`
+  String get obOtpLabel {
+    return Intl.message(
+      'OTP Authentication',
+      name: 'obOtpLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter the 6 digit code sent to your mobile number +91 ******{number}`
+  String obOtpDesc(Object number) {
+    return Intl.message(
+      'Please enter the 6 digit code sent to your mobile number +91 ******$number',
+      name: 'obOtpDesc',
+      desc: '',
+      args: [number],
+    );
+  }
+
+  /// `Didn't get an OTP? `
+  String get obDidntGetOtp {
+    return Intl.message(
+      'Didn\'t get an OTP? ',
+      name: 'obDidntGetOtp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// ` Resend`
+  String get obResend {
+    return Intl.message(
+      ' Resend',
+      name: 'obResend',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `OTP requests exceeded. Please try again in sometime or contact us.`
+  String get obOtpTryExceed {
+    return Intl.message(
+      'OTP requests exceeded. Please try again in sometime or contact us.',
+      name: 'obOtpTryExceed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email Address`
+  String get obEmailLabel {
+    return Intl.message(
+      'Email Address',
+      name: 'obEmailLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Name as per PAN`
+  String get obNameLabel {
+    return Intl.message(
+      'Name as per PAN',
+      name: 'obNameLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gender`
+  String get obGenderLabel {
+    return Intl.message(
+      'Gender',
+      name: 'obGenderLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Date of Birth`
+  String get obDobLabel {
+    return Intl.message(
+      'Date of Birth',
+      name: 'obDobLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ever saved or invested`
+  String get obEverInvestedLabel {
+    return Intl.message(
+      'Ever saved or invested',
+      name: 'obEverInvestedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter your email address`
+  String get obEmailHint {
+    return Intl.message(
+      'Enter your email address',
+      name: 'obEmailHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter your full name`
+  String get obNameHint {
+    return Intl.message(
+      'Enter your full name',
+      name: 'obNameHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select your gender`
+  String get obGenderHint {
+    return Intl.message(
+      'Select your gender',
+      name: 'obGenderHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Male`
+  String get obGenderMale {
+    return Intl.message(
+      'Male',
+      name: 'obGenderMale',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Female`
+  String get obGenderFemale {
+    return Intl.message(
+      'Female',
+      name: 'obGenderFemale',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Rather not say`
+  String get obGenderOthers {
+    return Intl.message(
+      'Rather not say',
+      name: 'obGenderOthers',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unique username`
+  String get obUsernameLabel {
+    return Intl.message(
+      'Unique username',
+      name: 'obUsernameLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose a usename`
+  String get obUsernameHint {
+    return Intl.message(
+      'Choose a usename',
+      name: 'obUsernameHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Rules for a valid username`
+  String get obUsernameRulesTitle {
+    return Intl.message(
+      'Rules for a valid username',
+      name: 'obUsernameRulesTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `must be more than 4 and less than 20 letters`
+  String get obUsernameRule1 {
+    return Intl.message(
+      'must be more than 4 and less than 20 letters',
+      name: 'obUsernameRule1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `only lowercase alphabets, numbers and dot(.) symbols allowed.`
+  String get obUsernameRule2 {
+    return Intl.message(
+      'only lowercase alphabets, numbers and dot(.) symbols allowed.',
+      name: 'obUsernameRule2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `consecutive dot(.) are not allowed. example: abc..xyz is an invalid username`
+  String get obUsernameRule3 {
+    return Intl.message(
+      'consecutive dot(.) are not allowed. example: abc..xyz is an invalid username',
+      name: 'obUsernameRule3',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `dot(.) are not allowed at the beginning and at the end example: .abc , abcd. are invalid usernames `
+  String get obUsernameRule4 {
+    return Intl.message(
+      'dot(.) are not allowed at the beginning and at the end example: .abc , abcd. are invalid usernames ',
+      name: 'obUsernameRule4',
       desc: '',
       args: [],
     );
@@ -146,11 +405,31 @@ class S {
     );
   }
 
+  /// `Complete your profile`
+  String get abCompleteYourProfile {
+    return Intl.message(
+      'Complete your profile',
+      name: 'abCompleteYourProfile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gaming Name`
+  String get abGamingName {
+    return Intl.message(
+      'Gaming Name',
+      name: 'abGamingName',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `My Profile`
-  String get profileTitle {
+  String get abMyProfile {
     return Intl.message(
       'My Profile',
-      name: 'profileTitle',
+      name: 'abMyProfile',
       desc: '',
       args: [],
     );

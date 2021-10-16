@@ -9,41 +9,4 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 
-class FelloAppBarVM extends BaseModel {
-  final _userCoinService = locator<UserCoinService>();
-
-  GlobalKey<ScaffoldState> _scaffoldKey;
-
-  bool _isLoadingFlc = true;
-  get isLoadingFlc => _isLoadingFlc;
-
-  setScaffoldKey(scaffoldKey) {
-    _scaffoldKey = scaffoldKey;
-  }
-
-  showDrawer() {
-    _scaffoldKey.currentState.openDrawer();
-  }
-
-  getFlc() async {
-    _isLoadingFlc = true;
-    await _userCoinService?.getUserCoinBalance();
-    _isLoadingFlc = false;
-    notifyListeners();
-  }
-
-  showTicketModal(BuildContext context) {
-    AppState.screenStack.add(ScreenItem.dialog);
-    showModalBottomSheet(
-        context: context,
-        builder: (ctx) {
-          return WantMoreTicketsModalSheet();
-        });
-  }
-
-  openAlertsScreen() {
-    Haptic.vibrate();
-    AppState.delegate.appState.currentAction =
-        PageAction(state: PageState.addPage, page: NotificationsConfig);
-  }
-}
+class FelloAppBarVM extends BaseModel {}

@@ -5,6 +5,7 @@ import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
+import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/ui/widgets/drawer/drawer_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -25,34 +26,34 @@ class Root extends StatelessWidget {
       },
       builder: (ctx, model, child) {
         model.initialize();
-        return RefreshIndicator(
-          onRefresh: model.refresh,
-          child: Scaffold(
-            key: model.scaffoldKey,
-            drawer: FDrawer(),
-            body: HomeBackground(
-              whiteBackground: WhiteBackground(
-                color: Color(0xffF1F6FF),
-                height: AppState.getCurrentTabIndex == 0
-                    ? kToolbarHeight * 2.7
-                    : kToolbarHeight * 2.8,
-              ),
-              child: Stack(
-                children: [
-                  FelloAppBar(
-                    leading: InkWell(
-                      onTap: () => model.showDrawer(),
-                      child: ProfileImageSE(
-                        radius: SizeConfig.avatarRadius,
-                      ),
+        return Scaffold(
+          key: model.scaffoldKey,
+          drawer: FDrawer(),
+          body: HomeBackground(
+            whiteBackground: WhiteBackground(
+              color: Color(0xffF1F6FF),
+              height: AppState.getCurrentTabIndex == 0
+                  ? kToolbarHeight * 2.7
+                  : kToolbarHeight * 2.8,
+            ),
+            child: Stack(
+              children: [
+                FelloAppBar(
+                  leading: InkWell(
+                    onTap: () => model.showDrawer(),
+                    child: ProfileImageSE(
+                      radius: SizeConfig.avatarRadius,
                     ),
-                    actions: [
-                      FelloCurrency(),
-                      SizedBox(width: 16),
-                      NotificationButton(),
-                    ],
                   ),
-                  SafeArea(
+                  actions: [
+                    FelloCoinBar(),
+                    SizedBox(width: 16),
+                    NotificationButton(),
+                  ],
+                ),
+                RefreshIndicator(
+                  onRefresh: model.refresh,
+                  child: SafeArea(
                     child: Container(
                       margin: EdgeInsets.only(top: kToolbarHeight * 1.2),
                       child: IndexedStack(
@@ -60,12 +61,12 @@ class Root extends StatelessWidget {
                           index: AppState.getCurrentTabIndex),
                     ),
                   ),
-                  WantMoreTickets(),
-                  BottomNavBar(
-                    model: model,
-                  ),
-                ],
-              ),
+                ),
+                WantMoreTickets(),
+                BottomNavBar(
+                  model: model,
+                ),
+              ],
             ),
           ),
         );

@@ -18,6 +18,7 @@ import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -201,6 +202,7 @@ class _LoginControllerState extends State<LoginController>
     lclDbProvider = Provider.of<LocalDBModel>(context, listen: false);
     fcmProvider = Provider.of<FcmListener>(context, listen: false);
     appStateProvider = Provider.of<AppState>(context, listen: false);
+    S locale = S.of(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: UiConstants.primaryColor,
@@ -233,8 +235,8 @@ class _LoginControllerState extends State<LoginController>
                                             page: SplashPageConfig);
                                 }),
                                 title: value < 3
-                                    ? "Complete your profile"
-                                    : "Gaming Name",
+                                    ? locale.abCompleteYourProfile
+                                    : locale.abGamingName,
                               );
                       }),
                   Expanded(
@@ -278,35 +280,6 @@ class _LoginControllerState extends State<LoginController>
                 ],
               ),
             ),
-            // ValueListenableBuilder<double>(
-            //     valueListenable: _pageNotifier,
-            //     builder: (ctx, value, child) {
-            //       return Stack(
-            //         children: [
-            //           Positioned(
-            //             left: SizeConfig.blockSizeHorizontal * 4 + 14,
-            //             top: kToolbarHeight * 2 + 8,
-            //             width: 1,
-            //             child: Container(
-            //               height:
-            //                   ((SizeConfig.screenHeight - kToolbarHeight * 2) /
-            //                           4) *
-            //                       value,
-            //               color: UiConstants.primaryColor,
-            //             ),
-            //           ),
-            //           ProgressBarItem(value: value, index: 0, icon: Icons.phone),
-            //           ProgressBarItem(
-            //               value: value, index: 1, icon: Icons.password),
-            //           ProgressBarItem(
-            //               value: value,
-            //               index: 2,
-            //               icon: Icons.account_circle_rounded),
-            //           ProgressBarItem(
-            //               value: value, index: 3, icon: Icons.alternate_email),
-            //         ],
-            //       );
-            //     }),
             Align(
               alignment: Alignment.bottomCenter,
               child: Column(
@@ -658,12 +631,9 @@ class _LoginControllerState extends State<LoginController>
   Future _onSignUpComplete() async {
     await BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
     await BaseAnalytics.logUserProfile(baseProvider.myUser);
-    final UserService _userService = locator<UserService>();
-
+    await userService.init();
     await baseProvider.init();
-    await _userService.init();
     await fcmProvider.setupFcm();
-
     AppState.isOnboardingInProgress = false;
     if (baseProvider.isLoginNextInProgress == true) {
       baseProvider.isLoginNextInProgress = false;

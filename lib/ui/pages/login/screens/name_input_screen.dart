@@ -4,6 +4,8 @@ import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
+import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -179,6 +181,7 @@ class NameInputScreenState extends State<NameInputScreen> {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     httpProvider = Provider.of<HttpModel>(context, listen: false);
     if (!_isInitialized) {
@@ -205,14 +208,14 @@ class NameInputScreenState extends State<NameInputScreen> {
           shrinkWrap: true,
           // crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            TextFieldLabel("Email Address"),
+            TextFieldLabel(locale.obEmailLabel),
             _emailEnabled
                 ? TextFormField(
                     controller: _emailFieldController,
                     keyboardType: TextInputType.emailAddress,
                     autofocus: true,
                     decoration: InputDecoration(
-                      hintText: 'Enter your Email Address',
+                      hintText: locale.obEmailHint,
                       prefixIcon: Icon(
                         Icons.email,
                         size: 20,
@@ -271,12 +274,12 @@ class NameInputScreenState extends State<NameInputScreen> {
                       ),
                     ),
                   ),
-            TextFieldLabel("Name as per PAN"),
+            TextFieldLabel(locale.obNameLabel),
             TextFormField(
               controller: _nameFieldController,
               keyboardType: TextInputType.text,
               decoration: InputDecoration(
-                hintText: 'Enter your full name',
+                hintText: locale.obNameHint,
                 prefixIcon: Icon(
                   Icons.person,
                   size: 20,
@@ -289,7 +292,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                     : 'Please enter your name';
               },
             ),
-            TextFieldLabel("Gender"),
+            TextFieldLabel(locale.obGenderLabel),
             Container(
               padding: EdgeInsets.all(5),
               width: double.infinity,
@@ -305,7 +308,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                     width: 10,
                   ),
                   SvgPicture.asset(
-                    'images/svgs/gender.svg',
+                    Assets.gender,
                     height: 20,
                     color: gen == null ? Colors.grey : UiConstants.primaryColor,
                   ),
@@ -317,23 +320,23 @@ class NameInputScreenState extends State<NameInputScreen> {
                       child: DropdownButton(
                           iconEnabledColor: UiConstants.primaryColor,
                           value: gen,
-                          hint: Text('Select your gender'),
+                          hint: Text(locale.obGenderHint),
                           items: [
                             DropdownMenuItem(
                               child: Text(
-                                "Male",
+                                locale.obGenderMale,
                               ),
                               value: 1,
                             ),
                             DropdownMenuItem(
                               child: Text(
-                                "Female",
+                                locale.obGenderFemale,
                               ),
                               value: 0,
                             ),
                             DropdownMenuItem(
                                 child: Text(
-                                  "Rather Not Say",
+                                  locale.obGenderOthers,
                                   style: TextStyle(),
                                 ),
                                 value: -1),
@@ -349,7 +352,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                 ],
               ),
             ),
-            TextFieldLabel("Date of Birth"),
+            TextFieldLabel(locale.obDobLabel),
             Container(
               padding: EdgeInsets.all(5),
               width: double.infinity,
@@ -452,7 +455,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                   ),
                 ],
               ),
-            TextFieldLabel("Ever saved or invested?"),
+            TextFieldLabel(locale.obEverInvestedLabel),
             Container(
               width: SizeConfig.screenWidth,
               height: SizeConfig.screenWidth * 0.115,

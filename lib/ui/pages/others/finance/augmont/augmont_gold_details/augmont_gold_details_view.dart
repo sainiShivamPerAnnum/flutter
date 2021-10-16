@@ -7,11 +7,15 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class AugmontGoldDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseView<AugmontGoldDetailsViewModel>(
+      onModelReady: (model) {
+        model.fetchGoldRates();
+      },
       builder: (ctx, model, child) {
         return Scaffold(
           backgroundColor: UiConstants.primaryColor,
@@ -60,16 +64,21 @@ class AugmontGoldDetailsView extends StatelessWidget {
                                     children: [
                                       Text(
                                         "Buy Price",
-                                        style: TextStyles.title5
+                                        style: TextStyles.body1
                                             .colour(Colors.white),
                                       ),
                                       SizedBox(height: SizeConfig.padding4),
-                                      Text(
-                                        "₹ 4800",
-                                        style: TextStyles.title5
-                                            .colour(Colors.white)
-                                            .bold,
-                                      ),
+                                      model.isGoldRateFetching
+                                          ? SpinKitThreeBounce(
+                                              size: SizeConfig.title5,
+                                              color: Colors.white,
+                                            )
+                                          : Text(
+                                              "₹ ${model.goldRates.goldBuyPrice.toStringAsFixed(2)}",
+                                              style: TextStyles.title5
+                                                  .colour(Colors.white)
+                                                  .bold,
+                                            ),
                                     ],
                                   ),
                                 ),
@@ -91,16 +100,21 @@ class AugmontGoldDetailsView extends StatelessWidget {
                                     children: [
                                       Text(
                                         "Sell Price",
-                                        style: TextStyles.title5
+                                        style: TextStyles.body1
                                             .colour(Colors.white),
                                       ),
                                       SizedBox(height: SizeConfig.padding4),
-                                      Text(
-                                        "₹ 4750",
-                                        style: TextStyles.title5
-                                            .colour(Colors.white)
-                                            .bold,
-                                      ),
+                                      model.isGoldRateFetching
+                                          ? SpinKitThreeBounce(
+                                              size: SizeConfig.title5,
+                                              color: Colors.white,
+                                            )
+                                          : Text(
+                                              "₹ ${model.goldRates.goldSellPrice.toStringAsFixed(2)}",
+                                              style: TextStyles.title5
+                                                  .colour(Colors.white)
+                                                  .bold,
+                                            ),
                                     ],
                                   ),
                                 ),
