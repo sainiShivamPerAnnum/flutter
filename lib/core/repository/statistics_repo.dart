@@ -17,7 +17,7 @@ class StatisticsRepo {
       String code = getCodeFromFreq(freq);
       _logger.d("Game Type : $gameType \n Frequency: $freq \n Code: $code");
       final QueryDocumentSnapshot _response = await _api
-          .getStatisticsByFreqGameTypeAndCode(gameType, freq, '2021-10-41');
+          .getStatisticsByFreqGameTypeAndCode(gameType, freq, code);
 
       LeaderBoardModal _responseModel =
           LeaderBoardModal.fromMap(_response.data());
