@@ -36,7 +36,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
             children: [
               FelloAppBar(
                 leading: FelloAppBarBackButton(),
-                title: locale.profileTitle,
+                title: locale.abMyProfile,
               ),
               Expanded(
                 child: Container(

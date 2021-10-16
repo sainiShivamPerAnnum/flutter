@@ -1,5 +1,7 @@
 import 'package:felloapp/ui/elements/pin_input_custom_text_field.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
+import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -7,7 +9,6 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class OtpInputScreen extends StatefulWidget {
   final VoidCallback otpEntered;
@@ -78,6 +79,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Container(
@@ -88,17 +90,17 @@ class OtpInputScreenState extends State<OtpInputScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               SvgPicture.asset(
-                "assets/vectors/otp_auth.svg",
+                Assets.otpAuth,
                 width: SizeConfig.screenWidth * 0.352,
               ),
               SizedBox(height: SizeConfig.padding64),
               Text(
-                "OTP Authentication",
+                locale.obOtpLabel,
                 style: TextStyles.title4.bold,
               ),
               SizedBox(height: SizeConfig.padding12),
               Text(
-                "Please enter the 6 digit code sent to your mobile number +91 ******${LoginController.mobileno.substring(6)}",
+                locale.obOtpDesc(LoginController.mobileno.substring(6)),
                 textAlign: TextAlign.center,
                 style: TextStyles.body2,
               ),
@@ -157,7 +159,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Didn't get an OTP? ",
+                          locale.obDidntGetOtp,
                           style: TextStyle(
                             color: Colors.black45,
                             fontWeight: FontWeight.w500,
@@ -165,7 +167,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                         ),
                         InkWell(
                           child: Text(
-                            " Resend",
+                            locale.obResend,
                             style: TextStyle(
                               color: Theme.of(context).primaryColor,
                               fontWeight: FontWeight.w700,
@@ -184,7 +186,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                   : SizedBox(),
               (_isTriesExceeded)
                   ? Text(
-                      "OTP requests exceeded. Please try again in sometime or contact us.",
+                      locale.obOtpTryExceed,
                       style: TextStyles.body2.colour(
                         Colors.red[400],
                       ),
@@ -205,7 +207,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                         SizedBox(
                           height: 8,
                         ),
-                        Text(_loaderMessage)
+                        //Text(_loaderMessage)
                       ],
                     )
                   : Container(),

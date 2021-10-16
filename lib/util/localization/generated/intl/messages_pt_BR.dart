@@ -19,11 +19,11 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'pt_BR';
 
-  static m0(servingSize) => "*Baseado em uma porção de ${servingSize} fl. oz.";
+  static m1(servingSize) => "*Baseado em uma porção de ${servingSize} fl. oz.";
 
-  static m1(quantity, formattedNumber) => "${Intl.plural(quantity, one: 'Uma porção.', other: '${formattedNumber} porções no seu sistema de uma vez.')}";
+  static m2(quantity, formattedNumber) => "${Intl.plural(quantity, one: 'Uma porção.', other: '${formattedNumber} porções no seu sistema de uma vez.')}";
 
-  static m2(quantity, formattedNumber) => "${Intl.plural(quantity, one: 'Uma porção por dia.', other: '${formattedNumber} porções por dia.')}";
+  static m3(quantity, formattedNumber) => "${Intl.plural(quantity, one: 'Uma porção por dia.', other: '${formattedNumber} porções por dia.')}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -32,9 +32,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "onboardText3" : MessageLookupByLibrary.simpleMessage("Seu dinheiro continua crescendo com grandes retornos enquanto você joga jogos divertidos e ganha prêmios!"),
     "onboardTitle" : MessageLookupByLibrary.simpleMessage("Poupança baseada em jogos \n e investimentos🎉"),
     "onboradButton" : MessageLookupByLibrary.simpleMessage("INICIAR"),
-    "resultsPageFirstDisclaimer" : m0,
-    "resultsPageLethalDosageMessage" : m1,
-    "resultsPageSafeDosageMessage" : m2,
+    "resultsPageFirstDisclaimer" : m1,
+    "resultsPageLethalDosageMessage" : m2,
+    "resultsPageSafeDosageMessage" : m3,
     "resultsPageSafeDosageTitle" : MessageLookupByLibrary.simpleMessage("Limite Seguro Diário"),
     "resultsPageSecondDisclaimer" : MessageLookupByLibrary.simpleMessage("*Se aplica a pessoas com 18 anos ou mais. Essa calculadora não substitui conselhos médicos profissionais."),
     "splashSlowConnection" : MessageLookupByLibrary.simpleMessage("A conexão está demorando mais do que o normal")

@@ -34,6 +34,11 @@ class Assets {
   static final String navSave = "assets/vectors/icons/wallet.svg";
   static final String navWin = "assets/vectors/icons/medal.svg";
 
+// ONBOARDING
+  static final String enterPhoneNumber = "assets/vectors/enter_phone.svg";
+  static final String otpAuth = "assets/vectors/otp_auth.svg";
+  static final String gender = 'images/svgs/gender.svg';
+  static final String username = "assets/vectors/username.svg";
   //HOME TAB
 
   // PLAY

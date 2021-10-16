@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -43,6 +45,7 @@ class MobileInputScreenState extends State<MobileInputScreen> {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Container(
       padding: EdgeInsets.symmetric(
         // horizontal: SizeConfig.pageHorizontalMargins,
@@ -54,18 +57,18 @@ class MobileInputScreenState extends State<MobileInputScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             SvgPicture.asset(
-              "assets/vectors/enter_phone.svg",
+              Assets.enterPhoneNumber,
               width: SizeConfig.screenWidth * 0.28,
             ),
             SizedBox(height: SizeConfig.padding64),
             Text(
-              "Enter the phone number",
+              locale.obEnterMobile,
               textAlign: TextAlign.center,
               style: TextStyles.title4.bold,
             ),
             SizedBox(height: SizeConfig.padding12),
             Text(
-              "For verification purposes, an OTP shall be sent to this number.",
+              locale.obMobileDesc,
               textAlign: TextAlign.center,
               style: TextStyles.body2,
             ),
@@ -73,7 +76,7 @@ class MobileInputScreenState extends State<MobileInputScreen> {
             Row(
               children: [
                 Text(
-                  "Mobile Number",
+                  locale.obMobileLabel,
                   textAlign: TextAlign.start,
                   style: TextStyles.body3.colour(Colors.grey),
                 ),
@@ -102,32 +105,35 @@ class MobileInputScreenState extends State<MobileInputScreen> {
                       alignLeft: false,
                     ),
                     Expanded(
-                      child: TextFormField(
-                        key: _phoneFieldKey,
-                        controller: _mobileController,
-                        keyboardType: TextInputType.phone,
-                        //autofocus: true,
-                        onTap: showAvailablePhoneNumbers,
-                        validator: (value) => _validateMobile(),
-                        onFieldSubmitted: (v) {
-                          FocusScope.of(context).requestFocus(FocusNode());
-                        },
-                        onChanged: (val) {
-                          if (val.length == 10)
-                            FocusScope.of(context).unfocus();
-                        },
-                        cursorColor: UiConstants.primaryColor,
-                        cursorWidth: 1,
-                        cursorHeight: SizeConfig.title4,
-                        decoration: InputDecoration(
-                          enabledBorder:
-                              OutlineInputBorder(borderSide: BorderSide.none),
-                          focusedBorder:
-                              OutlineInputBorder(borderSide: BorderSide.none),
-                          focusedErrorBorder:
-                              OutlineInputBorder(borderSide: BorderSide.none),
-                          errorBorder:
-                              OutlineInputBorder(borderSide: BorderSide.none),
+                      child: Container(
+                        margin: EdgeInsets.only(top: SizeConfig.padding4),
+                        child: TextFormField(
+                          key: _phoneFieldKey,
+                          controller: _mobileController,
+                          keyboardType: TextInputType.phone,
+                          //autofocus: true,
+                          onTap: showAvailablePhoneNumbers,
+                          validator: (value) => _validateMobile(),
+                          onFieldSubmitted: (v) {
+                            FocusScope.of(context).requestFocus(FocusNode());
+                          },
+                          onChanged: (val) {
+                            if (val.length == 10)
+                              FocusScope.of(context).unfocus();
+                          },
+                          cursorColor: UiConstants.primaryColor,
+                          cursorWidth: 1,
+                          cursorHeight: SizeConfig.title5,
+                          decoration: InputDecoration(
+                            enabledBorder:
+                                OutlineInputBorder(borderSide: BorderSide.none),
+                            focusedBorder:
+                                OutlineInputBorder(borderSide: BorderSide.none),
+                            focusedErrorBorder:
+                                OutlineInputBorder(borderSide: BorderSide.none),
+                            errorBorder:
+                                OutlineInputBorder(borderSide: BorderSide.none),
+                          ),
                         ),
                       ),
                     ),
@@ -159,7 +165,7 @@ class MobileInputScreenState extends State<MobileInputScreen> {
             //     ),
             //   ),
             // ),
-            const SizedBox(height: 24),
+            SizedBox(height: SizeConfig.viewInsets.bottom),
           ],
           //)
         ),
