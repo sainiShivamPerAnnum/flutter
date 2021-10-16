@@ -75,6 +75,8 @@ class S {
     );
   }
 
+  // skipped getter for the '----------------------------------' key
+
   /// `Enter the phone number`
   String get obEnterMobile {
     return Intl.message(
@@ -335,15 +337,7 @@ class S {
     );
   }
 
-  /// `Trending Games`
-  String get playTrendingGames {
-    return Intl.message(
-      'Trending Games',
-      name: 'playTrendingGames',
-      desc: '',
-      args: [],
-    );
-  }
+  // skipped getter for the '-----------------------------------' key
 
   /// `Finance`
   String get navBarFinance {
@@ -394,6 +388,20 @@ class S {
       args: [],
     );
   }
+
+  // skipped getter for the '------------------------------------' key
+
+  /// `Trending Games`
+  String get playTrendingGames {
+    return Intl.message(
+      'Trending Games',
+      name: 'playTrendingGames',
+      desc: '',
+      args: [],
+    );
+  }
+
+  // skipped getter for the '-------------------------------------' key
 
   /// `BUY`
   String get saveBuyButton {
@@ -485,6 +493,8 @@ class S {
     );
   }
 
+  // skipped getter for the '--------------------------------' key
+
   /// `Complete your profile`
   String get abCompleteYourProfile {
     return Intl.message(
@@ -525,6 +535,8 @@ class S {
     );
   }
 
+  // skipped getter for the '-------------------------------' key
+
   /// `Refer and Earn`
   String get dReferNEarn {
     return Intl.message(
@@ -535,7 +547,15 @@ class S {
     );
   }
 
-  // skipped getter for the 'dPan&kyc' key
+  /// `PAN & KYC`
+  String get dPanNkyc {
+    return Intl.message(
+      'PAN & KYC',
+      name: 'dPanNkyc',
+      desc: '',
+      args: [],
+    );
+  }
 
   /// `Transactions`
   String get dTransactions {
@@ -578,6 +598,166 @@ class S {
       args: [version],
     );
   }
+
+  // skipped getter for the '-------------------------' key
+
+  /// `Earn ₹ 25 and 10 tickets for every referral and referrer of the month will get a brand new iphone 13`
+  String get refsubtitle {
+    return Intl.message(
+      'Earn ₹ 25 and 10 tickets for every referral and referrer of the month will get a brand new iphone 13',
+      name: 'refsubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `WhatsApp`
+  String get refWhatsapp {
+    return Intl.message(
+      'WhatsApp',
+      name: 'refWhatsapp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Share Link`
+  String get refShareLink {
+    return Intl.message(
+      'Share Link',
+      name: 'refShareLink',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `How it works?`
+  String get refHIW {
+    return Intl.message(
+      'How it works?',
+      name: 'refHIW',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your friend installs and signs up through your link`
+  String get refstep1 {
+    return Intl.message(
+      'Your friend installs and signs up through your link',
+      name: 'refstep1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your friend makes a first saving of ₹ 25 on the app`
+  String get refStep2 {
+    return Intl.message(
+      'Your friend makes a first saving of ₹ 25 on the app',
+      name: 'refStep2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You and your friend gets ₹ 25 and 10 tickets in your account`
+  String get refStep3 {
+    return Intl.message(
+      'You and your friend gets ₹ 25 and 10 tickets in your account',
+      name: 'refStep3',
+      desc: '',
+      args: [],
+    );
+  }
+
+  // skipped getter for the '--------------------------' key
+
+  /// `PAN Number`
+  String get pkPanLabel {
+    return Intl.message(
+      'PAN Number',
+      name: 'pkPanLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `State`
+  String get pkStateLabel {
+    return Intl.message(
+      'State',
+      name: 'pkStateLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Which state do you live in?`
+  String get pkStateHint {
+    return Intl.message(
+      'Which state do you live in?',
+      name: 'pkStateHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  // skipped getter for the '------------------------------' key
+
+  /// `Bank Account Details`
+  String get txnBankDetailsLabel {
+    return Intl.message(
+      'Bank Account Details',
+      name: 'txnBankDetailsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Transaction History`
+  String get txnHistoryLabel {
+    return Intl.message(
+      'Transaction History',
+      name: 'txnHistoryLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  // skipped getter for the '-----------------------------' key
+
+  /// `Submit`
+  String get btnSumbit {
+    return Intl.message(
+      'Submit',
+      name: 'btnSumbit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Yes`
+  String get btnYes {
+    return Intl.message(
+      'Yes',
+      name: 'btnYes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No`
+  String get btnNo {
+    return Intl.message(
+      'No',
+      name: 'btnNo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  // skipped getter for the '----------------------' key
 
   /// `Game based Savings \n & Investments🎉`
   String get onboardTitle {
@@ -628,6 +808,8 @@ class S {
       args: [],
     );
   }
+
+  // skipped getter for the '-----------------------' key
 
   /// `*Based on {servingSize} fl. oz serving.`
   String resultsPageFirstDisclaimer(Object servingSize) {

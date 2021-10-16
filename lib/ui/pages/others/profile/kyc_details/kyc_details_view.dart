@@ -4,7 +4,7 @@ import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/augmont_state_list.dart';
-import 'package:felloapp/util/styles/palette.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -14,6 +14,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 class KYCDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return BaseView<KYCDetailsViewModel>(
       onModelReady: (model) {
         model.init();
@@ -25,12 +26,11 @@ class KYCDetailsView extends StatelessWidget {
             children: [
               FelloAppBar(
                 leading: FelloAppBarBackButton(),
-                title: "PAN & KYC",
+                title: locale.dPanNkyc,
               ),
               Expanded(
                 child: Container(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.scaffoldMargin),
+                  padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(40),
@@ -38,14 +38,16 @@ class KYCDetailsView extends StatelessWidget {
                     ),
                     color: Colors.white,
                   ),
-                  child: Column(
+                  child: ListView(
+                    padding: EdgeInsets.zero,
+                    shrinkWrap: true,
                     children: [
                       SizedBox(height: SizeConfig.scaffoldMargin),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Name as per PAN",
+                            locale.obNameLabel,
                             style: TextStyles.body3,
                           ),
                           SizedBox(height: 6),
@@ -61,7 +63,7 @@ class KYCDetailsView extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "PAN Number",
+                            locale.pkPanLabel,
                             style: TextStyles.body3,
                           ),
                           SizedBox(height: 6),
@@ -77,7 +79,7 @@ class KYCDetailsView extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "State",
+                            locale.pkStateLabel,
                             style: TextStyles.body3,
                           ),
                           SizedBox(height: 6),
@@ -93,7 +95,7 @@ class KYCDetailsView extends StatelessWidget {
                               ),
                             ),
                             iconEnabledColor: UiConstants.primaryColor,
-                            hint: Text("Which state do you live in?"),
+                            hint: Text(locale.pkStateHint),
                             value: model.stateChosenValue,
                             onChanged: model.onStateSelected,
                             items: AugmontResources.augmontStateList
@@ -116,7 +118,7 @@ class KYCDetailsView extends StatelessWidget {
                                         size: 20,
                                       )
                                     : Text(
-                                        'SUBMIT',
+                                        locale.btnSumbit,
                                         style: TextStyles.body2
                                             .colour(Colors.white)
                                             .bold,

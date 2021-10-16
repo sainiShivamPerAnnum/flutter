@@ -49,6 +49,10 @@ class Assets {
   static final String whiteRays = "assets/images/white_rays.png";
   static final String moneyIcon = "assets/images/icons/money.png";
 
+  // REFERRAL
+  static final String referNearn = "images/share-card.png";
+  static final String whatsapp = "images/svgs/whatsapp.svg";
+  static final String plane = "images/svgs/plane.svg";
   static final List<String> onboardingSlide = [
     'images/save-small.png',
     'images/grow-small.png',

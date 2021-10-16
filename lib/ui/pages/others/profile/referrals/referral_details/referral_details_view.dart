@@ -9,6 +9,8 @@ import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -19,6 +21,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 class ReferralDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return BaseView<ReferralDetailsViewModel>(
       onModelReady: (model) => model.init(),
       builder: (ctx, model, child) => Scaffold(
@@ -27,7 +30,7 @@ class ReferralDetailsView extends StatelessWidget {
             children: [
               FelloAppBar(
                 leading: FelloAppBarBackButton(),
-                title: "Refer and Earn",
+                title: locale.dReferNEarn,
               ),
               Expanded(
                 child: Container(
@@ -46,13 +49,13 @@ class ReferralDetailsView extends StatelessWidget {
                         padding: EdgeInsets.symmetric(
                             horizontal: SizeConfig.pageHorizontalMargins * 2),
                         child: Image.asset(
-                          "images/share-card.png",
+                          Assets.referNearn,
                           fit: BoxFit.cover,
                         ),
                       ),
                       SizedBox(height: SizeConfig.padding32),
                       Text(
-                        "Earn ₹ 25 and 10 tickets for every referral and referrer of the month will get a brand new iphone 13",
+                        locale.refsubtitle,
                         textAlign: TextAlign.center,
                         style: TextStyles.body2,
                       ),
@@ -85,13 +88,13 @@ class ReferralDetailsView extends StatelessWidget {
                                           MainAxisAlignment.center,
                                       children: [
                                         SvgPicture.asset(
-                                          "images/svgs/whatsapp.svg",
+                                          Assets.whatsapp,
                                           width: SizeConfig.padding20,
                                           color: Colors.grey,
                                         ),
                                         SizedBox(width: SizeConfig.padding16),
                                         Text(
-                                          "Whatsapp",
+                                          locale.refWhatsapp,
                                           style: TextStyles.body2
                                               .colour(Colors.grey),
                                         )
@@ -135,14 +138,14 @@ class ReferralDetailsView extends StatelessWidget {
                                                 MainAxisAlignment.center,
                                             children: [
                                               SvgPicture.asset(
-                                                "images/svgs/whatsapp.svg",
+                                                Assets.whatsapp,
                                                 width: SizeConfig.padding20,
                                                 color: Color(0xff25D366),
                                               ),
                                               SizedBox(
                                                   width: SizeConfig.padding16),
                                               Text(
-                                                "Whatsapp",
+                                                locale.refWhatsapp,
                                                 style: TextStyles.body2,
                                               )
                                             ],
@@ -169,13 +172,13 @@ class ReferralDetailsView extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       SvgPicture.asset(
-                                        "images/svgs/plane.svg",
+                                        Assets.plane,
                                         color: Colors.white,
                                         width: SizeConfig.padding20,
                                       ),
                                       SizedBox(width: SizeConfig.padding16),
                                       Text(
-                                        "Share Link",
+                                        locale.refShareLink,
                                         style: TextStyles.body2
                                             .colour(Colors.white),
                                       )
@@ -202,14 +205,14 @@ class ReferralDetailsView extends StatelessWidget {
                                               MainAxisAlignment.center,
                                           children: [
                                             SvgPicture.asset(
-                                              "images/svgs/plane.svg",
+                                              Assets.plane,
                                               color: Colors.white,
                                               width: SizeConfig.padding20,
                                             ),
                                             SizedBox(
                                                 width: SizeConfig.padding16),
                                             Text(
-                                              "Share Link",
+                                              locale.refShareLink,
                                               style: TextStyles.body2
                                                   .colour(Colors.white),
                                             )
@@ -238,20 +241,17 @@ class ReferralDetailsView extends StatelessWidget {
                       ),
                       SizedBox(height: SizeConfig.padding40),
                       Text(
-                        "How it works?",
+                        locale.refHIW,
                         style: TextStyles.title4.bold,
                       ),
                       InfoTile(
-                        title:
-                            "Your friend installs and signs up through your link",
+                        title: locale.refstep1,
                       ),
                       InfoTile(
-                        title:
-                            "Your friend makes a first saving of ₹ 25 on the app",
+                        title: locale.refStep2,
                       ),
                       InfoTile(
-                        title:
-                            "You and your friend gets ₹ 25 and 10 tickets in your account",
+                        title: locale.refStep3,
                       ),
                       SizedBox(height: SizeConfig.padding20),
                       FelloButtonLg(
