@@ -135,22 +135,22 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       setMyUserDpUrl(await CacheManager.readCache(key: 'dpUrl'));
     }
   }
-
-  Future<void> getUserTicketWalletData() async {
-    userTicketWallet = await _dbModel.getUserTicketWallet(firebaseUser.uid);
-    if (_userTicketWallet == null) {
-      await _initiateNewTicketWallet();
-    }
-  }
-
-  Future<bool> _initiateNewTicketWallet() async {
-    userTicketWallet = UserTicketWallet.newTicketWallet();
-    int _t = userTicketWallet.initTck;
-    userTicketWallet = await _dbModel.updateInitUserTicketCount(
-        baseUser.uid, _userTicketWallet, Constants.NEW_USER_TICKET_COUNT);
-    //updateInitUserTicketCount method returns no change if operations fails
-    return (userTicketWallet.initTck != _t);
-  }
+  //
+  // Future<void> getUserTicketWalletData() async {
+  //   userTicketWallet = await _dbModel.getUserTicketWallet(firebaseUser.uid);
+  //   if (_userTicketWallet == null) {
+  //     await _initiateNewTicketWallet();
+  //   }
+  // }
+  //
+  // Future<bool> _initiateNewTicketWallet() async {
+  //   userTicketWallet = UserTicketWallet.newTicketWallet();
+  //   int _t = userTicketWallet.initTck;
+  //   userTicketWallet = await _dbModel.updateInitUserTicketCount(
+  //       baseUser.uid, _userTicketWallet, Constants.NEW_USER_TICKET_COUNT);
+  //   //updateInitUserTicketCount method returns no change if operations fails
+  //   return (userTicketWallet.initTck != _t);
+  // }
 
   Future<void> getUserFundWalletData() async {
     userFundWallet = await _dbModel.getUserFundWallet(firebaseUser.uid);

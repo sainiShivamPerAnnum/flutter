@@ -231,10 +231,10 @@ class BaseUtil extends ChangeNotifier {
     if (_userFundWallet == null) _compileUserWallet();
 
     ///get user ticket balance --> Try moving it to view and viewmodel for game
-    _userTicketWallet = await _dbModel.getUserTicketWallet(firebaseUser.uid);
-    if (_userTicketWallet == null) {
-      await _initiateNewTicketWallet();
-    }
+    // _userTicketWallet = await _dbModel.getUserTicketWallet(firebaseUser.uid);
+    // if (_userTicketWallet == null) {
+    //   await _initiateNewTicketWallet();
+    // }
 
     ///prefill pan details if available --> Profile Section (Show pan number eye)
     panService = new PanService();
@@ -730,6 +730,15 @@ class BaseUtil extends ChangeNotifier {
   }
 
   Future<bool> _initiateNewTicketWallet() async {
+    _userTicketWallet = UserTicketWallet.newTicketWallet();
+    int _t = userTicketWallet.initTck;
+    _userTicketWallet = await _dbModel.updateInitUserTicketCount(
+        myUser.uid, _userTicketWallet, Constants.NEW_USER_TICKET_COUNT);
+    //updateInitUserTicketCount method returns no change if operations fails
+    return (_userTicketWallet.initTck != _t);
+  }
+
+  Future<bool> _initiateNewFLCWallet() async {
     _userTicketWallet = UserTicketWallet.newTicketWallet();
     int _t = userTicketWallet.initTck;
     _userTicketWallet = await _dbModel.updateInitUserTicketCount(

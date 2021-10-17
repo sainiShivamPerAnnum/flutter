@@ -71,7 +71,17 @@ class BaseUser {
 
   BaseUser.newUser(String id, String mobile)
       : this(
-            id,mobile,null,null,null,null,null,false,null,false,false,
+            id,
+            mobile,
+            null,
+            null,
+            null,
+            null,
+            null,
+            false,
+            null,
+            false,
+            false,
             null,
             null,
             null,
