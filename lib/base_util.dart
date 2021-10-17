@@ -241,16 +241,10 @@ class BaseUtil extends ChangeNotifier {
     if (!checkKycMissing) {
       userRegdPan = await panService.getUserPan();
     }
-    //setUpDailyPicksCount();
 
     ///prefill augmont details if available --> Save Tab
     if (myUser.isAugmontOnboarded) {
       augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
-
-      ///prefill augmont details if available --> Save Tab
-      if (myUser.isAugmontOnboarded) {
-        augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
-      }
     }
   }
 
@@ -259,6 +253,7 @@ class BaseUtil extends ChangeNotifier {
     packageInfo = await PackageInfo.fromPlatform();
   }
 
+  ///related to icici - function not active
   acceptNotificationsIfAny(BuildContext context) {
     ///if payment completed in the background:
     if (_payService != null && myUser.pendingTxnId != null) {
@@ -278,6 +273,7 @@ class BaseUtil extends ChangeNotifier {
     }
   }
 
+  ///related to icici - function not active
   cancelIncomingNotifications() {
     if (_payService != null) _payService.addPaymentStatusListener(null);
   }
