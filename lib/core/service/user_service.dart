@@ -92,8 +92,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     _firebaseUser = FirebaseAuth.instance.currentUser;
     await setBaseUser();
     await setProfilePicture();
-    //await getUserFundWalletData();
-    //await getUserTicketWalletData();
+    await getUserFundWalletData();
+    await getUserTicketWalletData();
   }
 
   Future<bool> signout() async {

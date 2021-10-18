@@ -33,8 +33,7 @@ class Save extends StatelessWidget {
                 color: Colors.white,
               ),
               child: Container(
-                padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.globalMargin * 2, vertical: 20),
+                padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
