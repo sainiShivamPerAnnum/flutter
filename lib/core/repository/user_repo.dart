@@ -15,4 +15,15 @@ class UserRepository {
       throw e;
     }
   }
+
+  Future<void> addKycName({String userUid, String upstreamKycName}) async {
+    try {
+      Map<String, dynamic> _data = {'mKycName': upstreamKycName};
+      await _api.addKycName(userUid, _data);
+      _logger.d("Kyc name successfully added to firestore");
+    } catch (e) {
+      _logger.e(e);
+      throw e;
+    }
+  }
 }

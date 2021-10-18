@@ -1,13 +1,16 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/model/signzy_pan/pan_verification_res_model.dart';
 import 'package:felloapp/core/model/signzy_pan/signzy_login.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
+import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/augmont_confirm_register_dialog.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/locator.dart';
@@ -21,6 +24,7 @@ class SimpleKycModelsheetViewModel extends BaseModel {
   final _dbModel = locator<DBModel>();
   final _httpModel = locator<HttpModel>();
   final _baseUtil = locator<BaseUtil>();
+  final _userRepo = locator<UserRepository>();
 
   final depositformKey3 = GlobalKey<FormState>();
 
@@ -164,14 +168,26 @@ class SimpleKycModelsheetViewModel extends BaseModel {
           await _dbModel.getActiveSignzyPanApiKey();
 
       try {
-        bool isPanVerified = await _httpModel.verifyPanSignzy(
-            baseUrl: _signzyPanLogin.baseUrl,
-            panNumber: enteredPan,
-            panName: enteredPanName,
-            authToken: _signzyPanLogin.accessToken,
-            patronId: _signzyPanLogin.userId);
+        ApiResponse<PanVerificationResModel> _response =
+            await _httpModel.verifyPanSignzy(
+                baseUrl: _signzyPanLogin.baseUrl,
+                panNumber: enteredPan,
+                panName: enteredPanName,
+                authToken: _signzyPanLogin.accessToken,
+                patronId: _signzyPanLogin.userId);
 
-        _flag = isPanVerified;
+        _flag = _response.model.response.result.verified;
+
+        if (_flag) {
+          try {
+            _userRepo.addKycName(
+                userUid: _userService.baseUser.uid,
+                upstreamKycName: _response.model.response.result.upstreamName);
+          } catch (e) {
+            _logger.e(e);
+          }
+        }
+        
       } catch (e) {
         _flag = false;
         _logger.e(e.toString());

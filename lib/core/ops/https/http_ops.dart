@@ -6,6 +6,7 @@ import 'package:felloapp/core/model/signzy_pan/pan_verification_res_model.dart';
 import 'package:felloapp/core/model/signzy_pan/signzy_identities.dart';
 import 'package:felloapp/core/model/tambola_winners_details.dart';
 import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
@@ -347,14 +348,14 @@ class HttpModel extends ChangeNotifier {
     return {'flag': false, 'fail_msg': 'Your ticket could not be redeemed'};
   }
 
-  Future<bool> verifyPanSignzy(
+  Future<ApiResponse<PanVerificationResModel>> verifyPanSignzy(
       {String baseUrl,
       String panNumber,
       String panName,
       String authToken,
       String patronId}) async {
     SignzyIdentities _signzyIdentities;
-    bool _isPanVerified = false;
+
     //add base url for signzy apis
     // String baseUrl = 'https://preproduction.signzy.tech/api/v2/';
     //testing pan with signy verification API
@@ -406,7 +407,7 @@ class HttpModel extends ChangeNotifier {
           PanVerificationResModel _panVerificationResModel =
               PanVerificationResModel.fromJson(json.decode(res.body));
           if (_panVerificationResModel.response.result.verified) {
-            _isPanVerified = true;
+            return ApiResponse(model: _panVerificationResModel, code: 200);
           }
         } else if (res.statusCode == 404) {
           throw Exception('PAN not found');
@@ -414,11 +415,11 @@ class HttpModel extends ChangeNotifier {
           throw Exception('Failed to get response from Signz Verification Api');
         }
       }
+      return ApiResponse.withError(
+          "Failed to get response from Signzy Identity Api", 400);
     } catch (e) {
       logger.e(e);
       throw Exception('Failed to get response from Signzy Identity Api');
     }
-
-    return _isPanVerified;
   }
 }
