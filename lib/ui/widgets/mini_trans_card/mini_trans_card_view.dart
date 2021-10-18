@@ -31,7 +31,11 @@ class MiniTransactionCard extends StatelessWidget {
                           child: CircularProgressIndicator(),
                         )
                       : (m.txnList.length == 0
-                          ? Text("No Transactions")
+                          ? Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: SizeConfig.padding20),
+                              alignment: Alignment.center,
+                              child: Text("No Transactions"))
                           : Column(
                               children: List.generate(
                                 m.txnList.length < 5 ? m.txnList.length : 5,
@@ -107,13 +111,15 @@ class MiniTransactionCard extends StatelessWidget {
                               ),
                             )),
                 ),
-                FelloButton(
-                  onPressed: () => model.viewAllTransaction(),
-                  defaultButtonText: "View All",
-                  defaultButtonColor: Colors.white,
-                  textStyle:
-                      TextStyles.body1.bold.colour(UiConstants.primaryColor),
-                ),
+                m.txnList.isEmpty
+                    ? SizedBox()
+                    : FelloButton(
+                        onPressed: () => model.viewAllTransaction(),
+                        defaultButtonText: "View All",
+                        defaultButtonColor: Colors.white,
+                        textStyle: TextStyles.body1.bold
+                            .colour(UiConstants.primaryColor),
+                      ),
                 SizedBox(
                   height: 8,
                 )

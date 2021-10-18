@@ -20,6 +20,7 @@ class FDrawerVM extends BaseModel {
     DrawerModel(
       icon: Icon(Icons.ac_unit),
       title: "Refer and Earn",
+      pageConfig: ReferralDetailsPageConfig,
     ),
     DrawerModel(
       icon: Icon(Icons.ac_unit),
@@ -39,6 +40,7 @@ class FDrawerVM extends BaseModel {
     DrawerModel(
       icon: Icon(Icons.ac_unit),
       title: "How it works",
+      pageConfig: AugmontGoldDetailsPageConfig,
     ),
     DrawerModel(
       icon: Icon(Icons.ac_unit),

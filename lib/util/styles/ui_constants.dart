@@ -6,6 +6,8 @@ class UiConstants {
   static final Color primaryColor = const Color(0xff34C3A7);
   static final Color primaryLight = const Color(0xffCBECED);
   static final Color tertiarySolid = const Color(0xffFF9E0B);
+  static final Color tertiaryLight = const Color(0xffFFF5E5);
+
   static final Color accentColor = const Color(0xff333333);
   static final Color darkPrimaryColor = const Color.fromARGB(255, 58, 120, 255);
   static final Color secondaryColor = const Color.fromARGB(255, 241, 227, 243);

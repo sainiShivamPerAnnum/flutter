@@ -1,16 +1,14 @@
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 
 class ChangeProfilePicture extends StatefulWidget {
   final File image;
@@ -92,43 +90,35 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
                     )
                   : Column(
                       children: [
-                        Container(
-                          width: SizeConfig.screenWidth * 0.7,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                primary: UiConstants.primaryColor),
-                            onPressed: () {
-                              setState(() {
-                                isUploading = true;
-                                widget.upload(true);
-                              });
-                            },
+                        FelloButtonLg(
+                          child: Text(
+                            "Update",
+                            style: GoogleFonts.montserrat(
+                              color: Colors.white,
+                              fontSize: SizeConfig.mediumTextSize,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              isUploading = true;
+                              widget.upload(true);
+                            });
+                          },
+                        ),
+                        SizedBox(height: SizeConfig.padding12),
+                        FelloButtonLg(
+                            color: UiConstants.tertiarySolid,
                             child: Text(
-                              "Update",
+                              "Cancel",
                               style: GoogleFonts.montserrat(
                                 color: Colors.white,
                                 fontSize: SizeConfig.mediumTextSize,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
-                          ),
-                        ),
-                        Container(
-                          width: SizeConfig.screenWidth * 0.7,
-                          child: ElevatedButton(
-                            style:
-                                ElevatedButton.styleFrom(primary: Colors.white),
-                            onPressed: () => Navigator.pop(context),
-                            child: Text(
-                              "Cancel",
-                              style: GoogleFonts.montserrat(
-                                color: Colors.black,
-                                fontSize: SizeConfig.mediumTextSize,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        ),
+                            onPressed: () =>
+                                AppState.backButtonDispatcher.didPopRoute()),
                       ],
                     ),
             ],

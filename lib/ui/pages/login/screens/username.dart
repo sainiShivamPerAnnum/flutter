@@ -130,7 +130,7 @@ class UsernameState extends State<Username> {
                   focusNode: focusNode,
                   controller: usernameController,
                   autofocus: true,
-                  cursorColor: Colors.black,
+                  cursorColor: UiConstants.primaryColor,
                   keyboardType: TextInputType.text,
                   validator: (val) {
                     if (val == null || val.isEmpty)
@@ -142,6 +142,7 @@ class UsernameState extends State<Username> {
                     prefixIcon: Icon(
                       Icons.alternate_email_rounded,
                       size: 20,
+                      color: UiConstants.primaryColor,
                     ),
                   ),
                   onChanged: (value) {

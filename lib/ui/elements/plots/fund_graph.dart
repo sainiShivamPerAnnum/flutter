@@ -5,6 +5,8 @@ import 'package:felloapp/ui/elements/network_bar.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/styles/palette.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -43,7 +45,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
   }
 
   final List<Color> gradientColors = [
-    FelloColorPalette.augmontFundPalette().primaryColor,
+    UiConstants.primaryColor,
     Colors.white,
   ];
 
@@ -54,6 +56,8 @@ class _LineChartWidgetState extends State<LineChartWidget> {
   BaseUtil baseProvider;
   String _dataPointsState = "loading";
   int _selectedFrequency = 3;
+  Map<int, DateTime> xAxisdata = {};
+  Map<int, double> yAxisData = {};
 
   List<FlSpot> filteredDataItems = [];
   double maxX = 97;
@@ -71,7 +75,10 @@ class _LineChartWidgetState extends State<LineChartWidget> {
           graphPoints = value;
           for (int i = 0; i < value.length; i++) {
             dataItems.add(FlSpot(i.toDouble(), value[i].rate));
+            xAxisdata[i + 1] = graphPoints[i].timestamp;
+            yAxisData[i + 1] = graphPoints[i].rate;
           }
+
           filteredDataItems = dataItems;
         } else {
           _dataPointsState = "error";
@@ -82,10 +89,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     }
     if (_dataPointsState == "loading") {
       return Container(
-        margin: EdgeInsets.symmetric(
-          horizontal: SizeConfig.screenHeight * 0.02,
-        ),
-        height: SizeConfig.screenHeight * 0.2,
+        height: SizeConfig.screenHeight * 0.3,
         width: double.infinity,
         child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -94,7 +98,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                     textColor: Colors.black,
                   )
                 : SpinKitThreeBounce(
-                    color: FelloColorPalette.augmontFundPalette().primaryColor,
+                    color: UiConstants.primaryColor,
                     size: 30.0,
                   )),
       );
@@ -103,12 +107,13 @@ class _LineChartWidgetState extends State<LineChartWidget> {
       return Column(
         children: [
           Container(
-            height: SizeConfig.screenHeight * 0.2,
+            margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+            height: SizeConfig.screenHeight * 0.4,
             child: LineChart(
               LineChartData(
-                // minX: minX,
-                // maxX: maxX,
-                minY: 0,
+                minX: 0,
+                maxX: 97,
+                minY: 3000,
                 maxY: 6000,
                 lineTouchData: LineTouchData(
                     enabled: true,
@@ -124,8 +129,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                           return LineTooltipItem(
                               '•  ',
                               GoogleFonts.montserrat(
-                                color: FelloColorPalette.augmontFundPalette()
-                                    .primaryColor,
+                                color: UiConstants.primaryColor,
                                 fontSize: SizeConfig.mediumTextSize,
                                 fontWeight: FontWeight.w900,
                               ),
@@ -154,25 +158,40 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                       maxContentWidth: 120,
                     )),
                 titlesData: FlTitlesData(
-                    show: false,
+                    show: true,
                     bottomTitles: SideTitles(
                       showTitles: true,
                       reservedSize: 35,
                       getTextStyles: (value) => GoogleFonts.montserrat(
                         color: Colors.grey,
-                        fontWeight: FontWeight.bold,
                         fontSize: SizeConfig.smallTextSize,
                       ),
-                      //  getTitles: (value) => getvalue(value),
+                      getTitles: (value) {
+                        DateTime date = xAxisdata[value.toInt() + 1];
+                        return value % 15 == 0
+                            ? DateFormat('dd MMM\nyyyy').format(date)
+                            : "";
+                      },
                     ),
-                    leftTitles: SideTitles(margin: 0)),
+                    leftTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: SizeConfig.padding32,
+                      getTextStyles: (value) =>
+                          TextStyles.body4.colour(Colors.grey),
+                      getTitles: (value) {
+                        return (value > 0 && value % 1000 == 0)
+                            ? "₹ ${value.toString().substring(0, 1)}K"
+                            : "";
+                      },
+                    )),
                 gridData: FlGridData(
                   show: true,
+                  horizontalInterval: 1000,
                   getDrawingHorizontalLine: (value) {
                     return FlLine(
-                      color: const Color(0xff37434d),
-                      strokeWidth: 0,
-                    );
+                        color: UiConstants.primaryColor,
+                        strokeWidth: 0.3,
+                        dashArray: [10, 10]);
                   },
                 ),
                 borderData: FlBorderData(
@@ -193,8 +212,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                         getDotPainter: (spot, d, data, i) {
                           return FlDotCirclePainter(
                             radius: 1,
-                            color: FelloColorPalette.augmontFundPalette()
-                                .primaryColor,
+                            color: UiConstants.primaryColor,
                             strokeColor: Colors.red,
                             strokeWidth: 2,
                           );
@@ -202,101 +220,13 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                         checkToShowDot: (spot, data) {
                           return true;
                         }),
-                    belowBarData: BarAreaData(
-                      show: true,
-                      gradientColorStops: [0.6, 1],
-                      gradientFrom: Offset(0.5, 0),
-                      gradientTo: Offset(0.5, 1),
-                      colors: gradientColors
-                          .map((color) => color.withOpacity(0.2))
-                          .toList(),
-                    ),
                   ),
                 ],
               ),
             ),
           ),
-          Container(
-            margin: EdgeInsets.symmetric(
-                horizontal: SizeConfig.blockSizeHorizontal * 5),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: List.generate(
-                4,
-                (index) => GestureDetector(
-                  onTap: () => getSplitedChartData(index),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        width: index == _selectedFrequency ? 0 : 1,
-                        color: Colors.black45.withOpacity(0.1),
-                      ),
-                      borderRadius: BorderRadius.circular(6),
-                      color: index == _selectedFrequency
-                          ? FelloColorPalette.augmontFundPalette().primaryColor
-                          : Colors.transparent,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        segmentList[index],
-                        style: TextStyle(
-                          fontWeight: index == _selectedFrequency
-                              ? FontWeight.w700
-                              : FontWeight.w300,
-                          fontSize: SizeConfig.mediumTextSize,
-                          color: index == _selectedFrequency
-                              ? Colors.white
-                              : Colors.black45,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          )
         ],
       );
-    }
-  }
-
-  List<String> segmentList = ['3M', '6M', '1Y', '3Y'];
-  getSplitedChartData(int index) {
-    switch (index) {
-      case 0:
-        setState(() {
-          _selectedFrequency = 0;
-          filteredDataItems = dataItems.sublist(dataItems.length - 9);
-          maxX = 95;
-          minX = 87;
-        });
-        break;
-      case 1:
-        setState(() {
-          _selectedFrequency = 1;
-          filteredDataItems = dataItems.sublist(dataItems.length - 18);
-          maxX = 95;
-          minX = 78;
-        });
-        break;
-      case 2:
-        setState(() {
-          _selectedFrequency = 2;
-          filteredDataItems = dataItems.sublist(dataItems.length - 36);
-          maxX = 95;
-          minX = 60;
-        });
-        break;
-      case 3:
-        setState(() {
-          _selectedFrequency = 3;
-          filteredDataItems = dataItems;
-          maxX = 97;
-          minX = 0;
-        });
-        break;
     }
   }
 
@@ -306,22 +236,70 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     return DateFormat('dd MMM, yyyy').format(time);
   }
 
-  // getvalue(double value) {
-  //   switch (_selectedFrequency) {
-  //     case 3:
-  //       if (value % 2 == 0)
-  //         return value.toString();
-  //       else
-  //         return '';
-  //       break;
-  //     case 4:
-  //       if (value % 3 == 0)
-  //         return value.toString();
-  //       else
-  //         return '';
-  //       break;
-  //     default:
-  //       return value.toString();
-  //   }
-  // }
+  getvalue(double value) {
+    switch (_selectedFrequency) {
+      case 3:
+        if (value % 2 == 0)
+          return value.toString();
+        else
+          return '';
+        break;
+      case 4:
+        if (value % 3 == 0)
+          return value.toString();
+        else
+          return '';
+        break;
+      default:
+        return value.toString();
+    }
+  }
+}
+
+class LineTitles {
+  static getTitleData() => FlTitlesData(
+        show: true,
+        bottomTitles: SideTitles(
+          showTitles: true,
+          reservedSize: 35,
+          getTextStyles: (value) => const TextStyle(
+            color: Color(0xff68737d),
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+          getTitles: (value) {
+            switch (value.toInt()) {
+              case 2:
+                return 'MAR';
+              case 5:
+                return 'JUN';
+              case 8:
+                return 'SEP';
+            }
+            return '';
+          },
+          margin: 8,
+        ),
+        leftTitles: SideTitles(
+          showTitles: true,
+          getTextStyles: (value) => const TextStyle(
+            color: Color(0xff67727d),
+            fontWeight: FontWeight.bold,
+            fontSize: 15,
+          ),
+          getTitles: (value) {
+            switch (value.toInt()) {
+              case 1:
+                return '10k';
+              case 3:
+                return '30k';
+              case 5:
+                return '50k';
+            }
+            return '';
+          },
+          reservedSize: 35,
+          margin: 12,
+        ),
+      );
 }

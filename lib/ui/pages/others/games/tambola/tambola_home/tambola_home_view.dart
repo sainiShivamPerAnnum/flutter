@@ -49,8 +49,10 @@ class TambolaHomeView extends StatelessWidget {
                             padding: EdgeInsets.all(SizeConfig.scaffoldMargin),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(40),
-                                topRight: Radius.circular(40),
+                                topLeft:
+                                    Radius.circular(SizeConfig.roundness40),
+                                topRight:
+                                    Radius.circular(SizeConfig.roundness40),
                               ),
                               color: Colors.white,
                             ),

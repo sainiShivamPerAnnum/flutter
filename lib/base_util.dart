@@ -490,16 +490,19 @@ class BaseUtil extends ChangeNotifier {
     );
   }
 
-  static Future<void> openModalBottomSheet({
+  static Future openModalBottomSheet({
     Widget content,
     bool addToScreenStack,
     bool hapticVibrate,
+    Color backgroundColor,
     bool isBarrierDismissable,
   }) {
     if (addToScreenStack != null && addToScreenStack == true)
       AppState.screenStack.add(ScreenItem.dialog);
     if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
-    showModalBottomSheet(
+    return showModalBottomSheet(
+        backgroundColor:
+            backgroundColor != null ? backgroundColor : Colors.white,
         isDismissible: isBarrierDismissable,
         context: AppState.delegate.navigatorKey.currentContext,
         builder: (ctx) => content);

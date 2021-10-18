@@ -33,6 +33,7 @@ import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/picks_card/picks_card_vm.dart';
 import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_vm.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_vm.dart';
+import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_vm.dart';
 import 'package:felloapp/ui/pages/others/profile/transactions_history/transaction_history_vm.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_viewModel.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
@@ -44,6 +45,7 @@ import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_vm.dart';
 import 'package:felloapp/ui/widgets/drawer/drawer_vm.dart';
 import 'package:felloapp/ui/widgets/mini_trans_card/mini_trans_card_vm.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 
@@ -53,6 +55,7 @@ void setupLocator() {
   //Utils
   locator.registerLazySingleton(() => Logger());
   locator.registerLazySingleton(() => ApiPath());
+  locator.registerLazySingleton(() => S());
 
   //Services
   locator.registerLazySingleton(() => Api());
@@ -102,9 +105,9 @@ void setupLocator() {
   locator.registerFactory(() => TambolaHomeViewModel());
   locator.registerFactory(() => TambolaGameViewModel());
   locator.registerFactory(() => PicksCardViewModel());
+  locator.registerFactory(() => ReferralDetailsViewModel());
   //WIDGETS
-  // locator.registerFactory(() => FBtnVM());
-  // locator.registerFactory(() => RBtnVM());
+
   locator.registerFactory(() => SellGoldBtnVM());
   locator.registerFactory(() => BuyGoldBtnVM());
   locator.registerFactory(() => FDrawerVM());

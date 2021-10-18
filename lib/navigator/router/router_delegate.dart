@@ -2,6 +2,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/aboutus_dialog.dart';
@@ -35,13 +36,14 @@ import 'package:felloapp/ui/pages/others/games/tambola/weekly_result.dart';
 import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/claim_username.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
-import 'package:felloapp/ui/pages/others/profile/referrals_page.dart';
+import 'package:felloapp/ui/pages/others/profile/referrals/referral_history/referrals_page.dart';
 import 'package:felloapp/ui/pages/others/profile/transactions_history/transactions_history_view.dart';
-import 'package:felloapp/ui/pages/static/transactions_view.dart';
+import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_view.dart';
 import 'package:felloapp/ui/pages/others/profile/verify_email.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/pages/splash/splash_view.dart';
+import 'package:felloapp/ui/pages/static/transactions_view.dart';
 import 'package:felloapp/util/locator.dart';
 
 import 'package:felloapp/util/assets.dart';
@@ -183,9 +185,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.BankDetails:
           _addPageData(BankDetailsView(), BankDetailsPageConfig);
           break;
-        case Pages.Referral:
-          _addPageData(ReferralsPage(), ReferralPageConfig);
-          break;
 
         case Pages.Tnc:
           _addPageData(TnC(), TncPageConfig);
@@ -257,6 +256,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
         case Pages.AugGoldDetails:
           _addPageData(AugmontGoldDetailsView(), AugmontGoldDetailsPageConfig);
+          break;
+        case Pages.ReferralDetails:
+          _addPageData(ReferralDetailsView(), ReferralDetailsPageConfig);
+          break;
+        case Pages.ReferralHistory:
+          _addPageData(ReferralHistoryView(), ReferralHistoryPageConfig);
           break;
         default:
           break;
@@ -430,6 +435,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.AugGoldDetails:
         AugmontGoldDetailsPageConfig.currentPageAction = action;
+        break;
+      case Pages.ReferralDetails:
+        ReferralDetailsPageConfig.currentPageAction = action;
+        break;
+      case Pages.ReferralHistory:
+        ReferralHistoryPageConfig.currentPageAction = action;
         break;
       default:
         break;

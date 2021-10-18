@@ -34,15 +34,14 @@ class AugmontGoldDetailsView extends StatelessWidget {
                           topLeft: Radius.circular(SizeConfig.roundness40),
                           topRight: Radius.circular(SizeConfig.roundness40)),
                     ),
-                    padding: EdgeInsets.symmetric(
-                      // horizontal: SizeConfig.pageHorizontalMargins,
-                      vertical: SizeConfig.padding32,
-                    ),
                     child: ListView(
                       padding: EdgeInsets.zero,
                       children: [
                         Container(
-                          margin: EdgeInsets.only(bottom: SizeConfig.padding32),
+                          margin: EdgeInsets.only(
+                              top: SizeConfig.padding32,
+                              right: SizeConfig.pageHorizontalMargins,
+                              bottom: SizeConfig.pageHorizontalMargins),
                           width: SizeConfig.screenWidth,
                           child: LineChartWidget(),
                         ),
@@ -129,8 +128,9 @@ class AugmontGoldDetailsView extends StatelessWidget {
                             Container(
                               padding: EdgeInsets.all(4),
                               margin: EdgeInsets.symmetric(
-                                  horizontal: SizeConfig.scaffoldMargin,
-                                  vertical: SizeConfig.scaffoldMargin / 2),
+                                  horizontal: SizeConfig.pageHorizontalMargins,
+                                  vertical:
+                                      SizeConfig.pageHorizontalMargins / 2),
                               decoration: BoxDecoration(
                                 color: Color(0xffF6F9FF),
                                 borderRadius: BorderRadius.circular(16),

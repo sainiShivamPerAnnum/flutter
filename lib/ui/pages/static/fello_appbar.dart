@@ -1,4 +1,6 @@
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -51,13 +53,19 @@ class FelloAppBar extends StatelessWidget {
 class NotificationButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return CircleAvatar(
-      backgroundColor: Colors.black,
-      radius: SizeConfig.avatarRadius,
-      child: Padding(
-        padding: EdgeInsets.all(SizeConfig.padding12),
-        child: SvgPicture.asset(
-          Assets.alerts,
+    return InkWell(
+      onTap: () {
+        AppState.delegate.appState.currentAction =
+            PageAction(state: PageState.addPage, page: NotificationsConfig);
+      },
+      child: CircleAvatar(
+        backgroundColor: Colors.black,
+        radius: SizeConfig.avatarRadius,
+        child: Padding(
+          padding: EdgeInsets.all(SizeConfig.padding12),
+          child: SvgPicture.asset(
+            Assets.alerts,
+          ),
         ),
       ),
     );
