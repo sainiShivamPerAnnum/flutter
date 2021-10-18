@@ -1,27 +1,29 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 
 class BaseUser {
   static Log log = new Log("User");
-  String _uid;
-  String _mobile;
-  String _name;
-  String _email;
-  String _dob;
-  String _gender; // 0: Male | 1: Female | -1: Rather Not to say
-  String _username;
-  String _client_token; //fetched from a subcollection
-  bool _isInvested;
-  bool _isIciciOnboarded;
-  bool _isAugmontOnboarded;
-  bool _isSimpleKycVerified;
-  int _isKycVerified;
-  String _pendingTxnId;
-  bool _isIciciEnabled;
-  bool _isAugmontEnabled;
-  bool _isemailVerified;
-  UserPreferences _userPreferences;
+  String uid;
+  String mobile;
+  String name;
+  String email;
+  String dob;
+  String gender; // 0: Male | 1: Female | -1: Rather Not to say
+  String username;
+  String client_token; //fetched from a subcollection
+  bool isInvested;
+  bool isIciciOnboarded;
+  bool isAugmontOnboarded;
+  bool isSimpleKycVerified;
+  int isKycVerified;
+  String pendingTxnId;
+  bool isIciciEnabled;
+  bool isAugmontEnabled;
+  bool isEmailVerified;
+  UserPreferences userPreferences;
+  Timestamp createdOn;
 
   static final String fldId = "mID";
   static final String fldMobile = "mMobile";
@@ -30,16 +32,9 @@ class BaseUser {
   static final String fldDob = "mDob";
   static final String fldGender = "mGender";
   static final String fldClient_token = "mClientToken";
-  static final String fldTicket_count = "mTicketCount";
-  static final String fldAcctBalance = "mAcctBalance";
-  static final String fldDepositBalance = "mDepBalance";
-  static final String fldPriBalance = "mPriBalance";
   static final String fldICICIBalance = "mICBalance";
   static final String fldAugmontBalance = "mAugBalance";
   static final String fldAugmontQuantity = "mAugQuantity";
-  static final String fldLifeTimeWinnings = "mLifeTimeWin";
-  static final String fldPan = "mPan";
-  static final String fldAge = "mAge";
   static final String fldUsername = "mUsername";
   static final String fldIsEmailVerified = "mIsEmailVerified";
   static final String fldIsInvested = "mIsInvested";
@@ -51,26 +46,28 @@ class BaseUser {
   static final String fldIsIciciEnabled = "mIsIciciEnabled";
   static final String fldIsAugmontEnabled = "mIsAugmontEnabled";
   static final String fldUserPrefs = "mUserPrefs";
+  static final String fldCreatedOn = "mCreatedOn";
 
   BaseUser(
-      this._uid,
-      this._mobile,
-      this._email,
-      this._name,
-      this._dob,
-      this._gender,
-      this._client_token,
-      this._isInvested,
-      this._isIciciOnboarded,
-      this._isAugmontOnboarded,
-      this._isSimpleKycVerified,
-      this._isKycVerified,
-      this._pendingTxnId,
-      this._isIciciEnabled,
-      this._isAugmontEnabled,
-      this._username,
-      this._isemailVerified,
-      this._userPreferences);
+      this.uid,
+      this.mobile,
+      this.email,
+      this.name,
+      this.dob,
+      this.gender,
+      this.client_token,
+      this.isInvested,
+      this.isIciciOnboarded,
+      this.isAugmontOnboarded,
+      this.isSimpleKycVerified,
+      this.isKycVerified,
+      this.pendingTxnId,
+      this.isIciciEnabled,
+      this.isAugmontEnabled,
+      this.username,
+      this.isEmailVerified,
+      this.userPreferences,
+      this.createdOn);
 
   BaseUser.newUser(String id, String mobile)
       : this(
@@ -82,16 +79,17 @@ class BaseUser {
             null,
             null,
             false,
-            false,
-            false,
-            false,
-            Constants.KYC_UNTESTED,
             null,
             false,
-            true,
+            false,
+            null,
+            null,
+            null,
+            null,
             "",
             false,
-            UserPreferences(null));
+            UserPreferences(null),
+            Timestamp.now());
 
   BaseUser.fromMap(Map<String, dynamic> data, String id, [String client_token])
       : this(
@@ -103,38 +101,42 @@ class BaseUser {
             data[fldGender],
             client_token,
             data[fldIsInvested] ?? false,
-            data[fldIsIciciOnboarded] ?? false,
-            data[fldIsAugmontOnboarded] ?? false,
+            data[fldIsIciciOnboarded],
+            data[fldIsAugmontOnboarded],
             data[fldIsSimpleKycVerified],
-            data[fldIsKycVerified] ?? Constants.KYC_UNTESTED,
+            data[fldIsKycVerified],
             data[fldPendingTxnId],
             data[fldIsIciciEnabled],
             data[fldIsAugmontEnabled],
             data[fldUsername],
             data[fldIsEmailVerified],
-            UserPreferences(data[fldUserPrefs]));
+            UserPreferences(data[fldUserPrefs]),
+            data[fldCreatedOn]);
 
   //to send user object to server
   toJson() {
     var userObj = {
-      fldMobile: _mobile,
-      fldName: _name,
-      fldEmail: _email,
-      fldDob: _dob,
-      fldGender: _gender,
-      fldIsInvested: _isInvested,
-      fldIsIciciOnboarded: _isIciciOnboarded,
-      fldIsAugmontOnboarded: _isAugmontOnboarded,
-      fldIsSimpleKycVerified: _isSimpleKycVerified,
-      fldIsKycVerified: _isKycVerified,
-      fldUsername: _username,
-      fldIsEmailVerified: _isemailVerified
+      fldMobile: mobile,
+      fldName: name,
+      fldEmail: email,
+      fldDob: dob,
+      fldGender: gender,
+      fldIsInvested: isInvested,
+      fldIsAugmontOnboarded: isAugmontOnboarded,
+      fldIsSimpleKycVerified: isSimpleKycVerified,
+      fldUsername: username,
+      fldIsEmailVerified: isEmailVerified,
+      fldCreatedOn: createdOn
     };
-    if (_isIciciEnabled != null) userObj[fldIsIciciEnabled] = _isIciciEnabled;
-    if (_isAugmontEnabled != null)
-      userObj[fldIsAugmontEnabled] = _isAugmontEnabled;
-    if (_userPreferences != null)
-      userObj[fldUserPrefs] = _userPreferences.toJson();
+    if (isKycVerified != null) userObj[fldIsKycVerified] = isKycVerified;
+    if (isIciciOnboarded != null)
+      userObj[fldIsIciciOnboarded] = isIciciOnboarded;
+    if (isIciciEnabled != null) userObj[fldIsIciciEnabled] = isIciciEnabled;
+    if (isAugmontEnabled != null)
+      userObj[fldIsAugmontEnabled] = isAugmontEnabled;
+    if (userPreferences != null)
+      userObj[fldUserPrefs] = userPreferences.toJson();
+
     return userObj;
   }
 
@@ -175,115 +177,7 @@ class BaseUser {
 
   bool hasIncompleteDetails() {
     //return ((_mobile?.isEmpty??true) || (_name?.isEmpty??true) || (_email?.isEmpty??true));
-    return (((_mobile?.isEmpty ?? true) || (_name?.isEmpty ?? true)));
-  }
-
-  String get client_token => _client_token;
-
-  set client_token(String value) {
-    _client_token = value;
-  }
-
-  String get email => _email;
-
-  set email(String value) {
-    _email = value;
-  }
-
-  String get name => _name;
-
-  set name(String value) {
-    _name = value;
-  }
-
-  String get username => _username;
-
-  set username(String value) {
-    _username = value;
-  }
-
-  String get mobile => _mobile;
-
-  set mobile(String value) {
-    _mobile = value;
-  }
-
-  String get dob => _dob;
-
-  set dob(String date) {
-    _dob = date;
-  }
-
-  String get gender => _gender;
-
-  set gender(String gen) {
-    _gender = gen;
-  }
-
-  String get uid => _uid;
-
-  set uid(String value) {
-    _uid = value;
-  }
-
-  bool get isEmailVerified => _isemailVerified;
-
-  set isEmailVerified(bool value) {
-    _isemailVerified = value;
-  }
-
-  bool get isInvested => _isInvested;
-
-  set isInvested(bool value) {
-    _isInvested = value;
-  }
-
-  bool get isSimpleKycVerified => _isSimpleKycVerified;
-
-  set isSimpleKycVerified(bool value) {
-    _isSimpleKycVerified = value;
-  }
-
-  int get isKycVerified => _isKycVerified;
-
-  set isKycVerified(int value) {
-    _isKycVerified = value;
-  }
-
-  bool get isIciciOnboarded => _isIciciOnboarded;
-
-  set isIciciOnboarded(bool value) {
-    _isIciciOnboarded = value;
-  }
-
-  String get pendingTxnId => _pendingTxnId;
-
-  set pendingTxnId(String value) {
-    _pendingTxnId = value;
-  }
-
-  bool get isIciciEnabled => _isIciciEnabled;
-
-  set isIciciEnabled(bool value) {
-    _isIciciEnabled = value;
-  }
-
-  bool get isAugmontEnabled => _isAugmontEnabled;
-
-  set isAugmontEnabled(bool value) {
-    _isAugmontEnabled = value;
-  }
-
-  bool get isAugmontOnboarded => _isAugmontOnboarded;
-
-  set isAugmontOnboarded(bool value) {
-    _isAugmontOnboarded = value;
-  }
-
-  UserPreferences get userPreferences => _userPreferences;
-
-  set userPreferences(UserPreferences value) {
-    _userPreferences = value;
+    return (((mobile?.isEmpty ?? true) || (name?.isEmpty ?? true)));
   }
 }
 
