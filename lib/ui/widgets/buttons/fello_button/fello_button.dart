@@ -26,6 +26,7 @@ class FelloButton extends StatefulWidget {
   final Function onPressed;
   final Widget activeButtonUI;
   final Widget offlineButtonUI;
+  final Widget loadingButtonUI;
   final Color defaultButtonColor;
   final String defaultButtonText;
   final TextStyle textStyle;
@@ -36,6 +37,7 @@ class FelloButton extends StatefulWidget {
       this.onPressed,
       this.activeButtonUI,
       this.offlineButtonUI,
+      this.loadingButtonUI,
       this.defaultButtonColor,
       this.defaultButtonText,
       this.onPressedAsync,
@@ -60,7 +62,12 @@ class _FelloButtonState extends State<FelloButton> {
         Provider.of<ConnectivityStatus>(context);
     if (connectivityStatus == ConnectivityStatus.Offline)
       return widget.offlineButtonUI != null
-          ? widget.offlineButtonUI
+          ? InkWell(
+              onTap: () async {
+                if (await BaseUtil.showNoInternetAlert()) return;
+              },
+              child: widget.offlineButtonUI,
+            )
           : ElevatedButton(
               onPressed: () => BaseUtil.showNoInternetAlert(),
               style: ElevatedButton.styleFrom(primary: Colors.grey),
@@ -71,23 +78,21 @@ class _FelloButtonState extends State<FelloButton> {
             );
     else {
       if (isLoading)
-        return SpinKitThreeBounce(
-          size: SizeConfig.mediumTextSize,
-          color: Colors.black,
-        );
+        return widget.loadingButtonUI != null
+            ? widget.loadingButtonUI
+            : SpinKitThreeBounce(
+                size: SizeConfig.mediumTextSize,
+                color: UiConstants.primaryColor,
+              );
       else
         return widget.activeButtonUI != null
             ? InkWell(
-                onTap: () {
+                onTap: () async {
+                  if (await BaseUtil.showNoInternetAlert()) return;
                   if (Platform.isAndroid)
                     HapticFeedback.vibrate();
                   else
                     HapticFeedback.lightImpact();
-                  widget.onPressed();
-                },
-                child: widget.activeButtonUI)
-            : TextButton(
-                onPressed: () async {
                   if (widget.onPressedAsync != null) {
                     if (widget.action != null)
                       widget.action(true);
@@ -99,7 +104,29 @@ class _FelloButtonState extends State<FelloButton> {
                     else
                       updateButtonState(false);
                   }
-                  widget.onPressed();
+                  if (widget.onPressed != null) widget.onPressed();
+                },
+                child: widget.activeButtonUI)
+            : TextButton(
+                onPressed: () async {
+                  if (await BaseUtil.showNoInternetAlert()) return;
+
+                  if (Platform.isAndroid)
+                    HapticFeedback.vibrate();
+                  else
+                    HapticFeedback.lightImpact();
+                  if (widget.onPressedAsync != null) {
+                    if (widget.action != null)
+                      widget.action(true);
+                    else
+                      updateButtonState(true);
+                    await widget.onPressedAsync();
+                    if (widget.action != null)
+                      widget.action(false);
+                    else
+                      updateButtonState(false);
+                  }
+                  if (widget.onPressed != null) widget.onPressed();
                 },
                 child: Text(
                   widget.defaultButtonText ?? "Button",

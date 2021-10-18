@@ -276,6 +276,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                   ),
             TextFieldLabel(locale.obNameLabel),
             TextFormField(
+              cursorColor: UiConstants.primaryColor,
               controller: _nameFieldController,
               keyboardType: TextInputType.text,
               decoration: InputDecoration(
@@ -283,6 +284,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                 prefixIcon: Icon(
                   Icons.person,
                   size: 20,
+                  color: UiConstants.primaryColor,
                 ),
               ),
               autofocus: false,

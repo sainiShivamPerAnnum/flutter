@@ -19,6 +19,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   BaseUser _baseUser;
   String _myUserDpUrl;
   String _myUserName;
+  String _dob;
+  String _gender;
   String _idToken;
   UserTicketWallet _userTicketWallet;
   UserFundWallet _userFundWallet;
@@ -28,6 +30,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   String get myUserDpUrl => _myUserDpUrl;
   String get myUserName => _myUserName;
   String get idToken => _idToken;
+  String get dob => _dob;
+  String get gender => _gender;
 
   UserTicketWallet get userTicketWallet => _userTicketWallet;
   UserFundWallet get userFundWallet => _userFundWallet;
@@ -44,6 +48,20 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     notifyListeners(UserServiceProperties.myUserName);
     _logger
         .d("My user name updated in userservice, property listeners notified");
+  }
+
+  setDateOfBirth(String dob) {
+    _dob = dob;
+    notifyListeners(UserServiceProperties.myDob);
+    _logger
+        .d("My user dob updated in userservice, property listeners notified");
+  }
+
+  setGender(String gender) {
+    _gender = gender;
+    notifyListeners(UserServiceProperties.myGender);
+    _logger.d(
+        "My user gender updated in userservice, property listeners notified");
   }
 
   set userTicketWallet(UserTicketWallet wallet) {
@@ -74,6 +92,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     _firebaseUser = FirebaseAuth.instance.currentUser;
     await setBaseUser();
     await setProfilePicture();
+    //await getUserFundWalletData();
+    //await getUserTicketWalletData();
   }
 
   Future<bool> signout() async {
@@ -153,11 +173,15 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   // }
 
   Future<void> getUserFundWalletData() async {
-    userFundWallet = await _dbModel.getUserFundWallet(firebaseUser.uid);
-    if (_userFundWallet == null) _compileUserWallet();
+    UserFundWallet temp = await _dbModel.getUserFundWallet(firebaseUser.uid);
+    if (temp == null)
+      _compileUserWallet();
+    else
+      userFundWallet = temp;
   }
 
   _compileUserWallet() {
+    _logger.d("Creating new fund wallet");
     userFundWallet = (_userFundWallet == null)
         ? UserFundWallet.newWallet()
         : _userFundWallet;

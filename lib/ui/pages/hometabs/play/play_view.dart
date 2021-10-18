@@ -46,7 +46,7 @@ class Play extends StatelessWidget {
                     EdgeInsets.only(left: SizeConfig.pageHorizontalMargins),
                 child: Text(
                   locale.playTrendingGames,
-                  style: TextStyles.title3,
+                  style: TextStyles.title3.bold,
                 ),
               ),
               if (model.state == ViewState.Idle)

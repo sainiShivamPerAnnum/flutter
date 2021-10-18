@@ -7,6 +7,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/widgets/buttons/sell_gold_button/sellGoldBtn_view.dart';
 import 'package:felloapp/ui/widgets/mini_trans_card/mini_trans_card_view.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/palette.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -40,14 +41,15 @@ class Save extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("My Gold Balance: ",
-                            style: TextStyles.body1.light),
+                        Text(locale.saveGoldBalancelabel,
+                            style: TextStyles.title5.light),
                         PropertyChangeConsumer<UserService,
                             UserServiceProperties>(
                           builder: (ctx, model, child) => Text(
-                            "0.00 gm",
-                            //"${model.userFundWallet.augGoldQuantity} gm",
-                            style: TextStyles.body1.bold.colour(
+                            locale.saveGoldBalanceValue(
+                                // model.userFundWallet.augGoldQuantity ??
+                                0.0),
+                            style: TextStyles.title5.bold.colour(
                                 FelloColorPalette.augmontFundPalette()
                                     .primaryColor),
                           ),
@@ -76,9 +78,8 @@ class Save extends StatelessWidget {
                                 alignment: Alignment.center,
                                 child: Text(
                                   locale.saveBuyButton,
-                                  style: TextStyles.title5
-                                      .colour(Colors.white)
-                                      .bold,
+                                  style: TextStyles.title5.bold
+                                      .colour(Colors.white),
                                 ),
                               ),
                             ),
@@ -124,14 +125,8 @@ class Save extends StatelessWidget {
                           SizedBox(width: 24),
                           Expanded(
                               child: Center(
-                            child: InkWell(
-                              onTap: () {
-                                AppState.delegate.appState.currentAction =
-                                    PageAction(
-                                        state: PageState.addPage,
-                                        page: AugmontGoldBuyPageConfig);
-                              },
-                              child: Container(
+                            child: SellGoldBtn(
+                              activeButtonUI: Container(
                                 width: SizeConfig.screenWidth * 0.367,
                                 height: SizeConfig.screenWidth * 0.12,
                                 decoration: BoxDecoration(
@@ -146,7 +141,38 @@ class Save extends StatelessWidget {
                                   style: TextStyles.title5.bold,
                                 ),
                               ),
+                              loadingButtonUI: Container(
+                                width: SizeConfig.screenWidth * 0.367,
+                                height: SizeConfig.screenWidth * 0.12,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: UiConstants.tertiarySolid,
+                                      width: 2),
+                                  borderRadius: BorderRadius.circular(100),
+                                ),
+                                alignment: Alignment.center,
+                                child: SpinKitThreeBounce(
+                                  size: SizeConfig.title5,
+                                  color: UiConstants.tertiarySolid,
+                                ),
+                              ),
+                              disabledButtonUI: Container(
+                                width: SizeConfig.screenWidth * 0.367,
+                                height: SizeConfig.screenWidth * 0.12,
+                                decoration: BoxDecoration(
+                                  border:
+                                      Border.all(color: Colors.grey, width: 2),
+                                  borderRadius: BorderRadius.circular(100),
+                                ),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  locale.saveSellButton,
+                                  style: TextStyles.title5.bold
+                                      .colour(Colors.grey),
+                                ),
+                              ),
                             ),
+                            // ),
                           )
                               // SellGoldBtn(
                               //   activeButtonUI: Container(
@@ -191,39 +217,36 @@ class Save extends StatelessWidget {
                       ),
                     ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Image.asset(
-                          "images/aug-logo.png",
-                          height: 28,
-                        ),
-                        Spacer(),
-                        Image.asset(
-                          "images/sebi.png",
-                          color: Colors.blue,
-                          height: 24,
-                        ),
-                        SizedBox(
-                          width: 12,
+                          Assets.augLogo,
+                          height: SizeConfig.padding24,
                         ),
                         Image.asset(
-                          "images/amfi.png",
+                          Assets.sebiGraphic,
                           color: Colors.blue,
-                          height: 24,
+                          height: SizeConfig.padding20,
                         ),
-                        SizedBox(
-                          width: 12,
-                        ),
-                        Text(
-                          "100% secure",
-                          style: TextStyles.body3.colour(Colors.grey),
+                        TextButton.icon(
+                          icon: Icon(
+                            Icons.lock,
+                            color: Colors.grey,
+                            size: SizeConfig.body3,
+                          ),
+                          onPressed: () {},
+                          label: Text(
+                            "100% secure",
+                            style: TextStyles.body3.colour(Colors.grey),
+                          ),
                         ),
                       ],
                     ),
-                    Divider(
-                      height: 30,
-                    ),
-                    Text("You get 1 ticket for every \$100 invested",
-                        style: TextStyles.body3)
+                    // Divider(
+                    //   height: 0,
+                    // ),
+                    // Text("You get 1 ticket for every \$100 invested",
+                    //     style: TextStyles.body3)
                   ],
                 ),
               ),
@@ -250,7 +273,7 @@ class Save extends StatelessWidget {
                   Opacity(
                     opacity: 0.1,
                     child: Image.asset(
-                      "assets/images/white_rays.png",
+                      Assets.whiteRays,
                       fit: BoxFit.cover,
                       width: SizeConfig.screenWidth,
                     ),
@@ -262,7 +285,7 @@ class Save extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.asset(
-                            "assets/images/icons/money.png",
+                            Assets.moneyIcon,
                             width: SizeConfig.screenWidth * 0.24,
                           ),
                           SizedBox(width: 24),
@@ -271,13 +294,15 @@ class Save extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                "Your winnings",
+                                locale.saveWinningsLabel,
                                 style:
                                     TextStyles.body1.colour(Colors.white).light,
                               ),
                               SizedBox(height: 8),
                               Text(
-                                "₹ ${model.getUnclaimedPrizeBalance()}",
+                                locale.saveWinningsValue(
+                                    model.getUnclaimedPrizeBalance()),
+                                // "₹ ${model.getUnclaimedPrizeBalance()}",
                                 style:
                                     TextStyles.title2.colour(Colors.white).bold,
                               ),
@@ -350,7 +375,8 @@ class Save extends StatelessWidget {
                   Container(
                       margin: EdgeInsets.symmetric(
                           horizontal: SizeConfig.scaffoldMargin, vertical: 16),
-                      child: Text("History", style: TextStyles.title2.bold)),
+                      child: Text(locale.saveHistory,
+                          style: TextStyles.title2.bold)),
                   MiniTransactionCard(),
                 ],
               ),

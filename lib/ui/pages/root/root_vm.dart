@@ -49,7 +49,7 @@ class RootViewModel extends BaseModel {
   List<Widget> pages;
 
   onInit() {
-    pages = <Widget>[Play(), Save(), Win()];
+    pages = <Widget>[Save(), Play(), Win()];
     AppState().setRootLoadValue = true;
     _initDynamicLinks(AppState.delegate.navigatorKey.currentContext);
   }

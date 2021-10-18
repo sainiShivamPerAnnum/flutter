@@ -2,11 +2,16 @@
 //Flutter & Dart Imports
 import 'dart:ui';
 
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/pages/login/screens/name_input_screen.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_viewModel.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -62,7 +67,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                             width: SizeConfig.screenWidth * 0.31,
                             height: SizeConfig.screenWidth * 0.33,
                             margin: EdgeInsets.only(
-                              top: SizeConfig.globalMargin,
+                              top: SizeConfig.pageHorizontalMargins,
                               bottom: SizeConfig.padding8,
                             ),
                             child: Stack(
@@ -125,106 +130,243 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                               style: TextStyles.title4.bold,
                             ),
                           ),
-                          SizedBox(height: 8),
-                          FittedBox(
-                            child: Text(
-                              "@${model.myUsername}",
-                              style: TextStyles.body3.colour(Colors.grey),
+                          Padding(
+                            padding: EdgeInsets.all(SizeConfig.padding8),
+                            child: FittedBox(
+                              child: Text(
+                                "@${model.myUsername}",
+                                style: TextStyles.body3.colour(Colors.grey),
+                              ),
                             ),
                           ),
-                          SizedBox(height: 24),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                "Name as per PAN",
-                                style: TextStyles.body3,
-                              ),
-                              SizedBox(height: 6),
+                              TextFieldLabel(locale.obNameLabel),
                               TextFormField(
-                                //initialValue: model.myname,
                                 enabled: model.inEditMode,
                                 controller: model.nameController,
                               ),
-                            ],
-                          ),
-                          SizedBox(height: 16),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Date of Birth",
-                                style: TextStyles.body3,
-                              ),
-                              SizedBox(height: 6),
+                              TextFieldLabel(locale.obDobLabel),
+                              !model.inEditMode
+                                  ? TextFormField(
+                                      enabled: model.inEditMode,
+                                      controller: model.dobController,
+                                    )
+                                  : Container(
+                                      padding: EdgeInsets.all(5),
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: model.dateInputError != ""
+                                              ? Colors.red
+                                              : UiConstants.primaryColor
+                                                  .withOpacity(0.3),
+                                        ),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          SizedBox(
+                                            width:
+                                                SizeConfig.blockSizeHorizontal *
+                                                    5,
+                                          ),
+                                          DateField(
+                                            controller:
+                                                model.dateFieldController,
+                                            fieldWidth:
+                                                SizeConfig.screenWidth * 0.12,
+                                            labelText: "dd",
+                                            maxlength: 2,
+                                            validate: (String val) {
+                                              if (val.isEmpty || val == null) {
+                                                setState(() {
+                                                  model.dateInputError =
+                                                      "Date field cannot be empty";
+                                                });
+                                              } else if (int.tryParse(val) >
+                                                      31 ||
+                                                  int.tryParse(val) < 1) {
+                                                setState(() {
+                                                  model.dateInputError =
+                                                      "Invalid date";
+                                                });
+                                              }
+                                              return null;
+                                            },
+                                          ),
+                                          Expanded(
+                                              child: Center(child: Text("/"))),
+                                          DateField(
+                                            controller:
+                                                model.monthFieldController,
+                                            fieldWidth:
+                                                SizeConfig.screenWidth * 0.12,
+                                            labelText: "mm",
+                                            maxlength: 2,
+                                            validate: (String val) {
+                                              if (val.isEmpty || val == null) {
+                                                setState(() {
+                                                  model.dateInputError =
+                                                      "Date field cannot be empty";
+                                                });
+                                              } else if (int.tryParse(val) !=
+                                                      null &&
+                                                  (int.tryParse(val) > 13 ||
+                                                      int.tryParse(val) < 0)) {
+                                                setState(() {
+                                                  model.dateInputError =
+                                                      "Invalid date";
+                                                });
+                                              }
+                                              return null;
+                                            },
+                                          ),
+                                          Expanded(
+                                              child: Center(child: Text("/"))),
+                                          DateField(
+                                            controller:
+                                                model.yearFieldController,
+                                            fieldWidth:
+                                                SizeConfig.screenWidth * 0.16,
+                                            labelText: "yyyy",
+                                            maxlength: 4,
+                                            validate: (String val) {
+                                              if (val.isEmpty || val == null) {
+                                                setState(() {
+                                                  model.dateInputError =
+                                                      "Date field cannot be empty";
+                                                });
+                                              } else if (int.tryParse(val) >
+                                                      DateTime.now().year ||
+                                                  int.tryParse(val) < 1950) {
+                                                setState(() {
+                                                  model.dateInputError =
+                                                      "Invalid date";
+                                                });
+                                              }
+                                              return null;
+                                            },
+                                          ),
+                                          SizedBox(
+                                            width: 16,
+                                          ),
+                                          IconButton(
+                                            onPressed:
+                                                model.showAndroidDatePicker,
+                                            icon: Icon(
+                                              Icons.calendar_today,
+                                              size: 20,
+                                              color: UiConstants.primaryColor,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                              TextFieldLabel(locale.obGenderLabel),
+                              !model.inEditMode
+                                  ? TextFormField(
+                                      enabled: false,
+                                      controller: model.genderController,
+                                    )
+                                  : Container(
+                                      padding:
+                                          EdgeInsets.all(SizeConfig.padding4),
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: UiConstants.primaryColor
+                                              .withOpacity(0.3),
+                                        ),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Expanded(
+                                            child: DropdownButtonHideUnderline(
+                                              child: DropdownButton(
+                                                  iconEnabledColor:
+                                                      UiConstants.primaryColor,
+                                                  value: model.gen,
+                                                  hint:
+                                                      Text(locale.obGenderHint),
+                                                  items: [
+                                                    DropdownMenuItem(
+                                                      child: Text(
+                                                        locale.obGenderMale,
+                                                      ),
+                                                      value: 1,
+                                                    ),
+                                                    DropdownMenuItem(
+                                                      child: Text(
+                                                        locale.obGenderFemale,
+                                                      ),
+                                                      value: 0,
+                                                    ),
+                                                    DropdownMenuItem(
+                                                        child: Text(
+                                                          locale.obGenderOthers,
+                                                          style: TextStyle(),
+                                                        ),
+                                                        value: -1),
+                                                  ],
+                                                  onChanged: (value) {
+                                                    model.gen = value;
+                                                    setState(() {});
+                                                  }),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                              TextFieldLabel(locale.obEmailLabel),
                               TextFormField(
-                                //initialValue: model.myAge,
-                                enabled: model.inEditMode,
-                                decoration: InputDecoration(
-                                  suffixIcon: Icon(Icons.unfold_more_rounded),
-                                ),
-                                controller: model.dobController,
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 16),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Gender",
-                                style: TextStyles.body3,
-                              ),
-                              SizedBox(height: 6),
-                              TextFormField(
-                                //initialValue: model.myGender,
-                                enabled: model.inEditMode,
-                                decoration: InputDecoration(
-                                  suffixIcon: Icon(Icons.expand_more_rounded),
-                                ),
-                                controller: model.genderController,
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 16),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Email",
-                                style: TextStyles.body3,
-                              ),
-                              SizedBox(height: 6),
-                              TextFormField(
-                                //initialValue: model.myEmail,
                                 enabled: false,
                                 decoration: InputDecoration(
-                                  suffixIcon: Icon(
-                                    Icons.verified,
-                                    color: UiConstants.primaryColor,
-                                  ),
+                                  suffixIcon: model.isEmailVerified
+                                      ? Icon(
+                                          Icons.verified,
+                                          color: UiConstants.primaryColor,
+                                        )
+                                      : SizedBox(),
                                 ),
                                 controller: model.emailController,
                               ),
-                            ],
-                          ),
-                          SizedBox(height: 16),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Mobile",
-                                style: TextStyles.body3,
-                              ),
-                              SizedBox(height: 6),
+                              if (!model.isEmailVerified)
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: InkWell(
+                                          child: Text(
+                                            "Verify",
+                                            style: TextStyles.body3.colour(
+                                                UiConstants.primaryColor),
+                                          ),
+                                          onTap: () {
+                                            AppState.delegate.appState
+                                                    .currentAction =
+                                                PageAction(
+                                                    state: PageState.addPage,
+                                                    page:
+                                                        VerifyEmailPageConfig);
+                                          }),
+                                    )
+                                  ],
+                                ),
+                              TextFieldLabel(locale.obMobileLabel),
                               TextFormField(
-                                //initialValue: "+91 ${model.myMobile}",
                                 enabled: false,
                                 controller: model.mobileController,
                               ),
                             ],
                           ),
-                          SizedBox(height: 16),
+                          SizedBox(height: SizeConfig.padding24),
                           FelloButtonLg(
                             child: model.isUpdaingUserDetails
                                 ? SpinKitThreeBounce(

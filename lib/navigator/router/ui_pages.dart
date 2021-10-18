@@ -39,6 +39,8 @@ const String KycDetailsPath = 'kycDetails';
 const String BankDetailsPath = 'bankDetails';
 const String AugmontGoldBuyPath = '/augBuy';
 const String AugmontGoldDetailsPath = '/augDetails';
+const String ReferralDetailsPath = '/referralDetails';
+const String ReferralHistoryPath = '/referralHistory';
 
 enum Pages {
   Splash,
@@ -78,7 +80,9 @@ enum Pages {
   KycDetails,
   BankDetails,
   AugGoldBuy,
-  AugGoldDetails
+  AugGoldDetails,
+  ReferralDetails,
+  ReferralHistory
 }
 
 class PageConfiguration {
@@ -293,4 +297,15 @@ PageConfiguration AugmontGoldDetailsPageConfig = PageConfiguration(
   key: 'augGoldDetails',
   path: AugmontGoldDetailsPath,
   uiPage: Pages.AugGoldDetails,
+);
+
+PageConfiguration ReferralDetailsPageConfig = PageConfiguration(
+  key: 'referDetails',
+  path: ReferralDetailsPath,
+  uiPage: Pages.ReferralDetails,
+);
+PageConfiguration ReferralHistoryPageConfig = PageConfiguration(
+  key: 'referHistory',
+  path: ReferralHistoryPath,
+  uiPage: Pages.ReferralHistory,
 );
