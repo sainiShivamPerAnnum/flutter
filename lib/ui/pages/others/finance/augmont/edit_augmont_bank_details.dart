@@ -265,12 +265,13 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                                 child: (!baseProvider
                                         .isEditAugmontBankDetailInProgress)
                                     ? Text(
-                                        (baseProvider.augmontDetail != null &&
-                                                baseProvider.augmontDetail
-                                                        .bankAccNo ==
-                                                    '')
-                                            ? 'WITHDRAW'
-                                            : 'UPDATE',
+                                        // (baseProvider.augmontDetail != null &&
+                                        //         baseProvider.augmontDetail
+                                        //                 .bankAccNo ==
+                                        //             '')
+                                        //     ? 'WITHDRAW'
+                                        //     :
+                                        'UPDATE',
                                         style: Theme.of(context)
                                             .textTheme
                                             .button

@@ -24,7 +24,7 @@ class HomeBackground extends StatelessWidget {
 }
 
 class WhiteBackground extends StatelessWidget {
-  const WhiteBackground({this.height, @required this.color});
+  const WhiteBackground({this.height, this.color});
   final double height;
   final Color color;
   @override
@@ -36,7 +36,7 @@ class WhiteBackground extends StatelessWidget {
         width: SizeConfig.screenWidth,
         height: (SizeConfig.screenHeight - query.padding.top) - height,
         decoration: BoxDecoration(
-          color: color,
+          color: color ?? Color(0xffF1F6FF),
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(SizeConfig.roundness40),
             topRight: Radius.circular(SizeConfig.roundness40),

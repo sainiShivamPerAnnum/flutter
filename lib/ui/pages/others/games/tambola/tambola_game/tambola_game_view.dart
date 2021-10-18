@@ -261,7 +261,6 @@ class TambolaGameView extends StatelessWidget {
       }
 
       _widget = Container(
-        height: SizeConfig.screenWidth * 0.95,
         child: Stack(
           children: [
             Column(
@@ -273,7 +272,7 @@ class TambolaGameView extends StatelessWidget {
                   child: Row(
                     children: [
                       Text(
-                        "My Tickets ($model.activeTambolaCardCount)",
+                        "My Tickets (${model.activeTambolaCardCount})",
                         style: GoogleFonts.montserrat(
                           color: Colors.black87,
                           fontSize: SizeConfig.cardTitleTextSize,

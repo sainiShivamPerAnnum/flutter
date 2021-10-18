@@ -111,7 +111,7 @@ class _FelloButtonState extends State<FelloButton> {
                   isAlreadyClicked = false;
                 },
                 child: widget.activeButtonUI)
-            : TextButton(
+            : ElevatedButton(
                 onPressed: () async {
                   if (isAlreadyClicked) return;
                   isAlreadyClicked = true;
@@ -142,26 +142,4 @@ class _FelloButtonState extends State<FelloButton> {
               );
     }
   }
-}
-
-class DemoButton extends FelloButton {
-  DemoButton(
-      {Key key,
-      Function onPressed,
-      activeButtonUI,
-      ValueChanged action,
-      offlineButtonUI,
-      Color defaultButtonColor,
-      String defaultButtonText,
-      Function onPressedAsync,
-      TextStyle textStyle})
-      : super(
-            onPressed: onPressed,
-            activeButtonUI: activeButtonUI,
-            action: action,
-            offlineButtonUI: offlineButtonUI,
-            defaultButtonColor: defaultButtonColor,
-            defaultButtonText: defaultButtonText,
-            onPressedAsync: onPressedAsync,
-            textStyle: textStyle);
 }

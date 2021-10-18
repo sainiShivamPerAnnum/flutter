@@ -116,7 +116,7 @@ class MiniTransactionCard extends StatelessWidget {
                               ),
                             )),
                 ),
-                m.txnList.isEmpty
+                m.txnList == null || m.txnList.isEmpty
                     ? SizedBox()
                     : FelloButton(
                         onPressed: () => model.viewAllTransaction(),

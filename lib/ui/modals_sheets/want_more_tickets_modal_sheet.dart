@@ -2,6 +2,7 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/FelloTile.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
@@ -33,7 +34,7 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                 children: [
                   SizedBox(height: SizeConfig.padding40),
                   FelloTile(
-                    leadingIcon: Icons.account_balance_wallet,
+                    leadingAsset: Assets.wmtsaveMoney,
                     title: "Save More Money",
                     subtitle: "Get 1 ticket for every ₹ 100 invested",
                     trailingIcon: Icons.arrow_forward_ios_rounded,
@@ -45,7 +46,7 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                   ),
                   SizedBox(height: SizeConfig.padding16),
                   FelloTile(
-                    leadingIcon: Icons.account_balance_wallet,
+                    leadingAsset: Assets.wmtShare,
                     title: "Refer your friends",
                     subtitle: "Get 10 tickets per referral",
                     trailingIcon: Icons.arrow_forward_ios_rounded,

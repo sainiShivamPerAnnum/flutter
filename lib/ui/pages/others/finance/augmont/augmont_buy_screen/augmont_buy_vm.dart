@@ -100,6 +100,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
         'The current rates couldn\'t be loaded. Please try again',
       );
     isGoldRateFetching = false;
+
     refresh();
   }
 

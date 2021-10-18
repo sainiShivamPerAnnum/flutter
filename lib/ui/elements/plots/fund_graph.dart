@@ -112,7 +112,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
             child: LineChart(
               LineChartData(
                 minX: 0,
-                maxX: 97,
+                maxX: graphPoints.length.toDouble(),
                 minY: 3000,
                 maxY: 6000,
                 lineTouchData: LineTouchData(

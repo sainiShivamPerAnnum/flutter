@@ -10,12 +10,12 @@ import 'package:felloapp/ui/widgets/buttons/sell_gold_button/sellGoldBtn_view.da
 import 'package:felloapp/ui/widgets/mini_trans_card/mini_trans_card_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
-import 'package:felloapp/util/styles/palette.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class Save extends StatelessWidget {
@@ -248,8 +248,8 @@ class Save extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image.asset(
-                            Assets.moneyIcon,
+                          SvgPicture.asset(
+                            Assets.giftBoxOpen,
                             width: SizeConfig.screenWidth * 0.24,
                           ),
                           SizedBox(width: 24),

@@ -33,7 +33,6 @@ class Root extends StatelessWidget {
           drawer: FDrawer(),
           body: HomeBackground(
             whiteBackground: WhiteBackground(
-              color: Color(0xffF1F6FF),
               height: kToolbarHeight * 2.8,
             ),
             child: Stack(
@@ -102,11 +101,11 @@ class BottomNavBar extends StatelessWidget {
             currentIndex: AppState.getCurrentTabIndex,
             items: [
               NavBarItemData(locale.navBarFinance, Assets.navSave,
-                  SizeConfig.screenWidth * 0.338),
+                  SizeConfig.screenWidth * 0.27),
               NavBarItemData(locale.navBarPlay, Assets.navPlay,
-                  SizeConfig.screenWidth * 0.270),
+                  SizeConfig.screenWidth * 0.27),
               NavBarItemData(locale.navBarWin, Assets.navWin,
-                  SizeConfig.screenWidth * 0.270),
+                  SizeConfig.screenWidth * 0.27),
             ],
           ),
         ),

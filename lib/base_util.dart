@@ -226,8 +226,8 @@ class BaseUtil extends ChangeNotifier {
 
   Future<void> setUserDefaults() async {
     ///get user wallet -> Try moving it to view and viewmodel for finance
-    _userFundWallet = await _dbModel.getUserFundWallet(firebaseUser.uid);
-    if (_userFundWallet == null) _compileUserWallet();
+    // _userFundWallet = await _dbModel.getUserFundWallet(firebaseUser.uid);
+    // if (_userFundWallet == null) _compileUserWallet();
 
     ///get user ticket balance --> Try moving it to view and viewmodel for game
     // _userTicketWallet = await _dbModel.getUserTicketWallet(firebaseUser.uid);
