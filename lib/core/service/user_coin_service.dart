@@ -18,6 +18,8 @@ class UserCoinService
   void setFlcBalance(int balance) {
     if (_flcBalance == null) {
       _flcBalance = balance;
+      notifyListeners(UserCoinServiceProperties.coinBalance);
+
       _logger.d("Initial Coin Balance added");
     } else {
       _flcBalance = balance;

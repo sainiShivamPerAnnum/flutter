@@ -10,6 +10,7 @@ class FelloCoinBarViewModel extends BaseModel {
 
   getFlc() async {
     _isLoadingFlc = true;
+    notifyListeners();
     await _userCoinService?.getUserCoinBalance();
     _isLoadingFlc = false;
     notifyListeners();

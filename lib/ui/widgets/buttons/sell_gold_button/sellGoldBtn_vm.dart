@@ -179,11 +179,11 @@ class SellGoldBtnVM extends BaseModel {
                   _baseUtil.userTicketWallet,
                   -1 * _baseUtil.currentAugmontTxn.ticketUpCount);
           // userService side [3.0 Arch]
-          _userService.userTicketWallet =
-              await _dbModel.updateAugmontGoldUserTicketCount(
-                  _baseUtil.myUser.uid,
-                  _baseUtil.userTicketWallet,
-                  -1 * _baseUtil.currentAugmontTxn.ticketUpCount);
+          // _userService.userTicketWallet =
+          //     await _dbModel.updateAugmontGoldUserTicketCount(
+          //         _baseUtil.myUser.uid,
+          //         _baseUtil.userTicketWallet,
+          //         -1 * _baseUtil.currentAugmontTxn.ticketUpCount);
 
           ///check if ticket count updated correctly
           if (_baseUtil.userTicketWallet.augGold99Tck == _tempCurrentCount) {

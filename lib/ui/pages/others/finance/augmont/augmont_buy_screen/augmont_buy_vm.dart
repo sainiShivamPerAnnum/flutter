@@ -290,11 +290,11 @@ class AugmontGoldBuyViewModel extends BaseModel {
                   _baseUtil.userTicketWallet,
                   _ticketUpdateCount);
           //userService side
-          _userService.userTicketWallet =
-              await _dbModel.updateAugmontGoldUserTicketCount(
-                  _baseUtil.myUser.uid,
-                  _baseUtil.userTicketWallet,
-                  _ticketUpdateCount);
+          // _userService.userTicketWallet =
+          //     await _dbModel.updateAugmontGoldUserTicketCount(
+          //         _baseUtil.myUser.uid,
+          //         _baseUtil.userTicketWallet,
+          //         _ticketUpdateCount);
 
           ///check if ticket count updated correctly
           if (_baseUtil.userTicketWallet.augGold99Tck == _tempCurrentCount) {
