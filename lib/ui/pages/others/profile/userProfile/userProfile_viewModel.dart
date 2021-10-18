@@ -1,9 +1,10 @@
 //Project Imports
+import 'dart:io';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/user_service.dart';
@@ -12,24 +13,18 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/change_profile_picture_dialog.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
-import 'package:felloapp/ui/modals_sheets/simple_kyc_modal_sheet.dart';
-import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-
 //Flutter & Dart Imports
 import 'package:flutter/material.dart';
-import 'dart:io';
-
 //Pub Imports
 import 'package:image_picker/image_picker.dart';
-import 'package:lottie/lottie.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -39,19 +34,26 @@ class UserProfileVM extends BaseModel {
   final _userService = locator<UserService>();
   final BaseUtil _baseUtil = locator<BaseUtil>();
   final DBModel _dbModel = locator<DBModel>();
+  final S _locale = locator<S>();
   double picSize;
   XFile selectedProfilePicture;
   ValueChanged<bool> upload;
   bool isUpdaingUserDetails = false;
+  int gen;
+  String gender;
+  DateTime selectedDate;
+  String dateInputError = "";
+
   final GlobalKey<FormState> formKey = new GlobalKey<FormState>();
 
-  get myUserDpUrl => _userService.myUserDpUrl;
-  get myname => _userService.baseUser.name;
-  get myUsername => _userService.baseUser.username;
-  get myAge => _userService.baseUser.dob;
-  get myEmail => _userService.baseUser.email;
-  get myGender => _userService.baseUser.gender;
-  get myMobile => _userService.baseUser.mobile;
+  String get myUserDpUrl => _userService.myUserDpUrl;
+  String get myname => _userService.baseUser.name;
+  String get myUsername => _userService.baseUser.username;
+  String get myAge => _userService.baseUser.dob;
+  String get myEmail => _userService.baseUser.email;
+  String get myGender => _userService.baseUser.gender;
+  String get myMobile => _userService.baseUser.mobile;
+  bool get isEmailVerified => _userService.baseUser.isEmailVerified;
 
   //controllers
 
@@ -59,7 +61,10 @@ class UserProfileVM extends BaseModel {
       dobController,
       genderController,
       emailController,
-      mobileController;
+      mobileController,
+      dateFieldController,
+      monthFieldController,
+      yearFieldController;
 
   init() {
     nameController = new TextEditingController(text: myname);
@@ -67,6 +72,45 @@ class UserProfileVM extends BaseModel {
     genderController = new TextEditingController(text: myGender);
     emailController = new TextEditingController(text: myEmail);
     mobileController = new TextEditingController(text: myMobile);
+    setGender();
+    setDate();
+  }
+
+  setGender() {
+    if (myGender == "M") {
+      gender = _locale.obGenderMale;
+      genderController = new TextEditingController(text: "Male");
+      gen = 1;
+    } else if (myGender == "F") {
+      gender = _locale.obGenderFemale;
+      genderController = new TextEditingController(text: "Female");
+      gen = 0;
+    } else if (myGender == "O") {
+      gender = _locale.obGenderOthers;
+      genderController = new TextEditingController(text: "Rather Not Say");
+      gen = -1;
+    }
+  }
+
+  setDate() {
+    dateFieldController = new TextEditingController(text: myAge.split("-")[2]);
+    monthFieldController = new TextEditingController(text: myAge.split("-")[1]);
+    yearFieldController = new TextEditingController(text: myAge.split("-")[0]);
+  }
+
+  void showAndroidDatePicker() async {
+    var res = await showDatePicker(
+      context: AppState.delegate.navigatorKey.currentContext,
+      initialDate: DateTime(2000, 1, 1),
+      firstDate: DateTime(1950, 1, 1),
+      lastDate: DateTime(2002, 1, 1),
+    );
+    if (res != null) print(res);
+    selectedDate = res;
+    dateFieldController.text = res.day.toString().padLeft(2, '0');
+    monthFieldController.text = res.month.toString().padLeft(2, '0');
+    yearFieldController.text = res.year.toString();
+    notifyListeners();
   }
 
   enableEdit() {
@@ -79,11 +123,16 @@ class UserProfileVM extends BaseModel {
       isUpdaingUserDetails = true;
       notifyListeners();
       _userService.baseUser.name = nameController.text.trim();
-      _userService.baseUser.dob = dobController.text.trim();
-      _userService.baseUser.gender = genderController.text.trim()[0];
+      _userService.baseUser.dob =
+          "${yearFieldController.text.trim()}-${monthFieldController.text.trim()}-${dateFieldController.text.trim()}";
+      _userService.baseUser.gender = getGender();
       await _dbModel.updateUser(_userService.baseUser).then((res) {
         if (res) {
           _userService.setMyUserName(_userService.baseUser.name);
+          _userService.setDateOfBirth(_userService.baseUser.dob);
+          _userService.setGender(_userService.baseUser.gender);
+          genderController.text = _userService.baseUser.gender;
+          dobController.text = _userService.baseUser.dob;
           isUpdaingUserDetails = false;
           inEditMode = false;
           notifyListeners();
@@ -102,10 +151,54 @@ class UserProfileVM extends BaseModel {
 
   bool _checkForChanges() {
     if (myname != nameController.text.trim() ||
-        myAge != dobController.text.trim() ||
-        myGender != genderController.text.trim()[0]) return true;
+        isDOBChanged() ||
+        isGenderChanged()) return true;
     return false;
   }
+
+  bool isDOBChanged() {
+    if (dateFieldController.text == myAge.split("-")[2] &&
+        monthFieldController.text == myAge.split("-")[1] &&
+        yearFieldController.text == myAge.split("-")[0])
+      return false;
+    else
+      return true;
+  }
+
+  bool isGenderChanged() {
+    if ((gen == 1 && myGender == "M") ||
+        (gen == 0 && myGender == "F") ||
+        (gen == -1 && myGender == "O"))
+      return false;
+    else
+      return true;
+  }
+
+  getGender() {
+    if (gen == 1)
+      return "M";
+    else if (gen == 0)
+      return "F";
+    else if (gen == -1) return "O";
+  }
+
+  // showUnsavedChanges() {
+  //   if (_checkForChanges()) {
+  //     AppState.unsavedChanges = true;
+  //     BaseUtil.openDialog(
+  //         addToScreenStack: true,
+  //         isBarrierDismissable: false,
+  //         content: ConfirmActionDialog(
+  //             title: "You have unsaved changes",
+  //             description:
+  //                 "Are you sure want to exit. All changes will be discarded",
+  //             buttonText: "Yes",
+  //             confirmAction: () {
+  //               AppState.backButtonDispatcher.didPopRoute();
+  //             },
+  //             cancelAction: () {}));
+  //   }
+  // }
 
   signout() async {
     if (await BaseUtil.showNoInternetAlert()) return;
@@ -140,56 +233,6 @@ class UserProfileVM extends BaseModel {
             });
           },
           cancelAction: () {},
-        ),
-      ),
-    );
-  }
-
-  Map<String, String> getBankDetail() {
-    Map<String, String> bankCreds = {};
-    if (_baseUtil.augmontDetail != null &&
-        _baseUtil.augmontDetail.bankAccNo != "") {
-      bankCreds["name"] = _baseUtil.augmontDetail.bankHolderName;
-      bankCreds["number"] = _baseUtil.augmontDetail.bankAccNo;
-      bankCreds["ifsc"] = _baseUtil.augmontDetail.ifsc;
-    } else {
-      bankCreds = {"name": "N/A", "number": "N/A", "ifsc": "N/A"};
-    }
-    return bankCreds;
-  }
-
-  String getGender() {
-    if (_baseUtil.myUser.gender == "M")
-      return "Male";
-    else if (_baseUtil.myUser.gender == "F")
-      return "Female";
-    else if (_baseUtil.myUser.gender == "O") return "Prefer not say";
-    return "unavailable";
-  }
-
-  String getDob() {
-    if (_baseUtil.myUser.dob != null)
-      return _baseUtil.myUser.dob;
-    else
-      return "N/A";
-  }
-
-  Widget cardItem(String title, String subTitle) {
-    return Expanded(
-      child: ListTile(
-        title: Text(
-          title,
-          style: TextStyle(
-              fontWeight: FontWeight.w500,
-              color: UiConstants.primaryColor.withOpacity(0.5),
-              fontSize: SizeConfig.mediumTextSize * 0.8),
-        ),
-        subtitle: Text(
-          subTitle,
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: SizeConfig.mediumTextSize,
-          ),
         ),
       ),
     );

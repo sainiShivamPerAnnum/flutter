@@ -44,6 +44,7 @@ import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_vm.dart';
 import 'package:felloapp/ui/widgets/drawer/drawer_vm.dart';
 import 'package:felloapp/ui/widgets/mini_trans_card/mini_trans_card_vm.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 
@@ -53,6 +54,7 @@ void setupLocator() {
   //Utils
   locator.registerLazySingleton(() => Logger());
   locator.registerLazySingleton(() => ApiPath());
+  locator.registerLazySingleton(() => S());
 
   //Services
   locator.registerLazySingleton(() => Api());
