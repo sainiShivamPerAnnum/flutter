@@ -348,7 +348,7 @@ class _YourFundsState extends State<YourFunds> {
             context: context,
             isScrollControlled: true,
             builder: (context) {
-              return SimpleKycModalSheet();
+              return SimpleKycModalSheetView();
             });
       },
       child: Container(

@@ -347,7 +347,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen>
             context: context,
             isScrollControlled: true,
             builder: (context) {
-              return SimpleKycModalSheet();
+              return SimpleKycModalSheetView();
             });
       },
       child: Container(

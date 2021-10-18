@@ -16,7 +16,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 
-class SimpleKycModalSheet extends StatelessWidget{
+class SimpleKycModalSheetView extends StatelessWidget{
 
 
   @override
