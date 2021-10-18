@@ -443,6 +443,16 @@ class S {
     );
   }
 
+  /// `100% secure`
+  String get saveSecure {
+    return Intl.message(
+      '100% secure',
+      name: 'saveSecure',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `You get 1 ticket for every ₹ 100 invested`
   String get saveBaseline {
     return Intl.message(

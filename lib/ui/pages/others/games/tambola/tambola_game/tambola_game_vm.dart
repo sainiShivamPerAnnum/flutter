@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
@@ -18,101 +17,88 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/elements/tambola-global/tambola_ticket.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/show_all_tickets.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_result.dart';
-
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/palette.dart';
-import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:logger/logger.dart';
 
 class TambolaGameViewModel extends BaseModel {
-  TambolaService _tambolaService = locator<TambolaService>();
+  TambolaService tambolaService = locator<TambolaService>();
   DBModel _dbModel = locator<DBModel>();
-  // _tambolaService. __tambolaService. = locator<_tambolaService.>();
+  // tambolaService. _tambolaService. = locator<tambolaService.>();
   UserService _userService = locator<UserService>();
   Logger _logger = locator<Logger>();
   LocalDBModel _localDBModel = locator<LocalDBModel>();
 
-  int get dailyPicksCount => _tambolaService.dailyPicksCount;
-  List<int> get todaysPicks => _tambolaService.todaysPicks;
-  DailyPick get weeklyDigits => _tambolaService.weeklyDigits;
-  List<TambolaBoard> get userWeeklyBoards => _tambolaService.userWeeklyBoards;
-  UserTicketWallet get userTicketWallet => _tambolaService.userTicketWallet;
+  int get dailyPicksCount => tambolaService.dailyPicksCount;
+  List<int> get todaysPicks => tambolaService.todaysPicks;
+  DailyPick get weeklyDigits => tambolaService.weeklyDigits;
+  List<TambolaBoard> get userWeeklyBoards => tambolaService.userWeeklyBoards;
+  UserTicketWallet get userTicketWallet => tambolaService.userTicketWallet;
   List<Ticket> _tambolaBoardViews;
   TambolaGenerationService _tambolaTicketService;
   int ticketGenerationTryCount = 0;
   TextEditingController ticketCountController;
   Ticket _currentBoardView;
   TambolaBoard _currentBoard;
+  Widget _widget;
 
   List<Ticket> _topFiveTambolaBoards = [];
 
   bool showSummaryCards = true;
   bool ticketsBeingGenerated = false;
   bool ticketBuyInProgress = false;
+  int buyTicketCount = 5;
+
+  Widget get cardWidet => _widget;
+
+  List<Ticket> get topFiveTambolaBoards => _topFiveTambolaBoards;
+
+  Ticket get currentBoardView => _currentBoardView;
+  TambolaBoard get currentBoard => _currentBoard;
+
+  set currentBoardView(val) {
+    _currentBoardView = val;
+    notifyListeners();
+  }
+
+  set currentBoard(val) {
+    _currentBoard = val;
+    notifyListeners();
+  }
 
   init() async {
-    ticketCountController = new TextEditingController(text: "5");
+    ticketCountController =
+        new TextEditingController(text: buyTicketCount.toString());
     // BaseAnalytics.analytics
 
     //     .setCurrentScreen(screenName: BaseAnalytics.PAGE_TAMBOLA);
     _tambolaTicketService = new TambolaGenerationService();
     // Ticket wallet check
     if (userTicketWallet == null)
-      await _tambolaService.getUserTicketWalletData();
+      await tambolaService.getUserTicketWalletData();
 
     ///Weekly Picks check
-    if (weeklyDigits == null) await _tambolaService.fetchWeeklyPicks();
+    if (weeklyDigits == null) await tambolaService.fetchWeeklyPicks();
 
     ///next get the tambola tickets of this week
-    if (!_tambolaService.weeklyTicksFetched) {
+    if (!tambolaService.weeklyTicksFetched) {
       _logger.d("Fetching Tambola tickets");
       List<TambolaBoard> _boards =
           await _dbModel.getWeeksTambolaTickets(_userService.baseUser.uid);
-      _tambolaService.weeklyTicksFetched = true;
+      tambolaService.weeklyTicksFetched = true;
       if (_boards != null) {
-        _tambolaService.userWeeklyBoards = _boards;
+        tambolaService.userWeeklyBoards = _boards;
         _currentBoard = null;
         _currentBoardView = null;
       }
       notifyListeners();
     }
 
-    ///check if new tambola tickets need to be generated
-    // if (ticketGenerationTryCount < 3) {
-    //   ticketGenerationTryCount += 1;
-    bool _isGenerating = await _tambolaTicketService
-        .processTicketGenerationRequirement(activeTambolaCardCount);
-    if (_isGenerating) {
-      ticketsBeingGenerated = true;
-      notifyListeners();
-      _tambolaTicketService.setTambolaTicketGenerationResultListener((flag) {
-        ticketsBeingGenerated = false;
-        notifyListeners();
-        if (flag == TambolaGenerationService.GENERATION_COMPLETE) {
-          //new tickets have arrived
-          _refreshTambolaTickets();
-          BaseUtil.showPositiveAlert('Tickets successfully generated 🥳',
-              'Your weekly odds are now way better!');
-        } else if (flag ==
-            TambolaGenerationService.GENERATION_PARTIALLY_COMPLETE) {
-          _refreshTambolaTickets();
-          BaseUtil.showPositiveAlert('Tickets partially generated',
-              'The remaining tickets shall soon be credited');
-        } else {
-          BaseUtil.showNegativeAlert(
-            'Tickets generation failed',
-            'The issue has been noted and your tickets will soon be credited',
-          );
-        }
-      });
-      // }
-    }
+    //check if new tambola tickets need to be generated
+    await checkIfMoreTicketNeedsToBeGenerated();
 
     ///check whether to show summary cards or not
     DateTime today = DateTime.now();
@@ -132,230 +118,27 @@ class TambolaGameViewModel extends BaseModel {
   _refreshTambolaTickets() async {
     _logger.i('Refreshing..');
     _topFiveTambolaBoards = [];
-    _tambolaService.weeklyTicksFetched = false;
+    tambolaService.weeklyTicksFetched = false;
     init();
     notifyListeners();
   }
 
   int get activeTambolaCardCount {
-    if (_tambolaService == null || _tambolaService.userWeeklyBoards == null)
+    if (tambolaService == null || tambolaService.userWeeklyBoards == null)
       return 0;
-    return _tambolaService.userWeeklyBoards.length;
+    return tambolaService.userWeeklyBoards.length;
   }
 
-  Widget buildCards() {
-    Widget _widget;
-    if (!_tambolaService.weeklyDrawFetched ||
-        !_tambolaService.weeklyTicksFetched) {
-      _widget = Padding(
-        //Loader
-        padding: EdgeInsets.all(10),
-        child: Container(
-          width: double.infinity,
-          height: 200,
-          child: Center(
-            child: SpinKitWave(
-              color: UiConstants.primaryColor,
-            ),
-          ),
-        ),
-      );
-    } else if (userWeeklyBoards == null || activeTambolaCardCount == 0) {
-      _widget = Padding(
-        padding: EdgeInsets.all(10),
-        child: Container(
-          width: double.infinity,
-          height: ticketsBeingGenerated
-              ? SizeConfig.screenWidth * 0.9
-              : SizeConfig.padding20,
-          child: Center(
-            child: (ticketsBeingGenerated)
-                ? Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: SizeConfig.screenWidth * 0.8,
-                        height: 4,
-                        decoration: BoxDecoration(
-                          color: UiConstants.primaryColor.withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                        child: FractionallySizedBox(
-                          heightFactor: 1,
-                          widthFactor: _tambolaService.ticketGenerateCount ==
-                                  _tambolaService
-                                      .atomicTicketGenerationLeftCount
-                              ? 0.1
-                              : (_tambolaService.ticketGenerateCount -
-                                      _tambolaService
-                                          .atomicTicketGenerationLeftCount) /
-                                  _tambolaService.ticketGenerateCount,
-                          alignment: Alignment.centerLeft,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: UiConstants.primaryColor,
-                              borderRadius: BorderRadius.circular(100),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 16),
-                      Text(
-                        'Generated ${_tambolaService.ticketGenerateCount - _tambolaService.atomicTicketGenerationLeftCount} of your ${_tambolaService.ticketGenerateCount} tickets',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: SizeConfig.mediumTextSize,
-                        ),
-                      ),
-                    ],
-                  )
-                : Text('No tickets yet'),
-          ),
-        ),
-      );
-    } else {
-      if (_topFiveTambolaBoards.isEmpty) {
-        _refreshBestBoards().forEach((element) {
-          _topFiveTambolaBoards.add(_buildBoardView(element));
-        });
-      }
+  increaseTicketCount() {
+    buyTicketCount += 1;
+    ticketCountController.text = buyTicketCount.toString();
+    notifyListeners();
+  }
 
-      _widget = Container(
-        height: SizeConfig.screenWidth * 0.95,
-        child: Stack(
-          children: [
-            Column(
-              children: [
-                Container(
-                  margin: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.blockSizeHorizontal * 3,
-                      vertical: SizeConfig.blockSizeHorizontal * 2),
-                  child: Row(
-                    children: [
-                      Text(
-                        "My Tickets ($activeTambolaCardCount)",
-                        style: GoogleFonts.montserrat(
-                          color: Colors.black87,
-                          fontSize: SizeConfig.cardTitleTextSize,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      Spacer(),
-                      InkWell(
-                        onTap: showAllBoards,
-                        highlightColor:
-                            UiConstants.primaryColor.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(100),
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: UiConstants.primaryColor,
-                            ),
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          child: Text(
-                            "Show All",
-                            style: GoogleFonts.montserrat(
-                              color: UiConstants.primaryColor,
-                              fontSize: SizeConfig.mediumTextSize,
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                Container(
-                  height: SizeConfig.screenWidth * 0.95,
-                  width: SizeConfig.screenWidth,
-                  child: ListView(
-                    physics: BouncingScrollPhysics(),
-                    scrollDirection: Axis.horizontal,
-                    children: List.generate(_topFiveTambolaBoards.length,
-                        (index) => _topFiveTambolaBoards[index]),
-                  ),
-                ),
-              ],
-            ),
-            if (ticketsBeingGenerated)
-              Align(
-                alignment: Alignment.center,
-                child: Container(
-                  width: SizeConfig.screenWidth,
-                  height: 140,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.7),
-                  ),
-                  padding: EdgeInsets.all(20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: SizeConfig.screenWidth * 0.8,
-                        height: 4,
-                        decoration: BoxDecoration(
-                          color: UiConstants.primaryColor.withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                        child: FractionallySizedBox(
-                          heightFactor: 1,
-                          widthFactor: _tambolaService.ticketGenerateCount ==
-                                  _tambolaService
-                                      .atomicTicketGenerationLeftCount
-                              ? 0.1
-                              : (_tambolaService.ticketGenerateCount -
-                                      _tambolaService
-                                          .atomicTicketGenerationLeftCount) /
-                                  _tambolaService.ticketGenerateCount,
-                          alignment: Alignment.centerLeft,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: UiConstants.primaryColor,
-                              borderRadius: BorderRadius.circular(100),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 16),
-                      Text(
-                        'Generated ${_tambolaService.ticketGenerateCount - _tambolaService.atomicTicketGenerationLeftCount} of your ${_tambolaService.ticketGenerateCount} tickets',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: SizeConfig.mediumTextSize,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-          ],
-        ),
-      );
-
-      if (_currentBoardView == null)
-        _currentBoardView = Ticket(
-          bgColor: FelloColorPalette.tambolaTicketColorPalettes()[0].boardColor,
-          boardColorEven:
-              FelloColorPalette.tambolaTicketColorPalettes()[0].itemColorEven,
-          boardColorOdd:
-              FelloColorPalette.tambolaTicketColorPalettes()[0].itemColorOdd,
-          boradColorMarked:
-              FelloColorPalette.tambolaTicketColorPalettes()[0].itemColorMarked,
-          calledDigits: [],
-          board: null,
-        );
-      if (_currentBoard == null)
-        _currentBoard = _tambolaService.userWeeklyBoards[0];
-    }
-    return _widget;
+  decreaseTicketCount() {
+    buyTicketCount -= 1;
+    ticketCountController.text = buyTicketCount.toString();
+    notifyListeners();
   }
 
   void buyTickets() async {
@@ -366,18 +149,19 @@ class TambolaGameViewModel extends BaseModel {
       return BaseUtil.showNegativeAlert(
           "Enter a valid number of tickets", "lol");
     int ticketCount = int.tryParse(ticketCountController.text);
-    _tambolaService.userTicketWallet = await _dbModel.updateInitUserTicketCount(
+    tambolaService.userTicketWallet = await _dbModel.updateInitUserTicketCount(
         _userService.baseUser.uid,
-        _tambolaService.userTicketWallet,
+        tambolaService.userTicketWallet,
         ticketCount);
     ticketBuyInProgress = false;
     notifyListeners();
     BaseUtil.showPositiveAlert(
         "Ticket bought successfully", "Generating tickets, please wait");
 
-    ///check if new tambola tickets need to be generated
-    // if (ticketGenerationTryCount < 3) {
-    //   ticketGenerationTryCount += 1;
+    checkIfMoreTicketNeedsToBeGenerated();
+  }
+
+  checkIfMoreTicketNeedsToBeGenerated() async {
     bool _isGenerating = await _tambolaTicketService
         .processTicketGenerationRequirement(activeTambolaCardCount);
     if (_isGenerating) {
@@ -406,10 +190,10 @@ class TambolaGameViewModel extends BaseModel {
     }
   }
 
-  Ticket _buildBoardView(TambolaBoard board) {
+  Ticket buildBoardView(TambolaBoard board) {
     if (board == null || !board.isValid()) return null;
     List<int> _calledDigits;
-    if (!_tambolaService.weeklyDrawFetched ||
+    if (!tambolaService.weeklyDrawFetched ||
         weeklyDigits == null ||
         weeklyDigits.toList().isEmpty)
       _calledDigits = [];
@@ -433,8 +217,8 @@ class TambolaGameViewModel extends BaseModel {
   showAllBoards() {
     if (BaseUtil.showNoInternetAlert()) return;
     _tambolaBoardViews = [];
-    _tambolaService.userWeeklyBoards.forEach((board) {
-      _tambolaBoardViews.add(_buildBoardView(board));
+    tambolaService.userWeeklyBoards.forEach((board) {
+      _tambolaBoardViews.add(buildBoardView(board));
     });
     if (_tambolaBoardViews.isNotEmpty)
       AppState.delegate.appState.currentAction = PageAction(
@@ -540,7 +324,7 @@ class TambolaGameViewModel extends BaseModel {
 
     _logger.i('Resultant wins: ${ticketCodeWinIndex.toString()}');
 
-    if (!_tambolaService.winnerDialogCalled)
+    if (!tambolaService.winnerDialogCalled)
       AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: TWeeklyResultPageConfig,
@@ -549,7 +333,7 @@ class TambolaGameViewModel extends BaseModel {
           isEligible: _isEligible,
         ),
       );
-    _tambolaService.winnerDialogCalled = true;
+    tambolaService.winnerDialogCalled = true;
 
     if (ticketCodeWinIndex.length > 0) {
       _dbModel
@@ -557,7 +341,7 @@ class TambolaGameViewModel extends BaseModel {
               _userService.baseUser.uid,
               _userService.baseUser.name,
               _userService.baseUser.mobile,
-              _tambolaService.userTicketWallet.getActiveTickets(),
+              tambolaService.userTicketWallet.getActiveTickets(),
               _isEligible,
               ticketCodeWinIndex)
           .then((flag) {
@@ -808,7 +592,7 @@ class TambolaGameViewModel extends BaseModel {
   //   return output;
   // }
 
-  List<TambolaBoard> _refreshBestBoards() {
+  List<TambolaBoard> refreshBestBoards() {
     List<TambolaBoard> _bestTambolaBoards = [];
 
     // If boards are empty

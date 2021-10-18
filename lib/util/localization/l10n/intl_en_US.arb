@@ -44,6 +44,7 @@
   "saveSellButton": "SELL",
   "saveGoldBalancelabel": "My Gold Balance:",
   "saveGoldBalanceValue": "{goldAmount} gm",
+  "saveSecure": "100% secure",
   "saveBaseline": "You get 1 ticket for every ₹ 100 invested",
   "saveWinningsLabel": "Your winnings",
   "saveWinningsValue": "₹ {winningsAmout}",
