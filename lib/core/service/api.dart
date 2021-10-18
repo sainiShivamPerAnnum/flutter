@@ -612,24 +612,18 @@ class Api {
   }
 
   //Statistics
-  Future<DocumentReference> getStatisticsByFreqGameTypeAndCode(
+  Future<QueryDocumentSnapshot> getStatisticsByFreqGameTypeAndCode(
       String gameType, String freq, String code) async {
     Query _query = _db
         .collection(Constants.COLN_STATISTICS)
         .where('code', isEqualTo: code)
         .where('freq', isEqualTo: freq)
-        .where('gameType', isEqualTo: gameType);
-
-    List<DocumentReference> _docReferences = [];
+        .where('gametype', isEqualTo: gameType);
 
     try {
       QuerySnapshot _querySnapshot = await _query.get();
-      _querySnapshot.docs.forEach((dDoc) {
-        if (dDoc.exists) {
-          _docReferences.add(dDoc.reference);
-          return _docReferences[0];
-        }
-      });
+
+      return _querySnapshot.docs.first;
     } catch (e) {
       throw e;
     }
