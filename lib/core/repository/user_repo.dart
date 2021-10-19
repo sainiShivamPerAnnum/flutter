@@ -11,22 +11,23 @@ class UserRepository {
 
   Future<ApiResponse<List<UserTransaction>>> getWinningHistory(
       String userUid) async {
-    List<UserTransaction> _userPrizeTransaction = [];
+    List<UserTransaction> _userPrizeTransactions = [];
     try {
       final QuerySnapshot _querySnapshot =
           await _api.getUserPrizeTransactionDocuments(userUid);
-          
+
       if (_querySnapshot.docs.length != 0) {
         _querySnapshot.docs.forEach((element) {
-          _userPrizeTransaction
+          _userPrizeTransactions
               .add(UserTransaction.fromMap(element.data(), element.id));
         });
-        _logger.d("User prize transaction successfully fetched");
+        _logger.d(
+            "User prize transaction successfully fetched: ${_userPrizeTransactions.first.toJson().toString()}");
       } else {
         _logger.d("user prize transaction empty");
       }
 
-      return ApiResponse(model: _userPrizeTransaction, code: 200);
+      return ApiResponse(model: _userPrizeTransactions, code: 200);
     } catch (e) {
       _logger.e(e);
       throw e;
