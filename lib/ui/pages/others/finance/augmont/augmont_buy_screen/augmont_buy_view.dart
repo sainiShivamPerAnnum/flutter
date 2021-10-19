@@ -6,15 +6,18 @@ import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/buy_gold_button/buyGoldBtn_view.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class AugmontGoldBuyView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return BaseView<AugmontGoldBuyViewModel>(
       onModelReady: (model) {
         model.init();
@@ -29,7 +32,7 @@ class AugmontGoldBuyView extends StatelessWidget {
             children: [
               FelloAppBar(
                 leading: FelloAppBarBackButton(),
-                title: "Buy Digital Gold",
+                title: locale.abBuyDigitalGold,
               ),
               Container(
                 margin: EdgeInsets.only(
@@ -60,43 +63,22 @@ class AugmontGoldBuyView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     TextButton.icon(
-                        icon: CircleAvatar(
-                          radius: SizeConfig.screenWidth * 0.029,
-                          backgroundColor: Colors.white.withOpacity(0.2),
-                          child: Icon(
-                            Icons.ac_unit,
-                            color: Colors.white,
-                            size: SizeConfig.iconSize3,
-                          ),
-                        ),
-                        label: Text("24K",
+                        icon: SvgPicture.asset(Assets.gold24K,
+                            width: SizeConfig.padding24),
+                        label: Text(locale.saveGold24k,
                             style: TextStyles.body3.colour(Colors.white)),
                         onPressed: () {}),
                     TextButton.icon(
-                      icon: CircleAvatar(
-                        radius: SizeConfig.screenWidth * 0.029,
-                        backgroundColor: Colors.white.withOpacity(0.2),
-                        child: Icon(
-                          Icons.ac_unit,
-                          color: Colors.white,
-                          size: SizeConfig.iconSize3,
-                        ),
-                      ),
-                      label: Text("99.99% Pure",
+                      icon: SvgPicture.asset(Assets.goldPure,
+                          width: SizeConfig.padding24),
+                      label: Text(locale.saveGoldPure,
                           style: TextStyles.body3.colour(Colors.white)),
                       onPressed: () {},
                     ),
                     TextButton.icon(
-                        icon: CircleAvatar(
-                          radius: SizeConfig.screenWidth * 0.029,
-                          backgroundColor: Colors.white.withOpacity(0.2),
-                          child: Icon(
-                            Icons.ac_unit,
-                            color: Colors.white,
-                            size: SizeConfig.iconSize3,
-                          ),
-                        ),
-                        label: Text("100% Secure",
+                        icon: SvgPicture.asset(Assets.goldSecure,
+                            width: SizeConfig.padding24),
+                        label: Text(locale.saveSecure,
                             style: TextStyles.body3.colour(Colors.white)),
                         onPressed: () {}),
                   ],
@@ -242,20 +224,16 @@ class AugmontGoldBuyView extends StatelessWidget {
                       ),
                       SizedBox(height: SizeConfig.padding40),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Image.asset(
-                            "images/aug-logo.png",
-                            width: SizeConfig.screenWidth * 0.285,
-                          ),
-                          SizedBox(width: SizeConfig.padding32),
-                          Image.network(
-                            "https://logodix.com/logo/2154679.png",
-                            width: SizeConfig.screenWidth * 0.285,
-                          ),
-                          SizedBox(width: SizeConfig.padding32),
+                          Image.asset(Assets.augLogo,
+                              height: SizeConfig.padding24),
+                          Image.asset(Assets.amfiGraphic,
+                              color: UiConstants.primaryColor,
+                              height: SizeConfig.padding24),
                           Image.asset(Assets.sebiGraphic,
                               color: Color(0xff2E2A81),
-                              width: SizeConfig.screenWidth * 0.05),
+                              height: SizeConfig.padding20),
                         ],
                       ),
                       SizedBox(height: SizeConfig.viewInsets.bottom)
@@ -309,6 +287,7 @@ class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
   @override
   void dispose() {
     controller.dispose();
+    animation.removeListener(() {});
     super.dispose();
   }
 

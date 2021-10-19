@@ -172,7 +172,7 @@ class MobileInputScreenState extends State<MobileInputScreen> {
                 },
               ),
             ),
-            SizedBox(height: SizeConfig.viewInsets.bottom),
+            SizedBox(height: SizeConfig.screenHeight / 2),
           ],
           //)
         ),

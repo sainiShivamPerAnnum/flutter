@@ -37,17 +37,42 @@ class Assets {
 
 // ONBOARDING
   static final String enterPhoneNumber = "assets/vectors/enter_phone.svg";
-  static final String otpAuth = "assets/vectors/otp_auth.svg";
+  static final String otpAuth = "assets/vectors/otp_auth2.svg";
   static final String gender = 'images/svgs/gender.svg';
   static final String username = "assets/vectors/username.svg";
-  //HOME TAB
+
+  // WANT MORE MODAL
+  static final String wmtsaveMoney = "assets/vectors/icons/wmt_save_money.svg";
+  static final String wmtShare = "assets/vectors/icons/wmt_share.svg";
+
+  // HELP N SUPPORT
+  static final String hsCustomerService =
+      "assets/vectors/icons/hs_customer_care.svg";
+  static final String hsFaqs = "assets/vectors/icons/hs_faqs.svg";
+  static final String hsFdbk = 'assets/vectors/icons/hs_fdbk.svg';
+  static final String hsMail = "assets/vectors/icons/hs_mail.svg";
+
+  //HOME TAB//
 
   // PLAY
   static final String germsPattern = "assets/images/bg_pattern.png";
 
   // SAVE
   static final String whiteRays = "assets/images/white_rays.png";
+  static final String giftBoxOpen = "assets/vectors/gift_box_open.svg";
   static final String moneyIcon = "assets/images/icons/money.png";
+  static final String gold24K = "assets/vectors/icons/gold24k.svg";
+  static final String goldPure = "assets/vectors/icons/goldPure.svg";
+  static final String goldSecure = "assets/vectors/icons/goldSecure.svg";
+
+  //DRAWER
+  static final String dAboutDigitalGold =
+      "assets/vectors/icons/about_digital_gold.svg";
+  static final String dHelpNSupport = "assets/vectors/icons/help_support.svg";
+  static final String dHowItWorks = "assets/vectors/icons/how_it_works.svg";
+  static final String dPanKyc = "assets/vectors/icons/pan_kyc.svg";
+  static final String dReferNEarn = "assets/vectors/icons/refer_and_earn.svg";
+  static final String dTransactions = "assets/vectors/icons/transactions.svg";
 
   // REFERRAL
   static final String referNearn = "images/share-card.png";

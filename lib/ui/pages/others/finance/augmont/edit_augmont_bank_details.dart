@@ -125,15 +125,13 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                 child: Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(40),
-                        topRight: Radius.circular(40),
+                        topLeft: Radius.circular(SizeConfig.padding40),
+                        topRight: Radius.circular(SizeConfig.padding40),
                       ),
                       color: Colors.white),
                   child: SingleChildScrollView(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.blockSizeHorizontal * 5,
-                          vertical: 10),
+                      padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
                       child: Form(
                           key: _formKey,
                           child: Column(
@@ -267,10 +265,13 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                                 child: (!baseProvider
                                         .isEditAugmontBankDetailInProgress)
                                     ? Text(
-                                        (baseProvider.augmontDetail.bankAccNo ==
-                                                '')
-                                            ? 'WITHDRAW'
-                                            : 'UPDATE',
+                                        // (baseProvider.augmontDetail != null &&
+                                        //         baseProvider.augmontDetail
+                                        //                 .bankAccNo ==
+                                        //             '')
+                                        //     ? 'WITHDRAW'
+                                        //     :
+                                        'UPDATE',
                                         style: Theme.of(context)
                                             .textTheme
                                             .button

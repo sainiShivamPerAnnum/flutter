@@ -49,6 +49,7 @@ class FelloButton extends StatefulWidget {
 
 class _FelloButtonState extends State<FelloButton> {
   bool isLoading = false;
+  bool isAlreadyClicked = false;
 
   updateButtonState(bool val) {
     setState(() {
@@ -88,6 +89,8 @@ class _FelloButtonState extends State<FelloButton> {
         return widget.activeButtonUI != null
             ? InkWell(
                 onTap: () async {
+                  if (isAlreadyClicked) return;
+                  isAlreadyClicked = true;
                   if (await BaseUtil.showNoInternetAlert()) return;
                   if (Platform.isAndroid)
                     HapticFeedback.vibrate();
@@ -105,10 +108,13 @@ class _FelloButtonState extends State<FelloButton> {
                       updateButtonState(false);
                   }
                   if (widget.onPressed != null) widget.onPressed();
+                  isAlreadyClicked = false;
                 },
                 child: widget.activeButtonUI)
-            : TextButton(
+            : ElevatedButton(
                 onPressed: () async {
+                  if (isAlreadyClicked) return;
+                  isAlreadyClicked = true;
                   if (await BaseUtil.showNoInternetAlert()) return;
 
                   if (Platform.isAndroid)
@@ -127,6 +133,7 @@ class _FelloButtonState extends State<FelloButton> {
                       updateButtonState(false);
                   }
                   if (widget.onPressed != null) widget.onPressed();
+                  isAlreadyClicked = false;
                 },
                 child: Text(
                   widget.defaultButtonText ?? "Button",
@@ -135,26 +142,4 @@ class _FelloButtonState extends State<FelloButton> {
               );
     }
   }
-}
-
-class DemoButton extends FelloButton {
-  DemoButton(
-      {Key key,
-      Function onPressed,
-      activeButtonUI,
-      ValueChanged action,
-      offlineButtonUI,
-      Color defaultButtonColor,
-      String defaultButtonText,
-      Function onPressedAsync,
-      TextStyle textStyle})
-      : super(
-            onPressed: onPressed,
-            activeButtonUI: activeButtonUI,
-            action: action,
-            offlineButtonUI: offlineButtonUI,
-            defaultButtonColor: defaultButtonColor,
-            defaultButtonText: defaultButtonText,
-            onPressedAsync: onPressedAsync,
-            textStyle: textStyle);
 }

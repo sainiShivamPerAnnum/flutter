@@ -31,7 +31,7 @@ class PicksDraw extends StatelessWidget {
                 ),
                 onPressed: () {
                   AppState.delegate.appState.currentAction = PageAction(
-                      state: PageState.replace, page: THomePageConfig);
+                      state: PageState.replace, page: TGamePageConfig);
                 },
               )
             : SizedBox(),

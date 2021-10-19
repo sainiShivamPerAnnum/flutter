@@ -5,7 +5,6 @@ import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
-import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/feed_card_model.dart';
 import 'package:felloapp/core/model/prize_leader_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
@@ -140,11 +139,11 @@ class BaseUtil extends ChangeNotifier {
       show_game_tutorial,
       show_finance_tutorial;
   static bool isDeviceOffline, ticketRequestSent, playScreenFirst;
-  static int ticketCountBeforeRequest,
-      infoSliderIndex,
+  static int ticketCountBeforeRequest, infoSliderIndex
       // _atomicTicketGenerationLeftCount,
-      ticketGenerateCount,
-      atomicTicketDeletionLeftCount;
+      //ticketGenerateCount,
+      // atomicTicketDeletionLeftCount
+      ;
 
   _setRuntimeDefaults() {
     isUserOnboarded = false;
@@ -181,7 +180,7 @@ class BaseUtil extends ChangeNotifier {
     infoSliderIndex = 0;
     playScreenFirst = true;
     // _atomicTicketGenerationLeftCount = 0;
-    atomicTicketDeletionLeftCount = 0;
+    // atomicTicketDeletionLeftCount = 0;
     show_security_prompt = false;
     firstAugmontTransaction = null;
   }
@@ -227,8 +226,8 @@ class BaseUtil extends ChangeNotifier {
 
   Future<void> setUserDefaults() async {
     ///get user wallet -> Try moving it to view and viewmodel for finance
-    _userFundWallet = await _dbModel.getUserFundWallet(firebaseUser.uid);
-    if (_userFundWallet == null) _compileUserWallet();
+    // _userFundWallet = await _dbModel.getUserFundWallet(firebaseUser.uid);
+    // if (_userFundWallet == null) _compileUserWallet();
 
     ///get user ticket balance --> Try moving it to view and viewmodel for game
     // _userTicketWallet = await _dbModel.getUserTicketWallet(firebaseUser.uid);

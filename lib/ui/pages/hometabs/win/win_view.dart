@@ -39,8 +39,8 @@ class Win extends StatelessWidget {
                           PropertyChangeConsumer<UserService,
                               UserServiceProperties>(
                             builder: (ctx, model, child) => Text(
-                              "₹ 0.00",
-                              // "₹ ${model.userFundWallet.unclaimedBalance}",
+                              //"₹ 0.00",
+                              "₹ ${model.userFundWallet.unclaimedBalance}",
                               style: TextStyles.body2.bold
                                   .colour(UiConstants.primaryColor),
                             ),
@@ -50,39 +50,19 @@ class Win extends StatelessWidget {
                       // SizedBox(height: 12),
                       // Widgets().getBodyBold("Redeem for", Colors.black),
                       SizedBox(height: 12),
-                      // if (model.getUnclaimedPrizeBalance() > 0)
-                      // PropertyChangeConsumer<UserService,
-                      //     UserServiceProperties>(
-                      //   builder: (ctx, m, child) => FelloButton(
-                      //     defaultButtonText:
-                      //         m.userFundWallet.isPrizeBalanceUnclaimed()
-                      //             ? "Redeem"
-                      //             : "Share",
-                      //     onPressedAsync: () =>
-                      //         model.prizeBalanceAction(context),
-                      //     defaultButtonColor: Colors.orange,
-                      //   ),
-                      // ),
-
-                      // Row(
-                      //   children: [
-                      // Expanded(
-                      //   child: Widgets().getButton(
-                      //     "Augmont Digital Gold",
-                      //     () {},
-                      //     augmontGoldPalette.primaryColor,
-                      //   ),
-                      // ),
-                      //     SizedBox(width: 24),
-                      //     Expanded(
-                      //       child: Widgets().getButton(
-                      //         "Amazon Gift voucher",
-                      //         () {},
-                      //         Colors.orange,
-                      //       ),
-                      //     ),
-                      //   ],
-                      // ),
+                      if (model.getUnclaimedPrizeBalance > 0)
+                        PropertyChangeConsumer<UserService,
+                            UserServiceProperties>(
+                          builder: (ctx, m, child) => FelloButton(
+                            defaultButtonText:
+                                m.userFundWallet.isPrizeBalanceUnclaimed()
+                                    ? "Redeem"
+                                    : "Share",
+                            onPressedAsync: () =>
+                                model.prizeBalanceAction(context),
+                            defaultButtonColor: Colors.orange,
+                          ),
+                        ),
                     ],
                   ),
                 ),

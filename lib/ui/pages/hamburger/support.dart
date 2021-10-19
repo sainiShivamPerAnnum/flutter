@@ -9,6 +9,7 @@ import 'package:felloapp/ui/pages/static/FelloTile.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -94,7 +95,7 @@ class _SupportPageState extends State<SupportPage> {
                   padding: EdgeInsets.zero,
                   children: [
                     FelloBriefTile(
-                      leadingIcon: Icons.account_balance_wallet,
+                      leadingAsset: Assets.hsCustomerService,
                       title: "Customer Support",
                       onTap: () {
                         Haptic.vibrate();
@@ -104,7 +105,7 @@ class _SupportPageState extends State<SupportPage> {
                       },
                     ),
                     FelloBriefTile(
-                      leadingIcon: Icons.account_balance_wallet,
+                      leadingAsset: Assets.hsFaqs,
                       title: "FAQs",
                       onTap: () {
                         Haptic.vibrate();
@@ -113,7 +114,7 @@ class _SupportPageState extends State<SupportPage> {
                       },
                     ),
                     FelloBriefTile(
-                      leadingIcon: Icons.account_balance_wallet,
+                      leadingAsset: Assets.hsMail,
                       title: "Email us your query",
                       onTap: () {
                         Haptic.vibrate();
@@ -128,7 +129,7 @@ class _SupportPageState extends State<SupportPage> {
                       },
                     ),
                     FelloBriefTile(
-                      leadingIcon: Icons.account_balance_wallet,
+                      leadingIcon: Icons.call,
                       title: "Request a Callback",
                       onTap: () {
                         Haptic.vibrate();
@@ -139,7 +140,7 @@ class _SupportPageState extends State<SupportPage> {
                       },
                     ),
                     FelloBriefTile(
-                      leadingIcon: Icons.account_balance_wallet,
+                      leadingAsset: Assets.hsFdbk,
                       title: "Feedback",
                       onTap: () {
                         AppState.screenStack.add(ScreenItem.dialog);

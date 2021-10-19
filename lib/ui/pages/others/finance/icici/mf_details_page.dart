@@ -115,7 +115,9 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
                       ],
                     ),
                     FAQCard(
-                        Assets.mfFaqHeaders, Assets.mfFaqAnswers, Colors.white),
+                      Assets.mfFaqHeaders,
+                      Assets.mfFaqAnswers,
+                    ),
                     _buildBetaWithdrawButton(),
                   ],
                 ),

@@ -510,9 +510,7 @@ class _CloseCardState extends State<CloseCard> {
                         ),
                         shape: BoxShape.circle,
                       ),
-                      child: ProfileImageSE(
-                        radius: SizeConfig.avatarRadius,
-                      ),
+                      child: ProfileImageSE(radius: SizeConfig.padding40),
                     ),
                   ),
                   SizedBox(height: SizeConfig.blockSizeVertical * 3)

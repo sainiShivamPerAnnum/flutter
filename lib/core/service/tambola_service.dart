@@ -1,8 +1,10 @@
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
+import 'package:felloapp/core/model/user_ticket_wallet_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,6 +15,7 @@ class TambolaService extends ChangeNotifier {
   DBModel _dbModel = locator<DBModel>();
   UserService _userService = locator<UserService>();
 
+  static UserTicketWallet _userTicketWallet;
   static int _dailyPicksCount;
   static List<int> _todaysPicks;
   static DailyPick _weeklyDigits;
@@ -20,9 +23,15 @@ class TambolaService extends ChangeNotifier {
   static bool _weeklyDrawFetched = false;
   static bool _weeklyTicksFetched = false;
   static bool _winnerDialogCalled = false;
-  static int _atomicTicketGenerationLeftCount = 0;
+  int _atomicTicketGenerationLeftCount;
+  int _atomicTicketDeletionLeftCount;
+  int ticketGenerateCount;
+
+  get userTicketWallet => _userTicketWallet;
 
   get atomicTicketGenerationLeftCount => _atomicTicketGenerationLeftCount;
+
+  get atomicTicketDeletionLeftCount => _atomicTicketDeletionLeftCount;
 
   get winnerDialogCalled => _winnerDialogCalled;
 
@@ -31,6 +40,12 @@ class TambolaService extends ChangeNotifier {
   get weeklyDrawFetched => _weeklyDrawFetched;
 
   get dailyPicksCount => _dailyPicksCount;
+
+  set userTicketWallet(val) {
+    _userTicketWallet = val;
+    _logger.d("Ticket Wallet updated");
+    notifyListeners();
+  }
 
   set dailyPicksCount(value) {
     _dailyPicksCount = value;
@@ -75,8 +90,34 @@ class TambolaService extends ChangeNotifier {
     notifyListeners();
   }
 
+  set atomicTicketDeletionLeftCount(val) {
+    _atomicTicketDeletionLeftCount = val;
+    notifyListeners();
+  }
+
   init() {
+    _atomicTicketGenerationLeftCount = 0;
+    _atomicTicketDeletionLeftCount = 0;
     setUpDailyPicksCount();
+  }
+
+  Future<void> getUserTicketWalletData() async {
+    userTicketWallet =
+        await _dbModel.getUserTicketWallet(_userService.baseUser.uid);
+    if (_userTicketWallet == null) {
+      await _initiateNewTicketWallet();
+    }
+  }
+
+  Future<bool> _initiateNewTicketWallet() async {
+    userTicketWallet = UserTicketWallet.newTicketWallet();
+    int _t = userTicketWallet.initTck;
+    userTicketWallet = await _dbModel.updateInitUserTicketCount(
+        _userService.baseUser.uid,
+        _userTicketWallet,
+        Constants.NEW_USER_TICKET_COUNT);
+    //updateInitUserTicketCount method returns no change if operations fails
+    return (userTicketWallet.initTck != _t);
   }
 
   dump() {
@@ -88,6 +129,7 @@ class TambolaService extends ChangeNotifier {
     _weeklyTicksFetched = false;
     _winnerDialogCalled = false;
     _atomicTicketGenerationLeftCount = 0;
+    _atomicTicketDeletionLeftCount = 0;
   }
 
   fetchWeeklyPicks({bool forcedRefresh = false}) async {
@@ -99,29 +141,29 @@ class TambolaService extends ChangeNotifier {
         weeklyDrawFetched = true;
         if (_picks != null) {
           weeklyDigits = _picks;
-        }
-        switch (DateTime.now().weekday) {
-          case 1:
-            todaysPicks = weeklyDigits.mon;
-            break;
-          case 2:
-            todaysPicks = weeklyDigits.tue;
-            break;
-          case 3:
-            todaysPicks = weeklyDigits.wed;
-            break;
-          case 4:
-            todaysPicks = weeklyDigits.thu;
-            break;
-          case 5:
-            todaysPicks = weeklyDigits.fri;
-            break;
-          case 6:
-            todaysPicks = weeklyDigits.sat;
-            break;
-          case 7:
-            todaysPicks = weeklyDigits.sun;
-            break;
+          switch (DateTime.now().weekday) {
+            case 1:
+              todaysPicks = weeklyDigits.mon;
+              break;
+            case 2:
+              todaysPicks = weeklyDigits.tue;
+              break;
+            case 3:
+              todaysPicks = weeklyDigits.wed;
+              break;
+            case 4:
+              todaysPicks = weeklyDigits.thu;
+              break;
+            case 5:
+              todaysPicks = weeklyDigits.fri;
+              break;
+            case 6:
+              todaysPicks = weeklyDigits.sat;
+              break;
+            case 7:
+              todaysPicks = weeklyDigits.sun;
+              break;
+          }
         }
         if (todaysPicks == null) {
           _logger.i("Today's picks are not generated yet");

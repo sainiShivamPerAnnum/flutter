@@ -13,7 +13,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class FDrawer extends StatelessWidget {
   @override
@@ -85,7 +85,7 @@ class FDrawer extends StatelessWidget {
                           model.drawerList.length,
                           (i) => Container(
                             margin: EdgeInsets.symmetric(
-                                vertical: SizeConfig.padding8),
+                                vertical: SizeConfig.padding12),
                             child: TextButton.icon(
                               onPressed: () {
                                 AppState.delegate.appState.currentAction =
@@ -93,10 +93,10 @@ class FDrawer extends StatelessWidget {
                                         state: PageState.addPage,
                                         page: model.drawerList[i].pageConfig);
                               },
-                              icon: Icon(
-                                Icons.account_tree,
-                                size: 20,
-                                color: Colors.grey[400],
+                              icon: SvgPicture.asset(
+                                model.drawerList[i].icon,
+                                width: SizeConfig.padding24,
+                                color: Color(0xff11192B),
                               ),
                               label: Text(
                                 model.drawerList[i].title,

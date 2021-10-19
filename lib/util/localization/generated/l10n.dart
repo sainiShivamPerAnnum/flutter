@@ -339,10 +339,10 @@ class S {
 
   // skipped getter for the '-----------------------------------' key
 
-  /// `Finance`
+  /// `Save`
   String get navBarFinance {
     return Intl.message(
-      'Finance',
+      'Save',
       name: 'navBarFinance',
       desc: '',
       args: [],
@@ -443,6 +443,16 @@ class S {
     );
   }
 
+  /// `100% secure`
+  String get saveSecure {
+    return Intl.message(
+      '100% secure',
+      name: 'saveSecure',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `You get 1 ticket for every ₹ 100 invested`
   String get saveBaseline {
     return Intl.message(
@@ -493,6 +503,26 @@ class S {
     );
   }
 
+  /// `24K`
+  String get saveGold24k {
+    return Intl.message(
+      '24K',
+      name: 'saveGold24k',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `99.99% Pure`
+  String get saveGoldPure {
+    return Intl.message(
+      '99.99% Pure',
+      name: 'saveGoldPure',
+      desc: '',
+      args: [],
+    );
+  }
+
   // skipped getter for the '--------------------------------' key
 
   /// `Complete your profile`
@@ -530,6 +560,16 @@ class S {
     return Intl.message(
       'Notifications',
       name: 'abNotifications',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Buy Digital Gold`
+  String get abBuyDigitalGold {
+    return Intl.message(
+      'Buy Digital Gold',
+      name: 'abBuyDigitalGold',
       desc: '',
       args: [],
     );
@@ -757,6 +797,36 @@ class S {
     );
   }
 
+  /// `Save`
+  String get btnSave {
+    return Intl.message(
+      'Save',
+      name: 'btnSave',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update`
+  String get btnUpdate {
+    return Intl.message(
+      'Update',
+      name: 'btnUpdate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit`
+  String get btnEdit {
+    return Intl.message(
+      'Edit',
+      name: 'btnEdit',
+      desc: '',
+      args: [],
+    );
+  }
+
   // skipped getter for the '----------------------' key
 
   /// `Game based Savings \n & Investments🎉`
@@ -860,6 +930,16 @@ class S {
     return Intl.message(
       '*Applies to age 18 and over. This calculator does not replace professional medical advice.',
       name: 'resultsPageSecondDisclaimer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sign Out`
+  String get signout {
+    return Intl.message(
+      'Sign Out',
+      name: 'signout',
       desc: '',
       args: [],
     );

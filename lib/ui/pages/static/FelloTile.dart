@@ -39,11 +39,13 @@ class FelloTile extends StatelessWidget {
                   ? Icon(
                       leadingIcon,
                       size: SizeConfig.padding32,
+                      color: UiConstants.primaryColor,
                     )
                   : SvgPicture.asset(
                       leadingAsset ?? "assets/vectors/icons/tickets.svg",
                       height: SizeConfig.padding32,
                       width: SizeConfig.padding32,
+                      color: UiConstants.primaryColor,
                     ),
             ),
             SizedBox(
@@ -124,6 +126,7 @@ class FelloBriefTile extends StatelessWidget {
                       leadingAsset ?? "assets/vectors/icons/tickets.svg",
                       height: SizeConfig.padding24,
                       width: SizeConfig.padding24,
+                      color: UiConstants.primaryColor,
                     ),
             ),
             SizedBox(

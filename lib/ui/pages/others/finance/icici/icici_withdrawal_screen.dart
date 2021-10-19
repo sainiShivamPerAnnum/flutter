@@ -277,8 +277,10 @@ class ICICIWithdrawalState extends State<ICICIWithdrawal> {
                           ],
                         ),
                       ),
-                      FAQCard(Assets.mfFaqHeaders, Assets.mfFaqAnswers,
-                          Colors.white),
+                      FAQCard(
+                        Assets.mfFaqHeaders,
+                        Assets.mfFaqAnswers,
+                      ),
                     ],
                   ),
                 ),

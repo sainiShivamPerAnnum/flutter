@@ -128,7 +128,7 @@ class _FelloConfirmationDialogState extends State<FelloConfirmationDialog> {
                               bottomRight: Radius.circular(16),
                             ),
                           ),
-                          child: DemoButton(
+                          child: FelloButton(
                             action: isBusy,
                             onPressedAsync: () async {
                               Future.delayed(Duration(seconds: 3));

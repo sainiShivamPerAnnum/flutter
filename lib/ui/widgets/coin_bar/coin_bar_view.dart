@@ -10,6 +10,7 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 
 class FelloCoinBar extends StatelessWidget {
@@ -36,22 +37,27 @@ class FelloCoinBar extends StatelessWidget {
                   borderRadius: BorderRadius.circular(100),
                   color: Colors.white.withOpacity(0.4),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    SvgPicture.asset(
-                      Assets.tickets,
-                      height: SizeConfig.iconSize1,
-                    ),
-                    CoinBalanceTextSE(),
-                    //  Text("200", style: TextStyles.body2.bold),
-                    Icon(
-                      Icons.add_circle,
-                      size: SizeConfig.iconSize1,
-                      color: UiConstants.primaryColor,
-                    ),
-                  ],
-                ),
+                child: model.isLoadingFlc
+                    ? SpinKitThreeBounce(
+                        size: SizeConfig.body2,
+                        color: Colors.white,
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          SvgPicture.asset(
+                            Assets.tickets,
+                            height: SizeConfig.iconSize1,
+                          ),
+                          CoinBalanceTextSE(),
+                          //  Text("200", style: TextStyles.body2.bold),
+                          Icon(
+                            Icons.add_circle,
+                            size: SizeConfig.iconSize1,
+                            color: UiConstants.primaryColor,
+                          ),
+                        ],
+                      ),
               ),
             ),
     );

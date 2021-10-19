@@ -11,7 +11,6 @@ import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_viewMod
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -374,7 +373,9 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                     size: 20,
                                   )
                                 : Text(
-                                    model.inEditMode ? 'SAVE' : 'EDIT',
+                                    model.inEditMode
+                                        ? locale.btnSave
+                                        : locale.btnEdit,
                                     style: TextStyles.body2
                                         .colour(Colors.white)
                                         .bold,
@@ -392,10 +393,11 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                           TextButton(
                             onPressed: model.signout,
                             child: Text(
-                              "SIGN OUT",
-                              style: TextStyles.title5
+                              locale.signout,
+                              style: TextStyles.body1
                                   .colour(Colors.red[200])
-                                  .letterSpace(5),
+                                  .light
+                                  .letterSpace(2),
                             ),
                           ),
                           SizedBox(height: 24),

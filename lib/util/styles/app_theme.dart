@@ -46,6 +46,29 @@ class FelloTheme {
           borderRadius: BorderRadius.circular(10),
         ),
       ),
+      // elevatedButtonTheme: ElevatedButtonThemeData(
+      //   style: ElevatedButton.styleFrom(
+      //     primary: UiConstants.primaryColor,
+      //     minimumSize: Size(double.infinity, 50),
+      //     textStyle:
+      //         TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+      //     padding: EdgeInsets.all(4),
+      //     shape: RoundedRectangleBorder(
+      //       borderRadius: BorderRadius.circular(8),
+      //     ),
+      //   ),
+      // ),
+      // textButtonTheme: TextButtonThemeData(
+      //   style: TextButton.styleFrom(
+      //     textStyle: TextStyle(
+      //       color: Colors.black,
+      //       fontWeight: FontWeight.w500,
+      //     ),
+      //     primary: UiConstants.primaryColor,
+      //     shadowColor: UiConstants.primaryLight,
+      //     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      //   ),
+      // ),
     );
   }
 }

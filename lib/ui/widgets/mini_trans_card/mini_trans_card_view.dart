@@ -4,6 +4,7 @@ import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/dialogs/transaction_details_dialog.dart';
+import 'package:felloapp/ui/pages/others/profile/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
 import 'package:felloapp/ui/widgets/mini_trans_card/mini_trans_card_vm.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -35,7 +36,11 @@ class MiniTransactionCard extends StatelessWidget {
                               padding: EdgeInsets.symmetric(
                                   vertical: SizeConfig.padding20),
                               alignment: Alignment.center,
-                              child: Text("No Transactions"))
+                              child: Container(
+                                height: SizeConfig.screenWidth * 0.8,
+                                child: NoTransactionsContent(),
+                              ),
+                            )
                           : Column(
                               children: List.generate(
                                 m.txnList.length < 5 ? m.txnList.length : 5,
@@ -111,7 +116,7 @@ class MiniTransactionCard extends StatelessWidget {
                               ),
                             )),
                 ),
-                m.txnList.isEmpty
+                m.txnList == null || m.txnList.isEmpty
                     ? SizedBox()
                     : FelloButton(
                         onPressed: () => model.viewAllTransaction(),

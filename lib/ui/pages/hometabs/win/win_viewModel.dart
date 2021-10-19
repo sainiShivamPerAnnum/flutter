@@ -2,6 +2,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/tambola_winners_details.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/Prize-Card/card.dart';
@@ -11,16 +12,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class WinViewModel extends BaseModel {
-  BaseUtil _baseUtil = locator<BaseUtil>();
+  final _userService = locator<UserService>();
 
   LocalDBModel _localDBModel = locator<LocalDBModel>();
 
-  getUnclaimedPrizeBalance() {
-    return _baseUtil.userFundWallet?.unclaimedBalance ?? 0.0;
-  }
+  double get getUnclaimedPrizeBalance =>
+      _userService.userFundWallet.unclaimedBalance;
 
   getWinningsButtonText() {
-    if (_baseUtil.userFundWallet.isPrizeBalanceUnclaimed())
+    if (_userService.userFundWallet.isPrizeBalanceUnclaimed())
       return "Redeem";
     else
       return "Share";
@@ -28,7 +28,7 @@ class WinViewModel extends BaseModel {
 
   prizeBalanceAction(BuildContext context) async {
     HapticFeedback.vibrate();
-    if (_baseUtil.userFundWallet.isPrizeBalanceUnclaimed())
+    if (_userService.userFundWallet.isPrizeBalanceUnclaimed())
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -37,8 +37,9 @@ class WinViewModel extends BaseModel {
             child: Material(
               color: Colors.transparent,
               child: FCard(
-                isClaimed: !_baseUtil.userFundWallet.isPrizeBalanceUnclaimed(),
-                unclaimedPrize: _baseUtil.userFundWallet.unclaimedBalance,
+                isClaimed:
+                    !_userService.userFundWallet.isPrizeBalanceUnclaimed(),
+                unclaimedPrize: _userService.userFundWallet.unclaimedBalance,
               ),
             ),
           );
@@ -50,10 +51,10 @@ class WinViewModel extends BaseModel {
       showDialog(
         context: context,
         builder: (ctx) => ShareCard(
-          dpUrl: _baseUtil.myUserDpUrl,
+          dpUrl: _userService.myUserDpUrl,
           claimChoice: choice,
-          prizeAmount: _baseUtil.userFundWallet.prizeBalance,
-          username: _baseUtil.myUser.name,
+          prizeAmount: _userService.userFundWallet.prizeBalance,
+          username: _userService.baseUser.name,
         ),
       );
     }
