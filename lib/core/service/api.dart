@@ -175,8 +175,7 @@ class Api {
     return ref.doc(txnId).get();
   }
 
-  Future<QuerySnapshot> getUserPrizeTransactionDocuments(
-      String userId) {
+  Future<QuerySnapshot> getUserPrizeTransactionDocuments(String userId) {
     final query = _db
         .collection(Constants.COLN_USERS)
         .doc(userId)
@@ -643,6 +642,21 @@ class Api {
         .where('freq', isEqualTo: freq)
         .where('gametype', isEqualTo: gameType);
 
+    try {
+      QuerySnapshot _querySnapshot = await _query.get();
+
+      return _querySnapshot.docs.first;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  //Prizes
+  Future<QueryDocumentSnapshot> getPrizesPerGamePerFreq(String gameCode, String freq) async {
+    Query _query = _db
+        .collection(Constants.COLN_PRIZES)
+        .where('category', isEqualTo: gameCode)
+        .where('freq', isEqualTo: freq);
     try {
       QuerySnapshot _querySnapshot = await _query.get();
 
