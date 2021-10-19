@@ -5,6 +5,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
+import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
 import 'package:felloapp/ui/widgets/buttons/sell_gold_button/sellGoldBtn_view.dart';
 import 'package:felloapp/ui/widgets/mini_trans_card/mini_trans_card_view.dart';
@@ -214,69 +215,39 @@ class Save extends StatelessWidget {
               ),
             ),
             SizedBox(height: SizeConfig.padding16),
-            Container(
-              decoration: BoxDecoration(
-                  color: UiConstants.primaryColor,
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness32),
-                  boxShadow: [
-                    BoxShadow(
-                      blurRadius: 30,
-                      color: UiConstants.primaryColor.withOpacity(0.5),
-                      offset: Offset(
-                        0,
-                        SizeConfig.screenWidth * 0.1,
+            WinningsContainer(
+              shadow: true,
+              child: Container(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        Assets.giftBoxOpen,
+                        width: SizeConfig.screenWidth * 0.24,
                       ),
-                      spreadRadius: -30,
-                    )
-                  ]),
-              height: SizeConfig.screenWidth * 0.3,
-              margin: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.pageHorizontalMargins),
-              child: Stack(
-                children: [
-                  Opacity(
-                    opacity: 0.1,
-                    child: Image.asset(
-                      Assets.whiteRays,
-                      fit: BoxFit.cover,
-                      width: SizeConfig.screenWidth,
-                    ),
-                  ),
-                  Container(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Row(
+                      SizedBox(width: 24),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SvgPicture.asset(
-                            Assets.giftBoxOpen,
-                            width: SizeConfig.screenWidth * 0.24,
+                          Text(
+                            locale.saveWinningsLabel,
+                            style: TextStyles.body1.colour(Colors.white).light,
                           ),
-                          SizedBox(width: 24),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                locale.saveWinningsLabel,
-                                style:
-                                    TextStyles.body1.colour(Colors.white).light,
-                              ),
-                              SizedBox(height: 8),
-                              Text(
-                                locale.saveWinningsValue(
-                                    model.getUnclaimedPrizeBalance()),
-                                // "₹ ${model.getUnclaimedPrizeBalance()}",
-                                style:
-                                    TextStyles.title2.colour(Colors.white).bold,
-                              ),
-                            ],
-                          )
+                          SizedBox(height: 8),
+                          Text(
+                            locale.saveWinningsValue(
+                                model.getUnclaimedPrizeBalance()),
+                            // "₹ ${model.getUnclaimedPrizeBalance()}",
+                            style: TextStyles.title2.colour(Colors.white).bold,
+                          ),
                         ],
-                      ),
-                    ),
+                      )
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
             SizedBox(height: SizeConfig.padding32),

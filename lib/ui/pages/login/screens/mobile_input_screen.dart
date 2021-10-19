@@ -58,7 +58,7 @@ class MobileInputScreenState extends State<MobileInputScreen> {
           children: <Widget>[
             SvgPicture.asset(
               Assets.enterPhoneNumber,
-              width: SizeConfig.screenWidth * 0.28,
+              width: SizeConfig.screenHeight * 0.1,
             ),
             SizedBox(height: SizeConfig.padding64),
             Text(
@@ -149,8 +149,6 @@ class MobileInputScreenState extends State<MobileInputScreen> {
                 maxLength: 10,
                 cursorColor: UiConstants.primaryColor,
                 decoration: InputDecoration(
-                  //hintText: "Mobile",
-
                   prefixIcon: Padding(
                     padding: EdgeInsets.all(SizeConfig.padding4),
                     child: Image.network(

@@ -91,7 +91,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
             children: <Widget>[
               SvgPicture.asset(
                 Assets.otpAuth,
-                width: SizeConfig.screenWidth * 0.352,
+                width: SizeConfig.screenHeight * 0.16,
               ),
               SizedBox(height: SizeConfig.padding64),
               Text(

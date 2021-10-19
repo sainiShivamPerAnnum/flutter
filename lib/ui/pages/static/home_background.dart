@@ -1,4 +1,5 @@
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -12,10 +13,24 @@ class HomeBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Container(color: UiConstants.primaryColor),
-        const RadialGradientLeft(),
-        const RadialGradientRight(),
-        const Thunderstorm(),
+        Container(
+          width: SizeConfig.screenWidth,
+          height: SizeConfig.screenHeight,
+          alignment: Alignment.topCenter,
+          decoration: BoxDecoration(
+            color: UiConstants.primaryColor,
+            image: DecorationImage(
+                image: AssetImage(Assets.splashBackground),
+                fit: BoxFit.fitWidth),
+          ),
+          // child: Image.asset(
+          //   Assets.splashBackground,
+          //   fit: BoxFit.cover,
+          // ),
+        ),
+        // const RadialGradientLeft(),
+        // const RadialGradientRight(),
+        // const Thunderstorm(),
         if (whiteBackground != null) whiteBackground,
         child,
       ],

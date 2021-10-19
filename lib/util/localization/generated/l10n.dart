@@ -525,6 +525,58 @@ class S {
 
   // skipped getter for the '--------------------------------' key
 
+  /// `My Winnings`
+  String get winMyWinnings {
+    return Intl.message(
+      'My Winnings',
+      name: 'winMyWinnings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Play and win`
+  String get winMoneySmallText {
+    return Intl.message(
+      'Play and win',
+      name: 'winMoneySmallText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `₹ 1 Lakh every week`
+  String get winMoneyBigText {
+    return Intl.message(
+      '₹ 1 Lakh every week',
+      name: 'winMoneyBigText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Refer`
+  String get winIphoneSmallText {
+    return Intl.message(
+      'Refer',
+      name: 'winIphoneSmallText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `friends and win iphone 13`
+  String get winIphoneBigText {
+    return Intl.message(
+      'friends and win iphone 13',
+      name: 'winIphoneBigText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  // skipped getter for the '----------------------------' key
+
   /// `Complete your profile`
   String get abCompleteYourProfile {
     return Intl.message(

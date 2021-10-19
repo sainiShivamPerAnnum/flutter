@@ -1,7 +1,7 @@
 import 'constants.dart';
 
 class Assets {
-  static final String splashBackground = "assets/images/splash_bg.png";
+  static final String splashBackground = "assets/images/BG.png";
   static final String logoMaxSize = 'images/fello_logo.png';
   static final String logoShortform = 'images/fello-short-logo.png';
   static final String referGraphic = 'images/transfer.png';
@@ -64,6 +64,17 @@ class Assets {
   static final String gold24K = "assets/vectors/icons/gold24k.svg";
   static final String goldPure = "assets/vectors/icons/goldPure.svg";
   static final String goldSecure = "assets/vectors/icons/goldSecure.svg";
+
+  // WIN
+  static final String prizeClaimConfirm =
+      "assets/vectors/prize_claim_confirm.svg";
+  static final String goldClaim = "assets/images/gold_claim.png";
+  static final String amazonClaim = "assets/images/amazon_claim.png";
+  static final String iphone = "assets/images/iphone.png";
+  static final String iphone2 = "assets/images/iphone2.png";
+  static final String amazonGC = "assets/images/amazon_coupon.png";
+  static final String myntraGV = "assets/images/myntra_coupon.png";
+  static final String moneyBag = "assets/images/money_bag.png";
 
   //DRAWER
   static final String dAboutDigitalGold =

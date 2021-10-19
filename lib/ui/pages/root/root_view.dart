@@ -31,6 +31,21 @@ class Root extends StatelessWidget {
         return Scaffold(
           key: model.scaffoldKey,
           drawer: FDrawer(),
+          // bottomSheet: AppState.getCurrentTabIndex == 2
+          //     ? DraggableScrollableSheet(
+          //         initialChildSize: 0.2,
+          //         minChildSize: 0.2,
+          //         maxChildSize: 0.8,
+          //         expand: true,
+          //         builder: (ctx, controller) {
+          //           return Container(
+          //             height: SizeConfig.navBarHeight * 0.5,
+          //             child: CustomPaint(
+          //               painter: ModalCustomBackground(),
+          //             ),
+          //           );
+          //         })
+          //     : SizedBox(),
           body: HomeBackground(
             whiteBackground: WhiteBackground(
               height: kToolbarHeight * 2.8,
