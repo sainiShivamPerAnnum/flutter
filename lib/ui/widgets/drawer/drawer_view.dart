@@ -85,7 +85,7 @@ class FDrawer extends StatelessWidget {
                           model.drawerList.length,
                           (i) => Container(
                             margin: EdgeInsets.symmetric(
-                                vertical: SizeConfig.padding12),
+                                vertical: SizeConfig.padding8),
                             child: TextButton.icon(
                               onPressed: () {
                                 AppState.delegate.appState.currentAction =

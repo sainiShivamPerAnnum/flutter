@@ -1,6 +1,7 @@
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/picks_card/picks_card_view.dart';
 import 'package:felloapp/ui/pages/static/FelloTile.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
@@ -27,8 +28,8 @@ class Transactions extends StatelessWidget {
                     horizontal: SizeConfig.pageHorizontalMargins),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(40),
-                    topRight: Radius.circular(40),
+                    topLeft: Radius.circular(SizeConfig.padding40),
+                    topRight: Radius.circular(SizeConfig.padding40),
                   ),
                   color: Colors.white,
                 ),
@@ -57,6 +58,7 @@ class Transactions extends StatelessWidget {
                         );
                       },
                     ),
+                    SizedBox(height: 50),
                   ],
                 ),
               ),

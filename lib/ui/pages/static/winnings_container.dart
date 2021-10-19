@@ -36,7 +36,7 @@ class WinningsContainer extends StatelessWidget {
       child: Stack(
         children: [
           Opacity(
-            opacity: 0.1,
+            opacity: 0.06,
             child: Image.asset(
               Assets.whiteRays,
               fit: BoxFit.cover,

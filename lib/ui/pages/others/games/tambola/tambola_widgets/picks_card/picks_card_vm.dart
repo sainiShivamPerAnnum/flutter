@@ -48,7 +48,7 @@ class PicksCardViewModel extends BaseModel {
   }
 
   init() {
-    _normalTopCardHeight = SizeConfig.screenWidth * 0.76;
+    _normalTopCardHeight = SizeConfig.screenWidth * 0.5;
     _expandedTopCardHeight =
         (SizeConfig.smallTextSize + SizeConfig.screenWidth * 0.1) * 8 +
             SizeConfig.cardTitleTextSize * 2.4 +

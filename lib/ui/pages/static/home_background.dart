@@ -15,18 +15,19 @@ class HomeBackground extends StatelessWidget {
       children: [
         Container(
           width: SizeConfig.screenWidth,
-          height: SizeConfig.screenHeight,
+          height: SizeConfig.screenHeight / 2,
           alignment: Alignment.topCenter,
           decoration: BoxDecoration(
             color: UiConstants.primaryColor,
-            image: DecorationImage(
-                image: AssetImage(Assets.splashBackground),
-                fit: BoxFit.fitWidth),
           ),
-          // child: Image.asset(
-          //   Assets.splashBackground,
-          //   fit: BoxFit.cover,
-          // ),
+        ),
+        Positioned(
+          top: 0,
+          child: Image.asset(
+            Assets.splashBackground,
+            width: SizeConfig.screenWidth,
+            fit: BoxFit.fitWidth,
+          ),
         ),
         // const RadialGradientLeft(),
         // const RadialGradientRight(),

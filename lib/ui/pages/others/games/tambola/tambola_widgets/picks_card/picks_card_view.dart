@@ -3,9 +3,12 @@ import 'package:felloapp/ui/elements/tambola-global/weekly_picks.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/current_picks.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/picks_card/picks_card_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/tambola_appBar.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/parser.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class PicksCardView extends StatelessWidget {
@@ -21,53 +24,64 @@ class PicksCardView extends StatelessWidget {
           duration: Duration(seconds: 1),
           curve: Curves.ease,
           decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("images/Tambola/tranbg.png"),
-                fit: BoxFit.cover,
-              ),
-              borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
-              color: UiConstants.primaryColor),
-          margin: EdgeInsets.all(SizeConfig.globalMargin),
-          child: Column(
+            borderRadius: BorderRadius.circular(SizeConfig.roundness32),
+            color: UiConstants.primaryColor,
+          ),
+          margin: EdgeInsets.symmetric(
+            vertical: SizeConfig.pageHorizontalMargins,
+          ),
+          child: Stack(
             children: [
-              TambolaAppBar(),
-              !model.isShowingAllPicks
-                  ? TambolaTitle(titleOpacity: model.titleOpacity)
-                  : SizedBox(),
-              model.isShowingAllPicks
-                  ? Text(
-                      "Weekly Picks",
-                      style: GoogleFonts.montserrat(
-                        color: Colors.white,
-                        fontSize: SizeConfig.cardTitleTextSize,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    )
-                  : (model.todaysPicks != null && model.todaysPicks.isNotEmpty
-                      ? Text(
-                          "Today's Picks",
-                          style: GoogleFonts.montserrat(
-                            color: Colors.white,
-                            fontSize: SizeConfig.cardTitleTextSize,
-                            fontWeight: FontWeight.w500,
+              Positioned(
+                bottom: 0,
+                child: SvgPicture.asset(
+                  Assets.dailyPickCard,
+                  width: SizeConfig.screenWidth -
+                      SizeConfig.pageHorizontalMargins * 2,
+                ),
+              ),
+              Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    model.isShowingAllPicks
+                        ? Text(
+                            "Weekly Picks",
+                            style: GoogleFonts.montserrat(
+                              color: Colors.white,
+                              fontSize: SizeConfig.cardTitleTextSize,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
+                        : (model.todaysPicks != null &&
+                                model.todaysPicks.isNotEmpty
+                            ? Text(
+                                "Today's Picks",
+                                style: GoogleFonts.montserrat(
+                                  color: Colors.white,
+                                  fontSize: SizeConfig.cardTitleTextSize,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              )
+                            : Text(
+                                "Today's picks will be drawn at 6 pm.",
+                                style: GoogleFonts.montserrat(
+                                  color: Colors.white,
+                                  fontSize: SizeConfig.mediumTextSize,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              )),
+                    !model.isShowingAllPicks
+                        ? CurrentPicks(
+                            dailyPicksCount: model.dailyPicksCount,
+                            todaysPicks: model.todaysPicks,
+                          )
+                        : WeeklyPicks(
+                            weeklyDraws: model.weeklyDigits,
                           ),
-                        )
-                      : Text(
-                          "Today's picks will be drawn at 6 pm.",
-                          style: GoogleFonts.montserrat(
-                            color: Colors.white,
-                            fontSize: SizeConfig.mediumTextSize,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        )),
-              !model.isShowingAllPicks
-                  ? CurrentPicks(
-                      dailyPicksCount: model.dailyPicksCount,
-                      todaysPicks: model.todaysPicks,
-                    )
-                  : WeeklyPicks(
-                      weeklyDraws: model.weeklyDigits,
-                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

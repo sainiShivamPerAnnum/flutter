@@ -28,16 +28,15 @@ class MyWinningsView extends StatelessWidget {
                 ),
                 Expanded(
                   child: Container(
-                    padding: EdgeInsets.symmetric(
-                        vertical: SizeConfig.pageHorizontalMargins),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(40),
-                        topRight: Radius.circular(40),
+                        topLeft: Radius.circular(SizeConfig.padding40),
+                        topRight: Radius.circular(SizeConfig.padding40),
                       ),
                       color: Colors.white,
                     ),
-                    child: Column(
+                    child: ListView(
+                      // crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Hero(
                           tag: "myWinnings",
@@ -78,7 +77,7 @@ class MyWinningsView extends StatelessWidget {
                               ClaimButton(
                                 color: UiConstants.primaryColor,
                                 image: Assets.amazonClaim,
-                                onTap: () {},
+                                onTap: model.showConfirmDialog,
                                 text: "Redeem for amazon pay",
                               ),
                               SizedBox(
@@ -91,6 +90,65 @@ class MyWinningsView extends StatelessWidget {
                                 text: "Invest in digtial gold",
                               ),
                             ],
+                          ),
+                        ),
+                        SizedBox(height: SizeConfig.padding20),
+                        Container(
+                          width: SizeConfig.screenWidth,
+                          margin: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.pageHorizontalMargins),
+                          height: SizeConfig.padding54,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.padding32),
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.circular(SizeConfig.roundness16),
+                            color: UiConstants.tertiaryLight.withOpacity(0.5),
+                          ),
+                          child: FittedBox(
+                            child: Text(
+                              "Winnings should be minimal of Rs 100 for withdrawal ",
+                              style: TextStyles.body3,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: SizeConfig.padding24),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.pageHorizontalMargins),
+                          child: Text(
+                            "Winning History",
+                            style: TextStyles.title3.bold,
+                          ),
+                        ),
+                        SizedBox(height: SizeConfig.padding16),
+                        Container(
+                          height: SizeConfig.screenHeight * 0.5,
+                          child: ListView.builder(
+                            physics: BouncingScrollPhysics(),
+                            itemCount: 10,
+                            itemBuilder: (ctx, i) => ListTile(
+                              contentPadding: EdgeInsets.symmetric(
+                                  horizontal: SizeConfig.pageHorizontalMargins),
+                              leading: CircleAvatar(
+                                radius: SizeConfig.padding24,
+                                backgroundImage: NetworkImage(
+                                    "https://upload.wikimedia.org/wikipedia/en/5/51/Minecraft_cover.png"),
+                              ),
+                              title: Text(
+                                "1st Position Cricket",
+                                style: TextStyles.body2.bold,
+                              ),
+                              subtitle: Text(
+                                "March 6, 2021",
+                                style: TextStyles.body3.colour(Colors.grey),
+                              ),
+                              trailing: Text(
+                                "Rs 100",
+                                style: TextStyles.body2.bold
+                                    .colour(UiConstants.primaryColor),
+                              ),
+                            ),
                           ),
                         )
                       ],

@@ -85,6 +85,10 @@ class Assets {
   static final String dReferNEarn = "assets/vectors/icons/refer_and_earn.svg";
   static final String dTransactions = "assets/vectors/icons/transactions.svg";
 
+  //TAMBOLA
+
+  static final String dailyPickCard = "assets/vectors/daily_picks_card.svg";
+
   // REFERRAL
   static final String referNearn = "images/share-card.png";
   static final String whatsapp = "images/svgs/whatsapp.svg";
