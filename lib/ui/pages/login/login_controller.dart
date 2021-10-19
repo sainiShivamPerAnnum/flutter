@@ -58,10 +58,11 @@ class _LoginControllerState extends State<LoginController>
   PageController _controller;
   static BaseUtil baseProvider;
   static DBModel dbProvider;
-  static FcmListener fcmProvider;
+  // static FcmListener fcmProvider;
   static LocalDBModel lclDbProvider;
   static AppState appStateProvider;
-  static UserService userService = locator<UserService>();
+  final UserService userService = locator<UserService>();
+  final FcmListener fcmListener = locator<FcmListener>();
   AnimationController animationController;
 
   String userMobile;
@@ -200,7 +201,7 @@ class _LoginControllerState extends State<LoginController>
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     lclDbProvider = Provider.of<LocalDBModel>(context, listen: false);
-    fcmProvider = Provider.of<FcmListener>(context, listen: false);
+    // fcmProvider = Provider.of<FcmListener>(context, listen: false);
     appStateProvider = Provider.of<AppState>(context, listen: false);
     S locale = S.of(context);
     return Scaffold(
@@ -633,7 +634,7 @@ class _LoginControllerState extends State<LoginController>
     await BaseAnalytics.logUserProfile(baseProvider.myUser);
     await userService.init();
     await baseProvider.init();
-    await fcmProvider.setupFcm();
+    await fcmListener.setupFcm();
     AppState.isOnboardingInProgress = false;
     if (baseProvider.isLoginNextInProgress == true) {
       baseProvider.isLoginNextInProgress = false;

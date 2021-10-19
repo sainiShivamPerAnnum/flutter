@@ -3,7 +3,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
-import 'package:felloapp/ui/modals_sheets/simple_kyc_modal_sheet.dart';
+import 'package:felloapp/ui/widgets/simple_kyc_modalsheet/simple_kyc_modalsheet_view.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/edit_augmont_bank_details.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
@@ -347,7 +347,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen>
             context: context,
             isScrollControlled: true,
             builder: (context) {
-              return SimpleKycModalSheet();
+              return SimpleKycModalSheetView();
             });
       },
       child: Container(

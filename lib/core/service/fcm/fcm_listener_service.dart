@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
@@ -8,23 +7,20 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:logger/logger.dart';
 
-class FcmListener extends ChangeNotifier {
+class FcmListener {
   final BaseUtil _baseUtil = locator<BaseUtil>();
   final DBModel _dbModel = locator<DBModel>();
   final Logger logger = locator<Logger>();
   final FcmHandler _handler = locator<FcmHandler>();
   final UserService _userService = locator<UserService>();
-  // final FcmTokenService _fcmTokenService = locator<FcmTokenService>();
 
   FirebaseMessaging _fcm;
   bool isTambolaNotificationLoading = false;
@@ -55,6 +51,7 @@ class FcmListener extends ChangeNotifier {
         ? logger.d("Fcm instance created")
         : logger.d("Fcm instance not created");
 
+    //SaveFCM
     String idToken = await CacheManager.readCache(key: 'token');
 
     idToken == null
@@ -79,14 +76,15 @@ class FcmListener extends ChangeNotifier {
       logger.d("BaseUser null in user service.");
     }
 
-    // ///update fcm user token if required
-    // Stream<String> fcmStream = _fcm.onTokenRefresh;
-    // fcmStream.listen((token) async {
-    //   logger.d("OnTokenRefresh called, updated FCM token: $token");
-    //   await CacheManager.writeCache(
-    //       key: 'token', value: token, type: CacheType.string);
-    //   logger.d("FCM token added to prefs.");
-    // });
+    ///update fcm user token if required
+    Stream<String> fcmStream = _fcm.onTokenRefresh;
+    fcmStream.listen((token) async {
+      logger.d("OnTokenRefresh called, updated FCM token: $token");
+      await CacheManager.writeCache(
+          key: 'token', value: token, type: CacheType.string);
+      _saveDeviceToken(idToken);
+      logger.d("FCM token added to prefs.");
+    });
 
     _fcm.getInitialMessage().then((RemoteMessage message) {
       logger.d("onMessage recieved: " + message.toString());

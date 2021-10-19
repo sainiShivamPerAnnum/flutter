@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/logger.dart';
@@ -27,6 +26,7 @@ class _UpdateRequiredScreenState extends State<UpdateRequiredScreen> {
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
+    
     return Scaffold(
       body: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
         SafeArea(

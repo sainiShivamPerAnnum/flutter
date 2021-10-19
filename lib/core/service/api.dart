@@ -33,6 +33,19 @@ class Api {
     return ref.doc(Constants.DOC_USER_FCM_TOKEN).set(data);
   }
 
+  Future<void> deleteUserClientToken(String userId) {
+    ref = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
+        .collection(Constants.SUBCOLN_USER_FCM);
+    return ref.doc(Constants.DOC_USER_FCM_TOKEN).delete();
+  }
+
+  Future<void> addKycName(String userId, Map<String,dynamic> data) {
+    final documentRef = _db.collection(Constants.COLN_USERS).doc(userId);
+    return documentRef.update(data);
+  }
+
   Future<QuerySnapshot> getUserNotifications(String userId) async {
     Future<QuerySnapshot> snapshot;
     ref = _db

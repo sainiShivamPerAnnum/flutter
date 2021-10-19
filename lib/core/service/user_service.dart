@@ -4,6 +4,7 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/model/user_ticket_wallet_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,6 +14,7 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   final _dbModel = locator<DBModel>();
   final _logger = locator<Logger>();
+  final _userRepo = locator<UserRepository>();
 
   User _firebaseUser;
   BaseUser _baseUser;
@@ -90,11 +92,10 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   Future<bool> signout() async {
     try {
-      await CacheManager.deleteCache(key: 'token');
+      await _userRepo.removeUserFCM(_baseUser.uid);
       await FirebaseAuth.instance.signOut();
       await CacheManager.clearCacheMemory();
-      _logger.d("Firebase user signed out");
-      _logger.d("Firebase user signed out, Token cleared");
+      _logger.d("UserService signout called");
       _firebaseUser = null;
       _baseUser = null;
       _myUserDpUrl = null;
