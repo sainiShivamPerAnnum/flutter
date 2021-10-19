@@ -76,5 +76,7 @@ class Constants {
   static final DateTime VERSION_2_RELEASE_DATE = DateTime(2021, 4, 1);
 
   static final String GAME_CRICKET_URI =
-      'https://live.gameskite.com/fello/cricket-2021';
+      'https://prod.freakx.in/fello/cricket-2021/';
 }
+
+   
