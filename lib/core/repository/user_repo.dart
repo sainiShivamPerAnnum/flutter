@@ -1,10 +1,37 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/api.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:logger/logger.dart';
 
 class UserRepository {
   final _logger = locator<Logger>();
   final _api = locator<Api>();
+
+  Future<ApiResponse<List<UserTransaction>>> getWinningHistory(
+      String userUid) async {
+    List<UserTransaction> _userPrizeTransaction = [];
+    try {
+      final QuerySnapshot _querySnapshot =
+          await _api.getUserPrizeTransactionDocuments(userUid);
+          
+      if (_querySnapshot.docs.length != 0) {
+        _querySnapshot.docs.forEach((element) {
+          _userPrizeTransaction
+              .add(UserTransaction.fromMap(element.data(), element.id));
+        });
+        _logger.d("User prize transaction successfully fetched");
+      } else {
+        _logger.d("user prize transaction empty");
+      }
+
+      return ApiResponse(model: _userPrizeTransaction, code: 200);
+    } catch (e) {
+      _logger.e(e);
+      throw e;
+    }
+  }
 
   Future<void> removeUserFCM(String userUid) async {
     try {
