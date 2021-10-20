@@ -1,8 +1,6 @@
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/elements/leaderboard.dart';
 import 'package:felloapp/ui/elements/texts/marquee_text.dart';
-import 'package:felloapp/ui/elements/week-winners_board.dart';
 import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
@@ -229,7 +227,10 @@ class Win extends StatelessWidget {
                                 )
                               : (model.winners == null
                                   ? Center(
-                                      child: Text("No data"),
+                                      child: NoRecordDisplayWidget(
+                                        asset: "images/leaderboard.png",
+                                        text: "Winners will be upadated soon",
+                                      ),
                                     )
                                   : WinnerboardView(
                                       model: model.winners,

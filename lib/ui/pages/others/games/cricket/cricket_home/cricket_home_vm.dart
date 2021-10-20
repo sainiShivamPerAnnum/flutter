@@ -4,8 +4,10 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/leader_board_modal.dart';
+import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/repository/statistics_repo.dart';
+import 'package:felloapp/core/service/prize_service.dart';
 import 'package:felloapp/core/service/user_coin_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -24,6 +26,7 @@ class CricketHomeViewModel extends BaseModel {
   final _userCoinService = locator<UserCoinService>();
   final _logger = locator<Logger>();
   final _stats = locator<StatisticsRepository>();
+  final _prizeService = locator<PrizeService>();
 
   PageController pageController = new PageController(initialPage: 0);
 
@@ -32,6 +35,9 @@ class CricketHomeViewModel extends BaseModel {
   String _sessionId;
   LeaderBoardModal _cricLeaderboard;
   bool isLeaderboardLoading = false;
+  bool isPrizesLoading = false;
+
+  PrizesModel get cPrizes => _prizeService.cricketPrizes;
 
   String get message => _message;
   String get sessionID => _sessionId;
@@ -53,6 +59,7 @@ class CricketHomeViewModel extends BaseModel {
 
   init() {
     getLeaderboard();
+    getPrizes();
   }
 
   startGame() {
@@ -92,7 +99,16 @@ class CricketHomeViewModel extends BaseModel {
     }
   }
 
-  fetchPrizes() async {}
+  getPrizes() async {
+    isPrizesLoading = true;
+    notifyListeners();
+    await _prizeService.fetchTambolaPrizes();
+    if (cPrizes == null)
+      BaseUtil.showNegativeAlert(
+          "Leaderboard failed to update", "Please refresh again");
+    isPrizesLoading = false;
+    notifyListeners();
+  }
 
   Future<void> getLeaderboard() async {
     isLeaderboardLoading = true;

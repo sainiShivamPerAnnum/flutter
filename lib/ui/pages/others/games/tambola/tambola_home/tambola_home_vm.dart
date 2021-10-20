@@ -6,12 +6,15 @@ import 'package:felloapp/core/repository/statistics_repo.dart';
 import 'package:felloapp/core/service/prize_service.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 class TambolaHomeViewModel extends BaseModel {
   final _stats = locator<StatisticsRepository>();
   final _prizeService = locator<PrizeService>();
+  final _logger = locator<Logger>();
 
   bool isLeaderboardLoading = false;
   bool isPrizesLoading = false;
@@ -44,8 +47,9 @@ class TambolaHomeViewModel extends BaseModel {
   Future<void> getLeaderboard() async {
     isLeaderboardLoading = true;
     notifyListeners();
-    var temp = await _stats.getLeaderBoard("GM_TAMBOLA2020", " weekly");
-    if (temp != null)
+    ApiResponse temp = await _stats.getLeaderBoard("GM_TAMBOLA2020", "weekly");
+    _logger.d(temp.code);
+    if (temp.model != null)
       _tLeaderBoard = temp.model;
     else
       BaseUtil.showNegativeAlert(

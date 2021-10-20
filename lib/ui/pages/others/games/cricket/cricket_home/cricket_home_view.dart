@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/leader_board_modal.dart';
+import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_vm.dart';
 import 'package:felloapp/ui/pages/static/FelloTile.dart';
@@ -89,16 +90,24 @@ class CricketHomeView extends StatelessWidget {
                                       physics: NeverScrollableScrollPhysics(),
                                       controller: model.pageController,
                                       children: [
-                                        ListView.builder(
-                                            shrinkWrap: true,
-                                            itemCount: 10,
-                                            itemBuilder: (ctx, i) {
-                                              return FelloBriefTile(
-                                                leadingIcon: Icons.first_page,
-                                                title: "First Prize",
-                                                trailingIcon: Icons.next_plan,
-                                              );
-                                            }),
+                                        model.isPrizesLoading
+                                            ? Center(
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  color:
+                                                      UiConstants.primaryColor,
+                                                ),
+                                              )
+                                            : (model.cPrizes == null
+                                                ? NoRecordDisplayWidget(
+                                                    asset:
+                                                        "images/week-winners.png",
+                                                    text:
+                                                        "Prizes will be upadated soon.",
+                                                  )
+                                                : PrizesView(
+                                                    model: model.cPrizes,
+                                                  )),
                                         model.isLeaderboardLoading
                                             ? Center(
                                                 child:
@@ -109,7 +118,13 @@ class CricketHomeView extends StatelessWidget {
                                               )
                                             : (model.cricLb == null
                                                 ? Center(
-                                                    child: Text("No data"),
+                                                    child:
+                                                        NoRecordDisplayWidget(
+                                                      asset:
+                                                          "images/leaderboard.png",
+                                                      text:
+                                                          "Leaderboard will be upadated soon.",
+                                                    ),
                                                   )
                                                 : LeaderBoardView(
                                                     model: model.cricLb,
@@ -163,6 +178,34 @@ class CricketHomeView extends StatelessWidget {
   }
 }
 
+class NoRecordDisplayWidget extends StatelessWidget {
+  final String asset;
+  final String text;
+
+  NoRecordDisplayWidget({this.asset, this.text});
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(height: SizeConfig.padding32),
+        Image.asset(
+          asset,
+          height: SizeConfig.screenHeight * 0.2,
+        ),
+        SizedBox(
+          height: SizeConfig.padding16,
+        ),
+        Text(
+          text,
+          textAlign: TextAlign.center,
+          style: TextStyles.title5.bold,
+        )
+      ],
+    );
+  }
+}
+
 class GameChips extends StatelessWidget {
   final CricketHomeViewModel model;
   final String text;
@@ -188,6 +231,58 @@ class GameChips extends StatelessWidget {
                 ? TextStyles.body3.bold.colour(Colors.white)
                 : TextStyles.body3.colour(UiConstants.primaryColor)),
       ),
+    );
+  }
+}
+
+class PrizesView extends StatelessWidget {
+  final PrizesModel model;
+  PrizesView({this.model});
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: model.prizesA.length,
+      itemBuilder: (ctx, i) {
+        return ListTile(
+          leading: Icon(Icons.first_page),
+          title: Text(model.prizesA[i].displayName),
+          trailing: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton.icon(
+                icon: CircleAvatar(
+                  radius: SizeConfig.screenWidth * 0.029,
+                  backgroundColor: UiConstants.tertiarySolid.withOpacity(0.2),
+                  child: RotatedBox(
+                    quarterTurns: 1,
+                    child: SvgPicture.asset(
+                      "assets/vectors/icons/tickets.svg",
+                      height: SizeConfig.iconSize3,
+                    ),
+                  ),
+                ),
+                label: Text("${model.prizesA[i].flc} tickets",
+                    style: TextStyles.body3.colour(Colors.black54)),
+                onPressed: () {},
+              ),
+              SizedBox(width: 16),
+              TextButton.icon(
+                  icon: CircleAvatar(
+                    radius: SizeConfig.screenWidth * 0.029,
+                    backgroundColor: UiConstants.primaryLight,
+                    child: Image.asset(
+                      "assets/images/icons/money.png",
+                      height: SizeConfig.iconSize3,
+                    ),
+                  ),
+                  label: Text("Rs ${model.prizesA[i].amt}",
+                      style: TextStyles.body3.colour(Colors.black54)),
+                  onPressed: () {}),
+            ],
+          ),
+        );
+      },
     );
   }
 }

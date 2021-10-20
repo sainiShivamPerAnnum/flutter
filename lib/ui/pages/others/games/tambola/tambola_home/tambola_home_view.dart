@@ -95,83 +95,15 @@ class TambolaHomeView extends StatelessWidget {
                                               ),
                                             )
                                           : (model.tPrizes == null
-                                              ? Center(
-                                                  child: Text("No data"),
+                                              ? NoRecordDisplayWidget(
+                                                  asset:
+                                                      "images/week-winners.png",
+                                                  text:
+                                                      "Prizes will be updates soon",
                                                 )
-                                              : ListView.builder(
-                                                  shrinkWrap: true,
-                                                  itemCount: model
-                                                      .tPrizes.prizesA.length,
-                                                  itemBuilder: (ctx, i) {
-                                                    return ListTile(
-                                                      leading: Icon(
-                                                          Icons.first_page),
-                                                      title: Text(model
-                                                          .tPrizes
-                                                          .prizesA[i]
-                                                          .displayName),
-                                                      trailing: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          TextButton.icon(
-                                                            icon: CircleAvatar(
-                                                              radius: SizeConfig
-                                                                      .screenWidth *
-                                                                  0.029,
-                                                              backgroundColor:
-                                                                  UiConstants
-                                                                      .tertiarySolid
-                                                                      .withOpacity(
-                                                                          0.2),
-                                                              child: RotatedBox(
-                                                                quarterTurns: 1,
-                                                                child:
-                                                                    SvgPicture
-                                                                        .asset(
-                                                                  "assets/vectors/icons/tickets.svg",
-                                                                  height: SizeConfig
-                                                                      .iconSize3,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            label: Text(
-                                                                "${model.tPrizes.prizesA[i].flc} tickets",
-                                                                style: TextStyles
-                                                                    .body3
-                                                                    .colour(Colors
-                                                                        .black54)),
-                                                            onPressed: () {},
-                                                          ),
-                                                          SizedBox(width: 16),
-                                                          TextButton.icon(
-                                                              icon:
-                                                                  CircleAvatar(
-                                                                radius: SizeConfig
-                                                                        .screenWidth *
-                                                                    0.029,
-                                                                backgroundColor:
-                                                                    UiConstants
-                                                                        .primaryLight,
-                                                                child:
-                                                                    Image.asset(
-                                                                  "assets/images/icons/money.png",
-                                                                  height: SizeConfig
-                                                                      .iconSize3,
-                                                                ),
-                                                              ),
-                                                              label: Text(
-                                                                  "Rs ${model.tPrizes.prizesA[i].amt}",
-                                                                  style: TextStyles
-                                                                      .body3
-                                                                      .colour(Colors
-                                                                          .black54)),
-                                                              onPressed: () {}),
-                                                        ],
-                                                      ),
-                                                    );
-                                                  })),
+                                              : PrizesView(
+                                                  model: model.tPrizes,
+                                                )),
                                       model.isLeaderboardLoading
                                           ? Center(
                                               child: CircularProgressIndicator(
@@ -179,8 +111,31 @@ class TambolaHomeView extends StatelessWidget {
                                               ),
                                             )
                                           : (model.tlboard == null
-                                              ? Center(
-                                                  child: Text("No data"),
+                                              ? Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    SizedBox(
+                                                        height: SizeConfig
+                                                            .padding32),
+                                                    Image.asset(
+                                                      "images/leaderboard.png",
+                                                      height: SizeConfig
+                                                              .screenHeight *
+                                                          0.2,
+                                                    ),
+                                                    SizedBox(
+                                                      height:
+                                                          SizeConfig.padding16,
+                                                    ),
+                                                    Text(
+                                                      "Leaderboard will be updated soon.",
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyles
+                                                          .title5.bold,
+                                                    )
+                                                  ],
                                                 )
                                               : LeaderBoardView(
                                                   model: model.tlboard,
