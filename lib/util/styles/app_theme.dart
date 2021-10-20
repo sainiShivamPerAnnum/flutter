@@ -9,7 +9,7 @@ class FelloTheme {
 
   static ThemeData lightMode() {
     return ThemeData(
-      primaryColor: UiConstants.primaryColor,
+      primaryColor: Color(0xff34C3A7),
       primarySwatch: UiConstants.kPrimaryColor,
       visualDensity: VisualDensity.adaptivePlatformDensity,
       colorScheme: ColorScheme.fromSwatch(accentColor: Colors.white),

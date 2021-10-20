@@ -17,7 +17,9 @@ class GameCard extends StatelessWidget {
       child: Container(
         width: SizeConfig.screenWidth,
         height: SizeConfig.screenWidth * 0.64,
-        margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+        margin: EdgeInsets.symmetric(
+            vertical: SizeConfig.padding8,
+            horizontal: SizeConfig.pageHorizontalMargins),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(SizeConfig.roundness56),

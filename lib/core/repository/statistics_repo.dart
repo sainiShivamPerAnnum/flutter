@@ -24,7 +24,7 @@ class StatisticsRepository {
       _logger.d(_responseModel.toJson().toString());
       return ApiResponse(model: _responseModel, code: 200);
     } catch (e) {
-      return ApiResponse.withError(e, 400);
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 }

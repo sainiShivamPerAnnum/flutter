@@ -91,8 +91,8 @@ class MiniTransactionCardViewModel extends BaseModel {
   }
 
   viewAllTransaction() async {
-    AppState.delegate.appState.currentAction =
-        PageAction(state: PageState.addPage, page: TransactionPageConfig);
+    AppState.delegate.appState.currentAction = PageAction(
+        state: PageState.addPage, page: TransactionsHistoryPageConfig);
   }
 
   bool isOfferStillValid(Timestamp time) {

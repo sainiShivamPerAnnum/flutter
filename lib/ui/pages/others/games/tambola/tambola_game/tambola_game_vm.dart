@@ -22,6 +22,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/palette.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:logger/logger.dart';
 
 class TambolaGameViewModel extends BaseModel {
@@ -44,13 +45,21 @@ class TambolaGameViewModel extends BaseModel {
   Ticket _currentBoardView;
   TambolaBoard _currentBoard;
   Widget _widget;
+  AnimationController animationController;
 
   List<Ticket> _topFiveTambolaBoards = [];
 
   bool showSummaryCards = true;
   bool ticketsBeingGenerated = false;
   bool ticketBuyInProgress = false;
+  bool _showBuyModal = true;
   int buyTicketCount = 5;
+
+  get showBuyModal => _showBuyModal;
+  set showBuyModal(value) {
+    _showBuyModal = value;
+    notifyListeners();
+  }
 
   Widget get cardWidet => _widget;
 
@@ -666,5 +675,26 @@ class TambolaGameViewModel extends BaseModel {
     }
 
     return _bestTambolaBoards;
+  }
+
+  bool handleScrollNotification(ScrollNotification notification) {
+    if (notification.depth == 0) {
+      if (notification is UserScrollNotification) {
+        final UserScrollNotification userScroll = notification;
+        switch (userScroll.direction) {
+          case ScrollDirection.forward:
+            //showBuyModal = true;
+            animationController.forward();
+            break;
+          case ScrollDirection.reverse:
+            //showBuyModal = false;
+            animationController.reverse();
+            break;
+          case ScrollDirection.idle:
+            break;
+        }
+      }
+    }
+    return false;
   }
 }

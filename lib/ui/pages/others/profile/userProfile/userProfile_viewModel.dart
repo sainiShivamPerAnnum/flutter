@@ -119,32 +119,36 @@ class UserProfileVM extends BaseModel {
   }
 
   updateDetails() async {
-    if (_checkForChanges()) {
-      isUpdaingUserDetails = true;
-      notifyListeners();
-      _userService.baseUser.name = nameController.text.trim();
-      _userService.baseUser.dob =
-          "${yearFieldController.text.trim()}-${monthFieldController.text.trim()}-${dateFieldController.text.trim()}";
-      _userService.baseUser.gender = getGender();
-      await _dbModel.updateUser(_userService.baseUser).then((res) {
-        if (res) {
-          _userService.setMyUserName(_userService.baseUser.name);
-          _userService.setDateOfBirth(_userService.baseUser.dob);
-          _userService.setGender(_userService.baseUser.gender);
-          genderController.text = _userService.baseUser.gender;
-          dobController.text = _userService.baseUser.dob;
-          isUpdaingUserDetails = false;
-          inEditMode = false;
-          notifyListeners();
-          BaseUtil.showPositiveAlert(
-              "Updated Successfully", "Profile updated successfully");
-        } else {
-          isUpdaingUserDetails = false;
-          notifyListeners();
-          BaseUtil.showNegativeAlert(
-              "Ahh Snap", "Please try again in some time");
-        }
-      });
+    if (formKey.currentState.validate() && isValidDate()) {
+      if (_checkForChanges()) {
+        isUpdaingUserDetails = true;
+        notifyListeners();
+        _userService.baseUser.name = nameController.text.trim();
+        _userService.baseUser.dob =
+            "${yearFieldController.text.trim()}-${monthFieldController.text.trim()}-${dateFieldController.text.trim()}";
+        _userService.baseUser.gender = getGender();
+        await _dbModel.updateUser(_userService.baseUser).then((res) {
+          if (res) {
+            _userService.setMyUserName(_userService.baseUser.name);
+            _userService.setDateOfBirth(_userService.baseUser.dob);
+            _userService.setGender(_userService.baseUser.gender);
+            genderController.text = _userService.baseUser.gender;
+            dobController.text = _userService.baseUser.dob;
+            isUpdaingUserDetails = false;
+            inEditMode = false;
+            notifyListeners();
+            BaseUtil.showPositiveAlert(
+                "Updated Successfully", "Profile updated successfully");
+          } else {
+            isUpdaingUserDetails = false;
+            notifyListeners();
+            BaseUtil.showNegativeAlert(
+                "Ahh Snap", "Please try again in some time");
+          }
+        });
+      } else
+        BaseUtil.showNegativeAlert(
+            "No changes found", "please make some changes");
     } else
       BaseUtil.showNegativeAlert("No changes found", "make some changes bruh");
   }
@@ -236,6 +240,43 @@ class UserProfileVM extends BaseModel {
         ),
       ),
     );
+  }
+
+  bool isValidDate() {
+    dateInputError = "";
+    notifyListeners();
+    String inputDate = yearFieldController.text +
+        monthFieldController.text +
+        dateFieldController.text;
+    print("Input date : " + inputDate);
+    if (inputDate == null || inputDate.isEmpty) {
+      dateInputError = "Invalid date";
+      notifyListeners();
+      return false;
+    }
+    final date = DateTime.tryParse(inputDate);
+    if (date == null) {
+      dateInputError = "Invalid date";
+      notifyListeners();
+      return false;
+    } else {
+      final originalFormatString = toOriginalFormatString(date);
+      if (inputDate == originalFormatString) {
+        selectedDate = date;
+        return true;
+      } else {
+        dateInputError = "Invalid date";
+        notifyListeners();
+        return false;
+      }
+    }
+  }
+
+  String toOriginalFormatString(DateTime dateTime) {
+    final y = dateTime.year.toString().padLeft(4, '0');
+    final m = dateTime.month.toString().padLeft(2, '0');
+    final d = dateTime.day.toString().padLeft(2, '0');
+    return "$y$m$d";
   }
 
   handleDPOperation() async {
