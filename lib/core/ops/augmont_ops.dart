@@ -405,14 +405,15 @@ class AugmontModel extends ChangeNotifier {
             .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm]
       };
 
-    ApiResponse<DepositResponseModel> _onCompleteDepositResponse =  await _investmentActionsRepository.completeUserDeposit(
-          augUpdates: augUpdates,
-          rzpUpdates: rzpUpdates,
-          userUid: _baseProvider.myUser.uid,
-          txnId: _initialDepositResponse
-              .model.response.transactionDoc.transactionId);
+      ApiResponse<DepositResponseModel> _onCompleteDepositResponse =
+          await _investmentActionsRepository.completeUserDeposit(
+              augUpdates: augUpdates,
+              rzpUpdates: rzpUpdates,
+              userUid: _baseProvider.myUser.uid,
+              txnId: _initialDepositResponse
+                  .model.response.transactionDoc.transactionId);
 
-    //TODO: Call property change notifier for flc and gold grams.
+      //TODO: Call property change notifier for flc and gold grams.
 
       // bool flag = await _dbModel.updateUserTransaction(
       //     _baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
@@ -443,20 +444,29 @@ class AugmontModel extends ChangeNotifier {
     log.error('Query Failed');
 
     Map<String, dynamic> rzpMap = {
-      "rOrderId": "14703jj124222",
-      "rPaymentId": "111222333",
-      "rStatus": "COMPLETED"
+      "rOrderId":
+          _baseProvider.currentAugmontTxn.rzp[UserTransaction.subFldRzpOrderId],
+      "rPaymentId": _baseProvider
+          .currentAugmontTxn.rzp[UserTransaction.subFldRzpPaymentId],
+      "rStatus":
+          _baseProvider.currentAugmontTxn.rzp[UserTransaction.subFldRzpStatus],
     };
 
     Map<String, dynamic> augMap = {
-      "aTranId": "AUG_TRAN_ID",
-      "aAugTranId": "merchantTranId",
-      "aGoldBalance": 0.013821,
+      "aTranId": _baseProvider
+          .currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId],
+      "aAugTranId": _baseProvider
+          .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId],
+      "aGoldBalance": _baseProvider
+          .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm],
       "aBlockId": "tempId",
-      "aLockPrice": 4822.36232,
+      "aLockPrice": _baseProvider
+          .currentAugmontTxn.augmnt[UserTransaction.subFldAugLockPrice],
       "aPaymode": "RZP",
-      "aGoldInTxn": 0.01986986,
-      "aTaxedGoldBalance": 0.0095
+      "aGoldInTxn": _baseProvider
+          .currentAugmontTxn.augmnt[UserTransaction.subFldAugCurrentGoldGm],
+      "aTaxedGoldBalance": _baseProvider
+          .currentAugmontTxn.augmnt[UserTransaction.subFldAugPostTaxTotal],
     };
 
     Map<String, dynamic> _failMap = {
