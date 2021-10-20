@@ -170,15 +170,17 @@ class BuyGoldBtnVM extends BaseModel {
       if (_baseUtil.currentAugmontTxn != null) {
         ///update user wallet object account balance
         double _tempCurrentBalance = _baseUtil.userFundWallet.augGoldBalance;
-        //baseutil side [TO BE DELETED]
-        _baseUtil.userFundWallet = await _dbModel.updateUserAugmontGoldBalance(
-            _baseUtil.myUser.uid,
-            _baseUtil.userFundWallet,
-            _baseUtil.augmontGoldRates.goldSellPrice,
-            _baseUtil
-                .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm],
-            _baseUtil.currentAugmontTxn.amount);
+        // //baseutil side [TO BE DELETED]
+        // _baseUtil.userFundWallet = await _dbModel.updateUserAugmontGoldBalance(
+        //     _baseUtil.myUser.uid,
+        //     _baseUtil.userFundWallet,
+        //     _baseUtil.augmontGoldRates.goldSellPrice,
+        //     _baseUtil
+        //         .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm],
+        //     _baseUtil.currentAugmontTxn.amount);
         //userService side
+
+        ///20-10-2021 = to be done using /deposit/complete API */
         _userService.userFundWallet =
             await _dbModel.updateUserAugmontGoldBalance(
                 _baseUtil.myUser.uid,
@@ -244,6 +246,8 @@ class BuyGoldBtnVM extends BaseModel {
             _baseUtil.getCurrentTotalClosingBalance();
         await _dbModel.updateUserTransaction(
             _baseUtil.myUser.uid, _baseUtil.currentAugmontTxn);
+
+        ///^^ 20-10-2021 ^^to be done using /deposit/complete API */
 
         ///if this was the user's first investment
         ///- update AugmontDetail obj
