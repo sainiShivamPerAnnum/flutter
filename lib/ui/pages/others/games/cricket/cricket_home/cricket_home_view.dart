@@ -4,6 +4,7 @@ import 'package:felloapp/core/model/leader_board_modal.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_vm.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/static/FelloTile.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
@@ -24,6 +25,10 @@ class CricketHomeView extends StatelessWidget {
     return BaseView<CricketHomeViewModel>(
       onModelReady: (model) {
         model.init();
+        model.scrollController = new ScrollController();
+        model.scrollController.addListener(() {
+          model.udpateCardOpacity();
+        });
       },
       builder: (ctx, model, child) {
         return Scaffold(
@@ -32,111 +37,94 @@ class CricketHomeView extends StatelessWidget {
             child: Stack(
               children: [
                 WhiteBackground(
-                  color: Color(0xffF1F6FF),
-                  height: kToolbarHeight * 2.6,
+                  color: UiConstants.scaffoldColor,
+                  height: SizeConfig.screenHeight * 0.2,
                 ),
-                RefreshIndicator(
-                  onRefresh: model.getLeaderboard,
-                  child: SafeArea(
-                    child: Container(
-                      width: SizeConfig.screenWidth,
-                      height: SizeConfig.screenHeight,
-                      child: ListView(
-                        shrinkWrap: true,
-                        children: [
-                          SizedBox(height: SizeConfig.padding40),
-                          GameCard(
+                SafeArea(
+                  child: Container(
+                    width: SizeConfig.screenWidth,
+                    height: SizeConfig.screenHeight,
+                    child: ListView(
+                      controller: model.scrollController,
+                      children: [
+                        SizedBox(height: SizeConfig.screenHeight * 0.1),
+                        Opacity(
+                          opacity: model.cardOpacity ?? 1,
+                          child: GameCard(
                             gameData: model.gameData,
                           ),
-                          SizedBox(height: SizeConfig.padding8),
-                          Container(
-                            height: SizeConfig.screenHeight * 0.8,
-                            padding: EdgeInsets.all(
-                                SizeConfig.pageHorizontalMargins),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                topLeft:
-                                    Radius.circular(SizeConfig.roundness40),
-                                topRight:
-                                    Radius.circular(SizeConfig.roundness40),
+                        ),
+                        SizedBox(height: SizeConfig.padding8),
+                        Container(
+                          height: SizeConfig.screenHeight * 0.86,
+                          padding:
+                              EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(SizeConfig.roundness40),
+                              topRight: Radius.circular(SizeConfig.roundness40),
+                            ),
+                            color: Colors.white,
+                          ),
+                          child: Column(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.only(
+                                    bottom: SizeConfig.padding4),
+                                alignment: Alignment.center,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    GameChips(
+                                      model: model,
+                                      text: "Prizes",
+                                      page: 0,
+                                    ),
+                                    SizedBox(width: 16),
+                                    GameChips(
+                                      model: model,
+                                      text: "LeaderBoard",
+                                      page: 1,
+                                    )
+                                  ],
+                                ),
                               ),
-                              color: Colors.white,
-                            ),
-                            child: Column(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.only(
-                                      bottom: SizeConfig.padding4),
-                                  alignment: Alignment.center,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
+                              Expanded(
+                                child: PageView(
+                                    physics: NeverScrollableScrollPhysics(),
+                                    controller: model.pageController,
                                     children: [
-                                      GameChips(
-                                        model: model,
-                                        text: "Prizes",
-                                        page: 0,
-                                      ),
-                                      SizedBox(width: 16),
-                                      GameChips(
-                                        model: model,
-                                        text: "LeaderBoard",
-                                        page: 1,
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                  child: PageView(
-                                      physics: NeverScrollableScrollPhysics(),
-                                      controller: model.pageController,
-                                      children: [
-                                        model.isPrizesLoading
-                                            ? Center(
-                                                child:
-                                                    CircularProgressIndicator(
-                                                  color:
-                                                      UiConstants.primaryColor,
-                                                ),
-                                              )
-                                            : (model.cPrizes == null
-                                                ? NoRecordDisplayWidget(
-                                                    asset:
-                                                        "images/week-winners.png",
-                                                    text:
-                                                        "Prizes will be upadated soon.",
-                                                  )
-                                                : PrizesView(
-                                                    model: model.cPrizes,
-                                                  )),
-                                        model.isLeaderboardLoading
-                                            ? Center(
-                                                child:
-                                                    CircularProgressIndicator(
-                                                  color:
-                                                      UiConstants.primaryColor,
-                                                ),
-                                              )
-                                            : (model.cricLb == null
-                                                ? Center(
-                                                    child:
-                                                        NoRecordDisplayWidget(
-                                                      asset:
-                                                          "images/leaderboard.png",
-                                                      text:
-                                                          "Leaderboard will be upadated soon.",
-                                                    ),
-                                                  )
-                                                : LeaderBoardView(
-                                                    model: model.cricLb,
-                                                  ))
-                                      ]),
-                                ),
-                                SizedBox(height: SizeConfig.padding64)
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
+                                      model.isPrizesLoading
+                                          ? ListLoader()
+                                          : (model.cPrizes == null
+                                              ? NoRecordDisplayWidget(
+                                                  asset:
+                                                      "images/week-winners.png",
+                                                  text:
+                                                      "Prizes will be updates soon",
+                                                )
+                                              : PrizesView(
+                                                  model: model.cPrizes,
+                                                )),
+                                      model.isLeaderboardLoading
+                                          ? ListLoader()
+                                          : (model.clboard == null
+                                              ? NoRecordDisplayWidget(
+                                                  asset:
+                                                      "images/leaderboard.png",
+                                                  text:
+                                                      "Leaderboard will be updated soon",
+                                                )
+                                              : LeaderBoardView(
+                                                  model: model.clboard,
+                                                ))
+                                    ]),
+                              ),
+                              SizedBox(height: SizeConfig.padding64)
+                            ],
+                          ),
+                        )
+                      ],
                     ),
                   ),
                 ),
@@ -159,13 +147,7 @@ class CricketHomeView extends StatelessWidget {
                         'PLAY',
                         style: TextStyles.body2.colour(Colors.white),
                       ),
-                      onPressed: () async {
-                        if (await model.openWebView())
-                          model.startGame();
-                        else
-                          BaseUtil.showNegativeAlert(
-                              "Something went wrong", model.message);
-                      },
+                      onPressed: model.startGame,
                     ),
                   ),
                 )
@@ -188,7 +170,7 @@ class NoRecordDisplayWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SizedBox(height: SizeConfig.padding32),
+        SizedBox(height: SizeConfig.screenHeight * 0.1),
         Image.asset(
           asset,
           height: SizeConfig.screenHeight * 0.2,
@@ -199,7 +181,7 @@ class NoRecordDisplayWidget extends StatelessWidget {
         Text(
           text,
           textAlign: TextAlign.center,
-          style: TextStyles.title5.bold,
+          style: TextStyles.body2.bold,
         )
       ],
     );

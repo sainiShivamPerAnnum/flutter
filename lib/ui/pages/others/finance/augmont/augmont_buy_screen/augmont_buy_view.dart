@@ -2,6 +2,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
+import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/buy_gold_button/buyGoldBtn_view.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
@@ -27,62 +28,13 @@ class AugmontGoldBuyView extends StatelessWidget {
         backgroundColor: UiConstants.primaryColor,
         body: HomeBackground(
           whiteBackground: WhiteBackground(
-              color: Color(0xffF1F6FF), height: kToolbarHeight * 2.7),
+              color: UiConstants.scaffoldColor,
+              height: SizeConfig.screenHeight * 0.07),
           child: Column(
             children: [
               FelloAppBar(
                 leading: FelloAppBarBackButton(),
                 title: locale.abBuyDigitalGold,
-              ),
-              Container(
-                margin: EdgeInsets.only(
-                  top: SizeConfig.padding24,
-                  right: SizeConfig.pageHorizontalMargins,
-                  left: SizeConfig.pageHorizontalMargins,
-                ),
-                width: SizeConfig.screenWidth,
-                height: SizeConfig.screenWidth * 0.212,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(SizeConfig.roundness24),
-                    color: UiConstants.primaryColor,
-                    image: DecorationImage(
-                        image: AssetImage("assets/images/bg_pattern.png"),
-                        fit: BoxFit.cover),
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 30,
-                        color: UiConstants.primaryColor.withOpacity(0.5),
-                        offset: Offset(
-                          0,
-                          SizeConfig.screenWidth * 0.1,
-                        ),
-                        spreadRadius: -30,
-                      )
-                    ]),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    TextButton.icon(
-                        icon: SvgPicture.asset(Assets.gold24K,
-                            width: SizeConfig.padding24),
-                        label: Text(locale.saveGold24k,
-                            style: TextStyles.body3.colour(Colors.white)),
-                        onPressed: () {}),
-                    TextButton.icon(
-                      icon: SvgPicture.asset(Assets.goldPure,
-                          width: SizeConfig.padding24),
-                      label: Text(locale.saveGoldPure,
-                          style: TextStyles.body3.colour(Colors.white)),
-                      onPressed: () {},
-                    ),
-                    TextButton.icon(
-                        icon: SvgPicture.asset(Assets.goldSecure,
-                            width: SizeConfig.padding24),
-                        label: Text(locale.saveSecure,
-                            style: TextStyles.body3.colour(Colors.white)),
-                        onPressed: () {}),
-                  ],
-                ),
               ),
               Expanded(
                 child: Container(
@@ -154,7 +106,7 @@ class AugmontGoldBuyView extends StatelessWidget {
                                   bottomRight:
                                       Radius.circular(SizeConfig.roundness12),
                                 ),
-                                color: Color(0xffF1F6FF),
+                                color: UiConstants.scaffoldColor,
                               ),
                               padding:
                                   EdgeInsets.only(left: SizeConfig.padding20),
@@ -193,7 +145,11 @@ class AugmontGoldBuyView extends StatelessWidget {
                       ),
                       SizedBox(height: SizeConfig.padding54),
                       CurrentPriceWidget(
-                        model: model,
+                        fetchGoldRates: model.fetchGoldRates,
+                        goldprice: model.goldRates != null
+                            ? model.goldRates.goldBuyPrice
+                            : 0.0,
+                        isFetching: model.isGoldRateFetching,
                       ),
                       SizedBox(height: SizeConfig.padding54),
                       FelloButtonLg(
@@ -222,6 +178,42 @@ class AugmontGoldBuyView extends StatelessWidget {
                         textAlign: TextAlign.center,
                         style: TextStyles.body3.colour(Colors.grey),
                       ),
+                      SizedBox(height: SizeConfig.padding80),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextButton.icon(
+                              icon: SvgPicture.asset(Assets.gold24K,
+                                  color: UiConstants.primaryColor,
+                                  width: SizeConfig.padding20),
+                              label: FittedBox(
+                                child: Text(locale.saveGold24k,
+                                    style:
+                                        TextStyles.body3.colour(Colors.black)),
+                              ),
+                              onPressed: () {}),
+                          TextButton.icon(
+                            icon: SvgPicture.asset(Assets.goldPure,
+                                color: UiConstants.primaryColor,
+                                width: SizeConfig.padding20),
+                            label: FittedBox(
+                              child: Text(locale.saveGoldPure,
+                                  style: TextStyles.body3.colour(Colors.black)),
+                            ),
+                            onPressed: () {},
+                          ),
+                          TextButton.icon(
+                              icon: SvgPicture.asset(Assets.goldSecure,
+                                  color: UiConstants.primaryColor,
+                                  width: SizeConfig.padding20),
+                              label: FittedBox(
+                                child: Text(locale.saveSecure,
+                                    style:
+                                        TextStyles.body3.colour(Colors.black)),
+                              ),
+                              onPressed: () {}),
+                        ],
+                      ),
                       SizedBox(height: SizeConfig.padding40),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -244,106 +236,6 @@ class AugmontGoldBuyView extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class CurrentPriceWidget extends StatefulWidget {
-  final AugmontGoldBuyViewModel model;
-  CurrentPriceWidget({this.model});
-
-  @override
-  _CurrentPriceWidgetState createState() => _CurrentPriceWidgetState();
-}
-
-class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
-    with SingleTickerProviderStateMixin {
-  Animation<Duration> animation;
-  AnimationController controller;
-
-  @override
-  void initState() {
-    controller =
-        AnimationController(vsync: this, duration: Duration(minutes: 3));
-    animation = Tween<Duration>(begin: Duration(minutes: 3), end: Duration.zero)
-        .animate(controller)
-          ..addListener(() {
-            setState(() {});
-          })
-          ..addStatusListener((status) {
-            if (status == AnimationStatus.completed) {
-              widget.model.fetchGoldRates();
-              controller.repeat();
-            } else if (status == AnimationStatus.dismissed) {
-              controller.forward();
-            }
-          });
-
-    controller.forward();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    animation.removeListener(() {});
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: SizeConfig.screenWidth * 0.246,
-      width: SizeConfig.screenWidth,
-      decoration: BoxDecoration(
-        color: UiConstants.primaryColor.withOpacity(0.1),
-        border: Border.all(width: 1, color: UiConstants.primaryColor),
-        borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-      ),
-      padding: EdgeInsets.symmetric(
-        horizontal: SizeConfig.padding24,
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                "Current Price",
-                style: TextStyles.body1.colour(UiConstants.primaryColor),
-              ),
-              Spacer(),
-              widget.model.isGoldRateFetching
-                  ? SpinKitThreeBounce(
-                      size: SizeConfig.body2,
-                      color: UiConstants.primaryColor,
-                    )
-                  : Text(
-                      "₹ ${widget.model.goldBuyPrice.toStringAsFixed(2)}",
-                      style: TextStyles.body1
-                          .colour(UiConstants.primaryColor)
-                          .bold,
-                    )
-            ],
-          ),
-          SizedBox(
-            height: SizeConfig.padding8,
-          ),
-          Row(
-            children: [
-              Text(
-                "Valid for: ",
-                style: TextStyles.body4.colour(UiConstants.primaryColor).light,
-              ),
-              Text(
-                '${animation.value.inMinutes}:${animation.value.inSeconds % 60}',
-                style: TextStyles.body4.colour(UiConstants.primaryColor).bold,
-              )
-            ],
-          )
-        ],
       ),
     );
   }

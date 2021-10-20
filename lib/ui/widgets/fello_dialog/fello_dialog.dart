@@ -1,3 +1,4 @@
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
 class FelloDialog extends StatelessWidget {
@@ -15,13 +16,14 @@ class FelloDialog extends StatelessWidget {
       children: [
         Dialog(
           child: Container(
+            padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
             child: Wrap(
               children: [content],
             ),
           ),
           backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(SizeConfig.roundness40),
           ),
         ),
         if (showCrossIcon)

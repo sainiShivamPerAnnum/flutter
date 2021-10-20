@@ -117,8 +117,10 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                 maxY: 6000,
                 lineTouchData: LineTouchData(
                     enabled: true,
+                    handleBuiltInTouches: true,
                     touchTooltipData: LineTouchTooltipData(
                       tooltipRoundedRadius: 8,
+                      showOnTopOfTheChartBoxArea: true,
                       fitInsideHorizontally: true,
                       fitInsideVertically: true,
                       tooltipPadding:

@@ -66,8 +66,7 @@ class Assets {
   static final String goldSecure = "assets/vectors/icons/goldSecure.svg";
 
   // WIN
-  static final String prizeClaimConfirm =
-      "assets/vectors/prize_claim_confirm.svg";
+
   static final String goldClaim = "assets/images/gold_claim.png";
   static final String amazonClaim = "assets/images/amazon_claim.png";
   static final String iphone = "assets/images/iphone.png";
@@ -101,6 +100,13 @@ class Assets {
     'images/games-small.png',
     'images/safe-small.png',
   ];
+
+  //DIALOGS
+  static final String goldenTicket = "assets/vectors/golden_ticket_new.svg";
+  static final String prizeClaimConfirm =
+      "assets/vectors/prize_claim_confirm.svg";
+  static final String congrats = "assets/vectors/congrats.svg";
+  static final String noTickets = "assets/vectors/no_tickets.svg";
 
   static final List<String> onboardingHeader = [
     'Save',

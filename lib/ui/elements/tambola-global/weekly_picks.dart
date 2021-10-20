@@ -116,8 +116,10 @@ class WeeklyPicks extends StatelessWidget {
     }
     return Expanded(
       child: Container(
-        padding: EdgeInsets.only(bottom: 8),
+        padding:
+            EdgeInsets.only(bottom: 8, top: SizeConfig.screenHeight * 0.02),
         child: ListView(
+          padding: EdgeInsets.zero,
           physics: NeverScrollableScrollPhysics(),
           children: colElems,
         ),

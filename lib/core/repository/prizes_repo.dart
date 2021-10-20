@@ -11,19 +11,19 @@ class PrizesRepository {
 
   Future<ApiResponse<PrizesModel>> getPrizesPerGamePerFreq(
       String gameCode, String freq) async {
-    try {
-      QueryDocumentSnapshot _queryDocumentSanpshot =
-          await _api.getPrizesPerGamePerFreq(gameCode, freq);
+    //try {
+    QueryDocumentSnapshot _queryDocumentSanpshot =
+        await _api.getPrizesPerGamePerFreq(gameCode, freq);
 
-      _logger.i("getPrizesPerGamePerFreq, successfully called");
-      _logger.d(_queryDocumentSanpshot.data());
+    _logger.i("getPrizesPerGamePerFreq, successfully called");
+    _logger.d(_queryDocumentSanpshot.data());
 
-      PrizesModel _prizesModel =
-          PrizesModel.fromMap(_queryDocumentSanpshot.data());
-      return ApiResponse(model: _prizesModel, code: 200);
-    } catch (e) {
-      _logger.e(e);
-      throw e;
-    }
+    PrizesModel _prizesModel =
+        PrizesModel.fromMap(_queryDocumentSanpshot.data());
+    return ApiResponse(model: _prizesModel, code: 200);
+    // } catch (e) {
+    //   _logger.e(e);
+    //   throw e.toString();
+    // }
   }
 }

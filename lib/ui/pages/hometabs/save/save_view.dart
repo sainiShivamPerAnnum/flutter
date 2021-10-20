@@ -53,8 +53,7 @@ class Save extends StatelessWidget {
                             UserServiceProperties>(
                           builder: (ctx, model, child) => Text(
                             locale.saveGoldBalanceValue(
-                                // model.userFundWallet.augGoldQuantity ??
-                                0.0),
+                                model.userFundWallet.augGoldQuantity ?? 0.0),
                             style: TextStyles.title5.bold
                                 .colour(UiConstants.tertiarySolid),
                           ),

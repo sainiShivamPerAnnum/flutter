@@ -5,6 +5,7 @@ import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
+import 'package:felloapp/ui/service_elements/user_service/user_winnings.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -49,8 +50,7 @@ class Win extends StatelessWidget {
                                 style: TextStyles.title5.colour(Colors.white60),
                               ),
                               SizedBox(height: SizeConfig.padding8),
-                              Text(
-                                locale.saveWinningsValue(1000),
+                              UserWinningsSE(
                                 style: TextStyles.title1
                                     .colour(Colors.white)
                                     .weight(FontWeight.w900)
@@ -59,7 +59,7 @@ class Win extends StatelessWidget {
                             ],
                           ),
                         ),
-                        color: Color(0xff11192B),
+                        color: UiConstants.primaryColor,
                       ),
                     ),
                   ),
@@ -71,7 +71,7 @@ class Win extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         BigPrizeContainer(
-                          bgColor: UiConstants.primaryColor,
+                          bgColor: Color(0xff26A6F4),
                           bigText: locale.winMoneyBigText,
                           smallText: locale.winMoneySmallText,
                           image: Assets.moneyBag,
@@ -217,25 +217,31 @@ class Win extends StatelessWidget {
                         ),
                       ),
                       Container(
-                          //color: Colors.white,
+                        //color: Colors.white,
 
-                          child: model.isWinnersLoading
-                              ? Center(
-                                  child: CircularProgressIndicator(
-                                    color: UiConstants.primaryColor,
-                                  ),
-                                )
-                              : (model.winners == null
-                                  ? Center(
-                                      child: NoRecordDisplayWidget(
-                                        asset: "images/leaderboard.png",
-                                        text: "Winners will be upadated soon",
+                        child: model.isWinnersLoading
+                            ? Center(
+                                child: CircularProgressIndicator(
+                                  color: UiConstants.primaryColor,
+                                ),
+                              )
+                            : (model.winners == null
+                                ? ListView(
+                                    controller: myscrollController,
+                                    children: [
+                                      Center(
+                                        child: NoRecordDisplayWidget(
+                                          asset: "images/leaderboard.png",
+                                          text: "Winners will be upadated soon",
+                                        ),
                                       ),
-                                    )
-                                  : WinnerboardView(
-                                      model: model.winners,
-                                      controller: myscrollController,
-                                    ))),
+                                    ],
+                                  )
+                                : WinnerboardView(
+                                    model: model.winners,
+                                    controller: myscrollController,
+                                  )),
+                      ),
                     ],
                   );
                 },

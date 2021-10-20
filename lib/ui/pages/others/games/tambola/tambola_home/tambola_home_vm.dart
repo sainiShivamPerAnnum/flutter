@@ -21,6 +21,14 @@ class TambolaHomeViewModel extends BaseModel {
   int currentPage = 0;
   PageController pageController = new PageController(initialPage: 0);
   LeaderBoardModal _tLeaderBoard;
+  ScrollController scrollController;
+  double cardOpacity = 1;
+
+  udpateCardOpacity() {
+    cardOpacity = 1 -
+        (scrollController.offset / scrollController.position.maxScrollExtent);
+    notifyListeners();
+  }
 
   get tlboard => _tLeaderBoard;
   PrizesModel get tPrizes => _prizeService.tambolaPrizes;
@@ -67,5 +75,9 @@ class TambolaHomeViewModel extends BaseModel {
           "Leaderboard failed to update", "Please refresh again");
     isPrizesLoading = false;
     notifyListeners();
+  }
+
+  openGame() {
+    BaseUtil().openTambolaHome();
   }
 }

@@ -28,6 +28,7 @@ import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_vm.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_game/cricket_game_view.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_game/cricket_game_vm.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_vm.dart';
@@ -110,6 +111,7 @@ void setupLocator() {
   locator.registerFactory(() => KYCDetailsViewModel());
   locator.registerFactory(() => BankDetailsViewModel());
   locator.registerFactory(() => AugmontGoldBuyViewModel());
+  locator.registerFactory(() => AugmontGoldSellViewModel());
   locator.registerFactory(() => AugmontGoldDetailsViewModel());
   locator.registerFactory(() => CricketHomeViewModel());
   locator.registerFactory(() => CricketGameViewModel());

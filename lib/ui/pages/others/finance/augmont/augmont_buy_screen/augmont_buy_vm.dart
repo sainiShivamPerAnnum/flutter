@@ -17,6 +17,10 @@ import 'package:felloapp/ui/dialogs/augmont_disabled_dialog.dart';
 import 'package:felloapp/ui/dialogs/success-dialog.dart';
 import 'package:felloapp/ui/modals_sheets/augmont_deposit_modal_sheet.dart';
 import 'package:felloapp/ui/modals_sheets/augmont_register_modal_sheet.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_dialog.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -31,7 +35,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   static const int STATUS_UNAVAILABLE = 0;
   static const int STATUS_REGISTER = 1;
   static const int STATUS_OPEN = 2;
-  final Log log = new Log("AugmontService");
+  final Log log = new Log("AugmontBuy");
   BaseUtil _baseUtil = locator<BaseUtil>();
   DBModel _dbModel = locator<DBModel>();
   AugmontModel _augmontModel = locator<AugmontModel>();
@@ -105,17 +109,18 @@ class AugmontGoldBuyViewModel extends BaseModel {
   }
 
   initiateBuy() async {
-    if (await BaseUtil.showNoInternetAlert()) return;
-    if (checkAugmontStatus() == STATUS_OPEN) {
-      if (goldAmountController.text.trim().isEmpty)
-        return BaseUtil.showNegativeAlert(
-            "No Amount Entered", "Please enter some amount");
-    }
+    // if (await BaseUtil.showNoInternetAlert()) return;
+    // if (checkAugmontStatus() == STATUS_OPEN) {
+    //   if (goldAmountController.text.trim().isEmpty)
+    //     return BaseUtil.showNegativeAlert(
+    //         "No Amount Entered", "Please enter some amount");
+    // }
 
-    isGoldBuyInProgress = true;
-    notifyListeners();
-    Haptic.vibrate();
-    _onDepositClicked();
+    // isGoldBuyInProgress = true;
+    // notifyListeners();
+    // Haptic.vibrate();
+    // _onDepositClicked();
+    showSuccessGoldBuyDialog();
   }
 
   String getActionButtonText() {
@@ -393,5 +398,30 @@ class AugmontGoldBuyViewModel extends BaseModel {
           'Your gold deposit failed. Please try again or contact us if you are facing issues',
           seconds: 5);
     }
+  }
+
+  showSuccessGoldBuyDialog() {
+    BaseUtil.openDialog(
+      addToScreenStack: true,
+      hapticVibrate: true,
+      isBarrierDismissable: false,
+      content: FelloInfoDialog(
+        asset: Assets.goldenTicket,
+        title: "Congratulations",
+        subtitle:
+            "You have successfully saved Rs.100 and earned 10 tickets! here is a golden ticket!",
+        action: Container(
+          width: SizeConfig.screenWidth,
+          child: FelloButtonLg(
+            child: Text(
+              "Next",
+              style: TextStyles.body3.colour(Colors.white),
+            ),
+            color: UiConstants.primaryColor,
+            onPressed: AppState.backButtonDispatcher.didPopRoute,
+          ),
+        ),
+      ),
+    );
   }
 }

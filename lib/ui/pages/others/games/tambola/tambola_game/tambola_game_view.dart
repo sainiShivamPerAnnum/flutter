@@ -76,13 +76,6 @@ class _TambolaGameViewState extends State<TambolaGameView>
                                         model.showBuyModal = value;
                                       },
                                     ),
-                                    // if (showCardSummary)
-                                    //   _buildTicketSummaryCards(
-                                    //       baseProvider.weeklyTicksFetched,
-                                    //       baseProvider.weeklyDrawFetched,
-                                    //       baseProvider.userWeeklyBoards,
-                                    //       _activeTambolaCardCount),
-
                                     connectivityStatus !=
                                             ConnectivityStatus.Offline
                                         ? buildCards(model)
@@ -127,8 +120,6 @@ class _TambolaGameViewState extends State<TambolaGameView>
                                   Expanded(
                                     child: Container(
                                       child: TextField(
-                                        cursorHeight:
-                                            SizeConfig.screenWidth * 0.135,
                                         controller: model.ticketCountController,
                                         enableInteractiveSelection: false,
                                         cursorColor: UiConstants.primaryColor,
@@ -426,21 +417,29 @@ class _TambolaGameViewState extends State<TambolaGameView>
         ),
       );
 
-      if (model.currentBoardView == null)
-        model.currentBoardView = Ticket(
-          bgColor: FelloColorPalette.tambolaTicketColorPalettes()[0].boardColor,
-          boardColorEven:
-              FelloColorPalette.tambolaTicketColorPalettes()[0].itemColorEven,
-          boardColorOdd:
-              FelloColorPalette.tambolaTicketColorPalettes()[0].itemColorOdd,
-          boradColorMarked:
-              FelloColorPalette.tambolaTicketColorPalettes()[0].itemColorMarked,
-          calledDigits: [],
-          board: null,
-        );
-      if (model.currentBoard == null)
-        model.currentBoard = model.tambolaService.userWeeklyBoards[0];
+      // if (model.currentBoardView == null)
+      //   model.currentBoardView = Ticket(
+      //     bgColor: FelloColorPalette.tambolaTicketColorPalettes()[0].boardColor,
+      //     boardColorEven:
+      //         FelloColorPalette.tambolaTicketColorPalettes()[0].itemColorEven,
+      //     boardColorOdd:
+      //         FelloColorPalette.tambolaTicketColorPalettes()[0].itemColorOdd,
+      //     boradColorMarked:
+      //         FelloColorPalette.tambolaTicketColorPalettes()[0].itemColorMarked,
+      //     calledDigits: [],
+      //     board: null,
+      //   );
+      // if (model.currentBoard == null)
+      //   model.currentBoard = model.tambolaService.userWeeklyBoards[0];
     }
     return _widget;
   }
 }
+
+
+// if (showCardSummary)
+//   _buildTicketSummaryCards(
+//       baseProvider.weeklyTicksFetched,
+//       baseProvider.weeklyDrawFetched,
+//       baseProvider.userWeeklyBoards,
+//       _activeTambolaCardCount),

@@ -267,6 +267,20 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                         ],
                                       ),
                                     ),
+                              if (model.inEditMode &&
+                                  model.dateInputError != "")
+                                Row(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(8),
+                                      child: Text(
+                                        model.dateInputError,
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(color: Colors.red),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               TextFieldLabel(locale.obGenderLabel),
                               !model.inEditMode
                                   ? TextFormField(

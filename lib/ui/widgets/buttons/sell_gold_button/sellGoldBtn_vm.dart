@@ -10,7 +10,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/modals_sheets/augmont_deposit_modal_sheet.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_withdraw_screen.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_view.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
@@ -32,17 +32,36 @@ class SellGoldBtnVM extends BaseModel {
 
   AugmontModel _augmontModel = locator<AugmontModel>();
   double _withdrawableGoldQnty;
-  GlobalKey<AugmontWithdrawScreenState> _withdrawalDialogKey2 = GlobalKey();
+  GlobalKey<AugmontGoldSellViewState> _withdrawalDialogKey2 = GlobalKey();
 
   sellButtonAction() async {
-    if (await BaseUtil.showNoInternetAlert()) return;
-    sellContext = sellContext;
-    if (!_baseUtil.isAugWithdrawRouteLogicInProgress) {
-      Haptic.vibrate();
-      _onWithdrawalClicked();
-      // double amt = await _augmontModel.getGoldBalance();
-      // log.debug(amt.toString());
-    }
+    openSellPage();
+    // if (await BaseUtil.showNoInternetAlert()) return;
+    // sellContext = sellContext;
+    // if (!_baseUtil.isAugWithdrawRouteLogicInProgress) {
+    //   Haptic.vibrate();
+    //   _onWithdrawalClicked();
+    //   // double amt = await _augmontModel.getGoldBalance();
+    //   // log.debug(amt.toString());
+    // }
+  }
+
+  openSellPage() {
+    AppState.delegate.appState.currentAction = PageAction(
+      state: PageState.addWidget,
+      page: AugWithdrawalPageConfig,
+      widget: AugmontGoldSellView(
+        passbookBalance: 0.0,
+        withdrawableGoldQnty: 0.0,
+        sellRate: 0.0,
+        onAmountConfirmed: (Map<String, double> amountDetails) {
+          //_onInitiateWithdrawal(amountDetails['withdrawal_quantity']);
+        },
+        bankHolderName: _baseUtil.augmontDetail.bankHolderName,
+        bankAccNo: _baseUtil.augmontDetail.bankAccNo,
+        bankIfsc: _baseUtil.augmontDetail.ifsc,
+      ),
+    );
   }
 
   _onWithdrawalClicked() async {
@@ -93,7 +112,7 @@ class SellGoldBtnVM extends BaseModel {
         AppState.delegate.appState.currentAction = PageAction(
           state: PageState.addWidget,
           page: AugWithdrawalPageConfig,
-          widget: AugmontWithdrawScreen(
+          widget: AugmontGoldSellView(
             key: _withdrawalDialogKey2,
             passbookBalance: _liveGoldQuantityBalance,
             withdrawableGoldQnty: _withdrawableGoldQnty,

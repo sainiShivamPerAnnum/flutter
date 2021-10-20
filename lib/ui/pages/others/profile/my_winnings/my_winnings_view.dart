@@ -3,6 +3,7 @@ import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_vm.dart
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
+import 'package:felloapp/ui/service_elements/user_service/user_winnings.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -56,8 +57,7 @@ class MyWinningsView extends StatelessWidget {
                                           .colour(Colors.white60),
                                     ),
                                     SizedBox(height: SizeConfig.padding8),
-                                    Text(
-                                      locale.saveWinningsValue(1000),
+                                    UserWinningsSE(
                                       style: TextStyles.title1
                                           .colour(Colors.white)
                                           .weight(FontWeight.w900)
