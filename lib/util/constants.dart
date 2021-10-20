@@ -19,6 +19,8 @@ class Constants {
   static final String COLN_HOMECARDS = "homefeed";
   static final String COLN_EMAILOTPREQUESTS = "emailotprequests";
   static final String COLN_STATISTICS = "statistics";
+  static final String WINNERS= "winners";
+  static final String COLN_PRIZES = "prizes";
 
   //Sub-collections
   static final String SUBCOLN_USER_FCM = "fcm";
@@ -75,5 +77,7 @@ class Constants {
   static final DateTime VERSION_2_RELEASE_DATE = DateTime(2021, 4, 1);
 
   static final String GAME_CRICKET_URI =
-      'https://live.gameskite.com/fello/cricket-2021';
+      'https://prod.freakx.in/fello/cricket-2021/';
 }
+
+   

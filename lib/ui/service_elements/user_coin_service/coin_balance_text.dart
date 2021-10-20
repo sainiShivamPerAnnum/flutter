@@ -10,7 +10,7 @@ class CoinBalanceTextSE extends StatelessWidget {
     return PropertyChangeConsumer<UserCoinService, UserCoinServiceProperties>(
       properties: [UserCoinServiceProperties.coinBalance],
       builder: (context, model, property) => Text(
-          model.flcBalance.toString() ?? " ",
+          model.flcBalance != null ? model.flcBalance.toString() : "0",
           style: TextStyles.body2.bold),
     );
   }
