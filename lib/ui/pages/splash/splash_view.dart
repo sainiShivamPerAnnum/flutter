@@ -29,14 +29,22 @@ class LauncherView extends StatelessWidget {
             body: Container(
               width: SizeConfig.screenWidth,
               height: SizeConfig.screenHeight,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(Assets.splashBackground),
-                  fit: BoxFit.fitWidth,
-                ),
-              ),
+              // decoration: BoxDecoration(
+              //   image: DecorationImage(
+              //     image: AssetImage(Assets.splashBackground),
+              //     fit: BoxFit.fitWidth,
+              //   ),
+              // ),
               child: Stack(
                 children: <Widget>[
+                  Positioned(
+                    top: 0,
+                    child: Image.asset(
+                      Assets.splashBackground,
+                      width: SizeConfig.screenWidth,
+                      fit: BoxFit.fitWidth,
+                    ),
+                  ),
                   Align(
                     alignment: Alignment.center,
                     child: Column(

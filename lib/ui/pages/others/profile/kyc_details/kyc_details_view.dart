@@ -111,21 +111,24 @@ class KYCDetailsView extends StatelessWidget {
                           ),
                           SizedBox(height: 24),
                           if (model.inEditMode)
-                            FelloButtonLg(
-                                child: model.isUpadtingKycDetails
-                                    ? SpinKitThreeBounce(
-                                        color: Colors.white,
-                                        size: 20,
-                                      )
-                                    : Text(
-                                        locale.btnSumbit,
-                                        style: TextStyles.body2
-                                            .colour(Colors.white)
-                                            .bold,
-                                      ),
-                                onPressed: () {
-                                  model.updateKYCDetails();
-                                }),
+                            Container(
+                              width: SizeConfig.screenWidth,
+                              child: FelloButtonLg(
+                                  child: model.isUpadtingKycDetails
+                                      ? SpinKitThreeBounce(
+                                          color: Colors.white,
+                                          size: 20,
+                                        )
+                                      : Text(
+                                          locale.btnSumbit,
+                                          style: TextStyles.body2
+                                              .colour(Colors.white)
+                                              .bold,
+                                        ),
+                                  onPressed: () {
+                                    model.updateKYCDetails();
+                                  }),
+                            ),
                           SizedBox(height: 24),
                         ],
                       ),

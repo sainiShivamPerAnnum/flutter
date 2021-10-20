@@ -24,14 +24,27 @@ class PicksCardView extends StatelessWidget {
           duration: Duration(seconds: 1),
           curve: Curves.ease,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(SizeConfig.roundness32),
-            color: UiConstants.primaryColor,
-          ),
-          margin: EdgeInsets.symmetric(
-            vertical: SizeConfig.pageHorizontalMargins,
+              //borderRadius: BorderRadius.circular(SizeConfig.roundness32),
+              // color: UiConstants.primaryColor,
+              ),
+          margin: EdgeInsets.all(
+            SizeConfig.pageHorizontalMargins,
           ),
           child: Stack(
             children: [
+              FractionallySizedBox(
+                heightFactor: 0.8,
+                alignment: Alignment.topCenter,
+                widthFactor: 1,
+                child: AnimatedContainer(
+                  duration: Duration(seconds: 1),
+                  curve: Curves.ease,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness32),
+                    color: UiConstants.primaryColor,
+                  ),
+                ),
+              ),
               Positioned(
                 bottom: 0,
                 child: SvgPicture.asset(
@@ -44,6 +57,7 @@ class PicksCardView extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    SizedBox(height: SizeConfig.pageHorizontalMargins),
                     model.isShowingAllPicks
                         ? Text(
                             "Weekly Picks",

@@ -83,17 +83,17 @@ class OtpInputScreenState extends State<OtpInputScreen> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Container(
-        padding: EdgeInsets.symmetric(
-            vertical: SizeConfig.pageHorizontalMargins * 2),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              SizedBox(height: SizeConfig.blockSizeVertical * 5),
+
               SvgPicture.asset(
                 Assets.otpAuth,
                 width: SizeConfig.screenHeight * 0.16,
               ),
-              SizedBox(height: SizeConfig.padding64),
+              SizedBox(height: SizeConfig.blockSizeVertical * 5),
               Text(
                 locale.obOtpLabel,
                 style: TextStyles.title4.bold,

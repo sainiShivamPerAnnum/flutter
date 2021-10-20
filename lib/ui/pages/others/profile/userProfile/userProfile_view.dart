@@ -366,34 +366,37 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                             ],
                           ),
                           SizedBox(height: SizeConfig.padding24),
-                          FelloButtonLg(
-                            child: model.isUpdaingUserDetails
-                                ? SpinKitThreeBounce(
-                                    color: Colors.white,
-                                    size: 20,
-                                  )
-                                : Text(
-                                    model.inEditMode
-                                        ? locale.btnSave
-                                        : locale.btnEdit,
-                                    style: TextStyles.body2
-                                        .colour(Colors.white)
-                                        .bold,
-                                  ),
-                            onPressed: () {
-                              if (model.inEditMode) {
-                                FocusScope.of(context).unfocus();
-                                model.updateDetails();
-                              } else {
-                                model.enableEdit();
-                              }
-                            },
+                          Container(
+                            width: SizeConfig.screenWidth,
+                            child: FelloButtonLg(
+                              child: model.isUpdaingUserDetails
+                                  ? SpinKitThreeBounce(
+                                      color: Colors.white,
+                                      size: 20,
+                                    )
+                                  : Text(
+                                      model.inEditMode
+                                          ? locale.btnSave
+                                          : locale.btnEdit,
+                                      style: TextStyles.body2
+                                          .colour(Colors.white)
+                                          .bold,
+                                    ),
+                              onPressed: () {
+                                if (model.inEditMode) {
+                                  FocusScope.of(context).unfocus();
+                                  model.updateDetails();
+                                } else {
+                                  model.enableEdit();
+                                }
+                              },
+                            ),
                           ),
                           SizedBox(height: 24),
                           TextButton(
                             onPressed: model.signout,
                             child: Text(
-                              locale.signout,
+                              locale.signout.toUpperCase(),
                               style: TextStyles.body1
                                   .colour(Colors.red[200])
                                   .light

@@ -28,7 +28,7 @@ class Save extends StatelessWidget {
       builder: (ctx, model, child) {
         return ListView(
           children: [
-            SizedBox(height: SizeConfig.padding12),
+            SizedBox(height: SizeConfig.padding80),
             Container(
               margin: EdgeInsets.symmetric(
                   horizontal: SizeConfig.pageHorizontalMargins),

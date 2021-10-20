@@ -217,18 +217,7 @@ class _FundsChartViewState extends State<FundsChartView> {
               ],
             ),
             IconButton(
-                icon: Icon(Icons.info),
-                onPressed: () {
-                  AppState.screenStack.add(ScreenItem.dialog);
-                  return showDialog(
-                    context: context,
-                    builder: (_) => GoldenTicketClaimDialog(
-                      ticketCount: 0,
-                      failMsg: "abc",
-                    ),
-                  );
-                },
-                color: Colors.grey)
+                icon: Icon(Icons.info), onPressed: () {}, color: Colors.grey)
           ],
         ),
       ),

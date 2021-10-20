@@ -21,7 +21,7 @@ class Play extends StatelessWidget {
         return Container(
           child: ListView(
             children: [
-              SizedBox(height: SizeConfig.padding12),
+              SizedBox(height: SizeConfig.padding80),
               Container(
                 width: SizeConfig.screenWidth,
                 height: SizeConfig.screenWidth * 0.44,

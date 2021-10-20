@@ -26,7 +26,7 @@ class Win extends StatelessWidget {
               child: ListView(
                 shrinkWrap: true,
                 children: [
-                  SizedBox(height: SizeConfig.padding24),
+                  SizedBox(height: SizeConfig.padding80),
                   InkWell(
                     onTap: model.navigateToMyWinnings,
                     child: Hero(
@@ -163,20 +163,14 @@ class Win extends StatelessWidget {
                   SizedBox(
                     height: SizeConfig.screenHeight * 0.4,
                   )
-                  // Container(
-                  //   height: SizeConfig.screenHeight,
-                  //   child: Column(
-                  //     children: [WeekWinnerBoard(), Leaderboard()],
-                  //   ),
-                  // ),
                 ],
               ),
             ),
             Container(
               child: DraggableScrollableSheet(
-                initialChildSize: 0.4,
+                initialChildSize: 0.3,
                 maxChildSize: 1,
-                minChildSize: 0.4,
+                minChildSize: 0.3,
                 builder: (BuildContext context, myscrollController) {
                   return Stack(
                     children: [

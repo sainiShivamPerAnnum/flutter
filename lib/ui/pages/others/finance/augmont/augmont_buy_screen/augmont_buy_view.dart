@@ -36,7 +36,7 @@ class AugmontGoldBuyView extends StatelessWidget {
               ),
               Container(
                 margin: EdgeInsets.only(
-                  top: SizeConfig.padding12,
+                  top: SizeConfig.padding24,
                   right: SizeConfig.pageHorizontalMargins,
                   left: SizeConfig.pageHorizontalMargins,
                 ),
