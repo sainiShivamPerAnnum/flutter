@@ -239,6 +239,8 @@ class AugmontModel extends ChangeNotifier {
       return null;
     }
     double netTax = buyRates.cgstPercent + buyRates.sgstPercent;
+
+    ///20-10-2021 = done through /deposit/pending API
     _baseProvider.currentAugmontTxn = UserTransaction.newGoldDeposit(
         amount,
         BaseUtil.digitPrecision(amount - getTaxOnAmount(amount, netTax)),
@@ -249,6 +251,8 @@ class AugmontModel extends ChangeNotifier {
             buyRates.goldBuyPrice),
         'RZP',
         _baseProvider.myUser.uid);
+    ///
+
     UserTransaction tTxn = await _rzpGateway.submitAugmontTransaction(
         _baseProvider.currentAugmontTxn,
         _baseProvider.myUser.mobile,
@@ -260,9 +264,11 @@ class AugmontModel extends ChangeNotifier {
       _rzpGateway.setTransactionListener(_onRazorpayPaymentProcessed);
     }
 
+    ///done through /deposit/pending API
     String _docKey = await _dbModel.addUserTransaction(
         _baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
     _baseProvider.currentAugmontTxn.docKey = _docKey;
+    ///
 
     return _baseProvider.currentAugmontTxn;
   }
@@ -321,6 +327,7 @@ class AugmontModel extends ChangeNotifier {
 
   ///submit gold purchase augmont api
   ///update object
+  //////IMP AUGMONT API API CALL POST SUCCESSFUL PAYMENT
   _onPaymentComplete() async {
     Map<String, String> _params = {
       SubmitGoldPurchase.fldMobile: _baseProvider.myUser.mobile,
