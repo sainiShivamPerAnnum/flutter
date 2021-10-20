@@ -72,52 +72,50 @@ class _ReferralHistoryViewState extends State<ReferralHistoryView> {
                 ),
                 color: Colors.white,
               ),
-              child:
-                  //  (baseProvider.referralsFetched)
-                  //     ?
-                  SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      // height: SizeConfig.screenHeight*0.8,
-                      // width: SizeConfig.screenWidth*0.9,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        padding: const EdgeInsets.all(6.0),
-                        itemBuilder: (context, i) {
-                          return _buildRefItem(
-                              baseProvider.userReferralsList[i]);
-                        },
-                        itemCount: baseProvider.userReferralsList.length,
+              child: (baseProvider.referralsFetched)
+                  ? SingleChildScrollView(
+                      physics: BouncingScrollPhysics(),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            // height: SizeConfig.screenHeight*0.8,
+                            // width: SizeConfig.screenWidth*0.9,
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              padding: const EdgeInsets.all(6.0),
+                              itemBuilder: (context, i) {
+                                return _buildRefItem(
+                                    baseProvider.userReferralsList[i]);
+                              },
+                              itemCount: baseProvider.userReferralsList.length,
+                            ),
+                          ),
+                          baseProvider.isOldCustomer()
+                              ? Padding(
+                                  padding: EdgeInsets.all(10),
+                                  child: Text(
+                                    'Referrals before April 2021 are not mentioned here',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: Colors.grey[500],
+                                        fontSize: SizeConfig.mediumTextSize),
+                                  ),
+                                )
+                              : Container()
+                        ],
+                      ),
+                    )
+                  : Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(30),
+                        child: SpinKitWave(
+                          color: UiConstants.primaryColor,
+                        ),
                       ),
                     ),
-                    baseProvider.isOldCustomer()
-                        ? Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Text(
-                              'Referrals before April 2021 are not mentioned here',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.grey[500],
-                                  fontSize: SizeConfig.mediumTextSize),
-                            ),
-                          )
-                        : Container()
-                  ],
-                ),
-              )
-              // : Center(
-              //     child: Padding(
-              //     padding: EdgeInsets.all(30),
-              //     child: SpinKitWave(
-              //       color: UiConstants.primaryColor,
-              //     ),
-              //   ),)
-              ,
             ),
           )
         ],

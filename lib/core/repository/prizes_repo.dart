@@ -16,6 +16,7 @@ class PrizesRepository {
           await _api.getPrizesPerGamePerFreq(gameCode, freq);
 
       _logger.i("getPrizesPerGamePerFreq, successfully called");
+      _logger.d(_queryDocumentSanpshot.data());
 
       PrizesModel _prizesModel =
           PrizesModel.fromMap(_queryDocumentSanpshot.data());

@@ -73,7 +73,9 @@ class AugmontGoldDetailsView extends StatelessWidget {
                                               color: Colors.white,
                                             )
                                           : Text(
-                                              "₹ ${model.goldRates.goldBuyPrice.toStringAsFixed(2)}",
+                                              model.goldRates != null
+                                                  ? "₹ ${model.goldRates.goldBuyPrice.toStringAsFixed(2)}"
+                                                  : "-",
                                               style: TextStyles.title5
                                                   .colour(Colors.white)
                                                   .bold,
@@ -109,7 +111,9 @@ class AugmontGoldDetailsView extends StatelessWidget {
                                               color: Colors.white,
                                             )
                                           : Text(
-                                              "₹ ${model.goldRates.goldSellPrice.toStringAsFixed(2)}",
+                                              model.goldRates != null
+                                                  ? "₹ ${model.goldRates.goldSellPrice.toStringAsFixed(2)}"
+                                                  : "-",
                                               style: TextStyles.title5
                                                   .colour(Colors.white)
                                                   .bold,

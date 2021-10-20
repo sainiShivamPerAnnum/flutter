@@ -1,8 +1,11 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/model/game_model.dart';
+import 'package:felloapp/core/model/leader_board_modal.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
+import 'package:felloapp/core/repository/statistics_repo.dart';
 import 'package:felloapp/core/service/user_coin_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -20,15 +23,19 @@ class CricketHomeViewModel extends BaseModel {
   final _fclActionRepo = locator<FlcActionsRepo>();
   final _userCoinService = locator<UserCoinService>();
   final _logger = locator<Logger>();
+  final _stats = locator<StatisticsRepository>();
 
   PageController pageController = new PageController(initialPage: 0);
 
   int currentPage = 0;
   String _message;
   String _sessionId;
+  LeaderBoardModal _cricLeaderboard;
+  bool isLeaderboardLoading = false;
 
   String get message => _message;
   String get sessionID => _sessionId;
+  LeaderBoardModal get cricLb => _cricLeaderboard;
 
   GameModel gameData = GameModel(
       gameName: "Cricket",
@@ -45,10 +52,8 @@ class CricketHomeViewModel extends BaseModel {
   }
 
   init() {
-    fetchScoreboard();
+    getLeaderboard();
   }
-
-  fetchScoreboard() async {}
 
   startGame() {
     AppState.delegate.appState.currentAction = PageAction(
@@ -85,5 +90,20 @@ class CricketHomeViewModel extends BaseModel {
       setState(ViewState.Idle);
       return false;
     }
+  }
+
+  fetchPrizes() async {}
+
+  Future<void> getLeaderboard() async {
+    isLeaderboardLoading = true;
+    notifyListeners();
+    var temp = await _stats.getLeaderBoard("GM_CRIC2020", "weekly");
+    if (temp != null)
+      _cricLeaderboard = temp.model;
+    else
+      BaseUtil.showNegativeAlert(
+          "Leaderboard failed to update", temp.errorMessage);
+    isLeaderboardLoading = false;
+    notifyListeners();
   }
 }

@@ -33,7 +33,7 @@ class Ticket extends StatelessWidget {
   // }
 
   getColor(int index) {
-    if (calledDigits.contains(ticketNumbers[index])) return boradColorMarked;
+    if (calledDigits.contains(ticketNumbers[index])) return Color(0xffFDA77F);
     if (index % 2 == 0) {
       return UiConstants.primaryLight;
     } else {
@@ -42,7 +42,7 @@ class Ticket extends StatelessWidget {
   }
 
   getTextColor(int index) {
-    if (calledDigits.contains(ticketNumbers[index])) return boradColorMarked;
+    if (calledDigits.contains(ticketNumbers[index])) return Colors.white;
     if (index % 2 != 0) {
       return UiConstants.primaryLight;
     } else {

@@ -1,9 +1,11 @@
+import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/leaderboard.dart';
 import 'package:felloapp/ui/elements/texts/marquee_text.dart';
 import 'package:felloapp/ui/elements/week-winners_board.dart';
 import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
+import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -12,13 +14,17 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 
 class Win extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return BaseView<WinViewModel>(
-      onModelReady: (model) {},
+      onModelReady: (model) {
+        model.init();
+      },
       builder: (ctx, model, child) {
         return Stack(
           children: [
@@ -71,6 +77,7 @@ class Win extends StatelessWidget {
                           bigText: locale.winMoneyBigText,
                           smallText: locale.winMoneySmallText,
                           image: Assets.moneyBag,
+                          painter: LakhCustomPaint(),
                         ),
                         //SizedBox(width: SizeConfig.padding16),
                         BigPrizeContainer(
@@ -78,6 +85,7 @@ class Win extends StatelessWidget {
                           bigText: locale.winIphoneBigText,
                           smallText: locale.winIphoneSmallText,
                           image: Assets.iphone,
+                          painter: IphoneCustomPaint(),
                         ),
                       ],
                     ),
@@ -168,9 +176,9 @@ class Win extends StatelessWidget {
             ),
             Container(
               child: DraggableScrollableSheet(
-                initialChildSize: 0.3,
-                maxChildSize: 1,
-                minChildSize: 0.3,
+                initialChildSize: 0.24,
+                maxChildSize: 0.94,
+                minChildSize: 0.24,
                 builder: (BuildContext context, myscrollController) {
                   return Stack(
                     children: [
@@ -211,100 +219,22 @@ class Win extends StatelessWidget {
                         ),
                       ),
                       Container(
-                        //color: Colors.white,
+                          //color: Colors.white,
 
-                        child: ListView.builder(
-                            shrinkWrap: true,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: SizeConfig.pageHorizontalMargins,
-                                vertical: SizeConfig.pageHorizontalMargins * 4),
-                            controller: myscrollController,
-                            itemCount: 40,
-                            itemBuilder: (ctx, i) {
-                              return Container(
-                                decoration: BoxDecoration(
-                                  color:
-                                      UiConstants.primaryLight.withOpacity(0.5),
-                                  borderRadius: BorderRadius.circular(
-                                      SizeConfig.roundness24),
-                                ),
-                                margin: EdgeInsets.symmetric(
-                                  vertical: SizeConfig.padding4,
-                                ),
-                                width: SizeConfig.screenWidth,
-                                padding: EdgeInsets.all(SizeConfig.padding12),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: SizeConfig.screenWidth * 0.154,
-                                      height: SizeConfig.tileAvatarRadius * 2,
-                                      child: Stack(
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.centerRight,
-                                            child: CircleAvatar(
-                                              backgroundImage: NetworkImage(
-                                                "https://thumbor.forbes.com/thumbor/fit-in/416x416/filters%3Aformat%28jpg%29/https%3A%2F%2Fspecials-images.forbesimg.com%2Fimageserve%2F5b3a90cba7ea4353dd3f9804%2F0x0.jpg%3Fbackground%3D000000%26cropX1%3D186%26cropX2%3D3092%26cropY1%3D449%26cropY2%3D3354",
-                                              ),
-                                              radius:
-                                                  SizeConfig.tileAvatarRadius,
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.centerLeft,
-                                            child: CircleAvatar(
-                                              backgroundColor:
-                                                  UiConstants.primaryColor,
-                                              radius: SizeConfig.padding16,
-                                              child: Text(
-                                                "${i + 1}",
-                                                style: TextStyles.body4
-                                                    .colour(Colors.white),
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(width: SizeConfig.padding12),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text("Mckinney",
-                                              style: TextStyles.body3),
-                                          SizedBox(height: SizeConfig.padding4),
-                                          Text(
-                                            "Tambola",
-                                            style: TextStyles.body4.colour(
-                                                UiConstants.primaryColor),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    TextButton.icon(
-                                        icon: CircleAvatar(
-                                          radius:
-                                              SizeConfig.screenWidth * 0.029,
-                                          backgroundColor:
-                                              UiConstants.primaryLight,
-                                          child: Image.asset(
-                                            "assets/images/icons/money.png",
-                                            height: SizeConfig.iconSize3,
-                                          ),
-                                        ),
-                                        label: Text("Rs 10K",
-                                            style: TextStyles.body3
-                                                .colour(Colors.black54)),
-                                        onPressed: () {}),
-                                  ],
-                                ),
-                              );
-                            }),
-                      ),
+                          child: model.isWinnersLoading
+                              ? Center(
+                                  child: CircularProgressIndicator(
+                                    color: UiConstants.primaryColor,
+                                  ),
+                                )
+                              : (model.winners == null
+                                  ? Center(
+                                      child: Text("No data"),
+                                    )
+                                  : WinnerboardView(
+                                      model: model.winners,
+                                      controller: myscrollController,
+                                    ))),
                     ],
                   );
                 },
@@ -322,8 +252,10 @@ class BigPrizeContainer extends StatelessWidget {
   final String image;
   final String smallText;
   final String bigText;
+  final CustomPainter painter;
 
-  BigPrizeContainer({this.bgColor, this.bigText, this.image, this.smallText});
+  BigPrizeContainer(
+      {this.bgColor, this.bigText, this.image, this.smallText, this.painter});
 
   @override
   Widget build(BuildContext context) {
@@ -362,10 +294,27 @@ class BigPrizeContainer extends StatelessWidget {
                         width: SizeConfig.screenWidth * 0.3,
                         height: SizeConfig.screenWidth * 0.2,
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.3),
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(SizeConfig.roundness32),
-                            bottomLeft: Radius.circular(SizeConfig.roundness56),
+                            // color: Colors.white.withOpacity(0.3),
+                            // borderRadius: BorderRadius.only(
+                            //   topRight: Radius.circular(SizeConfig.roundness32),
+                            //   bottomLeft: Radius.circular(SizeConfig.roundness56),
+                            // ),
+                            ),
+                        child: Opacity(
+                          opacity: 0.2,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(SizeConfig.roundness32),
+                            ),
+                            child: CustomPaint(
+                              size: Size(
+                                  SizeConfig.screenWidth * 0.3,
+                                  (SizeConfig.screenWidth *
+                                          0.3 *
+                                          0.676923076923077)
+                                      .toDouble()),
+                              painter: painter,
+                            ),
                           ),
                         ),
                       ),
@@ -409,46 +358,250 @@ class BigPrizeContainer extends StatelessWidget {
   }
 }
 
+// Card(
+//   margin: EdgeInsets.symmetric(vertical: 20),
+//   child: Padding(
+//     padding:
+//         const EdgeInsets.symmetric(horizontal: 8.0, vertical: 25),
+//     child: Column(
+//       children: [
+//         Row(
+//           mainAxisAlignment: MainAxisAlignment.spaceAround,
+//           children: [
+//             Text("My winnings", style: TextStyles.body3.light),
+//             PropertyChangeConsumer<UserService,
+//                 UserServiceProperties>(
+//               builder: (ctx, model, child) => Text(
+//                 //"₹ 0.00",
+//                 "₹ ${model.userFundWallet.unclaimedBalance}",
+//                 style: TextStyles.body2.bold
+//                     .colour(UiConstants.primaryColor),
+//               ),
+//             ),
+//           ],
+//         ),
+//         // SizedBox(height: 12),
+//         // Widgets().getBodyBold("Redeem for", Colors.black),
+//         SizedBox(height: 12),
+//         if (model.getUnclaimedPrizeBalance > 0)
+//           PropertyChangeConsumer<UserService,
+//               UserServiceProperties>(
+//             builder: (ctx, m, child) => FelloButton(
+//               defaultButtonText:
+//                   m.userFundWallet.isPrizeBalanceUnclaimed()
+//                       ? "Redeem"
+//                       : "Share",
+//               onPressedAsync: () =>
+//                   model.prizeBalanceAction(context),
+//               defaultButtonColor: Colors.orange,
+//             ),
+//           ),
+//       ],
+//     ),
+//   ),
+// ),
 
- // Card(
-              //   margin: EdgeInsets.symmetric(vertical: 20),
-              //   child: Padding(
-              //     padding:
-              //         const EdgeInsets.symmetric(horizontal: 8.0, vertical: 25),
-              //     child: Column(
-              //       children: [
-              //         Row(
-              //           mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //           children: [
-              //             Text("My winnings", style: TextStyles.body3.light),
-              //             PropertyChangeConsumer<UserService,
-              //                 UserServiceProperties>(
-              //               builder: (ctx, model, child) => Text(
-              //                 //"₹ 0.00",
-              //                 "₹ ${model.userFundWallet.unclaimedBalance}",
-              //                 style: TextStyles.body2.bold
-              //                     .colour(UiConstants.primaryColor),
-              //               ),
-              //             ),
-              //           ],
-              //         ),
-              //         // SizedBox(height: 12),
-              //         // Widgets().getBodyBold("Redeem for", Colors.black),
-              //         SizedBox(height: 12),
-              //         if (model.getUnclaimedPrizeBalance > 0)
-              //           PropertyChangeConsumer<UserService,
-              //               UserServiceProperties>(
-              //             builder: (ctx, m, child) => FelloButton(
-              //               defaultButtonText:
-              //                   m.userFundWallet.isPrizeBalanceUnclaimed()
-              //                       ? "Redeem"
-              //                       : "Share",
-              //               onPressedAsync: () =>
-              //                   model.prizeBalanceAction(context),
-              //               defaultButtonColor: Colors.orange,
-              //             ),
-              //           ),
-              //       ],
-              //     ),
-              //   ),
-              // ),
+//Copy this CustomPainter code to the Bottom of the File
+class LakhCustomPaint extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    Path path_0 = Path();
+    path_0.moveTo(size.width * 1.184615, size.height * 0.2691261);
+    path_0.cubicTo(
+        size.width * 1.184615,
+        size.height * 0.7285773,
+        size.width * 1.156438,
+        size.height * 1.052747,
+        size.width * 0.6349246,
+        size.height * 0.9553091);
+    path_0.cubicTo(
+        size.width * 0.5865785,
+        size.height * 0.9462761,
+        size.width * 0.5367577,
+        size.height * 0.9483352,
+        size.width * 0.4888669,
+        size.height * 0.9616466);
+    path_0.cubicTo(
+        size.width * -0.07392585,
+        size.height * 1.118072,
+        size.width * 0.007692154,
+        size.height * 0.7302920,
+        size.width * 0.007692154,
+        size.height * 0.2691261);
+    path_0.cubicTo(
+        size.width * 0.007692154,
+        size.height * -0.2109852,
+        size.width * 0.2711554,
+        size.height * -0.6001920,
+        size.width * 0.5961538,
+        size.height * -0.6001920);
+    path_0.cubicTo(
+        size.width * 0.9211538,
+        size.height * -0.6001920,
+        size.width * 1.184615,
+        size.height * -0.2109852,
+        size.width * 1.184615,
+        size.height * 0.2691261);
+    path_0.close();
+
+    Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
+    paint_0_fill.color = Colors.white.withOpacity(1.0);
+    canvas.drawPath(path_0, paint_0_fill);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
+  }
+}
+
+//Copy this CustomPainter code to the Bottom of the File
+class IphoneCustomPaint extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    Path path_0 = Path();
+    path_0.moveTo(size.width * 1.179104, size.height * 0.1723363);
+    path_0.cubicTo(
+        size.width * 1.179104,
+        size.height * 0.5976011,
+        size.width * 1.288672,
+        size.height * 1.119681,
+        size.width * 0.7680075,
+        size.height * 0.9679692);
+    path_0.cubicTo(
+        size.width * 0.6618127,
+        size.height * 0.9370264,
+        size.width * 0.5524649,
+        size.height * 0.9220132,
+        size.width * 0.4449075,
+        size.height * 0.9400901);
+    path_0.cubicTo(
+        size.width * -0.3325672,
+        size.height * 1.070758,
+        size.width * 0.1492530,
+        size.height * 0.6584198,
+        size.width * 0.1492530,
+        size.height * 0.2217868);
+    path_0.cubicTo(
+        size.width * 0.1492530,
+        size.height * -0.2424967,
+        size.width * 0.2929104,
+        size.height * -0.6683231,
+        size.width * 0.6082075,
+        size.height * -0.6683231);
+    path_0.cubicTo(
+        size.width * 0.9235075,
+        size.height * -0.6683231,
+        size.width * 1.179104,
+        size.height * -0.2919473,
+        size.width * 1.179104,
+        size.height * 0.1723363);
+    path_0.close();
+
+    Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
+    paint_0_fill.color = Colors.white.withOpacity(1.0);
+    canvas.drawPath(path_0, paint_0_fill);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
+  }
+}
+
+class WinnerboardView extends StatelessWidget {
+  final WinnersModel model;
+  final ScrollController controller;
+  WinnerboardView({this.model, this.controller});
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      controller: controller,
+      child: Column(
+        children: [
+          SizedBox(height: SizeConfig.padding80),
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.pageHorizontalMargins,
+              vertical: SizeConfig.padding8,
+            ),
+            child: Row(
+              children: [
+                Text(
+                  "Last updated on: ${DateFormat('dd-MMM-yyyy | hh:mm:ss').format(model.timestamp.toDate())}",
+                  style: TextStyles.body4.colour(Colors.grey),
+                )
+              ],
+            ),
+          ),
+          Column(
+              // controller: controller,
+              // shrinkWrap: true,
+              // itemCount: model.winners.length,
+              children: List.generate(
+            //50,
+            model.winners.length,
+            (i) {
+              return Container(
+                width: SizeConfig.screenWidth,
+                padding: EdgeInsets.all(SizeConfig.padding12),
+                margin: EdgeInsets.symmetric(
+                    vertical: SizeConfig.padding8,
+                    horizontal: SizeConfig.pageHorizontalMargins),
+                decoration: BoxDecoration(
+                  color: Color(0xfff6f6f6),
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+                ),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: UiConstants.primaryColor,
+                      radius: SizeConfig.padding16,
+                      child: Text(
+                        "${i + 1}",
+                        style: TextStyles.body4.colour(Colors.white),
+                      ),
+                    ),
+                    SizedBox(width: SizeConfig.padding12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                              //"avc",
+                              model.winners[i].username ?? "Username",
+                              style: TextStyles.body3),
+                          SizedBox(height: SizeConfig.padding4),
+                          Text(
+                            model.gametype == "GM_CRIC2020"
+                                ? "Circket"
+                                : "Tambola",
+                            style: TextStyles.body4
+                                .colour(UiConstants.primaryColor),
+                          )
+                        ],
+                      ),
+                    ),
+                    TextButton.icon(
+                        icon: CircleAvatar(
+                          radius: SizeConfig.screenWidth * 0.029,
+                          backgroundColor: UiConstants.tertiaryLight,
+                          child: SvgPicture.asset(Assets.tickets,
+                              height: SizeConfig.iconSize3),
+                        ),
+                        label: Text(
+                            //"00",
+                            model.winners[i].score.toString() ?? "00",
+                            style: TextStyles.body3.colour(Colors.black54)),
+                        onPressed: () {}),
+                  ],
+                ),
+              );
+            },
+          )),
+        ],
+      ),
+    );
+  }
+}

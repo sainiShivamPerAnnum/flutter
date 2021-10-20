@@ -12,21 +12,20 @@ import 'package:flutter_svg/parser.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class PicksCardView extends StatelessWidget {
+  final ValueChanged<bool> showBuyTicketModal;
+  PicksCardView({this.showBuyTicketModal});
   @override
   Widget build(BuildContext context) {
     return BaseView<PicksCardViewModel>(
       onModelReady: (model) => model.init(),
       builder: (ctx, model, child) => GestureDetector(
-        onTap: model.onTap,
+        onTap: () => model.onTap(showBuyTicketModal),
         child: AnimatedContainer(
           width: SizeConfig.screenWidth,
           height: model.topCardHeight,
           duration: Duration(seconds: 1),
           curve: Curves.ease,
-          decoration: BoxDecoration(
-              //borderRadius: BorderRadius.circular(SizeConfig.roundness32),
-              // color: UiConstants.primaryColor,
-              ),
+          decoration: BoxDecoration(),
           margin: EdgeInsets.all(
             SizeConfig.pageHorizontalMargins,
           ),
@@ -53,11 +52,18 @@ class PicksCardView extends StatelessWidget {
                       SizeConfig.pageHorizontalMargins * 2,
                 ),
               ),
-              Container(
+              AnimatedContainer(
+                width: SizeConfig.screenWidth,
+                height: model.topCardHeight,
+                duration: Duration(seconds: 1),
+                curve: Curves.ease,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(height: SizeConfig.pageHorizontalMargins),
+                    if (model.isShowingAllPicks)
+                      SizedBox(
+                        height: SizeConfig.screenWidth * 0.04,
+                      ),
                     model.isShowingAllPicks
                         ? Text(
                             "Weekly Picks",
@@ -93,6 +99,10 @@ class PicksCardView extends StatelessWidget {
                         : WeeklyPicks(
                             weeklyDraws: model.weeklyDigits,
                           ),
+                    if (!model.isShowingAllPicks)
+                      SizedBox(
+                        height: SizeConfig.screenWidth * 0.04,
+                      )
                   ],
                 ),
               ),

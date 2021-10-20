@@ -145,6 +145,7 @@ class MobileInputScreenState extends State<MobileInputScreen> {
                 keyboardType: TextInputType.number,
                 maxLength: 10,
                 cursorColor: UiConstants.primaryColor,
+                style: TextStyles.body3.colour(Colors.black),
                 decoration: InputDecoration(
                   prefixIcon: Padding(
                     padding: EdgeInsets.all(SizeConfig.padding4),

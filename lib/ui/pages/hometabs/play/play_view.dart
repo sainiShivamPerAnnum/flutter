@@ -19,7 +19,8 @@ class Play extends StatelessWidget {
       onModelReady: (model) {},
       builder: (ctx, model, child) {
         return Container(
-          child: ListView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: SizeConfig.padding80),
               Container(
@@ -50,23 +51,31 @@ class Play extends StatelessWidget {
                 ),
               ),
               if (model.state == ViewState.Idle)
-                Column(
-                  children: List.generate(
-                    2,
-                    (index) => GestureDetector(
+                Expanded(
+                  child: ListView(children: [
+                    GestureDetector(
                       onTap: () => AppState.delegate.appState.currentAction =
                           PageAction(
                               state: PageState.addPage,
-                              page: model.gameList[index].pageConfig),
+                              page: model.gameList[0].pageConfig),
                       child: GameCard(
-                        gameData: model.gameList[index],
+                        gameData: model.gameList[0],
                       ),
                     ),
-                  ),
+                    GestureDetector(
+                      onTap: () => AppState.delegate.appState.currentAction =
+                          PageAction(
+                              state: PageState.addPage,
+                              page: model.gameList[1].pageConfig),
+                      child: GameCard(
+                        gameData: model.gameList[1],
+                      ),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.navBarHeight * 2.4,
+                    )
+                  ]),
                 ),
-              SizedBox(
-                height: SizeConfig.navBarHeight * 2.4,
-              )
             ],
           ),
         );
