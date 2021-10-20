@@ -41,7 +41,7 @@ class Api {
     return ref.doc(Constants.DOC_USER_FCM_TOKEN).delete();
   }
 
-  Future<void> addKycName(String userId, Map<String,dynamic> data) {
+  Future<void> addKycName(String userId, Map<String, dynamic> data) {
     final documentRef = _db.collection(Constants.COLN_USERS).doc(userId);
     return documentRef.update(data);
   }
@@ -173,6 +173,15 @@ class Api {
         .doc(userId)
         .collection(Constants.SUBCOLN_USER_TXNS);
     return ref.doc(txnId).get();
+  }
+
+  Future<QuerySnapshot> getUserPrizeTransactionDocuments(String userId) {
+    final query = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
+        .collection(Constants.SUBCOLN_USER_TXNS)
+        .where('tType', isEqualTo: 'PRIZE');
+    return query.get();
   }
 
   Future<void> updateUserTransactionDocument(
@@ -633,6 +642,38 @@ class Api {
         .where('freq', isEqualTo: freq)
         .where('gametype', isEqualTo: gameType);
 
+    try {
+      QuerySnapshot _querySnapshot = await _query.get();
+
+      return _querySnapshot.docs.first;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  //Winners
+   Future<QueryDocumentSnapshot> getWinnersByGameTypeFreqAndCode(
+      String gameType, String freq, String code) async {
+    Query _query = _db
+        .collection(Constants.WINNERS)
+        .where('code', isEqualTo: code)
+        .where('freq', isEqualTo: freq)
+        .where('gametype', isEqualTo: gameType);
+
+    try {
+      QuerySnapshot _querySnapshot = await _query.get();
+      return _querySnapshot.docs.first;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  //Prizes
+  Future<QueryDocumentSnapshot> getPrizesPerGamePerFreq(String gameCode, String freq) async {
+    Query _query = _db
+        .collection(Constants.COLN_PRIZES)
+        .where('category', isEqualTo: gameCode)
+        .where('freq', isEqualTo: freq);
     try {
       QuerySnapshot _querySnapshot = await _query.get();
 
