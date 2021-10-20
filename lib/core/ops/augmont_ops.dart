@@ -3,12 +3,15 @@ import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
+import 'package:felloapp/core/model/deposit_response_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
+import 'package:felloapp/core/repository/investment_actions_repo.dart';
 import 'package:felloapp/core/service/augmont_invoice_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/augmont_api_util.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/icici_api_util.dart';
@@ -17,9 +20,14 @@ import 'package:felloapp/util/logger.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:logger/logger.dart';
 
 class AugmontModel extends ChangeNotifier {
   final Log log = new Log('AugmontModel');
+  final Logger _logger = locator<Logger>();
+  final InvestmentActionsRepository _investmentActionsRepository =
+      locator<InvestmentActionsRepository>();
+
   DBModel _dbModel = locator<DBModel>();
   RazorpayModel _rzpGateway = locator<RazorpayModel>();
   BaseUtil _baseProvider = locator<BaseUtil>();
@@ -30,6 +38,8 @@ class AugmontModel extends ChangeNotifier {
   String _baseUri;
   String _apiKey;
   var headers;
+
+  ApiResponse<DepositResponseModel> _initialDepositResponse;
 
   Future<bool> _init() async {
     if (_dbModel == null) return false;
@@ -238,37 +248,41 @@ class AugmontModel extends ChangeNotifier {
         amount <= 0) {
       return null;
     }
+
     double netTax = buyRates.cgstPercent + buyRates.sgstPercent;
 
-    ///20-10-2021 = done through /deposit/pending API
-    _baseProvider.currentAugmontTxn = UserTransaction.newGoldDeposit(
-        amount,
-        BaseUtil.digitPrecision(amount - getTaxOnAmount(amount, netTax)),
-        buyRates.blockId,
-        buyRates.goldBuyPrice,
-        getGoldQuantityFromTaxedAmount(
-            BaseUtil.digitPrecision(amount - getTaxOnAmount(amount, netTax)),
-            buyRates.goldBuyPrice),
-        'RZP',
-        _baseProvider.myUser.uid);
-    ///
+    Map<String, dynamic> _initAugMap = {
+      "aBlockId": buyRates.blockId.toString(),
+      "aLockPrice": buyRates.goldBuyPrice,
+      "aPaymode": "RZP",
+      "aGoldInTxn":
+          BaseUtil.digitPrecision(amount - getTaxOnAmount(amount, netTax)),
+      "aTaxedGoldBalance": getGoldQuantityFromTaxedAmount(
+          BaseUtil.digitPrecision(amount - getTaxOnAmount(amount, netTax)),
+          buyRates.goldBuyPrice)
+    };
 
-    UserTransaction tTxn = await _rzpGateway.submitAugmontTransaction(
-        _baseProvider.currentAugmontTxn,
-        _baseProvider.myUser.mobile,
-        _baseProvider.myUser.email,
-        //'');
-        'BlockID: ${buyRates.blockId},gPrice: ${buyRates.goldBuyPrice}');
-    if (tTxn != null) {
-      _baseProvider.currentAugmontTxn = tTxn;
-      _rzpGateway.setTransactionListener(_onRazorpayPaymentProcessed);
+    _initialDepositResponse =
+        await _investmentActionsRepository.initiateUserDeposit(
+            userUid: _baseProvider.myUser.uid,
+            amount: amount,
+            initAugMap: _initAugMap);
+
+    if (_initialDepositResponse.code == 200) {
+      _baseProvider.currentAugmontTxn =
+          _initialDepositResponse.model.response.userTransaction;
+
+      UserTransaction tTxn = await _rzpGateway.submitAugmontTransaction(
+          _baseProvider.currentAugmontTxn,
+          _baseProvider.myUser.mobile,
+          _baseProvider.myUser.email,
+          'BlockID: ${buyRates.blockId},gPrice: ${buyRates.goldBuyPrice}');
+
+      if (tTxn != null) {
+        _baseProvider.currentAugmontTxn = tTxn;
+        _rzpGateway.setTransactionListener(_onRazorpayPaymentProcessed);
+      }
     }
-
-    ///done through /deposit/pending API
-    String _docKey = await _dbModel.addUserTransaction(
-        _baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
-    _baseProvider.currentAugmontTxn.docKey = _docKey;
-    ///
 
     return _baseProvider.currentAugmontTxn;
   }
@@ -344,24 +358,66 @@ class AugmontModel extends ChangeNotifier {
       SubmitGoldPurchase.fldPaymode: _baseProvider
           .currentAugmontTxn.augmnt[UserTransaction.subFldAugPaymode],
     };
+
     var _request = http.Request(
         'GET', Uri.parse(_constructRequest(SubmitGoldPurchase.path, _params)));
     _request.headers.addAll(headers);
     http.StreamedResponse _response = await _request.send();
 
     final resMap = await _processResponse(_response);
+
     if (resMap == null ||
         !resMap[INTERNAL_FAIL_FLAG] ||
         resMap[SubmitGoldPurchase.resTranId] == null) {
       log.error('Query Failed');
+
       Map<String, dynamic> _failMap = {
         'txnDocId': _baseProvider.currentAugmontTxn.docKey
       };
+
+      _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId] =
+          resMap[SubmitGoldPurchase.resAugTranId];
+      _baseProvider
+              .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId] =
+          resMap[SubmitGoldPurchase.resTranId];
+      _baseProvider
+              .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm] =
+          double.tryParse(resMap[SubmitGoldPurchase.resGoldBalance]) ?? 0.0;
+
       await _dbModel.logFailure(_baseProvider.myUser.uid,
           FailType.UserAugmontPurchaseFailed, _failMap);
-      bool flag = await _dbModel.updateUserTransaction(
-          _baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
-      _txnService.updateTransactions();
+
+      Map<String, dynamic> rzpUpdates = {
+        "rOrderId": _baseProvider
+            .currentAugmontTxn.rzp[UserTransaction.subFldRzpOrderId],
+        "rPaymentId": _baseProvider
+            .currentAugmontTxn.rzp[UserTransaction.subFldRzpPaymentId],
+        "rStatus": _baseProvider
+            .currentAugmontTxn.rzp[UserTransaction.subFldRzpStatus],
+      };
+
+      Map<String, dynamic> augUpdates = {
+        "aTranId": _baseProvider
+            .currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId],
+        "aAugTranId": _baseProvider
+            .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId],
+        "aGoldBalance": _baseProvider
+            .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm]
+      };
+
+    ApiResponse<DepositResponseModel> _onCompleteDepositResponse =  await _investmentActionsRepository.completeUserDeposit(
+          augUpdates: augUpdates,
+          rzpUpdates: rzpUpdates,
+          userUid: _baseProvider.myUser.uid,
+          txnId: _initialDepositResponse
+              .model.response.transactionDoc.transactionId);
+
+    //TODO: Call property change notifier for flc and gold grams.
+
+      // bool flag = await _dbModel.updateUserTransaction(
+      //     _baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
+      // _txnService.updateTransactions();
+
       if (_augmontTxnProcessListener != null)
         _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
     } else {
@@ -385,16 +441,43 @@ class AugmontModel extends ChangeNotifier {
 
   _onPaymentFailed() async {
     log.error('Query Failed');
+
+    Map<String, dynamic> rzpMap = {
+      "rOrderId": "14703jj124222",
+      "rPaymentId": "111222333",
+      "rStatus": "COMPLETED"
+    };
+
+    Map<String, dynamic> augMap = {
+      "aTranId": "AUG_TRAN_ID",
+      "aAugTranId": "merchantTranId",
+      "aGoldBalance": 0.013821,
+      "aBlockId": "tempId",
+      "aLockPrice": 4822.36232,
+      "aPaymode": "RZP",
+      "aGoldInTxn": 0.01986986,
+      "aTaxedGoldBalance": 0.0095
+    };
+
     Map<String, dynamic> _failMap = {
       'txnDocId': _baseProvider.currentAugmontTxn.docKey
     };
+
     await _dbModel.logFailure(_baseProvider.myUser.uid,
         FailType.UserRazorpayPurchaseFailed, _failMap);
     _baseProvider.currentAugmontTxn.tranStatus =
         UserTransaction.TRAN_STATUS_CANCELLED;
-    bool flag = await _dbModel.updateUserTransaction(
-        _baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
-    _txnService.updateTransactions();
+
+    // bool flag = await _dbModel.updateUserTransaction(
+    //     _baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
+    // _txnService.updateTransactions();
+
+    await _investmentActionsRepository.cancelUserDeposit(
+        txnId:
+            _initialDepositResponse.model.response.transactionDoc.transactionId,
+        userUid: _baseProvider.myUser.uid,
+        rzpMap: rzpMap,
+        augMap: augMap);
 
     if (_augmontTxnProcessListener != null)
       _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
