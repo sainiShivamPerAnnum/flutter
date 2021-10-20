@@ -651,6 +651,23 @@ class Api {
     }
   }
 
+  //Winners
+   Future<QueryDocumentSnapshot> getWinnersByGameTypeFreqAndCode(
+      String gameType, String freq, String code) async {
+    Query _query = _db
+        .collection(Constants.WINNERS)
+        .where('code', isEqualTo: code)
+        .where('freq', isEqualTo: freq)
+        .where('gametype', isEqualTo: gameType);
+
+    try {
+      QuerySnapshot _querySnapshot = await _query.get();
+      return _querySnapshot.docs.first;
+    } catch (e) {
+      throw e;
+    }
+  }
+
   //Prizes
   Future<QueryDocumentSnapshot> getPrizesPerGamePerFreq(String gameCode, String freq) async {
     Query _query = _db

@@ -19,6 +19,7 @@ class Constants {
   static final String COLN_HOMECARDS = "homefeed";
   static final String COLN_EMAILOTPREQUESTS = "emailotprequests";
   static final String COLN_STATISTICS = "statistics";
+  static final String WINNERS= "winners";
   static final String COLN_PRIZES = "prizes";
 
   //Sub-collections
