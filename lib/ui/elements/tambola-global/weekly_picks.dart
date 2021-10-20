@@ -1,5 +1,6 @@
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -52,10 +53,10 @@ class WeeklyPicks extends StatelessWidget {
 
   Widget _getDrawBall(String digit) {
     return Container(
-      width: SizeConfig.screenWidth * 0.08,
-      height: SizeConfig.screenWidth * 0.08,
+      width: SizeConfig.screenWidth * 0.09,
+      height: SizeConfig.screenWidth * 0.09,
       decoration: new BoxDecoration(
-        color: Colors.white,
+        color: Colors.white.withOpacity(0.3),
         shape: BoxShape.circle,
       ),
       child: Center(
@@ -64,7 +65,7 @@ class WeeklyPicks extends StatelessWidget {
         style: TextStyle(
             fontSize: SizeConfig.mediumTextSize * 1.2,
             fontWeight: FontWeight.w500,
-            color: Colors.black),
+            color: Colors.white),
         textAlign: TextAlign.center,
       )),
     );
@@ -82,7 +83,7 @@ class WeeklyPicks extends StatelessWidget {
               child: Text(
                 'This week\'s numbers have not been drawn yet.',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.black54),
+                style: TextStyles.title2.bold.colour(Colors.white),
               ),
             ),
           ),

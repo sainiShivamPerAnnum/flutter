@@ -25,81 +25,90 @@ class LauncherView extends StatelessWidget {
       onModelDispose: (model) => model.exit(),
       builder: (ctx, model, child) {
         return Scaffold(
+            backgroundColor: Colors.white,
             body: Container(
-          width: SizeConfig.screenWidth,
-          height: SizeConfig.screenHeight,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(Assets.splashBackground),
-              fit: BoxFit.fitWidth,
-            ),
-          ),
-          child: Stack(
-            children: <Widget>[
-              Align(
-                alignment: Alignment.center,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      Assets.logoMaxSize,
-                      width: SizeConfig.screenWidth / 3,
+              width: SizeConfig.screenWidth,
+              height: SizeConfig.screenHeight,
+              // decoration: BoxDecoration(
+              //   image: DecorationImage(
+              //     image: AssetImage(Assets.splashBackground),
+              //     fit: BoxFit.fitWidth,
+              //   ),
+              // ),
+              child: Stack(
+                children: <Widget>[
+                  Positioned(
+                    top: 0,
+                    child: Image.asset(
+                      Assets.splashBackground,
+                      width: SizeConfig.screenWidth,
+                      fit: BoxFit.fitWidth,
                     ),
-                    Text(
-                      locale.splashTagline,
-                      style: TextStyles.body2,
-                    )
-                  ],
-                ),
-              ),
-              Positioned(
-                bottom: kToolbarHeight,
-                child: Container(
-                  width: SizeConfig.screenWidth,
-                  padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.screenWidth * 0.1),
-                  child: Column(
-                    children: [
-                      Text(locale.splashSecureText),
-                      SizedBox(height: 8),
-                      Row(
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          Assets.logoMaxSize,
+                          width: SizeConfig.screenWidth / 3,
+                        ),
+                        Text(
+                          locale.splashTagline,
+                          style: TextStyles.body2,
+                        )
+                      ],
+                    ),
+                  ),
+                  Positioned(
+                    bottom: kToolbarHeight,
+                    child: Container(
+                      width: SizeConfig.screenWidth,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.screenWidth * 0.1),
+                      child: Column(
+                        children: [
+                          Text(locale.splashSecureText),
+                          SizedBox(height: 8),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(Assets.augmontLogo,
+                                  width: SizeConfig.screenWidth * 0.2),
+                              SizedBox(width: 16),
+                              Image.asset(Assets.iciciGraphic,
+                                  width: SizeConfig.screenWidth * 0.1),
+                              SizedBox(width: 16),
+                              Image.asset(Assets.sebiGraphic,
+                                  color: Color(0xff2E2A81),
+                                  width: SizeConfig.screenWidth * 0.04),
+                              SizedBox(width: 16),
+                              Image.asset(Assets.amfiGraphic,
+                                  color: UiConstants.primaryColor,
+                                  width: SizeConfig.screenWidth * 0.04)
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    child: Container(
+                      width: SizeConfig.screenWidth,
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image.asset(Assets.augmontLogo,
-                              width: SizeConfig.screenWidth * 0.2),
-                          SizedBox(width: 16),
-                          Image.asset(Assets.iciciGraphic,
-                              width: SizeConfig.screenWidth * 0.1),
-                          SizedBox(width: 16),
-                          Image.asset(Assets.sebiGraphic,
-                              color: Color(0xff2E2A81),
-                              width: SizeConfig.screenWidth * 0.04),
-                          SizedBox(width: 16),
-                          Image.asset(Assets.amfiGraphic,
-                              color: UiConstants.primaryColor,
-                              width: SizeConfig.screenWidth * 0.04)
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              Positioned(
-                bottom: 0,
-                child: Container(
-                  width: SizeConfig.screenWidth,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 40),
-                        child: Visibility(
-                          maintainSize: true,
-                          maintainAnimation: true,
-                          maintainState: true,
-                          visible: model.isSlowConnection,
-                          child:
-                              connectivityStatus == ConnectivityStatus.Offline
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 40),
+                            child: Visibility(
+                              maintainSize: true,
+                              maintainAnimation: true,
+                              maintainState: true,
+                              visible: model.isSlowConnection,
+                              child: connectivityStatus ==
+                                      ConnectivityStatus.Offline
                                   ? Text(
                                       locale.splashNoInternet,
                                       style: TextStyles.body3.bold,
@@ -108,15 +117,15 @@ class LauncherView extends StatelessWidget {
                                       alertText: locale.splashSlowConnection,
                                       textStyle: TextStyles.body2,
                                     ),
-                        ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-              )
-            ],
-          ),
-        ));
+                    ),
+                  )
+                ],
+              ),
+            ));
       },
     );
   }

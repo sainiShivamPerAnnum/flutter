@@ -37,6 +37,19 @@ class Root extends StatelessWidget {
             ),
             child: Stack(
               children: [
+                RefreshIndicator(
+                  color: UiConstants.primaryColor,
+                  backgroundColor: Colors.black,
+                  onRefresh: model.refresh,
+                  child: SafeArea(
+                    child: Container(
+                      //margin: EdgeInsets.only(top: kToolbarHeight * 1.2),
+                      child: IndexedStack(
+                          children: model.pages,
+                          index: AppState.getCurrentTabIndex),
+                    ),
+                  ),
+                ),
                 FelloAppBar(
                   leading: InkWell(
                     onTap: () => model.showDrawer(),
@@ -49,19 +62,6 @@ class Root extends StatelessWidget {
                     SizedBox(width: 16),
                     NotificationButton(),
                   ],
-                ),
-                RefreshIndicator(
-                  color: UiConstants.primaryColor,
-                  backgroundColor: Colors.black,
-                  onRefresh: model.refresh,
-                  child: SafeArea(
-                    child: Container(
-                      margin: EdgeInsets.only(top: kToolbarHeight * 1.2),
-                      child: IndexedStack(
-                          children: model.pages,
-                          index: AppState.getCurrentTabIndex),
-                    ),
-                  ),
                 ),
                 WantMoreTickets(),
                 BottomNavBar(

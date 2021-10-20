@@ -110,17 +110,21 @@ class UsernameState extends State<Username> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     return Container(
-      padding:
-          EdgeInsets.symmetric(vertical: SizeConfig.pageHorizontalMargins * 2),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SvgPicture.asset(
-              Assets.username,
-              width: SizeConfig.screenWidth * 0.28,
+            SizedBox(height: SizeConfig.blockSizeVertical * 5),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset(
+                  Assets.username,
+                  width: SizeConfig.screenWidth * 0.28,
+                ),
+              ],
             ),
-            SizedBox(height: SizeConfig.padding40),
+            SizedBox(height: SizeConfig.blockSizeVertical * 5),
             TextFieldLabel(locale.obUsernameLabel),
             SizedBox(height: SizeConfig.padding6),
             Form(
@@ -172,6 +176,9 @@ class UsernameState extends State<Username> {
             RuleTile(rule: locale.obUsernameRule2),
             RuleTile(rule: locale.obUsernameRule3),
             RuleTile(rule: locale.obUsernameRule4),
+            SizedBox(
+              height: SizeConfig.screenHeight * 0.3,
+            ),
             SizedBox(
               height: SizeConfig.viewInsets.bottom,
             )

@@ -111,7 +111,7 @@ class _FelloButtonState extends State<FelloButton> {
                   isAlreadyClicked = false;
                 },
                 child: widget.activeButtonUI)
-            : ElevatedButton(
+            : TextButton(
                 onPressed: () async {
                   if (isAlreadyClicked) return;
                   isAlreadyClicked = true;

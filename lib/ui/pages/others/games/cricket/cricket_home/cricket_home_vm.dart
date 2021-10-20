@@ -44,7 +44,11 @@ class CricketHomeViewModel extends BaseModel {
     refresh();
   }
 
-  init() {}
+  init() {
+    fetchScoreboard();
+  }
+
+  fetchScoreboard() async {}
 
   startGame() {
     AppState.delegate.appState.currentAction = PageAction(

@@ -1,6 +1,7 @@
 import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/ui/elements/custom-art/tambola_ticket_painter.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
@@ -34,9 +35,18 @@ class Ticket extends StatelessWidget {
   getColor(int index) {
     if (calledDigits.contains(ticketNumbers[index])) return boradColorMarked;
     if (index % 2 == 0) {
-      return boardColorEven;
+      return UiConstants.primaryLight;
     } else {
-      return boardColorOdd;
+      return UiConstants.primaryColor;
+    }
+  }
+
+  getTextColor(int index) {
+    if (calledDigits.contains(ticketNumbers[index])) return boradColorMarked;
+    if (index % 2 != 0) {
+      return UiConstants.primaryLight;
+    } else {
+      return UiConstants.primaryColor;
     }
   }
 
@@ -108,10 +118,10 @@ class Ticket extends StatelessWidget {
       generateOdds();
     }
     return Container(
-      height: SizeConfig.screenWidth * 0.95,
-      width: SizeConfig.screenWidth * 0.9,
+      height: SizeConfig.screenWidth - SizeConfig.pageHorizontalMargins * 2,
+      width: SizeConfig.screenWidth - SizeConfig.pageHorizontalMargins * 2,
       decoration: BoxDecoration(
-        color: bgColor,
+        color: Color(0xffF1F6FF),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
           width: 0,
@@ -124,20 +134,20 @@ class Ticket extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          Container(
-            height: SizeConfig.screenWidth * 0.95,
-            width: SizeConfig.screenWidth * 0.9,
-            child: Opacity(
-              opacity: 0.1,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(14),
-                child: Image.asset(
-                  "images/Tambola/ticket-bg.png",
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ),
+          // Container(
+          //   height: SizeConfig.screenWidth * 0.95,
+          //   width: SizeConfig.screenWidth * 0.9,
+          //   child: Opacity(
+          //     opacity: 0.1,
+          //     child: ClipRRect(
+          //       borderRadius: BorderRadius.circular(14),
+          //       child: Image.asset(
+          //         "images/Tambola/ticket-bg.png",
+          //         fit: BoxFit.cover,
+          //       ),
+          //     ),
+          //   ),
+          // ),
           CustomPaint(
             painter: TicketPainter(
                 puchRadius: 20,
@@ -153,13 +163,7 @@ class Ticket extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text(
-                          'Ticket #${board.getTicketNumber()}',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: SizeConfig.smallTextSize),
-                        ),
-                        Spacer(),
+                        //SizedBox(height: SizeConfig.padding16),
                         GridView.builder(
                           shrinkWrap: true,
                           itemCount: 27,
@@ -187,6 +191,7 @@ class Ticket extends StatelessWidget {
                                       style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         fontSize: SizeConfig.mediumTextSize,
+                                        color: getTextColor(i),
                                       ),
                                     ),
                                   ),
@@ -197,12 +202,18 @@ class Ticket extends StatelessWidget {
                           },
                         ),
                         Spacer(),
+                        Text(
+                          'Ticket #${board.getTicketNumber()}',
+                          style: TextStyle(
+                              color: UiConstants.primaryColor,
+                              fontSize: SizeConfig.smallTextSize),
+                        ),
                       ],
                     ),
                   ),
                 ),
                 Divider(
-                  color: Color(0xffF0F0CB),
+                  color: UiConstants.primaryColor,
                   indent: 40,
                   endIndent: 40,
                 ),
@@ -225,14 +236,15 @@ class Ticket extends StatelessWidget {
                                 direction: ShimmerDirection.fromLTRB(),
                                 child: Container(
                                   decoration: BoxDecoration(
-                                      color: odds[index].color,
+                                      color: UiConstants.primaryLight
+                                          .withOpacity(0.5),
                                       borderRadius: BorderRadius.circular(4)),
                                   child: Stack(
                                     children: [
                                       Padding(
                                         padding: EdgeInsets.all(4),
                                         child: Icon(odds[index].icon,
-                                            color: Colors.white,
+                                            color: UiConstants.primaryColor,
                                             size:
                                                 SizeConfig.screenWidth * 0.06),
                                       ),
@@ -260,14 +272,14 @@ class Ticket extends StatelessWidget {
                                 Text(
                                   odds[index].title,
                                   style: TextStyle(
-                                    color: Colors.white,
+                                    color: Colors.black38,
                                     fontSize: SizeConfig.smallTextSize,
                                   ),
                                 ),
                                 Text(
                                   "${odds[index].left} left",
                                   style: TextStyle(
-                                      color: Colors.white,
+                                      color: Colors.black,
                                       fontWeight: FontWeight.w900,
                                       fontSize: SizeConfig.mediumTextSize),
                                 ),

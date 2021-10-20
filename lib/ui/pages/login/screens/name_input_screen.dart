@@ -530,6 +530,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                 ],
               ),
             ),
+            SizedBox(height: SizeConfig.navBarHeight),
             SizedBox(height: SizeConfig.viewInsets.bottom)
           ],
         ),

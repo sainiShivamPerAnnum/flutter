@@ -34,6 +34,8 @@ import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/picks_card/picks_card_vm.dart';
 import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_vm.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_vm.dart';
+import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
+import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_vm.dart';
 import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_vm.dart';
 import 'package:felloapp/ui/pages/others/profile/transactions_history/transaction_history_vm.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_viewModel.dart';
@@ -109,6 +111,7 @@ void setupLocator() {
   locator.registerFactory(() => TambolaGameViewModel());
   locator.registerFactory(() => PicksCardViewModel());
   locator.registerFactory(() => ReferralDetailsViewModel());
+  locator.registerFactory(() => MyWinningsViewModel());
 
   //WIDGETS
   locator.registerFactory(() => SellGoldBtnVM());

@@ -21,7 +21,7 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
               SizeConfig.screenWidth,
               (SizeConfig.screenWidth * 1.321256038647343).toDouble(),
             ),
-            painter: TicketModalCustomBackground(),
+            painter: ModalCustomBackground(),
             child: Container(
               alignment: Alignment.bottomCenter,
               width: SizeConfig.screenWidth,
@@ -74,7 +74,7 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
   }
 }
 
-class TicketModalCustomBackground extends CustomPainter {
+class ModalCustomBackground extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Path path_0 = Path();

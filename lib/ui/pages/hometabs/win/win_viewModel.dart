@@ -1,9 +1,11 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/tambola_winners_details.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/Prize-Card/card.dart';
 import 'package:felloapp/ui/dialogs/share-card.dart';
@@ -62,5 +64,10 @@ class WinViewModel extends BaseModel {
 
   Future<PrizeClaimChoice> getClaimChoice() async {
     return await _localDBModel.getPrizeClaimChoice();
+  }
+
+  void navigateToMyWinnings() {
+    AppState.delegate.appState.currentAction =
+        PageAction(state: PageState.addPage, page: MyWinnigsPageConfig);
   }
 }

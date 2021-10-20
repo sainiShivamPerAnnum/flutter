@@ -21,8 +21,8 @@ class FelloAppBar extends StatelessWidget {
         width: SizeConfig.screenWidth,
         child: Container(
           margin: EdgeInsets.symmetric(
-            vertical: kToolbarHeight / 4,
-            horizontal: SizeConfig.scaffoldMargin,
+            vertical: SizeConfig.padding8,
+            horizontal: SizeConfig.pageHorizontalMargins,
           ),
           child: Row(
             children: [

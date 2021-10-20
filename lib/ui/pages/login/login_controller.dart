@@ -241,40 +241,41 @@ class _LoginControllerState extends State<LoginController>
                               );
                       }),
                   Expanded(
-                    child: AnimatedContainer(
-                      duration: Duration(milliseconds: 500),
-                      padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.pageHorizontalMargins),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(SizeConfig.roundness40),
-                          topRight: Radius.circular(SizeConfig.roundness40),
-                        ),
-                        color: Colors.white,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(SizeConfig.padding40),
+                        topRight: Radius.circular(SizeConfig.padding40),
                       ),
-                      child: PageView.builder(
-                        physics: new NeverScrollableScrollPhysics(),
-                        scrollDirection: Axis.vertical,
-                        controller: _controller,
-                        itemCount: _pages.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          //print(index - _controller.page);
-                          return ValueListenableBuilder(
-                              valueListenable: _pageNotifier,
-                              builder: (ctx, value, _) {
-                                final factorChange = value - index;
-                                return Opacity(
-                                    opacity: (1 - factorChange.abs())
-                                        .clamp(0.0, 1.0),
-                                    child: _pages[index % _pages.length]);
-                              });
-                        },
-                        onPageChanged: (int index) {
-                          setState(() {
-                            _formProgress = 0.2 * (index + 1);
-                            _currentPage = index;
-                          });
-                        },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.pageHorizontalMargins),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                        ),
+                        child: PageView.builder(
+                          physics: new NeverScrollableScrollPhysics(),
+                          scrollDirection: Axis.vertical,
+                          controller: _controller,
+                          itemCount: _pages.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            //print(index - _controller.page);
+                            return ValueListenableBuilder(
+                                valueListenable: _pageNotifier,
+                                builder: (ctx, value, _) {
+                                  final factorChange = value - index;
+                                  return Opacity(
+                                      opacity: (1 - factorChange.abs())
+                                          .clamp(0.0, 1.0),
+                                      child: _pages[index % _pages.length]);
+                                });
+                          },
+                          onPageChanged: (int index) {
+                            setState(() {
+                              _formProgress = 0.2 * (index + 1);
+                              _currentPage = index;
+                            });
+                          },
+                        ),
                       ),
                     ),
                   ),

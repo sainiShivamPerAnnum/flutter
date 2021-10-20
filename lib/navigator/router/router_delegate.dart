@@ -36,6 +36,7 @@ import 'package:felloapp/ui/pages/others/games/tambola/weekly_result.dart';
 import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/claim_username.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
+import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
 import 'package:felloapp/ui/pages/others/profile/referrals/referral_history/referrals_page.dart';
 import 'package:felloapp/ui/pages/others/profile/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_view.dart';
@@ -263,6 +264,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.ReferralHistory:
           _addPageData(ReferralHistoryView(), ReferralHistoryPageConfig);
           break;
+        case Pages.MyWinnings:
+          _addPageData(MyWinningsView(), MyWinnigsPageConfig);
+          break;
         default:
           break;
       }
@@ -441,6 +445,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.ReferralHistory:
         ReferralHistoryPageConfig.currentPageAction = action;
+        break;
+      case Pages.MyWinnings:
+        MyWinnigsPageConfig.currentPageAction = action;
         break;
       default:
         break;

@@ -122,6 +122,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "splashSlowConnection" : MessageLookupByLibrary.simpleMessage("Connection taking longer than usual"),
     "splashTagline" : MessageLookupByLibrary.simpleMessage("Your savings and gaming app"),
     "txnBankDetailsLabel" : MessageLookupByLibrary.simpleMessage("Bank Account Details"),
-    "txnHistoryLabel" : MessageLookupByLibrary.simpleMessage("Transaction History")
+    "txnHistoryLabel" : MessageLookupByLibrary.simpleMessage("Transaction History"),
+    "winIphoneBigText" : MessageLookupByLibrary.simpleMessage("friends and win iphone 13"),
+    "winIphoneSmallText" : MessageLookupByLibrary.simpleMessage("Refer"),
+    "winMoneyBigText" : MessageLookupByLibrary.simpleMessage("₹ 1 Lakh every week"),
+    "winMoneySmallText" : MessageLookupByLibrary.simpleMessage("Play and win"),
+    "winMyWinnings" : MessageLookupByLibrary.simpleMessage("My Winnings")
   };
 }

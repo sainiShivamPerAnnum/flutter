@@ -48,19 +48,16 @@ class MobileInputScreenState extends State<MobileInputScreen> {
     S locale = S.of(context);
     return Container(
       padding: EdgeInsets.symmetric(
-        // horizontal: SizeConfig.pageHorizontalMargins,
-        vertical: SizeConfig.pageHorizontalMargins * 2,
+        vertical: SizeConfig.blockSizeVertical * 5,
       ),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SvgPicture.asset(
-              Assets.enterPhoneNumber,
-              width: SizeConfig.screenWidth * 0.28,
-            ),
-            SizedBox(height: SizeConfig.padding64),
+            SvgPicture.asset(Assets.enterPhoneNumber,
+                width: SizeConfig.screenHeight * 0.16),
+            SizedBox(height: SizeConfig.blockSizeVertical * 5),
             Text(
               locale.obEnterMobile,
               textAlign: TextAlign.center,
@@ -149,8 +146,6 @@ class MobileInputScreenState extends State<MobileInputScreen> {
                 maxLength: 10,
                 cursorColor: UiConstants.primaryColor,
                 decoration: InputDecoration(
-                  //hintText: "Mobile",
-
                   prefixIcon: Padding(
                     padding: EdgeInsets.all(SizeConfig.padding4),
                     child: Image.network(
@@ -172,7 +167,39 @@ class MobileInputScreenState extends State<MobileInputScreen> {
                 },
               ),
             ),
-            SizedBox(height: SizeConfig.screenHeight / 2),
+            SizedBox(height: SizeConfig.blockSizeVertical * 8),
+            Container(
+              width: SizeConfig.screenWidth,
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.screenWidth * 0.1),
+              child: Column(
+                children: [
+                  Text(locale.splashSecureText),
+                  SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(Assets.augmontLogo,
+                          width: SizeConfig.screenWidth * 0.2),
+                      SizedBox(width: 16),
+                      Image.asset(Assets.iciciGraphic,
+                          width: SizeConfig.screenWidth * 0.1),
+                      SizedBox(width: 16),
+                      Image.asset(Assets.sebiGraphic,
+                          color: Color(0xff2E2A81),
+                          width: SizeConfig.screenWidth * 0.04),
+                      SizedBox(width: 16),
+                      Image.asset(Assets.amfiGraphic,
+                          color: UiConstants.primaryColor,
+                          width: SizeConfig.screenWidth * 0.04)
+                    ],
+                  )
+                ],
+              ),
+            ),
+            SizedBox(
+              height: SizeConfig.screenHeight * 0.4,
+            )
           ],
           //)
         ),

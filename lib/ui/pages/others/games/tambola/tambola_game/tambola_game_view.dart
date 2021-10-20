@@ -1,15 +1,13 @@
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/network_bar.dart';
-import 'package:felloapp/ui/elements/tambola-global/prize_section.dart';
 import 'package:felloapp/ui/elements/tambola-global/tambola_ticket.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_game/tambola_game_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/picks_card/picks_card_view.dart';
-import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/tambola_faq_section.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
+import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/util/styles/palette.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -30,148 +28,276 @@ class TambolaGameView extends StatelessWidget {
       },
       builder: (ctx, model, child) {
         return Scaffold(
-          body: SafeArea(
-            child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              child: Column(
-                children: [
-                  PicksCardView(),
-                  // if (showCardSummary)
-                  //   _buildTicketSummaryCards(
-                  //       baseProvider.weeklyTicksFetched,
-                  //       baseProvider.weeklyDrawFetched,
-                  //       baseProvider.userWeeklyBoards,
-                  //       _activeTambolaCardCount),
+          body: HomeBackground(
+            child: Stack(
+              children: [
+                Container(
+                  height: SizeConfig.screenHeight,
+                  child: Column(
+                    children: [
+                      FelloAppBar(
+                        leading: FelloAppBarBackButton(),
+                        title: "Tambola",
+                        actions: [FelloCoinBar()],
+                      ),
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(SizeConfig.padding40),
+                              topRight: Radius.circular(SizeConfig.padding40),
+                            ),
+                            color: Colors.white,
+                          ),
+                          child: SingleChildScrollView(
+                            physics: BouncingScrollPhysics(),
+                            child: Column(
+                              children: [
+                                PicksCardView(),
+                                // if (showCardSummary)
+                                //   _buildTicketSummaryCards(
+                                //       baseProvider.weeklyTicksFetched,
+                                //       baseProvider.weeklyDrawFetched,
+                                //       baseProvider.userWeeklyBoards,
+                                //       _activeTambolaCardCount),
 
-                  connectivityStatus != ConnectivityStatus.Offline
-                      ? buildCards(model)
-                      : Center(
-                          child: NetworkBar(
-                            textColor: Colors.black,
+                                connectivityStatus != ConnectivityStatus.Offline
+                                    ? buildCards(model)
+                                    : Center(
+                                        child: NetworkBar(
+                                          textColor: Colors.black,
+                                        ),
+                                      ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.black,
+                                    borderRadius: BorderRadius.circular(
+                                        SizeConfig.roundness12),
+                                  ),
+                                  padding: EdgeInsets.all(SizeConfig.padding12),
+                                  margin: EdgeInsets.symmetric(
+                                      vertical:
+                                          SizeConfig.pageHorizontalMargins),
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        "Buy Tickets",
+                                        style: TextStyles.title3.bold
+                                            .colour(Colors.white),
+                                      ),
+                                      SizedBox(height: SizeConfig.padding8),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                TextFieldLabel(
+                                                    "Enter the ticket count"),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    CircleAvatar(
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      child: IconButton(
+                                                        onPressed: model
+                                                            .decreaseTicketCount,
+                                                        icon: Text(
+                                                          "-",
+                                                          style: TextStyles
+                                                              .title3.bold
+                                                              .colour(
+                                                                  Colors.black),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                        width: SizeConfig
+                                                            .padding12),
+                                                    Container(
+                                                      width: SizeConfig
+                                                              .screenWidth *
+                                                          0.2,
+                                                      child: TextField(
+                                                        enabled: false,
+                                                        controller: model
+                                                            .ticketCountController,
+                                                        keyboardType:
+                                                            TextInputType
+                                                                .number,
+                                                        cursorColor:
+                                                            Colors.white,
+                                                        style: TextStyles
+                                                            .body2.bold
+                                                            .colour(
+                                                                Colors.white),
+                                                        decoration:
+                                                            InputDecoration(
+                                                          focusedBorder:
+                                                              OutlineInputBorder(
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                    SizeConfig
+                                                                        .roundness12),
+                                                            borderSide:
+                                                                BorderSide(
+                                                                    color: Colors
+                                                                        .white),
+                                                          ),
+                                                          enabledBorder:
+                                                              OutlineInputBorder(
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                    SizeConfig
+                                                                        .roundness12),
+                                                            borderSide:
+                                                                BorderSide(
+                                                                    color: Colors
+                                                                        .grey),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                        width: SizeConfig
+                                                            .padding12),
+                                                    CircleAvatar(
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      child: IconButton(
+                                                        onPressed: model
+                                                            .increaseTicketCount,
+                                                        icon: Icon(
+                                                          Icons.add,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              TextFieldLabel("Available Coins"),
+                                              Text(
+                                                "200",
+                                                style: TextStyles.body1
+                                                    .colour(Colors.white),
+                                              ),
+                                              SizedBox(
+                                                  height: SizeConfig.padding16),
+                                              TextFieldLabel("Required Coins"),
+                                              Text(
+                                                "100",
+                                                style: TextStyles.body1
+                                                    .colour(Colors.white),
+                                              )
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: SizeConfig.padding16),
+                                      FelloButtonLg(
+                                        color: UiConstants.tertiarySolid,
+                                        child: model.ticketBuyInProgress
+                                            ? SpinKitThreeBounce(
+                                                color: Colors.white,
+                                                size: SizeConfig.body2,
+                                              )
+                                            : Text("Buy",
+                                                style: TextStyles.body2
+                                                    .colour(Colors.white)),
+                                        onPressed: () {
+                                          FocusScope.of(context).unfocus();
+                                          model.buyTickets();
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                // PrizeSection(),
+                                // TambolaFaqSection()
+                              ],
+                            ),
                           ),
                         ),
-                  Container(
+                      ),
+                    ],
+                  ),
+                ),
+                Positioned(
+                  bottom: 0,
+                  child: Container(
+                    width: SizeConfig.screenWidth,
+                    height: SizeConfig.screenWidth * 0.34,
                     decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness12),
-                    ),
-                    padding: EdgeInsets.all(SizeConfig.padding12),
-                    margin: EdgeInsets.all(SizeConfig.globalMargin),
-                    child: Column(
-                      children: [
-                        Text(
-                          "Buy Tickets",
-                          style: TextStyles.title3.bold.colour(Colors.white),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(SizeConfig.padding40),
+                          topRight: Radius.circular(SizeConfig.padding40),
                         ),
-                        SizedBox(height: SizeConfig.padding8),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.grey.withOpacity(0.3),
+                              offset: Offset(0, -10),
+                              spreadRadius: 10,
+                              blurRadius: 40)
+                        ]),
+                    padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         Row(
                           children: [
                             Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  TextFieldLabel("Enter the ticket count"),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      CircleAvatar(
-                                        backgroundColor: Colors.white,
-                                        child: IconButton(
-                                          onPressed: model.decreaseTicketCount,
-                                          icon: Text(
-                                            "-",
-                                            style: TextStyles.title3.bold
-                                                .colour(Colors.black),
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(width: SizeConfig.padding12),
-                                      Container(
-                                        width: SizeConfig.screenWidth * 0.2,
-                                        child: TextField(
-                                          enabled: false,
-                                          controller:
-                                              model.ticketCountController,
-                                          keyboardType: TextInputType.number,
-                                          cursorColor: Colors.white,
-                                          style: TextStyles.body2.bold
-                                              .colour(Colors.white),
-                                          decoration: InputDecoration(
-                                            focusedBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                      SizeConfig.roundness12),
-                                              borderSide: BorderSide(
-                                                  color: Colors.white),
-                                            ),
-                                            enabledBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                      SizeConfig.roundness12),
-                                              borderSide: BorderSide(
-                                                  color: Colors.grey),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(width: SizeConfig.padding12),
-                                      CircleAvatar(
-                                        backgroundColor: Colors.white,
-                                        child: IconButton(
-                                          onPressed: model.increaseTicketCount,
-                                          icon: Icon(
-                                            Icons.add,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                              flex: 2,
+                              child: TextField(
+                                controller: model.ticketCountController,
+                                decoration: InputDecoration(
+                                    isDense: true,
+                                    hintText: 'Enter no of tickets'),
                               ),
                             ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                TextFieldLabel("Available Coins"),
-                                Text(
-                                  "200",
-                                  style: TextStyles.body1.colour(Colors.white),
-                                ),
-                                SizedBox(height: SizeConfig.padding16),
-                                TextFieldLabel("Required Coins"),
-                                Text(
-                                  "100",
-                                  style: TextStyles.body1.colour(Colors.white),
-                                )
-                              ],
-                            ),
+                            SizedBox(width: SizeConfig.padding16),
+                            Expanded(
+                              flex: 1,
+                              child: FelloButtonLg(
+                                //color: UiConstants.tertiarySolid,
+                                child: model.ticketBuyInProgress
+                                    ? SpinKitThreeBounce(
+                                        color: Colors.white,
+                                        size: SizeConfig.body2,
+                                      )
+                                    : Text("Buy",
+                                        style: TextStyles.body2
+                                            .colour(Colors.white)),
+                                onPressed: () {
+                                  FocusScope.of(context).unfocus();
+                                  model.buyTickets();
+                                },
+                              ),
+                            )
                           ],
                         ),
-                        SizedBox(height: SizeConfig.padding16),
-                        FelloButtonLg(
-                          color: UiConstants.tertiarySolid,
-                          child: model.ticketBuyInProgress
-                              ? SpinKitThreeBounce(
-                                  color: Colors.white,
-                                  size: SizeConfig.body2,
-                                )
-                              : Text("Buy",
-                                  style: TextStyles.body2.colour(Colors.white)),
-                          onPressed: () {
-                            FocusScope.of(context).unfocus();
-                            model.buyTickets();
-                          },
+                        SizedBox(height: SizeConfig.padding8),
+                        Text(
+                          "10 coins = 1 ticket",
+                          style: TextStyles.body4.colour(Colors.grey),
                         )
                       ],
                     ),
                   ),
-                  PrizeSection(),
-                  TambolaFaqSection()
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         );
