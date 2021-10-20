@@ -9,6 +9,8 @@ class UserRepository {
   final _logger = locator<Logger>();
   final _api = locator<Api>();
 
+
+//Stack overflow condition when we inject _userUid from user service.
   Future<ApiResponse<List<UserTransaction>>> getWinningHistory(
       String userUid) async {
     List<UserTransaction> _userPrizeTransactions = [];

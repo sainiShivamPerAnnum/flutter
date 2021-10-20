@@ -1,0 +1,94 @@
+import 'package:felloapp/core/constants/apis_path_constants.dart';
+import 'package:felloapp/core/model/deposit_response_model.dart';
+import 'package:felloapp/core/service/api_service.dart';
+import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/locator.dart';
+import 'package:logger/logger.dart';
+
+class InvestmentActionsRepository {
+  final _apiPaths = locator<ApiPath>();
+  final _logger = locator<Logger>();
+
+  Future<ApiResponse<DepositResponseModel>> initiateUserDeposit(
+      {Map<String, dynamic> initAugMap, double amount, String userUid}) async {
+    Map<String, dynamic> _body = {
+      'user_id': userUid,
+      'amount': amount,
+      "aug_map": initAugMap
+    };
+    _logger.d("completeUserDeposit : $_body");
+
+    try {
+      final response = await APIService.instance
+          .postData(_apiPaths.kDepositPending, body: _body);
+
+      _logger.d(response.toString());
+
+      DepositResponseModel _investmentDepositModel =
+          DepositResponseModel.fromMap(response);
+
+      _logger.d("response from api: ${_investmentDepositModel.toString()}");
+
+      return ApiResponse(model: _investmentDepositModel, code: 200);
+    } catch (e) {
+      _logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<DepositResponseModel>> completeUserDeposit(
+      {String txnId,
+      double amount,
+      Map<String, dynamic> rzpUpdates,
+      Map<String, dynamic> augUpdates,
+      String userUid}) async {
+    Map<String, dynamic> _body = {
+      "user_id": userUid,
+      "amount": amount,
+      "rzp_map": rzpUpdates,
+      "aug_map": augUpdates,
+      "tran_id": "eE6quxfGUsrIsZcwAddR"
+    };
+    _logger.d("completeUserDeposit : $_body");
+    try {
+      final response = await APIService.instance
+          .postData(_apiPaths.kDepositComplete, body: _body);
+      _logger.d(response.toString());
+      DepositResponseModel _investmentDepositModel =
+          DepositResponseModel.fromMap(response);
+      return ApiResponse(model: _investmentDepositModel, code: 200);
+    } catch (e) {
+      _logger.e(e);
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<DepositResponseModel>> cancelUserDeposit(
+      {String txnId,
+      String userUid,
+      Map<String, dynamic> rzpMap,
+      Map<String, dynamic> augMap}) async {
+    Map<String, dynamic> _body = {
+      "user_id": userUid,
+      "rzp_map": rzpMap,
+      "aug_map": augMap,
+      "tran_id": txnId,
+    };
+
+    _logger.d("completeUserDeposit : $_body");
+    try {
+      final response = await APIService.instance
+          .postData(_apiPaths.kDepositCancelled, body: _body);
+
+      DepositResponseModel _investmentDepositModel =
+          DepositResponseModel.fromMap(response);
+
+      _logger.d(_investmentDepositModel.toString());
+      
+      return ApiResponse(model: _investmentDepositModel, code: 200);
+    } catch (e) {
+      _logger.e(e);
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+}

@@ -2,15 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/user_service.dart';
-import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:logger/logger.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
 
-class TransactionService extends ChangeNotifier {
+class TransactionService extends PropertyChangeNotifier {
   final _dBModel = locator<DBModel>();
   final _userService = locator<UserService>();
   final _logger = locator<Logger>();
+
   List<UserTransaction> _txnList;
   DocumentSnapshot lastTransactionListDocument;
   bool hasMoreTransactionListDocuments;
