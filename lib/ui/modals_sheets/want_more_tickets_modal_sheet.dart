@@ -36,7 +36,7 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                   FelloTile(
                     leadingAsset: Assets.wmtsaveMoney,
                     title: "Save More Money",
-                    subtitle: "Get 1 ticket for every ₹ 100 invested",
+                    subtitle: "Get 1 token for every Rupee saved",
                     trailingIcon: Icons.arrow_forward_ios_rounded,
                     onTap: () {
                       AppState.delegate.appState.currentAction = PageAction(
@@ -48,7 +48,7 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                   FelloTile(
                     leadingAsset: Assets.wmtShare,
                     title: "Refer your friends",
-                    subtitle: "Get 10 tickets per referral",
+                    subtitle: "Get ₹25 and 100 tokens per referral",
                     trailingIcon: Icons.arrow_forward_ios_rounded,
                     onTap: () {
                       AppState.delegate.appState.currentAction = PageAction(

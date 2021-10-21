@@ -105,7 +105,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "resultsPageSafeDosageMessage" : m4,
     "resultsPageSafeDosageTitle" : MessageLookupByLibrary.simpleMessage("Daily Safe Maximum"),
     "resultsPageSecondDisclaimer" : MessageLookupByLibrary.simpleMessage("*Applies to age 18 and over. This calculator does not replace professional medical advice."),
-    "saveBaseline" : MessageLookupByLibrary.simpleMessage("You get 1 ticket for every ₹ 100 invested"),
+    "saveBaseline" : MessageLookupByLibrary.simpleMessage("You get 1 token for every Rupee saved"),
     "saveBuyButton" : MessageLookupByLibrary.simpleMessage("BUY"),
     "saveGold24k" : MessageLookupByLibrary.simpleMessage("24K"),
     "saveGoldBalanceValue" : m5,

@@ -70,10 +70,7 @@ class Save extends StatelessWidget {
                             child: Center(
                               child: FelloButton(
                                 onPressed: () {
-                                  AppState.delegate.appState.currentAction =
-                                      PageAction(
-                                          state: PageState.addPage,
-                                          page: AugmontGoldBuyPageConfig);
+                                  model.checkRegistrationAndRedirect();
                                 },
                                 activeButtonUI: Container(
                                   width: SizeConfig.screenWidth * 0.367, //152

@@ -4,6 +4,7 @@ import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/modals_sheets/augmont_register_modal_sheet.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_view.dart';
 import 'package:felloapp/util/locator.dart';
 
@@ -17,5 +18,19 @@ class SaveViewModel extends BaseModel {
 
   getUnclaimedPrizeBalance() {
     return _baseUtil.userFundWallet?.prizeLifetimeWin ?? 0.0;
+  }
+
+  checkRegistrationAndRedirect() {
+    if(_baseUtil.myUser.isAugmontOnboarded) {
+      AppState.delegate.appState.currentAction =
+          PageAction(
+              state: PageState.addPage,
+              page: AugmontGoldBuyPageConfig);
+    }else{
+      BaseUtil.openModalBottomSheet(
+          addToScreenStack: true,
+          content: AugmontRegisterModalSheet(),
+          isBarrierDismissable: false);
+    }
   }
 }

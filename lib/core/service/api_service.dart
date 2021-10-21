@@ -73,7 +73,7 @@ class APIService implements API {
     String token,
   }) async {
     final HttpMetric metric =
-        FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Get);
+        FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Post);
     await metric.start();
     var responseJson;
     try {

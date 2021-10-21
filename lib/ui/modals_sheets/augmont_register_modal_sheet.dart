@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -6,6 +7,7 @@ import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/util/augmont_state_list.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -205,6 +207,7 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
           'Failed to regsiter at the moment. Please try again.');
       baseProvider.isAugmontRegnInProgress = false;
       setState(() {});
+      AppState.backButtonDispatcher.didPopRoute();
       return;
     } else {
       ///show completion animation
@@ -213,6 +216,10 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
       baseProvider.isAugmontRegnInProgress = false;
       setState(() {});
       AppState.backButtonDispatcher.didPopRoute();
+      AppState.delegate.appState.currentAction =
+          PageAction(
+              state: PageState.addPage,
+              page: AugmontGoldBuyPageConfig);
     }
     setState(() {});
     return;
