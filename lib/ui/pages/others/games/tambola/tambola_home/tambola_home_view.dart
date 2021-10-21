@@ -11,7 +11,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class TambolaHomeView extends StatelessWidget {
   @override
@@ -19,6 +19,10 @@ class TambolaHomeView extends StatelessWidget {
     return BaseView<TambolaHomeViewModel>(
       onModelReady: (model) {
         model.init();
+        model.scrollController = new ScrollController();
+        model.scrollController.addListener(() {
+          model.udpateCardOpacity();
+        });
       },
       builder: (ctx, model, child) {
         return Scaffold(
@@ -26,31 +30,27 @@ class TambolaHomeView extends StatelessWidget {
           body: HomeBackground(
             child: Stack(
               children: [
-                FelloAppBar(
-                  leading: FelloAppBarBackButton(),
-                  actions: [
-                    FelloCoinBar(),
-                    SizedBox(width: 16),
-                    NotificationButton(),
-                  ],
-                ),
                 WhiteBackground(
-                  color: Color(0xffF1F6FF),
-                  height: kToolbarHeight * 2.6,
+                  color: UiConstants.scaffoldColor,
+                  height: SizeConfig.screenHeight * 0.2,
                 ),
                 SafeArea(
                   child: Container(
                     width: SizeConfig.screenWidth,
                     height: SizeConfig.screenHeight,
-                    margin: EdgeInsets.only(top: kToolbarHeight),
                     child: ListView(
+                      controller: model.scrollController,
                       children: [
-                        GameCard(
-                          gameData: model.gameData,
+                        SizedBox(height: SizeConfig.screenHeight * 0.1),
+                        Opacity(
+                          opacity: model.cardOpacity ?? 1,
+                          child: GameCard(
+                            gameData: model.gameData,
+                          ),
                         ),
                         SizedBox(height: SizeConfig.padding8),
                         Container(
-                          height: SizeConfig.screenHeight * 0.8,
+                          height: SizeConfig.screenHeight * 0.86,
                           padding:
                               EdgeInsets.all(SizeConfig.pageHorizontalMargins),
                           decoration: BoxDecoration(
@@ -89,11 +89,7 @@ class TambolaHomeView extends StatelessWidget {
                                     controller: model.pageController,
                                     children: [
                                       model.isPrizesLoading
-                                          ? Center(
-                                              child: CircularProgressIndicator(
-                                                color: UiConstants.primaryColor,
-                                              ),
-                                            )
+                                          ? ListLoader()
                                           : (model.tPrizes == null
                                               ? NoRecordDisplayWidget(
                                                   asset:
@@ -105,37 +101,13 @@ class TambolaHomeView extends StatelessWidget {
                                                   model: model.tPrizes,
                                                 )),
                                       model.isLeaderboardLoading
-                                          ? Center(
-                                              child: CircularProgressIndicator(
-                                                color: UiConstants.primaryColor,
-                                              ),
-                                            )
+                                          ? ListLoader()
                                           : (model.tlboard == null
-                                              ? Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  children: [
-                                                    SizedBox(
-                                                        height: SizeConfig
-                                                            .padding32),
-                                                    Image.asset(
+                                              ? NoRecordDisplayWidget(
+                                                  asset:
                                                       "images/leaderboard.png",
-                                                      height: SizeConfig
-                                                              .screenHeight *
-                                                          0.2,
-                                                    ),
-                                                    SizedBox(
-                                                      height:
-                                                          SizeConfig.padding16,
-                                                    ),
-                                                    Text(
-                                                      "Leaderboard will be updated soon.",
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyles
-                                                          .title5.bold,
-                                                    )
-                                                  ],
+                                                  text:
+                                                      "Leaderboard will be updated soon",
                                                 )
                                               : LeaderBoardView(
                                                   model: model.tlboard,
@@ -150,32 +122,52 @@ class TambolaHomeView extends StatelessWidget {
                     ),
                   ),
                 ),
+                FelloAppBar(
+                  leading: FelloAppBarBackButton(),
+                  actions: [
+                    FelloCoinBar(),
+                    SizedBox(width: 16),
+                    NotificationButton(),
+                  ],
+                ),
                 Positioned(
-                    bottom: 0,
-                    child: Container(
-                      width: SizeConfig.screenWidth,
-                      padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.scaffoldMargin, vertical: 16),
-                      child: FelloButtonLg(
-                        child: Text(
-                          'PLAY',
-                          style: TextStyles.body2.colour(Colors.white),
-                        )
-                        // : SpinKitThreeBounce(
-                        //     color: UiConstants.spinnerColor2,
-                        //     size: 18.0,
-                        //   )
-                        ,
-                        onPressed: () {
-                          BaseUtil().openTambolaHome();
-                        },
+                  bottom: 0,
+                  child: Container(
+                    width: SizeConfig.screenWidth,
+                    padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.scaffoldMargin, vertical: 16),
+                    child: FelloButtonLg(
+                      child: Text(
+                        'PLAY',
+                        style: TextStyles.body2.colour(Colors.white),
                       ),
-                    ))
+                      onPressed: model.openGame,
+                    ),
+                  ),
+                )
               ],
             ),
           ),
         );
       },
+    );
+  }
+}
+
+class ListLoader extends StatelessWidget {
+  const ListLoader({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(height: SizeConfig.screenHeight * 0.1),
+        SpinKitWave(
+          color: UiConstants.primaryColor,
+        ),
+      ],
     );
   }
 }

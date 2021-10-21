@@ -150,7 +150,8 @@ class UserProfileVM extends BaseModel {
         BaseUtil.showNegativeAlert(
             "No changes found", "please make some changes");
     } else
-      BaseUtil.showNegativeAlert("No changes found", "make some changes bruh");
+      BaseUtil.showNegativeAlert(
+          "Invalid details", "please check the fields again");
   }
 
   bool _checkForChanges() {

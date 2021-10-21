@@ -1,4 +1,3 @@
-import 'package:felloapp/core/service/tambola_service.dart';
 import 'package:felloapp/ui/elements/tambola-global/tambola_daily_draw_timer.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
@@ -51,13 +50,13 @@ class CurrentPicks extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: SizeConfig.blockSizeHorizontal * 2),
+            padding: EdgeInsets.only(top: SizeConfig.screenHeight * 0.02),
             child: Text(
               "Tap to see all picks of this week",
               style: TextStyle(
-                  color: Colors.white,
-                  fontSize: SizeConfig.mediumTextSize,
-                  height: 2),
+                color: Colors.white,
+                fontSize: SizeConfig.mediumTextSize,
+              ),
             ),
           ),
         ],

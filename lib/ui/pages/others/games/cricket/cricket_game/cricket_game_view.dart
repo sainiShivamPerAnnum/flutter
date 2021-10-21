@@ -24,16 +24,18 @@ class CricketGameView extends StatelessWidget {
     String _url =
         '${Constants.GAME_CRICKET_URI}?userId=$userId&userName=$userName&sessionId=$sessionId&stage=$stage&gameId=cric2020';
     _logger.d("Webview URL - $_url");
+    AppState.circGameInProgress = true;
     return BaseView<CricketGameViewModel>(
       builder: (ctx, model, child) => Scaffold(
         backgroundColor: UiConstants.primaryColor,
         floatingActionButton: FloatingActionButton(
-          onPressed: () => AppState.backButtonDispatcher.didPopRoute(),
+          splashColor: UiConstants.tertiarySolid,
+          onPressed: AppState.backButtonDispatcher.didPopRoute,
           child: Icon(
-            Icons.exit_to_app,
+            Icons.close,
             color: Colors.white,
           ),
-          backgroundColor: Colors.amber,
+          backgroundColor: UiConstants.primaryColor,
         ),
         body: WebView(
           //TODO customize url

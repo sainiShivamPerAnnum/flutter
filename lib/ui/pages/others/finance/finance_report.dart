@@ -14,7 +14,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/Prize-Card/card.dart';
 import 'package:felloapp/ui/dialogs/share-card.dart';
 import 'package:felloapp/ui/widgets/simple_kyc_modalsheet/simple_kyc_modalsheet_view.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_withdraw_screen.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_view.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -56,7 +56,7 @@ class _YourFundsState extends State<YourFunds> {
   double _withdrawableGoldQnty;
 
   // PrizeClaimChoice choice;
-  GlobalKey<AugmontWithdrawScreenState> _withdrawalDialogKey2 = GlobalKey();
+  GlobalKey<AugmontGoldSellViewState> _withdrawalDialogKey2 = GlobalKey();
 
   @override
   void initState() {
@@ -439,7 +439,7 @@ class _YourFundsState extends State<YourFunds> {
         AppState.delegate.appState.currentAction = PageAction(
           state: PageState.addWidget,
           page: AugWithdrawalPageConfig,
-          widget: AugmontWithdrawScreen(
+          widget: AugmontGoldSellView(
             key: _withdrawalDialogKey2,
             passbookBalance: _liveGoldQuantityBalance,
             withdrawableGoldQnty: _withdrawableGoldQnty,

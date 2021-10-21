@@ -7,6 +7,8 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 
 //Flutter Imports
@@ -21,20 +23,21 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
   Future<bool> _confirmExit(
       String title, String description, Function confirmAction) {
-    AppState.screenStack.add(ScreenItem.dialog);
-    return showDialog<bool>(
-      barrierDismissible: false,
-      context: _routerDelegate.navigatorKey.currentContext,
-      builder: (ctx) => ConfirmActionDialog(
-        title: title,
-        description: description,
-        buttonText: "Yes",
-        confirmAction: confirmAction,
-        cancelAction: () {
-          didPopRoute();
-        },
-      ),
-    );
+    BaseUtil.openDialog(
+        addToScreenStack: true,
+        isBarrierDismissable: false,
+        hapticVibrate: true,
+        content: FelloConfirmationDialog(
+          asset: Assets.noTickets,
+          title: title,
+          subtitle: description,
+          accept: "Exit",
+          acceptColor: Colors.red,
+          rejectColor: Colors.grey.withOpacity(0.3),
+          reject: "Stay",
+          onAccept: confirmAction,
+          onReject: didPopRoute,
+        ));
   }
 
   @override
@@ -68,6 +71,14 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       AppState.isOnboardingInProgress = false;
       return Future.value(true);
     }
+    //If the cricket game is in progress
+    else if (AppState.circGameInProgress)
+      return _confirmExit("Are you sure?",
+          "Exiting will end the here itself and you'll get no reward", () {
+        AppState.circGameInProgress = false;
+        didPopRoute();
+        return didPopRoute();
+      });
 
     // If the root tab is not 0 at the time of exit
     else if (AppState.screenStack.length == 1 &&

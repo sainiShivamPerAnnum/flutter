@@ -43,8 +43,9 @@ class Play extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding:
-                    EdgeInsets.only(left: SizeConfig.pageHorizontalMargins),
+                padding: EdgeInsets.only(
+                    left: SizeConfig.pageHorizontalMargins,
+                    bottom: SizeConfig.padding8),
                 child: Text(
                   locale.playTrendingGames,
                   style: TextStyles.title3.bold,

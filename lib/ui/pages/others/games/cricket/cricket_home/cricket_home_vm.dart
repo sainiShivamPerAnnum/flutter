@@ -36,12 +36,20 @@ class CricketHomeViewModel extends BaseModel {
   LeaderBoardModal _cricLeaderboard;
   bool isLeaderboardLoading = false;
   bool isPrizesLoading = false;
+  ScrollController scrollController;
+  double cardOpacity = 1;
+
+  udpateCardOpacity() {
+    cardOpacity = 1 -
+        (scrollController.offset / scrollController.position.maxScrollExtent);
+    notifyListeners();
+  }
 
   PrizesModel get cPrizes => _prizeService.cricketPrizes;
 
   String get message => _message;
   String get sessionID => _sessionId;
-  LeaderBoardModal get cricLb => _cricLeaderboard;
+  LeaderBoardModal get clboard => _cricLeaderboard;
 
   GameModel gameData = GameModel(
       gameName: "Cricket",

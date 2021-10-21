@@ -14,16 +14,20 @@ import 'package:felloapp/ui/dialogs/share-card.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:logger/logger.dart';
 
 class WinViewModel extends BaseModel {
   final _userService = locator<UserService>();
   final _winnersRepo = locator<WinnersRepository>();
+  final _logger = locator<Logger>();
 
   LocalDBModel _localDBModel = locator<LocalDBModel>();
   bool isWinnersLoading = false;
   WinnersModel _winners;
 
   WinnersModel get winners => _winners;
+
+  double get winnings => _userService.userFundWallet.prizeBalance;
 
   set winners(val) {
     _winners = val;
@@ -93,6 +97,7 @@ class WinViewModel extends BaseModel {
     var temp = await _winnersRepo.getWinners("GM_CRIC2020", "daily");
     isWinnersLoading = false;
     notifyListeners();
+    _logger.d("Winners fetched");
     if (temp != null)
       winners = temp.model;
     else

@@ -121,7 +121,7 @@ class Ticket extends StatelessWidget {
       height: SizeConfig.screenWidth - SizeConfig.pageHorizontalMargins * 2,
       width: SizeConfig.screenWidth - SizeConfig.pageHorizontalMargins * 2,
       decoration: BoxDecoration(
-        color: Color(0xffF1F6FF),
+        color: UiConstants.scaffoldColor,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
           width: 0,

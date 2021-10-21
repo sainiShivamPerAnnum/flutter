@@ -52,7 +52,7 @@ class WhiteBackground extends StatelessWidget {
         width: SizeConfig.screenWidth,
         height: (SizeConfig.screenHeight - query.padding.top) - height,
         decoration: BoxDecoration(
-          color: color ?? Color(0xffF1F6FF),
+          color: color ?? UiConstants.scaffoldColor,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(SizeConfig.roundness40),
             topRight: Radius.circular(SizeConfig.roundness40),
