@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
-import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
@@ -14,14 +13,10 @@ import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/augmont_disabled_dialog.dart';
-import 'package:felloapp/ui/dialogs/success-dialog.dart';
-import 'package:felloapp/ui/modals_sheets/augmont_deposit_modal_sheet.dart';
 import 'package:felloapp/ui/modals_sheets/augmont_register_modal_sheet.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
-import 'package:felloapp/ui/widgets/fello_dialog/fello_dialog.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
@@ -291,6 +286,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
         ///if this was the user's first investment
         ///- update AugmontDetail obj
         ///- add notification subscription
+      
         if (!_baseUtil.augmontDetail.firstInvMade) {
           _baseUtil.augmontDetail.firstInvMade = true;
           bool _aflag = await _dbModel.updateUserAugmontDetails(
@@ -309,6 +305,9 @@ class AugmontGoldBuyViewModel extends BaseModel {
               await _dbModel.unlockReferralTickets(_baseUtil.myUser.uid);
           if (_isUnlocked) {
             //give it a few seconds before showing congratulatory message
+
+
+
             Timer(const Duration(seconds: 4), () {
               BaseUtil.showPositiveAlert(
                 'Congratulations are in order!',
