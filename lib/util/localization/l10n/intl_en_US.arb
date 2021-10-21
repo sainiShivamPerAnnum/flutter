@@ -45,7 +45,7 @@
   "saveGoldBalancelabel": "My Gold Balance:",
   "saveGoldBalanceValue": "{goldAmount} gm",
   "saveSecure": "100% secure",
-  "saveBaseline": "You get 1 ticket for every ₹ 100 invested",
+  "saveBaseline": "You get 1 token for every Rupee saved",
   "saveWinningsLabel": "Your winnings",
   "saveWinningsValue": "₹ {winningsAmout}",
   "saveHistory": "History",

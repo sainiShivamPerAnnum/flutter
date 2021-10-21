@@ -53,7 +53,7 @@ class Save extends StatelessWidget {
                             UserServiceProperties>(
                           builder: (ctx, model, child) => Text(
                             locale.saveGoldBalanceValue(
-                                model.userFundWallet.augGoldQuantity ?? 0.0),
+                                model.userFundWallet.augGoldQuantity.toStringAsFixed(4) ?? 0.0),
                             style: TextStyles.title5.bold
                                 .colour(UiConstants.tertiarySolid),
                           ),
@@ -71,10 +71,7 @@ class Save extends StatelessWidget {
                             child: Center(
                               child: FelloButton(
                                 onPressed: () {
-                                  AppState.delegate.appState.currentAction =
-                                      PageAction(
-                                          state: PageState.addPage,
-                                          page: AugmontGoldBuyPageConfig);
+                                  model.checkRegistrationAndRedirect();
                                 },
                                 activeButtonUI: Container(
                                   width: SizeConfig.screenWidth * 0.367, //152
