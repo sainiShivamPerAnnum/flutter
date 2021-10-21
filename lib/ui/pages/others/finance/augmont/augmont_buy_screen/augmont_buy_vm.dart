@@ -289,6 +289,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
       
         if (!_baseUtil.augmontDetail.firstInvMade) {
           _baseUtil.augmontDetail.firstInvMade = true;
+          
           bool _aflag = await _dbModel.updateUserAugmontDetails(
               _baseUtil.myUser.uid, _baseUtil.augmontDetail);
           if (_aflag) {
@@ -299,7 +300,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
         //TODO there is an error here
         ///check if referral bonuses need to be unlocked
-        if (_baseUtil.userFundWallet.augGoldPrinciple >=
+        if (_userService.userFundWallet.augGoldPrinciple >=
             BaseRemoteConfig.UNLOCK_REFERRAL_AMT) {
           bool _isUnlocked =
               await _dbModel.unlockReferralTickets(_baseUtil.myUser.uid);
