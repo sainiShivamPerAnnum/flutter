@@ -14,10 +14,22 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-class TambolaGameView extends StatelessWidget {
+class TambolaGameView extends StatefulWidget {
+  @override
+  _TambolaGameViewState createState() => _TambolaGameViewState();
+}
+
+class _TambolaGameViewState extends State<TambolaGameView>
+    with SingleTickerProviderStateMixin {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     ConnectivityStatus connectivityStatus =
@@ -25,189 +37,141 @@ class TambolaGameView extends StatelessWidget {
     return BaseView<TambolaGameViewModel>(
       onModelReady: (model) {
         model.init();
+        model.animationController = AnimationController(
+            vsync: this, duration: Duration(milliseconds: 300));
+        model.animationController.forward();
       },
       builder: (ctx, model, child) {
-        return Scaffold(
-          body: HomeBackground(
-            child: Stack(
-              children: [
-                Container(
-                  height: SizeConfig.screenHeight,
-                  child: Column(
-                    children: [
-                      FelloAppBar(
-                        leading: FelloAppBarBackButton(),
-                        title: "Tambola",
-                        actions: [FelloCoinBar()],
-                      ),
-                      Expanded(
-                        child: Container(
-                          decoration: BoxDecoration(
+        return NotificationListener<ScrollNotification>(
+          onNotification: model.handleScrollNotification,
+          child: Scaffold(
+            body: HomeBackground(
+              child: Stack(
+                children: [
+                  Container(
+                    height: SizeConfig.screenHeight,
+                    child: Column(
+                      children: [
+                        FelloAppBar(
+                          leading: FelloAppBarBackButton(),
+                          title: "Tambola",
+                          actions: [FelloCoinBar()],
+                        ),
+                        Expanded(
+                          child: ClipRRect(
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(SizeConfig.padding40),
                               topRight: Radius.circular(SizeConfig.padding40),
                             ),
-                            color: Colors.white,
-                          ),
-                          child: SingleChildScrollView(
-                            physics: BouncingScrollPhysics(),
-                            child: Column(
-                              children: [
-                                PicksCardView(),
-                                // if (showCardSummary)
-                                //   _buildTicketSummaryCards(
-                                //       baseProvider.weeklyTicksFetched,
-                                //       baseProvider.weeklyDrawFetched,
-                                //       baseProvider.userWeeklyBoards,
-                                //       _activeTambolaCardCount),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                              ),
+                              child: SingleChildScrollView(
+                                physics: BouncingScrollPhysics(),
+                                child: Column(
+                                  children: [
+                                    PicksCardView(
+                                      showBuyTicketModal: (value) {
+                                        model.showBuyModal = value;
+                                      },
+                                    ),
+                                    // if (showCardSummary)
+                                    //   _buildTicketSummaryCards(
+                                    //       baseProvider.weeklyTicksFetched,
+                                    //       baseProvider.weeklyDrawFetched,
+                                    //       baseProvider.userWeeklyBoards,
+                                    //       _activeTambolaCardCount),
 
-                                connectivityStatus != ConnectivityStatus.Offline
-                                    ? buildCards(model)
-                                    : Center(
-                                        child: NetworkBar(
-                                          textColor: Colors.black,
-                                        ),
-                                      ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.black,
-                                    borderRadius: BorderRadius.circular(
-                                        SizeConfig.roundness12),
-                                  ),
-                                  padding: EdgeInsets.all(SizeConfig.padding12),
-                                  margin: EdgeInsets.symmetric(
-                                      vertical:
-                                          SizeConfig.pageHorizontalMargins),
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        "Buy Tickets",
-                                        style: TextStyles.title3.bold
-                                            .colour(Colors.white),
-                                      ),
-                                      SizedBox(height: SizeConfig.padding8),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                TextFieldLabel(
-                                                    "Enter the ticket count"),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    CircleAvatar(
-                                                      backgroundColor:
-                                                          Colors.white,
-                                                      child: IconButton(
-                                                        onPressed: model
-                                                            .decreaseTicketCount,
-                                                        icon: Text(
-                                                          "-",
-                                                          style: TextStyles
-                                                              .title3.bold
-                                                              .colour(
-                                                                  Colors.black),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                        width: SizeConfig
-                                                            .padding12),
-                                                    Container(
-                                                      width: SizeConfig
-                                                              .screenWidth *
-                                                          0.2,
-                                                      child: TextField(
-                                                        enabled: false,
-                                                        controller: model
-                                                            .ticketCountController,
-                                                        keyboardType:
-                                                            TextInputType
-                                                                .number,
-                                                        cursorColor:
-                                                            Colors.white,
-                                                        style: TextStyles
-                                                            .body2.bold
-                                                            .colour(
-                                                                Colors.white),
-                                                        decoration:
-                                                            InputDecoration(
-                                                          focusedBorder:
-                                                              OutlineInputBorder(
-                                                            borderRadius:
-                                                                BorderRadius.circular(
-                                                                    SizeConfig
-                                                                        .roundness12),
-                                                            borderSide:
-                                                                BorderSide(
-                                                                    color: Colors
-                                                                        .white),
-                                                          ),
-                                                          enabledBorder:
-                                                              OutlineInputBorder(
-                                                            borderRadius:
-                                                                BorderRadius.circular(
-                                                                    SizeConfig
-                                                                        .roundness12),
-                                                            borderSide:
-                                                                BorderSide(
-                                                                    color: Colors
-                                                                        .grey),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                        width: SizeConfig
-                                                            .padding12),
-                                                    CircleAvatar(
-                                                      backgroundColor:
-                                                          Colors.white,
-                                                      child: IconButton(
-                                                        onPressed: model
-                                                            .increaseTicketCount,
-                                                        icon: Icon(
-                                                          Icons.add,
-                                                          color: Colors.black,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
+                                    connectivityStatus !=
+                                            ConnectivityStatus.Offline
+                                        ? buildCards(model)
+                                        : Center(
+                                            child: NetworkBar(
+                                              textColor: Colors.black,
                                             ),
                                           ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              TextFieldLabel("Available Coins"),
-                                              Text(
-                                                "200",
-                                                style: TextStyles.body1
-                                                    .colour(Colors.white),
-                                              ),
-                                              SizedBox(
-                                                  height: SizeConfig.padding16),
-                                              TextFieldLabel("Required Coins"),
-                                              Text(
-                                                "100",
-                                                style: TextStyles.body1
-                                                    .colour(Colors.white),
-                                              )
-                                            ],
-                                          ),
-                                        ],
+                                    SizedBox(height: SizeConfig.padding16),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Positioned(
+                    bottom:
+                        model.showBuyModal ? 0 : -SizeConfig.screenWidth * 0.4,
+                    child: SizeTransition(
+                      sizeFactor: model.animationController,
+                      axisAlignment: -1.0,
+                      child: Container(
+                        width: SizeConfig.screenWidth,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(SizeConfig.padding40),
+                            topRight: Radius.circular(SizeConfig.padding40),
+                          ),
+                          color: Colors.white,
+                        ),
+                        padding:
+                            EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                        child: Column(
+                          children: [
+                            Container(
+                              height: SizeConfig.screenWidth * 0.135,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      child: TextField(
+                                        cursorHeight:
+                                            SizeConfig.screenWidth * 0.135,
+                                        controller: model.ticketCountController,
+                                        enableInteractiveSelection: false,
+                                        cursorColor: UiConstants.primaryColor,
+                                        decoration: InputDecoration(
+                                            hintText: 'Enter no of tickets'),
                                       ),
-                                      SizedBox(height: SizeConfig.padding16),
-                                      FelloButtonLg(
-                                        color: UiConstants.tertiarySolid,
+                                    ),
+                                  ),
+                                  SizedBox(width: SizeConfig.padding16),
+                                  Container(
+                                    width: SizeConfig.screenWidth * 0.135,
+                                    height: SizeConfig.screenWidth * 0.135,
+                                    decoration: BoxDecoration(
+                                      color: UiConstants.primaryLight,
+                                      borderRadius: BorderRadius.circular(
+                                          SizeConfig.roundness12),
+                                    ),
+                                    child: IconButton(
+                                      icon: Icon(Icons.add),
+                                      color: UiConstants.primaryColor,
+                                      onPressed: model.increaseTicketCount,
+                                    ),
+                                  ),
+                                  SizedBox(width: SizeConfig.padding12),
+                                  Container(
+                                    width: SizeConfig.screenWidth * 0.135,
+                                    height: SizeConfig.screenWidth * 0.135,
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey.withOpacity(0.5),
+                                      borderRadius: BorderRadius.circular(
+                                          SizeConfig.roundness12),
+                                    ),
+                                    child: IconButton(
+                                      icon: Icon(Icons.remove),
+                                      color: Colors.black,
+                                      onPressed: model.decreaseTicketCount,
+                                    ),
+                                  ),
+                                  SizedBox(width: SizeConfig.padding16),
+                                  Expanded(
+                                    child: Container(
+                                      child: FelloButtonLg(
+                                        //color: UiConstants.tertiarySolid,
                                         child: model.ticketBuyInProgress
                                             ? SpinKitThreeBounce(
                                                 color: Colors.white,
@@ -220,84 +184,41 @@ class TambolaGameView extends StatelessWidget {
                                           FocusScope.of(context).unfocus();
                                           model.buyTickets();
                                         },
-                                      )
-                                    ],
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: SizeConfig.padding12),
+                            Row(
+                              children: [
+                                Text(
+                                  "10 tokens = 1 ticket",
+                                  style: TextStyles.body4.colour(Colors.grey),
+                                ),
+                                Spacer(),
+                                Text(
+                                  "Requires ${model.buyTicketCount * 10} ",
+                                  style: TextStyles.body4,
+                                ),
+                                RotatedBox(
+                                  quarterTurns: 1,
+                                  child: SvgPicture.asset(
+                                    "assets/vectors/icons/tickets.svg",
+                                    height: SizeConfig.iconSize3,
                                   ),
                                 ),
-                                // PrizeSection(),
-                                // TambolaFaqSection()
                               ],
                             ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Positioned(
-                  bottom: 0,
-                  child: Container(
-                    width: SizeConfig.screenWidth,
-                    height: SizeConfig.screenWidth * 0.34,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(SizeConfig.padding40),
-                          topRight: Radius.circular(SizeConfig.padding40),
-                        ),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.grey.withOpacity(0.3),
-                              offset: Offset(0, -10),
-                              spreadRadius: 10,
-                              blurRadius: 40)
-                        ]),
-                    padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              flex: 2,
-                              child: TextField(
-                                controller: model.ticketCountController,
-                                decoration: InputDecoration(
-                                    isDense: true,
-                                    hintText: 'Enter no of tickets'),
-                              ),
-                            ),
-                            SizedBox(width: SizeConfig.padding16),
-                            Expanded(
-                              flex: 1,
-                              child: FelloButtonLg(
-                                //color: UiConstants.tertiarySolid,
-                                child: model.ticketBuyInProgress
-                                    ? SpinKitThreeBounce(
-                                        color: Colors.white,
-                                        size: SizeConfig.body2,
-                                      )
-                                    : Text("Buy",
-                                        style: TextStyles.body2
-                                            .colour(Colors.white)),
-                                onPressed: () {
-                                  FocusScope.of(context).unfocus();
-                                  model.buyTickets();
-                                },
-                              ),
-                            )
+                            SizedBox(height: SizeConfig.padding16)
                           ],
                         ),
-                        SizedBox(height: SizeConfig.padding8),
-                        Text(
-                          "10 coins = 1 ticket",
-                          style: TextStyles.body4.colour(Colors.grey),
-                        )
-                      ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );
@@ -324,58 +245,59 @@ class TambolaGameView extends StatelessWidget {
       );
     } else if (model.tambolaService.userWeeklyBoards == null ||
         model.activeTambolaCardCount == 0) {
-      _widget = Padding(
-        padding: EdgeInsets.all(10),
-        child: Container(
-          width: double.infinity,
-          height: model.ticketsBeingGenerated
-              ? SizeConfig.screenWidth * 0.9
-              : SizeConfig.padding20,
-          child: Center(
-            child: (model.ticketsBeingGenerated)
-                ? Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: SizeConfig.screenWidth * 0.8,
-                        height: 4,
-                        decoration: BoxDecoration(
-                          color: UiConstants.primaryColor.withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                        child: FractionallySizedBox(
-                          heightFactor: 1,
-                          widthFactor: model
-                                      .tambolaService.ticketGenerateCount ==
-                                  model.tambolaService
-                                      .atomicTicketGenerationLeftCount
-                              ? 0.1
-                              : (model.tambolaService.ticketGenerateCount -
-                                      model.tambolaService
-                                          .atomicTicketGenerationLeftCount) /
-                                  model.tambolaService.ticketGenerateCount,
-                          alignment: Alignment.centerLeft,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: UiConstants.primaryColor,
-                              borderRadius: BorderRadius.circular(100),
+      _widget = Center(
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: Container(
+            width: double.infinity,
+            height: model.ticketsBeingGenerated
+                ? SizeConfig.screenWidth * 0.9
+                : SizeConfig.padding20,
+            child: Center(
+              child: (model.ticketsBeingGenerated)
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: SizeConfig.screenWidth * 0.8,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: UiConstants.primaryColor.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          child: FractionallySizedBox(
+                            heightFactor: 1,
+                            widthFactor: model
+                                        .tambolaService.ticketGenerateCount ==
+                                    model.tambolaService
+                                        .atomicTicketGenerationLeftCount
+                                ? 0.1
+                                : (model.tambolaService.ticketGenerateCount -
+                                        model.tambolaService
+                                            .atomicTicketGenerationLeftCount) /
+                                    model.tambolaService.ticketGenerateCount,
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: UiConstants.primaryColor,
+                                borderRadius: BorderRadius.circular(100),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      SizedBox(height: 16),
-                      Text(
-                        'Generated ${model.tambolaService.ticketGenerateCount - model.tambolaService.atomicTicketGenerationLeftCount} of your ${model.tambolaService.ticketGenerateCount} tickets',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: SizeConfig.mediumTextSize,
+                        SizedBox(height: 16),
+                        Text(
+                          'Generated ${model.tambolaService.ticketGenerateCount - model.tambolaService.atomicTicketGenerationLeftCount} of your ${model.tambolaService.ticketGenerateCount} tickets',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: SizeConfig.mediumTextSize,
+                          ),
                         ),
-                      ),
-                    ],
-                  )
-                : Text('No tickets yet'),
+                      ],
+                    )
+                  : Text('No tickets yet'),
+            ),
           ),
         ),
       );
@@ -393,7 +315,7 @@ class TambolaGameView extends StatelessWidget {
               children: [
                 Container(
                   margin: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.blockSizeHorizontal * 3,
+                      horizontal: SizeConfig.pageHorizontalMargins,
                       vertical: SizeConfig.blockSizeHorizontal * 2),
                   child: Row(
                     children: [

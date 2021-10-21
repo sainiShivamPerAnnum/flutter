@@ -57,94 +57,98 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                     right: SizeConfig.pageHorizontalMargins,
                   ),
                   child: SingleChildScrollView(
-                    child: Form(
-                      key: model.formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: SizeConfig.screenWidth * 0.31,
-                            height: SizeConfig.screenWidth * 0.33,
-                            margin: EdgeInsets.only(
-                              top: SizeConfig.pageHorizontalMargins,
-                              bottom: SizeConfig.padding8,
-                            ),
-                            child: Stack(
-                              children: [
-                                Container(
-                                  width: SizeConfig.screenWidth * 0.31,
-                                  height: SizeConfig.screenWidth * 0.31,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                      colors: [
-                                        UiConstants.primaryColor,
-                                        Colors.white,
-                                      ],
-                                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: SizeConfig.screenWidth * 0.31,
+                          height: SizeConfig.screenWidth * 0.33,
+                          margin: EdgeInsets.only(
+                            top: SizeConfig.pageHorizontalMargins,
+                            bottom: SizeConfig.padding8,
+                          ),
+                          child: Stack(
+                            children: [
+                              Container(
+                                width: SizeConfig.screenWidth * 0.31,
+                                height: SizeConfig.screenWidth * 0.31,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      UiConstants.primaryColor,
+                                      Colors.white,
+                                    ],
                                   ),
-                                  padding: EdgeInsets.all(3),
+                                ),
+                                padding: EdgeInsets.all(3),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  padding: EdgeInsets.all(SizeConfig.padding6),
+                                  child: ProfileImageSE(
+                                    radius: SizeConfig.screenWidth * 0.25,
+                                  ),
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment.bottomCenter,
+                                child: InkWell(
+                                  onTap: model.handleDPOperation,
                                   child: Container(
+                                    height: SizeConfig.screenWidth * 0.096,
+                                    width: SizeConfig.screenWidth * 0.096,
                                     decoration: BoxDecoration(
-                                      color: Colors.white,
                                       shape: BoxShape.circle,
+                                      color: UiConstants.primaryColor,
+                                      border: Border.all(
+                                          width: SizeConfig.padding4,
+                                          color: Colors.white),
                                     ),
-                                    padding:
-                                        EdgeInsets.all(SizeConfig.padding6),
-                                    child: ProfileImageSE(
-                                      radius: SizeConfig.screenWidth * 0.25,
+                                    child: Icon(
+                                      Icons.camera_alt_rounded,
+                                      size: SizeConfig.screenWidth * 0.05,
+                                      color: Colors.white,
                                     ),
                                   ),
                                 ),
-                                Align(
-                                  alignment: Alignment.bottomCenter,
-                                  child: InkWell(
-                                    onTap: model.handleDPOperation,
-                                    child: Container(
-                                      height: SizeConfig.screenWidth * 0.096,
-                                      width: SizeConfig.screenWidth * 0.096,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: UiConstants.primaryColor,
-                                        border: Border.all(
-                                            width: SizeConfig.padding4,
-                                            color: Colors.white),
-                                      ),
-                                      child: Icon(
-                                        Icons.camera_alt_rounded,
-                                        size: SizeConfig.screenWidth * 0.05,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
+                              )
+                            ],
                           ),
-                          FittedBox(
+                        ),
+                        FittedBox(
+                          child: Text(
+                            model.myname,
+                            style: TextStyles.title4.bold,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(SizeConfig.padding8),
+                          child: FittedBox(
                             child: Text(
-                              model.myname,
-                              style: TextStyles.title4.bold,
+                              "@${model.myUsername}",
+                              style: TextStyles.body3.colour(Colors.grey),
                             ),
                           ),
-                          Padding(
-                            padding: EdgeInsets.all(SizeConfig.padding8),
-                            child: FittedBox(
-                              child: Text(
-                                "@${model.myUsername}",
-                                style: TextStyles.body3.colour(Colors.grey),
-                              ),
-                            ),
-                          ),
-                          Column(
+                        ),
+                        Form(
+                          key: model.formKey,
+                          child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               TextFieldLabel(locale.obNameLabel),
                               TextFormField(
                                 enabled: model.inEditMode,
                                 controller: model.nameController,
+                                validator: (value) {
+                                  return (value != null && value.isNotEmpty)
+                                      ? null
+                                      : 'Please enter your name';
+                                },
                               ),
                               TextFieldLabel(locale.obDobLabel),
                               !model.inEditMode
@@ -365,47 +369,47 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                               ),
                             ],
                           ),
-                          SizedBox(height: SizeConfig.padding24),
-                          Container(
-                            width: SizeConfig.screenWidth,
-                            child: FelloButtonLg(
-                              child: model.isUpdaingUserDetails
-                                  ? SpinKitThreeBounce(
-                                      color: Colors.white,
-                                      size: 20,
-                                    )
-                                  : Text(
-                                      model.inEditMode
-                                          ? locale.btnSave
-                                          : locale.btnEdit,
-                                      style: TextStyles.body2
-                                          .colour(Colors.white)
-                                          .bold,
-                                    ),
-                              onPressed: () {
-                                if (model.inEditMode) {
-                                  FocusScope.of(context).unfocus();
-                                  model.updateDetails();
-                                } else {
-                                  model.enableEdit();
-                                }
-                              },
-                            ),
+                        ),
+                        SizedBox(height: SizeConfig.padding24),
+                        Container(
+                          width: SizeConfig.screenWidth,
+                          child: FelloButtonLg(
+                            child: model.isUpdaingUserDetails
+                                ? SpinKitThreeBounce(
+                                    color: Colors.white,
+                                    size: 20,
+                                  )
+                                : Text(
+                                    model.inEditMode
+                                        ? locale.btnSave
+                                        : locale.btnEdit,
+                                    style: TextStyles.body2
+                                        .colour(Colors.white)
+                                        .bold,
+                                  ),
+                            onPressed: () {
+                              if (model.inEditMode) {
+                                FocusScope.of(context).unfocus();
+                                model.updateDetails();
+                              } else {
+                                model.enableEdit();
+                              }
+                            },
                           ),
-                          SizedBox(height: 24),
-                          TextButton(
-                            onPressed: model.signout,
-                            child: Text(
-                              locale.signout.toUpperCase(),
-                              style: TextStyles.body1
-                                  .colour(Colors.red[200])
-                                  .light
-                                  .letterSpace(2),
-                            ),
+                        ),
+                        SizedBox(height: 24),
+                        TextButton(
+                          onPressed: model.signout,
+                          child: Text(
+                            locale.signout.toUpperCase(),
+                            style: TextStyles.body1
+                                .colour(Colors.red[200])
+                                .light
+                                .letterSpace(2),
                           ),
-                          SizedBox(height: 24),
-                        ],
-                      ),
+                        ),
+                        SizedBox(height: 24),
+                      ],
                     ),
                   ),
                 ),

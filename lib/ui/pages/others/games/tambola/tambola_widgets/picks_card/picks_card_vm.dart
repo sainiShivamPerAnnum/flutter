@@ -59,12 +59,14 @@ class PicksCardViewModel extends BaseModel {
     _tambolaService.fetchWeeklyPicks();
   }
 
-  void onTap() {
+  void onTap(ValueChanged<bool> showBuyTicketModal) {
     if (!isShowingAllPicks) {
+      showBuyTicketModal(false);
       topCardHeight = expandedTopCardHeight;
       titleOpacity = 0.0;
       isShowingAllPicks = true;
     } else {
+      showBuyTicketModal(true);
       topCardHeight = normalTopCardHeight;
       isShowingAllPicks = false;
       Future.delayed(Duration(milliseconds: 500), () {

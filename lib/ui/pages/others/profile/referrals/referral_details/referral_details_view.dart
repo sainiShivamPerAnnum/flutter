@@ -45,13 +45,9 @@ class ReferralDetailsView extends StatelessWidget {
                   ),
                   child: ListView(
                     children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.pageHorizontalMargins * 2),
-                        child: Image.asset(
-                          Assets.referNearn,
-                          fit: BoxFit.cover,
-                        ),
+                      SvgPicture.asset(
+                        Assets.rAeMain,
+                        height: SizeConfig.screenHeight * 0.2,
                       ),
                       SizedBox(height: SizeConfig.padding32),
                       Text(
@@ -246,12 +242,15 @@ class ReferralDetailsView extends StatelessWidget {
                       ),
                       InfoTile(
                         title: locale.refstep1,
+                        leadingAsset: Assets.paperClip,
                       ),
                       InfoTile(
                         title: locale.refStep2,
+                        leadingAsset: Assets.wmtsaveMoney,
                       ),
                       InfoTile(
                         title: locale.refStep3,
+                        leadingAsset: Assets.tickets,
                       ),
                       SizedBox(height: SizeConfig.padding20),
                       FelloButtonLg(

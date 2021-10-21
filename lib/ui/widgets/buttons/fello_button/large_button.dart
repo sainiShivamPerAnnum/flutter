@@ -8,13 +8,14 @@ class FelloButtonLg extends StatelessWidget {
   final Widget child;
   final Function onPressed;
   final Color color;
-  FelloButtonLg({this.child, this.onPressed, this.color});
+  final double height;
+  FelloButtonLg({this.child, this.onPressed, this.color, this.height});
   @override
   Widget build(BuildContext context) {
     return FelloButton(
       activeButtonUI: Container(
         // width: SizeConfig.screenWidth,
-        height: SizeConfig.screenWidth * 0.13,
+        height: height ?? SizeConfig.screenWidth * 0.13,
         decoration: BoxDecoration(
           color: color ?? UiConstants.primaryColor,
           borderRadius: new BorderRadius.circular(16.0),

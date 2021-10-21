@@ -261,33 +261,36 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
 
                               SizedBox(height: 24),
 
-                              FelloButtonLg(
-                                child: (!baseProvider
-                                        .isEditAugmontBankDetailInProgress)
-                                    ? Text(
-                                        // (baseProvider.augmontDetail != null &&
-                                        //         baseProvider.augmontDetail
-                                        //                 .bankAccNo ==
-                                        //             '')
-                                        //     ? 'WITHDRAW'
-                                        //     :
-                                        'UPDATE',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .button
-                                            .copyWith(color: Colors.white),
-                                      )
-                                    : SpinKitThreeBounce(
-                                        color: UiConstants.spinnerColor2,
-                                        size: 18.0,
-                                      ),
-                                onPressed: () {
-                                  FocusScope.of(context).unfocus();
-                                  if (BaseUtil.showNoInternetAlert()) return;
-                                  if (_formKey.currentState.validate()) {
-                                    _onUpdateClicked();
-                                  }
-                                },
+                              Container(
+                                width: SizeConfig.navBarWidth,
+                                child: FelloButtonLg(
+                                  child: (!baseProvider
+                                          .isEditAugmontBankDetailInProgress)
+                                      ? Text(
+                                          // (baseProvider.augmontDetail != null &&
+                                          //         baseProvider.augmontDetail
+                                          //                 .bankAccNo ==
+                                          //             '')
+                                          //     ? 'WITHDRAW'
+                                          //     :
+                                          'UPDATE',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .button
+                                              .copyWith(color: Colors.white),
+                                        )
+                                      : SpinKitThreeBounce(
+                                          color: UiConstants.spinnerColor2,
+                                          size: 18.0,
+                                        ),
+                                  onPressed: () {
+                                    FocusScope.of(context).unfocus();
+                                    if (BaseUtil.showNoInternetAlert()) return;
+                                    if (_formKey.currentState.validate()) {
+                                      _onUpdateClicked();
+                                    }
+                                  },
+                                ),
                               ),
                               // new Container(
                               //   height: 50.0,
