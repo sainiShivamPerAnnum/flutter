@@ -158,12 +158,17 @@ class CricketHomeView extends StatelessWidget {
                       padding: EdgeInsets.symmetric(
                           horizontal: SizeConfig.scaffoldMargin, vertical: 16),
                       child: FelloButtonLg(
-                        child: Text(
-                          'PLAY',
-                          style: TextStyles.body2.colour(Colors.white),
-                        ),
-                        onPressed: model.startGame,
-                      ),
+                          child: Text(
+                            'PLAY',
+                            style: TextStyles.body2.colour(Colors.white),
+                          ),
+                          onPressed: () async {
+                            if (await model.openWebView())
+                              model.startGame();
+                            else
+                              BaseUtil.showNegativeAlert(
+                                  "Something went wrong", model.message);
+                          }),
                     ),
                   )
                 ],

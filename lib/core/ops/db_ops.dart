@@ -266,8 +266,11 @@ class DBModel extends ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> getFilteredUserTransactions(
-      BaseUser user, String type, String subtype, DocumentSnapshot lastDocument,
-      [int limit = 30]) async {
+      BaseUser user,
+      String type,
+      String subtype,
+      DocumentSnapshot lastDocument,
+      int limit) async {
     Map<String, dynamic> resultTransactionsMap = Map<String, dynamic>();
     List<UserTransaction> requestedTxns = [];
     try {

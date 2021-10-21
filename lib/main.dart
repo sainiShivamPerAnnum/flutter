@@ -4,6 +4,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/user_coin_service_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/enums/winner_service_enum.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
@@ -16,6 +17,7 @@ import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/winners_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/back_dispatcher.dart';
 import 'package:felloapp/navigator/router/route_parser.dart';
@@ -98,20 +100,23 @@ class _MyAppState extends State<MyApp> {
         value: locator<UserCoinService>(),
         child: PropertyChangeProvider<UserService, UserServiceProperties>(
           value: locator<UserService>(),
-          child: MaterialApp.router(
-            title: Constants.APP_NAME,
-            theme: FelloTheme.lightMode(),
-            debugShowCheckedModeBanner: false,
-            backButtonDispatcher: backButtonDispatcher,
-            routerDelegate: delegate,
-            routeInformationParser: parser,
-            localizationsDelegates: [
-              S.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: S.delegate.supportedLocales,
+          child: PropertyChangeProvider<WinnerService, WinnerServiceProperties>(
+            value: locator<WinnerService>(),
+            child: MaterialApp.router(
+              title: Constants.APP_NAME,
+              theme: FelloTheme.lightMode(),
+              debugShowCheckedModeBanner: false,
+              backButtonDispatcher: backButtonDispatcher,
+              routerDelegate: delegate,
+              routeInformationParser: parser,
+              localizationsDelegates: [
+                S.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: S.delegate.supportedLocales,
+            ),
           ),
         ),
       ),

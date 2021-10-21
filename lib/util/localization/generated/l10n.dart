@@ -933,6 +933,16 @@ class S {
 
   // skipped getter for the '-----------------------' key
 
+  /// `No transactions to show yet`
+  String get noTransaction {
+    return Intl.message(
+      'No transactions to show yet',
+      name: 'noTransaction',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `*Based on {servingSize} fl. oz serving.`
   String resultsPageFirstDisclaimer(Object servingSize) {
     return Intl.message(

@@ -27,16 +27,18 @@ class TransactionService extends PropertyChangeNotifier {
     notifyListeners();
   }
 
-  fetchTransactions(bool mini) async {
+  fetchTransactions(int limit) async {
     if (_dBModel != null && _userService != null) {
-      Map<String, dynamic> tMap = mini
-          ? await _dBModel.getFilteredUserTransactions(
-              _userService.baseUser, null, null, lastTransactionListDocument, 4)
-          : await _dBModel.getFilteredUserTransactions(
-              _userService.baseUser, null, null, lastTransactionListDocument);
-      print(tMap);
+      Map<String, dynamic> tMap = await _dBModel.getFilteredUserTransactions(
+          _userService.baseUser,
+          null,
+          null,
+          lastTransactionListDocument,
+          limit);
+
       if (_txnList == null || _txnList.length == 0) {
         txnList = List.from(tMap['listOfTransactions']);
+        _logger.d("Transactions list length: ${txnList.length}");
       } else {
         appendTxns(List.from(tMap['listOfTransactions']));
       }
@@ -53,7 +55,7 @@ class TransactionService extends PropertyChangeNotifier {
     lastTransactionListDocument = null;
     hasMoreTransactionListDocuments = null;
     txnList.clear();
-    await fetchTransactions(true);
+    await fetchTransactions(4);
     _logger.i("Transactions got updated");
   }
 }

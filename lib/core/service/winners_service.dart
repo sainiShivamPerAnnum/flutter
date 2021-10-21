@@ -1,12 +1,12 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/winner_service_enum.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/repository/winners_repo.dart';
-import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:logger/logger.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
 
-class WinnersService extends ChangeNotifier {
+class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
   final _logger = locator<Logger>();
   final _winnersRepo = locator<WinnersRepository>();
   WinnersModel _winners;
@@ -14,7 +14,8 @@ class WinnersService extends ChangeNotifier {
 
   set winners(value) {
     this._winners = value;
-    notifyListeners();
+    notifyListeners(WinnerServiceProperties.winLeaderboard);
+    _logger.d("Win View leaderboard updated, property listeners notified");
   }
 
   fetchWinners() async {

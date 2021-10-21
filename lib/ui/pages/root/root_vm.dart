@@ -7,6 +7,7 @@ import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/user_coin_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/winners_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -33,7 +34,7 @@ class RootViewModel extends BaseModel {
   final UserService _userService = locator<UserService>();
   final UserCoinService _userCoinService = locator<UserCoinService>();
   final Logger _logger = locator<Logger>();
-  final winView = locator<WinViewModel>();
+  final winnerService = locator<WinnerService>();
 
   BuildContext rootContext;
   bool _isInitialized = false;
@@ -42,10 +43,8 @@ class RootViewModel extends BaseModel {
 
   Future<void> refresh() async {
     await _userCoinService.getUserCoinBalance();
+    await _userService.getUserFundWalletData();
   }
-
-  String get userTicketCount =>
-      _baseUtil.userTicketWallet?.getActiveTickets()?.toString();
 
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   List<Widget> pages;
@@ -89,7 +88,7 @@ class RootViewModel extends BaseModel {
         AppState.isSaveOpened = true;
         break;
       case 2:
-        AppState.isWinOpened = true;
+        winnerService.fetchWinners();
         break;
     }
     notifyListeners();

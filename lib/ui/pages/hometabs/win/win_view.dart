@@ -6,6 +6,7 @@ import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_winnings.dart';
+import 'package:felloapp/ui/service_elements/winners_prizes/win_leaderboard.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -184,81 +185,7 @@ class Win extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
-              child: DraggableScrollableSheet(
-                initialChildSize: 0.24,
-                maxChildSize: 0.94,
-                minChildSize: 0.24,
-                builder: (BuildContext context, myscrollController) {
-                  return Stack(
-                    children: [
-                      Positioned(
-                        top: -SizeConfig.screenHeight * 0.19,
-                        child: Container(
-                          height: SizeConfig.screenHeight * 2,
-                          // color: Colors.red,
-                          width: SizeConfig.screenWidth,
-                          child: Column(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  width: SizeConfig.screenWidth,
-                                  child: CustomPaint(
-                                    painter: ModalCustomBackground(),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  color: Colors.white,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: SizeConfig.screenWidth * 0.12,
-                              horizontal: SizeConfig.pageHorizontalMargins),
-                          child: Text(
-                            "Leaderboard",
-                            style: TextStyles.title3.bold,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        //color: Colors.white,
-
-                        child: model.isWinnersLoading
-                            ? Center(
-                                child: CircularProgressIndicator(
-                                  color: UiConstants.primaryColor,
-                                ),
-                              )
-                            : (model.winners == null
-                                ? ListView(
-                                    controller: myscrollController,
-                                    children: [
-                                      Center(
-                                        child: NoRecordDisplayWidget(
-                                          asset: "images/leaderboard.png",
-                                          text: "Winners will be upadated soon",
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                : WinnerboardView(
-                                    model: model.winners,
-                                    controller: myscrollController,
-                                  )),
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ),
+            WinnersLeaderBoardSE()
           ],
         );
       },

@@ -31,7 +31,10 @@ class FcmHandler extends ChangeNotifier {
         case 'cric2020GameEnd':
           {
             //Navigate back to CricketView
-            AppState.backButtonDispatcher.didPopRoute();
+            if (AppState.circGameInProgress) {
+              AppState.circGameInProgress = false;
+              AppState.backButtonDispatcher.didPopRoute();
+            }
           }
           break;
         default:

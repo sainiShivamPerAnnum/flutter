@@ -36,14 +36,12 @@ class MiniTransactionCard extends StatelessWidget {
                               padding: EdgeInsets.symmetric(
                                   vertical: SizeConfig.padding20),
                               alignment: Alignment.center,
-                              child: Container(
-                                height: SizeConfig.screenWidth * 0.8,
-                                child: NoTransactionsContent(),
-                              ),
+                              child: Transform.scale(
+                                  scale: 0.8, child: NoTransactionsContent()),
                             )
                           : Column(
                               children: List.generate(
-                                m.txnList.length < 5 ? m.txnList.length : 5,
+                                m.txnList.length, //< 5 ? m.txnList.length : 4,
                                 (i) {
                                   return ListTile(
                                     onTap: () {

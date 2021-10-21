@@ -83,7 +83,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => TransactionService());
   locator.registerLazySingleton(() => TambolaService());
   locator.registerLazySingleton(() => PrizeService());
-  locator.registerLazySingleton(() => WinnersService());
+  locator.registerLazySingleton(() => WinnerService());
 
   //Repository
   locator.registerLazySingleton(() => DBModel());

@@ -75,7 +75,7 @@ class TransactionsHistoryViewModel extends BaseModel {
 
   getTransactions() async {
     setState(ViewState.Busy);
-    await _transactionService.fetchTransactions(false);
+    await _transactionService.fetchTransactions(30);
     _filteredList = _transactionService.txnList;
     filterTransactions();
     setState(ViewState.Idle);
@@ -259,7 +259,8 @@ class TransactionsHistoryViewModel extends BaseModel {
   }
 
   init() {
-    if (_transactionService.txnList == null) {
+    if (_transactionService.txnList == null ||
+        _transactionService.txnList.length < 5) {
       getTransactions();
     }
     if (_init) {

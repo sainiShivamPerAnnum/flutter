@@ -38,7 +38,7 @@ class WinViewModel extends BaseModel {
       _userService.userFundWallet.unclaimedBalance;
 
   init() {
-    if (_winners == null) fetchWinners();
+    // if (_winners == null) fetchWinners();
   }
 
   getWinningsButtonText() {

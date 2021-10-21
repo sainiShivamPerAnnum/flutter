@@ -24,6 +24,7 @@ class Assets {
   static final String dummyAadhaarCard = 'images/Aadhar_card.jpg';
   static final String dummyCancelledCheque = 'images/Cancelled_cheque.png';
   static final String kycUnavailableAsset = 'images/kyc_unavailable.png';
+  static final String noTransaction = "images/no-transactions.png";
 
   //APPBAR
 

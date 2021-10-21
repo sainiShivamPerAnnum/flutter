@@ -31,7 +31,7 @@ class MiniTransactionCardViewModel extends BaseModel {
   getMiniTransactions() async {
     bulog.debug("Getting mini transactions");
     setState(ViewState.Busy);
-    await _txnService.fetchTransactions(true);
+    await _txnService.fetchTransactions(4);
     setState(ViewState.Idle);
   }
 

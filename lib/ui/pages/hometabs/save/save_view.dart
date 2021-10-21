@@ -6,7 +6,10 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
+import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
+import 'package:felloapp/ui/widgets/buttons/buy_gold_button/buyGoldBtn_view.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/buttons/sell_gold_button/sellGoldBtn_view.dart';
 import 'package:felloapp/ui/widgets/mini_trans_card/mini_trans_card_view.dart';
 import 'package:felloapp/util/assets.dart';
@@ -29,6 +32,7 @@ class Save extends StatelessWidget {
         return ListView(
           children: [
             SizedBox(height: SizeConfig.padding80),
+            BuyGoldBtn(),
             Container(
               margin: EdgeInsets.symmetric(
                   horizontal: SizeConfig.pageHorizontalMargins),
@@ -49,15 +53,10 @@ class Save extends StatelessWidget {
                       children: [
                         Text(locale.saveGoldBalancelabel,
                             style: TextStyles.title5.light),
-                        PropertyChangeConsumer<UserService,
-                            UserServiceProperties>(
-                          builder: (ctx, model, child) => Text(
-                            locale.saveGoldBalanceValue(
-                                model.userFundWallet.augGoldQuantity ?? 0.0),
-                            style: TextStyles.title5.bold
-                                .colour(UiConstants.tertiarySolid),
-                          ),
-                        ),
+                        UserGoldQuantitySE(
+                          style: TextStyles.title5.bold
+                              .colour(UiConstants.tertiarySolid),
+                        )
                       ],
                     ),
                     Container(

@@ -4,6 +4,8 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/profile/transactions_history/transaction_history_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
+import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -14,9 +16,6 @@ import 'package:provider/provider.dart';
 class TransactionsHistory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var query = MediaQuery.of(context);
-    print(query.devicePixelRatio);
-    print(query.textScaleFactor);
     return BaseView<TransactionsHistoryViewModel>(
       onModelReady: (model) {
         model.init();
@@ -92,19 +91,20 @@ class TransactionsHistory extends StatelessWidget {
 class NoTransactionsContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Image.asset(
-            "images/no-transactions.png",
+            Assets.noTransaction,
             width: SizeConfig.screenWidth * 0.8,
           ),
           SizedBox(
             height: 20,
           ),
           Text(
-            "No transactions to show yet",
+            locale.noTransaction,
             style: TextStyle(
               fontSize: SizeConfig.largeTextSize,
               fontWeight: FontWeight.w500,

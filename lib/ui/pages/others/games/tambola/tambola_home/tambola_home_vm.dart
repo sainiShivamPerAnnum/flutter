@@ -65,11 +65,10 @@ class TambolaHomeViewModel extends BaseModel {
     notifyListeners();
     ApiResponse temp = await _stats.getLeaderBoard("GM_TAMBOLA2020", "weekly");
     _logger.d(temp.code);
-    if (temp.model != null)
-      _tLeaderBoard = temp.model;
-    else
-      BaseUtil.showNegativeAlert(
-          "Leaderboard failed to update", temp.errorMessage);
+    if (temp.model != null) _tLeaderBoard = temp.model;
+    // else
+    //   BaseUtil.showNegativeAlert(
+    //       "Leaderboard failed to update", temp.errorMessage);
     isLeaderboardLoading = false;
     notifyListeners();
   }
