@@ -7,6 +7,7 @@ import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
+import 'package:felloapp/core/repository/investment_actions_repo.dart';
 import 'package:felloapp/core/repository/prizes_repo.dart';
 import 'package:felloapp/core/repository/statistics_repo.dart';
 import 'package:felloapp/core/repository/winners_repo.dart';
@@ -94,6 +95,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => FlcActionsRepo());
   locator.registerLazySingleton(() => StatisticsRepository());
   locator.registerLazySingleton(() => WinnersRepository());
+  locator.registerLazySingleton(() => InvestmentActionsRepository());
 
   // SPLASH
   locator.registerFactory(() => LauncherViewModel());
