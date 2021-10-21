@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class PrizesModel {
   String freq;
   String category;
@@ -32,7 +30,7 @@ class PrizesModel {
     return {
       'freq': freq,
       'category': category,
-      'prizesA': prizesA?.map((x) => x.toMap())?.toList(),
+      'prizes_a': prizesA?.map((x) => x.toMap())?.toList(),
     };
   }
 
@@ -41,7 +39,7 @@ class PrizesModel {
       freq: map['freq'],
       category: map['category'],
       prizesA:
-          List<PrizesA>.from(map['prizesA']?.map((x) => PrizesA.fromMap(x))),
+          List<PrizesA>.from(map['prizes_a']?.map((x) => PrizesA.fromMap(x))),
     );
   }
 
@@ -79,7 +77,7 @@ class PrizesA {
       'rank': rank,
       'amt': amt,
       'flc': flc,
-      'displayName': displayName,
+      'display_name': displayName,
     };
   }
 
@@ -88,7 +86,7 @@ class PrizesA {
       rank: map['rank'],
       amt: map['amt'],
       flc: map['flc'],
-      displayName: map['displayName'],
+      displayName: map['display_name'],
     );
   }
 

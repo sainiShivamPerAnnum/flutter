@@ -43,13 +43,19 @@ class Response {
   TransactionDoc transactionDoc;
   bool didFLCUpdate;
   UserTransaction userTransaction;
+  int augmontPrinciple;
+  double augmontGoldQty;
+  int flcBalance;
 
   Response(
       {this.status,
       this.didWalletUpdate,
       this.transactionDoc,
       this.didFLCUpdate,
-      this.userTransaction});
+      this.userTransaction,
+      this.augmontGoldQty,
+      this.augmontPrinciple,
+      this.flcBalance});
 
   Response.fromJson(Map<String, dynamic> json) {
     status = json['status'];
@@ -58,6 +64,9 @@ class Response {
         ? new TransactionDoc.fromJson(json['transactionDoc'])
         : null;
     didFLCUpdate = json['didFLCUpdate'];
+    augmontPrinciple = json['augmontPrinciple'];
+    augmontGoldQty = json['augmontGoldQty'];
+    flcBalance = json['flcBalance'];
   }
 
   Map<String, dynamic> toJson() {
@@ -68,6 +77,10 @@ class Response {
       data['transactionDoc'] = this.transactionDoc.toJson();
     }
     data['didFLCUpdate'] = this.didFLCUpdate;
+    data['didFLCUpdate'] = this.didFLCUpdate;
+    data['augmontPrinciple'] = this.augmontPrinciple;
+    data['augmontGoldQty'] = this.augmontGoldQty;
+    data['flcBalance'] = this.flcBalance;
     return data;
   }
 
@@ -78,6 +91,9 @@ class Response {
       'transactionDoc': transactionDoc.toMap(),
       'didFLCUpdate': didFLCUpdate,
       'userTransaction': userTransaction.toJson(),
+      'augmontPrinciple': augmontPrinciple,
+      'augmontGoldQty': augmontGoldQty,
+      'flcBalance': flcBalance,
     };
   }
 
@@ -89,6 +105,9 @@ class Response {
       didFLCUpdate: map['didFLCUpdate'],
       userTransaction: UserTransaction.fromMap(map['userTransaction'],
           TransactionDoc.fromMap(map['transactionDoc']).transactionId),
+      augmontPrinciple: map['augmontPrinciple'],
+      augmontGoldQty: map['augmontGoldQty'],
+      flcBalance: map['flcBalance'],
     );
   }
 

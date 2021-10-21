@@ -84,7 +84,57 @@ class InvestmentActionsRepository {
           DepositResponseModel.fromMap(response);
 
       _logger.d(_investmentDepositModel.toString());
-      
+
+      return ApiResponse(model: _investmentDepositModel, code: 200);
+    } catch (e) {
+      _logger.e(e);
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<DepositResponseModel>> withdrawlComplete(
+      {double amount, String userUid, Map<String, dynamic> augMap}) async {
+    Map<String, dynamic> _body = {
+      "user_id": userUid,
+      "amount": amount,
+      "aug_map": augMap,
+    };
+
+    _logger.d("withdrawlComplete : $_body");
+    try {
+      final response = await APIService.instance
+          .postData(_apiPaths.kWithdrawlComplete, body: _body);
+
+      DepositResponseModel _investmentDepositModel =
+          DepositResponseModel.fromMap(response);
+
+      _logger.d(_investmentDepositModel.toString());
+
+      return ApiResponse(model: _investmentDepositModel, code: 200);
+    } catch (e) {
+      _logger.e(e);
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<DepositResponseModel>> withdrawlCancelled(
+      {double amount, String userUid, Map<String, dynamic> augMap}) async {
+    Map<String, dynamic> _body = {
+      "user_id": userUid,
+      "amount": amount,
+      "aug_map": augMap,
+    };
+
+    _logger.d("withdrawlComplete : $_body");
+    try {
+      final response = await APIService.instance
+          .postData(_apiPaths.kWithdrawlCancelled, body: _body);
+
+      DepositResponseModel _investmentDepositModel =
+          DepositResponseModel.fromMap(response);
+
+      _logger.d(_investmentDepositModel.toString());
+
       return ApiResponse(model: _investmentDepositModel, code: 200);
     } catch (e) {
       _logger.e(e);

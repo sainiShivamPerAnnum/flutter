@@ -407,6 +407,7 @@ class AugmontModel extends ChangeNotifier {
 
       ApiResponse<DepositResponseModel> _onCompleteDepositResponse =
           await _investmentActionsRepository.completeUserDeposit(
+              amount: _baseProvider.currentAugmontTxn.amount,
               augUpdates: augUpdates,
               rzpUpdates: rzpUpdates,
               userUid: _baseProvider.myUser.uid,
@@ -459,7 +460,8 @@ class AugmontModel extends ChangeNotifier {
           .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId],
       "aGoldBalance": _baseProvider
           .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm],
-      "aBlockId": "tempId",
+      "aBlockId": _baseProvider
+          .currentAugmontTxn.augmnt[UserTransaction.subFldAugBlockId],
       "aLockPrice": _baseProvider
           .currentAugmontTxn.augmnt[UserTransaction.subFldAugLockPrice],
       "aPaymode": "RZP",
@@ -539,9 +541,37 @@ class AugmontModel extends ChangeNotifier {
         resMap[SubmitGoldSell.resTranId] == null) {
       _baseProvider.currentAugmontTxn.tranStatus =
           UserTransaction.TRAN_STATUS_CANCELLED;
-      String docKey = await _dbModel.addUserTransaction(
-          _baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
-      _baseProvider.currentAugmontTxn.docKey = docKey;
+
+      // String docKey = await _dbModel.addUserTransaction(
+      //     _baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
+      //Call Cancelled Withdrawl API
+
+      Map<String, dynamic> augMap = {
+        "aTranId": _baseProvider
+            .currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId],
+        "aAugTranId": _baseProvider
+            .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId],
+        "aGoldBalance": _baseProvider
+            .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm],
+        "aBlockId": _baseProvider
+            .currentAugmontTxn.augmnt[UserTransaction.subFldAugBlockId],
+        "aLockPrice": _baseProvider
+            .currentAugmontTxn.augmnt[UserTransaction.subFldAugLockPrice],
+        "aPaymode": "RZP",
+        "aGoldInTxn": _baseProvider
+            .currentAugmontTxn.augmnt[UserTransaction.subFldAugCurrentGoldGm],
+        "aTaxedGoldBalance": _baseProvider
+            .currentAugmontTxn.augmnt[UserTransaction.subFldAugPostTaxTotal],
+      };
+
+      final ApiResponse<DepositResponseModel> _apiResponse =
+          await _investmentActionsRepository.withdrawlCancelled(
+              augMap: augMap,
+              userUid: _baseProvider.myUser.uid,
+              amount: _baseProvider.currentAugmontTxn.amount);
+
+      _baseProvider.currentAugmontTxn.docKey =
+          _apiResponse.model.response.transactionDoc.transactionId;
       log.error('Query Failed');
       Map<String, dynamic> _failMap = {
         'txnDocId': _baseProvider.currentAugmontTxn.docKey
@@ -562,7 +592,32 @@ class AugmontModel extends ChangeNotifier {
       _baseProvider
               .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm] =
           double.tryParse(resMap[SubmitGoldSell.resGoldBalance]) ?? 0.0;
-      //bool flag = await _dbModel.updateUserTransaction(_baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
+
+      Map<String, dynamic> augMap = {
+        "aTranId": _baseProvider
+            .currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId],
+        "aAugTranId": _baseProvider
+            .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId],
+        "aGoldBalance": _baseProvider
+            .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm],
+        "aBlockId": _baseProvider
+            .currentAugmontTxn.augmnt[UserTransaction.subFldAugBlockId],
+        "aLockPrice": _baseProvider
+            .currentAugmontTxn.augmnt[UserTransaction.subFldAugLockPrice],
+        "aPaymode": "RZP",
+        "aGoldInTxn": _baseProvider
+            .currentAugmontTxn.augmnt[UserTransaction.subFldAugCurrentGoldGm],
+        "aTaxedGoldBalance": _baseProvider
+            .currentAugmontTxn.augmnt[UserTransaction.subFldAugPostTaxTotal],
+      };
+
+      await _investmentActionsRepository.withdrawlComplete(
+          amount: _baseProvider.currentAugmontTxn.amount,
+          augMap: augMap,
+          userUid: _baseProvider.myUser.uid);
+
+      //Call Property Change NotifyListeners here..
+
       if (_augmontTxnProcessListener != null)
         _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
     }

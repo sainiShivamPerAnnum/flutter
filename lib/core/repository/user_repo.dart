@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/core/model/fundbalance_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -9,8 +10,21 @@ class UserRepository {
   final _logger = locator<Logger>();
   final _api = locator<Api>();
 
-
 //Stack overflow condition when we inject _userUid from user service.
+  Future<ApiResponse> getFundBalance(
+    String userUid,
+  ) async {
+    try {
+      final DocumentSnapshot response = await _api.getUserFundBalance(userUid);
+      _logger.d(response.data().toString());
+      return ApiResponse(
+          model: FundBalanceModel.fromMap(response.data()), code: 200);
+    } catch (e) {
+      _logger.e(e);
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
   Future<ApiResponse<List<UserTransaction>>> getWinningHistory(
       String userUid) async {
     List<UserTransaction> _userPrizeTransactions = [];
