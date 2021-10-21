@@ -1,4 +1,8 @@
+import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/model/tambola_winners_details.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/dialogs/share-card.dart';
 import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
@@ -11,6 +15,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
 
 class MyWinningsView extends StatelessWidget {
   @override
@@ -78,7 +83,8 @@ class MyWinningsView extends StatelessWidget {
                                 ClaimButton(
                                   color: Color(0xff11192B),
                                   image: Assets.amazonClaim,
-                                  onTap: model.showConfirmDialog,
+                                  onTap: () => model.showConfirmDialog(
+                                      PrizeClaimChoice.AMZ_VOUCHER),
                                   text: "Redeem for amazon pay",
                                 ),
                                 SizedBox(
@@ -219,3 +225,49 @@ class ClaimButton extends StatelessWidget {
     );
   }
 }
+
+
+//                             Card(
+//                             margin: EdgeInsets.symmetric(vertical: 20),
+//                             child: Padding(
+//                               padding: const EdgeInsets.symmetric(
+//                                   horizontal: 8.0, vertical: 25),
+//                               child: Column(
+//                                 children: [
+//                                   Row(
+//                                     mainAxisAlignment:
+//                                         MainAxisAlignment.spaceAround,
+//                                     children: [
+//                                       Text("My winnings",
+//                                           style: TextStyles.body3.light),
+//                                       PropertyChangeConsumer<UserService,
+//                                           UserServiceProperties>(
+//                                         builder: (ctx, model, child) => Text(
+//                                           //"₹ 0.00",
+//                                           "₹ ${model.userFundWallet.unclaimedBalance}",
+//                                           style: TextStyles.body2.bold
+//                                               .colour(UiConstants.primaryColor),
+//                                         ),
+//                                       ),
+//                                     ],
+//                                   ),
+//                                   // SizedBox(height: 12),
+//                                   // Widgets().getBodyBold("Redeem for", Colors.black),
+//                                   SizedBox(height: 12),
+//                                   //if (model.getUnclaimedPrizeBalance > 0)
+//                                   PropertyChangeConsumer<UserService,
+//                                       UserServiceProperties>(
+//                                     builder: (ctx, m, child) => FelloButton(
+//                                       defaultButtonText: m.userFundWallet
+//                                               .isPrizeBalanceUnclaimed()
+//                                           ? "Redeem"
+//                                           : "Share",
+//                                       onPressedAsync: () =>
+//                                           model.prizeBalanceAction(context),
+//                                       defaultButtonColor: Colors.orange,
+//                                     ),
+//                                   ),
+//                                 ],
+//                               ),
+//                             ),
+//                           ),

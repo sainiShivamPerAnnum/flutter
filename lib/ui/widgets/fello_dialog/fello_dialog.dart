@@ -6,7 +6,7 @@ class FelloDialog extends StatelessWidget {
   final bool showCrossIcon;
   FelloDialog({
     this.content,
-    this.showCrossIcon,
+    this.showCrossIcon = false,
   });
 
   @override

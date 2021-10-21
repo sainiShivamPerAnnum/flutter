@@ -685,8 +685,6 @@ class _CloseCardState extends State<CloseCard> {
     );
   }
 
-  GlobalKey imageKey = GlobalKey();
-
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);

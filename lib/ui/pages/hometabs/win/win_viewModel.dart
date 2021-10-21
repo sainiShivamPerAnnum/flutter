@@ -48,40 +48,6 @@ class WinViewModel extends BaseModel {
       return "Share";
   }
 
-  prizeBalanceAction(BuildContext context) async {
-    HapticFeedback.vibrate();
-    if (_userService.userFundWallet.isPrizeBalanceUnclaimed())
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (ctx) {
-          return Center(
-            child: Material(
-              color: Colors.transparent,
-              child: FCard(
-                isClaimed:
-                    !_userService.userFundWallet.isPrizeBalanceUnclaimed(),
-                unclaimedPrize: _userService.userFundWallet.unclaimedBalance,
-              ),
-            ),
-          );
-        },
-      );
-    else {
-      final choice = await getClaimChoice();
-      AppState.screenStack.add(ScreenItem.dialog);
-      showDialog(
-        context: context,
-        builder: (ctx) => ShareCard(
-          dpUrl: _userService.myUserDpUrl,
-          claimChoice: choice,
-          prizeAmount: _userService.userFundWallet.prizeBalance,
-          username: _userService.baseUser.name,
-        ),
-      );
-    }
-  }
-
   Future<PrizeClaimChoice> getClaimChoice() async {
     return await _localDBModel.getPrizeClaimChoice();
   }

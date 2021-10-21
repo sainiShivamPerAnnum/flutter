@@ -13,7 +13,8 @@ class UserGoldQuantitySE extends StatelessWidget {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
       properties: [UserServiceProperties.myUserFund],
       builder: (context, model, property) => Text(
-        model.userFundWallet?.augGoldQuantity?.toString() ?? "-",
+        "${model.userFundWallet?.augGoldQuantity?.toStringAsFixed(4)} gm" ??
+            "-",
         style: style ??
             GoogleFonts.montserrat(
                 fontWeight: FontWeight.w500,
