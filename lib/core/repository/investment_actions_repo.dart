@@ -10,11 +10,12 @@ class InvestmentActionsRepository {
   final _logger = locator<Logger>();
 
   Future<ApiResponse<DepositResponseModel>> initiateUserDeposit(
-      {Map<String, dynamic> initAugMap, double amount, String userUid}) async {
+      {Map<String, dynamic> initAugMap, Map<String, dynamic> initRzpMap, double amount, String userUid}) async {
     Map<String, dynamic> _body = {
       'user_id': userUid,
       'amount': amount,
-      "aug_map": initAugMap
+      "aug_map": initAugMap,
+      "rzp_map": initRzpMap
     };
     _logger.d("completeUserDeposit : $_body");
 
@@ -47,7 +48,7 @@ class InvestmentActionsRepository {
       "amount": amount,
       "rzp_map": rzpUpdates,
       "aug_map": augUpdates,
-      "tran_id": "eE6quxfGUsrIsZcwAddR"
+      "tran_id": txnId
     };
     _logger.d("completeUserDeposit : $_body");
     try {

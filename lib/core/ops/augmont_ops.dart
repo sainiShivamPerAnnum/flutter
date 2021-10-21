@@ -249,34 +249,42 @@ class AugmontModel extends ChangeNotifier {
       return null;
     }
 
+    String rzpOrderId = await _rzpGateway.createOrderId(amount, 'BlockID: ${buyRates.blockId},gPrice: ${buyRates.goldBuyPrice}');
+    if(rzpOrderId == null) {
+      _logger.e("Received null from create Order id");
+      return null;
+    }
+
     double netTax = buyRates.cgstPercent + buyRates.sgstPercent;
 
     Map<String, dynamic> _initAugMap = {
       "aBlockId": buyRates.blockId.toString(),
       "aLockPrice": buyRates.goldBuyPrice,
       "aPaymode": "RZP",
-      "aGoldInTxn":
+      "aGoldInTxn":getGoldQuantityFromTaxedAmount(
           BaseUtil.digitPrecision(amount - getTaxOnAmount(amount, netTax)),
-      "aTaxedGoldBalance": getGoldQuantityFromTaxedAmount(
-          BaseUtil.digitPrecision(amount - getTaxOnAmount(amount, netTax)),
-          buyRates.goldBuyPrice)
+          buyRates.goldBuyPrice),
+      "aTaxedGoldBalance": BaseUtil.digitPrecision(amount - getTaxOnAmount(amount, netTax))
+    };
+
+    Map<String, dynamic> _initRzpMap = {
+      "rOrderId": rzpOrderId
     };
 
     _initialDepositResponse =
         await _investmentActionsRepository.initiateUserDeposit(
             userUid: _baseProvider.myUser.uid,
             amount: amount,
-            initAugMap: _initAugMap);
+            initAugMap: _initAugMap, initRzpMap: _initRzpMap);
 
     if (_initialDepositResponse.code == 200) {
       _baseProvider.currentAugmontTxn =
-          _initialDepositResponse.model.response.userTransaction;
+          _initialDepositResponse.model.response.transactionDoc.transactionDetail;
 
       UserTransaction tTxn = await _rzpGateway.submitAugmontTransaction(
           _baseProvider.currentAugmontTxn,
           _baseProvider.myUser.mobile,
-          _baseProvider.myUser.email,
-          'BlockID: ${buyRates.blockId},gPrice: ${buyRates.goldBuyPrice}');
+          _baseProvider.myUser.email);
 
       if (tTxn != null) {
         _baseProvider.currentAugmontTxn = tTxn;
@@ -370,11 +378,6 @@ class AugmontModel extends ChangeNotifier {
         !resMap[INTERNAL_FAIL_FLAG] ||
         resMap[SubmitGoldPurchase.resTranId] == null) {
       log.error('Query Failed');
-
-      Map<String, dynamic> _failMap = {
-        'txnDocId': _baseProvider.currentAugmontTxn.docKey
-      };
-
       _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId] =
           resMap[SubmitGoldPurchase.resAugTranId];
       _baseProvider
@@ -384,8 +387,32 @@ class AugmontModel extends ChangeNotifier {
               .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm] =
           double.tryParse(resMap[SubmitGoldPurchase.resGoldBalance]) ?? 0.0;
 
+      Map<String, dynamic> _failMap = {
+        'txnDocId': _baseProvider.currentAugmontTxn.docKey,
+      };
+
       await _dbModel.logFailure(_baseProvider.myUser.uid,
-          FailType.UserAugmontPurchaseFailed, _failMap);
+          FailType.UserPaymentCompleteTxnFailed, _failMap);
+
+      // bool flag = await _dbModel.updateUserTransaction(
+      //     _baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
+      // _txnService.updateTransactions();
+
+      if (_augmontTxnProcessListener != null)
+        _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
+    } else {
+      //success - update transaction fields and call listener
+      _baseProvider.currentAugmontTxn.tranStatus =
+          UserTransaction.TRAN_STATUS_COMPLETE;
+      _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId] =
+          resMap[SubmitGoldPurchase.resAugTranId];
+      _baseProvider
+              .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId] =
+          resMap[SubmitGoldPurchase.resTranId];
+      _baseProvider
+              .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm] =
+          double.tryParse(resMap[SubmitGoldPurchase.resGoldBalance]) ?? 0.0;
+      //bool flag = await _dbModel.updateUserTransaction(_baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
 
       Map<String, dynamic> rzpUpdates = {
         "rOrderId": _baseProvider
@@ -416,25 +443,7 @@ class AugmontModel extends ChangeNotifier {
 
       //TODO: Call property change notifier for flc and gold grams.
 
-      // bool flag = await _dbModel.updateUserTransaction(
-      //     _baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
-      // _txnService.updateTransactions();
-
-      if (_augmontTxnProcessListener != null)
-        _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
-    } else {
-      //success - update transaction fields and call listener
-      _baseProvider.currentAugmontTxn.tranStatus =
-          UserTransaction.TRAN_STATUS_COMPLETE;
-      _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId] =
-          resMap[SubmitGoldPurchase.resAugTranId];
-      _baseProvider
-              .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId] =
-          resMap[SubmitGoldPurchase.resTranId];
-      _baseProvider
-              .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm] =
-          double.tryParse(resMap[SubmitGoldPurchase.resGoldBalance]) ?? 0.0;
-      //bool flag = await _dbModel.updateUserTransaction(_baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
+      _baseProvider.currentAugmontTxn = _onCompleteDepositResponse.model.response.transactionDoc.transactionDetail;
 
       if (_augmontTxnProcessListener != null)
         _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);

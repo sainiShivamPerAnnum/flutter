@@ -62,7 +62,7 @@ dependencies:
   permission_handler: ^8.1.4+2
   property_change_notifier: ^0.3.0
   provider: ^5.0.0
-  razorpay_flutter: ^1.2.6
+  razorpay_flutter: ^1.2.7
   rive: ^0.7.22
   share_plus: ^2.1.4
   shared_preferences: ^2.0.6

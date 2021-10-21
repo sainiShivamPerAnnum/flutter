@@ -87,8 +87,8 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
   updateGoldAmount() {
     if (goldBuyPrice != 0.0)
-      goldAmountInGrams =
-          double.tryParse(goldAmountController.text) / goldBuyPrice;
+      goldAmountInGrams = BaseUtil.digitPrecision(
+          double.tryParse(goldAmountController.text) / goldBuyPrice, 4, false);
     else
       goldAmountInGrams = 0.0;
     refresh();
@@ -109,6 +109,45 @@ class AugmontGoldBuyViewModel extends BaseModel {
   }
 
   initiateBuy() async {
+    double buyAmount = double.tryParse(goldAmountController.text);
+    if(goldRates == null) {
+      BaseUtil.showNegativeAlert(
+        'Gold Rates Unavailable',
+        'Please try again in sometime',
+      );
+      return;
+    }
+    if(buyAmount == null) {
+      BaseUtil.showNegativeAlert(
+        'No amount entered',
+        'Please enter an amount',
+      );
+      return;
+    }
+    if(buyAmount < 10) {
+      BaseUtil.showNegativeAlert(
+        'Minimum amount should be 10',
+        'Please enter a minimum purchase amount or Rs 10',
+      );
+      return;
+    }
+
+    if(_baseUtil.augmontDetail == null) {
+      _baseUtil.augmontDetail = await _dbModel.getUserAugmontDetails(_baseUtil.myUser.uid);
+    }
+
+    _augmontModel.initiateGoldPurchase(
+        goldRates, buyAmount).then((txn) {
+          if(txn == null) {
+            BaseUtil.showNegativeAlert(
+              'Transaction failed',
+              'Please try again in sometime or contact us for further assistance.',
+            );
+          }
+    });
+    _augmontModel.setAugmontTxnProcessListener(
+        _onDepositTransactionComplete);
+
     // if (await BaseUtil.showNoInternetAlert()) return;
     // if (checkAugmontStatus() == STATUS_OPEN) {
     //   if (goldAmountController.text.trim().isEmpty)
@@ -120,7 +159,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
     // notifyListeners();
     // Haptic.vibrate();
     // _onDepositClicked();
-    showSuccessGoldBuyDialog();
+    // showSuccessGoldBuyDialog();
   }
 
   String getActionButtonText() {
@@ -249,83 +288,6 @@ class AugmontGoldBuyViewModel extends BaseModel {
   Future<void> _onDepositTransactionComplete(UserTransaction txn) async {
     if (txn.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE) {
       if (_baseUtil.currentAugmontTxn != null) {
-        ///update user wallet object account balance
-        double _tempCurrentBalance = _baseUtil.userFundWallet.augGoldBalance;
-        //baseutil side [TO BE DELETED]
-        _baseUtil.userFundWallet = await _dbModel.updateUserAugmontGoldBalance(
-            _baseUtil.myUser.uid,
-            _baseUtil.userFundWallet,
-            _baseUtil.augmontGoldRates.goldSellPrice,
-            _baseUtil
-                .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm],
-            _baseUtil.currentAugmontTxn.amount);
-        //userService side
-        _userService.userFundWallet =
-            await _dbModel.updateUserAugmontGoldBalance(
-                _baseUtil.myUser.uid,
-                _baseUtil.userFundWallet,
-                _baseUtil.augmontGoldRates.goldSellPrice,
-                _baseUtil.currentAugmontTxn
-                    .augmnt[UserTransaction.subFldAugTotalGoldGm],
-                _baseUtil.currentAugmontTxn.amount);
-
-        ///check if balance updated correctly
-        if (_baseUtil.userFundWallet.augGoldBalance == _tempCurrentBalance) {
-          //wallet balance was not updated. Transaction update failed
-          Map<String, dynamic> _data = {
-            'txn_id': _baseUtil.currentAugmontTxn.docKey,
-            'aug_tran_id': _baseUtil
-                .currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId],
-            'note':
-                'Transaction completed, but found inconsistency while updating balance'
-          };
-          await _dbModel.logFailure(_baseUtil.myUser.uid,
-              FailType.UserAugmontDepositUpdateDiscrepancy, _data);
-        }
-
-        ///update user ticket count
-        ///tickets will be updated based on total amount spent
-        int _ticketUpdateCount = _baseUtil
-            .getTicketCountForTransaction(_baseUtil.currentAugmontTxn.amount);
-        if (_ticketUpdateCount > 0) {
-          int _tempCurrentCount = _baseUtil.userTicketWallet.augGold99Tck;
-          //baseutil side [TO BE DELETED]
-          _baseUtil.userTicketWallet =
-              await _dbModel.updateAugmontGoldUserTicketCount(
-                  _baseUtil.myUser.uid,
-                  _baseUtil.userTicketWallet,
-                  _ticketUpdateCount);
-          //userService side
-          // _userService.userTicketWallet =
-          //     await _dbModel.updateAugmontGoldUserTicketCount(
-          //         _baseUtil.myUser.uid,
-          //         _baseUtil.userTicketWallet,
-          //         _ticketUpdateCount);
-
-          ///check if ticket count updated correctly
-          if (_baseUtil.userTicketWallet.augGold99Tck == _tempCurrentCount) {
-            //ticket count did not update
-            Map<String, dynamic> _data = {
-              'txn_id': _baseUtil.currentAugmontTxn.docKey,
-              'aug_tran_id': _baseUtil
-                  .currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId],
-              'note':
-                  'Transaction completed, but found inconsistency while updating tickets'
-            };
-            await _dbModel.logFailure(_baseUtil.myUser.uid,
-                FailType.UserAugmontDepositUpdateDiscrepancy, _data);
-          }
-        }
-
-        ///update user transaction
-        ///update augmont transaction closing balance and ticketupcount
-        ///closing balance will be based on taxed amount
-        _baseUtil.currentAugmontTxn.ticketUpCount = _ticketUpdateCount;
-        _baseUtil.currentAugmontTxn.closingBalance =
-            _baseUtil.getCurrentTotalClosingBalance();
-        await _dbModel.updateUserTransaction(
-            _baseUtil.myUser.uid, _baseUtil.currentAugmontTxn);
-
         ///if this was the user's first investment
         ///- update AugmontDetail obj
         ///- add notification subscription
@@ -339,6 +301,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
           }
         }
 
+        //TODO there is an error here
         ///check if referral bonuses need to be unlocked
         if (_baseUtil.userFundWallet.augGoldPrinciple >=
             BaseRemoteConfig.UNLOCK_REFERRAL_AMT) {
@@ -358,7 +321,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
         ///update UI
         onDepositComplete(true);
         _augmontModel.completeTransaction();
-        _baseUtil.refreshAugmontBalance();
+        //TODO _baseUtil.refreshAugmontBalance();
         return true;
       }
     } else if (txn.tranStatus == UserTransaction.TRAN_STATUS_CANCELLED) {
@@ -386,12 +349,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
     if (flag) {
       // BaseUtil.showPositiveAlert(
       //     'SUCCESS', 'You gold deposit was confirmed!', context);
-      Haptic.vibrate();
-
-      BaseUtil.openDialog(
-          addToScreenStack: true,
-          content: SuccessDialog(),
-          isBarrierDismissable: false);
+      showSuccessGoldBuyDialog();
     } else {
       AppState.backButtonDispatcher.didPopRoute();
       BaseUtil.showNegativeAlert('Failed',
@@ -409,7 +367,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
         asset: Assets.goldenTicket,
         title: "Congratulations",
         subtitle:
-            "You have successfully saved Rs.100 and earned 10 tickets! here is a golden ticket!",
+            "You have successfully saved ${_baseUtil.currentAugmontTxn.amount} and earned ${_baseUtil.currentAugmontTxn.amount.ceil()} tokens!",
         action: Container(
           width: SizeConfig.screenWidth,
           child: FelloButtonLg(
