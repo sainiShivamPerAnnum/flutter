@@ -42,8 +42,7 @@ class Response {
   bool didWalletUpdate;
   TransactionDoc transactionDoc;
   bool didFLCUpdate;
-  UserTransaction userTransaction;
-  int augmontPrinciple;
+  double augmontPrinciple;
   double augmontGoldQty;
   int flcBalance;
 
@@ -52,7 +51,6 @@ class Response {
       this.didWalletUpdate,
       this.transactionDoc,
       this.didFLCUpdate,
-      this.userTransaction,
       this.augmontGoldQty,
       this.augmontPrinciple,
       this.flcBalance});
@@ -90,7 +88,6 @@ class Response {
       'didWalletUpdate': didWalletUpdate,
       'transactionDoc': transactionDoc.toMap(),
       'didFLCUpdate': didFLCUpdate,
-      'userTransaction': userTransaction.toJson(),
       'augmontPrinciple': augmontPrinciple,
       'augmontGoldQty': augmontGoldQty,
       'flcBalance': flcBalance,
@@ -103,8 +100,6 @@ class Response {
       didWalletUpdate: map['didWalletUpdate'],
       transactionDoc: TransactionDoc.fromMap(map['transactionDoc']),
       didFLCUpdate: map['didFLCUpdate'],
-      userTransaction: UserTransaction.fromMap(map['userTransaction'],
-          TransactionDoc.fromMap(map['transactionDoc']).transactionId),
       augmontPrinciple: map['augmontPrinciple'],
       augmontGoldQty: map['augmontGoldQty'],
       flcBalance: map['flcBalance'],
@@ -120,18 +115,21 @@ class Response {
 class TransactionDoc {
   bool status;
   String transactionId;
+  UserTransaction transactionDetail;
 
-  TransactionDoc({this.status, this.transactionId});
+  TransactionDoc({this.status, this.transactionId, this.transactionDetail});
 
   TransactionDoc.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     transactionId = json['transactionId'];
+    transactionDetail = UserTransaction.fromMap(json['transactionDetails'], transactionId);
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     data['transactionId'] = this.transactionId;
+    data['transactionDetails'] = this.transactionDetail;
     return data;
   }
 
@@ -139,6 +137,7 @@ class TransactionDoc {
     return {
       'status': status,
       'transactionId': transactionId,
+      'transactionDetail': transactionDetail
     };
   }
 
@@ -146,10 +145,11 @@ class TransactionDoc {
     return TransactionDoc(
       status: map['status'],
       transactionId: map['transactionId'],
+      transactionDetail: UserTransaction.fromJSON(map['transactionDetails'], map['transactionId'])
     );
   }
 
   @override
   String toString() =>
-      'TransactionDoc(status: $status, transactionId: $transactionId)';
+      'TransactionDoc(status: $status, transactionId: $transactionId, transactionDetail: ${transactionDetail.toJson().toString()})';
 }

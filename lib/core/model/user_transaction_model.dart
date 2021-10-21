@@ -112,6 +112,22 @@ class UserTransaction {
             data[fldTimestamp],
             data[fldUpdatedTime]);
 
+  UserTransaction.fromJSON(Map<String, dynamic> data, String documentID)
+      : this(
+      documentID,
+      BaseUtil.toDouble(data[fldAmount]),
+      BaseUtil.toDouble(data[fldClosingBalance]),
+      data[fldNote],
+      data[fldSubType],
+      data[fldType],
+      data[fldTicketUpCount],
+      data[fldUserId],
+      data[fldTranStatus],
+      data[fldIciciMap],
+      data[fldRzpMap],
+      data[fldAugmontMap],
+      null, null);  //TODO JSON response received as HashMap for Timestamps
+
   //ICICI investment initiated by new investor
   UserTransaction.mfDeposit(String tranId, String multipleId,
       String upiTimestamp, double amount, String userId)
