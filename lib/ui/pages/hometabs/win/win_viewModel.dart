@@ -38,7 +38,7 @@ class WinViewModel extends BaseModel {
       _userService.userFundWallet.unclaimedBalance;
 
   init() {
-    fetchWinners();
+    if (_winners == null) fetchWinners();
   }
 
   getWinningsButtonText() {
@@ -94,14 +94,14 @@ class WinViewModel extends BaseModel {
   fetchWinners() async {
     isWinnersLoading = true;
     notifyListeners();
-    var temp = await _winnersRepo.getWinners("GM_CRIC2020", "daily");
-    isWinnersLoading = false;
-    notifyListeners();
-    _logger.d("Winners fetched");
-    if (temp != null)
+    var temp = await _winnersRepo.getWinners("GM_CRIC2020", "weekly");
+    if (temp != null) {
       winners = temp.model;
-    else
+      _logger.d("Winners fetched");
+    } else
       BaseUtil.showNegativeAlert(
           "Unable to fetch winners", "try again in sometime");
+    isWinnersLoading = false;
+    notifyListeners();
   }
 }

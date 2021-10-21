@@ -16,6 +16,7 @@ import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
+import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
@@ -32,6 +33,7 @@ class RootViewModel extends BaseModel {
   final UserService _userService = locator<UserService>();
   final UserCoinService _userCoinService = locator<UserCoinService>();
   final Logger _logger = locator<Logger>();
+  final winView = locator<WinViewModel>();
 
   BuildContext rootContext;
   bool _isInitialized = false;
@@ -50,6 +52,7 @@ class RootViewModel extends BaseModel {
 
   onInit() {
     pages = <Widget>[Save(), Play(), Win()];
+    AppState().setCurrentTabIndex = 1;
     AppState().setRootLoadValue = true;
     _initDynamicLinks(AppState.delegate.navigatorKey.currentContext);
   }
@@ -81,6 +84,14 @@ class RootViewModel extends BaseModel {
 
   void onItemTapped(int index) {
     AppState().setCurrentTabIndex = index;
+    switch (index) {
+      case 1:
+        AppState.isSaveOpened = true;
+        break;
+      case 2:
+        AppState.isWinOpened = true;
+        break;
+    }
     notifyListeners();
   }
 

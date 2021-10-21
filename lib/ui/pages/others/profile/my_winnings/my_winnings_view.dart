@@ -66,7 +66,7 @@ class MyWinningsView extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              color: Color(0xff11192B),
+                              //color: Color(0xff11192B),
                             ),
                           ),
                           SizedBox(height: SizeConfig.padding24),
@@ -76,7 +76,7 @@ class MyWinningsView extends StatelessWidget {
                             child: Row(
                               children: [
                                 ClaimButton(
-                                  color: UiConstants.primaryColor,
+                                  color: Color(0xff11192B),
                                   image: Assets.amazonClaim,
                                   onTap: model.showConfirmDialog,
                                   text: "Redeem for amazon pay",

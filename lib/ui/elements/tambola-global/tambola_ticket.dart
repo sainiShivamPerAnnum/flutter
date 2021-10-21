@@ -72,6 +72,13 @@ class Ticket extends StatelessWidget {
     }
   }
 
+  List<IconData> oddsIcons = [
+    Icons.apps,
+    Icons.border_top,
+    Icons.border_bottom,
+    Icons.border_horizontal,
+    Icons.border_outer
+  ];
   generateOdds() {
     odds = [
       TicketOdds(

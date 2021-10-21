@@ -24,13 +24,21 @@ class TambolaHomeViewModel extends BaseModel {
   ScrollController scrollController;
   double cardOpacity = 1;
 
+  Map<String, IconData> tambolaOdds = {
+    "Full House": Icons.apps,
+    "Top Row": Icons.border_top,
+    "Middle Row": Icons.border_horizontal,
+    "Bottom Row": Icons.border_bottom,
+    "Corners": Icons.border_outer
+  };
+
   udpateCardOpacity() {
     cardOpacity = 1 -
         (scrollController.offset / scrollController.position.maxScrollExtent);
     notifyListeners();
   }
 
-  get tlboard => _tLeaderBoard;
+  LeaderBoardModal get tlboard => _tLeaderBoard;
   PrizesModel get tPrizes => _prizeService.tambolaPrizes;
 
   GameModel gameData = GameModel(
@@ -49,7 +57,7 @@ class TambolaHomeViewModel extends BaseModel {
 
   init() {
     getLeaderboard();
-    getPrizes();
+    if (tPrizes == null) getPrizes();
   }
 
   Future<void> getLeaderboard() async {
@@ -72,7 +80,7 @@ class TambolaHomeViewModel extends BaseModel {
     await _prizeService.fetchTambolaPrizes();
     if (tPrizes == null)
       BaseUtil.showNegativeAlert(
-          "Leaderboard failed to update", "Please refresh again");
+          "Prizesd failed to update", "Please refresh again");
     isPrizesLoading = false;
     notifyListeners();
   }

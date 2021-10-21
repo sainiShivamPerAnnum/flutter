@@ -102,7 +102,7 @@ class _FelloConfirmationDialogState extends State<FelloConfirmationDialog> {
                             showButtons = false;
                           });
                           if (widget.result != null) widget.result(true);
-                          if (widget.accept != null) widget.onAccept();
+                          if (widget.onAccept != null) widget.onAccept();
                         },
                       ),
                     ),

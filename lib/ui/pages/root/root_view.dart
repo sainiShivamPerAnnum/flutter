@@ -93,7 +93,7 @@ class BottomNavBar extends StatelessWidget {
           height: SizeConfig.navBarHeight,
           decoration: BoxDecoration(
             color: UiConstants.primaryColor,
-            borderRadius: BorderRadius.circular(SizeConfig.roundness32),
+            borderRadius: BorderRadius.circular(SizeConfig.roundness24),
           ),
           child: NavBar(
             itemTapped: (int index) => model.onItemTapped(index),
@@ -136,18 +136,18 @@ class WantMoreTickets extends StatelessWidget {
         child: AnimatedContainer(
           duration: Duration(seconds: 1),
           height: AppState.getCurrentTabIndex == 1
-              ? SizeConfig.screenWidth * 0.362
+              ? SizeConfig.navBarHeight * 1.6
               : SizeConfig.navBarHeight,
           width: SizeConfig.screenWidth,
           decoration: BoxDecoration(
             color: UiConstants.primaryLight,
             borderRadius: BorderRadius.circular(
-              SizeConfig.roundness32,
+              SizeConfig.roundness24,
             ),
           ),
           alignment: Alignment.topCenter,
           child: Container(
-            height: SizeConfig.screenWidth * 0.15,
+            height: SizeConfig.navBarHeight * 0.6,
             alignment: Alignment.center,
             child: Text(
               locale.navWMT,

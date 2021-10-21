@@ -31,6 +31,10 @@ class AppState extends ChangeNotifier {
   static bool unsavedPrefs = false;
   static bool circGameInProgress = false;
   static bool isOnboardingInProgress = false;
+
+  static bool isSaveOpened = false;
+  static bool isWinOpened = false;
+
   static List<ScreenItem> screenStack = [];
   static FelloRouterDelegate delegate;
   static FelloBackButtonDispatcher backButtonDispatcher;
@@ -67,7 +71,7 @@ class AppState extends ChangeNotifier {
 
   set setCurrentTabIndex(int index) {
     _rootIndex = index;
-    _saveLastTapIndex(index);
+    //_saveLastTapIndex(index);
     print(_rootIndex);
     notifyListeners();
   }

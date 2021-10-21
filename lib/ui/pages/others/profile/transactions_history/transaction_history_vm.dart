@@ -75,7 +75,7 @@ class TransactionsHistoryViewModel extends BaseModel {
 
   getTransactions() async {
     setState(ViewState.Busy);
-    await _transactionService.fetchTransactions();
+    await _transactionService.fetchTransactions(false);
     _filteredList = _transactionService.txnList;
     filterTransactions();
     setState(ViewState.Idle);

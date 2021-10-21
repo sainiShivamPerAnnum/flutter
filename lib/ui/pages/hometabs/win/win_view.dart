@@ -28,148 +28,160 @@ class Win extends StatelessWidget {
         return Stack(
           children: [
             Container(
-              child: ListView(
-                shrinkWrap: true,
+              child: Column(
                 children: [
-                  SizedBox(height: SizeConfig.padding80),
-                  InkWell(
-                    onTap: model.navigateToMyWinnings,
-                    child: Hero(
-                      tag: "myWinnigs",
-                      child: WinningsContainer(
-                        shadow: false,
-                        child: Container(
-                          width: SizeConfig.screenWidth,
-                          alignment: Alignment.center,
-                          padding: EdgeInsets.all(SizeConfig.padding16),
-                          child: Column(
+                  SizedBox(
+                      height:
+                          SizeConfig.screenWidth * 0.3 + SizeConfig.padding40),
+                  Expanded(
+                    child: ListView(
+                      children: [
+                        SizedBox(height: SizeConfig.padding54),
+                        Container(
+                          // padding: EdgeInsets.symmetric(
+                          //     horizontal: SizeConfig.pageHorizontalMargins),
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
-                                locale.winMyWinnings,
-                                style: TextStyles.title5.colour(Colors.white60),
+                              BigPrizeContainer(
+                                bgColor: Color(0xff26A6F4),
+                                bigText: locale.winMoneyBigText,
+                                smallText: locale.winMoneySmallText,
+                                image: Assets.moneyBag,
+                                painter: LakhCustomPaint(),
                               ),
-                              SizedBox(height: SizeConfig.padding8),
-                              UserWinningsSE(
-                                style: TextStyles.title1
-                                    .colour(Colors.white)
-                                    .weight(FontWeight.w900)
-                                    .letterSpace(2),
-                              )
+                              SizedBox(width: SizeConfig.padding16),
+                              BigPrizeContainer(
+                                bgColor: UiConstants.tertiarySolid,
+                                bigText: locale.winIphoneBigText,
+                                smallText: locale.winIphoneSmallText,
+                                image: Assets.iphone,
+                                painter: IphoneCustomPaint(),
+                              ),
                             ],
                           ),
                         ),
-                        color: UiConstants.primaryColor,
+                        SizedBox(height: SizeConfig.padding20),
+                        Container(
+                          width: SizeConfig.screenWidth,
+                          margin: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.pageHorizontalMargins),
+                          height: SizeConfig.padding54,
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.circular(SizeConfig.roundness16),
+                            color: UiConstants.tertiaryLight.withOpacity(0.5),
+                          ),
+                          child: MarqueeText(
+                            infoList: [
+                              "Shourya won ₹ 1000",
+                              "Manish won ₹ 2000",
+                              "Shreeyash won ₹ 1200"
+                            ],
+                            showBullet: true,
+                            bulletColor: UiConstants.tertiarySolid,
+                          ),
+                        ),
+                        SizedBox(height: SizeConfig.padding24),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.pageHorizontalMargins),
+                          child: Text(
+                            "Rewards and Coupons",
+                            style: TextStyles.title3.bold,
+                          ),
+                        ),
+                        SizedBox(height: SizeConfig.padding16),
+                        Container(
+                          height: SizeConfig.screenWidth * 0.309,
+                          width: SizeConfig.screenWidth,
+                          child: ListView(
+                            padding: EdgeInsets.zero,
+                            scrollDirection: Axis.horizontal,
+                            children: [
+                              SizedBox(width: SizeConfig.pageHorizontalMargins),
+                              Container(
+                                height: SizeConfig.screenWidth * 0.309,
+                                width: SizeConfig.screenWidth * 0.405,
+                                margin: EdgeInsets.only(
+                                    right: SizeConfig.padding12),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                      SizeConfig.roundness32),
+                                  image: DecorationImage(
+                                      image: AssetImage(Assets.amazonGC),
+                                      fit: BoxFit.cover),
+                                ),
+                              ),
+                              Container(
+                                height: SizeConfig.screenWidth * 0.309,
+                                width: SizeConfig.screenWidth * 0.405,
+                                margin: EdgeInsets.only(
+                                    right: SizeConfig.padding12),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                      SizeConfig.roundness32),
+                                  image: DecorationImage(
+                                      image: AssetImage(Assets.myntraGV),
+                                      fit: BoxFit.cover),
+                                ),
+                              ),
+                              Container(
+                                height: SizeConfig.screenWidth * 0.309,
+                                width: SizeConfig.screenWidth * 0.405,
+                                margin: EdgeInsets.only(
+                                    right: SizeConfig.padding12),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                      SizeConfig.roundness32),
+                                  image: DecorationImage(
+                                      image: AssetImage(Assets.amazonGC),
+                                      fit: BoxFit.cover),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: SizeConfig.screenHeight * 0.4,
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(top: SizeConfig.padding80),
+              child: InkWell(
+                onTap: model.navigateToMyWinnings,
+                child: Hero(
+                  tag: "myWinnigs",
+                  child: WinningsContainer(
+                    shadow: false,
+                    child: Container(
+                      width: SizeConfig.screenWidth,
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.all(SizeConfig.padding16),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            locale.winMyWinnings,
+                            style: TextStyles.title5.colour(Colors.white60),
+                          ),
+                          SizedBox(height: SizeConfig.padding8),
+                          UserWinningsSE(
+                            style: TextStyles.title1
+                                .colour(Colors.white)
+                                .weight(FontWeight.w900)
+                                .letterSpace(2),
+                          )
+                        ],
                       ),
                     ),
                   ),
-                  SizedBox(height: SizeConfig.padding16),
-                  Container(
-                    // padding: EdgeInsets.symmetric(
-                    //     horizontal: SizeConfig.pageHorizontalMargins),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        BigPrizeContainer(
-                          bgColor: Color(0xff26A6F4),
-                          bigText: locale.winMoneyBigText,
-                          smallText: locale.winMoneySmallText,
-                          image: Assets.moneyBag,
-                          painter: LakhCustomPaint(),
-                        ),
-                        //SizedBox(width: SizeConfig.padding16),
-                        BigPrizeContainer(
-                          bgColor: UiConstants.tertiarySolid,
-                          bigText: locale.winIphoneBigText,
-                          smallText: locale.winIphoneSmallText,
-                          image: Assets.iphone,
-                          painter: IphoneCustomPaint(),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: SizeConfig.padding20),
-                  Container(
-                    width: SizeConfig.screenWidth,
-                    margin: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.pageHorizontalMargins),
-                    height: SizeConfig.padding54,
-                    decoration: BoxDecoration(
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness16),
-                      color: UiConstants.tertiaryLight.withOpacity(0.5),
-                    ),
-                    child: MarqueeText(
-                      infoList: [
-                        "Shourya won ₹ 1000",
-                        "Manish won ₹ 2000",
-                        "Shreeyash won ₹ 1200"
-                      ],
-                      showBullet: true,
-                      bulletColor: UiConstants.tertiarySolid,
-                    ),
-                  ),
-                  SizedBox(height: SizeConfig.padding24),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.pageHorizontalMargins),
-                    child: Text(
-                      "Rewards and Coupons",
-                      style: TextStyles.title3.bold,
-                    ),
-                  ),
-                  SizedBox(height: SizeConfig.padding16),
-                  Container(
-                    height: SizeConfig.screenWidth * 0.309,
-                    width: SizeConfig.screenWidth,
-                    child: ListView(
-                      padding: EdgeInsets.zero,
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        SizedBox(width: SizeConfig.pageHorizontalMargins),
-                        Container(
-                          height: SizeConfig.screenWidth * 0.309,
-                          width: SizeConfig.screenWidth * 0.405,
-                          margin: EdgeInsets.only(right: SizeConfig.padding12),
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.circular(SizeConfig.roundness32),
-                            image: DecorationImage(
-                                image: AssetImage(Assets.amazonGC),
-                                fit: BoxFit.cover),
-                          ),
-                        ),
-                        Container(
-                          height: SizeConfig.screenWidth * 0.309,
-                          width: SizeConfig.screenWidth * 0.405,
-                          margin: EdgeInsets.only(right: SizeConfig.padding12),
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.circular(SizeConfig.roundness32),
-                            image: DecorationImage(
-                                image: AssetImage(Assets.myntraGV),
-                                fit: BoxFit.cover),
-                          ),
-                        ),
-                        Container(
-                          height: SizeConfig.screenWidth * 0.309,
-                          width: SizeConfig.screenWidth * 0.405,
-                          margin: EdgeInsets.only(right: SizeConfig.padding12),
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.circular(SizeConfig.roundness32),
-                            image: DecorationImage(
-                                image: AssetImage(Assets.amazonGC),
-                                fit: BoxFit.cover),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: SizeConfig.screenHeight * 0.4,
-                  )
-                ],
+                ),
               ),
             ),
             Container(

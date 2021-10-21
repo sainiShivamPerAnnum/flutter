@@ -70,6 +70,7 @@ class SizeConfig {
   static double get iconSize1 => screenWidth * 0.048; //16
   static double get iconSize2 => screenWidth * 0.033; //14
   static double get iconSize3 => screenWidth * 0.028; //12
+  static double get iconSize4 => screenWidth * 0.019; //8
 
   // PADDINGS
   static double get padding2 => screenWidth * 0.0048;
@@ -103,7 +104,7 @@ class SizeConfig {
   static double get navBarWidth =>
       SizeConfig.screenWidth - (SizeConfig.pageHorizontalMargins * 2);
   static double get navBarAspectRatio => 4.16;
-  static double get navBarHeight => navBarWidth / navBarAspectRatio;
+  static double get navBarHeight => navBarWidth / navBarAspectRatio * 0.9;
   //static double get navBarHeight => screenWidth * 0.212;
 
   static double get avatarRadius => screenWidth * 0.048;

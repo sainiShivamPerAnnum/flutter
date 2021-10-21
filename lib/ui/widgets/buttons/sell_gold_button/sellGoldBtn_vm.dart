@@ -51,16 +51,16 @@ class SellGoldBtnVM extends BaseModel {
       state: PageState.addWidget,
       page: AugWithdrawalPageConfig,
       widget: AugmontGoldSellView(
-        passbookBalance: 0.0,
-        withdrawableGoldQnty: 0.0,
-        sellRate: 0.0,
-        onAmountConfirmed: (Map<String, double> amountDetails) {
-          //_onInitiateWithdrawal(amountDetails['withdrawal_quantity']);
-        },
-        bankHolderName: _baseUtil.augmontDetail.bankHolderName,
-        bankAccNo: _baseUtil.augmontDetail.bankAccNo,
-        bankIfsc: _baseUtil.augmontDetail.ifsc,
-      ),
+          passbookBalance: 0.0,
+          withdrawableGoldQnty: 0.0,
+          sellRate: 0.0,
+          onAmountConfirmed: (Map<String, double> amountDetails) {
+            //_onInitiateWithdrawal(amountDetails['withdrawal_quantity']);
+          },
+          bankHolderName: "ARAB", // _baseUtil.augmontDetail.bankHolderName,
+          bankAccNo: "1234", //_baseUtil.augmontDetail.bankAccNo,
+          bankIfsc: "12345" // _baseUtil.augmontDetail.ifsc,
+          ),
     );
   }
 

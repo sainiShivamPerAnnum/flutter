@@ -67,7 +67,7 @@ class CricketHomeViewModel extends BaseModel {
 
   init() {
     getLeaderboard();
-    getPrizes();
+    if (cPrizes == null) getPrizes();
   }
 
   startGame() {
@@ -110,10 +110,10 @@ class CricketHomeViewModel extends BaseModel {
   getPrizes() async {
     isPrizesLoading = true;
     notifyListeners();
-    await _prizeService.fetchTambolaPrizes();
+    await _prizeService.fetchCricketPrizes();
     if (cPrizes == null)
       BaseUtil.showNegativeAlert(
-          "Leaderboard failed to update", "Please refresh again");
+          "Prizes failed to update", "Please refresh again");
     isPrizesLoading = false;
     notifyListeners();
   }
