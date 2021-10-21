@@ -651,36 +651,3 @@ class _LoginControllerState extends State<LoginController>
     //TODO move to home through animation
   }
 }
-
-class ProgressBarItem extends StatelessWidget {
-  final double value;
-  final int index;
-  final IconData icon;
-
-  const ProgressBarItem({this.value, this.index, this.icon});
-
-  @override
-  Widget build(BuildContext context) {
-    final topPos = kToolbarHeight * 2 +
-        5 +
-        ((SizeConfig.screenHeight - kToolbarHeight * 2) / 4) * index;
-    return Positioned(
-      left: SizeConfig.blockSizeHorizontal * 4.5,
-      top: topPos,
-      child: Container(
-        height: 25,
-        width: 25,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: value > index ? UiConstants.primaryColor : Colors.white,
-          border: Border.all(color: UiConstants.primaryColor),
-        ),
-        child: Icon(
-          icon,
-          size: 16,
-          color: value > index ? Colors.white : UiConstants.primaryColor,
-        ),
-      ),
-    );
-  }
-}

@@ -125,9 +125,7 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
         resizeToAvoidBottomInset: false,
         body: HomeBackground(
           whiteBackground: WhiteBackground(
-            color: UiConstants.scaffoldColor,
-            height: SizeConfig.screenHeight * 0.07,
-          ),
+              color: UiConstants.scaffoldColor, height: SizeConfig.padding54),
           child: Column(
             children: [
               FelloAppBar(

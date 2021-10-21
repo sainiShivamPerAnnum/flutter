@@ -42,13 +42,16 @@ class Play extends StatelessWidget {
                   ),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(
+              Transform.translate(
+                offset: Offset(0, -SizeConfig.padding12),
+                child: Padding(
+                  padding: EdgeInsets.only(
                     left: SizeConfig.pageHorizontalMargins,
-                    bottom: SizeConfig.padding8),
-                child: Text(
-                  locale.playTrendingGames,
-                  style: TextStyles.title3.bold,
+                  ),
+                  child: Text(
+                    locale.playTrendingGames,
+                    style: TextStyles.title3.bold,
+                  ),
                 ),
               ),
               if (model.state == ViewState.Idle)

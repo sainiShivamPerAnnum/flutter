@@ -23,6 +23,7 @@ import 'package:felloapp/core/service/tambola_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_coin_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/winners_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
@@ -82,6 +83,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => TransactionService());
   locator.registerLazySingleton(() => TambolaService());
   locator.registerLazySingleton(() => PrizeService());
+  locator.registerLazySingleton(() => WinnerService());
 
   //Repository
   locator.registerLazySingleton(() => DBModel());

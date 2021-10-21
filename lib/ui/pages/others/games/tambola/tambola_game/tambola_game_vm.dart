@@ -135,7 +135,7 @@ class TambolaGameViewModel extends BaseModel {
   int get activeTambolaCardCount {
     if (tambolaService == null || tambolaService.userWeeklyBoards == null)
       return 0;
-    return tambolaService.userWeeklyBoards.length;
+    return tambolaService.userTicketWallet.initTck;
   }
 
   increaseTicketCount() {

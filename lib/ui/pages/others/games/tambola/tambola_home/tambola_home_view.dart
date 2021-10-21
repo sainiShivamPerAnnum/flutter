@@ -25,127 +25,147 @@ class TambolaHomeView extends StatelessWidget {
         });
       },
       builder: (ctx, model, child) {
-        return Scaffold(
-          backgroundColor: UiConstants.primaryColor,
-          body: HomeBackground(
-            child: Stack(
-              children: [
-                WhiteBackground(
-                  color: UiConstants.scaffoldColor,
-                  height: SizeConfig.screenHeight * 0.2,
-                ),
-                SafeArea(
-                  child: Container(
-                    width: SizeConfig.screenWidth,
-                    height: SizeConfig.screenHeight,
-                    child: ListView(
-                      controller: model.scrollController,
-                      children: [
-                        SizedBox(height: SizeConfig.screenHeight * 0.1),
-                        Opacity(
-                          opacity: model.cardOpacity ?? 1,
-                          child: GameCard(
-                            gameData: model.gameData,
-                          ),
-                        ),
-                        SizedBox(height: SizeConfig.padding8),
-                        Container(
-                          height: SizeConfig.screenHeight * 0.86,
-                          padding:
-                              EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(SizeConfig.roundness40),
-                              topRight: Radius.circular(SizeConfig.roundness40),
+        return RefreshIndicator(
+          onRefresh: model.getLeaderboard,
+          child: Scaffold(
+            backgroundColor: UiConstants.primaryColor,
+            body: HomeBackground(
+              child: Stack(
+                children: [
+                  WhiteBackground(
+                    color: UiConstants.scaffoldColor,
+                    height: SizeConfig.screenHeight * 0.2,
+                  ),
+                  SafeArea(
+                    child: Container(
+                      width: SizeConfig.screenWidth,
+                      height: SizeConfig.screenHeight,
+                      child: ListView(
+                        controller: model.scrollController,
+                        children: [
+                          SizedBox(height: SizeConfig.screenHeight * 0.1),
+                          Opacity(
+                            opacity: model.cardOpacity ?? 1,
+                            child: GameCard(
+                              gameData: model.gameData,
                             ),
-                            color: Colors.white,
                           ),
-                          child: Column(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.only(
-                                    bottom: SizeConfig.padding4),
-                                alignment: Alignment.center,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    GameChips(
-                                      model: model,
-                                      text: "Prizes",
-                                      page: 0,
-                                    ),
-                                    SizedBox(width: 16),
-                                    GameChips(
-                                      model: model,
-                                      text: "LeaderBoard",
-                                      page: 1,
-                                    )
-                                  ],
-                                ),
+                          SizedBox(height: SizeConfig.padding8),
+                          Container(
+                            height: SizeConfig.screenHeight * 0.86,
+                            padding: EdgeInsets.all(
+                                SizeConfig.pageHorizontalMargins),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                topLeft:
+                                    Radius.circular(SizeConfig.roundness40),
+                                topRight:
+                                    Radius.circular(SizeConfig.roundness40),
                               ),
-                              Expanded(
-                                child: PageView(
-                                    physics: NeverScrollableScrollPhysics(),
-                                    controller: model.pageController,
+                              color: Colors.white,
+                            ),
+                            child: Column(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.only(
+                                      bottom: SizeConfig.padding4),
+                                  alignment: Alignment.center,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      model.isPrizesLoading
-                                          ? ListLoader()
-                                          : (model.tPrizes == null
-                                              ? NoRecordDisplayWidget(
-                                                  asset:
-                                                      "images/week-winners.png",
-                                                  text:
-                                                      "Prizes will be updates soon",
-                                                )
-                                              : PrizesView(
-                                                  model: model.tPrizes,
-                                                )),
-                                      model.isLeaderboardLoading
-                                          ? ListLoader()
-                                          : (model.tlboard == null
-                                              ? NoRecordDisplayWidget(
-                                                  asset:
-                                                      "images/leaderboard.png",
-                                                  text:
-                                                      "Leaderboard will be updated soon",
-                                                )
-                                              : LeaderBoardView(
-                                                  model: model.tlboard,
-                                                ))
-                                    ]),
-                              ),
-                              SizedBox(height: SizeConfig.padding64)
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                FelloAppBar(
-                  leading: FelloAppBarBackButton(),
-                  actions: [
-                    FelloCoinBar(),
-                    SizedBox(width: 16),
-                    NotificationButton(),
-                  ],
-                ),
-                Positioned(
-                  bottom: 0,
-                  child: Container(
-                    width: SizeConfig.screenWidth,
-                    padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.scaffoldMargin, vertical: 16),
-                    child: FelloButtonLg(
-                      child: Text(
-                        'PLAY',
-                        style: TextStyles.body2.colour(Colors.white),
+                                      GameChips(
+                                        model: model,
+                                        text: "Prizes",
+                                        page: 0,
+                                      ),
+                                      SizedBox(width: 16),
+                                      GameChips(
+                                        model: model,
+                                        text: "LeaderBoard",
+                                        page: 1,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  child: PageView(
+                                      physics: NeverScrollableScrollPhysics(),
+                                      controller: model.pageController,
+                                      children: [
+                                        model.isPrizesLoading
+                                            ? ListLoader()
+                                            : (model.tPrizes == null
+                                                ? NoRecordDisplayWidget(
+                                                    asset:
+                                                        "images/week-winners.png",
+                                                    text:
+                                                        "Prizes will be updates soon",
+                                                  )
+                                                : PrizesView(
+                                                    model: model.tPrizes,
+                                                    leading: [
+                                                      Icons.apps,
+                                                      Icons.border_top,
+                                                      Icons.border_horizontal,
+                                                      Icons.border_bottom,
+                                                      Icons.border_outer
+                                                    ]
+                                                        .map((e) => Icon(
+                                                              e,
+                                                              color: UiConstants
+                                                                  .primaryColor,
+                                                            ))
+                                                        .toList(),
+                                                  )),
+                                        model.isLeaderboardLoading
+                                            ? ListLoader()
+                                            : (model.tlboard == null ||
+                                                    model.tlboard.scoreboard
+                                                        .isEmpty
+                                                ? NoRecordDisplayWidget(
+                                                    asset:
+                                                        "images/leaderboard.png",
+                                                    text:
+                                                        "Leaderboard will be updated soon",
+                                                  )
+                                                : LeaderBoardView(
+                                                    model: model.tlboard,
+                                                  ))
+                                      ]),
+                                ),
+                                SizedBox(height: SizeConfig.padding64)
+                              ],
+                            ),
+                          )
+                        ],
                       ),
-                      onPressed: model.openGame,
                     ),
                   ),
-                )
-              ],
+                  FelloAppBar(
+                    leading: FelloAppBarBackButton(),
+                    actions: [
+                      FelloCoinBar(),
+                      SizedBox(width: 16),
+                      NotificationButton(),
+                    ],
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    child: Container(
+                      width: SizeConfig.screenWidth,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.scaffoldMargin, vertical: 16),
+                      child: FelloButtonLg(
+                        child: Text(
+                          'PLAY',
+                          style: TextStyles.body2.colour(Colors.white),
+                        ),
+                        onPressed: model.openGame,
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         );

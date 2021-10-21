@@ -66,7 +66,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   set userFundWallet(UserFundWallet wallet) {
     _userFundWallet = wallet;
     notifyListeners(UserServiceProperties.myUserFund);
-    print(_userFundWallet.augGoldQuantity);
     _logger.d("Wallet updated in userservice, property listeners notified");
   }
 

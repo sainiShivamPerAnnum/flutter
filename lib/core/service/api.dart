@@ -310,7 +310,7 @@ class Api {
       query = query.where(UserTransaction.fldType, isEqualTo: type);
     if (subtype != null)
       query = query.where(UserTransaction.fldSubType, isEqualTo: subtype);
-    if (limit != -1 && limit > 10) query = query.limit(limit);
+    if (limit != -1 && limit > 3) query = query.limit(limit);
     query = query.orderBy(UserTransaction.fldTimestamp, descending: true);
     if (lastDocument != null) query = query.startAfterDocument(lastDocument);
     return query.get();

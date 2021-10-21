@@ -19,31 +19,30 @@ class FelloAppBar extends StatelessWidget {
     return SafeArea(
       child: Container(
         width: SizeConfig.screenWidth,
-        child: Container(
-          margin: EdgeInsets.symmetric(
-            vertical: SizeConfig.padding8,
-            horizontal: SizeConfig.pageHorizontalMargins,
-          ),
-          child: Row(
-            children: [
-              if (leading != null) leading,
-              SizedBox(width: 16),
-              if (title != null)
-                FittedBox(
-                  child: Text(
-                    title,
-                    maxLines: 1,
-                    overflow: TextOverflow.clip,
-                    style: TextStyles.title4.bold.colour(Colors.white),
-                  ),
+        height: SizeConfig.padding40,
+        margin: EdgeInsets.symmetric(
+          vertical: SizeConfig.padding8,
+          horizontal: SizeConfig.pageHorizontalMargins,
+        ),
+        child: Row(
+          children: [
+            if (leading != null) leading,
+            SizedBox(width: 16),
+            if (title != null)
+              FittedBox(
+                child: Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.clip,
+                  style: TextStyles.title4.bold.colour(Colors.white),
                 ),
-              Spacer(),
-              if (actions != null)
-                Row(
-                  children: actions,
-                )
-            ],
-          ),
+              ),
+            Spacer(),
+            if (actions != null)
+              Row(
+                children: actions,
+              )
+          ],
         ),
       ),
     );

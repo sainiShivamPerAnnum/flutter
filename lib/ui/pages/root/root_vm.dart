@@ -7,6 +7,7 @@ import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/user_coin_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/winners_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -16,6 +17,7 @@ import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
+import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
@@ -32,6 +34,7 @@ class RootViewModel extends BaseModel {
   final UserService _userService = locator<UserService>();
   final UserCoinService _userCoinService = locator<UserCoinService>();
   final Logger _logger = locator<Logger>();
+  final winnerService = locator<WinnerService>();
 
   BuildContext rootContext;
   bool _isInitialized = false;
@@ -40,16 +43,15 @@ class RootViewModel extends BaseModel {
 
   Future<void> refresh() async {
     await _userCoinService.getUserCoinBalance();
+    await _userService.getUserFundWalletData();
   }
-
-  String get userTicketCount =>
-      _baseUtil.userTicketWallet?.getActiveTickets()?.toString();
 
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   List<Widget> pages;
 
   onInit() {
     pages = <Widget>[Save(), Play(), Win()];
+    AppState().setCurrentTabIndex = 1;
     AppState().setRootLoadValue = true;
     _initDynamicLinks(AppState.delegate.navigatorKey.currentContext);
   }
@@ -81,6 +83,14 @@ class RootViewModel extends BaseModel {
 
   void onItemTapped(int index) {
     AppState().setCurrentTabIndex = index;
+    switch (index) {
+      case 1:
+        AppState.isSaveOpened = true;
+        break;
+      case 2:
+        winnerService.fetchWinners();
+        break;
+    }
     notifyListeners();
   }
 

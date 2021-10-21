@@ -27,7 +27,7 @@ class TambolaService extends ChangeNotifier {
   int _atomicTicketDeletionLeftCount;
   int ticketGenerateCount;
 
-  get userTicketWallet => _userTicketWallet;
+  UserTicketWallet get userTicketWallet => _userTicketWallet;
 
   get atomicTicketGenerationLeftCount => _atomicTicketGenerationLeftCount;
 

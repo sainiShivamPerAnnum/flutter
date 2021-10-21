@@ -3,6 +3,7 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/leader_board_modal.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_view.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/static/FelloTile.dart';
@@ -31,127 +32,147 @@ class CricketHomeView extends StatelessWidget {
         });
       },
       builder: (ctx, model, child) {
-        return Scaffold(
-          backgroundColor: UiConstants.primaryColor,
-          body: HomeBackground(
-            child: Stack(
-              children: [
-                WhiteBackground(
-                  color: UiConstants.scaffoldColor,
-                  height: SizeConfig.screenHeight * 0.2,
-                ),
-                SafeArea(
-                  child: Container(
-                    width: SizeConfig.screenWidth,
-                    height: SizeConfig.screenHeight,
-                    child: ListView(
-                      controller: model.scrollController,
-                      children: [
-                        SizedBox(height: SizeConfig.screenHeight * 0.1),
-                        Opacity(
-                          opacity: model.cardOpacity ?? 1,
-                          child: GameCard(
-                            gameData: model.gameData,
-                          ),
-                        ),
-                        SizedBox(height: SizeConfig.padding8),
-                        Container(
-                          height: SizeConfig.screenHeight * 0.86,
-                          padding:
-                              EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(SizeConfig.roundness40),
-                              topRight: Radius.circular(SizeConfig.roundness40),
+        return RefreshIndicator(
+          onRefresh: model.getLeaderboard,
+          child: Scaffold(
+            backgroundColor: UiConstants.primaryColor,
+            body: HomeBackground(
+              child: Stack(
+                children: [
+                  WhiteBackground(
+                    color: UiConstants.scaffoldColor,
+                    height: SizeConfig.screenHeight * 0.2,
+                  ),
+                  SafeArea(
+                    child: Container(
+                      width: SizeConfig.screenWidth,
+                      height: SizeConfig.screenHeight,
+                      child: ListView(
+                        controller: model.scrollController,
+                        children: [
+                          SizedBox(height: SizeConfig.screenHeight * 0.1),
+                          Opacity(
+                            opacity: model.cardOpacity ?? 1,
+                            child: GameCard(
+                              gameData: model.gameData,
                             ),
-                            color: Colors.white,
                           ),
-                          child: Column(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.only(
-                                    bottom: SizeConfig.padding4),
-                                alignment: Alignment.center,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    GameChips(
-                                      model: model,
-                                      text: "Prizes",
-                                      page: 0,
-                                    ),
-                                    SizedBox(width: 16),
-                                    GameChips(
-                                      model: model,
-                                      text: "LeaderBoard",
-                                      page: 1,
-                                    )
-                                  ],
-                                ),
+                          SizedBox(height: SizeConfig.padding8),
+                          Container(
+                            height: SizeConfig.screenHeight * 0.86,
+                            padding: EdgeInsets.all(
+                                SizeConfig.pageHorizontalMargins),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                topLeft:
+                                    Radius.circular(SizeConfig.roundness40),
+                                topRight:
+                                    Radius.circular(SizeConfig.roundness40),
                               ),
-                              Expanded(
-                                child: PageView(
-                                    physics: NeverScrollableScrollPhysics(),
-                                    controller: model.pageController,
+                              color: Colors.white,
+                            ),
+                            child: Column(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.only(
+                                      bottom: SizeConfig.padding4),
+                                  alignment: Alignment.center,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      model.isPrizesLoading
-                                          ? ListLoader()
-                                          : (model.cPrizes == null
-                                              ? NoRecordDisplayWidget(
-                                                  asset:
-                                                      "images/week-winners.png",
-                                                  text:
-                                                      "Prizes will be updates soon",
-                                                )
-                                              : PrizesView(
-                                                  model: model.cPrizes,
-                                                )),
-                                      model.isLeaderboardLoading
-                                          ? ListLoader()
-                                          : (model.clboard == null
-                                              ? NoRecordDisplayWidget(
-                                                  asset:
-                                                      "images/leaderboard.png",
-                                                  text:
-                                                      "Leaderboard will be updated soon",
-                                                )
-                                              : LeaderBoardView(
-                                                  model: model.clboard,
-                                                ))
-                                    ]),
-                              ),
-                              SizedBox(height: SizeConfig.padding64)
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                FelloAppBar(
-                  leading: FelloAppBarBackButton(),
-                  actions: [
-                    FelloCoinBar(),
-                    SizedBox(width: 16),
-                    NotificationButton(),
-                  ],
-                ),
-                Positioned(
-                  bottom: 0,
-                  child: Container(
-                    width: SizeConfig.screenWidth,
-                    padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.scaffoldMargin, vertical: 16),
-                    child: FelloButtonLg(
-                      child: Text(
-                        'PLAY',
-                        style: TextStyles.body2.colour(Colors.white),
+                                      GameChips(
+                                        model: model,
+                                        text: "Prizes",
+                                        page: 0,
+                                      ),
+                                      SizedBox(width: 16),
+                                      GameChips(
+                                        model: model,
+                                        text: "LeaderBoard",
+                                        page: 1,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  child: PageView(
+                                      physics: NeverScrollableScrollPhysics(),
+                                      controller: model.pageController,
+                                      children: [
+                                        model.isPrizesLoading
+                                            ? ListLoader()
+                                            : (model.cPrizes == null
+                                                ? NoRecordDisplayWidget(
+                                                    asset:
+                                                        "images/week-winners.png",
+                                                    text:
+                                                        "Prizes will be updates soon",
+                                                  )
+                                                : PrizesView(
+                                                    model: model.cPrizes,
+                                                    leading: List.generate(
+                                                        model.cPrizes.prizesA
+                                                            .length,
+                                                        (i) => Text(
+                                                              "${i + 1}",
+                                                              style: TextStyles
+                                                                  .body3.bold
+                                                                  .colour(UiConstants
+                                                                      .primaryColor),
+                                                            )),
+                                                  )),
+                                        model.isLeaderboardLoading
+                                            ? ListLoader()
+                                            : (model.clboard == null
+                                                ? NoRecordDisplayWidget(
+                                                    asset:
+                                                        "images/leaderboard.png",
+                                                    text:
+                                                        "Leaderboard will be updated soon",
+                                                  )
+                                                : LeaderBoardView(
+                                                    model: model.clboard,
+                                                  ))
+                                      ]),
+                                ),
+                                SizedBox(height: SizeConfig.padding64)
+                              ],
+                            ),
+                          )
+                        ],
                       ),
-                      onPressed: model.startGame,
                     ),
                   ),
-                )
-              ],
+                  FelloAppBar(
+                    leading: FelloAppBarBackButton(),
+                    actions: [
+                      FelloCoinBar(),
+                      SizedBox(width: 16),
+                      NotificationButton(),
+                    ],
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    child: Container(
+                      width: SizeConfig.screenWidth,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.scaffoldMargin, vertical: 16),
+                      child: FelloButtonLg(
+                          child: Text(
+                            'PLAY',
+                            style: TextStyles.body2.colour(Colors.white),
+                          ),
+                          onPressed: () async {
+                            if (await model.openWebView())
+                              model.startGame();
+                            else
+                              BaseUtil.showNegativeAlert(
+                                  "Something went wrong", model.message);
+                          }),
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         );
@@ -219,52 +240,91 @@ class GameChips extends StatelessWidget {
 
 class PrizesView extends StatelessWidget {
   final PrizesModel model;
-  PrizesView({this.model});
+  final List<Widget> leading;
+
+  PrizesView({this.model, this.leading});
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       shrinkWrap: true,
       itemCount: model.prizesA.length,
       itemBuilder: (ctx, i) {
-        return ListTile(
-          leading: Icon(Icons.first_page),
-          title: Text(model.prizesA[i].displayName),
-          trailing: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+        return Container(
+          width: SizeConfig.screenWidth,
+          padding: EdgeInsets.all(SizeConfig.padding12),
+          margin: EdgeInsets.symmetric(vertical: SizeConfig.padding8),
+          decoration: BoxDecoration(
+            color: UiConstants.primaryLight.withOpacity(0.2),
+            borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+          ),
+          child: Row(
             children: [
-              TextButton.icon(
-                icon: CircleAvatar(
-                  radius: SizeConfig.screenWidth * 0.029,
-                  backgroundColor: UiConstants.tertiarySolid.withOpacity(0.2),
-                  child: RotatedBox(
-                    quarterTurns: 1,
-                    child: SvgPicture.asset(
-                      "assets/vectors/icons/tickets.svg",
-                      height: SizeConfig.iconSize3,
-                    ),
-                  ),
+              CircleAvatar(
+                  radius: SizeConfig.padding24,
+                  backgroundColor: UiConstants.primaryColor.withOpacity(0.3),
+                  child: leading[i]),
+              SizedBox(width: SizeConfig.padding12),
+              Expanded(
+                child: Text(
+                  model.prizesA[i].displayName ?? "Prize ${i + 1}",
+                  style: TextStyles.body3.bold,
                 ),
-                label: Text("${model.prizesA[i].flc} tickets",
-                    style: TextStyles.body3.colour(Colors.black54)),
-                onPressed: () {},
               ),
-              SizedBox(width: 16),
-              TextButton.icon(
-                  icon: CircleAvatar(
-                    radius: SizeConfig.screenWidth * 0.029,
-                    backgroundColor: UiConstants.primaryLight,
-                    child: Image.asset(
-                      "assets/images/icons/money.png",
-                      height: SizeConfig.iconSize3,
-                    ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  PrizeChip(
+                    color: UiConstants.tertiarySolid,
+                    svg: Assets.tickets,
+                    text: "${model.prizesA[i].flc}",
                   ),
-                  label: Text("Rs ${model.prizesA[i].amt}",
-                      style: TextStyles.body3.colour(Colors.black54)),
-                  onPressed: () {}),
+                  SizedBox(width: SizeConfig.padding16),
+                  PrizeChip(
+                    color: UiConstants.primaryColor,
+                    png: Assets.moneyIcon,
+                    text: "Rs ${model.prizesA[i].amt}",
+                  )
+                ],
+              ),
             ],
           ),
         );
       },
+    );
+  }
+}
+
+class PrizeChip extends StatelessWidget {
+  final String svg, png, text;
+  final Color color;
+
+  PrizeChip({this.color, this.png, this.svg, this.text});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Row(
+        children: [
+          CircleAvatar(
+            radius: SizeConfig.iconSize3,
+            backgroundColor: color.withOpacity(0.2),
+            child: RotatedBox(
+              quarterTurns: 1,
+              child: svg != null
+                  ? SvgPicture.asset(
+                      svg,
+                      height: SizeConfig.iconSize3,
+                      color: color,
+                    )
+                  : Image.asset(
+                      png,
+                      height: SizeConfig.iconSize3,
+                    ),
+            ),
+          ),
+          SizedBox(width: SizeConfig.padding8),
+          Text(text, style: TextStyles.body3)
+        ],
+      ),
     );
   }
 }

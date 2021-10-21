@@ -1,10 +1,8 @@
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
-import 'package:felloapp/ui/widgets/buttons/buy_gold_button/buyGoldBtn_view.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -28,8 +26,7 @@ class AugmontGoldBuyView extends StatelessWidget {
         backgroundColor: UiConstants.primaryColor,
         body: HomeBackground(
           whiteBackground: WhiteBackground(
-              color: UiConstants.scaffoldColor,
-              height: SizeConfig.screenHeight * 0.07),
+              color: UiConstants.scaffoldColor, height: SizeConfig.padding54),
           child: Column(
             children: [
               FelloAppBar(
@@ -182,36 +179,14 @@ class AugmontGoldBuyView extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          TextButton.icon(
-                              icon: SvgPicture.asset(Assets.gold24K,
-                                  color: UiConstants.primaryColor,
-                                  width: SizeConfig.padding20),
-                              label: FittedBox(
-                                child: Text(locale.saveGold24k,
-                                    style:
-                                        TextStyles.body3.colour(Colors.black)),
-                              ),
-                              onPressed: () {}),
-                          TextButton.icon(
-                            icon: SvgPicture.asset(Assets.goldPure,
-                                color: UiConstants.primaryColor,
-                                width: SizeConfig.padding20),
-                            label: FittedBox(
-                              child: Text(locale.saveGoldPure,
-                                  style: TextStyles.body3.colour(Colors.black)),
-                            ),
-                            onPressed: () {},
-                          ),
-                          TextButton.icon(
-                              icon: SvgPicture.asset(Assets.goldSecure,
-                                  color: UiConstants.primaryColor,
-                                  width: SizeConfig.padding20),
-                              label: FittedBox(
-                                child: Text(locale.saveSecure,
-                                    style:
-                                        TextStyles.body3.colour(Colors.black)),
-                              ),
-                              onPressed: () {}),
+                          InfoChip(
+                              asset: Assets.gold24K, text: locale.saveGold24k),
+                          InfoChip(
+                              asset: Assets.goldPure,
+                              text: locale.saveGoldPure),
+                          InfoChip(
+                              asset: Assets.goldSecure,
+                              text: locale.saveSecure),
                         ],
                       ),
                       SizedBox(height: SizeConfig.padding40),
@@ -236,6 +211,27 @@ class AugmontGoldBuyView extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class InfoChip extends StatelessWidget {
+  final String asset, text;
+  InfoChip({this.asset, this.text});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Wrap(
+        children: [
+          SvgPicture.asset(
+            asset,
+            width: SizeConfig.padding24,
+            color: UiConstants.primaryColor,
+          ),
+          SizedBox(width: SizeConfig.padding8),
+          Text(text, style: TextStyles.body3.bold)
+        ],
       ),
     );
   }
