@@ -2,6 +2,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
+import 'package:felloapp/ui/service_elements/user_service/user_winnings.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
 import 'package:felloapp/ui/widgets/buttons/sell_gold_button/sellGoldBtn_view.dart';
 import 'package:felloapp/ui/widgets/mini_trans_card/mini_trans_card_view.dart';
@@ -13,6 +14,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:logger/logger.dart';
 
 class Save extends StatelessWidget {
   @override
@@ -57,10 +59,7 @@ class Save extends StatelessWidget {
                                       .light,
                                 ),
                                 SizedBox(height: 8),
-                                Text(
-                                  locale.saveWinningsValue(
-                                      model.getUnclaimedPrizeBalance()),
-                                  // "₹ ${model.getUnclaimedPrizeBalance()}",
+                                UserWinningsSE(
                                   style: TextStyles.title2
                                       .colour(Colors.white)
                                       .bold,
@@ -76,50 +75,26 @@ class Save extends StatelessWidget {
                   Container(
                     width: SizeConfig.screenWidth,
                     height: SizeConfig.screenWidth * 0.24,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: List.generate(
-                          3,
-                          (index) {
-                            return Container(
-                              width: SizeConfig.screenWidth * 0.603,
-                              height: SizeConfig.screenWidth * 0.24,
-                              margin: EdgeInsets.only(
-                                  left: SizeConfig.pageHorizontalMargins,
-                                  right: SizeConfig.padding16),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(
-                                    SizeConfig.roundness32),
-                              ),
-                              alignment: Alignment.center,
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: SizeConfig.padding20,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image.asset("images/augmont-share.png",
-                                        width: SizeConfig.padding40),
-                                    SizedBox(width: SizeConfig.padding16),
-                                    Expanded(
-                                      child: Text(
-                                        "What is digital Gold",
-                                        maxLines: 3,
-                                        style: TextStyles.title5.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        ),
+                    child:
+                        ListView(scrollDirection: Axis.horizontal, children: [
+                      SaveInfoTile(
+                        png: "images/augmont-share.png",
+                        title: "What is digital Gold",
+                        onPressed: () {
+                          Logger().d("Save info tile tap check");
+                        },
                       ),
-                    ),
+                      SaveInfoTile(
+                        png: "images/augmont-share.png",
+                        title: "What is digital Gold",
+                        onPressed: () {},
+                      ),
+                      SaveInfoTile(
+                        png: "images/augmont-share.png",
+                        title: "What is digital Gold",
+                        onPressed: () {},
+                      ),
+                    ]),
                   ),
                   SizedBox(height: SizeConfig.padding24),
                   Container(
@@ -150,6 +125,62 @@ class Save extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+}
+
+class SaveInfoTile extends StatelessWidget {
+  final String svg, png;
+  final String title;
+  final Function onPressed;
+
+  SaveInfoTile({this.svg, this.png, this.onPressed, this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onPressed ?? () {},
+      splashColor: UiConstants.primaryColor,
+      focusColor: UiConstants.primaryColor,
+      highlightColor: UiConstants.primaryColor,
+      hoverColor: UiConstants.primaryColor,
+      child: Container(
+        width: SizeConfig.screenWidth * 0.603,
+        height: SizeConfig.screenWidth * 0.24,
+        margin: EdgeInsets.only(
+            left: SizeConfig.pageHorizontalMargins,
+            right: SizeConfig.padding16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(SizeConfig.roundness32),
+        ),
+        alignment: Alignment.center,
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: SizeConfig.padding20,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              png != null
+                  ? Image.asset(png ?? Assets.moneyIcon,
+                      width: SizeConfig.padding40)
+                  : SvgPicture.asset(
+                      svg ?? Assets.tickets,
+                      width: SizeConfig.padding40,
+                    ),
+              SizedBox(width: SizeConfig.padding16),
+              Expanded(
+                child: Text(
+                  title ?? "title",
+                  maxLines: 3,
+                  style: TextStyles.title5.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

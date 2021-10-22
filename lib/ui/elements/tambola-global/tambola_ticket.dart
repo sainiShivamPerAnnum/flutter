@@ -194,7 +194,7 @@ class Ticket extends StatelessWidget {
                 child: Odds(dailyPicks, board, bestBoards)),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            padding: EdgeInsets.all(SizeConfig.padding12),
             child: InkWell(
               onTap: () {
                 print(board.getTicketNumber());

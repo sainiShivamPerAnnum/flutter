@@ -111,8 +111,9 @@ class MyWinningsViewModel extends BaseModel {
         showCrossIcon: true,
         asset: Assets.prizeClaimConfirm,
         title: "Confirmation",
-        subtitle:
-            "Are you sure you want to invest Rs ${_userService.userFundWallet.prizeBalance} in amazon gift voucher?",
+        subtitle: choice == PrizeClaimChoice.AMZ_VOUCHER
+            ? "Are you sure you want to invest ₹ ${_userService.userFundWallet.prizeBalance} in amazon gift voucher?"
+            : "Are you sure you want to invest ₹ ${_userService.userFundWallet.prizeBalance} into Augmont Digital Gold",
         accept: "Yes",
         reject: "No",
         acceptColor: UiConstants.primaryColor,
@@ -174,14 +175,14 @@ class MyWinningsViewModel extends BaseModel {
   claim(PrizeClaimChoice choice) {
     _registerClaimChoice(choice).then((flag) {
       AppState.backButtonDispatcher.didPopRoute();
-      // if (flag) {
-      showSuccessPrizeWithdrawalDialog(choice == PrizeClaimChoice.AMZ_VOUCHER
-          ? "You will recieve the voucher on your email soon"
-          : "Your gold is invested successfully");
-      // } else {
-      //   BaseUtil.showNegativeAlert(
-      //       'Failed to send claim', 'Please try again in some time');
-      // }
+      if (flag) {
+        showSuccessPrizeWithdrawalDialog(choice == PrizeClaimChoice.AMZ_VOUCHER
+            ? "You will recieve the voucher on your email soon"
+            : "Your gold is invested successfully");
+      } else {
+        BaseUtil.showNegativeAlert(
+            'Failed to send claim', 'Please try again in some time');
+      }
     });
   }
 

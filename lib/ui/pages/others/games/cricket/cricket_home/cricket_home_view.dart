@@ -18,12 +18,11 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
 class CricketHomeView extends StatelessWidget {
-  final GameModel game;
-  CricketHomeView({this.game});
   @override
   Widget build(BuildContext context) {
     return BaseView<CricketHomeViewModel>(
@@ -57,7 +56,7 @@ class CricketHomeView extends StatelessWidget {
                           Opacity(
                             opacity: model.cardOpacity ?? 1,
                             child: GameCard(
-                              gameData: game,
+                              gameData: BaseUtil.gamesList[0],
                             ),
                           ),
                           SizedBox(height: SizeConfig.padding8),
@@ -165,16 +164,26 @@ class CricketHomeView extends StatelessWidget {
                       padding: EdgeInsets.symmetric(
                           horizontal: SizeConfig.scaffoldMargin, vertical: 16),
                       child: FelloButtonLg(
-                          child: Text(
-                            'PLAY',
-                            style: TextStyles.body2.colour(Colors.white),
-                          ),
+                          child: (model.state == ViewState.Idle)
+                              ? Text(
+                                  'PLAY',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .button
+                                      .copyWith(color: Colors.white),
+                                )
+                              : SpinKitThreeBounce(
+                                  color: UiConstants.spinnerColor2,
+                                  size: 18.0,
+                                ),
                           onPressed: () async {
-                            if (await model.openWebView())
-                              model.startGame();
-                            else
-                              BaseUtil.showNegativeAlert(
-                                  "Something went wrong", model.message);
+                            if (model.state == ViewState.Idle) {
+                              if (await model.openWebView())
+                                model.startGame();
+                              else
+                                BaseUtil.showNegativeAlert(
+                                    "Something went wrong", model.message);
+                            }
                           }),
                     ),
                   )
