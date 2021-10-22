@@ -207,7 +207,7 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                                       keyboardType: TextInputType.number,
                                       style: TextStyles.body2.bold,
                                       onChanged: (val) {
-                                        model.goldBuyAmount =
+                                        model.goldSellAmount =
                                             double.tryParse(val);
                                         model.updateGoldAmount();
                                       },
@@ -241,7 +241,7 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          "You recieve",
+                                          "You receive",
                                           style: TextStyles.body3
                                               .colour(Colors.grey),
                                         ),
@@ -249,7 +249,7 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                                             height: SizeConfig.padding4 / 2),
                                         FittedBox(
                                           child: Text(
-                                            "₹ ${model.goldAmountInGrams.toStringAsFixed(4)}",
+                                            "₹ ${model.goldAmountFromGrams.toStringAsFixed(2)}",
                                             style: TextStyles.body2.bold,
                                           ),
                                         ),
@@ -288,30 +288,33 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                                 ? _addBankInfoWidget()
                                 : Container(),
 
-                            Container(
-                              margin:
-                                  EdgeInsets.only(top: SizeConfig.padding24),
-                              width: SizeConfig.screenWidth,
-                              child: FelloButtonLg(
-                                child: model.isGoldBuyInProgress
-                                    ? SpinKitThreeBounce(
-                                        color: Colors.white,
-                                        size: 20,
-                                      )
-                                    : Text(
-                                        "SELL",
-                                        style: TextStyles.body2
-                                            .colour(Colors.white)
-                                            .bold,
-                                      ),
-                                onPressed: () {
-                                  if (!model.isGoldBuyInProgress) {
-                                    FocusScope.of(context).unfocus();
-                                    model.initiateSell();
-                                  }
-                                },
-                              ),
-                            ),
+                            (baseProvider.checkKycMissing ||
+                                    _checkBankInfoMissing)
+                                ? Container(
+                                    margin: EdgeInsets.only(
+                                        top: SizeConfig.padding24),
+                                    width: SizeConfig.screenWidth,
+                                    child: FelloButtonLg(
+                                      child: model.isGoldSellInProgress
+                                          ? SpinKitThreeBounce(
+                                              color: Colors.white,
+                                              size: 20,
+                                            )
+                                          : Text(
+                                              "SELL",
+                                              style: TextStyles.body2
+                                                  .colour(Colors.white)
+                                                  .bold,
+                                            ),
+                                      onPressed: () {
+                                        if (!model.isGoldSellInProgress) {
+                                          FocusScope.of(context).unfocus();
+                                          model.initiateSell();
+                                        }
+                                      },
+                                    ),
+                                  )
+                                : Container(),
                             SizedBox(
                               height: SizeConfig.padding20,
                             ),

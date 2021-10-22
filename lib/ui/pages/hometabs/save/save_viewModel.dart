@@ -19,7 +19,7 @@ class SaveViewModel extends BaseModel {
   }
 
   getUnclaimedPrizeBalance() {
-    return _baseUtil.userFundWallet?.prizeLifetimeWin ?? 0.0;
+    return _userService.userFundWallet?.prizeLifetimeWin ?? 0.0;
   }
 
   checkRegistrationAndRedirect() {

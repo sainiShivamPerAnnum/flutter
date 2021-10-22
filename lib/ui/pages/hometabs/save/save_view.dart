@@ -21,141 +21,132 @@ class Save extends StatelessWidget {
     return BaseView<SaveViewModel>(
       onModelReady: (model) {},
       builder: (ctx, model, child) {
-        return Stack(
+        return Column(
           children: [
-            Positioned(
-              bottom: 0,
-              child: Container(
-                width: SizeConfig.screenWidth,
-                height: SizeConfig.screenHeight - SizeConfig.screenWidth * 0.85,
-                child: Expanded(
-                  child: ListView(
-                    children: [
-                      SizedBox(
-                        height: SizeConfig.padding80,
-                      ),
-                      WinningsContainer(
-                        shadow: true,
-                        child: Container(
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Row(
+            SizedBox(
+              height: SizeConfig.screenHeight * 0.09,
+            ),
+            AugmontCard(model: model),
+            Expanded(
+              child: ListView(
+                children: [
+                  SizedBox(
+                    height: SizeConfig.padding16,
+                  ),
+                  WinningsContainer(
+                    shadow: true,
+                    child: Container(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset(
+                              Assets.giftBoxOpen,
+                              width: SizeConfig.screenWidth * 0.24,
+                            ),
+                            SizedBox(width: 24),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                SvgPicture.asset(
-                                  Assets.giftBoxOpen,
-                                  width: SizeConfig.screenWidth * 0.24,
+                                Text(
+                                  locale.saveWinningsLabel,
+                                  style: TextStyles.body1
+                                      .colour(Colors.white)
+                                      .light,
                                 ),
-                                SizedBox(width: 24),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      locale.saveWinningsLabel,
-                                      style: TextStyles.body1
-                                          .colour(Colors.white)
-                                          .light,
-                                    ),
-                                    SizedBox(height: 8),
-                                    Text(
-                                      locale.saveWinningsValue(
-                                          model.getUnclaimedPrizeBalance()),
-                                      // "₹ ${model.getUnclaimedPrizeBalance()}",
-                                      style: TextStyles.title2
-                                          .colour(Colors.white)
-                                          .bold,
-                                    ),
-                                  ],
-                                )
+                                SizedBox(height: 8),
+                                Text(
+                                  locale.saveWinningsValue(
+                                      model.getUnclaimedPrizeBalance()),
+                                  // "₹ ${model.getUnclaimedPrizeBalance()}",
+                                  style: TextStyles.title2
+                                      .colour(Colors.white)
+                                      .bold,
+                                ),
                               ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: SizeConfig.padding32),
-                      Container(
-                        width: SizeConfig.screenWidth,
-                        height: SizeConfig.screenWidth * 0.24,
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: List.generate(
-                              3,
-                              (index) {
-                                return Container(
-                                  width: SizeConfig.screenWidth * 0.603,
-                                  height: SizeConfig.screenWidth * 0.24,
-                                  margin: EdgeInsets.only(
-                                      left: SizeConfig.pageHorizontalMargins,
-                                      right: SizeConfig.padding16),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(
-                                        SizeConfig.roundness32),
-                                  ),
-                                  alignment: Alignment.center,
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: SizeConfig.padding20,
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Image.asset("images/augmont-share.png",
-                                            width: SizeConfig.padding40),
-                                        SizedBox(width: SizeConfig.padding16),
-                                        Expanded(
-                                          child: Text(
-                                            "What is digital Gold",
-                                            maxLines: 3,
-                                            style: TextStyles.title5.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: SizeConfig.padding24),
-                      Container(
-                        margin: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.pageHorizontalMargins),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius:
-                              BorderRadius.circular(SizeConfig.roundness32),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: SizeConfig.padding20),
-                            Container(
-                                margin: EdgeInsets.symmetric(
-                                    horizontal:
-                                        SizeConfig.pageHorizontalMargins),
-                                child: Text(locale.saveHistory,
-                                    style: TextStyles.title4.bold)),
-                            MiniTransactionCard(),
+                            )
                           ],
                         ),
                       ),
-                      SizedBox(height: kBottomNavigationBarHeight * 4),
-                    ],
+                    ),
                   ),
-                ),
+                  SizedBox(height: SizeConfig.padding32),
+                  Container(
+                    width: SizeConfig.screenWidth,
+                    height: SizeConfig.screenWidth * 0.24,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: List.generate(
+                          3,
+                          (index) {
+                            return Container(
+                              width: SizeConfig.screenWidth * 0.603,
+                              height: SizeConfig.screenWidth * 0.24,
+                              margin: EdgeInsets.only(
+                                  left: SizeConfig.pageHorizontalMargins,
+                                  right: SizeConfig.padding16),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(
+                                    SizeConfig.roundness32),
+                              ),
+                              alignment: Alignment.center,
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: SizeConfig.padding20,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset("images/augmont-share.png",
+                                        width: SizeConfig.padding40),
+                                    SizedBox(width: SizeConfig.padding16),
+                                    Expanded(
+                                      child: Text(
+                                        "What is digital Gold",
+                                        maxLines: 3,
+                                        style: TextStyles.title5.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: SizeConfig.padding24),
+                  Container(
+                    margin: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.pageHorizontalMargins),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness32),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: SizeConfig.padding20),
+                        Container(
+                            margin: EdgeInsets.symmetric(
+                                horizontal: SizeConfig.pageHorizontalMargins),
+                            child: Text(locale.saveHistory,
+                                style: TextStyles.title4.bold)),
+                        MiniTransactionCard(),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: kBottomNavigationBarHeight * 4),
+                ],
               ),
             ),
-            Positioned(
-              top: SizeConfig.screenHeight * 0.09,
-              child: AugmontCard(model: model),
-            )
           ],
         );
       },

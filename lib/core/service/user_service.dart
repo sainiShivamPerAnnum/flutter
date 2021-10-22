@@ -68,7 +68,17 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     _logger.d("Wallet updated in userservice, property listeners notified");
   }
 
- 
+  set augGoldPrinciple(double principle) {
+    _userFundWallet.augGoldPrinciple = principle;
+    notifyListeners(UserServiceProperties.myUserFund);
+    _logger.d("Wallet:Aug Gold Quantity updated in userservice, property listeners notified");
+  }
+
+  set augGoldQuantity(double quantity) {
+    _userFundWallet.augGoldQuantity = quantity;
+    notifyListeners(UserServiceProperties.myUserFund);
+    _logger.d("Wallet:Aug Gold Quantity updated in userservice, property listeners notified");
+  }
 
   bool get isUserOnborded {
     if (_firebaseUser != null &&

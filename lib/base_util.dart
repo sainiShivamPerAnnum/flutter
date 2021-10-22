@@ -242,9 +242,9 @@ class BaseUtil extends ChangeNotifier {
     }
 
     ///prefill augmont details if available --> Save Tab
-    if (myUser.isAugmontOnboarded) {
-      augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
-    }
+    // if (myUser.isAugmontOnboarded) {
+    //   augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
+    // }
   }
 
   void setPackageInfo() async {

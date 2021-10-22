@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
+import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
@@ -28,9 +29,9 @@ class AugmontGoldSellViewModel extends BaseModel {
   TransactionService _txnService = locator<TransactionService>();
   bool isGoldRateFetching = false;
   AugmontRates goldRates;
-  bool isGoldBuyInProgress = false;
-  double goldBuyAmount = 0;
-  double goldAmountInGrams = 0.0;
+  bool isGoldSellInProgress = false;
+  double goldSellAmount = 0;
+  double goldAmountFromGrams = 0.0;
   TextEditingController goldAmountController;
   List<double> chipAmountList = [25, 50, 100];
   double get goldSellPrice => goldRates != null ? goldRates.goldSellPrice : 0.0;
@@ -44,8 +45,8 @@ class AugmontGoldSellViewModel extends BaseModel {
   Widget amoutChip(double amt) {
     return GestureDetector(
       onTap: () {
-        goldBuyAmount += amt;
-        goldAmountController.text = goldBuyAmount.toString();
+        goldSellAmount = userFundWallet.augGoldQuantity * (amt/100);
+        goldAmountController.text = goldSellAmount.toString();
         updateGoldAmount();
         notifyListeners();
       },
@@ -54,7 +55,7 @@ class AugmontGoldSellViewModel extends BaseModel {
         height: SizeConfig.screenWidth * 0.103,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-          color: amt.toInt() == 100
+          color: amt.toInt() == 25
               ? UiConstants.tertiarySolid
               : UiConstants.tertiaryLight,
         ),
@@ -62,7 +63,7 @@ class AugmontGoldSellViewModel extends BaseModel {
         child: Text(
           "${amt.toInt()}%",
           style: TextStyles.body3.bold.colour(
-            amt.toInt() == 100 ? Colors.white : UiConstants.tertiarySolid,
+            amt.toInt() == 25 ? Colors.white : UiConstants.tertiarySolid,
           ),
         ),
       ),
@@ -71,10 +72,10 @@ class AugmontGoldSellViewModel extends BaseModel {
 
   updateGoldAmount() {
     if (goldSellPrice != 0.0)
-      goldAmountInGrams =
-          double.tryParse(goldAmountController.text) / goldSellPrice;
+      goldAmountFromGrams =
+          BaseUtil.digitPrecision(double.tryParse(goldAmountController.text) * goldSellPrice);
     else
-      goldAmountInGrams = 0.0;
+      goldAmountFromGrams = 0.0;
     refresh();
   }
 
@@ -93,18 +94,63 @@ class AugmontGoldSellViewModel extends BaseModel {
   }
 
   initiateSell() async {
-    // if (await BaseUtil.showNoInternetAlert()) return;
-    // if (checkAugmontStatus() == STATUS_OPEN) {
-    //   if (goldAmountController.text.trim().isEmpty)
-    //     return BaseUtil.showNegativeAlert(
-    //         "No Amount Entered", "Please enter some amount");
-    // }
+    double sellGramAmount = double.tryParse(goldAmountController.text.trim());
+    if(sellGramAmount == null) {
+      BaseUtil.showNegativeAlert("No Amount Entered", "Please enter some amount");
+      return;
+    }
+    if(sellGramAmount < 0.0001) {
+      BaseUtil.showNegativeAlert("Amount too low", "Please enter a larger amount");
+      return;
+    }
+    if(!_baseUtil.myUser.isAugmontOnboarded) {
+      BaseUtil.showNegativeAlert(
+        'Not registered',
+        'You have not registered for digital gold yet',
+      );
+      return;
+    }
+    if (_baseUtil.augmontDetail == null) {
+      _baseUtil.augmontDetail =
+      await _dbModel.getUserAugmontDetails(_baseUtil.myUser.uid);
+    }
+    if(_baseUtil.augmontDetail == null) {
+      BaseUtil.showNegativeAlert(
+        'Deposit Failed',
+        'Please try again in sometime or contact us',
+      );
+      return;
+    }
+    isGoldSellInProgress = true;
+    _augmontModel.initiateWithdrawal(goldRates, sellGramAmount);
+    _augmontModel.setAugmontTxnProcessListener(_onSellTransactionComplete);
+  }
 
-    // isGoldBuyInProgress = true;
-    // notifyListeners();
-    // Haptic.vibrate();
-    // _onDepositClicked();
-    showSuccessGoldSellDialog();
+  Future<void> _onSellTransactionComplete(UserTransaction txn) async {
+    if(_baseUtil.currentAugmontTxn == null)return;
+    if (txn.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE) {
+      ///update UI
+      onSellComplete(true);
+      _augmontModel.completeTransaction();
+      return true;
+    } else if (txn.tranStatus == UserTransaction.TRAN_STATUS_CANCELLED) {
+      onSellComplete(false);
+      _augmontModel.completeTransaction();
+    }
+  }
+
+  onSellComplete(bool flag) {
+    // _isDepositInProgress = false;
+    // setState(() {});
+    isGoldSellInProgress = false;
+    if (flag) {
+      showSuccessGoldSellDialog();
+    } else {
+      AppState.backButtonDispatcher.didPopRoute();
+      BaseUtil.showNegativeAlert('Failed',
+          'Your gold Sell failed. Please try again or contact us if you are facing issues',
+          seconds: 5);
+    }
   }
 
   showSuccessGoldSellDialog() {
