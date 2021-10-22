@@ -11,6 +11,8 @@ import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/core/repository/investment_actions_repo.dart';
 import 'package:felloapp/core/service/augmont_invoice_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
+import 'package:felloapp/core/service/user_coin_service.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/augmont_api_util.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -28,10 +30,13 @@ class AugmontModel extends ChangeNotifier {
   final InvestmentActionsRepository _investmentActionsRepository =
       locator<InvestmentActionsRepository>();
 
-  DBModel _dbModel = locator<DBModel>();
-  RazorpayModel _rzpGateway = locator<RazorpayModel>();
-  BaseUtil _baseProvider = locator<BaseUtil>();
-  TransactionService _txnService = locator<TransactionService>();
+  final DBModel _dbModel = locator<DBModel>();
+  final RazorpayModel _rzpGateway = locator<RazorpayModel>();
+  final BaseUtil _baseProvider = locator<BaseUtil>();
+  final UserService _userService = locator<UserService>();
+  final _userCoinService = locator<UserCoinService>();
+  final TransactionService _txnService = locator<TransactionService>();
+
   ValueChanged<UserTransaction> _augmontTxnProcessListener;
   final String defaultBaseUri =
       'https://jg628sk4s2.execute-api.ap-south-1.amazonaws.com/prod';
@@ -441,7 +446,18 @@ class AugmontModel extends ChangeNotifier {
               txnId: _initialDepositResponse
                   .model.response.transactionDoc.transactionId);
 
-      //TODO: Call property change notifier for flc and gold grams.
+      double newAugPrinciple = _onCompleteDepositResponse.model.response.augmontPrinciple;
+      if(newAugPrinciple != null && newAugPrinciple > 0) {
+        _userService.augGoldPrinciple = newAugPrinciple;
+      }
+      double newAugQuantity = _onCompleteDepositResponse.model.response.augmontGoldQty;
+      if(newAugQuantity != null && newAugQuantity > 0) {
+        _userService.augGoldQuantity = newAugQuantity;
+      }
+      int newFlcBalance = _onCompleteDepositResponse.model.response.flcBalance;
+      if(newFlcBalance > 0) {
+        _userCoinService.setFlcBalance(newFlcBalance);
+      }
 
       _baseProvider.currentAugmontTxn = _onCompleteDepositResponse.model.response.transactionDoc.transactionDetail;
 
