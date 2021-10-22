@@ -23,15 +23,22 @@ class ReferralDetailsViewModel extends BaseModel {
   final _razorpayModel = locator<RazorpayModel>();
   final _fcmListener = locator<FcmListener>();
   final _userService = locator<UserService>();
+
   String referral_bonus =
       BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS);
   String referral_ticket_bonus = BaseRemoteConfig.remoteConfig
       .getString(BaseRemoteConfig.REFERRAL_TICKET_BONUS);
+  String _userUrl = "";
+
   String _shareMsg;
   bool shareWhatsappInProgress = false;
   bool shareLinkInProgress = false;
+  bool lodingUrl = false;
+
+  get userUrl => _userUrl;
 
   init() {
+    generateLink();
     referral_bonus = (referral_bonus == null || referral_bonus.isEmpty)
         ? '25'
         : referral_bonus;
@@ -41,6 +48,14 @@ class ReferralDetailsViewModel extends BaseModel {
             : referral_ticket_bonus;
     _shareMsg =
         'Hey I am gifting you ₹$referral_bonus and $referral_ticket_bonus free Tambola tickets. Lets start saving and playing together! ';
+  }
+
+  Future<void> generateLink() async {
+    lodingUrl = true;
+    _userUrl =
+        await _createDynamicLink(_userService.baseUser.uid, true, 'Other');
+    lodingUrl = false;
+    refresh();
   }
 
   shareLink() async {
