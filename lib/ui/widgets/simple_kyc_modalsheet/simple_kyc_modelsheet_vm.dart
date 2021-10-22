@@ -162,7 +162,7 @@ class SimpleKycModelsheetViewModel extends BaseModel {
       _reason =
           'This PAN number is already associated with a different account';
     }
-    var kObj;
+   
     if (_flag) {
       SignzyPanLogin _signzyPanLogin =
           await _dbModel.getActiveSignzyPanApiKey();
@@ -202,7 +202,6 @@ class SimpleKycModelsheetViewModel extends BaseModel {
 
     return {
       'flag': true,
-      'pan_name': kObj[GetKycStatus.resName],
     };
   }
 }

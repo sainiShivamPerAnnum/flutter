@@ -56,10 +56,15 @@ class ReferralDetailsView extends StatelessWidget {
                         style: TextStyles.body2,
                       ),
                       SizedBox(height: SizeConfig.padding24),
-                      TextFormField(
-                        initialValue: "https://fello.in/app/er4843",
-                        style: TextStyles.body3.colour(Colors.grey),
-                      ),
+                      model.lodingUrl
+                          ? SpinKitThreeBounce(
+                              color: UiConstants.spinnerColor2,
+                              size: 18.0,
+                            )
+                          : TextFormField(
+                              initialValue: model.userUrl,
+                              style: TextStyles.body3.colour(Colors.grey),
+                            ),
                       SizedBox(height: SizeConfig.padding24),
                       Row(
                         children: [

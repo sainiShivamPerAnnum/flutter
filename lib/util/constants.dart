@@ -4,6 +4,10 @@ class Constants {
   static const String APP_NAME = "Fello";
   static const String PAN_AES_KEY = 'felloisquitefun!';
 
+  //Game Type
+  static const String GAME_TYPE_CRICKET = "GM_CRIC2020";
+  static const String GAME_TYPE_TAMBOLA = "GM_TAMBOLA2020";
+
   //Collections
   static final String COLN_USERS = "users";
   static final String COLN_ANNOUNCEMENTS = "announcements";
@@ -19,7 +23,7 @@ class Constants {
   static final String COLN_HOMECARDS = "homefeed";
   static final String COLN_EMAILOTPREQUESTS = "emailotprequests";
   static final String COLN_STATISTICS = "statistics";
-  static final String WINNERS= "winners";
+  static final String WINNERS = "winners";
   static final String COLN_PRIZES = "prizes";
 
   //Sub-collections
@@ -75,9 +79,6 @@ class Constants {
       1; //no of days to wait before withdrawal
   static const int UNLOCK_REFERRAL_AMT = 100;
   static final DateTime VERSION_2_RELEASE_DATE = DateTime(2021, 4, 1);
-
   static final String GAME_CRICKET_URI =
       'https://prod.freakx.in/fello/cricket-2021/';
 }
-
-   

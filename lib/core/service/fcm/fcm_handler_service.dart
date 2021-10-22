@@ -30,6 +30,7 @@ class FcmHandler extends ChangeNotifier {
       switch (command) {
         case 'cric2020GameEnd':
           {
+            logger.i("FCM Command received to end Cricket game");
             //Navigate back to CricketView
             if (AppState.circGameInProgress) {
               AppState.circGameInProgress = false;
