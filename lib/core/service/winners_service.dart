@@ -18,6 +18,7 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
   Timestamp _timestamp;
 
   List<Winners> _winners = [];
+
   get winners => this._winners;
   get cricketWinnersLength => this._cricketWinnersLength;
   get tambolaWinnersLength => this._tambolaWinnersLength;
@@ -32,13 +33,14 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
     _winners.clear();
     ApiResponse<WinnersModel> _cricketWinners =
         await _winnersRepo.getWinners(Constants.GAME_TYPE_CRICKET, "weekly");
+
     ApiResponse<WinnersModel> _tambolaWinners =
         await _winnersRepo.getWinners(Constants.GAME_TYPE_TAMBOLA, "weekly");
 
     _winners.clear();
 
     if (_cricketWinners.model?.winners?.length != 0) {
-      _timestamp = _cricketWinners.model.timestamp;
+      _timestamp = _cricketWinners.model?.timestamp;
       _cricketWinnersLength = _cricketWinners.model?.winners?.length;
       _winners.addAll(_cricketWinners.model.winners);
       _logger.d(_cricketWinners.model.winners.toString());
@@ -59,6 +61,7 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
     }
 
     if (_winners != null) {
+      _winners.sort((a, b) => a.score.compareTo(b.score));
       setWinners();
     }
   }

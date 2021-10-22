@@ -7,6 +7,7 @@ import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_winnings.dart';
 import 'package:felloapp/ui/service_elements/winners_prizes/win_leaderboard.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -415,14 +416,12 @@ class WinnerboardView extends StatelessWidget {
   final List<Winners> winners;
   final ScrollController controller;
   final Timestamp timeStamp;
-  final int cricketWinnerCount;
-  final int tambolaWinnerCount;
-  WinnerboardView(
-      {@required this.winners,
-      @required this.controller,
-      @required this.timeStamp,
-      @required this.cricketWinnerCount,
-      this.tambolaWinnerCount});
+
+  WinnerboardView({
+    @required this.winners,
+    @required this.controller,
+    @required this.timeStamp,
+  });
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -486,7 +485,9 @@ class WinnerboardView extends StatelessWidget {
                               style: TextStyles.body3),
                           SizedBox(height: SizeConfig.padding4),
                           Text(
-                            i + 1 <= cricketWinnerCount ? "Circket" : "Tambola",
+                            winners[i].gameType == Constants.GAME_TYPE_CRICKET
+                                ? "Circket"
+                                : "Tambola",
                             style: TextStyles.body4
                                 .colour(UiConstants.primaryColor),
                           )

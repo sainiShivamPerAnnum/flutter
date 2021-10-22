@@ -88,10 +88,7 @@ class _WinnersLeaderBoardSEState extends State<WinnersLeaderBoardSE> {
                                   winners: model.winners,
                                   controller: myscrollController,
                                   timeStamp: model.timeStamp,
-                                  cricketWinnerCount:
-                                      model.cricketWinnersLength,
-                                  tambolaWinnerCount:
-                                      model.tambolaWinnersLength,
+                             
                                 )),
                     ),
                   ],

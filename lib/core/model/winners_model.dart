@@ -45,10 +45,10 @@ class WinnersModel {
     };
   }
 
-  factory WinnersModel.fromMap(Map<String, dynamic> map) {
+  factory WinnersModel.fromMap(Map<String, dynamic> map, String gameType) {
     return WinnersModel(
       winners:
-          List<Winners>.from(map['winners']?.map((x) => Winners.fromMap(x))),
+          List<Winners>.from(map['winners']?.map((x) => Winners.fromMap(x,gameType))),
       code: map['code'],
       gametype: map['gametype'],
       freq: map['freq'],
@@ -66,8 +66,9 @@ class Winners {
   int score;
   String userid;
   String username;
+  String gameType;
 
-  Winners({this.score, this.userid, this.username});
+  Winners({this.score, this.userid, this.username,this.gameType});
 
   Winners.fromJson(Map<String, dynamic> json) {
     score = json['score'];
@@ -91,15 +92,16 @@ class Winners {
     };
   }
 
-  factory Winners.fromMap(Map<String, dynamic> map) {
+  factory Winners.fromMap(Map<String, dynamic> map, String gameType) {
     return Winners(
       score: map['score'],
       userid: map['userid'],
       username: map['username'],
+      gameType: gameType,
     );
   }
 
   @override
   String toString() =>
-      'Winners(score: $score, userid: $userid, username: $username)';
+      'Winners(score: $score, userid: $userid, username: $username, gameType: $gameType)';
 }
