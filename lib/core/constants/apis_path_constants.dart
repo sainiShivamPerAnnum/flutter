@@ -13,4 +13,5 @@ class ApiPath {
   get kDepositCancelled => "/userFinanceOps/$stage/api/deposit/cancelled";
   get kWithdrawlComplete => "/userFinanceOps/$stage/api/withdraw/complete";
   get kWithdrawlCancelled => "/userFinanceOps/$stage/api/withdraw/cancelled";
+  get kBuyTambola => "/felloCoins/$stage/api/tambola/buy-tambola-tickets";
 }

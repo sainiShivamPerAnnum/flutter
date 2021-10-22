@@ -65,4 +65,24 @@ class FlcActionsRepo {
       return ApiResponse.withError(e.toString(), 400);
     }
   }
+
+  Future<ApiResponse<FlcModel>> buyTambolaTickets(
+      {int cost, int noOfTickets, String userUid}) async {
+    Map<String, dynamic> _body = {
+      "user_id": userUid,
+      "cost": cost,
+      "no_of_tickets": noOfTickets,
+    };
+    _logger.d("buyTambolaTickets : $_body");
+    try {
+      final response = await APIService.instance
+          .postData(_apiPaths.kBuyTambola, body: _body);
+      _logger.d(response.toString());
+      FlcModel _flcModel = FlcModel.fromMap(response);
+      return ApiResponse(model: _flcModel, code: 200);
+    } catch (e) {
+      _logger.e(e);
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
 }
