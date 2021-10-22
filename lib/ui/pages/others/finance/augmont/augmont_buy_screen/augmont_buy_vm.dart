@@ -47,6 +47,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   List<double> chipAmountList = [100, 500, 1000, 5000];
 
   double get goldBuyPrice => goldRates != null ? goldRates.goldBuyPrice : 0.0;
+
   get isGoldBuyInProgress => this._isGoldBuyInProgress;
 
   set isGoldBuyInProgress(value) {
@@ -137,6 +138,13 @@ class AugmontGoldBuyViewModel extends BaseModel {
     if (_baseUtil.augmontDetail == null) {
       _baseUtil.augmontDetail =
           await _dbModel.getUserAugmontDetails(_baseUtil.myUser.uid);
+    }
+    if(_baseUtil.augmontDetail == null) {
+      BaseUtil.showNegativeAlert(
+        'Deposit Failed',
+        'Please try again in sometime or contact us',
+      );
+      return;
     }
     isGoldBuyInProgress = true;
     _augmontModel.initiateGoldPurchase(goldRates, buyAmount).then((txn) {
@@ -280,10 +288,10 @@ class AugmontGoldBuyViewModel extends BaseModel {
         ///if this was the user's first investment
         ///- update AugmontDetail obj
         ///- add notification subscription
-      
+
         if (!_baseUtil.augmontDetail.firstInvMade) {
           _baseUtil.augmontDetail.firstInvMade = true;
-          
+
           bool _aflag = await _dbModel.updateUserAugmontDetails(
               _baseUtil.myUser.uid, _baseUtil.augmontDetail);
           if (_aflag) {
@@ -292,7 +300,6 @@ class AugmontGoldBuyViewModel extends BaseModel {
           }
         }
 
-        //TODO there is an error here
         ///check if referral bonuses need to be unlocked
         if (_userService.userFundWallet.augGoldPrinciple >=
             BaseRemoteConfig.UNLOCK_REFERRAL_AMT) {
@@ -300,9 +307,6 @@ class AugmontGoldBuyViewModel extends BaseModel {
               await _dbModel.unlockReferralTickets(_baseUtil.myUser.uid);
           if (_isUnlocked) {
             //give it a few seconds before showing congratulatory message
-
-
-
             Timer(const Duration(seconds: 4), () {
               BaseUtil.showPositiveAlert(
                 'Congratulations are in order!',
@@ -315,7 +319,6 @@ class AugmontGoldBuyViewModel extends BaseModel {
         ///update UI
         onDepositComplete(true);
         _augmontModel.completeTransaction();
-        //TODO _baseUtil.refreshAugmontBalance();
         return true;
       }
     } else if (txn.tranStatus == UserTransaction.TRAN_STATUS_CANCELLED) {
@@ -365,11 +368,14 @@ class AugmontGoldBuyViewModel extends BaseModel {
           width: SizeConfig.screenWidth,
           child: FelloButtonLg(
             child: Text(
-              "Next",
+              "Done",
               style: TextStyles.body3.colour(Colors.white),
             ),
             color: UiConstants.primaryColor,
-            onPressed: AppState.backButtonDispatcher.didPopRoute,
+            onPressed: () {
+              AppState.backButtonDispatcher.didPopRoute();
+              AppState.backButtonDispatcher.didPopRoute();
+            },
           ),
         ),
       ),

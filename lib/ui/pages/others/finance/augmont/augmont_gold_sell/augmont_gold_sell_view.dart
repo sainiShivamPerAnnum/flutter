@@ -8,6 +8,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_vm.dart';
+import 'package:felloapp/ui/pages/static/FelloTile.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
@@ -206,7 +207,7 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                                       keyboardType: TextInputType.number,
                                       style: TextStyles.body2.bold,
                                       onChanged: (val) {
-                                        model.goldBuyAmount =
+                                        model.goldSellAmount =
                                             double.tryParse(val);
                                         model.updateGoldAmount();
                                       },
@@ -240,7 +241,7 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          "You recieve",
+                                          "You receive",
                                           style: TextStyles.body3
                                               .colour(Colors.grey),
                                         ),
@@ -248,7 +249,7 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                                             height: SizeConfig.padding4 / 2),
                                         FittedBox(
                                           child: Text(
-                                            "₹ ${model.goldAmountInGrams.toStringAsFixed(4)}",
+                                            "₹ ${model.goldAmountFromGrams.toStringAsFixed(2)}",
                                             style: TextStyles.body2.bold,
                                           ),
                                         ),
@@ -271,34 +272,49 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                               ],
                             ),
                             SizedBox(height: SizeConfig.padding54),
-                            CurrentPriceWidget(
-                              fetchGoldRates: model.fetchGoldRates,
-                              goldprice: model.goldSellPrice ?? 0.0,
-                              isFetching: model.isGoldRateFetching,
-                            ),
-                            SizedBox(height: SizeConfig.padding54),
                             Container(
-                              width: SizeConfig.screenWidth,
-                              child: FelloButtonLg(
-                                child: model.isGoldBuyInProgress
-                                    ? SpinKitThreeBounce(
-                                        color: Colors.white,
-                                        size: 20,
-                                      )
-                                    : Text(
-                                        "SELL",
-                                        style: TextStyles.body2
-                                            .colour(Colors.white)
-                                            .bold,
-                                      ),
-                                onPressed: () {
-                                  if (!model.isGoldBuyInProgress) {
-                                    FocusScope.of(context).unfocus();
-                                    model.initiateSell();
-                                  }
-                                },
+                              margin:
+                                  EdgeInsets.only(bottom: SizeConfig.padding24),
+                              child: CurrentPriceWidget(
+                                fetchGoldRates: model.fetchGoldRates,
+                                goldprice: model.goldSellPrice ?? 0.0,
+                                isFetching: model.isGoldRateFetching,
                               ),
                             ),
+                            (baseProvider.checkKycMissing)
+                                ? _addKycInfoWidget()
+                                : Container(),
+                            (_checkBankInfoMissing)
+                                ? _addBankInfoWidget()
+                                : Container(),
+
+                            (baseProvider.checkKycMissing ||
+                                    _checkBankInfoMissing)
+                                ? Container(
+                                    margin: EdgeInsets.only(
+                                        top: SizeConfig.padding24),
+                                    width: SizeConfig.screenWidth,
+                                    child: FelloButtonLg(
+                                      child: model.isGoldSellInProgress
+                                          ? SpinKitThreeBounce(
+                                              color: Colors.white,
+                                              size: 20,
+                                            )
+                                          : Text(
+                                              "SELL",
+                                              style: TextStyles.body2
+                                                  .colour(Colors.white)
+                                                  .bold,
+                                            ),
+                                      onPressed: () {
+                                        if (!model.isGoldSellInProgress) {
+                                          FocusScope.of(context).unfocus();
+                                          model.initiateSell();
+                                        }
+                                      },
+                                    ),
+                                  )
+                                : Container(),
                             SizedBox(
                               height: SizeConfig.padding20,
                             ),
@@ -308,9 +324,7 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                               style: TextStyles.body3.colour(Colors.grey),
                             ),
                             SizedBox(height: SizeConfig.padding80),
-                            // (baseProvider.checkKycMissing)
-                            //     ? _addKycInfoWidget()
-                            //     : Container(),
+
                             // SizedBox(
                             //   child: Image(
                             //     image: AssetImage(Assets.onboardingSlide[1]),
@@ -445,9 +459,7 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                             // SizedBox(
                             //   height: 25,
                             // ),
-                            // (_checkBankInfoMissing)
-                            //     ? _addBankInfoWidget()
-                            //     : Container(),
+
                             // (!_isLoading)
                             //     ? _buildSubmitButton(context)
                             //     : Container(),
@@ -486,83 +498,68 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
   }
 
   Widget _addBankInfoWidget() {
-    return Container(
-      width: SizeConfig.screenWidth,
-      decoration: BoxDecoration(
-        color: Colors.amber[100],
-        borderRadius: BorderRadius.circular(4),
-      ),
-      alignment: Alignment.centerLeft,
-      margin: EdgeInsets.symmetric(vertical: 10),
-      child: Padding(
-        padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
-        child: FittedBox(
-          fit: BoxFit.scaleDown,
-          child: Text(
-            'You will be asked for your bank information in next step',
-            style: TextStyle(
-                fontSize: SizeConfig.smallTextSize * 1.2,
-                color: Colors.black54),
-          ),
-        ),
-      ),
+    return FelloBriefTile(
+      leadingAsset: Assets.wmtsaveMoney,
+      title: "Add bank information",
+      onTap: () {
+        AppState.delegate.appState.currentAction = PageAction(
+            page: EditAugBankDetailsPageConfig, state: PageState.addPage);
+      },
     );
   }
 
   Widget _addKycInfoWidget() {
-    return InkWell(
-      onTap: () {
-        AppState.screenStack.add(ScreenItem.dialog);
-        showModalBottomSheet(
-            isDismissible: false,
-            // backgroundColor: Colors.transparent,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            context: context,
-            isScrollControlled: true,
-            builder: (context) {
-              return SimpleKycModalSheetView();
-            });
-      },
-      child: Container(
-        height: SizeConfig.cardTitleTextSize * 2,
-        alignment: Alignment.center,
-        child: Transform.scale(
-          scale: scaleAnimation.value,
-          child: Container(
-            width: SizeConfig.screenWidth * 0.8,
-            decoration: BoxDecoration(
-              color: Colors.amber[200],
-              borderRadius: BorderRadius.circular(SizeConfig.blockSizeVertical),
-            ),
-            child: Padding(
-              padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Icon(
-                    Icons.info_outline,
-                    size: SizeConfig.mediumTextSize,
-                  ),
-                  Spacer(),
-                  FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      'Complete your KYC to withdraw',
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Spacer(),
-                  SizedBox()
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
+    return Transform.scale(
+        scale: scaleAnimation.value,
+        child: FelloBriefTile(
+          leadingIcon: Icons.verified_user,
+          title: "Complete your KYC to withdraw",
+          onTap: () {
+            AppState.screenStack.add(ScreenItem.dialog);
+            showModalBottomSheet(
+                isDismissible: false,
+                // backgroundColor: Colors.transparent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                context: context,
+                isScrollControlled: true,
+                builder: (context) {
+                  return SimpleKycModalSheetView();
+                });
+          },
+        )
+        // Container(
+        //   width: SizeConfig.screenWidth * 0.8,
+        //   decoration: BoxDecoration(
+        //     color: Colors.amber[200],
+        //     borderRadius: BorderRadius.circular(SizeConfig.blockSizeVertical),
+        //   ),
+        //   child: Padding(
+        //     padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
+        //     child: Row(
+        //       mainAxisAlignment: MainAxisAlignment.center,
+        //       mainAxisSize: MainAxisSize.max,
+        //       children: [
+        //         Icon(
+        //           Icons.info_outline,
+        //           size: SizeConfig.mediumTextSize,
+        //         ),
+        //         Spacer(),
+        //         FittedBox(
+        //           fit: BoxFit.scaleDown,
+        //           child: Text(
+        //             'Complete your KYC to withdraw',
+        //             textAlign: TextAlign.center,
+        //           ),
+        //         ),
+        //         Spacer(),
+        //         SizedBox()
+        //       ],
+        //     ),
+        //   ),
+        // ),
+        );
   }
 
   Widget _getGoldAmount(String qnt) {

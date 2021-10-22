@@ -47,6 +47,7 @@ class TambolaGameViewModel extends BaseModel {
   Widget _widget;
   AnimationController animationController;
   PageController ticketPageController;
+  int _currentPage = 1;
 
   List<Ticket> _topFiveTambolaBoards = [];
   List<Ticket> tambolaBoardViews;
@@ -64,6 +65,13 @@ class TambolaGameViewModel extends BaseModel {
     notifyListeners();
   }
 
+  int get currentPage => this._currentPage;
+
+  set currentPage(int value) {
+    this._currentPage = value;
+    notifyListeners();
+  }
+
   Widget get cardWidet => _widget;
 
   List<Ticket> get topFiveTambolaBoards => _topFiveTambolaBoards;
@@ -72,19 +80,20 @@ class TambolaGameViewModel extends BaseModel {
   Ticket get currentBoardView => _currentBoardView;
   TambolaBoard get currentBoard => _currentBoard;
 
-  set currentBoardView(val) {
-    _currentBoardView = val;
-    notifyListeners();
-  }
+  // set currentBoardView(val) {
+  //   _currentBoardView = val;
+  //   notifyListeners();
+  // }
 
-  set currentBoard(val) {
-    _currentBoard = val;
-    notifyListeners();
-  }
+  // set currentBoard(val) {
+  //   _currentBoard = val;
+  //   notifyListeners();
+  // }
 
   init() async {
     ticketCountController =
         new TextEditingController(text: buyTicketCount.toString());
+
     // BaseAnalytics.analytics
 
     //     .setCurrentScreen(screenName: BaseAnalytics.PAGE_TAMBOLA);
@@ -107,6 +116,7 @@ class TambolaGameViewModel extends BaseModel {
       tambolaService.weeklyTicksFetched = true;
       if (_boards != null) {
         tambolaService.userWeeklyBoards = _boards;
+        _logger.d(_boards.length);
         _currentBoard = null;
         _currentBoardView = null;
       }
@@ -134,15 +144,16 @@ class TambolaGameViewModel extends BaseModel {
   _refreshTambolaTickets() async {
     _logger.i('Refreshing..');
     _topFiveTambolaBoards = [];
+    ticketsBeingGenerated = true;
     tambolaService.weeklyTicksFetched = false;
     init();
-    notifyListeners();
+    //notifyListeners();
   }
 
   int get activeTambolaCardCount {
     if (tambolaService == null || tambolaService.userWeeklyBoards == null)
       return 0;
-    return tambolaService.userTicketWallet.initTck;
+    return tambolaService.userWeeklyBoards.length;
   }
 
   increaseTicketCount() {
@@ -174,7 +185,7 @@ class TambolaGameViewModel extends BaseModel {
     BaseUtil.showPositiveAlert(
         "Ticket bought successfully", "Generating tickets, please wait");
 
-    checkIfMoreTicketNeedsToBeGenerated();
+    _refreshTambolaTickets();
   }
 
   checkIfMoreTicketNeedsToBeGenerated() async {

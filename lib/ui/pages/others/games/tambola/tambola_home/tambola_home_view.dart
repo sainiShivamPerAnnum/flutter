@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_vm.dart';
@@ -14,6 +15,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class TambolaHomeView extends StatelessWidget {
+  final GameModel game;
+  TambolaHomeView({this.game});
   @override
   Widget build(BuildContext context) {
     return BaseView<TambolaHomeViewModel>(
@@ -47,7 +50,7 @@ class TambolaHomeView extends StatelessWidget {
                           Opacity(
                             opacity: model.cardOpacity ?? 1,
                             child: GameCard(
-                              gameData: model.gameData,
+                              gameData: game,
                             ),
                           ),
                           SizedBox(height: SizeConfig.padding8),
@@ -103,6 +106,8 @@ class TambolaHomeView extends StatelessWidget {
                                                   )
                                                 : PrizesView(
                                                     model: model.tPrizes,
+                                                    controller:
+                                                        model.scrollController,
                                                     leading: [
                                                       Icons.apps,
                                                       Icons.border_top,
@@ -129,6 +134,8 @@ class TambolaHomeView extends StatelessWidget {
                                                         "Leaderboard will be updated soon",
                                                   )
                                                 : LeaderBoardView(
+                                                    controller:
+                                                        model.scrollController,
                                                     model: model.tlboard,
                                                   ))
                                       ]),

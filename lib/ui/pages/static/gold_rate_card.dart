@@ -37,7 +37,7 @@ class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
               widget.fetchGoldRates();
               controller.repeat();
             } else if (status == AnimationStatus.dismissed) {
-              controller.forward();
+              controller.dispose();
             }
           });
 

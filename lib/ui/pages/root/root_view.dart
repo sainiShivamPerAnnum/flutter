@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
@@ -28,46 +29,63 @@ class Root extends StatelessWidget {
       },
       builder: (ctx, model, child) {
         model.initialize();
-        return Scaffold(
-          key: model.scaffoldKey,
-          drawer: FDrawer(),
-          body: HomeBackground(
-            whiteBackground: WhiteBackground(
-              height: kToolbarHeight * 2.8,
-            ),
-            child: Stack(
-              children: [
-                RefreshIndicator(
-                  color: UiConstants.primaryColor,
-                  backgroundColor: Colors.black,
-                  onRefresh: model.refresh,
-                  child: SafeArea(
-                    child: Container(
-                      //margin: EdgeInsets.only(top: kToolbarHeight * 1.2),
-                      child: IndexedStack(
-                          children: model.pages,
-                          index: AppState.getCurrentTabIndex),
+        return WillPopScope(
+          onWillPop: () async {
+            if (RootViewModel.scaffoldKey.currentState.isDrawerOpen) {
+              print("Pop Popped");
+              Navigator.pop(context);
+              return false;
+            }
+            return true;
+          },
+          child: Scaffold(
+            key: RootViewModel.scaffoldKey,
+            drawer: FDrawer(),
+            drawerEnableOpenDragGesture: false,
+            // onDrawerChanged: (value) {
+            //   if (value == false) if (AppState.screenStack.length != 1) {
+            //     print("Popped");
+            //     AppState.backButtonDispatcher.didPopRoute();
+            //   }
+            // },
+            body: HomeBackground(
+              whiteBackground: WhiteBackground(
+                height: kToolbarHeight * 2.8,
+              ),
+              child: Stack(
+                children: [
+                  RefreshIndicator(
+                    color: UiConstants.primaryColor,
+                    backgroundColor: Colors.black,
+                    onRefresh: model.refresh,
+                    child: SafeArea(
+                      child: Container(
+                        //margin: EdgeInsets.only(top: kToolbarHeight * 1.2),
+                        child: IndexedStack(
+                            children: model.pages,
+                            index: AppState.getCurrentTabIndex),
+                      ),
                     ),
                   ),
-                ),
-                FelloAppBar(
-                  leading: InkWell(
-                    onTap: () => model.showDrawer(),
-                    child: ProfileImageSE(
-                      radius: SizeConfig.avatarRadius,
+                  FelloAppBar(
+                    leading: InkWell(
+                      onTap: () => model.showDrawer(),
+                      child: ProfileImageSE(
+                        radius: SizeConfig.avatarRadius,
+                      ),
                     ),
+                    actions: [
+                      FelloCoinBar(),
+                      SizedBox(width: 16),
+                      NotificationButton(),
+                    ],
                   ),
-                  actions: [
-                    FelloCoinBar(),
-                    SizedBox(width: 16),
-                    NotificationButton(),
-                  ],
-                ),
-                WantMoreTickets(),
-                BottomNavBar(
-                  model: model,
-                ),
-              ],
+                  WantMoreTickets(),
+                  BottomNavBar(
+                    model: model,
+                  ),
+                ],
+              ),
             ),
           ),
         );

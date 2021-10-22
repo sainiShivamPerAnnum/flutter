@@ -9,11 +9,14 @@ import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/augmont_state_list.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/palette.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -69,20 +72,16 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
       children: [
         Row(
           children: [
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                'Augmont Registration',
-                maxLines: 2,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w700,
-                  color: FelloColorPalette.augmontFundPalette().primaryColor,
-                ),
+            Expanded(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text('Augmont Registration',
+                    maxLines: 2,
+                    textAlign: TextAlign.start,
+                    style: TextStyles.title4.bold
+                        .colour(UiConstants.primaryColor)),
               ),
             ),
-            Spacer(),
             IconButton(
               icon: Icon(
                 Icons.clear_rounded,
@@ -120,15 +119,13 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
             vertical: 4,
           ),
           decoration: BoxDecoration(
-            border: Border.all(
-                color: FelloColorPalette.augmontFundPalette().primaryColor),
+            border: Border.all(color: UiConstants.primaryColor),
             borderRadius: BorderRadius.circular(10),
           ),
           child: DropdownButtonFormField(
             decoration: InputDecoration(
                 border: InputBorder.none, enabledBorder: InputBorder.none),
-            iconEnabledColor:
-                FelloColorPalette.augmontFundPalette().primaryColor,
+            iconEnabledColor: UiConstants.primaryColor,
             hint: Text("Which state do you live in?"),
             value: stateChosenValue,
             onChanged: (String newVal) {
@@ -153,38 +150,24 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
         Container(
           width: SizeConfig.screenWidth,
           height: 50.0,
-          decoration: BoxDecoration(
-            gradient: new LinearGradient(colors: [
-              FelloColorPalette.augmontFundPalette().primaryColor,
-              FelloColorPalette.augmontFundPalette().primaryColor2
-              // UiConstants.primaryColor,
-              // UiConstants.primaryColor.withBlue(200),
-            ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0)),
-            borderRadius: new BorderRadius.circular(10.0),
-          ),
-          child: new Material(
-            child: MaterialButton(
-              child: (!baseProvider.isAugmontRegnInProgress &&
-                      !baseProvider.isAugmontRegnCompleteAnimateInProgress)
-                  ? Text(
-                      'REGISTER',
-                      style: Theme.of(context)
-                          .textTheme
-                          .button
-                          .copyWith(color: Colors.white),
-                    )
-                  : SpinKitThreeBounce(
-                      color: UiConstants.spinnerColor2,
-                      size: 18.0,
-                    ),
-              onPressed: () async {
-                _onSubmit();
-              },
-              highlightColor: Colors.white30,
-              splashColor: Colors.white30,
-            ),
-            color: Colors.transparent,
-            borderRadius: new BorderRadius.circular(30.0),
+          child: FelloButtonLg(
+            color: UiConstants.primaryColor,
+            child: (!baseProvider.isAugmontRegnInProgress &&
+                    !baseProvider.isAugmontRegnCompleteAnimateInProgress)
+                ? Text(
+                    'REGISTER',
+                    style: Theme.of(context)
+                        .textTheme
+                        .button
+                        .copyWith(color: Colors.white),
+                  )
+                : SpinKitThreeBounce(
+                    color: UiConstants.spinnerColor2,
+                    size: 18.0,
+                  ),
+            onPressed: () async {
+              _onSubmit();
+            },
           ),
         ),
         //AugmontInfoTiles()
@@ -217,9 +200,7 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
       setState(() {});
       AppState.backButtonDispatcher.didPopRoute();
       AppState.delegate.appState.currentAction =
-          PageAction(
-              state: PageState.addPage,
-              page: AugmontGoldBuyPageConfig);
+          PageAction(state: PageState.addPage, page: AugmontGoldBuyPageConfig);
     }
     setState(() {});
     return;

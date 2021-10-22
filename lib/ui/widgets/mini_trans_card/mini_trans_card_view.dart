@@ -41,7 +41,7 @@ class MiniTransactionCard extends StatelessWidget {
                             )
                           : Column(
                               children: List.generate(
-                                m.txnList.length, //< 5 ? m.txnList.length : 4,
+                                m.txnList.length < 5 ? m.txnList.length : 4,
                                 (i) {
                                   return ListTile(
                                     onTap: () {

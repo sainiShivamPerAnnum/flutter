@@ -31,6 +31,7 @@ class AppState extends ChangeNotifier {
   static bool unsavedPrefs = false;
   static bool circGameInProgress = false;
   static bool isOnboardingInProgress = false;
+  static bool isDrawerOpened = false;
 
   static bool isSaveOpened = false;
   static bool isWinOpened = false;
