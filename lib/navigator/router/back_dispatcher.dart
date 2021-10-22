@@ -7,6 +7,8 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
+import 'package:felloapp/ui/pages/root/root_view.dart';
+import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
@@ -84,8 +86,11 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     else if (AppState.screenStack.length == 1 &&
         AppState.getCurrentTabIndex != 0 &&
         _baseUtil.isUserOnboarded) {
-      print("Yo");
-      AppState().setCurrentTabIndex = 0;
+      print("Press back once more to exit");
+      if (RootViewModel.scaffoldKey.currentState.isDrawerOpen)
+        RootViewModel.scaffoldKey.currentState.openEndDrawer();
+      else
+        AppState().setCurrentTabIndex = 0;
       //_routerDelegate.appState.returnHome();
       return Future.value(true);
     }

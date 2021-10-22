@@ -58,19 +58,13 @@ class Play extends StatelessWidget {
                 Expanded(
                   child: ListView(children: [
                     GestureDetector(
-                      onTap: () => AppState.delegate.appState.currentAction =
-                          PageAction(
-                              state: PageState.addPage,
-                              page: model.gameList[0].pageConfig),
+                      onTap: () => model.openGame(model.gameList[0].gameName),
                       child: GameCard(
                         gameData: model.gameList[0],
                       ),
                     ),
                     GestureDetector(
-                      onTap: () => AppState.delegate.appState.currentAction =
-                          PageAction(
-                              state: PageState.addPage,
-                              page: model.gameList[1].pageConfig),
+                      onTap: () => model.openGame(model.gameList[1].gameName),
                       child: GameCard(
                         gameData: model.gameList[1],
                       ),

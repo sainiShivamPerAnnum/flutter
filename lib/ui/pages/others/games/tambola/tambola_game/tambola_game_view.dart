@@ -44,7 +44,10 @@ class _TambolaGameViewState extends State<TambolaGameView>
     return BaseView<TambolaGameViewModel>(
       onModelReady: (model) {
         model.init();
-        model.ticketPageController = new PageController();
+        model.ticketPageController = new PageController()
+          ..addListener(() {
+            model.currentPage = model.ticketPageController.page.toInt() + 1;
+          });
         model.animationController = AnimationController(
             vsync: this, duration: Duration(milliseconds: 300));
         model.animationController.forward();
@@ -365,8 +368,8 @@ class _TambolaGameViewState extends State<TambolaGameView>
         calledDigits:
             (model.weeklyDrawFetched) ? model.weeklyDigits.toList() : [],
       ));
-      model.currentBoardView = model.tambolaBoardViews[0];
-      model.currentBoard = model.userWeeklyBoards[0];
+      // model.currentBoardView = model.tambolaBoardViews[0];
+      // model.currentBoard = model.userWeeklyBoards[0];
       _widget = Padding(
           padding: EdgeInsets.all(10),
           child: Container(
@@ -393,7 +396,7 @@ class _TambolaGameViewState extends State<TambolaGameView>
             child: Row(
               children: [
                 Text(
-                  "My Tickets (${model.activeTambolaCardCount})",
+                  "My Tickets (${model.currentPage}/${model.activeTambolaCardCount})",
                   style: GoogleFonts.montserrat(
                     color: Colors.black87,
                     fontSize: SizeConfig.cardTitleTextSize,
@@ -403,9 +406,13 @@ class _TambolaGameViewState extends State<TambolaGameView>
                 Spacer(),
                 InkWell(
                   onTap: () {
-                    model.ticketPageController.previousPage(
-                        duration: Duration(milliseconds: 200),
-                        curve: Curves.decelerate);
+                    model.ticketPageController
+                        .previousPage(
+                            duration: Duration(milliseconds: 200),
+                            curve: Curves.decelerate)
+                        .then((_) {
+                      if (model.currentPage > 0) model.currentPage -= 1;
+                    });
                   },
                   child: Icon(
                     Icons.arrow_left_rounded,
@@ -415,9 +422,14 @@ class _TambolaGameViewState extends State<TambolaGameView>
                 ),
                 InkWell(
                   onTap: () {
-                    model.ticketPageController.nextPage(
-                        duration: Duration(milliseconds: 200),
-                        curve: Curves.decelerate);
+                    model.ticketPageController
+                        .nextPage(
+                            duration: Duration(milliseconds: 200),
+                            curve: Curves.decelerate)
+                        .then((_) {
+                      if (model.currentPage <= model.activeTambolaCardCount)
+                        model.currentPage += 1;
+                    });
                   },
                   child: Icon(
                     Icons.arrow_right_rounded,
@@ -500,10 +512,10 @@ class _TambolaGameViewState extends State<TambolaGameView>
           ),
         ],
       );
-      if (model.currentBoardView == null)
-        model.currentBoardView = model.tambolaBoardViews[0];
-      if (model.currentBoard == null)
-        model.currentBoard = model.userWeeklyBoards[0];
+      // if (model.currentBoardView == null)
+      //   model.currentBoardView = model.tambolaBoardViews[0];
+      // if (model.currentBoard == null)
+      //   model.currentBoard = model.userWeeklyBoards[0];
     }
     return _widget;
   }

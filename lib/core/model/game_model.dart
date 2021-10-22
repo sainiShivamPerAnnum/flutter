@@ -5,6 +5,15 @@ class GameModel {
   final String tag;
   final String thumbnailImage;
   final PageConfiguration pageConfig;
+  final int playCost;
+  final double prizeAmount;
 
-  GameModel({this.gameName, this.pageConfig, this.tag, this.thumbnailImage});
+  GameModel({
+    this.gameName,
+    this.pageConfig,
+    this.tag,
+    this.thumbnailImage,
+    this.playCost,
+    this.prizeAmount,
+  });
 }

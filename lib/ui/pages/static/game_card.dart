@@ -33,10 +33,9 @@ class GameCard extends StatelessWidget {
                 width: SizeConfig.screenWidth,
                 height: SizeConfig.screenWidth * 0.4,
                 decoration: BoxDecoration(
-                  color: UiConstants.tertiarySolid,
+                  color: UiConstants.primaryColor,
                   image: DecorationImage(
-                      image:
-                          CachedNetworkImageProvider(gameData.thumbnailImage),
+                      image: AssetImage(gameData.thumbnailImage),
                       fit: BoxFit.fitWidth),
                 ),
               ),
@@ -67,7 +66,7 @@ class GameCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                      label: Text("10 tokens",
+                      label: Text("${gameData.playCost ?? 0} tickets",
                           style: TextStyles.body3.colour(Colors.black54)),
                       onPressed: () {},
                     ),
@@ -81,7 +80,7 @@ class GameCard extends StatelessWidget {
                             height: SizeConfig.iconSize3,
                           ),
                         ),
-                        label: Text("Rs 5K",
+                        label: Text("Rs ${gameData.prizeAmount ?? 0.0}",
                             style: TextStyles.body3.colour(Colors.black54)),
                         onPressed: () {}),
                   ],

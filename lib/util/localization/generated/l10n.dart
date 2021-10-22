@@ -453,7 +453,7 @@ class S {
     );
   }
 
-  /// `You get 1 ticket for every ₹ 100 invested`
+  /// `You get 1 token for every Rupee saved`
   String get saveBaseline {
     return Intl.message(
       'You get 1 token for every Rupee saved',

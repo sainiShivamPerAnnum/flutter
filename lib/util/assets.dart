@@ -57,6 +57,8 @@ class Assets {
 
   // PLAY
   static final String germsPattern = "assets/images/bg_pattern.png";
+  static final String cricketThumb = "assets/images/cricket.jpg";
+  static final String tambolaThumb = "assets/images/tambola.png";
 
   // SAVE
   static final String whiteRays = "assets/images/white_rays.png";

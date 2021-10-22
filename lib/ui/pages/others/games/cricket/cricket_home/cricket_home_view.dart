@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/leader_board_modal.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -21,6 +22,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
 class CricketHomeView extends StatelessWidget {
+  final GameModel game;
+  CricketHomeView({this.game});
   @override
   Widget build(BuildContext context) {
     return BaseView<CricketHomeViewModel>(
@@ -54,7 +57,7 @@ class CricketHomeView extends StatelessWidget {
                           Opacity(
                             opacity: model.cardOpacity ?? 1,
                             child: GameCard(
-                              gameData: model.gameData,
+                              gameData: game,
                             ),
                           ),
                           SizedBox(height: SizeConfig.padding8),
@@ -110,6 +113,8 @@ class CricketHomeView extends StatelessWidget {
                                                   )
                                                 : PrizesView(
                                                     model: model.cPrizes,
+                                                    controller:
+                                                        model.scrollController,
                                                     leading: List.generate(
                                                         model.cPrizes.prizesA
                                                             .length,
@@ -132,6 +137,8 @@ class CricketHomeView extends StatelessWidget {
                                                   )
                                                 : LeaderBoardView(
                                                     model: model.clboard,
+                                                    controller:
+                                                        model.scrollController,
                                                   ))
                                       ]),
                                 ),
@@ -246,56 +253,72 @@ class GameChips extends StatelessWidget {
 
 class PrizesView extends StatelessWidget {
   final PrizesModel model;
+  final ScrollController controller;
   final List<Widget> leading;
 
-  PrizesView({this.model, this.leading});
+  PrizesView({this.model, this.leading, this.controller});
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: model.prizesA.length,
-      itemBuilder: (ctx, i) {
-        return Container(
-          width: SizeConfig.screenWidth,
-          padding: EdgeInsets.all(SizeConfig.padding12),
-          margin: EdgeInsets.symmetric(vertical: SizeConfig.padding8),
-          decoration: BoxDecoration(
-            color: UiConstants.primaryLight.withOpacity(0.2),
-            borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-          ),
-          child: Row(
-            children: [
-              CircleAvatar(
-                  radius: SizeConfig.padding24,
-                  backgroundColor: UiConstants.primaryColor.withOpacity(0.3),
-                  child: leading[i]),
-              SizedBox(width: SizeConfig.padding12),
-              Expanded(
-                child: Text(
-                  model.prizesA[i].displayName ?? "Prize ${i + 1}",
-                  style: TextStyles.body3.bold,
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  PrizeChip(
-                    color: UiConstants.tertiarySolid,
-                    svg: Assets.tickets,
-                    text: "${model.prizesA[i].flc}",
-                  ),
-                  SizedBox(width: SizeConfig.padding16),
-                  PrizeChip(
-                    color: UiConstants.primaryColor,
-                    png: Assets.moneyIcon,
-                    text: "Rs ${model.prizesA[i].amt}",
-                  )
-                ],
-              ),
-            ],
-          ),
-        );
+    return NotificationListener<OverscrollNotification>(
+      onNotification: (OverscrollNotification value) {
+        if (value.overscroll < 0 && controller.offset + value.overscroll <= 0) {
+          if (controller.offset != 0) controller.jumpTo(0);
+          return true;
+        }
+        if (controller.offset + value.overscroll >=
+            controller.position.maxScrollExtent) {
+          if (controller.offset != controller.position.maxScrollExtent)
+            controller.jumpTo(controller.position.maxScrollExtent);
+          return true;
+        }
+        controller.jumpTo(controller.offset + value.overscroll);
+        return true;
       },
+      child: ListView.builder(
+        itemCount: model.prizesA.length,
+        itemBuilder: (ctx, i) {
+          return Container(
+            width: SizeConfig.screenWidth,
+            padding: EdgeInsets.all(SizeConfig.padding12),
+            margin: EdgeInsets.symmetric(vertical: SizeConfig.padding8),
+            decoration: BoxDecoration(
+              color: UiConstants.primaryLight.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+            ),
+            child: Row(
+              children: [
+                CircleAvatar(
+                    radius: SizeConfig.padding24,
+                    backgroundColor: UiConstants.primaryColor.withOpacity(0.3),
+                    child: leading[i]),
+                SizedBox(width: SizeConfig.padding12),
+                Expanded(
+                  child: Text(
+                    model.prizesA[i].displayName ?? "Prize ${i + 1}",
+                    style: TextStyles.body3.bold,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    PrizeChip(
+                      color: UiConstants.tertiarySolid,
+                      svg: Assets.tickets,
+                      text: "${model.prizesA[i].flc}",
+                    ),
+                    SizedBox(width: SizeConfig.padding16),
+                    PrizeChip(
+                      color: UiConstants.primaryColor,
+                      png: Assets.moneyIcon,
+                      text: "Rs ${model.prizesA[i].amt}",
+                    )
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }
@@ -337,7 +360,9 @@ class PrizeChip extends StatelessWidget {
 
 class LeaderBoardView extends StatelessWidget {
   final LeaderBoardModal model;
-  LeaderBoardView({this.model});
+  final ScrollController controller;
+
+  LeaderBoardView({this.model, this.controller});
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -356,60 +381,76 @@ class LeaderBoardView extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: model.scoreboard.length,
-            itemBuilder: (ctx, i) {
-              return Container(
-                width: SizeConfig.screenWidth,
-                padding: EdgeInsets.all(SizeConfig.padding12),
-                margin: EdgeInsets.symmetric(vertical: SizeConfig.padding8),
-                decoration: BoxDecoration(
-                  color: UiConstants.primaryLight.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-                ),
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      backgroundColor: UiConstants.primaryColor,
-                      radius: SizeConfig.padding16,
-                      child: Text(
-                        "${i + 1}",
-                        style: TextStyles.body4.colour(Colors.white),
-                      ),
-                    ),
-                    SizedBox(width: SizeConfig.padding12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(model.scoreboard[i].username ?? "Username",
-                              style: TextStyles.body3),
-                          SizedBox(height: SizeConfig.padding4),
-                          Text(
-                            "Tambola",
-                            style: TextStyles.body4
-                                .colour(UiConstants.primaryColor),
-                          )
-                        ],
-                      ),
-                    ),
-                    TextButton.icon(
-                        icon: CircleAvatar(
-                          radius: SizeConfig.screenWidth * 0.029,
-                          backgroundColor: UiConstants.tertiaryLight,
-                          child: SvgPicture.asset(Assets.tickets,
-                              height: SizeConfig.iconSize3),
-                        ),
-                        label: Text(
-                            model.scoreboard[i].score.toString() ?? "00",
-                            style: TextStyles.body3.colour(Colors.black54)),
-                        onPressed: () {}),
-                  ],
-                ),
-              );
+          child: NotificationListener<OverscrollNotification>(
+            onNotification: (OverscrollNotification value) {
+              if (value.overscroll < 0 &&
+                  controller.offset + value.overscroll <= 0) {
+                if (controller.offset != 0) controller.jumpTo(0);
+                return true;
+              }
+              if (controller.offset + value.overscroll >=
+                  controller.position.maxScrollExtent) {
+                if (controller.offset != controller.position.maxScrollExtent)
+                  controller.jumpTo(controller.position.maxScrollExtent);
+                return true;
+              }
+              controller.jumpTo(controller.offset + value.overscroll);
+              return true;
             },
+            child: ListView.builder(
+              itemCount: model.scoreboard.length,
+              itemBuilder: (ctx, i) {
+                return Container(
+                  width: SizeConfig.screenWidth,
+                  padding: EdgeInsets.all(SizeConfig.padding12),
+                  margin: EdgeInsets.symmetric(vertical: SizeConfig.padding8),
+                  decoration: BoxDecoration(
+                    color: UiConstants.primaryLight.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+                  ),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        backgroundColor: UiConstants.primaryColor,
+                        radius: SizeConfig.padding16,
+                        child: Text(
+                          "${i + 1}",
+                          style: TextStyles.body4.colour(Colors.white),
+                        ),
+                      ),
+                      SizedBox(width: SizeConfig.padding12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(model.scoreboard[i].username ?? "Username",
+                                style: TextStyles.body3),
+                            SizedBox(height: SizeConfig.padding4),
+                            Text(
+                              "Tambola",
+                              style: TextStyles.body4
+                                  .colour(UiConstants.primaryColor),
+                            )
+                          ],
+                        ),
+                      ),
+                      TextButton.icon(
+                          icon: CircleAvatar(
+                            radius: SizeConfig.screenWidth * 0.029,
+                            backgroundColor: UiConstants.tertiaryLight,
+                            child: SvgPicture.asset(Assets.tickets,
+                                height: SizeConfig.iconSize3),
+                          ),
+                          label: Text(
+                              model.scoreboard[i].score.toString() ?? "00",
+                              style: TextStyles.body3.colour(Colors.black54)),
+                          onPressed: () {}),
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
         ),
       ],

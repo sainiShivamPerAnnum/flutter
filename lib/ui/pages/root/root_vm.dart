@@ -46,7 +46,8 @@ class RootViewModel extends BaseModel {
     await _userService.getUserFundWalletData();
   }
 
-  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
+  static final GlobalKey<ScaffoldState> scaffoldKey =
+      new GlobalKey<ScaffoldState>();
   List<Widget> pages;
 
   onInit() {
@@ -68,7 +69,8 @@ class RootViewModel extends BaseModel {
   }
 
   showDrawer() {
-    print("drawer opened");
+    // print("drawer opened");
+    //AppState.screenStack.add(ScreenItem.dialog);
     scaffoldKey.currentState.openDrawer();
   }
 
