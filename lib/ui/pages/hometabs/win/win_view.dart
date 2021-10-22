@@ -158,27 +158,6 @@ class Win extends StatelessWidget {
                   tag: "myWinnigs",
                   child: WinningsContainer(
                     shadow: false,
-                    child: Container(
-                      width: SizeConfig.screenWidth,
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.all(SizeConfig.padding16),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            locale.winMyWinnings,
-                            style: TextStyles.title5.colour(Colors.white60),
-                          ),
-                          SizedBox(height: SizeConfig.padding8),
-                          UserWinningsSE(
-                            style: TextStyles.title1
-                                .colour(Colors.white)
-                                .weight(FontWeight.w900)
-                                .letterSpace(2),
-                          )
-                        ],
-                      ),
-                    ),
                   ),
                 ),
               ),

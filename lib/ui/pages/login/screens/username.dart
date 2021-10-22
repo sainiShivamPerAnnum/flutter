@@ -33,13 +33,13 @@ class UsernameState extends State<Username> {
   bool isUpdated = false;
   final _formKey = GlobalKey<FormState>();
 
-  @override
-  void initState() {
-    focusNode = new FocusNode();
-    focusNode.addListener(
-        () => print('focusNode updated: hasFocus: ${focusNode.hasFocus}'));
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   focusNode = new FocusNode();
+  //   focusNode.addListener(
+  //       () => print('focusNode updated: hasFocus: ${focusNode.hasFocus}'));
+  //   super.initState();
+  // }
 
   @override
   void dispose() {

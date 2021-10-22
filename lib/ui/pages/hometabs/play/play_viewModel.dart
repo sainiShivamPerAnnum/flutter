@@ -54,22 +54,7 @@ class PlayViewModel extends BaseModel {
       routePath: '/not/yet/defined',
     ),
   ];
-  List<GameModel> _gamesList = [
-    GameModel(
-        gameName: "Cricket",
-        pageConfig: CricketHomePageConfig,
-        tag: 'cricket',
-        thumbnailImage: Assets.cricketThumb,
-        playCost: 5,
-        prizeAmount: 10000.0),
-    GameModel(
-        gameName: "Tambola",
-        pageConfig: THomePageConfig,
-        tag: 'tambola',
-        thumbnailImage: Assets.tambolaThumb,
-        playCost: 10,
-        prizeAmount: 25000.0),
-  ];
+
   final _fclActionRepo = locator<FlcActionsRepo>();
   final _userCoinService = locator<UserCoinService>();
   final _userService = locator<UserService>();
@@ -79,7 +64,6 @@ class PlayViewModel extends BaseModel {
   String _message;
   String _sessionId;
 
-  List<GameModel> get gameList => _gamesList;
   List<OfferCardModel> get offerList => _offerList;
 
   String get message => _message;
@@ -97,21 +81,9 @@ class PlayViewModel extends BaseModel {
   // void showMessage(context) {
   //   _baseUtil.showNegativeAlert('Permission Denied', _message, context);
   // }
-  openGame(String gameName) {
-    switch (gameName) {
-      case "Cricket":
-        AppState.delegate.appState.currentAction = PageAction(
-            state: PageState.addWidget,
-            widget: CricketHomeView(),
-            page: CricketHomePageConfig);
-        break;
-      case "Tambola":
-        AppState.delegate.appState.currentAction = PageAction(
-            state: PageState.addWidget,
-            widget: TambolaHomeView(),
-            page: THomePageConfig);
-        break;
-    }
+  openGame(PageConfiguration pageConfig) {
+    AppState.delegate.appState.currentAction =
+        PageAction(state: PageState.addPage, page: pageConfig);
   }
 
   void navigateToCricketView() {
