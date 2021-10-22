@@ -1,17 +1,12 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/enums/winner_service_enum.dart';
-import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/core/service/winners_service.dart';
 import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class WinnersLeaderBoardSE extends StatefulWidget {
@@ -90,8 +85,13 @@ class _WinnersLeaderBoardSEState extends State<WinnersLeaderBoardSE> {
                                   ],
                                 )
                               : WinnerboardView(
-                                  model: model.winners,
+                                  winners: model.winners,
                                   controller: myscrollController,
+                                  timeStamp: model.timeStamp,
+                                  cricketWinnerCount:
+                                      model.cricketWinnersLength,
+                                  tambolaWinnerCount:
+                                      model.tambolaWinnersLength,
                                 )),
                     ),
                   ],

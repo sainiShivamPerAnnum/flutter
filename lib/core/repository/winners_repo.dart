@@ -11,7 +11,7 @@ class WinnersRepository {
   final _logger = locator<Logger>();
 
 
-  Future<ApiResponse> getWinners(String gameType, String freq) async {
+  Future<ApiResponse<WinnersModel>> getWinners(String gameType, String freq) async {
     try {
       String code = CodeFromFreq.getCodeFromFreq(freq);
       _logger.d("Game Type : $gameType \n Frequency: $freq \n Code: $code");

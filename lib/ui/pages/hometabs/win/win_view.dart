@@ -1,9 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/texts/marquee_text.dart';
-import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
-import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_winnings.dart';
 import 'package:felloapp/ui/service_elements/winners_prizes/win_leaderboard.dart';
@@ -413,9 +412,17 @@ class IphoneCustomPaint extends CustomPainter {
 }
 
 class WinnerboardView extends StatelessWidget {
-  final WinnersModel model;
+  final List<Winners> winners;
   final ScrollController controller;
-  WinnerboardView({this.model, this.controller});
+  final Timestamp timeStamp;
+  final int cricketWinnerCount;
+  final int tambolaWinnerCount;
+  WinnerboardView(
+      {@required this.winners,
+      @required this.controller,
+      @required this.timeStamp,
+      @required this.cricketWinnerCount,
+      this.tambolaWinnerCount});
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -431,7 +438,9 @@ class WinnerboardView extends StatelessWidget {
             child: Row(
               children: [
                 Text(
-                  "Last updated on: ${DateFormat('dd-MMM-yyyy | hh:mm:ss').format(model.timestamp.toDate())}",
+                  timeStamp != null
+                      ? "Last updated on: ${DateFormat('dd-MMM-yyyy | hh:mm:ss').format(timeStamp.toDate())}"
+                      : "",
                   style: TextStyles.body4.colour(Colors.grey),
                 )
               ],
@@ -443,7 +452,7 @@ class WinnerboardView extends StatelessWidget {
               // itemCount: model.winners.length,
               children: List.generate(
             //50,
-            model.winners.length,
+            winners.length,
             (i) {
               return Container(
                 width: SizeConfig.screenWidth,
@@ -473,13 +482,11 @@ class WinnerboardView extends StatelessWidget {
                         children: [
                           Text(
                               //"avc",
-                              model.winners[i].username ?? "Username",
+                              winners[i].username ?? "Username",
                               style: TextStyles.body3),
                           SizedBox(height: SizeConfig.padding4),
                           Text(
-                            model.gametype == "GM_CRIC2020"
-                                ? "Circket"
-                                : "Tambola",
+                            i + 1 <= cricketWinnerCount ? "Circket" : "Tambola",
                             style: TextStyles.body4
                                 .colour(UiConstants.primaryColor),
                           )
@@ -495,7 +502,7 @@ class WinnerboardView extends StatelessWidget {
                         ),
                         label: Text(
                             //"00",
-                            model.winners[i].score.toString() ?? "00",
+                            winners[i].score.toString() ?? "00",
                             style: TextStyles.body3.colour(Colors.black54)),
                         onPressed: () {}),
                   ],
