@@ -52,6 +52,7 @@ class Assets {
   static final String hsFaqs = "assets/vectors/icons/hs_faqs.svg";
   static final String hsFdbk = 'assets/vectors/icons/hs_fdbk.svg';
   static final String hsMail = "assets/vectors/icons/hs_mail.svg";
+  static final String profilePic = "assets/images/profile.png";
 
   //HOME TAB//
 

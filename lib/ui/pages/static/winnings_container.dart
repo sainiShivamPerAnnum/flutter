@@ -1,28 +1,28 @@
+import 'package:felloapp/ui/service_elements/user_service/user_winnings.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class WinningsContainer extends StatelessWidget {
-  final Widget child;
-  final Color color;
   final bool shadow;
-
-  WinningsContainer({@required this.child, this.color, @required this.shadow});
+  final Widget child;
+  WinningsContainer({this.child, @required this.shadow});
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Container(
       decoration: BoxDecoration(
-          color: color ?? UiConstants.primaryColor,
+          color: UiConstants.primaryColor,
           borderRadius: BorderRadius.circular(SizeConfig.roundness32),
           boxShadow: [
             if (shadow)
               BoxShadow(
                 blurRadius: 30,
-                color: color != null
-                    ? color.withOpacity(0.5)
-                    : UiConstants.primaryColor.withOpacity(0.5),
+                color: UiConstants.primaryColor.withOpacity(0.5),
                 offset: Offset(
                   0,
                   SizeConfig.screenWidth * 0.1,
@@ -43,7 +43,29 @@ class WinningsContainer extends StatelessWidget {
               width: SizeConfig.screenWidth,
             ),
           ),
-          child
+          child != null
+              ? child
+              : Container(
+                  width: SizeConfig.screenWidth,
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.all(SizeConfig.padding16),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        locale.winMyWinnings,
+                        style: TextStyles.title5.colour(Colors.white60),
+                      ),
+                      SizedBox(height: SizeConfig.padding8),
+                      UserWinningsSE(
+                        style: TextStyles.title1
+                            .colour(Colors.white)
+                            .weight(FontWeight.w900)
+                            .letterSpace(2),
+                      )
+                    ],
+                  ),
+                ),
         ],
       ),
     );

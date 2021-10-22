@@ -421,7 +421,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
               bankIfsc: pBankIfsc,
               bankName: bankDetail[GetBankDetail.resBankName],
               bankBranchName: bankDetail[GetBankDetail.resBranchName],
-              dialogColor: FelloColorPalette.augmontFundPalette().primaryColor2,
+              dialogColor: UiConstants.primaryColor,
               customMessage: (widget.isWithdrawFlow)
                   ? 'Are you sure you want to continue? ${baseProvider.activeGoldWithdrawalQuantity.toString()} grams of digital gold shall be processed.'
                   : '',
