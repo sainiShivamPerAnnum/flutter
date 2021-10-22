@@ -37,15 +37,15 @@ class OfferCardModel {
 class PlayViewModel extends BaseModel {
   List<OfferCardModel> _offerList = [
     OfferCardModel(
-      title1: "WIN",
-      title2: "4 Tickets Now",
+      title1: "2X Multiplier",
+      title2: "Double your tokens",
       bgColor: UiConstants.tertiarySolid,
       buttonText: "Explore",
       routePath: '/not/yet/defined',
     ),
     OfferCardModel(
       title1: "WIN",
-      title2: "8 Tickets Now",
+      title2: "2 games, 200 tokens",
       bgColor: UiConstants.primaryColor,
       buttonText: "Hop in",
       routePath: '/not/yet/defined',

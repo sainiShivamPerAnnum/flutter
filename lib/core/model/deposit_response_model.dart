@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 
 class DepositResponseModel {
@@ -100,9 +101,9 @@ class Response {
       didWalletUpdate: map['didWalletUpdate'],
       transactionDoc: TransactionDoc.fromMap(map['transactionDoc']),
       didFLCUpdate: map['didFLCUpdate'],
-      augmontPrinciple: map['augmontPrinciple'],
-      augmontGoldQty: map['augmontGoldQty'],
-      flcBalance: map['flcBalance'],
+      augmontPrinciple: BaseUtil.toDouble(map['augmontPrinciple']),
+      augmontGoldQty: BaseUtil.toDouble(map['augmontGoldQty']),
+      flcBalance: BaseUtil.toInt(map['flcBalance']),
     );
   }
 
