@@ -4,6 +4,9 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/tambola-global/prize_section.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/picks_card/picks_card_view.dart';
+import 'package:felloapp/ui/pages/static/fello_appbar.dart';
+import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 
@@ -64,185 +67,93 @@ class Walkthrough extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: UiConstants.primaryColor,
-        elevation: 2,
-        shadowColor: Color(0xff0C9463).withOpacity(0.5),
-        title: Text(
-          "Walkthrough",
-          style: GoogleFonts.montserrat(
-            color: Colors.white,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        actions: [
-          InkWell(
-            child: SvgPicture.asset("images/support-log.svg",
-                height: kToolbarHeight * 0.6, color: Colors.white),
-            onTap: () {
-              HapticFeedback.vibrate();
-              AppState.delegate.appState.currentAction =
-                  PageAction(state: PageState.addPage, page: SupportPageConfig);
-            },
-          ),
-          SizedBox(width: SizeConfig.blockSizeHorizontal)
-        ],
-        centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.white),
-      ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-            horizontal: SizeConfig.blockSizeHorizontal * 5, vertical: 10),
-        child: ListView(
+      body: HomeBackground(
+        child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12.0),
-              child: Text(
-                "The Daily Picks",
-                style: GoogleFonts.montserrat(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-            Container(
-              width: SizeConfig.screenWidth,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage("images/Tambola/tranbg.png"),
-                  fit: BoxFit.cover,
-                ),
-                borderRadius:
-                    BorderRadius.circular(SizeConfig.cardBorderRadius),
-                gradient: LinearGradient(
-                  colors: [Color(0xff34C3A7), Color(0xff4AB474)],
-                  begin: Alignment.bottomRight,
-                  end: Alignment.topLeft,
-                ),
-              ),
-              padding: EdgeInsets.all(SizeConfig.globalMargin),
-              child: Column(
-                children: [
-                  Text(
-                    "Today's Picks",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: SizeConfig.largeTextSize,
-                        fontWeight: FontWeight.w700),
+            FelloAppBar(
+              leading: FelloAppBarBackButton(),
+              title: "Walkthrough",
+              actions: [
+                CircleAvatar(
+                  backgroundColor: Colors.black,
+                  child: InkWell(
+                    child: SvgPicture.asset("images/support-log.svg",
+                        width: SizeConfig.padding24, color: Colors.white),
+                    onTap: () {
+                      HapticFeedback.vibrate();
+                      AppState.delegate.appState.currentAction = PageAction(
+                          state: PageState.addPage, page: SupportPageConfig);
+                    },
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: List.generate(
-                        int.tryParse(BaseRemoteConfig.remoteConfig.getString(
-                            BaseRemoteConfig.TAMBOLA_DAILY_PICK_COUNT)),
-                        (index) => Random().nextInt(90),
-                      )
-                          .map(
-                            (e) => Container(
-                              height: SizeConfig.screenWidth * 0.12,
-                              width: SizeConfig.screenWidth * 0.12,
-                              decoration: BoxDecoration(
-                                color: Colors.black,
-                                shape: BoxShape.circle,
-                                gradient: RadialGradient(
-                                  center: Alignment(-0.8, -0.6),
-                                  colors: [Color(0xff515E63), Colors.black],
-                                  radius: 1.0,
-                                ),
-                              ),
-                              alignment: Alignment.center,
-                              child: Stack(
-                                children: [
-                                  Align(
-                                    alignment: Alignment.center,
-                                    child: Container(
-                                      height: SizeConfig.screenWidth * 0.09,
-                                      width: SizeConfig.screenWidth * 0.09,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: Colors.white,
-                                          width: 0.5,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    height: SizeConfig.screenWidth * 0.12,
-                                    width: SizeConfig.screenWidth * 0.12,
-                                    alignment: Alignment.center,
-                                    padding: EdgeInsets.all(8),
-                                    child: FittedBox(
-                                      child: Text(
-                                        e.toString() ?? "-",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w700,
-                                            color: Colors.white,
-                                            fontSize: SizeConfig.largeTextSize),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    height: SizeConfig.screenWidth * 0.12,
-                                    width: SizeConfig.screenWidth * 0.12,
-                                    alignment: Alignment.center,
-                                    padding: EdgeInsets.all(8),
-                                    child: FittedBox(
-                                      child: Text(
-                                        e.toString() ?? "-",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w700,
-                                            color: Colors.white,
-                                            fontSize: SizeConfig.largeTextSize),
-                                      ),
-                                    ),
-                                  )
-                                ],
+                )
+              ],
+            ),
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(SizeConfig.roundness40),
+                        topRight: Radius.circular(SizeConfig.roundness40)),
+                    color: Colors.white),
+                padding: EdgeInsets.symmetric(
+                    vertical: SizeConfig.pageHorizontalMargins),
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.pageHorizontalMargins),
+                      child: Text(
+                        "The Daily Picks",
+                        style: GoogleFonts.montserrat(
+                          fontSize: SizeConfig.title3,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    PicksCardView(),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.pageHorizontalMargins),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(children: generatePoints(dailyPicks)),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: SizeConfig.padding12),
+                            child: Text(
+                              "The Daily Picks",
+                              style: GoogleFonts.montserrat(
+                                fontSize: SizeConfig.title3,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
-                          )
-                          .toList(),
-                    ),
-                  )
-                ],
-              ),
-            ),
-            // Image.asset(
-            //   "images/Tambola/w-picks.png",
-            //   width: SizeConfig.screenWidth,
-            // ),
-            Column(children: generatePoints(dailyPicks)),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12.0),
-              child: Text(
-                "Your tickets",
-                style: GoogleFonts.montserrat(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w500,
+                          ),
+                          Image.asset(
+                            "images/Tambola/w-ticket.png",
+                            width: SizeConfig.screenWidth,
+                            fit: BoxFit.cover,
+                          ),
+                          Column(children: generatePoints(tambolatickets)),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 12.0),
+                            child: Text(
+                              "How to Win",
+                              style: GoogleFonts.montserrat(
+                                fontSize: 24,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          Column(children: generatePoints(prizes)),
+                        ],
+                      ),
+                    )
+                  ],
                 ),
               ),
             ),
-            Image.asset(
-              "images/Tambola/w-ticket.png",
-              width: SizeConfig.screenWidth,
-              fit: BoxFit.cover,
-            ),
-            Column(children: generatePoints(tambolatickets)),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12.0),
-              child: Text(
-                "How to Win",
-                style: GoogleFonts.montserrat(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-            PrizeSection(),
-            Column(children: generatePoints(prizes)),
           ],
         ),
       ),

@@ -134,7 +134,8 @@ class WantMoreTickets extends StatelessWidget {
           isBarrierDismissable: true,
         ),
         child: AnimatedContainer(
-          duration: Duration(seconds: 1),
+          duration: Duration(milliseconds: 300),
+          curve: Curves.decelerate,
           height: AppState.getCurrentTabIndex == 1
               ? SizeConfig.navBarHeight * 1.6
               : SizeConfig.navBarHeight,

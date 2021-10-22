@@ -39,13 +39,20 @@ class AugmontGoldBuyViewModel extends BaseModel {
   TransactionService _txnService = locator<TransactionService>();
   bool isGoldRateFetching = false;
   AugmontRates goldRates;
-  bool isGoldBuyInProgress = false;
+  bool _isGoldBuyInProgress = false;
+
   double goldBuyAmount = 0;
   double goldAmountInGrams = 0.0;
   TextEditingController goldAmountController;
   List<double> chipAmountList = [100, 500, 1000, 5000];
 
   double get goldBuyPrice => goldRates != null ? goldRates.goldBuyPrice : 0.0;
+  get isGoldBuyInProgress => this._isGoldBuyInProgress;
+
+  set isGoldBuyInProgress(value) {
+    this._isGoldBuyInProgress = value;
+    notifyListeners();
+  }
 
   init() {
     goldAmountController = TextEditingController();
@@ -105,21 +112,21 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
   initiateBuy() async {
     double buyAmount = double.tryParse(goldAmountController.text);
-    if(goldRates == null) {
+    if (goldRates == null) {
       BaseUtil.showNegativeAlert(
         'Gold Rates Unavailable',
         'Please try again in sometime',
       );
       return;
     }
-    if(buyAmount == null) {
+    if (buyAmount == null) {
       BaseUtil.showNegativeAlert(
         'No amount entered',
         'Please enter an amount',
       );
       return;
     }
-    if(buyAmount < 10) {
+    if (buyAmount < 10) {
       BaseUtil.showNegativeAlert(
         'Minimum amount should be 10',
         'Please enter a minimum purchase amount or Rs 10',
@@ -127,34 +134,21 @@ class AugmontGoldBuyViewModel extends BaseModel {
       return;
     }
 
-    if(_baseUtil.augmontDetail == null) {
-      _baseUtil.augmontDetail = await _dbModel.getUserAugmontDetails(_baseUtil.myUser.uid);
+    if (_baseUtil.augmontDetail == null) {
+      _baseUtil.augmontDetail =
+          await _dbModel.getUserAugmontDetails(_baseUtil.myUser.uid);
     }
-
-    _augmontModel.initiateGoldPurchase(
-        goldRates, buyAmount).then((txn) {
-          if(txn == null) {
-            BaseUtil.showNegativeAlert(
-              'Transaction failed',
-              'Please try again in sometime or contact us for further assistance.',
-            );
-          }
+    isGoldBuyInProgress = true;
+    _augmontModel.initiateGoldPurchase(goldRates, buyAmount).then((txn) {
+      if (txn == null) {
+        isGoldBuyInProgress = false;
+        BaseUtil.showNegativeAlert(
+          'Transaction failed',
+          'Please try again in sometime or contact us for further assistance.',
+        );
+      }
     });
-    _augmontModel.setAugmontTxnProcessListener(
-        _onDepositTransactionComplete);
-
-    // if (await BaseUtil.showNoInternetAlert()) return;
-    // if (checkAugmontStatus() == STATUS_OPEN) {
-    //   if (goldAmountController.text.trim().isEmpty)
-    //     return BaseUtil.showNegativeAlert(
-    //         "No Amount Entered", "Please enter some amount");
-    // }
-
-    // isGoldBuyInProgress = true;
-    // notifyListeners();
-    // Haptic.vibrate();
-    // _onDepositClicked();
-    // showSuccessGoldBuyDialog();
+    _augmontModel.setAugmontTxnProcessListener(_onDepositTransactionComplete);
   }
 
   String getActionButtonText() {
@@ -345,7 +339,6 @@ class AugmontGoldBuyViewModel extends BaseModel {
     // _isDepositInProgress = false;
     // setState(() {});
     isGoldBuyInProgress = false;
-    notifyListeners();
     if (flag) {
       // BaseUtil.showPositiveAlert(
       //     'SUCCESS', 'You gold deposit was confirmed!', context);

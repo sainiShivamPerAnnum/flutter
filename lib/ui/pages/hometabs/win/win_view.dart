@@ -304,49 +304,6 @@ class BigPrizeContainer extends StatelessWidget {
   }
 }
 
-// Card(
-//   margin: EdgeInsets.symmetric(vertical: 20),
-//   child: Padding(
-//     padding:
-//         const EdgeInsets.symmetric(horizontal: 8.0, vertical: 25),
-//     child: Column(
-//       children: [
-//         Row(
-//           mainAxisAlignment: MainAxisAlignment.spaceAround,
-//           children: [
-//             Text("My winnings", style: TextStyles.body3.light),
-//             PropertyChangeConsumer<UserService,
-//                 UserServiceProperties>(
-//               builder: (ctx, model, child) => Text(
-//                 //"₹ 0.00",
-//                 "₹ ${model.userFundWallet.unclaimedBalance}",
-//                 style: TextStyles.body2.bold
-//                     .colour(UiConstants.primaryColor),
-//               ),
-//             ),
-//           ],
-//         ),
-//         // SizedBox(height: 12),
-//         // Widgets().getBodyBold("Redeem for", Colors.black),
-//         SizedBox(height: 12),
-//         if (model.getUnclaimedPrizeBalance > 0)
-//           PropertyChangeConsumer<UserService,
-//               UserServiceProperties>(
-//             builder: (ctx, m, child) => FelloButton(
-//               defaultButtonText:
-//                   m.userFundWallet.isPrizeBalanceUnclaimed()
-//                       ? "Redeem"
-//                       : "Share",
-//               onPressedAsync: () =>
-//                   model.prizeBalanceAction(context),
-//               defaultButtonColor: Colors.orange,
-//             ),
-//           ),
-//       ],
-//     ),
-//   ),
-// ),
-
 //Copy this CustomPainter code to the Bottom of the File
 class LakhCustomPaint extends CustomPainter {
   @override

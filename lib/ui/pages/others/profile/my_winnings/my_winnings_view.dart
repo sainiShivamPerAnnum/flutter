@@ -1,4 +1,10 @@
+import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/model/tambola_winners_details.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/dialogs/share-card.dart';
+import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
@@ -11,12 +17,17 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
 
 class MyWinningsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return BaseView<MyWinningsViewModel>(
+      onModelReady: (model) {
+        model.getWinningHistory();
+      },
       builder: (ctx, model, child) {
         return Scaffold(
           backgroundColor: UiConstants.primaryColor,
@@ -38,6 +49,8 @@ class MyWinningsView extends StatelessWidget {
                         color: Colors.white,
                       ),
                       child: ListView(
+                        padding: EdgeInsets.only(
+                            top: SizeConfig.pageHorizontalMargins),
                         // crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Hero(
@@ -78,7 +91,8 @@ class MyWinningsView extends StatelessWidget {
                                 ClaimButton(
                                   color: Color(0xff11192B),
                                   image: Assets.amazonClaim,
-                                  onTap: model.showConfirmDialog,
+                                  onTap: () => model.showConfirmDialog(
+                                      PrizeClaimChoice.AMZ_VOUCHER),
                                   text: "Redeem for amazon pay",
                                 ),
                                 SizedBox(
@@ -123,36 +137,50 @@ class MyWinningsView extends StatelessWidget {
                             ),
                           ),
                           SizedBox(height: SizeConfig.padding16),
-                          Container(
-                            height: SizeConfig.screenHeight * 0.5,
-                            child: ListView.builder(
-                              physics: BouncingScrollPhysics(),
-                              itemCount: 10,
-                              itemBuilder: (ctx, i) => ListTile(
-                                contentPadding: EdgeInsets.symmetric(
-                                    horizontal:
-                                        SizeConfig.pageHorizontalMargins),
-                                leading: CircleAvatar(
-                                  radius: SizeConfig.padding24,
-                                  backgroundImage: NetworkImage(
-                                      "https://upload.wikimedia.org/wikipedia/en/5/51/Minecraft_cover.png"),
-                                ),
-                                title: Text(
-                                  "1st Position Cricket",
-                                  style: TextStyles.body2.bold,
-                                ),
-                                subtitle: Text(
-                                  "March 6, 2021",
-                                  style: TextStyles.body3.colour(Colors.grey),
-                                ),
-                                trailing: Text(
-                                  "Rs 100",
-                                  style: TextStyles.body2.bold
-                                      .colour(UiConstants.primaryColor),
-                                ),
-                              ),
-                            ),
-                          )
+                          model.isWinningHistoryLoading
+                              ? ListLoader()
+                              : (model.winningHistory != null &&
+                                      model.winningHistory.isNotEmpty
+                                  ? Container(
+                                      height: SizeConfig.screenHeight * 0.5,
+                                      child: ListView.builder(
+                                        padding: EdgeInsets.zero,
+                                        physics: BouncingScrollPhysics(),
+                                        itemCount: model.winningHistory.length,
+                                        itemBuilder: (ctx, i) => ListTile(
+                                          contentPadding: EdgeInsets.symmetric(
+                                              horizontal: SizeConfig
+                                                  .pageHorizontalMargins),
+                                          leading: CircleAvatar(
+                                            radius: SizeConfig.padding24,
+                                            backgroundImage: NetworkImage(
+                                                "https://upload.wikimedia.org/wikipedia/en/5/51/Minecraft_cover.png"),
+                                          ),
+                                          title: Text(
+                                            model.getWinningHistoryTitle(model
+                                                .winningHistory[i].subType),
+                                            style: TextStyles.body2.bold,
+                                          ),
+                                          subtitle: Text(
+                                            DateFormat("dd MMM, yyyy").format(
+                                                model
+                                                    .winningHistory[i].timestamp
+                                                    .toDate()),
+                                            style: TextStyles.body3
+                                                .colour(Colors.grey),
+                                          ),
+                                          trailing: Text(
+                                            "₹ ${model.winningHistory[i]?.amount}",
+                                            style: TextStyles.body2.bold.colour(
+                                                UiConstants.primaryColor),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : NoRecordDisplayWidget(
+                                      asset: Assets.noTransaction,
+                                      text: "No Winning History yet",
+                                    ))
                         ],
                       ),
                     ),
@@ -219,3 +247,49 @@ class ClaimButton extends StatelessWidget {
     );
   }
 }
+
+
+//                             Card(
+//                             margin: EdgeInsets.symmetric(vertical: 20),
+//                             child: Padding(
+//                               padding: const EdgeInsets.symmetric(
+//                                   horizontal: 8.0, vertical: 25),
+//                               child: Column(
+//                                 children: [
+//                                   Row(
+//                                     mainAxisAlignment:
+//                                         MainAxisAlignment.spaceAround,
+//                                     children: [
+//                                       Text("My winnings",
+//                                           style: TextStyles.body3.light),
+//                                       PropertyChangeConsumer<UserService,
+//                                           UserServiceProperties>(
+//                                         builder: (ctx, model, child) => Text(
+//                                           //"₹ 0.00",
+//                                           "₹ ${model.userFundWallet.unclaimedBalance}",
+//                                           style: TextStyles.body2.bold
+//                                               .colour(UiConstants.primaryColor),
+//                                         ),
+//                                       ),
+//                                     ],
+//                                   ),
+//                                   // SizedBox(height: 12),
+//                                   // Widgets().getBodyBold("Redeem for", Colors.black),
+//                                   SizedBox(height: 12),
+//                                   //if (model.getUnclaimedPrizeBalance > 0)
+//                                   PropertyChangeConsumer<UserService,
+//                                       UserServiceProperties>(
+//                                     builder: (ctx, m, child) => FelloButton(
+//                                       defaultButtonText: m.userFundWallet
+//                                               .isPrizeBalanceUnclaimed()
+//                                           ? "Redeem"
+//                                           : "Share",
+//                                       onPressedAsync: () =>
+//                                           model.prizeBalanceAction(context),
+//                                       defaultButtonColor: Colors.orange,
+//                                     ),
+//                                   ),
+//                                 ],
+//                               ),
+//                             ),
+//                           ),
