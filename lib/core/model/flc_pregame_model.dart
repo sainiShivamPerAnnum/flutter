@@ -1,17 +1,23 @@
 class FlcModel {
   String message;
+  bool status;
+  int ticketCount;
   int flcBalance;
   String sessionId;
   bool isValidUser;
   bool canUserPlay;
   bool isWalletInitalized;
+  String ticketFieldName;
 
   FlcModel(
       {this.message,
       this.flcBalance,
+      this.ticketCount,
+      this.ticketFieldName,
       this.sessionId,
       this.isValidUser,
       this.canUserPlay,
+      this.status,
       this.isWalletInitalized});
 
   FlcModel.fromJson(Map<String, dynamic> json) {
@@ -21,6 +27,9 @@ class FlcModel {
     isValidUser = json['isValidUser'];
     canUserPlay = json['canUserPlay'];
     isWalletInitalized = json['isWalletInitalized'];
+    ticketFieldName = json['ticketFieldName'];
+    status = json['status'];
+    ticketCount = json['ticketCount'];
   }
 
   Map<String, dynamic> toJson() {
@@ -31,6 +40,9 @@ class FlcModel {
     data['isValidUser'] = this.isValidUser;
     data['canUserPlay'] = this.canUserPlay;
     data['isWalletInitalized'] = this.isWalletInitalized;
+    data['status'] = this.status;
+    data['ticketFieldName'] = this.ticketFieldName;
+    data['ticketCount'] = this.ticketCount;
 
     return data;
   }
@@ -43,6 +55,9 @@ class FlcModel {
       'isValidUser': isValidUser,
       'canUserPlay': canUserPlay,
       'isWalletInitalized': isWalletInitalized,
+      'ticketFieldName': ticketFieldName,
+      'status': status,
+      'ticketCount': ticketCount,
     };
   }
 
@@ -53,6 +68,9 @@ class FlcModel {
         sessionId: map['sessionId'],
         isValidUser: map['isValidUser'],
         canUserPlay: map['canUserPlay'],
-        isWalletInitalized: map['isWalletInitalized']);
+        isWalletInitalized: map['isWalletInitalized'],
+        ticketFieldName: map['ticketFieldName'],
+        status: map['status'],
+        ticketCount: map['ticketCount']);
   }
 }
