@@ -12,7 +12,10 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_game/cricket_game_view.dart';
+import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -56,14 +59,16 @@ class PlayViewModel extends BaseModel {
         gameName: "Cricket",
         pageConfig: CricketHomePageConfig,
         tag: 'cricket',
-        thumbnailImage:
-            "https://www.mpl.live/blog/wp-content/uploads/2020/09/WCC2-mobile-game-becomes-the-worlds-No.1-cricket-game-silently-1.png"),
+        thumbnailImage: Assets.cricketThumb,
+        playCost: 5,
+        prizeAmount: 10000.0),
     GameModel(
         gameName: "Tambola",
         pageConfig: THomePageConfig,
         tag: 'tambola',
-        thumbnailImage:
-            "https://store-images.s-microsoft.com/image/apps.7421.14526104391731353.3efa198c-600d-47e2-a495-171846e34e31.74622fdc-08ff-434d-9cec-a4b5266dc24c?mode=scale&q=90&h=1080&w=1920"),
+        thumbnailImage: Assets.tambolaThumb,
+        playCost: 10,
+        prizeAmount: 25000.0),
   ];
   final _fclActionRepo = locator<FlcActionsRepo>();
   final _userCoinService = locator<UserCoinService>();
@@ -92,6 +97,22 @@ class PlayViewModel extends BaseModel {
   // void showMessage(context) {
   //   _baseUtil.showNegativeAlert('Permission Denied', _message, context);
   // }
+  openGame(String gameName) {
+    switch (gameName) {
+      case "Cricket":
+        AppState.delegate.appState.currentAction = PageAction(
+            state: PageState.addWidget,
+            widget: CricketHomeView(),
+            page: CricketHomePageConfig);
+        break;
+      case "Tambola":
+        AppState.delegate.appState.currentAction = PageAction(
+            state: PageState.addWidget,
+            widget: TambolaHomeView(),
+            page: THomePageConfig);
+        break;
+    }
+  }
 
   void navigateToCricketView() {
     AppState.delegate.appState.currentAction = PageAction(

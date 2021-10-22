@@ -31,9 +31,7 @@ class Win extends StatelessWidget {
             Container(
               child: Column(
                 children: [
-                  SizedBox(
-                      height:
-                          SizeConfig.screenWidth * 0.3 + SizeConfig.padding40),
+                  SizedBox(height: SizeConfig.screenHeight * 0.2),
                   Expanded(
                     child: ListView(
                       children: [
@@ -153,7 +151,7 @@ class Win extends StatelessWidget {
               ),
             ),
             Container(
-              margin: EdgeInsets.only(top: SizeConfig.padding80),
+              margin: EdgeInsets.only(top: SizeConfig.screenHeight * 0.09),
               child: InkWell(
                 onTap: model.navigateToMyWinnings,
                 child: Hero(

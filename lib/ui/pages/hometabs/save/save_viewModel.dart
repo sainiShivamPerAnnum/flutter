@@ -7,6 +7,8 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/modals_sheets/augmont_register_modal_sheet.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_view.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:flutter/cupertino.dart';
 
 class SaveViewModel extends BaseModel {
   BaseUtil _baseUtil = locator<BaseUtil>();
@@ -21,13 +23,15 @@ class SaveViewModel extends BaseModel {
   }
 
   checkRegistrationAndRedirect() {
-    if(_baseUtil.myUser.isAugmontOnboarded) {
+    if (_baseUtil.myUser.isAugmontOnboarded) {
       AppState.delegate.appState.currentAction =
-          PageAction(
-              state: PageState.addPage,
-              page: AugmontGoldBuyPageConfig);
-    }else{
+          PageAction(state: PageState.addPage, page: AugmontGoldBuyPageConfig);
+    } else {
       BaseUtil.openModalBottomSheet(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(SizeConfig.roundness24),
+            topRight: Radius.circular(SizeConfig.roundness24),
+          ),
           addToScreenStack: true,
           content: AugmontRegisterModalSheet(),
           isBarrierDismissable: false);

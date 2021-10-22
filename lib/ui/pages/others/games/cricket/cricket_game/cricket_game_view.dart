@@ -5,6 +5,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_game/cricket_game_vm.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -28,14 +29,15 @@ class CricketGameView extends StatelessWidget {
     return BaseView<CricketGameViewModel>(
       builder: (ctx, model, child) => Scaffold(
         backgroundColor: UiConstants.primaryColor,
-        floatingActionButton: FloatingActionButton(
-          splashColor: UiConstants.tertiarySolid,
-          onPressed: AppState.backButtonDispatcher.didPopRoute,
-          child: Icon(
-            Icons.close,
-            color: Colors.white,
+        floatingActionButton: CircleAvatar(
+          backgroundColor: Colors.red.withOpacity(0.5),
+          child: IconButton(
+            onPressed: AppState.backButtonDispatcher.didPopRoute,
+            icon: Icon(
+              Icons.close,
+              color: Colors.white,
+            ),
           ),
-          backgroundColor: UiConstants.primaryColor,
         ),
         body: WebView(
           //TODO customize url
