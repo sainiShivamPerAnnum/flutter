@@ -173,7 +173,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                                     keyboardType: TextInputType.name,
                                     textCapitalization:
                                         TextCapitalization.characters,
-                                    controller: _bankAccNoConfirmController,
+                                    controller: _bankHolderNameController,
                                     validator: (value) {
                                       return (value.isEmpty || value.length < 4)
                                           ? 'Please enter you name as per your bank'
@@ -364,9 +364,9 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
     var pConfirmBankAccNo = _bankAccNoConfirmController.text;
     var pBankIfsc = _bankIfscController.text;
 
-    var curBankHolderName = baseProvider.augmontDetail.bankHolderName;
-    var curBankAccNo = baseProvider.augmontDetail.bankAccNo;
-    var curBankIfsc = baseProvider.augmontDetail.ifsc;
+    var curBankHolderName = baseProvider.augmontDetail?.bankHolderName;
+    var curBankAccNo = baseProvider.augmontDetail?.bankAccNo;
+    var curBankIfsc = baseProvider.augmontDetail?.ifsc;
 
     bool noChanges = true;
     if (curBankHolderName == null || pBankHolderName != curBankHolderName)
