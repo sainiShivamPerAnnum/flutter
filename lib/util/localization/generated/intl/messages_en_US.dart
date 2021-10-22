@@ -56,7 +56,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "navBarPlay" : MessageLookupByLibrary.simpleMessage("Play"),
     "navBarSave" : MessageLookupByLibrary.simpleMessage("Save"),
     "navBarWin" : MessageLookupByLibrary.simpleMessage("Win"),
-    "navWMT" : MessageLookupByLibrary.simpleMessage("Want more tickets"),
+    "navWMT" : MessageLookupByLibrary.simpleMessage("Earn more tokens"),
     "noTransaction" : MessageLookupByLibrary.simpleMessage("No transactions to show yet"),
     "obDidntGetOtp" : MessageLookupByLibrary.simpleMessage("Didn\'t get an OTP? "),
     "obDobLabel" : MessageLookupByLibrary.simpleMessage("Date of Birth"),

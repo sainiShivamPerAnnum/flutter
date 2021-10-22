@@ -300,9 +300,6 @@ class AugmontGoldBuyViewModel extends BaseModel {
               await _dbModel.unlockReferralTickets(_baseUtil.myUser.uid);
           if (_isUnlocked) {
             //give it a few seconds before showing congratulatory message
-
-
-
             Timer(const Duration(seconds: 4), () {
               BaseUtil.showPositiveAlert(
                 'Congratulations are in order!',
