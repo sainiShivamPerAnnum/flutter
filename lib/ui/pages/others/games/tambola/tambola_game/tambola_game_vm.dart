@@ -46,12 +46,15 @@ class TambolaGameViewModel extends BaseModel {
   TambolaBoard _currentBoard;
   Widget _widget;
   AnimationController animationController;
+  PageController ticketPageController;
 
   List<Ticket> _topFiveTambolaBoards = [];
-
+  List<Ticket> tambolaBoardViews;
+  List<TambolaBoard> _bestTambolaBoards;
   bool showSummaryCards = true;
   bool ticketsBeingGenerated = false;
   bool ticketBuyInProgress = false;
+  bool weeklyDrawFetched = false;
   bool _showBuyModal = true;
   int buyTicketCount = 5;
 
@@ -64,6 +67,7 @@ class TambolaGameViewModel extends BaseModel {
   Widget get cardWidet => _widget;
 
   List<Ticket> get topFiveTambolaBoards => _topFiveTambolaBoards;
+  bool get weeklyTicksFetched => tambolaService.weeklyTicksFetched;
 
   Ticket get currentBoardView => _currentBoardView;
   TambolaBoard get currentBoard => _currentBoard;
@@ -90,7 +94,10 @@ class TambolaGameViewModel extends BaseModel {
       await tambolaService.getUserTicketWalletData();
 
     ///Weekly Picks check
-    if (weeklyDigits == null) await tambolaService.fetchWeeklyPicks();
+    if (weeklyDigits == null) {
+      await tambolaService.fetchWeeklyPicks();
+      weeklyDrawFetched = true;
+    }
 
     ///next get the tambola tickets of this week
     if (!tambolaService.weeklyTicksFetched) {
@@ -216,10 +223,6 @@ class TambolaGameViewModel extends BaseModel {
     return Ticket(
       board: board,
       calledDigits: _calledDigits,
-      bgColor: ticketColor.boardColor,
-      boardColorEven: ticketColor.itemColorEven,
-      boardColorOdd: ticketColor.itemColorOdd,
-      boradColorMarked: ticketColor.itemColorMarked,
     );
   }
 
@@ -378,27 +381,27 @@ class TambolaGameViewModel extends BaseModel {
   //   List<BestTambolaTicketsSumm> bestCornersBoardCardItems = [];
   //   List<BestTambolaTicketsSumm> fullHouseBoardCardItems = [];
 
-  //   if (baseProvider.userWeeklyBoards == null ||
-  //       baseProvider.userWeeklyBoards.isEmpty) {
+  //   if (userWeeklyBoards == null ||
+  //       userWeeklyBoards.isEmpty) {
   //     return summary;
   //   }
 
-  //   if (baseProvider.weeklyDigits == null ||
-  //       baseProvider.weeklyDigits.toList().isEmpty) {
+  //   if (weeklyDigits == null ||
+  //       weeklyDigits.toList().isEmpty) {
   //     return summary;
   //   }
 
-  //   baseProvider.userWeeklyBoards.forEach((board) {
+  //   userWeeklyBoards.forEach((board) {
   //     // CORNERS CHECK
   //     // Checking for any completed corner borads
-  //     if (board.getCornerOdds(baseProvider.weeklyDigits
+  //     if (board.getCornerOdds(weeklyDigits
   //             .getPicksPostDate(board.generatedDayCode)) ==
   //         0) completedCornersBoard.add(_buildBoardView(board));
   //     // Checking for best Chances
-  //     if (board.getCornerOdds(baseProvider.weeklyDigits
+  //     if (board.getCornerOdds(weeklyDigits
   //                 .getPicksPostDate(board.generatedDayCode)) <
   //             2 &&
-  //         board.getCornerOdds(baseProvider.weeklyDigits
+  //         board.getCornerOdds(weeklyDigits
   //                 .getPicksPostDate(board.generatedDayCode)) >
   //             0) bestCornerBoard.add(_buildBoardView(board));
 
@@ -406,68 +409,68 @@ class TambolaGameViewModel extends BaseModel {
   //     // TOP ROW
   //     if (board.getRowOdds(
   //                 0,
-  //                 baseProvider.weeklyDigits
+  //                 weeklyDigits
   //                     .getPicksPostDate(board.generatedDayCode)) <
   //             3 &&
   //         board.getRowOdds(
   //                 0,
-  //                 baseProvider.weeklyDigits
+  //                 weeklyDigits
   //                     .getPicksPostDate(board.generatedDayCode)) >
   //             0) bestTopRowBoard.add(_buildBoardView(board));
 
   //     if (board.getRowOdds(
   //             0,
-  //             baseProvider.weeklyDigits
+  //             weeklyDigits
   //                 .getPicksPostDate(board.generatedDayCode)) ==
   //         0) completedTopRowBoard.add(_buildBoardView(board));
 
   //     // MIDDLE ROW
   //     if (board.getRowOdds(
   //                 1,
-  //                 baseProvider.weeklyDigits
+  //                 weeklyDigits
   //                     .getPicksPostDate(board.generatedDayCode)) <
   //             3 &&
   //         board.getRowOdds(
   //                 1,
-  //                 baseProvider.weeklyDigits
+  //                 weeklyDigits
   //                     .getPicksPostDate(board.generatedDayCode)) >
   //             0) bestMiddleRowBoard.add(_buildBoardView(board));
 
   //     if (board.getRowOdds(
   //             1,
-  //             baseProvider.weeklyDigits
+  //             weeklyDigits
   //                 .getPicksPostDate(board.generatedDayCode)) ==
   //         0) completedMiddleRowBoard.add(_buildBoardView(board));
 
   //     // BOTTOM ROW
   //     if (board.getRowOdds(
   //                 2,
-  //                 baseProvider.weeklyDigits
+  //                 weeklyDigits
   //                     .getPicksPostDate(board.generatedDayCode)) <
   //             3 &&
   //         board.getRowOdds(
   //                 2,
-  //                 baseProvider.weeklyDigits
+  //                 weeklyDigits
   //                     .getPicksPostDate(board.generatedDayCode)) >
   //             0) bestBottomRowBoard.add(_buildBoardView(board));
 
   //     if (board.getRowOdds(
   //             2,
-  //             baseProvider.weeklyDigits
+  //             weeklyDigits
   //                 .getPicksPostDate(board.generatedDayCode)) ==
   //         0) completedBottomRowBoard.add(_buildBoardView(board));
 
   //     // FULL HOUSE CHECK
 
   //     // Checking for completed Full House Boards
-  //     if (board.getFullHouseOdds(baseProvider.weeklyDigits
+  //     if (board.getFullHouseOdds(weeklyDigits
   //             .getPicksPostDate(board.generatedDayCode)) ==
   //         0) completedFullHouseBoard.add(_buildBoardView(board));
   //     // Checking for best Chances of a Full House Board
-  //     if (board.getFullHouseOdds(baseProvider.weeklyDigits
+  //     if (board.getFullHouseOdds(weeklyDigits
   //                 .getPicksPostDate(board.generatedDayCode)) <
   //             5 &&
-  //         board.getFullHouseOdds(baseProvider.weeklyDigits
+  //         board.getFullHouseOdds(weeklyDigits
   //                 .getPicksPostDate(board.generatedDayCode)) >
   //             0) bestFullHouseBoard.add(_buildBoardView(board));
   //   });
@@ -601,78 +604,129 @@ class TambolaGameViewModel extends BaseModel {
   //   return output;
   // }
 
+  // List<TambolaBoard> refreshBestBoards() {
+  //   List<TambolaBoard> _bestTambolaBoards = [];
+
+  //   // If boards are empty
+  //   if (userWeeklyBoards == null || userWeeklyBoards.isEmpty) {
+  //     return _bestTambolaBoards;
+  //   }
+  //   // If number of boards are less than 5, return all the boards
+  //   if (userWeeklyBoards.length <= 5) {
+  //     _bestTambolaBoards = [];
+  //     userWeeklyBoards.forEach((e) {
+  //       _bestTambolaBoards.add(e);
+  //     });
+  //     return _bestTambolaBoards;
+  //   }
+  //   // If numbers of boards are more than 5
+
+  //   //initialise bestboards with first 5 board
+  //   // _bestTambolaBoards = List.filled(5, userWeeklyBoards[0]);
+  //   for (int i = 0; i < 5; i++) {
+  //     _bestTambolaBoards.add(userWeeklyBoards[i]);
+  //   }
+
+  //   // If weekly digits are not announced yet, simply return first 5 tickets
+  //   if (weeklyDigits == null || weeklyDigits.toList().isEmpty) {
+  //     return _bestTambolaBoards;
+  //   }
+
+  //   for (int i = 5; i < userWeeklyBoards.length; i++) {
+  //     final board = userWeeklyBoards[i];
+  //     if (_bestTambolaBoards[0].getRowOdds(
+  //                 0,
+  //                 weeklyDigits.getPicksPostDate(
+  //                     _bestTambolaBoards[0].generatedDayCode)) >
+  //             board.getRowOdds(
+  //                 0, weeklyDigits.getPicksPostDate(board.generatedDayCode)) &&
+  //         !_bestTambolaBoards.contains(board)) {
+  //       _bestTambolaBoards[0] = board;
+  //     }
+  //     if (_bestTambolaBoards[1].getRowOdds(
+  //                 1,
+  //                 weeklyDigits.getPicksPostDate(
+  //                     _bestTambolaBoards[1].generatedDayCode)) >
+  //             board.getRowOdds(
+  //                 1, weeklyDigits.getPicksPostDate(board.generatedDayCode)) &&
+  //         !_bestTambolaBoards.contains(board)) {
+  //       _bestTambolaBoards[1] = board;
+  //     }
+  //     if (_bestTambolaBoards[2].getRowOdds(
+  //                 2,
+  //                 weeklyDigits.getPicksPostDate(
+  //                     _bestTambolaBoards[2].generatedDayCode)) >
+  //             board.getRowOdds(
+  //                 2, weeklyDigits.getPicksPostDate(board.generatedDayCode)) &&
+  //         !_bestTambolaBoards.contains(board)) {
+  //       _bestTambolaBoards[2] = board;
+  //     }
+  //     if (_bestTambolaBoards[3].getCornerOdds(weeklyDigits
+  //                 .getPicksPostDate(_bestTambolaBoards[3].generatedDayCode)) >
+  //             board.getCornerOdds(
+  //                 weeklyDigits.getPicksPostDate(board.generatedDayCode)) &&
+  //         !_bestTambolaBoards.contains(board)) {
+  //       _bestTambolaBoards[3] = board;
+  //     }
+  //     if (_bestTambolaBoards[4].getFullHouseOdds(weeklyDigits
+  //                 .getPicksPostDate(_bestTambolaBoards[4].generatedDayCode)) >
+  //             board.getFullHouseOdds(
+  //                 weeklyDigits.getPicksPostDate(board.generatedDayCode)) &&
+  //         !_bestTambolaBoards.contains(board)) {
+  //       _bestTambolaBoards[4] = board;
+  //     }
+  //   }
+
+  //   return _bestTambolaBoards;
+  // }
+
   List<TambolaBoard> refreshBestBoards() {
-    List<TambolaBoard> _bestTambolaBoards = [];
-
-    // If boards are empty
     if (userWeeklyBoards == null || userWeeklyBoards.isEmpty) {
-      return _bestTambolaBoards;
+      return new List<TambolaBoard>(5);
     }
-    // If number of boards are less than 5, return all the boards
-    if (userWeeklyBoards.length <= 5) {
-      _bestTambolaBoards = [];
-      userWeeklyBoards.forEach((e) {
-        _bestTambolaBoards.add(e);
-      });
-      return _bestTambolaBoards;
-    }
-    // If numbers of boards are more than 5
-
-    //initialise bestboards with first 5 board
-    // _bestTambolaBoards = List.filled(5, baseProvider.userWeeklyBoards[0]);
+    _bestTambolaBoards = [];
     for (int i = 0; i < 5; i++) {
-      _bestTambolaBoards.add(userWeeklyBoards[i]);
+      _bestTambolaBoards.add(userWeeklyBoards[0]);
     }
+    //initialise
+    _bestTambolaBoards[0] = userWeeklyBoards[0];
+    _bestTambolaBoards[1] = userWeeklyBoards[0];
+    _bestTambolaBoards[2] = userWeeklyBoards[0];
+    _bestTambolaBoards[3] = userWeeklyBoards[0];
+    _bestTambolaBoards[4] = userWeeklyBoards[0];
 
-    // If weekly digits are not announced yet, simply return first 5 tickets
     if (weeklyDigits == null || weeklyDigits.toList().isEmpty) {
       return _bestTambolaBoards;
     }
 
-    for (int i = 5; i < userWeeklyBoards.length; i++) {
-      final board = userWeeklyBoards[i];
-      if (_bestTambolaBoards[0].getRowOdds(
-                  0,
-                  weeklyDigits.getPicksPostDate(
-                      _bestTambolaBoards[0].generatedDayCode)) >
-              board.getRowOdds(
-                  0, weeklyDigits.getPicksPostDate(board.generatedDayCode)) &&
-          !_bestTambolaBoards.contains(board)) {
+    userWeeklyBoards.forEach((board) {
+      if (_bestTambolaBoards[0] == null) _bestTambolaBoards[0] = board;
+      if (_bestTambolaBoards[1] == null) _bestTambolaBoards[1] = board;
+      if (_bestTambolaBoards[2] == null) _bestTambolaBoards[2] = board;
+      if (_bestTambolaBoards[3] == null) _bestTambolaBoards[3] = board;
+      if (_bestTambolaBoards[4] == null) _bestTambolaBoards[4] = board;
+
+      if (_bestTambolaBoards[0].getRowOdds(0, weeklyDigits.toList()) >
+          board.getRowOdds(0, weeklyDigits.toList())) {
         _bestTambolaBoards[0] = board;
       }
-      if (_bestTambolaBoards[1].getRowOdds(
-                  1,
-                  weeklyDigits.getPicksPostDate(
-                      _bestTambolaBoards[1].generatedDayCode)) >
-              board.getRowOdds(
-                  1, weeklyDigits.getPicksPostDate(board.generatedDayCode)) &&
-          !_bestTambolaBoards.contains(board)) {
+      if (_bestTambolaBoards[1].getRowOdds(1, weeklyDigits.toList()) >
+          board.getRowOdds(1, weeklyDigits.toList())) {
         _bestTambolaBoards[1] = board;
       }
-      if (_bestTambolaBoards[2].getRowOdds(
-                  2,
-                  weeklyDigits.getPicksPostDate(
-                      _bestTambolaBoards[2].generatedDayCode)) >
-              board.getRowOdds(
-                  2, weeklyDigits.getPicksPostDate(board.generatedDayCode)) &&
-          !_bestTambolaBoards.contains(board)) {
+      if (_bestTambolaBoards[2].getRowOdds(2, weeklyDigits.toList()) >
+          board.getRowOdds(2, weeklyDigits.toList())) {
         _bestTambolaBoards[2] = board;
       }
-      if (_bestTambolaBoards[3].getCornerOdds(weeklyDigits
-                  .getPicksPostDate(_bestTambolaBoards[3].generatedDayCode)) >
-              board.getCornerOdds(
-                  weeklyDigits.getPicksPostDate(board.generatedDayCode)) &&
-          !_bestTambolaBoards.contains(board)) {
+      if (_bestTambolaBoards[3].getCornerOdds(weeklyDigits.toList()) >
+          board.getCornerOdds(weeklyDigits.toList())) {
         _bestTambolaBoards[3] = board;
       }
-      if (_bestTambolaBoards[4].getFullHouseOdds(weeklyDigits
-                  .getPicksPostDate(_bestTambolaBoards[4].generatedDayCode)) >
-              board.getFullHouseOdds(
-                  weeklyDigits.getPicksPostDate(board.generatedDayCode)) &&
-          !_bestTambolaBoards.contains(board)) {
+      if (_bestTambolaBoards[4].getFullHouseOdds(weeklyDigits.toList()) >
+          board.getFullHouseOdds(weeklyDigits.toList())) {
         _bestTambolaBoards[4] = board;
       }
-    }
+    });
 
     return _bestTambolaBoards;
   }

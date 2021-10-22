@@ -4,9 +4,11 @@ import 'dart:typed_data';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/tambola_winners_details.dart';
+import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -15,6 +17,7 @@ import 'package:felloapp/ui/dialogs/share-card.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_dialog.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
@@ -30,19 +33,70 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 class MyWinningsViewModel extends BaseModel {
+  //LOCATORS
   final _logger = locator<Logger>();
   final _httpModel = locator<HttpModel>();
   final _userService = locator<UserService>();
   final _localDBModel = locator<LocalDBModel>();
   final _dbModel = locator<DBModel>();
+
+  // LOCAL VARIABLES
   PrizeClaimChoice _choice;
   get choice => this._choice;
+  bool _isWinningHistoryLoading = false;
   final GlobalKey imageKey = GlobalKey();
+  final userRepo = locator<UserRepository>();
+  List<UserTransaction> _winningHistory;
+
+  //GETTERS SETTERS
+  get isWinningHistoryLoading => this._isWinningHistoryLoading;
+  set isWinningHistoryLoading(value) {
+    this._isWinningHistoryLoading = value;
+    notifyListeners();
+  }
+
+  List<UserTransaction> get winningHistory => this._winningHistory;
+  set winningHistory(List<UserTransaction> value) {
+    this._winningHistory = value;
+    notifyListeners();
+  }
 
   UserService get userService => _userService;
+
   set choice(value) {
     this._choice = value;
     notifyListeners();
+  }
+
+  getWinningHistory() async {
+    isWinningHistoryLoading = true;
+    ApiResponse<List<UserTransaction>> temp =
+        await userRepo.getWinningHistory(_userService.baseUser.uid);
+    isWinningHistoryLoading = false;
+    if (temp != null)
+      winningHistory = temp.model;
+    else
+      BaseUtil.showNegativeAlert(
+          "Winning History fetch failed", temp.errorMessage);
+  }
+
+  getWinningHistoryTitle(String subtype) {
+    switch (subtype) {
+      case "CIRCKET":
+        return "Cricket";
+        break;
+      case "AUGGOLD99":
+        return "Augmont Gold";
+        break;
+      case "TAMBOLA":
+        return "Tambola";
+        break;
+      case "AMZPAY":
+        return "Amazon Pay";
+        break;
+      default:
+        return "Fello Prize";
+    }
   }
 
   showConfirmDialog(PrizeClaimChoice choice) {
@@ -63,7 +117,6 @@ class MyWinningsViewModel extends BaseModel {
         reject: "No",
         acceptColor: UiConstants.primaryColor,
         rejectColor: Colors.grey.withOpacity(0.3),
-        //onAccept: buyAmazonGiftCard,
         onReject: AppState.backButtonDispatcher.didPopRoute,
       ),
     );
@@ -111,75 +164,6 @@ class MyWinningsViewModel extends BaseModel {
             ),
           );
         });
-    // BaseUtil.openDialog(
-    //   addToScreenStack: true,
-    //   isBarrierDismissable: false,
-    //   hapticVibrate: true,
-    //   content: FelloDialog(
-    //     showCrossIcon: true,
-    //     content: Container(
-    //       height: SizeConfig.screenHeight * 0.5,
-    //       child: Column(
-    //         children: [
-    //           Container(
-    //             height: SizeConfig.navBarHeight * 0.3,
-    //             child: Expanded(
-    // child: ShareCard(
-    //   dpUrl: _userService.myUserDpUrl,
-    //   claimChoice: choice,
-    //   prizeAmount: _userService.userFundWallet.prizeBalance,
-    //   username: _userService.baseUser.name,
-    // ),
-    //             ),
-    //           ),
-    //           SizedBox(
-    //             height: SizeConfig.screenHeight * 0.04,
-    //           ),
-    //           Text(
-    //             "Congratulations",
-    //             style: TextStyles.title2.bold,
-    //           ),
-    //           SizedBox(height: SizeConfig.padding16),
-    //           Text(
-    //             subtitle,
-    //             textAlign: TextAlign.center,
-    //             style: TextStyles.body2.colour(Colors.grey),
-    //           ),
-    //           SizedBox(height: SizeConfig.screenHeight * 0.04),
-    //           Column(
-    //             children: [
-    //               Container(
-    //                 width: SizeConfig.screenWidth,
-    //                 child: FelloButtonLg(
-    //                   child: Text(
-    //                     "Share on Whatsapp",
-    //                     style: TextStyles.body3.bold.colour(Colors.white),
-    //                   ),
-    //                   color: UiConstants.primaryColor,
-    //                   height: SizeConfig.padding54,
-    //                   onPressed: shareOnWhatsapp,
-    //                 ),
-    //               ),
-    //               SizedBox(height: SizeConfig.padding12),
-    //               Container(
-    //                 width: SizeConfig.screenWidth,
-    //                 child: FelloButtonLg(
-    //                   child: Text(
-    //                     "OK",
-    //                     style: TextStyles.body3.bold,
-    //                   ),
-    //                   color: UiConstants.tertiarySolid,
-    //                   height: SizeConfig.padding54,
-    //                   onPressed: AppState.backButtonDispatcher.didPopRoute,
-    //                 ),
-    //               ),
-    //             ],
-    //           ),
-    //         ],
-    //       ),
-    //     ),
-    //   ),
-    // );
   }
 
   shareOnWhatsapp() {
@@ -201,6 +185,8 @@ class MyWinningsViewModel extends BaseModel {
     });
   }
 
+// SET AND GET CLAIM CHOICE
+
   Future<bool> _registerClaimChoice(PrizeClaimChoice choice) async {
     if (choice == PrizeClaimChoice.NA) return false;
     bool flag = await _httpModel.registerPrizeClaim(_userService.baseUser.uid,
@@ -215,40 +201,7 @@ class MyWinningsViewModel extends BaseModel {
     choice = await _localDBModel.getPrizeClaimChoice();
   }
 
-  prizeBalanceAction(BuildContext context) async {
-    HapticFeedback.vibrate();
-    if (_userService.userFundWallet.isPrizeBalanceUnclaimed())
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (ctx) {
-          return Center(
-            child: Material(
-              color: Colors.transparent,
-              child: FCard(
-                isClaimed:
-                    !_userService.userFundWallet.isPrizeBalanceUnclaimed(),
-                unclaimedPrize: _userService.userFundWallet.unclaimedBalance,
-              ),
-            ),
-          );
-        },
-      );
-    else {
-      final choice = await getClaimChoice();
-      AppState.screenStack.add(ScreenItem.dialog);
-      showDialog(
-        context: context,
-        builder: (ctx) => ShareCard(
-          dpUrl: _userService.myUserDpUrl,
-          claimChoice: choice,
-          prizeAmount: _userService.userFundWallet.prizeBalance,
-          username: _userService.baseUser.name,
-        ),
-      );
-    }
-  }
-
+// Capture Share card Logic
   caputure() {
     Future.delayed(Duration(seconds: 1), () {
       captureCard().then((image) {

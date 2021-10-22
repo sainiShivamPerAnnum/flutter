@@ -1,15 +1,8 @@
-import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/enums/user_service_enum.dart';
-import 'package:felloapp/core/service/user_service.dart';
-import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
-import 'package:felloapp/ui/widgets/buttons/buy_gold_button/buyGoldBtn_view.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/buttons/sell_gold_button/sellGoldBtn_view.dart';
 import 'package:felloapp/ui/widgets/mini_trans_card/mini_trans_card_view.dart';
 import 'package:felloapp/util/assets.dart';
@@ -20,7 +13,6 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:property_change_notifier/property_change_notifier.dart';
 
 class Save extends StatelessWidget {
   @override
@@ -32,7 +24,6 @@ class Save extends StatelessWidget {
         return ListView(
           children: [
             SizedBox(height: SizeConfig.padding80),
-            BuyGoldBtn(),
             Container(
               margin: EdgeInsets.symmetric(
                   horizontal: SizeConfig.pageHorizontalMargins),

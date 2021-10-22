@@ -183,19 +183,25 @@ class CricketHomeView extends StatelessWidget {
 
 class NoRecordDisplayWidget extends StatelessWidget {
   final String asset;
+  final String assetSvg;
   final String text;
 
-  NoRecordDisplayWidget({this.asset, this.text});
+  NoRecordDisplayWidget({this.asset, this.text, this.assetSvg});
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(height: SizeConfig.screenHeight * 0.1),
-        Image.asset(
-          asset,
-          height: SizeConfig.screenHeight * 0.2,
-        ),
+        asset != null
+            ? Image.asset(
+                asset,
+                height: SizeConfig.screenHeight * 0.16,
+              )
+            : SvgPicture.asset(
+                assetSvg,
+                height: SizeConfig.screenHeight * 0.16,
+              ),
         SizedBox(
           height: SizeConfig.padding16,
         ),
