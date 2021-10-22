@@ -139,6 +139,13 @@ class AugmontGoldBuyViewModel extends BaseModel {
       _baseUtil.augmontDetail =
           await _dbModel.getUserAugmontDetails(_baseUtil.myUser.uid);
     }
+    if(_baseUtil.augmontDetail == null) {
+      BaseUtil.showNegativeAlert(
+        'Deposit Failed',
+        'Please try again in sometime or contact us',
+      );
+      return;
+    }
     isGoldBuyInProgress = true;
     _augmontModel.initiateGoldPurchase(goldRates, buyAmount).then((txn) {
       if (txn == null) {
