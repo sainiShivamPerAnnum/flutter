@@ -14,7 +14,8 @@ class FelloTheme {
       primaryColor: Color(0xff34C3A7),
       primarySwatch: UiConstants.kPrimaryColor,
       visualDensity: VisualDensity.adaptivePlatformDensity,
-      colorScheme: ColorScheme.fromSwatch(accentColor: Colors.white),
+      colorScheme: ColorScheme.light(primary: UiConstants.primaryColor),
+
       textTheme: GoogleFonts.montserratTextTheme(),
       inputDecorationTheme: InputDecorationTheme(
         enabledBorder: OutlineInputBorder(

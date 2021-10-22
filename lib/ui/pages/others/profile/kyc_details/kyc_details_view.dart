@@ -1,4 +1,6 @@
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
@@ -38,102 +40,68 @@ class KYCDetailsView extends StatelessWidget {
                     ),
                     color: Colors.white,
                   ),
-                  child: ListView(
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    children: [
-                      SizedBox(height: SizeConfig.scaffoldMargin),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            locale.obNameLabel,
-                            style: TextStyles.body3,
-                          ),
-                          SizedBox(height: 6),
-                          TextFormField(
-                            //initialValue: model.myname,
-                            enabled: model.inEditMode,
-                            controller: model.nameController,
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 16),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            locale.pkPanLabel,
-                            style: TextStyles.body3,
-                          ),
-                          SizedBox(height: 6),
-                          TextFormField(
-                            //initialValue: model.myname,
-                            enabled: model.inEditMode,
-                            controller: model.panController,
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 16),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            locale.pkStateLabel,
-                            style: TextStyles.body3,
-                          ),
-                          SizedBox(height: 6),
-                          DropdownButtonFormField(
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color:
-                                      UiConstants.primaryColor.withOpacity(0.3),
+                  child: model.state == ViewState.Busy
+                      ? ListLoader()
+                      : ListView(
+                          padding: EdgeInsets.zero,
+                          shrinkWrap: true,
+                          children: [
+                            SizedBox(height: SizeConfig.scaffoldMargin),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  locale.obNameLabel,
+                                  style: TextStyles.body3,
                                 ),
-                                borderRadius: BorderRadius.circular(10),
+                                SizedBox(height: 6),
+                                TextFormField(
+                                  autofocus: true,
+                                  //initialValue: model.myname,
+                                  enabled: model.inEditMode,
+                                  controller: model.nameController,
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 16),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  locale.pkPanLabel,
+                                  style: TextStyles.body3,
+                                ),
+                                SizedBox(height: 6),
+                                TextFormField(
+                                  //initialValue: model.myname,
+                                  enabled: model.inEditMode,
+                                  controller: model.panController,
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 20),
+                            if (model.inEditMode)
+                              Container(
+                                width: SizeConfig.screenWidth,
+                                child: FelloButtonLg(
+                                    child: model.isKycInProgress
+                                        ? SpinKitThreeBounce(
+                                            color: Colors.white,
+                                            size: 20,
+                                          )
+                                        : Text(
+                                            locale.btnSumbit,
+                                            style: TextStyles.body2
+                                                .colour(Colors.white)
+                                                .bold,
+                                          ),
+                                    onPressed: () {
+                                      model.onSubmit(context);
+                                    }),
                               ),
-                            ),
-                            iconEnabledColor: UiConstants.primaryColor,
-                            hint: Text(locale.pkStateHint),
-                            value: model.stateChosenValue,
-                            onChanged: model.onStateSelected,
-                            items: AugmontResources.augmontStateList
-                                .map(
-                                  (e) => DropdownMenuItem(
-                                    value: e["id"],
-                                    child: Text(
-                                      e["name"],
-                                    ),
-                                  ),
-                                )
-                                .toList(),
-                          ),
-                          SizedBox(height: 24),
-                          if (model.inEditMode)
-                            Container(
-                              width: SizeConfig.screenWidth,
-                              child: FelloButtonLg(
-                                  child: model.isUpadtingKycDetails
-                                      ? SpinKitThreeBounce(
-                                          color: Colors.white,
-                                          size: 20,
-                                        )
-                                      : Text(
-                                          locale.btnSumbit,
-                                          style: TextStyles.body2
-                                              .colour(Colors.white)
-                                              .bold,
-                                        ),
-                                  onPressed: () {
-                                    model.updateKYCDetails();
-                                  }),
-                            ),
-                          SizedBox(height: 24),
-                        ],
-                      ),
-                    ],
-                  ),
+                            SizedBox(height: 24),
+                          ],
+                        ),
                 ),
               )
             ],

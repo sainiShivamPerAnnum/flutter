@@ -16,6 +16,7 @@ import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/ui/widgets/simple_kyc_modalsheet/simple_kyc_modalsheet_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -509,6 +510,20 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
         AppState.delegate.appState.currentAction =
             PageAction(page: KycDetailsPageConfig, state: PageState.addPage);
       },
+      // onTap: () {
+      //   AppState.screenStack.add(ScreenItem.dialog);
+      //   showModalBottomSheet(
+      //       isDismissible: false,
+      //       // backgroundColor: Colors.transparent,
+      //       shape: RoundedRectangleBorder(
+      //         borderRadius: BorderRadius.circular(16),
+      //       ),
+      //       context: context,
+      //       isScrollControlled: true,
+      //       builder: (context) {
+      //         return SimpleKycModalSheetView();
+      //       });
+      // },
     );
   }
 
