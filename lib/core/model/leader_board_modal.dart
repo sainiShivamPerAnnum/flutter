@@ -7,8 +7,13 @@ class LeaderBoardModal {
   Timestamp lastupdated;
   List<Scoreboard> scoreboard;
 
-  LeaderBoardModal(
-      {this.code, this.gametype, this.freq, this.lastupdated, this.scoreboard});
+  LeaderBoardModal({
+    this.code,
+    this.gametype,
+    this.freq,
+    this.lastupdated,
+    this.scoreboard,
+  });
 
   LeaderBoardModal.fromJson(Map<String, dynamic> json) {
     code = json['code'];
