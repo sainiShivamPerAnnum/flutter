@@ -16,7 +16,7 @@ class GameCard extends StatelessWidget {
       tag: gameData.tag,
       child: Container(
         width: SizeConfig.screenWidth,
-        height: SizeConfig.screenWidth * 0.64,
+        //height: SizeConfig.screenWidth * 0.64,
         margin: EdgeInsets.symmetric(
             vertical: SizeConfig.padding8,
             horizontal: SizeConfig.pageHorizontalMargins),

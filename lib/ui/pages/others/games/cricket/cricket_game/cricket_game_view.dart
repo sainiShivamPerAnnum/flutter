@@ -40,7 +40,6 @@ class CricketGameView extends StatelessWidget {
           ),
         ),
         body: WebView(
-          //TODO customize url
           initialUrl: _url,
           javascriptMode: JavascriptMode.unrestricted,
           onWebViewCreated: (WebViewController controller) {
