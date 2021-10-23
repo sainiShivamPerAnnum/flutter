@@ -3,6 +3,7 @@ import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/texts/marquee_text.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
+import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_winnings.dart';
 import 'package:felloapp/ui/service_elements/winners_prizes/win_leaderboard.dart';
@@ -471,18 +472,11 @@ class WinnerboardView extends StatelessWidget {
                         ],
                       ),
                     ),
-                    TextButton.icon(
-                        icon: CircleAvatar(
-                          radius: SizeConfig.screenWidth * 0.029,
-                          backgroundColor: UiConstants.tertiaryLight,
-                          child: SvgPicture.asset(Assets.tickets,
-                              height: SizeConfig.iconSize3),
-                        ),
-                        label: Text(
-                            //"00",
-                            winners[i].score.toString() ?? "00",
-                            style: TextStyles.body3.colour(Colors.black54)),
-                        onPressed: () {}),
+                    PrizeChip(
+                      color: UiConstants.primaryColor,
+                      png: Assets.moneyIcon,
+                      text: "Rs ${winners[i].amount.toString() ?? "00"}",
+                    ),
                   ],
                 ),
               );

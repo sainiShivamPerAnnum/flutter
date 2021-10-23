@@ -47,8 +47,8 @@ class WinnersModel {
 
   factory WinnersModel.fromMap(Map<String, dynamic> map, String gameType) {
     return WinnersModel(
-      winners:
-          List<Winners>.from(map['winners']?.map((x) => Winners.fromMap(x,gameType))),
+      winners: List<Winners>.from(
+          map['winners']?.map((x) => Winners.fromMap(x, gameType))),
       code: map['code'],
       gametype: map['gametype'],
       freq: map['freq'],
@@ -64,16 +64,29 @@ class WinnersModel {
 
 class Winners {
   int score;
+  int amount;
+  bool isMockUser;
+  int flc;
   String userid;
   String username;
   String gameType;
 
-  Winners({this.score, this.userid, this.username,this.gameType});
+  Winners(
+      {this.score,
+      this.userid,
+      this.username,
+      this.gameType,
+      this.isMockUser,
+      this.amount,
+      this.flc});
 
   Winners.fromJson(Map<String, dynamic> json) {
     score = json['score'];
     userid = json['userid'];
     username = json['username'];
+    isMockUser = json['isMockUser'];
+    amount = json['amount'];
+    flc = json['flc'];
   }
 
   Map<String, dynamic> toJson() {
@@ -81,6 +94,9 @@ class Winners {
     data['score'] = this.score;
     data['userid'] = this.userid;
     data['username'] = this.username;
+    data['amount'] = this.amount;
+    data['isMockUser'] = this.isMockUser;
+    data['flc'] = this.flc;
     return data;
   }
 
@@ -89,6 +105,8 @@ class Winners {
       'score': score,
       'userid': userid,
       'username': username,
+      'amount': amount,
+      'isMockUser': isMockUser,
     };
   }
 
@@ -98,10 +116,13 @@ class Winners {
       userid: map['userid'],
       username: map['username'],
       gameType: gameType,
+      amount: map['amount'],
+      flc: map['flc'],
+      isMockUser: map['isMockUser'],
     );
   }
 
   @override
   String toString() =>
-      'Winners(score: $score, userid: $userid, username: $username, gameType: $gameType)';
+      'Winners(score: $score, userid: $userid, username: $username, gameType: $gameType, amount: $amount, isMockUser: $isMockUser)';
 }
