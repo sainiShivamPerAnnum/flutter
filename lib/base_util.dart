@@ -112,6 +112,8 @@ class BaseUtil extends ChangeNotifier {
 
   ///Flags in various screens defined as global variables
   bool isUserOnboarded,
+      isNewUser,
+      isFirstFetchDone,
       isLoginNextInProgress,
       isEditProfileNextInProgress,
       isRedemptionOtpInProgress,
@@ -147,6 +149,8 @@ class BaseUtil extends ChangeNotifier {
       ;
 
   _setRuntimeDefaults() {
+    isNewUser = false;
+    isFirstFetchDone = false;
     isUserOnboarded = false;
     isLoginNextInProgress = false;
     isEditProfileNextInProgress = false;
@@ -518,6 +522,12 @@ class BaseUtil extends ChangeNotifier {
     log.debug("Verification credetials: " + credential.toString());
     return FirebaseAuth.instance.signInWithCredential(credential).then((res) {
       this.firebaseUser = res.user;
+      isNewUser = res.additionalUserInfo.isNewUser;
+      if (isNewUser) {
+        isFirstFetchDone = false;
+      }
+
+      logger.i("New Firebase User: $isNewUser");
       return true;
     }).catchError((e) {
       log.error(
@@ -541,6 +551,8 @@ class BaseUtil extends ChangeNotifier {
       /// the old variables are still in effect
       /// resetting them like below for now
       _myUser = null;
+      isNewUser = null;
+      isFirstFetchDone = null;
       _userFundWallet = null;
       _userTicketWallet = null;
       firebaseUser = null;
