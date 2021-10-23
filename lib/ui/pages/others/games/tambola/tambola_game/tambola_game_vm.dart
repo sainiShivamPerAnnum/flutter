@@ -53,11 +53,18 @@ class TambolaGameViewModel extends BaseModel {
   List<Ticket> tambolaBoardViews;
   List<TambolaBoard> _bestTambolaBoards;
   bool showSummaryCards = true;
-  bool ticketsBeingGenerated = false;
   bool ticketBuyInProgress = false;
   bool weeklyDrawFetched = false;
   bool _showBuyModal = true;
   int buyTicketCount = 5;
+  bool _ticketsBeingGenerated = false;
+
+  get ticketsBeingGenerated => this._ticketsBeingGenerated;
+
+  set ticketsBeingGenerated(value) {
+    this._ticketsBeingGenerated = value;
+    notifyListeners();
+  }
 
   get showBuyModal => _showBuyModal;
   set showBuyModal(value) {
@@ -157,35 +164,49 @@ class TambolaGameViewModel extends BaseModel {
   }
 
   increaseTicketCount() {
-    buyTicketCount += 1;
+    if (buyTicketCount < 50)
+      buyTicketCount += 1;
+    else
+      BaseUtil.showNegativeAlert("Ticket purchase Count exceeded",
+          "You can buy only 50 tickets at one go");
     ticketCountController.text = buyTicketCount.toString();
     notifyListeners();
   }
 
   decreaseTicketCount() {
-    buyTicketCount -= 1;
+    if (buyTicketCount > 0)
+      buyTicketCount -= 1;
+    else
+      BaseUtil.showNegativeAlert(
+          "Oops!", "We currently don't support negative counts");
     ticketCountController.text = buyTicketCount.toString();
     notifyListeners();
   }
 
   void buyTickets() async {
     if (ticketBuyInProgress) return;
-    ticketBuyInProgress = true;
-    notifyListeners();
-    if (ticketCountController.text.isEmpty)
-      return BaseUtil.showNegativeAlert(
-          "Enter a valid number of tickets", "lol");
-    int ticketCount = int.tryParse(ticketCountController.text);
-    tambolaService.userTicketWallet = await _dbModel.updateInitUserTicketCount(
-        _userService.baseUser.uid,
-        tambolaService.userTicketWallet,
-        ticketCount);
-    ticketBuyInProgress = false;
-    notifyListeners();
-    BaseUtil.showPositiveAlert(
-        "Ticket bought successfully", "Generating tickets, please wait");
+    if (int.tryParse(ticketCountController.text) > 0 &&
+        int.tryParse(ticketCountController.text) < 51) {
+      ticketBuyInProgress = true;
+      notifyListeners();
+      if (ticketCountController.text.isEmpty)
+        return BaseUtil.showNegativeAlert(
+            "Enter a valid number of tickets", "lol");
+      int ticketCount = int.tryParse(ticketCountController.text);
+      tambolaService.userTicketWallet =
+          await _dbModel.updateInitUserTicketCount(_userService.baseUser.uid,
+              tambolaService.userTicketWallet, ticketCount);
+      ticketBuyInProgress = false;
+      notifyListeners();
+      BaseUtil.showPositiveAlert(
+          "Ticket bought successfully", "Generating tickets, please wait");
 
-    _refreshTambolaTickets();
+      _refreshTambolaTickets();
+    } else {
+      BaseUtil.showNegativeAlert("Invalid ticket purchase count",
+          "You can only buy at most 50 tickets at one go");
+      ticketCountController.text = "50";
+    }
   }
 
   checkIfMoreTicketNeedsToBeGenerated() async {
@@ -193,10 +214,8 @@ class TambolaGameViewModel extends BaseModel {
         .processTicketGenerationRequirement(activeTambolaCardCount);
     if (_isGenerating) {
       ticketsBeingGenerated = true;
-      notifyListeners();
       _tambolaTicketService.setTambolaTicketGenerationResultListener((flag) {
         ticketsBeingGenerated = false;
-        notifyListeners();
         if (flag == TambolaGenerationService.GENERATION_COMPLETE) {
           //new tickets have arrived
           _refreshTambolaTickets();

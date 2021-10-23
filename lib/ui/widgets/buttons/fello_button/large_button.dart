@@ -34,7 +34,7 @@ class FelloButtonLg extends StatelessWidget {
         width: SizeConfig.screenWidth,
         height: 60.0,
         decoration: BoxDecoration(
-          color: Colors.grey,
+          color: Colors.grey.withOpacity(0.5),
           borderRadius: new BorderRadius.circular(16.0),
         ),
         alignment: Alignment.center,

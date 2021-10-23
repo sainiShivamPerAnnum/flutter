@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -54,19 +55,25 @@ class Play extends StatelessWidget {
                   ),
                 ),
               ),
-              if (model.state == ViewState.Idle)
-                Expanded(
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(100),
+                    topRight: Radius.circular(100),
+                  ),
                   child: ListView(children: [
                     GestureDetector(
-                      onTap: () => model.openGame(model.gameList[0].gameName),
+                      onTap: () =>
+                          model.openGame(BaseUtil.gamesList[0].pageConfig),
                       child: GameCard(
-                        gameData: model.gameList[0],
+                        gameData: BaseUtil.gamesList[0],
                       ),
                     ),
                     GestureDetector(
-                      onTap: () => model.openGame(model.gameList[1].gameName),
+                      onTap: () =>
+                          model.openGame(BaseUtil.gamesList[1].pageConfig),
                       child: GameCard(
-                        gameData: model.gameList[1],
+                        gameData: BaseUtil.gamesList[1],
                       ),
                     ),
                     SizedBox(
@@ -74,6 +81,7 @@ class Play extends StatelessWidget {
                     )
                   ]),
                 ),
+              ),
             ],
           ),
         );

@@ -1,42 +1,36 @@
 //Project Imports
+
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/edit_augmont_bank_details.dart';
 import 'package:felloapp/ui/pages/static/FelloTile.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
-import 'package:felloapp/ui/widgets/simple_kyc_modalsheet/simple_kyc_modalsheet_view.dart';
-import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/edit_augmont_bank_details.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/ui/widgets/simple_kyc_modalsheet/simple_kyc_modalsheet_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
-import 'package:felloapp/util/styles/palette.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/styles/palette.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/enums/screen_item_enum.dart';
-
-//Dart and Flutter Imports
-import 'dart:io';
-import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter/services.dart';
 //Pub Imports
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
 
@@ -290,7 +284,8 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
 
                             (baseProvider.checkKycMissing ||
                                     _checkBankInfoMissing)
-                                ? Container(
+                                ? Container()
+                                : Container(
                                     margin: EdgeInsets.only(
                                         top: SizeConfig.padding24),
                                     width: SizeConfig.screenWidth,
@@ -313,8 +308,7 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                                         }
                                       },
                                     ),
-                                  )
-                                : Container(),
+                                  ),
                             SizedBox(
                               height: SizeConfig.padding20,
                             ),
@@ -509,57 +503,28 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
   }
 
   Widget _addKycInfoWidget() {
-    return Transform.scale(
-        scale: scaleAnimation.value,
-        child: FelloBriefTile(
-          leadingIcon: Icons.verified_user,
-          title: "Complete your KYC to withdraw",
-          onTap: () {
-            AppState.screenStack.add(ScreenItem.dialog);
-            showModalBottomSheet(
-                isDismissible: false,
-                // backgroundColor: Colors.transparent,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                context: context,
-                isScrollControlled: true,
-                builder: (context) {
-                  return SimpleKycModalSheetView();
-                });
-          },
-        )
-        // Container(
-        //   width: SizeConfig.screenWidth * 0.8,
-        //   decoration: BoxDecoration(
-        //     color: Colors.amber[200],
-        //     borderRadius: BorderRadius.circular(SizeConfig.blockSizeVertical),
-        //   ),
-        //   child: Padding(
-        //     padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
-        //     child: Row(
-        //       mainAxisAlignment: MainAxisAlignment.center,
-        //       mainAxisSize: MainAxisSize.max,
-        //       children: [
-        //         Icon(
-        //           Icons.info_outline,
-        //           size: SizeConfig.mediumTextSize,
-        //         ),
-        //         Spacer(),
-        //         FittedBox(
-        //           fit: BoxFit.scaleDown,
-        //           child: Text(
-        //             'Complete your KYC to withdraw',
-        //             textAlign: TextAlign.center,
-        //           ),
-        //         ),
-        //         Spacer(),
-        //         SizedBox()
-        //       ],
-        //     ),
-        //   ),
-        // ),
-        );
+    return FelloBriefTile(
+      leadingIcon: Icons.verified_user,
+      title: "Complete your KYC to withdraw",
+      onTap: () {
+        AppState.delegate.appState.currentAction =
+            PageAction(page: KycDetailsPageConfig, state: PageState.addPage);
+      },
+      // onTap: () {
+      //   AppState.screenStack.add(ScreenItem.dialog);
+      //   showModalBottomSheet(
+      //       isDismissible: false,
+      //       // backgroundColor: Colors.transparent,
+      //       shape: RoundedRectangleBorder(
+      //         borderRadius: BorderRadius.circular(16),
+      //       ),
+      //       context: context,
+      //       isScrollControlled: true,
+      //       builder: (context) {
+      //         return SimpleKycModalSheetView();
+      //       });
+      // },
+    );
   }
 
   Widget _getGoldAmount(String qnt) {
@@ -708,13 +673,13 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
     );
   }
 
-  bool get _checkBankInfoMissing =>
-      (baseProvider.augmontDetail.bankAccNo.isEmpty ||
-          baseProvider.augmontDetail.bankAccNo == null ||
-          baseProvider.augmontDetail.bankHolderName.isEmpty ||
-          baseProvider.augmontDetail.bankHolderName == null ||
-          baseProvider.augmontDetail.ifsc.isEmpty ||
-          baseProvider.augmontDetail.ifsc == null);
+  bool get _checkBankInfoMissing => (baseProvider.augmontDetail == null ||
+      baseProvider.augmontDetail.bankAccNo == null ||
+      baseProvider.augmontDetail.bankAccNo.isEmpty ||
+      baseProvider.augmontDetail.bankHolderName.isEmpty ||
+      baseProvider.augmontDetail.bankHolderName == null ||
+      baseProvider.augmontDetail.ifsc.isEmpty ||
+      baseProvider.augmontDetail.ifsc == null);
 
   _buildRow(String title, String value) {
     return ListTile(
