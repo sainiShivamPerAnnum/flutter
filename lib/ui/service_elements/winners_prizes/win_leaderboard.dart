@@ -73,22 +73,24 @@ class _WinnersLeaderBoardSEState extends State<WinnersLeaderBoardSE> {
                               ),
                             )
                           : (model.winners == null
-                              ? ListView(
-                                  controller: myscrollController,
-                                  children: [
-                                    Center(
-                                      child: NoRecordDisplayWidget(
-                                        asset: "images/leaderboard.png",
-                                        text: "Winners will be upadated soon",
+                              ? Container(
+                                  color: Colors.white,
+                                  child: ListView(
+                                    controller: myscrollController,
+                                    children: [
+                                      Center(
+                                        child: NoRecordDisplayWidget(
+                                          asset: "images/leaderboard.png",
+                                          text: "Winners will be upadated soon",
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 )
                               : WinnerboardView(
                                   winners: model.winners,
                                   controller: myscrollController,
                                   timeStamp: model.timeStamp,
-                             
                                 )),
                     ),
                   ],

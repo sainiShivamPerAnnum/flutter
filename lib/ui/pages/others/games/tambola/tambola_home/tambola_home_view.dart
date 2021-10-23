@@ -15,8 +15,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class TambolaHomeView extends StatelessWidget {
-  final GameModel game;
-  TambolaHomeView({this.game});
   @override
   Widget build(BuildContext context) {
     return BaseView<TambolaHomeViewModel>(
@@ -50,7 +48,7 @@ class TambolaHomeView extends StatelessWidget {
                           Opacity(
                             opacity: model.cardOpacity ?? 1,
                             child: GameCard(
-                              gameData: game,
+                              gameData: BaseUtil.gamesList[1],
                             ),
                           ),
                           SizedBox(height: SizeConfig.padding8),

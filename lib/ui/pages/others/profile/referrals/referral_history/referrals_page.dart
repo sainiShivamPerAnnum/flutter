@@ -4,6 +4,7 @@ import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -147,9 +148,10 @@ class _ReferralHistoryViewState extends State<ReferralHistoryView> {
           children: [
             CircleAvatar(
               radius: SizeConfig.tileAvatarRadius,
-              backgroundImage: NetworkImage(
-                "https://d23.com/app/uploads/2019/08/2019-disneylegend-rdj.jpg",
+              backgroundImage: AssetImage(
+                Assets.profilePic,
               ),
+              foregroundColor: UiConstants.tertiarySolid.withOpacity(0.4),
             ),
             SizedBox(width: SizeConfig.padding8),
             Expanded(
@@ -161,7 +163,7 @@ class _ReferralHistoryViewState extends State<ReferralHistoryView> {
                     children: [
                       Expanded(
                         child: Text(rDetail.userName ?? '',
-                            maxLines: 1,
+                            maxLines: 2,
                             overflow: TextOverflow.clip,
                             style: TextStyles.body2.bold),
                       ),

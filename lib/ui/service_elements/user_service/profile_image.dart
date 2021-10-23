@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -30,7 +31,7 @@ class ProfileImageSE extends StatelessWidget {
             radius: radius,
             backgroundImage: model.myUserDpUrl == null
                 ? AssetImage(
-                    "images/profile.png",
+                    Assets.profilePic,
                   )
                 : CachedNetworkImageProvider(
                     model.myUserDpUrl,

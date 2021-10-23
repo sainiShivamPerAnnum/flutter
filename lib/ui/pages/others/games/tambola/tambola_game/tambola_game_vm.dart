@@ -64,11 +64,18 @@ class TambolaGameViewModel extends BaseModel {
   List<Ticket> tambolaBoardViews;
   List<TambolaBoard> _bestTambolaBoards;
   bool showSummaryCards = true;
-  bool ticketsBeingGenerated = false;
   bool ticketBuyInProgress = false;
   bool weeklyDrawFetched = false;
   bool _showBuyModal = true;
   int buyTicketCount = 5;
+  bool _ticketsBeingGenerated = false;
+
+  get ticketsBeingGenerated => this._ticketsBeingGenerated;
+
+  set ticketsBeingGenerated(value) {
+    this._ticketsBeingGenerated = value;
+    notifyListeners();
+  }
 
   static const int TICKET_COST_IN_FLC = 10;
 
@@ -176,13 +183,21 @@ class TambolaGameViewModel extends BaseModel {
   }
 
   increaseTicketCount() {
-    buyTicketCount += 1;
+    if (buyTicketCount < 50)
+      buyTicketCount += 1;
+    else
+      BaseUtil.showNegativeAlert("Ticket purchase Count exceeded",
+          "You can buy only 50 tickets at one go");
     ticketCountController.text = buyTicketCount.toString();
     notifyListeners();
   }
 
   decreaseTicketCount() {
-    buyTicketCount -= 1;
+    if (buyTicketCount > 0)
+      buyTicketCount -= 1;
+    else
+      BaseUtil.showNegativeAlert(
+          "Oops!", "We currently don't support negative counts");
     ticketCountController.text = buyTicketCount.toString();
     notifyListeners();
   }
@@ -240,10 +255,8 @@ class TambolaGameViewModel extends BaseModel {
         .processTicketGenerationRequirement(activeTambolaCardCount);
     if (_isGenerating) {
       ticketsBeingGenerated = true;
-      notifyListeners();
       _tambolaTicketService.setTambolaTicketGenerationResultListener((flag) {
         ticketsBeingGenerated = false;
-        notifyListeners();
         if (flag == TambolaGenerationService.GENERATION_COMPLETE) {
           //new tickets have arrived
           _refreshTambolaTickets();

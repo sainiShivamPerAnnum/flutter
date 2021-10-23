@@ -162,8 +162,16 @@ class _TambolaGameViewState extends State<TambolaGameView>
                             topLeft: Radius.circular(SizeConfig.padding40),
                             topRight: Radius.circular(SizeConfig.padding40),
                           ),
+                          boxShadow: [
+                            BoxShadow(
+                                blurRadius: 10,
+                                offset: Offset(0, -5),
+                                color: Colors.black.withOpacity(0.05),
+                                spreadRadius: 5)
+                          ],
                           color: Colors.white,
                         ),
+                        margin: EdgeInsets.only(top: SizeConfig.padding16),
                         padding:
                             EdgeInsets.all(SizeConfig.pageHorizontalMargins),
                         child: Column(
@@ -188,7 +196,8 @@ class _TambolaGameViewState extends State<TambolaGameView>
                                     width: SizeConfig.screenWidth * 0.135,
                                     height: SizeConfig.screenWidth * 0.135,
                                     decoration: BoxDecoration(
-                                      color: UiConstants.primaryLight,
+                                      color: UiConstants.primaryLight
+                                          .withOpacity(0.8),
                                       borderRadius: BorderRadius.circular(
                                           SizeConfig.roundness12),
                                     ),
@@ -199,18 +208,22 @@ class _TambolaGameViewState extends State<TambolaGameView>
                                     ),
                                   ),
                                   SizedBox(width: SizeConfig.padding12),
-                                  Container(
-                                    width: SizeConfig.screenWidth * 0.135,
-                                    height: SizeConfig.screenWidth * 0.135,
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey.withOpacity(0.5),
-                                      borderRadius: BorderRadius.circular(
-                                          SizeConfig.roundness12),
-                                    ),
-                                    child: IconButton(
-                                      icon: Icon(Icons.remove),
-                                      color: Colors.black,
-                                      onPressed: model.decreaseTicketCount,
+                                  MaterialButton(
+                                    onPressed: model.decreaseTicketCount,
+                                    splashColor: Colors.grey,
+                                    highlightColor: Colors.grey,
+                                    child: Container(
+                                      width: SizeConfig.screenWidth * 0.135,
+                                      height: SizeConfig.screenWidth * 0.135,
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey.withOpacity(0.3),
+                                        borderRadius: BorderRadius.circular(
+                                            SizeConfig.roundness12),
+                                      ),
+                                      child: Icon(
+                                        Icons.remove,
+                                        color: Colors.black,
+                                      ),
                                     ),
                                   ),
                                   SizedBox(width: SizeConfig.padding16),
@@ -290,16 +303,6 @@ class _TambolaGameViewState extends State<TambolaGameView>
       );
     } else if (model.userWeeklyBoards == null ||
         model.activeTambolaCardCount == 0) {
-      // _widget = Padding(
-      //     padding: EdgeInsets.all(10),
-      //     child: Container(
-      //         width: double.infinity,
-      //         height: 200,
-      //         child: Center(
-      //           child: Text((model.ticketsBeingGenerated)
-      //               ? 'Your new tickets are being generated..'
-      //               : 'No tickets yet'),
-      //         )));
       _widget = Center(
         child: Padding(
           padding: EdgeInsets.all(10),
@@ -453,7 +456,8 @@ class _TambolaGameViewState extends State<TambolaGameView>
                     children: model.tambolaBoardViews.toList(),
                   ),
                 ),
-                if (model.ticketsBeingGenerated)
+                if (model.ticketsBeingGenerated &&
+                    model.tambolaService.ticketGenerateCount > 0)
                   Align(
                     alignment: Alignment.center,
                     child: Container(

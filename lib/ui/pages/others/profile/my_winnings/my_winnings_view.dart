@@ -1,8 +1,5 @@
-import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/tambola_winners_details.dart';
-import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/dialogs/share-card.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_vm.dart';
@@ -18,7 +15,6 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:property_change_notifier/property_change_notifier.dart';
 
 class MyWinningsView extends StatelessWidget {
   @override
@@ -57,29 +53,6 @@ class MyWinningsView extends StatelessWidget {
                             tag: "myWinnings",
                             child: WinningsContainer(
                               shadow: false,
-                              child: Container(
-                                width: SizeConfig.screenWidth,
-                                alignment: Alignment.center,
-                                padding: EdgeInsets.all(SizeConfig.padding16),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      locale.winMyWinnings,
-                                      style: TextStyles.title5
-                                          .colour(Colors.white60),
-                                    ),
-                                    SizedBox(height: SizeConfig.padding8),
-                                    UserWinningsSE(
-                                      style: TextStyles.title1
-                                          .colour(Colors.white)
-                                          .weight(FontWeight.w900)
-                                          .letterSpace(2),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              //color: Color(0xff11192B),
                             ),
                           ),
                           SizedBox(height: SizeConfig.padding24),
@@ -101,7 +74,8 @@ class MyWinningsView extends StatelessWidget {
                                 ClaimButton(
                                   color: UiConstants.tertiarySolid,
                                   image: Assets.goldClaim,
-                                  onTap: () {},
+                                  onTap: () => model.showConfirmDialog(
+                                      PrizeClaimChoice.GOLD_CREDIT),
                                   text: "Invest in digtial gold",
                                 ),
                               ],

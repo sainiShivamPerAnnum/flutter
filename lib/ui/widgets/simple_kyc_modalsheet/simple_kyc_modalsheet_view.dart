@@ -2,6 +2,7 @@
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/dialogs/augmont_regn_security_dialog.dart';
+import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/widgets/simple_kyc_modalsheet/simple_kyc_modelsheet_vm.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -15,10 +16,7 @@ import 'package:flutter/services.dart';
 //Pub Imports
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-
-class SimpleKycModalSheetView extends StatelessWidget{
-
-
+class SimpleKycModalSheetView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseView<SimpleKycModelsheetViewModel>(
@@ -67,19 +65,15 @@ class SimpleKycModalSheetView extends StatelessWidget{
                       Divider(
                         endIndent: SizeConfig.screenWidth * 0.3,
                       ),
-                      SizedBox(height: 16),
+                      TextFieldLabel("PAN Card Number"),
                       TextFormField(
-                        decoration:
-                            InputDecoration(labelText: "PAN Card Number"),
                         controller: model.panInput,
-                        autofocus: false,
+                        autofocus: true,
                         textCapitalization: TextCapitalization.characters,
                         enabled: true,
                       ),
-                      SizedBox(height: 16),
+                      TextFieldLabel("Your name as per your PAN Card"),
                       TextFormField(
-                        decoration: InputDecoration(
-                            labelText: 'Your name as per your PAN Card'),
                         controller: model.panHolderNameInput,
                         keyboardType: TextInputType.name,
                         textCapitalization: TextCapitalization.characters,

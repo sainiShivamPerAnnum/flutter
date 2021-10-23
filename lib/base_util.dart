@@ -22,6 +22,7 @@ import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -51,6 +52,8 @@ import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:logger/logger.dart';
+
+import 'core/model/game_model.dart';
 
 class BaseUtil extends ChangeNotifier {
   final Log log = new Log("BaseUtil");
@@ -109,9 +112,12 @@ class BaseUtil extends ChangeNotifier {
   int isOtpResendCount = 0;
   bool show_security_prompt = false;
   String zeroBalanceAssetUri;
+  static List<GameModel> gamesList;
 
   ///Flags in various screens defined as global variables
   bool isUserOnboarded,
+      isNewUser,
+      isFirstFetchDone,
       isLoginNextInProgress,
       isEditProfileNextInProgress,
       isRedemptionOtpInProgress,
@@ -147,6 +153,8 @@ class BaseUtil extends ChangeNotifier {
       ;
 
   _setRuntimeDefaults() {
+    isNewUser = false;
+    isFirstFetchDone = false;
     isUserOnboarded = false;
     isLoginNextInProgress = false;
     isEditProfileNextInProgress = false;
@@ -199,6 +207,7 @@ class BaseUtil extends ChangeNotifier {
     await BaseRemoteConfig.init();
 
     setPackageInfo();
+    setGameDefaults();
 
     ///fetch on-boarding status and User details
     firebaseUser = _userService.firebaseUser;
@@ -251,6 +260,25 @@ class BaseUtil extends ChangeNotifier {
   void setPackageInfo() async {
     //Appversion //add it seperate method
     packageInfo = await PackageInfo.fromPlatform();
+  }
+
+  void setGameDefaults() {
+    gamesList = [
+      GameModel(
+          gameName: "Cricket",
+          pageConfig: CricketHomePageConfig,
+          tag: 'cricket',
+          thumbnailImage: Assets.cricketThumb,
+          playCost: 5,
+          prizeAmount: 10000.0),
+      GameModel(
+          gameName: "Tambola",
+          pageConfig: THomePageConfig,
+          tag: 'tambola',
+          thumbnailImage: Assets.tambolaThumb,
+          playCost: 10,
+          prizeAmount: 25000.0),
+    ];
   }
 
   ///related to icici - function not active
@@ -497,8 +525,8 @@ class BaseUtil extends ChangeNotifier {
       AppState.screenStack.add(ScreenItem.dialog);
     if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
     return showModalBottomSheet(
-        shape:
-            RoundedRectangleBorder(borderRadius: borderRadius ?? Radius.zero),
+        shape: RoundedRectangleBorder(
+            borderRadius: borderRadius ?? BorderRadius.zero),
         backgroundColor:
             backgroundColor != null ? backgroundColor : Colors.white,
         isDismissible: isBarrierDismissable,
@@ -518,6 +546,12 @@ class BaseUtil extends ChangeNotifier {
     log.debug("Verification credetials: " + credential.toString());
     return FirebaseAuth.instance.signInWithCredential(credential).then((res) {
       this.firebaseUser = res.user;
+      isNewUser = res.additionalUserInfo.isNewUser;
+      if (isNewUser) {
+        isFirstFetchDone = false;
+      }
+
+      logger.i("New Firebase User: $isNewUser");
       return true;
     }).catchError((e) {
       log.error(
@@ -541,6 +575,8 @@ class BaseUtil extends ChangeNotifier {
       /// the old variables are still in effect
       /// resetting them like below for now
       _myUser = null;
+      isNewUser = null;
+      isFirstFetchDone = null;
       _userFundWallet = null;
       _userTicketWallet = null;
       firebaseUser = null;
