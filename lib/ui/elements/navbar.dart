@@ -153,7 +153,9 @@ class _NavbarButtonState extends State<NavbarButton>
           alignment: Alignment.centerLeft,
 
           //Determine target width, selected item is wider
-          width: widget.isSelected ? widget.data.width : 64,
+          width: widget.isSelected
+              ? widget.data.width
+              : SizeConfig.screenWidth * 0.16,
           curve: Curves.easeOutCubic,
           padding: EdgeInsets.symmetric(horizontal: 12),
           duration: Duration(milliseconds: 1400),

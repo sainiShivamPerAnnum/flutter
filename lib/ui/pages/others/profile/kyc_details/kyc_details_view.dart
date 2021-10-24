@@ -60,6 +60,9 @@ class KYCDetailsView extends StatelessWidget {
                                   //initialValue: model.myname,
                                   enabled: model.inEditMode,
                                   controller: model.nameController,
+                                  keyboardType: TextInputType.name,
+                                  textCapitalization:
+                                      TextCapitalization.characters,
                                 ),
                               ],
                             ),
@@ -76,6 +79,19 @@ class KYCDetailsView extends StatelessWidget {
                                   //initialValue: model.myname,
                                   enabled: model.inEditMode,
                                   controller: model.panController,
+                                  focusNode: model.panFocusNode,
+                                  textCapitalization:
+                                      TextCapitalization.characters,
+                                  keyboardType: model.panTextInputType,
+                                  onChanged: (val) {
+                                    // if (model.onPanEntered()) {
+                                    //   Future.delayed(Duration(milliseconds: 5),
+                                    //       () {
+                                    //     FocusScope.of(context)
+                                    //         .requestFocus(model.panFocusNode);
+                                    //   });
+                                    // }
+                                  },
                                 ),
                               ],
                             ),

@@ -201,7 +201,7 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                                       keyboardType: TextInputType.number,
                                       style: TextStyles.body2.bold,
                                       onChanged: (val) {
-                                        model.goldSellAmount =
+                                        model.goldSellGrams =
                                             double.tryParse(val);
                                         model.updateGoldAmount();
                                       },

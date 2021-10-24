@@ -20,8 +20,11 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
   List<Winners> _winners = [];
 
   get winners => this._winners;
+
   get cricketWinnersLength => this._cricketWinnersLength;
+
   get tambolaWinnersLength => this._tambolaWinnersLength;
+
   get timeStamp => _timestamp;
 
   setWinners() {
@@ -39,7 +42,10 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
 
     _winners.clear();
 
-    if (_cricketWinners.model?.winners?.length != 0) {
+    if (_cricketWinners != null &&
+        _cricketWinners.model != null &&
+        _cricketWinners.model.winners != null &&
+        _cricketWinners.model?.winners?.length != 0) {
       _timestamp = _cricketWinners.model?.timestamp;
       _cricketWinnersLength = _cricketWinners.model?.winners?.length;
       _winners.addAll(_cricketWinners.model.winners);
@@ -47,8 +53,11 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
       _logger.d("Cricket Winners added to leaderboard");
     }
 
-    if (_tambolaWinners.model?.winners?.length != 0) {
-      _timestamp = _cricketWinners.model.timestamp;
+    if (_tambolaWinners != null &&
+        _tambolaWinners.model != null &&
+        _tambolaWinners.model.winners != null &&
+        _tambolaWinners.model?.winners?.length != 0) {
+      _timestamp = _tambolaWinners.model.timestamp;
       _tambolaWinnersLength = _tambolaWinners.model?.winners?.length;
       _winners.addAll(_tambolaWinners.model.winners);
       _logger.d("Tambola Winners added to leaderboard");
@@ -61,7 +70,7 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
     }
 
     if (_winners != null) {
-      _winners.sort((a, b) => b.score.compareTo(a.score));
+      _winners.sort((a, b) => (a.amount==null || b.amount==null)?-1:b.amount.compareTo(a.amount));
       setWinners();
     }
   }

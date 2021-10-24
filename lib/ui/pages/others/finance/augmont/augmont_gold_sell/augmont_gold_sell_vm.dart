@@ -31,12 +31,15 @@ class AugmontGoldSellViewModel extends BaseModel {
   AugmontRates goldRates;
   bool _isGoldSellInProgress = false;
 
-  double goldSellAmount = 0;
+  double goldSellGrams = 0;
   double goldAmountFromGrams = 0.0;
   TextEditingController goldAmountController;
   List<double> chipAmountList = [25, 50, 100];
+
   double get goldSellPrice => goldRates != null ? goldRates.goldSellPrice : 0.0;
+
   UserFundWallet get userFundWallet => _userService.userFundWallet;
+
   get isGoldSellInProgress => this._isGoldSellInProgress;
 
   set isGoldSellInProgress(value) {
@@ -47,13 +50,25 @@ class AugmontGoldSellViewModel extends BaseModel {
   init() {
     goldAmountController = TextEditingController();
     fetchGoldRates();
+
+    if (_baseUtil.augmontDetail == null) {
+      _dbModel.getUserAugmontDetails(_baseUtil.myUser.uid).then((value) {
+        _baseUtil.augmontDetail = value;
+        refresh();
+      });
+    }
   }
 
   Widget amoutChip(double amt) {
     return GestureDetector(
       onTap: () {
-        goldSellAmount = userFundWallet.augGoldQuantity * (amt / 100);
-        goldAmountController.text = goldSellAmount.toString();
+        goldSellGrams = userFundWallet.augGoldQuantity * (amt / 100);
+
+        double updatedGrams = goldSellGrams * 10000;
+        int checker = updatedGrams.truncate();
+        goldSellGrams = checker / 10000;
+
+        goldAmountController.text = goldSellGrams.toStringAsFixed(4);
         updateGoldAmount();
         notifyListeners();
       },
@@ -80,7 +95,7 @@ class AugmontGoldSellViewModel extends BaseModel {
   updateGoldAmount() {
     if (goldSellPrice != 0.0)
       goldAmountFromGrams = BaseUtil.digitPrecision(
-          double.tryParse(goldAmountController.text) * goldSellPrice);
+          double.tryParse(goldAmountController.text) * goldSellPrice, 4, false);
     else
       goldAmountFromGrams = 0.0;
     refresh();
@@ -112,6 +127,18 @@ class AugmontGoldSellViewModel extends BaseModel {
           "Amount too low", "Please enter a larger amount");
       return;
     }
+    if (sellGramAmount > userFundWallet.augGoldQuantity) {
+      BaseUtil.showNegativeAlert(
+          "Not enough balance", "Please enter a lower amount");
+      return;
+    }
+    if (!_baseUtil.myUser.isAugmontOnboarded) {
+      BaseUtil.showNegativeAlert(
+        'Not registered',
+        'You have not registered for digital gold yet',
+      );
+      return;
+    }
     if (!_baseUtil.myUser.isAugmontOnboarded) {
       BaseUtil.showNegativeAlert(
         'Not registered',
@@ -127,6 +154,17 @@ class AugmontGoldSellViewModel extends BaseModel {
       BaseUtil.showNegativeAlert(
         'Deposit Failed',
         'Please try again in sometime or contact us',
+      );
+      return;
+    }
+    List<String> fractionalPart = sellGramAmount.toString().split('.');
+    if (fractionalPart != null &&
+        fractionalPart.length > 1 &&
+        fractionalPart[1] != null &&
+        fractionalPart[1].length > 4) {
+      BaseUtil.showNegativeAlert(
+        'Please try again',
+        'Upto 4 decimals allowed',
       );
       return;
     }
@@ -180,7 +218,10 @@ class AugmontGoldSellViewModel extends BaseModel {
               style: TextStyles.body3.colour(Colors.white),
             ),
             color: UiConstants.primaryColor,
-            onPressed: AppState.backButtonDispatcher.didPopRoute,
+            onPressed: () {
+              AppState.backButtonDispatcher.didPopRoute();
+              AppState.backButtonDispatcher.didPopRoute();
+            },
           ),
         ),
       ),

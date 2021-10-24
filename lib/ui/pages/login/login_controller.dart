@@ -208,78 +208,88 @@ class _LoginControllerState extends State<LoginController>
       resizeToAvoidBottomInset: false,
       backgroundColor: UiConstants.primaryColor,
       body: HomeBackground(
-        child: SafeArea(
-            child: Stack(
+        child: Stack(
           children: <Widget>[
-            Container(
-              width: SizeConfig.screenWidth,
-              height: SizeConfig.screenHeight,
-              child: Column(
-                children: [
-                  ValueListenableBuilder(
-                      valueListenable: _pageNotifier,
-                      builder: (ctx, value, child) {
-                        return value < 2.0
-                            ? SizedBox(
-                                height: kToolbarHeight,
-                              )
-                            : FelloAppBar(
-                                leading: FelloAppBarBackButton(onBackPress: () {
-                                  if (value == 3)
-                                    _controller.previousPage(
-                                        duration: Duration(milliseconds: 600),
-                                        curve: Curves.easeInOut);
-                                  else
-                                    AppState.delegate.appState.currentAction =
-                                        PageAction(
-                                            state: PageState.replaceAll,
-                                            page: SplashPageConfig);
-                                }),
-                                title: value < 3
-                                    ? locale.abCompleteYourProfile
-                                    : locale.abGamingName,
-                              );
-                      }),
-                  Expanded(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(SizeConfig.padding40),
-                        topRight: Radius.circular(SizeConfig.padding40),
-                      ),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.pageHorizontalMargins),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
+            Positioned(
+              bottom: 0,
+              child: Container(
+                width: SizeConfig.screenWidth,
+                height: SizeConfig.screenHeight / 2,
+                color: Colors.white,
+              ),
+            ),
+            SafeArea(
+              child: Container(
+                width: SizeConfig.screenWidth,
+                height: SizeConfig.screenHeight,
+                child: Column(
+                  children: [
+                    ValueListenableBuilder(
+                        valueListenable: _pageNotifier,
+                        builder: (ctx, value, child) {
+                          return value < 2.0
+                              ? SizedBox(
+                                  height: kToolbarHeight,
+                                )
+                              : FelloAppBar(
+                                  leading:
+                                      FelloAppBarBackButton(onBackPress: () {
+                                    if (value == 3)
+                                      _controller.previousPage(
+                                          duration: Duration(milliseconds: 600),
+                                          curve: Curves.easeInOut);
+                                    else
+                                      AppState.delegate.appState.currentAction =
+                                          PageAction(
+                                              state: PageState.replaceAll,
+                                              page: SplashPageConfig);
+                                  }),
+                                  title: value < 3
+                                      ? locale.abCompleteYourProfile
+                                      : locale.abGamingName,
+                                );
+                        }),
+                    Expanded(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(SizeConfig.padding40),
+                          topRight: Radius.circular(SizeConfig.padding40),
                         ),
-                        child: PageView.builder(
-                          physics: new NeverScrollableScrollPhysics(),
-                          scrollDirection: Axis.vertical,
-                          controller: _controller,
-                          itemCount: _pages.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            //print(index - _controller.page);
-                            return ValueListenableBuilder(
-                                valueListenable: _pageNotifier,
-                                builder: (ctx, value, _) {
-                                  final factorChange = value - index;
-                                  return Opacity(
-                                      opacity: (1 - factorChange.abs())
-                                          .clamp(0.0, 1.0),
-                                      child: _pages[index % _pages.length]);
-                                });
-                          },
-                          onPageChanged: (int index) {
-                            setState(() {
-                              _formProgress = 0.2 * (index + 1);
-                              _currentPage = index;
-                            });
-                          },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.pageHorizontalMargins),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                          ),
+                          child: PageView.builder(
+                            physics: new NeverScrollableScrollPhysics(),
+                            scrollDirection: Axis.vertical,
+                            controller: _controller,
+                            itemCount: _pages.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              //print(index - _controller.page);
+                              return ValueListenableBuilder(
+                                  valueListenable: _pageNotifier,
+                                  builder: (ctx, value, _) {
+                                    final factorChange = value - index;
+                                    return Opacity(
+                                        opacity: (1 - factorChange.abs())
+                                            .clamp(0.0, 1.0),
+                                        child: _pages[index % _pages.length]);
+                                  });
+                            },
+                            onPageChanged: (int index) {
+                              setState(() {
+                                _formProgress = 0.2 * (index + 1);
+                                _currentPage = index;
+                              });
+                            },
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             Align(
@@ -287,39 +297,6 @@ class _LoginControllerState extends State<LoginController>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  // (_currentPage == MobileInputScreen.index)
-                  //     ? Padding(
-                  //         padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                  //         child: RichText(
-                  //           text: new TextSpan(
-                  //             children: [
-                  //               new TextSpan(
-                  //                 text: 'By continuing, you agree to our ',
-                  //                 style: GoogleFonts.montserrat(
-                  //                     fontSize: SizeConfig.smallTextSize * 1.2,
-                  //                     color: Colors.black45),
-                  //               ),
-                  //               new TextSpan(
-                  //                 text: 'Terms of Service',
-                  //                 style: GoogleFonts.montserrat(
-                  //                     color: Colors.black45,
-                  //                     fontSize: SizeConfig.smallTextSize * 1.2,
-                  //                     decoration: TextDecoration.underline),
-                  //                 recognizer: new TapGestureRecognizer()
-                  //                   ..onTap = () {
-                  //                     Haptic.vibrate();
-                  //                     BaseUtil.launchUrl(
-                  //                         'https://fello.in/policy/tnc');
-                  //                     // appStateProvider.currentAction = PageAction(
-                  //                     //     state: PageState.addPage,
-                  //                     //     page: TncPageConfig);
-                  //                   },
-                  //               ),
-                  //             ],
-                  //           ),
-                  //         ),
-                  //       )
-                  //     : Container(),
                   Container(
                     width: SizeConfig.screenWidth,
                     padding: EdgeInsets.fromLTRB(0, 10, 0, 20),
@@ -329,7 +306,7 @@ class _LoginControllerState extends State<LoginController>
                       children: <Widget>[
                         new Container(
                           width: SizeConfig.screenWidth -
-                              SizeConfig.blockSizeHorizontal * 10,
+                              SizeConfig.pageHorizontalMargins * 2,
                           child: FelloButtonLg(
                             child: (!baseProvider.isLoginNextInProgress)
                                 ? Text(
@@ -356,7 +333,7 @@ class _LoginControllerState extends State<LoginController>
               ),
             ),
           ],
-        )),
+        ),
       ),
     );
   }
@@ -651,3 +628,38 @@ class _LoginControllerState extends State<LoginController>
     //TODO move to home through animation
   }
 }
+
+
+// (_currentPage == MobileInputScreen.index)
+                  //     ? Padding(
+                  //         padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                  //         child: RichText(
+                  //           text: new TextSpan(
+                  //             children: [
+                  //               new TextSpan(
+                  //                 text: 'By continuing, you agree to our ',
+                  //                 style: GoogleFonts.montserrat(
+                  //                     fontSize: SizeConfig.smallTextSize * 1.2,
+                  //                     color: Colors.black45),
+                  //               ),
+                  //               new TextSpan(
+                  //                 text: 'Terms of Service',
+                  //                 style: GoogleFonts.montserrat(
+                  //                     color: Colors.black45,
+                  //                     fontSize: SizeConfig.smallTextSize * 1.2,
+                  //                     decoration: TextDecoration.underline),
+                  //                 recognizer: new TapGestureRecognizer()
+                  //                   ..onTap = () {
+                  //                     Haptic.vibrate();
+                  //                     BaseUtil.launchUrl(
+                  //                         'https://fello.in/policy/tnc');
+                  //                     // appStateProvider.currentAction = PageAction(
+                  //                     //     state: PageState.addPage,
+                  //                     //     page: TncPageConfig);
+                  //                   },
+                  //               ),
+                  //             ],
+                  //           ),
+                  //         ),
+                  //       )
+                  //     : Container(),
