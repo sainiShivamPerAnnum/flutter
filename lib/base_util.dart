@@ -85,8 +85,7 @@ class BaseUtil extends ChangeNotifier {
   PanService panService;
 
   ///Augmont global objects
-  UserAugmontDetail _augmontDetail =
-      UserAugmontDetail("", "", "", "", "", "", false, "", null, null);
+  UserAugmontDetail _augmontDetail;
   UserTransaction _currentAugmontTxn;
   AugmontRates augmontGoldRates;
 

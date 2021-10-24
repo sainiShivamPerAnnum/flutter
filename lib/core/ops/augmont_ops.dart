@@ -504,10 +504,6 @@ class AugmontModel extends ChangeNotifier {
     _baseProvider.currentAugmontTxn.tranStatus =
         UserTransaction.TRAN_STATUS_CANCELLED;
 
-    // bool flag = await _dbModel.updateUserTransaction(
-    //     _baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
-    // _txnService.updateTransactions();
-
     await _investmentActionsRepository.cancelUserDeposit(
         txnId:
             _initialDepositResponse.model.response.transactionDoc.transactionId,

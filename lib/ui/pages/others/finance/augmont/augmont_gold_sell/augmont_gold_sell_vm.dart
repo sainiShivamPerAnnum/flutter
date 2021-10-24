@@ -35,8 +35,11 @@ class AugmontGoldSellViewModel extends BaseModel {
   double goldAmountFromGrams = 0.0;
   TextEditingController goldAmountController;
   List<double> chipAmountList = [25, 50, 100];
+
   double get goldSellPrice => goldRates != null ? goldRates.goldSellPrice : 0.0;
+
   UserFundWallet get userFundWallet => _userService.userFundWallet;
+
   get isGoldSellInProgress => this._isGoldSellInProgress;
 
   set isGoldSellInProgress(value) {
@@ -47,6 +50,13 @@ class AugmontGoldSellViewModel extends BaseModel {
   init() {
     goldAmountController = TextEditingController();
     fetchGoldRates();
+
+    if (_baseUtil.augmontDetail == null) {
+      _dbModel.getUserAugmontDetails(_baseUtil.myUser.uid).then((value) {
+        _baseUtil.augmontDetail = value;
+        refresh();
+      });
+    }
   }
 
   Widget amoutChip(double amt) {

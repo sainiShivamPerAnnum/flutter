@@ -32,6 +32,9 @@ class KYCDetailsViewModel extends BaseModel {
   final _baseUtil = locator<BaseUtil>();
   final _userRepo = locator<UserRepository>();
 
+  FocusNode panFocusNode = FocusNode();
+  TextInputType panTextInputType = TextInputType.name;
+
   final depositformKey3 = GlobalKey<FormState>();
 
   bool _isKycInProgress = false;
@@ -42,6 +45,36 @@ class KYCDetailsViewModel extends BaseModel {
     nameController = new TextEditingController();
     panController = new TextEditingController();
     checkForKycExistence();
+  }
+
+  _getPanKeyboardType() {
+    if (panController.text.length >= 0 && panController.text.length < 5) {
+      return TextInputType.name;
+    } else if (panController.text.length >= 5 &&
+        panController.text.length < 9) {
+      return TextInputType.number;
+    }
+    return TextInputType.name;
+  }
+
+  onPanEntered() {
+    bool _change = false;
+    if (_getPanKeyboardType() == TextInputType.name &&
+        panTextInputType == TextInputType.number) {
+      panTextInputType = TextInputType.name;
+      _change = true;
+    } else if (_getPanKeyboardType() == TextInputType.number &&
+        panTextInputType == TextInputType.name) {
+      panTextInputType = TextInputType.number;
+      _change = true;
+    }else{}
+
+    if(_change) {
+      panFocusNode.unfocus();
+      notifyListeners();
+    }
+
+    return _change;
   }
 
   checkForKycExistence() async {
