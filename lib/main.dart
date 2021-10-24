@@ -25,6 +25,8 @@ import 'package:felloapp/navigator/router/route_parser.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/credentials_stage.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/app_theme.dart';
@@ -38,6 +40,24 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
 
 import 'core/service/user_coin_service.dart';
+
+void main() async {
+  FlavorConfig(
+      flavor: Flavor.DEV,
+      color: Colors.green,
+      values: FlavorValues(
+          awsAugmontStage: AWSAugmontStage.DEV,
+          awsIciciStage: AWSIciciStage.PROD,
+          freshchatStage: FreshchatStage.DEV,
+          razorpayStage: RazorpayStage.DEV,
+          signzyStage: SignzyStage.PROD,
+          signzyPanStage: SignzyPanStage.DEV,
+          baseUriUS: 'us-central1-fello-dev-station.cloudfunctions.net',
+          baseUriAsia: 'asia-south1-fello-dev-station.cloudfunctions.net',
+          dynamicLinkPrefix: 'https://dev.fello.in/test'));
+  await mainInit();
+  runApp(MyApp());
+}
 
 Future mainInit() async {
   setupLocator();
