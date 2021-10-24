@@ -407,7 +407,7 @@ class _TambolaGameViewState extends State<TambolaGameView>
             child: Row(
               children: [
                 Text(
-                  "My Tickets (${model.currentPage}/${model.activeTambolaCardCount})",
+                  "My Tickets (${model.totalActiveTickets})",
                   style: GoogleFonts.montserrat(
                     color: Colors.black87,
                     fontSize: SizeConfig.cardTitleTextSize,
