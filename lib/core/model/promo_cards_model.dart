@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 class PromoCardModel {
   static Log log = new Log('PromoCard');
 
-  int _id;
+  int _position;
   final String _title;
   final String _subtitle;
   final String _buttonText;
   final String _actionUri;
   final int _bgColor;
-  get id => this._id;
+  get position => this._position;
 
   PromoCardModel(
-    this._id,
+    this._position,
     this._title,
     this._subtitle,
     this._actionUri,
@@ -23,15 +23,15 @@ class PromoCardModel {
 
   PromoCardModel.fromMap(Map<String, dynamic> cMap)
       : this(
-          cMap['id'],
+          cMap['position'],
           cMap['title'],
           cMap['subtitle'],
           cMap['actionUri'],
-          cMap['btntext'],
+          cMap['btnText'],
           cMap['color'],
         );
 
-  set id(value) => this._id = value;
+  set position(value) => this.position = value;
 
   String get title => this._title;
 
