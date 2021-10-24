@@ -154,6 +154,7 @@ class SimpleKycModelsheetViewModel extends BaseModel {
     bool _flag = true;
     int _failCode = 0;
     String _reason = '';
+    String upstreamName = '';
 
     bool registeredFlag = await _httpModel.isPanRegistered(enteredPan);
     if (registeredFlag) {
@@ -178,14 +179,17 @@ class SimpleKycModelsheetViewModel extends BaseModel {
 
         _flag = _response.model.response.result.verified;
 
-        if (_flag) {
-          try {
-            _userRepo.addKycName(
-                userUid: _userService.baseUser.uid,
-                upstreamKycName: _response.model.response.result.upstreamName);
-          } catch (e) {
-            _logger.e(e);
-          }
+        if (!_flag) {
+          _reason = 'The name on your PAN card does not match with the entered name. Please try again.';
+          // try {
+          //   _userRepo.addKycName(
+          //       userUid: _userService.baseUser.uid,
+          //       upstreamKycName: _response.model.response.result.upstreamName);
+          // } catch (e) {
+          //   _logger.e(e);
+          // }
+        }else{
+          upstreamName = _response.model.response.result.upstreamName;
         }
         
       } catch (e) {
@@ -201,6 +205,7 @@ class SimpleKycModelsheetViewModel extends BaseModel {
     }
 
     return {
+      'upstreamName': upstreamName,
       'flag': true,
     };
   }

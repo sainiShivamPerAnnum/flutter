@@ -12,12 +12,14 @@ class BaseUser {
   String dob;
   String gender; // 0: Male | 1: Female | -1: Rather Not to say
   String username;
+  String verifiedName;
   String client_token; //fetched from a subcollection
   bool isInvested;
   bool isIciciOnboarded;
   bool isAugmontOnboarded;
   bool isSimpleKycVerified;
   int isKycVerified;
+  String kycName;
   String pendingTxnId;
   bool isIciciEnabled;
   bool isAugmontEnabled;
@@ -47,6 +49,7 @@ class BaseUser {
   static final String fldIsAugmontEnabled = "mIsAugmontEnabled";
   static final String fldUserPrefs = "mUserPrefs";
   static final String fldCreatedOn = "mCreatedOn";
+  static final String fldKycName = "mKycName";
 
   BaseUser(
       this.uid,
@@ -129,6 +132,7 @@ class BaseUser {
       fldCreatedOn: createdOn
     };
     if (isKycVerified != null) userObj[fldIsKycVerified] = isKycVerified;
+    if(kycName != null) userObj[fldKycName] = kycName;
     if (isIciciOnboarded != null)
       userObj[fldIsIciciOnboarded] = isIciciOnboarded;
     if (isIciciEnabled != null) userObj[fldIsIciciEnabled] = isIciciEnabled;

@@ -90,7 +90,7 @@ class KYCDetailsView extends StatelessWidget {
                                     //     FocusScope.of(context)
                                     //         .requestFocus(model.panFocusNode);
                                     //   });
-                                    }
+                                    // }
                                   },
                                 ),
                               ],

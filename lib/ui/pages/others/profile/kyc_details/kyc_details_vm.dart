@@ -67,9 +67,9 @@ class KYCDetailsViewModel extends BaseModel {
         panTextInputType == TextInputType.name) {
       panTextInputType = TextInputType.number;
       _change = true;
-    }else{}
+    } else {}
 
-    if(_change) {
+    if (_change) {
       panFocusNode.unfocus();
       notifyListeners();
     }
@@ -154,6 +154,10 @@ class KYCDetailsViewModel extends BaseModel {
             if (_baseUtil.myUser.isSimpleKycVerified == null ||
                 !_baseUtil.myUser.isSimpleKycVerified) {
               _baseUtil.myUser.isSimpleKycVerified = true;
+              if (veriDetails['upstreamName'] != null &&
+                  veriDetails['upstreamName'] != '') {
+                _baseUtil.myUser.kycName = veriDetails['upstreamName'];
+              }
               _baseUtil.setKycVerified(true);
               _q = await _dbModel.updateUser(_userService.baseUser);
             }
@@ -208,6 +212,7 @@ class KYCDetailsViewModel extends BaseModel {
     bool _flag = true;
     int _failCode = 0;
     String _reason = '';
+    String upstreamName = '';
 
     bool registeredFlag = await _httpModel.isPanRegistered(enteredPan);
     if (registeredFlag) {
@@ -232,14 +237,18 @@ class KYCDetailsViewModel extends BaseModel {
 
         _flag = _response.model.response.result.verified;
 
-        if (_flag) {
-          try {
-            _userRepo.addKycName(
-                userUid: _userService.baseUser.uid,
-                upstreamKycName: _response.model.response.result.upstreamName);
-          } catch (e) {
-            _logger.e(e);
-          }
+        if (!_flag) {
+          _reason =
+              'The name on your PAN card does not match with the entered name. Please try again.';
+          // try {
+          //   _userRepo.addKycName(
+          //       userUid: _userService.baseUser.uid,
+          //       upstreamKycName: _response.model.response.result.upstreamName);
+          // } catch (e) {
+          //   _logger.e(e);
+          // }
+        } else {
+          upstreamName = _response.model.response.result.upstreamName;
         }
       } catch (e) {
         _flag = false;
@@ -254,6 +263,7 @@ class KYCDetailsViewModel extends BaseModel {
     }
 
     return {
+      'upstreamName': upstreamName,
       'flag': true,
     };
   }
