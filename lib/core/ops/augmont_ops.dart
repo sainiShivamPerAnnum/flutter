@@ -504,10 +504,6 @@ class AugmontModel extends ChangeNotifier {
     _baseProvider.currentAugmontTxn.tranStatus =
         UserTransaction.TRAN_STATUS_CANCELLED;
 
-    // bool flag = await _dbModel.updateUserTransaction(
-    //     _baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
-    // _txnService.updateTransactions();
-
     await _investmentActionsRepository.cancelUserDeposit(
         txnId:
             _initialDepositResponse.model.response.transactionDoc.transactionId,
@@ -550,13 +546,9 @@ class AugmontModel extends ChangeNotifier {
       SubmitGoldSell.fldBlockId: sellRates.blockId,
       SubmitGoldSell.fldLockPrice: sellRates.goldSellPrice.toString(),
       SubmitGoldSell.fldAccHolderName:
-      'SHOURYADITYA LALA',
-      SubmitGoldSell.fldAccNo: '159986643444',
-      SubmitGoldSell.fldIfsc: 'INDB0001394',
-      // SubmitGoldSell.fldAccHolderName:
-      //     _baseProvider.augmontDetail.bankHolderName,
-      // SubmitGoldSell.fldAccNo: _baseProvider.augmontDetail.bankAccNo,
-      // SubmitGoldSell.fldIfsc: _baseProvider.augmontDetail.ifsc,
+          _baseProvider.augmontDetail.bankHolderName,
+      SubmitGoldSell.fldAccNo: _baseProvider.augmontDetail.bankAccNo,
+      SubmitGoldSell.fldIfsc: _baseProvider.augmontDetail.ifsc,
     };
     var _request = http.Request(
         'GET', Uri.parse(_constructRequest(SubmitGoldSell.path, _params)));

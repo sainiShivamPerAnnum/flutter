@@ -188,7 +188,8 @@ class HttpModel extends ChangeNotifier {
 
   Future<bool> isPanRegistered(String pan) async {
     //build request
-    final Uri _uri = Uri.https(ASIA_BASE_URI, '/userSearch/dev/api/ispanregd');
+    String _stage = FlavorConfig.isDevelopment()?'dev':'prod';
+    final Uri _uri = Uri.https(ASIA_BASE_URI, '/userSearch/$_stage/api/ispanregd');
     var headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
       HttpHeaders.authorizationHeader: 'Bearer $idToken'
@@ -220,7 +221,8 @@ class HttpModel extends ChangeNotifier {
   ///encrypt text - used for pan
   Future<String> encryptText(String encText, int encVersion) async {
     //build request
-    final Uri _uri = Uri.https(ASIA_BASE_URI, '/encoderops/api/encrypt');
+    String _stage = FlavorConfig.isDevelopment()?'dev':'prod';
+    final Uri _uri = Uri.https(ASIA_BASE_URI, '/encoderops/$_stage/api/encrypt');
     var headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
       HttpHeaders.authorizationHeader: 'Bearer $idToken'
@@ -253,7 +255,8 @@ class HttpModel extends ChangeNotifier {
   ///decrypt text - used for pan
   Future<String> decryptText(String decText, int decVersion) async {
     //build request
-    final Uri _uri = Uri.https(ASIA_BASE_URI, '/encoderops/api/decrypt');
+    String _stage = FlavorConfig.isDevelopment()?'dev':'prod';
+    final Uri _uri = Uri.https(ASIA_BASE_URI, '/encoderops/$_stage/api/decrypt');
     var headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
       HttpHeaders.authorizationHeader: 'Bearer $idToken'

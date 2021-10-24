@@ -528,7 +528,7 @@ class Api {
   }
 
   Future<QuerySnapshot> getPromoCardCollection() {
-    Query _query = _db.collection(Constants.COLN_PROMOS).orderBy('id');
+    Query _query = _db.collection(Constants.COLN_PROMOS).orderBy('position');
     return _query.get();
   }
 
