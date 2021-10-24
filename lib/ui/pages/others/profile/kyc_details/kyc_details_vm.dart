@@ -80,9 +80,9 @@ class KYCDetailsViewModel extends BaseModel {
   checkForKycExistence() async {
     setState(ViewState.Busy);
     String pan = await _baseUtil.panService.getUserPan();
-    if (pan != null && pan == "") {
+    if (_baseUtil.myUser.isSimpleKycVerified && pan != null && pan.isNotEmpty) {
       panController.text = pan;
-      nameController.text = _userService.baseUser.name;
+      nameController.text = _userService.baseUser.kycName;
       inEditMode = false;
     }
 
