@@ -77,6 +77,8 @@ class BaseRemoteConfig {
 
   static const Map<String, String> _OCT_FEST_OFFER_TIMEOUT = {'oct_fest_offer_timeout': '10'};
 
+  static const Map<String, String> _OCT_FEST_MIN_DEPOSIT = {'oct_fest_min_deposit': '100'};
+
   static const Map<String, dynamic> DEFAULTS = {
     ..._DRAW_PICK_TIME,
     ..._TAMBOLA_HEADER_FIRST,
@@ -101,7 +103,8 @@ class BaseRemoteConfig {
     ..._KYC_COMPLETION_PRIZE,
     ..._UNLOCK_REFERRAL_AMT,
     ..._WEEK_NUMBER,
-    ..._OCT_FEST_OFFER_TIMEOUT
+    ..._OCT_FEST_OFFER_TIMEOUT,
+    ..._OCT_FEST_MIN_DEPOSIT
   };
 
   static Future<bool> init() async {
@@ -184,6 +187,8 @@ class BaseRemoteConfig {
   static String get WEEK_NUMBER => _WEEK_NUMBER.keys.first;
 
   static String get OCT_FEST_OFFER_TIMEOUT => _OCT_FEST_OFFER_TIMEOUT.keys.first;
+
+  static String get OCT_FEST_MIN_DEPOSIT => _OCT_FEST_MIN_DEPOSIT.keys.first;
 
   static int get UNLOCK_REFERRAL_AMT {
     String _val = _UNLOCK_REFERRAL_AMT.keys.first;

@@ -77,6 +77,7 @@ class _FundsChartViewState extends State<FundsChartView> {
   }
 
   static List<ChartFundItem> chartData = [];
+
   getchartData() {
     chartData = [
       ChartFundItem(
@@ -213,19 +214,10 @@ class _FundsChartViewState extends State<FundsChartView> {
                 )
               ],
             ),
-            IconButton(
-                icon: Icon(Icons.info),
-                onPressed: () {
-                  AppState.screenStack.add(ScreenItem.dialog);
-                  return showDialog(
-                    context: context,
-                    builder: (_) => GoldenTicketClaimDialog(
-                      ticketCount: 0,
-                      failMsg: "abc",
-                    ),
-                  );
-                },
-                color: Colors.grey)
+            Icon(
+              Icons.info,
+              color: Colors.grey,
+            )
           ],
         ),
       ),

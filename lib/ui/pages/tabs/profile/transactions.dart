@@ -40,7 +40,7 @@ class _TransactionsState extends State<Transactions> {
         baseProvider.hasMoreTransactionListDocuments) {
       dbProvider
           .getFilteredUserTransactions(baseProvider.myUser, null, null,
-              baseProvider.lastTransactionListDocument)
+          baseProvider.lastTransactionListDocument)
           .then((Map<String, dynamic> tMap) {
         if (baseProvider.userMiniTxnList == null ||
             baseProvider.userMiniTxnList.length == 0) {
@@ -69,10 +69,10 @@ class _TransactionsState extends State<Transactions> {
   findFirstAugmontTransaction() {
     try {
       List<UserTransaction> reversedList =
-          baseProvider.userMiniTxnList.reversed.toList();
+      baseProvider.userMiniTxnList.reversed.toList();
       baseProvider.firstAugmontTransaction = reversedList.firstWhere(
-          (element) =>
-              element.type == UserTransaction.TRAN_TYPE_DEPOSIT &&
+              (element) =>
+          element.type == UserTransaction.TRAN_TYPE_DEPOSIT &&
               element.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE &&
               element.subType == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD);
     } catch (e) {
@@ -196,21 +196,21 @@ class _TransactionsState extends State<Transactions> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     if (baseProvider.userMiniTxnList == null
-        // || baseProvider.userMiniTxnList.isEmpty
-        ) {
+    // || baseProvider.userMiniTxnList.isEmpty
+    ) {
       getTransactions();
     }
     if (isInit) {
       if (baseProvider.userMiniTxnList != null
-          // && baseProvider.userMiniTxnList.isNotEmpty
-          ) {
+      // && baseProvider.userMiniTxnList.isNotEmpty
+      ) {
         filteredList = List.from(baseProvider.userMiniTxnList);
       } else {
         filteredList = [];
       }
       _scrollController.addListener(() async {
         if (_scrollController.offset >=
-                _scrollController.position.maxScrollExtent &&
+            _scrollController.position.maxScrollExtent &&
             !_scrollController.position.outOfRange) {
           if (baseProvider.hasMoreTransactionListDocuments && !isLoading) {
             getTransactions();
@@ -239,7 +239,7 @@ class _TransactionsState extends State<Transactions> {
                     // ),
                     Container(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
                         border: Border.all(
                             width: 2, color: UiConstants.primaryColor),
@@ -291,7 +291,7 @@ class _TransactionsState extends State<Transactions> {
                     SizedBox(width: 30),
                     Container(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
                         border: Border.all(
                             width: 2, color: UiConstants.primaryColor),
@@ -338,34 +338,34 @@ class _TransactionsState extends State<Transactions> {
               Expanded(
                 child: isLoading
                     ? Center(
-                        child: CircularProgressIndicator(),
-                      )
+                  child: CircularProgressIndicator(),
+                )
                     : (filteredList.length == 0
-                        ? Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                "images/no-transactions.png",
-                                width: SizeConfig.screenWidth * 0.8,
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              Text(
-                                "No transactions to show yet",
-                                style: TextStyle(
-                                  fontSize: SizeConfig.largeTextSize,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              )
-                            ],
-                          )
-                        : ListView(
-                            physics: BouncingScrollPhysics(),
-                            padding: EdgeInsets.all(10),
-                            controller: _scrollController,
-                            children: _getTxns(),
-                          )),
+                    ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "images/no-transactions.png",
+                      width: SizeConfig.screenWidth * 0.8,
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      "No transactions to show yet",
+                      style: TextStyle(
+                        fontSize: SizeConfig.largeTextSize,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    )
+                  ],
+                )
+                    : ListView(
+                  physics: BouncingScrollPhysics(),
+                  padding: EdgeInsets.all(10),
+                  controller: _scrollController,
+                  children: _getTxns(),
+                )),
               ),
             ],
           ),
@@ -439,19 +439,20 @@ class _TransactionsState extends State<Transactions> {
 
   String _getFormattedTime(Timestamp tTime) {
     DateTime now =
-        DateTime.fromMillisecondsSinceEpoch(tTime.millisecondsSinceEpoch);
+    DateTime.fromMillisecondsSinceEpoch(tTime.millisecondsSinceEpoch);
     return DateFormat('yyyy-MM-dd – kk:mm').format(now);
   }
 
-  bool isOfferStillValid(Timestamp time) {
-    String _timeoutMins = BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.OCT_FEST_OFFER_TIMEOUT);
-    if(_timeoutMins == null || _timeoutMins.isEmpty) _timeoutMins = '10';
+  bool _isOfferStillValid(Timestamp time) {
+    String _timeoutMins = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.OCT_FEST_OFFER_TIMEOUT);
+    if (_timeoutMins == null || _timeoutMins.isEmpty) _timeoutMins = '10';
     int _timeout = int.tryParse(_timeoutMins);
 
     DateTime tTime =
-        DateTime.fromMillisecondsSinceEpoch(time.millisecondsSinceEpoch);
+    DateTime.fromMillisecondsSinceEpoch(time.millisecondsSinceEpoch);
     Duration difference = DateTime.now().difference(tTime);
-    if (difference.inSeconds <= _timeout*60) {
+    if (difference.inSeconds <= _timeout * 60) {
       log("offer Still valid");
       return true;
     }
@@ -460,10 +461,20 @@ class _TransactionsState extends State<Transactions> {
   }
 
   bool getBeerTicketStatus(UserTransaction transaction) {
+    ///check if this is the first transaction
     if (baseProvider.firstAugmontTransaction != null &&
-        baseProvider.firstAugmontTransaction == transaction &&
-        transaction.amount >= 150.0 &&
-        isOfferStillValid(transaction.timestamp)) return true;
+        baseProvider.firstAugmontTransaction == transaction) {
+      ///check if the offer hasnt timed out and if minimum deposit criteria is met
+      String minDepositRequiredStr = BaseRemoteConfig.remoteConfig
+          .getString(BaseRemoteConfig.OCT_FEST_MIN_DEPOSIT);
+      int minDepositRequired = 100; //default
+      if (minDepositRequiredStr != null &&
+          int.tryParse(minDepositRequiredStr) != null)
+        minDepositRequired = int.tryParse(minDepositRequiredStr);
+
+      return (transaction.amount >= minDepositRequired &&
+          _isOfferStillValid(transaction.timestamp));
+    }
     return false;
   }
 }
