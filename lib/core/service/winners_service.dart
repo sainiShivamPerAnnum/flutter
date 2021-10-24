@@ -61,7 +61,7 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
     }
 
     if (_winners != null) {
-      _winners.sort((a, b) => b.score.compareTo(a.score));
+      _winners.sort((a, b) => b.amount.compareTo(a.score));
       setWinners();
     }
   }
