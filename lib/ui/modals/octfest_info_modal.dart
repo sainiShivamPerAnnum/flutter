@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/size_config.dart';
@@ -90,7 +91,7 @@ class OctFestInfoModal extends StatelessWidget {
                           0,
                         ),
                         referralTile(
-                            "Make your first investment of ₹150 or more and show the transaction to the outlet to avail the offer.",
+                            "Make your first investment of ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.OCT_FEST_MIN_DEPOSIT)} or more and show the transaction to the outlet to avail the offer.",
                             SizeConfig.screenWidth * 0.1),
                         referralTile(
                             "This offer can only be availed once per user, using the outlet's download link.",
