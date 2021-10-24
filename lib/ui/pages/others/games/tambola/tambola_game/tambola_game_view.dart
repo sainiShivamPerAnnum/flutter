@@ -20,6 +20,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -185,6 +186,13 @@ class _TambolaGameViewState extends State<TambolaGameView>
                                       child: TextField(
                                         controller: model.ticketCountController,
                                         enableInteractiveSelection: false,
+                                        keyboardType:
+                                            TextInputType.numberWithOptions(
+                                                signed: true),
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter
+                                              .digitsOnly,
+                                        ],
                                         cursorColor: UiConstants.primaryColor,
                                         decoration: InputDecoration(
                                             hintText: 'Enter no of tickets'),

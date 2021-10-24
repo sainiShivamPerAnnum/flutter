@@ -40,8 +40,10 @@ class CricketHomeViewModel extends BaseModel {
   double cardOpacity = 1;
 
   udpateCardOpacity() {
-    cardOpacity = 1 -
-        (scrollController.offset / scrollController.position.maxScrollExtent);
+    cardOpacity = (1 -
+            (scrollController.offset /
+                scrollController.position.maxScrollExtent))
+        .clamp(0, 1);
     notifyListeners();
   }
 

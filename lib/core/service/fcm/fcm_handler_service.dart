@@ -1,4 +1,7 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +37,19 @@ class FcmHandler extends ChangeNotifier {
             //Navigate back to CricketView
             if (AppState.circGameInProgress) {
               AppState.circGameInProgress = false;
-              AppState.backButtonDispatcher.didPopRoute();
+              await AppState.backButtonDispatcher.didPopRoute().then((value) {
+                // BaseUtil.openDialog(
+                //   addToScreenStack: true,
+                //   isBarrierDismissable: true,
+                //   hapticVibrate: false,
+                //   content: FelloInfoDialog(
+                //     showCrossIcon: true,
+                //     asset: Assets.congrats,
+                //     title: "Congratulations",
+                //     subtitle: "Your score was XX and you played for XX secs",
+                //   ),
+                // );
+              });
             }
           }
           break;

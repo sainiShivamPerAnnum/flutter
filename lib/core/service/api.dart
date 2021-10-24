@@ -527,6 +527,11 @@ class Api {
     return _query.get();
   }
 
+  Future<QuerySnapshot> getPromoCardCollection() {
+    Query _query = _db.collection(Constants.COLN_PROMOS).orderBy('id');
+    return _query.get();
+  }
+
   Future<String> getFileFromDPBucketURL(String uid, String path) {
     return _storage.ref('dps/$uid/$path').getDownloadURL();
   }

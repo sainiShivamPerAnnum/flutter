@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:country_code_picker/country_code_picker.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/logger.dart';
@@ -8,6 +7,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 
@@ -142,7 +142,10 @@ class MobileInputScreenState extends State<MobileInputScreen> {
               key: _formKey,
               child: TextFormField(
                 key: _phoneFieldKey,
-                keyboardType: TextInputType.number,
+                keyboardType: TextInputType.numberWithOptions(signed: true),
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
                 maxLength: 10,
                 cursorColor: UiConstants.primaryColor,
                 style: TextStyles.body3.colour(Colors.black),
