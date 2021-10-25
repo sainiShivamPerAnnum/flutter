@@ -19,6 +19,7 @@ import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -55,6 +56,7 @@ class RootViewModel extends BaseModel {
     AppState().setCurrentTabIndex = 1;
     AppState().setRootLoadValue = true;
     _initDynamicLinks(AppState.delegate.navigatorKey.currentContext);
+    _verifyManualReferral(AppState.delegate.navigatorKey.currentContext);
   }
 
   onDispose() {
@@ -155,6 +157,20 @@ class RootViewModel extends BaseModel {
     }
   }
 
+  Future<dynamic> _verifyManualReferral(BuildContext context) async {
+    if(BaseUtil.manualReferralCode == null) return null;
+    try {
+      PendingDynamicLinkData dynamicLinkData =
+          await FirebaseDynamicLinks.instance.getDynamicLink(Uri.parse(
+              '${FlavorConfig.instance.values.dynamicLinkPrefix}/app/referral/${BaseUtil.manualReferralCode}'));
+      Uri deepLink = dynamicLinkData?.link;
+      _logger.d(deepLink.toString());
+      if(deepLink != null) return _processDynamicLink(_baseUtil.myUser.uid, deepLink, context);
+    } catch (e) {
+      _logger.e(e.toString());
+    }
+  }
+
   Future<dynamic> _initDynamicLinks(BuildContext context) async {
     FirebaseDynamicLinks.instance.onLink(
         onSuccess: (PendingDynamicLinkData dynamicLink) async {
@@ -184,6 +200,9 @@ class RootViewModel extends BaseModel {
       //Golden ticket dynamic link
       int flag = await _submitGoldenTicket(userId, _uri, context);
     } else {
+      BaseUtil.manualReferralCode =
+          null; //make manual Code null in case user used both link and code
+
       //Referral dynamic link
       int addUserTicketCount = await _submitReferral(
           _baseUtil.myUser.uid, _userService.myUserName, _uri);
