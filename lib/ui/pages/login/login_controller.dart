@@ -352,7 +352,9 @@ class _LoginControllerState extends State<LoginController>
             log.debug(
                 'Mobile number validated: ${_mobileScreenKey.currentState.getMobile()}');
             this.userMobile = _mobileScreenKey.currentState.getMobile();
-
+            String refCode = _mobileScreenKey.currentState.getReferralCode();
+            if (refCode != null && refCode.isNotEmpty)
+              BaseUtil.manualReferralCode = refCode;
             setState(() {
               LoginController.mobileno = this.userMobile;
             });

@@ -270,5 +270,7 @@ class MobileInputScreenState extends State<MobileInputScreen> {
 
   String getMobile() => _mobileController.text;
 
+  String getReferralCode() => _referralCodeController.text;
+
   get formKey => _formKey;
 }
