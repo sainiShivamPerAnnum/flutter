@@ -466,7 +466,8 @@ class NameInputScreenState extends State<NameInputScreen> {
                 vertical: 4,
               ),
               decoration: BoxDecoration(
-                border: Border.all(color: UiConstants.primaryColor),
+                border: Border.all(
+                    color: UiConstants.primaryColor.withOpacity(0.5)),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: DropdownButtonFormField(

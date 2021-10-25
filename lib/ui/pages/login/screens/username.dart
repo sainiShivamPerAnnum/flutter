@@ -11,7 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
-enum UsernameResponse { AVAILABLE, UNAVAILABLE, INVALID, EMPTY }
+enum UsernameResponse { AVAILABLE, UNAVAILABLE, INVALID, EMPTY, SHORT, LONG }
 
 class LowerCaseTextFormatter extends TextInputFormatter {
   @override
@@ -122,10 +122,18 @@ class UsernameState extends State<Username> {
           style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500));
     else if (response == UsernameResponse.INVALID
         // isValid == false
-        )
-      return Text(
-          "@${usernameController.text.trim()} is invalid. please refer to rules",
-          style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500));
+        ) {
+      if (usernameController.text.trim().length < 5)
+        return Text("please enter a username with more than 4 characters.",
+            style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500));
+      else if (usernameController.text.trim().length > 20)
+        return Text("please enter a username with less than 20 characters.",
+            style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500));
+      else
+        return Text("@${usernameController.text.trim()} is invalid",
+            style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500));
+    }
+
     return SizedBox(
       height: 16,
     );

@@ -1,12 +1,14 @@
 //Project Imports
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
+import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -466,7 +468,8 @@ class _LoginControllerState extends State<LoginController>
             bool isInv = _nameScreenKey.currentState.isInvested;
             if (isInv != null) baseProvider.myUser.isInvested = isInv;
             state = _nameScreenKey.currentState.state;
-            baseProvider.myUser.isAugmontOnboarded = true;
+            await CacheManager.writeCache(
+                key: "UserAugmontState", value: state, type: CacheType.string);
 
             Future.delayed(Duration(seconds: 1), () {
               baseProvider.isLoginNextInProgress = false;
@@ -500,26 +503,11 @@ class _LoginControllerState extends State<LoginController>
                 if (res) {
                   baseProvider.myUser.username = username;
                   bool flag = await dbProvider.updateUser(baseProvider.myUser);
-                  UserAugmontDetail detail = await augmontProvider
-                      .createSimpleUser(baseProvider.myUser.mobile, state);
-                  if (detail != null && flag) {
+
+                  if (flag) {
                     log.debug("User object saved successfully");
                     _onSignUpComplete();
-                  }
-                  // if (detail == null) {
-                  //   BaseUtil.showNegativeAlert('Registration Failed',
-                  //       'Failed to regsiter at the moment. Please try again.');
-                  //   return;
-                  // } else {
-                  //   ///show completion animation
-                  //   BaseUtil.showPositiveAlert('Registration Successful',
-                  //       'You are successfully registered!');
-                  //   // AppState.delegate.appState.currentAction =
-                  //   //     PageAction(state: PageState.addPage, page: AugmontGoldBuyPageConfig);
-                  // }
-                  // if (flag) {
-                  // }
-                  else {
+                  } else {
                     BaseUtil.showNegativeAlert(
                       'Update failed',
                       'Please try again in sometime',

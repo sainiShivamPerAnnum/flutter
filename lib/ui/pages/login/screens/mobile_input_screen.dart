@@ -186,6 +186,8 @@ class MobileInputScreenState extends State<MobileInputScreen> {
                             hintStyle: TextStyles.body3.colour(Colors.grey),
                           ),
                           validator: (val) {
+                            if (val.trim().length == 0 || val == null)
+                              return null;
                             if (val.trim().length < 3 || val.trim().length > 10)
                               return "Invalid referral code";
                             return null;
