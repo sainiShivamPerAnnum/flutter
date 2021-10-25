@@ -161,7 +161,7 @@ class WantMoreTickets extends StatelessWidget {
             ),
             alignment: Alignment.topCenter,
             child: Container(
-              height: SizeConfig.navBarHeight * 0.6,
+              height: SizeConfig.navBarHeight * 0.5,
               alignment: Alignment.center,
               child: Text(
                 locale.navWMT,

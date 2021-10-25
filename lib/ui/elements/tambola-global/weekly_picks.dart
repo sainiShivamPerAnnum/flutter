@@ -1,7 +1,9 @@
 import 'package:felloapp/core/model/daily_pick_model.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class WeeklyPicks extends StatelessWidget {
@@ -74,20 +76,21 @@ class WeeklyPicks extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (weeklyDraws == null || weeklyDraws.toList().isEmpty) {
-      return Center(
-        child: Container(
-          height: 150,
-          child: Center(
-            child: Padding(
-              padding: EdgeInsets.all(10),
-              child: Text(
-                'This week\'s numbers have not been drawn yet.',
-                textAlign: TextAlign.center,
-                style: TextStyles.title2.bold.colour(Colors.white),
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SvgPicture.asset(Assets.noTickets),
+          Padding(
+            padding: EdgeInsets.all(10),
+            child: Text(
+              'This week\'s numbers have not been drawn yet.',
+              textAlign: TextAlign.center,
+              style: TextStyles.body1.colour(
+                Colors.white.withOpacity(0.5),
               ),
             ),
           ),
-        ),
+        ],
       );
     }
     DateTime today = DateTime.now();

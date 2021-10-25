@@ -199,10 +199,10 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
       baseProvider.isAugmontRegnInProgress = false;
       setState(() {});
       AppState.backButtonDispatcher.didPopRoute();
-      AppState.delegate.appState.currentAction =
-          PageAction(state: PageState.addPage, page: AugmontGoldBuyPageConfig);
+      // AppState.delegate.appState.currentAction =
+      //     PageAction(state: PageState.addPage, page: AugmontGoldBuyPageConfig);
     }
-    setState(() {});
+    //setState(() {});
     return;
   }
 

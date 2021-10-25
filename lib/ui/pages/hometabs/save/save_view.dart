@@ -228,9 +228,7 @@ class AugmontCard extends StatelessWidget {
                   Expanded(
                     child: Center(
                       child: FelloButton(
-                        onPressed: () {
-                          model.checkRegistrationAndRedirect();
-                        },
+                        onPressed: model.navigateToBuyScreen,
                         activeButtonUI: Container(
                           width: SizeConfig.screenWidth * 0.367, //152
                           height: SizeConfig.screenWidth * 0.12, //50

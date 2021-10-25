@@ -17,74 +17,84 @@ class OfferCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(SizeConfig.roundness32),
-      child: Shimmer(
-        enabled: shimmer,
-        child: Container(
-          width: SizeConfig.screenWidth * 0.6,
-          height: SizeConfig.screenWidth * 0.34,
-          margin: EdgeInsets.only(
-              left: SizeConfig.pageHorizontalMargins,
-              right: SizeConfig.pageHorizontalMargins / 2),
-          decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage(Assets.germsPattern), fit: BoxFit.cover),
-            color: model.bgColor != null
-                ? Color(model.bgColor)
-                : UiConstants.tertiarySolid,
-            borderRadius: BorderRadius.circular(SizeConfig.roundness32),
-            boxShadow: [
-              BoxShadow(
-                blurRadius: 30,
-                color: model.bgColor != null
-                    ? Color(model.bgColor).withOpacity(0.3)
-                    : UiConstants.tertiarySolid.withOpacity(0.3),
-                offset: Offset(
-                  0,
-                  SizeConfig.screenWidth * 0.15,
-                ),
-                spreadRadius: -44,
-              )
-            ],
-          ),
-          child: Padding(
-            padding: EdgeInsets.only(
-              left: SizeConfig.screenWidth * 0.07,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  model.title ?? "",
-                  style: TextStyles.title5.colour(Colors.white).bold,
-                ),
-                SizedBox(height: SizeConfig.padding6),
-                Text(
-                  model.subtitle ?? "",
-                  style: TextStyles.title5.colour(Colors.white).bold,
-                ),
-                SizedBox(
-                  height: SizeConfig.padding12,
-                ),
-                if (model.buttonText != null && model.actionUri != null)
-                  InkWell(
-                    onTap: () => AppState.delegate
-                        .parseRoute(Uri.parse(model.actionUri)),
-                    child: Container(
-                      alignment: Alignment.center,
-                      width: SizeConfig.screenWidth * 0.171,
-                      height: SizeConfig.screenWidth * 0.065,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(100),
+      child: Container(
+        width: SizeConfig.screenWidth * 0.6,
+        height: SizeConfig.screenWidth * 0.34,
+        margin: EdgeInsets.only(
+            left: SizeConfig.pageHorizontalMargins,
+            right: SizeConfig.pageHorizontalMargins / 2),
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage(Assets.germsPattern), fit: BoxFit.cover),
+          color: model.bgColor != null
+              ? Color(model.bgColor)
+              : UiConstants.tertiarySolid,
+          borderRadius: BorderRadius.circular(SizeConfig.roundness32),
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 30,
+              color: model.bgColor != null
+                  ? Color(model.bgColor).withOpacity(0.3)
+                  : UiConstants.tertiarySolid.withOpacity(0.3),
+              offset: Offset(
+                0,
+                SizeConfig.screenWidth * 0.15,
+              ),
+              spreadRadius: -44,
+            )
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(SizeConfig.roundness32),
+          child: Shimmer(
+            enabled: shimmer,
+            child: Container(
+              padding: EdgeInsets.only(
+                left: SizeConfig.screenWidth * 0.07,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    model.title ?? "",
+                    overflow: TextOverflow.clip,
+                    maxLines: 1,
+                    style: TextStyles.title5.colour(Colors.white).bold,
+                  ),
+                  SizedBox(height: SizeConfig.padding6),
+                  Text(
+                    model.subtitle ?? "",
+                    overflow: TextOverflow.clip,
+                    maxLines: 1,
+                    style: TextStyles.title5.colour(Colors.white).bold,
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding12,
+                  ),
+                  if (model.buttonText != null && model.actionUri != null)
+                    InkWell(
+                      onTap: () {
+                        print(model.actionUri.toString());
+                        AppState.delegate
+                            .parseRoute(Uri.parse(model.actionUri));
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        width: SizeConfig.screenWidth * 0.171,
+                        height: SizeConfig.screenWidth * 0.065,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: Text(
+                          model.buttonText ?? "Button",
+                          style: TextStyles.body4.colour(Colors.white).bold,
+                        ),
                       ),
-                      child: Text(
-                        model.buttonText ?? "Button",
-                        style: TextStyles.body4.colour(Colors.white).bold,
-                      ),
-                    ),
-                  )
-              ],
+                    )
+                ],
+              ),
             ),
           ),
         ),

@@ -50,6 +50,7 @@ class TambolaGameViewModel extends BaseModel {
 
   UserTicketWallet get userTicketWallet => tambolaService.userTicketWallet;
   List<Ticket> _tambolaBoardViews;
+
   TambolaGenerationService _tambolaTicketService;
   int ticketGenerationTryCount = 0;
   TextEditingController ticketCountController;
@@ -61,7 +62,6 @@ class TambolaGameViewModel extends BaseModel {
   int _currentPage = 1;
 
   List<Ticket> _topFiveTambolaBoards = [];
-  List<Ticket> tambolaBoardViews;
   List<TambolaBoard> _bestTambolaBoards;
   bool showSummaryCards = true;
   bool ticketBuyInProgress = false;
@@ -69,6 +69,10 @@ class TambolaGameViewModel extends BaseModel {
   bool _showBuyModal = true;
   int buyTicketCount = 5;
   bool _ticketsBeingGenerated = false;
+
+  List<Ticket> get tambolaBoardViews => this._tambolaBoardViews;
+
+  set tambolaBoardViews(List<Ticket> value) => this._tambolaBoardViews = value;
 
   get ticketsBeingGenerated => this._ticketsBeingGenerated;
 
@@ -238,7 +242,6 @@ class TambolaGameViewModel extends BaseModel {
       tambolaService.userTicketWallet =
           await _dbModel.getUserTicketWallet(_userService.baseUser.uid);
       if (tambolaService.userTicketWallet != null) _refreshTambolaTickets();
-
     } else {
       return BaseUtil.showNegativeAlert("Operation Failed",
           "Failed to buy tickets at the moment. Please try again later");

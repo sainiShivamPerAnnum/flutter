@@ -78,6 +78,7 @@ class PlayViewModel extends BaseModel {
 
   loadOfferList() async {
     isOfferListLoading = true;
+    await Future.delayed(Duration(seconds: 10));
     await _dbProvider.getPromoCards().then((cards) {
       _offerList = cards;
     });

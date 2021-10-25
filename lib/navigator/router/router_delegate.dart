@@ -144,6 +144,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     _pages.add(
       _createPage(child, pageConfig),
     );
+    //notifyListeners();
   }
 
   void addPage(PageConfiguration pageConfig) {
@@ -552,21 +553,14 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   void screenCheck(String screenKey) {
     PageConfiguration pageConfiguration;
     switch (screenKey) {
-      case 'dashboard':
+      case 'save':
         appState.setCurrentTabIndex = 0;
         break;
-      case 'games':
+      case 'play':
         appState.setCurrentTabIndex = 1;
         break;
-      case 'scoreboard':
-        appState.setCurrentTabIndex = 1;
-        //appState.setCurrentGameTabIndex = 1;
-        break;
-      case 'finance':
+      case 'win':
         appState.setCurrentTabIndex = 2;
-        break;
-      case 'profile':
-        appState.setCurrentTabIndex = 3;
         break;
       case 'editProfile':
         pageConfiguration = UserProfileDetailsConfig;
@@ -574,14 +568,15 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'mfDetails':
         pageConfiguration = MfDetailsPageConfig;
         break;
-      case 'augDetails':
-        pageConfiguration = AugDetailsPageConfig;
+      case 'augBuy':
+        pageConfiguration = AugmontGoldBuyPageConfig;
         break;
+
       case 'tran':
-        pageConfiguration = TransactionPageConfig;
+        pageConfiguration = TransactionsHistoryPageConfig;
         break;
       case 'referral':
-        pageConfiguration = ReferralPageConfig;
+        pageConfiguration = ReferralDetailsPageConfig;
         break;
       case 'tambolaHome':
         _baseUtil.openTambolaHome();
@@ -612,6 +607,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     }
     if (pageConfiguration != null) {
       addPage(pageConfiguration);
+      notifyListeners();
     }
   }
 }

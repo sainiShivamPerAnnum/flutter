@@ -39,9 +39,12 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                     subtitle: "Get 1 token for every Rupee saved",
                     trailingIcon: Icons.arrow_forward_ios_rounded,
                     onTap: () {
-                      AppState.delegate.appState.currentAction = PageAction(
-                          state: PageState.addPage,
-                          page: AugmontGoldBuyPageConfig);
+                      AppState.backButtonDispatcher.didPopRoute();
+                      Future.delayed(Duration.zero, () {
+                        AppState.delegate.appState.currentAction = PageAction(
+                            state: PageState.addPage,
+                            page: AugmontGoldBuyPageConfig);
+                      });
                     },
                   ),
                   SizedBox(height: SizeConfig.padding16),
@@ -51,6 +54,7 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                     subtitle: "Get ₹25 and 100 tokens per referral",
                     trailingIcon: Icons.arrow_forward_ios_rounded,
                     onTap: () {
+                      AppState.backButtonDispatcher.didPopRoute();
                       AppState.delegate.appState.currentAction = PageAction(
                           state: PageState.addPage,
                           page: ReferralDetailsPageConfig);
