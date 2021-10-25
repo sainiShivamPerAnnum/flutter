@@ -11,6 +11,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
+enum UsernameResponse { AVAILABLE, UNAVAILABLE, INVALID, EMPTY }
+
 class LowerCaseTextFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
@@ -37,14 +39,14 @@ class UsernameState extends State<Username> {
   DBModel dbProvider;
   String username = "";
   FocusNode focusNode;
-
+  bool enabled = true;
   final regex = RegExp(r"^(?!\.)(?!.*\.$)(?!.*?\.\.)[a-z0-9.]{4,20}$");
   bool isValid;
   bool isLoading = false;
   bool isUpdating = false;
   bool isUpdated = false;
   final _formKey = GlobalKey<FormState>();
-  String responseText = "";
+  UsernameResponse response;
 
   // @override
   // void initState() {
@@ -68,18 +70,22 @@ class UsernameState extends State<Username> {
     if (username == "" || username == null)
       setState(() {
         isValid = null;
-        responseText = "username cannot be empty";
+        response = UsernameResponse.EMPTY;
       });
     else if (regex.hasMatch(username)) {
       bool res = await dbProvider
           .checkIfUsernameIsAvailable(username.replaceAll('.', '@'));
       setState(() {
         isValid = res;
+        if (res)
+          response = UsernameResponse.AVAILABLE;
+        else
+          response = UsernameResponse.UNAVAILABLE;
       });
     } else {
       setState(() {
         isValid = false;
-        responseText = "not a valid username";
+        response = UsernameResponse.INVALID;
       });
     }
     setState(() {
@@ -89,6 +95,7 @@ class UsernameState extends State<Username> {
   }
 
   Widget showResult() {
+    print(response);
     if (isLoading) {
       return Container(
         height: 16,
@@ -97,12 +104,27 @@ class UsernameState extends State<Username> {
           strokeWidth: 2,
         ),
       );
-    } else if (isValid == true)
-      return Text("${usernameController.text.trim()} is available",
+    } else if (response == UsernameResponse.EMPTY
+        // isValid == true
+        )
+      return Text("username cannot be empty",
+          style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w500));
+    else if (response == UsernameResponse.AVAILABLE
+        // isValid == true
+        )
+      return Text("@${usernameController.text.trim()} is available",
           style: TextStyle(
               color: UiConstants.primaryColor, fontWeight: FontWeight.w500));
-    else if (isValid == false)
-      return Text("${usernameController.text.trim()} is not available",
+    else if (response == UsernameResponse.UNAVAILABLE
+        // isValid == false
+        )
+      return Text("@${usernameController.text.trim()} is not available",
+          style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500));
+    else if (response == UsernameResponse.INVALID
+        // isValid == false
+        )
+      return Text(
+          "@${usernameController.text.trim()} is invalid. please refer to rules",
           style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500));
     return SizedBox(
       height: 16,
@@ -148,9 +170,13 @@ class UsernameState extends State<Username> {
                 child: TextFormField(
                   focusNode: focusNode,
                   controller: usernameController,
-                  inputFormatters: [LowerCaseTextFormatter()],
+                  inputFormatters: [
+                    LowerCaseTextFormatter(),
+                    //FilteringTextInputFormatter.allow(regex)
+                  ],
                   textCapitalization: TextCapitalization.none,
                   autofocus: true,
+                  enabled: enabled,
                   cursorColor: UiConstants.primaryColor,
                   keyboardType: TextInputType.text,
                   validator: (val) {

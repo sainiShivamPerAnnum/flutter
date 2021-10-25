@@ -22,7 +22,7 @@ void main() async {
   await mainInit();
   runApp(
     DevicePreview(
-      enabled: !kReleaseMode,
+      enabled: false, //!kReleaseMode,
       builder: (context) => MyApp(), // Wrap your app
     ),
   );

@@ -491,6 +491,8 @@ class _LoginControllerState extends State<LoginController>
               String username =
                   _usernameKey.currentState.username.replaceAll('.', '@');
               if (await dbProvider.checkIfUsernameIsAvailable(username)) {
+                _usernameKey.currentState.enabled = false;
+                setState(() {});
                 bool res = await dbProvider.setUsername(
                     username, baseProvider.firebaseUser.uid);
                 if (res) {
@@ -520,6 +522,8 @@ class _LoginControllerState extends State<LoginController>
                       'Update failed',
                       'Please try again in sometime',
                     );
+                    _usernameKey.currentState.enabled = false;
+
                     baseProvider.isLoginNextInProgress = false;
                     setState(() {});
                   }
@@ -528,6 +532,8 @@ class _LoginControllerState extends State<LoginController>
                     'Username update failed',
                     'Please try again in sometime',
                   );
+                  _usernameKey.currentState.enabled = false;
+
                   baseProvider.isLoginNextInProgress = false;
                   setState(() {});
                 }
@@ -536,6 +542,8 @@ class _LoginControllerState extends State<LoginController>
                   'username not available',
                   'Please choose another username',
                 );
+                _usernameKey.currentState.enabled = false;
+
                 baseProvider.isLoginNextInProgress = false;
                 setState(() {});
               }

@@ -32,14 +32,14 @@ class Win extends StatelessWidget {
             Container(
               child: Column(
                 children: [
-                  SizedBox(height: SizeConfig.screenHeight * 0.2),
+                  SizedBox(height: SizeConfig.screenHeight * 0.09),
                   Expanded(
                     child: ListView(
+                      padding: EdgeInsets.only(
+                          top: SizeConfig.screenWidth * 0.3 +
+                              SizeConfig.pageHorizontalMargins),
                       children: [
-                        SizedBox(height: SizeConfig.padding54),
                         Container(
-                          // padding: EdgeInsets.symmetric(
-                          //     horizontal: SizeConfig.pageHorizontalMargins),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -143,7 +143,7 @@ class Win extends StatelessWidget {
                           ),
                         ),
                         SizedBox(
-                          height: SizeConfig.screenHeight * 0.4,
+                          height: SizeConfig.screenHeight * 0.2,
                         )
                       ],
                     ),
