@@ -54,4 +54,16 @@ class FlavorConfig {
   static bool isDevelopment() => _instance.flavor == Flavor.DEV;
 
   static bool isQA() => _instance.flavor == Flavor.QA;
+
+  static String getStage() {
+    switch (_instance.flavor) {
+      case Flavor.PROD:
+        return 'prod';
+      case Flavor.QA:
+        return 'qa';
+      case Flavor.DEV:
+      default:
+        return 'dev';
+    }
+  }
 }

@@ -10,6 +10,7 @@ import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fcm_topics.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter_share_me/flutter_share_me.dart';
@@ -138,7 +139,7 @@ class ReferralDetailsViewModel extends BaseModel {
   Future<String> _createDynamicLink(
       String userId, bool short, String source) async {
     final DynamicLinkParameters parameters = DynamicLinkParameters(
-      uriPrefix: 'https://fello.in/app/referral',
+      uriPrefix: '${FlavorConfig.instance.values.dynamicLinkPrefix}/app/referral',
       link: Uri.parse('https://fello.in/$userId'),
       socialMetaTagParameters: SocialMetaTagParameters(
           title: 'Download ${Constants.APP_NAME}',
