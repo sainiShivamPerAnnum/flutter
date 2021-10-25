@@ -1,0 +1,3 @@
+enum TransactionServiceProperties {
+ transactionList
+}

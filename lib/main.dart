@@ -3,6 +3,7 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
+import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/enums/user_coin_service_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/enums/winner_service_enum.dart';
@@ -117,28 +118,34 @@ class _MyAppState extends State<MyApp> {
         ),
         ChangeNotifierProvider(create: (_) => appState),
       ],
-      child: PropertyChangeProvider<UserCoinService, UserCoinServiceProperties>(
-        value: locator<UserCoinService>(),
-        child: PropertyChangeProvider<UserService, UserServiceProperties>(
-          value: locator<UserService>(),
-          child: PropertyChangeProvider<WinnerService, WinnerServiceProperties>(
-            value: locator<WinnerService>(),
-            child: MaterialApp.router(
-              locale: DevicePreview.locale(context), // Add the locale here
-              builder: DevicePreview.appBuilder,
-              title: Constants.APP_NAME,
-              theme: FelloTheme.lightMode(),
-              debugShowCheckedModeBanner: false,
-              backButtonDispatcher: backButtonDispatcher,
-              routerDelegate: delegate,
-              routeInformationParser: parser,
-              localizationsDelegates: [
-                S.delegate,
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                GlobalCupertinoLocalizations.delegate,
-              ],
-              supportedLocales: S.delegate.supportedLocales,
+      child: PropertyChangeProvider<TransactionService,
+          TransactionServiceProperties>(
+        value: locator<TransactionService>(),
+        child:
+            PropertyChangeProvider<UserCoinService, UserCoinServiceProperties>(
+          value: locator<UserCoinService>(),
+          child: PropertyChangeProvider<UserService, UserServiceProperties>(
+            value: locator<UserService>(),
+            child:
+                PropertyChangeProvider<WinnerService, WinnerServiceProperties>(
+              value: locator<WinnerService>(),
+              child: MaterialApp.router(
+                locale: DevicePreview.locale(context), // Add the locale here
+                builder: DevicePreview.appBuilder,
+                title: Constants.APP_NAME,
+                theme: FelloTheme.lightMode(),
+                debugShowCheckedModeBanner: false,
+                backButtonDispatcher: backButtonDispatcher,
+                routerDelegate: delegate,
+                routeInformationParser: parser,
+                localizationsDelegates: [
+                  S.delegate,
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                supportedLocales: S.delegate.supportedLocales,
+              ),
             ),
           ),
         ),
