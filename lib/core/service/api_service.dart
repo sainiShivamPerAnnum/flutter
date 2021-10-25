@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:felloapp/util/app_exceptions.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:firebase_performance/firebase_performance.dart';
 import 'package:http/http.dart' as http;
@@ -20,7 +21,8 @@ abstract class API {
 }
 
 class APIService implements API {
-  String _baseUrl = "https://asia-south1-fello-dev-station.cloudfunctions.net";
+  String _baseUrl = 'https://' + FlavorConfig.instance.values.baseUriAsia;
+  //"https://asia-south1-fello-dev-station.cloudfunctions.net";
   String _versionString;
   final logger = locator<Logger>();
 
