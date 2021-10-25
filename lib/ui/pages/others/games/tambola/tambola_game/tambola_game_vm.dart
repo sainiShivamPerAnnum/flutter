@@ -4,12 +4,15 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
+import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/model/user_ticket_wallet_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/service/tambola_generation_service.dart';
 import 'package:felloapp/core/service/tambola_service.dart';
+import 'package:felloapp/core/service/user_coin_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -17,6 +20,7 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/elements/tambola-global/tambola_ticket.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/show_all_tickets.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_result.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/palette.dart';
@@ -28,15 +32,22 @@ import 'package:logger/logger.dart';
 class TambolaGameViewModel extends BaseModel {
   TambolaService tambolaService = locator<TambolaService>();
   DBModel _dbModel = locator<DBModel>();
+
   // tambolaService. _tambolaService. = locator<tambolaService.>();
   UserService _userService = locator<UserService>();
+  UserCoinService _coinService = locator<UserCoinService>();
   Logger _logger = locator<Logger>();
   LocalDBModel _localDBModel = locator<LocalDBModel>();
+  final _fclActionRepo = locator<FlcActionsRepo>();
 
   int get dailyPicksCount => tambolaService.dailyPicksCount;
+
   List<int> get todaysPicks => tambolaService.todaysPicks;
+
   DailyPick get weeklyDigits => tambolaService.weeklyDigits;
+
   List<TambolaBoard> get userWeeklyBoards => tambolaService.userWeeklyBoards;
+
   UserTicketWallet get userTicketWallet => tambolaService.userTicketWallet;
   List<Ticket> _tambolaBoardViews;
   TambolaGenerationService _tambolaTicketService;
@@ -66,7 +77,10 @@ class TambolaGameViewModel extends BaseModel {
     notifyListeners();
   }
 
+  static const int TICKET_COST_IN_FLC = 10;
+
   get showBuyModal => _showBuyModal;
+
   set showBuyModal(value) {
     _showBuyModal = value;
     notifyListeners();
@@ -82,9 +96,11 @@ class TambolaGameViewModel extends BaseModel {
   Widget get cardWidet => _widget;
 
   List<Ticket> get topFiveTambolaBoards => _topFiveTambolaBoards;
+
   bool get weeklyTicksFetched => tambolaService.weeklyTicksFetched;
 
   Ticket get currentBoardView => _currentBoardView;
+
   TambolaBoard get currentBoard => _currentBoard;
 
   // set currentBoardView(val) {
@@ -96,6 +112,9 @@ class TambolaGameViewModel extends BaseModel {
   //   _currentBoard = val;
   //   notifyListeners();
   // }
+
+  int get totalActiveTickets =>
+      tambolaService.userTicketWallet.getActiveTickets();
 
   init() async {
     ticketCountController =
@@ -185,28 +204,50 @@ class TambolaGameViewModel extends BaseModel {
 
   void buyTickets() async {
     if (ticketBuyInProgress) return;
-    if (int.tryParse(ticketCountController.text) > 0 &&
-        int.tryParse(ticketCountController.text) < 51) {
-      ticketBuyInProgress = true;
-      notifyListeners();
-      if (ticketCountController.text.isEmpty)
-        return BaseUtil.showNegativeAlert(
-            "Enter a valid number of tickets", "lol");
-      int ticketCount = int.tryParse(ticketCountController.text);
-      tambolaService.userTicketWallet =
-          await _dbModel.updateInitUserTicketCount(_userService.baseUser.uid,
-              tambolaService.userTicketWallet, ticketCount);
+    ticketBuyInProgress = true;
+    notifyListeners();
+    if (ticketCountController.text.isEmpty)
+      return BaseUtil.showNegativeAlert(
+          "No ticket count entered", "Please enter a valid number of tickets");
+
+    int ticketCount = int.tryParse(ticketCountController.text);
+    if (ticketCount == 0) {
+      return BaseUtil.showNegativeAlert(
+          "No ticket count entered", "Please enter a valid number of tickets");
+    }
+    if (TICKET_COST_IN_FLC * ticketCount > _coinService.flcBalance) {
+      return BaseUtil.showNegativeAlert("Insufficient tokens",
+          "You do not have enough tokens to buy Tambola tickets");
+    }
+
+    ApiResponse<FlcModel> _flcResponse = await _fclActionRepo.buyTambolaTickets(
+        cost: (-1 * TICKET_COST_IN_FLC),
+        noOfTickets: ticketCount,
+        userUid: _userService.baseUser.uid);
+    if (_flcResponse.model != null && _flcResponse.code == 200) {
       ticketBuyInProgress = false;
       notifyListeners();
       BaseUtil.showPositiveAlert(
           "Ticket bought successfully", "Generating tickets, please wait");
 
-      _refreshTambolaTickets();
+      if (_flcResponse.model.flcBalance > 0) {
+        _coinService.setFlcBalance(_flcResponse.model.flcBalance);
+      }
+
+      //Need to refresh the userTicketWallet object after API completes
+      tambolaService.userTicketWallet =
+          await _dbModel.getUserTicketWallet(_userService.baseUser.uid);
+      if (tambolaService.userTicketWallet != null) _refreshTambolaTickets();
+
     } else {
-      BaseUtil.showNegativeAlert("Invalid ticket purchase count",
-          "You can only buy at most 50 tickets at one go");
-      ticketCountController.text = "50";
+      return BaseUtil.showNegativeAlert("Operation Failed",
+          "Failed to buy tickets at the moment. Please try again later");
     }
+
+    // tambolaService.userTicketWallet = await _dbModel.updateInitUserTicketCount(
+    //     _userService.baseUser.uid,
+    //     tambolaService.userTicketWallet,
+    //     ticketCount);
   }
 
   checkIfMoreTicketNeedsToBeGenerated() async {

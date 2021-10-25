@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
@@ -11,13 +12,16 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 
 class Play extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return BaseView<PlayViewModel>(
-      onModelReady: (model) {},
+      onModelReady: (model) {
+        model.loadOfferList();
+      },
       builder: (ctx, model, child) {
         return Container(
           child: Column(
@@ -31,15 +35,35 @@ class Play extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: List.generate(
-                      model.offerList.length,
-                      (i) {
-                        return OfferCard(
-                          model: model,
-                          i: i,
-                        );
-                      },
-                    ),
+                    children: model.isOfferListLoading
+                        ? [
+                            ClipRRect(
+                              borderRadius:
+                                  BorderRadius.circular(SizeConfig.roundness32),
+                              child: OfferCard(
+                                shimmer: true,
+                                model: PromoCardModel(
+                                    1, null, null, null, null, null),
+                              ),
+                            ),
+                            ClipRRect(
+                              borderRadius:
+                                  BorderRadius.circular(SizeConfig.roundness32),
+                              child: OfferCard(
+                                shimmer: true,
+                                model: PromoCardModel(
+                                    1, null, null, null, null, null),
+                              ),
+                            ),
+                          ]
+                        : List.generate(
+                            model.offerList.length,
+                            (i) {
+                              return OfferCard(
+                                model: model.offerList[i],
+                              );
+                            },
+                          ),
                   ),
                 ),
               ),

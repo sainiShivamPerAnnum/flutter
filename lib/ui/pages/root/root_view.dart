@@ -42,16 +42,9 @@ class Root extends StatelessWidget {
             key: RootViewModel.scaffoldKey,
             drawer: FDrawer(),
             drawerEnableOpenDragGesture: false,
-            // onDrawerChanged: (value) {
-            //   if (value == false) if (AppState.screenStack.length != 1) {
-            //     print("Popped");
-            //     AppState.backButtonDispatcher.didPopRoute();
-            //   }
-            // },
             body: HomeBackground(
-              whiteBackground: WhiteBackground(
-                height: kToolbarHeight * 2.8,
-              ),
+              whiteBackground:
+                  WhiteBackground(height: SizeConfig.screenHeight * 0.2),
               child: Stack(
                 children: [
                   RefreshIndicator(
@@ -105,6 +98,7 @@ class BottomNavBar extends StatelessWidget {
     return Positioned(
       bottom: SizeConfig.pageHorizontalMargins,
       left: SizeConfig.pageHorizontalMargins,
+      right: SizeConfig.pageHorizontalMargins,
       child: SafeArea(
         child: Container(
           width: SizeConfig.navBarWidth,
@@ -139,38 +133,40 @@ class WantMoreTickets extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    return Positioned(
-      bottom: SizeConfig.pageHorizontalMargins,
+    return AnimatedPositioned(
+      duration: Duration(milliseconds: 300),
+      curve: Curves.decelerate,
+      bottom: AppState.getCurrentTabIndex == 1
+          ? SizeConfig.pageHorizontalMargins + SizeConfig.navBarHeight / 2
+          : SizeConfig.pageHorizontalMargins,
       left: SizeConfig.pageHorizontalMargins,
       right: SizeConfig.pageHorizontalMargins,
-      child: InkWell(
-        onTap: () => BaseUtil.openModalBottomSheet(
-          addToScreenStack: true,
-          content: WantMoreTicketsModalSheet(),
-          hapticVibrate: true,
-          backgroundColor: Colors.transparent,
-          isBarrierDismissable: true,
-        ),
-        child: AnimatedContainer(
-          duration: Duration(milliseconds: 300),
-          curve: Curves.decelerate,
-          height: AppState.getCurrentTabIndex == 1
-              ? SizeConfig.navBarHeight * 1.6
-              : SizeConfig.navBarHeight,
-          width: SizeConfig.screenWidth,
-          decoration: BoxDecoration(
-            color: UiConstants.primaryLight,
-            borderRadius: BorderRadius.circular(
-              SizeConfig.roundness24,
-            ),
+      child: SafeArea(
+        child: InkWell(
+          onTap: () => BaseUtil.openModalBottomSheet(
+            addToScreenStack: true,
+            content: WantMoreTicketsModalSheet(),
+            hapticVibrate: true,
+            backgroundColor: Colors.transparent,
+            isBarrierDismissable: true,
           ),
-          alignment: Alignment.topCenter,
           child: Container(
-            height: SizeConfig.navBarHeight * 0.6,
-            alignment: Alignment.center,
-            child: Text(
-              locale.navWMT,
-              style: TextStyles.body1.colour(UiConstants.primaryColor).bold,
+            height: SizeConfig.navBarHeight,
+            width: SizeConfig.navBarWidth,
+            decoration: BoxDecoration(
+              color: UiConstants.primaryLight,
+              borderRadius: BorderRadius.circular(
+                SizeConfig.roundness24,
+              ),
+            ),
+            alignment: Alignment.topCenter,
+            child: Container(
+              height: SizeConfig.navBarHeight * 0.6,
+              alignment: Alignment.center,
+              child: Text(
+                locale.navWMT,
+                style: TextStyles.body1.colour(UiConstants.primaryColor).bold,
+              ),
             ),
           ),
         ),

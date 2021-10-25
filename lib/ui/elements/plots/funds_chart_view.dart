@@ -80,6 +80,7 @@ class _FundsChartViewState extends State<FundsChartView> {
   }
 
   static List<ChartFundItem> chartData = [];
+
   getchartData() {
     chartData = [
       ChartFundItem(
@@ -216,8 +217,10 @@ class _FundsChartViewState extends State<FundsChartView> {
                 )
               ],
             ),
-            IconButton(
-                icon: Icon(Icons.info), onPressed: () {}, color: Colors.grey)
+            Icon(
+              Icons.info,
+              color: Colors.grey,
+            )
           ],
         ),
       ),

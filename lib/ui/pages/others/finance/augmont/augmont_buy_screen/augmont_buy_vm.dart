@@ -89,11 +89,16 @@ class AugmontGoldBuyViewModel extends BaseModel {
   }
 
   updateGoldAmount() {
-    if (goldBuyPrice != 0.0)
-      goldAmountInGrams = BaseUtil.digitPrecision(
-          double.tryParse(goldAmountController.text) / goldBuyPrice, 4, false);
-    else
+    if(goldAmountController.text == null || goldAmountController.text.isEmpty || double.tryParse(goldAmountController.text) == null) {
       goldAmountInGrams = 0.0;
+    }else {
+      if (goldBuyPrice != null && goldBuyPrice != 0.0)
+        goldAmountInGrams = BaseUtil.digitPrecision(
+            double.tryParse(goldAmountController.text) / goldBuyPrice, 4,
+            false);
+      else
+        goldAmountInGrams = 0.0;
+    }
     refresh();
   }
 

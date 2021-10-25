@@ -32,6 +32,9 @@ class KYCDetailsViewModel extends BaseModel {
   final _baseUtil = locator<BaseUtil>();
   final _userRepo = locator<UserRepository>();
 
+  FocusNode panFocusNode = FocusNode();
+  TextInputType panTextInputType = TextInputType.name;
+
   final depositformKey3 = GlobalKey<FormState>();
 
   bool _isKycInProgress = false;
@@ -44,12 +47,42 @@ class KYCDetailsViewModel extends BaseModel {
     checkForKycExistence();
   }
 
+  _getPanKeyboardType() {
+    if (panController.text.length >= 0 && panController.text.length < 5) {
+      return TextInputType.name;
+    } else if (panController.text.length >= 5 &&
+        panController.text.length < 9) {
+      return TextInputType.number;
+    }
+    return TextInputType.name;
+  }
+
+  onPanEntered() {
+    bool _change = false;
+    if (_getPanKeyboardType() == TextInputType.name &&
+        panTextInputType == TextInputType.number) {
+      panTextInputType = TextInputType.name;
+      _change = true;
+    } else if (_getPanKeyboardType() == TextInputType.number &&
+        panTextInputType == TextInputType.name) {
+      panTextInputType = TextInputType.number;
+      _change = true;
+    } else {}
+
+    if (_change) {
+      panFocusNode.unfocus();
+      notifyListeners();
+    }
+
+    return _change;
+  }
+
   checkForKycExistence() async {
     setState(ViewState.Busy);
     String pan = await _baseUtil.panService.getUserPan();
-    if (pan != null && pan == "") {
+    if (_baseUtil.myUser.isSimpleKycVerified && pan != null && pan.isNotEmpty) {
       panController.text = pan;
-      nameController.text = _userService.baseUser.name;
+      nameController.text = _userService.baseUser.kycName;
       inEditMode = false;
     }
 
@@ -121,6 +154,10 @@ class KYCDetailsViewModel extends BaseModel {
             if (_baseUtil.myUser.isSimpleKycVerified == null ||
                 !_baseUtil.myUser.isSimpleKycVerified) {
               _baseUtil.myUser.isSimpleKycVerified = true;
+              if (veriDetails['upstreamName'] != null &&
+                  veriDetails['upstreamName'] != '') {
+                _baseUtil.myUser.kycName = veriDetails['upstreamName'];
+              }
               _baseUtil.setKycVerified(true);
               _q = await _dbModel.updateUser(_userService.baseUser);
             }
@@ -175,6 +212,7 @@ class KYCDetailsViewModel extends BaseModel {
     bool _flag = true;
     int _failCode = 0;
     String _reason = '';
+    String upstreamName = '';
 
     bool registeredFlag = await _httpModel.isPanRegistered(enteredPan);
     if (registeredFlag) {
@@ -199,14 +237,18 @@ class KYCDetailsViewModel extends BaseModel {
 
         _flag = _response.model.response.result.verified;
 
-        if (_flag) {
-          try {
-            _userRepo.addKycName(
-                userUid: _userService.baseUser.uid,
-                upstreamKycName: _response.model.response.result.upstreamName);
-          } catch (e) {
-            _logger.e(e);
-          }
+        if (!_flag) {
+          _reason =
+              'The name on your PAN card does not match with the entered name. Please try again.';
+          // try {
+          //   _userRepo.addKycName(
+          //       userUid: _userService.baseUser.uid,
+          //       upstreamKycName: _response.model.response.result.upstreamName);
+          // } catch (e) {
+          //   _logger.e(e);
+          // }
+        } else {
+          upstreamName = _response.model.response.result.upstreamName;
         }
       } catch (e) {
         _flag = false;
@@ -221,6 +263,7 @@ class KYCDetailsViewModel extends BaseModel {
     }
 
     return {
+      'upstreamName': upstreamName,
       'flag': true,
     };
   }

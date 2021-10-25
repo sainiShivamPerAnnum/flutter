@@ -2,8 +2,11 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/feed_card_model.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/model/game_model.dart';
+import 'package:felloapp/core/model/promo_cards_model.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/service/user_coin_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
@@ -22,52 +25,47 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
-class OfferCardModel {
-  String title1;
-  String title2;
-  String buttonText;
-  String routePath;
-  Color bgColor;
-
-  OfferCardModel(
-      {this.bgColor,
-      this.buttonText,
-      this.routePath,
-      this.title1,
-      this.title2});
-}
-
 class PlayViewModel extends BaseModel {
-  List<OfferCardModel> _offerList = [
-    OfferCardModel(
-      title1: "2X Multiplier",
-      title2: "Double your tokens",
-      bgColor: UiConstants.tertiarySolid,
-      buttonText: "Explore",
-      routePath: '/not/yet/defined',
-    ),
-    OfferCardModel(
-      title1: "WIN",
-      title2: "2 games, 200 tokens",
-      bgColor: UiConstants.primaryColor,
-      buttonText: "Hop in",
-      routePath: '/not/yet/defined',
-    ),
-  ];
+  // List<OfferCardModel> _offerList = [
+  //   OfferCardModel(
+  //     title1: "2X Multiplier",
+  //     title2: "Double your tokens",
+  //     bgColor: UiConstants.tertiarySolid,
+  //     buttonText: "Explore",
+  //     routePath: '/not/yet/defined',
+  //   ),
+  //   OfferCardModel(
+  //     title1: "WIN",
+  //     title2: "2 games, 200 tokens",
+  //     bgColor: UiConstants.primaryColor,
+  //     buttonText: "Hop in",
+  //     routePath: '/not/yet/defined',
+  //   ),
+  // ];
 
   final _fclActionRepo = locator<FlcActionsRepo>();
   final _userCoinService = locator<UserCoinService>();
   final _userService = locator<UserService>();
+  final _dbProvider = locator<DBModel>();
   final _logger = locator<Logger>();
   final _baseUtil = locator<BaseUtil>();
 
   String _message;
   String _sessionId;
+  bool _isOfferListLoading = true;
+  List<PromoCardModel> _offerList;
 
-  List<OfferCardModel> get offerList => _offerList;
+  List<PromoCardModel> get offerList => _offerList;
 
   String get message => _message;
   String get sessionId => _sessionId;
+
+  get isOfferListLoading => this._isOfferListLoading;
+
+  set isOfferListLoading(value) {
+    this._isOfferListLoading = value;
+    notifyListeners();
+  }
 
   showTicketModal(BuildContext context) {
     AppState.screenStack.add(ScreenItem.dialog);
@@ -76,6 +74,16 @@ class PlayViewModel extends BaseModel {
         builder: (ctx) {
           return WantMoreTicketsModalSheet();
         });
+  }
+
+  loadOfferList() async {
+    isOfferListLoading = true;
+    await _dbProvider.getPromoCards().then((cards) {
+      _offerList = cards;
+    });
+    print(_offerList);
+
+    isOfferListLoading = false;
   }
 
   // void showMessage(context) {
@@ -94,7 +102,7 @@ class PlayViewModel extends BaseModel {
           sessionId: _sessionId,
           userId: _userService.baseUser.uid,
           userName: _userService.baseUser.username,
-          stage: FlavorConfig.isDevelopment() ? 'dev' : 'prod',
+          stage: FlavorConfig.getStage(),
         ));
   }
 

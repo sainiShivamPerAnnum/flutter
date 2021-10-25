@@ -9,6 +9,7 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/feed_card_model.dart';
 import 'package:felloapp/core/model/prize_leader_model.dart';
+import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/referral_leader_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
@@ -22,6 +23,7 @@ import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/model/signzy_pan/signzy_login.dart';
 import 'package:felloapp/core/service/api.dart';
+import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -1235,6 +1237,33 @@ class DBModel extends ChangeNotifier {
             ///only include the feedcards that are not 'hidden'
             if (_card != null && _card.isHidden != null && !_card.isHidden)
               _cards.add(_card);
+
+            ///bump down the 'learn' card if the user is old
+          }
+        }
+      }
+    } catch (e) {
+      log.error('Error Fetching Home cards: ${e.toString()}');
+    }
+    return _cards;
+  }
+
+  Future<List<PromoCardModel>> getPromoCards() async {
+    List<PromoCardModel> _cards = [];
+    try {
+      QuerySnapshot querySnapshot = await _api.getPromoCardCollection();
+      if (querySnapshot != null && querySnapshot.docs.length > 0) {
+        for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
+          Map<String, dynamic> _doc = documentSnapshot.data();
+          if (documentSnapshot != null &&
+              documentSnapshot.exists &&
+              _doc != null &&
+              _doc.length > 0) {
+            PromoCardModel _card =
+                PromoCardModel.fromMap(documentSnapshot.data());
+
+            ///only include the feedcards that are not 'hidden'
+            if (_card != null) _cards.add(_card);
 
             ///bump down the 'learn' card if the user is old
           }

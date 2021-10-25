@@ -85,8 +85,7 @@ class BaseUtil extends ChangeNotifier {
   PanService panService;
 
   ///Augmont global objects
-  UserAugmontDetail _augmontDetail =
-      UserAugmontDetail("", "", "", "", "", "", false, "", null, null);
+  UserAugmontDetail _augmontDetail;
   UserTransaction _currentAugmontTxn;
   AugmontRates augmontGoldRates;
 
@@ -113,6 +112,7 @@ class BaseUtil extends ChangeNotifier {
   bool show_security_prompt = false;
   String zeroBalanceAssetUri;
   static List<GameModel> gamesList;
+  static String manualReferralCode = 'P1ud';
 
   ///Flags in various screens defined as global variables
   bool isUserOnboarded,
