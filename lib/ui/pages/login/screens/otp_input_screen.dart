@@ -38,7 +38,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
   bool _isResendClicked = false;
   bool _isTriesExceeded = false;
   bool showResendOption = false;
-  final _pinEditingController = new TextEditingController();
+  final pinEditingController = new TextEditingController();
   FocusNode focusNode;
   String mobileNo;
 
@@ -138,7 +138,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                     strokeWidth: 0,
                     textStyle: TextStyles.body2.bold.colour(Colors.black),
                   ),
-                  controller: _pinEditingController,
+                  controller: pinEditingController,
                   onChanged: (value) {
                     if (value.length == 6) {
                       if (widget.otpEntered != null) widget.otpEntered();
@@ -254,5 +254,5 @@ class OtpInputScreenState extends State<OtpInputScreen> {
     }
   }
 
-  String get otp => _pinEditingController.text;
+  String get otp => pinEditingController.text;
 }

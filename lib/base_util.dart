@@ -264,19 +264,29 @@ class BaseUtil extends ChangeNotifier {
   void setGameDefaults() {
     gamesList = [
       GameModel(
-          gameName: "Cricket",
-          pageConfig: CricketHomePageConfig,
-          tag: 'cricket',
-          thumbnailImage: Assets.cricketThumb,
-          playCost: 5,
-          prizeAmount: 10000.0),
+        gameName: "Cricket",
+        pageConfig: CricketHomePageConfig,
+        tag: 'cricket',
+        thumbnailImage: Assets.cricketThumb,
+        playCost: BaseRemoteConfig.remoteConfig
+                .getString(BaseRemoteConfig.CRICKET_PLAY_COST) ??
+            "10",
+        prizeAmount: BaseRemoteConfig.remoteConfig
+                .getString(BaseRemoteConfig.CRICKET_PLAY_PRIZE) ??
+            "5000",
+      ),
       GameModel(
-          gameName: "Tambola",
-          pageConfig: THomePageConfig,
-          tag: 'tambola',
-          thumbnailImage: Assets.tambolaThumb,
-          playCost: 10,
-          prizeAmount: 25000.0),
+        gameName: "Tambola",
+        pageConfig: THomePageConfig,
+        tag: 'tambola',
+        thumbnailImage: Assets.tambolaThumb,
+        playCost: BaseRemoteConfig.remoteConfig
+                .getString(BaseRemoteConfig.TAMBOLA_PLAY_COST) ??
+            "10",
+        prizeAmount: BaseRemoteConfig.remoteConfig
+                .getString(BaseRemoteConfig.TAMBOLA_PLAY_PRIZE) ??
+            "10,000",
+      ),
     ];
   }
 

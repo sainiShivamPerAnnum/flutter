@@ -82,10 +82,10 @@ class Play extends StatelessWidget {
               Expanded(
                 child: ClipRRect(
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(100),
-                    topRight: Radius.circular(100),
-                  ),
-                  child: ListView(children: [
+                      // topLeft: Radius.circular(100),
+                      // topRight: Radius.circular(100),
+                      ),
+                  child: ListView(padding: EdgeInsets.zero, children: [
                     GestureDetector(
                       onTap: () =>
                           model.openGame(BaseUtil.gamesList[0].pageConfig),

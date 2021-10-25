@@ -565,8 +565,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'editProfile':
         pageConfiguration = UserProfileDetailsConfig;
         break;
-      case 'mfDetails':
-        pageConfiguration = MfDetailsPageConfig;
+      case 'augDetails':
+        pageConfiguration = AugmontGoldDetailsPageConfig;
         break;
       case 'augBuy':
         pageConfiguration = AugmontGoldBuyPageConfig;
@@ -581,8 +581,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'tambolaHome':
         _baseUtil.openTambolaHome();
         break;
-      case 'tnc':
-        pageConfiguration = TncPageConfig;
+      case 'myWinnings':
+        pageConfiguration = MyWinnigsPageConfig;
         break;
       case 'faq':
         pageConfiguration = FaqPageConfig;

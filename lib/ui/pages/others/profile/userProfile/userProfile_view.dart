@@ -2,7 +2,9 @@
 //Flutter & Dart Imports
 import 'dart:ui';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -411,13 +413,71 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                             },
                           ),
                         ),
-                        SizedBox(height: 24),
+                        SizedBox(height: SizeConfig.padding24),
+                        Divider(),
+                        Container(
+                          margin: EdgeInsets.symmetric(
+                              vertical: SizeConfig.padding24),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "App Preferences",
+                                style: TextStyle(
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: SizeConfig.body1),
+                              ),
+                              SizedBox(height: SizeConfig.padding16),
+                              Row(children: [
+                                Text(
+                                  "App Lock",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: SizeConfig.body2),
+                                ),
+                                Spacer(),
+                                Switch.adaptive(
+                                    activeColor: UiConstants.primaryColor,
+                                    value: model.applock,
+                                    onChanged: (val) =>
+                                        model.onAppLockPreferenceChanged(val)),
+                              ]),
+                              Row(children: [
+                                Text(
+                                  "Tambola Draw Notifications",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: SizeConfig.body2,
+                                  ),
+                                ),
+                                Spacer(),
+                                model.isTambolaNotificationLoading
+                                    ? Container(
+                                        padding:
+                                            EdgeInsets.all(SizeConfig.padding2),
+                                        height: SizeConfig.title3,
+                                        width: SizeConfig.title3,
+                                        child: CircularProgressIndicator(),
+                                      )
+                                    : Switch.adaptive(
+                                        activeColor: UiConstants.primaryColor,
+                                        value: model.tambolaNotification,
+                                        onChanged: (val) => model
+                                            .onTambolaNotificationPreferenceChanged(
+                                                val)),
+                              ]),
+                            ],
+                          ),
+                        ),
+                        Divider(),
+                        SizedBox(height: SizeConfig.padding12),
                         TextButton(
                           onPressed: model.signout,
                           child: Text(
                             locale.signout.toUpperCase(),
                             style: TextStyles.body1
-                                .colour(Colors.red[200])
+                                .colour(Colors.red)
                                 .light
                                 .letterSpace(2),
                           ),

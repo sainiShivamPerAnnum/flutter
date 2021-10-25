@@ -373,6 +373,7 @@ class _LoginControllerState extends State<LoginController>
               _otpScreenKey.currentState.onOtpReceived();
               _onSignInSuccess();
             } else {
+              _otpScreenKey.currentState.pinEditingController.text = "";
               BaseUtil.showNegativeAlert(
                   'Invalid Otp', 'Please enter a valid otp');
               baseProvider.isLoginNextInProgress = false;

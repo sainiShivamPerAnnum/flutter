@@ -175,7 +175,9 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                                         TextCapitalization.characters,
                                     controller: _bankHolderNameController,
                                     validator: (value) {
-                                      return (value.isEmpty || value.length < 4)
+                                      return (value == null ||
+                                              value.isEmpty ||
+                                              value.trim().length < 4)
                                           ? 'Please enter you name as per your bank'
                                           : null;
                                     },
@@ -202,9 +204,13 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                                     keyboardType: TextInputType.number,
                                     validator: (value) {
                                       print(value);
-                                      return (value != null && value.isNotEmpty)
-                                          ? null
-                                          : 'Please enter a valid account number';
+
+                                      if (value == null && value.trim().isEmpty)
+                                        return 'Please enter a valid account number';
+                                      else if (value.trim().length < 9 ||
+                                          value.trim().length > 18)
+                                        return 'Invalid Bank Account Number';
+                                      return null;
                                     },
                                   ),
                                 ],
@@ -227,9 +233,15 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                                     obscureText: true,
                                     validator: (value) {
                                       print(value);
-                                      return (value != null && value.isNotEmpty)
-                                          ? null
-                                          : 'Field cannot be empty';
+                                      if (value == null && value.trim().isEmpty)
+                                        return 'Please enter a valid account number';
+                                      else if (value.trim().length < 9 ||
+                                          value.trim().length > 18)
+                                        return 'Invalid Bank Account Number';
+                                      else if (value.trim() !=
+                                          _bankAccNoController.text.trim())
+                                        return "Bank account numbers did not match";
+                                      return null;
                                     },
                                   ),
                                 ],
@@ -251,7 +263,8 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                                         TextCapitalization.characters,
                                     validator: (value) {
                                       print(value);
-                                      return (value != null && value.isNotEmpty)
+                                      return (value != null &&
+                                              value.trim().isNotEmpty)
                                           ? null
                                           : 'Please enter a valid bank IFSC';
                                     },
@@ -267,12 +280,6 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                                   child: (!baseProvider
                                           .isEditAugmontBankDetailInProgress)
                                       ? Text(
-                                          // (baseProvider.augmontDetail != null &&
-                                          //         baseProvider.augmontDetail
-                                          //                 .bankAccNo ==
-                                          //             '')
-                                          //     ? 'WITHDRAW'
-                                          //     :
                                           'UPDATE',
                                           style: Theme.of(context)
                                               .textTheme

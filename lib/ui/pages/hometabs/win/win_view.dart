@@ -404,6 +404,7 @@ class WinnerboardView extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       controller: controller,
+      // physics: NeverScrollableScrollPhysics(),
       child: Column(
         children: [
           SizedBox(height: SizeConfig.padding80),
@@ -423,14 +424,12 @@ class WinnerboardView extends StatelessWidget {
               ],
             ),
           ),
-          Column(
-              // controller: controller,
-              // shrinkWrap: true,
-              // itemCount: model.winners.length,
-              children: List.generate(
-            //50,
-            winners.length,
-            (i) {
+          ListView.builder(
+            controller: controller,
+            shrinkWrap: true,
+            itemCount: winners.length,
+            padding: EdgeInsets.zero,
+            itemBuilder: (ctx, i) {
               return Container(
                 width: SizeConfig.screenWidth,
                 padding: EdgeInsets.all(SizeConfig.padding12),
@@ -481,7 +480,7 @@ class WinnerboardView extends StatelessWidget {
                 ),
               );
             },
-          )),
+          ),
         ],
       ),
     );

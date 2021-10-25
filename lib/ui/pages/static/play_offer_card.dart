@@ -21,6 +21,7 @@ class OfferCard extends StatelessWidget {
         width: SizeConfig.screenWidth * 0.6,
         height: SizeConfig.screenWidth * 0.34,
         margin: EdgeInsets.only(
+            bottom: SizeConfig.screenWidth * 0.1,
             left: SizeConfig.pageHorizontalMargins,
             right: SizeConfig.pageHorizontalMargins / 2),
         decoration: BoxDecoration(
