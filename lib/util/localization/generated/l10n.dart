@@ -379,10 +379,10 @@ class S {
     );
   }
 
-  /// `Want more tickets`
+  /// `Earn more tokens`
   String get navWMT {
     return Intl.message(
-      'Want more tickets',
+      'Earn more tokens',
       name: 'navWMT',
       desc: '',
       args: [],

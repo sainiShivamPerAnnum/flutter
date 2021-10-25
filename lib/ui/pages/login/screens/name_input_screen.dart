@@ -5,6 +5,7 @@ import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/augmont_state_list.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -51,6 +52,7 @@ class NameInputScreenState extends State<NameInputScreen> {
   TextEditingController _monthFieldController;
   TextEditingController _yearFieldController;
   String dateInputError = "";
+  static String stateChosenValue;
 
   HttpModel httpProvider;
   BaseUtil authProvider;
@@ -457,79 +459,112 @@ class NameInputScreenState extends State<NameInputScreen> {
                   ),
                 ],
               ),
-            TextFieldLabel(locale.obEverInvestedLabel),
+            TextFieldLabel("State"),
             Container(
-              width: SizeConfig.screenWidth,
-              height: SizeConfig.screenWidth * 0.115,
-              decoration: BoxDecoration(
-                color: UiConstants.primaryColor.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+              padding: EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 4,
               ),
-              padding: EdgeInsets.all(SizeConfig.padding2),
-              child: Stack(
-                children: [
-                  AnimatedPositioned(
-                    left: _isInvested ? 0 : SizeConfig.screenWidth * 0.45,
-                    duration: Duration(milliseconds: 400),
-                    child: Container(
-                      height: SizeConfig.screenWidth * 0.106,
-                      width: SizeConfig.screenWidth * 0.422,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius:
-                            BorderRadius.circular(SizeConfig.roundness12),
+              decoration: BoxDecoration(
+                border: Border.all(color: UiConstants.primaryColor),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: DropdownButtonFormField(
+                decoration: InputDecoration(
+                    border: InputBorder.none, enabledBorder: InputBorder.none),
+                iconEnabledColor: UiConstants.primaryColor,
+                hint: Text("Which state do you live in?"),
+                value: stateChosenValue,
+                onChanged: (String newVal) {
+                  setState(() {
+                    stateChosenValue = newVal;
+                    print(newVal);
+                  });
+                },
+                items: AugmontResources.augmontStateList
+                    .map(
+                      (e) => DropdownMenuItem(
+                        value: e["id"],
+                        child: Text(
+                          e["name"],
+                        ),
                       ),
-                    ),
-                  ),
-                  Container(
-                    width: SizeConfig.screenWidth,
-                    height: SizeConfig.screenWidth * 0.115,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Center(
-                            child: TextButton(
-                              onPressed: () {
-                                setState(() {
-                                  _isInvested = true;
-                                });
-                              },
-                              child: Text(
-                                "YES",
-                                style: TextStyles.body2.colour(
-                                  _isInvested
-                                      ? UiConstants.primaryColor
-                                      : Colors.grey,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Center(
-                            child: TextButton(
-                              onPressed: () {
-                                setState(() {
-                                  _isInvested = false;
-                                });
-                              },
-                              child: Text(
-                                "NO",
-                                style: TextStyles.body2.colour(
-                                  !_isInvested
-                                      ? UiConstants.primaryColor
-                                      : Colors.grey,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
+                    )
+                    .toList(),
               ),
             ),
+            // Container(
+            //   width: SizeConfig.screenWidth,
+            //   height: SizeConfig.screenWidth * 0.115,
+            //   decoration: BoxDecoration(
+            //     color: UiConstants.primaryColor.withOpacity(0.1),
+            //     borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+            //   ),
+            //   padding: EdgeInsets.all(SizeConfig.padding2),
+            //   child: Stack(
+            //     children: [
+            //       AnimatedPositioned(
+            //         left: _isInvested ? 0 : SizeConfig.screenWidth * 0.45,
+            //         duration: Duration(milliseconds: 400),
+            //         child: Container(
+            //           height: SizeConfig.screenWidth * 0.106,
+            //           width: SizeConfig.screenWidth * 0.422,
+            //           decoration: BoxDecoration(
+            //             color: Colors.white,
+            //             borderRadius:
+            //                 BorderRadius.circular(SizeConfig.roundness12),
+            //           ),
+            //         ),
+            //       ),
+            //       Container(
+            //         width: SizeConfig.screenWidth,
+            //         height: SizeConfig.screenWidth * 0.115,
+            //         child: Row(
+            //           children: [
+            //             Expanded(
+            //               child: Center(
+            //                 child: TextButton(
+            //                   onPressed: () {
+            //                     setState(() {
+            //                       _isInvested = true;
+            //                     });
+            //                   },
+            //                   child: Text(
+            //                     "YES",
+            //                     style: TextStyles.body2.colour(
+            //                       _isInvested
+            //                           ? UiConstants.primaryColor
+            //                           : Colors.grey,
+            //                     ),
+            //                   ),
+            //                 ),
+            //               ),
+            //             ),
+            //             Expanded(
+            //               child: Center(
+            //                 child: TextButton(
+            //                   onPressed: () {
+            //                     setState(() {
+            //                       _isInvested = false;
+            //                     });
+            //                   },
+            //                   child: Text(
+            //                     "NO",
+            //                     style: TextStyles.body2.colour(
+            //                       !_isInvested
+            //                           ? UiConstants.primaryColor
+            //                           : Colors.grey,
+            //                     ),
+            //                   ),
+            //                 ),
+            //               ),
+            //             ),
+            //           ],
+            //         ),
+            //       )
+            //     ],
+            //   ),
+            // ),
             SizedBox(height: SizeConfig.navBarHeight),
             SizedBox(height: SizeConfig.viewInsets.bottom)
           ],
@@ -631,6 +666,7 @@ class NameInputScreenState extends State<NameInputScreen> {
     _isSigningIn = val;
   }
 
+  String get state => stateChosenValue;
   get formKey => _formKey;
 
   bool isValidDate() {
@@ -743,7 +779,7 @@ class SignInOptions extends StatefulWidget {
 class _SignInOptionsState extends State<SignInOptions> {
   @override
   Widget build(BuildContext context) {
-    BaseUtil baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    BaseUtil baseProvider = Provider.of<BaseUtil>(context);
     return WillPopScope(
       onWillPop: () async {
         AppState.backButtonDispatcher.didPopRoute();

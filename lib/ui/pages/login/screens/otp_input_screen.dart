@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/elements/pin_input_custom_text_field.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
 import 'package:felloapp/util/assets.dart';
@@ -66,9 +67,10 @@ class OtpInputScreenState extends State<OtpInputScreen> {
     if (mounted)
       Future.delayed(Duration(seconds: 30), () {
         try {
-          setState(() {
-            showResendOption = true;
-          });
+          if (mounted)
+            setState(() {
+              showResendOption = true;
+            });
         } catch (e) {
           log.error('Screen no longer active');
         }
@@ -175,6 +177,10 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                           ),
                           onTap: () {
                             log.debug("Resend action triggered");
+                            FocusScope.of(context).unfocus();
+                            BaseUtil.showPositiveAlert(
+                                "OTP resent successfully",
+                                "Please wait for the new otp");
                             if (!_isResendClicked) {
                               //ensure that button isnt clicked multiple times
                               if (widget.resendOtp != null) widget.resendOtp();
@@ -192,25 +198,25 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                       ),
                     )
                   : SizedBox(),
-              (!showResendOption)
-                  ? Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(25.0, 25.0, 25.0, 25.0),
-                          child: SpinKitDoubleBounce(
-                            color: UiConstants.spinnerColor,
-                            //controller: AnimationController(vsync: this, duration: const Duration(milliseconds: 1200)),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        //Text(_loaderMessage)
-                      ],
-                    )
-                  : Container(),
+              // (!showResendOption)
+              //     ? Column(
+              //         mainAxisAlignment: MainAxisAlignment.center,
+              //         children: [
+              //           Padding(
+              //             padding:
+              //                 const EdgeInsets.fromLTRB(25.0, 25.0, 25.0, 25.0),
+              //             child: SpinKitDoubleBounce(
+              //               color: UiConstants.spinnerColor,
+              //               //controller: AnimationController(vsync: this, duration: const Duration(milliseconds: 1200)),
+              //             ),
+              //           ),
+              //           SizedBox(
+              //             height: 8,
+              //           ),
+              //           //Text(_loaderMessage)
+              //         ],
+              //       )
+              //     : Container(),
             ],
           ),
         ),

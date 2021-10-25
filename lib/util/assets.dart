@@ -7,7 +7,7 @@ class Assets {
   static final String referGraphic = 'images/transfer.png';
   static final String iciciGraphic = 'images/icici.png';
   static final String augmontGraphic = 'images/augmont.png';
-  static final String augmontLogo = "images/augmont-logo.jpg";
+  static final String augmontLogo = "images/aug-logo.png";
   static final String augLogo = "images/aug-logo.png";
   static final String sebiGraphic = 'images/sebi.png';
   static final String amfiGraphic = 'images/amfi.png';

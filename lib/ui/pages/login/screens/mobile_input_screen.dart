@@ -184,17 +184,19 @@ class MobileInputScreenState extends State<MobileInputScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Image.asset(Assets.augmontLogo,
+                          color: Colors.grey,
                           width: SizeConfig.screenWidth * 0.2),
                       SizedBox(width: 16),
                       Image.asset(Assets.iciciGraphic,
+                          color: Colors.grey,
                           width: SizeConfig.screenWidth * 0.1),
                       SizedBox(width: 16),
                       Image.asset(Assets.sebiGraphic,
-                          color: Color(0xff2E2A81),
+                          color: Colors.grey,
                           width: SizeConfig.screenWidth * 0.04),
                       SizedBox(width: 16),
                       Image.asset(Assets.amfiGraphic,
-                          color: UiConstants.primaryColor,
+                          color: Colors.grey,
                           width: SizeConfig.screenWidth * 0.04)
                     ],
                   )

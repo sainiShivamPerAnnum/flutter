@@ -140,7 +140,7 @@ class BaseUtil extends ChangeNotifier {
       isReferralLinkBuildInProgressWhatsapp,
       isReferralLinkBuildInProgressOther,
       isHomeCardsFetched,
-      isGoogleSignInProgress,
+      _isGoogleSignInProgress,
       show_home_tutorial,
       show_game_tutorial,
       show_finance_tutorial;
@@ -1014,6 +1014,13 @@ class BaseUtil extends ChangeNotifier {
 
   set userTicketWallet(UserTicketWallet value) {
     _userTicketWallet = value;
+    notifyListeners();
+  }
+
+  get isGoogleSignInProgress => this._isGoogleSignInProgress;
+
+  set isGoogleSignInProgress(value) {
+    this._isGoogleSignInProgress = value;
     notifyListeners();
   }
 

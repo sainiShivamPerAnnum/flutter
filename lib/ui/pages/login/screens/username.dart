@@ -7,8 +7,20 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+
+class LowerCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+      text: newValue.text.toLowerCase(),
+      selection: newValue.selection,
+    );
+  }
+}
 
 class Username extends StatefulWidget {
   static const int index = 3;
@@ -32,6 +44,7 @@ class UsernameState extends State<Username> {
   bool isUpdating = false;
   bool isUpdated = false;
   final _formKey = GlobalKey<FormState>();
+  String responseText = "";
 
   // @override
   // void initState() {
@@ -43,7 +56,7 @@ class UsernameState extends State<Username> {
 
   @override
   void dispose() {
-    focusNode.dispose();
+    focusNode?.dispose();
     super.dispose();
   }
 
@@ -55,6 +68,7 @@ class UsernameState extends State<Username> {
     if (username == "" || username == null)
       setState(() {
         isValid = null;
+        responseText = "username cannot be empty";
       });
     else if (regex.hasMatch(username)) {
       bool res = await dbProvider
@@ -65,6 +79,7 @@ class UsernameState extends State<Username> {
     } else {
       setState(() {
         isValid = false;
+        responseText = "not a valid username";
       });
     }
     setState(() {
@@ -133,6 +148,8 @@ class UsernameState extends State<Username> {
                 child: TextFormField(
                   focusNode: focusNode,
                   controller: usernameController,
+                  inputFormatters: [LowerCaseTextFormatter()],
+                  textCapitalization: TextCapitalization.none,
                   autofocus: true,
                   cursorColor: UiConstants.primaryColor,
                   keyboardType: TextInputType.text,
@@ -164,6 +181,7 @@ class UsernameState extends State<Username> {
               height: 40,
               child: showResult(),
             ),
+            //Text(responseText),
             SizedBox(height: SizeConfig.padding40),
             Text(
               locale.obUsernameRulesTitle,
