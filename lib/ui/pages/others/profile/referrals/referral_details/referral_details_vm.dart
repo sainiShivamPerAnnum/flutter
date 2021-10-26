@@ -72,6 +72,7 @@ class ReferralDetailsViewModel extends BaseModel {
     List<String> splittedUrl = _userUrlPrefix.split('/');
     splittedUrl.removeLast();
     _userUrlPrefix = splittedUrl.join("/");
+    _userUrlPrefix = _userUrlPrefix + '/';
     loadingUrl = false;
     refresh();
   }
