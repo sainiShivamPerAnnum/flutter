@@ -83,7 +83,7 @@ class ShareInfoModalSheet extends StatelessWidget {
                           0,
                         ),
                         referralTile(
-                            "Once they signup, both of you receive 10 tickets and ₹25.",
+                            "Once they signup, both of you receive 200 tokens and ₹25.",
                             SizeConfig.screenWidth * 0.1),
                         referralTile(
                             "This balance gets unlocked for both once they make their first investment of atleast ₹100.",

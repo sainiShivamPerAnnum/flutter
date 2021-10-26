@@ -56,6 +56,13 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
       baseProvider = Provider.of<BaseUtil>(context, listen: false);
       dbProvider = Provider.of<DBModel>(context, listen: false);
       iProvider = Provider.of<ICICIModel>(context, listen: false);
+      if(baseProvider.myUser.isAugmontOnboarded && baseProvider.augmontDetail == null) {
+        dbProvider.getUserAugmontDetails(baseProvider.myUser.uid).then((detail) {
+          _isInitialized = false;
+          baseProvider.augmontDetail = detail;
+          setState(() {});
+        });
+      }
       _bankHolderNameController = (baseProvider.augmontDetail != null &&
               baseProvider.augmontDetail.bankHolderName != null)
           ? new TextEditingController(

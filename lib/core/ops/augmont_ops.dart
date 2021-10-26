@@ -430,9 +430,9 @@ class AugmontModel extends ChangeNotifier {
 
       Map<String, dynamic> augUpdates = {
         "aTranId": _baseProvider
-            .currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId],
-        "aAugTranId": _baseProvider
             .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId],
+        "aAugTranId": _baseProvider
+            .currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId],
         "aGoldBalance": _baseProvider
             .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm]
       };
