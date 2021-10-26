@@ -51,13 +51,12 @@ class Root extends StatelessWidget {
                     color: UiConstants.primaryColor,
                     backgroundColor: Colors.black,
                     onRefresh: model.refresh,
-                    child: SafeArea(
-                      child: Container(
-                        //margin: EdgeInsets.only(top: kToolbarHeight * 1.2),
-                        child: IndexedStack(
-                            children: model.pages,
-                            index: AppState.getCurrentTabIndex),
-                      ),
+                    child: Container(
+                      margin: EdgeInsets.only(
+                          top: MediaQuery.of(context).padding.top),
+                      child: IndexedStack(
+                          children: model.pages,
+                          index: AppState.getCurrentTabIndex),
                     ),
                   ),
                   FelloAppBar(
@@ -99,26 +98,24 @@ class BottomNavBar extends StatelessWidget {
       bottom: SizeConfig.pageHorizontalMargins,
       left: SizeConfig.pageHorizontalMargins,
       right: SizeConfig.pageHorizontalMargins,
-      child: SafeArea(
-        child: Container(
-          width: SizeConfig.navBarWidth,
-          height: SizeConfig.navBarHeight,
-          decoration: BoxDecoration(
-            color: UiConstants.primaryColor,
-            borderRadius: BorderRadius.circular(SizeConfig.roundness24),
-          ),
-          child: NavBar(
-            itemTapped: (int index) => model.onItemTapped(index),
-            currentIndex: AppState.getCurrentTabIndex,
-            items: [
-              NavBarItemData(locale.navBarFinance, Assets.navSave,
-                  SizeConfig.screenWidth * 0.27),
-              NavBarItemData(locale.navBarPlay, Assets.navPlay,
-                  SizeConfig.screenWidth * 0.27),
-              NavBarItemData(locale.navBarWin, Assets.navWin,
-                  SizeConfig.screenWidth * 0.27),
-            ],
-          ),
+      child: Container(
+        width: SizeConfig.navBarWidth,
+        height: SizeConfig.navBarHeight,
+        decoration: BoxDecoration(
+          color: UiConstants.primaryColor,
+          borderRadius: BorderRadius.circular(SizeConfig.roundness24),
+        ),
+        child: NavBar(
+          itemTapped: (int index) => model.onItemTapped(index),
+          currentIndex: AppState.getCurrentTabIndex,
+          items: [
+            NavBarItemData(locale.navBarFinance, Assets.navSave,
+                SizeConfig.screenWidth * 0.27),
+            NavBarItemData(locale.navBarPlay, Assets.navPlay,
+                SizeConfig.screenWidth * 0.27),
+            NavBarItemData(
+                locale.navBarWin, Assets.navWin, SizeConfig.screenWidth * 0.27),
+          ],
         ),
       ),
     );
@@ -141,32 +138,30 @@ class WantMoreTickets extends StatelessWidget {
           : SizeConfig.pageHorizontalMargins,
       left: SizeConfig.pageHorizontalMargins,
       right: SizeConfig.pageHorizontalMargins,
-      child: SafeArea(
-        child: InkWell(
-          onTap: () => BaseUtil.openModalBottomSheet(
-            addToScreenStack: true,
-            content: WantMoreTicketsModalSheet(),
-            hapticVibrate: true,
-            backgroundColor: Colors.transparent,
-            isBarrierDismissable: true,
-          ),
-          child: Container(
-            height: SizeConfig.navBarHeight,
-            width: SizeConfig.navBarWidth,
-            decoration: BoxDecoration(
-              color: UiConstants.primaryLight,
-              borderRadius: BorderRadius.circular(
-                SizeConfig.roundness24,
-              ),
+      child: InkWell(
+        onTap: () => BaseUtil.openModalBottomSheet(
+          addToScreenStack: true,
+          content: WantMoreTicketsModalSheet(),
+          hapticVibrate: true,
+          backgroundColor: Colors.transparent,
+          isBarrierDismissable: true,
+        ),
+        child: Container(
+          height: SizeConfig.navBarHeight,
+          width: SizeConfig.navBarWidth,
+          decoration: BoxDecoration(
+            color: UiConstants.primaryLight,
+            borderRadius: BorderRadius.circular(
+              SizeConfig.roundness24,
             ),
-            alignment: Alignment.topCenter,
-            child: Container(
-              height: SizeConfig.navBarHeight * 0.6,
-              alignment: Alignment.center,
-              child: Text(
-                locale.navWMT,
-                style: TextStyles.body1.colour(UiConstants.primaryColor).bold,
-              ),
+          ),
+          alignment: Alignment.topCenter,
+          child: Container(
+            height: SizeConfig.navBarHeight * 0.5,
+            alignment: Alignment.center,
+            child: Text(
+              locale.navWMT,
+              style: TextStyles.body1.colour(UiConstants.primaryColor).bold,
             ),
           ),
         ),

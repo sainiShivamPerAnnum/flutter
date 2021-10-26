@@ -20,5 +20,10 @@ void main() async {
           baseUriAsia: 'asia-south1-fello-dev-station.cloudfunctions.net',
           dynamicLinkPrefix: 'https://dev.fello.in/test'));
   await mainInit();
-  runApp(MyApp());
+  runApp(
+    DevicePreview(
+      enabled: false, //!kReleaseMode,
+      builder: (context) => MyApp(), // Wrap your app
+    ),
+  );
 }

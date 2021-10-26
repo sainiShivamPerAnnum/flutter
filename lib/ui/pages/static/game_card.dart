@@ -80,7 +80,7 @@ class GameCard extends StatelessWidget {
                             height: SizeConfig.iconSize3,
                           ),
                         ),
-                        label: Text("Rs ${gameData.prizeAmount ?? 0.0}",
+                        label: Text("₹ ${gameData.prizeAmount ?? 0.0}",
                             style: TextStyles.body3.colour(Colors.black54)),
                         onPressed: () {}),
                   ],

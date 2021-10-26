@@ -22,12 +22,14 @@ class MobileInputScreen extends StatefulWidget {
 class MobileInputScreenState extends State<MobileInputScreen> {
   final _formKey = GlobalKey<FormState>();
   final _mobileController = TextEditingController();
+  final _referralCodeController = TextEditingController();
   bool _validate = true;
   bool showAvailableMobileNos = true;
   Log log = new Log("MobileInputScreen");
   static final GlobalKey<FormFieldState<String>> _phoneFieldKey =
       GlobalKey<FormFieldState<String>>();
   String code = "+91";
+  bool hasReferralCode = false;
 
   void showAvailablePhoneNumbers() async {
     if (Platform.isAndroid && showAvailableMobileNos) {
@@ -140,35 +142,78 @@ class MobileInputScreenState extends State<MobileInputScreen> {
             // ),
             Form(
               key: _formKey,
-              child: TextFormField(
-                key: _phoneFieldKey,
-                keyboardType: TextInputType.numberWithOptions(signed: true),
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                ],
-                maxLength: 10,
-                cursorColor: UiConstants.primaryColor,
-                style: TextStyles.body3.colour(Colors.black),
-                decoration: InputDecoration(
-                  prefixIcon: Padding(
-                    padding: EdgeInsets.all(SizeConfig.padding4),
-                    child: Image.network(
-                      "https://media.istockphoto.com/vectors/india-round-flag-vector-flat-icon-vector-id1032066158?k=20&m=1032066158&s=170667a&w=0&h=V79avsonlNYP6KB_vU3TfVK4lrkAzD0otqiWcfQlk-Q=",
-                      width: SizeConfig.padding8,
+              child: Column(
+                children: [
+                  TextFormField(
+                    key: _phoneFieldKey,
+                    keyboardType: TextInputType.numberWithOptions(signed: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                    maxLength: 10,
+                    cursorColor: UiConstants.primaryColor,
+                    style: TextStyles.body3.colour(Colors.black),
+                    decoration: InputDecoration(
+                      prefixIcon: Padding(
+                        padding: EdgeInsets.all(SizeConfig.padding4),
+                        child: Image.network(
+                          "https://media.istockphoto.com/vectors/india-round-flag-vector-flat-icon-vector-id1032066158?k=20&m=1032066158&s=170667a&w=0&h=V79avsonlNYP6KB_vU3TfVK4lrkAzD0otqiWcfQlk-Q=",
+                          width: SizeConfig.padding8,
+                        ),
+                      ),
+                      prefixText: "+91 ",
+                      prefixStyle: TextStyles.body3.colour(Colors.black),
                     ),
+                    onChanged: (val) {
+                      if (val.length == 10) FocusScope.of(context).unfocus();
+                    },
+                    onTap: showAvailablePhoneNumbers,
+                    controller: _mobileController,
+                    validator: (value) => _validateMobile(),
+                    onFieldSubmitted: (v) {
+                      FocusScope.of(context).requestFocus(FocusNode());
+                    },
                   ),
-                  prefixText: "+91 ",
-                  prefixStyle: TextStyles.body3.colour(Colors.black),
-                ),
-                onChanged: (val) {
-                  if (val.length == 10) FocusScope.of(context).unfocus();
-                },
-                onTap: showAvailablePhoneNumbers,
-                controller: _mobileController,
-                validator: (value) => _validateMobile(),
-                onFieldSubmitted: (v) {
-                  FocusScope.of(context).requestFocus(FocusNode());
-                },
+                  SizedBox(
+                    height: SizeConfig.padding12,
+                  ),
+                  hasReferralCode
+                      ? TextFormField(
+                          controller: _referralCodeController,
+                          //maxLength: 10,
+                          decoration: InputDecoration(
+                            hintText: "Enter your referral code here",
+                            hintStyle: TextStyles.body3.colour(Colors.grey),
+                          ),
+                          validator: (val) {
+                            if (val.trim().length == 0 || val == null)
+                              return null;
+                            if (val.trim().length < 3 || val.trim().length > 10)
+                              return "Invalid referral code";
+                            return null;
+                          })
+                      : TextButton(
+                          onPressed: () {
+                            setState(() {
+                              hasReferralCode = true;
+                            });
+                          },
+                          child: Text(
+                            "Have a referral code?",
+                            style: TextStyles.body2.bold
+                                .colour(UiConstants.primaryColor),
+                          ),
+                        ),
+                  if (hasReferralCode)
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "Referral codes are case-sensitive",
+                        textAlign: TextAlign.start,
+                        style: TextStyles.body4.colour(Colors.black54),
+                      ),
+                    ),
+                ],
               ),
             ),
             SizedBox(height: SizeConfig.blockSizeVertical * 8),
@@ -184,17 +229,15 @@ class MobileInputScreenState extends State<MobileInputScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Image.asset(Assets.augmontLogo,
+                          color: Colors.grey,
                           width: SizeConfig.screenWidth * 0.2),
                       SizedBox(width: 16),
-                      Image.asset(Assets.iciciGraphic,
-                          width: SizeConfig.screenWidth * 0.1),
-                      SizedBox(width: 16),
                       Image.asset(Assets.sebiGraphic,
-                          color: Color(0xff2E2A81),
+                          color: Colors.grey,
                           width: SizeConfig.screenWidth * 0.04),
                       SizedBox(width: 16),
                       Image.asset(Assets.amfiGraphic,
-                          color: UiConstants.primaryColor,
+                          color: Colors.grey,
                           width: SizeConfig.screenWidth * 0.04)
                     ],
                   )
@@ -228,6 +271,8 @@ class MobileInputScreenState extends State<MobileInputScreen> {
   }
 
   String getMobile() => _mobileController.text;
+
+  String getReferralCode() => _referralCodeController.text;
 
   get formKey => _formKey;
 }

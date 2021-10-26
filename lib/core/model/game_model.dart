@@ -5,8 +5,8 @@ class GameModel {
   final String tag;
   final String thumbnailImage;
   final PageConfiguration pageConfig;
-  final int playCost;
-  final double prizeAmount;
+  final String playCost;
+  final String prizeAmount;
 
   GameModel({
     this.gameName,

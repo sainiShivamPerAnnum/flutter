@@ -78,7 +78,8 @@ class AugmontGoldBuyView extends StatelessWidget {
                             Expanded(
                               child: TextField(
                                 controller: model.goldAmountController,
-                                keyboardType: TextInputType.number,
+                                keyboardType: TextInputType.numberWithOptions(
+                                    signed: true, decimal: true),
                                 style: TextStyles.body2.bold,
                                 onChanged: (val) {
                                   model.goldBuyAmount = double.tryParse(val);

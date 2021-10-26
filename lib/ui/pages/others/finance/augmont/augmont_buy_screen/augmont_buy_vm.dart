@@ -37,6 +37,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   FcmListener _fcmListener = locator<FcmListener>();
   UserService _userService = locator<UserService>();
   TransactionService _txnService = locator<TransactionService>();
+  int _status = 0;
   bool isGoldRateFetching = false;
   AugmontRates goldRates;
   bool _isGoldBuyInProgress = false;
@@ -58,6 +59,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   init() {
     goldAmountController = TextEditingController();
     fetchGoldRates();
+    checkRegistrationStatus();
   }
 
   Widget amoutChip(double amt) {
@@ -89,12 +91,15 @@ class AugmontGoldBuyViewModel extends BaseModel {
   }
 
   updateGoldAmount() {
-    if(goldAmountController.text == null || goldAmountController.text.isEmpty || double.tryParse(goldAmountController.text) == null) {
+    if (goldAmountController.text == null ||
+        goldAmountController.text.isEmpty ||
+        double.tryParse(goldAmountController.text) == null) {
       goldAmountInGrams = 0.0;
-    }else {
+    } else {
       if (goldBuyPrice != null && goldBuyPrice != 0.0)
         goldAmountInGrams = BaseUtil.digitPrecision(
-            double.tryParse(goldAmountController.text) / goldBuyPrice, 4,
+            double.tryParse(goldAmountController.text) / goldBuyPrice,
+            4,
             false);
       else
         goldAmountInGrams = 0.0;
@@ -117,6 +122,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   }
 
   initiateBuy() async {
+    if (_status == 1) return checkRegistrationStatus();
     double buyAmount = double.tryParse(goldAmountController.text);
     if (goldRates == null) {
       BaseUtil.showNegativeAlert(
@@ -144,7 +150,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
       _baseUtil.augmontDetail =
           await _dbModel.getUserAugmontDetails(_baseUtil.myUser.uid);
     }
-    if(_baseUtil.augmontDetail == null) {
+    if (_baseUtil.augmontDetail == null) {
       BaseUtil.showNegativeAlert(
         'Deposit Failed',
         'Please try again in sometime or contact us',
@@ -165,7 +171,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   }
 
   String getActionButtonText() {
-    int _status = checkAugmontStatus();
+    _status = checkAugmontStatus();
     if (_status == STATUS_UNAVAILABLE)
       return 'UNAVAILABLE';
     else if (_status == STATUS_REGISTER)
@@ -179,6 +185,20 @@ class AugmontGoldBuyViewModel extends BaseModel {
     Haptic.vibrate();
     _baseUtil.isAugDepositRouteLogicInProgress = true;
     _onDepositClicked().then((value) {});
+  }
+
+  checkRegistrationStatus() async {
+    if (!_userService.baseUser.isAugmontOnboarded)
+      Future.delayed(Duration.zero, () {
+        BaseUtil.openModalBottomSheet(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(SizeConfig.roundness24),
+              topRight: Radius.circular(SizeConfig.roundness24),
+            ),
+            addToScreenStack: true,
+            content: AugmontRegisterModalSheet(),
+            isBarrierDismissable: false);
+      });
   }
 
   int checkAugmontStatus() {

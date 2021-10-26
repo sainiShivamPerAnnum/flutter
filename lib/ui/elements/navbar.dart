@@ -111,12 +111,12 @@ class _NavbarButtonState extends State<NavbarButton>
                       color: Colors.white, shape: BoxShape.circle),
                   padding: EdgeInsets.all(SizeConfig.padding8),
                   child: SvgPicture.asset(widget.data.iconImage,
-                      height: SizeConfig.screenWidth * 0.048,
+                      width: SizeConfig.screenWidth * 0.048,
                       color: UiConstants.primaryColor),
                 )
               : SvgPicture.asset(
                   widget.data.iconImage,
-                  height: SizeConfig.screenWidth * 0.077,
+                  width: SizeConfig.screenWidth * 0.077,
                   color: Color(0xffC2EDE4),
                 ),
         ),
@@ -155,7 +155,7 @@ class _NavbarButtonState extends State<NavbarButton>
           //Determine target width, selected item is wider
           width: widget.isSelected
               ? widget.data.width
-              : SizeConfig.screenWidth * 0.16,
+              : SizeConfig.screenWidth * 0.132,
           curve: Curves.easeOutCubic,
           padding: EdgeInsets.symmetric(horizontal: 12),
           duration: Duration(milliseconds: 1400),

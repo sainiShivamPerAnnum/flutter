@@ -22,19 +22,8 @@ class SaveViewModel extends BaseModel {
     return _userService.userFundWallet?.prizeLifetimeWin ?? 0.0;
   }
 
-  checkRegistrationAndRedirect() {
-    if (_baseUtil.myUser.isAugmontOnboarded) {
-      AppState.delegate.appState.currentAction =
-          PageAction(state: PageState.addPage, page: AugmontGoldBuyPageConfig);
-    } else {
-      BaseUtil.openModalBottomSheet(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(SizeConfig.roundness24),
-            topRight: Radius.circular(SizeConfig.roundness24),
-          ),
-          addToScreenStack: true,
-          content: AugmontRegisterModalSheet(),
-          isBarrierDismissable: false);
-    }
+  navigateToBuyScreen() {
+    AppState.delegate.appState.currentAction =
+        PageAction(state: PageState.addPage, page: AugmontGoldBuyPageConfig);
   }
 }

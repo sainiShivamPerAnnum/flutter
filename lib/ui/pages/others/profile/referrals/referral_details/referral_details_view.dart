@@ -56,15 +56,50 @@ class ReferralDetailsView extends StatelessWidget {
                         style: TextStyles.body2,
                       ),
                       SizedBox(height: SizeConfig.padding24),
-                      model.lodingUrl
-                          ? SpinKitThreeBounce(
-                              color: UiConstants.spinnerColor2,
-                              size: 18.0,
-                            )
-                          : TextFormField(
-                              initialValue: model.userUrl,
-                              style: TextStyles.body3.colour(Colors.grey),
+                      // model.lodingUrl
+                      //     ? SpinKitThreeBounce(
+                      //         color: UiConstants.spinnerColor2,
+                      //         size: 18.0,
+                      //       )
+                      //     : TextFormField(
+                      //         initialValue: model.userUrl,
+                      //         style: TextStyles.body3.colour(Colors.grey),
+                      //       ),
+                      Container(
+                        width: SizeConfig.navBarWidth,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: UiConstants.primaryColor.withOpacity(0.5),
+                          ),
+                          borderRadius:
+                              BorderRadius.circular(SizeConfig.roundness12),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                            vertical: SizeConfig.padding12),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "https://fello.in/app/referral/ ",
+                              style: TextStyles.body2,
                             ),
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: SizeConfig.padding8,
+                                vertical: SizeConfig.padding8,
+                              ),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: UiConstants.tertiarySolid),
+                              child: Text(
+                                "hVcc",
+                                style:
+                                    TextStyles.body2.bold.colour(Colors.white),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
                       SizedBox(height: SizeConfig.padding24),
                       Row(
                         children: [

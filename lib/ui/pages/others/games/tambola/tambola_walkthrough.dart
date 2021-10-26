@@ -7,6 +7,7 @@ import 'package:felloapp/ui/elements/tambola-global/prize_section.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/picks_card/picks_card_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 
@@ -111,7 +112,9 @@ class Walkthrough extends StatelessWidget {
                         ),
                       ),
                     ),
-                    PicksCardView(),
+                    PicksCardView(
+                      isForDemo: true,
+                    ),
                     Container(
                       padding: EdgeInsets.symmetric(
                           horizontal: SizeConfig.pageHorizontalMargins),
@@ -131,7 +134,7 @@ class Walkthrough extends StatelessWidget {
                             ),
                           ),
                           Image.asset(
-                            "images/Tambola/w-ticket.png",
+                            Assets.tambolaWalkthrough,
                             width: SizeConfig.screenWidth,
                             fit: BoxFit.cover,
                           ),

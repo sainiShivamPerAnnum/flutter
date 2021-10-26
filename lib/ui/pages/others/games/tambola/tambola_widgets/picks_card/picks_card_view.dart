@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/tambola-global/weekly_picks.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/current_picks.dart';
@@ -11,13 +13,15 @@ import 'package:google_fonts/google_fonts.dart';
 
 class PicksCardView extends StatelessWidget {
   final ValueChanged<bool> showBuyTicketModal;
-  PicksCardView({this.showBuyTicketModal});
+  final bool isForDemo;
+  PicksCardView({this.showBuyTicketModal, this.isForDemo = false});
+
   @override
   Widget build(BuildContext context) {
     return BaseView<PicksCardViewModel>(
       onModelReady: (model) => model.init(),
       builder: (ctx, model, child) => GestureDetector(
-        onTap: () => model.onTap(showBuyTicketModal),
+        onTap: isForDemo ? () {} : () => model.onTap(showBuyTicketModal),
         child: AnimatedContainer(
           width: SizeConfig.screenWidth,
           height: model.topCardHeight,
@@ -91,10 +95,17 @@ class PicksCardView extends StatelessWidget {
                               )),
                     SizedBox(height: SizeConfig.padding12),
                     !model.isShowingAllPicks
-                        ? CurrentPicks(
-                            dailyPicksCount: model.dailyPicksCount,
-                            todaysPicks: model.todaysPicks,
-                          )
+                        ? (isForDemo
+                            ? CurrentPicks(
+                                dailyPicksCount: model.dailyPicksCount,
+                                todaysPicks: List.generate(
+                                    model.dailyPicksCount,
+                                    (index) => Random().nextInt(90)),
+                              )
+                            : CurrentPicks(
+                                dailyPicksCount: model.dailyPicksCount,
+                                todaysPicks: model.todaysPicks,
+                              ))
                         : WeeklyPicks(
                             weeklyDraws: model.weeklyDigits,
                           ),

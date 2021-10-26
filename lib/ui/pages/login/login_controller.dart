@@ -1,10 +1,14 @@
 //Project Imports
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
+import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/model/user_augmont_details_model.dart';
+import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -63,11 +67,13 @@ class _LoginControllerState extends State<LoginController>
   static AppState appStateProvider;
   final UserService userService = locator<UserService>();
   final FcmListener fcmListener = locator<FcmListener>();
+  final AugmontModel augmontProvider = locator<AugmontModel>();
   AnimationController animationController;
 
   String userMobile;
   String _verificationId;
   String _augmentedVerificationId;
+  String state;
   ValueNotifier<double> _pageNotifier;
   static List<Widget> _pages;
   int _currentPage;
@@ -348,7 +354,9 @@ class _LoginControllerState extends State<LoginController>
             log.debug(
                 'Mobile number validated: ${_mobileScreenKey.currentState.getMobile()}');
             this.userMobile = _mobileScreenKey.currentState.getMobile();
-
+            String refCode = _mobileScreenKey.currentState.getReferralCode();
+            if (refCode != null && refCode.isNotEmpty)
+              BaseUtil.manualReferralCode = refCode;
             setState(() {
               LoginController.mobileno = this.userMobile;
             });
@@ -373,6 +381,7 @@ class _LoginControllerState extends State<LoginController>
               _otpScreenKey.currentState.onOtpReceived();
               _onSignInSuccess();
             } else {
+              _otpScreenKey.currentState.pinEditingController.text = "";
               BaseUtil.showNegativeAlert(
                   'Invalid Otp', 'Please enter a valid otp');
               baseProvider.isLoginNextInProgress = false;
@@ -418,6 +427,13 @@ class _LoginControllerState extends State<LoginController>
               );
               return false;
             }
+            if (_nameScreenKey.currentState.state == null) {
+              BaseUtil.showNegativeAlert(
+                'Invalid details',
+                'Please enter your state of residence',
+              );
+              return false;
+            }
             FocusScope.of(_nameScreenKey.currentContext).unfocus();
             baseProvider.isLoginNextInProgress = true;
             setState(() {});
@@ -451,6 +467,9 @@ class _LoginControllerState extends State<LoginController>
 
             bool isInv = _nameScreenKey.currentState.isInvested;
             if (isInv != null) baseProvider.myUser.isInvested = isInv;
+            state = _nameScreenKey.currentState.state;
+            await CacheManager.writeCache(
+                key: "UserAugmontState", value: state, type: CacheType.string);
 
             Future.delayed(Duration(seconds: 1), () {
               baseProvider.isLoginNextInProgress = false;
@@ -477,11 +496,14 @@ class _LoginControllerState extends State<LoginController>
               String username =
                   _usernameKey.currentState.username.replaceAll('.', '@');
               if (await dbProvider.checkIfUsernameIsAvailable(username)) {
+                _usernameKey.currentState.enabled = false;
+                setState(() {});
                 bool res = await dbProvider.setUsername(
                     username, baseProvider.firebaseUser.uid);
                 if (res) {
                   baseProvider.myUser.username = username;
                   bool flag = await dbProvider.updateUser(baseProvider.myUser);
+
                   if (flag) {
                     log.debug("User object saved successfully");
                     _onSignUpComplete();
@@ -490,6 +512,8 @@ class _LoginControllerState extends State<LoginController>
                       'Update failed',
                       'Please try again in sometime',
                     );
+                    _usernameKey.currentState.enabled = false;
+
                     baseProvider.isLoginNextInProgress = false;
                     setState(() {});
                   }
@@ -498,6 +522,8 @@ class _LoginControllerState extends State<LoginController>
                     'Username update failed',
                     'Please try again in sometime',
                   );
+                  _usernameKey.currentState.enabled = false;
+
                   baseProvider.isLoginNextInProgress = false;
                   setState(() {});
                 }
@@ -506,6 +532,8 @@ class _LoginControllerState extends State<LoginController>
                   'username not available',
                   'Please choose another username',
                 );
+                _usernameKey.currentState.enabled = false;
+
                 baseProvider.isLoginNextInProgress = false;
                 setState(() {});
               }
@@ -629,37 +657,36 @@ class _LoginControllerState extends State<LoginController>
   }
 }
 
-
 // (_currentPage == MobileInputScreen.index)
-                  //     ? Padding(
-                  //         padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                  //         child: RichText(
-                  //           text: new TextSpan(
-                  //             children: [
-                  //               new TextSpan(
-                  //                 text: 'By continuing, you agree to our ',
-                  //                 style: GoogleFonts.montserrat(
-                  //                     fontSize: SizeConfig.smallTextSize * 1.2,
-                  //                     color: Colors.black45),
-                  //               ),
-                  //               new TextSpan(
-                  //                 text: 'Terms of Service',
-                  //                 style: GoogleFonts.montserrat(
-                  //                     color: Colors.black45,
-                  //                     fontSize: SizeConfig.smallTextSize * 1.2,
-                  //                     decoration: TextDecoration.underline),
-                  //                 recognizer: new TapGestureRecognizer()
-                  //                   ..onTap = () {
-                  //                     Haptic.vibrate();
-                  //                     BaseUtil.launchUrl(
-                  //                         'https://fello.in/policy/tnc');
-                  //                     // appStateProvider.currentAction = PageAction(
-                  //                     //     state: PageState.addPage,
-                  //                     //     page: TncPageConfig);
-                  //                   },
-                  //               ),
-                  //             ],
-                  //           ),
-                  //         ),
-                  //       )
-                  //     : Container(),
+//     ? Padding(
+//         padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+//         child: RichText(
+//           text: new TextSpan(
+//             children: [
+//               new TextSpan(
+//                 text: 'By continuing, you agree to our ',
+//                 style: GoogleFonts.montserrat(
+//                     fontSize: SizeConfig.smallTextSize * 1.2,
+//                     color: Colors.black45),
+//               ),
+//               new TextSpan(
+//                 text: 'Terms of Service',
+//                 style: GoogleFonts.montserrat(
+//                     color: Colors.black45,
+//                     fontSize: SizeConfig.smallTextSize * 1.2,
+//                     decoration: TextDecoration.underline),
+//                 recognizer: new TapGestureRecognizer()
+//                   ..onTap = () {
+//                     Haptic.vibrate();
+//                     BaseUtil.launchUrl(
+//                         'https://fello.in/policy/tnc');
+//                     // appStateProvider.currentAction = PageAction(
+//                     //     state: PageState.addPage,
+//                     //     page: TncPageConfig);
+//                   },
+//               ),
+//             ],
+//           ),
+//         ),
+//       )
+//     : Container(),
