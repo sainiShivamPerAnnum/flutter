@@ -159,7 +159,7 @@ class AugmontGoldBuyView extends StatelessWidget {
                             : Text(
                                 model.status == 0
                                     ? "UNAVAILABLE"
-                                    : (model.status == 1 ? "REGISTER" : "BUY"),
+                                    : "BUY",
                                 style:
                                     TextStyles.body2.colour(Colors.white).bold,
                               ),
