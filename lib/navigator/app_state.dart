@@ -22,7 +22,7 @@ class PageAction {
 }
 
 class AppState extends ChangeNotifier {
-  static int _rootIndex = 0;
+  int _rootIndex = 1;
   static ScrollController homeCardListController = ScrollController();
   static String _fcmData;
   static bool isFirstTime = true;
@@ -42,6 +42,13 @@ class AppState extends ChangeNotifier {
 
   PageAction _currentAction = PageAction();
   // BackButtonDispatcher backButtonDispatcher;
+
+  get rootIndex => this._rootIndex;
+
+  set rootIndex(value) {
+    this._rootIndex = value;
+    notifyListeners();
+  }
 
   scrollHome(int cardNo) {
     double scrollDepth = SizeConfig.screenHeight * 0.2 * cardNo;
@@ -68,7 +75,7 @@ class AppState extends ChangeNotifier {
 
 // GETTERS AND SETTERS
 
-  static int get getCurrentTabIndex => _rootIndex ?? 0;
+  int get getCurrentTabIndex => _rootIndex ?? 0;
 
   set setCurrentTabIndex(int index) {
     _rootIndex = index;
@@ -99,9 +106,9 @@ class AppState extends ChangeNotifier {
     });
   }
 
-  static setLastTapIndex() {
-    SharedPreferences.getInstance().then((instance) {
-      _rootIndex = instance.getInt('lastTab');
-    });
-  }
+  // setLastTapIndex() {
+  //   SharedPreferences.getInstance().then((instance) {
+  //     rootIndex = instance.getInt('lastTab');
+  //   });
+  // }
 }

@@ -316,9 +316,7 @@ class _TambolaGameViewState extends State<TambolaGameView>
           padding: EdgeInsets.all(10),
           child: Container(
             width: double.infinity,
-            height: model.ticketsBeingGenerated
-                ? SizeConfig.screenWidth * 0.9
-                : SizeConfig.padding20,
+            height: SizeConfig.screenWidth * 0.9,
             child: Center(
               child: (model.ticketsBeingGenerated)
                   ? Column(
@@ -363,7 +361,7 @@ class _TambolaGameViewState extends State<TambolaGameView>
                       ],
                     )
                   : NoRecordDisplayWidget(
-                      asset: Assets.noTickets,
+                      assetSvg: Assets.noTickets,
                       text: "You have no tickets right now",
                     ),
             ),

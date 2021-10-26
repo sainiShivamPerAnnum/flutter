@@ -34,6 +34,7 @@ class RootViewModel extends BaseModel {
   final LocalDBModel _localDBModel = locator<LocalDBModel>();
   final UserService _userService = locator<UserService>();
   final UserCoinService _userCoinService = locator<UserCoinService>();
+  final AppState _appState = locator<AppState>();
   final Logger _logger = locator<Logger>();
   final winnerService = locator<WinnerService>();
 
@@ -41,6 +42,7 @@ class RootViewModel extends BaseModel {
   bool _isInitialized = false;
 
   String get myUserDpUrl => _userService.myUserDpUrl;
+  int get currentTabIndex => _appState.rootIndex;
 
   Future<void> refresh() async {
     await _userCoinService.getUserCoinBalance();
@@ -86,7 +88,7 @@ class RootViewModel extends BaseModel {
   }
 
   void onItemTapped(int index) {
-    AppState().setCurrentTabIndex = index;
+    AppState.delegate.appState.setCurrentTabIndex = index;
     switch (index) {
       case 1:
         AppState.isSaveOpened = true;
@@ -158,14 +160,15 @@ class RootViewModel extends BaseModel {
   }
 
   Future<dynamic> _verifyManualReferral(BuildContext context) async {
-    if(BaseUtil.manualReferralCode == null) return null;
+    if (BaseUtil.manualReferralCode == null) return null;
     try {
       PendingDynamicLinkData dynamicLinkData =
           await FirebaseDynamicLinks.instance.getDynamicLink(Uri.parse(
               '${FlavorConfig.instance.values.dynamicLinkPrefix}/app/referral/${BaseUtil.manualReferralCode}'));
       Uri deepLink = dynamicLinkData?.link;
       _logger.d(deepLink.toString());
-      if(deepLink != null) return _processDynamicLink(_baseUtil.myUser.uid, deepLink, context);
+      if (deepLink != null)
+        return _processDynamicLink(_baseUtil.myUser.uid, deepLink, context);
     } catch (e) {
       _logger.e(e.toString());
     }

@@ -29,7 +29,7 @@ class Assets {
   //APPBAR
 
   static final String alerts = "assets/vectors/icons/alerts.svg";
-  static final String tickets = "assets/vectors/icons/tickets.svg";
+  static final String tickets = "assets/vectors/icons/token.svg";
   //NAVBAR
 
   static final String navPlay = "assets/vectors/icons/support.svg";
@@ -62,6 +62,7 @@ class Assets {
   static final String tambolaThumb = "assets/images/tambola.png";
   static final String tambolaWalkthrough =
       "assets/images/tambola_walkthrough.png";
+  static final String scoreIcon = "assets/vectors/icons/score.svg";
 
   // SAVE
   static final String whiteRays = "assets/images/white_rays.png";

@@ -22,19 +22,20 @@ class FelloConfirmationDialog extends StatefulWidget {
   final String accept;
   final String reject;
 
-  FelloConfirmationDialog(
-      {this.result,
-      this.content,
-      this.onAccept,
-      this.onReject,
-      this.asset,
-      this.showCrossIcon,
-      this.subtitle,
-      this.title,
-      this.accept,
-      this.acceptColor,
-      this.rejectColor,
-      this.reject});
+  FelloConfirmationDialog({
+    this.result,
+    this.content,
+    this.onAccept,
+    this.onReject,
+    this.asset,
+    this.showCrossIcon,
+    this.subtitle,
+    this.title,
+    this.accept,
+    this.acceptColor,
+    this.rejectColor,
+    this.reject,
+  });
 
   @override
   _FelloConfirmationDialogState createState() =>

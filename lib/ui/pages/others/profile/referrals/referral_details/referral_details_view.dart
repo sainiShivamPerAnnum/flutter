@@ -56,15 +56,15 @@ class ReferralDetailsView extends StatelessWidget {
                         style: TextStyles.body2,
                       ),
                       SizedBox(height: SizeConfig.padding24),
-                      // model.lodingUrl
-                      //     ? SpinKitThreeBounce(
-                      //         color: UiConstants.spinnerColor2,
-                      //         size: 18.0,
-                      //       )
-                      //     : TextFormField(
-                      //         initialValue: model.userUrl,
-                      //         style: TextStyles.body3.colour(Colors.grey),
-                      //       ),
+                      model.lodingUrl
+                          ? SpinKitThreeBounce(
+                              color: UiConstants.spinnerColor2,
+                              size: 18.0,
+                            )
+                          : TextFormField(
+                              initialValue: model.userUrl,
+                              style: TextStyles.body3.colour(Colors.grey),
+                            ),
                       Container(
                         width: SizeConfig.navBarWidth,
                         decoration: BoxDecoration(

@@ -30,7 +30,7 @@ class Play extends StatelessWidget {
               SizedBox(height: SizeConfig.padding80),
               Container(
                 width: SizeConfig.screenWidth,
-                height: SizeConfig.screenWidth * 0.44,
+                height: SizeConfig.screenWidth * 0.38,
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/model/game_model.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -16,22 +17,23 @@ class GameCard extends StatelessWidget {
       tag: gameData.tag,
       child: Container(
         width: SizeConfig.screenWidth,
-        //height: SizeConfig.screenWidth * 0.64,
-        margin: EdgeInsets.symmetric(
-            vertical: SizeConfig.padding8,
-            horizontal: SizeConfig.pageHorizontalMargins),
+        margin: EdgeInsets.only(
+            right: SizeConfig.pageHorizontalMargins,
+            left: SizeConfig.pageHorizontalMargins,
+            bottom: SizeConfig.padding16),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(SizeConfig.roundness56),
+          borderRadius: BorderRadius.circular(SizeConfig.padding54),
         ),
-        padding: EdgeInsets.all(SizeConfig.padding8),
+        padding: EdgeInsets.symmetric(
+            horizontal: SizeConfig.padding8, vertical: SizeConfig.padding6),
         child: Column(
           children: [
             ClipPath(
               clipper: GameThumbnailClipper(),
               child: Container(
                 width: SizeConfig.screenWidth,
-                height: SizeConfig.screenWidth * 0.4,
+                height: SizeConfig.screenWidth * 0.3,
                 decoration: BoxDecoration(
                   color: UiConstants.primaryColor,
                   image: DecorationImage(
@@ -43,47 +45,63 @@ class GameCard extends StatelessWidget {
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                SizedBox(height: SizeConfig.padding4),
+                // SizedBox(height: SizeConfig.padding4),
                 Text(
                   gameData.gameName,
                   style:
                       TextStyles.title5.bold.colour(UiConstants.primaryColor),
                 ),
-                SizedBox(height: SizeConfig.padding4),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextButton.icon(
-                      icon: CircleAvatar(
-                        radius: SizeConfig.screenWidth * 0.029,
-                        backgroundColor:
-                            UiConstants.tertiarySolid.withOpacity(0.2),
-                        child: RotatedBox(
-                          quarterTurns: 1,
-                          child: SvgPicture.asset(
-                            "assets/vectors/icons/tickets.svg",
-                            height: SizeConfig.iconSize3,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text("Entry: ${gameData.playCost ?? 0}   ",
+                                  style: TextStyles.body3),
+                              CircleAvatar(
+                                radius: SizeConfig.screenWidth * 0.029,
+                                backgroundColor:
+                                    UiConstants.tertiarySolid.withOpacity(0.2),
+                                child: SvgPicture.asset(
+                                  Assets.tickets,
+                                  height: SizeConfig.iconSize3,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                      label: Text("${gameData.playCost ?? 0} tickets",
-                          style: TextStyles.body3.colour(Colors.black54)),
-                      onPressed: () {},
-                    ),
-                    SizedBox(width: 16),
-                    TextButton.icon(
-                        icon: CircleAvatar(
-                          radius: SizeConfig.screenWidth * 0.029,
-                          backgroundColor: UiConstants.primaryLight,
-                          child: Image.asset(
-                            "assets/images/icons/money.png",
-                            height: SizeConfig.iconSize3,
-                          ),
+                      SizedBox(
+                        width: SizeConfig.screenWidth * 0.1,
+                      ),
+                      Expanded(
+                          child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text("Win: ₹ ${gameData.prizeAmount ?? 0}   ",
+                                style: TextStyles.body3),
+                            CircleAvatar(
+                              radius: SizeConfig.screenWidth * 0.029,
+                              backgroundColor:
+                                  UiConstants.primaryColor.withOpacity(0.2),
+                              child: RotatedBox(
+                                quarterTurns: 1,
+                                child: Image.asset(
+                                  Assets.moneyIcon,
+                                  height: SizeConfig.iconSize3,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        label: Text("₹ ${gameData.prizeAmount ?? 0.0}",
-                            style: TextStyles.body3.colour(Colors.black54)),
-                        onPressed: () {}),
-                  ],
+                      ))
+                    ],
+                  ),
                 ),
               ],
             )
