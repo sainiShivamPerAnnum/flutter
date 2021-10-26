@@ -156,38 +156,43 @@ class OtpInputScreenState extends State<OtpInputScreen> {
               SizedBox(
                 height: SizeConfig.padding16,
               ),
+
               (showResendOption && !_isTriesExceeded)
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          locale.obDidntGetOtp,
-                          style: TextStyle(
-                            color: Colors.black45,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        InkWell(
-                          child: Text(
-                            locale.obResend,
+                  ? Padding(
+                      padding: EdgeInsets.all(SizeConfig.padding4),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            locale.obDidntGetOtp,
                             style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                              fontWeight: FontWeight.w700,
+                              color: Colors.black45,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
-                          onTap: () {
-                            log.debug("Resend action triggered");
-                            FocusScope.of(context).unfocus();
-                            BaseUtil.showPositiveAlert(
-                                "OTP resent successfully",
-                                "Please wait for the new otp");
-                            if (!_isResendClicked) {
-                              //ensure that button isnt clicked multiple times
-                              if (widget.resendOtp != null) widget.resendOtp();
-                            }
-                          },
-                        ),
-                      ],
+                          InkWell(
+                            child: Text(
+                              locale.obResend,
+                              style: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            onTap: () {
+                              log.debug("Resend action triggered");
+                              FocusScope.of(context).unfocus();
+                              BaseUtil.showPositiveAlert(
+                                  "OTP resent successfully",
+                                  "Please wait for the new otp");
+                              if (!_isResendClicked) {
+                                //ensure that button isnt clicked multiple times
+                                if (widget.resendOtp != null)
+                                  widget.resendOtp();
+                              }
+                            },
+                          ),
+                        ],
+                      ),
                     )
                   : SizedBox(),
               (_isTriesExceeded)
@@ -198,25 +203,37 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                       ),
                     )
                   : SizedBox(),
-              // (!showResendOption)
-              //     ? Column(
-              //         mainAxisAlignment: MainAxisAlignment.center,
-              //         children: [
-              //           Padding(
-              //             padding:
-              //                 const EdgeInsets.fromLTRB(25.0, 25.0, 25.0, 25.0),
-              //             child: SpinKitDoubleBounce(
-              //               color: UiConstants.spinnerColor,
-              //               //controller: AnimationController(vsync: this, duration: const Duration(milliseconds: 1200)),
-              //             ),
-              //           ),
-              //           SizedBox(
-              //             height: 8,
-              //           ),
-              //           //Text(_loaderMessage)
-              //         ],
-              //       )
-              //     : Container(),
+              (!showResendOption)
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Didn't get an OTP? request in ",
+                            style: TextStyles.body3),
+                        TweenAnimationBuilder<Duration>(
+                            duration: Duration(seconds: 30),
+                            tween: Tween(
+                                begin: Duration(seconds: 30),
+                                end: Duration.zero),
+                            onEnd: () {
+                              print('Timer ended');
+                            },
+                            builder: (BuildContext context, Duration value,
+                                Widget child) {
+                              final minutes =
+                                  (value.inMinutes).toString().padLeft(2, '0');
+                              final seconds = (value.inSeconds % 60)
+                                  .toString()
+                                  .padLeft(2, '0');
+
+                              return Text(
+                                "$minutes:$seconds",
+                                style: TextStyles.body3.bold
+                                    .colour(UiConstants.primaryColor),
+                              );
+                            }),
+                      ],
+                    )
+                  : Container(),
             ],
           ),
         ),

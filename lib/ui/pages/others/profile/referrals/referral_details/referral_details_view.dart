@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -15,6 +16,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -56,50 +58,68 @@ class ReferralDetailsView extends StatelessWidget {
                         style: TextStyles.body2,
                       ),
                       SizedBox(height: SizeConfig.padding24),
-                      // model.lodingUrl
+                      // model.loadingUrl
                       //     ? SpinKitThreeBounce(
                       //         color: UiConstants.spinnerColor2,
                       //         size: 18.0,
                       //       )
                       //     : TextFormField(
-                      //         initialValue: model.userUrl,
+                      //         initialValue: model.getuserUrlPrefix(),
                       //         style: TextStyles.body3.colour(Colors.grey),
                       //       ),
-                      Container(
-                        width: SizeConfig.navBarWidth,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: UiConstants.primaryColor.withOpacity(0.5),
-                          ),
-                          borderRadius:
-                              BorderRadius.circular(SizeConfig.roundness12),
-                        ),
-                        padding: EdgeInsets.symmetric(
-                            vertical: SizeConfig.padding12),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "https://fello.in/app/referral/ ",
-                              style: TextStyles.body2,
-                            ),
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: SizeConfig.padding8,
-                                vertical: SizeConfig.padding8,
-                              ),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: UiConstants.tertiarySolid),
-                              child: Text(
-                                "hVcc",
-                                style:
-                                    TextStyles.body2.bold.colour(Colors.white),
-                              ),
+                      model.loadingUrl
+                          ? SpinKitThreeBounce(
+                              color: UiConstants.spinnerColor2,
+                              size: 18.0,
                             )
-                          ],
-                        ),
-                      ),
+                          : Container(
+                              width: SizeConfig.navBarWidth,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color:
+                                      UiConstants.primaryColor.withOpacity(0.5),
+                                ),
+                                borderRadius: BorderRadius.circular(
+                                    SizeConfig.roundness12),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: SizeConfig.padding12),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    model.userUrlPrefix,
+                                    style: TextStyles.body2,
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      Clipboard.setData(ClipboardData(
+                                              text: model.userUrlCode))
+                                          .then((_) {
+                                        BaseUtil.showPositiveAlert(
+                                            "Code: ${model.userUrlCode}",
+                                            "Copied to Clipboard");
+                                      });
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: SizeConfig.padding8,
+                                        vertical: SizeConfig.padding8,
+                                      ),
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          color: UiConstants.tertiarySolid),
+                                      child: Text(
+                                        model.userUrlCode,
+                                        style: TextStyles.body2.bold
+                                            .colour(Colors.white),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
                       SizedBox(height: SizeConfig.padding24),
                       Row(
                         children: [

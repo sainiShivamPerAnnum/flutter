@@ -157,7 +157,9 @@ class AugmontGoldBuyView extends StatelessWidget {
                                 size: 20,
                               )
                             : Text(
-                                model.getActionButtonText(),
+                                model.status == 0
+                                    ? "UNAVAILABLE"
+                                    : (model.status == 1 ? "REGISTER" : "BUY"),
                                 style:
                                     TextStyles.body2.colour(Colors.white).bold,
                               ),
@@ -223,7 +225,7 @@ class InfoChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Wrap(
+      child: Row(
         children: [
           SvgPicture.asset(
             asset,

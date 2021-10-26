@@ -4,9 +4,11 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
+import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
@@ -15,6 +17,7 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/augmont_disabled_dialog.dart';
 import 'package:felloapp/ui/modals_sheets/augmont_register_modal_sheet.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fcm_topics.dart';
@@ -37,10 +40,13 @@ class AugmontGoldBuyViewModel extends BaseModel {
   FcmListener _fcmListener = locator<FcmListener>();
   UserService _userService = locator<UserService>();
   TransactionService _txnService = locator<TransactionService>();
+
   int _status = 0;
+
   bool isGoldRateFetching = false;
   AugmontRates goldRates;
   bool _isGoldBuyInProgress = false;
+  String userAugmontState;
 
   double goldBuyAmount = 0;
   double goldAmountInGrams = 0.0;
@@ -56,16 +62,26 @@ class AugmontGoldBuyViewModel extends BaseModel {
     notifyListeners();
   }
 
+  get status => this._status;
+
+  set status(value) {
+    this._status = value;
+    notifyListeners();
+  }
+
   init() {
     goldAmountController = TextEditingController();
     fetchGoldRates();
-    checkRegistrationStatus();
+    status = checkAugmontStatus();
   }
 
   Widget amoutChip(double amt) {
     return GestureDetector(
       onTap: () {
-        goldBuyAmount += amt;
+        if (goldBuyAmount == null)
+          goldBuyAmount = amt;
+        else
+          goldBuyAmount += amt;
         goldAmountController.text = goldBuyAmount.toString();
         updateGoldAmount();
         notifyListeners();
@@ -122,7 +138,12 @@ class AugmontGoldBuyViewModel extends BaseModel {
   }
 
   initiateBuy() async {
-    if (_status == 1) return checkRegistrationStatus();
+    if (_status == 1) {
+      bool res = await _onboardUser();
+      if (!res) await _checkRegistrationStatus();
+      status = checkAugmontStatus();
+      return;
+    }
     double buyAmount = double.tryParse(goldAmountController.text);
     if (goldRates == null) {
       BaseUtil.showNegativeAlert(
@@ -170,15 +191,15 @@ class AugmontGoldBuyViewModel extends BaseModel {
     _augmontModel.setAugmontTxnProcessListener(_onDepositTransactionComplete);
   }
 
-  String getActionButtonText() {
-    _status = checkAugmontStatus();
-    if (_status == STATUS_UNAVAILABLE)
-      return 'UNAVAILABLE';
-    else if (_status == STATUS_REGISTER)
-      return 'REGISTER';
-    else
-      return 'BUY';
-  }
+  // String getActionButtonText() {
+  //   _status = checkAugmontStatus();
+  //   if (_status == STATUS_UNAVAILABLE)
+  //     return 'UNAVAILABLE';
+  //   else if (_status == STATUS_REGISTER)
+  //     return 'REGISTER';
+  //   else
+  //     return 'BUY';
+  // }
 
   buyButtonAction() async {
     if (await BaseUtil.showNoInternetAlert()) return;
@@ -187,18 +208,21 @@ class AugmontGoldBuyViewModel extends BaseModel {
     _onDepositClicked().then((value) {});
   }
 
-  checkRegistrationStatus() async {
-    if (!_userService.baseUser.isAugmontOnboarded)
-      Future.delayed(Duration.zero, () {
-        BaseUtil.openModalBottomSheet(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(SizeConfig.roundness24),
-              topRight: Radius.circular(SizeConfig.roundness24),
-            ),
-            addToScreenStack: true,
-            content: AugmontRegisterModalSheet(),
-            isBarrierDismissable: false);
-      });
+  _checkRegistrationStatus() async {
+    userAugmontState = await CacheManager.readCache(key: "UserAugmontState");
+    if (userAugmontState == null) {
+      if (!_userService.baseUser.isAugmontOnboarded)
+        Future.delayed(Duration.zero, () {
+          BaseUtil.openModalBottomSheet(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(SizeConfig.roundness24),
+                topRight: Radius.circular(SizeConfig.roundness24),
+              ),
+              addToScreenStack: true,
+              content: AugmontRegisterModalSheet(),
+              isBarrierDismissable: false);
+        });
+    }
   }
 
   int checkAugmontStatus() {
@@ -234,6 +258,22 @@ class AugmontGoldBuyViewModel extends BaseModel {
       return STATUS_REGISTER;
     else
       return STATUS_OPEN;
+  }
+
+  Future _onboardUser() async {
+    userAugmontState = await CacheManager.readCache(key: "UserAugmontState");
+    if (!_userService.baseUser.isAugmontOnboarded && userAugmontState != null) {
+      UserAugmontDetail detail = await _augmontModel.createSimpleUser(
+          _userService.baseUser.mobile, userAugmontState);
+      if (detail == null) {
+        BaseUtil.showNegativeAlert('Registration Failed',
+            'Failed to regsiter at the moment. Please try again.');
+        return false;
+      } else
+        BaseUtil.showPositiveAlert('Registration Successful',
+            'You are successfully onboarded to Augmont Digital Gold');
+      return true;
+    }
   }
 
   Future<bool> _onDepositClicked() async {
@@ -384,25 +424,26 @@ class AugmontGoldBuyViewModel extends BaseModel {
       addToScreenStack: true,
       hapticVibrate: true,
       isBarrierDismissable: false,
-      content: FelloInfoDialog(
+      content: FelloConfirmationDialog(
         asset: Assets.goldenTicket,
         title: "Congratulations",
         subtitle:
             "You have successfully saved ${_baseUtil.currentAugmontTxn.amount} and earned ${_baseUtil.currentAugmontTxn.amount.ceil()} tokens!",
-        action: Container(
-          width: SizeConfig.screenWidth,
-          child: FelloButtonLg(
-            child: Text(
-              "Done",
-              style: TextStyles.body3.colour(Colors.white),
-            ),
-            color: UiConstants.primaryColor,
-            onPressed: () {
-              AppState.backButtonDispatcher.didPopRoute();
-              AppState.backButtonDispatcher.didPopRoute();
-            },
-          ),
-        ),
+        result: (res) {
+          if (res) ;
+        },
+        accept: "Invest more",
+        reject: "Start Playing",
+        acceptColor: UiConstants.primaryColor,
+        rejectColor: UiConstants.tertiarySolid,
+        onReject: () {
+          AppState.backButtonDispatcher.didPopRoute();
+          AppState.backButtonDispatcher.didPopRoute();
+          AppState.delegate.appState.setCurrentTabIndex = 1;
+        },
+        onAccept: () {
+          AppState.backButtonDispatcher.didPopRoute();
+        },
       ),
     );
   }

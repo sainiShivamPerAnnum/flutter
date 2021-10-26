@@ -18,19 +18,19 @@ class OfferCard extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(SizeConfig.roundness32),
       child: Container(
-        width: SizeConfig.screenWidth * 0.6,
-        height: SizeConfig.screenWidth * 0.34,
+        width: SizeConfig.screenWidth * 0.5,
+        height: SizeConfig.screenWidth * 0.28,
         margin: EdgeInsets.only(
-            bottom: SizeConfig.screenWidth * 0.1,
-            left: SizeConfig.pageHorizontalMargins,
-            right: SizeConfig.pageHorizontalMargins / 2),
+          bottom: SizeConfig.screenWidth * 0.1,
+          left: SizeConfig.pageHorizontalMargins,
+        ),
         decoration: BoxDecoration(
           image: DecorationImage(
               image: AssetImage(Assets.germsPattern), fit: BoxFit.cover),
           color: model.bgColor != null
               ? Color(model.bgColor)
               : UiConstants.tertiarySolid,
-          borderRadius: BorderRadius.circular(SizeConfig.roundness32),
+          borderRadius: BorderRadius.circular(SizeConfig.roundness24),
           boxShadow: [
             BoxShadow(
               blurRadius: 30,
@@ -63,7 +63,7 @@ class OfferCard extends StatelessWidget {
                     maxLines: 1,
                     style: TextStyles.title5.colour(Colors.white).bold,
                   ),
-                  SizedBox(height: SizeConfig.padding6),
+                  SizedBox(height: SizeConfig.padding4),
                   Text(
                     model.subtitle ?? "",
                     overflow: TextOverflow.clip,
@@ -71,7 +71,7 @@ class OfferCard extends StatelessWidget {
                     style: TextStyles.title5.colour(Colors.white).bold,
                   ),
                   SizedBox(
-                    height: SizeConfig.padding12,
+                    height: SizeConfig.padding8,
                   ),
                   if (model.buttonText != null && model.actionUri != null)
                     InkWell(

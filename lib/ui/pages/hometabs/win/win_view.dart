@@ -153,13 +153,10 @@ class Win extends StatelessWidget {
             ),
             Container(
               margin: EdgeInsets.only(top: SizeConfig.screenHeight * 0.09),
-              child: InkWell(
-                onTap: model.navigateToMyWinnings,
-                child: Hero(
-                  tag: "myWinnigs",
-                  child: WinningsContainer(
-                    shadow: false,
-                  ),
+              child: Hero(
+                tag: "myWinnigs",
+                child: WinningsContainer(
+                  shadow: false,
                 ),
               ),
             ),

@@ -73,7 +73,6 @@ class LauncherViewModel extends BaseModel {
   }
 
   initLogic() async {
-    AppState.setLastTapIndex();
     await userService.init(); // PROCEED IF firebase != null
     await _baseUtil.init();
     _tambolaService.init();

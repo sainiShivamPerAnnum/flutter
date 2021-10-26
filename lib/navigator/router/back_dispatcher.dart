@@ -10,6 +10,7 @@ import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog_landscape.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 
@@ -20,6 +21,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   final FelloRouterDelegate _routerDelegate;
   DBModel _dbModel = locator<DBModel>();
   BaseUtil _baseUtil = locator<BaseUtil>();
+  AppState _appState = locator<AppState>();
 
   FelloBackButtonDispatcher(this._routerDelegate) : super();
 
@@ -29,7 +31,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
         addToScreenStack: true,
         isBarrierDismissable: false,
         hapticVibrate: true,
-        content: FelloConfirmationDialog(
+        content: FelloConfirmationLandScapeDialog(
           asset: Assets.noTickets,
           title: title,
           subtitle: description,
@@ -75,8 +77,8 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     }
     //If the cricket game is in progress
     else if (AppState.circGameInProgress)
-      return _confirmExit("Are you sure?",
-          "Exiting will end the here itself and you'll get no reward", () {
+      return _confirmExit(
+          "Are you sure?", "Game will end here if you exit now.", () {
         AppState.circGameInProgress = false;
         didPopRoute();
         return didPopRoute();
@@ -84,7 +86,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
     // If the root tab is not 0 at the time of exit
     else if (AppState.screenStack.length == 1 &&
-        AppState.getCurrentTabIndex != 0 &&
+        _appState.rootIndex != 0 &&
         _baseUtil.isUserOnboarded) {
       print("Press back once more to exit");
       if (RootViewModel.scaffoldKey.currentState.isDrawerOpen)

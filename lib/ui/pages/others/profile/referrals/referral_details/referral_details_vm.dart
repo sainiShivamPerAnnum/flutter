@@ -30,13 +30,18 @@ class ReferralDetailsViewModel extends BaseModel {
   String referral_ticket_bonus = BaseRemoteConfig.remoteConfig
       .getString(BaseRemoteConfig.REFERRAL_TICKET_BONUS);
   String _userUrl = "";
+  String _userUrlPrefix = "";
+  String _userUrlCode = "";
 
   String _shareMsg;
   bool shareWhatsappInProgress = false;
   bool shareLinkInProgress = false;
-  bool lodingUrl = false;
+  bool loadingUrl = false;
 
   get userUrl => _userUrl;
+
+  get userUrlCode => _userUrlCode;
+  get userUrlPrefix => _userUrlPrefix;
 
   init() {
     generateLink();
@@ -52,10 +57,16 @@ class ReferralDetailsViewModel extends BaseModel {
   }
 
   Future<void> generateLink() async {
-    lodingUrl = true;
+    loadingUrl = true;
+    notifyListeners();
     _userUrl =
         await _createDynamicLink(_userService.baseUser.uid, true, 'Other');
-    lodingUrl = false;
+    _userUrlPrefix = _userUrl;
+    _userUrlCode = _userUrlPrefix.split('/').removeLast();
+    List<String> splittedUrl = _userUrlPrefix.split('/');
+    splittedUrl.removeLast();
+    _userUrlPrefix = splittedUrl.join("/");
+    loadingUrl = false;
     refresh();
   }
 
@@ -139,7 +150,8 @@ class ReferralDetailsViewModel extends BaseModel {
   Future<String> _createDynamicLink(
       String userId, bool short, String source) async {
     final DynamicLinkParameters parameters = DynamicLinkParameters(
-      uriPrefix: '${FlavorConfig.instance.values.dynamicLinkPrefix}/app/referral',
+      uriPrefix:
+          '${FlavorConfig.instance.values.dynamicLinkPrefix}/app/referral',
       link: Uri.parse('https://fello.in/$userId'),
       socialMetaTagParameters: SocialMetaTagParameters(
           title: 'Download ${Constants.APP_NAME}',
