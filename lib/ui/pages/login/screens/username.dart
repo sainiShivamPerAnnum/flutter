@@ -7,8 +7,22 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+
+enum UsernameResponse { AVAILABLE, UNAVAILABLE, INVALID, EMPTY, SHORT, LONG }
+
+class LowerCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+      text: newValue.text.toLowerCase(),
+      selection: newValue.selection,
+    );
+  }
+}
 
 class Username extends StatefulWidget {
   static const int index = 3;
@@ -25,13 +39,14 @@ class UsernameState extends State<Username> {
   DBModel dbProvider;
   String username = "";
   FocusNode focusNode;
-
+  bool enabled = true;
   final regex = RegExp(r"^(?!\.)(?!.*\.$)(?!.*?\.\.)[a-z0-9.]{4,20}$");
   bool isValid;
   bool isLoading = false;
   bool isUpdating = false;
   bool isUpdated = false;
   final _formKey = GlobalKey<FormState>();
+  UsernameResponse response;
 
   // @override
   // void initState() {
@@ -43,7 +58,7 @@ class UsernameState extends State<Username> {
 
   @override
   void dispose() {
-    focusNode.dispose();
+    focusNode?.dispose();
     super.dispose();
   }
 
@@ -55,16 +70,22 @@ class UsernameState extends State<Username> {
     if (username == "" || username == null)
       setState(() {
         isValid = null;
+        response = UsernameResponse.EMPTY;
       });
     else if (regex.hasMatch(username)) {
       bool res = await dbProvider
           .checkIfUsernameIsAvailable(username.replaceAll('.', '@'));
       setState(() {
         isValid = res;
+        if (res)
+          response = UsernameResponse.AVAILABLE;
+        else
+          response = UsernameResponse.UNAVAILABLE;
       });
     } else {
       setState(() {
         isValid = false;
+        response = UsernameResponse.INVALID;
       });
     }
     setState(() {
@@ -74,6 +95,7 @@ class UsernameState extends State<Username> {
   }
 
   Widget showResult() {
+    print(response);
     if (isLoading) {
       return Container(
         height: 16,
@@ -82,13 +104,36 @@ class UsernameState extends State<Username> {
           strokeWidth: 2,
         ),
       );
-    } else if (isValid == true)
-      return Text("${usernameController.text.trim()} is available",
+    } else if (response == UsernameResponse.EMPTY
+        // isValid == true
+        )
+      return Text("username cannot be empty",
+          style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w500));
+    else if (response == UsernameResponse.AVAILABLE
+        // isValid == true
+        )
+      return Text("@${usernameController.text.trim()} is available",
           style: TextStyle(
               color: UiConstants.primaryColor, fontWeight: FontWeight.w500));
-    else if (isValid == false)
-      return Text("${usernameController.text.trim()} is not available",
+    else if (response == UsernameResponse.UNAVAILABLE
+        // isValid == false
+        )
+      return Text("@${usernameController.text.trim()} is not available",
           style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500));
+    else if (response == UsernameResponse.INVALID
+        // isValid == false
+        ) {
+      if (usernameController.text.trim().length < 5)
+        return Text("please enter a username with more than 4 characters.",
+            style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500));
+      else if (usernameController.text.trim().length > 20)
+        return Text("please enter a username with less than 20 characters.",
+            style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500));
+      else
+        return Text("@${usernameController.text.trim()} is invalid",
+            style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500));
+    }
+
     return SizedBox(
       height: 16,
     );
@@ -133,7 +178,13 @@ class UsernameState extends State<Username> {
                 child: TextFormField(
                   focusNode: focusNode,
                   controller: usernameController,
+                  inputFormatters: [
+                    LowerCaseTextFormatter(),
+                    //FilteringTextInputFormatter.allow(regex)
+                  ],
+                  textCapitalization: TextCapitalization.none,
                   autofocus: true,
+                  enabled: enabled,
                   cursorColor: UiConstants.primaryColor,
                   keyboardType: TextInputType.text,
                   validator: (val) {
@@ -164,6 +215,7 @@ class UsernameState extends State<Username> {
               height: 40,
               child: showResult(),
             ),
+            //Text(responseText),
             SizedBox(height: SizeConfig.padding40),
             Text(
               locale.obUsernameRulesTitle,

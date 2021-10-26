@@ -16,6 +16,8 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/shims/dart_ui_real.dart';
+import 'package:provider/provider.dart';
 
 class Root extends StatelessWidget {
   @override
@@ -43,20 +45,22 @@ class Root extends StatelessWidget {
             drawer: FDrawer(),
             drawerEnableOpenDragGesture: false,
             body: HomeBackground(
-              whiteBackground:
-                  WhiteBackground(height: SizeConfig.screenHeight * 0.2),
+              whiteBackground: WhiteBackground(
+                  height: model.currentTabIndex == 1
+                      ? SizeConfig.screenHeight * 0.17
+                      : SizeConfig.screenHeight * 0.2),
               child: Stack(
                 children: [
                   RefreshIndicator(
                     color: UiConstants.primaryColor,
                     backgroundColor: Colors.black,
                     onRefresh: model.refresh,
-                    child: SafeArea(
-                      child: Container(
-                        //margin: EdgeInsets.only(top: kToolbarHeight * 1.2),
-                        child: IndexedStack(
-                            children: model.pages,
-                            index: AppState.getCurrentTabIndex),
+                    child: Container(
+                      margin: EdgeInsets.only(
+                          top: MediaQuery.of(context).padding.top),
+                      child: Consumer<AppState>(
+                        builder: (ctx, m, child) => IndexedStack(
+                            children: model.pages, index: m.rootIndex),
                       ),
                     ),
                   ),
@@ -73,7 +77,21 @@ class Root extends StatelessWidget {
                       NotificationButton(),
                     ],
                   ),
-                  WantMoreTickets(),
+                  Positioned(
+                    bottom: 0,
+                    child: ClipRect(
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                        child: Container(
+                          width: SizeConfig.screenWidth,
+                          height: SizeConfig.navBarHeight,
+                        ),
+                      ),
+                    ),
+                  ),
+                  WantMoreTickets(
+                    model: model,
+                  ),
                   BottomNavBar(
                     model: model,
                   ),
@@ -95,11 +113,11 @@ class BottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    return Positioned(
-      bottom: SizeConfig.pageHorizontalMargins,
-      left: SizeConfig.pageHorizontalMargins,
-      right: SizeConfig.pageHorizontalMargins,
-      child: SafeArea(
+    return Consumer<AppState>(
+      builder: (ctx, m, child) => Positioned(
+        bottom: SizeConfig.pageHorizontalMargins,
+        left: SizeConfig.pageHorizontalMargins,
+        right: SizeConfig.pageHorizontalMargins,
         child: Container(
           width: SizeConfig.navBarWidth,
           height: SizeConfig.navBarHeight,
@@ -109,7 +127,7 @@ class BottomNavBar extends StatelessWidget {
           ),
           child: NavBar(
             itemTapped: (int index) => model.onItemTapped(index),
-            currentIndex: AppState.getCurrentTabIndex,
+            currentIndex: m.rootIndex,
             items: [
               NavBarItemData(locale.navBarFinance, Assets.navSave,
                   SizeConfig.screenWidth * 0.27),
@@ -126,22 +144,22 @@ class BottomNavBar extends StatelessWidget {
 }
 
 class WantMoreTickets extends StatelessWidget {
-  const WantMoreTickets({
-    Key key,
-  }) : super(key: key);
+  final RootViewModel model;
+
+  WantMoreTickets({@required this.model});
 
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    return AnimatedPositioned(
-      duration: Duration(milliseconds: 300),
-      curve: Curves.decelerate,
-      bottom: AppState.getCurrentTabIndex == 1
-          ? SizeConfig.pageHorizontalMargins + SizeConfig.navBarHeight / 2
-          : SizeConfig.pageHorizontalMargins,
-      left: SizeConfig.pageHorizontalMargins,
-      right: SizeConfig.pageHorizontalMargins,
-      child: SafeArea(
+    return Consumer<AppState>(
+      builder: (ctx, m, child) => AnimatedPositioned(
+        duration: Duration(milliseconds: 300),
+        curve: Curves.decelerate,
+        bottom: m.rootIndex == 1
+            ? SizeConfig.pageHorizontalMargins + SizeConfig.navBarHeight / 2
+            : SizeConfig.pageHorizontalMargins,
+        left: SizeConfig.pageHorizontalMargins,
+        right: SizeConfig.pageHorizontalMargins,
         child: InkWell(
           onTap: () => BaseUtil.openModalBottomSheet(
             addToScreenStack: true,
@@ -161,7 +179,7 @@ class WantMoreTickets extends StatelessWidget {
             ),
             alignment: Alignment.topCenter,
             child: Container(
-              height: SizeConfig.navBarHeight * 0.6,
+              height: SizeConfig.navBarHeight * 0.5,
               alignment: Alignment.center,
               child: Text(
                 locale.navWMT,

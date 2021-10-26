@@ -7,7 +7,7 @@ class Assets {
   static final String referGraphic = 'images/transfer.png';
   static final String iciciGraphic = 'images/icici.png';
   static final String augmontGraphic = 'images/augmont.png';
-  static final String augmontLogo = "images/augmont-logo.jpg";
+  static final String augmontLogo = "images/aug-logo.png";
   static final String augLogo = "images/aug-logo.png";
   static final String sebiGraphic = 'images/sebi.png';
   static final String amfiGraphic = 'images/amfi.png';
@@ -29,7 +29,7 @@ class Assets {
   //APPBAR
 
   static final String alerts = "assets/vectors/icons/alerts.svg";
-  static final String tickets = "assets/vectors/icons/tickets.svg";
+  static final String tickets = "assets/vectors/icons/token.svg";
   //NAVBAR
 
   static final String navPlay = "assets/vectors/icons/support.svg";
@@ -60,6 +60,9 @@ class Assets {
   static final String germsPattern = "assets/images/bg_pattern.png";
   static final String cricketThumb = "assets/images/cricket.jpg";
   static final String tambolaThumb = "assets/images/tambola.png";
+  static final String tambolaWalkthrough =
+      "assets/images/tambola_walkthrough.png";
+  static final String scoreIcon = "assets/vectors/icons/score.svg";
 
   // SAVE
   static final String whiteRays = "assets/images/white_rays.png";

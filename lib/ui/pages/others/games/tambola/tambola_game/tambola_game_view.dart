@@ -316,9 +316,7 @@ class _TambolaGameViewState extends State<TambolaGameView>
           padding: EdgeInsets.all(10),
           child: Container(
             width: double.infinity,
-            height: model.ticketsBeingGenerated
-                ? SizeConfig.screenWidth * 0.9
-                : SizeConfig.padding20,
+            height: SizeConfig.screenWidth * 0.9,
             child: Center(
               child: (model.ticketsBeingGenerated)
                   ? Column(
@@ -363,7 +361,7 @@ class _TambolaGameViewState extends State<TambolaGameView>
                       ],
                     )
                   : NoRecordDisplayWidget(
-                      asset: Assets.noTickets,
+                      assetSvg: Assets.noTickets,
                       text: "You have no tickets right now",
                     ),
             ),
@@ -376,8 +374,9 @@ class _TambolaGameViewState extends State<TambolaGameView>
         bestBoards: model.refreshBestBoards(),
         dailyPicks: model.weeklyDigits,
         board: model.userWeeklyBoards[0],
-        calledDigits:
-            (model.weeklyDrawFetched) ? model.weeklyDigits.toList() : [],
+        calledDigits: (model.weeklyDrawFetched && model.weeklyDigits != null)
+            ? model.weeklyDigits.toList()
+            : [],
       ));
       // model.currentBoardView = model.tambolaBoardViews[0];
       // model.currentBoard = model.userWeeklyBoards[0];
@@ -389,14 +388,13 @@ class _TambolaGameViewState extends State<TambolaGameView>
       model.tambolaBoardViews = [];
       model.userWeeklyBoards.forEach((board) {
         model.tambolaBoardViews.add(Ticket(
-            bestBoards: model.refreshBestBoards(),
-            dailyPicks: model.weeklyDigits,
-            board: board,
-            calledDigits: //(model.weeklyDrawFetched && model.weeklyDigits != null)
-                //?
-                model.weeklyDigits.toList()
-            //: [],
-            ));
+          bestBoards: model.refreshBestBoards(),
+          dailyPicks: model.weeklyDigits,
+          board: board,
+          calledDigits: (model.weeklyDrawFetched && model.weeklyDigits != null)
+              ? model.weeklyDigits.toList()
+              : [],
+        ));
       });
       _widget = Column(
         children: [
@@ -544,73 +542,74 @@ class Odds extends StatelessWidget {
   Widget build(BuildContext cx) {
     if (_board == null) return Container();
     List<int> _digits = (_digitsObj != null) ? _digitsObj.toList() : [];
-    return ListView.builder(
-      padding: EdgeInsets.zero,
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: 6,
-      itemBuilder: (context, index) {
-        switch (index) {
-          case 0:
-            return _buildRow(
-                cx,
-                Icons.border_top,
-                'Top Row',
-                _board.getRowOdds(0, _digits).toString() + ' left',
-                _bestBoards[0].getRowOdds(0, _digits).toString() + ' left',
-                _bestBoards[0],
-                _digits);
-          case 1:
-            return _buildRow(
-                cx,
-                Icons.border_horizontal,
-                'Middle Row',
-                _board.getRowOdds(1, _digits).toString() + ' left',
-                _bestBoards[1].getRowOdds(1, _digits).toString() + ' left',
-                _bestBoards[1],
-                _digits);
-          case 2:
-            return _buildRow(
-                cx,
-                Icons.border_bottom,
-                'Bottom Row',
-                _board.getRowOdds(2, _digits).toString() + ' left',
-                _bestBoards[2].getRowOdds(2, _digits).toString() + ' left',
-                _bestBoards[2],
-                _digits);
-          case 3:
-            return _buildRow(
-                cx,
-                Icons.border_outer,
-                'Corners',
-                _board.getCornerOdds(_digits).toString() + ' left',
-                _bestBoards[3].getCornerOdds(_digits).toString() + ' left',
-                _bestBoards[3],
-                _digits);
-          case 4:
-            return _buildRow(
-                cx,
-                Icons.apps,
-                'Full House',
-                _board.getFullHouseOdds(_digits).toString() + ' left',
-                _bestBoards[4].getFullHouseOdds(_digits).toString() + ' left',
-                _bestBoards[4],
-                _digits);
-          case 5:
-            return SizedBox(
-              height: 40,
-            );
-          default:
-            return _buildRow(
-                cx,
-                Icons.border_top,
-                'Top Row',
-                _board.getRowOdds(0, _digits).toString() + ' left',
-                _bestBoards[0].getRowOdds(0, _digits).toString() + ' left',
-                _bestBoards[0],
-                _digits);
-        }
-      },
-    );
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        // padding: EdgeInsets.zero,
+        // physics: NeverScrollableScrollPhysics(),
+        // itemCount: 6,
+        children: List.generate(
+          5,
+          (index) {
+            switch (index) {
+              case 0:
+                return _buildRow(
+                    cx,
+                    Icons.border_top,
+                    'Top Row',
+                    _board.getRowOdds(0, _digits).toString() + ' left',
+                    _bestBoards[0].getRowOdds(0, _digits).toString() + ' left',
+                    _bestBoards[0],
+                    _digits);
+              case 1:
+                return _buildRow(
+                    cx,
+                    Icons.border_horizontal,
+                    'Middle Row',
+                    _board.getRowOdds(1, _digits).toString() + ' left',
+                    _bestBoards[1].getRowOdds(1, _digits).toString() + ' left',
+                    _bestBoards[1],
+                    _digits);
+              case 2:
+                return _buildRow(
+                    cx,
+                    Icons.border_bottom,
+                    'Bottom Row',
+                    _board.getRowOdds(2, _digits).toString() + ' left',
+                    _bestBoards[2].getRowOdds(2, _digits).toString() + ' left',
+                    _bestBoards[2],
+                    _digits);
+              case 3:
+                return _buildRow(
+                    cx,
+                    Icons.border_outer,
+                    'Corners',
+                    _board.getCornerOdds(_digits).toString() + ' left',
+                    _bestBoards[3].getCornerOdds(_digits).toString() + ' left',
+                    _bestBoards[3],
+                    _digits);
+              case 4:
+                return _buildRow(
+                    cx,
+                    Icons.apps,
+                    'Full House',
+                    _board.getFullHouseOdds(_digits).toString() + ' left',
+                    _bestBoards[4].getFullHouseOdds(_digits).toString() +
+                        ' left',
+                    _bestBoards[4],
+                    _digits);
+
+              default:
+                return _buildRow(
+                    cx,
+                    Icons.border_top,
+                    'Top Row',
+                    _board.getRowOdds(0, _digits).toString() + ' left',
+                    _bestBoards[0].getRowOdds(0, _digits).toString() + ' left',
+                    _bestBoards[0],
+                    _digits);
+            }
+          },
+        ));
   }
 
   Widget _buildRow(BuildContext cx, IconData _i, String _title, String _tOdd,
@@ -625,7 +624,7 @@ class Odds extends StatelessWidget {
               child: Row(
                 children: [
                   CircleAvatar(
-                      radius: SizeConfig.padding24,
+                      radius: SizeConfig.padding20,
                       backgroundColor:
                           UiConstants.primaryColor.withOpacity(0.1),
                       child: Icon(_i,
@@ -643,6 +642,7 @@ class Odds extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
                   Text(_tOdd, style: TextStyles.body3),
+                  SizedBox(height: SizeConfig.padding2),
                   Text('This ticket',
                       style: TextStyles.body4.colour(Colors.grey))
                 ],
@@ -654,6 +654,7 @@ class Odds extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
                     Text(_oOdd, style: TextStyles.body3),
+                    SizedBox(height: SizeConfig.padding4),
                     Container(
                       padding: EdgeInsets.symmetric(
                         horizontal: SizeConfig.padding8,

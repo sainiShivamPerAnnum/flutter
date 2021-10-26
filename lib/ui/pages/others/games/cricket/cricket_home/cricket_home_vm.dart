@@ -53,12 +53,6 @@ class CricketHomeViewModel extends BaseModel {
   String get sessionID => _sessionId;
   LeaderBoardModal get clboard => _cricLeaderboard;
 
-  GameModel gameData = GameModel(
-      gameName: "Cricket",
-      pageConfig: CricketHomePageConfig,
-      tag: 'cricket',
-      thumbnailImage:
-          "https://www.mpl.live/blog/wp-content/uploads/2020/09/WCC2-mobile-game-becomes-the-worlds-No.1-cricket-game-silently-1.png");
   viewpage(int index) {
     currentPage = index;
     print(currentPage);
@@ -80,7 +74,7 @@ class CricketHomeViewModel extends BaseModel {
           sessionId: _sessionId,
           userId: _userService.baseUser.uid,
           userName: _userService.baseUser.username,
-          stage: FlavorConfig.isDevelopment() ? 'dev' : 'prod',
+          stage: FlavorConfig.getStage(),
         ));
   }
 

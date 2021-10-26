@@ -198,7 +198,9 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                                   Expanded(
                                     child: TextField(
                                       controller: model.goldAmountController,
-                                      keyboardType: TextInputType.number,
+                                      keyboardType:
+                                          TextInputType.numberWithOptions(
+                                              decimal: true, signed: true),
                                       style: TextStyles.body2.bold,
                                       onChanged: (val) {
                                         model.goldSellGrams =

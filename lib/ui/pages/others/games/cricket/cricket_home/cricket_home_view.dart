@@ -345,19 +345,15 @@ class PrizeChip extends StatelessWidget {
           CircleAvatar(
             radius: SizeConfig.iconSize3,
             backgroundColor: color.withOpacity(0.2),
-            child: RotatedBox(
-              quarterTurns: 1,
-              child: svg != null
-                  ? SvgPicture.asset(
-                      svg,
-                      height: SizeConfig.iconSize3,
-                      color: color,
-                    )
-                  : Image.asset(
-                      png,
-                      height: SizeConfig.iconSize3,
-                    ),
-            ),
+            child: svg != null
+                ? SvgPicture.asset(
+                    svg,
+                    height: SizeConfig.iconSize3,
+                  )
+                : Image.asset(
+                    png,
+                    height: SizeConfig.iconSize3,
+                  ),
           ),
           SizedBox(width: SizeConfig.padding8),
           Text(text, style: TextStyles.body3)
@@ -424,31 +420,20 @@ class LeaderBoardView extends StatelessWidget {
                         radius: SizeConfig.padding16,
                         child: Text(
                           "${i + 1}",
-                          style: TextStyles.body4.colour(Colors.white),
+                          style: TextStyles.body4.bold.colour(Colors.white),
                         ),
                       ),
                       SizedBox(width: SizeConfig.padding12),
                       Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(model.scoreboard[i].username ?? "Username",
-                                style: TextStyles.body3),
-                            SizedBox(height: SizeConfig.padding4),
-                            Text(
-                              "Tambola",
-                              style: TextStyles.body4
-                                  .colour(UiConstants.primaryColor),
-                            )
-                          ],
-                        ),
+                        child: Text(model.scoreboard[i].username ?? "Username",
+                            style: TextStyles.body3),
                       ),
                       TextButton.icon(
                           icon: CircleAvatar(
                             radius: SizeConfig.screenWidth * 0.029,
-                            backgroundColor: UiConstants.tertiaryLight,
-                            child: SvgPicture.asset(Assets.tickets,
+                            backgroundColor: Colors.blue[900].withOpacity(0.2),
+                            child: SvgPicture.asset(Assets.scoreIcon,
+                                color: Colors.blue[900],
                                 height: SizeConfig.iconSize3),
                           ),
                           label: Text(

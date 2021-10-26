@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/elements/pin_input_custom_text_field.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
 import 'package:felloapp/util/assets.dart';
@@ -38,7 +39,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
   bool _isResendClicked = false;
   bool _isTriesExceeded = false;
   bool showResendOption = false;
-  final _pinEditingController = new TextEditingController();
+  final pinEditingController = new TextEditingController();
   FocusNode focusNode;
   String mobileNo;
 
@@ -66,9 +67,10 @@ class OtpInputScreenState extends State<OtpInputScreen> {
     if (mounted)
       Future.delayed(Duration(seconds: 30), () {
         try {
-          setState(() {
-            showResendOption = true;
-          });
+          if (mounted)
+            setState(() {
+              showResendOption = true;
+            });
         } catch (e) {
           log.error('Screen no longer active');
         }
@@ -138,7 +140,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                     strokeWidth: 0,
                     textStyle: TextStyles.body2.bold.colour(Colors.black),
                   ),
-                  controller: _pinEditingController,
+                  controller: pinEditingController,
                   onChanged: (value) {
                     if (value.length == 6) {
                       if (widget.otpEntered != null) widget.otpEntered();
@@ -154,34 +156,43 @@ class OtpInputScreenState extends State<OtpInputScreen> {
               SizedBox(
                 height: SizeConfig.padding16,
               ),
+
               (showResendOption && !_isTriesExceeded)
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          locale.obDidntGetOtp,
-                          style: TextStyle(
-                            color: Colors.black45,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        InkWell(
-                          child: Text(
-                            locale.obResend,
+                  ? Padding(
+                      padding: EdgeInsets.all(SizeConfig.padding4),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            locale.obDidntGetOtp,
                             style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                              fontWeight: FontWeight.w700,
+                              color: Colors.black45,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
-                          onTap: () {
-                            log.debug("Resend action triggered");
-                            if (!_isResendClicked) {
-                              //ensure that button isnt clicked multiple times
-                              if (widget.resendOtp != null) widget.resendOtp();
-                            }
-                          },
-                        ),
-                      ],
+                          InkWell(
+                            child: Text(
+                              locale.obResend,
+                              style: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            onTap: () {
+                              log.debug("Resend action triggered");
+                              FocusScope.of(context).unfocus();
+                              BaseUtil.showPositiveAlert(
+                                  "OTP resent successfully",
+                                  "Please wait for the new otp");
+                              if (!_isResendClicked) {
+                                //ensure that button isnt clicked multiple times
+                                if (widget.resendOtp != null)
+                                  widget.resendOtp();
+                              }
+                            },
+                          ),
+                        ],
+                      ),
                     )
                   : SizedBox(),
               (_isTriesExceeded)
@@ -193,21 +204,33 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                     )
                   : SizedBox(),
               (!showResendOption)
-                  ? Column(
+                  ? Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(25.0, 25.0, 25.0, 25.0),
-                          child: SpinKitDoubleBounce(
-                            color: UiConstants.spinnerColor,
-                            //controller: AnimationController(vsync: this, duration: const Duration(milliseconds: 1200)),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        //Text(_loaderMessage)
+                        Text("Didn't get an OTP? request in ",
+                            style: TextStyles.body3),
+                        TweenAnimationBuilder<Duration>(
+                            duration: Duration(seconds: 30),
+                            tween: Tween(
+                                begin: Duration(seconds: 30),
+                                end: Duration.zero),
+                            onEnd: () {
+                              print('Timer ended');
+                            },
+                            builder: (BuildContext context, Duration value,
+                                Widget child) {
+                              final minutes =
+                                  (value.inMinutes).toString().padLeft(2, '0');
+                              final seconds = (value.inSeconds % 60)
+                                  .toString()
+                                  .padLeft(2, '0');
+
+                              return Text(
+                                "$minutes:$seconds",
+                                style: TextStyles.body3.bold
+                                    .colour(UiConstants.primaryColor),
+                              );
+                            }),
                       ],
                     )
                   : Container(),
@@ -254,5 +277,5 @@ class OtpInputScreenState extends State<OtpInputScreen> {
     }
   }
 
-  String get otp => _pinEditingController.text;
+  String get otp => pinEditingController.text;
 }

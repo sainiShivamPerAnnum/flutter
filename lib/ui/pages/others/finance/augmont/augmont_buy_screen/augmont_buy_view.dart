@@ -78,7 +78,8 @@ class AugmontGoldBuyView extends StatelessWidget {
                             Expanded(
                               child: TextField(
                                 controller: model.goldAmountController,
-                                keyboardType: TextInputType.number,
+                                keyboardType: TextInputType.numberWithOptions(
+                                    signed: true, decimal: true),
                                 style: TextStyles.body2.bold,
                                 onChanged: (val) {
                                   model.goldBuyAmount = double.tryParse(val);
@@ -156,7 +157,9 @@ class AugmontGoldBuyView extends StatelessWidget {
                                 size: 20,
                               )
                             : Text(
-                                model.getActionButtonText(),
+                                model.status == 0
+                                    ? "UNAVAILABLE"
+                                    : "BUY",
                                 style:
                                     TextStyles.body2.colour(Colors.white).bold,
                               ),
@@ -170,11 +173,11 @@ class AugmontGoldBuyView extends StatelessWidget {
                       SizedBox(
                         height: SizeConfig.padding20,
                       ),
-                      Text(
-                        "Buy Clicking on Buy, you agree to T&C",
-                        textAlign: TextAlign.center,
-                        style: TextStyles.body3.colour(Colors.grey),
-                      ),
+                      // Text(
+                      //   "Buy Clicking on Buy, you agree to T&C",
+                      //   textAlign: TextAlign.center,
+                      //   style: TextStyles.body3.colour(Colors.grey),
+                      // ),
                       SizedBox(height: SizeConfig.padding80),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -222,7 +225,7 @@ class InfoChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Wrap(
+      child: Row(
         children: [
           SvgPicture.asset(
             asset,

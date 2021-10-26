@@ -64,6 +64,7 @@ class BaseUser {
       this.isAugmontOnboarded,
       this.isSimpleKycVerified,
       this.isKycVerified,
+      this.kycName,
       this.pendingTxnId,
       this.isIciciEnabled,
       this.isAugmontEnabled,
@@ -89,6 +90,7 @@ class BaseUser {
             null,
             null,
             null,
+            null,
             "",
             false,
             UserPreferences(null),
@@ -108,6 +110,7 @@ class BaseUser {
             data[fldIsAugmontOnboarded],
             data[fldIsSimpleKycVerified],
             data[fldIsKycVerified],
+            data[fldKycName],
             data[fldPendingTxnId],
             data[fldIsIciciEnabled],
             data[fldIsAugmontEnabled],
@@ -142,41 +145,6 @@ class BaseUser {
       userObj[fldUserPrefs] = userPreferences.toJson();
 
     return userObj;
-  }
-
-  static String _decryptPan(String encde) {
-    if (encde == null || encde.isEmpty) {
-      return null;
-    }
-    RegExp panCheck = RegExp(r"[A-Z]{5}[0-9]{4}[A-Z]{1}");
-    if (!panCheck.hasMatch(encde) || encde.length != 10) {
-      //this is encrypted
-      final key = encrypt.Key.fromUtf8(Constants.PAN_AES_KEY);
-      final iv = encrypt.IV.fromLength(16);
-
-      final encrypter = encrypt.Encrypter(encrypt.AES(key));
-
-      final decrypted = encrypter.decrypt64(encde, iv: iv);
-      log.debug('Decrypted PAN: $decrypted');
-      return decrypted;
-    } else {
-      //not yet encrypted
-      return encde;
-    }
-  }
-
-  static String _encryptPan(String decde) {
-    if (decde == null || decde.isEmpty) return null;
-    final key = encrypt.Key.fromUtf8(Constants.PAN_AES_KEY);
-    final iv = encrypt.IV.fromLength(16);
-
-    final encrypter = encrypt.Encrypter(encrypt.AES(key));
-
-    final encrypted = encrypter.encrypt(decde, iv: iv);
-
-    String cde = encrypted.base64;
-    log.debug('Encrypted PAN: $cde');
-    return cde;
   }
 
   bool hasIncompleteDetails() {

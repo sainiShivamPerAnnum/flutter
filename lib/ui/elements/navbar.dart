@@ -50,7 +50,7 @@ class NavBar extends StatelessWidget {
       //Clip the row of widgets, to suppress any overflow errors that might occur during animation
       child: Row(
         //Center buttons horizontally
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         // Inject a bunch of btn instances into our row
         children: buttonWidgets,
       ),
@@ -111,12 +111,12 @@ class _NavbarButtonState extends State<NavbarButton>
                       color: Colors.white, shape: BoxShape.circle),
                   padding: EdgeInsets.all(SizeConfig.padding8),
                   child: SvgPicture.asset(widget.data.iconImage,
-                      height: SizeConfig.screenWidth * 0.048,
+                      width: SizeConfig.screenWidth * 0.048,
                       color: UiConstants.primaryColor),
                 )
               : SvgPicture.asset(
                   widget.data.iconImage,
-                  height: SizeConfig.screenWidth * 0.077,
+                  width: SizeConfig.screenWidth * 0.077,
                   color: Color(0xffC2EDE4),
                 ),
         ),
@@ -153,9 +153,10 @@ class _NavbarButtonState extends State<NavbarButton>
           alignment: Alignment.centerLeft,
 
           //Determine target width, selected item is wider
-          width: widget.isSelected
-              ? widget.data.width
-              : SizeConfig.screenWidth * 0.16,
+          //width: //widget.isSelected
+          //?
+          //  widget.data.width,
+          //: SizeConfig.screenWidth * 0.132,
           curve: Curves.easeOutCubic,
           padding: EdgeInsets.symmetric(horizontal: 12),
           duration: Duration(milliseconds: 1400),

@@ -31,6 +31,7 @@ class Save extends StatelessWidget {
             AugmontCard(model: model),
             Expanded(
               child: ListView(
+                padding: EdgeInsets.zero,
                 children: [
                   SizedBox(
                     height: SizeConfig.padding16,
@@ -228,9 +229,7 @@ class AugmontCard extends StatelessWidget {
                   Expanded(
                     child: Center(
                       child: FelloButton(
-                        onPressed: () {
-                          model.checkRegistrationAndRedirect();
-                        },
+                        onPressed: model.navigateToBuyScreen,
                         activeButtonUI: Container(
                           width: SizeConfig.screenWidth * 0.367, //152
                           height: SizeConfig.screenWidth * 0.12, //50
@@ -319,12 +318,13 @@ class AugmontCard extends StatelessWidget {
                 children: [
                   Image.asset(
                     Assets.augLogo,
-                    height: SizeConfig.padding24,
+                    color: Colors.grey,
+                    height: SizeConfig.padding20,
                   ),
                   Image.asset(
                     Assets.sebiGraphic,
-                    color: Colors.blue,
-                    height: SizeConfig.padding20,
+                    color: Colors.grey,
+                    height: SizeConfig.padding16,
                   ),
                   TextButton.icon(
                     icon: Icon(

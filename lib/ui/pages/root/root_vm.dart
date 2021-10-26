@@ -19,6 +19,7 @@ import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -33,6 +34,7 @@ class RootViewModel extends BaseModel {
   final LocalDBModel _localDBModel = locator<LocalDBModel>();
   final UserService _userService = locator<UserService>();
   final UserCoinService _userCoinService = locator<UserCoinService>();
+  final AppState _appState = locator<AppState>();
   final Logger _logger = locator<Logger>();
   final winnerService = locator<WinnerService>();
 
@@ -40,6 +42,7 @@ class RootViewModel extends BaseModel {
   bool _isInitialized = false;
 
   String get myUserDpUrl => _userService.myUserDpUrl;
+  int get currentTabIndex => _appState.rootIndex;
 
   Future<void> refresh() async {
     await _userCoinService.getUserCoinBalance();
@@ -55,6 +58,7 @@ class RootViewModel extends BaseModel {
     AppState().setCurrentTabIndex = 1;
     AppState().setRootLoadValue = true;
     _initDynamicLinks(AppState.delegate.navigatorKey.currentContext);
+    _verifyManualReferral(AppState.delegate.navigatorKey.currentContext);
   }
 
   onDispose() {
@@ -84,7 +88,7 @@ class RootViewModel extends BaseModel {
   }
 
   void onItemTapped(int index) {
-    AppState().setCurrentTabIndex = index;
+    AppState.delegate.appState.setCurrentTabIndex = index;
     switch (index) {
       case 1:
         AppState.isSaveOpened = true;
@@ -123,14 +127,14 @@ class RootViewModel extends BaseModel {
   initialize() async {
     if (!_isInitialized) {
       _isInitialized = true;
-      _localDBModel.showHomeTutorial.then((value) {
-        if (value) {
-          //show tutorial
-          _localDBModel.setShowHomeTutorial = false;
-          AppState.delegate.parseRoute(Uri.parse('dashboard/walkthrough'));
-          notifyListeners();
-        }
-      });
+      // _localDBModel.showHomeTutorial.then((value) {
+      //   if (value) {
+      //     //show tutorial
+      //     _localDBModel.setShowHomeTutorial = false;
+      //     AppState.delegate.parseRoute(Uri.parse('dashboard/walkthrough'));
+      //     notifyListeners();
+      //   }
+      // });
 
       _initAdhocNotifications();
 
@@ -152,6 +156,21 @@ class RootViewModel extends BaseModel {
               seconds: 4);
         }
       });
+    }
+  }
+
+  Future<dynamic> _verifyManualReferral(BuildContext context) async {
+    if (BaseUtil.manualReferralCode == null) return null;
+    try {
+      PendingDynamicLinkData dynamicLinkData =
+          await FirebaseDynamicLinks.instance.getDynamicLink(Uri.parse(
+              '${FlavorConfig.instance.values.dynamicLinkPrefix}/app/referral/${BaseUtil.manualReferralCode}'));
+      Uri deepLink = dynamicLinkData?.link;
+      _logger.d(deepLink.toString());
+      if (deepLink != null)
+        return _processDynamicLink(_baseUtil.myUser.uid, deepLink, context);
+    } catch (e) {
+      _logger.e(e.toString());
     }
   }
 
@@ -184,18 +203,22 @@ class RootViewModel extends BaseModel {
       //Golden ticket dynamic link
       int flag = await _submitGoldenTicket(userId, _uri, context);
     } else {
+      BaseUtil.manualReferralCode =
+          null; //make manual Code null in case user used both link and code
+
       //Referral dynamic link
-      int addUserTicketCount = await _submitReferral(
+      bool _flag = await _submitReferral(
           _baseUtil.myUser.uid, _userService.myUserName, _uri);
-      if (addUserTicketCount == null || addUserTicketCount < 0) {
-        _logger.d('Processing complete. No extra tickets to be added');
+      if (_flag) {
+        _logger.d('Rewards added');
+        refresh();
       } else {
-        _logger.d('$addUserTicketCount tickets need to be added for the user');
+        // _logger.d('$addUserTicketCount tickets need to be added for the user');
       }
     }
   }
 
-  Future<int> _submitReferral(
+  Future<bool> _submitReferral(
       String userId, String userName, String deepLink) async {
     try {
       String prefix = 'https://fello.in/';
@@ -205,17 +228,17 @@ class RootViewModel extends BaseModel {
         if (prefix.length > 0 && prefix != userId) {
           return _httpModel
               .postUserReferral(userId, referee, userName)
-              .then((userTicketUpdateCount) {
-            _logger.d('User deserves $userTicketUpdateCount more tickets');
-            return userTicketUpdateCount;
+              .then((flag) {
+            // _logger.d('User deserves $userTicketUpdateCount more tickets');
+            return flag;
           });
         } else
-          return -1;
+          return false;
       } else
-        return -1;
+        return false;
     } catch (e) {
       _logger.e(e);
-      return -1;
+      return false;
     }
   }
 

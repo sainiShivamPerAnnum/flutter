@@ -19,9 +19,9 @@ class FelloAppBar extends StatelessWidget {
     return SafeArea(
       child: Container(
         width: SizeConfig.screenWidth,
-        height: SizeConfig.padding40,
+        // height: SizeConfig.padding40,
         margin: EdgeInsets.symmetric(
-          vertical: SizeConfig.padding8,
+          vertical: SizeConfig.padding12,
           horizontal: SizeConfig.pageHorizontalMargins,
         ),
         child: Row(

@@ -10,6 +10,7 @@ import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fcm_topics.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter_share_me/flutter_share_me.dart';
@@ -28,14 +29,21 @@ class ReferralDetailsViewModel extends BaseModel {
       BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS);
   String referral_ticket_bonus = BaseRemoteConfig.remoteConfig
       .getString(BaseRemoteConfig.REFERRAL_TICKET_BONUS);
+  String referral_flc_bonus = BaseRemoteConfig.remoteConfig
+      .getString(BaseRemoteConfig.REFERRAL_FLC_BONUS);
   String _userUrl = "";
+  String _userUrlPrefix = "";
+  String _userUrlCode = "";
 
   String _shareMsg;
   bool shareWhatsappInProgress = false;
   bool shareLinkInProgress = false;
-  bool lodingUrl = false;
+  bool loadingUrl = false;
 
   get userUrl => _userUrl;
+
+  get userUrlCode => _userUrlCode;
+  get userUrlPrefix => _userUrlPrefix;
 
   init() {
     generateLink();
@@ -46,15 +54,26 @@ class ReferralDetailsViewModel extends BaseModel {
         (referral_ticket_bonus == null || referral_ticket_bonus.isEmpty)
             ? '10'
             : referral_ticket_bonus;
+    referral_flc_bonus =
+    (referral_flc_bonus == null || referral_flc_bonus.isEmpty)
+        ? '200'
+        : referral_flc_bonus;
     _shareMsg =
-        'Hey I am gifting you ₹$referral_bonus and $referral_ticket_bonus free Tambola tickets. Lets start saving and playing together! ';
+        'Hey I am gifting you ₹$referral_bonus and $referral_flc_bonus gaming tokens. Lets start saving and playing together! ';
   }
 
   Future<void> generateLink() async {
-    lodingUrl = true;
+    loadingUrl = true;
+    notifyListeners();
     _userUrl =
         await _createDynamicLink(_userService.baseUser.uid, true, 'Other');
-    lodingUrl = false;
+    _userUrlPrefix = _userUrl;
+    _userUrlCode = _userUrlPrefix.split('/').removeLast();
+    List<String> splittedUrl = _userUrlPrefix.split('/');
+    splittedUrl.removeLast();
+    _userUrlPrefix = splittedUrl.join("/");
+    _userUrlPrefix = _userUrlPrefix + '/';
+    loadingUrl = false;
     refresh();
   }
 
@@ -138,7 +157,8 @@ class ReferralDetailsViewModel extends BaseModel {
   Future<String> _createDynamicLink(
       String userId, bool short, String source) async {
     final DynamicLinkParameters parameters = DynamicLinkParameters(
-      uriPrefix: 'https://fello.in/app/referral',
+      uriPrefix:
+          '${FlavorConfig.instance.values.dynamicLinkPrefix}/app/referral',
       link: Uri.parse('https://fello.in/$userId'),
       socialMetaTagParameters: SocialMetaTagParameters(
           title: 'Download ${Constants.APP_NAME}',

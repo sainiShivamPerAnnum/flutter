@@ -102,7 +102,7 @@ class PlayViewModel extends BaseModel {
           sessionId: _sessionId,
           userId: _userService.baseUser.uid,
           userName: _userService.baseUser.username,
-          stage: FlavorConfig.isDevelopment() ? 'dev' : 'prod',
+          stage: FlavorConfig.getStage(),
         ));
   }
 

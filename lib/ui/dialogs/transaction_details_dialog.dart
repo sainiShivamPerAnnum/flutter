@@ -233,17 +233,17 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                             ],
                           )
                         : Container(),
-                    (widget._transaction.type !=
-                            UserTransaction.TRAN_TYPE_WITHDRAW)
-                        ? referralTileWide(
-                            'Tickets Added:',
-                            '${widget._transaction.ticketUpCount ?? 'Unavailable'}',
-                            UiConstants.primaryColor)
-                        : referralTileWide(
-                            'Tickets Reduced:',
-                            '${widget._transaction.ticketUpCount ?? 'Unavailable'}',
-                            Colors.redAccent.withOpacity(0.6),
-                          ),
+                    // (widget._transaction.type !=
+                    //         UserTransaction.TRAN_TYPE_WITHDRAW)
+                    //     ? referralTileWide(
+                    //         'Tickets Added:',
+                    //         '${widget._transaction.ticketUpCount ?? 'Unavailable'}',
+                    //         UiConstants.primaryColor)
+                    //     : referralTileWide(
+                    //         'Tickets Reduced:',
+                    //         '${widget._transaction.ticketUpCount ?? 'Unavailable'}',
+                    //         Colors.redAccent.withOpacity(0.6),
+                    //       ),
                     (widget._transaction.subType ==
                             UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD)
                         ? referralTileWide(

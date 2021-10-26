@@ -5,8 +5,10 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -34,11 +36,13 @@ class UserProfileVM extends BaseModel {
   final _userService = locator<UserService>();
   final BaseUtil _baseUtil = locator<BaseUtil>();
   final DBModel _dbModel = locator<DBModel>();
+  final fcmlistener = locator<FcmListener>();
   final S _locale = locator<S>();
   double picSize;
   XFile selectedProfilePicture;
   ValueChanged<bool> upload;
   bool isUpdaingUserDetails = false;
+  bool isTambolaNotificationLoading = false;
   int gen;
   String gender;
   DateTime selectedDate;
@@ -55,6 +59,14 @@ class UserProfileVM extends BaseModel {
   String get myMobile => _userService.baseUser.mobile;
   bool get isEmailVerified => _userService.baseUser.isEmailVerified;
 
+  bool get applock =>
+      _userService.baseUser.userPreferences
+          .getPreference(Preferences.APPLOCK) ==
+      1;
+  bool get tambolaNotification =>
+      _userService.baseUser.userPreferences
+          .getPreference(Preferences.TAMBOLANOTIFICATIONS) ==
+      1;
   //controllers
 
   TextEditingController nameController,
@@ -72,6 +84,7 @@ class UserProfileVM extends BaseModel {
     genderController = new TextEditingController(text: myGender);
     emailController = new TextEditingController(text: myEmail);
     mobileController = new TextEditingController(text: myMobile);
+
     setGender();
     setDate();
   }
@@ -402,5 +415,20 @@ class UserProfileVM extends BaseModel {
     }
     //upload(false);
     AppState.backButtonDispatcher.didPopRoute();
+  }
+
+  onAppLockPreferenceChanged(val) async {
+    if (await BaseUtil.showNoInternetAlert()) return;
+    _baseUtil.flipSecurityValue(val);
+    notifyListeners();
+  }
+
+  onTambolaNotificationPreferenceChanged(val) async {
+    if (await BaseUtil.showNoInternetAlert()) return;
+    isTambolaNotificationLoading = true;
+    notifyListeners();
+    await fcmlistener.toggleTambolaDrawNotificationStatus(val);
+    isTambolaNotificationLoading = false;
+    notifyListeners();
   }
 }

@@ -38,38 +38,41 @@ class HttpModel extends ChangeNotifier {
   }
 
   ///Returns the number of tickets that need to be added to user's balance
-  Future<int> postUserReferral(
+  Future<bool> postUserReferral(
       String userId, String referee, String userName) async {
     try {
-      Uri _uri = Uri.https(US_BASE_URI, '/validateUserReferral',
-          {'uid': userId, 'rid': referee, 'uname': userName});
-      http.Response _response = await http.post(_uri, headers: header);
+      String _stage = FlavorConfig.getStage();
+      Map<String, dynamic> _params = {
+        'uid': userId,
+        'rid': referee,
+        'uname': Uri.encodeComponent(userName??'')
+      };
+      Uri _uri = Uri.https(
+          ASIA_BASE_URI, '/referralOps/$_stage/api/validate', _params);
+      http.Response _response = await http.post(_uri, headers: {HttpHeaders.authorizationHeader: 'Bearer $idToken'});
       logger.d(_response.body);
       if (_response.statusCode == 200) {
         try {
           Map<String, dynamic> parsed = jsonDecode(_response.body);
-          if (parsed != null && parsed['add_tickets_count'] != null) {
+          if (parsed != null && parsed['status'] != null) {
             try {
-              logger.d(parsed['add_tickets_count'].toString());
-              int userTicketUpdateCount =
-                  BaseUtil.toInt(parsed['add_tickets_count']);
-              return userTicketUpdateCount;
+              return true;
             } catch (ee) {
-              return -1;
+              return false;
             }
           } else {
-            return -1;
+            return false;
           }
         } catch (err) {
           logger.e('Failed to parse ticket update count');
-          return -1;
+          return false;
         }
       } else {
-        return -1;
+        return false;
       }
     } catch (e) {
       logger.e('Http post failed: ' + e.toString());
-      return -1;
+      return false;
     }
   }
 
@@ -188,8 +191,9 @@ class HttpModel extends ChangeNotifier {
 
   Future<bool> isPanRegistered(String pan) async {
     //build request
-    String _stage = FlavorConfig.isDevelopment()?'dev':'prod';
-    final Uri _uri = Uri.https(ASIA_BASE_URI, '/userSearch/$_stage/api/ispanregd');
+    String _stage = FlavorConfig.getStage();
+    final Uri _uri =
+        Uri.https(ASIA_BASE_URI, '/userSearch/$_stage/api/ispanregd');
     var headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
       HttpHeaders.authorizationHeader: 'Bearer $idToken'
@@ -221,8 +225,9 @@ class HttpModel extends ChangeNotifier {
   ///encrypt text - used for pan
   Future<String> encryptText(String encText, int encVersion) async {
     //build request
-    String _stage = FlavorConfig.isDevelopment()?'dev':'prod';
-    final Uri _uri = Uri.https(ASIA_BASE_URI, '/encoderops/$_stage/api/encrypt');
+    String _stage = FlavorConfig.getStage();
+    final Uri _uri =
+        Uri.https(ASIA_BASE_URI, '/encoderops/$_stage/api/encrypt');
     var headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
       HttpHeaders.authorizationHeader: 'Bearer $idToken'
@@ -255,8 +260,9 @@ class HttpModel extends ChangeNotifier {
   ///decrypt text - used for pan
   Future<String> decryptText(String decText, int decVersion) async {
     //build request
-    String _stage = FlavorConfig.isDevelopment()?'dev':'prod';
-    final Uri _uri = Uri.https(ASIA_BASE_URI, '/encoderops/$_stage/api/decrypt');
+    String _stage = FlavorConfig.getStage();
+    final Uri _uri =
+        Uri.https(ASIA_BASE_URI, '/encoderops/$_stage/api/decrypt');
     var headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
       HttpHeaders.authorizationHeader: 'Bearer $idToken'

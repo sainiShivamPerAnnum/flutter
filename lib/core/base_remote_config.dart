@@ -51,6 +51,9 @@ class BaseRemoteConfig {
   static const Map<String, String> _REFERRAL_TICKET_BONUS = {
     'referral_ticket_bonus': '10'
   };
+  static const Map<String, String> _REFERRAL_FLC_BONUS = {
+    'referral_flc_bonus': '200'
+  };
   static const Map<String, String> _AWS_ICICI_KEY_INDEX = {
     'aws_icici_key_index': '1'
   };
@@ -82,7 +85,22 @@ class BaseRemoteConfig {
     'oct_fest_offer_timeout': '10'
   };
 
-  static const Map<String, String> _OCT_FEST_MIN_DEPOSIT = {'oct_fest_min_deposit': '100'};
+  static const Map<String, String> _OCT_FEST_MIN_DEPOSIT = {
+    'oct_fest_min_deposit': '100'
+  };
+
+  static const Map<String, String> _TAMBOLA_PLAY_COST = {
+    'tambola_play_cost': '10'
+  };
+  static const Map<String, String> _TAMBOLA_PLAY_PRIZE = {
+    'tambola_play_prize': '10,000'
+  };
+  static const Map<String, String> _CRICKET_PLAY_COST = {
+    'cricket_play_cost': '10'
+  };
+  static const Map<String, String> _CRICKET_PLAY_PRIZE = {
+    'cricket_play_prize': '5000'
+  };
 
   static const Map<String, dynamic> DEFAULTS = {
     ..._DRAW_PICK_TIME,
@@ -99,6 +117,7 @@ class BaseRemoteConfig {
     ..._TAMBOLA_WIN_FULL,
     ..._REFERRAL_BONUS,
     ..._REFERRAL_TICKET_BONUS,
+    ..._REFERRAL_FLC_BONUS,
     ..._AWS_ICICI_KEY_INDEX,
     ..._AWS_AUGMONT_KEY_INDEX,
     ..._ICICI_DEPOSITS_ENABLED,
@@ -109,7 +128,11 @@ class BaseRemoteConfig {
     ..._UNLOCK_REFERRAL_AMT,
     ..._WEEK_NUMBER,
     ..._OCT_FEST_OFFER_TIMEOUT,
-    ..._OCT_FEST_MIN_DEPOSIT
+    ..._OCT_FEST_MIN_DEPOSIT,
+    ..._TAMBOLA_PLAY_COST,
+    ..._TAMBOLA_PLAY_PRIZE,
+    ..._CRICKET_PLAY_COST,
+    ..._CRICKET_PLAY_PRIZE
   };
 
   static Future<bool> init() async {
@@ -170,6 +193,8 @@ class BaseRemoteConfig {
 
   static String get REFERRAL_BONUS => _REFERRAL_BONUS.keys.first;
 
+  static String get REFERRAL_FLC_BONUS => _REFERRAL_FLC_BONUS.keys.first;
+
   static String get TAMBOLA_WIN_FULL => _TAMBOLA_WIN_FULL.keys.first;
 
   static String get TAMBOLA_WIN_BOTTOM => _TAMBOLA_WIN_BOTTOM.keys.first;
@@ -197,6 +222,14 @@ class BaseRemoteConfig {
       _OCT_FEST_OFFER_TIMEOUT.keys.first;
 
   static String get OCT_FEST_MIN_DEPOSIT => _OCT_FEST_MIN_DEPOSIT.keys.first;
+
+  static String get TAMBOLA_PLAY_COST => _TAMBOLA_PLAY_COST.keys.first;
+
+  static String get TAMBOLA_PLAY_PRIZE => _TAMBOLA_PLAY_PRIZE.keys.first;
+
+  static String get CRICKET_PLAY_COST => _CRICKET_PLAY_COST.keys.first;
+
+  static String get CRICKET_PLAY_PRIZE => _CRICKET_PLAY_PRIZE.keys.first;
 
   static int get UNLOCK_REFERRAL_AMT {
     String _val = _UNLOCK_REFERRAL_AMT.keys.first;

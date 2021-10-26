@@ -1,7 +1,9 @@
-class ApiPath {
-  final String stage;
+import 'package:felloapp/util/flavor_config.dart';
 
-  ApiPath({this.stage = "dev"});
+class ApiPath {
+  final String stage = FlavorConfig.getStage();
+
+  ApiPath();
 
   get kSubstractFlcPreGameApi =>
       "/felloCoins/$stage/api/felloCoin/updateWallet/preGame";

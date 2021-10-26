@@ -73,7 +73,6 @@ class LauncherViewModel extends BaseModel {
   }
 
   initLogic() async {
-    AppState.setLastTapIndex();
     await userService.init(); // PROCEED IF firebase != null
     await _baseUtil.init();
     _tambolaService.init();
@@ -99,7 +98,7 @@ class LauncherViewModel extends BaseModel {
     if (!userService.isUserOnborded) {
       _logger.d("New user. Moving to Onboarding..");
       navigator.currentAction =
-          PageAction(state: PageState.replaceAll, page: OnboardPageConfig);
+          PageAction(state: PageState.replaceAll, page: LoginPageConfig);
       return;
     }
 

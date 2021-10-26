@@ -112,6 +112,7 @@ class BaseUtil extends ChangeNotifier {
   bool show_security_prompt = false;
   String zeroBalanceAssetUri;
   static List<GameModel> gamesList;
+  static String manualReferralCode;// = 'jdF1';
 
   ///Flags in various screens defined as global variables
   bool isUserOnboarded,
@@ -140,7 +141,7 @@ class BaseUtil extends ChangeNotifier {
       isReferralLinkBuildInProgressWhatsapp,
       isReferralLinkBuildInProgressOther,
       isHomeCardsFetched,
-      isGoogleSignInProgress,
+      _isGoogleSignInProgress,
       show_home_tutorial,
       show_game_tutorial,
       show_finance_tutorial;
@@ -264,19 +265,29 @@ class BaseUtil extends ChangeNotifier {
   void setGameDefaults() {
     gamesList = [
       GameModel(
-          gameName: "Cricket",
-          pageConfig: CricketHomePageConfig,
-          tag: 'cricket',
-          thumbnailImage: Assets.cricketThumb,
-          playCost: 5,
-          prizeAmount: 10000.0),
+        gameName: "Cricket",
+        pageConfig: CricketHomePageConfig,
+        tag: 'cricket',
+        thumbnailImage: Assets.cricketThumb,
+        playCost: BaseRemoteConfig.remoteConfig
+                .getString(BaseRemoteConfig.CRICKET_PLAY_COST) ??
+            "10",
+        prizeAmount: BaseRemoteConfig.remoteConfig
+                .getString(BaseRemoteConfig.CRICKET_PLAY_PRIZE) ??
+            "5000",
+      ),
       GameModel(
-          gameName: "Tambola",
-          pageConfig: THomePageConfig,
-          tag: 'tambola',
-          thumbnailImage: Assets.tambolaThumb,
-          playCost: 10,
-          prizeAmount: 25000.0),
+        gameName: "Tambola",
+        pageConfig: THomePageConfig,
+        tag: 'tambola',
+        thumbnailImage: Assets.tambolaThumb,
+        playCost: BaseRemoteConfig.remoteConfig
+                .getString(BaseRemoteConfig.TAMBOLA_PLAY_COST) ??
+            "10",
+        prizeAmount: BaseRemoteConfig.remoteConfig
+                .getString(BaseRemoteConfig.TAMBOLA_PLAY_PRIZE) ??
+            "10,000",
+      ),
     ];
   }
 
@@ -1004,6 +1015,13 @@ class BaseUtil extends ChangeNotifier {
 
   set userTicketWallet(UserTicketWallet value) {
     _userTicketWallet = value;
+    notifyListeners();
+  }
+
+  get isGoogleSignInProgress => this._isGoogleSignInProgress;
+
+  set isGoogleSignInProgress(value) {
+    this._isGoogleSignInProgress = value;
     notifyListeners();
   }
 
