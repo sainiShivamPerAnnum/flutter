@@ -49,14 +49,12 @@ class MobileInputScreenState extends State<MobileInputScreen> {
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return Container(
-      padding: EdgeInsets.symmetric(
-        vertical: SizeConfig.blockSizeVertical * 5,
-      ),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            SizedBox(height: SizeConfig.blockSizeVertical * 5),
             SvgPicture.asset(Assets.enterPhoneNumber,
                 width: SizeConfig.screenHeight * 0.16),
             SizedBox(height: SizeConfig.blockSizeVertical * 5),
@@ -245,8 +243,8 @@ class MobileInputScreenState extends State<MobileInputScreen> {
               ),
             ),
             SizedBox(
-              height: SizeConfig.screenHeight * 0.4,
-            )
+                height: SizeConfig.screenHeight * 0.2 +
+                    MediaQuery.of(context).padding.bottom)
           ],
           //)
         ),

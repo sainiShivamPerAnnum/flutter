@@ -210,8 +210,8 @@ class _LoginControllerState extends State<LoginController>
     // fcmProvider = Provider.of<FcmListener>(context, listen: false);
     appStateProvider = Provider.of<AppState>(context, listen: false);
     S locale = S.of(context);
+    bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       backgroundColor: UiConstants.primaryColor,
       body: HomeBackground(
         child: Stack(
@@ -220,7 +220,7 @@ class _LoginControllerState extends State<LoginController>
               bottom: 0,
               child: Container(
                 width: SizeConfig.screenWidth,
-                height: SizeConfig.screenHeight / 2,
+                height: SizeConfig.screenHeight / 3,
                 color: Colors.white,
               ),
             ),
@@ -298,46 +298,47 @@ class _LoginControllerState extends State<LoginController>
                 ),
               ),
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Container(
-                    width: SizeConfig.screenWidth,
-                    padding: EdgeInsets.fromLTRB(0, 10, 0, 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                        new Container(
-                          width: SizeConfig.screenWidth -
-                              SizeConfig.pageHorizontalMargins * 2,
-                          child: FelloButtonLg(
-                            child: (!baseProvider.isLoginNextInProgress)
-                                ? Text(
-                                    _currentPage == Username.index
-                                        ? 'FINISH'
-                                        : 'NEXT',
-                                    style:
-                                        TextStyles.body2.colour(Colors.white),
-                                  )
-                                : SpinKitThreeBounce(
-                                    color: UiConstants.spinnerColor2,
-                                    size: 18.0,
-                                  ),
-                            onPressed: () {
-                              if (!baseProvider.isLoginNextInProgress)
-                                _processScreenInput(_currentPage);
-                            },
+            if (!keyboardIsOpen)
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
+                      width: SizeConfig.screenWidth,
+                      padding: EdgeInsets.fromLTRB(0, 10, 0, 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: <Widget>[
+                          new Container(
+                            width: SizeConfig.screenWidth -
+                                SizeConfig.pageHorizontalMargins * 2,
+                            child: FelloButtonLg(
+                              child: (!baseProvider.isLoginNextInProgress)
+                                  ? Text(
+                                      _currentPage == Username.index
+                                          ? 'FINISH'
+                                          : 'NEXT',
+                                      style:
+                                          TextStyles.body2.colour(Colors.white),
+                                    )
+                                  : SpinKitThreeBounce(
+                                      color: UiConstants.spinnerColor2,
+                                      size: 18.0,
+                                    ),
+                              onPressed: () {
+                                if (!baseProvider.isLoginNextInProgress)
+                                  _processScreenInput(_currentPage);
+                              },
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
-            ),
           ],
         ),
       ),
