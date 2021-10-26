@@ -46,9 +46,8 @@ class Save extends StatelessWidget {
                           children: [
                             SvgPicture.asset(
                               Assets.giftBoxOpen,
-                              width: SizeConfig.screenWidth * 0.24,
                             ),
-                            SizedBox(width: 24),
+                            SizedBox(width: SizeConfig.screenWidth * 0.05),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -59,9 +58,9 @@ class Save extends StatelessWidget {
                                       .colour(Colors.white)
                                       .light,
                                 ),
-                                SizedBox(height: 8),
+                                Spacer(),
                                 UserWinningsSE(
-                                  style: TextStyles.title2
+                                  style: TextStyles.title3
                                       .colour(Colors.white)
                                       .bold,
                                 ),
@@ -202,8 +201,8 @@ class AugmontCard extends StatelessWidget {
       ),
       child: Container(
         padding: EdgeInsets.symmetric(
-          horizontal: SizeConfig.padding20,
-          vertical: SizeConfig.padding24,
+          horizontal: SizeConfig.padding16,
+          vertical: SizeConfig.padding20,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -211,11 +210,23 @@ class AugmontCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(locale.saveGoldBalancelabel,
-                    style: TextStyles.title5.light),
-                UserGoldQuantitySE(
-                  style:
-                      TextStyles.title5.bold.colour(UiConstants.tertiarySolid),
+                Expanded(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(locale.saveGoldBalancelabel,
+                        style: TextStyles.body1.light),
+                  ),
+                ),
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      UserGoldQuantitySE(
+                        style: TextStyles.body1.bold
+                            .colour(UiConstants.tertiarySolid),
+                      ),
+                    ],
+                  ),
                 )
               ],
             ),
@@ -342,16 +353,18 @@ class AugmontCard extends StatelessWidget {
               ),
             ),
             Container(
-              height: SizeConfig.screenWidth * 0.12,
               margin: EdgeInsets.only(top: SizeConfig.padding16),
               width: SizeConfig.screenWidth,
+              padding: EdgeInsets.symmetric(vertical: 12),
               alignment: Alignment.center,
               decoration: BoxDecoration(
                   color: UiConstants.tertiaryLight,
                   borderRadius: BorderRadius.circular(SizeConfig.roundness12)),
-              child: Text(
-                locale.saveBaseline,
-                style: TextStyles.body3.colour(UiConstants.tertiarySolid),
+              child: FittedBox(
+                child: Text(
+                  locale.saveBaseline,
+                  style: TextStyles.body3.colour(UiConstants.tertiarySolid),
+                ),
               ),
             )
           ],

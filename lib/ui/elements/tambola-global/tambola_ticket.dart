@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/ui/elements/custom-art/tambola_ticket_painter.dart';
@@ -10,20 +11,22 @@ import 'package:flutter/material.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
 class Ticket extends StatelessWidget {
-  Ticket(
-      {@required this.board,
-      @required this.calledDigits,
-      @required this.bestBoards,
-      @required this.dailyPicks});
+  Ticket({
+    @required this.board,
+    @required this.calledDigits,
+    @required this.bestBoards,
+    @required this.dailyPicks,
+    this.showBestOdds = true,
+  });
 
   final TambolaBoard board;
   final DailyPick dailyPicks;
   final List<TambolaBoard> bestBoards;
   final List<int> calledDigits;
+  final bool showBestOdds;
 
   //List<int> markedIndices = [];
   List<int> ticketNumbers = [];
-  List<TicketOdds> odds = [];
 
   // markItem(int index) {
   //   print("marked index : $index");
@@ -74,37 +77,6 @@ class Ticket extends StatelessWidget {
     }
   }
 
-  generateOdds() {
-    odds = [
-      TicketOdds(
-        color: Color(0xffE76F51),
-        icon: Icons.apps,
-        title: "Full House",
-        left: board.getFullHouseOdds(calledDigits),
-      ),
-      TicketOdds(
-          color: Color(0xff264653),
-          icon: Icons.border_top,
-          title: "Top Row",
-          left: board.getRowOdds(0, calledDigits)),
-      TicketOdds(
-          color: Color(0xff264653),
-          icon: Icons.border_horizontal,
-          title: "Middle Row",
-          left: board.getRowOdds(1, calledDigits)),
-      TicketOdds(
-          color: Color(0xff264653),
-          icon: Icons.border_bottom,
-          title: "Bottom Row",
-          left: board.getRowOdds(2, calledDigits)),
-      TicketOdds(
-          color: Color(0xff865858),
-          icon: Icons.border_outer,
-          title: "Corners",
-          left: board.getCornerOdds(calledDigits)),
-    ];
-  }
-
   generateNumberList() {
     for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 9; j++) {
@@ -115,10 +87,8 @@ class Ticket extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (odds.isEmpty || ticketNumbers.isEmpty) {
-      generateNumberList();
-      generateOdds();
-    }
+    if (ticketNumbers.isEmpty) generateNumberList();
+
     return Container(
       height: SizeConfig.screenWidth * 1.3,
       width: SizeConfig.screenWidth - SizeConfig.pageHorizontalMargins * 2,
@@ -188,10 +158,11 @@ class Ticket extends StatelessWidget {
           ),
           Expanded(
             child: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.padding16,
-                ),
-                child: Odds(dailyPicks, board, bestBoards)),
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.padding16,
+              ),
+              child: Odds(dailyPicks, board, bestBoards, showBestOdds),
+            ),
           ),
           Padding(
             padding: EdgeInsets.all(SizeConfig.padding12),
@@ -214,91 +185,175 @@ class Ticket extends StatelessWidget {
   }
 }
 
-class TicketOdds {
-  final String title;
-  final int left;
-  final IconData icon;
-  final Color color;
+class Odds extends StatelessWidget {
+  final DailyPick _digitsObj;
+  final TambolaBoard _board;
+  final List<TambolaBoard> _bestBoards;
+  final bool showBestBoard;
 
-  TicketOdds({this.icon, this.left, this.title, this.color});
+  Odds(this._digitsObj, this._board, this._bestBoards, this.showBestBoard);
+
+  @override
+  Widget build(BuildContext cx) {
+    if (_board == null) return Container();
+    List<int> _digits = (_digitsObj != null) ? _digitsObj.toList() : [];
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        // padding: EdgeInsets.zero,
+        // physics: NeverScrollableScrollPhysics(),
+        // itemCount: 6,
+        children: List.generate(
+          5,
+          (index) {
+            switch (index) {
+              case 0:
+                return _buildRow(
+                    cx,
+                    Icons.border_top,
+                    'Top Row',
+                    _board.getRowOdds(0, _digits).toString() + ' left',
+                    _bestBoards[0].getRowOdds(0, _digits).toString() + ' left',
+                    _bestBoards[0],
+                    _digits);
+              case 1:
+                return _buildRow(
+                    cx,
+                    Icons.border_horizontal,
+                    'Middle Row',
+                    _board.getRowOdds(1, _digits).toString() + ' left',
+                    _bestBoards[1].getRowOdds(1, _digits).toString() + ' left',
+                    _bestBoards[1],
+                    _digits);
+              case 2:
+                return _buildRow(
+                    cx,
+                    Icons.border_bottom,
+                    'Bottom Row',
+                    _board.getRowOdds(2, _digits).toString() + ' left',
+                    _bestBoards[2].getRowOdds(2, _digits).toString() + ' left',
+                    _bestBoards[2],
+                    _digits);
+              case 3:
+                return _buildRow(
+                    cx,
+                    Icons.border_outer,
+                    'Corners',
+                    _board.getCornerOdds(_digits).toString() + ' left',
+                    _bestBoards[3].getCornerOdds(_digits).toString() + ' left',
+                    _bestBoards[3],
+                    _digits);
+              case 4:
+                return _buildRow(
+                    cx,
+                    Icons.apps,
+                    'Full House',
+                    _board.getFullHouseOdds(_digits).toString() + ' left',
+                    _bestBoards[4].getFullHouseOdds(_digits).toString() +
+                        ' left',
+                    _bestBoards[4],
+                    _digits);
+
+              default:
+                return _buildRow(
+                    cx,
+                    Icons.border_top,
+                    'Top Row',
+                    _board.getRowOdds(0, _digits).toString() + ' left',
+                    _bestBoards[0].getRowOdds(0, _digits).toString() + ' left',
+                    _bestBoards[0],
+                    _digits);
+            }
+          },
+        ));
+  }
+
+  Widget _buildRow(BuildContext cx, IconData _i, String _title, String _tOdd,
+      String _oOdd, TambolaBoard _bestBoard, List<int> _digits) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: SizeConfig.padding12),
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Expanded(
+              flex: showBestBoard ? 1 : 2,
+              child: Row(
+                children: [
+                  CircleAvatar(
+                      radius: SizeConfig.padding20,
+                      backgroundColor:
+                          UiConstants.primaryColor.withOpacity(0.1),
+                      child: Icon(_i,
+                          size: SizeConfig.padding20,
+                          color: UiConstants.primaryColor)),
+                  SizedBox(width: SizeConfig.padding12),
+                  Expanded(
+                    child: Text(_title, maxLines: 2, style: TextStyles.body3),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  Text(_tOdd, style: TextStyles.body3),
+                  SizedBox(height: SizeConfig.padding2),
+                  Text('This ticket',
+                      style: TextStyles.body4.colour(Colors.grey))
+                ],
+              ),
+            ),
+            if (showBestBoard)
+              Expanded(
+                child: InkWell(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      Text(_oOdd, style: TextStyles.body3),
+                      SizedBox(height: SizeConfig.padding4),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.padding8,
+                          vertical: SizeConfig.padding2,
+                        ),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            color: UiConstants.primaryColor.withOpacity(0.2)),
+                        child: Text('Best ticket',
+                            textAlign: TextAlign.center,
+                            style: TextStyles.body4
+                                .colour(UiConstants.primaryColor)),
+                      )
+                    ],
+                  ),
+                  onTap: () {
+                    BaseUtil.openDialog(
+                      addToScreenStack: true,
+                      hapticVibrate: true,
+                      isBarrierDismissable: true,
+                      content: Dialog(
+                        backgroundColor: Colors.transparent,
+                        child: Container(
+                          height: SizeConfig.screenWidth * 1.3,
+                          width: SizeConfig.screenWidth -
+                              SizeConfig.pageHorizontalMargins * 2,
+                          child: Transform.scale(
+                            scale: 1.1,
+                            child: Ticket(
+                                dailyPicks: _digitsObj,
+                                bestBoards: _bestBoards,
+                                board: _bestBoard,
+                                showBestOdds: false,
+                                calledDigits: _digits),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+          ]),
+    );
+  }
 }
-
-
-//  ListView(
-                //   padding: EdgeInsets.zero,
-                //   children: List.generate(5, (index) {
-                //     return Container(
-                //       margin: EdgeInsets.symmetric(
-                //           vertical: SizeConfig.padding8),
-                //       child: Row(
-                //         children: [
-                //           ClipRRect(
-                //             borderRadius: BorderRadius.circular(4),
-                //             child: Shimmer(
-                //               enabled: odds[index].left == 0,
-                //               direction: ShimmerDirection.fromLTRB(),
-                //               child: Container(
-                //                 decoration: BoxDecoration(
-                //                     color: UiConstants.primaryLight
-                //                         .withOpacity(0.5),
-                //                     borderRadius: BorderRadius.circular(4)),
-                //                 child: Stack(
-                //                   children: [
-                //                     Padding(
-                //                       padding: EdgeInsets.all(4),
-                //                       child: Icon(odds[index].icon,
-                //                           color: UiConstants.primaryColor,
-                //                           size: SizeConfig.screenWidth *
-                //                               0.06),
-                //                     ),
-                //                     odds[index].left == 0
-                //                         ? Transform.translate(
-                //                             offset: Offset(-3, -3),
-                //                             child: Image.network(
-                //                               "https://image.flaticon.com/icons/png/512/3699/3699516.png",
-                //                               height:
-                //                                   SizeConfig.largeTextSize,
-                //                               width:
-                //                                   SizeConfig.largeTextSize,
-                //                             ),
-                //                           )
-                //                         : SizedBox()
-                //                   ],
-                //                 ),
-                //               ),
-                //             ),
-                //           ),
-                //           SizedBox(width: 12),
-                //           Expanded(
-                //             child: Text(
-                //               odds[index].title,
-                //               style: TextStyle(
-                //                 color: Colors.black38,
-                //                 fontSize: SizeConfig.smallTextSize,
-                //               ),
-                //             ),
-                //           ),
-                //           Text(
-                //             "${odds[index].left} left",
-                //             style: TextStyles.body4.bold,
-                //           ),
-                //           Spacer(),
-                //           Column(
-                //             children: [
-                //               Text(
-                //                 "${odds[index].left} left",
-                //                 style: TextStyles.body4.bold,
-                //               ),
-                //               SizedBox(height: SizeConfig.padding2),
-                //               Text(
-                //                 "1 Left",
-                //                 style: TextStyles.body4.bold.underline
-                //                     .colour(UiConstants.primaryColor),
-                //               )
-                //             ],
-                //           ),
-                //         ],
-                //       ),
-                //     );
-                //   }),
-                // ),

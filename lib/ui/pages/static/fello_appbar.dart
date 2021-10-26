@@ -55,7 +55,7 @@ class NotificationButton extends StatelessWidget {
     return InkWell(
       onTap: () {
         AppState.delegate.appState.currentAction =
-            PageAction(state: PageState.addPage, page: NotificationsConfig);
+            PageAction(state: PageState.addPage, page: WalkThroughConfig);
       },
       child: CircleAvatar(
         backgroundColor: Colors.black,

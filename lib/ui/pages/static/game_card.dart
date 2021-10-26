@@ -33,12 +33,12 @@ class GameCard extends StatelessWidget {
               clipper: GameThumbnailClipper(),
               child: Container(
                 width: SizeConfig.screenWidth,
-                height: SizeConfig.screenWidth * 0.3,
+                height: SizeConfig.screenHeight * 0.16,
                 decoration: BoxDecoration(
                   color: UiConstants.primaryColor,
                   image: DecorationImage(
                       image: AssetImage(gameData.thumbnailImage),
-                      fit: BoxFit.fitWidth),
+                      fit: BoxFit.cover),
                 ),
               ),
             ),
@@ -52,7 +52,7 @@ class GameCard extends StatelessWidget {
                       TextStyles.title5.bold.colour(UiConstants.primaryColor),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(SizeConfig.screenHeight * 0.01),
                   child: Row(
                     children: [
                       Expanded(
@@ -76,7 +76,7 @@ class GameCard extends StatelessWidget {
                         ),
                       ),
                       SizedBox(
-                        width: SizeConfig.screenWidth * 0.1,
+                        width: SizeConfig.screenWidth * 0.05,
                       ),
                       Expanded(
                           child: Center(

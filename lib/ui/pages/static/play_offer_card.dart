@@ -39,7 +39,7 @@ class OfferCard extends StatelessWidget {
                   : UiConstants.tertiarySolid.withOpacity(0.3),
               offset: Offset(
                 0,
-                SizeConfig.screenWidth * 0.15,
+                SizeConfig.screenWidth * 0.14,
               ),
               spreadRadius: -44,
             )
@@ -61,14 +61,14 @@ class OfferCard extends StatelessWidget {
                     model.title ?? "",
                     overflow: TextOverflow.clip,
                     maxLines: 1,
-                    style: TextStyles.title5.colour(Colors.white).bold,
+                    style: TextStyles.body2.colour(Colors.white).bold,
                   ),
                   SizedBox(height: SizeConfig.padding4),
                   Text(
                     model.subtitle ?? "",
                     overflow: TextOverflow.clip,
                     maxLines: 1,
-                    style: TextStyles.title5.colour(Colors.white).bold,
+                    style: TextStyles.body2.colour(Colors.white).bold,
                   ),
                   SizedBox(
                     height: SizeConfig.padding8,

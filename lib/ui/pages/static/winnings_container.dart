@@ -23,7 +23,7 @@ class WinningsContainer extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
             color: UiConstants.primaryColor,
-            borderRadius: BorderRadius.circular(SizeConfig.roundness32),
+            borderRadius: BorderRadius.circular(SizeConfig.roundness24),
             boxShadow: [
               if (shadow)
                 BoxShadow(
@@ -36,7 +36,7 @@ class WinningsContainer extends StatelessWidget {
                   spreadRadius: -30,
                 )
             ]),
-        height: SizeConfig.screenWidth * 0.3,
+        height: SizeConfig.screenWidth * 0.22,
         margin:
             EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
         child: Stack(
@@ -62,7 +62,7 @@ class WinningsContainer extends StatelessWidget {
                           locale.winMyWinnings,
                           style: TextStyles.title5.colour(Colors.white60),
                         ),
-                        SizedBox(height: SizeConfig.padding8),
+                        Spacer(),
                         UserWinningsSE(
                           style: TextStyles.title1
                               .colour(Colors.white)
