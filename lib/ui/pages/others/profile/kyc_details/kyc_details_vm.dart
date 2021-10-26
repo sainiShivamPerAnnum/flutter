@@ -61,20 +61,63 @@ class KYCDetailsViewModel extends BaseModel {
     bool _change = false;
     if (_getPanKeyboardType() == TextInputType.name &&
         panTextInputType == TextInputType.number) {
+      panFocusNode.unfocus();
       panTextInputType = TextInputType.name;
       _change = true;
+      panFocusNode.requestFocus();
+      notifyListeners();
     } else if (_getPanKeyboardType() == TextInputType.number &&
         panTextInputType == TextInputType.name) {
+      panFocusNode.unfocus();
       panTextInputType = TextInputType.number;
       _change = true;
+      panFocusNode.requestFocus();
+      notifyListeners();
     } else {}
 
-    if (_change) {
-      panFocusNode.unfocus();
-      notifyListeners();
-    }
+    // if (_change) {
+    //   panFocusNode.unfocus();
+    //   notifyListeners();
+    // }
 
     return _change;
+  }
+
+  checkForKeyboardChange(String val) {
+    if (val.length >= 0 &&
+        val.length < 5 &&
+        panTextInputType != TextInputType.name) {
+      panFocusNode.unfocus();
+      panTextInputType = TextInputType.name;
+      notifyListeners();
+      Future.delayed(Duration(milliseconds: 100), () {
+        panFocusNode.requestFocus();
+      });
+      return;
+    }
+    if (val.length >= 5 &&
+        val.length < 9 &&
+        panTextInputType != TextInputType.number) {
+      print("I got called");
+      panFocusNode.unfocus();
+      panTextInputType = TextInputType.number;
+      notifyListeners();
+      Future.delayed(Duration(milliseconds: 100), () {
+        panFocusNode.requestFocus();
+      });
+      return;
+    }
+
+    if (val.length >= 9 && panTextInputType != TextInputType.name) {
+      panFocusNode.unfocus();
+      panTextInputType = TextInputType.name;
+      notifyListeners();
+      Future.delayed(Duration(milliseconds: 100), () {
+        panFocusNode.requestFocus();
+      });
+    }
+
+    return;
   }
 
   checkForKycExistence() async {

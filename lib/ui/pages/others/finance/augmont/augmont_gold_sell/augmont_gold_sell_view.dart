@@ -197,10 +197,16 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                                   SizedBox(width: SizeConfig.padding24),
                                   Expanded(
                                     child: TextField(
+                                      enabled: !model.isGoldSellInProgress,
                                       controller: model.goldAmountController,
                                       keyboardType:
                                           TextInputType.numberWithOptions(
                                               decimal: true, signed: true),
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.deny(
+                                            RegExp(r'^0+(?!$)')),
+                                        FilteringTextInputFormatter.digitsOnly,
+                                      ],
                                       style: TextStyles.body2.bold,
                                       onChanged: (val) {
                                         model.goldSellGrams =

@@ -125,7 +125,7 @@ class Loser extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        "₹ 25 and 10 Tickets\nper share",
+                        "₹ 25 and 200 Tokens\nper share",
                         textAlign: TextAlign.center,
                       ),
                     ),

@@ -43,6 +43,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
   int _status = 0;
 
+  bool _showMaxCapText = false;
   bool isGoldRateFetching = false;
   AugmontRates goldRates;
   bool _isGoldBuyInProgress = false;
@@ -69,10 +70,23 @@ class AugmontGoldBuyViewModel extends BaseModel {
     notifyListeners();
   }
 
+  get showMaxCapText => this._showMaxCapText;
+
+  set showMaxCapText(value) {
+    this._showMaxCapText = value;
+    notifyListeners();
+  }
+
   init() {
     goldAmountController = TextEditingController();
     fetchGoldRates();
     status = checkAugmontStatus();
+
+    if (status == STATUS_REGISTER) {
+      _onboardUser().then((flag) {
+        status = checkAugmontStatus();
+      });
+    }
   }
 
   Widget amoutChip(double amt) {
@@ -261,19 +275,30 @@ class AugmontGoldBuyViewModel extends BaseModel {
   }
 
   Future _onboardUser() async {
+    isGoldBuyInProgress = true;
+    setState(ViewState.Busy);
     userAugmontState = await CacheManager.readCache(key: "UserAugmontState");
-    if (!_userService.baseUser.isAugmontOnboarded && userAugmontState != null) {
-      UserAugmontDetail detail = await _augmontModel.createSimpleUser(
-          _userService.baseUser.mobile, userAugmontState);
-      if (detail == null) {
-        BaseUtil.showNegativeAlert('Registration Failed',
-            'Failed to regsiter at the moment. Please try again.');
-        return false;
-      } else
-        BaseUtil.showPositiveAlert('Registration Successful',
-            'You are successfully onboarded to Augmont Digital Gold');
+    if (userAugmontState == null) {
+      await _checkRegistrationStatus();
       return true;
     }
+    if (!_userService.baseUser.isAugmontOnboarded && userAugmontState != null) {
+      _baseUtil.augmontDetail = await _augmontModel.createSimpleUser(
+          _userService.baseUser.mobile, userAugmontState);
+      if (_baseUtil.augmontDetail == null) {
+        BaseUtil.showNegativeAlert('Registration Failed',
+            'Failed to regsiter at the moment. Please try again.');
+        isGoldBuyInProgress = false;
+        setState(ViewState.Idle);
+        return false;
+      }
+      // else
+      //   BaseUtil.showPositiveAlert('Registration Successful',
+      //       'You are successfully onboarded to Augmont Digital Gold');
+    }
+    isGoldBuyInProgress = false;
+    setState(ViewState.Idle);
+    return true;
   }
 
   Future<bool> _onDepositClicked() async {

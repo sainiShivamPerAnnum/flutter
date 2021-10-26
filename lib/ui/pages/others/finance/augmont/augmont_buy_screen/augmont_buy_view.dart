@@ -10,6 +10,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -77,11 +78,24 @@ class AugmontGoldBuyView extends StatelessWidget {
                             SizedBox(width: SizeConfig.padding24),
                             Expanded(
                               child: TextField(
+                                enabled: !model.isGoldBuyInProgress,
                                 controller: model.goldAmountController,
-                                keyboardType: TextInputType.numberWithOptions(
-                                    signed: true, decimal: true),
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                        signed: true, decimal: true),
                                 style: TextStyles.body2.bold,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.deny(
+                                      RegExp(r'^0+(?!$)')),
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
                                 onChanged: (val) {
+                                  if (model.showMaxCapText)
+                                    model.showMaxCapText = false;
+                                  if (int.tryParse(val.trim()) > 50000) {
+                                    model.goldAmountController.text = "50000";
+                                    model.showMaxCapText = true;
+                                  }
                                   model.goldBuyAmount = double.tryParse(val);
                                   model.updateGoldAmount();
                                 },
@@ -129,6 +143,16 @@ class AugmontGoldBuyView extends StatelessWidget {
                           ],
                         ),
                       ),
+                      if (model.showMaxCapText)
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: SizeConfig.padding4),
+                          child: Text(
+                            "Upto ₹ 50,000 can be invested at one go.",
+                            style: TextStyles.body4.bold
+                                .colour(UiConstants.primaryColor),
+                          ),
+                        ),
                       SizedBox(
                         height: SizeConfig.padding24,
                       ),
@@ -157,9 +181,7 @@ class AugmontGoldBuyView extends StatelessWidget {
                                 size: 20,
                               )
                             : Text(
-                                model.status == 0
-                                    ? "UNAVAILABLE"
-                                    : (model.status == 1 ? "REGISTER" : "BUY"),
+                                model.status == 0 ? "UNAVAILABLE" : "BUY",
                                 style:
                                     TextStyles.body2.colour(Colors.white).bold,
                               ),
@@ -173,11 +195,11 @@ class AugmontGoldBuyView extends StatelessWidget {
                       SizedBox(
                         height: SizeConfig.padding20,
                       ),
-                      Text(
-                        "Buy Clicking on Buy, you agree to T&C",
-                        textAlign: TextAlign.center,
-                        style: TextStyles.body3.colour(Colors.grey),
-                      ),
+                      // Text(
+                      //   "Buy Clicking on Buy, you agree to T&C",
+                      //   textAlign: TextAlign.center,
+                      //   style: TextStyles.body3.colour(Colors.grey),
+                      // ),
                       SizedBox(height: SizeConfig.padding80),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

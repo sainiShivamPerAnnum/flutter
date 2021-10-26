@@ -11,7 +11,19 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+class UpperCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+      text: newValue.text.toUpperCase(),
+      selection: newValue.selection,
+    );
+  }
+}
 
 class KYCDetailsView extends StatelessWidget {
   @override
@@ -80,6 +92,12 @@ class KYCDetailsView extends StatelessWidget {
                                   enabled: model.inEditMode,
                                   controller: model.panController,
                                   focusNode: model.panFocusNode,
+                                  inputFormatters: [
+                                    UpperCaseTextFormatter(),
+                                    FilteringTextInputFormatter.deny(
+                                        RegExp(r'^0+(?!$)')),
+                                    LengthLimitingTextInputFormatter(10)
+                                  ],
                                   textCapitalization:
                                       TextCapitalization.characters,
                                   keyboardType: model.panTextInputType,
@@ -91,6 +109,8 @@ class KYCDetailsView extends StatelessWidget {
                                     //         .requestFocus(model.panFocusNode);
                                     //   });
                                     // }
+                                    print("val changed");
+                                    model.checkForKeyboardChange(val.trim());
                                   },
                                 ),
                               ],
@@ -112,7 +132,8 @@ class KYCDetailsView extends StatelessWidget {
                                                 .bold,
                                           ),
                                     onPressed: () {
-                                      model.onSubmit(context);
+                                      model.panFocusNode.unfocus();
+                                      //model.onSubmit(context);
                                     }),
                               ),
                             SizedBox(height: 24),

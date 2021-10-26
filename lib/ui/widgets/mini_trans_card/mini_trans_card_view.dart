@@ -1,4 +1,5 @@
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -12,6 +13,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
 
 class MiniTransactionCard extends StatelessWidget {
@@ -22,7 +24,9 @@ class MiniTransactionCard extends StatelessWidget {
         model.getMiniTransactions();
       },
       builder: (ctx, model, child) {
-        return Consumer<TransactionService>(
+        return PropertyChangeConsumer<TransactionService,
+            TransactionServiceProperties>(
+          properties: [TransactionServiceProperties.transactionList],
           builder: (ctx, m, child) {
             return Column(
               children: [

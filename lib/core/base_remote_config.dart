@@ -51,6 +51,9 @@ class BaseRemoteConfig {
   static const Map<String, String> _REFERRAL_TICKET_BONUS = {
     'referral_ticket_bonus': '10'
   };
+  static const Map<String, String> _REFERRAL_FLC_BONUS = {
+    'referral_flc_bonus': '200'
+  };
   static const Map<String, String> _AWS_ICICI_KEY_INDEX = {
     'aws_icici_key_index': '1'
   };
@@ -114,6 +117,7 @@ class BaseRemoteConfig {
     ..._TAMBOLA_WIN_FULL,
     ..._REFERRAL_BONUS,
     ..._REFERRAL_TICKET_BONUS,
+    ..._REFERRAL_FLC_BONUS,
     ..._AWS_ICICI_KEY_INDEX,
     ..._AWS_AUGMONT_KEY_INDEX,
     ..._ICICI_DEPOSITS_ENABLED,
@@ -188,6 +192,8 @@ class BaseRemoteConfig {
   static String get REFERRAL_TICKET_BONUS => _REFERRAL_TICKET_BONUS.keys.first;
 
   static String get REFERRAL_BONUS => _REFERRAL_BONUS.keys.first;
+
+  static String get REFERRAL_FLC_BONUS => _REFERRAL_FLC_BONUS.keys.first;
 
   static String get TAMBOLA_WIN_FULL => _TAMBOLA_WIN_FULL.keys.first;
 

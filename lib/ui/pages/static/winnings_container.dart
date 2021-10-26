@@ -36,7 +36,7 @@ class WinningsContainer extends StatelessWidget {
                   spreadRadius: -30,
                 )
             ]),
-        height: SizeConfig.screenWidth * 0.22,
+        height: SizeConfig.screenWidth * 0.24,
         margin:
             EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
         child: Stack(
@@ -64,7 +64,7 @@ class WinningsContainer extends StatelessWidget {
                         ),
                         Spacer(),
                         UserWinningsSE(
-                          style: TextStyles.title1
+                          style: TextStyles.title2
                               .colour(Colors.white)
                               .weight(FontWeight.w900)
                               .letterSpace(2),

@@ -7,8 +7,13 @@ class LeaderBoardModal {
   Timestamp lastupdated;
   List<Scoreboard> scoreboard;
 
-  LeaderBoardModal(
-      {this.code, this.gametype, this.freq, this.lastupdated, this.scoreboard});
+  LeaderBoardModal({
+    this.code,
+    this.gametype,
+    this.freq,
+    this.lastupdated,
+    this.scoreboard,
+  });
 
   LeaderBoardModal.fromJson(Map<String, dynamic> json) {
     code = json['code'];
@@ -59,17 +64,24 @@ class LeaderBoardModal {
 
 class Scoreboard {
   int score;
-  int gametime;
+  int gameDuration;
+  bool isUserEligible;
   String userid;
   Timestamp timestamp;
   String username;
 
   Scoreboard(
-      {this.score, this.gametime, this.userid, this.timestamp, this.username});
+      {this.score,
+      this.gameDuration,
+      this.isUserEligible,
+      this.userid,
+      this.timestamp,
+      this.username});
 
   Scoreboard.fromJson(Map<String, dynamic> json) {
     score = json['score'];
-    gametime = json['gametime'];
+    gameDuration = json['gameDuration'];
+    isUserEligible = json['isUserEligible'];
     userid = json['userid'];
     timestamp = json['timestamp'];
     username = json['username'];
@@ -78,7 +90,8 @@ class Scoreboard {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['score'] = this.score;
-    data['gametime'] = this.gametime;
+    data['gameDuration'] = this.gameDuration;
+    data['isUserEligible'] = this.isUserEligible;
     data['userid'] = this.userid;
     data['timestamp'] = this.timestamp;
     data['username'] = this.username;
@@ -88,7 +101,8 @@ class Scoreboard {
   Map<String, dynamic> toMap() {
     return {
       'score': score,
-      'gametime': gametime,
+      'gameDuration': gameDuration,
+      'isUserEligible': isUserEligible,
       'userid': userid,
       'timestamp': timestamp.millisecondsSinceEpoch,
       'username': username,
@@ -98,7 +112,8 @@ class Scoreboard {
   factory Scoreboard.fromMap(Map<String, dynamic> map) {
     return Scoreboard(
       score: map['score'],
-      gametime: map['gametime'],
+      isUserEligible: map['isUserEligible'],
+      gameDuration: map['gameDuration'],
       userid: map['userid'],
       timestamp: map['timestamp'],
       username: map['username'],

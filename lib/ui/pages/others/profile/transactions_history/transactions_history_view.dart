@@ -51,17 +51,16 @@ class TransactionsHistory extends StatelessWidget {
                                     top: SizeConfig.blockSizeVertical * 2),
                                 height: SizeConfig.screenHeight * 0.08,
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     FilterOption(
                                       filterItems: model.tranTypeFilterItems,
                                       type: TranFilterType.Type,
                                     ),
-                                    FilterOption(
-                                      filterItems: model.tranSubTypeFilterItems,
-                                      type: TranFilterType.Subtype,
-                                    )
+                                    // FilterOption(
+                                    //   filterItems: model.tranSubTypeFilterItems,
+                                    //   type: TranFilterType.Subtype,
+                                    // )
                                   ],
                                 ),
                               ),
@@ -140,6 +139,8 @@ class FilterOption extends StatelessWidget {
     return Consumer<TransactionsHistoryViewModel>(builder: (ctx, model, child) {
       return Container(
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        margin:
+            EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
         decoration: BoxDecoration(
           border: Border.all(width: 2, color: UiConstants.primaryColor),
           borderRadius: BorderRadius.circular(8),
