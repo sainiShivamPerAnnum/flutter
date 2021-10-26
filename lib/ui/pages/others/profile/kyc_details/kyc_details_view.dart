@@ -133,7 +133,7 @@ class KYCDetailsView extends StatelessWidget {
                                           ),
                                     onPressed: () {
                                       model.panFocusNode.unfocus();
-                                      //model.onSubmit(context);
+                                      model.onSubmit(context);
                                     }),
                               ),
                             SizedBox(height: 24),

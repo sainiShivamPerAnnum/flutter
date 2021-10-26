@@ -41,6 +41,7 @@ class Root extends StatelessWidget {
             return true;
           },
           child: Scaffold(
+            resizeToAvoidBottomInset: false,
             key: RootViewModel.scaffoldKey,
             drawer: FDrawer(),
             drawerEnableOpenDragGesture: false,

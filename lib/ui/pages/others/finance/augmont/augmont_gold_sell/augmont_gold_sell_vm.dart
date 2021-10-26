@@ -30,6 +30,7 @@ class AugmontGoldSellViewModel extends BaseModel {
   bool isGoldRateFetching = false;
   AugmontRates goldRates;
   bool _isGoldSellInProgress = false;
+  FocusNode sellFieldNode = FocusNode();
 
   double goldSellGrams = 0;
   double goldAmountFromGrams = 0.0;

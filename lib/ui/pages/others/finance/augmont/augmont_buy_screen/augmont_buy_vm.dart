@@ -48,6 +48,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   AugmontRates goldRates;
   bool _isGoldBuyInProgress = false;
   String userAugmontState;
+  FocusNode buyFieldNode = FocusNode();
 
   double goldBuyAmount = 0;
   double goldAmountInGrams = 0.0;
@@ -92,10 +93,16 @@ class AugmontGoldBuyViewModel extends BaseModel {
   Widget amoutChip(double amt) {
     return GestureDetector(
       onTap: () {
+        buyFieldNode.unfocus();
         if (goldBuyAmount == null)
           goldBuyAmount = amt;
-        else
-          goldBuyAmount += amt;
+        else {
+          if (goldBuyAmount + amt < 50000)
+            goldBuyAmount += amt;
+          else
+            goldBuyAmount = 50000;
+        }
+
         goldAmountController.text = goldBuyAmount.toString();
         updateGoldAmount();
         notifyListeners();
@@ -205,15 +212,23 @@ class AugmontGoldBuyViewModel extends BaseModel {
     _augmontModel.setAugmontTxnProcessListener(_onDepositTransactionComplete);
   }
 
-  // String getActionButtonText() {
-  //   _status = checkAugmontStatus();
-  //   if (_status == STATUS_UNAVAILABLE)
-  //     return 'UNAVAILABLE';
-  //   else if (_status == STATUS_REGISTER)
-  //     return 'REGISTER';
-  //   else
-  //     return 'BUY';
-  // }
+  onBuyValueChanged(String val) {
+    log.debug("Value: $val");
+    if (showMaxCapText) showMaxCapText = false;
+    if (val != null && val.isNotEmpty) {
+      if (double.tryParse(val.trim()) != null &&
+          double.tryParse(val.trim()) > 50000) {
+        goldBuyAmount = 50000;
+        goldAmountController.text = goldBuyAmount.toString();
+        updateGoldAmount();
+        showMaxCapText = true;
+        buyFieldNode.unfocus();
+      } else {
+        goldBuyAmount = double.tryParse(val);
+        updateGoldAmount();
+      }
+    }
+  }
 
   buyButtonAction() async {
     if (await BaseUtil.showNoInternetAlert()) return;

@@ -120,7 +120,8 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
         resizeToAvoidBottomInset: false,
         body: HomeBackground(
           whiteBackground: WhiteBackground(
-              color: UiConstants.scaffoldColor, height: SizeConfig.padding54),
+              color: UiConstants.scaffoldColor,
+              height: SizeConfig.screenHeight * 0.08),
           child: Column(
             children: [
               FelloAppBar(
@@ -197,16 +198,13 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                                   SizedBox(width: SizeConfig.padding24),
                                   Expanded(
                                     child: TextField(
+                                      focusNode: model.sellFieldNode,
                                       enabled: !model.isGoldSellInProgress,
                                       controller: model.goldAmountController,
+                                      enableInteractiveSelection: false,
                                       keyboardType:
                                           TextInputType.numberWithOptions(
                                               decimal: true, signed: true),
-                                      inputFormatters: [
-                                        FilteringTextInputFormatter.deny(
-                                            RegExp(r'^0+(?!$)')),
-                                        FilteringTextInputFormatter.digitsOnly,
-                                      ],
                                       style: TextStyles.body2.bold,
                                       onChanged: (val) {
                                         model.goldSellGrams =
@@ -219,6 +217,7 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                                         border: InputBorder.none,
                                         enabledBorder: InputBorder.none,
                                         focusedBorder: InputBorder.none,
+                                        disabledBorder: InputBorder.none,
                                       ),
                                     ),
                                   ),

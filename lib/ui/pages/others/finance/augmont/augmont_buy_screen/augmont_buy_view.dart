@@ -27,7 +27,8 @@ class AugmontGoldBuyView extends StatelessWidget {
         backgroundColor: UiConstants.primaryColor,
         body: HomeBackground(
           whiteBackground: WhiteBackground(
-              color: UiConstants.scaffoldColor, height: SizeConfig.padding54),
+              color: UiConstants.scaffoldColor,
+              height: SizeConfig.screenHeight * 0.08),
           child: Column(
             children: [
               FelloAppBar(
@@ -79,25 +80,18 @@ class AugmontGoldBuyView extends StatelessWidget {
                             Expanded(
                               child: TextField(
                                 enabled: !model.isGoldBuyInProgress,
+                                focusNode: model.buyFieldNode,
+                                enableInteractiveSelection: false,
                                 controller: model.goldAmountController,
-                                keyboardType:
-                                    const TextInputType.numberWithOptions(
-                                        signed: true, decimal: true),
+                                keyboardType: TextInputType.numberWithOptions(
+                                    signed: true, decimal: true),
                                 style: TextStyles.body2.bold,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.deny(
                                       RegExp(r'^0+(?!$)')),
-                                  FilteringTextInputFormatter.digitsOnly,
                                 ],
                                 onChanged: (val) {
-                                  if (model.showMaxCapText)
-                                    model.showMaxCapText = false;
-                                  if (int.tryParse(val.trim()) > 50000) {
-                                    model.goldAmountController.text = "50000";
-                                    model.showMaxCapText = true;
-                                  }
-                                  model.goldBuyAmount = double.tryParse(val);
-                                  model.updateGoldAmount();
+                                  model.onBuyValueChanged(val);
                                 },
                                 decoration: InputDecoration(
                                   prefix:
@@ -105,6 +99,7 @@ class AugmontGoldBuyView extends StatelessWidget {
                                   border: InputBorder.none,
                                   enabledBorder: InputBorder.none,
                                   focusedBorder: InputBorder.none,
+                                  disabledBorder: InputBorder.none,
                                 ),
                               ),
                             ),

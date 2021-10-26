@@ -41,47 +41,52 @@ class KYCDetailsViewModel extends BaseModel {
 
   get isKycInProgress => _isKycInProgress;
 
+  set isKycInProgress(val) {
+    this._isKycInProgress = val;
+    notifyListeners();
+  }
+
   init() {
     nameController = new TextEditingController();
     panController = new TextEditingController();
     checkForKycExistence();
   }
 
-  _getPanKeyboardType() {
-    if (panController.text.length >= 0 && panController.text.length < 5) {
-      return TextInputType.name;
-    } else if (panController.text.length >= 5 &&
-        panController.text.length < 9) {
-      return TextInputType.number;
-    }
-    return TextInputType.name;
-  }
+  // _getPanKeyboardType() {
+  //   if (panController.text.length >= 0 && panController.text.length < 5) {
+  //     return TextInputType.name;
+  //   } else if (panController.text.length >= 5 &&
+  //       panController.text.length < 9) {
+  //     return TextInputType.number;
+  //   }
+  //   return TextInputType.name;
+  // }
 
-  onPanEntered() {
-    bool _change = false;
-    if (_getPanKeyboardType() == TextInputType.name &&
-        panTextInputType == TextInputType.number) {
-      panFocusNode.unfocus();
-      panTextInputType = TextInputType.name;
-      _change = true;
-      panFocusNode.requestFocus();
-      notifyListeners();
-    } else if (_getPanKeyboardType() == TextInputType.number &&
-        panTextInputType == TextInputType.name) {
-      panFocusNode.unfocus();
-      panTextInputType = TextInputType.number;
-      _change = true;
-      panFocusNode.requestFocus();
-      notifyListeners();
-    } else {}
+  // onPanEntered() {
+  //   bool _change = false;
+  //   if (_getPanKeyboardType() == TextInputType.name &&
+  //       panTextInputType == TextInputType.number) {
+  //     panFocusNode.unfocus();
+  //     panTextInputType = TextInputType.name;
+  //     _change = true;
+  //     panFocusNode.requestFocus();
+  //     notifyListeners();
+  //   } else if (_getPanKeyboardType() == TextInputType.number &&
+  //       panTextInputType == TextInputType.name) {
+  //     panFocusNode.unfocus();
+  //     panTextInputType = TextInputType.number;
+  //     _change = true;
+  //     panFocusNode.requestFocus();
+  //     notifyListeners();
+  //   } else {}
 
-    // if (_change) {
-    //   panFocusNode.unfocus();
-    //   notifyListeners();
-    // }
+  //   // if (_change) {
+  //   //   panFocusNode.unfocus();
+  //   //   notifyListeners();
+  //   // }
 
-    return _change;
-  }
+  //   return _change;
+  // }
 
   checkForKeyboardChange(String val) {
     if (val.length >= 0 &&
@@ -158,8 +163,7 @@ class KYCDetailsViewModel extends BaseModel {
 
     FocusScope.of(context).unfocus();
 
-    _isKycInProgress = true;
-    refresh();
+    isKycInProgress = true;
 
     ///next get all details required for registration
     Map<String, dynamic> veriDetails =
@@ -241,9 +245,8 @@ class KYCDetailsViewModel extends BaseModel {
         BaseUtil.showNegativeAlert(
             'Registration failed', veriDetails['reason'] ?? 'Please try again');
 
-      _isKycInProgress = false;
+      isKycInProgress = false;
 
-      refresh();
       return;
     }
   }
