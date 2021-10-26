@@ -29,6 +29,8 @@ class ReferralDetailsViewModel extends BaseModel {
       BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS);
   String referral_ticket_bonus = BaseRemoteConfig.remoteConfig
       .getString(BaseRemoteConfig.REFERRAL_TICKET_BONUS);
+  String referral_flc_bonus = BaseRemoteConfig.remoteConfig
+      .getString(BaseRemoteConfig.REFERRAL_FLC_BONUS);
   String _userUrl = "";
 
   String _shareMsg;
@@ -47,8 +49,12 @@ class ReferralDetailsViewModel extends BaseModel {
         (referral_ticket_bonus == null || referral_ticket_bonus.isEmpty)
             ? '10'
             : referral_ticket_bonus;
+    referral_flc_bonus =
+    (referral_flc_bonus == null || referral_flc_bonus.isEmpty)
+        ? '200'
+        : referral_flc_bonus;
     _shareMsg =
-        'Hey I am gifting you ₹$referral_bonus and $referral_ticket_bonus free Tambola tickets. Lets start saving and playing together! ';
+        'Hey I am gifting you ₹$referral_bonus and $referral_flc_bonus gaming tokens. Lets start saving and playing together! ';
   }
 
   Future<void> generateLink() async {
