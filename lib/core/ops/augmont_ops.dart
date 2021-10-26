@@ -254,8 +254,9 @@ class AugmontModel extends ChangeNotifier {
       return null;
     }
 
-    String rzpOrderId = await _rzpGateway.createOrderId(amount, 'BlockID: ${buyRates.blockId},gPrice: ${buyRates.goldBuyPrice}');
-    if(rzpOrderId == null) {
+    String rzpOrderId = await _rzpGateway.createOrderId(amount,
+        'BlockID: ${buyRates.blockId},gPrice: ${buyRates.goldBuyPrice}');
+    if (rzpOrderId == null) {
       _logger.e("Received null from create Order id");
       return null;
     }
@@ -266,25 +267,25 @@ class AugmontModel extends ChangeNotifier {
       "aBlockId": buyRates.blockId.toString(),
       "aLockPrice": buyRates.goldBuyPrice,
       "aPaymode": "RZP",
-      "aGoldInTxn":getGoldQuantityFromTaxedAmount(
+      "aGoldInTxn": getGoldQuantityFromTaxedAmount(
           BaseUtil.digitPrecision(amount - getTaxOnAmount(amount, netTax)),
           buyRates.goldBuyPrice),
-      "aTaxedGoldBalance": BaseUtil.digitPrecision(amount - getTaxOnAmount(amount, netTax))
+      "aTaxedGoldBalance":
+          BaseUtil.digitPrecision(amount - getTaxOnAmount(amount, netTax))
     };
 
-    Map<String, dynamic> _initRzpMap = {
-      "rOrderId": rzpOrderId
-    };
+    Map<String, dynamic> _initRzpMap = {"rOrderId": rzpOrderId};
 
     _initialDepositResponse =
         await _investmentActionsRepository.initiateUserDeposit(
             userUid: _baseProvider.myUser.uid,
             amount: amount,
-            initAugMap: _initAugMap, initRzpMap: _initRzpMap);
+            initAugMap: _initAugMap,
+            initRzpMap: _initRzpMap);
 
     if (_initialDepositResponse.code == 200) {
-      _baseProvider.currentAugmontTxn =
-          _initialDepositResponse.model.response.transactionDoc.transactionDetail;
+      _baseProvider.currentAugmontTxn = _initialDepositResponse
+          .model.response.transactionDoc.transactionDetail;
 
       UserTransaction tTxn = await _rzpGateway.submitAugmontTransaction(
           _baseProvider.currentAugmontTxn,
@@ -445,20 +446,25 @@ class AugmontModel extends ChangeNotifier {
               txnId: _initialDepositResponse
                   .model.response.transactionDoc.transactionId);
 
-      double newAugPrinciple = _onCompleteDepositResponse.model.response.augmontPrinciple;
-      if(newAugPrinciple != null && newAugPrinciple > 0) {
+      double newAugPrinciple =
+          _onCompleteDepositResponse.model.response.augmontPrinciple;
+      if (newAugPrinciple != null && newAugPrinciple > 0) {
         _userService.augGoldPrinciple = newAugPrinciple;
       }
-      double newAugQuantity = _onCompleteDepositResponse.model.response.augmontGoldQty;
-      if(newAugQuantity != null && newAugQuantity > 0) {
+      double newAugQuantity =
+          _onCompleteDepositResponse.model.response.augmontGoldQty;
+      if (newAugQuantity != null && newAugQuantity > 0) {
         _userService.augGoldQuantity = newAugQuantity;
       }
       int newFlcBalance = _onCompleteDepositResponse.model.response.flcBalance;
-      if(newFlcBalance > 0) {
+      if (newFlcBalance > 0) {
         _userCoinService.setFlcBalance(newFlcBalance);
       }
 
-      _baseProvider.currentAugmontTxn = _onCompleteDepositResponse.model.response.transactionDoc.transactionDetail;
+      _txnService.updateTransactions();
+
+      _baseProvider.currentAugmontTxn = _onCompleteDepositResponse
+          .model.response.transactionDoc.transactionDetail;
 
       if (_augmontTxnProcessListener != null)
         _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
@@ -566,16 +572,16 @@ class AugmontModel extends ChangeNotifier {
       //     _baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
       //Call Cancelled Withdrawl API
       Map<String, dynamic> augMap = {};
-      if(resMap != null) {
-         augMap = {
-          "aTranId": resMap[SubmitGoldSell.resTranId]??'',
-          "aAugTranId": resMap[SubmitGoldSell.resAugTranId]??'',
-          "aGoldBalance": resMap[SubmitGoldSell.resGoldBalance]??'',
+      if (resMap != null) {
+        augMap = {
+          "aTranId": resMap[SubmitGoldSell.resTranId] ?? '',
+          "aAugTranId": resMap[SubmitGoldSell.resAugTranId] ?? '',
+          "aGoldBalance": resMap[SubmitGoldSell.resGoldBalance] ?? '',
           "aBlockId": sellRates.blockId,
           "aLockPrice": sellRates.goldSellPrice,
           "aPaymode": "RZP",
           "aGoldInTxn": quantity,
-          "aTaxedGoldBalance": resMap[SubmitGoldSell.resPreTaxAmount]??'',
+          "aTaxedGoldBalance": resMap[SubmitGoldSell.resPreTaxAmount] ?? '',
         };
       }
 
@@ -583,7 +589,7 @@ class AugmontModel extends ChangeNotifier {
           await _investmentActionsRepository.withdrawlCancelled(
               augMap: augMap,
               userUid: _baseProvider.myUser.uid,
-              amount: -1*_baseProvider.currentAugmontTxn.amount);
+              amount: -1 * _baseProvider.currentAugmontTxn.amount);
 
       log.error('Query Failed');
       Map<String, dynamic> _failMap = {
@@ -593,6 +599,7 @@ class AugmontModel extends ChangeNotifier {
           _baseProvider.myUser.uid, FailType.UserAugmontSellFailed, _failMap);
       if (_augmontTxnProcessListener != null)
         _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
+  
     } else {
       //success
       _baseProvider.currentAugmontTxn.tranStatus =
@@ -624,29 +631,34 @@ class AugmontModel extends ChangeNotifier {
             .currentAugmontTxn.augmnt[UserTransaction.subFldAugPostTaxTotal],
       };
 
-      ApiResponse<DepositResponseModel> _onSellCompleteResponse = await _investmentActionsRepository.withdrawlComplete(
-          amount: -1*_baseProvider.currentAugmontTxn.amount,
-          augMap: augMap,
-          userUid: _baseProvider.myUser.uid);
+      ApiResponse<DepositResponseModel> _onSellCompleteResponse =
+          await _investmentActionsRepository.withdrawlComplete(
+              amount: -1 * _baseProvider.currentAugmontTxn.amount,
+              augMap: augMap,
+              userUid: _baseProvider.myUser.uid);
 
-      double newAugPrinciple = _onSellCompleteResponse.model.response.augmontPrinciple;
-      if(newAugPrinciple != null && newAugPrinciple > 0) {
+      double newAugPrinciple =
+          _onSellCompleteResponse.model.response.augmontPrinciple;
+      if (newAugPrinciple != null && newAugPrinciple > 0) {
         _userService.augGoldPrinciple = newAugPrinciple;
       }
-      double newAugQuantity = _onSellCompleteResponse.model.response.augmontGoldQty;
-      if(newAugQuantity != null && newAugQuantity > 0) {
+      double newAugQuantity =
+          _onSellCompleteResponse.model.response.augmontGoldQty;
+      if (newAugQuantity != null && newAugQuantity > 0) {
         _userService.augGoldQuantity = newAugQuantity;
       }
       int newFlcBalance = _onSellCompleteResponse.model.response.flcBalance;
-      if(newFlcBalance > 0) {
+      if (newFlcBalance > 0) {
         _userCoinService.setFlcBalance(newFlcBalance);
       }
 
-      _baseProvider.currentAugmontTxn = _onSellCompleteResponse.model.response.transactionDoc.transactionDetail;
+      _baseProvider.currentAugmontTxn = _onSellCompleteResponse
+          .model.response.transactionDoc.transactionDetail;
 
       if (_augmontTxnProcessListener != null)
         _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
     }
+    _txnService.updateTransactions();
   }
 
   ///returns path where invoice is generated and saved
