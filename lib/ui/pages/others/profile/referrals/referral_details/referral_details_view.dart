@@ -89,7 +89,7 @@ class ReferralDetailsView extends StatelessWidget {
                                 children: [
                                   Text(
                                     model.userUrlPrefix,
-                                    style: TextStyles.body2,
+                                    style: TextStyles.body3,
                                   ),
                                   InkWell(
                                     onTap: () {
@@ -214,7 +214,7 @@ class ReferralDetailsView extends StatelessWidget {
                             child: Center(
                               child: FelloButton(
                                 onPressedAsync: model.shareLink,
-                                activeButtonUI: Container(
+                                offlineButtonUI: Container(
                                   width: Platform.isAndroid
                                       ? SizeConfig.screenWidth * 0.422
                                       : SizeConfig.screenWidth,
@@ -222,7 +222,7 @@ class ReferralDetailsView extends StatelessWidget {
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(
                                         SizeConfig.roundness12),
-                                    color: UiConstants.primaryColor,
+                                    color: Colors.grey,
                                   ),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -241,7 +241,7 @@ class ReferralDetailsView extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                offlineButtonUI: Container(
+                                activeButtonUI: Container(
                                   width: Platform.isAndroid
                                       ? SizeConfig.screenWidth * 0.422
                                       : SizeConfig.screenWidth,
@@ -249,7 +249,7 @@ class ReferralDetailsView extends StatelessWidget {
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(
                                         SizeConfig.roundness12),
-                                    color: Colors.grey,
+                                    color: UiConstants.primaryColor,
                                   ),
                                   child: model.shareLinkInProgress
                                       ? SpinKitThreeBounce(
