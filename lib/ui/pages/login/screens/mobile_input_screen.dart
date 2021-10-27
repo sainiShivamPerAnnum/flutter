@@ -173,7 +173,7 @@ class MobileInputScreenState extends State<MobileInputScreen> {
                     },
                   ),
                   SizedBox(
-                    height: SizeConfig.padding12,
+                    height: SizeConfig.blockSizeVertical * 1.6,
                   ),
                   hasReferralCode
                       ? TextFormField(
@@ -214,7 +214,7 @@ class MobileInputScreenState extends State<MobileInputScreen> {
                 ],
               ),
             ),
-            SizedBox(height: SizeConfig.blockSizeVertical * 8),
+            SizedBox(height: SizeConfig.blockSizeVertical * 4),
             Container(
               width: SizeConfig.screenWidth,
               padding: EdgeInsets.symmetric(

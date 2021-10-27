@@ -56,8 +56,11 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
       baseProvider = Provider.of<BaseUtil>(context, listen: false);
       dbProvider = Provider.of<DBModel>(context, listen: false);
       iProvider = Provider.of<ICICIModel>(context, listen: false);
-      if(baseProvider.myUser.isAugmontOnboarded && baseProvider.augmontDetail == null) {
-        dbProvider.getUserAugmontDetails(baseProvider.myUser.uid).then((detail) {
+      if (baseProvider.myUser.isAugmontOnboarded &&
+          baseProvider.augmontDetail == null) {
+        dbProvider
+            .getUserAugmontDetails(baseProvider.myUser.uid)
+            .then((detail) {
           _isInitialized = false;
           baseProvider.augmontDetail = detail;
           setState(() {});
@@ -208,7 +211,13 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                                   SizedBox(height: 6),
                                   TextFormField(
                                     controller: _bankAccNoController,
-                                    keyboardType: TextInputType.number,
+                                    keyboardType:
+                                        TextInputType.numberWithOptions(
+                                            signed: true),
+                                    inputFormatters: [
+                                      LengthLimitingTextInputFormatter(18),
+                                      FilteringTextInputFormatter.digitsOnly,
+                                    ],
                                     validator: (value) {
                                       print(value);
 
@@ -238,16 +247,21 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                                     controller: _bankAccNoConfirmController,
                                     keyboardType: TextInputType.visiblePassword,
                                     obscureText: true,
+                                    inputFormatters: [
+                                      LengthLimitingTextInputFormatter(18),
+                                      FilteringTextInputFormatter.digitsOnly,
+                                    ],
                                     validator: (value) {
                                       print(value);
                                       if (value == null && value.trim().isEmpty)
                                         return 'Please enter a valid account number';
-                                      else if (value.trim().length < 9 ||
-                                          value.trim().length > 18)
-                                        return 'Invalid Bank Account Number';
                                       else if (value.trim() !=
                                           _bankAccNoController.text.trim())
                                         return "Bank account numbers did not match";
+                                      else if (value.trim().length < 9 ||
+                                          value.trim().length > 18)
+                                        return 'Invalid Bank Account Number';
+
                                       return null;
                                     },
                                   ),

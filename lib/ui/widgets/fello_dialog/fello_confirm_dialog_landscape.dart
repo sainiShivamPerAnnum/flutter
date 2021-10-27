@@ -68,7 +68,7 @@ class _FelloConfirmationDialogState
                             SizedBox(height: SizeConfig.padding8),
                             Text(
                               widget.title,
-                              style: TextStyles.title1.bold,
+                              style: TextStyles.title2.bold,
                             ),
                             SizedBox(height: SizeConfig.padding8),
                             Text(

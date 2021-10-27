@@ -10,6 +10,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -26,7 +27,8 @@ class AugmontGoldBuyView extends StatelessWidget {
         backgroundColor: UiConstants.primaryColor,
         body: HomeBackground(
           whiteBackground: WhiteBackground(
-              color: UiConstants.scaffoldColor, height: SizeConfig.padding54),
+              color: UiConstants.scaffoldColor,
+              height: SizeConfig.screenHeight * 0.08),
           child: Column(
             children: [
               FelloAppBar(
@@ -77,13 +79,19 @@ class AugmontGoldBuyView extends StatelessWidget {
                             SizedBox(width: SizeConfig.padding24),
                             Expanded(
                               child: TextField(
+                                enabled: !model.isGoldBuyInProgress,
+                                focusNode: model.buyFieldNode,
+                                enableInteractiveSelection: false,
                                 controller: model.goldAmountController,
                                 keyboardType: TextInputType.numberWithOptions(
                                     signed: true, decimal: true),
                                 style: TextStyles.body2.bold,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.deny(
+                                      RegExp(r'^0+(?!$)')),
+                                ],
                                 onChanged: (val) {
-                                  model.goldBuyAmount = double.tryParse(val);
-                                  model.updateGoldAmount();
+                                  model.onBuyValueChanged(val);
                                 },
                                 decoration: InputDecoration(
                                   prefix:
@@ -91,6 +99,7 @@ class AugmontGoldBuyView extends StatelessWidget {
                                   border: InputBorder.none,
                                   enabledBorder: InputBorder.none,
                                   focusedBorder: InputBorder.none,
+                                  disabledBorder: InputBorder.none,
                                 ),
                               ),
                             ),
@@ -129,6 +138,16 @@ class AugmontGoldBuyView extends StatelessWidget {
                           ],
                         ),
                       ),
+                      if (model.showMaxCapText)
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: SizeConfig.padding4),
+                          child: Text(
+                            "Upto ₹ 50,000 can be invested at one go.",
+                            style: TextStyles.body4.bold
+                                .colour(UiConstants.primaryColor),
+                          ),
+                        ),
                       SizedBox(
                         height: SizeConfig.padding24,
                       ),
@@ -157,9 +176,7 @@ class AugmontGoldBuyView extends StatelessWidget {
                                 size: 20,
                               )
                             : Text(
-                                model.status == 0
-                                    ? "UNAVAILABLE"
-                                    : "BUY",
+                                model.status == 0 ? "UNAVAILABLE" : "BUY",
                                 style:
                                     TextStyles.body2.colour(Colors.white).bold,
                               ),
@@ -173,12 +190,12 @@ class AugmontGoldBuyView extends StatelessWidget {
                       SizedBox(
                         height: SizeConfig.padding20,
                       ),
-                      // Text(
-                      //   "Buy Clicking on Buy, you agree to T&C",
-                      //   textAlign: TextAlign.center,
-                      //   style: TextStyles.body3.colour(Colors.grey),
-                      // ),
-                      SizedBox(height: SizeConfig.padding80),
+                      Text(
+                        "Buy Clicking on Buy, you agree to T&C",
+                        textAlign: TextAlign.center,
+                        style: TextStyles.body3.colour(Colors.grey),
+                      ),
+                      SizedBox(height: SizeConfig.screenHeight * 0.05),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -192,7 +209,7 @@ class AugmontGoldBuyView extends StatelessWidget {
                               text: locale.saveSecure),
                         ],
                       ),
-                      SizedBox(height: SizeConfig.padding40),
+                      SizedBox(height: SizeConfig.screenHeight * 0.05),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [

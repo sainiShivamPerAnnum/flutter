@@ -15,97 +15,101 @@ class GameCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Hero(
       tag: gameData.tag,
-      child: Container(
-        width: SizeConfig.screenWidth,
-        margin: EdgeInsets.only(
-            right: SizeConfig.pageHorizontalMargins,
-            left: SizeConfig.pageHorizontalMargins,
-            bottom: SizeConfig.padding16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(SizeConfig.padding54),
-        ),
-        padding: EdgeInsets.symmetric(
-            horizontal: SizeConfig.padding8, vertical: SizeConfig.padding6),
-        child: Column(
-          children: [
-            ClipPath(
-              clipper: GameThumbnailClipper(),
-              child: Container(
-                width: SizeConfig.screenWidth,
-                height: SizeConfig.screenWidth * 0.3,
-                decoration: BoxDecoration(
-                  color: UiConstants.primaryColor,
-                  image: DecorationImage(
-                      image: AssetImage(gameData.thumbnailImage),
-                      fit: BoxFit.fitWidth),
+      child: Material(
+        color: Colors.transparent,
+        child: Container(
+          width: SizeConfig.screenWidth,
+          margin: EdgeInsets.only(
+              right: SizeConfig.pageHorizontalMargins,
+              left: SizeConfig.pageHorizontalMargins,
+              bottom: SizeConfig.padding16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(
+                SizeConfig.roundness40 + SizeConfig.padding8),
+          ),
+          padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.padding8, vertical: SizeConfig.padding6),
+          child: Column(
+            children: [
+              ClipPath(
+                clipper: GameThumbnailClipper(),
+                child: Container(
+                  width: SizeConfig.screenWidth,
+                  height: SizeConfig.screenHeight * 0.16,
+                  decoration: BoxDecoration(
+                    color: UiConstants.primaryColor,
+                    image: DecorationImage(
+                        image: AssetImage(gameData.thumbnailImage),
+                        fit: BoxFit.cover),
+                  ),
                 ),
               ),
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                // SizedBox(height: SizeConfig.padding4),
-                Text(
-                  gameData.gameName,
-                  style:
-                      TextStyles.title5.bold.colour(UiConstants.primaryColor),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Center(
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  // SizedBox(height: SizeConfig.padding4),
+                  Text(
+                    gameData.gameName,
+                    style:
+                        TextStyles.title5.bold.colour(UiConstants.primaryColor),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(SizeConfig.screenHeight * 0.01),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text("Entry: ${gameData.playCost ?? 0}   ",
+                                    style: TextStyles.body3),
+                                CircleAvatar(
+                                  radius: SizeConfig.screenWidth * 0.029,
+                                  backgroundColor: UiConstants.tertiarySolid
+                                      .withOpacity(0.2),
+                                  child: SvgPicture.asset(
+                                    Assets.tickets,
+                                    height: SizeConfig.iconSize3,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: SizeConfig.screenWidth * 0.05,
+                        ),
+                        Expanded(
+                            child: Center(
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Text("Entry: ${gameData.playCost ?? 0}   ",
+                              Text("Win: ₹ ${gameData.prizeAmount ?? 0}   ",
                                   style: TextStyles.body3),
                               CircleAvatar(
                                 radius: SizeConfig.screenWidth * 0.029,
                                 backgroundColor:
-                                    UiConstants.tertiarySolid.withOpacity(0.2),
-                                child: SvgPicture.asset(
-                                  Assets.tickets,
-                                  height: SizeConfig.iconSize3,
+                                    UiConstants.primaryColor.withOpacity(0.2),
+                                child: RotatedBox(
+                                  quarterTurns: 1,
+                                  child: Image.asset(
+                                    Assets.moneyIcon,
+                                    height: SizeConfig.iconSize3,
+                                  ),
                                 ),
                               ),
                             ],
                           ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: SizeConfig.screenWidth * 0.1,
-                      ),
-                      Expanded(
-                          child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text("Win: ₹ ${gameData.prizeAmount ?? 0}   ",
-                                style: TextStyles.body3),
-                            CircleAvatar(
-                              radius: SizeConfig.screenWidth * 0.029,
-                              backgroundColor:
-                                  UiConstants.primaryColor.withOpacity(0.2),
-                              child: RotatedBox(
-                                quarterTurns: 1,
-                                child: Image.asset(
-                                  Assets.moneyIcon,
-                                  height: SizeConfig.iconSize3,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ))
-                    ],
+                        ))
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            )
-          ],
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );

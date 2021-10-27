@@ -30,6 +30,7 @@ class AugmontGoldSellViewModel extends BaseModel {
   bool isGoldRateFetching = false;
   AugmontRates goldRates;
   bool _isGoldSellInProgress = false;
+  FocusNode sellFieldNode = FocusNode();
 
   double goldSellGrams = 0;
   double goldAmountFromGrams = 0.0;
@@ -62,6 +63,7 @@ class AugmontGoldSellViewModel extends BaseModel {
   Widget amoutChip(double amt) {
     return GestureDetector(
       onTap: () {
+        sellFieldNode.unfocus();
         goldSellGrams = userFundWallet.augGoldQuantity * (amt / 100);
 
         double updatedGrams = goldSellGrams * 10000;

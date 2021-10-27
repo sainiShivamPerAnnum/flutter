@@ -19,7 +19,7 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
 
   List<Winners> _winners = [];
 
-  get winners => this._winners;
+  List<Winners> get winners => this._winners;
 
   get cricketWinnersLength => this._cricketWinnersLength;
 
@@ -69,9 +69,13 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
           "Unable to fetch winners", "try again in sometime");
     }
 
-    if (_winners != null) {
-      _winners.sort((a, b) => (a.amount==null || b.amount==null)?-1:b.amount.compareTo(a.amount));
-      setWinners();
-    }
+    if (_winners != null)
+      _winners.sort((a, b) => (a.amount == null || b.amount == null)
+          ? -1
+          : b.amount.compareTo(a.amount));
+    else
+      _winners = [];
+
+    setWinners();
   }
 }

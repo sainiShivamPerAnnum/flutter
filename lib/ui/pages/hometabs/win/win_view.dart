@@ -7,6 +7,7 @@ import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_winnings.dart';
 import 'package:felloapp/ui/service_elements/winners_prizes/win_leaderboard.dart';
+import 'package:felloapp/ui/service_elements/winners_prizes/winners_marquee.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -32,12 +33,12 @@ class Win extends StatelessWidget {
             Container(
               child: Column(
                 children: [
-                  SizedBox(height: SizeConfig.screenHeight * 0.09),
+                  SizedBox(
+                      height: SizeConfig.screenHeight * 0.08 +
+                          SizeConfig.screenWidth * 0.24),
                   Expanded(
                     child: ListView(
-                      padding: EdgeInsets.only(
-                          top: SizeConfig.screenWidth * 0.3 +
-                              SizeConfig.pageHorizontalMargins),
+                      padding: EdgeInsets.only(top: SizeConfig.padding20),
                       children: [
                         Container(
                           child: Row(
@@ -62,26 +63,7 @@ class Win extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: SizeConfig.padding20),
-                        Container(
-                          width: SizeConfig.screenWidth,
-                          margin: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.pageHorizontalMargins),
-                          height: SizeConfig.padding54,
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.circular(SizeConfig.roundness16),
-                            color: UiConstants.tertiaryLight.withOpacity(0.5),
-                          ),
-                          child: MarqueeText(
-                            infoList: [
-                              "Shourya won ₹ 1000",
-                              "Manish won ₹ 2000",
-                              "Shreeyash won ₹ 1200"
-                            ],
-                            showBullet: true,
-                            bulletColor: UiConstants.tertiarySolid,
-                          ),
-                        ),
+                        WinnersMarqueeStrip(),
                         SizedBox(height: SizeConfig.padding24),
                         Padding(
                           padding: EdgeInsets.symmetric(
@@ -143,7 +125,7 @@ class Win extends StatelessWidget {
                           ),
                         ),
                         SizedBox(
-                          height: SizeConfig.screenHeight * 0.2,
+                          height: SizeConfig.screenHeight * 0.24,
                         )
                       ],
                     ),
@@ -214,13 +196,7 @@ class BigPrizeContainer extends StatelessWidget {
                       child: Container(
                         width: SizeConfig.screenWidth * 0.3,
                         height: SizeConfig.screenWidth * 0.2,
-                        decoration: BoxDecoration(
-                            // color: Colors.white.withOpacity(0.3),
-                            // borderRadius: BorderRadius.only(
-                            //   topRight: Radius.circular(SizeConfig.roundness32),
-                            //   bottomLeft: Radius.circular(SizeConfig.roundness56),
-                            // ),
-                            ),
+                        decoration: BoxDecoration(),
                         child: Opacity(
                           opacity: 0.2,
                           child: ClipRRect(

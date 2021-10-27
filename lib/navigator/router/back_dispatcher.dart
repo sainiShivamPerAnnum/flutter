@@ -46,8 +46,15 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
   @override
   Future<bool> didPopRoute() {
+    // If the top item is anything except a scaffold
+    if (AppState.screenStack.last == ScreenItem.dialog) {
+      Navigator.pop(_routerDelegate.navigatorKey.currentContext);
+      AppState.screenStack.removeLast();
+      print("Current Stack: ${AppState.screenStack}");
+      return Future.value(true);
+    }
     // If user is in the profile page and preferences are changed
-    if (AppState.unsavedPrefs) {
+    else if (AppState.unsavedPrefs) {
       if (_baseUtil != null &&
           _baseUtil.myUser != null &&
           _baseUtil.myUser.uid != null &&
@@ -61,13 +68,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
         });
       return _routerDelegate.popRoute();
     }
-    // If the top item is anything except a scaffold
-    else if (AppState.screenStack.last == ScreenItem.dialog) {
-      Navigator.pop(_routerDelegate.navigatorKey.currentContext);
-      AppState.screenStack.removeLast();
-      print("Current Stack: ${AppState.screenStack}");
-      return Future.value(true);
-    }
+
     // If onboarding is in progress
     else if (AppState.isOnboardingInProgress) {
       BaseUtil.showNegativeAlert(
@@ -86,13 +87,13 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
     // If the root tab is not 0 at the time of exit
     else if (AppState.screenStack.length == 1 &&
-        _appState.rootIndex != 0 &&
+        AppState.delegate.appState.rootIndex != 0 &&
         _baseUtil.isUserOnboarded) {
       print("Press back once more to exit");
       if (RootViewModel.scaffoldKey.currentState.isDrawerOpen)
         RootViewModel.scaffoldKey.currentState.openEndDrawer();
       else
-        AppState().setCurrentTabIndex = 0;
+        AppState.delegate.appState.setCurrentTabIndex = 0;
       //_routerDelegate.appState.returnHome();
       return Future.value(true);
     }

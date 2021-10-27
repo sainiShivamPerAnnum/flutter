@@ -41,6 +41,7 @@ class Root extends StatelessWidget {
             return true;
           },
           child: Scaffold(
+            resizeToAvoidBottomInset: false,
             key: RootViewModel.scaffoldKey,
             drawer: FDrawer(),
             drawerEnableOpenDragGesture: false,
@@ -83,8 +84,12 @@ class Root extends StatelessWidget {
                       child: BackdropFilter(
                         filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                         child: Container(
+                          color: UiConstants.scaffoldColor,
                           width: SizeConfig.screenWidth,
                           height: SizeConfig.navBarHeight,
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                          ),
                         ),
                       ),
                     ),

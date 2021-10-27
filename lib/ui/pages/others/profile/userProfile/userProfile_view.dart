@@ -434,7 +434,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                   "App Lock",
                                   style: TextStyle(
                                       color: Colors.black,
-                                      fontSize: SizeConfig.body2),
+                                      fontSize: SizeConfig.body3),
                                 ),
                                 Spacer(),
                                 Switch.adaptive(
@@ -448,7 +448,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                   "Tambola Draw Notifications",
                                   style: TextStyle(
                                     color: Colors.black,
-                                    fontSize: SizeConfig.body2,
+                                    fontSize: SizeConfig.body3,
                                   ),
                                 ),
                                 Spacer(),

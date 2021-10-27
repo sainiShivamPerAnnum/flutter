@@ -10,15 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
-class WinnersLeaderBoardSE extends StatefulWidget {
-  @override
-  _WinnersLeaderBoardSEState createState() => _WinnersLeaderBoardSEState();
-}
-
-class _WinnersLeaderBoardSEState extends State<WinnersLeaderBoardSE> {
-  @override
+class WinnersLeaderBoardSE extends StatelessWidget {
   Widget build(BuildContext context) {
-    bool isWinnersLoading = false;
     return PropertyChangeConsumer<WinnerService, WinnerServiceProperties>(
         properties: [WinnerServiceProperties.winLeaderboard],
         builder: (context, model, properties) {
@@ -67,13 +60,13 @@ class _WinnersLeaderBoardSEState extends State<WinnersLeaderBoardSE> {
                       ),
                     ),
                     Container(
-                      child: isWinnersLoading
+                      child: model.winners == null
                           ? Center(
                               child: SpinKitWave(
                                 color: UiConstants.primaryColor,
                               ),
                             )
-                          : (model.winners == null
+                          : (model.winners.isEmpty
                               ? Container(
                                   color: Colors.white,
                                   child: ListView(

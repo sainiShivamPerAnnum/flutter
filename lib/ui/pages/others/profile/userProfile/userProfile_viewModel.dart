@@ -51,12 +51,12 @@ class UserProfileVM extends BaseModel {
   final GlobalKey<FormState> formKey = new GlobalKey<FormState>();
 
   String get myUserDpUrl => _userService.myUserDpUrl;
-  String get myname => _userService.baseUser.name;
-  String get myUsername => _userService.baseUser.username;
-  String get myAge => _userService.baseUser.dob;
-  String get myEmail => _userService.baseUser.email;
-  String get myGender => _userService.baseUser.gender;
-  String get myMobile => _userService.baseUser.mobile;
+  String get myname => _userService.baseUser.name ?? "";
+  String get myUsername => _userService.baseUser.username ?? "";
+  String get myDob => _userService.baseUser.dob ?? "";
+  String get myEmail => _userService.baseUser.email ?? "";
+  String get myGender => _userService.baseUser.gender ?? "";
+  String get myMobile => _userService.baseUser.mobile ?? "";
   bool get isEmailVerified => _userService.baseUser.isEmailVerified;
 
   bool get applock =>
@@ -80,13 +80,12 @@ class UserProfileVM extends BaseModel {
 
   init() {
     nameController = new TextEditingController(text: myname);
-    dobController = new TextEditingController(text: myAge);
-    genderController = new TextEditingController(text: myGender);
+    dobController = new TextEditingController();
+    genderController = new TextEditingController();
+    setDate();
+    setGender();
     emailController = new TextEditingController(text: myEmail);
     mobileController = new TextEditingController(text: myMobile);
-
-    setGender();
-    setDate();
   }
 
   setGender() {
@@ -106,9 +105,18 @@ class UserProfileVM extends BaseModel {
   }
 
   setDate() {
-    dateFieldController = new TextEditingController(text: myAge?.split("-")[2]);
-    monthFieldController = new TextEditingController(text: myAge?.split("-")[1]);
-    yearFieldController = new TextEditingController(text: myAge?.split("-")[0]);
+    if (myDob != null && myDob.isNotEmpty) {
+      dateFieldController =
+          new TextEditingController(text: myDob.split("-")[2]);
+      monthFieldController =
+          new TextEditingController(text: myDob.split("-")[1]);
+      yearFieldController =
+          new TextEditingController(text: myDob.split("-")[0]);
+    } else {
+      dateFieldController = new TextEditingController(text: "");
+      monthFieldController = new TextEditingController(text: "");
+      yearFieldController = new TextEditingController(text: "");
+    }
   }
 
   void showAndroidDatePicker() async {
@@ -134,31 +142,38 @@ class UserProfileVM extends BaseModel {
   updateDetails() async {
     if (formKey.currentState.validate() && isValidDate()) {
       if (_checkForChanges()) {
-        isUpdaingUserDetails = true;
-        notifyListeners();
-        _userService.baseUser.name = nameController.text.trim();
-        _userService.baseUser.dob =
-            "${yearFieldController.text.trim()}-${monthFieldController.text.trim()}-${dateFieldController.text.trim()}";
-        _userService.baseUser.gender = getGender();
-        await _dbModel.updateUser(_userService.baseUser).then((res) {
-          if (res) {
-            _userService.setMyUserName(_userService.baseUser.name);
-            _userService.setDateOfBirth(_userService.baseUser.dob);
-            _userService.setGender(_userService.baseUser.gender);
-            genderController.text = _userService.baseUser.gender;
-            dobController.text = _userService.baseUser.dob;
-            isUpdaingUserDetails = false;
-            inEditMode = false;
-            notifyListeners();
-            BaseUtil.showPositiveAlert(
-                "Updated Successfully", "Profile updated successfully");
-          } else {
-            isUpdaingUserDetails = false;
-            notifyListeners();
-            BaseUtil.showNegativeAlert(
-                "Ahh Snap", "Please try again in some time");
-          }
-        });
+        if (_isAdult(selectedDate)) {
+          isUpdaingUserDetails = true;
+          notifyListeners();
+          _userService.baseUser.name = nameController.text.trim();
+          _userService.baseUser.dob =
+              "${yearFieldController.text}-${monthFieldController.text}-${dateFieldController.text}";
+          _userService.baseUser.gender = getGender();
+          await _dbModel.updateUser(_userService.baseUser).then((res) {
+            if (res) {
+              _userService.setMyUserName(_userService.baseUser.name);
+              _userService.setDateOfBirth(_userService.baseUser.dob);
+              _userService.setGender(_userService.baseUser.gender);
+              genderController.text = setGender();
+              dobController.text = _userService.baseUser.dob;
+              isUpdaingUserDetails = false;
+              inEditMode = false;
+              notifyListeners();
+              BaseUtil.showPositiveAlert(
+                  "Updated Successfully", "Profile updated successfully");
+            } else {
+              isUpdaingUserDetails = false;
+              notifyListeners();
+              BaseUtil.showNegativeAlert(
+                  "Ahh Snap", "Please try again in some time");
+            }
+          });
+        } else {
+          BaseUtil.showNegativeAlert(
+            'Ineligible',
+            'You need to be above 18 to join',
+          );
+        }
       } else
         BaseUtil.showNegativeAlert(
             "No changes found", "please make some changes");
@@ -175,9 +190,9 @@ class UserProfileVM extends BaseModel {
   }
 
   bool isDOBChanged() {
-    if (dateFieldController.text == myAge.split("-")[2] &&
-        monthFieldController.text == myAge.split("-")[1] &&
-        yearFieldController.text == myAge.split("-")[0])
+    String newDob =
+        "${yearFieldController.text}-${monthFieldController.text}-${dateFieldController.text}";
+    if (newDob == myDob)
       return false;
     else
       return true;
@@ -200,6 +215,18 @@ class UserProfileVM extends BaseModel {
     else if (gen == -1) return "O";
   }
 
+  bool _isAdult(DateTime dt) {
+    // Current time - at this moment
+    DateTime today = DateTime.now();
+    // Date to check but moved 18 years ahead
+    DateTime adultDate = DateTime(
+      dt.year + 18,
+      dt.month,
+      dt.day,
+    );
+
+    return adultDate.isBefore(today);
+  }
   // showUnsavedChanges() {
   //   if (_checkForChanges()) {
   //     AppState.unsavedChanges = true;

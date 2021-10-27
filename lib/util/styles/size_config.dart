@@ -34,9 +34,7 @@ class SizeConfig {
     screenHeight = _mediaQueryData.size.height;
     pixelRatio = _mediaQueryData.devicePixelRatio;
     textScaleFactor = _mediaQueryData.textScaleFactor;
-    viewInsets = EdgeInsets.fromWindowPadding(
-        WidgetsBinding.instance.window.viewInsets,
-        WidgetsBinding.instance.window.devicePixelRatio);
+    viewInsets = _mediaQueryData.padding;
     blockSizeHorizontal = screenWidth / 100;
     blockSizeVertical = screenHeight / 100;
     smallTextSize = blockSizeHorizontal * 2.4;
@@ -61,7 +59,7 @@ class SizeConfig {
   static double get title3 => 28;
   static double get title4 => screenWidth * 0.058; //24
   static double get title5 => screenWidth * 0.048; //20
-  static double get body1 => screenWidth * 0.043;
+  static double get body1 => screenWidth * 0.043; // 18
   static double get body2 => screenWidth * 0.038; // 16
   static double get body3 => screenWidth * 0.033; //14
   static double get body4 => screenWidth * 0.028; //12;

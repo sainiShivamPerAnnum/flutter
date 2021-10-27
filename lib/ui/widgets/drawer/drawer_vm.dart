@@ -41,7 +41,7 @@ class FDrawerVM extends BaseModel {
     DrawerModel(
       icon: Assets.dHowItWorks,
       title: "How it works",
-      pageConfig: AugmontGoldDetailsPageConfig,
+      pageConfig: WalkThroughConfig,
     ),
     DrawerModel(
       icon: Assets.dAboutDigitalGold,

@@ -12,8 +12,10 @@ class FontSizes {
 }
 
 class TextStyles {
-  static TextStyle get bodyFont => GoogleFonts.sourceSansPro();//TextStyle(fontFamily: "Arctick");
-  static TextStyle get titleFont => GoogleFonts.sourceSansPro();//TextStyle(fontFamily: "Arctick");
+  static TextStyle get bodyFont =>
+      GoogleFonts.sourceSansPro(); //TextStyle(fontFamily: "Arctick");
+  static TextStyle get titleFont =>
+      GoogleFonts.sourceSansPro(); //TextStyle(fontFamily: "Arctick");
 
   static TextStyle get title1 =>
       titleFont.copyWith(fontSize: SizeConfig.title1);
