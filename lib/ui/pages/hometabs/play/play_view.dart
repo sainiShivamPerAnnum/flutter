@@ -31,41 +31,43 @@ class Play extends StatelessWidget {
               Container(
                 width: SizeConfig.screenWidth,
                 height: SizeConfig.screenWidth * 0.38,
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: model.isOfferListLoading
-                        ? [
-                            ClipRRect(
-                              borderRadius:
-                                  BorderRadius.circular(SizeConfig.roundness32),
-                              child: OfferCard(
-                                shimmer: true,
-                                model: PromoCardModel(
-                                    1, null, null, null, null, 4281648039),
-                              ),
+                child: model.isOfferListLoading
+                    ? ListView(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.pageHorizontalMargins),
+                        scrollDirection: Axis.horizontal,
+                        children: [
+                          ClipRRect(
+                            borderRadius:
+                                BorderRadius.circular(SizeConfig.roundness32),
+                            child: OfferCard(
+                              shimmer: true,
+                              model: PromoCardModel(
+                                  1, null, null, null, null, 4281648039),
                             ),
-                            ClipRRect(
-                              borderRadius:
-                                  BorderRadius.circular(SizeConfig.roundness32),
-                              child: OfferCard(
-                                shimmer: true,
-                                model: PromoCardModel(
-                                    1, null, null, null, null, 4294942219),
-                              ),
-                            ),
-                          ]
-                        : List.generate(
-                            model.offerList.length,
-                            (i) {
-                              return OfferCard(
-                                model: model.offerList[i],
-                              );
-                            },
                           ),
-                  ),
-                ),
+                          ClipRRect(
+                            borderRadius:
+                                BorderRadius.circular(SizeConfig.roundness32),
+                            child: OfferCard(
+                              shimmer: true,
+                              model: PromoCardModel(
+                                  1, null, null, null, null, 4294942219),
+                            ),
+                          ),
+                        ],
+                      )
+                    : ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.pageHorizontalMargins),
+                        itemCount: model.offerList.length,
+                        itemBuilder: (ctx, i) {
+                          return OfferCard(
+                            model: model.offerList[i],
+                          );
+                        },
+                      ),
               ),
               Transform.translate(
                 offset: Offset(0, -SizeConfig.padding12),

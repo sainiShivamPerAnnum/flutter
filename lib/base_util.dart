@@ -112,7 +112,7 @@ class BaseUtil extends ChangeNotifier {
   bool show_security_prompt = false;
   String zeroBalanceAssetUri;
   static List<GameModel> gamesList;
-  static String manualReferralCode;// = 'jdF1';
+  static String manualReferralCode; // = 'jdF1';
 
   ///Flags in various screens defined as global variables
   bool isUserOnboarded,

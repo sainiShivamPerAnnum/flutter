@@ -1,13 +1,10 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
-import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/leader_board_modal.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_view.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
-import 'package:felloapp/ui/pages/static/FelloTile.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
@@ -53,10 +50,21 @@ class CricketHomeView extends StatelessWidget {
                         controller: model.scrollController,
                         children: [
                           SizedBox(height: SizeConfig.screenHeight * 0.1),
-                          Opacity(
-                            opacity: model.cardOpacity ?? 1,
-                            child: GameCard(
-                              gameData: BaseUtil.gamesList[0],
+                          InkWell(
+                            onTap: () async {
+                              if (model.state == ViewState.Idle) {
+                                if (await model.openWebView())
+                                  model.startGame();
+                                else
+                                  BaseUtil.showNegativeAlert(
+                                      "Something went wrong", model.message);
+                              }
+                            },
+                            child: Opacity(
+                              opacity: model.cardOpacity ?? 1,
+                              child: GameCard(
+                                gameData: BaseUtil.gamesList[0],
+                              ),
                             ),
                           ),
                           SizedBox(height: SizeConfig.padding8),
@@ -149,6 +157,52 @@ class CricketHomeView extends StatelessWidget {
                       ),
                     ),
                   ),
+                  if (model.state == ViewState.Idle)
+                    Positioned(
+                      bottom: 0,
+                      child: Container(
+                        width: SizeConfig.screenWidth,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.scaffoldMargin,
+                            vertical: 16),
+                        child: FelloButtonLg(
+                            child:
+                                //  (model.state == ViewState.Idle)
+                                //     ?
+                                Text(
+                              'PLAY',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .button
+                                  .copyWith(color: Colors.white),
+                            ),
+                            // : SpinKitThreeBounce(
+                            //     color: UiConstants.spinnerColor2,
+                            //     size: 18.0,
+                            //   ),
+                            onPressed: () async {
+                              if (model.state == ViewState.Idle) {
+                                if (await model.openWebView())
+                                  model.startGame();
+                                else
+                                  BaseUtil.showNegativeAlert(
+                                      "Something went wrong", model.message);
+                              }
+                            }),
+                      ),
+                    ),
+                  if (model.state == ViewState.Busy)
+                    Container(
+                      color: Colors.white.withOpacity(0.5),
+                      child: SafeArea(
+                        child: Center(
+                          child: SpinKitWave(
+                            color: UiConstants.primaryColor,
+                            size: SizeConfig.padding32,
+                          ),
+                        ),
+                      ),
+                    ),
                   FelloAppBar(
                     leading: FelloAppBarBackButton(),
                     actions: [
@@ -157,36 +211,6 @@ class CricketHomeView extends StatelessWidget {
                       NotificationButton(),
                     ],
                   ),
-                  Positioned(
-                    bottom: 0,
-                    child: Container(
-                      width: SizeConfig.screenWidth,
-                      padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.scaffoldMargin, vertical: 16),
-                      child: FelloButtonLg(
-                          child: (model.state == ViewState.Idle)
-                              ? Text(
-                                  'PLAY',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .button
-                                      .copyWith(color: Colors.white),
-                                )
-                              : SpinKitThreeBounce(
-                                  color: UiConstants.spinnerColor2,
-                                  size: 18.0,
-                                ),
-                          onPressed: () async {
-                            if (model.state == ViewState.Idle) {
-                              if (await model.openWebView())
-                                model.startGame();
-                              else
-                                BaseUtil.showNegativeAlert(
-                                    "Something went wrong", model.message);
-                            }
-                          }),
-                    ),
-                  )
                 ],
               ),
             ),

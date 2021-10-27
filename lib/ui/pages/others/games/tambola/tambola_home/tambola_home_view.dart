@@ -45,10 +45,13 @@ class TambolaHomeView extends StatelessWidget {
                         controller: model.scrollController,
                         children: [
                           SizedBox(height: SizeConfig.screenHeight * 0.1),
-                          Opacity(
-                            opacity: model.cardOpacity ?? 1,
-                            child: GameCard(
-                              gameData: BaseUtil.gamesList[1],
+                          InkWell(
+                            onTap: model.openGame,
+                            child: Opacity(
+                              opacity: model.cardOpacity ?? 1,
+                              child: GameCard(
+                                gameData: BaseUtil.gamesList[1],
+                              ),
                             ),
                           ),
                           SizedBox(height: SizeConfig.padding8),

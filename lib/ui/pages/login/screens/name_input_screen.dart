@@ -119,9 +119,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                 baseProvider.isGoogleSignInProgress = false;
               });
             } else {
-              setState(() {
-                baseProvider.isGoogleSignInProgress = false;
-              });
+              baseProvider.isGoogleSignInProgress = false;
               BaseUtil.showNegativeAlert(
                   "Error getting profile picture", "Please try again");
             }
@@ -132,9 +130,7 @@ class NameInputScreenState extends State<NameInputScreen> {
           }
           AppState.backButtonDispatcher.didPopRoute();
         } else {
-          setState(() {
-            baseProvider.isGoogleSignInProgress = false;
-          });
+          baseProvider.isGoogleSignInProgress = false;
           BaseUtil.showNegativeAlert(
               "Email already registered", "Please try with another email");
         }
@@ -147,9 +143,7 @@ class NameInputScreenState extends State<NameInputScreen> {
       }
     } catch (e) {
       print(e.toString());
-      setState(() {
-        baseProvider.isGoogleSignInProgress = false;
-      });
+      baseProvider.isGoogleSignInProgress = false;
       BaseUtil.showNegativeAlert(
           "Unable to verify", "Please try a different method");
     }

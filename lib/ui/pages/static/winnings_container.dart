@@ -56,13 +56,12 @@ class WinningsContainer extends StatelessWidget {
                     alignment: Alignment.center,
                     padding: EdgeInsets.all(SizeConfig.padding16),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Text(
                           locale.winMyWinnings,
                           style: TextStyles.title5.colour(Colors.white60),
                         ),
-                        Spacer(),
                         UserWinningsSE(
                           style: TextStyles.title2
                               .colour(Colors.white)

@@ -46,8 +46,15 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
   @override
   Future<bool> didPopRoute() {
+    // If the top item is anything except a scaffold
+    if (AppState.screenStack.last == ScreenItem.dialog) {
+      Navigator.pop(_routerDelegate.navigatorKey.currentContext);
+      AppState.screenStack.removeLast();
+      print("Current Stack: ${AppState.screenStack}");
+      return Future.value(true);
+    }
     // If user is in the profile page and preferences are changed
-    if (AppState.unsavedPrefs) {
+    else if (AppState.unsavedPrefs) {
       if (_baseUtil != null &&
           _baseUtil.myUser != null &&
           _baseUtil.myUser.uid != null &&
@@ -61,13 +68,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
         });
       return _routerDelegate.popRoute();
     }
-    // If the top item is anything except a scaffold
-    else if (AppState.screenStack.last == ScreenItem.dialog) {
-      Navigator.pop(_routerDelegate.navigatorKey.currentContext);
-      AppState.screenStack.removeLast();
-      print("Current Stack: ${AppState.screenStack}");
-      return Future.value(true);
-    }
+
     // If onboarding is in progress
     else if (AppState.isOnboardingInProgress) {
       BaseUtil.showNegativeAlert(

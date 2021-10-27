@@ -97,7 +97,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
         if (goldBuyAmount == null)
           goldBuyAmount = amt;
         else {
-          if (goldBuyAmount + amt < 50000)
+          if (goldBuyAmount + amt <= 50000)
             goldBuyAmount += amt;
           else
             goldBuyAmount = 50000;
@@ -227,6 +227,9 @@ class AugmontGoldBuyViewModel extends BaseModel {
         goldBuyAmount = double.tryParse(val);
         updateGoldAmount();
       }
+    } else {
+      goldBuyAmount = 0;
+      updateGoldAmount();
     }
   }
 

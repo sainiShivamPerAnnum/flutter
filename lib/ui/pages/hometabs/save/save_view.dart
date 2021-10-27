@@ -50,7 +50,7 @@ class Save extends StatelessWidget {
                             SizedBox(width: SizeConfig.screenWidth * 0.05),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Text(
                                   locale.saveWinningsLabel,
@@ -58,7 +58,6 @@ class Save extends StatelessWidget {
                                       .colour(Colors.white)
                                       .light,
                                 ),
-                                Spacer(),
                                 UserWinningsSE(
                                   style: TextStyles.title3
                                       .colour(Colors.white)

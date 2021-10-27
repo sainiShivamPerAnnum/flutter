@@ -7,6 +7,7 @@ import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_winnings.dart';
 import 'package:felloapp/ui/service_elements/winners_prizes/win_leaderboard.dart';
+import 'package:felloapp/ui/service_elements/winners_prizes/winners_marquee.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -62,26 +63,7 @@ class Win extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: SizeConfig.padding20),
-                        Container(
-                          width: SizeConfig.screenWidth,
-                          margin: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.pageHorizontalMargins),
-                          height: SizeConfig.padding54,
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.circular(SizeConfig.roundness16),
-                            color: UiConstants.tertiaryLight.withOpacity(0.5),
-                          ),
-                          child: MarqueeText(
-                            infoList: [
-                              "Shourya won ₹ 1000",
-                              "Manish won ₹ 2000",
-                              "Shreeyash won ₹ 1200"
-                            ],
-                            showBullet: true,
-                            bulletColor: UiConstants.tertiarySolid,
-                          ),
-                        ),
+                        WinnersMarqueeStrip(),
                         SizedBox(height: SizeConfig.padding24),
                         Padding(
                           padding: EdgeInsets.symmetric(
