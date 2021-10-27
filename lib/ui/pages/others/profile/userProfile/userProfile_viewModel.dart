@@ -106,9 +106,9 @@ class UserProfileVM extends BaseModel {
   }
 
   setDate() {
-    dateFieldController = new TextEditingController(text: myAge.split("-")[2]);
-    monthFieldController = new TextEditingController(text: myAge.split("-")[1]);
-    yearFieldController = new TextEditingController(text: myAge.split("-")[0]);
+    dateFieldController = new TextEditingController(text: myAge?.split("-")[2]);
+    monthFieldController = new TextEditingController(text: myAge?.split("-")[1]);
+    yearFieldController = new TextEditingController(text: myAge?.split("-")[0]);
   }
 
   void showAndroidDatePicker() async {

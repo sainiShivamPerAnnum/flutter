@@ -237,7 +237,7 @@ class TransactionsHistoryViewModel extends BaseModel {
           children: [
             Text(
               (filteredList[index].type == "WITHDRAWAL" ? "- " : "+ ") +
-                  "₹ ${filteredList[index].amount.toString()}",
+                  "₹ ${filteredList[index].type == "WITHDRAWAL" ? (filteredList[index].amount * -1).toString() : filteredList[index].amount.toString()}",
               style: TextStyle(
                 color: getTileColor(filteredList[index].tranStatus),
                 fontSize: SizeConfig.mediumTextSize,

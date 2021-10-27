@@ -45,7 +45,7 @@ class HttpModel extends ChangeNotifier {
       Map<String, dynamic> _params = {
         'uid': userId,
         'rid': referee,
-        'uname': Uri.encodeComponent(userName??'')
+        'uname': userName
       };
       Uri _uri = Uri.https(
           ASIA_BASE_URI, '/referralOps/$_stage/api/validate', _params);
