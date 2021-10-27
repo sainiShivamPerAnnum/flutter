@@ -95,7 +95,7 @@ class MiniTransactionCard extends StatelessWidget {
                                           (m.txnList[i].type == "WITHDRAWAL"
                                                   ? "- "
                                                   : "+ ") +
-                                              "₹ ${m.txnList[i].amount.toString()}",
+                                              "₹ ${m.txnList[i].type == "WITHDRAWAL" ? (m.txnList[i].amount * -1).toString() : m.txnList[i].amount.toString()}",
                                           style: TextStyle(
                                             color: model.getTileColor(
                                                 m.txnList[i].tranStatus),
