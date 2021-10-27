@@ -91,39 +91,40 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
                   : Column(
                       children: [
                         Container(
-                          width:SizeConfig.screenWidth,
-                          child:FelloButtonLg(
-                          child: Text(
-                            "Update",
-                            style: GoogleFonts.montserrat(
-                              color: Colors.white,
-                              fontSize: SizeConfig.mediumTextSize,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              isUploading = true;
-                              widget.upload(true);
-                            });
-                          },
-                        ),
-                        ),
-                        SizedBox(height: SizeConfig.padding12),
-                 Container(
-                       width:SizeConfig.screenWidth,
-                   child:        FelloButtonLg(
-                            color: UiConstants.tertiarySolid,
+                          width: SizeConfig.screenWidth,
+                          child: FelloButtonLg(
                             child: Text(
-                              "Cancel",
+                              "Update",
                               style: GoogleFonts.montserrat(
                                 color: Colors.white,
                                 fontSize: SizeConfig.mediumTextSize,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
-                            onPressed: () =>
-                                AppState.backButtonDispatcher.didPopRoute()),),
+                            onPressed: () {
+                              setState(() {
+                                isUploading = true;
+                                widget.upload(true);
+                              });
+                            },
+                          ),
+                        ),
+                        SizedBox(height: SizeConfig.padding12),
+                        Container(
+                          width: SizeConfig.screenWidth,
+                          child: FelloButtonLg(
+                              color: UiConstants.tertiarySolid,
+                              child: Text(
+                                "Cancel",
+                                style: GoogleFonts.montserrat(
+                                  color: Colors.white,
+                                  fontSize: SizeConfig.mediumTextSize,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              onPressed: () =>
+                                  AppState.backButtonDispatcher.didPopRoute()),
+                        ),
                       ],
                     ),
             ],
