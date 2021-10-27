@@ -88,7 +88,7 @@ class Ticket extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (ticketNumbers.isEmpty) generateNumberList();
-
+    print(calledDigits);
     return Container(
       height: SizeConfig.screenWidth * 1.3,
       width: SizeConfig.screenWidth - SizeConfig.pageHorizontalMargins * 2,

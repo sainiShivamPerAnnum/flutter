@@ -295,7 +295,7 @@ class _TambolaGameViewState extends State<TambolaGameView>
 
   Widget buildCards(TambolaGameViewModel model) {
     Widget _widget;
-    if (!model.weeklyTicksFetched) {
+    if (!model.weeklyTicksFetched || !model.weeklyDrawFetched) {
       _widget = Padding(
         //Loader
         padding: EdgeInsets.all(10),
