@@ -23,103 +23,117 @@ class Save extends StatelessWidget {
     return BaseView<SaveViewModel>(
       onModelReady: (model) {},
       builder: (ctx, model, child) {
-        return Column(
+        return Stack(
           children: [
-            SizedBox(
-              height: SizeConfig.screenHeight * 0.09,
-            ),
-            AugmontCard(model: model),
-            Expanded(
-              child: ListView(
-                padding: EdgeInsets.zero,
+            Container(
+              child: Column(
                 children: [
                   SizedBox(
-                    height: SizeConfig.padding16,
-                  ),
-                  WinningsContainer(
-                    shadow: true,
-                    child: Container(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset(
-                              Assets.giftBoxOpen,
-                            ),
-                            SizedBox(width: SizeConfig.screenWidth * 0.05),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Text(
-                                  locale.saveWinningsLabel,
-                                  style: TextStyles.body1
-                                      .colour(Colors.white)
-                                      .light,
-                                ),
-                                UserWinningsSE(
-                                  style: TextStyles.title3
-                                      .colour(Colors.white)
-                                      .bold,
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: SizeConfig.padding32),
-                  Container(
-                    width: SizeConfig.screenWidth,
-                    height: SizeConfig.screenWidth * 0.24,
-                    child:
-                        ListView(scrollDirection: Axis.horizontal, children: [
-                      SaveInfoTile(
-                        png: "images/augmont-share.png",
-                        title: "What is digital Gold",
-                        onPressed: () {
-                          Logger().d("Save info tile tap check");
-                        },
-                      ),
-                      SaveInfoTile(
-                        png: "images/augmont-share.png",
-                        title: "What is digital Gold",
-                        onPressed: () {},
-                      ),
-                      SaveInfoTile(
-                        png: "images/augmont-share.png",
-                        title: "What is digital Gold",
-                        onPressed: () {},
-                      ),
-                    ]),
-                  ),
-                  SizedBox(height: SizeConfig.padding24),
-                  Container(
-                    margin: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.pageHorizontalMargins),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness32),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      height: SizeConfig.screenHeight * 0.08 +
+                          SizeConfig.screenWidth * 0.6),
+                  Expanded(
+                    child: ListView(
+                      padding: EdgeInsets.only(top: SizeConfig.padding20),
                       children: [
-                        SizedBox(height: SizeConfig.padding20),
+                        SizedBox(
+                          height: SizeConfig.padding16,
+                        ),
+                        WinningsContainer(
+                          shadow: true,
+                          child: Container(
+                            child: Padding(
+                              padding: EdgeInsets.all(SizeConfig.padding16),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SvgPicture.asset(
+                                    Assets.giftBoxOpen,
+                                  ),
+                                  SizedBox(
+                                      width: SizeConfig.screenWidth * 0.05),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text(
+                                        locale.saveWinningsLabel,
+                                        style: TextStyles.body1
+                                            .colour(Colors.white)
+                                            .light,
+                                      ),
+                                      UserWinningsSE(
+                                        style: TextStyles.title3
+                                            .colour(Colors.white)
+                                            .bold,
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: SizeConfig.padding32),
                         Container(
-                            margin: EdgeInsets.symmetric(
-                                horizontal: SizeConfig.pageHorizontalMargins),
-                            child: Text(locale.saveHistory,
-                                style: TextStyles.title4.bold)),
-                        MiniTransactionCard(),
+                          width: SizeConfig.screenWidth,
+                          height: SizeConfig.screenWidth * 0.24,
+                          child: ListView(
+                              scrollDirection: Axis.horizontal,
+                              children: [
+                                SaveInfoTile(
+                                  png: "images/augmont-share.png",
+                                  title: "What is digital Gold",
+                                  onPressed: () {
+                                    Logger().d("Save info tile tap check");
+                                  },
+                                ),
+                                SaveInfoTile(
+                                  png: "images/augmont-share.png",
+                                  title: "What is digital Gold",
+                                  onPressed: () {},
+                                ),
+                                SaveInfoTile(
+                                  png: "images/augmont-share.png",
+                                  title: "What is digital Gold",
+                                  onPressed: () {},
+                                ),
+                              ]),
+                        ),
+                        SizedBox(height: SizeConfig.padding24),
+                        Container(
+                          margin: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.pageHorizontalMargins),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius:
+                                BorderRadius.circular(SizeConfig.roundness32),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: SizeConfig.padding20),
+                              Container(
+                                  margin: EdgeInsets.symmetric(
+                                      horizontal:
+                                          SizeConfig.pageHorizontalMargins),
+                                  child: Text(locale.saveHistory,
+                                      style: TextStyles.title4.bold)),
+                              MiniTransactionCard(),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: SizeConfig.navBarHeight * 2),
                       ],
                     ),
                   ),
-                  SizedBox(height: kBottomNavigationBarHeight * 4),
                 ],
               ),
+            ),
+            Container(
+              margin: EdgeInsets.only(top: SizeConfig.screenHeight * 0.09),
+              child: AugmontCard(model: model),
             ),
           ],
         );
@@ -190,185 +204,191 @@ class AugmontCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    return Container(
-      width: SizeConfig.screenWidth - SizeConfig.pageHorizontalMargins * 2,
-      margin:
-          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(SizeConfig.roundness32),
-        color: Colors.white,
-      ),
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: SizeConfig.padding16,
-          vertical: SizeConfig.padding20,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(locale.saveGoldBalancelabel,
-                        style: TextStyles.body1.light),
-                  ),
-                ),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      UserGoldQuantitySE(
-                        style: TextStyles.body1.bold
-                            .colour(UiConstants.tertiarySolid),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-            Container(
-              margin: EdgeInsets.only(
-                top: SizeConfig.padding24,
-                bottom: SizeConfig.padding16,
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Center(
-                      child: FelloButton(
-                        onPressed: model.navigateToBuyScreen,
-                        activeButtonUI: Container(
-                          width: SizeConfig.screenWidth * 0.367, //152
-                          height: SizeConfig.screenWidth * 0.12, //50
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                              color: UiConstants.primaryColor),
-                          alignment: Alignment.center,
-                          child: Text(
-                            locale.saveBuyButton,
-                            style: TextStyles.title5.bold.colour(Colors.white),
-                          ),
-                        ),
-                        offlineButtonUI: Container(
-                          width: SizeConfig.screenWidth * 0.367, //152
-                          height: SizeConfig.screenWidth * 0.12, //50
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                              color: Colors.grey),
-                          alignment: Alignment.center,
-                          child: Text(
-                            locale.saveBuyButton,
-                            style: TextStyles.title5.bold.colour(Colors.white),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: SizeConfig.padding20),
-                  Expanded(
-                      child: Center(
-                    child: SellGoldBtn(
-                      activeButtonUI: Container(
-                        width: SizeConfig.screenWidth * 0.367,
-                        height: SizeConfig.screenWidth * 0.12,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                              color: UiConstants.tertiarySolid, width: 2),
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                        alignment: Alignment.center,
-                        child: Text(
-                          locale.saveSellButton,
-                          style: TextStyles.title5.bold,
-                        ),
-                      ),
-                      loadingButtonUI: Container(
-                        width: SizeConfig.screenWidth * 0.367,
-                        height: SizeConfig.screenWidth * 0.12,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                              color: UiConstants.tertiarySolid, width: 2),
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                        alignment: Alignment.center,
-                        child: SpinKitThreeBounce(
-                          size: SizeConfig.title5,
-                          color: UiConstants.tertiarySolid,
-                        ),
-                      ),
-                      disabledButtonUI: Container(
-                        width: SizeConfig.screenWidth * 0.367,
-                        height: SizeConfig.screenWidth * 0.12,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey, width: 2),
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                        alignment: Alignment.center,
-                        child: Text(
-                          locale.saveSellButton,
-                          style: TextStyles.title5.bold.colour(Colors.grey),
-                        ),
-                      ),
-                    ),
-                    // ),
-                  )),
-                ],
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding8),
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey, width: 0.1),
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness12)),
-              child: Row(
+    return Wrap(
+      children: [
+        Container(
+          width: SizeConfig.screenWidth - SizeConfig.pageHorizontalMargins * 2,
+          margin: EdgeInsets.symmetric(
+              horizontal: SizeConfig.pageHorizontalMargins),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(SizeConfig.roundness32),
+            color: Colors.white,
+          ),
+          padding: EdgeInsets.symmetric(
+            horizontal: SizeConfig.padding16,
+            vertical: SizeConfig.padding20,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Image.asset(
-                    Assets.augLogo,
-                    color: Colors.grey,
-                    height: SizeConfig.padding20,
-                  ),
-                  Image.asset(
-                    Assets.sebiGraphic,
-                    color: Colors.grey,
-                    height: SizeConfig.padding16,
-                  ),
-                  TextButton.icon(
-                    icon: Icon(
-                      Icons.lock,
-                      color: Colors.grey,
-                      size: SizeConfig.body3,
-                    ),
-                    onPressed: () {},
-                    label: Text(
-                      locale.saveSecure,
-                      style: TextStyles.body3.colour(Colors.grey),
+                  Expanded(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(locale.saveGoldBalancelabel,
+                          style: TextStyles.body1.light),
                     ),
                   ),
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        UserGoldQuantitySE(
+                          style: TextStyles.body1.bold
+                              .colour(UiConstants.tertiarySolid),
+                        ),
+                      ],
+                    ),
+                  )
                 ],
               ),
-            ),
-            Container(
-              margin: EdgeInsets.only(top: SizeConfig.padding16),
-              width: SizeConfig.screenWidth,
-              padding: EdgeInsets.symmetric(vertical: 12),
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                  color: UiConstants.tertiaryLight,
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness12)),
-              child: FittedBox(
-                child: Text(
-                  locale.saveBaseline,
-                  style: TextStyles.body3.colour(UiConstants.tertiarySolid),
+              Container(
+                margin: EdgeInsets.only(
+                  top: SizeConfig.padding24,
+                  bottom: SizeConfig.padding16,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Center(
+                        child: FelloButton(
+                          onPressed: model.navigateToBuyScreen,
+                          activeButtonUI: Container(
+                            width: SizeConfig.screenWidth * 0.367, //152
+                            height: SizeConfig.screenWidth * 0.12, //50
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                color: UiConstants.primaryColor),
+                            alignment: Alignment.center,
+                            child: Text(
+                              locale.saveBuyButton,
+                              style:
+                                  TextStyles.title5.bold.colour(Colors.white),
+                            ),
+                          ),
+                          offlineButtonUI: Container(
+                            width: SizeConfig.screenWidth * 0.367, //152
+                            height: SizeConfig.screenWidth * 0.12, //50
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                color: Colors.grey),
+                            alignment: Alignment.center,
+                            child: Text(
+                              locale.saveBuyButton,
+                              style:
+                                  TextStyles.title5.bold.colour(Colors.white),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: SizeConfig.padding20),
+                    Expanded(
+                        child: Center(
+                      child: SellGoldBtn(
+                        activeButtonUI: Container(
+                          width: SizeConfig.screenWidth * 0.367,
+                          height: SizeConfig.screenWidth * 0.12,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                color: UiConstants.tertiarySolid, width: 2),
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            locale.saveSellButton,
+                            style: TextStyles.title5.bold,
+                          ),
+                        ),
+                        loadingButtonUI: Container(
+                          width: SizeConfig.screenWidth * 0.367,
+                          height: SizeConfig.screenWidth * 0.12,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                color: UiConstants.tertiarySolid, width: 2),
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          alignment: Alignment.center,
+                          child: SpinKitThreeBounce(
+                            size: SizeConfig.title5,
+                            color: UiConstants.tertiarySolid,
+                          ),
+                        ),
+                        disabledButtonUI: Container(
+                          width: SizeConfig.screenWidth * 0.367,
+                          height: SizeConfig.screenWidth * 0.12,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey, width: 2),
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            locale.saveSellButton,
+                            style: TextStyles.title5.bold.colour(Colors.grey),
+                          ),
+                        ),
+                      ),
+                      // ),
+                    )),
+                  ],
                 ),
               ),
-            )
-          ],
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding8),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey, width: 0.1),
+                    borderRadius:
+                        BorderRadius.circular(SizeConfig.roundness12)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Image.asset(
+                      Assets.augLogo,
+                      color: Colors.grey,
+                      height: SizeConfig.padding20,
+                    ),
+                    Image.asset(
+                      Assets.sebiGraphic,
+                      color: Colors.grey,
+                      height: SizeConfig.padding16,
+                    ),
+                    TextButton.icon(
+                      icon: Icon(
+                        Icons.lock,
+                        color: Colors.grey,
+                        size: SizeConfig.body3,
+                      ),
+                      onPressed: () {},
+                      label: Text(
+                        locale.saveSecure,
+                        style: TextStyles.body3.colour(Colors.grey),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: SizeConfig.padding16),
+                width: SizeConfig.screenWidth,
+                padding: EdgeInsets.symmetric(vertical: 12),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    color: UiConstants.tertiaryLight,
+                    borderRadius:
+                        BorderRadius.circular(SizeConfig.roundness12)),
+                child: FittedBox(
+                  child: Text(
+                    locale.saveBaseline,
+                    style: TextStyles.body3.colour(UiConstants.tertiarySolid),
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }

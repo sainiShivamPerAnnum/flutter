@@ -25,7 +25,8 @@ class GameCard extends StatelessWidget {
               bottom: SizeConfig.padding16),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(SizeConfig.padding54),
+            borderRadius: BorderRadius.circular(
+                SizeConfig.roundness40 + SizeConfig.padding8),
           ),
           padding: EdgeInsets.symmetric(
               horizontal: SizeConfig.padding8, vertical: SizeConfig.padding6),

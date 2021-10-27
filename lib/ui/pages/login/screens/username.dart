@@ -150,7 +150,7 @@ class UsernameState extends State<Username> {
   void didChangeDependencies() {
     if (mounted)
       Future.delayed(Duration(seconds: 2), () {
-        FocusScope.of(context).requestFocus(focusNode);
+        if (mounted) FocusScope.of(context).requestFocus(focusNode);
       });
 
     super.didChangeDependencies();

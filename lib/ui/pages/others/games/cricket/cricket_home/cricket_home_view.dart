@@ -25,7 +25,6 @@ class CricketHomeView extends StatelessWidget {
     return BaseView<CricketHomeViewModel>(
       onModelReady: (model) {
         model.init();
-        model.scrollController = new ScrollController();
         model.scrollController.addListener(() {
           model.udpateCardOpacity();
         });
@@ -69,7 +68,8 @@ class CricketHomeView extends StatelessWidget {
                           ),
                           SizedBox(height: SizeConfig.padding8),
                           Container(
-                            height: SizeConfig.screenHeight * 0.86,
+                            height: SizeConfig.screenHeight * 0.86 -
+                                SizeConfig.viewInsets.top,
                             padding: EdgeInsets.all(
                                 SizeConfig.pageHorizontalMargins),
                             decoration: BoxDecoration(
@@ -149,7 +149,6 @@ class CricketHomeView extends StatelessWidget {
                                                   ))
                                       ]),
                                 ),
-                                SizedBox(height: SizeConfig.padding64)
                               ],
                             ),
                           )
@@ -309,6 +308,8 @@ class PrizesView extends StatelessWidget {
       },
       child: ListView.builder(
         itemCount: model.prizesA.length,
+        shrinkWrap: true,
+        physics: BouncingScrollPhysics(),
         itemBuilder: (ctx, i) {
           return Container(
             width: SizeConfig.screenWidth,
@@ -427,6 +428,7 @@ class LeaderBoardView extends StatelessWidget {
               return true;
             },
             child: ListView.builder(
+              // physics: ClampingScrollPhysics(),
               itemCount: model.scoreboard.length,
               itemBuilder: (ctx, i) {
                 return Container(

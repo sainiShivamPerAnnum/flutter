@@ -36,14 +36,15 @@ class CricketHomeViewModel extends BaseModel {
   LeaderBoardModal _cricLeaderboard;
   bool isLeaderboardLoading = false;
   bool isPrizesLoading = false;
-  ScrollController scrollController;
+  ScrollController scrollController = ScrollController();
   double cardOpacity = 1;
 
   udpateCardOpacity() {
     cardOpacity = (1 -
             (scrollController.offset /
                 scrollController.position.maxScrollExtent))
-        .clamp(0, 1);
+        .clamp(0, 1)
+        .toDouble();
     notifyListeners();
   }
 

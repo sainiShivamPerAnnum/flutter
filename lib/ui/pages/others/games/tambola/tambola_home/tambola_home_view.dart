@@ -56,7 +56,8 @@ class TambolaHomeView extends StatelessWidget {
                           ),
                           SizedBox(height: SizeConfig.padding8),
                           Container(
-                            height: SizeConfig.screenHeight * 0.86,
+                            height: SizeConfig.screenHeight * 0.86 -
+                                SizeConfig.viewInsets.top,
                             padding: EdgeInsets.all(
                                 SizeConfig.pageHorizontalMargins),
                             decoration: BoxDecoration(

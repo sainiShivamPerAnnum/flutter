@@ -16,7 +16,7 @@ class OfferCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(SizeConfig.roundness32),
+      borderRadius: BorderRadius.circular(SizeConfig.roundness24),
       child: Container(
         width: SizeConfig.screenWidth * 0.5,
         height: SizeConfig.screenWidth * 0.28,

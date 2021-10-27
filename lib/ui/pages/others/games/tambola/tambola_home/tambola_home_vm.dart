@@ -34,7 +34,9 @@ class TambolaHomeViewModel extends BaseModel {
 
   udpateCardOpacity() {
     cardOpacity = 1 -
-        (scrollController.offset / scrollController.position.maxScrollExtent);
+        (scrollController.offset / scrollController.position.maxScrollExtent)
+            .clamp(0, 1)
+            .toDouble();
     notifyListeners();
   }
 

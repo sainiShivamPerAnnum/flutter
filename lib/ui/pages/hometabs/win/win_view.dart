@@ -33,12 +33,12 @@ class Win extends StatelessWidget {
             Container(
               child: Column(
                 children: [
-                  SizedBox(height: SizeConfig.screenHeight * 0.08),
+                  SizedBox(
+                      height: SizeConfig.screenHeight * 0.08 +
+                          SizeConfig.screenWidth * 0.24),
                   Expanded(
                     child: ListView(
-                      padding: EdgeInsets.only(
-                          top: SizeConfig.screenWidth * 0.22 +
-                              SizeConfig.padding20),
+                      padding: EdgeInsets.only(top: SizeConfig.padding20),
                       children: [
                         Container(
                           child: Row(
@@ -196,13 +196,7 @@ class BigPrizeContainer extends StatelessWidget {
                       child: Container(
                         width: SizeConfig.screenWidth * 0.3,
                         height: SizeConfig.screenWidth * 0.2,
-                        decoration: BoxDecoration(
-                            // color: Colors.white.withOpacity(0.3),
-                            // borderRadius: BorderRadius.only(
-                            //   topRight: Radius.circular(SizeConfig.roundness32),
-                            //   bottomLeft: Radius.circular(SizeConfig.roundness56),
-                            // ),
-                            ),
+                        decoration: BoxDecoration(),
                         child: Opacity(
                           opacity: 0.2,
                           child: ClipRRect(

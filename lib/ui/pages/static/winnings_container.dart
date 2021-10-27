@@ -54,7 +54,7 @@ class WinningsContainer extends StatelessWidget {
                 : Container(
                     width: SizeConfig.screenWidth,
                     alignment: Alignment.center,
-                    padding: EdgeInsets.all(SizeConfig.padding16),
+                    padding: EdgeInsets.all(SizeConfig.padding8),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [

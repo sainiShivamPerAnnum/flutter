@@ -70,7 +70,7 @@ class Play extends StatelessWidget {
                       ),
               ),
               Transform.translate(
-                offset: Offset(0, -SizeConfig.padding12),
+                offset: Offset(0, -SizeConfig.padding16),
                 child: Padding(
                   padding: EdgeInsets.only(
                     left: SizeConfig.pageHorizontalMargins,

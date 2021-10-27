@@ -244,7 +244,9 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                     "NEXT",
                     style: TextStyles.body2.bold.colour(Colors.white),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    AppState.backButtonDispatcher.didPopRoute();
+                  },
                 ),
               ),
               TextButton(
