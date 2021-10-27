@@ -90,7 +90,9 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
                     )
                   : Column(
                       children: [
-                        FelloButtonLg(
+                        Container(
+                          width:SizeConfig.screenWidth,
+                          child:FelloButtonLg(
                           child: Text(
                             "Update",
                             style: GoogleFonts.montserrat(
@@ -106,8 +108,11 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
                             });
                           },
                         ),
+                        ),
                         SizedBox(height: SizeConfig.padding12),
-                        FelloButtonLg(
+                 Container(
+                       width:SizeConfig.screenWidth,
+                   child:        FelloButtonLg(
                             color: UiConstants.tertiarySolid,
                             child: Text(
                               "Cancel",
@@ -118,7 +123,7 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
                               ),
                             ),
                             onPressed: () =>
-                                AppState.backButtonDispatcher.didPopRoute()),
+                                AppState.backButtonDispatcher.didPopRoute()),),
                       ],
                     ),
             ],
