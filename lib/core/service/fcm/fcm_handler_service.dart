@@ -1,9 +1,12 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
@@ -37,18 +40,31 @@ class FcmHandler extends ChangeNotifier {
             //Navigate back to CricketView
             if (AppState.circGameInProgress) {
               AppState.circGameInProgress = false;
-              await AppState.backButtonDispatcher.didPopRoute().then((value) {
-                // BaseUtil.openDialog(
-                //   addToScreenStack: true,
-                //   isBarrierDismissable: true,
-                //   hapticVibrate: false,
-                //   content: FelloInfoDialog(
-                //     showCrossIcon: true,
-                //     asset: Assets.congrats,
-                //     title: "Congratulations",
-                //     subtitle: "Your score was XX and you played for XX secs",
-                //   ),
-                // );
+              AppState.backButtonDispatcher.didPopRoute();
+              Future.delayed(Duration(milliseconds: 100), () {
+                BaseUtil.openDialog(
+                  addToScreenStack: true,
+                  isBarrierDismissable: true,
+                  hapticVibrate: false,
+                  content: FelloInfoDialog(
+                    showCrossIcon: false,
+                    asset: Assets.congrats,
+                    title: "Congratulations",
+                    subtitle:
+                        "Your score was ${data['game_score']} and you played for ${data['game_duration']} secs",
+                    action: Container(
+                      width: SizeConfig.screenWidth,
+                      child: FelloButtonLg(
+                        child: Text(
+                          "OK",
+                          style: TextStyles.body2.bold.colour(Colors.white),
+                        ),
+                        onPressed: () =>
+                            AppState.backButtonDispatcher.didPopRoute(),
+                      ),
+                    ),
+                  ),
+                );
               });
             }
           }

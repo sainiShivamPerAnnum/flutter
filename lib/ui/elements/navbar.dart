@@ -127,7 +127,11 @@ class _NavbarButtonState extends State<NavbarButton>
           fit: BoxFit.scaleDown,
           child: Text(
             widget.data.title,
-            style: TextStyles.body2.colour(Colors.white).bold,
+            style: TextStyles.body2
+                .colour(
+                  widget.isSelected ? Colors.white : Color(0xffC2EDE4),
+                )
+                .bold,
           ),
         ),
       ],

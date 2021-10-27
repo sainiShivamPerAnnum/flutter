@@ -62,9 +62,12 @@ class _FelloConfirmationDialogState extends State<FelloConfirmationDialog> {
                     SizedBox(
                       height: SizeConfig.screenHeight * 0.04,
                     ),
-                    Text(
-                      widget.title,
-                      style: TextStyles.title2.bold,
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        widget.title,
+                        style: TextStyles.title2.bold,
+                      ),
                     ),
                     SizedBox(height: SizeConfig.padding16),
                     Text(

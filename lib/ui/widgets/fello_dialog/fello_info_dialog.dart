@@ -35,7 +35,7 @@ class FelloInfoDialog extends StatelessWidget {
                 ),
                 Text(
                   title,
-                  style: TextStyles.title2.bold,
+                  style: TextStyles.title3.bold,
                 ),
                 SizedBox(height: SizeConfig.padding16),
                 Text(

@@ -41,6 +41,7 @@ class Assets {
   static final String otpAuth = "assets/vectors/otp_auth2.svg";
   static final String gender = 'images/svgs/gender.svg';
   static final String username = "assets/vectors/username.svg";
+  static final String bankLottie = "assets/lotties/bank.json";
 
   // WANT MORE MODAL
   static final String wmtsaveMoney = "assets/vectors/icons/wmt_save_money.svg";
@@ -84,12 +85,12 @@ class Assets {
 
   //DRAWER
   static final String dAboutDigitalGold =
-      "assets/vectors/icons/about_digital_gold.svg";
-  static final String dHelpNSupport = "assets/vectors/icons/help_support.svg";
-  static final String dHowItWorks = "assets/vectors/icons/how_it_works.svg";
-  static final String dPanKyc = "assets/vectors/icons/pan_kyc.svg";
-  static final String dReferNEarn = "assets/vectors/icons/refer_and_earn.svg";
-  static final String dTransactions = "assets/vectors/icons/transactions.svg";
+      "assets/vectors/drawer/about_digital_gold.svg";
+  static final String dHelpNSupport = "assets/vectors/drawer/help_support.svg";
+  static final String dHowItWorks = "assets/vectors/drawer/how_it_works.svg";
+  static final String dPanKyc = "assets/vectors/drawer/pan_kyc.svg";
+  static final String dReferNEarn = "assets/vectors/drawer/refer_and_earn.svg";
+  static final String dTransactions = "assets/vectors/drawer/transactions.svg";
 
   //TAMBOLA
 

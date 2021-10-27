@@ -43,10 +43,12 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
   int _status = 0;
 
+  bool _showMaxCapText = false;
   bool isGoldRateFetching = false;
   AugmontRates goldRates;
   bool _isGoldBuyInProgress = false;
   String userAugmontState;
+  FocusNode buyFieldNode = FocusNode();
 
   double goldBuyAmount = 0;
   double goldAmountInGrams = 0.0;
@@ -69,12 +71,19 @@ class AugmontGoldBuyViewModel extends BaseModel {
     notifyListeners();
   }
 
+  get showMaxCapText => this._showMaxCapText;
+
+  set showMaxCapText(value) {
+    this._showMaxCapText = value;
+    notifyListeners();
+  }
+
   init() {
     goldAmountController = TextEditingController();
     fetchGoldRates();
     status = checkAugmontStatus();
 
-    if(status == STATUS_REGISTER) {
+    if (status == STATUS_REGISTER) {
       _onboardUser().then((flag) {
         status = checkAugmontStatus();
       });
@@ -84,10 +93,16 @@ class AugmontGoldBuyViewModel extends BaseModel {
   Widget amoutChip(double amt) {
     return GestureDetector(
       onTap: () {
+        buyFieldNode.unfocus();
         if (goldBuyAmount == null)
           goldBuyAmount = amt;
-        else
-          goldBuyAmount += amt;
+        else {
+          if (goldBuyAmount + amt <= 50000)
+            goldBuyAmount += amt;
+          else
+            goldBuyAmount = 50000;
+        }
+
         goldAmountController.text = goldBuyAmount.toString();
         updateGoldAmount();
         notifyListeners();
@@ -197,15 +212,26 @@ class AugmontGoldBuyViewModel extends BaseModel {
     _augmontModel.setAugmontTxnProcessListener(_onDepositTransactionComplete);
   }
 
-  // String getActionButtonText() {
-  //   _status = checkAugmontStatus();
-  //   if (_status == STATUS_UNAVAILABLE)
-  //     return 'UNAVAILABLE';
-  //   else if (_status == STATUS_REGISTER)
-  //     return 'REGISTER';
-  //   else
-  //     return 'BUY';
-  // }
+  onBuyValueChanged(String val) {
+    log.debug("Value: $val");
+    if (showMaxCapText) showMaxCapText = false;
+    if (val != null && val.isNotEmpty) {
+      if (double.tryParse(val.trim()) != null &&
+          double.tryParse(val.trim()) > 50000) {
+        goldBuyAmount = 50000;
+        goldAmountController.text = goldBuyAmount.toString();
+        updateGoldAmount();
+        showMaxCapText = true;
+        buyFieldNode.unfocus();
+      } else {
+        goldBuyAmount = double.tryParse(val);
+        updateGoldAmount();
+      }
+    } else {
+      goldBuyAmount = 0;
+      updateGoldAmount();
+    }
+  }
 
   buyButtonAction() async {
     if (await BaseUtil.showNoInternetAlert()) return;
@@ -270,12 +296,12 @@ class AugmontGoldBuyViewModel extends BaseModel {
     isGoldBuyInProgress = true;
     setState(ViewState.Busy);
     userAugmontState = await CacheManager.readCache(key: "UserAugmontState");
-    if(userAugmontState == null) {
+    if (userAugmontState == null) {
       await _checkRegistrationStatus();
       return true;
     }
     if (!_userService.baseUser.isAugmontOnboarded && userAugmontState != null) {
-    _baseUtil.augmontDetail = await _augmontModel.createSimpleUser(
+      _baseUtil.augmontDetail = await _augmontModel.createSimpleUser(
           _userService.baseUser.mobile, userAugmontState);
       if (_baseUtil.augmontDetail == null) {
         BaseUtil.showNegativeAlert('Registration Failed',

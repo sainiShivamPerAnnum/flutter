@@ -127,14 +127,16 @@ class RootViewModel extends BaseModel {
   initialize() async {
     if (!_isInitialized) {
       _isInitialized = true;
-      // _localDBModel.showHomeTutorial.then((value) {
-      //   if (value) {
-      //     //show tutorial
-      //     _localDBModel.setShowHomeTutorial = false;
-      //     AppState.delegate.parseRoute(Uri.parse('dashboard/walkthrough'));
-      //     notifyListeners();
-      //   }
-      // });
+      _localDBModel.showHomeTutorial.then((value) {
+        if (value) {
+          //show tutorial
+          _localDBModel.setShowHomeTutorial = false;
+          // AppState.delegate.parseRoute(Uri.parse('dashboard/walkthrough'));
+          AppState.delegate.appState.currentAction =
+              PageAction(state: PageState.addPage, page: WalkThroughConfig);
+          notifyListeners();
+        }
+      });
 
       _initAdhocNotifications();
 

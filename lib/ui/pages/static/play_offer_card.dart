@@ -16,13 +16,13 @@ class OfferCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(SizeConfig.roundness32),
+      borderRadius: BorderRadius.circular(SizeConfig.roundness24),
       child: Container(
         width: SizeConfig.screenWidth * 0.5,
         height: SizeConfig.screenWidth * 0.28,
         margin: EdgeInsets.only(
           bottom: SizeConfig.screenWidth * 0.1,
-          left: SizeConfig.pageHorizontalMargins,
+          right: SizeConfig.pageHorizontalMargins,
         ),
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -39,7 +39,7 @@ class OfferCard extends StatelessWidget {
                   : UiConstants.tertiarySolid.withOpacity(0.3),
               offset: Offset(
                 0,
-                SizeConfig.screenWidth * 0.15,
+                SizeConfig.screenWidth * 0.14,
               ),
               spreadRadius: -44,
             )
@@ -61,14 +61,14 @@ class OfferCard extends StatelessWidget {
                     model.title ?? "",
                     overflow: TextOverflow.clip,
                     maxLines: 1,
-                    style: TextStyles.title5.colour(Colors.white).bold,
+                    style: TextStyles.body2.colour(Colors.white).bold,
                   ),
                   SizedBox(height: SizeConfig.padding4),
                   Text(
                     model.subtitle ?? "",
                     overflow: TextOverflow.clip,
                     maxLines: 1,
-                    style: TextStyles.title5.colour(Colors.white).bold,
+                    style: TextStyles.body2.colour(Colors.white).bold,
                   ),
                   SizedBox(
                     height: SizeConfig.padding8,

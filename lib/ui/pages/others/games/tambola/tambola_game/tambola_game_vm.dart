@@ -65,7 +65,8 @@ class TambolaGameViewModel extends BaseModel {
   List<TambolaBoard> _bestTambolaBoards;
   bool showSummaryCards = true;
   bool ticketBuyInProgress = false;
-  bool weeklyDrawFetched = false;
+  bool _weeklyDrawFetched = false;
+
   bool _showBuyModal = true;
   int buyTicketCount = 5;
   bool _ticketsBeingGenerated = false;
@@ -78,6 +79,13 @@ class TambolaGameViewModel extends BaseModel {
 
   set ticketsBeingGenerated(value) {
     this._ticketsBeingGenerated = value;
+    notifyListeners();
+  }
+
+  get weeklyDrawFetched => this._weeklyDrawFetched;
+
+  set weeklyDrawFetched(value) {
+    this._weeklyDrawFetched = value;
     notifyListeners();
   }
 
@@ -136,7 +144,8 @@ class TambolaGameViewModel extends BaseModel {
     if (weeklyDigits == null) {
       await tambolaService.fetchWeeklyPicks();
       weeklyDrawFetched = true;
-    }
+    } else
+      weeklyDrawFetched = true;
 
     ///next get the tambola tickets of this week
     if (!tambolaService.weeklyTicksFetched) {

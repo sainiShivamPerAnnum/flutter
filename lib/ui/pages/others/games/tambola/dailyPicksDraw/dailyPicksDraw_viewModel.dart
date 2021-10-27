@@ -19,6 +19,7 @@ class DailyPicksDrawViewModel extends BaseModel {
   double rowWidth = 0;
   double opacity = 0;
   bool showTxt = false;
+  bool showNext = false;
   double ringWidth = 0;
   List<int> get todaysPicks => _tambolaService.todaysPicks;
 
@@ -36,6 +37,10 @@ class DailyPicksDrawViewModel extends BaseModel {
       Future.delayed(Duration(seconds: 1), () {
         showText();
       }).then((value) {
+        Future.delayed(Duration(seconds: 1), () {
+          showNext = true;
+          notifyListeners();
+        });
         // FOR AUTOMATICALLY REPLACING THIS SCREEN WITH THE TAMBOLA HOME SCREEN
         // Future.delayed(Duration(seconds: 2), () {
         //   delegate.appState.currentAction =
