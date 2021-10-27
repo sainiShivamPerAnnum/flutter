@@ -619,6 +619,7 @@ class BaseUtil extends ChangeNotifier {
       isOtpResendCount = 0;
       show_security_prompt = false;
       AppState.delegate.appState.setCurrentTabIndex = 0;
+      manualReferralCode = null;
       _setRuntimeDefaults();
 
       return true;
