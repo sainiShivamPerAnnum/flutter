@@ -80,7 +80,7 @@ class UserProfileVM extends BaseModel {
 
   init() {
     nameController = new TextEditingController(text: myname);
-    dobController = new TextEditingController();
+    dobController = new TextEditingController(text: myDob);
     genderController = new TextEditingController();
     setDate();
     setGender();
