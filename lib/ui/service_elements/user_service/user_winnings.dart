@@ -16,7 +16,7 @@ class UserWinningsSE extends StatelessWidget {
       properties: [UserServiceProperties.myUserFund],
       builder: (context, model, property) => Text(
         locale.saveWinningsValue(
-            model.userFundWallet?.prizeBalance?.toInt() ?? "-"),
+            model.userFundWallet?.prizeLifetimeWin?.toInt() ?? "-"),
         style: style ??
             GoogleFonts.montserrat(
                 fontWeight: FontWeight.w500,

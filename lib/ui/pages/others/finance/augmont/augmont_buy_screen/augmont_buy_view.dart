@@ -169,24 +169,53 @@ class AugmontGoldBuyView extends StatelessWidget {
                         isFetching: model.isGoldRateFetching,
                       ),
                       SizedBox(height: SizeConfig.padding54),
-                      FelloButtonLg(
-                        child: model.isGoldBuyInProgress
-                            ? SpinKitThreeBounce(
-                                color: Colors.white,
-                                size: 20,
-                              )
-                            : Text(
-                                model.status == 0 ? "UNAVAILABLE" : "BUY",
+                      if (model.augOnbRegInProgress)
+                        Container(
+                          width: SizeConfig.screenWidth,
+                          alignment: Alignment.center,
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              "Please wait, onboarding you to Augmont",
+                              style: TextStyles.title3.bold
+                                  .colour(UiConstants.primaryColor),
+                            ),
+                          ),
+                        ),
+                      if (model.augRegFailed)
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                "Augmont Onboarding failed, please try again in sometime",
+                                maxLines: 2,
+                                textAlign: TextAlign.center,
                                 style:
-                                    TextStyles.body2.colour(Colors.white).bold,
+                                    TextStyles.title5.bold.colour(Colors.red),
                               ),
-                        onPressed: () {
-                          if (!model.isGoldBuyInProgress) {
-                            FocusScope.of(context).unfocus();
-                            model.initiateBuy();
-                          }
-                        },
-                      ),
+                            ),
+                          ],
+                        ),
+                      if (!model.augOnbRegInProgress && !model.augRegFailed)
+                        FelloButtonLg(
+                          child: model.isGoldBuyInProgress
+                              ? SpinKitThreeBounce(
+                                  color: Colors.white,
+                                  size: 20,
+                                )
+                              : Text(
+                                  model.status == 0 ? "UNAVAILABLE" : "BUY",
+                                  style: TextStyles.body2
+                                      .colour(Colors.white)
+                                      .bold,
+                                ),
+                          onPressed: () {
+                            if (!model.isGoldBuyInProgress) {
+                              FocusScope.of(context).unfocus();
+                              model.initiateBuy();
+                            }
+                          },
+                        ),
                       SizedBox(
                         height: SizeConfig.padding20,
                       ),

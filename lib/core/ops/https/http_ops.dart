@@ -5,12 +5,14 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/signzy_pan/pan_verification_res_model.dart';
 import 'package:felloapp/core/model/signzy_pan/signzy_identities.dart';
 import 'package:felloapp/core/model/tambola_winners_details.dart';
+import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
@@ -22,19 +24,21 @@ class HttpModel extends ChangeNotifier {
   final Log log = new Log('HttpModel');
   static final String ASIA_BASE_URI = FlavorConfig.instance.values.baseUriAsia;
   static final String US_BASE_URI = FlavorConfig.instance.values.baseUriUS;
-
-  Map header;
-  String idToken;
+  static final String _stage = FlavorConfig.getStage();
 
   void init() {
     if (_userService == null || _userService.idToken == null) {
       logger.e("Null received from user service for IdToken");
       return;
     }
-    idToken = _userService.idToken;
-    logger.d('Fetched user IDToken: ' + idToken);
-    header = {HttpHeaders.authorizationHeader: 'Bearer $idToken'};
     logger.d("Https Ops initialized");
+  }
+
+  Future<String> getBearerToken() async{
+    String token = await _userService.firebaseUser.getIdToken();
+    logger.d(token);
+
+    return token;
   }
 
   ///Returns the number of tickets that need to be added to user's balance
@@ -47,9 +51,11 @@ class HttpModel extends ChangeNotifier {
         'rid': referee,
         'uname': userName
       };
+
+      String _bearer = await getBearerToken();
       Uri _uri = Uri.https(
           ASIA_BASE_URI, '/referralOps/$_stage/api/validate', _params);
-      http.Response _response = await http.post(_uri, headers: {HttpHeaders.authorizationHeader: 'Bearer $idToken'});
+      http.Response _response = await http.post(_uri, headers: {HttpHeaders.authorizationHeader: 'Bearer $_bearer'});
       logger.d(_response.body);
       if (_response.statusCode == 200) {
         try {
@@ -89,9 +95,10 @@ class HttpModel extends ChangeNotifier {
         Uri.https(US_BASE_URI, '/razorpayops/$_stage/api/orderid', queryMap);
     logger.d('URL: $_uri');
 
+    String _bearer = await getBearerToken();
     try {
       http.Response response = await http.get(_uri,
-          headers: {HttpHeaders.authorizationHeader: 'Bearer $idToken'});
+          headers: {HttpHeaders.authorizationHeader: 'Bearer $_bearer'});
       logger.d(response.body);
       Map<String, dynamic> parsed = jsonDecode(response.body);
       //logger.d(parsed);
@@ -111,9 +118,10 @@ class HttpModel extends ChangeNotifier {
         {'orderid': orderId, 'payid': paymentId});
     logger.d('URL: $_uri');
 
+    String _bearer = await getBearerToken();
     try {
       http.Response response = await http.get(_uri,
-          headers: {HttpHeaders.authorizationHeader: 'Bearer $idToken'});
+          headers: {HttpHeaders.authorizationHeader: 'Bearer $_bearer'});
       logger.d(response.body);
       Map<String, dynamic> parsed = jsonDecode(response.body);
       //logger.d(parsed);
@@ -124,22 +132,22 @@ class HttpModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> registerPrizeClaim(
+  Future<Map<String, dynamic>> registerPrizeClaim(
       String userId, double amount, PrizeClaimChoice claimChoice) async {
     if (userId == null || amount == null || claimChoice == null) return null;
 
-    ///    '$US_BASE_URI/userTxnOps/api/registerPrizeClaim?userId=$userId&amount=$amount&redeemType=${claimChoice.value()}';
     final Uri _uri = Uri.https(
-        US_BASE_URI, '/userTxnOps/api/registerPrizeClaim', {
+        US_BASE_URI, '/userTxnOps/$_stage/api/prize/claim', {
       'userId': userId,
       'amount': '$amount',
       'redeemType': claimChoice.value()
     });
     logger.d('URL: $_uri');
 
+    String _bearer = await getBearerToken();
     try {
       http.Response response = await http.post(_uri,
-          headers: {HttpHeaders.authorizationHeader: 'Bearer $idToken'});
+          headers: {HttpHeaders.authorizationHeader: 'Bearer $_bearer'});
       logger.d(response.body);
       Map<String, dynamic> parsed = jsonDecode(response.body);
       logger.d(parsed.toString());
@@ -147,12 +155,22 @@ class HttpModel extends ChangeNotifier {
           parsed['flag'] != null &&
           parsed['flag'] == true) {
         logger.d('Action successful');
-        return true;
+        return {
+          'status': true
+        };
       }
-      return false;
+      else {
+        return {
+          'status': false,
+          'message': parsed['message']??'Operation failed. Please try again in sometime'
+        };
+      }
     } catch (e) {
       logger.e('Http post failed: ' + e.toString());
-      return false;
+      return {
+        'status': false,
+        'message': 'Operation failed. Please try again in sometime'
+      };
     }
   }
 
@@ -161,9 +179,10 @@ class HttpModel extends ChangeNotifier {
     //build request
     final Uri _uri =
         Uri.https(ASIA_BASE_URI, '/userSearch/dev/api/isemailregd');
+    String _bearer = await getBearerToken();
     var headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
-      HttpHeaders.authorizationHeader: 'Bearer $idToken'
+      HttpHeaders.authorizationHeader: 'Bearer $_bearer'
     };
     var request = http.Request('POST', _uri);
     request.bodyFields = {'uid': userId, 'email': email};
@@ -191,12 +210,12 @@ class HttpModel extends ChangeNotifier {
 
   Future<bool> isPanRegistered(String pan) async {
     //build request
-    String _stage = FlavorConfig.getStage();
     final Uri _uri =
         Uri.https(ASIA_BASE_URI, '/userSearch/$_stage/api/ispanregd');
+    String _bearer = await getBearerToken();
     var headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
-      HttpHeaders.authorizationHeader: 'Bearer $idToken'
+      HttpHeaders.authorizationHeader: 'Bearer $_bearer'
     };
     var request = http.Request('POST', _uri);
     request.bodyFields = {'pan': pan};
@@ -225,12 +244,12 @@ class HttpModel extends ChangeNotifier {
   ///encrypt text - used for pan
   Future<String> encryptText(String encText, int encVersion) async {
     //build request
-    String _stage = FlavorConfig.getStage();
     final Uri _uri =
         Uri.https(ASIA_BASE_URI, '/encoderops/$_stage/api/encrypt');
+    String _bearer = await getBearerToken();
     var headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
-      HttpHeaders.authorizationHeader: 'Bearer $idToken'
+      HttpHeaders.authorizationHeader: 'Bearer $_bearer'
     };
     var request = http.Request('POST', _uri);
     request.bodyFields = {'etext': encText, 'eversion': encVersion.toString()};
@@ -260,12 +279,12 @@ class HttpModel extends ChangeNotifier {
   ///decrypt text - used for pan
   Future<String> decryptText(String decText, int decVersion) async {
     //build request
-    String _stage = FlavorConfig.getStage();
     final Uri _uri =
         Uri.https(ASIA_BASE_URI, '/encoderops/$_stage/api/decrypt');
+    String _bearer = await getBearerToken();
     var headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
-      HttpHeaders.authorizationHeader: 'Bearer $idToken'
+      HttpHeaders.authorizationHeader: 'Bearer $_bearer'
     };
     var request = http.Request('POST', _uri);
     request.bodyFields = {'dtext': decText, 'dversion': decVersion.toString()};
@@ -301,23 +320,24 @@ class HttpModel extends ChangeNotifier {
     try {
       Uri _uri = Uri.https(
           ASIA_BASE_URI,
-          '/goldenTicketOps/prod/api/redeemGoldenTicket',
-          {'user_id': userId, 'gt_id': goldenTicketId});
+          '/goldenTicketOps/$_stage/api/redeemGoldenTicket',
+          {'userId': userId, 'gtId': goldenTicketId});
       //post request
+      String _bearer = await getBearerToken();
       http.Response _response = await http.post(_uri,
-          headers: {HttpHeaders.authorizationHeader: 'Bearer $idToken'});
+          headers: {HttpHeaders.authorizationHeader: 'Bearer $_bearer'});
       logger.d(_response.body);
       if (_response.statusCode == 200) {
         //redemption successful
         try {
           Map<String, dynamic> parsed = jsonDecode(_response.body);
           if (parsed != null &&
-              parsed['gtck_count'] != null &&
+              parsed['gflc_count'] != null &&
               parsed['gamt_win'] != null) {
             try {
-              logger.d(parsed['gtck_count'].toString());
+              logger.d(parsed['gflc_count'].toString());
               logger.d(parsed['gamt_win'].toString());
-              int goldenTckRewardCount = BaseUtil.toInt(parsed['gtck_count']);
+              int goldenTckRewardCount = BaseUtil.toInt(parsed['gflc_count']);
               int goldenTckRewardAmt = BaseUtil.toInt(parsed['gamt_win']);
               return {
                 'flag': true,

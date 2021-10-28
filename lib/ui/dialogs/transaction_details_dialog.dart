@@ -81,13 +81,15 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
     if (type == UserTransaction.TRAN_SUBTYPE_ICICI) {
       return "ICICI Prudential Fund";
     } else if (type == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD) {
-      return "Augmont Digital Gold";
+      return "Digital Gold";
     } else if (type == UserTransaction.TRAN_SUBTYPE_TAMBOLA_WIN) {
       return "Tambola Win";
     } else if (type == UserTransaction.TRAN_SUBTYPE_REF_BONUS) {
       return "Referral Bonus";
     } else if (type == UserTransaction.TRAN_SUBTYPE_GLDN_TCK) {
       return "Golden Ticket";
+    } else if (type == UserTransaction.TRAN_SUBTYPE_REWARD_REDEEM) {
+      return "Rewards Redeemed";
     }
     return 'Fello Rewards';
   }

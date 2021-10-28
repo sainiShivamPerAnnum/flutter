@@ -132,7 +132,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                           padding: EdgeInsets.all(SizeConfig.padding8),
                           child: FittedBox(
                             child: Text(
-                              "@${model.myUsername}",
+                              "@${model.myUsername ?? 'username'}",
                               style: TextStyles.body3.colour(Colors.grey),
                             ),
                           ),

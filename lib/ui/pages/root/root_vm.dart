@@ -258,6 +258,9 @@ class RootViewModel extends BaseModel {
           if (redemptionMap != null &&
               redemptionMap['flag'] &&
               redemptionMap['count'] > 0) {
+            _userCoinService.getUserCoinBalance();
+            _userService.getUserFundWalletData();
+
             AppState.screenStack.add(ScreenItem.dialog);
             return showDialog(
               context: context,

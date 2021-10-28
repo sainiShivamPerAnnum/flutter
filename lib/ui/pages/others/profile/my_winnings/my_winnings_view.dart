@@ -56,6 +56,10 @@ class MyWinningsView extends StatelessWidget {
                             ),
                           ),
                           SizedBox(height: SizeConfig.padding24),
+                          Text(
+                            "Unclaimed Balance: ${model.userService.userFundWallet.unclaimedBalance} ",
+                            style: TextStyles.body3,
+                          ),
                           Container(
                             margin: EdgeInsets.symmetric(
                                 horizontal: SizeConfig.pageHorizontalMargins),
@@ -66,7 +70,7 @@ class MyWinningsView extends StatelessWidget {
                                   image: Assets.amazonClaim,
                                   onTap: () => model.showConfirmDialog(
                                       PrizeClaimChoice.AMZ_VOUCHER),
-                                  text: "Redeem for amazon pay",
+                                  text: "Redeem as Amazon Pay Gift Card",
                                 ),
                                 SizedBox(
                                   width: SizeConfig.padding12,
@@ -76,7 +80,7 @@ class MyWinningsView extends StatelessWidget {
                                   image: Assets.goldClaim,
                                   onTap: () => model.showConfirmDialog(
                                       PrizeClaimChoice.GOLD_CREDIT),
-                                  text: "Invest in digtial gold",
+                                  text: "Redeem as Digital Gold",
                                 ),
                               ],
                             ),
@@ -96,7 +100,7 @@ class MyWinningsView extends StatelessWidget {
                             ),
                             child: FittedBox(
                               child: Text(
-                                "Winnings should be minimal of Rs 100 for withdrawal ",
+                                "Winnings can be redeemed after reaching ₹100",
                                 style: TextStyles.body3,
                               ),
                             ),
@@ -221,7 +225,6 @@ class ClaimButton extends StatelessWidget {
     );
   }
 }
-
 
 //                             Card(
 //                             margin: EdgeInsets.symmetric(vertical: 20),
