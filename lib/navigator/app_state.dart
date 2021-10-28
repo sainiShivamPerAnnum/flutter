@@ -1,7 +1,9 @@
 //Project imports
+import 'package:felloapp/core/service/winners_service.dart';
 import 'package:felloapp/navigator/router/back_dispatcher.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
@@ -22,6 +24,7 @@ class PageAction {
 }
 
 class AppState extends ChangeNotifier {
+  final _winnerService = locator<WinnerService>();
   int _rootIndex = 1;
   static ScrollController homeCardListController = ScrollController();
   static String _fcmData;
@@ -79,7 +82,10 @@ class AppState extends ChangeNotifier {
 
   set setCurrentTabIndex(int index) {
     _rootIndex = index;
-    //_saveLastTapIndex(index);
+    if (index == 2 && isWinOpened == false) {
+      _winnerService.fetchWinners();
+      isWinOpened = true;
+    }
     print(_rootIndex);
     notifyListeners();
   }
