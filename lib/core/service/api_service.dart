@@ -79,16 +79,14 @@ class APIService implements API {
     await metric.start();
     var responseJson;
     try {
+      Map<String, String> _headers = {'Content-Type': 'application/json; charset=UTF-8'};
+      if(token != null) _headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
       String _url = _baseUrl + url;
       logger.d("response from $url");
+
       final response = await http.post(
         Uri.parse(_url),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          // HttpHeaders.authorizationHeader: token != null ? token : '',
-          // 'platform': Platform.isAndroid ? 'android' : 'iOS',
-          // 'version': await _getAppVersion(),
-        },
+        headers: _headers,
         body: jsonEncode(body ?? {}),
       );
       responseJson = returnResponse(response);
