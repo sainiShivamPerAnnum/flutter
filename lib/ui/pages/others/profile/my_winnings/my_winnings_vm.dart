@@ -187,15 +187,19 @@ class MyWinningsViewModel extends BaseModel {
   }
 
 // SET AND GET CLAIM CHOICE
-
   Future<bool> _registerClaimChoice(PrizeClaimChoice choice) async {
     if (choice == PrizeClaimChoice.NA) return false;
-    bool flag = await _httpModel.registerPrizeClaim(_userService.baseUser.uid,
-        _userService.userFundWallet.prizeBalance, choice);
-    if (flag) _userService.getUserFundWalletData();
-    if (flag) await _localDBModel.savePrizeClaimChoice(choice);
-    print('Claim choice saved: $flag');
-    return flag;
+    Map<String, dynamic> response = await _httpModel.registerPrizeClaim(
+        _userService.baseUser.uid, _userService.userFundWallet.prizeBalance, choice);
+    if (response['status'] != null && response['status']) {
+      _userService.getUserFundWalletData();
+      await _localDBModel.savePrizeClaimChoice(choice);
+
+      return true;
+    }else{
+      BaseUtil.showNegativeAlert('Withdrawal Failed', response['message']);
+      return false;
+    }
   }
 
   getClaimChoice() async {

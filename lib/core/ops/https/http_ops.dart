@@ -22,6 +22,7 @@ class HttpModel extends ChangeNotifier {
   final Log log = new Log('HttpModel');
   static final String ASIA_BASE_URI = FlavorConfig.instance.values.baseUriAsia;
   static final String US_BASE_URI = FlavorConfig.instance.values.baseUriUS;
+  static final String _stage = FlavorConfig.getStage();
 
   Map header;
   String idToken;
@@ -124,13 +125,12 @@ class HttpModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> registerPrizeClaim(
+  Future<Map<String, dynamic>> registerPrizeClaim(
       String userId, double amount, PrizeClaimChoice claimChoice) async {
     if (userId == null || amount == null || claimChoice == null) return null;
-
     ///    '$US_BASE_URI/userTxnOps/api/registerPrizeClaim?userId=$userId&amount=$amount&redeemType=${claimChoice.value()}';
     final Uri _uri = Uri.https(
-        US_BASE_URI, '/userTxnOps/api/registerPrizeClaim', {
+        US_BASE_URI, '/userTxnOps/$_stage/api/prize/claim', {
       'userId': userId,
       'amount': '$amount',
       'redeemType': claimChoice.value()
@@ -147,12 +147,22 @@ class HttpModel extends ChangeNotifier {
           parsed['flag'] != null &&
           parsed['flag'] == true) {
         logger.d('Action successful');
-        return true;
+        return {
+          'status': true
+        };
       }
-      return false;
+      else {
+        return {
+          'status': false,
+          'message': parsed['message']??'Operation failed. Please try again in sometime'
+        };
+      }
     } catch (e) {
       logger.e('Http post failed: ' + e.toString());
-      return false;
+      return {
+        'status': false,
+        'message': 'Operation failed. Please try again in sometime'
+      };
     }
   }
 
@@ -191,7 +201,6 @@ class HttpModel extends ChangeNotifier {
 
   Future<bool> isPanRegistered(String pan) async {
     //build request
-    String _stage = FlavorConfig.getStage();
     final Uri _uri =
         Uri.https(ASIA_BASE_URI, '/userSearch/$_stage/api/ispanregd');
     var headers = {
@@ -225,7 +234,6 @@ class HttpModel extends ChangeNotifier {
   ///encrypt text - used for pan
   Future<String> encryptText(String encText, int encVersion) async {
     //build request
-    String _stage = FlavorConfig.getStage();
     final Uri _uri =
         Uri.https(ASIA_BASE_URI, '/encoderops/$_stage/api/encrypt');
     var headers = {
@@ -260,7 +268,6 @@ class HttpModel extends ChangeNotifier {
   ///decrypt text - used for pan
   Future<String> decryptText(String decText, int decVersion) async {
     //build request
-    String _stage = FlavorConfig.getStage();
     final Uri _uri =
         Uri.https(ASIA_BASE_URI, '/encoderops/$_stage/api/decrypt');
     var headers = {
