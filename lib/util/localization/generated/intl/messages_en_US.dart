@@ -116,7 +116,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "saveSecure" : MessageLookupByLibrary.simpleMessage("100% secure"),
     "saveSellButton" : MessageLookupByLibrary.simpleMessage("SELL"),
     "saveViewAll" : MessageLookupByLibrary.simpleMessage("View All"),
-    "saveWinningsLabel" : MessageLookupByLibrary.simpleMessage("Your winnings"),
+    "saveWinningsLabel" : MessageLookupByLibrary.simpleMessage("Your total winnings"),
     "saveWinningsValue" : m6,
     "signout" : MessageLookupByLibrary.simpleMessage("Sign Out"),
     "splashNoInternet" : MessageLookupByLibrary.simpleMessage("No active internet connection"),
@@ -129,6 +129,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "winIphoneSmallText" : MessageLookupByLibrary.simpleMessage("Refer"),
     "winMoneyBigText" : MessageLookupByLibrary.simpleMessage("₹ 1 Lakh every week"),
     "winMoneySmallText" : MessageLookupByLibrary.simpleMessage("Play and win"),
-    "winMyWinnings" : MessageLookupByLibrary.simpleMessage("My Winnings")
+    "winMyWinnings" : MessageLookupByLibrary.simpleMessage("My Total Winnings")
   };
 }

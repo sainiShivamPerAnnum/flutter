@@ -53,13 +53,15 @@ class MiniTransactionCardViewModel extends BaseModel {
     if (type == UserTransaction.TRAN_SUBTYPE_ICICI) {
       return "ICICI Prudential Fund";
     } else if (type == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD) {
-      return "Augmont Gold";
+      return "Digital Gold";
     } else if (type == UserTransaction.TRAN_SUBTYPE_TAMBOLA_WIN) {
       return "Tambola Win";
     } else if (type == UserTransaction.TRAN_SUBTYPE_REF_BONUS) {
       return "Referral Bonus";
+    }else if (type == UserTransaction.TRAN_SUBTYPE_REWARD_REDEEM) {
+      return "Rewards Redeemed";
     }
-    return "Fund Name";
+    return "Fello Rewards";
   }
 
   String getTileSubtitle(String type) {
