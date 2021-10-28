@@ -430,13 +430,17 @@ class _TicketState extends State<FCard> {
 
   Future<bool> _registerClaimChoice(PrizeClaimChoice choice) async {
     if (choice == PrizeClaimChoice.NA) return false;
-    bool flag = await httpProvider.registerPrizeClaim(
+    Map<String, dynamic> response = await httpProvider.registerPrizeClaim(
         baseProvider.myUser.uid, widget.unclaimedPrize, choice);
-    if (flag) baseProvider.refreshFunds();
-    if (flag) _userService.getUserFundWalletData();
-    if (flag) await localDBModel.savePrizeClaimChoice(choice);
-    print('Claim choice saved: $flag');
-    return flag;
+    if (response['status'] != null && response['status']) {
+      _userService.getUserFundWalletData();
+      await localDBModel.savePrizeClaimChoice(choice);
+
+      return true;
+    }else{
+      BaseUtil.showNegativeAlert('Withdrawal Failed', response['message']);
+      return false;
+    }
   }
 }
 

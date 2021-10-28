@@ -12,17 +12,13 @@ import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/dialogs/Prize-Card/card.dart';
 import 'package:felloapp/ui/dialogs/share-card.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
-import 'package:felloapp/ui/widgets/fello_dialog/fello_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -82,7 +78,7 @@ class MyWinningsViewModel extends BaseModel {
 
   getWinningHistoryTitle(String subtype) {
     switch (subtype) {
-      case "CIRCKET":
+      case "CRICKET":
         return "Cricket";
         break;
       case "AUGGOLD99":
@@ -112,8 +108,8 @@ class MyWinningsViewModel extends BaseModel {
         asset: Assets.prizeClaimConfirm,
         title: "Confirmation",
         subtitle: choice == PrizeClaimChoice.AMZ_VOUCHER
-            ? "Are you sure you want to invest ₹ ${_userService.userFundWallet.prizeBalance} in amazon gift voucher?"
-            : "Are you sure you want to invest ₹ ${_userService.userFundWallet.prizeBalance} into Augmont Digital Gold",
+            ? "Are you sure you want to redeem ₹ ${_userService.userFundWallet.unclaimedBalance} as an Amazon gift voucher?"
+            : "Are you sure you want to redeem ₹ ${_userService.userFundWallet.unclaimedBalance} as Digital Gold?",
         accept: "Yes",
         reject: "No",
         acceptColor: UiConstants.primaryColor,
@@ -187,15 +183,19 @@ class MyWinningsViewModel extends BaseModel {
   }
 
 // SET AND GET CLAIM CHOICE
-
   Future<bool> _registerClaimChoice(PrizeClaimChoice choice) async {
     if (choice == PrizeClaimChoice.NA) return false;
-    bool flag = await _httpModel.registerPrizeClaim(_userService.baseUser.uid,
-        _userService.userFundWallet.prizeBalance, choice);
-    if (flag) _userService.getUserFundWalletData();
-    if (flag) await _localDBModel.savePrizeClaimChoice(choice);
-    print('Claim choice saved: $flag');
-    return flag;
+    Map<String, dynamic> response = await _httpModel.registerPrizeClaim(
+        _userService.baseUser.uid, _userService.userFundWallet.prizeBalance, choice);
+    if (response['status'] != null && response['status']) {
+      _userService.getUserFundWalletData();
+      await _localDBModel.savePrizeClaimChoice(choice);
+
+      return true;
+    }else{
+      BaseUtil.showNegativeAlert('Withdrawal Failed', response['message']);
+      return false;
+    }
   }
 
   getClaimChoice() async {

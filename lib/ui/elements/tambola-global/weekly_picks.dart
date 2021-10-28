@@ -79,7 +79,7 @@ class WeeklyPicks extends StatelessWidget {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SvgPicture.asset(Assets.noTickets),
+          SvgPicture.asset(Assets.noTickets,width: SizeConfig.screenWidth*0.3,),
           Padding(
             padding: EdgeInsets.all(10),
             child: Text(

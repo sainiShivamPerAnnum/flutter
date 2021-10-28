@@ -3,6 +3,7 @@ import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/winnerbox.dart';
 import 'package:felloapp/util/fcm_topics.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -19,7 +20,7 @@ class PrizeWin extends StatefulWidget {
 
 class _PrizeWinState extends State<PrizeWin> {
   ConfettiController _confettiController;
-  FcmListener fcmProvider;
+  FcmListener _fcmListener;
   bool addedSubscription = false;
 
   @override
@@ -36,9 +37,9 @@ class _PrizeWinState extends State<PrizeWin> {
 
   @override
   Widget build(BuildContext context) {
-    fcmProvider = Provider.of<FcmListener>(context, listen: false);
+    _fcmListener = locator<FcmListener>();
     if (!addedSubscription) {
-      fcmProvider.addSubscription(FcmTopic.WINNERWINNER);
+      _fcmListener.addSubscription(FcmTopic.WINNERWINNER);
       addedSubscription = true;
     }
     return Scaffold(

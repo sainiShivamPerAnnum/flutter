@@ -261,20 +261,17 @@ class _TambolaGameViewState extends State<TambolaGameView>
                             Row(
                               children: [
                                 Text(
-                                  "10 tokens = 1 ticket",
-                                  style: TextStyles.body4.colour(Colors.grey),
+                                  '${model.ticketPurchaseCost} tokens = 1 Tambola ticket',
+                                  style: TextStyles.body3.colour(Colors.grey),
                                 ),
                                 Spacer(),
                                 Text(
                                   "Requires ${model.buyTicketCount * 10} ",
-                                  style: TextStyles.body4,
+                                  style: TextStyles.body3,
                                 ),
-                                RotatedBox(
-                                  quarterTurns: 1,
-                                  child: SvgPicture.asset(
-                                    "assets/vectors/icons/tickets.svg",
-                                    height: SizeConfig.iconSize3,
-                                  ),
+                                SvgPicture.asset(
+                                  Assets.tickets,
+                                  height: SizeConfig.iconSize1,
                                 ),
                               ],
                             ),
@@ -362,7 +359,7 @@ class _TambolaGameViewState extends State<TambolaGameView>
                     )
                   : NoRecordDisplayWidget(
                       assetSvg: Assets.noTickets,
-                      text: "You have no tickets right now",
+                      text: "You do have any Tambola tickets right now",
                     ),
             ),
           ),

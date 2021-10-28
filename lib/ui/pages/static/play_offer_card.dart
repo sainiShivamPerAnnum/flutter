@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
@@ -24,7 +25,7 @@ class OfferCard extends StatelessWidget {
           bottom: SizeConfig.screenWidth * 0.1,
           right: SizeConfig.pageHorizontalMargins,
         ),
-        decoration: BoxDecoration(
+        decoration: (model.bgImage == null || model.bgImage.isEmpty)?BoxDecoration(
           image: DecorationImage(
               image: AssetImage(Assets.germsPattern), fit: BoxFit.cover),
           color: model.bgColor != null
@@ -44,8 +45,8 @@ class OfferCard extends StatelessWidget {
               spreadRadius: -44,
             )
           ],
-        ),
-        child: ClipRRect(
+        ):BoxDecoration(),
+        child: (model.bgImage == null || model.bgImage.isEmpty)?ClipRRect(
           borderRadius: BorderRadius.circular(SizeConfig.roundness32),
           child: Shimmer(
             enabled: shimmer,
@@ -98,7 +99,7 @@ class OfferCard extends StatelessWidget {
               ),
             ),
           ),
-        ),
+        ):Container(),
       ),
     );
   }

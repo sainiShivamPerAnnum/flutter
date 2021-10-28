@@ -68,7 +68,7 @@ class TambolaGameViewModel extends BaseModel {
   bool _weeklyDrawFetched = false;
 
   bool _showBuyModal = true;
-  int buyTicketCount = 5;
+  int buyTicketCount = 3;
   bool _ticketsBeingGenerated = false;
 
   List<Ticket> get tambolaBoardViews => this._tambolaBoardViews;
@@ -88,8 +88,6 @@ class TambolaGameViewModel extends BaseModel {
     this._weeklyDrawFetched = value;
     notifyListeners();
   }
-
-  static const int TICKET_COST_IN_FLC = 10;
 
   get showBuyModal => _showBuyModal;
 
@@ -124,6 +122,14 @@ class TambolaGameViewModel extends BaseModel {
   //   _currentBoard = val;
   //   notifyListeners();
   // }
+
+  int get ticketPurchaseCost  {
+    String _tambolaCost = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.TAMBOLA_PLAY_COST);
+    if(_tambolaCost == null || _tambolaCost.isEmpty || int.tryParse(_tambolaCost) == null) _tambolaCost = '10';
+
+    return int.tryParse(_tambolaCost);
+  }
 
   int get totalActiveTickets =>
       tambolaService.userTicketWallet.getActiveTickets();
@@ -178,6 +184,8 @@ class TambolaGameViewModel extends BaseModel {
     if (_isDeleted) {
       notifyListeners();
     }
+
+    checkSundayResultsProcessing();
   }
 
   _refreshTambolaTickets() async {
@@ -196,11 +204,11 @@ class TambolaGameViewModel extends BaseModel {
   }
 
   increaseTicketCount() {
-    if (buyTicketCount < 50)
+    if (buyTicketCount < 30)
       buyTicketCount += 1;
     else
-      BaseUtil.showNegativeAlert("Ticket purchase Count exceeded",
-          "You can buy only 50 tickets at one go");
+      BaseUtil.showNegativeAlert("Maximum tickets exceeded",
+          "You can purchase upto 30 tambola tickets at once");
     ticketCountController.text = buyTicketCount.toString();
     notifyListeners();
   }
@@ -210,15 +218,13 @@ class TambolaGameViewModel extends BaseModel {
       buyTicketCount -= 1;
     else
       BaseUtil.showNegativeAlert(
-          "Oops!", "We currently don't support negative counts");
+          "Failed", "We currently don't support negative counts");
     ticketCountController.text = buyTicketCount.toString();
     notifyListeners();
   }
 
   void buyTickets() async {
     if (ticketBuyInProgress) return;
-    ticketBuyInProgress = true;
-    notifyListeners();
     if (ticketCountController.text.isEmpty)
       return BaseUtil.showNegativeAlert(
           "No ticket count entered", "Please enter a valid number of tickets");
@@ -228,20 +234,26 @@ class TambolaGameViewModel extends BaseModel {
       return BaseUtil.showNegativeAlert(
           "No ticket count entered", "Please enter a valid number of tickets");
     }
-    if (TICKET_COST_IN_FLC * ticketCount > _coinService.flcBalance) {
+    if (ticketCount > 30) {
+      return BaseUtil.showNegativeAlert("Maximum tickets exceeded",
+          "You can purchase upto 30 tambola tickets at once");
+    }
+    if (ticketPurchaseCost * ticketCount > _coinService.flcBalance) {
       return BaseUtil.showNegativeAlert("Insufficient tokens",
           "You do not have enough tokens to buy Tambola tickets");
     }
 
+    ticketBuyInProgress = true;
+    notifyListeners();
     ApiResponse<FlcModel> _flcResponse = await _fclActionRepo.buyTambolaTickets(
-        cost: (-1 * TICKET_COST_IN_FLC),
+        cost: (-1 * ticketPurchaseCost),
         noOfTickets: ticketCount,
         userUid: _userService.baseUser.uid);
     if (_flcResponse.model != null && _flcResponse.code == 200) {
       ticketBuyInProgress = false;
       notifyListeners();
       BaseUtil.showPositiveAlert(
-          "Ticket bought successfully", "Generating tickets, please wait");
+          "Request is now processing", "Generating your tickets, please wait");
 
       if (_flcResponse.model.flcBalance > 0) {
         _coinService.setFlcBalance(_flcResponse.model.flcBalance);
@@ -252,6 +264,8 @@ class TambolaGameViewModel extends BaseModel {
           await _dbModel.getUserTicketWallet(_userService.baseUser.uid);
       if (tambolaService.userTicketWallet != null) _refreshTambolaTickets();
     } else {
+      ticketBuyInProgress = false;
+      notifyListeners();
       return BaseUtil.showNegativeAlert("Operation Failed",
           "Failed to buy tickets at the moment. Please try again later");
     }
@@ -338,7 +352,7 @@ class TambolaGameViewModel extends BaseModel {
       return false;
     }
     DateTime date = DateTime.now();
-    if (date.weekday == DateTime.sunday) {
+    if (date.weekday == DateTime.thursday) {
       if (weeklyDigits.toList().length == 7 * dailyPicksCount) {
         _localDBModel.isTambolaResultProcessingDone().then((flag) {
           if (flag == 0) {
