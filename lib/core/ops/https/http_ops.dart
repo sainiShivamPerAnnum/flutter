@@ -135,7 +135,7 @@ class HttpModel extends ChangeNotifier {
   Future<Map<String, dynamic>> registerPrizeClaim(
       String userId, double amount, PrizeClaimChoice claimChoice) async {
     if (userId == null || amount == null || claimChoice == null) return null;
-    ///    '$US_BASE_URI/userTxnOps/api/registerPrizeClaim?userId=$userId&amount=$amount&redeemType=${claimChoice.value()}';
+
     final Uri _uri = Uri.https(
         US_BASE_URI, '/userTxnOps/$_stage/api/prize/claim', {
       'userId': userId,
@@ -321,7 +321,7 @@ class HttpModel extends ChangeNotifier {
       Uri _uri = Uri.https(
           ASIA_BASE_URI,
           '/goldenTicketOps/$_stage/api/redeemGoldenTicket',
-          {'user_id': userId, 'gt_id': goldenTicketId});
+          {'userId': userId, 'gtId': goldenTicketId});
       //post request
       String _bearer = await getBearerToken();
       http.Response _response = await http.post(_uri,
