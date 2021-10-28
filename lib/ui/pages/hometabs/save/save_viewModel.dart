@@ -4,11 +4,8 @@ import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/modals_sheets/augmont_register_modal_sheet.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_view.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/size_config.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SaveViewModel extends BaseModel {
   BaseUtil _baseUtil = locator<BaseUtil>();
@@ -25,5 +22,19 @@ class SaveViewModel extends BaseModel {
   navigateToBuyScreen() {
     AppState.delegate.appState.currentAction =
         PageAction(state: PageState.addPage, page: AugmontGoldBuyPageConfig);
+  }
+
+  navigateToAboutGold() {
+    AppState.delegate.appState.currentAction = PageAction(
+        state: PageState.addPage, page: AugmontGoldDetailsPageConfig);
+  }
+
+  openAugmontWebUri() async {
+    const url = "https://www.augmont.com/about-us";
+    if (await canLaunch(url))
+      await launch(url);
+    else
+      BaseUtil.showNegativeAlert(
+          'Failed to launch URL', 'Please try again in sometime');
   }
 }

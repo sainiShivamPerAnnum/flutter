@@ -310,6 +310,7 @@ class PrizesView extends StatelessWidget {
         itemCount: model.prizesA.length,
         shrinkWrap: true,
         physics: BouncingScrollPhysics(),
+        padding: EdgeInsets.only(bottom: SizeConfig.navBarHeight),
         itemBuilder: (ctx, i) {
           return Container(
             width: SizeConfig.screenWidth,
@@ -429,6 +430,7 @@ class LeaderBoardView extends StatelessWidget {
             },
             child: ListView.builder(
               // physics: ClampingScrollPhysics(),
+              padding: EdgeInsets.only(bottom: SizeConfig.navBarHeight),
               itemCount: model.scoreboard.length,
               itemBuilder: (ctx, i) {
                 return Container(

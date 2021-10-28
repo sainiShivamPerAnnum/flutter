@@ -141,7 +141,7 @@ class _LoginControllerState extends State<LoginController>
         ///this is the first time that the otp was requested
         baseProvider.isLoginNextInProgress = false;
         _controller.animateToPage(OtpInputScreen.index,
-            duration: Duration(milliseconds: 1500),
+            duration: Duration(milliseconds: 500),
             curve: Curves.easeInToLinear);
         setState(() {});
       } else {
@@ -513,7 +513,7 @@ class _LoginControllerState extends State<LoginController>
               setState(() {});
             }).then((value) {
               _controller.animateToPage(Username.index,
-                  duration: Duration(seconds: 1), curve: Curves.easeInToLinear);
+                  duration: Duration(milliseconds: 500), curve: Curves.easeInToLinear);
             });
           }
           break;
@@ -638,7 +638,7 @@ class _LoginControllerState extends State<LoginController>
       lclDbProvider.setShowHomeTutorial = true;
       lclDbProvider.setShowTambolaTutorial = true;
       _controller.animateToPage(NameInputScreen.index,
-          duration: Duration(seconds: 1), curve: Curves.easeInToLinear);
+          duration: Duration(milliseconds: 500), curve: Curves.easeInToLinear);
       //_nameScreenKey.currentState.showEmailOptions();
     } else {
       ///Existing user
@@ -668,7 +668,7 @@ class _LoginControllerState extends State<LoginController>
     if (!baseProvider.isLoginNextInProgress) {
       AppState.isOnboardingInProgress = false;
       _controller.animateToPage(MobileInputScreen.index,
-          duration: Duration(milliseconds: 300), curve: Curves.easeInToLinear);
+          duration: Duration(milliseconds: 500), curve: Curves.easeInToLinear);
     }
   }
 

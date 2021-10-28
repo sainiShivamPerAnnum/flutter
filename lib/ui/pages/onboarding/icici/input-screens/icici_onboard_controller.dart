@@ -529,12 +529,12 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
               setState(() {});
               new Timer(const Duration(milliseconds: 1000), () {
                 Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (ctx) => MFDetailsPage(),
-                  ),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (ctx) => MFDetailsPage(),
+                //   ),
+                // );
                 //setState(() {});
               });
             });

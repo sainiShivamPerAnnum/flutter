@@ -14,6 +14,13 @@ class FlcActionsRepo {
   final _api = locator<Api>();
   final _logger = locator<Logger>();
 
+  Future<String> _getBearerToken() async{
+    String token = await _userService.firebaseUser.getIdToken();
+    _logger.d(token);
+
+    return token;
+  }
+
   Future<ApiResponse<FlcModel>> getCoinBalance() async {
     try {
       final DocumentSnapshot response =
@@ -35,8 +42,9 @@ class FlcActionsRepo {
     };
     _logger.d("Substract FLC : $_body");
     try {
+      final String _bearer = await _getBearerToken();
       final response = await APIService.instance
-          .postData(_apiPaths.kSubstractFlcPreGameApi, body: _body);
+          .postData(_apiPaths.kSubstractFlcPreGameApi, body: _body, token: _bearer);
       _logger.d(response.toString());
       FlcModel _flcModel = FlcModel.fromMap(response);
       return ApiResponse(model: _flcModel, code: 200);
@@ -55,8 +63,9 @@ class FlcActionsRepo {
     };
     _logger.d("completeUserDeposit : $_body");
     try {
+      final String _bearer = await _getBearerToken();
       final response = await APIService.instance
-          .postData(_apiPaths.kDepositComplete, body: _body);
+          .postData(_apiPaths.kDepositComplete, body: _body, token: _bearer);
       _logger.d(response.toString());
       FlcModel _flcModel = FlcModel.fromMap(response);
       return ApiResponse(model: _flcModel, code: 200);
@@ -75,8 +84,9 @@ class FlcActionsRepo {
     };
     _logger.d("buyTambolaTickets : $_body");
     try {
+      final String _bearer = await _getBearerToken();
       final response = await APIService.instance
-          .postData(_apiPaths.kBuyTambola, body: _body);
+          .postData(_apiPaths.kBuyTambola, body: _body, token: _bearer);
       _logger.d(response.toString());
       FlcModel _flcModel = FlcModel.fromMap(response);
       return ApiResponse(model: _flcModel, code: 200);

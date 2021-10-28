@@ -25,14 +25,17 @@ class FelloInfoDialog extends StatelessWidget {
           ? customContent
           : Column(
               children: [
-                SizedBox(height: SizeConfig.screenHeight * 0.04),
-                SvgPicture.asset(
-                  asset,
-                  height: SizeConfig.screenHeight * 0.16,
-                ),
-                SizedBox(
-                  height: SizeConfig.screenHeight * 0.04,
-                ),
+                if (asset != null)
+                  SizedBox(height: SizeConfig.screenHeight * 0.04),
+                if (asset != null)
+                  SvgPicture.asset(
+                    asset,
+                    height: SizeConfig.screenHeight * 0.16,
+                  ),
+                if (asset != null)
+                  SizedBox(
+                    height: SizeConfig.screenHeight * 0.04,
+                  ),
                 Text(
                   title,
                   style: TextStyles.title3.bold,
@@ -43,7 +46,7 @@ class FelloInfoDialog extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: TextStyles.body2.colour(Colors.grey),
                 ),
-                SizedBox(height: SizeConfig.screenHeight * 0.04),
+                SizedBox(height: SizeConfig.screenHeight * 0.02),
                 action
               ],
             ),

@@ -89,14 +89,14 @@ class RootViewModel extends BaseModel {
 
   void onItemTapped(int index) {
     AppState.delegate.appState.setCurrentTabIndex = index;
-    switch (index) {
-      case 1:
-        AppState.isSaveOpened = true;
-        break;
-      case 2:
-        winnerService.fetchWinners();
-        break;
-    }
+    // switch (index) {
+    //   case 1:
+    //     AppState.isSaveOpened = true;
+    //     break;
+    //   case 2:
+    //     winnerService.fetchWinners();
+    //     break;
+    // }
     notifyListeners();
   }
 

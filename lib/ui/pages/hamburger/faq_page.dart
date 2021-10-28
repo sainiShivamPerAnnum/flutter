@@ -37,6 +37,11 @@ class _FAQList extends State<FAQPage> {
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    List<String> faqheaders = [], faqAnswers = [];
+    faqheaders.addAll(Assets.faqHeaders);
+    faqheaders.addAll(Assets.goldFaqHeaders);
+    faqAnswers.addAll(Assets.faqAnswers);
+    faqAnswers.addAll(Assets.goldFaqAnswers);
     return new Scaffold(
         body: HomeBackground(
       whiteBackground: WhiteBackground(
@@ -55,8 +60,8 @@ class _FAQList extends State<FAQPage> {
                 shrinkWrap: true,
                 children: [
                   FAQCard(
-                    Assets.faqHeaders,
-                    Assets.faqAnswers,
+                    faqheaders,
+                    faqAnswers,
                   ),
                 ],
               ),

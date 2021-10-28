@@ -7,8 +7,6 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
-
 //Flutter and dart imports
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -29,12 +27,7 @@ class LauncherView extends StatelessWidget {
             body: Container(
               width: SizeConfig.screenWidth,
               height: SizeConfig.screenHeight,
-              // decoration: BoxDecoration(
-              //   image: DecorationImage(
-              //     image: AssetImage(Assets.splashBackground),
-              //     fit: BoxFit.fitWidth,
-              //   ),
-              // ),
+              color: Colors.white,
               child: Stack(
                 children: <Widget>[
                   Positioned(
@@ -62,7 +55,7 @@ class LauncherView extends StatelessWidget {
                     ),
                   ),
                   Positioned(
-                    bottom: kToolbarHeight,
+                    bottom: SizeConfig.navBarHeight,
                     child: Container(
                       width: SizeConfig.screenWidth,
                       padding: EdgeInsets.symmetric(
@@ -75,17 +68,15 @@ class LauncherView extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Image.asset(Assets.augmontLogo,
+                                  color: Colors.grey,
                                   width: SizeConfig.screenWidth * 0.2),
                               SizedBox(width: 16),
-                              Image.asset(Assets.iciciGraphic,
-                                  width: SizeConfig.screenWidth * 0.1),
-                              SizedBox(width: 16),
                               Image.asset(Assets.sebiGraphic,
-                                  color: Color(0xff2E2A81),
+                                  color: Colors.grey,
                                   width: SizeConfig.screenWidth * 0.04),
                               SizedBox(width: 16),
                               Image.asset(Assets.amfiGraphic,
-                                  color: UiConstants.primaryColor,
+                                  color: Colors.grey,
                                   width: SizeConfig.screenWidth * 0.04)
                             ],
                           )

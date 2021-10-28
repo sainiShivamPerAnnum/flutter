@@ -4,6 +4,8 @@ import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/prize_loss
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/prize_partial_win.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/prize_win.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/processing.dart';
+import 'package:felloapp/ui/pages/static/fello_appbar.dart';
+import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +21,7 @@ class WeeklyResult extends StatefulWidget {
 
 class _WeeklyResultState extends State<WeeklyResult> {
   PageController _pageController;
+  bool showBack = false;
   @override
   void initState() {
     print(widget.isEligible);
@@ -31,6 +34,9 @@ class _WeeklyResultState extends State<WeeklyResult> {
   void didChangeDependencies() {
     Future.delayed(Duration(seconds: 3), () {
       if (mounted) {
+        setState(() {
+          showBack = true;
+        });
         if (!widget.isEligible && widget.winningsmap.isNotEmpty)
           _pageController.jumpToPage(3);
         else if (widget.isEligible && widget.winningsmap.isNotEmpty)
@@ -45,33 +51,42 @@ class _WeeklyResultState extends State<WeeklyResult> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          leading: SizedBox(),
-          elevation: 0,
-          centerTitle: true,
-          backgroundColor: Color(0xffF5DFC3),
-          title: Image.asset(
-            "images/fello_logo.png",
-            height: kToolbarHeight * 0.6,
-          ),
-          actions: [
-            IconButton(
-              onPressed: () => AppState.backButtonDispatcher.didPopRoute(),
-              icon: Icon(
-                Icons.close,
-                color: Color(0xff272727),
+      body: HomeBackground(
+        child: Column(
+          children: [
+            FelloAppBar(
+              leading: FelloAppBarBackButton(
+                onBackPress: showBack == true
+                    ? () => AppState.backButtonDispatcher.didPopRoute()
+                    : () {},
+              ),
+              title: showBack == true ? "Tambola" : "Processing",
+            ),
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.pageHorizontalMargins),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(SizeConfig.padding40),
+                    topRight: Radius.circular(SizeConfig.padding40),
+                  ),
+                  color: Colors.white,
+                ),
+                child: PageView(
+                  physics: NeverScrollableScrollPhysics(),
+                  controller: _pageController,
+                  children: [
+                    const PrizeProcessing(),
+                    const Loser(),
+                    PrizeWin(winningsMap: widget.winningsmap),
+                    PrizePWin(winningsMap: widget.winningsmap)
+                  ],
+                ),
               ),
             ),
-          ]),
-      body: PageView(
-        physics: NeverScrollableScrollPhysics(),
-        controller: _pageController,
-        children: [
-          const PrizeProcessing(),
-          const Loser(),
-          PrizeWin(winningsMap: widget.winningsmap),
-          PrizePWin(winningsMap: widget.winningsmap)
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -32,7 +32,7 @@ import 'package:felloapp/ui/pages/others/games/tambola/summary_tickets_display.d
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_game/tambola_game_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_walkthrough.dart';
-import 'package:felloapp/ui/pages/others/games/tambola/weekly_result.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_result.dart';
 import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/claim_username.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
@@ -169,9 +169,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.UserProfileDetails:
           _addPageData(UserProfileDetails(), UserProfileDetailsConfig);
           break;
-        case Pages.MfDetails:
-          _addPageData(MFDetailsPage(), MfDetailsPageConfig);
-          break;
+        // case Pages.MfDetails:
+        //   _addPageData(MFDetailsPage(), MfDetailsPageConfig);
+        //   break;
         // case Pages.AugDetails:
         //   _addPageData(AugmontDetailsPage(), AugDetailsPageConfig);
         //   break;
@@ -241,9 +241,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.TWeeklyResult:
           _addPageData(WeeklyResult(), TWeeklyResultPageConfig);
           break;
-        case Pages.TSummaryDetails:
-          _addPageData(SummaryTicketsDisplay(), TSummaryDetailsPageConfig);
-          break;
+        // case Pages.TSummaryDetails:
+        //   _addPageData(SummaryTicketsDisplay(), TSummaryDetailsPageConfig);
+        //   break;
         case Pages.Notifications:
           _addPageData(NotficationsPage(), NotificationsConfig);
           break;

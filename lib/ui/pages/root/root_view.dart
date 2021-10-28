@@ -18,6 +18,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/shims/dart_ui_real.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 
 class Root extends StatelessWidget {
   @override
@@ -173,22 +174,30 @@ class WantMoreTickets extends StatelessWidget {
             backgroundColor: Colors.transparent,
             isBarrierDismissable: true,
           ),
-          child: Container(
-            height: SizeConfig.navBarHeight,
-            width: SizeConfig.navBarWidth,
-            decoration: BoxDecoration(
-              color: UiConstants.primaryLight,
-              borderRadius: BorderRadius.circular(
-                SizeConfig.roundness24,
-              ),
-            ),
-            alignment: Alignment.topCenter,
+          child: Shimmer(
+            duration: Duration(seconds: 5),
             child: Container(
-              height: SizeConfig.navBarHeight * 0.5,
-              alignment: Alignment.center,
-              child: Text(
-                locale.navWMT,
-                style: TextStyles.body1.colour(UiConstants.primaryColor).bold,
+              height: SizeConfig.navBarHeight,
+              width: SizeConfig.navBarWidth,
+              decoration: BoxDecoration(
+                color: UiConstants.primaryLight,
+                borderRadius: BorderRadius.circular(
+                  SizeConfig.roundness24,
+                ),
+              ),
+              alignment: Alignment.topCenter,
+              child: Container(
+                height: SizeConfig.navBarHeight * 0.5,
+                alignment: Alignment.center,
+                child: Shimmer(
+                  duration: Duration(seconds: 1),
+                  interval: Duration(seconds: 4),
+                  child: Text(
+                    locale.navWMT,
+                    style:
+                        TextStyles.body1.colour(UiConstants.primaryColor).bold,
+                  ),
+                ),
               ),
             ),
           ),

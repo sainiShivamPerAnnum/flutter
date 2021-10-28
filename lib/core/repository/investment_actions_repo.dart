@@ -1,13 +1,22 @@
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/deposit_response_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:logger/logger.dart';
 
 class InvestmentActionsRepository {
+  final _userService = locator<UserService>();
   final _apiPaths = locator<ApiPath>();
   final _logger = locator<Logger>();
+
+  Future<String> _getBearerToken() async{
+    String token = await _userService.firebaseUser.getIdToken();
+    _logger.d(token);
+
+    return token;
+  }
 
   Future<ApiResponse<DepositResponseModel>> initiateUserDeposit(
       {Map<String, dynamic> initAugMap, Map<String, dynamic> initRzpMap, double amount, String userUid}) async {
@@ -20,8 +29,9 @@ class InvestmentActionsRepository {
     _logger.d("completeUserDeposit : $_body");
 
     try {
+      final String _bearer = await _getBearerToken();
       final response = await APIService.instance
-          .postData(_apiPaths.kDepositPending, body: _body);
+          .postData(_apiPaths.kDepositPending, body: _body, token: _bearer);
 
       _logger.d(response.toString());
 
@@ -52,8 +62,9 @@ class InvestmentActionsRepository {
     };
     _logger.d("completeUserDeposit : $_body");
     try {
+      final String _bearer = await _getBearerToken();
       final response = await APIService.instance
-          .postData(_apiPaths.kDepositComplete, body: _body);
+          .postData(_apiPaths.kDepositComplete, body: _body, token: _bearer);
       _logger.d(response.toString());
       DepositResponseModel _investmentDepositModel =
           DepositResponseModel.fromMap(response);
@@ -78,8 +89,9 @@ class InvestmentActionsRepository {
 
     _logger.d("completeUserDeposit : $_body");
     try {
+      final String _bearer = await _getBearerToken();
       final response = await APIService.instance
-          .postData(_apiPaths.kDepositCancelled, body: _body);
+          .postData(_apiPaths.kDepositCancelled, body: _body, token: _bearer);
 
       DepositResponseModel _investmentDepositModel =
           DepositResponseModel.fromMap(response);
@@ -103,8 +115,9 @@ class InvestmentActionsRepository {
 
     _logger.d("withdrawlComplete : $_body");
     try {
+      final String _bearer = await _getBearerToken();
       final response = await APIService.instance
-          .postData(_apiPaths.kWithdrawlComplete, body: _body);
+          .postData(_apiPaths.kWithdrawlComplete, body: _body, token: _bearer);
 
       DepositResponseModel _investmentDepositModel =
           DepositResponseModel.fromMap(response);
@@ -128,8 +141,9 @@ class InvestmentActionsRepository {
 
     _logger.d("withdrawlComplete : $_body");
     try {
+      final String _bearer = await _getBearerToken();
       final response = await APIService.instance
-          .postData(_apiPaths.kWithdrawlCancelled, body: _body);
+          .postData(_apiPaths.kWithdrawlCancelled, body: _body, token: _bearer);
 
       DepositResponseModel _investmentDepositModel =
           DepositResponseModel.fromMap(response);

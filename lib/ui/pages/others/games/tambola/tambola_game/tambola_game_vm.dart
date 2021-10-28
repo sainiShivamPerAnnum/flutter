@@ -19,7 +19,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/elements/tambola-global/tambola_ticket.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/show_all_tickets.dart';
-import 'package:felloapp/ui/pages/others/games/tambola/weekly_result.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_result.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
@@ -123,10 +123,12 @@ class TambolaGameViewModel extends BaseModel {
   //   notifyListeners();
   // }
 
-  int get ticketPurchaseCost  {
+  int get ticketPurchaseCost {
     String _tambolaCost = BaseRemoteConfig.remoteConfig
         .getString(BaseRemoteConfig.TAMBOLA_PLAY_COST);
-    if(_tambolaCost == null || _tambolaCost.isEmpty || int.tryParse(_tambolaCost) == null) _tambolaCost = '10';
+    if (_tambolaCost == null ||
+        _tambolaCost.isEmpty ||
+        int.tryParse(_tambolaCost) == null) _tambolaCost = '10';
 
     return int.tryParse(_tambolaCost);
   }
@@ -352,7 +354,7 @@ class TambolaGameViewModel extends BaseModel {
       return false;
     }
     DateTime date = DateTime.now();
-    if (date.weekday == DateTime.thursday) {
+    if (date.weekday == DateTime.sunday) {
       if (weeklyDigits.toList().length == 7 * dailyPicksCount) {
         _localDBModel.isTambolaResultProcessingDone().then((flag) {
           if (flag == 0) {

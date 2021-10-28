@@ -1,4 +1,7 @@
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -7,66 +10,49 @@ class PrizeProcessing extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xffF5DFC3),
-      body: SafeArea(
-        child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Spacer(
-                flex: 1,
+    S locale = S.of(context);
+    return SafeArea(
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Spacer(
+              flex: 1,
+            ),
+            Text(
+              locale.tProcessingTitle,
+              style: TextStyles.title1.bold,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20.0),
+              child: Text(
+                locale.tProcessingSubtitle,
+                textAlign: TextAlign.center,
+                style: TextStyles.body3.letterSpace(2),
               ),
-              Text(
-                "Prize Day",
+            ),
+            LottieBuilder.asset(
+              "images/Tambola/process.json",
+              width: SizeConfig.screenWidth * 0.5,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20.0),
+              child: Text(
+                "PROCESSING...",
+                textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontFamily: "Cucciolo",
-                    color: Color(0xff272727),
-                    fontSize: SizeConfig.cardTitleTextSize * 1.6,
+                    color: UiConstants.primaryColor,
+                    fontSize: SizeConfig.largeTextSize,
+                    height: 1.5,
                     fontWeight: FontWeight.w700,
-                    letterSpacing: 2,
-                    shadows: [
-                      BoxShadow(
-                          color: Color(0xffFCB260).withOpacity(0.8),
-                          offset: Offset(1, 1),
-                          blurRadius: 5,
-                          spreadRadius: 5)
-                    ]),
+                    letterSpacing: 5),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20.0),
-                child: Text(
-                  "It's Sunday, and we are processing your tickets to see if any of your tickets won or not ",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: SizeConfig.mediumTextSize,
-                      height: 1.5,
-                      letterSpacing: 2),
-                ),
-              ),
-              LottieBuilder.asset(
-                "images/Tambola/process.json",
-                width: SizeConfig.screenWidth * 0.5,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20.0),
-                child: Text(
-                  "PROCESSING...",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      color: Color(0xffFCB260),
-                      fontSize: SizeConfig.largeTextSize,
-                      height: 1.5,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 5),
-                ),
-              ),
-              Spacer(
-                flex: 2,
-              )
-            ],
-          ),
+            ),
+            Spacer(
+              flex: 2,
+            )
+          ],
         ),
       ),
     );
