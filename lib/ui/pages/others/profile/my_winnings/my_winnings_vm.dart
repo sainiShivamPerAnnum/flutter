@@ -184,11 +184,8 @@ class MyWinningsViewModel extends BaseModel {
       AppState.backButtonDispatcher.didPopRoute();
       if (flag) {
         showSuccessPrizeWithdrawalDialog(choice == PrizeClaimChoice.AMZ_VOUCHER
-            ? "You will recieve the voucher on your email soon"
-            : "Your gold is invested successfully");
-      } else {
-        BaseUtil.showNegativeAlert(
-            'Failed to send claim', 'Please try again in some time');
+            ? "You will receive the gift card on your registered email and mobile in the next 1-2 business days"
+            : "The gold in grams shall be credited to your wallet in the next 1-2 business days");
       }
     });
   }
@@ -198,10 +195,11 @@ class MyWinningsViewModel extends BaseModel {
     if (choice == PrizeClaimChoice.NA) return false;
     Map<String, dynamic> response = await _httpModel.registerPrizeClaim(
         _userService.baseUser.uid,
-        _userService.userFundWallet.prizeBalance,
+        _userService.userFundWallet.unclaimedBalance,
         choice);
     if (response['status'] != null && response['status']) {
       _userService.getUserFundWalletData();
+      notifyListeners();
       await _localDBModel.savePrizeClaimChoice(choice);
 
       return true;

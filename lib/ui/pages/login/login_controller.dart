@@ -62,6 +62,7 @@ class _LoginControllerState extends State<LoginController>
   PageController _controller;
   static BaseUtil baseProvider;
   static DBModel dbProvider;
+
   // static FcmListener fcmProvider;
   static LocalDBModel lclDbProvider;
   static AppState appStateProvider;
@@ -269,7 +270,7 @@ class _LoginControllerState extends State<LoginController>
                           ),
                           child: PageView.builder(
                             physics: new NeverScrollableScrollPhysics(),
-                            scrollDirection: Axis.vertical,
+                            scrollDirection: Axis.horizontal,
                             controller: _controller,
                             itemCount: _pages.length,
                             itemBuilder: (BuildContext context, int index) {
@@ -304,6 +305,41 @@ class _LoginControllerState extends State<LoginController>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
+                    (_currentPage == MobileInputScreen.index)
+                        ? Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                            child: RichText(
+                              text: new TextSpan(
+                                children: [
+                                  new TextSpan(
+                                    text: 'By continuing, you agree to our ',
+                                    style: GoogleFonts.montserrat(
+                                        fontSize:
+                                            SizeConfig.smallTextSize * 1.2,
+                                        color: Colors.black45),
+                                  ),
+                                  new TextSpan(
+                                    text: 'Terms of Service',
+                                    style: GoogleFonts.montserrat(
+                                        color: Colors.black45,
+                                        fontSize:
+                                            SizeConfig.smallTextSize * 1.2,
+                                        decoration: TextDecoration.underline),
+                                    recognizer: new TapGestureRecognizer()
+                                      ..onTap = () {
+                                        Haptic.vibrate();
+                                        BaseUtil.launchUrl(
+                                            'https://fello.in/policy/tnc');
+                                        // appStateProvider.currentAction = PageAction(
+                                        //     state: PageState.addPage,
+                                        //     page: TncPageConfig);
+                                      },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        : Container(),
                     Container(
                       width: SizeConfig.screenWidth,
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 20),
@@ -657,37 +693,3 @@ class _LoginControllerState extends State<LoginController>
     //TODO move to home through animation
   }
 }
-
-// (_currentPage == MobileInputScreen.index)
-//     ? Padding(
-//         padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-//         child: RichText(
-//           text: new TextSpan(
-//             children: [
-//               new TextSpan(
-//                 text: 'By continuing, you agree to our ',
-//                 style: GoogleFonts.montserrat(
-//                     fontSize: SizeConfig.smallTextSize * 1.2,
-//                     color: Colors.black45),
-//               ),
-//               new TextSpan(
-//                 text: 'Terms of Service',
-//                 style: GoogleFonts.montserrat(
-//                     color: Colors.black45,
-//                     fontSize: SizeConfig.smallTextSize * 1.2,
-//                     decoration: TextDecoration.underline),
-//                 recognizer: new TapGestureRecognizer()
-//                   ..onTap = () {
-//                     Haptic.vibrate();
-//                     BaseUtil.launchUrl(
-//                         'https://fello.in/policy/tnc');
-//                     // appStateProvider.currentAction = PageAction(
-//                     //     state: PageState.addPage,
-//                     //     page: TncPageConfig);
-//                   },
-//               ),
-//             ],
-//           ),
-//         ),
-//       )
-//     : Container(),
