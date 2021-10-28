@@ -25,7 +25,9 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AugmontRegisterModalSheet extends StatefulWidget {
-  AugmontRegisterModalSheet({Key key}) : super(key: key);
+  final ValueChanged<bool> onSuccessfulAugReg;
+
+  AugmontRegisterModalSheet({this.onSuccessfulAugReg});
 
   AugmontRegisterModalSheetState createState() =>
       AugmontRegisterModalSheetState();
@@ -88,7 +90,8 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
                 size: 30,
               ),
               onPressed: () {
-                AppState.backButtonDispatcher.didPopRoute();
+                if (!baseProvider.isAugmontRegnInProgress)
+                  AppState.backButtonDispatcher.didPopRoute();
               },
             )
           ],
@@ -194,11 +197,12 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
       return;
     } else {
       ///show completion animation
+      widget.onSuccessfulAugReg(true);
       BaseUtil.showPositiveAlert(
           'Registration Successful', 'You are successfully registered!');
       baseProvider.isAugmontRegnInProgress = false;
       setState(() {});
-      AppState.backButtonDispatcher.didPopRoute();
+      Navigator.pop(context);
       // AppState.delegate.appState.currentAction =
       //     PageAction(state: PageState.addPage, page: AugmontGoldBuyPageConfig);
     }
