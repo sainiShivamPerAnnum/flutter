@@ -167,8 +167,8 @@ class _GoldenTicketClaimDialogState extends State<GoldenTicketClaimDialog> {
                                     child: Text(
                                       widget.cashPrize != null &&
                                               widget.cashPrize > 0
-                                          ? "You've won ${widget.ticketCount} tambola tickets and ₹ ${widget.cashPrize} in prizes!"
-                                          : "You've won ${widget.ticketCount} tambola tickets!",
+                                          ? "You've won ${widget.ticketCount} Fello tokens and ₹ ${widget.cashPrize} in prizes!"
+                                          : "You've won ${widget.ticketCount} Fello tokens!",
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                           fontWeight: FontWeight.w700,

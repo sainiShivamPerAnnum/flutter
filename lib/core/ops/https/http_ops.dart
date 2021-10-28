@@ -308,7 +308,7 @@ class HttpModel extends ChangeNotifier {
     try {
       Uri _uri = Uri.https(
           ASIA_BASE_URI,
-          '/goldenTicketOps/prod/api/redeemGoldenTicket',
+          '/goldenTicketOps/$_stage/api/redeemGoldenTicket',
           {'user_id': userId, 'gt_id': goldenTicketId});
       //post request
       http.Response _response = await http.post(_uri,
@@ -319,12 +319,12 @@ class HttpModel extends ChangeNotifier {
         try {
           Map<String, dynamic> parsed = jsonDecode(_response.body);
           if (parsed != null &&
-              parsed['gtck_count'] != null &&
+              parsed['gflc_count'] != null &&
               parsed['gamt_win'] != null) {
             try {
-              logger.d(parsed['gtck_count'].toString());
+              logger.d(parsed['gflc_count'].toString());
               logger.d(parsed['gamt_win'].toString());
-              int goldenTckRewardCount = BaseUtil.toInt(parsed['gtck_count']);
+              int goldenTckRewardCount = BaseUtil.toInt(parsed['gflc_count']);
               int goldenTckRewardAmt = BaseUtil.toInt(parsed['gamt_win']);
               return {
                 'flag': true,
