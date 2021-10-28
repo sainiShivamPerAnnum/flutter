@@ -93,7 +93,7 @@ class FDrawer extends StatelessWidget {
                               },
                               icon: SvgPicture.asset(
                                 model.drawerList[i].icon,
-                                width: SizeConfig.padding24,
+                                width: SizeConfig.padding20,
                                 color: Color(0xff11192B),
                               ),
                               label: Text(

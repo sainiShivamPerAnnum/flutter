@@ -945,6 +945,108 @@ class S {
 
   // skipped getter for the '-----------------------' key
 
+  /// `Prize Day`
+  String get tProcessingTitle {
+    return Intl.message(
+      'Prize Day',
+      name: 'tProcessingTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `It's Sunday, and we are processing your tickets to see if any of your tickets won or not `
+  String get tProcessingSubtitle {
+    return Intl.message(
+      'It\'s Sunday, and we are processing your tickets to see if any of your tickets won or not ',
+      name: 'tProcessingSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tambola Results`
+  String get tLossTitle {
+    return Intl.message(
+      'Tambola Results',
+      name: 'tLossTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `None of your tickets matched this week`
+  String get tLossSubtitle {
+    return Intl.message(
+      'None of your tickets matched this week',
+      name: 'tLossSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Get ready for next week tambola from now on.`
+  String get tLossSubtitle2 {
+    return Intl.message(
+      'Get ready for next week tambola from now on.',
+      name: 'tLossSubtitle2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `CONGRATULATIONS!`
+  String get tWinTitle {
+    return Intl.message(
+      'CONGRATULATIONS!',
+      name: 'tWinTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your tickets have been submitted\nfor processing`
+  String get tWinSubtitle {
+    return Intl.message(
+      'Your tickets have been submitted\nfor processing',
+      name: 'tWinSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Prizes will be announced tomorrow. be sure to check put the leaderboard`
+  String get tWinSubtitle2 {
+    return Intl.message(
+      'Prizes will be announced tomorrow. be sure to check put the leaderboard',
+      name: 'tWinSubtitle2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tambola Results`
+  String get tParWinTitle {
+    return Intl.message(
+      'Tambola Results',
+      name: 'tParWinTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Only users with minimun savings balance of ₹ 100 are eliglble for Fello Prizes`
+  String get tParWinsubtitle {
+    return Intl.message(
+      'Only users with minimun savings balance of ₹ 100 are eliglble for Fello Prizes',
+      name: 'tParWinsubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  // skipped getter for the '--------------------------------------------' key
+
   /// `No transactions to show yet`
   String get noTransaction {
     return Intl.message(

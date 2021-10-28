@@ -63,7 +63,7 @@ class KYCDetailsView extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Name as Per PAN Card",
+                                  locale.kycNameLabel,
                                   style: TextStyles.body3,
                                 ),
                                 SizedBox(height: 6),
