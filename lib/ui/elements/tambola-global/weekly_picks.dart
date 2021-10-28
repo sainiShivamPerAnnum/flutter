@@ -1,4 +1,5 @@
 import 'package:felloapp/core/model/daily_pick_model.dart';
+import 'package:felloapp/core/service/tambola_service.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -43,7 +44,7 @@ class WeeklyPicks extends StatelessWidget {
         balls.add(_getDrawBall(element.toString()));
       });
     } else {
-      for (int i = 0; i < draws.mon.length; i++) {
+      for (int i = 0; i < TambolaService().dailyPicksCount; i++) {
         balls.add(_getDrawBall('-'));
       }
     }
@@ -79,7 +80,10 @@ class WeeklyPicks extends StatelessWidget {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SvgPicture.asset(Assets.noTickets,width: SizeConfig.screenWidth*0.3,),
+          SvgPicture.asset(
+            Assets.noTickets,
+            width: SizeConfig.screenWidth * 0.3,
+          ),
           Padding(
             padding: EdgeInsets.all(10),
             child: Text(
