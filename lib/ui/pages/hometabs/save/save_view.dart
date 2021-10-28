@@ -86,21 +86,24 @@ class Save extends StatelessWidget {
                               children: [
                                 SaveInfoTile(
                                   png: "images/augmont-share.png",
-                                  title: "What is digital Gold",
+                                  title: "About digital Gold",
                                   onPressed: () {
                                     Logger().d("Save info tile tap check");
+                                    model.navigateToAboutGold();
                                   },
                                 ),
                                 SaveInfoTile(
                                   png: "images/augmont-share.png",
-                                  title: "What is digital Gold",
-                                  onPressed: () {},
+                                  title: "Learn more about Augmont",
+                                  onPressed: () {
+                                    model.openAugmontWebUri();
+                                  },
                                 ),
-                                SaveInfoTile(
-                                  png: "images/augmont-share.png",
-                                  title: "What is digital Gold",
-                                  onPressed: () {},
-                                ),
+                                // SaveInfoTile(
+                                //   png: "images/augmont-share.png",
+                                //   title: "What is digital Gold",
+                                //   onPressed: () {},
+                                // ),
                               ]),
                         ),
                         SizedBox(height: SizeConfig.padding24),

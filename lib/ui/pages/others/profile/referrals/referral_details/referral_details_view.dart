@@ -59,7 +59,7 @@ class ReferralDetailsView extends StatelessWidget {
                             ),
                             SizedBox(height: SizeConfig.padding32),
                             Text(
-                              locale.refsubtitle,
+                              "Earn ₹${model.referral_bonus} and ${model.referral_flc_bonus} Fello tokens for every referral. The referrer of the month wins a brand new iPhone 13!",
                               textAlign: TextAlign.center,
                               style: TextStyles.body2,
                             ),
@@ -327,7 +327,7 @@ class ReferralDetailsView extends StatelessWidget {
                               leadingAsset: Assets.wmtsaveMoney,
                             ),
                             InfoTile(
-                              title: locale.refStep3,
+                              title: "You and your friend gets ₹${model.referral_bonus} and ${model.referral_flc_bonus} Fello tokens in your account",
                               leadingAsset: Assets.tickets,
                             ),
                             SizedBox(height: SizeConfig.navBarHeight),

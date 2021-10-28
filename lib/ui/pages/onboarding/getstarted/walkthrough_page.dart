@@ -20,11 +20,11 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
   ValueNotifier<double> _pageNotifier;
 
   List<String> lottieList = [Assets.onb1, Assets.onb2, Assets.onb3];
-  List<String> titleList = ["PLAY", "SAVE", "WIN"];
+  List<String> titleList = ["SAVE", "PLAY", "WIN"];
   List<String> descList = [
-    "Play as much as you can",
-    "Save as much as you can",
-    "Win as much as you can"
+    "Save and invest in strong assets and earn tokens 🪙",
+    "Use these tokens to play fun and exciting games 🎮",
+    "Stand to win exclusive prizes and fun rewards 🎉"
   ];
   @override
   void initState() {
@@ -134,7 +134,7 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                         textAlign: TextAlign.center,
                         maxLines: 3,
                         overflow: TextOverflow.clip,
-                        style: TextStyles.body3);
+                        style: TextStyles.body1);
                   },
                 ),
               ),
@@ -186,7 +186,7 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                         value.toInt() == 2
                             ? AppState.backButtonDispatcher.didPopRoute()
                             : _pageController.nextPage(
-                                duration: Duration(milliseconds: 500),
+                                duration: Duration(milliseconds: 400),
                                 curve: Curves.easeIn);
                       },
                     );

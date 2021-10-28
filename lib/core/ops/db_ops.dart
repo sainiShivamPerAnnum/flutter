@@ -363,8 +363,8 @@ class DBModel extends ChangeNotifier {
   Future<DailyPick> getWeeklyPicks() async {
     try {
       DateTime date = new DateTime.now();
-      // int weekCde = date.year * 100 + BaseUtil.getWeekNumber();
-      int weekCde = 202143;
+      int weekCde = date.year * 100 + BaseUtil.getWeekNumber();
+      // int weekCde = 202143;
       QuerySnapshot querySnapshot = await _api.getWeekPickByCde(weekCde);
 
       if (querySnapshot.docs.length != 1) {
