@@ -173,7 +173,7 @@ class MobileInputScreenState extends State<MobileInputScreen> {
                     },
                   ),
                   SizedBox(
-                    height: SizeConfig.blockSizeVertical * 1.6,
+                    height: SizeConfig.blockSizeVertical,
                   ),
                   hasReferralCode
                       ? TextFormField(
@@ -215,33 +215,33 @@ class MobileInputScreenState extends State<MobileInputScreen> {
               ),
             ),
             SizedBox(height: SizeConfig.blockSizeVertical * 4),
-            Container(
-              width: SizeConfig.screenWidth,
-              padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.screenWidth * 0.1),
-              child: Column(
-                children: [
-                  Text(locale.splashSecureText),
-                  SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(Assets.augmontLogo,
-                          color: Colors.grey,
-                          width: SizeConfig.screenWidth * 0.2),
-                      SizedBox(width: 16),
-                      Image.asset(Assets.sebiGraphic,
-                          color: Colors.grey,
-                          width: SizeConfig.screenWidth * 0.04),
-                      SizedBox(width: 16),
-                      Image.asset(Assets.amfiGraphic,
-                          color: Colors.grey,
-                          width: SizeConfig.screenWidth * 0.04)
-                    ],
-                  )
-                ],
-              ),
-            ),
+            // Container(
+            //   width: SizeConfig.screenWidth,
+            //   padding: EdgeInsets.symmetric(
+            //       horizontal: SizeConfig.screenWidth * 0.1),
+            //   child: Column(
+            //     children: [
+            //       Text(locale.splashSecureText),
+            //       SizedBox(height: 8),
+            //       Row(
+            //         mainAxisAlignment: MainAxisAlignment.center,
+            //         children: [
+            //           Image.asset(Assets.augmontLogo,
+            //               color: Colors.grey,
+            //               width: SizeConfig.screenWidth * 0.2),
+            //           SizedBox(width: 16),
+            //           Image.asset(Assets.sebiGraphic,
+            //               color: Colors.grey,
+            //               width: SizeConfig.screenWidth * 0.04),
+            //           SizedBox(width: 16),
+            //           Image.asset(Assets.amfiGraphic,
+            //               color: Colors.grey,
+            //               width: SizeConfig.screenWidth * 0.04)
+            //         ],
+            //       )
+            //     ],
+            //   ),
+            // ),
             SizedBox(
                 height: SizeConfig.screenHeight * 0.2 +
                     MediaQuery.of(context).padding.bottom)
