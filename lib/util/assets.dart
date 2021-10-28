@@ -42,6 +42,10 @@ class Assets {
   static final String gender = 'images/svgs/gender.svg';
   static final String username = "assets/vectors/username.svg";
   static final String bankLottie = "assets/lotties/bank.json";
+  static final String onb1 = "assets/lotties/slide1.json";
+  static final String onb2 = "assets/lotties/slide2.json";
+  static final String onb3 = "assets/lotties/slide3.json";
+  static final String indFlag = "assets/images/indflag.jpg";
 
   // WANT MORE MODAL
   static final String wmtsaveMoney = "assets/vectors/icons/wmt_save_money.svg";
@@ -82,6 +86,7 @@ class Assets {
   static final String amazonGC = "assets/images/amazon_coupon.png";
   static final String myntraGV = "assets/images/myntra_coupon.png";
   static final String moneyBag = "assets/images/money_bag.png";
+  static final String clip = "assets/vectors/clip.svg";
 
   //DRAWER
   static final String dAboutDigitalGold =

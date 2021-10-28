@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:felloapp/core/model/tambola_winners_details.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
@@ -14,6 +16,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
 class MyWinningsView extends StatelessWidget {
@@ -118,7 +121,8 @@ class MyWinningsView extends StatelessWidget {
                                   ? Container(
                                       height: SizeConfig.screenHeight * 0.5,
                                       child: ListView.builder(
-                                        padding: EdgeInsets.zero,
+                                        padding: EdgeInsets.only(
+                                            bottom: SizeConfig.navBarHeight),
                                         physics: BouncingScrollPhysics(),
                                         itemCount: model.winningHistory.length,
                                         itemBuilder: (ctx, i) => ListTile(
@@ -127,8 +131,15 @@ class MyWinningsView extends StatelessWidget {
                                                   .pageHorizontalMargins),
                                           leading: CircleAvatar(
                                             radius: SizeConfig.padding24,
-                                            backgroundImage: NetworkImage(
-                                                "https://upload.wikimedia.org/wikipedia/en/5/51/Minecraft_cover.png"),
+                                            backgroundColor: model.colorList[
+                                                Random().nextInt(
+                                                    model.colorList.length)],
+                                            child: Padding(
+                                              padding: EdgeInsets.all(
+                                                  SizeConfig.padding4),
+                                              child: SvgPicture.asset(
+                                                  Assets.congrats),
+                                            ),
                                           ),
                                           title: Text(
                                             model.getWinningHistoryTitle(model
@@ -146,7 +157,10 @@ class MyWinningsView extends StatelessWidget {
                                           trailing: Text(
                                             "₹ ${model.winningHistory[i]?.amount}",
                                             style: TextStyles.body2.bold.colour(
-                                                UiConstants.primaryColor),
+                                                model.winningHistory[i].amount >
+                                                        0
+                                                    ? UiConstants.primaryColor
+                                                    : Colors.red[300]),
                                           ),
                                         ),
                                       ),
@@ -211,7 +225,7 @@ class ClaimButton extends StatelessWidget {
               Expanded(
                 child: Text(
                   text ?? "Redeem for amazon pay",
-                  style: TextStyles.body2.colour(Colors.white),
+                  style: TextStyles.body3.colour(Colors.white),
                 ),
               )
             ],
@@ -221,49 +235,3 @@ class ClaimButton extends StatelessWidget {
     );
   }
 }
-
-
-//                             Card(
-//                             margin: EdgeInsets.symmetric(vertical: 20),
-//                             child: Padding(
-//                               padding: const EdgeInsets.symmetric(
-//                                   horizontal: 8.0, vertical: 25),
-//                               child: Column(
-//                                 children: [
-//                                   Row(
-//                                     mainAxisAlignment:
-//                                         MainAxisAlignment.spaceAround,
-//                                     children: [
-//                                       Text("My winnings",
-//                                           style: TextStyles.body3.light),
-//                                       PropertyChangeConsumer<UserService,
-//                                           UserServiceProperties>(
-//                                         builder: (ctx, model, child) => Text(
-//                                           //"₹ 0.00",
-//                                           "₹ ${model.userFundWallet.unclaimedBalance}",
-//                                           style: TextStyles.body2.bold
-//                                               .colour(UiConstants.primaryColor),
-//                                         ),
-//                                       ),
-//                                     ],
-//                                   ),
-//                                   // SizedBox(height: 12),
-//                                   // Widgets().getBodyBold("Redeem for", Colors.black),
-//                                   SizedBox(height: 12),
-//                                   //if (model.getUnclaimedPrizeBalance > 0)
-//                                   PropertyChangeConsumer<UserService,
-//                                       UserServiceProperties>(
-//                                     builder: (ctx, m, child) => FelloButton(
-//                                       defaultButtonText: m.userFundWallet
-//                                               .isPrizeBalanceUnclaimed()
-//                                           ? "Redeem"
-//                                           : "Share",
-//                                       onPressedAsync: () =>
-//                                           model.prizeBalanceAction(context),
-//                                       defaultButtonColor: Colors.orange,
-//                                     ),
-//                                   ),
-//                                 ],
-//                               ),
-//                             ),
-//                           ),

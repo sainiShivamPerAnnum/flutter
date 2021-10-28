@@ -216,14 +216,14 @@ class AugmontGoldBuyView extends StatelessWidget {
                             }
                           },
                         ),
-                      SizedBox(
-                        height: SizeConfig.padding20,
-                      ),
-                      Text(
-                        "Buy Clicking on Buy, you agree to T&C",
-                        textAlign: TextAlign.center,
-                        style: TextStyles.body3.colour(Colors.grey),
-                      ),
+                      // SizedBox(
+                      //   height: SizeConfig.padding20,
+                      // ),
+                      // Text(
+                      //   "Buy Clicking on Buy, you agree to T&C",
+                      //   textAlign: TextAlign.center,
+                      //   style: TextStyles.body3.colour(Colors.grey),
+                      // ),
                       SizedBox(height: SizeConfig.screenHeight * 0.05),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

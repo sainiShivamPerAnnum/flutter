@@ -879,6 +879,18 @@ class S {
     );
   }
 
+  // skipped getter for the '------------------' key
+
+  /// `Name as per your PAN Card`
+  String get kycNameLabel {
+    return Intl.message(
+      'Name as per your PAN Card',
+      name: 'kycNameLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
   // skipped getter for the '----------------------' key
 
   /// `Game based Savings \n & Investments🎉`

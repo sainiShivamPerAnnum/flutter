@@ -154,8 +154,8 @@ class MobileInputScreenState extends State<MobileInputScreen> {
                     decoration: InputDecoration(
                       prefixIcon: Padding(
                         padding: EdgeInsets.all(SizeConfig.padding4),
-                        child: Image.network(
-                          "https://media.istockphoto.com/vectors/india-round-flag-vector-flat-icon-vector-id1032066158?k=20&m=1032066158&s=170667a&w=0&h=V79avsonlNYP6KB_vU3TfVK4lrkAzD0otqiWcfQlk-Q=",
+                        child: Image.asset(
+                          Assets.indFlag,
                           width: SizeConfig.padding8,
                         ),
                       ),

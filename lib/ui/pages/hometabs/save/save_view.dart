@@ -1,4 +1,6 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/dialogs/augmont_regn_security_dialog.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
@@ -342,7 +344,7 @@ class AugmontCard extends StatelessWidget {
                     borderRadius:
                         BorderRadius.circular(SizeConfig.roundness12)),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Image.asset(
                       Assets.augLogo,
@@ -360,7 +362,16 @@ class AugmontCard extends StatelessWidget {
                         color: Colors.grey,
                         size: SizeConfig.body3,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        BaseUtil.openDialog(
+                            addToScreenStack: true,
+                            isBarrierDismissable: true,
+                            content: AugmontRegnSecurityDialog(
+                              text: Assets.infoAugmontRegnSecurity,
+                              imagePath: 'images/aes256.png',
+                              title: 'Security > Rest',
+                            ));
+                      },
                       label: Text(
                         locale.saveSecure,
                         style: TextStyles.body3.colour(Colors.grey),

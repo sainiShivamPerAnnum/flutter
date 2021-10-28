@@ -94,6 +94,8 @@
   "btnSave": "Save",
   "btnUpdate": "Update",
   "btnEdit": "Edit",
+  "------------------": "----------------------------",
+  "kycNameLabel": "Name as per your PAN Card",
   "----------------------": "----------------------------",
   "onboardTitle": "Game based Savings \n & Investments🎉",
   "onboardText1": "Save or invest ₹100 and get 1 game ticket every Monday",

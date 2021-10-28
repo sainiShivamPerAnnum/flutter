@@ -55,6 +55,12 @@ class MyWinningsViewModel extends BaseModel {
     notifyListeners();
   }
 
+  List<Color> colorList = [
+    UiConstants.tertiarySolid,
+    UiConstants.primaryColor,
+    Color(0xff11192B)
+  ];
+
   List<UserTransaction> get winningHistory => this._winningHistory;
   set winningHistory(List<UserTransaction> value) {
     this._winningHistory = value;

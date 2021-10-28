@@ -87,13 +87,13 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
     // If the root tab is not 0 at the time of exit
     else if (AppState.screenStack.length == 1 &&
-        AppState.delegate.appState.rootIndex != 0 &&
+        AppState.delegate.appState.rootIndex != 1 &&
         _baseUtil.isUserOnboarded) {
       print("Press back once more to exit");
       if (RootViewModel.scaffoldKey.currentState.isDrawerOpen)
         RootViewModel.scaffoldKey.currentState.openEndDrawer();
       else
-        AppState.delegate.appState.setCurrentTabIndex = 0;
+        AppState.delegate.appState.setCurrentTabIndex = 1;
       //_routerDelegate.appState.returnHome();
       return Future.value(true);
     }
