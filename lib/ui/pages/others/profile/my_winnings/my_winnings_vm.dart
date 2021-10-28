@@ -194,13 +194,9 @@ class MyWinningsViewModel extends BaseModel {
   Future<bool> _registerClaimChoice(PrizeClaimChoice choice) async {
     if (choice == PrizeClaimChoice.NA) return false;
     Map<String, dynamic> response = await _httpModel.registerPrizeClaim(
-<<<<<<< HEAD
         _userService.baseUser.uid,
         _userService.userFundWallet.unclaimedBalance,
         choice);
-=======
-        _userService.baseUser.uid, _userService.userFundWallet.unclaimedBalance, choice);
->>>>>>> af6e09e0b86df2bacf897bef4c84ccc63cb2e219
     if (response['status'] != null && response['status']) {
       _userService.getUserFundWalletData();
       notifyListeners();

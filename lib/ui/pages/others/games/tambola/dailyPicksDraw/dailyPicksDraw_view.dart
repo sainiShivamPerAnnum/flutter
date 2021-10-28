@@ -41,11 +41,12 @@ class PicksDraw extends StatelessWidget {
                       topLeft: Radius.circular(SizeConfig.padding40),
                       topRight: Radius.circular(SizeConfig.padding40),
                     ),
-                    color: Colors.white,
+                    color: UiConstants.tertiaryLight,
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
+                      Spacer(),
                       Padding(
                         padding: EdgeInsets.all(SizeConfig.padding24),
                         child: Text(
@@ -56,154 +57,181 @@ class PicksDraw extends StatelessWidget {
                             style: TextStyles.title3.bold),
                       ),
                       Spacer(),
-                      model.state == ViewState.Idle
-                          ? Container(
-                              height: 280,
-                              width: SizeConfig.screenWidth,
-                              margin: EdgeInsets.symmetric(
-                                  vertical: SizeConfig.screenHeight * 0.05),
-                              child: Stack(
-                                children: [
-                                  Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: Container(
-                                      height: 180,
-                                      width: 180,
-                                      child: rive.RiveAnimation.asset(
-                                        "images/Tambola/openbox.riv",
-                                        // controllers: [model.boxController],
-                                      ),
-                                    ),
+                      if (model.state == ViewState.Idle)
+                        Container(
+                          height: 280,
+                          width: SizeConfig.screenWidth,
+                          margin: EdgeInsets.symmetric(
+                              vertical: SizeConfig.screenHeight * 0.05),
+                          child: Stack(
+                            children: [
+                              Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Transform.translate(
+                                  offset: Offset(0, 10),
+                                  child: Container(
+                                    height: 105,
+                                    width: 210,
+                                    margin: EdgeInsets.only(
+                                        top: 40, left: 40, right: 40),
+                                    decoration: new BoxDecoration(
+                                        color: UiConstants.primaryColor
+                                            .withOpacity(0.8),
+                                        borderRadius: new BorderRadius.all(
+                                          Radius.elliptical(100, 50),
+                                        ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                              color: UiConstants.primaryColor
+                                                  .withOpacity(0.2),
+                                              spreadRadius: 20,
+                                              blurRadius: 30,
+                                              offset: Offset(0, 0))
+                                        ]),
+                                    child: Text('     '),
                                   ),
-                                  Positioned(
-                                    bottom: 28,
-                                    left: SizeConfig.screenWidth / 2,
-                                    child: Image.asset(
-                                      "images/fello-dark.png",
-                                      height: 30,
-                                    ),
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Container(
+                                  height: 180,
+                                  width: 180,
+                                  child: rive.RiveAnimation.asset(
+                                    "images/Tambola/openbox.riv",
+                                    // controllers: [model.boxController],
                                   ),
-                                  AnimatedPositioned(
-                                    duration: Duration(seconds: 1),
-                                    //curve: Curves.decelerate,
-                                    top: model.rowWidth == 0 ? 150 : 0,
-                                    child: Container(
-                                      width: SizeConfig.screenWidth,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          AnimatedContainer(
-                                            alignment: Alignment.topCenter,
-                                            width: model.rowWidth,
-                                            duration: Duration(seconds: 1),
-                                            curve: Curves.easeIn,
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              children:
-                                                  (model.todaysPicks ??
-                                                          List.filled(3, 0))
-                                                      .map(
-                                                        (e) =>
-                                                            AnimatedContainer(
-                                                          curve: Curves.easeIn,
-                                                          height: model.radius,
-                                                          width: model.radius,
-                                                          duration: Duration(
-                                                              seconds: 1),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: Colors.black,
-                                                            shape:
-                                                                BoxShape.circle,
-                                                            gradient:
-                                                                RadialGradient(
-                                                              center: Alignment(
-                                                                  -0.8, -0.6),
-                                                              colors: [
-                                                                Color(
-                                                                    0xff515E63),
-                                                                Colors.black
-                                                              ],
-                                                              radius: 1.0,
-                                                            ),
-                                                          ),
+                                ),
+                              ),
+                              Positioned(
+                                bottom: 28,
+                                left: SizeConfig.screenWidth / 2,
+                                child: Image.asset(
+                                  "images/fello-dark.png",
+                                  height: 30,
+                                ),
+                              ),
+                              AnimatedPositioned(
+                                duration: Duration(seconds: 1),
+                                //curve: Curves.decelerate,
+                                top: model.rowWidth == 0 ? 150 : 0,
+                                child: Container(
+                                  width: SizeConfig.screenWidth,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      AnimatedContainer(
+                                        alignment: Alignment.topCenter,
+                                        width: model.rowWidth,
+                                        duration: Duration(seconds: 1),
+                                        curve: Curves.easeIn,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: (model.todaysPicks ??
+                                                  List.filled(3, 0))
+                                              .map(
+                                                (e) => AnimatedContainer(
+                                                  curve: Curves.easeIn,
+                                                  height: model.radius,
+                                                  width: model.radius,
+                                                  duration:
+                                                      Duration(seconds: 1),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.black,
+                                                    shape: BoxShape.circle,
+                                                    gradient: RadialGradient(
+                                                      center:
+                                                          Alignment(-0.8, -0.6),
+                                                      colors: [
+                                                        Color(0xff515E63),
+                                                        Colors.black
+                                                      ],
+                                                      radius: 1.0,
+                                                    ),
+                                                  ),
+                                                  alignment: Alignment.center,
+                                                  child: Transform.scale(
+                                                      scale: model.opacity,
+                                                      child: Stack(children: [
+                                                        Align(
                                                           alignment:
                                                               Alignment.center,
                                                           child:
-                                                              Transform.scale(
-                                                                  scale: model
-                                                                      .opacity,
-                                                                  child: Stack(
-                                                                      children: [
-                                                                        Align(
-                                                                          alignment:
-                                                                              Alignment.center,
-                                                                          child:
-                                                                              AnimatedContainer(
-                                                                            height:
-                                                                                model.ringWidth,
-                                                                            width:
-                                                                                model.ringWidth,
-                                                                            duration:
-                                                                                Duration(seconds: 1),
-                                                                            curve:
-                                                                                Curves.easeIn,
-                                                                            decoration:
-                                                                                BoxDecoration(
-                                                                              border: Border.all(
-                                                                                color: Colors.white,
-                                                                                width: 0.5,
-                                                                              ),
-                                                                              borderRadius: BorderRadius.circular(100),
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                        AnimatedOpacity(
-                                                                          duration:
-                                                                              Duration(milliseconds: 500),
-                                                                          curve:
-                                                                              Curves.easeInOutBack,
-                                                                          opacity:
-                                                                              model.opacity,
-                                                                          child:
-                                                                              Container(
-                                                                            height:
-                                                                                model.radius,
-                                                                            width:
-                                                                                model.radius,
-                                                                            alignment:
-                                                                                Alignment.center,
-                                                                            child: model.showTxt
-                                                                                ? FittedBox(
-                                                                                    fit: BoxFit.cover,
-                                                                                    child: Text(
-                                                                                      e.toString() ?? "-",
-                                                                                      style: TextStyle(
-                                                                                        color: Colors.white,
-                                                                                        fontSize: 20,
-                                                                                        fontWeight: FontWeight.w700,
-                                                                                      ),
-                                                                                    ),
-                                                                                  )
-                                                                                : SizedBox(),
-                                                                          ),
-                                                                        ),
-                                                                      ])),
+                                                              AnimatedContainer(
+                                                            height:
+                                                                model.ringWidth,
+                                                            width:
+                                                                model.ringWidth,
+                                                            duration: Duration(
+                                                                seconds: 1),
+                                                            curve:
+                                                                Curves.easeIn,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              border:
+                                                                  Border.all(
+                                                                color: Colors
+                                                                    .white,
+                                                                width: 0.5,
+                                                              ),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          100),
+                                                            ),
+                                                          ),
                                                         ),
-                                                      )
-                                                      .toList(),
-                                            ),
-                                          ),
-                                        ],
+                                                        AnimatedOpacity(
+                                                          duration: Duration(
+                                                              milliseconds:
+                                                                  500),
+                                                          curve: Curves
+                                                              .easeInOutBack,
+                                                          opacity:
+                                                              model.opacity,
+                                                          child: Container(
+                                                            height:
+                                                                model.radius,
+                                                            width: model.radius,
+                                                            alignment: Alignment
+                                                                .center,
+                                                            child: model.showTxt
+                                                                ? FittedBox(
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                    child: Text(
+                                                                      e.toString() ??
+                                                                          "-",
+                                                                      style:
+                                                                          TextStyle(
+                                                                        color: Colors
+                                                                            .white,
+                                                                        fontSize:
+                                                                            20,
+                                                                        fontWeight:
+                                                                            FontWeight.w700,
+                                                                      ),
+                                                                    ),
+                                                                  )
+                                                                : SizedBox(),
+                                                          ),
+                                                        ),
+                                                      ])),
+                                                ),
+                                              )
+                                              .toList(),
+                                        ),
                                       ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            )
-                          : SizedBox(),
+                                    ],
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        )
+                      else
+                        SizedBox(),
                       if (model.state == ViewState.Idle)
                         Padding(
                           padding: EdgeInsets.symmetric(
