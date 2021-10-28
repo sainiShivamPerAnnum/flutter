@@ -169,9 +169,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.UserProfileDetails:
           _addPageData(UserProfileDetails(), UserProfileDetailsConfig);
           break;
-        case Pages.MfDetails:
-          _addPageData(MFDetailsPage(), MfDetailsPageConfig);
-          break;
+        // case Pages.MfDetails:
+        //   _addPageData(MFDetailsPage(), MfDetailsPageConfig);
+        //   break;
         // case Pages.AugDetails:
         //   _addPageData(AugmontDetailsPage(), AugDetailsPageConfig);
         //   break;
@@ -241,9 +241,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.TWeeklyResult:
           _addPageData(WeeklyResult(), TWeeklyResultPageConfig);
           break;
-        case Pages.TSummaryDetails:
-          _addPageData(SummaryTicketsDisplay(), TSummaryDetailsPageConfig);
-          break;
+        // case Pages.TSummaryDetails:
+        //   _addPageData(SummaryTicketsDisplay(), TSummaryDetailsPageConfig);
+        //   break;
         case Pages.Notifications:
           _addPageData(NotficationsPage(), NotificationsConfig);
           break;

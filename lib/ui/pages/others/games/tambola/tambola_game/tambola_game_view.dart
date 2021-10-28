@@ -117,7 +117,7 @@ class _TambolaGameViewState extends State<TambolaGameView>
                                     //       state: PageState.addWidget,
                                     //       page: TWeeklyResultPageConfig,
                                     //       widget: WeeklyResult(
-                                    //         winningsmap: {"12324": 1},
+                                    //         winningsmap: {}, // {"12324": 1},
                                     //         isEligible: false,
                                     //       ),
                                     //     ),

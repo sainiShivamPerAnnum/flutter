@@ -164,7 +164,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                     bottomTitles: SideTitles(
                       showTitles: true,
                       reservedSize: 35,
-                      getTextStyles: (value) => GoogleFonts.montserrat(
+                      getTextStyles: (ctx, value) => GoogleFonts.montserrat(
                         color: Colors.grey,
                         fontSize: SizeConfig.smallTextSize,
                       ),
@@ -178,7 +178,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                     leftTitles: SideTitles(
                       showTitles: true,
                       reservedSize: SizeConfig.padding32,
-                      getTextStyles: (value) =>
+                      getTextStyles: (ctx, value) =>
                           TextStyles.body4.colour(Colors.grey),
                       getTitles: (value) {
                         return (value > 0 && value % 1000 == 0)
@@ -264,7 +264,7 @@ class LineTitles {
         bottomTitles: SideTitles(
           showTitles: true,
           reservedSize: 35,
-          getTextStyles: (value) => const TextStyle(
+          getTextStyles: (ctx, value) => const TextStyle(
             color: Color(0xff68737d),
             fontWeight: FontWeight.bold,
             fontSize: 16,
@@ -284,7 +284,7 @@ class LineTitles {
         ),
         leftTitles: SideTitles(
           showTitles: true,
-          getTextStyles: (value) => const TextStyle(
+          getTextStyles: (ctx, value) => const TextStyle(
             color: Color(0xff67727d),
             fontWeight: FontWeight.bold,
             fontSize: 15,

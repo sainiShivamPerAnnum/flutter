@@ -3,6 +3,7 @@ import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -67,10 +68,10 @@ class _NotficationsPageState extends State<NotficationsPage> {
                                     backgroundColor: UiConstants.primaryColor
                                         .withOpacity(0.1),
                                     radius: SizeConfig.tileAvatarRadius,
-                                    child: Icon(
-                                      Icons.adb_rounded,
+                                    child: Image.asset(
+                                      Assets.logoShortform,
                                       color: UiConstants.primaryColor,
-                                      size: SizeConfig.tileAvatarRadius,
+                                      height: SizeConfig.iconSize1,
                                     ),
                                   ),
                                   SizedBox(width: SizeConfig.padding12),

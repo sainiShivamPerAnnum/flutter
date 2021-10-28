@@ -36,7 +36,7 @@ class FAQCardState extends State<FAQCard> {
                 blurRadius: 5)
           ]),
       margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-      padding: EdgeInsets.only(top: 12, left: 10),
+      padding: EdgeInsets.only(top: 12, left: 10, bottom: SizeConfig.padding24),
       child: Column(
         children: [
           Text(

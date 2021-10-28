@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/ui/pages/static/fello_appbar.dart';
+import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -75,44 +77,65 @@ class _TnCState extends State<TnC> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: BaseUtil.getAppBar(context, "Terms & Conditions"),
-      body: Container(
-        width: SizeConfig.screenWidth,
-        height: SizeConfig.screenHeight,
-        child: SingleChildScrollView(
-          padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
-          physics: BouncingScrollPhysics(),
+      body: HomeBackground(
+        child: Container(
+          width: SizeConfig.screenWidth,
+          height: SizeConfig.screenHeight,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              (_isLoadComplete && !_downloadFailed)
-                  ? Html(
-                      data: htmlString ?? '',
-                    )
-                  : Container(),
-              (_isLoadComplete && _downloadFailed)
-                  ? Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Text(
-                          'Failed to load the Terms of Service at the moment. Please try again later',
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w300,
-                              color: UiConstants.accentColor),
-                        ),
-                      ),
-                    )
-                  : Container(),
-              (!_isLoadComplete)
-                  ? Center(
-                      child: Padding(
-                          padding: const EdgeInsets.all(30),
-                          child: SpinKitWave(
-                            color: UiConstants.primaryColor,
-                          )),
-                    )
-                  : Container()
+              FelloAppBar(
+                leading: FelloAppBarBackButton(),
+                title: "Referral Policy",
+              ),
+              Expanded(
+                  child: Container(
+                padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.pageHorizontalMargins),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(SizeConfig.padding40),
+                    topRight: Radius.circular(SizeConfig.padding40),
+                  ),
+                  color: Colors.white,
+                ),
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
+                  physics: BouncingScrollPhysics(),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      (_isLoadComplete && !_downloadFailed)
+                          ? Html(
+                              data: htmlString ?? '',
+                            )
+                          : Container(),
+                      (_isLoadComplete && _downloadFailed)
+                          ? Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(20),
+                                child: Text(
+                                  'Failed to load the Terms of Service at the moment. Please try again later',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w300,
+                                      color: UiConstants.accentColor),
+                                ),
+                              ),
+                            )
+                          : Container(),
+                      (!_isLoadComplete)
+                          ? Center(
+                              child: Padding(
+                                  padding: const EdgeInsets.all(30),
+                                  child: SpinKitWave(
+                                    color: UiConstants.primaryColor,
+                                  )),
+                            )
+                          : Container()
+                    ],
+                  ),
+                ),
+              ))
             ],
           ),
         ),
