@@ -1,15 +1,11 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
-import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/augmont_state_list.dart';
 import 'package:felloapp/util/haptic.dart';

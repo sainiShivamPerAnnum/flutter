@@ -354,7 +354,7 @@ class TambolaGameViewModel extends BaseModel {
       return false;
     }
     DateTime date = DateTime.now();
-    if (date.weekday == DateTime.thursday) {
+    if (date.weekday == DateTime.sunday) {
       if (weeklyDigits.toList().length == 7 * dailyPicksCount) {
         _localDBModel.isTambolaResultProcessingDone().then((flag) {
           if (flag == 0) {
