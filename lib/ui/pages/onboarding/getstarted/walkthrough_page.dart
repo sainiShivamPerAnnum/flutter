@@ -24,146 +24,149 @@ class WalkThroughPage extends StatefulWidget {
 }
 
 class _WalkThroughPageState extends State<WalkThroughPage> {
-  List<String> _videoURLS;
-  static final TextStyle normStyle = GoogleFonts.montserrat(
-      fontSize: SizeConfig.mediumTextSize * 1.4, color: Colors.black);
-  static final TextStyle boldStyle = GoogleFonts.montserrat(
-      color: Colors.black,
-      fontWeight: FontWeight.bold,
-      fontSize: SizeConfig.mediumTextSize * 1.4);
-  List<RichText> _content = [
-    RichText(
-      text: new TextSpan(
-        children: [
-          new TextSpan(
-            text: 'Save and invest ',
-            style: boldStyle,
-          ),
-          new TextSpan(
-            text: 'in strong financial assets with ease 💪',
-            style: normStyle,
-          ),
-        ],
-      ),
-    ),
-    RichText(
-      text: new TextSpan(
-        children: [
-          new TextSpan(
-            text: 'Earn ',
-            style: normStyle,
-          ),
-          new TextSpan(
-            text: '1 weekly gaming ticket for every ₹ 100 ',
-            style: boldStyle,
-          ),
-          new TextSpan(
-            text: 'you save 🎟️',
-            style: normStyle,
-          )
-        ],
-      ),
-    ),
-    RichText(
-      text: new TextSpan(
-        children: [
-          new TextSpan(
-            text: 'Use your gaming tickets to play ',
-            style: normStyle,
-          ),
-          new TextSpan(
-            text: 'fun filled games ',
-            style: boldStyle,
-          ),
-          new TextSpan(
-            text: '🎲',
-            style: normStyle,
-          )
-        ],
-      ),
-    ),
-    RichText(
-      text: new TextSpan(
-        children: [
-          new TextSpan(
-            text: 'Gain ',
-            style: normStyle,
-          ),
-          new TextSpan(
-            text: 'better returns ',
-            style: boldStyle,
-          ),
-          new TextSpan(
-            text: 'and win ',
-            style: normStyle,
-          ),
-          new TextSpan(
-            text: 'exciting prizes ',
-            style: normStyle,
-          ),
-          new TextSpan(
-            text: 'every week 🎉',
-            style: boldStyle,
-          ),
-        ],
-      ),
-    )
-    // 'Save and invest in strong financial assets with ease 💪',
-    // 'Earn 1 weekly gaming ticket for every ₹ 100 you save 🎟️',
-    // 'Use your gaming tickets to play fun filled games 🎲',
-    // 'Gain better returns and win exciting prizes every week 🎉'
-  ];
-  int _currentIndex = 0;
-  PageController pageController = PageController(keepPage: false);
-  AppState stateProvider;
-  BaseUtil baseProvider;
-  DBModel dbProvider;
-  VideoPlayerController _videoController;
-  bool isInit = false;
-  ConnectivityStatus connectivityStatus;
+  //List<String> _videoURLS;
+  PageController _controller = new PageController();
+  // ValueNotifier _pageNotifier = ValueN
+//int ValuNot
+  // static final TextStyle normStyle = GoogleFonts.montserrat(
+  //     fontSize: SizeConfig.mediumTextSize * 1.4, color: Colors.black);
+  // static final TextStyle boldStyle = GoogleFonts.montserrat(
+  //     color: Colors.black,
+  //     fontWeight: FontWeight.bold,
+  //     fontSize: SizeConfig.mediumTextSize * 1.4);
+  // List<RichText> _content = [
+  //   RichText(
+  //     text: new TextSpan(
+  //       children: [
+  //         new TextSpan(
+  //           text: 'Save and invest ',
+  //           style: boldStyle,
+  //         ),
+  //         new TextSpan(
+  //           text: 'in strong financial assets with ease 💪',
+  //           style: normStyle,
+  //         ),
+  //       ],
+  //     ),
+  //   ),
+  //   RichText(
+  //     text: new TextSpan(
+  //       children: [
+  //         new TextSpan(
+  //           text: 'Earn ',
+  //           style: normStyle,
+  //         ),
+  //         new TextSpan(
+  //           text: '1 weekly gaming ticket for every ₹ 100 ',
+  //           style: boldStyle,
+  //         ),
+  //         new TextSpan(
+  //           text: 'you save 🎟️',
+  //           style: normStyle,
+  //         )
+  //       ],
+  //     ),
+  //   ),
+  //   RichText(
+  //     text: new TextSpan(
+  //       children: [
+  //         new TextSpan(
+  //           text: 'Use your gaming tickets to play ',
+  //           style: normStyle,
+  //         ),
+  //         new TextSpan(
+  //           text: 'fun filled games ',
+  //           style: boldStyle,
+  //         ),
+  //         new TextSpan(
+  //           text: '🎲',
+  //           style: normStyle,
+  //         )
+  //       ],
+  //     ),
+  //   ),
+  //   RichText(
+  //     text: new TextSpan(
+  //       children: [
+  //         new TextSpan(
+  //           text: 'Gain ',
+  //           style: normStyle,
+  //         ),
+  //         new TextSpan(
+  //           text: 'better returns ',
+  //           style: boldStyle,
+  //         ),
+  //         new TextSpan(
+  //           text: 'and win ',
+  //           style: normStyle,
+  //         ),
+  //         new TextSpan(
+  //           text: 'exciting prizes ',
+  //           style: normStyle,
+  //         ),
+  //         new TextSpan(
+  //           text: 'every week 🎉',
+  //           style: boldStyle,
+  //         ),
+  //       ],
+  //     ),
+  //   )
+  //   // 'Save and invest in strong financial assets with ease 💪',
+  //   // 'Earn 1 weekly gaming ticket for every ₹ 100 you save 🎟️',
+  //   // 'Use your gaming tickets to play fun filled games 🎲',
+  //   // 'Gain better returns and win exciting prizes every week 🎉'
+  // ];
+  // int _currentIndex = 0;
+  // PageController pageController = PageController(keepPage: false);
+  // AppState stateProvider;
+  // BaseUtil baseProvider;
+  // DBModel dbProvider;
+  // VideoPlayerController _videoController;
+  // bool isInit = false;
+  // ConnectivityStatus connectivityStatus;
 
-  void init() async {
-    if (connectivityStatus != ConnectivityStatus.Offline) {
-      dbProvider.getWalkthroughUrls().then((value) {
-        print(value.length);
-        _videoURLS = value;
-        _initController(0);
-      });
-      isInit = true;
-    }
-  }
+  // void init() async {
+  //   if (connectivityStatus != ConnectivityStatus.Offline) {
+  //     dbProvider.getWalkthroughUrls().then((value) {
+  //       print(value.length);
+  //       _videoURLS = value;
+  //       _initController(0);
+  //     });
+  //     isInit = true;
+  //   }
+  // }
 
-  void _initController(int index) {
-    _videoController = VideoPlayerController.network(_videoURLS[index])
-      ..setLooping(true)
-      ..initialize().then((_) {
-        setState(() {
-          _videoController.play();
-        });
-      });
-  }
+  // void _initController(int index) {
+  //   _videoController = VideoPlayerController.network(_videoURLS[index])
+  //     ..setLooping(true)
+  //     ..initialize().then((_) {
+  //       setState(() {
+  //         _videoController.play();
+  //       });
+  //     });
+  // }
 
-  Future<void> _onControllerChange(int index) async {
-    if (_videoController == null) {
-      _initController(index);
-    } else {
-      final oldController = _videoController;
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        await oldController.dispose();
-        _initController(index);
-      });
-      setState(() {
-        _videoController = null;
-      });
-    }
-  }
+  // Future<void> _onControllerChange(int index) async {
+  //   if (_videoController == null) {
+  //     _initController(index);
+  //   } else {
+  //     final oldController = _videoController;
+  //     WidgetsBinding.instance.addPostFrameCallback((_) async {
+  //       await oldController.dispose();
+  //       _initController(index);
+  //     });
+  //     setState(() {
+  //       _videoController = null;
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
-    stateProvider = Provider.of<AppState>(context, listen: false);
-    baseProvider = Provider.of<BaseUtil>(context, listen: false);
-    dbProvider = Provider.of<DBModel>(context, listen: false);
-    connectivityStatus = Provider.of<ConnectivityStatus>(context);
+    // stateProvider = Provider.of<AppState>(context, listen: false);
+    // baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    // dbProvider = Provider.of<DBModel>(context, listen: false);
+    // connectivityStatus = Provider.of<ConnectivityStatus>(context);
     // if (!isInit) {
     //   init();
     // }
@@ -199,15 +202,39 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                               .toDouble()),
                     ),
                     Positioned(
-                      child: Lottie.asset(
-                        Assets.bankLottie,
-                        // "images/lottie/clap.json",
-                        height: SizeConfig.screenWidth,
-                        width: SizeConfig.screenWidth,
+                      child: PageView(
+                        controller: _controller,
+                        children: [
+                          Lottie.asset(
+                            Assets.bankLottie,
+                            height: SizeConfig.screenWidth,
+                            width: SizeConfig.screenWidth,
+                          ),
+                          Lottie.asset(
+                            Assets.onb2,
+                            height: SizeConfig.screenWidth,
+                            width: SizeConfig.screenWidth,
+                          ),
+                          Lottie.asset(
+                            Assets.onb3,
+                            height: SizeConfig.screenWidth,
+                            width: SizeConfig.screenWidth,
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(
+                  SizeConfig.screenHeight * 0.05,
+                ),
+                child: Text(
+                    "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit.",
+                    maxLines: 3,
+                    overflow: TextOverflow.clip,
+                    style: TextStyles.body3),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -225,16 +252,6 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                       borderColor: Colors.grey,
                       size: 10),
                 ],
-              ),
-              Padding(
-                padding: EdgeInsets.all(
-                  SizeConfig.screenHeight * 0.05,
-                ),
-                child: Text(
-                    "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit.",
-                    maxLines: 3,
-                    overflow: TextOverflow.clip,
-                    style: TextStyles.body3),
               ),
               Spacer(),
               Container(
@@ -429,50 +446,50 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
         );
   }
 
-  Widget _buildWalkthroughPage(int index) {
-    return Column(
-      children: [
-        SizedBox(height: kToolbarHeight * 0.8),
-        Expanded(
-          child: (_videoController != null)
-              ? Container(
-                  decoration: BoxDecoration(boxShadow: [
-                    BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 3,
-                        blurRadius: 7)
-                  ]),
-                  child: AspectRatio(
-                      aspectRatio: _videoController.value.aspectRatio,
-                      child: VideoPlayer(_videoController)))
-              : Shimmer(
-                  child: Container(
-                    width: SizeConfig.screenWidth * 0.6,
-                    color: Colors.grey.withOpacity(0.4),
-                  ),
-                  color: Colors.white,
-                ),
-        ),
-        Container(
-          width: SizeConfig.screenWidth * 0.8,
-          height: SizeConfig.screenHeight * 0.1,
-          margin: EdgeInsets.only(
-            top: SizeConfig.blockSizeHorizontal * 3,
-            bottom: SizeConfig.blockSizeHorizontal * 14,
-          ),
-          child: Center(
-            child: _content[index],
-          ),
-        ),
-      ],
-    );
-  }
+  // Widget _buildWalkthroughPage(int index) {
+  //   return Column(
+  //     children: [
+  //       SizedBox(height: kToolbarHeight * 0.8),
+  //       Expanded(
+  //         child: (_videoController != null)
+  //             ? Container(
+  //                 decoration: BoxDecoration(boxShadow: [
+  //                   BoxShadow(
+  //                       color: Colors.grey.withOpacity(0.5),
+  //                       spreadRadius: 3,
+  //                       blurRadius: 7)
+  //                 ]),
+  //                 child: AspectRatio(
+  //                     aspectRatio: _videoController.value.aspectRatio,
+  //                     child: VideoPlayer(_videoController)))
+  //             : Shimmer(
+  //                 child: Container(
+  //                   width: SizeConfig.screenWidth * 0.6,
+  //                   color: Colors.grey.withOpacity(0.4),
+  //                 ),
+  //                 color: Colors.white,
+  //               ),
+  //       ),
+  //       Container(
+  //         width: SizeConfig.screenWidth * 0.8,
+  //         height: SizeConfig.screenHeight * 0.1,
+  //         margin: EdgeInsets.only(
+  //           top: SizeConfig.blockSizeHorizontal * 3,
+  //           bottom: SizeConfig.blockSizeHorizontal * 14,
+  //         ),
+  //         child: Center(
+  //           child: _content[index],
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 
-  @override
-  void dispose() {
-    _videoController?.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _videoController?.dispose();
+  //   super.dispose();
+  // }
 }
 
 class LottieBackground extends CustomPainter {

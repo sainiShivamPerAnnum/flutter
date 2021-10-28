@@ -51,6 +51,12 @@ class MyWinningsViewModel extends BaseModel {
     notifyListeners();
   }
 
+  List<Color> colorList = [
+    UiConstants.tertiarySolid,
+    UiConstants.primaryColor,
+    Color(0xff11192B)
+  ];
+
   List<UserTransaction> get winningHistory => this._winningHistory;
   set winningHistory(List<UserTransaction> value) {
     this._winningHistory = value;
@@ -130,21 +136,26 @@ class MyWinningsViewModel extends BaseModel {
             height: SizeConfig.screenHeight,
             child: Stack(
               children: [
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: RepaintBoundary(
-                    key: imageKey,
-                    child: ShareCard(
-                      dpUrl: _userService.myUserDpUrl,
-                      claimChoice: choice,
-                      prizeAmount: _userService.userFundWallet.prizeBalance,
-                      username: _userService.baseUser.name,
-                    ),
-                  ),
-                ),
+                // Align(
+                //   alignment: Alignment.bottomCenter,
+                //   child: RepaintBoundary(
+                //     key: imageKey,
+                //     child: ShareCard(
+                //       dpUrl: _userService.myUserDpUrl,
+                //       claimChoice: choice,
+                //       prizeAmount: _userService.userFundWallet.prizeBalance,
+                //       username: _userService.baseUser.name,
+                //     ),
+                //   ),
+                // ),
                 FelloConfirmationDialog(
                   result: (res) async {
-                    if (res) caputure();
+                    if (res) {
+                      AppState.backButtonDispatcher.didPopRoute();
+                      BaseUtil.showPositiveAlert(
+                          "Share to Whatsapp to be added",
+                          "think of a sharable message");
+                    }
                   },
                   showCrossIcon: false,
                   asset: Assets.goldenTicket,
@@ -190,7 +201,7 @@ class MyWinningsViewModel extends BaseModel {
       await _localDBModel.savePrizeClaimChoice(choice);
 
       return true;
-    }else{
+    } else {
       BaseUtil.showNegativeAlert('Withdrawal Failed', response['message']);
       return false;
     }

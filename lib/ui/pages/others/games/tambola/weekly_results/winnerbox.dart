@@ -1,4 +1,8 @@
+import 'dart:math';
+
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -27,11 +31,23 @@ class WinnerBox extends StatelessWidget {
   }
 
   getWinningTicketTiles() {
+    List<Color> colorList = [
+      UiConstants.tertiarySolid,
+      UiConstants.primaryColor,
+      Color(0xff11192B)
+    ];
     List<ListTile> ticketTiles = [];
     winningsmap.forEach((key, value) {
       ticketTiles.add(ListTile(
-        leading: Text("#$key"),
-        trailing: Text(getValue(value)),
+        leading: Text(
+          "#$key",
+          style: TextStyles.body3,
+        ),
+        trailing: Text(
+          getValue(value),
+          style: TextStyles.body3.bold
+              .colour(colorList[Random().nextInt(colorList.length)]),
+        ),
       ));
     });
     return ticketTiles;
@@ -45,22 +61,16 @@ class WinnerBox extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 20),
       padding: EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.5),
+        color: UiConstants.scaffoldColor,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 20.0),
-            child: Text(
-              "Winning Tickets",
-              textAlign: TextAlign.center,
-              style: GoogleFonts.montserrat(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 20,
-                  height: 1.5,
-                  letterSpacing: 2),
-            ),
+            child: Text("Winning Tickets",
+                textAlign: TextAlign.center,
+                style: TextStyles.body1.bold.letterSpace(2)),
           ),
           Divider(),
           Expanded(

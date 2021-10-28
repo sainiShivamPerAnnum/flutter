@@ -48,10 +48,9 @@ class FcmHandler extends ChangeNotifier {
                   hapticVibrate: false,
                   content: FelloInfoDialog(
                     showCrossIcon: false,
-                    asset: Assets.congrats,
-                    title: "Congratulations",
+                    title: "Game Over",
                     subtitle:
-                        "Your score was ${data['game_score']} and you played for ${data['game_duration']} secs",
+                        "Your score for this round: ${data['game_score']}",
                     action: Container(
                       width: SizeConfig.screenWidth,
                       child: FelloButtonLg(

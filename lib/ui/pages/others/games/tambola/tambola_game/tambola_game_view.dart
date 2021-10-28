@@ -11,6 +11,7 @@ import 'package:felloapp/ui/elements/tambola-global/tambola_ticket.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_game/tambola_game_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/picks_card/picks_card_view.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_result.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
@@ -105,6 +106,23 @@ class _TambolaGameViewState extends State<TambolaGameView>
                                         model.showBuyModal = value;
                                       },
                                     ),
+                                    // Padding(
+                                    //   padding: EdgeInsets.all(40),
+                                    //   child: ElevatedButton(
+                                    //     child: Text("Results"),
+                                    //     onPressed: () => AppState
+                                    //         .delegate
+                                    //         .appState
+                                    //         .currentAction = PageAction(
+                                    //       state: PageState.addWidget,
+                                    //       page: TWeeklyResultPageConfig,
+                                    //       widget: WeeklyResult(
+                                    //         winningsmap: {"12324": 1},
+                                    //         isEligible: false,
+                                    //       ),
+                                    //     ),
+                                    //   ),
+                                    // ),
                                     connectivityStatus !=
                                             ConnectivityStatus.Offline
                                         ? buildCards(model)
