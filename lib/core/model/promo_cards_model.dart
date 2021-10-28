@@ -10,16 +10,12 @@ class PromoCardModel {
   final String _buttonText;
   final String _actionUri;
   final int _bgColor;
+  final String _bgImage;
+
   get position => this._position;
 
-  PromoCardModel(
-    this._position,
-    this._title,
-    this._subtitle,
-    this._actionUri,
-    this._buttonText,
-    this._bgColor,
-  );
+  PromoCardModel(this._position, this._title, this._subtitle, this._actionUri,
+      this._buttonText, this._bgColor, this._bgImage);
 
   PromoCardModel.fromMap(Map<String, dynamic> cMap)
       : this(
@@ -29,6 +25,7 @@ class PromoCardModel {
           cMap['actionUri'],
           cMap['btnText'],
           cMap['color'],
+          cMap['bgImage']
         );
 
   set position(value) => this.position = value;
@@ -42,4 +39,6 @@ class PromoCardModel {
   String get actionUri => this._actionUri;
 
   int get bgColor => this._bgColor;
+
+  String get bgImage => _bgImage;
 }

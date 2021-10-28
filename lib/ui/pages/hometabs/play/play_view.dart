@@ -43,7 +43,7 @@ class Play extends StatelessWidget {
                             child: OfferCard(
                               shimmer: true,
                               model: PromoCardModel(
-                                  1, null, null, null, null, 4281648039),
+                                  1, null, null, null, null, 4281648039, null),
                             ),
                           ),
                           ClipRRect(
@@ -52,7 +52,7 @@ class Play extends StatelessWidget {
                             child: OfferCard(
                               shimmer: true,
                               model: PromoCardModel(
-                                  1, null, null, null, null, 4294942219),
+                                  1, null, null, null, null, 4294942219, null),
                             ),
                           ),
                         ],

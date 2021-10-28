@@ -184,6 +184,8 @@ class TambolaGameViewModel extends BaseModel {
     if (_isDeleted) {
       notifyListeners();
     }
+
+    checkSundayResultsProcessing();
   }
 
   _refreshTambolaTickets() async {
@@ -216,7 +218,7 @@ class TambolaGameViewModel extends BaseModel {
       buyTicketCount -= 1;
     else
       BaseUtil.showNegativeAlert(
-          "Oops!", "We currently don't support negative counts");
+          "Failed", "We currently don't support negative counts");
     ticketCountController.text = buyTicketCount.toString();
     notifyListeners();
   }
@@ -350,7 +352,7 @@ class TambolaGameViewModel extends BaseModel {
       return false;
     }
     DateTime date = DateTime.now();
-    if (date.weekday == DateTime.sunday) {
+    if (date.weekday == DateTime.thursday) {
       if (weeklyDigits.toList().length == 7 * dailyPicksCount) {
         _localDBModel.isTambolaResultProcessingDone().then((flag) {
           if (flag == 0) {
