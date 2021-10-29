@@ -94,7 +94,7 @@ class Win extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(
                                       SizeConfig.roundness32),
                                   image: DecorationImage(
-                                      image: AssetImage(Assets.amazonGC),
+                                      image: AssetImage(Assets.amazonCoupon),
                                       fit: BoxFit.cover),
                                 ),
                               ),
@@ -107,7 +107,7 @@ class Win extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(
                                       SizeConfig.roundness32),
                                   image: DecorationImage(
-                                      image: AssetImage(Assets.myntraGV),
+                                      image: AssetImage(Assets.myntraCoupon),
                                       fit: BoxFit.cover),
                                 ),
                               ),
@@ -120,7 +120,7 @@ class Win extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(
                                       SizeConfig.roundness32),
                                   image: DecorationImage(
-                                      image: AssetImage(Assets.amazonGC),
+                                      image: AssetImage(Assets.gplayCoupon),
                                       fit: BoxFit.cover),
                                 ),
                               ),

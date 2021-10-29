@@ -288,7 +288,7 @@ class _TambolaGameViewState extends State<TambolaGameView>
                                   style: TextStyles.body3,
                                 ),
                                 SvgPicture.asset(
-                                  Assets.tickets,
+                                  Assets.tokens,
                                   height: SizeConfig.iconSize1,
                                 ),
                               ],

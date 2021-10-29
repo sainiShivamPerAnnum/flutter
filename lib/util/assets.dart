@@ -29,7 +29,8 @@ class Assets {
   //APPBAR
 
   static final String alerts = "assets/vectors/icons/alerts.svg";
-  static final String tickets = "assets/vectors/icons/token.svg";
+  static final String tokens = "assets/vectors/icons/token.svg";
+  static final String tickets = "assets/vectors/icons/tickets.svg";
   //NAVBAR
 
   static final String navPlay = "assets/vectors/icons/support.svg";
@@ -87,6 +88,15 @@ class Assets {
   static final String myntraGV = "assets/images/myntra_coupon.png";
   static final String moneyBag = "assets/images/money_bag.png";
   static final String clip = "assets/vectors/clip.svg";
+
+  static final String amazonCoupon = "assets/images/afv.png";
+  static final String myntraCoupon = "assets/images/mgv.png";
+  static final String gplayCoupon = "assets/images/ggv.png";
+
+  // TRANSACTIONS
+
+  static final String bankDetails = "assets/vectors/icons/bankDetails.svg";
+  static final String txnHistory = "assets/vectors/icons/txnHistory.svg";
 
   //DRAWER
   static final String dAboutDigitalGold =

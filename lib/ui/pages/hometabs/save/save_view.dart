@@ -183,7 +183,7 @@ class SaveInfoTile extends StatelessWidget {
                   ? Image.asset(png ?? Assets.moneyIcon,
                       width: SizeConfig.padding40)
                   : SvgPicture.asset(
-                      svg ?? Assets.tickets,
+                      svg ?? Assets.tokens,
                       width: SizeConfig.padding40,
                     ),
               SizedBox(width: SizeConfig.padding16),

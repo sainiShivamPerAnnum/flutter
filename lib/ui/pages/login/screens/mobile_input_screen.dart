@@ -144,7 +144,7 @@ class MobileInputScreenState extends State<MobileInputScreen> {
                 children: [
                   TextFormField(
                     key: _phoneFieldKey,
-                    keyboardType: TextInputType.numberWithOptions(signed: true),
+                    keyboardType: TextInputType.phone,
                     inputFormatters: [
                       FilteringTextInputFormatter.digitsOnly,
                     ],

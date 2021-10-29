@@ -1,4 +1,6 @@
 //Project Imports
+import 'dart:io';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
@@ -214,6 +216,16 @@ class _LoginControllerState extends State<LoginController>
     bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
     return Scaffold(
       backgroundColor: UiConstants.primaryColor,
+      floatingActionButton: keyboardIsOpen && Platform.isIOS
+          ? FloatingActionButton(
+              child: Icon(
+                Icons.done,
+                color: Colors.white,
+              ),
+              backgroundColor: UiConstants.tertiarySolid,
+              onPressed: () => FocusScope.of(context).unfocus(),
+            )
+          : SizedBox(),
       body: HomeBackground(
         child: Stack(
           children: <Widget>[
@@ -513,7 +525,8 @@ class _LoginControllerState extends State<LoginController>
               setState(() {});
             }).then((value) {
               _controller.animateToPage(Username.index,
-                  duration: Duration(milliseconds: 500), curve: Curves.easeInToLinear);
+                  duration: Duration(milliseconds: 500),
+                  curve: Curves.easeInToLinear);
             });
           }
           break;

@@ -110,7 +110,7 @@ class Root extends StatelessWidget {
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                   child: Container(
-                    color: UiConstants.scaffoldColor,
+                    color: Colors.transparent,
                     width: SizeConfig.screenWidth,
                     height: SizeConfig.navBarHeight,
                     child: BackdropFilter(

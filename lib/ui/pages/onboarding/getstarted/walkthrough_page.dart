@@ -52,7 +52,7 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
         body: HomeBackground(
       child: SafeArea(
         child: Container(
-          margin: EdgeInsets.only(top: SizeConfig.padding16),
+          margin: EdgeInsets.only(top: SizeConfig.screenHeight * 0.04),
           padding: EdgeInsets.symmetric(
               horizontal: SizeConfig.pageHorizontalMargins),
           decoration: BoxDecoration(
@@ -74,8 +74,8 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
               ),
               Spacer(),
               Container(
-                height: SizeConfig.screenWidth,
-                width: SizeConfig.screenWidth,
+                height: SizeConfig.screenHeight * 0.38,
+                width: SizeConfig.screenHeight * 0.38,
                 child: Stack(
                   children: [
                     Align(
@@ -83,8 +83,8 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                       child: CustomPaint(
                         painter: LottieBackground(),
                         size: Size(
-                            SizeConfig.screenWidth * 0.8,
-                            (SizeConfig.screenWidth * 0.8 * 0.9779874213836478)
+                            SizeConfig.screenHeight * 0.4,
+                            (SizeConfig.screenHeight * 0.4 * 0.9779874213836478)
                                 .toDouble()),
                       ),
                     ),
@@ -125,7 +125,7 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
               ),
               Padding(
                 padding: EdgeInsets.all(
-                  SizeConfig.screenHeight * 0.05,
+                  SizeConfig.screenHeight * 0.03,
                 ),
                 child: ValueListenableBuilder(
                   valueListenable: _pageNotifier,
@@ -201,6 +201,9 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                   "Skip",
                   style: TextStyles.body3.colour(Colors.grey),
                 ),
+              ),
+              SizedBox(
+                height: kToolbarHeight / 2,
               )
             ],
           ),
