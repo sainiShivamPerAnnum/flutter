@@ -70,7 +70,7 @@ class GameCard extends StatelessWidget {
                                   backgroundColor: UiConstants.tertiarySolid
                                       .withOpacity(0.2),
                                   child: SvgPicture.asset(
-                                    Assets.tickets,
+                                    Assets.tokens,
                                     height: SizeConfig.iconSize3,
                                   ),
                                 ),

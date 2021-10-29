@@ -73,7 +73,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "obMobileDesc" : MessageLookupByLibrary.simpleMessage("For verification purposes, an OTP shall be sent to this number."),
     "obMobileLabel" : MessageLookupByLibrary.simpleMessage("Mobile Number"),
     "obNameHint" : MessageLookupByLibrary.simpleMessage("Enter your full name"),
-    "obNameLabel" : MessageLookupByLibrary.simpleMessage("Name as per PAN"),
+    "obNameLabel" : MessageLookupByLibrary.simpleMessage("Name"),
     "obOtpDesc" : m1,
     "obOtpLabel" : MessageLookupByLibrary.simpleMessage("OTP Authentication"),
     "obOtpTryExceed" : MessageLookupByLibrary.simpleMessage("OTP requests exceeded. Please try again in sometime or contact us."),
@@ -116,11 +116,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "saveSecure" : MessageLookupByLibrary.simpleMessage("100% secure"),
     "saveSellButton" : MessageLookupByLibrary.simpleMessage("SELL"),
     "saveViewAll" : MessageLookupByLibrary.simpleMessage("View All"),
-    "saveWinningsLabel" : MessageLookupByLibrary.simpleMessage("My total winnings"),
+    "saveWinningsLabel" : MessageLookupByLibrary.simpleMessage("My Total Winnings"),
     "saveWinningsValue" : m6,
     "signout" : MessageLookupByLibrary.simpleMessage("Sign Out"),
     "splashNoInternet" : MessageLookupByLibrary.simpleMessage("No active internet connection"),
-    "splashSecureText" : MessageLookupByLibrary.simpleMessage("🔒 safe and secure"),
+    "splashSecureText" : MessageLookupByLibrary.simpleMessage("100% safe and secure"),
     "splashSlowConnection" : MessageLookupByLibrary.simpleMessage("Connection taking longer than usual"),
     "splashTagline" : MessageLookupByLibrary.simpleMessage("Your savings and gaming app"),
     "tLossSubtitle" : MessageLookupByLibrary.simpleMessage("None of your tickets matched this week"),
@@ -135,10 +135,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "tWinTitle" : MessageLookupByLibrary.simpleMessage("CONGRATULATIONS!"),
     "txnBankDetailsLabel" : MessageLookupByLibrary.simpleMessage("Bank Account Details"),
     "txnHistoryLabel" : MessageLookupByLibrary.simpleMessage("Transaction History"),
-    "winIphoneBigText" : MessageLookupByLibrary.simpleMessage("friends and win an iPhone 13"),
+    "winIphoneBigText" : MessageLookupByLibrary.simpleMessage("friends and win iphone 13"),
     "winIphoneSmallText" : MessageLookupByLibrary.simpleMessage("Refer"),
-    "winMoneyBigText" : MessageLookupByLibrary.simpleMessage("upto ₹ 1 Lakh every week"),
+    "winMoneyBigText" : MessageLookupByLibrary.simpleMessage("₹ 1 Lakh every week"),
     "winMoneySmallText" : MessageLookupByLibrary.simpleMessage("Play and win"),
-    "winMyWinnings" : MessageLookupByLibrary.simpleMessage("My total winnings")
+    "winMyWinnings" : MessageLookupByLibrary.simpleMessage("My Winnings")
   };
 }

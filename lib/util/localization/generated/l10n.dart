@@ -167,10 +167,10 @@ class S {
     );
   }
 
-  /// `Name as per PAN`
+  /// `Name`
   String get obNameLabel {
     return Intl.message(
-      'Name as per PAN',
+      'Name',
       name: 'obNameLabel',
       desc: '',
       args: [],
@@ -463,10 +463,10 @@ class S {
     );
   }
 
-  /// `Your winnings`
+  /// `My Total Winnings`
   String get saveWinningsLabel {
     return Intl.message(
-      'Your winnings',
+      'My Total Winnings',
       name: 'saveWinningsLabel',
       desc: '',
       args: [],

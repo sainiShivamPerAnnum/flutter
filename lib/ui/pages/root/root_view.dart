@@ -4,6 +4,10 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
 import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
+import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
+import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
+import 'package:felloapp/ui/pages/root/root_animation.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
@@ -21,6 +25,12 @@ import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
 class Root extends StatelessWidget {
+  final AnimationController controller;
+
+  Root({Key key, @required this.controller})
+      : animation = RootAnimation(controller),
+        super(key: key);
+  final RootAnimation animation;
   @override
   Widget build(BuildContext context) {
     return BaseView<RootViewModel>(
@@ -42,86 +52,100 @@ class Root extends StatelessWidget {
             return true;
           },
           child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            key: RootViewModel.scaffoldKey,
-            drawer: FDrawer(),
-            drawerEnableOpenDragGesture: false,
-            body: HomeBackground(
-              whiteBackground: WhiteBackground(
-                  height: model.currentTabIndex == 1
-                      ? SizeConfig.screenHeight * 0.17
-                      : SizeConfig.screenHeight * 0.2),
-              child: Stack(
-                children: [
-                  RefreshIndicator(
-                    color: UiConstants.primaryColor,
-                    backgroundColor: Colors.black,
-                    onRefresh: model.refresh,
-                    child: Container(
-                      margin: EdgeInsets.only(
-                          top: MediaQuery.of(context).padding.top),
-                      child: Consumer<AppState>(
-                        builder: (ctx, m, child) => IndexedStack(
-                            children: model.pages, index: m.rootIndex),
-                      ),
-                    ),
-                  ),
-                  FelloAppBar(
-                    leading: InkWell(
-                      onTap: () => model.showDrawer(),
-                      child: ProfileImageSE(
-                        radius: SizeConfig.avatarRadius,
-                      ),
-                    ),
-                    actions: [
-                      FelloCoinBar(),
-                      SizedBox(width: 16),
-                      NotificationButton(),
-                    ],
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    child: ClipRect(
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                        child: Container(
-                          color: UiConstants.scaffoldColor,
-                          width: SizeConfig.screenWidth,
-                          height: SizeConfig.navBarHeight,
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  WantMoreTickets(
-                    model: model,
-                  ),
-                  BottomNavBar(
-                    model: model,
-                  ),
-                ],
-              ),
-            ),
-          ),
+              resizeToAvoidBottomInset: false,
+              key: RootViewModel.scaffoldKey,
+              drawer: FDrawer(),
+              drawerEnableOpenDragGesture: false,
+              body: AnimatedBuilder(
+                animation: animation.controller,
+                builder: (ctx, child) => _buildAnimation(context, child, model),
+              )),
         );
       },
+    );
+  }
+
+  Widget _buildAnimation(
+      BuildContext context, Widget child, RootViewModel model) {
+    return Opacity(
+      opacity: animation.backgroundOpacity.value,
+      child: HomeBackground(
+        whiteBackground: WhiteBackground(
+            height: model.currentTabIndex == 1
+                ? SizeConfig.screenHeight * 0.17
+                : SizeConfig.screenHeight * 0.2),
+        child: Stack(
+          children: [
+            RefreshIndicator(
+              color: UiConstants.primaryColor,
+              backgroundColor: Colors.black,
+              onRefresh: model.refresh,
+              child: Opacity(
+                opacity: animation.contentOpacity.value,
+                child: Container(
+                  margin: EdgeInsets.only(top: animation.contentHeight.value),
+                  child: Consumer<AppState>(
+                    builder: (ctx, m, child) => IndexedStack(
+                        children: [Save(), Play(), Win()], index: m.rootIndex),
+                  ),
+                ),
+              ),
+            ),
+            FelloAppBar(
+              leading: InkWell(
+                onTap: () => model.showDrawer(),
+                child: ProfileImageSE(
+                  radius: SizeConfig.avatarRadius,
+                ),
+              ),
+              actions: [
+                FelloCoinBar(),
+                SizedBox(width: 16),
+                NotificationButton(),
+              ],
+            ),
+            Positioned(
+              bottom: 0,
+              child: ClipRect(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                  child: Container(
+                    color: Colors.transparent,
+                    width: SizeConfig.screenWidth,
+                    height: SizeConfig.navBarHeight,
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            WantMoreTickets(
+              model: model,
+              bottomMargin: animation.navbarPosition.value,
+            ),
+            BottomNavBar(
+              model: model,
+              bottomHeight: animation.navbarPosition.value,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
 
 class BottomNavBar extends StatelessWidget {
   final RootViewModel model;
-
-  BottomNavBar({@required this.model});
+  final double bottomHeight;
+  BottomNavBar({@required this.model, @required this.bottomHeight});
 
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return Consumer<AppState>(
       builder: (ctx, m, child) => Positioned(
-        bottom: SizeConfig.pageHorizontalMargins,
+        bottom: bottomHeight,
         left: SizeConfig.pageHorizontalMargins,
         right: SizeConfig.pageHorizontalMargins,
         child: Container(
@@ -151,8 +175,8 @@ class BottomNavBar extends StatelessWidget {
 
 class WantMoreTickets extends StatelessWidget {
   final RootViewModel model;
-
-  WantMoreTickets({@required this.model});
+  final bottomMargin;
+  WantMoreTickets({@required this.model, @required this.bottomMargin});
 
   @override
   Widget build(BuildContext context) {
@@ -161,9 +185,7 @@ class WantMoreTickets extends StatelessWidget {
       builder: (ctx, m, child) => AnimatedPositioned(
         duration: Duration(milliseconds: 300),
         curve: Curves.decelerate,
-        bottom: m.rootIndex == 1
-            ? SizeConfig.pageHorizontalMargins + SizeConfig.navBarHeight / 2
-            : SizeConfig.pageHorizontalMargins,
+        bottom: bottomMargin,
         left: SizeConfig.pageHorizontalMargins,
         right: SizeConfig.pageHorizontalMargins,
         child: InkWell(
@@ -176,8 +198,12 @@ class WantMoreTickets extends StatelessWidget {
           ),
           child: Shimmer(
             duration: Duration(seconds: 5),
-            child: Container(
-              height: SizeConfig.navBarHeight,
+            child: AnimatedContainer(
+              duration: Duration(milliseconds: 300),
+              curve: Curves.decelerate,
+              height: m.rootIndex == 1
+                  ? SizeConfig.navBarHeight * 1.5
+                  : SizeConfig.navBarHeight,
               width: SizeConfig.navBarWidth,
               decoration: BoxDecoration(
                 color: UiConstants.primaryLight,

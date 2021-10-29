@@ -50,7 +50,7 @@ class Transactions extends StatelessWidget {
                   children: [
                     SizedBox(height: SizeConfig.scaffoldMargin),
                     FelloBriefTile(
-                      leadingAsset: Assets.wmtsaveMoney,
+                      leadingAsset: Assets.bankDetails,
                       title: "Bank Account Details",
                       trailingIcon: Icons.arrow_forward_ios_rounded,
                       onTap: () {
@@ -61,7 +61,7 @@ class Transactions extends StatelessWidget {
                       },
                     ),
                     FelloBriefTile(
-                      leadingAsset: Assets.tickets,
+                      leadingAsset: Assets.txnHistory,
                       title: "Transactions History and Invoice",
                       trailingIcon: Icons.arrow_forward_ios_rounded,
                       onTap: () {

@@ -338,7 +338,7 @@ class PrizesView extends StatelessWidget {
                   children: [
                     PrizeChip(
                       color: UiConstants.tertiarySolid,
-                      svg: Assets.tickets,
+                      svg: Assets.tokens,
                       text: "${model.prizesA[i].flc}",
                     ),
                     SizedBox(width: SizeConfig.padding16),

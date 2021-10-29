@@ -355,7 +355,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                 ),
                                 controller: model.emailController,
                               ),
-                              if (!model.isEmailVerified)
+                              if (!model.isEmailVerified && !model.inEditMode)
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
@@ -390,6 +390,9 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                         Container(
                           width: SizeConfig.screenWidth,
                           child: FelloButtonLg(
+                            // color: model.inEditMode
+                            //     ? UiConstants.primaryColor
+                            //     : UiConstants.tertiarySolid,
                             child: model.isUpdaingUserDetails
                                 ? SpinKitThreeBounce(
                                     color: Colors.white,
@@ -470,7 +473,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                         //     ],
                         //   ),
                         // ),
-                        Divider(),
+                        //Divider(),
                         SizedBox(height: SizeConfig.padding12),
                         TextButton(
                           onPressed: model.signout,

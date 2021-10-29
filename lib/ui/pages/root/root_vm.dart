@@ -51,10 +51,10 @@ class RootViewModel extends BaseModel {
 
   static final GlobalKey<ScaffoldState> scaffoldKey =
       new GlobalKey<ScaffoldState>();
-  List<Widget> pages;
+  // List<Widget> pages;
 
   onInit() {
-    pages = <Widget>[Save(), Play(), Win()];
+    // pages = <Widget>[Save(), Play(), Win()];
     AppState().setCurrentTabIndex = 1;
     AppState().setRootLoadValue = true;
     _initDynamicLinks(AppState.delegate.navigatorKey.currentContext);

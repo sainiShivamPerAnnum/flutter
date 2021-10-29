@@ -59,7 +59,7 @@ class WinningsContainer extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Text(
-                          locale.winMyWinnings,
+                          locale.saveWinningsLabel,
                           style: TextStyles.title5.colour(Colors.white60),
                         ),
                         UserWinningsSE(

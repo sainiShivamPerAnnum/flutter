@@ -70,11 +70,12 @@ class KYCDetailsView extends StatelessWidget {
                                 TextFormField(
                                   autofocus: true,
                                   //initialValue: model.myname,
+                                  inputFormatters: [
+                                    UpperCaseTextFormatter(),
+                                  ],
                                   enabled: model.inEditMode,
                                   controller: model.nameController,
                                   keyboardType: TextInputType.name,
-                                  textCapitalization:
-                                      TextCapitalization.characters,
                                 ),
                               ],
                             ),

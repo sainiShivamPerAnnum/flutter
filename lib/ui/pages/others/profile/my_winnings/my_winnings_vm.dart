@@ -162,9 +162,9 @@ class MyWinningsViewModel extends BaseModel {
                   title: "Congratulations",
                   subtitle: "Claimed successful",
                   accept: "Share on Whatsapp",
-                  reject: "OK",
+                  reject: "Done",
                   acceptColor: UiConstants.primaryColor,
-                  rejectColor: UiConstants.tertiarySolid,
+                  rejectColor: Colors.grey[400],
                   //onAccept: buyAmazonGiftCard,
                   onReject: AppState.backButtonDispatcher.didPopRoute,
                 )

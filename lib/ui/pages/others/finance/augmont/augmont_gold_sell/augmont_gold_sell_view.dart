@@ -212,7 +212,7 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                                         model.updateGoldAmount();
                                       },
                                       decoration: InputDecoration(
-                                        prefix: Text("gm ",
+                                        suffix: Text("gm ",
                                             style: TextStyles.body2.bold),
                                         border: InputBorder.none,
                                         enabledBorder: InputBorder.none,

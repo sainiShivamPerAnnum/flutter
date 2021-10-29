@@ -60,66 +60,71 @@ class _NotficationsPageState extends State<NotficationsPage> {
                       } else {
                         return ListView.builder(
                           padding: EdgeInsets.zero,
-                          itemBuilder: (context, index) => Column(
-                            children: [
-                              Row(
-                                children: [
-                                  CircleAvatar(
-                                    backgroundColor: UiConstants.primaryColor
-                                        .withOpacity(0.1),
-                                    radius: SizeConfig.tileAvatarRadius,
-                                    child: Image.asset(
-                                      Assets.logoShortform,
-                                      color: UiConstants.primaryColor,
-                                      height: SizeConfig.iconSize1,
+                          itemBuilder: (context, index) => Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: SizeConfig.padding8),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    CircleAvatar(
+                                      backgroundColor: UiConstants.primaryColor
+                                          .withOpacity(0.1),
+                                      radius: SizeConfig.tileAvatarRadius,
+                                      child: Image.asset(
+                                        Assets.logoShortform,
+                                        color: UiConstants.primaryColor,
+                                        height: SizeConfig.iconSize1,
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(width: SizeConfig.padding12),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: Text(
-                                                alerts[index]
-                                                        .title
-                                                        .toUpperCase() ??
-                                                    "Title",
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyles.body2.bold,
+                                    SizedBox(width: SizeConfig.padding12),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: Text(
+                                                  alerts[index]
+                                                          .title
+                                                          .toUpperCase() ??
+                                                      "Title",
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyles.body2.bold,
+                                                ),
                                               ),
-                                            ),
-                                            Text(
-                                              TimeAgo.timeAgoSinceDate(
-                                                DateTime.fromMillisecondsSinceEpoch(
-                                                        alerts[index]
-                                                                .createdTime
-                                                                .seconds *
-                                                            1000)
-                                                    .toString(),
+                                              Text(
+                                                TimeAgo.timeAgoSinceDate(
+                                                  DateTime.fromMillisecondsSinceEpoch(
+                                                          alerts[index]
+                                                                  .createdTime
+                                                                  .seconds *
+                                                              1000)
+                                                      .toString(),
+                                                ),
+                                                style: TextStyles.body3
+                                                    .colour(Colors.grey)
+                                                    .letterSpace(2),
                                               ),
-                                              style: TextStyles.body3
-                                                  .colour(Colors.grey)
-                                                  .letterSpace(2),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(height: SizeConfig.padding6),
-                                        Text(alerts[index].subtitle ??
-                                            "Subtitle"),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                              Divider(),
-                            ],
+                                            ],
+                                          ),
+                                          SizedBox(height: SizeConfig.padding6),
+                                          Text(alerts[index].subtitle ??
+                                              "Subtitle"),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                Divider(),
+                              ],
+                            ),
                           ),
                           itemCount: alerts?.length ?? 0,
                         );

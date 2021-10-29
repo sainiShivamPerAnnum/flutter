@@ -32,13 +32,12 @@ class Save extends StatelessWidget {
                 children: [
                   SizedBox(
                       height: SizeConfig.screenHeight * 0.08 +
-                          SizeConfig.screenWidth * 0.6),
+                          SizeConfig.screenWidth * 0.5),
                   Expanded(
                     child: ListView(
-                      padding: EdgeInsets.only(top: SizeConfig.padding20),
                       children: [
                         SizedBox(
-                          height: SizeConfig.padding16,
+                          height: SizeConfig.screenWidth * 0.08,
                         ),
                         WinningsContainer(
                           shadow: true,
@@ -184,7 +183,7 @@ class SaveInfoTile extends StatelessWidget {
                   ? Image.asset(png ?? Assets.moneyIcon,
                       width: SizeConfig.padding40)
                   : SvgPicture.asset(
-                      svg ?? Assets.tickets,
+                      svg ?? Assets.tokens,
                       width: SizeConfig.padding40,
                     ),
               SizedBox(width: SizeConfig.padding16),
@@ -250,9 +249,8 @@ class AugmontCard extends StatelessWidget {
                 ],
               ),
               Container(
-                margin: EdgeInsets.only(
-                  top: SizeConfig.padding24,
-                  bottom: SizeConfig.padding16,
+                margin: EdgeInsets.symmetric(
+                  vertical: SizeConfig.padding16,
                 ),
                 child: Row(
                   children: [

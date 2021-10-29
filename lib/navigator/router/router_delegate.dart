@@ -42,6 +42,7 @@ import 'package:felloapp/ui/pages/others/profile/transactions_history/transactio
 import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_view.dart';
 import 'package:felloapp/ui/pages/others/profile/verify_email.dart';
+import 'package:felloapp/ui/pages/root/root_animator.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/pages/splash/splash_view.dart';
 import 'package:felloapp/ui/pages/static/transactions_view.dart';
@@ -161,7 +162,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(LoginController(), LoginPageConfig);
           break;
         case Pages.Root:
-          _addPageData(Root(), RootPageConfig);
+          _addPageData(RootAnimator(), RootPageConfig);
           break;
         case Pages.Onboard:
           _addPageData(GetStartedPage(), OnboardPageConfig);

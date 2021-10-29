@@ -50,6 +50,7 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
           padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 5),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -81,44 +82,56 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
                 ),
               ),
               isUploading
-                  ? Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SpinKitThreeBounce(
-                        color: UiConstants.primaryColor,
-                        size: 24.0,
+                  ? Container(
+                      alignment: Alignment.center,
+                      height: SizeConfig.screenWidth * 0.26,
+                      child: Container(
+                        height: SizeConfig.padding40,
+                        width: SizeConfig.padding40,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: UiConstants.primaryColor,
+                          backgroundColor: UiConstants.tertiarySolid,
+                        ),
                       ),
                     )
                   : Column(
                       children: [
-                        FelloButtonLg(
-                          child: Text(
-                            "Update",
-                            style: GoogleFonts.montserrat(
-                              color: Colors.white,
-                              fontSize: SizeConfig.mediumTextSize,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              isUploading = true;
-                              widget.upload(true);
-                            });
-                          },
-                        ),
-                        SizedBox(height: SizeConfig.padding12),
-                        FelloButtonLg(
-                            color: UiConstants.tertiarySolid,
+                        Container(
+                          width: SizeConfig.screenWidth,
+                          child: FelloButtonLg(
                             child: Text(
-                              "Cancel",
+                              "Update",
                               style: GoogleFonts.montserrat(
                                 color: Colors.white,
                                 fontSize: SizeConfig.mediumTextSize,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
-                            onPressed: () =>
-                                AppState.backButtonDispatcher.didPopRoute()),
+                            onPressed: () {
+                              setState(() {
+                                isUploading = true;
+                                widget.upload(true);
+                              });
+                            },
+                          ),
+                        ),
+                        SizedBox(height: SizeConfig.padding12),
+                        Container(
+                          width: SizeConfig.screenWidth,
+                          child: FelloButtonLg(
+                              color: Colors.grey[300],
+                              child: Text(
+                                "Cancel",
+                                style: GoogleFonts.montserrat(
+                                  color: Colors.black,
+                                  fontSize: SizeConfig.mediumTextSize,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              onPressed: () =>
+                                  AppState.backButtonDispatcher.didPopRoute()),
+                        ),
                       ],
                     ),
             ],
