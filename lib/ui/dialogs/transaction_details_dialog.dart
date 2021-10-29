@@ -211,7 +211,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                   UiConstants.primaryColor),
                               referralTile(
                                   'Gold Purchased:',
-                                  '${_getAugmontGoldGrams(widget._transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm] ?? 'N/A')} grams',
+                                  '${_getAugmontGoldGrams(BaseUtil.toDouble(widget._transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm]) ?? 'N/A')} grams',
                                   UiConstants.primaryColor)
                             ],
                           )
@@ -229,7 +229,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                               ),
                               referralTile(
                                 'Gold Sold:',
-                                '${_getAugmontGoldGrams(widget._transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm] ?? 'N/A')} grams',
+                                '${_getAugmontGoldGrams(BaseUtil.toDouble(widget._transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm]) ?? 'N/A')} grams',
                                 Colors.redAccent.withOpacity(0.6),
                               )
                             ],

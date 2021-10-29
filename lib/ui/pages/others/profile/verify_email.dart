@@ -4,10 +4,12 @@ import 'dart:math' as math;
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/pin_input_custom_text_field.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -30,6 +32,7 @@ class VerifyEmail extends StatefulWidget {
 class VerifyEmailState extends State<VerifyEmail> {
   TextEditingController email = new TextEditingController();
   TextEditingController otp = new TextEditingController();
+  final _userService = locator<UserService>();
   final formKey = GlobalKey<FormState>();
   Timer timer;
   bool isGmailVerifying = false;
@@ -201,6 +204,7 @@ class VerifyEmailState extends State<VerifyEmail> {
     if (generatedOTP == otp.text) {
       baseProvider.setEmail(email.text.trim());
       baseProvider.setEmailVerified();
+      _userService.isEmailVerified = true;
       bool res = await dbProvider.updateUser(baseProvider.myUser);
       setState(() {
         _isVerifying = false;
@@ -241,6 +245,7 @@ class VerifyEmailState extends State<VerifyEmail> {
         email.text = googleUser.email;
         baseProvider.myUser.email = googleUser.email;
         baseProvider.setEmailVerified();
+        _userService.isEmailVerified = true;
         bool res = await dbProvider.updateUser(baseProvider.myUser);
         if (res) {
           setState(() {

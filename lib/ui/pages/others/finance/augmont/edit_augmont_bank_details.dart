@@ -7,6 +7,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/augmont_confirm_register_dialog.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
+import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
@@ -181,6 +182,11 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                                   SizedBox(height: 6),
                                   TextFormField(
                                     keyboardType: TextInputType.name,
+                                    inputFormatters: [
+                                      UpperCaseTextFormatter(),
+                                      FilteringTextInputFormatter.allow(
+                                          RegExp(r'[A-Z ]'))
+                                    ],
                                     textCapitalization:
                                         TextCapitalization.characters,
                                     controller: _bankHolderNameController,

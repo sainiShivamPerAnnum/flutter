@@ -23,6 +23,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   String _gender;
   String _idToken;
   UserFundWallet _userFundWallet;
+  bool _isEmailVerified;
 
   User get firebaseUser => _firebaseUser;
   BaseUser get baseUser => _baseUser;
@@ -31,6 +32,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   String get idToken => _idToken;
   String get dob => _dob;
   String get gender => _gender;
+  bool get isEmailVerified => _isEmailVerified;
 
   UserFundWallet get userFundWallet => _userFundWallet;
 
@@ -71,13 +73,21 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   set augGoldPrinciple(double principle) {
     _userFundWallet.augGoldPrinciple = principle;
     notifyListeners(UserServiceProperties.myUserFund);
-    _logger.d("Wallet:Aug Gold Quantity updated in userservice, property listeners notified");
+    _logger.d(
+        "Wallet:Aug Gold Quantity updated in userservice, property listeners notified");
   }
 
   set augGoldQuantity(double quantity) {
     _userFundWallet.augGoldQuantity = quantity;
     notifyListeners(UserServiceProperties.myUserFund);
-    _logger.d("Wallet:Aug Gold Quantity updated in userservice, property listeners notified");
+    _logger.d(
+        "Wallet:Aug Gold Quantity updated in userservice, property listeners notified");
+  }
+
+  set isEmailVerified(bool val) {
+    _isEmailVerified = val;
+    notifyListeners(UserServiceProperties.myEmailVerification);
+    _logger.d("Email:User email verified, property listeners notified");
   }
 
   bool get isUserOnborded {
@@ -95,6 +105,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     _firebaseUser = FirebaseAuth.instance.currentUser;
     await setBaseUser();
     if (baseUser != null) {
+      isEmailVerified = baseUser.isEmailVerified;
       await setProfilePicture();
       await getUserFundWalletData();
     }
@@ -111,6 +122,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       _myUserDpUrl = null;
       _myUserName = null;
       _idToken = null;
+      _isEmailVerified = false;
       return true;
     } catch (e) {
       _logger.e("Failed to logout user: ${e.toString()}");

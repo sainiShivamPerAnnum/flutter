@@ -30,6 +30,13 @@
             {
               "client_id": "76548371644-v44cjfu14vrhd66593e77kkvv7upfdeo.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "76548371644-2mphkjd1hahmsrem16sce0lsonic5ce2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "in.fello.felloapp.iOS"
+              }
             }
           ]
         }
