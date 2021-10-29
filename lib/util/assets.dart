@@ -64,8 +64,6 @@ class Assets {
 
   // PLAY
   static final String germsPattern = "assets/images/bg_pattern.png";
-  static final String cricketThumb = "assets/images/cricket.jpg";
-  static final String tambolaThumb = "assets/images/tambola.png";
   static final String tambolaWalkthrough =
       "assets/images/tambola_walkthrough.png";
   static final String scoreIcon = "assets/vectors/icons/score.svg";

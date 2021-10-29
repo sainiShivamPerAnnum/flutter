@@ -34,16 +34,17 @@ class GameCard extends StatelessWidget {
             children: [
               ClipPath(
                 clipper: GameThumbnailClipper(),
-                child: Container(
-                  width: SizeConfig.screenWidth,
-                  height: SizeConfig.screenHeight * 0.16,
-                  decoration: BoxDecoration(
-                    color: UiConstants.primaryColor,
-                    image: DecorationImage(
-                        image: AssetImage(gameData.thumbnailImage),
-                        fit: BoxFit.cover),
-                  ),
-                ),
+                child: CachedNetworkImage(imageUrl: gameData.thumbnailUri,)
+                // Container(
+                //   width: SizeConfig.screenWidth,
+                //   height: SizeConfig.screenHeight * 0.16,
+                //   decoration: BoxDecoration(
+                //     color: UiConstants.primaryColor,
+                //     image: DecorationImage(
+                //         image: AssetImage(gameData.thumbnailImage),
+                //         fit: BoxFit.cover),
+                //   ),
+                // ),
               ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
