@@ -162,7 +162,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(LoginController(), LoginPageConfig);
           break;
         case Pages.Root:
-          _addPageData(RootAnimator(), RootPageConfig);
+          _addPageData(Root(), RootPageConfig);
           break;
         case Pages.Onboard:
           _addPageData(GetStartedPage(), OnboardPageConfig);
