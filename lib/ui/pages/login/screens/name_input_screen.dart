@@ -65,9 +65,9 @@ class NameInputScreenState extends State<NameInputScreen> {
 
   bool _isSigningIn = false;
   bool _isContinuedWithGoogle = false;
-  bool _emailEnabled = false;
+  bool _emailEnabled = true;
   String emailText = "Email";
-  bool isEmailEntered = false;
+  bool isEmailEntered = true;
   bool isUploaded = false;
 
   showEmailOptions() {
