@@ -44,6 +44,10 @@ android {
 //        disable 'InvalidPackage'
 //    }
 
+    lintOptions {
+        checkReleaseBuilds false
+    }
+
     defaultConfig {
         applicationId "in.fello.felloapp"
         minSdkVersion 21

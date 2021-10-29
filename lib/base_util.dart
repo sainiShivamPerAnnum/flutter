@@ -147,6 +147,7 @@ class BaseUtil extends ChangeNotifier {
       show_finance_tutorial;
   static bool isDeviceOffline, ticketRequestSent, playScreenFirst;
   static int ticketCountBeforeRequest, infoSliderIndex
+
       // _atomicTicketGenerationLeftCount,
       //ticketGenerateCount,
       // atomicTicketDeletionLeftCount
@@ -268,19 +269,21 @@ class BaseUtil extends ChangeNotifier {
         gameName: "Cricket",
         pageConfig: CricketHomePageConfig,
         tag: 'cricket',
-        thumbnailImage: Assets.cricketThumb,
+        thumbnailUri: BaseRemoteConfig.remoteConfig
+            .getString(BaseRemoteConfig.CRICKET_THUMBNAIL_URI),
         playCost: BaseRemoteConfig.remoteConfig
                 .getString(BaseRemoteConfig.CRICKET_PLAY_COST) ??
             "10",
         prizeAmount: BaseRemoteConfig.remoteConfig
                 .getString(BaseRemoteConfig.CRICKET_PLAY_PRIZE) ??
-            "5000",
+            "50000",
       ),
       GameModel(
         gameName: "Tambola",
         pageConfig: THomePageConfig,
         tag: 'tambola',
-        thumbnailImage: Assets.tambolaThumb,
+        thumbnailUri: BaseRemoteConfig.remoteConfig
+            .getString(BaseRemoteConfig.TAMBOLA_THUMBNAIL_URI),
         playCost: BaseRemoteConfig.remoteConfig
                 .getString(BaseRemoteConfig.TAMBOLA_PLAY_COST) ??
             "10",
