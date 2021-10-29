@@ -364,14 +364,14 @@ class AugmontCard extends StatelessWidget {
                         size: SizeConfig.body3,
                       ),
                       onPressed: () {
-                        BaseUtil.openDialog(
-                            addToScreenStack: true,
-                            isBarrierDismissable: true,
-                            content: AugmontRegnSecurityDialog(
-                              text: Assets.infoAugmontRegnSecurity,
-                              imagePath: 'images/aes256.png',
-                              title: 'Security > Rest',
-                            ));
+                        // BaseUtil.openDialog(
+                        //     addToScreenStack: true,
+                        //     isBarrierDismissable: true,
+                        //     content: AugmontRegnSecurityDialog(
+                        //       text: Assets.infoAugmontRegnSecurity,
+                        //       imagePath: 'images/aes256.png',
+                        //       title: 'Security > Rest',
+                        //     ));
                       },
                       label: Text(
                         locale.saveSecure,

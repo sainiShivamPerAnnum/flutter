@@ -89,8 +89,8 @@ class Assets {
   static final String moneyBag = "assets/images/money_bag.png";
   static final String clip = "assets/vectors/clip.svg";
 
-  static final String amazonCoupon = "assets/images/afv.png";
-  static final String myntraCoupon = "assets/images/mgv.png";
+  static final String amazonCoupon = "assets/images/amazon_coupon.png";
+  static final String myntraCoupon = "assets/images/myntra_coupon.png";
   static final String gplayCoupon = "assets/images/ggv.png";
 
   // TRANSACTIONS
