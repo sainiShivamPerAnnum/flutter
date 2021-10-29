@@ -274,7 +274,7 @@ class BaseUtil extends ChangeNotifier {
             "10",
         prizeAmount: BaseRemoteConfig.remoteConfig
                 .getString(BaseRemoteConfig.CRICKET_PLAY_PRIZE) ??
-            "5000",
+            "50000",
       ),
       GameModel(
         gameName: "Tambola",
