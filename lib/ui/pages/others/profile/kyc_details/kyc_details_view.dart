@@ -72,6 +72,8 @@ class KYCDetailsView extends StatelessWidget {
                                   //initialValue: model.myname,
                                   inputFormatters: [
                                     UpperCaseTextFormatter(),
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp(r'[A-Z ]'))
                                   ],
                                   enabled: model.inEditMode,
                                   controller: model.nameController,
