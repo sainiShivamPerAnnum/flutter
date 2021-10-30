@@ -350,7 +350,7 @@ class ReferralDetailsView extends StatelessWidget {
                         SizeConfig.pageHorizontalMargins * 2,
                     child: FelloButtonLg(
                       child: Text(
-                        "See Referral",
+                        "My Referrals",
                         style: TextStyles.body2.colour(Colors.white),
                       ),
                       onPressed: () {
