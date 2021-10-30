@@ -147,7 +147,7 @@ class DBModel extends ChangeNotifier {
     notifications.addAll(announcements);
 
     notifications
-        .sort((a, b) => a.createdTime.seconds.compareTo(b.createdTime.seconds));
+        .sort((a, b) => b.createdTime.seconds.compareTo(a.createdTime.seconds));
 
     return notifications;
   }
