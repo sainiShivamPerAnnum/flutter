@@ -50,7 +50,7 @@ class FcmHandler extends ChangeNotifier {
                     showCrossIcon: false,
                     title: "Game Over",
                     subtitle:
-                        "Your score is: ${data['game_score']??'Unavailable'}. \nPlay again to improve your rank and chances of winning.",
+                        "Your score is: ${data['game_score']??'Unavailable'}.",
                     action: Container(
                       width: SizeConfig.screenWidth,
                       child: FelloButtonLg(

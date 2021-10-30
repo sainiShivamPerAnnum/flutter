@@ -402,10 +402,13 @@ class LeaderBoardView extends StatelessWidget {
         Padding(
           padding: EdgeInsets.all(SizeConfig.padding8),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              Text('This week\'s top scorers:',
+                style: TextStyles.body4.colour(Colors.grey),
+              ),
               Text(
-                "Last updated on: ${DateFormat('dd-MMM-yyyy | hh:mm:ss').format(model.lastupdated.toDate())}",
+                "Updated on: ${DateFormat('dd-MMM-yyyy | hh:mm:ss').format(model.lastupdated.toDate())}",
                 style: TextStyles.body4.colour(Colors.grey),
               )
             ],

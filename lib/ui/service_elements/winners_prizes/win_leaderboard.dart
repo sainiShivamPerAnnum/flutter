@@ -137,13 +137,17 @@ class WinnerboardView extends StatelessWidget {
               horizontal: SizeConfig.pageHorizontalMargins,
             ),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                Text('Previous week\'s prize winners:',
+                  style: TextStyles.body4.colour(Colors.grey),
+                ),
                 Text(
                   timeStamp != null
-                      ? "Last updated on: ${DateFormat('dd-MMM-yyyy | hh:mm:ss').format(timeStamp.toDate())}"
+                      ? "Updated on: ${DateFormat('dd-MMM-yyyy | hh:mm:ss').format(timeStamp.toDate())}"
                       : "",
                   style: TextStyles.body4.colour(Colors.grey),
-                )
+                ),
               ],
             ),
           ),

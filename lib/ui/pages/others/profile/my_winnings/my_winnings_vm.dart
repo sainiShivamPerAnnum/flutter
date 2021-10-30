@@ -20,10 +20,12 @@ import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_html/shims/dart_ui_real.dart';
+import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -108,7 +110,7 @@ class MyWinningsViewModel extends BaseModel {
       hapticVibrate: true,
       content: FelloConfirmationDialog(
         result: (res) async {
-          if (res) await claim(choice);
+          if (res) await claim(choice, _userService.userFundWallet.unclaimedBalance);
         },
         showCrossIcon: true,
         asset: Assets.prizeClaimConfirm,
@@ -125,7 +127,7 @@ class MyWinningsViewModel extends BaseModel {
     );
   }
 
-  showSuccessPrizeWithdrawalDialog(String subtitle) async {
+  showSuccessPrizeWithdrawalDialog(String subtitle, String shareMessage) async {
     if (choice == null) await getClaimChoice();
     AppState.screenStack.add(ScreenItem.dialog);
     showDialog(
@@ -152,15 +154,19 @@ class MyWinningsViewModel extends BaseModel {
                   result: (res) async {
                     if (res) {
                       AppState.backButtonDispatcher.didPopRoute();
-                      BaseUtil.showPositiveAlert(
-                          "Share to Whatsapp to be added",
-                          "think of a sharable message");
+                      if (Platform.isIOS) {
+                        Share.share(shareMessage);
+                      } else {
+                        FlutterShareMe().shareToSystem(msg: shareMessage).then((flag) {
+                          _logger.d(flag);
+                        });
+                      }
                     }
                   },
                   showCrossIcon: false,
                   asset: Assets.goldenTicket,
                   title: "Congratulations",
-                  subtitle: "Your rewards will be credited to you in 1-2 business days.",
+                  subtitle: subtitle,
                   accept: "Share",
                   reject: "Done",
                   acceptColor: UiConstants.primaryColor,
@@ -179,13 +185,14 @@ class MyWinningsViewModel extends BaseModel {
     AppState.backButtonDispatcher.didPopRoute();
   }
 
-  claim(PrizeClaimChoice choice) {
+  claim(PrizeClaimChoice choice, double claimPrize) {
+    double _claimAmt = claimPrize;
     _registerClaimChoice(choice).then((flag) {
       AppState.backButtonDispatcher.didPopRoute();
       if (flag) {
         showSuccessPrizeWithdrawalDialog(choice == PrizeClaimChoice.AMZ_VOUCHER
             ? "You will receive the gift card on your registered email and mobile in the next 1-2 business days"
-            : "The gold in grams shall be credited to your wallet in the next 1-2 business days");
+            : "The gold in grams shall be credited to your wallet in the next 1-2 business days", 'Hey, I just won ₹${_claimAmt} on Fello! \nYou should try it out too: https://fello.in/app/download');
       }
     });
   }
