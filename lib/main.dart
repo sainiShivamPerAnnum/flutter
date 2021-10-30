@@ -44,18 +44,18 @@ import 'core/service/user_coin_service.dart';
 
 void main() async {
   FlavorConfig(
-      flavor: Flavor.DEV,
-      color: Colors.green,
+      flavor: Flavor.PROD,
+      color: Colors.deepPurpleAccent,
       values: FlavorValues(
           awsAugmontStage: AWSAugmontStage.DEV,
           awsIciciStage: AWSIciciStage.PROD,
           freshchatStage: FreshchatStage.DEV,
           razorpayStage: RazorpayStage.DEV,
           signzyStage: SignzyStage.PROD,
-          signzyPanStage: SignzyPanStage.DEV,
-          baseUriUS: 'us-central1-fello-dev-station.cloudfunctions.net',
-          baseUriAsia: 'asia-south1-fello-dev-station.cloudfunctions.net',
-          dynamicLinkPrefix: 'https://dev.fello.in/test'));
+          signzyPanStage: SignzyPanStage.PROD,
+          baseUriUS: 'us-central1-fello-d3a9c.cloudfunctions.net',
+          baseUriAsia: 'asia-south1-fello-d3a9c.cloudfunctions.net',
+          dynamicLinkPrefix: 'https://fello.in'));
   await mainInit();
   runApp(MyApp());
 }

@@ -327,6 +327,7 @@ class UserProfileVM extends BaseModel {
     if (_status.isRestricted || _status.isLimited || _status.isDenied) {
       BaseUtil.openDialog(
           isBarrierDismissable: false,
+          addToScreenStack: true,
           content: ConfirmActionDialog(
               title: "Request Permission",
               description:
@@ -338,10 +339,9 @@ class UserProfileVM extends BaseModel {
                     height: SizeConfig.screenWidth * 0.24),
               ),
               confirmAction: () {
-                Navigator.pop(context);
                 _chooseprofilePicture();
               },
-              cancelAction: () => Navigator.pop(context)));
+              cancelAction: (){}));
     } else if (_status.isGranted) {
       await _chooseprofilePicture();
       // needsRefresh(true);
