@@ -79,7 +79,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     //If the cricket game is in progress
     else if (AppState.circGameInProgress)
       return _confirmExit(
-          "Exit Game?", "Are you sure you want to leave?", () {
+          "Exit Game", "Are you sure you want to leave?", () {
         AppState.circGameInProgress = false;
         didPopRoute();
         return didPopRoute();
