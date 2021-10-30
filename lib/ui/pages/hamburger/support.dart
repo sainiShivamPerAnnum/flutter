@@ -259,7 +259,7 @@ class _SupportPageState extends State<SupportPage> {
                       height: SizeConfig.blockSizeVertical * 3.5,
                     ),
                     Text(
-                      'Give us your number and we will call you back.',
+                      'Confirm your number and we will call you back.',
                       style:
                       TextStyle(fontSize: SizeConfig.mediumTextSize * 1.3),
                     ),
