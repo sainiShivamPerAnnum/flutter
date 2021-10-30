@@ -84,7 +84,7 @@ class Save extends StatelessWidget {
                               scrollDirection: Axis.horizontal,
                               children: [
                                 SaveInfoTile(
-                                  png: "images/augmont-share.png",
+                                  svg: 'images/svgs/gold.svg',
                                   title: "About digital Gold",
                                   onPressed: () {
                                     Logger().d("Save info tile tap check");
