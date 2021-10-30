@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -132,6 +134,14 @@ class _TambolaGameViewState extends State<TambolaGameView>
                                             ),
                                           ),
                                     SizedBox(height: SizeConfig.padding20),
+                                    (Platform.isIOS)?Text(
+                                      'Apple is not associated with Fello Tambola',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w100,
+                                        fontSize: SizeConfig.mediumTextSize,
+                                        color: Colors.blueGrey
+                                      ),
+                                    ):Container(),
                                     // InkWell(
                                     //   onTap: model.showAllBoards,
                                     //   highlightColor: UiConstants.primaryColor
@@ -288,7 +298,7 @@ class _TambolaGameViewState extends State<TambolaGameView>
                                   style: TextStyles.body3,
                                 ),
                                 SvgPicture.asset(
-                                  Assets.tickets,
+                                  Assets.tokens,
                                   height: SizeConfig.iconSize1,
                                 ),
                               ],

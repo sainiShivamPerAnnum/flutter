@@ -3,7 +3,6 @@ import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/elements/network_bar.dart';
 import 'package:felloapp/util/fail_types.dart';
-import 'package:felloapp/util/styles/palette.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -44,24 +43,14 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     return _res;
   }
 
-  final List<Color> gradientColors = [
-    UiConstants.primaryColor,
-    Colors.white,
-  ];
-
   List<GoldGraphPoint> graphPoints = [];
   List<FlSpot> dataItems = [];
   AugmontModel augmontProvider;
   DBModel dbProvider;
   BaseUtil baseProvider;
   String _dataPointsState = "loading";
-  int _selectedFrequency = 3;
   Map<int, DateTime> xAxisdata = {};
   Map<int, double> yAxisData = {};
-
-  List<FlSpot> filteredDataItems = [];
-  double maxX = 97;
-  double minX = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -78,8 +67,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
             xAxisdata[i + 1] = graphPoints[i].timestamp;
             yAxisData[i + 1] = graphPoints[i].rate;
           }
-
-          filteredDataItems = dataItems;
+          dataItems.add(FlSpot.nullSpot);
         } else {
           _dataPointsState = "error";
         }
@@ -120,9 +108,9 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                     handleBuiltInTouches: true,
                     touchTooltipData: LineTouchTooltipData(
                       tooltipRoundedRadius: 8,
-                      showOnTopOfTheChartBoxArea: true,
                       fitInsideHorizontally: true,
                       fitInsideVertically: true,
+                      tooltipBgColor: Colors.white,
                       tooltipPadding:
                           EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       getTooltipItems: (lbs) {
@@ -201,28 +189,14 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                 ),
                 lineBarsData: [
                   LineChartBarData(
-                    spots: filteredDataItems,
-                    isCurved: true,
-                    isStrokeCapRound: false,
-                    colors: gradientColors,
-                    gradientFrom: Offset(SizeConfig.screenWidth * 0.5, 0),
-                    gradientTo: Offset(
-                        SizeConfig.screenWidth * 0.5, SizeConfig.screenHeight),
-                    barWidth: 2,
-                    dotData: FlDotData(
+                      spots: dataItems,
+                      isCurved: true,
+                      isStrokeCapRound: false,
+                      colors: [UiConstants.primaryColor],
+                      barWidth: 2,
+                      dotData: FlDotData(
                         show: false,
-                        getDotPainter: (spot, d, data, i) {
-                          return FlDotCirclePainter(
-                            radius: 1,
-                            color: UiConstants.primaryColor,
-                            strokeColor: Colors.red,
-                            strokeWidth: 2,
-                          );
-                        },
-                        checkToShowDot: (spot, data) {
-                          return true;
-                        }),
-                  ),
+                      )),
                 ],
               ),
             ),
@@ -237,71 +211,4 @@ class _LineChartWidgetState extends State<LineChartWidget> {
         graphPoints.firstWhere((element) => element.rate == lbs.y).timestamp;
     return DateFormat('dd MMM, yyyy').format(time);
   }
-
-  getvalue(double value) {
-    switch (_selectedFrequency) {
-      case 3:
-        if (value % 2 == 0)
-          return value.toString();
-        else
-          return '';
-        break;
-      case 4:
-        if (value % 3 == 0)
-          return value.toString();
-        else
-          return '';
-        break;
-      default:
-        return value.toString();
-    }
-  }
-}
-
-class LineTitles {
-  static getTitleData() => FlTitlesData(
-        show: true,
-        bottomTitles: SideTitles(
-          showTitles: true,
-          reservedSize: 35,
-          getTextStyles: (ctx, value) => const TextStyle(
-            color: Color(0xff68737d),
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
-          getTitles: (value) {
-            switch (value.toInt()) {
-              case 2:
-                return 'MAR';
-              case 5:
-                return 'JUN';
-              case 8:
-                return 'SEP';
-            }
-            return '';
-          },
-          margin: 8,
-        ),
-        leftTitles: SideTitles(
-          showTitles: true,
-          getTextStyles: (ctx, value) => const TextStyle(
-            color: Color(0xff67727d),
-            fontWeight: FontWeight.bold,
-            fontSize: 15,
-          ),
-          getTitles: (value) {
-            switch (value.toInt()) {
-              case 1:
-                return '10k';
-              case 3:
-                return '30k';
-              case 5:
-                return '50k';
-            }
-            return '';
-          },
-          reservedSize: 35,
-          margin: 12,
-        ),
-      );
 }

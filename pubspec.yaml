@@ -3,7 +3,7 @@ description: Game-based Investments
 
 publish_to: "none"
 
-version: 2.9.2+34
+version: 3.0.0+35
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -29,7 +29,7 @@ dependencies:
   firebase_performance: ^0.7.1+1
   firebase_remote_config: ^0.10.0+3
   firebase_storage: ^10.0.2
-  fl_chart: ^0.40.2
+  fl_chart: ^0.36.3
   flushbar: ^1.10.4
   flutter:
     sdk: flutter

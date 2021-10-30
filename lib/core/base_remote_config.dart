@@ -93,13 +93,19 @@ class BaseRemoteConfig {
     'tambola_play_cost': '10'
   };
   static const Map<String, String> _TAMBOLA_PLAY_PRIZE = {
-    'tambola_play_prize': '10,000'
+    'tambola_play_prize': '25,000'
   };
   static const Map<String, String> _CRICKET_PLAY_COST = {
     'cricket_play_cost': '10'
   };
   static const Map<String, String> _CRICKET_PLAY_PRIZE = {
-    'cricket_play_prize': '5000'
+    'cricket_play_prize': '25,000'
+  };
+  static const Map<String, String> _CRICKET_THUMBNAIL_URI = {
+    'cricket_thumbnail': 'https://fello-assets.s3.ap-south-1.amazonaws.com/fello_cricket.png'
+  };
+  static const Map<String, String> _TAMBOLA_THUMBNAIL_URI = {
+    'tambola_thumbnail': 'https://fello-assets.s3.ap-south-1.amazonaws.com/fello_tambola.png'
   };
 
   static const Map<String, dynamic> DEFAULTS = {
@@ -132,7 +138,9 @@ class BaseRemoteConfig {
     ..._TAMBOLA_PLAY_COST,
     ..._TAMBOLA_PLAY_PRIZE,
     ..._CRICKET_PLAY_COST,
-    ..._CRICKET_PLAY_PRIZE
+    ..._CRICKET_PLAY_PRIZE,
+    ..._CRICKET_THUMBNAIL_URI,
+    ..._TAMBOLA_THUMBNAIL_URI
   };
 
   static Future<bool> init() async {
@@ -230,6 +238,10 @@ class BaseRemoteConfig {
   static String get CRICKET_PLAY_COST => _CRICKET_PLAY_COST.keys.first;
 
   static String get CRICKET_PLAY_PRIZE => _CRICKET_PLAY_PRIZE.keys.first;
+
+  static String get CRICKET_THUMBNAIL_URI => _CRICKET_THUMBNAIL_URI.keys.first;
+
+  static String get TAMBOLA_THUMBNAIL_URI => _TAMBOLA_THUMBNAIL_URI.keys.first;
 
   static int get UNLOCK_REFERRAL_AMT {
     String _val = _UNLOCK_REFERRAL_AMT.keys.first;

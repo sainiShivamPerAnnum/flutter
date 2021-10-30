@@ -13,6 +13,7 @@ import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_viewMod
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
+import 'package:felloapp/ui/service_elements/user_service/user_email_verification_button.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -132,7 +133,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                           padding: EdgeInsets.all(SizeConfig.padding8),
                           child: FittedBox(
                             child: Text(
-                              "@${model.myUsername ?? 'username'}",
+                              "@${model.myUsername.replaceAll('@', '.') ?? 'username'}",
                               style: TextStyles.body3.colour(Colors.grey),
                             ),
                           ),
@@ -346,38 +347,12 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                               TextFormField(
                                 enabled: false,
                                 decoration: InputDecoration(
-                                  suffixIcon: model.isEmailVerified
-                                      ? Icon(
-                                          Icons.verified,
-                                          color: UiConstants.primaryColor,
-                                        )
-                                      : SizedBox(),
+                                  suffixIcon: UserEmailVerificationMark(),
                                 ),
                                 controller: model.emailController,
                               ),
-                              if (!model.isEmailVerified)
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 8.0),
-                                      child: InkWell(
-                                          child: Text(
-                                            "Verify",
-                                            style: TextStyles.body3.colour(
-                                                UiConstants.primaryColor),
-                                          ),
-                                          onTap: () {
-                                            AppState.delegate.appState
-                                                    .currentAction =
-                                                PageAction(
-                                                    state: PageState.addPage,
-                                                    page:
-                                                        VerifyEmailPageConfig);
-                                          }),
-                                    )
-                                  ],
-                                ),
+                              // if (!model.inEditMode)
+                              //   UserEmailVerificationButton(),
                               TextFieldLabel(locale.obMobileLabel),
                               TextFormField(
                                 enabled: false,
@@ -390,6 +365,9 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                         Container(
                           width: SizeConfig.screenWidth,
                           child: FelloButtonLg(
+                            // color: model.inEditMode
+                            //     ? UiConstants.primaryColor
+                            //     : UiConstants.tertiarySolid,
                             child: model.isUpdaingUserDetails
                                 ? SpinKitThreeBounce(
                                     color: Colors.white,
@@ -470,7 +448,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                         //     ],
                         //   ),
                         // ),
-                        Divider(),
+                        //Divider(),
                         SizedBox(height: SizeConfig.padding12),
                         TextButton(
                           onPressed: model.signout,

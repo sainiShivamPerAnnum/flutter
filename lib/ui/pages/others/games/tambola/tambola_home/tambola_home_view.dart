@@ -84,11 +84,11 @@ class TambolaHomeView extends StatelessWidget {
                                         page: 0,
                                       ),
                                       SizedBox(width: 16),
-                                      GameChips(
-                                        model: model,
-                                        text: "LeaderBoard",
-                                        page: 1,
-                                      )
+                                      // GameChips(
+                                      //   model: model,
+                                      //   text: "LeaderBoard",
+                                      //   page: 1,
+                                      // )
                                     ],
                                   ),
                                 ),

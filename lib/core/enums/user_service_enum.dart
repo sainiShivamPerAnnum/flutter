@@ -4,5 +4,6 @@ enum UserServiceProperties {
   myUserWallet,
   myUserFund,
   myDob,
-  myGender
+  myGender,
+  myEmailVerification
 }

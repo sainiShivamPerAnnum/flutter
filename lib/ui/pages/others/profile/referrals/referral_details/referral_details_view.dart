@@ -327,7 +327,8 @@ class ReferralDetailsView extends StatelessWidget {
                               leadingAsset: Assets.wmtsaveMoney,
                             ),
                             InfoTile(
-                              title: "You and your friend gets ₹${model.referral_bonus} and ${model.referral_flc_bonus} Fello tokens in your account",
+                              title:
+                                  "You and your friend gets ₹${model.referral_bonus} and ${model.referral_flc_bonus} Fello tokens in your account",
                               leadingAsset: Assets.tickets,
                             ),
                             SizedBox(height: SizeConfig.navBarHeight),
@@ -349,7 +350,7 @@ class ReferralDetailsView extends StatelessWidget {
                         SizeConfig.pageHorizontalMargins * 2,
                     child: FelloButtonLg(
                       child: Text(
-                        "See Referral",
+                        "My Referrals",
                         style: TextStyles.body2.colour(Colors.white),
                       ),
                       onPressed: () {

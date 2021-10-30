@@ -68,356 +68,135 @@ class _SupportPageState extends State<SupportPage> {
     appState = Provider.of<AppState>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     ConnectivityStatus connectivityStatus =
-        Provider.of<ConnectivityStatus>(context);
+    Provider.of<ConnectivityStatus>(context);
 
     if (!isInit) {
       init();
     }
     return Scaffold(
       body: HomeBackground(
-        child: Column(
+        child: Stack(
           children: [
-            FelloAppBar(
-              leading: FelloAppBarBackButton(),
-              title: "Help & Support",
-            ),
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(40),
-                    topRight: Radius.circular(40),
-                  ),
-                  color: Colors.white,
+            Column(
+              children: [
+                FelloAppBar(
+                  leading: FelloAppBarBackButton(),
+                  title: "Help & Support",
                 ),
-                child: ListView(
-                  padding: EdgeInsets.zero,
-                  children: [
-                    FelloBriefTile(
-                      leadingAsset: Assets.hsCustomerService,
-                      title: "Customer Support",
-                      onTap: () {
-                        Haptic.vibrate();
-                        appState.currentAction = PageAction(
-                            state: PageState.addPage,
-                            page: ChatSupportPageConfig);
-                      },
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(40),
+                        topRight: Radius.circular(40),
+                      ),
+                      color: Colors.white,
                     ),
-                    FelloBriefTile(
-                      leadingAsset: Assets.hsFaqs,
-                      title: "FAQs",
-                      onTap: () {
-                        Haptic.vibrate();
-                        appState.currentAction = PageAction(
-                            state: PageState.addPage, page: FaqPageConfig);
-                      },
-                    ),
-                    FelloBriefTile(
-                      leadingAsset: Assets.hsMail,
-                      title: "Email us your query",
-                      onTap: () {
-                        Haptic.vibrate();
-                        try {
-                          _launchEmail();
-                        } catch (e) {
-                          BaseUtil.showNegativeAlert(
-                            'Error',
-                            'Something went wrong, could not launch email right now. Please try again later',
-                          );
-                        }
-                      },
-                    ),
-                    FelloBriefTile(
-                      leadingIcon: Icons.call,
-                      title: "Request a Callback",
-                      onTap: () {
-                        Haptic.vibrate();
-                        if (connectivityStatus != ConnectivityStatus.Offline)
-                          _showRequestCallSheet();
-                        else
-                          BaseUtil.showNoInternetAlert();
-                      },
-                    ),
-                    FelloBriefTile(
-                      leadingAsset: Assets.hsFdbk,
-                      title: "Feedback",
-                      onTap: () {
-                        AppState.screenStack.add(ScreenItem.dialog);
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) => WillPopScope(
-                            onWillPop: () {
-                              AppState.backButtonDispatcher.didPopRoute();
-                              return Future.value(true);
-                            },
-                            child: FeedbackDialog(
-                              title: "Tell us what you think",
-                              description: "We'd love to hear from you",
-                              buttonText: "Submit",
-                              dialogAction: (String fdbk) {
-                                if (fdbk != null && fdbk.isNotEmpty) {
-                                  //feedback submission allowed even if user not signed in
-                                  dbProvider
-                                      .submitFeedback(
+                    child: ListView(
+                      padding: EdgeInsets.zero,
+                      children: [
+                        FelloBriefTile(
+                          leadingAsset: Assets.hsCustomerService,
+                          title: "Chat with us",
+                          onTap: () {
+                            Haptic.vibrate();
+                            appState.currentAction = PageAction(
+                                state: PageState.addPage,
+                                page: ChatSupportPageConfig);
+                          },
+                        ),
+                        FelloBriefTile(
+                          leadingIcon: Icons.call,
+                          title: "Request a Callback",
+                          onTap: () {
+                            Haptic.vibrate();
+                            if (connectivityStatus != ConnectivityStatus.Offline)
+                              _showRequestCallSheet();
+                            else
+                              BaseUtil.showNoInternetAlert();
+                          },
+                        ),
+                        FelloBriefTile(
+                          leadingAsset: Assets.hsMail,
+                          title: "Email us your query",
+                          onTap: () {
+                            Haptic.vibrate();
+                            try {
+                              _launchEmail();
+                            } catch (e) {
+                              BaseUtil.showNegativeAlert(
+                                'Error',
+                                'Something went wrong, could not launch email right now. Please try again later',
+                              );
+                            }
+                          },
+                        ),
+                        FelloBriefTile(
+                          leadingAsset: Assets.hsFaqs,
+                          title: "FAQs",
+                          onTap: () {
+                            Haptic.vibrate();
+                            appState.currentAction = PageAction(
+                                state: PageState.addPage, page: FaqPageConfig);
+                          },
+                        ),
+                        FelloBriefTile(
+                          leadingAsset: Assets.hsFdbk,
+                          title: "Feedback",
+                          onTap: () {
+                            AppState.screenStack.add(ScreenItem.dialog);
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) => WillPopScope(
+                                onWillPop: () {
+                                  AppState.backButtonDispatcher.didPopRoute();
+                                  return Future.value(true);
+                                },
+                                child: FeedbackDialog(
+                                  title: "Tell us what you think",
+                                  description: "We'd love to hear from you",
+                                  buttonText: "Submit",
+                                  dialogAction: (String fdbk) {
+                                    if (fdbk != null && fdbk.isNotEmpty) {
+                                      //feedback submission allowed even if user not signed in
+                                      dbProvider
+                                          .submitFeedback(
                                           (baseProvider.firebaseUser == null ||
-                                                  baseProvider
-                                                          .firebaseUser.uid ==
-                                                      null)
+                                              baseProvider
+                                                  .firebaseUser.uid ==
+                                                  null)
                                               ? 'UNKNOWN'
                                               : baseProvider.firebaseUser.uid,
                                           fdbk)
-                                      .then((flag) {
-                                    AppState.backButtonDispatcher.didPopRoute();
-                                    if (flag) {
-                                      BaseUtil.showPositiveAlert(
-                                        'Thank You',
-                                        'We appreciate your feedback!',
-                                      );
+                                          .then((flag) {
+                                        AppState.backButtonDispatcher.didPopRoute();
+                                        if (flag) {
+                                          BaseUtil.showPositiveAlert(
+                                            'Thank You',
+                                            'We appreciate your feedback!',
+                                          );
+                                        }
+                                      });
                                     }
-                                  });
-                                }
-                              },
-                            ),
-                          ),
-                        );
-                      },
+                                  },
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-
-            // Container(
-            //   decoration: BoxDecoration(
-            //     gradient: new LinearGradient(
-            //       begin: Alignment.topRight,
-            //       end: Alignment.bottomLeft,
-            //       stops: [0.1, 0.6],
-            //       colors: [
-            //         UiConstants.primaryColor.withGreen(190),
-            //         UiConstants.primaryColor,
-            //       ],
-            //     ),
-            //   ),
-            //   width: SizeConfig.screenWidth,
-            //   height: SizeConfig.screenHeight * 0.3,
-            //   child: Stack(
-            //     children: [
-            //       Positioned(
-            //         bottom: 0,
-            //         right: 0,
-            //         child: Opacity(
-            //           opacity: 0.5,
-            //           child: SvgPicture.asset(
-            //             'images/svgs/contact_bg_illustration.svg',
-            //             width: SizeConfig.screenWidth * 0.6,
-            //           ),
-            //         ),
-            //       ),
-            //       SafeArea(
-            //         child: Container(
-            //           height: double.infinity,
-            //           width: SizeConfig.screenWidth * 0.6,
-            //           padding: EdgeInsets.only(
-            //               left: SizeConfig.blockSizeHorizontal * 5),
-            //           child: Column(
-            //             mainAxisAlignment: MainAxisAlignment.center,
-            //             crossAxisAlignment: CrossAxisAlignment.end,
-            //             children: [
-            //               Row(
-            //                 crossAxisAlignment: CrossAxisAlignment.start,
-            //                 children: [
-            //                   Expanded(
-            //                     child: FittedBox(
-            //                       child: Text(
-            //                         "Support 👩🏼‍🔧",
-            //                         style: GoogleFonts.montserrat(
-            //                             fontSize:
-            //                                 SizeConfig.cardTitleTextSize * 2,
-            //                             fontWeight: FontWeight.w500,
-            //                             color: Colors.white),
-            //                       ),
-            //                     ),
-            //                   ),
-            //                   Text(
-            //                     "( 24 x 7 )",
-            //                     style: GoogleFonts.montserrat(
-            //                       fontWeight: FontWeight.w300,
-            //                       color: Colors.white,
-            //                     ),
-            //                   )
-            //                 ],
-            //               ),
-            //               Text(
-            //                 "We're just a click and text away. Always.",
-            //                 style: TextStyle(
-            //                   color: Colors.white,
-            //                   height: 1.4,
-            //                   fontSize: SizeConfig.mediumTextSize,
-            //                 ),
-            //               )
-            //             ],
-            //           ),
-            //         ),
-            //       ),
-            //       SafeArea(
-            //         child: Container(
-            //           width: SizeConfig.screenWidth,
-            //           height: kToolbarHeight,
-            //           child: Row(
-            //             children: [
-            //               SizedBox(width: SizeConfig.blockSizeHorizontal),
-            //               IconButton(
-            //                 iconSize: 30,
-            //                 color: Colors.white,
-            //                 icon: Icon(
-            //                   Icons.arrow_back_rounded,
-            //                 ),
-            //                 onPressed: () =>
-            //                     AppState.backButtonDispatcher.didPopRoute(),
-            //               ),
-            //               Spacer(),
-            //               Image.asset(
-            //                 "images/fello_logo.png",
-            //                 width: SizeConfig.screenWidth * 0.1,
-            //                 color: Colors.white,
-            //               ),
-            //               Spacer(),
-            //               IconButton(
-            //                 iconSize: 30,
-            //                 color: Colors.white,
-            //                 icon: SizedBox(),
-            //                 onPressed: () {},
-            //               ),
-            //             ],
-            //           ),
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
-            // Expanded(
-            //   child: SingleChildScrollView(
-            //     physics: BouncingScrollPhysics(),
-            //     child: Column(
-            //       crossAxisAlignment: CrossAxisAlignment.start,
-            //       children: [
-            //         Padding(
-            //           padding: EdgeInsets.only(
-            //             top: 16,
-            //             left: SizeConfig.blockSizeHorizontal * 4,
-            //           ),
-            //           child: Text(
-            //             "Reach Out",
-            //             style: TextStyle(
-            //               fontWeight: FontWeight.w700,
-            //               color: UiConstants.primaryColor.withOpacity(0.5),
-            //               fontSize: SizeConfig.largeTextSize,
-            //             ),
-            //           ),
-            //         ),
-            //         Divider(),
-            //         ListTile(
-            //           title: Text('Chat with Us',
-            //               style: TextStyle(color: UiConstants.textColor)),
-            //           tileColor: Colors.transparent,
-            //           trailing: Icon(
-            //             Icons.arrow_forward_ios,
-            //             size: 16,
-            //           ),
-            // onTap: () {
-            //   Haptic.vibrate();
-            //   appState.currentAction = PageAction(
-            //       state: PageState.addPage,
-            //       page: ChatSupportPageConfig);
-            // },
-            //         ),
-            //         ListTile(
-            //           title: Text('Email Us',
-            //               style: TextStyle(color: UiConstants.textColor)),
-            //           tileColor: Colors.transparent,
-            //           trailing: Icon(
-            //             Icons.arrow_forward_ios,
-            //             size: 16,
-            //           ),
-            // onTap: () {
-            //   Haptic.vibrate();
-            //   try {
-            //     _launchEmail();
-            //   } catch (e) {
-            //     BaseUtil.showNegativeAlert(
-            //       'Error',
-            //       'Something went wrong, could not launch email right now. Please try again later',
-            //     );
-            //   }
-            // },
-            //         ),
-            //         ListTile(
-            //           title: Text('Request a callback',
-            //               style: TextStyle(
-            //                 color: UiConstants.textColor,
-            //               )),
-            //           tileColor: Colors.transparent,
-            //           trailing: Icon(
-            //             Icons.arrow_forward_ios,
-            //             size: 16,
-            //           ),
-            // onTap: () {
-            //   Haptic.vibrate();
-            //   if (connectivityStatus != ConnectivityStatus.Offline)
-            //     _showRequestCallSheet();
-            //   else
-            //     BaseUtil.showNoInternetAlert();
-            // },
-            //         ),
-            //         Padding(
-            //           padding: EdgeInsets.only(
-            //             top: 16,
-            //             left: SizeConfig.blockSizeHorizontal * 4,
-            //           ),
-            //           child: Text(
-            //             "Self-serve",
-            //             style: TextStyle(
-            //               fontWeight: FontWeight.w700,
-            //               color: UiConstants.primaryColor.withOpacity(0.5),
-            //               fontSize: SizeConfig.largeTextSize,
-            //             ),
-            //           ),
-            //         ),
-            //         Divider(),
-            //         ListTile(
-            //           title: Text('Play Walkthrough',
-            //               style: TextStyle(color: UiConstants.textColor)),
-            //           tileColor: Colors.transparent,
-            //           trailing: Icon(
-            //             Icons.arrow_forward_ios,
-            //             size: 16,
-            //           ),
-            //           onTap: () {
-            //             Haptic.vibrate();
-            //             appState.currentAction = PageAction(
-            //                 state: PageState.addPage, page: WalkThroughConfig);
-            //           },
-            //         ),
-            //         ListTile(
-            //           title: Text('FAQs',
-            //               style: TextStyle(color: UiConstants.textColor)),
-            //           tileColor: Colors.transparent,
-            //           trailing: Icon(
-            //             Icons.arrow_forward_ios,
-            //             size: 16,
-            //           ),
-            // onTap: () {
-            //   Haptic.vibrate();
-            //   appState.currentAction = PageAction(
-            //       state: PageState.addPage, page: FaqPageConfig);
-            // },
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // )
+            Positioned(
+              bottom: SizeConfig.blockSizeVertical,
+              left: 0,
+              right: 0,
+              child: const TermsRow(),
+            )
           ],
         ),
       ),
@@ -460,9 +239,9 @@ class _SupportPageState extends State<SupportPage> {
                                 .textTheme
                                 .headline5
                                 .copyWith(
-                                    color: UiConstants.primaryColor,
-                                    fontSize: SizeConfig.largeTextSize * 1.2,
-                                    fontWeight: FontWeight.bold),
+                                color: UiConstants.primaryColor,
+                                fontSize: SizeConfig.largeTextSize * 1.2,
+                                fontWeight: FontWeight.bold),
                           ),
                         ),
                         GestureDetector(
@@ -480,9 +259,9 @@ class _SupportPageState extends State<SupportPage> {
                       height: SizeConfig.blockSizeVertical * 3.5,
                     ),
                     Text(
-                      'Give us your number and we will call you back.',
+                      'Confirm your number and we will call you back.',
                       style:
-                          TextStyle(fontSize: SizeConfig.mediumTextSize * 1.3),
+                      TextStyle(fontSize: SizeConfig.mediumTextSize * 1.3),
                     ),
                     SizedBox(
                       height: SizeConfig.blockSizeVertical * 3.5,
@@ -510,7 +289,7 @@ class _SupportPageState extends State<SupportPage> {
                     Text(
                       'What time should we call you?',
                       style:
-                          TextStyle(fontSize: SizeConfig.mediumTextSize * 1.3),
+                      TextStyle(fontSize: SizeConfig.mediumTextSize * 1.3),
                     ),
                     SizedBox(
                       height: SizeConfig.blockSizeVertical * 1.5,
@@ -544,16 +323,16 @@ class _SupportPageState extends State<SupportPage> {
                                   padding: EdgeInsets.all(5.0),
                                   child: (_selectedTimeSlotIndex == index)
                                       ? Center(
-                                          child: Text(
-                                            timeSlots[index],
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
-                                        )
+                                    child: Text(
+                                      timeSlots[index],
+                                      style:
+                                      TextStyle(color: Colors.white),
+                                    ),
+                                  )
                                       : Center(
-                                          child: Text(
-                                          timeSlots[index],
-                                        )),
+                                      child: Text(
+                                        timeSlots[index],
+                                      )),
                                 ),
                               ),
                             );
@@ -579,16 +358,16 @@ class _SupportPageState extends State<SupportPage> {
                                   padding: EdgeInsets.all(5.0),
                                   child: (_selectedTimeSlotIndex == index)
                                       ? Center(
-                                          child: Text(
-                                            timeSlots[index],
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
-                                        )
+                                    child: Text(
+                                      timeSlots[index],
+                                      style:
+                                      TextStyle(color: Colors.white),
+                                    ),
+                                  )
                                       : Center(
-                                          child: Text(
-                                          timeSlots[index],
-                                        )),
+                                      child: Text(
+                                        timeSlots[index],
+                                      )),
                                 ),
                               ),
                             );
@@ -611,16 +390,16 @@ class _SupportPageState extends State<SupportPage> {
                                   padding: EdgeInsets.all(5.0),
                                   child: (_selectedTimeSlotIndex == index)
                                       ? Center(
-                                          child: Text(
-                                            timeSlots[index],
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
-                                        )
+                                    child: Text(
+                                      timeSlots[index],
+                                      style:
+                                      TextStyle(color: Colors.white),
+                                    ),
+                                  )
                                       : Center(
-                                          child: Text(
-                                          timeSlots[index],
-                                        )),
+                                      child: Text(
+                                        timeSlots[index],
+                                      )),
                                 ),
                               ),
                             );
@@ -649,8 +428,8 @@ class _SupportPageState extends State<SupportPage> {
                           onPressed: () async {
                             try {
                               if (_requestCallPhoneController.text
-                                      .trim()
-                                      .length !=
+                                  .trim()
+                                  .length !=
                                   10) {
                                 BaseUtil.showNegativeAlert(
                                   'Incorrect',
@@ -677,9 +456,9 @@ class _SupportPageState extends State<SupportPage> {
                                 if (baseProvider.myUser.uid != null) {
                                   Map<String, dynamic> errorDetails = {
                                     'error_msg':
-                                        'Placing a call request failed',
+                                    'Placing a call request failed',
                                     'Phone Number':
-                                        _requestCallPhoneController.text.trim(),
+                                    _requestCallPhoneController.text.trim(),
                                   };
                                   dbProvider.logFailure(
                                       baseProvider.myUser.uid,
@@ -710,5 +489,82 @@ class _SupportPageState extends State<SupportPage> {
   void _launchEmail() {
     final Uri emailLaunchUri = Uri(scheme: 'mailto', path: 'hello@fello.in');
     launch(emailLaunchUri.toString());
+  }
+}
+
+
+class TermsRow extends StatelessWidget {
+  const TermsRow();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
+          child: InkWell(
+            child: Text(
+              'Terms of Service',
+              style: TextStyle(
+                  fontSize: SizeConfig.smallTextSize * 1.2,
+                  color: Colors.grey,
+                  decoration: TextDecoration.underline),
+            ),
+            onTap: () {
+              Haptic.vibrate();
+              BaseUtil.launchUrl('https://fello.in/policy/tnc');
+
+              // AppState.delegate.appState.currentAction =
+              //     PageAction(state: PageState.addPage, page: TncPageConfig);
+            },
+          ),
+        ),
+        Text(
+          '•',
+          style: TextStyle(color: Colors.grey),
+        ),
+        Padding(
+          padding: EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
+          child: InkWell(
+            child: Text(
+              'Privacy Policy',
+              style: TextStyle(
+                  fontSize: SizeConfig.smallTextSize * 1.2,
+                  color: Colors.grey,
+                  decoration: TextDecoration.underline),
+            ),
+            onTap: () {
+              Haptic.vibrate();
+              BaseUtil.launchUrl('https://fello.in/policy/privacy');
+              // AppState.delegate.appState.currentAction = PageAction(
+              //     state: PageState.addPage, page: RefPolicyPageConfig);
+            },
+          ),
+        ),
+        Text(
+          '•',
+          style: TextStyle(color: Colors.grey),
+        ),
+        Padding(
+          padding: EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
+          child: InkWell(
+            child: Text(
+              'Referral Policy',
+              style: TextStyle(
+                  fontSize: SizeConfig.smallTextSize * 1.2,
+                  color: Colors.grey,
+                  decoration: TextDecoration.underline),
+            ),
+            onTap: () {
+              Haptic.vibrate();
+              // BaseUtil.launchUrl('https://fello.in/policy/privacy');
+              AppState.delegate.appState.currentAction = PageAction(
+                  state: PageState.addPage, page: RefPolicyPageConfig);
+            },
+          ),
+        )
+      ],
+    );
   }
 }

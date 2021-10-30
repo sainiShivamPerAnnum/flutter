@@ -149,15 +149,22 @@ class AugmontGoldBuyViewModel extends BaseModel {
         double.tryParse(goldAmountController.text) == null) {
       goldAmountInGrams = 0.0;
     } else {
+      double netTax = goldRates.cgstPercent + goldRates.sgstPercent;
+      double enteredAmount = double.tryParse(goldAmountController.text);
+      double postTaxAmount = BaseUtil.digitPrecision(
+          enteredAmount - getTaxOnAmount(enteredAmount, netTax));
+
       if (goldBuyPrice != null && goldBuyPrice != 0.0)
-        goldAmountInGrams = BaseUtil.digitPrecision(
-            double.tryParse(goldAmountController.text) / goldBuyPrice,
-            4,
-            false);
+        goldAmountInGrams =
+            BaseUtil.digitPrecision(postTaxAmount / goldBuyPrice, 4, false);
       else
         goldAmountInGrams = 0.0;
     }
     refresh();
+  }
+
+  double getTaxOnAmount(double amount, double taxRate) {
+    return BaseUtil.digitPrecision((amount * taxRate) / (100 + taxRate));
   }
 
   fetchGoldRates() async {
@@ -319,15 +326,15 @@ class AugmontGoldBuyViewModel extends BaseModel {
           _userService.baseUser.mobile, userAugmontState);
       if (_baseUtil.augmontDetail == null) {
         BaseUtil.showNegativeAlert('Registration Failed',
-            'Failed to regsiter at the moment. Please try again.');
+            'Failed to register for digital gold. Please check your connection and reopen.');
         augOnbRegInProgress = false;
         augRegFailed = true;
         return;
       } else {
         augOnbRegInProgress = false;
         status = checkAugmontStatus();
-        BaseUtil.showPositiveAlert('Registration Successful',
-            'You are successfully onboarded to Augmont Digital Gold');
+        // BaseUtil.showPositiveAlert('Registration Successful',
+        //     'You are successfully onboarded to Augmont Digital Gold');
       }
     }
     isGoldBuyInProgress = false;

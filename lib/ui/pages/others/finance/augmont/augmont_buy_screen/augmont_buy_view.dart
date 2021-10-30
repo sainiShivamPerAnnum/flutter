@@ -229,24 +229,46 @@ class AugmontGoldBuyView extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           InfoChip(
-                              asset: Assets.gold24K, text: locale.saveGold24k),
+                              asset: Container(
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: UiConstants.primaryLight
+                                        .withOpacity(0.8)),
+                                width: SizeConfig.padding24,
+                                padding: EdgeInsets.all(SizeConfig.padding4),
+                                child: SvgPicture.asset(
+                                  Assets.gold24K,
+                                  color: UiConstants.primaryColor,
+                                ),
+                              ),
+                              text: locale.saveGold24k),
                           InfoChip(
-                              asset: Assets.goldPure,
+                              asset: SvgPicture.asset(
+                                Assets.goldSecure,
+                                width: SizeConfig.padding24,
+                                color: UiConstants.primaryColor,
+                              ),
                               text: locale.saveGoldPure),
                           InfoChip(
-                              asset: Assets.goldSecure,
+                              asset: SvgPicture.asset(
+                                Assets.goldPure,
+                                width: SizeConfig.padding24,
+                                color: UiConstants.primaryColor,
+                              ),
                               text: locale.saveSecure),
                         ],
                       ),
                       SizedBox(height: SizeConfig.screenHeight * 0.05),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.asset(Assets.augLogo,
                               height: SizeConfig.padding24),
+                          SizedBox(width: SizeConfig.padding20),
                           Image.asset(Assets.amfiGraphic,
                               color: UiConstants.primaryColor,
                               height: SizeConfig.padding24),
+                          SizedBox(width: SizeConfig.padding20),
                           Image.asset(Assets.sebiGraphic,
                               color: Color(0xff2E2A81),
                               height: SizeConfig.padding20),
@@ -266,18 +288,15 @@ class AugmontGoldBuyView extends StatelessWidget {
 }
 
 class InfoChip extends StatelessWidget {
-  final String asset, text;
+  final Widget asset;
+  final String text;
   InfoChip({this.asset, this.text});
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Row(
         children: [
-          SvgPicture.asset(
-            asset,
-            width: SizeConfig.padding24,
-            color: UiConstants.primaryColor,
-          ),
+          asset,
           SizedBox(width: SizeConfig.padding8),
           Text(text, style: TextStyles.body3.bold)
         ],

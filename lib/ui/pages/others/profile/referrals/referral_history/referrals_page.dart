@@ -195,11 +195,11 @@ class _ReferralHistoryViewState extends State<ReferralHistoryView> {
     else {
       if (rDetail.bonusMap != null &&
           rDetail.bonusMap['uamt'] != null &&
-          rDetail.bonusMap['utck'] != null) {
+          rDetail.bonusMap['uflc'] != null) {
         int _amt = BaseUtil.toInt(rDetail.bonusMap['uamt']);
-        int _tck = BaseUtil.toInt(rDetail.bonusMap['utck']);
+        int _tck = BaseUtil.toInt(rDetail.bonusMap['uflc']);
         if (_amt != null && _tck != null)
-          return 'You earned ₹$_amt and $_tck tickets 🥳';
+          return 'You earned ₹$_amt and $_tck tokens 🥳';
       }
     }
     return 'Rewards unlocked 🥳';

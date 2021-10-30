@@ -39,7 +39,7 @@ class MyWinningsView extends StatelessWidget {
               children: [
                 FelloAppBar(
                   leading: FelloAppBarBackButton(),
-                  title: "Your Total Winnings",
+                  title: "Winnings",
                 ),
                 Expanded(
                   child: ClipRRect(

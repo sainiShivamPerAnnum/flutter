@@ -51,7 +51,7 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                   FelloTile(
                     leadingAsset: Assets.wmtShare,
                     title: "Refer your friends",
-                    subtitle: "Get ₹25 and 100 tokens per referral",
+                    subtitle: "Get ₹25 and 200 tokens per referral",
                     trailingIcon: Icons.arrow_forward_ios_rounded,
                     onTap: () {
                       AppState.backButtonDispatcher.didPopRoute();

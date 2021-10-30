@@ -50,7 +50,7 @@ class Transactions extends StatelessWidget {
                   children: [
                     SizedBox(height: SizeConfig.scaffoldMargin),
                     FelloBriefTile(
-                      leadingAsset: Assets.wmtsaveMoney,
+                      leadingAsset: Assets.bankDetails,
                       title: "Bank Account Details",
                       trailingIcon: Icons.arrow_forward_ios_rounded,
                       onTap: () {
@@ -61,8 +61,8 @@ class Transactions extends StatelessWidget {
                       },
                     ),
                     FelloBriefTile(
-                      leadingAsset: Assets.tickets,
-                      title: "Transactions History and Invoice",
+                      leadingAsset: Assets.txnHistory,
+                      title: "Transaction History and Invoice",
                       trailingIcon: Icons.arrow_forward_ios_rounded,
                       onTap: () {
                         AppState.delegate.appState.currentAction = PageAction(
@@ -70,54 +70,6 @@ class Transactions extends StatelessWidget {
                           page: TransactionsHistoryPageConfig,
                         );
                       },
-                    ),
-                    SizedBox(height: 50),
-                    TextField(
-                      decoration: InputDecoration(labelText: "Number"),
-                      keyboardType: TextInputType.number,
-                      onSubmitted: (cal) {},
-                    ),
-                    TextField(
-                      decoration:
-                          InputDecoration(labelText: "NumberWithOptions"),
-                      keyboardType: TextInputType.numberWithOptions(),
-                      onSubmitted: (cal) {},
-                    ),
-                    TextField(
-                      decoration: InputDecoration(
-                          labelText: "NumberWithOptions(signed:true)"),
-                      keyboardType:
-                          TextInputType.numberWithOptions(signed: true),
-                      onSubmitted: (cal) {},
-                    ),
-                    TextField(
-                      decoration: InputDecoration(
-                          labelText:
-                              "NumberWithOptions(signed:true,decimal:true)"),
-                      keyboardType: TextInputType.numberWithOptions(
-                          signed: true, decimal: true),
-                      onSubmitted: (cal) {},
-                    ),
-                    TextField(
-                      decoration: InputDecoration(labelText: "Phone"),
-                      keyboardType: TextInputType.phone,
-                      onSubmitted: (cal) {},
-                    ),
-                    TextField(
-                      decoration: InputDecoration(
-                          labelText:
-                              "TextInputAction.done with numberswithOption"),
-                      keyboardType: TextInputType.numberWithOptions(
-                          signed: true, decimal: true),
-                      textInputAction: TextInputAction.done,
-                      onSubmitted: (cal) {},
-                    ),
-                    TextField(
-                      decoration: InputDecoration(
-                          labelText: "TextInputAction.done with number"),
-                      keyboardType: TextInputType.number,
-                      textInputAction: TextInputAction.done,
-                      onSubmitted: (cal) {},
                     ),
                   ],
                 ),

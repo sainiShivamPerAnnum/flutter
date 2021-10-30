@@ -1,9 +1,11 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
 import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
+import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
+import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
@@ -21,6 +23,12 @@ import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
 class Root extends StatelessWidget {
+  // final AnimationController controller;
+
+  // Root({Key key, @required this.controller})
+  //     : animation = RootAnimation(controller),
+  //       super(key: key);
+  // final RootAnimation animation;
   @override
   Widget build(BuildContext context) {
     return BaseView<RootViewModel>(
@@ -58,11 +66,11 @@ class Root extends StatelessWidget {
                     backgroundColor: Colors.black,
                     onRefresh: model.refresh,
                     child: Container(
-                      margin: EdgeInsets.only(
-                          top: MediaQuery.of(context).padding.top),
+                      margin: EdgeInsets.only(top: SizeConfig.viewInsets.top),
                       child: Consumer<AppState>(
                         builder: (ctx, m, child) => IndexedStack(
-                            children: model.pages, index: m.rootIndex),
+                            children: [Save(), Play(), Win()],
+                            index: m.rootIndex),
                       ),
                     ),
                   ),
@@ -85,7 +93,7 @@ class Root extends StatelessWidget {
                       child: BackdropFilter(
                         filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                         child: Container(
-                          color: UiConstants.scaffoldColor,
+                          color: Colors.transparent,
                           width: SizeConfig.screenWidth,
                           height: SizeConfig.navBarHeight,
                           child: BackdropFilter(
@@ -113,7 +121,6 @@ class Root extends StatelessWidget {
 
 class BottomNavBar extends StatelessWidget {
   final RootViewModel model;
-
   BottomNavBar({@required this.model});
 
   @override
@@ -151,8 +158,9 @@ class BottomNavBar extends StatelessWidget {
 
 class WantMoreTickets extends StatelessWidget {
   final RootViewModel model;
-
-  WantMoreTickets({@required this.model});
+  WantMoreTickets({
+    @required this.model,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -161,9 +169,7 @@ class WantMoreTickets extends StatelessWidget {
       builder: (ctx, m, child) => AnimatedPositioned(
         duration: Duration(milliseconds: 300),
         curve: Curves.decelerate,
-        bottom: m.rootIndex == 1
-            ? SizeConfig.pageHorizontalMargins + SizeConfig.navBarHeight / 2
-            : SizeConfig.pageHorizontalMargins,
+        bottom: SizeConfig.pageHorizontalMargins,
         left: SizeConfig.pageHorizontalMargins,
         right: SizeConfig.pageHorizontalMargins,
         child: InkWell(
@@ -176,8 +182,12 @@ class WantMoreTickets extends StatelessWidget {
           ),
           child: Shimmer(
             duration: Duration(seconds: 5),
-            child: Container(
-              height: SizeConfig.navBarHeight,
+            child: AnimatedContainer(
+              duration: Duration(milliseconds: 300),
+              curve: Curves.decelerate,
+              height: m.rootIndex == 1
+                  ? SizeConfig.navBarHeight * 1.5
+                  : SizeConfig.navBarHeight,
               width: SizeConfig.navBarWidth,
               decoration: BoxDecoration(
                 color: UiConstants.primaryLight,

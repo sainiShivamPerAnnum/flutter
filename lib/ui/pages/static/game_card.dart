@@ -34,16 +34,17 @@ class GameCard extends StatelessWidget {
             children: [
               ClipPath(
                 clipper: GameThumbnailClipper(),
-                child: Container(
-                  width: SizeConfig.screenWidth,
-                  height: SizeConfig.screenHeight * 0.16,
-                  decoration: BoxDecoration(
-                    color: UiConstants.primaryColor,
-                    image: DecorationImage(
-                        image: AssetImage(gameData.thumbnailImage),
-                        fit: BoxFit.cover),
-                  ),
-                ),
+                child: CachedNetworkImage(imageUrl: gameData.thumbnailUri,)
+                // Container(
+                //   width: SizeConfig.screenWidth,
+                //   height: SizeConfig.screenHeight * 0.16,
+                //   decoration: BoxDecoration(
+                //     color: UiConstants.primaryColor,
+                //     image: DecorationImage(
+                //         image: AssetImage(gameData.thumbnailImage),
+                //         fit: BoxFit.cover),
+                //   ),
+                // ),
               ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -70,7 +71,7 @@ class GameCard extends StatelessWidget {
                                   backgroundColor: UiConstants.tertiarySolid
                                       .withOpacity(0.2),
                                   child: SvgPicture.asset(
-                                    Assets.tickets,
+                                    Assets.tokens,
                                     height: SizeConfig.iconSize3,
                                   ),
                                 ),
