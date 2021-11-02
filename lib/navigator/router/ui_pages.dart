@@ -25,14 +25,23 @@ const String WalkThroughPath = '/walkThrough';
 const String WalkThroughCompletedPath = '/walkThroughCompleted';
 const String YourFundsPath = '/yourFunds';
 const String NotificationsPath = '/notifications';
-
-// For testing
 const String THome = '/tHome';
+const String TGame = '/tGame';
 const String TWalkthrough = 'tWalkthrough';
 const String TShowAllTickets = 'tShowAllTickets';
 const String TPickDraw = 'tPickDraw';
 const String TWeeklyResult = 'tWeeklyResult';
 const String TSummaryDetails = 'tSummaryDetails';
+const String CricketHomePath = 'cricketHome';
+const String CricketGamePath = 'cricketGame';
+const String TransactionsHistoryPath = 'transHistory';
+const String KycDetailsPath = 'kycDetails';
+const String BankDetailsPath = 'bankDetails';
+const String AugmontGoldBuyPath = '/augBuy';
+const String AugmontGoldDetailsPath = '/augDetails';
+const String ReferralDetailsPath = '/referralDetails';
+const String ReferralHistoryPath = '/referralHistory';
+const String MyWinningsPath = '/myWinnings';
 
 enum Pages {
   Splash,
@@ -59,12 +68,23 @@ enum Pages {
   WalkThroughCompleted,
   YourFunds,
   THome,
+  TGame,
   TWeeklyResult,
   TWalkthrough,
   TPickDraw,
   TShowAllTickets,
   TSummaryDetails,
   Notifications,
+  CricketHome,
+  CricketGame,
+  TxnHistory,
+  KycDetails,
+  BankDetails,
+  AugGoldBuy,
+  AugGoldDetails,
+  ReferralDetails,
+  ReferralHistory,
+  MyWinnings
 }
 
 class PageConfiguration {
@@ -72,6 +92,7 @@ class PageConfiguration {
   final String path;
   final Pages uiPage;
   PageAction currentPageAction;
+  var returnValue;
 
   PageConfiguration(
       {@required this.key,
@@ -207,6 +228,11 @@ PageConfiguration THomePageConfig = PageConfiguration(
   path: THome,
   uiPage: Pages.THome,
 );
+PageConfiguration TGamePageConfig = PageConfiguration(
+  key: 'TGame',
+  path: TGame,
+  uiPage: Pages.TGame,
+);
 PageConfiguration TWeeklyResultPageConfig = PageConfiguration(
   key: 'TWeeklyResult',
   path: TWeeklyResult,
@@ -232,4 +258,62 @@ PageConfiguration TSummaryDetailsPageConfig = PageConfiguration(
   key: 'TSummaryDetails',
   path: TSummaryDetails,
   uiPage: Pages.TSummaryDetails,
+);
+
+PageConfiguration CricketHomePageConfig = PageConfiguration(
+  key: 'CricketHome',
+  path: CricketHomePath,
+  uiPage: Pages.CricketHome,
+);
+
+PageConfiguration CricketGamePageConfig = PageConfiguration(
+  key: 'CricketGame',
+  path: CricketGamePath,
+  uiPage: Pages.CricketGame,
+);
+
+PageConfiguration TransactionsHistoryPageConfig = PageConfiguration(
+  key: 'TxnHistory',
+  path: TransactionsHistoryPath,
+  uiPage: Pages.TxnHistory,
+);
+PageConfiguration KycDetailsPageConfig = PageConfiguration(
+  key: 'KycDetails',
+  path: KycDetailsPath,
+  uiPage: Pages.KycDetails,
+);
+
+PageConfiguration BankDetailsPageConfig = PageConfiguration(
+  key: 'BankDetails',
+  path: BankDetailsPath,
+  uiPage: Pages.BankDetails,
+);
+
+PageConfiguration AugmontGoldBuyPageConfig = PageConfiguration(
+  key: 'augGoldBuy',
+  path: AugmontGoldBuyPath,
+  uiPage: Pages.AugGoldBuy,
+);
+
+PageConfiguration AugmontGoldDetailsPageConfig = PageConfiguration(
+  key: 'augGoldDetails',
+  path: AugmontGoldDetailsPath,
+  uiPage: Pages.AugGoldDetails,
+);
+
+PageConfiguration ReferralDetailsPageConfig = PageConfiguration(
+  key: 'referDetails',
+  path: ReferralDetailsPath,
+  uiPage: Pages.ReferralDetails,
+);
+PageConfiguration ReferralHistoryPageConfig = PageConfiguration(
+  key: 'referHistory',
+  path: ReferralHistoryPath,
+  uiPage: Pages.ReferralHistory,
+);
+
+PageConfiguration MyWinnigsPageConfig = PageConfiguration(
+  key: 'myWinnings',
+  path: MyWinningsPath,
+  uiPage: Pages.MyWinnings,
 );

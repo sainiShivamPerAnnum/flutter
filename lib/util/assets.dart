@@ -1,12 +1,14 @@
 import 'constants.dart';
 
 class Assets {
+  static final String splashBackground = "assets/images/BG.png";
   static final String logoMaxSize = 'images/fello_logo.png';
   static final String logoShortform = 'images/fello-short-logo.png';
   static final String referGraphic = 'images/transfer.png';
   static final String iciciGraphic = 'images/icici.png';
   static final String augmontGraphic = 'images/augmont.png';
-  static final String augmontLogo = "images/augmont-logo.jpg";
+  static final String augmontLogo = "images/aug-logo.png";
+  static final String augLogo = "images/aug-logo.png";
   static final String sebiGraphic = 'images/sebi.png';
   static final String amfiGraphic = 'images/amfi.png';
   static final String prizesGraphic = 'images/prizes-small.png';
@@ -22,13 +24,110 @@ class Assets {
   static final String dummyAadhaarCard = 'images/Aadhar_card.jpg';
   static final String dummyCancelledCheque = 'images/Cancelled_cheque.png';
   static final String kycUnavailableAsset = 'images/kyc_unavailable.png';
+  static final String noTransaction = "images/no-transactions.png";
 
+  //APPBAR
+
+  static final String alerts = "assets/vectors/icons/alerts.svg";
+  static final String tokens = "assets/vectors/icons/token.svg";
+  static final String tickets = "assets/vectors/icons/tickets.svg";
+  //NAVBAR
+
+  static final String navPlay = "assets/vectors/icons/support.svg";
+  static final String navSave = "assets/vectors/icons/wallet.svg";
+  static final String navWin = "assets/vectors/icons/medal.svg";
+
+// ONBOARDING
+  static final String enterPhoneNumber = "assets/vectors/enter_phone.svg";
+  static final String otpAuth = "assets/vectors/otp_auth2.svg";
+  static final String gender = 'images/svgs/gender.svg';
+  static final String username = "assets/vectors/username.svg";
+  static final String bankLottie = "assets/lotties/bank.json";
+  static final String onb1 = "assets/lotties/slide1.json";
+  static final String onb2 = "assets/lotties/slide2.json";
+  static final String onb3 = "assets/lotties/slide3.json";
+  static final String indFlag = "assets/images/indflag.jpg";
+
+  // WANT MORE MODAL
+  static final String wmtsaveMoney = "assets/vectors/icons/wmt_save_money.svg";
+  static final String wmtShare = "assets/vectors/icons/wmt_share.svg";
+
+  // HELP N SUPPORT
+  static final String hsCustomerService =
+      "assets/vectors/icons/hs_customer_care.svg";
+  static final String hsFaqs = "assets/vectors/icons/hs_faqs.svg";
+  static final String hsFdbk = 'assets/vectors/icons/hs_fdbk.svg';
+  static final String hsMail = "assets/vectors/icons/hs_mail.svg";
+  static final String profilePic = "assets/images/profile.png";
+
+  //HOME TAB//
+
+  // PLAY
+  static final String germsPattern = "assets/images/bg_pattern.png";
+  static final String tambolaWalkthrough =
+      "assets/images/tambola_walkthrough.png";
+  static final String scoreIcon = "assets/vectors/icons/score.svg";
+
+  // SAVE
+  static final String whiteRays = "assets/images/white_rays.png";
+  static final String giftBoxOpen = "assets/vectors/gift_box_open.svg";
+  static final String moneyIcon = "assets/images/icons/money.png";
+  static final String gold24K = "assets/vectors/icons/gold24k.svg";
+  static final String goldPure = "assets/vectors/icons/goldPure.svg";
+  static final String goldSecure = "assets/vectors/icons/goldSecure.svg";
+
+  // WIN
+
+  static final String goldClaim = "assets/images/gold_claim.png";
+  static final String amazonClaim = "assets/images/amazon_claim.png";
+  static final String iphone = "assets/images/iphone.png";
+  static final String iphone2 = "assets/images/iphone2.png";
+  static final String amazonGC = "assets/images/amazon_coupon.png";
+  static final String myntraGV = "assets/images/myntra_coupon.png";
+  static final String moneyBag = "assets/images/money_bag.png";
+  static final String clip = "assets/vectors/clip.svg";
+
+  static final String amazonCoupon = "assets/images/amazon_coupon.png";
+  static final String myntraCoupon = "assets/images/myntra_coupon.png";
+  static final String gplayCoupon = "assets/images/ggv.png";
+
+  // TRANSACTIONS
+
+  static final String bankDetails = "assets/vectors/icons/bankDetails.svg";
+  static final String txnHistory = "assets/vectors/icons/txnHistory.svg";
+
+  //DRAWER
+  static final String dAboutDigitalGold =
+      "assets/vectors/drawer/about_digital_gold.svg";
+  static final String dHelpNSupport = "assets/vectors/drawer/help_support.svg";
+  static final String dHowItWorks = "assets/vectors/drawer/how_it_works.svg";
+  static final String dPanKyc = "assets/vectors/drawer/pan_kyc.svg";
+  static final String dReferNEarn = "assets/vectors/drawer/refer_and_earn.svg";
+  static final String dTransactions = "assets/vectors/drawer/transactions.svg";
+
+  //TAMBOLA
+
+  static final String dailyPickCard = "assets/vectors/daily_picks_card.svg";
+
+  // REFERRAL
+  static final String referNearn = "images/share-card.png";
+  static final String whatsapp = "images/svgs/whatsapp.svg";
+  static final String plane = "images/svgs/plane.svg";
+  static final String rAeMain = "assets/vectors/refer_and_earn_main.svg";
+  static final String paperClip = "assets/vectors/icons/paperclip.svg";
   static final List<String> onboardingSlide = [
     'images/save-small.png',
     'images/grow-small.png',
     'images/games-small.png',
     'images/safe-small.png',
   ];
+
+  //DIALOGS
+  static final String goldenTicket = "assets/vectors/golden_ticket_new.svg";
+  static final String prizeClaimConfirm =
+      "assets/vectors/prize_claim_confirm.svg";
+  static final String congrats = "assets/vectors/congrats.svg";
+  static final String noTickets = "assets/vectors/no_tickets.svg";
 
   static final List<String> onboardingHeader = [
     'Save',
@@ -78,44 +177,27 @@ class Assets {
   static final List<String> faqHeaders = [
     'What is Fello?',
     'How does Fello work?',
-    'For how long are these gaming tickets valid?',
-    'What can I do with these gaming tickets?',
+    'Why should I save and invest with Fello?',
+    'What can I do with these Fello Tokens?',
     'Why do I need to submit and verify my KYC details?',
     'What do I need to do to verify my KYC?',
     'Are my funds safe?',
-    'How to play the tambola game?',
+    'How can I play the tambola game?',
+    'How can I play the cricket game?'
   ];
 
   static final List<String> faqAnswers = [
     'Fello is a game based savings and investment application for you to save, play and '
         'get returns more than a traditional savings bank account. We are making savings fun '
         'and easy through fun,exciting and rewarding games.',
-    'You can start saving and investing in the funds or financial assets listed on Fello.'
-        ' For every Rs.100 saved or invested through Fello, you receive a gaming ticket which '
-        'can be used to play games listed on the application. For example: If you save Rs.500 in gold,'
-        ' you get 5 gaming tickets which can be used to play the tambola game which is listed on the app.',
-    'Let’s take a scenario. If you save Rs.500, you get 5 gaming tickets. These gaming tickets will be '
-        'refreshed every week. That means, even if you use these gaming tickets in a week, your 5 gaming '
-        'tickets will be refreshed for the next week. If you save more, you get more gaming tickets which '
-        'will be refreshed every week.',
-    'You can play fun and exciting games! Play these games and get a chance to win amazing rewards and prizes.'
-        ' The current game which we have on the app is Tambola and we will be coming up with many more exciting '
-        'games! Now savings is not boring, it\'s fun and exciting!',
-    'As per the RBI and SEBI guidelines, it is mandatory for users to verify their KYC before saving and '
-        'investing. But don’t worry, your information is absolutely safe and confidential with us.',
-    'If you are saving and investing in Augmont digital gold, all you have to do is just enter your PAN details.'
-        '\nIf you are saving and investing in mutual funds, if you are an existing mutual fund investor on any '
-        'other platform, you just need to enter your PAN details if not, you need to go through a quick 3-5 minute '
-        'KYC verification process which includes PAN, aadhar and video KYC verification.',
-    'Absolutely, your savings and investments are directly made into Augmont Digital Gold and ICICI Prudential '
-        'Mutual Funds. While you save/invest, the respective banking details and payment gateways are directly '
-        'linked to these financial institutions where your money is invested safely and securely without the '
-        'intervention of Fello. Also we are a registered Mutual Fund Distributor with AMFI Licence number: 176484',
-    'Very simple. For the current version of the application, for every Rs.100 saved you get one tambola ticket '
-        'which is directly generated in the tambola game. Each ticket has 15 numbers from 1-90. Every day 5 '
-        'numbers will be drawn and over a period of one week from Monday to Sunday 35 numbers are drawn. If you '
-        'the drawn numbers matches your ticket numbers, you get to win prizes as per the rewards mentioned in the '
-        'game which are in the form of corners, top row, middle row, bottom row and full house.',
+  'You can start saving and investing in the funds or financial assets listed on Fello. For every Rs.1, you save or invest with Fello, you receive 1 Fello Token which you can use to play your favourite games on the application. For example: If you save Rs.500 in gold, you get 500 Fello Tokens which can be used to play the games listed on the app. To play one game of cricket, you will need 10 Tokens, and for every Tambola Ticket, you will need 10 Tokens. The more you play, or the more tickets you have, the higher your chances of winning.',
+    'Fello aims to make saving and investing as fun as it is rewarding for our users. By saving and investing with Fello, users can win exciting prizes, earn returns much higher than bank accounts and get to be a part of a cool community of gamers and investors.',
+    'You can play fun and exciting games! Play these games and get a chance to win amazing rewards and prizes. Currently, there are two games available - Cricket and Tambola. To play one game of Cricket, you need 10 Tokens, and for every Tambola Ticket, you need 10 Tokens. The more you play, or the more tickets you have, the higher your chances of winning. We’re always listening to our users and coming up with more exciting games. Now saving is not boring, it\'s fun and exciting!',
+    'As per the RBI and SEBI guidelines, users must verify their KYC before saving and investing. In the case of Digital Gold, you only need to verify your KYC details when you want to withdraw your balance. But don’t worry, your information is confidential and absolutely safe with us.',
+    'If you are saving and investing in digital gold, all you need is your PAN number!',
+    'Your savings and investments are made directly into Augmont Digital Gold. While you save and invest, the respective banking details and payment gateways are directly linked to these financial institutions where your money is invested safely and securely without the intervention of Fello.',
+    'It’s very simple. In the current version of the application, for every 10 Fello Tokens you get for saving, you get one tambola ticket which is directly generated in the tambola game. Each ticket has 15 numbers from 1-90. Every day 5 numbers will be drawn and over one week - from Monday to Sunday, 35 numbers are drawn. If the drawn numbers match the numbers on your ticket, you get to win prizes as per the rewards mentioned in the game for corners, top row, middle row, bottom row and full house.',
+    'Playing cricket has never been more fun! To play one match of your favourite game, all you need is 10 Fello Tokens. Once the match starts, step onto the pitch and have the innings of a lifetime. At the end of the week, the top 5 scorers with the highest runs scored in a single match will win exciting prizes.',
   ];
 
   static final List<String> mfFaqHeaders = [
@@ -139,7 +221,7 @@ class Assets {
   ];
 
   static final List<String> goldFaqHeaders = [
-    'What kind of asset is this?',
+    'What does digital gold mean?',
     'Who is Augmont?',
     'What does digital gold mean?',
     'What is the purity of the Gold?',
@@ -150,7 +232,7 @@ class Assets {
   ];
 
   static final List<String> goldFaqAnswers = [
-    'This is digital gold. It brings the power of buying gold with the ease of online access.  On completing a deposit, you receive the required grams of digital gold at the purchased gold rate',
+    'Digital Gold brings the power of buying gold with the ease of online access.  On completing a deposit, you receive the required grams of digital gold at the purchased gold rate. It is as great as physical ownership and can be sold at any given time.',
     'Augmont Goldtech Private Limited is a consumer retail Goldtech company - India’s largest and completely integrated gold company-from refining to retailing.',
     'Your gold is stored as an investment with Augmont Goldtech. For all purposes, it is as great as physical ownership and can be sold at any given time as well.',
     'Augmont offers verified 24 carats 999 Gold.',

@@ -1,8 +1,9 @@
-import 'package:felloapp/core/model/UserTransaction.dart';
-import 'package:felloapp/core/ops/http_ops.dart';
+import 'package:felloapp/core/model/user_transaction_model.dart';
+import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/credentials_stage.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/razorpay_api_util.dart';
@@ -85,33 +86,37 @@ class RazorpayModel extends ChangeNotifier {
     //TODO
   }
 
-  //generate order id
-  //update transaction
-  //create map
-  //open gateway
-  Future<UserTransaction> submitAugmontTransaction(
-      UserTransaction txn, String mobile, String email, String note) async {
-    if (!_init(txn)) return null; //initialise razorpay
-
+  Future<String> createOrderId(double amount, String note) async {
     Map<String, dynamic> orderDetails =
-        await _httpModel.generateRzpOrderId(_currentTxn.amount, note);
+        await _httpModel.generateRzpOrderId(amount, note);
     if (orderDetails == null) {
       log.error('Failed to generate order id');
       return null;
     }
 
-    if (_currentTxn.rzp == null) {
-      _currentTxn.rzp = {};
-    }
-    _currentTxn.rzp[UserTransaction.subFldRzpOrderId] =
-        orderDetails['order_id'];
+    return orderDetails['order_id'];
+    //
+    // if (_currentTxn.rzp == null) {
+    //   _currentTxn.rzp = {};
+    // }
+    // _currentTxn.rzp[UserTransaction.subFldRzpOrderId] =
+    // orderDetails['order_id'];
+  }
 
-    String _keyId = RZP_KEY[Constants.activeRazorpayStage.value()];
+  //generate order id
+  //update transaction
+  //create map
+  //open gateway
+  Future<UserTransaction> submitAugmontTransaction(
+      UserTransaction txn, String mobile, String email) async {
+    if (!_init(txn)) return null; //initialise razorpay
+
+    String _keyId = RZP_KEY[FlavorConfig.instance.values.razorpayStage.value()];
     var options = {
       'key': _keyId,
       'amount': txn.amount.ceil(),
       'name': 'Augmont Gold',
-      'order_id': orderDetails['order_id'],
+      'order_id': txn.rzp[UserTransaction.subFldRzpOrderId],
       'description': 'Digital Gold Purchase',
       'timeout': 120, // in seconds
       'image': Assets.logoBase64,

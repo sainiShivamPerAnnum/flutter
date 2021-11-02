@@ -1,5 +1,5 @@
 import 'package:felloapp/core/base_remote_config.dart';
-import 'package:felloapp/util/size_config.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';

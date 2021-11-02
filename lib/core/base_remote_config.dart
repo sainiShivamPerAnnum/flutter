@@ -1,13 +1,16 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:logger/logger.dart';
 
 class BaseRemoteConfig {
   static RemoteConfig remoteConfig;
   static DBModel _dbProvider = locator<DBModel>();
   static BaseUtil _baseProvider = locator<BaseUtil>();
+  static UserService _userService = locator<UserService>();
 
   ///Each config is set as a map = {name, default value}
   static const Map<String, String> _DRAW_PICK_TIME = {'draw_pick_time': '18'};
@@ -48,6 +51,9 @@ class BaseRemoteConfig {
   static const Map<String, String> _REFERRAL_TICKET_BONUS = {
     'referral_ticket_bonus': '10'
   };
+  static const Map<String, String> _REFERRAL_FLC_BONUS = {
+    'referral_flc_bonus': '200'
+  };
   static const Map<String, String> _AWS_ICICI_KEY_INDEX = {
     'aws_icici_key_index': '1'
   };
@@ -75,9 +81,32 @@ class BaseRemoteConfig {
 
   static const Map<String, String> _WEEK_NUMBER = {'week_number': '12'};
 
-  static const Map<String, String> _OCT_FEST_OFFER_TIMEOUT = {'oct_fest_offer_timeout': '10'};
+  static const Map<String, String> _OCT_FEST_OFFER_TIMEOUT = {
+    'oct_fest_offer_timeout': '10'
+  };
 
-  static const Map<String, String> _OCT_FEST_MIN_DEPOSIT = {'oct_fest_min_deposit': '100'};
+  static const Map<String, String> _OCT_FEST_MIN_DEPOSIT = {
+    'oct_fest_min_deposit': '100'
+  };
+
+  static const Map<String, String> _TAMBOLA_PLAY_COST = {
+    'tambola_play_cost': '10'
+  };
+  static const Map<String, String> _TAMBOLA_PLAY_PRIZE = {
+    'tambola_play_prize': '25,000'
+  };
+  static const Map<String, String> _CRICKET_PLAY_COST = {
+    'cricket_play_cost': '10'
+  };
+  static const Map<String, String> _CRICKET_PLAY_PRIZE = {
+    'cricket_play_prize': '25,000'
+  };
+  static const Map<String, String> _CRICKET_THUMBNAIL_URI = {
+    'cricket_thumbnail': 'https://fello-assets.s3.ap-south-1.amazonaws.com/fello_cricket.png'
+  };
+  static const Map<String, String> _TAMBOLA_THUMBNAIL_URI = {
+    'tambola_thumbnail': 'https://fello-assets.s3.ap-south-1.amazonaws.com/fello_tambola.png'
+  };
 
   static const Map<String, dynamic> DEFAULTS = {
     ..._DRAW_PICK_TIME,
@@ -94,6 +123,7 @@ class BaseRemoteConfig {
     ..._TAMBOLA_WIN_FULL,
     ..._REFERRAL_BONUS,
     ..._REFERRAL_TICKET_BONUS,
+    ..._REFERRAL_FLC_BONUS,
     ..._AWS_ICICI_KEY_INDEX,
     ..._AWS_AUGMONT_KEY_INDEX,
     ..._ICICI_DEPOSITS_ENABLED,
@@ -104,32 +134,40 @@ class BaseRemoteConfig {
     ..._UNLOCK_REFERRAL_AMT,
     ..._WEEK_NUMBER,
     ..._OCT_FEST_OFFER_TIMEOUT,
-    ..._OCT_FEST_MIN_DEPOSIT
+    ..._OCT_FEST_MIN_DEPOSIT,
+    ..._TAMBOLA_PLAY_COST,
+    ..._TAMBOLA_PLAY_PRIZE,
+    ..._CRICKET_PLAY_COST,
+    ..._CRICKET_PLAY_PRIZE,
+    ..._CRICKET_THUMBNAIL_URI,
+    ..._TAMBOLA_THUMBNAIL_URI
   };
 
   static Future<bool> init() async {
-    print('initializing remote config');
+    final Logger logger = locator<Logger>();
+    logger.i('initializing remote config');
     remoteConfig = RemoteConfig.instance;
     try {
       // await remoteConfig.activateFetched();
+      //TODO remoteConfig lazy?
+
       await remoteConfig.setConfigSettings(RemoteConfigSettings(
         fetchTimeout: const Duration(milliseconds: 30000),
         minimumFetchInterval: const Duration(hours: 6),
       ));
       await remoteConfig.setDefaults(DEFAULTS);
       //RemoteConfigValue(null, ValueSource.valueStatic);
-
       await remoteConfig.fetchAndActivate();
       return true;
     } catch (exception) {
       print(
           'Unable to fetch remote config. Cached or default values will be used');
-      if (_baseProvider.myUser.uid != null) {
+      if (_userService.baseUser.uid != null) {
         Map<String, dynamic> errorDetails = {
           'error_type': 'Remote config details fetch failed',
           'error_msg': 'Remote config fetch failed, using default values.'
         };
-        _dbProvider.logFailure(_baseProvider.myUser.uid,
+        _dbProvider.logFailure(_userService.baseUser.uid,
             FailType.RemoteConfigFailed, errorDetails);
       }
       return false;
@@ -163,6 +201,8 @@ class BaseRemoteConfig {
 
   static String get REFERRAL_BONUS => _REFERRAL_BONUS.keys.first;
 
+  static String get REFERRAL_FLC_BONUS => _REFERRAL_FLC_BONUS.keys.first;
+
   static String get TAMBOLA_WIN_FULL => _TAMBOLA_WIN_FULL.keys.first;
 
   static String get TAMBOLA_WIN_BOTTOM => _TAMBOLA_WIN_BOTTOM.keys.first;
@@ -186,9 +226,22 @@ class BaseRemoteConfig {
 
   static String get WEEK_NUMBER => _WEEK_NUMBER.keys.first;
 
-  static String get OCT_FEST_OFFER_TIMEOUT => _OCT_FEST_OFFER_TIMEOUT.keys.first;
+  static String get OCT_FEST_OFFER_TIMEOUT =>
+      _OCT_FEST_OFFER_TIMEOUT.keys.first;
 
   static String get OCT_FEST_MIN_DEPOSIT => _OCT_FEST_MIN_DEPOSIT.keys.first;
+
+  static String get TAMBOLA_PLAY_COST => _TAMBOLA_PLAY_COST.keys.first;
+
+  static String get TAMBOLA_PLAY_PRIZE => _TAMBOLA_PLAY_PRIZE.keys.first;
+
+  static String get CRICKET_PLAY_COST => _CRICKET_PLAY_COST.keys.first;
+
+  static String get CRICKET_PLAY_PRIZE => _CRICKET_PLAY_PRIZE.keys.first;
+
+  static String get CRICKET_THUMBNAIL_URI => _CRICKET_THUMBNAIL_URI.keys.first;
+
+  static String get TAMBOLA_THUMBNAIL_URI => _TAMBOLA_THUMBNAIL_URI.keys.first;
 
   static int get UNLOCK_REFERRAL_AMT {
     String _val = _UNLOCK_REFERRAL_AMT.keys.first;

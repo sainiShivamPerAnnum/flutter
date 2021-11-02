@@ -8,6 +8,8 @@
 .buildlog/
 .history
 .svn/
+out/
+fello.plantuml
 
 # IntelliJ related
 *.iml

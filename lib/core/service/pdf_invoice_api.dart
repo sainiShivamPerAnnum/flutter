@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:felloapp/core/model/invoice.dart';
+import 'package:felloapp/core/model/invoice_model.dart';
 import 'package:felloapp/core/service/pdf_api.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
@@ -227,17 +227,6 @@ class PdfInvoiceApi {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // buildText(
-                //   title: 'Net total',
-                //   value: Utils.formatPrice(netTotal),
-                //   unite: true,
-                // ),
-                // buildText(
-                //   title: 'Vat ${vatPercent * 100} %',
-                //   value: Utils.formatPrice(vat),
-                //   unite: true,
-                // ),
-                //Divider(),
                 buildText(
                   title: 'Total',
                   titleStyle: TextStyle(

@@ -1,13 +1,13 @@
-import 'package:felloapp/util/size_config.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class FAQCard extends StatefulWidget {
   final List<String> faqHeaders;
   final List<String> faqResponses;
-  final Color borderColor;
 
-  FAQCard(this.faqHeaders, this.faqResponses, this.borderColor);
+  FAQCard(this.faqHeaders, this.faqResponses);
   @override
   State<StatefulWidget> createState() => FAQCardState();
 }
@@ -35,8 +35,8 @@ class FAQCardState extends State<FAQCard> {
                 spreadRadius: 5,
                 blurRadius: 5)
           ]),
-      margin: EdgeInsets.all(SizeConfig.globalMargin),
-      padding: EdgeInsets.only(top: 12, left: 10),
+      margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+      padding: EdgeInsets.only(top: 12, left: 10, bottom: SizeConfig.padding24),
       child: Column(
         children: [
           Text(
@@ -78,14 +78,8 @@ class FAQCardState extends State<FAQCard> {
                     margin: EdgeInsets.symmetric(
                       horizontal: SizeConfig.blockSizeHorizontal * 6,
                     ),
-                    child: Text(
-                      widget.faqResponses[index],
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        height: 1.5,
-                        fontSize: SizeConfig.mediumTextSize,
-                      ),
-                    ),
+                    child: Text(widget.faqResponses[index],
+                        textAlign: TextAlign.start, style: TextStyles.body2),
                   ),
                 ),
               ),
@@ -104,14 +98,10 @@ class FAQCardState extends State<FAQCard> {
   _prizeFAQHeader(String title) {
     return Padding(
       padding: EdgeInsets.only(
-          top: 10, bottom: 10, left: SizeConfig.blockSizeHorizontal * 5),
-      child: Text(
-        title,
-        style: TextStyle(
-          fontSize: SizeConfig.mediumTextSize,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
+          top: SizeConfig.padding20,
+          bottom: SizeConfig.padding20,
+          left: SizeConfig.pageHorizontalMargins),
+      child: Text(title, style: TextStyles.body2.bold),
     );
   }
 }

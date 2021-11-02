@@ -1,27 +1,44 @@
-import 'dart:async';
-import 'dart:ui';
+//Project Imports
+import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
-import 'package:felloapp/core/fcm_listener.dart';
-import 'package:felloapp/core/model/BaseUser.dart';
+import 'package:felloapp/core/enums/cache_type_enum.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/model/user_augmont_details_model.dart';
+import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/elements/Buttons/large_button.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/username.dart';
+import 'package:felloapp/ui/pages/static/fello_appbar.dart';
+import 'package:felloapp/ui/pages/static/home_background.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/size_config.dart';
-import 'package:felloapp/util/ui_constants.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
+
+//Dart and Flutter Imports
+import 'dart:async';
+import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+
+//Pub Imports
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -47,14 +64,19 @@ class _LoginControllerState extends State<LoginController>
   PageController _controller;
   static BaseUtil baseProvider;
   static DBModel dbProvider;
-  static FcmListener fcmProvider;
+
+  // static FcmListener fcmProvider;
   static LocalDBModel lclDbProvider;
   static AppState appStateProvider;
+  final UserService userService = locator<UserService>();
+  final FcmListener fcmListener = locator<FcmListener>();
+  final AugmontModel augmontProvider = locator<AugmontModel>();
   AnimationController animationController;
 
   String userMobile;
   String _verificationId;
   String _augmentedVerificationId;
+  String state;
   ValueNotifier<double> _pageNotifier;
   static List<Widget> _pages;
   int _currentPage;
@@ -121,7 +143,7 @@ class _LoginControllerState extends State<LoginController>
         ///this is the first time that the otp was requested
         baseProvider.isLoginNextInProgress = false;
         _controller.animateToPage(OtpInputScreen.index,
-            duration: Duration(milliseconds: 1500),
+            duration: Duration(milliseconds: 500),
             curve: Curves.easeInToLinear);
         setState(() {});
       } else {
@@ -149,8 +171,10 @@ class _LoginControllerState extends State<LoginController>
       } else {
         log.error("User auto sign in didnt work");
         baseProvider.isLoginNextInProgress = false;
-        baseProvider.showNegativeAlert('Sign In Failed',
-            'Please check your network or number and try again', context);
+        BaseUtil.showNegativeAlert(
+          'Sign In Failed',
+          'Please check your network or number and try again',
+        );
         setState(() {});
       }
     };
@@ -164,8 +188,10 @@ class _LoginControllerState extends State<LoginController>
         log.error("Quota for otps exceeded");
       }
       log.error("Verification process failed:  ${exception.message}");
-      baseProvider.showNegativeAlert('Sign In Failed',
-          'Please check your network or number and try again', context);
+      BaseUtil.showNegativeAlert(
+        'Sign In Failed',
+        'Please check your network or number and try again',
+      );
       baseProvider.isLoginNextInProgress = false;
       setState(() {});
     };
@@ -184,182 +210,186 @@ class _LoginControllerState extends State<LoginController>
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     lclDbProvider = Provider.of<LocalDBModel>(context, listen: false);
-    fcmProvider = Provider.of<FcmListener>(context, listen: false);
+    // fcmProvider = Provider.of<FcmListener>(context, listen: false);
     appStateProvider = Provider.of<AppState>(context, listen: false);
+    S locale = S.of(context);
+    bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
     return Scaffold(
-      body: SafeArea(
-          child: Stack(
-        children: <Widget>[
-          Positioned(
-            top: kToolbarHeight / 3,
-            child: Container(
-              alignment: Alignment.center,
-              width: SizeConfig.screenWidth,
-              child: Image.asset("images/fello_logo.png", height: 40),
+      backgroundColor: UiConstants.primaryColor,
+      floatingActionButton: keyboardIsOpen && Platform.isIOS
+          ? FloatingActionButton(
+              child: Icon(
+                Icons.done,
+                color: Colors.white,
+              ),
+              backgroundColor: UiConstants.tertiarySolid,
+              onPressed: () => FocusScope.of(context).unfocus(),
+            )
+          : SizedBox(),
+      body: HomeBackground(
+        child: Stack(
+          children: <Widget>[
+            Positioned(
+              bottom: 0,
+              child: Container(
+                width: SizeConfig.screenWidth,
+                height: SizeConfig.screenHeight / 3,
+                color: Colors.white,
+              ),
             ),
-          ),
-          new PageView.builder(
-            physics: new NeverScrollableScrollPhysics(),
-            scrollDirection: Axis.vertical,
-            controller: _controller,
-            itemCount: _pages.length,
-            itemBuilder: (BuildContext context, int index) {
-              //print(index - _controller.page);
-              return ValueListenableBuilder(
-                  valueListenable: _pageNotifier,
-                  builder: (ctx, value, _) {
-                    final factorChange = value - index;
-                    return Padding(
-                      padding: EdgeInsets.only(
-                          top: kToolbarHeight * 1.5,
-                          left: SizeConfig.blockSizeHorizontal * 16,
-                          right: SizeConfig.blockSizeHorizontal * 5),
-                      child: Opacity(
-                          opacity: (1 - factorChange.abs()).clamp(0.0, 1.0),
-                          child: _pages[index % _pages.length]),
-                    );
-                  });
-            },
-            onPageChanged: (int index) {
-              setState(() {
-                _formProgress = 0.2 * (index + 1);
-                _currentPage = index;
-              });
-            },
-          ),
-          ValueListenableBuilder<double>(
-              valueListenable: _pageNotifier,
-              builder: (ctx, value, child) {
-                return Stack(
+            SafeArea(
+              child: Container(
+                width: SizeConfig.screenWidth,
+                height: SizeConfig.screenHeight,
+                child: Column(
                   children: [
-                    Positioned(
-                      left: SizeConfig.blockSizeHorizontal * 4 + 14,
-                      top: kToolbarHeight * 2 + 8,
-                      width: 1,
-                      child: Container(
-                        height:
-                            ((SizeConfig.screenHeight - kToolbarHeight * 2) /
-                                    4) *
-                                value,
-                        color: UiConstants.primaryColor,
-                      ),
-                    ),
-                    ProgressBarItem(value: value, index: 0, icon: Icons.phone),
-                    ProgressBarItem(
-                        value: value, index: 1, icon: Icons.password),
-                    ProgressBarItem(
-                        value: value,
-                        index: 2,
-                        icon: Icons.account_circle_rounded),
-                    ProgressBarItem(
-                        value: value, index: 3, icon: Icons.alternate_email),
-                  ],
-                );
-              }),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                (_currentPage == MobileInputScreen.index)
-                    ? Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                        child: RichText(
-                          text: new TextSpan(
-                            children: [
-                              new TextSpan(
-                                text: 'By continuing, you agree to our ',
-                                style: GoogleFonts.montserrat(
-                                    fontSize: SizeConfig.smallTextSize * 1.2,
-                                    color: Colors.black45),
-                              ),
-                              new TextSpan(
-                                text: 'Terms of Service',
-                                style: GoogleFonts.montserrat(
-                                    color: Colors.black45,
-                                    fontSize: SizeConfig.smallTextSize * 1.2,
-                                    decoration: TextDecoration.underline),
-                                recognizer: new TapGestureRecognizer()
-                                  ..onTap = () {
-                                    Haptic.vibrate();
-                                    BaseUtil.launchUrl(
-                                        'https://fello.in/policy/tnc');
-                                    // appStateProvider.currentAction = PageAction(
-                                    //     state: PageState.addPage,
-                                    //     page: TncPageConfig);
-                                  },
-                              ),
-                            ],
+                    ValueListenableBuilder(
+                        valueListenable: _pageNotifier,
+                        builder: (ctx, value, child) {
+                          return value < 2.0
+                              ? SizedBox(
+                                  height: kToolbarHeight,
+                                )
+                              : FelloAppBar(
+                                  leading:
+                                      FelloAppBarBackButton(onBackPress: () {
+                                    if (value == 3)
+                                      _controller.previousPage(
+                                          duration: Duration(milliseconds: 600),
+                                          curve: Curves.easeInOut);
+                                    else
+                                      AppState.delegate.appState.currentAction =
+                                          PageAction(
+                                              state: PageState.replaceAll,
+                                              page: SplashPageConfig);
+                                  }),
+                                  title: value < 3
+                                      ? locale.abCompleteYourProfile
+                                      : locale.abGamingName,
+                                );
+                        }),
+                    Expanded(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(SizeConfig.padding40),
+                          topRight: Radius.circular(SizeConfig.padding40),
+                        ),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.pageHorizontalMargins),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                          ),
+                          child: PageView.builder(
+                            physics: new NeverScrollableScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            controller: _controller,
+                            itemCount: _pages.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              //print(index - _controller.page);
+                              return ValueListenableBuilder(
+                                  valueListenable: _pageNotifier,
+                                  builder: (ctx, value, _) {
+                                    final factorChange = value - index;
+                                    return Opacity(
+                                        opacity: (1 - factorChange.abs())
+                                            .clamp(0.0, 1.0),
+                                        child: _pages[index % _pages.length]);
+                                  });
+                            },
+                            onPageChanged: (int index) {
+                              setState(() {
+                                _formProgress = 0.2 * (index + 1);
+                                _currentPage = index;
+                              });
+                            },
                           ),
                         ),
-                      )
-                    : Container(),
-                Container(
-                  width: SizeConfig.screenWidth,
-                  padding: EdgeInsets.fromLTRB(0, 10, 0, 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      new Container(
-                        width: SizeConfig.screenWidth -
-                            SizeConfig.blockSizeHorizontal * 10,
-                        child: LargeButton(
-                          child: (!baseProvider.isLoginNextInProgress)
-                              ? Text(
-                                  _currentPage == Username.index
-                                      ? 'FINISH'
-                                      : 'NEXT',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .button
-                                      .copyWith(color: Colors.white),
-                                )
-                              : SpinKitThreeBounce(
-                                  color: UiConstants.spinnerColor2,
-                                  size: 18.0,
-                                ),
-                          onTap: () {
-                            if (!baseProvider.isLoginNextInProgress)
-                              _processScreenInput(_currentPage);
-                          },
-                        ),
-
-                        // Material(
-                        //   child: MaterialButton(
-                        //     child: (!baseProvider.isLoginNextInProgress)
-                        //         ? Text(
-                        //             _currentPage == Username.index
-                        //                 ? 'FINISH'
-                        //                 : 'NEXT',
-                        //             style: Theme.of(context)
-                        //                 .textTheme
-                        //                 .button
-                        //                 .copyWith(color: Colors.white),
-                        //           )
-                        //         : SpinKitThreeBounce(
-                        //             color: UiConstants.spinnerColor2,
-                        //             size: 18.0,
-                        //           ),
-                        //     onPressed: () {
-                        //       if (!baseProvider.isLoginNextInProgress)
-                        //         _processScreenInput(_currentPage);
-                        //     },
-                        //     highlightColor: Colors.white30,
-                        //     splashColor: Colors.white30,
-                        //   ),
-                        //   color: Colors.transparent,
-                        //   borderRadius: new BorderRadius.circular(30.0),
-                        // ),
                       ),
-                    ],
-                  ),
-                )
-              ],
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ),
-        ],
-      )),
+            if (!keyboardIsOpen)
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    (_currentPage == MobileInputScreen.index)
+                        ? Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                            child: RichText(
+                              text: new TextSpan(
+                                children: [
+                                  new TextSpan(
+                                    text: 'By continuing, you agree to our ',
+                                    style: GoogleFonts.montserrat(
+                                        fontSize:
+                                            SizeConfig.smallTextSize * 1.2,
+                                        color: Colors.black45),
+                                  ),
+                                  new TextSpan(
+                                    text: 'Terms of Service',
+                                    style: GoogleFonts.montserrat(
+                                        color: Colors.black45,
+                                        fontSize:
+                                            SizeConfig.smallTextSize * 1.2,
+                                        decoration: TextDecoration.underline),
+                                    recognizer: new TapGestureRecognizer()
+                                      ..onTap = () {
+                                        Haptic.vibrate();
+                                        BaseUtil.launchUrl(
+                                            'https://fello.in/policy/tnc');
+                                        // appStateProvider.currentAction = PageAction(
+                                        //     state: PageState.addPage,
+                                        //     page: TncPageConfig);
+                                      },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        : Container(),
+                    Container(
+                      width: SizeConfig.screenWidth,
+                      padding: EdgeInsets.fromLTRB(0, 10, 0, 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: <Widget>[
+                          new Container(
+                            width: SizeConfig.screenWidth -
+                                SizeConfig.pageHorizontalMargins * 2,
+                            child: FelloButtonLg(
+                              child: (!baseProvider.isLoginNextInProgress)
+                                  ? Text(
+                                      _currentPage == Username.index
+                                          ? 'FINISH'
+                                          : 'NEXT',
+                                      style:
+                                          TextStyles.body2.colour(Colors.white),
+                                    )
+                                  : SpinKitThreeBounce(
+                                      color: UiConstants.spinnerColor2,
+                                      size: 18.0,
+                                    ),
+                              onPressed: () {
+                                if (!baseProvider.isLoginNextInProgress)
+                                  _processScreenInput(_currentPage);
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -373,7 +403,9 @@ class _LoginControllerState extends State<LoginController>
             log.debug(
                 'Mobile number validated: ${_mobileScreenKey.currentState.getMobile()}');
             this.userMobile = _mobileScreenKey.currentState.getMobile();
-
+            String refCode = _mobileScreenKey.currentState.getReferralCode();
+            if (refCode != null && refCode.isNotEmpty)
+              BaseUtil.manualReferralCode = refCode;
             setState(() {
               LoginController.mobileno = this.userMobile;
             });
@@ -398,15 +430,16 @@ class _LoginControllerState extends State<LoginController>
               _otpScreenKey.currentState.onOtpReceived();
               _onSignInSuccess();
             } else {
-              baseProvider.showNegativeAlert(
-                  'Invalid Otp', 'Please enter a valid otp', context);
+              _otpScreenKey.currentState.pinEditingController.text = "";
+              BaseUtil.showNegativeAlert(
+                  'Invalid Otp', 'Please enter a valid otp');
               baseProvider.isLoginNextInProgress = false;
               FocusScope.of(_otpScreenKey.currentContext).unfocus();
               setState(() {});
             }
           } else {
-            baseProvider.showNegativeAlert(
-                'Enter OTP', 'Please enter a valid one time password', context);
+            BaseUtil.showNegativeAlert(
+                'Enter OTP', 'Please enter a valid one time password');
           }
           break;
         }
@@ -417,24 +450,37 @@ class _LoginControllerState extends State<LoginController>
           if (_nameScreenKey.currentState.formKey.currentState.validate() &&
               _nameScreenKey.currentState.isValidDate()) {
             if (!_nameScreenKey.currentState.isEmailEntered) {
-              baseProvider.showNegativeAlert(
-                  'Email field empty', 'Please enter a valid email', context);
+              BaseUtil.showNegativeAlert(
+                  'Email field empty', 'Please enter a valid email');
               return false;
             }
 
             if (_nameScreenKey.currentState.selectedDate == null) {
-              baseProvider.showNegativeAlert('Invalid Date of Birth',
-                  'Please enter a valid date of birth', context);
+              BaseUtil.showNegativeAlert(
+                'Invalid Date of Birth',
+                'Please enter a valid date of birth',
+              );
               return false;
             } else if (!_isAdult(_nameScreenKey.currentState.selectedDate)) {
-              baseProvider.showNegativeAlert(
-                  'Ineligible', 'You need to be above 18 to join', context);
+              BaseUtil.showNegativeAlert(
+                'Ineligible',
+                'You need to be above 18 to join',
+              );
               return false;
             }
             if (_nameScreenKey.currentState.gen == null ||
                 _nameScreenKey.currentState.isInvested == null) {
-              baseProvider.showNegativeAlert(
-                  'Invalid details', 'Please enter all the fields', context);
+              BaseUtil.showNegativeAlert(
+                'Invalid details',
+                'Please enter all the fields',
+              );
+              return false;
+            }
+            if (_nameScreenKey.currentState.state == null) {
+              BaseUtil.showNegativeAlert(
+                'Invalid details',
+                'Please enter your state of residence',
+              );
               return false;
             }
             FocusScope.of(_nameScreenKey.currentContext).unfocus();
@@ -470,13 +516,17 @@ class _LoginControllerState extends State<LoginController>
 
             bool isInv = _nameScreenKey.currentState.isInvested;
             if (isInv != null) baseProvider.myUser.isInvested = isInv;
+            state = _nameScreenKey.currentState.state;
+            await CacheManager.writeCache(
+                key: "UserAugmontState", value: state, type: CacheType.string);
 
             Future.delayed(Duration(seconds: 1), () {
               baseProvider.isLoginNextInProgress = false;
               setState(() {});
             }).then((value) {
               _controller.animateToPage(Username.index,
-                  duration: Duration(seconds: 1), curve: Curves.easeInToLinear);
+                  duration: Duration(milliseconds: 500),
+                  curve: Curves.easeInToLinear);
             });
           }
           break;
@@ -496,35 +546,52 @@ class _LoginControllerState extends State<LoginController>
               String username =
                   _usernameKey.currentState.username.replaceAll('.', '@');
               if (await dbProvider.checkIfUsernameIsAvailable(username)) {
+                _usernameKey.currentState.enabled = false;
+                setState(() {});
                 bool res = await dbProvider.setUsername(
                     username, baseProvider.firebaseUser.uid);
                 if (res) {
                   baseProvider.myUser.username = username;
                   bool flag = await dbProvider.updateUser(baseProvider.myUser);
+
                   if (flag) {
                     log.debug("User object saved successfully");
                     _onSignUpComplete();
                   } else {
-                    baseProvider.showNegativeAlert('Update failed',
-                        'Please try again in sometime', context);
+                    BaseUtil.showNegativeAlert(
+                      'Update failed',
+                      'Please try again in sometime',
+                    );
+                    _usernameKey.currentState.enabled = false;
+
                     baseProvider.isLoginNextInProgress = false;
                     setState(() {});
                   }
                 } else {
-                  baseProvider.showNegativeAlert('Username update failed',
-                      'Please try again in sometime', context);
+                  BaseUtil.showNegativeAlert(
+                    'Username update failed',
+                    'Please try again in sometime',
+                  );
+                  _usernameKey.currentState.enabled = false;
+
                   baseProvider.isLoginNextInProgress = false;
                   setState(() {});
                 }
               } else {
-                baseProvider.showNegativeAlert('username not available',
-                    'Please choose another username', context);
+                BaseUtil.showNegativeAlert(
+                  'username not available',
+                  'Please choose another username',
+                );
+                _usernameKey.currentState.enabled = false;
+
                 baseProvider.isLoginNextInProgress = false;
                 setState(() {});
               }
             } else {
-              baseProvider.showNegativeAlert(
-                  "Error", "Please try again", context);
+              BaseUtil.showNegativeAlert(
+                "Error",
+                "Please try again",
+              );
             }
           }
 
@@ -564,6 +631,7 @@ class _LoginControllerState extends State<LoginController>
   void _onSignInSuccess() async {
     log.debug("User authenticated. Now check if details previously available.");
     baseProvider.firebaseUser = FirebaseAuth.instance.currentUser;
+    //userService.baseUser = FirebaseAuth.instance.currentUser;
     log.debug("User is set: " + baseProvider.firebaseUser.uid);
     BaseUser user = await dbProvider.getUser(baseProvider.firebaseUser.uid);
     //user variable is pre cast into User object
@@ -583,7 +651,7 @@ class _LoginControllerState extends State<LoginController>
       lclDbProvider.setShowHomeTutorial = true;
       lclDbProvider.setShowTambolaTutorial = true;
       _controller.animateToPage(NameInputScreen.index,
-          duration: Duration(seconds: 1), curve: Curves.easeInToLinear);
+          duration: Duration(milliseconds: 500), curve: Curves.easeInToLinear);
       //_nameScreenKey.currentState.showEmailOptions();
     } else {
       ///Existing user
@@ -613,16 +681,16 @@ class _LoginControllerState extends State<LoginController>
     if (!baseProvider.isLoginNextInProgress) {
       AppState.isOnboardingInProgress = false;
       _controller.animateToPage(MobileInputScreen.index,
-          duration: Duration(milliseconds: 300), curve: Curves.easeInToLinear);
+          duration: Duration(milliseconds: 500), curve: Curves.easeInToLinear);
     }
   }
 
   Future _onSignUpComplete() async {
     await BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
     await BaseAnalytics.logUserProfile(baseProvider.myUser);
-
+    await userService.init();
     await baseProvider.init();
-    await fcmProvider.setupFcm();
+    await fcmListener.setupFcm();
     AppState.isOnboardingInProgress = false;
     if (baseProvider.isLoginNextInProgress == true) {
       baseProvider.isLoginNextInProgress = false;
@@ -630,44 +698,11 @@ class _LoginControllerState extends State<LoginController>
     }
     appStateProvider.currentAction =
         PageAction(state: PageState.replaceAll, page: RootPageConfig);
-    baseProvider.showPositiveAlert(
-        'Sign In Complete',
-        'Welcome to ${Constants.APP_NAME}, ${baseProvider.myUser.name}',
-        context);
+    BaseUtil.showPositiveAlert(
+      'Sign In Complete',
+      'Welcome to ${Constants.APP_NAME}, ${baseProvider.myUser.name}',
+    );
     //process complete
     //TODO move to home through animation
-  }
-}
-
-class ProgressBarItem extends StatelessWidget {
-  final double value;
-  final int index;
-  final IconData icon;
-
-  const ProgressBarItem({this.value, this.index, this.icon});
-
-  @override
-  Widget build(BuildContext context) {
-    final topPos = kToolbarHeight * 2 +
-        5 +
-        ((SizeConfig.screenHeight - kToolbarHeight * 2) / 4) * index;
-    return Positioned(
-      left: SizeConfig.blockSizeHorizontal * 4.5,
-      top: topPos,
-      child: Container(
-        height: 25,
-        width: 25,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: value > index ? UiConstants.primaryColor : Colors.white,
-          border: Border.all(color: UiConstants.primaryColor),
-        ),
-        child: Icon(
-          icon,
-          size: 16,
-          color: value > index ? Colors.white : UiConstants.primaryColor,
-        ),
-      ),
-    );
   }
 }

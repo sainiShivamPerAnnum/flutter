@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "76548371644",
+    "firebase_url": "https://fello-dev-station-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "fello-dev-station",
+    "storage_bucket": "fello-dev-station.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:76548371644:android:bfebda5878a97473174cb9",
+        "android_client_info": {
+          "package_name": "in.fello.felloapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "76548371644-v44cjfu14vrhd66593e77kkvv7upfdeo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBm67dKHZbgqAnjQEvs0pM4LVXQYIdzb_k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "76548371644-v44cjfu14vrhd66593e77kkvv7upfdeo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

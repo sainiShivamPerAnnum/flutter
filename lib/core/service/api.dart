@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:felloapp/core/model/DailyPick.dart';
-import 'package:felloapp/core/model/ReferralDetail.dart';
-import 'package:felloapp/core/model/TambolaBoard.dart';
-import 'package:felloapp/core/model/UserTransaction.dart';
+import 'package:felloapp/core/model/daily_pick_model.dart';
+import 'package:felloapp/core/model/referral_details_model.dart';
+import 'package:felloapp/core/model/tambola_board_model.dart';
+import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
@@ -31,6 +31,19 @@ class Api {
         .doc(userId)
         .collection(Constants.SUBCOLN_USER_FCM);
     return ref.doc(Constants.DOC_USER_FCM_TOKEN).set(data);
+  }
+
+  Future<void> deleteUserClientToken(String userId) {
+    ref = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
+        .collection(Constants.SUBCOLN_USER_FCM);
+    return ref.doc(Constants.DOC_USER_FCM_TOKEN).delete();
+  }
+
+  Future<void> addKycName(String userId, Map<String, dynamic> data) {
+    final documentRef = _db.collection(Constants.COLN_USERS).doc(userId);
+    return documentRef.update(data);
   }
 
   Future<QuerySnapshot> getUserNotifications(String userId) async {
@@ -162,6 +175,15 @@ class Api {
     return ref.doc(txnId).get();
   }
 
+  Future<QuerySnapshot> getUserPrizeTransactionDocuments(String userId) {
+    final query = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
+        .collection(Constants.SUBCOLN_USER_TXNS)
+        .where('tType', isEqualTo: 'PRIZE');
+    return query.get();
+  }
+
   Future<void> updateUserTransactionDocument(
       String userId, String txnId, Map data) {
     ref = _db
@@ -288,7 +310,7 @@ class Api {
       query = query.where(UserTransaction.fldType, isEqualTo: type);
     if (subtype != null)
       query = query.where(UserTransaction.fldSubType, isEqualTo: subtype);
-    if (limit != -1 && limit > 10) query = query.limit(limit);
+    if (limit != -1 && limit > 3) query = query.limit(limit);
     query = query.orderBy(UserTransaction.fldTimestamp, descending: true);
     if (lastDocument != null) query = query.startAfterDocument(lastDocument);
     return query.get();
@@ -505,6 +527,11 @@ class Api {
     return _query.get();
   }
 
+  Future<QuerySnapshot> getPromoCardCollection() {
+    Query _query = _db.collection(Constants.COLN_PROMOS).orderBy('position');
+    return _query.get();
+  }
+
   Future<String> getFileFromDPBucketURL(String uid, String path) {
     return _storage.ref('dps/$uid/$path').getDownloadURL();
   }
@@ -599,6 +626,76 @@ class Api {
     } catch (e) {
       print(e.toString());
       return false;
+    }
+  }
+
+  Future<DocumentSnapshot> getUserFundBalance(String id) {
+    ref = _db
+        .collection(Constants.COLN_USERS)
+        .doc(id)
+        .collection(Constants.SUBCOLN_USER_WALLET);
+    return ref.doc(Constants.DOC_USER_WALLET_FUND_BALANCE).get();
+  }
+
+  //FLC
+  Future<DocumentSnapshot> getUserCoinWalletDocById(String id) {
+    ref = _db
+        .collection(Constants.COLN_USERS)
+        .doc(id)
+        .collection(Constants.SUBCOLN_USER_WALLET);
+    return ref.doc(Constants.DOC_USER_WALLET_COIN_BALANCE).get();
+  }
+
+  //Statistics
+  Future<QueryDocumentSnapshot> getStatisticsByFreqGameTypeAndCode(
+      String gameType, String freq, String code) async {
+    Query _query = _db
+        .collection(Constants.COLN_STATISTICS)
+        .where('code', isEqualTo: code)
+        .where('freq', isEqualTo: freq)
+        .where('gametype', isEqualTo: gameType);
+
+    try {
+      QuerySnapshot _querySnapshot = await _query.get();
+
+      return _querySnapshot.docs.first;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  //Winners
+  Future<QueryDocumentSnapshot> getWinnersByGameTypeFreqAndCode(
+      String gameType, String freq, String code) async {
+    Query _query = _db
+        .collection(Constants.WINNERS)
+        .where('code', isEqualTo: code)
+        .where('freq', isEqualTo: freq)
+        .where('gametype', isEqualTo: gameType);
+
+    try {
+      QuerySnapshot _querySnapshot = await _query.get();
+      return _querySnapshot.docs.first;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  //Prizes
+  Future<QueryDocumentSnapshot> getPrizesPerGamePerFreq(
+      String gameCode, String freq) async {
+    Query _query = _db
+        .collection(Constants.COLN_PRIZES)
+        .where('category', isEqualTo: gameCode)
+        .where('freq', isEqualTo: freq);
+    try {
+      QuerySnapshot _querySnapshot = await _query.get();
+      if (_querySnapshot.docs != null) {
+        logger.i("No prizes for perticular category and freq");
+      }
+      return _querySnapshot.docs?.first;
+    } catch (e) {
+      throw e;
     }
   }
 

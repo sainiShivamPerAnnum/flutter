@@ -4,18 +4,57 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
         {
-            "name": "felloapp",
+            "name": "felloapp-dev",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "debug",
-            "program": "lib/main.dart"
+            "program": "lib/main_dev.dart",
+            "args": [
+                "--flavor",
+                "dev",
+                "--debug"
+              ]
         },
         {
-            "name": "felloapp (profile mode)",
+            "name": "felloapp-prod",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "profile"
-        }
+            "program": "lib/main_prod.dart",
+            "args": [
+                "--flavor",
+                "prod",
+                "--debug"
+              ]
+        },
+        {
+            "name": "felloapp-dev-profile",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main_dev.dart",
+            "args": [
+                "--flavor",
+                "dev",
+                "--profile"
+              ]
+        },
+        {
+            "name": "felloapp-prod-profile",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main_prod.dart",
+            "args": [
+                "--flavor",
+                "prod",
+                "--profile"
+              ]
+        },
+        {
+            "name": "felloapp-release-ios",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+        },
+  
     ]
 }

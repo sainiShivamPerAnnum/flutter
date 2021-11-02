@@ -5,25 +5,29 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info/device_info.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
-import 'package:felloapp/core/model/BaseUser.dart';
-import 'package:felloapp/core/model/DailyPick.dart';
-import 'package:felloapp/core/model/FeedCard.dart';
-import 'package:felloapp/core/model/PrizeLeader.dart';
-import 'package:felloapp/core/model/ReferralDetail.dart';
-import 'package:felloapp/core/model/ReferralLeader.dart';
-import 'package:felloapp/core/model/TambolaBoard.dart';
-import 'package:felloapp/core/model/TambolaWinnersDetail.dart';
-import 'package:felloapp/core/model/TicketRequest.dart';
-import 'package:felloapp/core/model/UserAugmontDetail.dart';
-import 'package:felloapp/core/model/UserFundWallet.dart';
-import 'package:felloapp/core/model/UserIciciDetail.dart';
-import 'package:felloapp/core/model/UserTicketWallet.dart';
-import 'package:felloapp/core/model/UserTransaction.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/model/daily_pick_model.dart';
+import 'package:felloapp/core/model/feed_card_model.dart';
+import 'package:felloapp/core/model/prize_leader_model.dart';
+import 'package:felloapp/core/model/promo_cards_model.dart';
+import 'package:felloapp/core/model/referral_details_model.dart';
+import 'package:felloapp/core/model/referral_leader_model.dart';
+import 'package:felloapp/core/model/tambola_board_model.dart';
+import 'package:felloapp/core/model/tambola_winners_details.dart';
+import 'package:felloapp/core/model/ticket_request_model.dart';
+import 'package:felloapp/core/model/user_augmont_details_model.dart';
+import 'package:felloapp/core/model/user_funt_wallet_model.dart';
+import 'package:felloapp/core/model/user_icici_detail_model.dart';
+import 'package:felloapp/core/model/user_ticket_wallet_model.dart';
+import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/model/alert_model.dart';
+import 'package:felloapp/core/model/signzy_pan/signzy_login.dart';
 import 'package:felloapp/core/service/api.dart';
+import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/fail_types.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/help_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
@@ -143,7 +147,7 @@ class DBModel extends ChangeNotifier {
     notifications.addAll(announcements);
 
     notifications
-        .sort((a, b) => a.createdTime.seconds.compareTo(b.createdTime.seconds));
+        .sort((a, b) => b.createdTime.seconds.compareTo(a.createdTime.seconds));
 
     return notifications;
   }
@@ -264,8 +268,11 @@ class DBModel extends ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> getFilteredUserTransactions(
-      BaseUser user, String type, String subtype, DocumentSnapshot lastDocument,
-      [int limit = 30]) async {
+      BaseUser user,
+      String type,
+      String subtype,
+      DocumentSnapshot lastDocument,
+      int limit) async {
     Map<String, dynamic> resultTransactionsMap = Map<String, dynamic>();
     List<UserTransaction> requestedTxns = [];
     try {
@@ -357,6 +364,7 @@ class DBModel extends ChangeNotifier {
     try {
       DateTime date = new DateTime.now();
       int weekCde = date.year * 100 + BaseUtil.getWeekNumber();
+      // int weekCde = 202143;
       QuerySnapshot querySnapshot = await _api.getWeekPickByCde(weekCde);
 
       if (querySnapshot.docs.length != 1) {
@@ -440,7 +448,9 @@ class DBModel extends ChangeNotifier {
       keyIndex = 1;
     }
     QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
-        'aws-icici', Constants.activeAwsIciciStage.value(), keyIndex);
+        'aws-icici',
+        FlavorConfig.instance.values.awsIciciStage.value(),
+        keyIndex);
     if (querySnapshot != null && querySnapshot.docs.length == 1) {
       DocumentSnapshot snapshot = querySnapshot.docs[0];
       Map<String, dynamic> _doc = snapshot.data();
@@ -465,7 +475,9 @@ class DBModel extends ChangeNotifier {
       keyIndex = 1;
     }
     QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
-        'aws-augmont', Constants.activeAwsAugmontStage.value(), keyIndex);
+        'aws-augmont',
+        FlavorConfig.instance.values.awsAugmontStage.value(),
+        keyIndex);
     if (querySnapshot != null && querySnapshot.docs.length == 1) {
       DocumentSnapshot snapshot = querySnapshot.docs[0];
       Map<String, dynamic> _doc = snapshot.data();
@@ -478,10 +490,35 @@ class DBModel extends ChangeNotifier {
     return null;
   }
 
+  Future<SignzyPanLogin> getActiveSignzyPanApiKey() async {
+    int keyIndex = 1;
+    QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
+        'signzy-pan',
+        FlavorConfig.instance.values.signzyPanStage.value(),
+        keyIndex);
+    if (querySnapshot != null && querySnapshot.docs.length == 1) {
+      DocumentSnapshot snapshot = querySnapshot.docs[0];
+      Map<String, dynamic> _doc = snapshot.data();
+      if (snapshot.exists && _doc != null && _doc['apiKey'] != null) {
+        log.debug('api token:' +
+            _doc['apiKey'] +
+            '\n patronId:' +
+            _doc['channel_id']);
+        SignzyPanLogin _signzyPanLogin = SignzyPanLogin();
+        _signzyPanLogin.accessToken = _doc['apiKey'];
+        _signzyPanLogin.ttl = _doc['ttl'];
+        _signzyPanLogin.userId = _doc['channel_id'];
+        _signzyPanLogin.baseUrl = _doc['base_url'];
+        return _signzyPanLogin;
+      }
+    }
+    return null;
+  }
+
   Future<Map<String, String>> getActiveSignzyApiKey() async {
     int keyIndex = 1;
     QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
-        'signzy', Constants.activeSignzyStage.value(), keyIndex);
+        'signzy', FlavorConfig.instance.values.signzyStage.value(), keyIndex);
     if (querySnapshot != null && querySnapshot.docs.length == 1) {
       DocumentSnapshot snapshot = querySnapshot.docs[0];
       Map<String, dynamic> _doc = snapshot.data();
@@ -496,7 +533,9 @@ class DBModel extends ChangeNotifier {
   Future<Map<String, String>> getActiveFreshchatKey() async {
     int keyIndex = 1;
     QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
-        'freshchat', Constants.activeFreshchatStage.value(), keyIndex);
+        'freshchat',
+        FlavorConfig.instance.values.freshchatStage.value(),
+        keyIndex);
     if (querySnapshot != null && querySnapshot.docs.length == 1) {
       DocumentSnapshot snapshot = querySnapshot.docs[0];
       if (snapshot.exists) {
@@ -1201,6 +1240,30 @@ class DBModel extends ChangeNotifier {
               _cards.add(_card);
 
             ///bump down the 'learn' card if the user is old
+          }
+        }
+      }
+    } catch (e) {
+      log.error('Error Fetching Home cards: ${e.toString()}');
+    }
+    return _cards;
+  }
+
+  Future<List<PromoCardModel>> getPromoCards() async {
+    List<PromoCardModel> _cards = [];
+    try {
+      QuerySnapshot querySnapshot = await _api.getPromoCardCollection();
+      if (querySnapshot != null && querySnapshot.docs.length > 0) {
+        for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
+          Map<String, dynamic> _doc = documentSnapshot.data();
+          if (documentSnapshot != null &&
+              documentSnapshot.exists &&
+              _doc != null &&
+              _doc.length > 0) {
+            PromoCardModel _card =
+                PromoCardModel.fromMap(documentSnapshot.data());
+
+            if (_card != null) _cards.add(_card);
           }
         }
       }

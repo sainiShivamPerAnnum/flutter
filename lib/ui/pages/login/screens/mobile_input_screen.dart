@@ -1,9 +1,14 @@
 import 'dart:io';
 
+import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/size_config.dart';
-import 'package:felloapp/util/ui_constants.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 
 class MobileInputScreen extends StatefulWidget {
@@ -17,11 +22,14 @@ class MobileInputScreen extends StatefulWidget {
 class MobileInputScreenState extends State<MobileInputScreen> {
   final _formKey = GlobalKey<FormState>();
   final _mobileController = TextEditingController();
+  final _referralCodeController = TextEditingController();
   bool _validate = true;
   bool showAvailableMobileNos = true;
   Log log = new Log("MobileInputScreen");
   static final GlobalKey<FormFieldState<String>> _phoneFieldKey =
       GlobalKey<FormFieldState<String>>();
+  String code = "+91";
+  bool hasReferralCode = false;
 
   void showAvailablePhoneNumbers() async {
     if (Platform.isAndroid && showAvailableMobileNos) {
@@ -39,56 +47,204 @@ class MobileInputScreenState extends State<MobileInputScreen> {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Container(
       child: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            SizedBox(height: SizeConfig.blockSizeVertical * 5),
+            SvgPicture.asset(Assets.enterPhoneNumber,
+                width: SizeConfig.screenHeight * 0.16),
+            SizedBox(height: SizeConfig.blockSizeVertical * 5),
             Text(
-              "Let's get you onboarded ✅",
-              style: TextStyle(
-                  fontSize: SizeConfig.mediumTextSize, color: Colors.black54),
+              locale.obEnterMobile,
+              textAlign: TextAlign.center,
+              style: TextStyles.title4.bold,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 24,
-              ),
-              child: Text(
-                "Please share your mobile number",
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: SizeConfig.screenWidth * 0.06,
+            SizedBox(height: SizeConfig.padding12),
+            Text(
+              locale.obMobileDesc,
+              textAlign: TextAlign.center,
+              style: TextStyles.body2,
+            ),
+            SizedBox(height: SizeConfig.padding40),
+            Row(
+              children: [
+                Text(
+                  locale.obMobileLabel,
+                  textAlign: TextAlign.start,
+                  style: TextStyles.body3.colour(Colors.grey),
                 ),
-              ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 24),
-              child: Form(
-                key: _formKey,
-                child: TextFormField(
-                  key: _phoneFieldKey,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    labelText: "Mobile",
-                    prefixIcon: Icon(Icons.phone),
-                    focusColor: UiConstants.primaryColor,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+            SizedBox(height: SizeConfig.padding6),
+            // Form(
+            //   key: _formKey,
+            //   child: Container(
+            //     decoration: BoxDecoration(
+            //       border:
+            //           Border.all(color: UiConstants.primaryColor, width: 0.5),
+            //       borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+            //     ),
+            //     child: Row(
+            //       children: [
+            //         CountryCodePicker(
+            //           onChanged: (val) {
+            //             code = val.toString();
+            //             FocusScope.of(context).unfocus();
+            //           },
+            //           initialSelection: '+91',
+            //           favorite: ['+91'],
+            //           showCountryOnly: false,
+            //           showOnlyCountryWhenClosed: false,
+            //           alignLeft: false,
+            //         ),
+            //         Expanded(
+            //           child: Container(
+            //             margin: EdgeInsets.only(top: SizeConfig.padding4),
+            //             child: TextFormField(
+            //               key: _phoneFieldKey,
+            //               controller: _mobileController,
+            //               keyboardType: TextInputType.phone,
+            //               //autofocus: true,
+            //               onTap: showAvailablePhoneNumbers,
+            //               validator: (value) => _validateMobile(),
+            //               onFieldSubmitted: (v) {
+            //                 FocusScope.of(context).requestFocus(FocusNode());
+            //               },
+            // onChanged: (val) {
+            //   if (val.length == 10)
+            //     FocusScope.of(context).unfocus();
+            // },
+            //               cursorColor: UiConstants.primaryColor,
+            //               cursorWidth: 1,
+            //               cursorHeight: SizeConfig.title5,
+            //               decoration: InputDecoration(
+            //                 enabledBorder:
+            //                     OutlineInputBorder(borderSide: BorderSide.none),
+            //                 focusedBorder:
+            //                     OutlineInputBorder(borderSide: BorderSide.none),
+            //                 focusedErrorBorder:
+            //                     OutlineInputBorder(borderSide: BorderSide.none),
+            //                 errorBorder:
+            //                     OutlineInputBorder(borderSide: BorderSide.none),
+            //               ),
+            //             ),
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
+            Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  TextFormField(
+                    key: _phoneFieldKey,
+                    keyboardType: TextInputType.phone,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                    maxLength: 10,
+                    cursorColor: UiConstants.primaryColor,
+                    style: TextStyles.body3.colour(Colors.black),
+                    decoration: InputDecoration(
+                      prefixIcon: Padding(
+                        padding: EdgeInsets.all(SizeConfig.padding4),
+                        child: Image.asset(
+                          Assets.indFlag,
+                          width: SizeConfig.padding8,
+                        ),
+                      ),
+                      prefixText: "+91 ",
+                      prefixStyle: TextStyles.body3.colour(Colors.black),
                     ),
+                    onChanged: (val) {
+                      if (val.length == 10) FocusScope.of(context).unfocus();
+                    },
+                    onTap: showAvailablePhoneNumbers,
+                    controller: _mobileController,
+                    validator: (value) => _validateMobile(),
+                    onFieldSubmitted: (v) {
+                      FocusScope.of(context).requestFocus(FocusNode());
+                    },
                   ),
-                  onTap: showAvailablePhoneNumbers,
-                  controller: _mobileController,
-                  validator: (value) => _validateMobile(),
-                  onFieldSubmitted: (v) {
-                    FocusScope.of(context).requestFocus(FocusNode());
-                  },
-                ),
+                  SizedBox(
+                    height: SizeConfig.blockSizeVertical,
+                  ),
+                  hasReferralCode
+                      ? TextFormField(
+                          controller: _referralCodeController,
+                          //maxLength: 10,
+                          decoration: InputDecoration(
+                            hintText: "Enter your referral code here",
+                            hintStyle: TextStyles.body3.colour(Colors.grey),
+                          ),
+                          validator: (val) {
+                            if (val.trim().length == 0 || val == null)
+                              return null;
+                            if (val.trim().length < 3 || val.trim().length > 10)
+                              return "Invalid referral code";
+                            return null;
+                          })
+                      : TextButton(
+                          onPressed: () {
+                            setState(() {
+                              hasReferralCode = true;
+                            });
+                          },
+                          child: Text(
+                            "Have a referral code?",
+                            style: TextStyles.body2.bold
+                                .colour(UiConstants.primaryColor),
+                          ),
+                        ),
+                  if (hasReferralCode)
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "Referral codes are case-sensitive",
+                        textAlign: TextAlign.start,
+                        style: TextStyles.body4.colour(Colors.black54),
+                      ),
+                    ),
+                ],
               ),
             ),
-            const SizedBox(height: 24),
-            const Text(
-                "For verification purposes, an OTP shall be sent to this number."),
+            SizedBox(height: SizeConfig.blockSizeVertical * 4),
+            // Container(
+            //   width: SizeConfig.screenWidth,
+            //   padding: EdgeInsets.symmetric(
+            //       horizontal: SizeConfig.screenWidth * 0.1),
+            //   child: Column(
+            //     children: [
+            //       Text(locale.splashSecureText),
+            //       SizedBox(height: 8),
+            //       Row(
+            //         mainAxisAlignment: MainAxisAlignment.center,
+            //         children: [
+            //           Image.asset(Assets.augmontLogo,
+            //               color: Colors.grey,
+            //               width: SizeConfig.screenWidth * 0.2),
+            //           SizedBox(width: 16),
+            //           Image.asset(Assets.sebiGraphic,
+            //               color: Colors.grey,
+            //               width: SizeConfig.screenWidth * 0.04),
+            //           SizedBox(width: 16),
+            //           Image.asset(Assets.amfiGraphic,
+            //               color: Colors.grey,
+            //               width: SizeConfig.screenWidth * 0.04)
+            //         ],
+            //       )
+            //     ],
+            //   ),
+            // ),
+            SizedBox(
+                height: SizeConfig.screenHeight * 0.2 +
+                    MediaQuery.of(context).padding.bottom)
           ],
           //)
         ),
@@ -113,6 +269,8 @@ class MobileInputScreenState extends State<MobileInputScreen> {
   }
 
   String getMobile() => _mobileController.text;
+
+  String getReferralCode() => _referralCodeController.text;
 
   get formKey => _formKey;
 }

@@ -1,9 +1,28 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/util/size_config.dart';
-import 'package:felloapp/util/ui_constants.dart';
+import 'package:felloapp/ui/pages/static/fello_appbar.dart';
+import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+
+enum UsernameResponse { AVAILABLE, UNAVAILABLE, INVALID, EMPTY, SHORT, LONG }
+
+class LowerCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+      text: newValue.text.toLowerCase(),
+      selection: newValue.selection,
+    );
+  }
+}
 
 class Username extends StatefulWidget {
   static const int index = 3;
@@ -19,13 +38,29 @@ class UsernameState extends State<Username> {
   BaseUtil baseProvider;
   DBModel dbProvider;
   String username = "";
-
+  FocusNode focusNode;
+  bool enabled = true;
   final regex = RegExp(r"^(?!\.)(?!.*\.$)(?!.*?\.\.)[a-z0-9.]{4,20}$");
   bool isValid;
   bool isLoading = false;
   bool isUpdating = false;
   bool isUpdated = false;
   final _formKey = GlobalKey<FormState>();
+  UsernameResponse response;
+
+  // @override
+  // void initState() {
+  //   focusNode = new FocusNode();
+  //   focusNode.addListener(
+  //       () => print('focusNode updated: hasFocus: ${focusNode.hasFocus}'));
+  //   super.initState();
+  // }
+
+  @override
+  void dispose() {
+    focusNode?.dispose();
+    super.dispose();
+  }
 
   Future<bool> validate() async {
     username = usernameController.text.trim();
@@ -35,16 +70,22 @@ class UsernameState extends State<Username> {
     if (username == "" || username == null)
       setState(() {
         isValid = null;
+        response = UsernameResponse.EMPTY;
       });
     else if (regex.hasMatch(username)) {
       bool res = await dbProvider
           .checkIfUsernameIsAvailable(username.replaceAll('.', '@'));
       setState(() {
         isValid = res;
+        if (res)
+          response = UsernameResponse.AVAILABLE;
+        else
+          response = UsernameResponse.UNAVAILABLE;
       });
     } else {
       setState(() {
         isValid = false;
+        response = UsernameResponse.INVALID;
       });
     }
     setState(() {
@@ -54,6 +95,7 @@ class UsernameState extends State<Username> {
   }
 
   Widget showResult() {
+    print(response);
     if (isLoading) {
       return Container(
         height: 16,
@@ -62,20 +104,61 @@ class UsernameState extends State<Username> {
           strokeWidth: 2,
         ),
       );
-    } else if (isValid == true)
-      return Text("${usernameController.text.trim()} is available",
-          style: TextStyle(
-              color: UiConstants.primaryColor, fontWeight: FontWeight.w500));
-    else if (isValid == false)
-      return Text("${usernameController.text.trim()} is not available",
-          style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500));
+    } else if (response == UsernameResponse.EMPTY)
+      return FittedBox(
+        child: Text("username cannot be empty",
+            style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w500)),
+      );
+    else if (response == UsernameResponse.AVAILABLE)
+      return FittedBox(
+        child: Text("@${usernameController.text.trim()} is available",
+            style: TextStyle(
+                color: UiConstants.primaryColor, fontWeight: FontWeight.w500)),
+      );
+    else if (response == UsernameResponse.UNAVAILABLE)
+      return FittedBox(
+        child: Text("@${usernameController.text.trim()} is not available",
+            style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500)),
+      );
+    else if (response == UsernameResponse.INVALID) {
+      if (usernameController.text.trim().length < 5)
+        return FittedBox(
+          child: Text("please enter a username with more than 4 characters.",
+              maxLines: 2,
+              style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500)),
+        );
+      else if (usernameController.text.trim().length > 20)
+        return FittedBox(
+          child: Text("please enter a username with less than 20 characters.",
+              maxLines: 2,
+              style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500)),
+        );
+      else
+        return FittedBox(
+          child: Text("@${usernameController.text.trim()} is invalid",
+              maxLines: 2,
+              style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500)),
+        );
+    }
+
     return SizedBox(
       height: 16,
     );
   }
 
   @override
+  void didChangeDependencies() {
+    if (mounted)
+      Future.delayed(Duration(seconds: 2), () {
+        if (mounted) FocusScope.of(context).requestFocus(focusNode);
+      });
+
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     return Container(
@@ -83,27 +166,33 @@ class UsernameState extends State<Username> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: Text(
-                "Pick a username",
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: SizeConfig.screenWidth * 0.06,
+            SizedBox(height: SizeConfig.blockSizeVertical * 5),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset(
+                  Assets.username,
+                  width: SizeConfig.screenWidth * 0.28,
                 ),
-              ),
+              ],
             ),
-            const Text("This is going to be your unique ID✨"),
-            const SizedBox(
-              height: 16,
-            ),
+            SizedBox(height: SizeConfig.blockSizeVertical * 5),
+            TextFieldLabel(locale.obUsernameLabel),
+            SizedBox(height: SizeConfig.padding6),
             Form(
               key: _formKey,
               child: Container(
                 child: TextFormField(
+                  focusNode: focusNode,
                   controller: usernameController,
+                  inputFormatters: [
+                    LowerCaseTextFormatter(),
+                    //FilteringTextInputFormatter.allow(regex)
+                  ],
+                  textCapitalization: TextCapitalization.none,
                   autofocus: true,
-                  cursorColor: Colors.black,
+                  enabled: enabled,
+                  cursorColor: UiConstants.primaryColor,
                   keyboardType: TextInputType.text,
                   validator: (val) {
                     if (val == null || val.isEmpty)
@@ -111,10 +200,11 @@ class UsernameState extends State<Username> {
                     return null;
                   },
                   decoration: InputDecoration(
-                    hintText: "username",
+                    hintText: locale.obUsernameHint,
                     prefixIcon: Icon(
                       Icons.alternate_email_rounded,
                       size: 20,
+                      color: UiConstants.primaryColor,
                     ),
                   ),
                   onChanged: (value) {
@@ -132,30 +222,24 @@ class UsernameState extends State<Username> {
               height: 40,
               child: showResult(),
             ),
-            SizedBox(height: SizeConfig.screenHeight * .1),
-            const Text(
-              "Rules for a valid username",
-              style: TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 16,
-              ),
+            //Text(responseText),
+            SizedBox(height: SizeConfig.padding40),
+            Text(
+              locale.obUsernameRulesTitle,
+              style: TextStyles.title4.bold,
             ),
-            const SizedBox(
-              height: 8,
+            SizedBox(
+              height: SizeConfig.padding16,
             ),
-            const RuleTile(
-                rule: "• must be more than 4 and less than 20 letters"),
-            const RuleTile(
-                rule:
-                    "• only lowercase alphabets, numbers and dot(.) symbols allowed."),
-            const RuleTile(
-                rule:
-                    "• consecutive dot(.) are not allowed. example: abc..xyz is an invalid username"),
-            const RuleTile(
-                rule:
-                    "• dot(.) are not allowed at the beginning and at the end example: .abc , abcd. are invalid usernames "),
-            const SizedBox(
-              height: kToolbarHeight * 2,
+            RuleTile(rule: locale.obUsernameRule1),
+            RuleTile(rule: locale.obUsernameRule2),
+            RuleTile(rule: locale.obUsernameRule3),
+            RuleTile(rule: locale.obUsernameRule4),
+            SizedBox(
+              height: SizeConfig.screenHeight * 0.3,
+            ),
+            SizedBox(
+              height: SizeConfig.viewInsets.bottom,
             )
           ],
         ),
@@ -174,10 +258,20 @@ class RuleTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Text(
-        rule,
-        style: TextStyle(color: Colors.black26),
+      padding: EdgeInsets.only(bottom: SizeConfig.padding16),
+      child: Row(
+        children: [
+          CircleAvatar(
+              backgroundColor: UiConstants.primaryColor,
+              radius: SizeConfig.padding4),
+          SizedBox(width: SizeConfig.padding4 * 2),
+          Expanded(
+            child: Text(
+              rule,
+              style: TextStyle(color: Colors.black26),
+            ),
+          ),
+        ],
       ),
     );
   }

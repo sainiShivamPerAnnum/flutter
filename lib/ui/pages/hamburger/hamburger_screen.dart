@@ -136,11 +136,11 @@
 //                       backButtonDispatcher.didPopRoute();
 //                       appstate.currentAction = PageAction(
 //                           state: PageState.replaceAll, page: SplashPageConfig);
-//                       baseProvider.showPositiveAlert(
+//                       BaseUtil.showPositiveAlert(
 //                           'Signed out', 'Hope to see you soon', context);
 //                     } else {
 //                       backButtonDispatcher.didPopRoute();
-//                       baseProvider.showNegativeAlert('Sign out failed',
+//                       BaseUtil.showNegativeAlert('Sign out failed',
 //                           'Couldn\'t signout. Please try again', context);
 //                       //log.error('Sign out process failed');
 //                     }
@@ -182,7 +182,7 @@
 //                         .then((flag) {
 //                       backButtonDispatcher.didPopRoute();
 //                       if (flag) {
-//                         baseProvider.showPositiveAlert('Thank You',
+//                         BaseUtil.showPositiveAlert('Thank You',
 //                             'We appreciate your feedback!', context);
 //                       }
 //                     });

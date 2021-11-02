@@ -1,8 +1,8 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/util/size_config.dart';
-import 'package:felloapp/util/ui_constants.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -167,8 +167,8 @@ class _GoldenTicketClaimDialogState extends State<GoldenTicketClaimDialog> {
                                     child: Text(
                                       widget.cashPrize != null &&
                                               widget.cashPrize > 0
-                                          ? "You've won ${widget.ticketCount} tambola tickets and ₹ ${widget.cashPrize} in prizes!"
-                                          : "You've won ${widget.ticketCount} tambola tickets!",
+                                          ? "You've won ${widget.ticketCount} Fello tokens and ₹ ${widget.cashPrize} in prizes!"
+                                          : "You've won ${widget.ticketCount} Fello tokens!",
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                           fontWeight: FontWeight.w700,

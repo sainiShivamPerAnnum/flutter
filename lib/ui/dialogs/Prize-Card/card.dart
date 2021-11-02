@@ -1,19 +1,31 @@
+//Project Imports
+//Flutter & Dart Imports
 import 'dart:io';
 import 'dart:typed_data';
+
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/model/TambolaWinnersDetail.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/model/tambola_winners_details.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/ops/http_ops.dart';
+import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/Prize-Card/fold-card.dart';
 import 'package:felloapp/ui/dialogs/share-card.dart';
-import 'package:felloapp/util/palettes.dart';
-import 'package:felloapp/util/size_config.dart';
-import 'package:felloapp/util/ui_constants.dart';
+import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
+import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/palette.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
+
+//Flutter & Dart Imports
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+//Pub Imports
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
@@ -51,6 +63,7 @@ class _TicketState extends State<FCard> {
   bool _isPrizeProcessing = false;
   bool _tChoice;
   bool _isclaimed = false;
+  UserService _userService = locator<UserService>();
 
   Widget get backCard => Container(
         decoration: BoxDecoration(
@@ -113,8 +126,8 @@ class _TicketState extends State<FCard> {
                         })
                       : AppState.backButtonDispatcher.didPopRoute();
                 } else {
-                  baseProvider.showNegativeAlert(
-                      "Please wait", "Your prize is being processed", context);
+                  BaseUtil.showNegativeAlert(
+                      "Please wait", "Your prize is being processed");
                 }
               }),
         ),
@@ -317,7 +330,7 @@ class _TicketState extends State<FCard> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      if (baseProvider.showNoInternetAlert(context)) return;
+                      if (BaseUtil.showNoInternetAlert()) return;
 
                       setState(() {
                         _isPrizeProcessing = true;
@@ -338,8 +351,8 @@ class _TicketState extends State<FCard> {
                             _isOpen = false;
                           });
                         } else {
-                          baseProvider.showNegativeAlert('Failed to send claim',
-                              'Please try again in some time', context);
+                          BaseUtil.showNegativeAlert('Failed to send claim',
+                              'Please try again in some time');
                           setState(() {
                             _isPrizeProcessing = false;
                           });
@@ -366,7 +379,7 @@ class _TicketState extends State<FCard> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      if (baseProvider.showNoInternetAlert(context)) return;
+                      if (BaseUtil.showNoInternetAlert()) return;
                       setState(() {
                         _isPrizeProcessing = true;
                       });
@@ -388,8 +401,8 @@ class _TicketState extends State<FCard> {
                             _isOpen = false;
                           });
                         } else {
-                          baseProvider.showNegativeAlert('Failed to send claim',
-                              'Please try again in some time', context);
+                          BaseUtil.showNegativeAlert('Failed to send claim',
+                              'Please try again in some time');
                           setState(() {
                             _isPrizeProcessing = false;
                           });
@@ -417,12 +430,17 @@ class _TicketState extends State<FCard> {
 
   Future<bool> _registerClaimChoice(PrizeClaimChoice choice) async {
     if (choice == PrizeClaimChoice.NA) return false;
-    bool flag = await httpProvider.registerPrizeClaim(
+    Map<String, dynamic> response = await httpProvider.registerPrizeClaim(
         baseProvider.myUser.uid, widget.unclaimedPrize, choice);
-    if (flag) baseProvider.refreshFunds();
-    if (flag) await localDBModel.savePrizeClaimChoice(choice);
-    print('Claim choice saved: $flag');
-    return flag;
+    if (response['status'] != null && response['status']) {
+      _userService.getUserFundWalletData();
+      await localDBModel.savePrizeClaimChoice(choice);
+
+      return true;
+    }else{
+      BaseUtil.showNegativeAlert('Withdrawal Failed', response['message']);
+      return false;
+    }
   }
 }
 
@@ -495,13 +513,8 @@ class _CloseCardState extends State<CloseCard> {
                           width: 3,
                         ),
                         shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: baseProvider.myUserDpUrl != null
-                              ? NetworkImage(baseProvider.myUserDpUrl)
-                              : AssetImage("images/profile.png"),
-                          fit: BoxFit.cover,
-                        ),
                       ),
+                      child: ProfileImageSE(radius: SizeConfig.padding40),
                     ),
                   ),
                   SizedBox(height: SizeConfig.blockSizeVertical * 3)
@@ -584,8 +597,8 @@ class _CloseCardState extends State<CloseCard> {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight)
             : new LinearGradient(colors: [
-                augmontGoldPalette.primaryColor,
-                augmontGoldPalette.primaryColor2,
+                FelloColorPalette.augmontFundPalette().primaryColor,
+                FelloColorPalette.augmontFundPalette().primaryColor2,
               ], begin: Alignment.topLeft, end: Alignment.bottomRight),
         borderRadius: BorderRadius.circular(15),
       ),
@@ -676,8 +689,6 @@ class _CloseCardState extends State<CloseCard> {
     );
   }
 
-  GlobalKey imageKey = GlobalKey();
-
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
@@ -734,8 +745,8 @@ class _CloseCardState extends State<CloseCard> {
         }
         AppState.backButtonDispatcher.didPopRoute();
         AppState.backButtonDispatcher.didPopRoute();
-        baseProvider.showPositiveAlert("Saved Successfulyy",
-            "Share card saved successfully to the gallery", context);
+        BaseUtil.showPositiveAlert("Saved Successfulyy",
+            "Share card saved successfully to the gallery");
       }
     } catch (e) {
       setState(() {
@@ -743,8 +754,8 @@ class _CloseCardState extends State<CloseCard> {
       });
       AppState.backButtonDispatcher.didPopRoute();
       print(e.toString());
-      baseProvider.showNegativeAlert(
-          "Task Failed", "Unable to save the picture at the moment", context);
+      BaseUtil.showNegativeAlert(
+          "Task Failed", "Unable to save the picture at the moment");
     }
   }
 

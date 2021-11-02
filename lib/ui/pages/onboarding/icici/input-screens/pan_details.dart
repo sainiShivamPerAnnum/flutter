@@ -3,7 +3,7 @@ import 'package:felloapp/ui/pages/onboarding/icici/input-elements/data_provider.
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
-import 'package:felloapp/util/ui_constants.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

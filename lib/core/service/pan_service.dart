@@ -1,13 +1,14 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/ops/http_ops.dart';
+import 'package:felloapp/core/ops/https/http_ops.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
 
 class PanService extends ChangeNotifier {
   PanService();
-
+  final _userService = locator<UserService>();
   BaseUtil baseProvider = locator<BaseUtil>();
   DBModel dbProvider = locator<DBModel>();
   HttpModel httpProvider = locator<HttpModel>();
@@ -23,14 +24,14 @@ class PanService extends ChangeNotifier {
     }
     String pan_v1;
 
-    ///check if user added their pan in base user
-    if (baseProvider.myUser.pan != null && baseProvider.myUser.pan.isNotEmpty) {
-      pan_v1 = baseProvider.myUser.pan;
-    }
+    // ///check if user added their pan in base user
+    // if (baseProvider.myUser.pan != null && baseProvider.myUser.pan.isNotEmpty) {
+    //   pan_v1 = baseProvider.myUser.pan;
+    // }
 
     ///now check if pan new version available
     Map<String, dynamic> encPan =
-        await dbProvider.getEncodedUserPan(baseProvider.myUser.uid);
+        await dbProvider.getEncodedUserPan(_userService.baseUser.uid);
     if (encPan == null) {
       log.debug('No vX PAN Number found on remote');
       return pan_v1;
@@ -62,6 +63,6 @@ class PanService extends ChangeNotifier {
 
     ///save to remote
     return await dbProvider.saveEncodedUserPan(
-        baseProvider.myUser.uid, encPan, ENC_VERSION);
+        _userService.baseUser.uid, encPan, ENC_VERSION);
   }
 }

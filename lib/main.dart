@@ -1,36 +1,66 @@
 //Flutter imports
-import 'package:felloapp/core/enums/connectivity_status.dart';
-import 'package:felloapp/core/service/connectivity_service.dart';
-import 'package:flutter/material.dart';
-
-//Pub imports
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
-import 'package:logger/logger.dart';
-
 //Project imports
+import 'package:device_preview/device_preview.dart';
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/fcm_handler.dart';
-import 'package:felloapp/core/fcm_listener.dart';
+import 'package:felloapp/core/enums/connectivity_status_enum.dart';
+import 'package:felloapp/core/enums/transaction_service_enum.dart';
+import 'package:felloapp/core/enums/user_coin_service_enum.dart';
+import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/enums/winner_service_enum.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/ops/http_ops.dart';
+import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
+import 'package:felloapp/core/service/connectivity_service.dart';
+import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
+import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/payment_service.dart';
+import 'package:felloapp/core/service/transaction_service.dart';
+import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/winners_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/back_dispatcher.dart';
 import 'package:felloapp/navigator/router/route_parser.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/credentials_stage.dart';
+import 'package:felloapp/util/flavor_config.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/ui_constants.dart';
+import 'package:felloapp/util/styles/app_theme.dart';
+//Pub imports
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:logger/logger.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:provider/provider.dart';
+
+import 'core/service/user_coin_service.dart';
 
 void main() async {
+  FlavorConfig(
+      flavor: Flavor.PROD,
+      color: Colors.deepPurpleAccent,
+      values: FlavorValues(
+          awsAugmontStage: AWSAugmontStage.DEV,
+          awsIciciStage: AWSIciciStage.PROD,
+          freshchatStage: FreshchatStage.DEV,
+          razorpayStage: RazorpayStage.DEV,
+          signzyStage: SignzyStage.PROD,
+          signzyPanStage: SignzyPanStage.PROD,
+          baseUriUS: 'us-central1-fello-d3a9c.cloudfunctions.net',
+          baseUriAsia: 'asia-south1-fello-d3a9c.cloudfunctions.net',
+          dynamicLinkPrefix: 'https://fello.in'));
+  await mainInit();
+  runApp(MyApp());
+}
+
+Future mainInit() async {
   setupLocator();
 
   final logger = locator<Logger>();
@@ -42,7 +72,6 @@ void main() async {
     logger.e(e.toString());
   }
   FirebaseMessaging.onBackgroundMessage(FcmListener.backgroundMessageHandler);
-  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -75,9 +104,9 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => locator<RazorpayModel>()),
         ChangeNotifierProvider(create: (_) => locator<AugmontModel>()),
         ChangeNotifierProvider(create: (_) => locator<BaseUtil>()),
-        ChangeNotifierProvider(create: (_) => locator<FcmListener>()),
         ChangeNotifierProvider(create: (_) => locator<FcmHandler>()),
         ChangeNotifierProvider(create: (_) => locator<PaymentService>()),
+        ChangeNotifierProvider(create: (_) => locator<TransactionService>()),
         StreamProvider<ConnectivityStatus>(
           create: (_) {
             ConnectivityService connectivityService =
@@ -89,53 +118,36 @@ class _MyAppState extends State<MyApp> {
         ),
         ChangeNotifierProvider(create: (_) => appState),
       ],
-      child: MaterialApp.router(
-        title: Constants.APP_NAME,
-        theme: _felloTheme(),
-        debugShowCheckedModeBanner: false,
-        backButtonDispatcher: backButtonDispatcher,
-        routerDelegate: delegate,
-        routeInformationParser: parser,
-      ),
-    );
-  }
-
-  ThemeData _felloTheme() {
-    return ThemeData(
-      primaryColor: UiConstants.primaryColor,
-      primarySwatch: UiConstants.kPrimaryColor,
-      visualDensity: VisualDensity.adaptivePlatformDensity,
-      textTheme: GoogleFonts.montserratTextTheme(),
-      inputDecorationTheme: InputDecorationTheme(
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-              color: UiConstants.primaryColor.withOpacity(0.3), width: 1),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        disabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey.withOpacity(0.3), width: 1),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: UiConstants.primaryColor,
-            width: 2,
+      child: PropertyChangeProvider<TransactionService,
+          TransactionServiceProperties>(
+        value: locator<TransactionService>(),
+        child:
+            PropertyChangeProvider<UserCoinService, UserCoinServiceProperties>(
+          value: locator<UserCoinService>(),
+          child: PropertyChangeProvider<UserService, UserServiceProperties>(
+            value: locator<UserService>(),
+            child:
+                PropertyChangeProvider<WinnerService, WinnerServiceProperties>(
+              value: locator<WinnerService>(),
+              child: MaterialApp.router(
+                locale: DevicePreview.locale(context), // Add the locale here
+                builder: DevicePreview.appBuilder,
+                title: Constants.APP_NAME,
+                theme: FelloTheme.lightMode(),
+                debugShowCheckedModeBanner: false,
+                backButtonDispatcher: backButtonDispatcher,
+                routerDelegate: delegate,
+                routeInformationParser: parser,
+                localizationsDelegates: [
+                  S.delegate,
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                supportedLocales: S.delegate.supportedLocales,
+              ),
+            ),
           ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.red.withOpacity(0.3),
-            width: 2,
-          ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.red.withOpacity(0.3),
-            width: 2,
-          ),
-          borderRadius: BorderRadius.circular(10),
         ),
       ),
     );

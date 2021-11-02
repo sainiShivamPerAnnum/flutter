@@ -1,7 +1,10 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/ui/elements/faq_card.dart';
+import 'package:felloapp/ui/pages/static/fello_appbar.dart';
+import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/size_config.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -34,15 +37,42 @@ class _FAQList extends State<FAQPage> {
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    List<String> faqheaders = [], faqAnswers = [];
+    faqheaders.addAll(Assets.faqHeaders);
+    faqheaders.addAll(Assets.goldFaqHeaders);
+    faqAnswers.addAll(Assets.faqAnswers);
+    faqAnswers.addAll(Assets.goldFaqAnswers);
     return new Scaffold(
-        appBar: BaseUtil.getAppBar(context, "FAQs"),
-        body: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: ListView(
-            children: [_buildFAQBody()],
+        body: HomeBackground(
+      whiteBackground: WhiteBackground(
+        height: SizeConfig.screenHeight * 0.2,
+      ),
+      child: Column(
+        children: [
+          FelloAppBar(
+            leading: FelloAppBarBackButton(),
+            title: "FAQs",
           ),
-        ));
+          Expanded(
+            child: Container(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                children: [
+                  FAQCard(
+                    faqheaders,
+                    faqAnswers,
+                  ),
+                ],
+              ),
+              //  ListView(
+              //   children: [_buildFAQBody()],
+              // ),
+            ),
+          ),
+        ],
+      ),
+    ));
   }
 
   List<Item> generateItems(int numberOfItems) {

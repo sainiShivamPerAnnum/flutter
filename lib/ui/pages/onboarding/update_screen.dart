@@ -2,13 +2,11 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/tabs/profile/profile_screen.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/size_config.dart';
-import 'package:felloapp/util/ui_constants.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -28,6 +26,7 @@ class _UpdateRequiredScreenState extends State<UpdateRequiredScreen> {
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
+    
     return Scaffold(
       body: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
         SafeArea(
@@ -135,8 +134,10 @@ class _UpdateRequiredScreenState extends State<UpdateRequiredScreen> {
       updateInfo = await InAppUpdate.checkForUpdate();
       if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
         InAppUpdate.performImmediateUpdate().catchError((err) {
-          baseProvider.showNegativeAlert('Update Error',
-              'Oops! Something went wrong while updating your app', context);
+          BaseUtil.showNegativeAlert(
+            'Update Error',
+            'Oops! Something went wrong while updating your app',
+          );
           log.error(err);
           dbProvider.logFailure(
               baseProvider.myUser.uid, FailType.AndroidInAppUpdateFailed, {
@@ -148,8 +149,8 @@ class _UpdateRequiredScreenState extends State<UpdateRequiredScreen> {
         });
       }
     } catch (e) {
-      baseProvider.showNegativeAlert('Update Error',
-          'Oops! Something went wrong while updating your app', context);
+      BaseUtil.showNegativeAlert(
+          'Update Error', 'Oops! Something went wrong while updating your app');
       log.error(e);
       dbProvider.logFailure(
           baseProvider.myUser.uid, FailType.AndroidInAppUpdateFailed, {
