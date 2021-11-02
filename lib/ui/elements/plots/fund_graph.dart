@@ -1,10 +1,11 @@
-import 'package:felloapp/core/enums/connectivity_status.dart';
+import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/ui/widgets/network_bar.dart';
+import 'package:felloapp/ui/elements/network_bar.dart';
 import 'package:felloapp/util/fail_types.dart';
-import 'package:felloapp/util/palettes.dart';
-import 'package:felloapp/util/size_config.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -42,22 +43,14 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     return _res;
   }
 
-  final List<Color> gradientColors = [
-    augmontGoldPalette.primaryColor,
-    Colors.white,
-  ];
-
   List<GoldGraphPoint> graphPoints = [];
   List<FlSpot> dataItems = [];
   AugmontModel augmontProvider;
   DBModel dbProvider;
   BaseUtil baseProvider;
   String _dataPointsState = "loading";
-  int _selectedFrequency = 3;
-
-  List<FlSpot> filteredDataItems = [];
-  double maxX = 97;
-  double minX = 0;
+  Map<int, DateTime> xAxisdata = {};
+  Map<int, double> yAxisData = {};
 
   @override
   Widget build(BuildContext context) {
@@ -71,8 +64,10 @@ class _LineChartWidgetState extends State<LineChartWidget> {
           graphPoints = value;
           for (int i = 0; i < value.length; i++) {
             dataItems.add(FlSpot(i.toDouble(), value[i].rate));
+            xAxisdata[i + 1] = graphPoints[i].timestamp;
+            yAxisData[i + 1] = graphPoints[i].rate;
           }
-          filteredDataItems = dataItems;
+          dataItems.add(FlSpot.nullSpot);
         } else {
           _dataPointsState = "error";
         }
@@ -82,10 +77,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     }
     if (_dataPointsState == "loading") {
       return Container(
-        margin: EdgeInsets.symmetric(
-          horizontal: SizeConfig.screenHeight * 0.02,
-        ),
-        height: SizeConfig.screenHeight * 0.2,
+        height: SizeConfig.screenHeight * 0.3,
         width: double.infinity,
         child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -94,7 +86,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                     textColor: Colors.black,
                   )
                 : SpinKitThreeBounce(
-                    color: augmontGoldPalette.primaryColor,
+                    color: UiConstants.primaryColor,
                     size: 30.0,
                   )),
       );
@@ -103,19 +95,22 @@ class _LineChartWidgetState extends State<LineChartWidget> {
       return Column(
         children: [
           Container(
-            height: SizeConfig.screenHeight * 0.2,
+            margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+            height: SizeConfig.screenHeight * 0.4,
             child: LineChart(
               LineChartData(
-                // minX: minX,
-                // maxX: maxX,
-                minY: 0,
+                minX: 0,
+                maxX: graphPoints.length.toDouble(),
+                minY: 3000,
                 maxY: 6000,
                 lineTouchData: LineTouchData(
                     enabled: true,
+                    handleBuiltInTouches: true,
                     touchTooltipData: LineTouchTooltipData(
                       tooltipRoundedRadius: 8,
                       fitInsideHorizontally: true,
                       fitInsideVertically: true,
+                      tooltipBgColor: Colors.white,
                       tooltipPadding:
                           EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       getTooltipItems: (lbs) {
@@ -124,7 +119,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                           return LineTooltipItem(
                               '•  ',
                               GoogleFonts.montserrat(
-                                color: augmontGoldPalette.primaryColor,
+                                color: UiConstants.primaryColor,
                                 fontSize: SizeConfig.mediumTextSize,
                                 fontWeight: FontWeight.w900,
                               ),
@@ -153,25 +148,40 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                       maxContentWidth: 120,
                     )),
                 titlesData: FlTitlesData(
-                    show: false,
+                    show: true,
                     bottomTitles: SideTitles(
                       showTitles: true,
                       reservedSize: 35,
-                      getTextStyles: (value) => GoogleFonts.montserrat(
+                      getTextStyles: (ctx, value) => GoogleFonts.montserrat(
                         color: Colors.grey,
-                        fontWeight: FontWeight.bold,
                         fontSize: SizeConfig.smallTextSize,
                       ),
-                      //  getTitles: (value) => getvalue(value),
+                      getTitles: (value) {
+                        DateTime date = xAxisdata[value.toInt() + 1];
+                        return value % 15 == 0
+                            ? DateFormat('dd MMM\nyyyy').format(date)
+                            : "";
+                      },
                     ),
-                    leftTitles: SideTitles(margin: 0)),
+                    leftTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: SizeConfig.padding32,
+                      getTextStyles: (ctx, value) =>
+                          TextStyles.body4.colour(Colors.grey),
+                      getTitles: (value) {
+                        return (value > 0 && value % 1000 == 0)
+                            ? "₹ ${value.toString().substring(0, 1)}K"
+                            : "";
+                      },
+                    )),
                 gridData: FlGridData(
                   show: true,
+                  horizontalInterval: 1000,
                   getDrawingHorizontalLine: (value) {
                     return FlLine(
-                      color: const Color(0xff37434d),
-                      strokeWidth: 0,
-                    );
+                        color: UiConstants.primaryColor,
+                        strokeWidth: 0.3,
+                        dashArray: [10, 10]);
                   },
                 ),
                 borderData: FlBorderData(
@@ -179,122 +189,20 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                 ),
                 lineBarsData: [
                   LineChartBarData(
-                    spots: filteredDataItems,
-                    isCurved: true,
-                    isStrokeCapRound: false,
-                    colors: gradientColors,
-                    gradientFrom: Offset(SizeConfig.screenWidth * 0.5, 0),
-                    gradientTo: Offset(
-                        SizeConfig.screenWidth * 0.5, SizeConfig.screenHeight),
-                    barWidth: 2,
-                    dotData: FlDotData(
+                      spots: dataItems,
+                      isCurved: true,
+                      isStrokeCapRound: false,
+                      colors: [UiConstants.primaryColor],
+                      barWidth: 2,
+                      dotData: FlDotData(
                         show: false,
-                        getDotPainter: (spot, d, data, i) {
-                          return FlDotCirclePainter(
-                            radius: 1,
-                            color: augmontGoldPalette.primaryColor,
-                            strokeColor: Colors.red,
-                            strokeWidth: 2,
-                          );
-                        },
-                        checkToShowDot: (spot, data) {
-                          return true;
-                        }),
-                    belowBarData: BarAreaData(
-                      show: true,
-                      gradientColorStops: [0.6, 1],
-                      gradientFrom: Offset(0.5, 0),
-                      gradientTo: Offset(0.5, 1),
-                      colors: gradientColors
-                          .map((color) => color.withOpacity(0.2))
-                          .toList(),
-                    ),
-                  ),
+                      )),
                 ],
               ),
             ),
           ),
-          Container(
-            margin: EdgeInsets.symmetric(
-                horizontal: SizeConfig.blockSizeHorizontal * 5),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: List.generate(
-                4,
-                (index) => GestureDetector(
-                  onTap: () => getSplitedChartData(index),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        width: index == _selectedFrequency ? 0 : 1,
-                        color: Colors.black45.withOpacity(0.1),
-                      ),
-                      borderRadius: BorderRadius.circular(6),
-                      color: index == _selectedFrequency
-                          ? augmontGoldPalette.primaryColor
-                          : Colors.transparent,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        segmentList[index],
-                        style: TextStyle(
-                          fontWeight: index == _selectedFrequency
-                              ? FontWeight.w700
-                              : FontWeight.w300,
-                          fontSize: SizeConfig.mediumTextSize,
-                          color: index == _selectedFrequency
-                              ? Colors.white
-                              : Colors.black45,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          )
         ],
       );
-    }
-  }
-
-  List<String> segmentList = ['3M', '6M', '1Y', '3Y'];
-  getSplitedChartData(int index) {
-    switch (index) {
-      case 0:
-        setState(() {
-          _selectedFrequency = 0;
-          filteredDataItems = dataItems.sublist(dataItems.length - 9);
-          maxX = 95;
-          minX = 87;
-        });
-        break;
-      case 1:
-        setState(() {
-          _selectedFrequency = 1;
-          filteredDataItems = dataItems.sublist(dataItems.length - 18);
-          maxX = 95;
-          minX = 78;
-        });
-        break;
-      case 2:
-        setState(() {
-          _selectedFrequency = 2;
-          filteredDataItems = dataItems.sublist(dataItems.length - 36);
-          maxX = 95;
-          minX = 60;
-        });
-        break;
-      case 3:
-        setState(() {
-          _selectedFrequency = 3;
-          filteredDataItems = dataItems;
-          maxX = 97;
-          minX = 0;
-        });
-        break;
     }
   }
 
@@ -303,23 +211,4 @@ class _LineChartWidgetState extends State<LineChartWidget> {
         graphPoints.firstWhere((element) => element.rate == lbs.y).timestamp;
     return DateFormat('dd MMM, yyyy').format(time);
   }
-
-  // getvalue(double value) {
-  //   switch (_selectedFrequency) {
-  //     case 3:
-  //       if (value % 2 == 0)
-  //         return value.toString();
-  //       else
-  //         return '';
-  //       break;
-  //     case 4:
-  //       if (value % 3 == 0)
-  //         return value.toString();
-  //       else
-  //         return '';
-  //       break;
-  //     default:
-  //       return value.toString();
-  //   }
-  // }
 }

@@ -1,4 +1,5 @@
-import 'package:felloapp/util/ui_constants.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 Future<dynamic> showErrorDialog(
@@ -7,7 +8,7 @@ Future<dynamic> showErrorDialog(
     context: context,
     builder: (ctx) => AlertDialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(UiConstants.padding),
+        borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
       ),
       title: Text(title),
       content: Text(content),

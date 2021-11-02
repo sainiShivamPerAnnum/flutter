@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
-import 'package:felloapp/core/model/UserTransaction.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/modals/octfest_info_modal.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/size_config.dart';
-import 'package:felloapp/util/ui_constants.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -80,13 +81,15 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
     if (type == UserTransaction.TRAN_SUBTYPE_ICICI) {
       return "ICICI Prudential Fund";
     } else if (type == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD) {
-      return "Augmont Digital Gold";
+      return "Digital Gold";
     } else if (type == UserTransaction.TRAN_SUBTYPE_TAMBOLA_WIN) {
       return "Tambola Win";
     } else if (type == UserTransaction.TRAN_SUBTYPE_REF_BONUS) {
       return "Referral Bonus";
     } else if (type == UserTransaction.TRAN_SUBTYPE_GLDN_TCK) {
       return "Golden Ticket";
+    } else if (type == UserTransaction.TRAN_SUBTYPE_REWARD_REDEEM) {
+      return "Rewards Redeemed";
     }
     return 'Fello Rewards';
   }
@@ -208,7 +211,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                   UiConstants.primaryColor),
                               referralTile(
                                   'Gold Purchased:',
-                                  '${_getAugmontGoldGrams(widget._transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm] ?? 'N/A')} grams',
+                                  '${_getAugmontGoldGrams(BaseUtil.toDouble(widget._transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm]) ?? 'N/A')} grams',
                                   UiConstants.primaryColor)
                             ],
                           )
@@ -226,23 +229,23 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                               ),
                               referralTile(
                                 'Gold Sold:',
-                                '${_getAugmontGoldGrams(widget._transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm] ?? 'N/A')} grams',
+                                '${_getAugmontGoldGrams(BaseUtil.toDouble(widget._transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm]) ?? 'N/A')} grams',
                                 Colors.redAccent.withOpacity(0.6),
                               )
                             ],
                           )
                         : Container(),
-                    (widget._transaction.type !=
-                            UserTransaction.TRAN_TYPE_WITHDRAW)
-                        ? referralTileWide(
-                            'Tickets Added:',
-                            '${widget._transaction.ticketUpCount ?? 'Unavailable'}',
-                            UiConstants.primaryColor)
-                        : referralTileWide(
-                            'Tickets Reduced:',
-                            '${widget._transaction.ticketUpCount ?? 'Unavailable'}',
-                            Colors.redAccent.withOpacity(0.6),
-                          ),
+                    // (widget._transaction.type !=
+                    //         UserTransaction.TRAN_TYPE_WITHDRAW)
+                    //     ? referralTileWide(
+                    //         'Tickets Added:',
+                    //         '${widget._transaction.ticketUpCount ?? 'Unavailable'}',
+                    //         UiConstants.primaryColor)
+                    //     : referralTileWide(
+                    //         'Tickets Reduced:',
+                    //         '${widget._transaction.ticketUpCount ?? 'Unavailable'}',
+                    //         Colors.redAccent.withOpacity(0.6),
+                    //       ),
                     (widget._transaction.subType ==
                             UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD)
                         ? referralTileWide(
@@ -300,17 +303,15 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                             if (generatedPdfFilePath != null) {
                               OpenFile.open(generatedPdfFilePath);
                             } else {
-                              baseProvider.showNegativeAlert(
+                              BaseUtil.showNegativeAlert(
                                   'Invoice could\'nt be loaded',
-                                  'Please try again in some time',
-                                  context);
+                                  'Please try again in some time');
                             }
                           });
                         } else {
-                          baseProvider.showNegativeAlert(
+                          BaseUtil.showNegativeAlert(
                               'Invoice could\'nt be loaded',
-                              'Please try again in some time',
-                              context);
+                              'Please try again in some time');
                         }
                       },
                     ),
@@ -395,10 +396,10 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                     end: Duration.zero),
                                 onEnd: () {
                                   print('Timer ended');
-                                  baseProvider.showNegativeAlert(
-                                      "Offer Closed",
-                                      "Stay tuned for more such fun offers!",
-                                      context);
+                                  BaseUtil.showNegativeAlert(
+                                    "Offer Closed",
+                                    "Stay tuned for more such fun offers!",
+                                  );
                                   AppState.backButtonDispatcher.didPopRoute();
                                 },
                                 builder: (BuildContext context, Duration value,

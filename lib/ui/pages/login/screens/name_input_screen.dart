@@ -1,17 +1,26 @@
+//Project Imports
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/ops/https/http_ops.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/static/fello_appbar.dart';
+import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/augmont_state_list.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
+
+//Dart and Flutter Imports
 import 'dart:typed_data';
 import 'dart:ui';
-
-import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/ops/http_ops.dart';
-import 'package:felloapp/main.dart';
-import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/size_config.dart';
-import 'package:felloapp/util/ui_constants.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+//Pub Imports
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
@@ -32,7 +41,7 @@ class NameInputScreenState extends State<NameInputScreen> {
   String _name;
   String _email;
   String _age;
-  bool _isInvested = null;
+  bool _isInvested = true;
   bool _isInitialized = false;
   bool _validate = true;
   int gen = null;
@@ -43,6 +52,7 @@ class NameInputScreenState extends State<NameInputScreen> {
   TextEditingController _monthFieldController;
   TextEditingController _yearFieldController;
   String dateInputError = "";
+  static String stateChosenValue;
 
   HttpModel httpProvider;
   BaseUtil authProvider;
@@ -55,84 +65,22 @@ class NameInputScreenState extends State<NameInputScreen> {
 
   bool _isSigningIn = false;
   bool _isContinuedWithGoogle = false;
-  bool _emailEnabled = false;
+  bool _emailEnabled = true;
   String emailText = "Email";
-  bool isEmailEntered = false;
+  bool isEmailEntered = true;
   bool isUploaded = false;
 
   showEmailOptions() {
     AppState.screenStack.add(ScreenItem.dialog);
+    baseProvider.isGoogleSignInProgress = false;
     showModalBottomSheet(
+        isDismissible: baseProvider.isGoogleSignInProgress ? false : true,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         context: context,
         builder: (ctx) {
-          return WillPopScope(
-            onWillPop: () async {
-              AppState.backButtonDispatcher.didPopRoute();
-              return true;
-            },
-            child: Wrap(
-              children: [
-                Container(
-                  decoration: BoxDecoration(),
-                  padding: EdgeInsets.all(
-                    SizeConfig.blockSizeHorizontal * 5,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Choose an email option",
-                        style: TextStyle(
-                          color: Colors.black54,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 24,
-                        ),
-                      ),
-                      Divider(
-                        height: 32,
-                        thickness: 2,
-                      ),
-                      ListTile(
-                        leading: SvgPicture.asset(
-                          "images/svgs/google.svg",
-                          height: 24,
-                          width: 24,
-                        ),
-                        title: Text("Continue with Google"),
-                        onTap: continueWithGoogle,
-                      ),
-                      Divider(),
-                      ListTile(
-                        leading: Icon(
-                          Icons.alternate_email,
-                          color: UiConstants.primaryColor,
-                        ),
-                        title: Text("Use another email"),
-                        subtitle: Text(
-                          "this option requires an extra step",
-                          style: TextStyle(
-                            fontSize: SizeConfig.smallTextSize * 1.3,
-                            color: Colors.red[300],
-                          ),
-                        ),
-                        onTap: () {
-                          setState(() {
-                            isEmailEntered = true;
-                            _emailEnabled = true;
-                          });
-                          Navigator.pop(context);
-                        },
-                      ),
-                      SizedBox(
-                        height: 24,
-                      )
-                    ],
-                  ),
-                  width: double.infinity,
-                ),
-              ],
-            ),
+          return SignInOptions(
+            onEmailSignIn: continueWithEmail,
+            onGoogleSignIn: continueWithGoogle,
           );
         });
   }
@@ -161,7 +109,6 @@ class NameInputScreenState extends State<NameInputScreen> {
             var res = await uploadTask;
             String url = await res.ref.getDownloadURL();
             if (url != null) {
-              isUploaded = true;
               baseProvider.isProfilePictureUpdated = true;
               baseProvider.setDisplayPictureUrl(url);
               setState(() {
@@ -169,29 +116,45 @@ class NameInputScreenState extends State<NameInputScreen> {
                 isEmailEntered = true;
                 _isContinuedWithGoogle = true;
                 emailText = googleUser.email;
+                baseProvider.isGoogleSignInProgress = false;
               });
             } else {
-              baseProvider.showNegativeAlert(
-                  "Error getting profile picture", "Please try again", context);
+              baseProvider.isGoogleSignInProgress = false;
+              BaseUtil.showNegativeAlert(
+                  "Error getting profile picture", "Please try again");
             }
           } catch (e) {
-            baseProvider.showNegativeAlert(
-                "Error uploading profile picture", "Please try again", context);
+            baseProvider.isGoogleSignInProgress = false;
+            BaseUtil.showNegativeAlert(
+                "Error uploading profile picture", "Please try again");
           }
-          Navigator.pop(context);
+          AppState.backButtonDispatcher.didPopRoute();
         } else {
-          baseProvider.showNegativeAlert("Email already registered",
-              "Please try with another email", context);
+          baseProvider.isGoogleSignInProgress = false;
+          BaseUtil.showNegativeAlert(
+              "Email already registered", "Please try with another email");
         }
       } else {
-        baseProvider.showNegativeAlert("No account selected",
-            "Please choose an account from the list", context);
+        setState(() {
+          baseProvider.isGoogleSignInProgress = false;
+        });
+        BaseUtil.showNegativeAlert(
+            "No account selected", "Please choose an account from the list");
       }
     } catch (e) {
       print(e.toString());
-      baseProvider.showNegativeAlert(
-          "Unable to verify", "Please try a different method", context);
+      baseProvider.isGoogleSignInProgress = false;
+      BaseUtil.showNegativeAlert(
+          "Unable to verify", "Please try a different method");
     }
+  }
+
+  continueWithEmail() {
+    setState(() {
+      isEmailEntered = true;
+      _emailEnabled = true;
+    });
+    AppState.backButtonDispatcher.didPopRoute();
   }
 
   void _showAndroidDatePicker() async {
@@ -214,6 +177,7 @@ class NameInputScreenState extends State<NameInputScreen> {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     httpProvider = Provider.of<HttpModel>(context, listen: false);
     if (!_isInitialized) {
@@ -232,350 +196,425 @@ class NameInputScreenState extends State<NameInputScreen> {
       _yearFieldController = new TextEditingController();
     }
     return Container(
-      child: ListView(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 16),
-            child: Text(
-              "Tell us a bit about yourself",
-              style: TextStyle(
-                fontWeight: FontWeight.w800,
-                fontSize: SizeConfig.screenWidth * 0.06,
+      child: Form(
+        key: _formKey,
+        child: ListView(
+          padding:
+              EdgeInsets.symmetric(vertical: SizeConfig.pageHorizontalMargins),
+          shrinkWrap: true,
+          // crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            TextFieldLabel(locale.obEmailLabel),
+            _emailEnabled
+                ? TextFormField(
+                    controller: _emailFieldController,
+                    keyboardType: TextInputType.emailAddress,
+                    autofocus: true,
+                    decoration: InputDecoration(
+                      hintText: locale.obEmailHint,
+                      prefixIcon: Icon(
+                        Icons.email,
+                        size: 20,
+                        color: UiConstants.primaryColor,
+                      ),
+                      focusColor: UiConstants.primaryColor,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    validator: (value) {
+                      return (value != null &&
+                              value.isNotEmpty &&
+                              _emailRegex.hasMatch(value))
+                          ? null
+                          : 'Please enter a valid email';
+                    },
+                  )
+                : InkWell(
+                    onTap: _isContinuedWithGoogle ? () {} : showEmailOptions,
+                    child: Container(
+                      height: 60,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: UiConstants.primaryColor.withOpacity(0.3),
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      alignment: Alignment.centerLeft,
+                      child: Row(
+                        children: [
+                          Icon(Icons.email,
+                              size: 20,
+                              color: _isContinuedWithGoogle
+                                  ? UiConstants.primaryColor
+                                  : Colors.grey),
+                          SizedBox(width: 12),
+                          Text(
+                            emailText,
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                          Spacer(),
+                          emailText != "Email"
+                              ? Icon(
+                                  Icons.verified,
+                                  size: SizeConfig.blockSizeVertical * 2.4,
+                                  color: UiConstants.primaryColor,
+                                )
+                              : SizedBox()
+                        ],
+                      ),
+                    ),
+                  ),
+            TextFieldLabel(locale.obNameLabel),
+            TextFormField(
+              cursorColor: UiConstants.primaryColor,
+              controller: _nameFieldController,
+              keyboardType: TextInputType.text,
+              decoration: InputDecoration(
+                hintText: locale.obNameHint,
+                prefixIcon: Icon(
+                  Icons.person,
+                  size: 20,
+                  color: UiConstants.primaryColor,
+                ),
+              ),
+              autofocus: false,
+              validator: (value) {
+                return (value != null && value.isNotEmpty)
+                    ? null
+                    : 'Please enter your name';
+              },
+            ),
+            TextFieldLabel(locale.obGenderLabel),
+            Container(
+              padding: EdgeInsets.all(5),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: UiConstants.primaryColor.withOpacity(0.3),
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 10,
+                  ),
+                  SvgPicture.asset(
+                    Assets.gender,
+                    height: 20,
+                    color: gen == null ? Colors.grey : UiConstants.primaryColor,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton(
+                          iconEnabledColor: UiConstants.primaryColor,
+                          value: gen,
+                          hint: Text(locale.obGenderHint),
+                          items: [
+                            DropdownMenuItem(
+                              child: Text(
+                                locale.obGenderMale,
+                              ),
+                              value: 1,
+                            ),
+                            DropdownMenuItem(
+                              child: Text(
+                                locale.obGenderFemale,
+                              ),
+                              value: 0,
+                            ),
+                            DropdownMenuItem(
+                                child: Text(
+                                  locale.obGenderOthers,
+                                  style: TextStyle(),
+                                ),
+                                value: -1),
+                          ],
+                          onChanged: (value) {
+                            gen = value;
+                            //   isLoading = true;
+                            setState(() {});
+                            //   filterTransactions();
+                          }),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ),
-          Text("This is required to setup your account"),
-          SizedBox(
-            height: 24,
-          ),
-          Form(
-            key: _formKey,
-            child: Column(
-              children: <Widget>[
-                _emailEnabled
-                    ? TextFormField(
-                        controller: _emailFieldController,
-                        keyboardType: TextInputType.emailAddress,
-                        autofocus: true,
-                        decoration: InputDecoration(
-                          labelText: 'Email',
-                          prefixIcon: Icon(
-                            Icons.email,
-                            size: 20,
-                          ),
-                          focusColor: UiConstants.primaryColor,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        validator: (value) {
-                          return (value != null &&
-                                  value.isNotEmpty &&
-                                  _emailRegex.hasMatch(value))
-                              ? null
-                              : 'Please enter a valid email';
-                        },
-                      )
-                    : InkWell(
-                        onTap:
-                            _isContinuedWithGoogle ? () {} : showEmailOptions,
-                        child: Container(
-                          height: 60,
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: UiConstants.primaryColor.withOpacity(0.3),
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          alignment: Alignment.centerLeft,
-                          child: Row(
-                            children: [
-                              Icon(Icons.email,
-                                  size: 20,
-                                  color: _isContinuedWithGoogle
-                                      ? UiConstants.primaryColor
-                                      : Colors.grey),
-                              SizedBox(width: 12),
-                              Text(
-                                emailText,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                ),
-                              ),
-                              Spacer(),
-                              emailText != "Email"
-                                  ? Icon(
-                                      Icons.verified,
-                                      size: SizeConfig.blockSizeVertical * 2.4,
-                                      color: UiConstants.primaryColor,
-                                    )
-                                  : SizedBox()
-                            ],
-                          ),
-                        ),
-                      ),
-                SizedBox(
-                  height: 24,
+            TextFieldLabel(locale.obDobLabel),
+            Container(
+              padding: EdgeInsets.all(5),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: dateInputError != ""
+                      ? Colors.red
+                      : UiConstants.primaryColor.withOpacity(0.3),
                 ),
-                TextFormField(
-                  controller: _nameFieldController,
-                  keyboardType: TextInputType.text,
-                  decoration: InputDecoration(
-                    labelText: 'Name',
-                    prefixIcon: Icon(
-                      Icons.person,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: SizeConfig.blockSizeHorizontal * 5,
+                  ),
+                  DateField(
+                    controller: _dateFieldController,
+                    fieldWidth: SizeConfig.screenWidth * 0.12,
+                    labelText: "dd",
+                    maxlength: 2,
+                    validate: (String val) {
+                      if (val.isEmpty || val == null) {
+                        setState(() {
+                          dateInputError = "Date field cannot be empty";
+                        });
+                      } else if (int.tryParse(val) > 31 ||
+                          int.tryParse(val) < 1) {
+                        setState(() {
+                          dateInputError = "Invalid date";
+                        });
+                      }
+                      return null;
+                    },
+                  ),
+                  Expanded(child: Center(child: Text("/"))),
+                  DateField(
+                    controller: _monthFieldController,
+                    fieldWidth: SizeConfig.screenWidth * 0.12,
+                    labelText: "mm",
+                    maxlength: 2,
+                    validate: (String val) {
+                      if (val.isEmpty || val == null) {
+                        setState(() {
+                          dateInputError = "Date field cannot be empty";
+                        });
+                      } else if (int.tryParse(val) != null &&
+                          (int.tryParse(val) > 13 || int.tryParse(val) < 0)) {
+                        setState(() {
+                          dateInputError = "Invalid date";
+                        });
+                      }
+                      return null;
+                    },
+                  ),
+                  Expanded(child: Center(child: Text("/"))),
+                  DateField(
+                    controller: _yearFieldController,
+                    fieldWidth: SizeConfig.screenWidth * 0.16,
+                    labelText: "yyyy",
+                    maxlength: 4,
+                    validate: (String val) {
+                      if (val.isEmpty || val == null) {
+                        setState(() {
+                          dateInputError = "Date field cannot be empty";
+                        });
+                      } else if (int.tryParse(val) > DateTime.now().year ||
+                          int.tryParse(val) < 1950) {
+                        setState(() {
+                          dateInputError = "Invalid date";
+                        });
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(
+                    width: 16,
+                  ),
+                  IconButton(
+                    onPressed: _showAndroidDatePicker,
+                    icon: Icon(
+                      Icons.calendar_today,
                       size: 20,
+                      color: UiConstants.primaryColor,
                     ),
-                  ),
-                  autofocus: false,
-                  validator: (value) {
-                    return (value != null && value.isNotEmpty)
-                        ? null
-                        : 'Please enter your name';
-                  },
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  margin: EdgeInsets.only(
-                    bottom: 20,
-                    top: 5,
-                  ),
-                  padding: EdgeInsets.all(5),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: UiConstants.primaryColor.withOpacity(0.3),
-                    ),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 10,
-                      ),
-                      SvgPicture.asset(
-                        'images/svgs/gender.svg',
-                        height: 20,
-                        color: gen == null
-                            ? Colors.grey
-                            : UiConstants.primaryColor,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Expanded(
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                              iconEnabledColor: UiConstants.primaryColor,
-                              value: gen,
-                              hint: Text('Gender'),
-                              items: [
-                                DropdownMenuItem(
-                                  child: Text(
-                                    "Male",
-                                  ),
-                                  value: 1,
-                                ),
-                                DropdownMenuItem(
-                                  child: Text(
-                                    "Female",
-                                  ),
-                                  value: 0,
-                                ),
-                                DropdownMenuItem(
-                                    child: Text(
-                                      "Rather Not Say",
-                                      style: TextStyle(),
-                                    ),
-                                    value: -1),
-                              ],
-                              onChanged: (value) {
-                                gen = value;
-                                //   isLoading = true;
-                                setState(() {});
-                                //   filterTransactions();
-                              }),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.all(5),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: dateInputError != ""
-                          ? Colors.red
-                          : UiConstants.primaryColor.withOpacity(0.3),
-                    ),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: SizeConfig.blockSizeHorizontal * 5,
-                      ),
-                      DateField(
-                        controller: _dateFieldController,
-                        fieldWidth: SizeConfig.screenWidth * 0.12,
-                        labelText: "dd",
-                        maxlength: 2,
-                        validate: (String val) {
-                          if (val.isEmpty || val == null) {
-                            setState(() {
-                              dateInputError = "Date field cannot be empty";
-                            });
-                          } else if (int.tryParse(val) > 31 ||
-                              int.tryParse(val) < 1) {
-                            setState(() {
-                              dateInputError = "Invalid date";
-                            });
-                          }
-                          return null;
-                        },
-                      ),
-                      Expanded(child: Center(child: Text("/"))),
-                      DateField(
-                        controller: _monthFieldController,
-                        fieldWidth: SizeConfig.screenWidth * 0.12,
-                        labelText: "mm",
-                        maxlength: 2,
-                        validate: (String val) {
-                          if (val.isEmpty || val == null) {
-                            setState(() {
-                              dateInputError = "Date field cannot be empty";
-                            });
-                          } else if (int.tryParse(val) != null &&
-                              (int.tryParse(val) > 13 ||
-                                  int.tryParse(val) < 0)) {
-                            setState(() {
-                              dateInputError = "Invalid date";
-                            });
-                          }
-                          return null;
-                        },
-                      ),
-                      Expanded(child: Center(child: Text("/"))),
-                      DateField(
-                        controller: _yearFieldController,
-                        fieldWidth: SizeConfig.screenWidth * 0.16,
-                        labelText: "yyyy",
-                        maxlength: 4,
-                        validate: (String val) {
-                          if (val.isEmpty || val == null) {
-                            setState(() {
-                              dateInputError = "Date field cannot be empty";
-                            });
-                          } else if (int.tryParse(val) > DateTime.now().year ||
-                              int.tryParse(val) < 1950) {
-                            setState(() {
-                              dateInputError = "Invalid date";
-                            });
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(
-                        width: 16,
-                      ),
-                      IconButton(
-                        onPressed: _showAndroidDatePicker,
-                        icon: Icon(
-                          Icons.calendar_today,
-                          size: 20,
-                          color: UiConstants.primaryColor,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                if (dateInputError != "")
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        child: Text(
-                          dateInputError,
-                          textAlign: TextAlign.start,
-                          style: TextStyle(color: Colors.red),
-                        ),
-                      ),
-                    ],
-                  ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text("Have you ever invested in Mutual Funds?",
-                    style: TextStyle(
-                        color: Colors.grey[600], fontStyle: FontStyle.italic)),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    ElevatedButton(
-                      // color: (_isInvested ?? false)
-                      //     ? UiConstants.primaryColor
-                      //     : Color(0xffe9e9ea),
-                      style: ElevatedButton.styleFrom(
-                        primary: (_isInvested ?? false)
-                            ? UiConstants.primaryColor
-                            : Color(0xffe9e9ea),
-                        shadowColor: UiConstants.primaryColor.withOpacity(0.3),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _isInvested = true;
-                        });
-                      },
-                      child: Text(
-                        " YES ",
-                        style: TextStyle(
-                            color: (_isInvested ?? false)
-                                ? Colors.white
-                                : Colors.grey),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: (_isInvested ?? true)
-                            ? Color(0xffe9e9ea)
-                            : UiConstants.primaryColor,
-                        shadowColor: UiConstants.primaryColor.withOpacity(0.3),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _isInvested = false;
-                        });
-                      },
-                      child: Text(
-                        " NO ",
-                        style: TextStyle(
-                            color: (isInvested ?? true)
-                                ? Colors.grey
-                                : Colors.white),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+                  )
+                ],
+              ),
             ),
-          ),
-          SizedBox(
-            height: kToolbarHeight * 2,
-          )
-        ],
+            if (dateInputError != "")
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    child: Text(
+                      dateInputError,
+                      textAlign: TextAlign.start,
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
+                ],
+              ),
+            TextFieldLabel("State"),
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 4,
+              ),
+              decoration: BoxDecoration(
+                border: Border.all(
+                    color: UiConstants.primaryColor.withOpacity(0.5)),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: DropdownButtonFormField(
+                decoration: InputDecoration(
+                    border: InputBorder.none, enabledBorder: InputBorder.none),
+                iconEnabledColor: UiConstants.primaryColor,
+                hint: Text("Which state do you live in?"),
+                value: stateChosenValue,
+                onChanged: (String newVal) {
+                  setState(() {
+                    stateChosenValue = newVal;
+                    print(newVal);
+                  });
+                },
+                items: AugmontResources.augmontStateList
+                    .map(
+                      (e) => DropdownMenuItem(
+                        value: e["id"],
+                        child: Text(
+                          e["name"],
+                        ),
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
+            // Container(
+            //   width: SizeConfig.screenWidth,
+            //   height: SizeConfig.screenWidth * 0.115,
+            //   decoration: BoxDecoration(
+            //     color: UiConstants.primaryColor.withOpacity(0.1),
+            //     borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+            //   ),
+            //   padding: EdgeInsets.all(SizeConfig.padding2),
+            //   child: Stack(
+            //     children: [
+            //       AnimatedPositioned(
+            //         left: _isInvested ? 0 : SizeConfig.screenWidth * 0.45,
+            //         duration: Duration(milliseconds: 400),
+            //         child: Container(
+            //           height: SizeConfig.screenWidth * 0.106,
+            //           width: SizeConfig.screenWidth * 0.422,
+            //           decoration: BoxDecoration(
+            //             color: Colors.white,
+            //             borderRadius:
+            //                 BorderRadius.circular(SizeConfig.roundness12),
+            //           ),
+            //         ),
+            //       ),
+            //       Container(
+            //         width: SizeConfig.screenWidth,
+            //         height: SizeConfig.screenWidth * 0.115,
+            //         child: Row(
+            //           children: [
+            //             Expanded(
+            //               child: Center(
+            //                 child: TextButton(
+            //                   onPressed: () {
+            //                     setState(() {
+            //                       _isInvested = true;
+            //                     });
+            //                   },
+            //                   child: Text(
+            //                     "YES",
+            //                     style: TextStyles.body2.colour(
+            //                       _isInvested
+            //                           ? UiConstants.primaryColor
+            //                           : Colors.grey,
+            //                     ),
+            //                   ),
+            //                 ),
+            //               ),
+            //             ),
+            //             Expanded(
+            //               child: Center(
+            //                 child: TextButton(
+            //                   onPressed: () {
+            //                     setState(() {
+            //                       _isInvested = false;
+            //                     });
+            //                   },
+            //                   child: Text(
+            //                     "NO",
+            //                     style: TextStyles.body2.colour(
+            //                       !_isInvested
+            //                           ? UiConstants.primaryColor
+            //                           : Colors.grey,
+            //                     ),
+            //                   ),
+            //                 ),
+            //               ),
+            //             ),
+            //           ],
+            //         ),
+            //       )
+            //     ],
+            //   ),
+            // ),
+            SizedBox(height: SizeConfig.navBarHeight),
+            SizedBox(height: SizeConfig.viewInsets.bottom)
+          ],
+        ),
       ),
+    );
+  }
+
+  Row abc() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        ElevatedButton(
+          // color: (_isInvested ?? false)
+          //     ? UiConstants.primaryColor
+          //     : Color(0xffe9e9ea),
+          style: ElevatedButton.styleFrom(
+            primary: (_isInvested ?? false)
+                ? UiConstants.primaryColor
+                : Color(0xffe9e9ea),
+            shadowColor: UiConstants.primaryColor.withOpacity(0.3),
+          ),
+          onPressed: () {
+            setState(() {
+              _isInvested = true;
+            });
+          },
+          child: Text(
+            " YES ",
+            style: TextStyle(
+                color: (_isInvested ?? false) ? Colors.white : Colors.grey),
+          ),
+        ),
+        SizedBox(
+          width: 20,
+        ),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            primary: (_isInvested ?? true)
+                ? Color(0xffe9e9ea)
+                : UiConstants.primaryColor,
+            shadowColor: UiConstants.primaryColor.withOpacity(0.3),
+          ),
+          onPressed: () {
+            setState(() {
+              _isInvested = false;
+            });
+          },
+          child: Text(
+            " NO ",
+            style: TextStyle(
+                color: (isInvested ?? true) ? Colors.grey : Colors.white),
+          ),
+        ),
+      ],
     );
   }
 
@@ -622,6 +661,7 @@ class NameInputScreenState extends State<NameInputScreen> {
     _isSigningIn = val;
   }
 
+  String get state => stateChosenValue;
   get formKey => _formKey;
 
   bool isValidDate() {
@@ -719,6 +759,97 @@ class DateField extends StatelessWidget {
             letterSpacing: 2,
           ),
         ),
+      ),
+    );
+  }
+}
+
+class SignInOptions extends StatefulWidget {
+  final Function onGoogleSignIn, onEmailSignIn;
+  SignInOptions({this.onEmailSignIn, this.onGoogleSignIn});
+  @override
+  _SignInOptionsState createState() => _SignInOptionsState();
+}
+
+class _SignInOptionsState extends State<SignInOptions> {
+  @override
+  Widget build(BuildContext context) {
+    BaseUtil baseProvider = Provider.of<BaseUtil>(context);
+    return WillPopScope(
+      onWillPop: () async {
+        AppState.backButtonDispatcher.didPopRoute();
+        return true;
+      },
+      child: Wrap(
+        children: [
+          Container(
+            decoration: BoxDecoration(),
+            padding: EdgeInsets.all(
+              SizeConfig.blockSizeHorizontal * 5,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Choose an email option",
+                  style: TextStyle(
+                    color: Colors.black54,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 24,
+                  ),
+                ),
+                Divider(
+                  height: 32,
+                  thickness: 2,
+                ),
+                ListTile(
+                  leading: SvgPicture.asset(
+                    "images/svgs/google.svg",
+                    height: 24,
+                    width: 24,
+                  ),
+                  trailing: baseProvider.isGoogleSignInProgress
+                      ? Container(
+                          child: CircularProgressIndicator(),
+                        )
+                      : SizedBox(),
+                  title: Text("Continue with Google"),
+                  onTap: () {
+                    if (!baseProvider.isGoogleSignInProgress) {
+                      setState(() {
+                        baseProvider.isGoogleSignInProgress = true;
+                      });
+                      widget.onGoogleSignIn();
+                    }
+                  },
+                ),
+                Divider(),
+                ListTile(
+                    leading: Icon(
+                      Icons.alternate_email,
+                      color: UiConstants.primaryColor,
+                    ),
+                    title: Text("Use another email"),
+                    subtitle: Text(
+                      "this option requires an extra step",
+                      style: TextStyle(
+                        fontSize: SizeConfig.smallTextSize * 1.3,
+                        color: Colors.red[300],
+                      ),
+                    ),
+                    onTap: () {
+                      if (!baseProvider.isGoogleSignInProgress) {
+                        widget.onEmailSignIn();
+                      }
+                    }),
+                SizedBox(
+                  height: 24,
+                )
+              ],
+            ),
+            width: double.infinity,
+          ),
+        ],
       ),
     );
   }

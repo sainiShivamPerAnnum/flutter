@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/model/UserIciciDetail.dart';
+import 'package:felloapp/core/model/user_icici_detail_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/ui/dialogs/contact_dialog.dart';
@@ -14,14 +14,14 @@ import 'package:felloapp/ui/pages/onboarding/icici/input-screens/income_details.
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/otp_verification.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/pan_details.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/personal_details.dart';
+import 'package:felloapp/ui/pages/others/finance/icici/mf_details_page.dart';
 import 'package:intl/intl.dart';
-import '../../../tabs/finance/icici/mf_details_page.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/ui_constants.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -529,12 +529,12 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
               setState(() {});
               new Timer(const Duration(milliseconds: 1000), () {
                 Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (ctx) => MFDetailsPage(),
-                  ),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (ctx) => MFDetailsPage(),
+                //   ),
+                // );
                 //setState(() {});
               });
             });
@@ -1237,17 +1237,17 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
                                             //     .then((flag) {
                                             //   if (flag) {
                                             //     Navigator.of(context).pop();
-                                            //     baseProvider.showPositiveAlert(
+                                            //     BaseUtil.showPositiveAlert(
                                             //         'Callback placed!',
                                             //         'We\'ll contact you soon on your registered mobile',
                                             //         context);
                                             //   }
                                             // });
                                           } else {
-                                            baseProvider.showNegativeAlert(
-                                                'Unavailable',
-                                                'Callbacks are reserved for active users',
-                                                context);
+                                            BaseUtil.showNegativeAlert(
+                                              'Unavailable',
+                                              'Callbacks are reserved for active users',
+                                            );
                                           }
                                         },
                                       ));

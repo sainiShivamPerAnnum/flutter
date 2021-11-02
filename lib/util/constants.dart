@@ -4,6 +4,10 @@ class Constants {
   static const String APP_NAME = "Fello";
   static const String PAN_AES_KEY = 'felloisquitefun!';
 
+  //Game Type
+  static const String GAME_TYPE_CRICKET = "GM_CRIC2020";
+  static const String GAME_TYPE_TAMBOLA = "GM_TAMBOLA2020";
+
   //Collections
   static final String COLN_USERS = "users";
   static final String COLN_ANNOUNCEMENTS = "announcements";
@@ -17,7 +21,11 @@ class Constants {
   static final String COLN_POLLS = "polls";
   static final String COLN_LEADERBOARD = "leaderboard";
   static final String COLN_HOMECARDS = "homefeed";
+  static final String COLN_PROMOS = "promos";
   static final String COLN_EMAILOTPREQUESTS = "emailotprequests";
+  static final String COLN_STATISTICS = "statistics";
+  static final String WINNERS = "winners";
+  static final String COLN_PRIZES = "prizes";
 
   //Sub-collections
   static final String SUBCOLN_USER_FCM = "fcm";
@@ -38,6 +46,7 @@ class Constants {
   static final String DOC_USER_AUGMONT_DETAIL = "detail";
   static final String DOC_USER_WALLET_FUND_BALANCE = "fndbalance";
   static final String DOC_USER_WALLET_TICKET_BALANCE = "tckbalance";
+  static final String DOC_USER_WALLET_COIN_BALANCE = "coinbalance";
 
   static const int CORNERS_COMPLETED = 0;
   static const int ROW_ONE_COMPLETED = 1;
@@ -71,12 +80,6 @@ class Constants {
       1; //no of days to wait before withdrawal
   static const int UNLOCK_REFERRAL_AMT = 100;
   static final DateTime VERSION_2_RELEASE_DATE = DateTime(2021, 4, 1);
-
-  ///STAGES - IMPORTANT
-  static AWSIciciStage activeAwsIciciStage = AWSIciciStage.PROD;
-  static FreshchatStage activeFreshchatStage = FreshchatStage.DEV;
-  static AWSAugmontStage activeAwsAugmontStage = AWSAugmontStage.PROD;
-  static SignzyStage activeSignzyStage = SignzyStage.PROD;
-  static RazorpayStage activeRazorpayStage = RazorpayStage.PROD;
-  static SignzyPanStage activeSignzyPanStage = SignzyPanStage.PROD;
+  static final String GAME_CRICKET_URI =
+      'https://prod.freakx.in/fello/cricket-2021/';
 }

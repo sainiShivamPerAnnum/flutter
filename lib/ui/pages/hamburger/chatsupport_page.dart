@@ -1,5 +1,5 @@
-import 'package:felloapp/util/size_config.dart';
-import 'package:felloapp/util/ui_constants.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
@@ -46,8 +46,8 @@ class _ChatSupportState extends State<ChatSupport> {
       Navigator.pop(context);
     } else if (isFreshchatLoaded == "error") {
       Navigator.of(context).pop();
-      baseProvider.showNegativeAlert(
-          'Error', 'Something went wrong, please try again!', context,
+      BaseUtil.showNegativeAlert(
+          'Error', 'Something went wrong, please try again!',
           seconds: 3);
     }
     return Container(

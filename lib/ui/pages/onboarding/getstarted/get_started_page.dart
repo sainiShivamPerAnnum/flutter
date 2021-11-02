@@ -1,13 +1,19 @@
-import 'dart:async';
-
+//Project Imports
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/elements/Buttons/large_button.dart';
 import 'package:felloapp/ui/elements/custom-art/circles_with_image.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
-import 'package:felloapp/util/size_config.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+
+//Dart and Flutter Imports
+import 'dart:async';
 import 'package:flutter/material.dart';
+
+//Pub Imports
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 
@@ -19,11 +25,13 @@ class GetStartedPage extends StatefulWidget {
 class _GetStartedPageState extends State<GetStartedPage> {
   List<bool> isVisible = List<bool>.filled(4, false);
   AppState appState;
+  S FT;
   static const Duration animDuration = Duration(milliseconds: 190);
 
   @override
   Widget build(BuildContext context) {
     appState = Provider.of<AppState>(context, listen: false);
+    FT = S.of(context);
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -35,7 +43,7 @@ class _GetStartedPageState extends State<GetStartedPage> {
               child: Padding(
                 padding: EdgeInsets.only(top: SizeConfig.screenHeight * 0.05),
                 child: Text(
-                  'Game based Savings \n & Investments🎉',
+                  FT.onboardTitle,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontWeight: FontWeight.w800,
@@ -89,13 +97,13 @@ class _GetStartedPageState extends State<GetStartedPage> {
     return AnimatedContainer(
       duration: animDuration,
       width: (isVisible[3]) ? SizeConfig.screenWidth - 50 : 0,
-      child: new LargeButton(
+      child: FelloButtonLg(
         child: Text(
-          'GET STARTED',
+          FT.onboradButton,
           style:
               Theme.of(context).textTheme.button.copyWith(color: Colors.white),
         ),
-        onTap: () {
+        onPressed: () {
           Haptic.vibrate();
           appState.currentAction =
               PageAction(state: PageState.replaceAll, page: LoginPageConfig);
@@ -115,7 +123,7 @@ class _GetStartedPageState extends State<GetStartedPage> {
                   padding: EdgeInsets.all(20),
                   child: Center(
                     child: Text(
-                      Assets.getStartedDesc[0],
+                      FT.onboardText1,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -154,7 +162,7 @@ class _GetStartedPageState extends State<GetStartedPage> {
                   padding: EdgeInsets.all(20),
                   child: Center(
                     child: Text(
-                      Assets.getStartedDesc[1],
+                      FT.onboardText2,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -182,7 +190,7 @@ class _GetStartedPageState extends State<GetStartedPage> {
                   padding: EdgeInsets.only(left: 20, right: 20),
                   child: Center(
                     child: Text(
-                      Assets.getStartedDesc[2],
+                      FT.onboardText3,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontWeight: FontWeight.bold,

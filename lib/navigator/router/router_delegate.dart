@@ -1,8 +1,12 @@
+//Project Imports
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/main.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/model/referral_details_model.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/aboutus_dialog.dart';
 import 'package:felloapp/ui/dialogs/game-poll-dialog.dart';
-import 'package:felloapp/ui/dialogs/golden_ticket_claim.dart';
 import 'package:felloapp/ui/dialogs/guide_dialog.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/hamburger/chatsupport_page.dart';
@@ -10,41 +14,45 @@ import 'package:felloapp/ui/pages/hamburger/faq_page.dart';
 import 'package:felloapp/ui/pages/hamburger/referral_policy_page.dart';
 import 'package:felloapp/ui/pages/hamburger/support.dart';
 import 'package:felloapp/ui/pages/hamburger/tnc_page.dart';
-import 'package:felloapp/ui/pages/launcher_screen.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
 import 'package:felloapp/ui/pages/notifications/notifications.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/get_started_page.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_page.dart';
 import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
-import 'package:felloapp/ui/pages/root.dart';
-import 'package:felloapp/ui/pages/tabs/finance/finance_report.dart';
-import 'package:felloapp/ui/pages/tabs/games/tambola/pick_draw.dart';
-import 'package:felloapp/ui/pages/tabs/games/tambola/show_all_tickets.dart';
-import 'package:felloapp/ui/pages/tabs/games/tambola/summary_tickets_display.dart';
-import 'package:felloapp/ui/pages/tabs/games/tambola/tambola-home.dart';
-import 'package:felloapp/ui/pages/tabs/games/tambola/tambola_walkthrough.dart';
-import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_view.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_view.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/edit_augmont_bank_details.dart';
+import 'package:felloapp/ui/pages/others/finance/finance_report.dart';
+import 'package:felloapp/ui/pages/others/finance/icici/mf_details_page.dart';
+import 'package:felloapp/ui/pages/others/games/cricket/cricket_game/cricket_game_view.dart';
+import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/dailyPicksDraw/dailyPicksDraw_view.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/show_all_tickets.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/summary_tickets_display.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/tambola_game/tambola_game_view.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/tambola_walkthrough.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_result.dart';
+import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_view.dart';
+import 'package:felloapp/ui/pages/others/profile/claim_username.dart';
+import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
+import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
+import 'package:felloapp/ui/pages/others/profile/referrals/referral_history/referrals_page.dart';
+import 'package:felloapp/ui/pages/others/profile/transactions_history/transactions_history_view.dart';
+import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_view.dart';
+import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_view.dart';
+import 'package:felloapp/ui/pages/others/profile/verify_email.dart';
+import 'package:felloapp/ui/pages/root/root_view.dart';
+import 'package:felloapp/ui/pages/splash/splash_view.dart';
+import 'package:felloapp/ui/pages/static/transactions_view.dart';
 import 'package:felloapp/util/locator.dart';
-import '../../ui/pages/tabs/finance/augmont/augmont-details.dart';
-import '../../ui/pages/tabs/finance/augmont/edit_augmont_bank_details.dart';
-import 'package:felloapp/ui/pages/tabs/finance/finance_report.dart';
-import '../../ui/pages/tabs/finance/icici/mf_details_page.dart';
-import 'package:felloapp/ui/pages/tabs/games/tambola/weekly_result.dart';
-import 'package:felloapp/ui/pages/tabs/profile/claim_username.dart';
-import 'package:felloapp/ui/pages/tabs/profile/referrals_page.dart';
-import 'package:felloapp/ui/pages/tabs/profile/transactions.dart';
-import 'package:felloapp/ui/pages/tabs/profile/user_profile_details.dart';
-import 'package:felloapp/ui/pages/tabs/profile/verify_email.dart';
+
 import 'package:felloapp/util/assets.dart';
+
+//Flutter Imports
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import '../../ui/pages/tabs/finance/augmont/augmont-details.dart';
-import '../../ui/pages/tabs/finance/augmont/edit_augmont_bank_details.dart';
-import '../../ui/pages/tabs/finance/icici/mf_details_page.dart';
-import '../app_state.dart';
-import 'ui_pages.dart';
 
 class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
@@ -136,6 +144,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     _pages.add(
       _createPage(child, pageConfig),
     );
+    //notifyListeners();
   }
 
   void addPage(PageConfiguration pageConfig) {
@@ -146,7 +155,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     if (shouldAddPage) {
       switch (pageConfig.uiPage) {
         case Pages.Splash:
-          _addPageData(SplashScreen(), SplashPageConfig);
+          _addPageData(LauncherView(), SplashPageConfig);
           break;
         case Pages.Login:
           _addPageData(LoginController(), LoginPageConfig);
@@ -160,17 +169,23 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.UserProfileDetails:
           _addPageData(UserProfileDetails(), UserProfileDetailsConfig);
           break;
-        case Pages.MfDetails:
-          _addPageData(MFDetailsPage(), MfDetailsPageConfig);
-          break;
-        case Pages.AugDetails:
-          _addPageData(AugmontDetailsPage(), AugDetailsPageConfig);
-          break;
+        // case Pages.MfDetails:
+        //   _addPageData(MFDetailsPage(), MfDetailsPageConfig);
+        //   break;
+        // case Pages.AugDetails:
+        //   _addPageData(AugmontDetailsPage(), AugDetailsPageConfig);
+        //   break;
         case Pages.Transaction:
-          _addPageData(Transactions(), MfDetailsPageConfig);
+          _addPageData(Transactions(), TransactionPageConfig);
           break;
-        case Pages.Referral:
-          _addPageData(ReferralsPage(), ReferralPageConfig);
+        case Pages.TxnHistory:
+          _addPageData(TransactionsHistory(), TransactionsHistoryPageConfig);
+          break;
+        case Pages.KycDetails:
+          _addPageData(KYCDetailsView(), KycDetailsPageConfig);
+          break;
+        case Pages.BankDetails:
+          _addPageData(BankDetailsView(), BankDetailsPageConfig);
           break;
 
         case Pages.Tnc:
@@ -209,7 +224,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(YourFunds(), YourFundsConfig);
           break;
         case Pages.THome:
-          _addPageData(TambolaHome(), THomePageConfig);
+          _addPageData(TambolaHomeView(), THomePageConfig);
+          break;
+        case Pages.TGame:
+          _addPageData(TambolaGameView(), TGamePageConfig);
           break;
         case Pages.TPickDraw:
           _addPageData(PicksDraw(), TPickDrawPageConfig);
@@ -223,11 +241,32 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.TWeeklyResult:
           _addPageData(WeeklyResult(), TWeeklyResultPageConfig);
           break;
-        case Pages.TSummaryDetails:
-          _addPageData(SummaryTicketsDisplay(), TSummaryDetailsPageConfig);
-          break;
+        // case Pages.TSummaryDetails:
+        //   _addPageData(SummaryTicketsDisplay(), TSummaryDetailsPageConfig);
+        //   break;
         case Pages.Notifications:
           _addPageData(NotficationsPage(), NotificationsConfig);
+          break;
+        case Pages.CricketHome:
+          _addPageData(CricketHomeView(), CricketHomePageConfig);
+          break;
+        case Pages.CricketGame:
+          _addPageData(CricketGameView(), CricketGamePageConfig);
+          break;
+        case Pages.AugGoldBuy:
+          _addPageData(AugmontGoldBuyView(), CricketHomePageConfig);
+          break;
+        case Pages.AugGoldDetails:
+          _addPageData(AugmontGoldDetailsView(), AugmontGoldDetailsPageConfig);
+          break;
+        case Pages.ReferralDetails:
+          _addPageData(ReferralDetailsView(), ReferralDetailsPageConfig);
+          break;
+        case Pages.ReferralHistory:
+          _addPageData(ReferralHistoryView(), ReferralHistoryPageConfig);
+          break;
+        case Pages.MyWinnings:
+          _addPageData(MyWinningsView(), MyWinnigsPageConfig);
           break;
         default:
           break;
@@ -312,6 +351,16 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.Transaction:
         TransactionPageConfig.currentPageAction = action;
         break;
+      case Pages.TxnHistory:
+        TransactionsHistoryPageConfig.currentPageAction = action;
+        break;
+      case Pages.KycDetails:
+        KycDetailsPageConfig.currentPageAction = action;
+        break;
+      case Pages.BankDetails:
+        BankDetailsPageConfig.currentPageAction = action;
+        break;
+
       case Pages.Referral:
         ReferralPageConfig.currentPageAction = action;
         break;
@@ -359,6 +408,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.THome:
         THomePageConfig.currentPageAction = action;
         break;
+      case Pages.TGame:
+        TGamePageConfig.currentPageAction = action;
+        break;
       case Pages.TPickDraw:
         TPickDrawPageConfig.currentPageAction = action;
         break;
@@ -377,7 +429,27 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.Notifications:
         NotificationsConfig.currentPageAction = action;
         break;
-
+      case Pages.CricketHome:
+        CricketHomePageConfig.currentPageAction = action;
+        break;
+      case Pages.CricketGame:
+        CricketGamePageConfig.currentPageAction = action;
+        break;
+      case Pages.AugGoldBuy:
+        AugmontGoldBuyPageConfig.currentPageAction = action;
+        break;
+      case Pages.AugGoldDetails:
+        AugmontGoldDetailsPageConfig.currentPageAction = action;
+        break;
+      case Pages.ReferralDetails:
+        ReferralDetailsPageConfig.currentPageAction = action;
+        break;
+      case Pages.ReferralHistory:
+        ReferralHistoryPageConfig.currentPageAction = action;
+        break;
+      case Pages.MyWinnings:
+        MyWinnigsPageConfig.currentPageAction = action;
+        break;
       default:
         break;
     }
@@ -460,10 +532,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           title: 'Where is my PAN Number used?',
         );
         break;
-      case "goldenTicket":
-        dialogWidget = GoldenTicketClaimDialog();
-        barrierDismissable = false;
-        break;
     }
     if (dialogWidget != null) {
       AppState.screenStack.add(ScreenItem.dialog);
@@ -485,42 +553,36 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   void screenCheck(String screenKey) {
     PageConfiguration pageConfiguration;
     switch (screenKey) {
-      case 'dashboard':
+      case 'save':
         appState.setCurrentTabIndex = 0;
         break;
-      case 'games':
+      case 'play':
         appState.setCurrentTabIndex = 1;
         break;
-      case 'scoreboard':
-        appState.setCurrentTabIndex = 1;
-        appState.setCurrentGameTabIndex = 1;
-        break;
-      case 'finance':
+      case 'win':
         appState.setCurrentTabIndex = 2;
-        break;
-      case 'profile':
-        appState.setCurrentTabIndex = 3;
         break;
       case 'editProfile':
         pageConfiguration = UserProfileDetailsConfig;
         break;
-      case 'mfDetails':
-        pageConfiguration = MfDetailsPageConfig;
-        break;
       case 'augDetails':
-        pageConfiguration = AugDetailsPageConfig;
+        pageConfiguration = AugmontGoldDetailsPageConfig;
         break;
+      case 'augBuy':
+        pageConfiguration = AugmontGoldBuyPageConfig;
+        break;
+
       case 'tran':
-        pageConfiguration = TransactionPageConfig;
+        pageConfiguration = TransactionsHistoryPageConfig;
         break;
       case 'referral':
-        pageConfiguration = ReferralPageConfig;
+        pageConfiguration = ReferralDetailsPageConfig;
         break;
       case 'tambolaHome':
         _baseUtil.openTambolaHome();
         break;
-      case 'tnc':
-        pageConfiguration = TncPageConfig;
+      case 'myWinnings':
+        pageConfiguration = MyWinnigsPageConfig;
         break;
       case 'faq':
         pageConfiguration = FaqPageConfig;
@@ -545,6 +607,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     }
     if (pageConfiguration != null) {
       addPage(pageConfiguration);
+      notifyListeners();
     }
   }
 }

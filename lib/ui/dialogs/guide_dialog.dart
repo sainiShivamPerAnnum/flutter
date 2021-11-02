@@ -1,12 +1,17 @@
+//Project Imports
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/ui_constants.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
+
+//Dart and Flutter Imports
 import 'package:flutter/material.dart';
+
+//Pub Imports
 import 'package:provider/provider.dart';
 
 class GuideDialog extends StatelessWidget {
@@ -208,14 +213,14 @@ class GuideDialog extends StatelessWidget {
                             //                   .then((flag) {
                             //                 if (flag) {
                             //                   Navigator.of(context).pop();
-                            //                   baseProvider.showPositiveAlert(
+                            //                   BaseUtil.showPositiveAlert(
                             //                       'Callback placed!',
                             //                       'We\'ll contact you soon on your registered mobile',
                             //                       context);
                             //                 }
                             //               });
                             //             } else {
-                            //               baseProvider.showNegativeAlert(
+                            //               BaseUtil.showNegativeAlert(
                             //                   'Unavailable',
                             //                   'Callbacks are reserved for active users',
                             //                   context);

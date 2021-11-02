@@ -1,52 +1,68 @@
-import 'dart:async';
-import 'dart:math';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
+//Project Imports
 import 'package:felloapp/core/base_analytics.dart';
-import 'package:felloapp/core/enums/connectivity_status.dart';
-import 'package:felloapp/core/model/AugGoldRates.dart';
-import 'package:felloapp/core/model/BaseUser.dart';
-import 'package:felloapp/core/model/DailyPick.dart';
-import 'package:felloapp/core/model/FeedCard.dart';
-import 'package:felloapp/core/model/PrizeLeader.dart';
-import 'package:felloapp/core/model/ReferralDetail.dart';
-import 'package:felloapp/core/model/ReferralLeader.dart';
-import 'package:felloapp/core/model/TambolaWinnersDetail.dart';
-import 'package:felloapp/core/model/UserFundWallet.dart';
-import 'package:felloapp/core/model/UserIciciDetail.dart';
-import 'package:felloapp/core/model/UserTicketWallet.dart';
-import 'package:felloapp/core/model/UserTransaction.dart';
+import 'package:felloapp/core/enums/cache_type_enum.dart';
+import 'package:felloapp/core/enums/connectivity_status_enum.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/model/aug_gold_rates_model.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/model/feed_card_model.dart';
+import 'package:felloapp/core/model/prize_leader_model.dart';
+import 'package:felloapp/core/model/referral_details_model.dart';
+import 'package:felloapp/core/model/referral_leader_model.dart';
+import 'package:felloapp/core/model/tambola_winners_details.dart';
+import 'package:felloapp/core/model/user_funt_wallet_model.dart';
+import 'package:felloapp/core/model/user_icici_detail_model.dart';
+import 'package:felloapp/core/model/user_ticket_wallet_model.dart';
+import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/pan_service.dart';
 import 'package:felloapp/core/service/payment_service.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fail_types.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/ui_constants.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/model/tambola_board_model.dart';
+import 'package:felloapp/core/model/user_augmont_details_model.dart';
+import 'package:felloapp/core/ops/augmont_ops.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+
+//Dart & Flutter Imports
+import 'dart:async';
+import 'dart:math';
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:flutter/material.dart';
+
+//Pub Imports
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flushbar/flushbar.dart';
-import 'package:flutter/material.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'core/base_remote_config.dart';
-import 'core/model/TambolaBoard.dart';
-import 'core/model/UserAugmontDetail.dart';
-import 'core/ops/augmont_ops.dart';
-import 'util/size_config.dart';
+import 'package:logger/logger.dart';
+
+import 'core/model/game_model.dart';
 
 class BaseUtil extends ChangeNotifier {
   final Log log = new Log("BaseUtil");
-  DBModel _dbModel = locator<DBModel>();
-  LocalDBModel _lModel = locator<LocalDBModel>();
-  AppState _appState = locator<AppState>();
+  final Logger logger = locator<Logger>();
+  final DBModel _dbModel = locator<DBModel>();
+  final LocalDBModel _lModel = locator<LocalDBModel>();
+  final AppState _appState = locator<AppState>();
+  final UserService _userService = locator<UserService>();
+
   BaseUser _myUser;
   UserFundWallet _userFundWallet;
   UserTicketWallet _userTicketWallet;
@@ -54,13 +70,13 @@ class BaseUtil extends ChangeNotifier {
   FirebaseAnalytics baseAnalytics;
   PaymentService _payService;
   List<FeedCard> feedCards;
-  int _dailyPickCount;
   String userRegdPan;
-  List<int> todaysPicks;
 
   ///Tambola global objects
-  DailyPick weeklyDigits;
-  List<TambolaBoard> userWeeklyBoards;
+  // int _dailyPickCount;
+  // List<int> todaysPicks;
+  // DailyPick weeklyDigits;
+  // List<TambolaBoard> userWeeklyBoards;
 
   ///ICICI global objects
   UserIciciDetail _iciciDetail;
@@ -95,6 +111,9 @@ class BaseUtil extends ChangeNotifier {
   int isOtpResendCount = 0;
   bool show_security_prompt = false;
   String zeroBalanceAssetUri;
+  static List<GameModel> gamesList;
+  static String manualReferralCode;
+  static bool isNewUser, isFirstFetchDone; // = 'jdF1';
 
   ///Flags in various screens defined as global variables
   bool isUserOnboarded,
@@ -121,16 +140,21 @@ class BaseUtil extends ChangeNotifier {
       isReferralLinkBuildInProgressWhatsapp,
       isReferralLinkBuildInProgressOther,
       isHomeCardsFetched,
+      _isGoogleSignInProgress,
       show_home_tutorial,
       show_game_tutorial,
       show_finance_tutorial;
   static bool isDeviceOffline, ticketRequestSent, playScreenFirst;
-  static int ticketCountBeforeRequest,
-      infoSliderIndex,
-      atomicTicketGenerationLeftCount,
-      atomicTicketDeletionLeftCount;
+  static int ticketCountBeforeRequest, infoSliderIndex
+
+      // _atomicTicketGenerationLeftCount,
+      //ticketGenerateCount,
+      // atomicTicketDeletionLeftCount
+      ;
 
   _setRuntimeDefaults() {
+    isNewUser = false;
+    isFirstFetchDone = true;
     isUserOnboarded = false;
     isLoginNextInProgress = false;
     isEditProfileNextInProgress = false;
@@ -158,114 +182,129 @@ class BaseUtil extends ChangeNotifier {
     show_home_tutorial = false;
     show_game_tutorial = false;
     show_finance_tutorial = false;
+    isGoogleSignInProgress = false;
     isDeviceOffline = false;
     ticketRequestSent = false;
     ticketCountBeforeRequest = Constants.NEW_USER_TICKET_COUNT;
     infoSliderIndex = 0;
     playScreenFirst = true;
-    atomicTicketGenerationLeftCount = 0;
-    atomicTicketDeletionLeftCount = 0;
+    // _atomicTicketGenerationLeftCount = 0;
+    // atomicTicketDeletionLeftCount = 0;
     show_security_prompt = false;
     firstAugmontTransaction = null;
   }
 
   Future init() async {
-    print('inside init base util');
+    logger.i('inside init base util');
     _setRuntimeDefaults();
 
-    ///analytics
+    //Analytics logs app open state.
     BaseAnalytics.init();
     BaseAnalytics.analytics.logAppOpen();
+
     //remote config for various remote variables
-    print('base util remote config');
+    logger.i('base util remote config');
     await BaseRemoteConfig.init();
 
+    setPackageInfo();
+    setGameDefaults();
+
     ///fetch on-boarding status and User details
-    firebaseUser = FirebaseAuth.instance.currentUser;
-    if (firebaseUser != null) {
-      _myUser = await _dbModel.getUser(firebaseUser.uid); //_lModel.getUser();
-    }
-    packageInfo = await PackageInfo.fromPlatform();
+    firebaseUser = _userService.firebaseUser;
+    isUserOnboarded = _userService.isUserOnborded;
 
-    isUserOnboarded =
-        (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
+    // isUserOnboarded =
+    //     (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
+
     if (isUserOnboarded) {
-      ///see if security needs to be shown
-      show_security_prompt = await _lModel.showSecurityPrompt();
-
-      ///get user wallet
-      _userFundWallet = await _dbModel.getUserFundWallet(firebaseUser.uid);
-      if (_userFundWallet == null) _compileUserWallet();
-
-      ///get user ticket balance
-      _userTicketWallet = await _dbModel.getUserTicketWallet(firebaseUser.uid);
-      if (_userTicketWallet == null) {
-        await _initiateNewTicketWallet();
-      }
+      //set current user
+      myUser = _userService.baseUser;
 
       ///get user creation time
       _userCreationTimestamp = firebaseUser.metadata.creationTime;
 
-      //check if there are any icici deposits txns in process
-      //TODO not required for now
-      // if (myUser.isIciciOnboarded) _payService.verifyPaymentsIfAny();
-      // _payService = locator<PaymentService>();
-
-      ///prefill pan details if available
-      panService = new PanService();
-      if (!checkKycMissing) {
-        userRegdPan = await panService.getUserPan();
-      }
-
-      ///prefill augmont details if available
-      if (myUser.isAugmontOnboarded) {
-        augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
-      }
-
-      await getProfilePicUrl();
-
-      ///Freshchat utils
-      freshchatKeys = await _dbModel.getActiveFreshchatKey();
-      if (freshchatKeys != null && freshchatKeys.isNotEmpty) {
-        Freshchat.init(freshchatKeys['app_id'], freshchatKeys['app_key'],
-            freshchatKeys['app_domain'],
-            gallerySelectionEnabled: true, themeName: 'FreshchatCustomTheme');
-      }
-
-      /// Fetch this weeks' Dailypicks count
-      String _dpc = BaseRemoteConfig.remoteConfig
-          .getString(BaseRemoteConfig.TAMBOLA_DAILY_PICK_COUNT);
-      if (_dpc == null || _dpc.isEmpty) _dpc = '3';
-      _dailyPickCount = 3;
-      try {
-        _dailyPickCount = int.parse(_dpc);
-      } catch (e) {
-        log.error('key parsing failed: ' + e.toString());
-        Map<String, String> errorDetails = {'error_msg': e.toString()};
-        _dbModel.logFailure(
-            _myUser.uid, FailType.DailyPickParseFailed, errorDetails);
-        _dailyPickCount = 3;
-      }
-
-      await fetchWeeklyPicks(forcedRefresh: false);
-
       ///pick zerobalance asset
       Random rnd = new Random();
       zeroBalanceAssetUri = 'zerobal/zerobal_${rnd.nextInt(4) + 1}';
+
+      ///see if security needs to be shown -> Move to save tab
+      // show_security_prompt = await _lModel.showSecurityPrompt();
+
+      await setUserDefaults();
     }
   }
 
+  Future<void> setUserDefaults() async {
+    ///get user wallet -> Try moving it to view and viewmodel for finance
+    // _userFundWallet = await _dbModel.getUserFundWallet(firebaseUser.uid);
+    // if (_userFundWallet == null) _compileUserWallet();
+
+    ///get user ticket balance --> Try moving it to view and viewmodel for game
+    // _userTicketWallet = await _dbModel.getUserTicketWallet(firebaseUser.uid);
+    // if (_userTicketWallet == null) {
+    //   await _initiateNewTicketWallet();
+    // }
+
+    ///prefill pan details if available --> Profile Section (Show pan number eye)
+    panService = new PanService();
+    if (!checkKycMissing) {
+      userRegdPan = await panService.getUserPan();
+    }
+
+    ///prefill augmont details if available --> Save Tab
+    // if (myUser.isAugmontOnboarded) {
+    //   augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
+    // }
+  }
+
+  void setPackageInfo() async {
+    //Appversion //add it seperate method
+    packageInfo = await PackageInfo.fromPlatform();
+  }
+
+  void setGameDefaults() {
+    gamesList = [
+      GameModel(
+        gameName: "Cricket",
+        pageConfig: CricketHomePageConfig,
+        tag: 'cricket',
+        thumbnailUri: BaseRemoteConfig.remoteConfig
+            .getString(BaseRemoteConfig.CRICKET_THUMBNAIL_URI),
+        playCost: BaseRemoteConfig.remoteConfig
+                .getString(BaseRemoteConfig.CRICKET_PLAY_COST) ??
+            "10",
+        prizeAmount: BaseRemoteConfig.remoteConfig
+                .getString(BaseRemoteConfig.CRICKET_PLAY_PRIZE) ??
+            "50000",
+      ),
+      GameModel(
+        gameName: "Tambola",
+        pageConfig: THomePageConfig,
+        tag: 'tambola',
+        thumbnailUri: BaseRemoteConfig.remoteConfig
+            .getString(BaseRemoteConfig.TAMBOLA_THUMBNAIL_URI),
+        playCost: BaseRemoteConfig.remoteConfig
+                .getString(BaseRemoteConfig.TAMBOLA_PLAY_COST) ??
+            "10",
+        prizeAmount: BaseRemoteConfig.remoteConfig
+                .getString(BaseRemoteConfig.TAMBOLA_PLAY_PRIZE) ??
+            "10,000",
+      ),
+    ];
+  }
+
+  ///related to icici - function not active
   acceptNotificationsIfAny(BuildContext context) {
     ///if payment completed in the background:
     if (_payService != null && myUser.pendingTxnId != null) {
       _payService.addPaymentStatusListener((value) {
         if (value == PaymentService.TRANSACTION_COMPLETE) {
-          showPositiveAlert('Transaction Complete',
-              'Your account balance has been updated!', context,
+          showPositiveAlert(
+              'Transaction Complete', 'Your account balance has been updated!',
               seconds: 5);
         } else if (value == PaymentService.TRANSACTION_REJECTED) {
-          showPositiveAlert('Transaction Closed',
-              'The transaction was not completed', context,
+          showPositiveAlert(
+              'Transaction Closed', 'The transaction was not completed',
               seconds: 5);
         } else {
           log.debug('Received notif for pending transaction: $value');
@@ -274,6 +313,7 @@ class BaseUtil extends ChangeNotifier {
     }
   }
 
+  ///related to icici - function not active
   cancelIncomingNotifications() {
     if (_payService != null) _payService.addPaymentStatusListener(null);
   }
@@ -345,51 +385,7 @@ class BaseUtil extends ChangeNotifier {
     return (!skFlag && !augFlag);
   }
 
-  fetchWeeklyPicks({bool forcedRefresh}) async {
-    if (forcedRefresh) weeklyDrawFetched = false;
-    if (!weeklyDrawFetched) {
-      try {
-        log.debug('Requesting for weekly picks');
-        DailyPick _picks = await _dbModel.getWeeklyPicks();
-        weeklyDrawFetched = true;
-        if (_picks != null) {
-          weeklyDigits = _picks;
-        }
-        switch (DateTime.now().weekday) {
-          case 1:
-            todaysPicks = weeklyDigits.mon;
-            break;
-          case 2:
-            todaysPicks = weeklyDigits.tue;
-            break;
-          case 3:
-            todaysPicks = weeklyDigits.wed;
-            break;
-          case 4:
-            todaysPicks = weeklyDigits.thu;
-            break;
-          case 5:
-            todaysPicks = weeklyDigits.fri;
-            break;
-          case 6:
-            todaysPicks = weeklyDigits.sat;
-            break;
-          case 7:
-            todaysPicks = weeklyDigits.sun;
-            break;
-        }
-        if (todaysPicks == null) {
-          log.debug("Today's picks are not generated yet");
-        }
-        notifyListeners();
-      } catch (e) {
-        log.error('$e');
-      }
-    }
-  }
-
-  showPositiveAlert(String title, String message, BuildContext context,
-      {int seconds}) {
+  static showPositiveAlert(String title, String message, {int seconds}) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Flushbar(
         flushbarPosition: FlushbarPosition.BOTTOM,
@@ -420,8 +416,7 @@ class BaseUtil extends ChangeNotifier {
     });
   }
 
-  showNegativeAlert(String title, String message, BuildContext context,
-      {int seconds}) {
+  static showNegativeAlert(String title, String message, {int seconds}) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Flushbar(
         flushbarPosition: FlushbarPosition.BOTTOM,
@@ -448,9 +443,10 @@ class BaseUtil extends ChangeNotifier {
     });
   }
 
-  showNoInternetAlert(BuildContext context) {
-    ConnectivityStatus connectivityStatus =
-        Provider.of<ConnectivityStatus>(context, listen: false);
+  static showNoInternetAlert() {
+    ConnectivityStatus connectivityStatus = Provider.of<ConnectivityStatus>(
+        AppState.delegate.navigatorKey.currentContext,
+        listen: false);
 
     if (connectivityStatus == ConnectivityStatus.Offline) {
       Flushbar(
@@ -474,21 +470,16 @@ class BaseUtil extends ChangeNotifier {
             blurRadius: 3.0,
           )
         ],
-      )..show(context);
+      )..show(AppState.delegate.navigatorKey.currentContext);
       return true;
     }
     return false;
   }
 
   Future<bool> getDrawStatus() async {
-    // CHECKING IF THE PICK ARE DRAWN OR NOT
-    if (!weeklyDrawFetched || weeklyDigits == null)
-      await fetchWeeklyPicks(forcedRefresh: true);
-    //CHECKING FOR THE FIRST TIME OPENING OF TAMBOLA AFTER THE PICKS ARE DRAWN FOR THIS PARTICULAR DAY
-    notifyListeners();
-    if (todaysPicks != null &&
-        DateTime.now().weekday != await _lModel.getDailyPickAnimLastDay())
-      return true;
+    if (DateTime.now().weekday != await _lModel.getDailyPickAnimLastDay() &&
+        DateTime.now().hour >= 18 &&
+        DateTime.now().hour < 24) return true;
 
     return false;
   }
@@ -518,6 +509,43 @@ class BaseUtil extends ChangeNotifier {
     )..show(context);
   }
 
+  static Future<void> openDialog(
+      {Widget content,
+      bool addToScreenStack,
+      bool hapticVibrate,
+      bool isBarrierDismissable,
+      ValueChanged<dynamic> callback}) async {
+    if (addToScreenStack != null && addToScreenStack == true)
+      AppState.screenStack.add(ScreenItem.dialog);
+    if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
+    await showDialog(
+      context: AppState.delegate.navigatorKey.currentContext,
+      barrierDismissible: isBarrierDismissable,
+      builder: (ctx) => content,
+      useSafeArea: true,
+    );
+  }
+
+  static Future openModalBottomSheet(
+      {Widget content,
+      bool addToScreenStack,
+      bool hapticVibrate,
+      Color backgroundColor,
+      bool isBarrierDismissable,
+      BorderRadius borderRadius}) {
+    if (addToScreenStack != null && addToScreenStack == true)
+      AppState.screenStack.add(ScreenItem.dialog);
+    if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
+    return showModalBottomSheet(
+        shape: RoundedRectangleBorder(
+            borderRadius: borderRadius ?? BorderRadius.zero),
+        backgroundColor:
+            backgroundColor != null ? backgroundColor : Colors.white,
+        isDismissible: isBarrierDismissable,
+        context: AppState.delegate.navigatorKey.currentContext,
+        builder: (ctx) => content);
+  }
+
   AuthCredential generateAuthCredential(String verificationId, String smsCode) {
     final AuthCredential credential = PhoneAuthProvider.credential(
       verificationId: verificationId,
@@ -527,12 +555,13 @@ class BaseUtil extends ChangeNotifier {
   }
 
   Future<bool> authenticateUser(AuthCredential credential) {
-    log.debug("Verification credetials: " + credential.toString());
+    logger.d("Verification credetials: " + credential.toString());
     return FirebaseAuth.instance.signInWithCredential(credential).then((res) {
       this.firebaseUser = res.user;
+      logger.i("New Firebase User: ${res.additionalUserInfo.isNewUser}");
       return true;
     }).catchError((e) {
-      log.error(
+      logger.e(
           "User Authentication failed with credential: Error: " + e.toString());
       return false;
     });
@@ -540,8 +569,6 @@ class BaseUtil extends ChangeNotifier {
 
   Future<bool> signOut() async {
     try {
-      await FirebaseAuth.instance.signOut();
-      log.debug('Signed Out Firebase User');
       await _lModel.deleteLocalAppData();
       log.debug('Cleared local cache');
       _appState.setCurrentTabIndex = 0;
@@ -555,16 +582,18 @@ class BaseUtil extends ChangeNotifier {
       /// the old variables are still in effect
       /// resetting them like below for now
       _myUser = null;
+      isNewUser = null;
+      isFirstFetchDone = null;
       _userFundWallet = null;
       _userTicketWallet = null;
       firebaseUser = null;
       baseAnalytics = null;
       _payService = null;
       feedCards = null;
-      _dailyPickCount = null;
+      // _dailyPickCount = null;
       userRegdPan = null;
-      weeklyDigits = null;
-      userWeeklyBoards = null;
+      // weeklyDigits = null;
+      // userWeeklyBoards = null;
       _iciciDetail = null;
       _currentICICITxn = null;
       _currentICICINonInstantWthrlTxn = null;
@@ -587,6 +616,7 @@ class BaseUtil extends ChangeNotifier {
       isOtpResendCount = 0;
       show_security_prompt = false;
       AppState.delegate.appState.setCurrentTabIndex = 0;
+      manualReferralCode = null;
       _setRuntimeDefaults();
 
       return true;
@@ -620,16 +650,21 @@ class BaseUtil extends ChangeNotifier {
     return 0;
   }
 
-  Future<void> getProfilePicUrl() async {
-    try {
-      if (myUser != null) myUserDpUrl = await _dbModel.getUserDP(myUser.uid);
-      if (myUserDpUrl != null) {
-        print("got the image");
-        notifyListeners();
+  getProfilePicture() async {
+    if (await CacheManager.readCache(key: 'dpUrl') == null) {
+      try {
+        if (myUser != null) myUserDpUrl = await _dbModel.getUserDP(myUser.uid);
+        if (myUserDpUrl != null) {
+          await CacheManager.writeCache(
+              key: 'dpUrl', value: myUserDpUrl, type: CacheType.string);
+          setDisplayPictureUrl(myUserDpUrl);
+          log.debug("No profile picture found in cache, fetched from server");
+        }
+      } catch (e) {
+        log.error(e.toString());
       }
-    } catch (e) {
-      log.error(e.toString());
-    }
+    } else
+      setDisplayPictureUrl(await CacheManager.readCache(key: 'dpUrl'));
   }
 
   static void launchUrl(String url) async {
@@ -641,7 +676,6 @@ class BaseUtil extends ChangeNotifier {
   }
 
   void openTambolaHome() async {
-    AppState.delegate.appState.setCurrentTabIndex = 1;
     if (await getDrawStatus()) {
       await _lModel.saveDailyPicksAnimStatus(DateTime.now().weekday).then(
             (value) =>
@@ -651,7 +685,7 @@ class BaseUtil extends ChangeNotifier {
           PageAction(state: PageState.addPage, page: TPickDrawPageConfig);
     } else
       AppState.delegate.appState.currentAction =
-          PageAction(state: PageState.addPage, page: THomePageConfig);
+          PageAction(state: PageState.addPage, page: TGamePageConfig);
   }
 
   bool isOldCustomer() {
@@ -745,6 +779,15 @@ class BaseUtil extends ChangeNotifier {
   }
 
   Future<bool> _initiateNewTicketWallet() async {
+    _userTicketWallet = UserTicketWallet.newTicketWallet();
+    int _t = userTicketWallet.initTck;
+    _userTicketWallet = await _dbModel.updateInitUserTicketCount(
+        myUser.uid, _userTicketWallet, Constants.NEW_USER_TICKET_COUNT);
+    //updateInitUserTicketCount method returns no change if operations fails
+    return (_userTicketWallet.initTck != _t);
+  }
+
+  Future<bool> _initiateNewFLCWallet() async {
     _userTicketWallet = UserTicketWallet.newTicketWallet();
     int _t = userTicketWallet.initTck;
     _userTicketWallet = await _dbModel.updateInitUserTicketCount(
@@ -973,14 +1016,33 @@ class BaseUtil extends ChangeNotifier {
     notifyListeners();
   }
 
-  int get dailyPicksCount => _dailyPickCount;
+  get isGoogleSignInProgress => this._isGoogleSignInProgress;
+
+  set isGoogleSignInProgress(value) {
+    this._isGoogleSignInProgress = value;
+    notifyListeners();
+  }
+
+  // int get atomicTicketGenerationLeftCount => _atomicTicketGenerationLeftCount;
+
+  // set atomicTicketGenerationLeftCount(int value) {
+  //   _atomicTicketGenerationLeftCount = value;
+  //   notifyListeners();
+  // }
+
+  // int get dailyPicksCount => _dailyPickCount;
+
+  // set dailyPicksCount(int count) {
+  //   _dailyPickCount = count;
+  //   notifyListeners();
+  // }
 
   Future<bool> isOfflineSnackBar(BuildContext context) async {
     ConnectivityStatus connectivityStatus =
         Provider.of<ConnectivityStatus>(context, listen: false);
 
     if (connectivityStatus == ConnectivityStatus.Offline) {
-      await showNegativeAlert('Offline', 'Please connect to internet', context,
+      await showNegativeAlert('Offline', 'Please connect to internet',
           seconds: 3);
       return true;
     }

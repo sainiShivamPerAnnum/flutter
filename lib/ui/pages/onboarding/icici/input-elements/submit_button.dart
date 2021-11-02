@@ -1,4 +1,4 @@
-import 'package:felloapp/util/ui_constants.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class SubmitButton extends StatelessWidget {

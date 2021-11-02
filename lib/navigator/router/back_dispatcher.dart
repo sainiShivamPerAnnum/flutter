@@ -1,41 +1,60 @@
+//Project Imports
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
+import 'package:felloapp/ui/pages/root/root_view.dart';
+import 'package:felloapp/ui/pages/root/root_vm.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog_landscape.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:flutter/material.dart';
 
-import 'router_delegate.dart';
+//Flutter Imports
+import 'package:flutter/material.dart';
 
 class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   final FelloRouterDelegate _routerDelegate;
   DBModel _dbModel = locator<DBModel>();
   BaseUtil _baseUtil = locator<BaseUtil>();
+  AppState _appState = locator<AppState>();
 
   FelloBackButtonDispatcher(this._routerDelegate) : super();
 
   Future<bool> _confirmExit(
       String title, String description, Function confirmAction) {
-    AppState.screenStack.add(ScreenItem.dialog);
-    return showDialog<bool>(
-      barrierDismissible: false,
-      context: _routerDelegate.navigatorKey.currentContext,
-      builder: (ctx) => ConfirmActionDialog(
-        title: title,
-        description: description,
-        buttonText: "Yes",
-        confirmAction: confirmAction,
-        cancelAction: () {
-          didPopRoute();
-        },
-      ),
-    );
+    BaseUtil.openDialog(
+        addToScreenStack: true,
+        isBarrierDismissable: false,
+        hapticVibrate: true,
+        content: FelloConfirmationLandScapeDialog(
+          asset: Assets.noTickets,
+          title: title,
+          subtitle: description,
+          accept: "Exit",
+          acceptColor: Colors.red,
+          rejectColor: Colors.grey.withOpacity(0.3),
+          reject: "Stay",
+          onAccept: confirmAction,
+          onReject: didPopRoute,
+        ));
   }
 
   @override
   Future<bool> didPopRoute() {
+    // If the top item is anything except a scaffold
+    if (AppState.screenStack.last == ScreenItem.dialog) {
+      Navigator.pop(_routerDelegate.navigatorKey.currentContext);
+      AppState.screenStack.removeLast();
+      print("Current Stack: ${AppState.screenStack}");
+      return Future.value(true);
+    }
     // If user is in the profile page and preferences are changed
-    if (AppState.unsavedPrefs) {
+    else if (AppState.unsavedPrefs) {
       if (_baseUtil != null &&
           _baseUtil.myUser != null &&
           _baseUtil.myUser.uid != null &&
@@ -45,32 +64,37 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
                 _baseUtil.myUser.uid, _baseUtil.myUser.userPreferences)
             .then((value) {
           AppState.unsavedPrefs = false;
-          print("Preferences updated");
+          log("Preferences updated");
         });
       return _routerDelegate.popRoute();
     }
+
     // If onboarding is in progress
     else if (AppState.isOnboardingInProgress) {
-      BaseUtil().showNegativeAlert(
-          "Exit Onboarding?🕺",
-          "Press back once more to exit",
-          _routerDelegate.navigatorKey.currentContext);
+      BaseUtil.showNegativeAlert(
+          "Exit Onboarding?🕺", "Press back once more to exit");
       AppState.isOnboardingInProgress = false;
       return Future.value(true);
     }
-    // If the top item is anything except a scaffold
-    else if (AppState.screenStack.last == ScreenItem.dialog) {
-      Navigator.pop(_routerDelegate.navigatorKey.currentContext);
-      AppState.screenStack.removeLast();
-      print("Current Stack: ${AppState.screenStack}");
-      return Future.value(true);
-    }
+    //If the cricket game is in progress
+    else if (AppState.circGameInProgress)
+      return _confirmExit(
+          "Exit Game", "Are you sure you want to leave?", () {
+        AppState.circGameInProgress = false;
+        didPopRoute();
+        return didPopRoute();
+      });
+
     // If the root tab is not 0 at the time of exit
     else if (AppState.screenStack.length == 1 &&
-        _routerDelegate.appState.getCurrentTabIndex != 0 &&
+        AppState.delegate.appState.rootIndex != 1 &&
         _baseUtil.isUserOnboarded) {
-      _routerDelegate.appState.setCurrentGameTabIndex = 0;
-      _routerDelegate.appState.returnHome();
+      print("Press back once more to exit");
+      if (RootViewModel.scaffoldKey.currentState.isDrawerOpen)
+        RootViewModel.scaffoldKey.currentState.openEndDrawer();
+      else
+        AppState.delegate.appState.setCurrentTabIndex = 1;
+      //_routerDelegate.appState.returnHome();
       return Future.value(true);
     }
     // else if (AppState.unsavedChanges)

@@ -1,6 +1,7 @@
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/ui_constants.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class AugmontDisabled extends StatefulWidget {
@@ -15,14 +16,20 @@ class AugmontDisabledState extends State<AugmontDisabled> {
   @override
   Widget build(BuildContext context) {
     _width = MediaQuery.of(context).size.width;
-    return Dialog(
-      insetPadding: EdgeInsets.only(left: 20, top: 50, bottom: 80, right: 20),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
+    return WillPopScope(
+      onWillPop: () {
+        AppState.backButtonDispatcher.didPopRoute();
+        return Future.value(true);
+      },
+      child: Dialog(
+        insetPadding: EdgeInsets.only(left: 20, top: 50, bottom: 80, right: 20),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        elevation: 0.0,
+        backgroundColor: Colors.white,
+        child: dialogContent(context),
       ),
-      elevation: 0.0,
-      backgroundColor: Colors.white,
-      child: dialogContent(context),
     );
   }
 

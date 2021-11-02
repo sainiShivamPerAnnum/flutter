@@ -1,8 +1,8 @@
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/size_config.dart';
-import 'package:felloapp/util/ui_constants.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -34,7 +34,7 @@ class _FormDialogState extends State<ConfirmActionDialog> {
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(UiConstants.padding),
+        borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
       ),
       elevation: 0.0,
       backgroundColor: Colors.transparent,
@@ -48,16 +48,16 @@ class _FormDialogState extends State<ConfirmActionDialog> {
         //...bottom card part,
         Container(
           padding: EdgeInsets.only(
-            top: 5 + UiConstants.padding,
-            bottom: UiConstants.padding,
-            left: UiConstants.padding,
-            right: UiConstants.padding,
+            top: 5 + SizeConfig.cardBorderRadius,
+            bottom: SizeConfig.cardBorderRadius,
+            left: SizeConfig.cardBorderRadius,
+            right: SizeConfig.cardBorderRadius,
           ),
           margin: EdgeInsets.all(10),
           decoration: new BoxDecoration(
             color: Colors.white,
             shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.circular(UiConstants.padding),
+            borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
             boxShadow: [
               BoxShadow(
                 color: Colors.black26,

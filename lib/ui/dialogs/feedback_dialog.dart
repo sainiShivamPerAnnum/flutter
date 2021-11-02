@@ -1,11 +1,11 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/connectivity_status.dart';
+import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/palettes.dart';
-import 'package:felloapp/util/size_config.dart';
-import 'package:felloapp/util/ui_constants.dart';
+import 'package:felloapp/util/styles/palette.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -41,7 +41,7 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
 
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(UiConstants.padding),
+        borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
       ),
       backgroundColor: Colors.transparent,
       child: dialogContent(context, connectivityStatus, baseProvider),
@@ -116,7 +116,8 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
             children: [
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                    primary: augmontGoldPalette.secondaryColor),
+                    primary:
+                        FelloColorPalette.augmontFundPalette().secondaryColor),
                 onPressed: () {
                   AppState.backButtonDispatcher.didPopRoute();
                 },
@@ -133,7 +134,7 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
                   Haptic.vibrate();
                   log.debug('DialogAction clicked');
                   if (connectivityStatus == ConnectivityStatus.Offline)
-                    baseProvider.showNoInternetAlert(context);
+                    BaseUtil.showNoInternetAlert();
                   else if (_formKey.currentState.validate()) {
                     widget.dialogAction(fdbkController.text);
                   }

@@ -1,0 +1,1 @@
+enum WinnerServiceProperties { winLeaderboard }

@@ -101,10 +101,10 @@ class TransactionHelpDialog extends StatelessWidget {
               .then((flag) {
             if (flag) {
               Navigator.of(_context).pop();
-              baseProvider.showPositiveAlert(
-                  'Request noted!',
-                  'We\'ll look into your issue and reach out to you soon',
-                  _context);
+              BaseUtil.showPositiveAlert(
+                'Request noted!',
+                'We\'ll look into your issue and reach out to you soon',
+              );
             }
           });
         });

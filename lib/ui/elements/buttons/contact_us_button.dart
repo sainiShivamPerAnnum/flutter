@@ -1,7 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/dialogs/contact_dialog.dart';
-import 'package:felloapp/util/ui_constants.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -26,7 +26,7 @@ class ContactUsBtn extends StatelessWidget {
                     isUnavailable: BaseUtil.isDeviceOffline,
                     onClick: () {
                       if (BaseUtil.isDeviceOffline) {
-                        baseProvider.showNoInternetAlert(context);
+                        BaseUtil.showNoInternetAlert();
                         return;
                       }
                       if (baseProvider.isSignedIn() &&
@@ -39,15 +39,15 @@ class ContactUsBtn extends StatelessWidget {
                         //     .then((flag) {
                         //   if (flag) {
                         //     Navigator.of(context).pop();
-                        //     baseProvider.showPositiveAlert(
+                        //     BaseUtil.showPositiveAlert(
                         //         'Callback placed!',
                         //         'We\'ll contact you soon on your registered mobile',
                         //         context);
                         //   }
                         // });
                       } else {
-                        baseProvider.showNegativeAlert('Unavailable',
-                            'Callbacks are reserved for active users', context);
+                        BaseUtil.showNegativeAlert('Unavailable',
+                            'Callbacks are reserved for active users');
                       }
                     },
                   )),

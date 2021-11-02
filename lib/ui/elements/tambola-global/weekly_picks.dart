@@ -1,6 +1,10 @@
-import 'package:felloapp/core/model/DailyPick.dart';
-import 'package:felloapp/util/size_config.dart';
+import 'package:felloapp/core/model/daily_pick_model.dart';
+import 'package:felloapp/core/service/tambola_service.dart';
+import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class WeeklyPicks extends StatelessWidget {
@@ -40,7 +44,7 @@ class WeeklyPicks extends StatelessWidget {
         balls.add(_getDrawBall(element.toString()));
       });
     } else {
-      for (int i = 0; i < draws.mon.length; i++) {
+      for (int i = 0; i < TambolaService().dailyPicksCount; i++) {
         balls.add(_getDrawBall('-'));
       }
     }
@@ -52,10 +56,10 @@ class WeeklyPicks extends StatelessWidget {
 
   Widget _getDrawBall(String digit) {
     return Container(
-      width: SizeConfig.screenWidth * 0.08,
-      height: SizeConfig.screenWidth * 0.08,
+      width: SizeConfig.screenWidth * 0.09,
+      height: SizeConfig.screenWidth * 0.09,
       decoration: new BoxDecoration(
-        color: Colors.white,
+        color: Colors.white.withOpacity(0.3),
         shape: BoxShape.circle,
       ),
       child: Center(
@@ -64,7 +68,7 @@ class WeeklyPicks extends StatelessWidget {
         style: TextStyle(
             fontSize: SizeConfig.mediumTextSize * 1.2,
             fontWeight: FontWeight.w500,
-            color: Colors.black),
+            color: Colors.white),
         textAlign: TextAlign.center,
       )),
     );
@@ -73,20 +77,24 @@ class WeeklyPicks extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (weeklyDraws == null || weeklyDraws.toList().isEmpty) {
-      return Center(
-        child: Container(
-          height: 150,
-          child: Center(
-            child: Padding(
-              padding: EdgeInsets.all(10),
-              child: Text(
-                'This week\'s numbers have not been drawn yet.',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.black54),
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SvgPicture.asset(
+            Assets.noTickets,
+            width: SizeConfig.screenWidth * 0.3,
+          ),
+          Padding(
+            padding: EdgeInsets.all(10),
+            child: Text(
+              'This week\'s numbers have not been drawn yet.',
+              textAlign: TextAlign.center,
+              style: TextStyles.body1.colour(
+                Colors.white.withOpacity(0.5),
               ),
             ),
           ),
-        ),
+        ],
       );
     }
     DateTime today = DateTime.now();
@@ -115,8 +123,10 @@ class WeeklyPicks extends StatelessWidget {
     }
     return Expanded(
       child: Container(
-        padding: EdgeInsets.only(bottom: 8),
+        padding:
+            EdgeInsets.only(bottom: 8, top: SizeConfig.screenHeight * 0.02),
         child: ListView(
+          padding: EdgeInsets.zero,
           physics: NeverScrollableScrollPhysics(),
           children: colElems,
         ),

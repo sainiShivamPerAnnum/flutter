@@ -8,22 +8,19 @@ class FlavorBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if(FlavorConfig.isProduction()) return child;
+    if (FlavorConfig.isProduction()) return child;
     bannerConfig ??= _getDefaultBanner();
     return Stack(
-      children: <Widget>[
-        child,
-        SafeArea(child: _buildBanner(context))
-      ],
+      children: <Widget>[child, SafeArea(child: _buildBanner(context))],
     );
   }
 
   BannerConfig _getDefaultBanner() {
     return BannerConfig(
         bannerName: FlavorConfig.instance.name,
-        bannerColor: FlavorConfig.instance.color
-    );
+        bannerColor: FlavorConfig.instance.color);
   }
+
   Widget _buildBanner(BuildContext context) {
     return Container(
       width: 70,
@@ -34,8 +31,7 @@ class FlavorBanner extends StatelessWidget {
             textDirection: Directionality.of(context),
             layoutDirection: Directionality.of(context),
             location: BannerLocation.topStart,
-            color: bannerConfig.bannerColor
-        ),
+            color: bannerConfig.bannerColor),
       ),
     );
   }
@@ -44,7 +40,6 @@ class FlavorBanner extends StatelessWidget {
 class BannerConfig {
   final String bannerName;
   final Color bannerColor;
-  BannerConfig({
-    @required String this.bannerName,
-    @required Color this.bannerColor});
+  BannerConfig(
+      {@required String this.bannerName, @required Color this.bannerColor});
 }

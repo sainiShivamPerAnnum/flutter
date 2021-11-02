@@ -2,7 +2,8 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/ui_constants.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -40,7 +41,7 @@ class _ContactUsState extends State<ContactUsDialog> {
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(UiConstants.padding),
+        borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
       ),
       elevation: 0.0,
       backgroundColor: Colors.transparent,
@@ -54,16 +55,16 @@ class _ContactUsState extends State<ContactUsDialog> {
         //...bottom card part,
         Container(
           padding: EdgeInsets.only(
-            top: UiConstants.padding + 30,
-            bottom: UiConstants.padding + 30,
-            left: UiConstants.padding,
-            right: UiConstants.padding,
+            top: SizeConfig.cardBorderRadius + 30,
+            bottom: SizeConfig.cardBorderRadius + 30,
+            left: SizeConfig.cardBorderRadius,
+            right: SizeConfig.cardBorderRadius,
           ),
           //margin: EdgeInsets.only(top: UiConstants.avatarRadius),
           decoration: new BoxDecoration(
             color: Colors.white,
             shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.circular(UiConstants.padding),
+            borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
             boxShadow: [
               BoxShadow(
                 color: Colors.black26,

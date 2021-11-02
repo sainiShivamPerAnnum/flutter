@@ -323,7 +323,7 @@
 //                                       "",
 //                                       "");
 //                               if (detail == null) {
-//                                 baseProvider.showNegativeAlert(
+//                                 BaseUtil.showNegativeAlert(
 //                                     'Registration Failed',
 //                                     'Failed to regsiter at the moment. Please try again.',
 //                                     context);
@@ -336,7 +336,7 @@
 //                               }
 //                             },
 //                             onReject: () {
-//                               baseProvider.showNegativeAlert(
+//                               BaseUtil.showNegativeAlert(
 //                                   'Registration Cancelled',
 //                                   'Please try again',
 //                                   context);
@@ -357,7 +357,7 @@
 //                                     title: 'Invalid Details',
 //                                   ));
 //                         else
-//                           baseProvider.showNegativeAlert(
+//                           BaseUtil.showNegativeAlert(
 //                               'Registration failed',
 //                               veriDetails['reason'] ?? 'Please try again',
 //                               context);
@@ -387,38 +387,38 @@
 //   bool _preVerifyInputs() {
 //     RegExp panCheck = RegExp(r"[A-Z]{5}[0-9]{4}[A-Z]{1}");
 //     if (_panInput.text.isEmpty) {
-//       baseProvider.showNegativeAlert(
+//       BaseUtil.showNegativeAlert(
 //           'Invalid Pan', 'Kindly enter a valid PAN Number', context);
 //       return false;
 //     } else if (!panCheck.hasMatch(_panInput.text) ||
 //         _panInput.text.length != 10) {
-//       baseProvider.showNegativeAlert(
+//       BaseUtil.showNegativeAlert(
 //           'Invalid Pan', 'Kindly enter a valid PAN Number', context);
 //       return false;
 //     } else if (_panHolderNameInput.text.isEmpty) {
-//       baseProvider.showNegativeAlert('Name missing',
+//       BaseUtil.showNegativeAlert('Name missing',
 //           'Kindly enter your name as per your pan card', context);
 //       return false;
 //     } else if (stateChosenValue == null || stateChosenValue.isEmpty) {
-//       baseProvider.showNegativeAlert('State missing',
+//       BaseUtil.showNegativeAlert('State missing',
 //           'Kindly enter your current residential state', context);
 //       return false;
 //     }
 //     // else if (_bankHolderNameInput.text.isEmpty) {
-//     //   baseProvider.showNegativeAlert(
+//     //   BaseUtil.showNegativeAlert(
 //     //       'Name missing', 'Kindly enter your name as per your bank', context);
 //     //   return false;
 //     // } else if (_bankAccountNumberInput.text.isEmpty) {
-//     //   baseProvider.showNegativeAlert(
+//     //   BaseUtil.showNegativeAlert(
 //     //       'Account missing', 'Kindly enter your bank account number', context);
 //     //   return false;
 //     // } else if (_bankAccountNumberInput.text !=
 //     //     _reenterbankAccountNumberInput.text) {
-//     //   baseProvider.showNegativeAlert('Account number mismatch',
+//     //   BaseUtil.showNegativeAlert('Account number mismatch',
 //     //       'The bank account numbers did not match', context);
 //     //   return false;
 //     // } else if (_bankIfscInput.text.isEmpty) {
-//     //   baseProvider.showNegativeAlert(
+//     //   BaseUtil.showNegativeAlert(
 //     //       'Name missing', 'Kindly enter your bank IFSC code', context);
 //     //   return false;
 //     // }
@@ -507,7 +507,7 @@
 //       baseProvider.isAugmontRegnCompleteAnimateInProgress = false;
 //       setState(() {});
 //       backButtonDispatcher.didPopRoute();
-//       baseProvider.showPositiveAlert(
+//       BaseUtil.showPositiveAlert(
 //           'Registration Successful', 'You can now make a deposit!', context);
 //     });
 //   }
@@ -559,7 +559,7 @@
 //                   if (await canLaunch(url))
 //                     await launch(url);
 //                   else
-//                     baseProvider.showNegativeAlert('Failed to launch URL',
+//                     BaseUtil.showNegativeAlert('Failed to launch URL',
 //                         'Please try again in sometime', context);
 //                 },
 //                 label: Text(
