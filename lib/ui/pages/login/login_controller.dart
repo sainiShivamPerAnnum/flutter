@@ -650,6 +650,8 @@ class _LoginControllerState extends State<LoginController>
       //Move to name input page
       lclDbProvider.setShowHomeTutorial = true;
       lclDbProvider.setShowTambolaTutorial = true;
+      BaseUtil.isNewUser = true;
+      BaseUtil.isFirstFetchDone = false;
       _controller.animateToPage(NameInputScreen.index,
           duration: Duration(milliseconds: 500), curve: Curves.easeInToLinear);
       //_nameScreenKey.currentState.showEmailOptions();
