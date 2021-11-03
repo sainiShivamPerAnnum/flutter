@@ -14,6 +14,7 @@ import 'package:felloapp/ui/dialogs/augmont_confirm_register_dialog.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -236,7 +237,9 @@ class KYCDetailsViewModel extends BaseModel {
         ),
       );
     } else {
-      print('inside failed name');
+      _dbModel.logFailure(_userService.baseUser.uid,
+          FailType.UserKYCFlagFetchFailed, veriDetails);
+      _logger.e('inside failed name');
       if (veriDetails['fail_code'] == 0)
         showDialog(
             context: context,
@@ -308,8 +311,14 @@ class KYCDetailsViewModel extends BaseModel {
       }
     }
     if (!_flag) {
-      print('returning false flag');
-      return {'flag': _flag, 'fail_code': _failCode, 'reason': _reason};
+      _logger.d('returning false flag for pan verification');
+      return {
+        'flag': _flag,
+        'fail_code': _failCode,
+        'reason': _reason,
+        'user_pan_name': enteredPanName,
+        'user_pan_number': enteredPan
+      };
     }
 
     return {
