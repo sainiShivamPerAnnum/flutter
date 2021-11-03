@@ -5,9 +5,6 @@ import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/dialogs/aboutus_dialog.dart';
-import 'package:felloapp/ui/dialogs/game-poll-dialog.dart';
-import 'package:felloapp/ui/dialogs/guide_dialog.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/hamburger/chatsupport_page.dart';
 import 'package:felloapp/ui/pages/hamburger/faq_page.dart';
@@ -16,13 +13,11 @@ import 'package:felloapp/ui/pages/hamburger/support.dart';
 import 'package:felloapp/ui/pages/hamburger/tnc_page.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
 import 'package:felloapp/ui/pages/notifications/notifications.dart';
-import 'package:felloapp/ui/pages/onboarding/getstarted/get_started_page.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_page.dart';
 import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/edit_augmont_bank_details.dart';
-import 'package:felloapp/ui/pages/others/finance/finance_report.dart';
 import 'package:felloapp/ui/pages/others/finance/icici/mf_details_page.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_game/cricket_game_view.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
@@ -163,9 +158,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.Root:
           _addPageData(Root(), RootPageConfig);
           break;
-        case Pages.Onboard:
-          _addPageData(GetStartedPage(), OnboardPageConfig);
-          break;
+        // case Pages.Onboard:
+        //   _addPageData(GetStartedPage(), OnboardPageConfig);
+        //   break;
         case Pages.UserProfileDetails:
           _addPageData(UserProfileDetails(), UserProfileDetailsConfig);
           break;
@@ -220,9 +215,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(WalkThroughPage(), WalkThroughConfig);
           break;
 
-        case Pages.YourFunds:
-          _addPageData(YourFunds(), YourFundsConfig);
-          break;
+        // case Pages.YourFunds:
+        //   _addPageData(YourFunds(), YourFundsConfig);
+        //   break;
         case Pages.THome:
           _addPageData(TambolaHomeView(), THomePageConfig);
           break;
@@ -517,15 +512,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     Widget dialogWidget;
     bool barrierDismissable = true;
     switch (dialogKey) {
-      case 'guide':
-        dialogWidget = GuideDialog();
-        break;
-      case 'gamePoll':
-        dialogWidget = GamePoll();
-        break;
-      case "aboutUs":
-        dialogWidget = const AboutUsDialog();
-        break;
       case "panInfo":
         dialogWidget = MoreInfoDialog(
           text: Assets.infoWhyPan,
