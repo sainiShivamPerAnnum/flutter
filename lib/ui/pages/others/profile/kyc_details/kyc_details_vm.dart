@@ -317,7 +317,8 @@ class KYCDetailsViewModel extends BaseModel {
         'fail_code': _failCode,
         'reason': _reason,
         'user_pan_name': enteredPanName,
-        'user_pan_number': enteredPan
+        'user_pan_number': enteredPan,
+        'upstream_name': upstreamName,
       };
     }
 
