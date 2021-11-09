@@ -3,6 +3,7 @@ import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -18,39 +19,24 @@ class OctFestInfoModal extends StatelessWidget {
             children: [
               Container(
                 padding: EdgeInsets.only(
-                    left: SizeConfig.blockSizeHorizontal * 5,
-                    right: SizeConfig.blockSizeHorizontal * 5,
-                    top: 16,
-                    bottom: 0),
+                    left: SizeConfig.pageHorizontalMargins, top: 16, bottom: 0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // SizedBox(
-                    // width: SizeConfig
-                    //         .blockSizeHorizontal *
-                    //     5),
-                    Expanded(
-                      child: FittedBox(
-                        fit: BoxFit.cover,
-                        child: Text(
-                          "Fello October Fest 🍺",
-                          textAlign: TextAlign.center,
-                          maxLines: 2,
-                          style: GoogleFonts.montserrat(
-                            fontWeight: FontWeight.w500,
-                            color: UiConstants.primaryColor,
-                          ),
-                        ),
-                      ),
+                    Text(
+                      "Fello October Fest 🍺",
+                      textAlign: TextAlign.center,
+                      style: TextStyles.title3.bold
+                          .colour(UiConstants.primaryColor),
                     ),
-                    SizedBox(width: SizeConfig.blockSizeHorizontal * 5),
                     IconButton(
                       onPressed: () {
                         AppState.backButtonDispatcher.didPopRoute();
                       },
                       icon: Icon(
                         Icons.close,
-                        color: Colors.grey,
+                        size: SizeConfig.iconSize1,
+                        color: Colors.black,
                       ),
                     )
                   ],
@@ -124,7 +110,7 @@ class OctFestInfoModal extends StatelessWidget {
           Expanded(
             child: Text(
               title,
-              style: GoogleFonts.montserrat(),
+              style: TextStyles.body4,
             ),
           ),
         ],

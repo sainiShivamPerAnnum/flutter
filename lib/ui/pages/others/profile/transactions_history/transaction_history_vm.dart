@@ -19,10 +19,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 
 enum TranFilterType { Type, Subtype }
 
 class TransactionsHistoryViewModel extends BaseModel {
+  final _logger = locator<Logger>();
   int _subfilter = 1;
   int _filter = 1;
   bool _init = true;
@@ -104,7 +106,7 @@ class TransactionsHistoryViewModel extends BaseModel {
       return "Tambola Win";
     } else if (type == UserTransaction.TRAN_SUBTYPE_REF_BONUS) {
       return "Referral Bonus";
-    }else if (type == UserTransaction.TRAN_SUBTYPE_REWARD_REDEEM) {
+    } else if (type == UserTransaction.TRAN_SUBTYPE_REWARD_REDEEM) {
       return "Rewards Redeemed";
     }
     return "Fund Name";
@@ -302,6 +304,7 @@ class TransactionsHistoryViewModel extends BaseModel {
   }
 
   bool getBeerTicketStatus(UserTransaction transaction) {
+    _logger.d(baseProvider.firstAugmontTransaction);
     if (baseProvider.firstAugmontTransaction != null &&
         baseProvider.firstAugmontTransaction == transaction &&
         transaction.amount >= 150.0 &&

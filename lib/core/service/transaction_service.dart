@@ -5,10 +5,13 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:logger/logger.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
-class TransactionService extends PropertyChangeNotifier<TransactionServiceProperties> {
+class TransactionService
+    extends PropertyChangeNotifier<TransactionServiceProperties> {
   final _dBModel = locator<DBModel>();
+  final _baseUtil = locator<BaseUtil>();
   final _userService = locator<UserService>();
   final _logger = locator<Logger>();
 
@@ -48,7 +51,20 @@ class TransactionService extends PropertyChangeNotifier<TransactionServiceProper
       }
       if (tMap['length'] < 30) {
         hasMoreTransactionListDocuments = false;
+        findFirstAugmontTransaction();
       }
+    }
+  }
+
+  findFirstAugmontTransaction() {
+    try {
+      List<UserTransaction> reversedList = txnList.reversed.toList();
+      _baseUtil.firstAugmontTransaction = reversedList.firstWhere((element) =>
+          element.type == UserTransaction.TRAN_TYPE_DEPOSIT &&
+          element.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE &&
+          element.subType == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD);
+    } catch (e) {
+      _logger.i("No transaction found");
     }
   }
 

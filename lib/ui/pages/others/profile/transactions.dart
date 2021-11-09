@@ -89,19 +89,19 @@
 //     }
 //   }
 //
-//   findFirstAugmontTransaction() {
-//     try {
-//       List<UserTransaction> reversedList =
-//           baseProvider.userMiniTxnList.reversed.toList();
-//       baseProvider.firstAugmontTransaction = reversedList.firstWhere(
-//           (element) =>
-//               element.type == UserTransaction.TRAN_TYPE_DEPOSIT &&
-//               element.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE &&
-//               element.subType == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD);
-//     } catch (e) {
-//       log("No transaction found");
-//     }
-//   }
+  // findFirstAugmontTransaction() {
+  //   try {
+  //     List<UserTransaction> reversedList =
+  //         baseProvider.userMiniTxnList.reversed.toList();
+  //     baseProvider.firstAugmontTransaction = reversedList.firstWhere(
+  //         (element) =>
+  //             element.type == UserTransaction.TRAN_TYPE_DEPOSIT &&
+  //             element.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE &&
+  //             element.subType == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD);
+  //   } catch (e) {
+  //     log("No transaction found");
+  //   }
+  // }
 //
 //   Widget getTileLead(String type) {
 //     if (type == UserTransaction.TRAN_STATUS_COMPLETE) {

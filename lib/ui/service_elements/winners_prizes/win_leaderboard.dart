@@ -86,14 +86,14 @@ class WinnersLeaderBoardSE extends StatelessWidget {
                             )
                           : (model.winners.isEmpty
                               ? Container(
-                                  color: Colors.white,
                                   child: ListView(
                                     controller: myscrollController,
                                     children: [
                                       Center(
                                         child: NoRecordDisplayWidget(
                                           asset: "images/leaderboard.png",
-                                          text: "Winners will be upadated soon",
+                                          text:
+                                              "Leaderboard will be upadated soon",
                                         ),
                                       ),
                                     ],
@@ -139,7 +139,8 @@ class WinnerboardView extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Previous week\'s prize winners:',
+                Text(
+                  'Previous week\'s prize winners:',
                   style: TextStyles.body4.colour(Colors.grey),
                 ),
                 Text(
