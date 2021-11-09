@@ -51,6 +51,7 @@ class CricketHomeView extends StatelessWidget {
                           SizedBox(height: SizeConfig.screenHeight * 0.1),
                           InkWell(
                             onTap: () async {
+                              if (await BaseUtil.showNoInternetAlert()) return;
                               if (model.state == ViewState.Idle) {
                                 if (await model.openWebView())
                                   model.startGame();
@@ -404,7 +405,8 @@ class LeaderBoardView extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('This week\'s top scorers:',
+              Text(
+                'This week\'s top scorers:',
                 style: TextStyles.body4.colour(Colors.grey),
               ),
               Text(
