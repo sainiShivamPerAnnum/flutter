@@ -118,7 +118,7 @@ class CricketHomeViewModel extends BaseModel {
   Future<void> getLeaderboard() async {
     isLeaderboardLoading = true;
     notifyListeners();
-    var temp = await _stats.getLeaderBoard("GM_CRIC2020", "weekly");
+    var temp = await _stats.getLeaderBoard("GM_CRIC2020", "daily");
     if (temp != null)
       _cricLeaderboard = temp.model;
     else
