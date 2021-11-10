@@ -190,7 +190,7 @@ class _LoginControllerState extends State<LoginController>
       log.error("Verification process failed:  ${exception.message}");
       BaseUtil.showNegativeAlert(
         'Sign In Failed',
-        'Please check your network or number and try again',
+        '${exception.message}',
       );
       baseProvider.isLoginNextInProgress = false;
       setState(() {});
