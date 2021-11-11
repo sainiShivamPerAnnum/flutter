@@ -199,7 +199,7 @@ class BaseUtil extends ChangeNotifier {
     _setRuntimeDefaults();
 
     //Analytics logs app open state.
-    BaseAnalytics.init();
+    await BaseAnalytics.init();
     BaseAnalytics.analytics.logAppOpen();
 
     //remote config for various remote variables

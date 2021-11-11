@@ -1,3 +1,4 @@
+import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -16,6 +17,7 @@ void main() async {
           signzyPanStage: SignzyPanStage.PROD,
           baseUriUS: 'us-central1-fello-d3a9c.cloudfunctions.net',
           baseUriAsia: 'asia-south1-fello-d3a9c.cloudfunctions.net',
+          mixpanelToken: BaseAnalytics.PROD_TOKEN,
           dynamicLinkPrefix: 'https://fello.in'));
   await mainInit();
   runApp(MyApp());
