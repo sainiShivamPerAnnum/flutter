@@ -19,6 +19,7 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -110,7 +111,8 @@ class MyWinningsViewModel extends BaseModel {
       hapticVibrate: true,
       content: FelloConfirmationDialog(
         result: (res) async {
-          if (res) await claim(choice, _userService.userFundWallet.unclaimedBalance);
+          if (res)
+            await claim(choice, _userService.userFundWallet.unclaimedBalance);
         },
         showCrossIcon: true,
         asset: Assets.prizeClaimConfirm,
@@ -128,54 +130,85 @@ class MyWinningsViewModel extends BaseModel {
   }
 
   showSuccessPrizeWithdrawalDialog(String subtitle, String shareMessage) async {
-    if (choice == null) await getClaimChoice();
+    if (choice == null) {
+      choice = PrizeClaimChoice.GOLD_CREDIT;
+      // await getClaimChoice();
+    }
     AppState.screenStack.add(ScreenItem.dialog);
     showDialog(
         context: AppState.delegate.navigatorKey.currentContext,
         builder: (ctx) {
-          return Container(
-            width: SizeConfig.screenWidth,
-            height: SizeConfig.screenHeight,
-            child: Stack(
-              children: [
-                // Align(
-                //   alignment: Alignment.bottomCenter,
-                //   child: RepaintBoundary(
-                //     key: imageKey,
-                //     child: ShareCard(
-                //       dpUrl: _userService.myUserDpUrl,
-                //       claimChoice: choice,
-                //       prizeAmount: _userService.userFundWallet.prizeBalance,
-                //       username: _userService.baseUser.name,
-                //     ),
-                //   ),
-                // ),
-                FelloConfirmationDialog(
-                  result: (res) async {
-                    if (res) {
-                      AppState.backButtonDispatcher.didPopRoute();
-                      if (Platform.isIOS) {
-                        Share.share(shareMessage);
-                      } else {
-                        FlutterShareMe().shareToSystem(msg: shareMessage).then((flag) {
-                          _logger.d(flag);
-                        });
-                      }
-                    }
-                  },
-                  showCrossIcon: false,
-                  asset: Assets.goldenTicket,
-                  title: "Congratulations",
-                  subtitle: subtitle,
-                  accept: "Share",
-                  reject: "Done",
-                  acceptColor: UiConstants.primaryColor,
-                  rejectColor: Colors.grey[400],
-                  //onAccept: buyAmazonGiftCard,
-                  onReject: AppState.backButtonDispatcher.didPopRoute,
-                )
-              ],
-            ),
+          return Stack(
+            children: [
+              FelloConfirmationDialog(
+                result: (res) async {
+                  if (res) {
+                    caputure();
+                    // AppState.backButtonDispatcher.didPopRoute();
+                    // if (Platform.isIOS) {
+                    //   Share.share(shareMessage);
+                    // } else {
+                    //   FlutterShareMe()
+                    //       .shareToSystem(msg: shareMessage)
+                    //       .then((flag) {
+                    //     _logger.d(flag);
+                    //   });
+                    // }
+                  }
+                },
+                content: Column(
+                  children: [
+                    SizedBox(height: SizeConfig.screenHeight * 0.02),
+                    Container(
+                      height: SizeConfig.screenHeight * 0.38,
+                      width: SizeConfig.screenWidth,
+                      child: FittedBox(
+                        fit: BoxFit.contain,
+                        child: RepaintBoundary(
+                          key: imageKey,
+                          child: ShareCard(
+                            dpUrl: _userService.myUserDpUrl,
+                            claimChoice: choice,
+                            prizeAmount:
+                                _userService.userFundWallet.prizeBalance,
+                            username: _userService.baseUser.name,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: SizeConfig.screenHeight * 0.02),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        "Congratulations",
+                        style: TextStyles.title2.bold,
+                      ),
+                    ),
+                    SizedBox(height: SizeConfig.padding16),
+                    Text(
+                      subtitle,
+                      textAlign: TextAlign.center,
+                      style: TextStyles.body2.colour(Colors.grey),
+                    ),
+                    SizedBox(height: SizeConfig.screenHeight * 0.03),
+                  ],
+                ),
+                showCrossIcon: false,
+                // asset: Assets.goldenTicket,
+                // title: "Congratulations",
+                // subtitle: subtitle,
+                accept: "Share",
+                reject: "Done",
+                acceptColor: UiConstants.primaryColor,
+                rejectColor: Colors.grey[300],
+                //onAccept: buyAmazonGiftCard,
+                onReject: AppState.backButtonDispatcher.didPopRoute,
+              ),
+              // Align(
+              //   alignment: Alignment.bottomCenter,
+              //   child:
+              // ),
+            ],
           );
         });
   }
@@ -190,9 +223,11 @@ class MyWinningsViewModel extends BaseModel {
     _registerClaimChoice(choice).then((flag) {
       AppState.backButtonDispatcher.didPopRoute();
       if (flag) {
-        showSuccessPrizeWithdrawalDialog(choice == PrizeClaimChoice.AMZ_VOUCHER
-            ? "You will receive the gift card on your registered email and mobile in the next 1-2 business days"
-            : "The gold in grams shall be credited to your wallet in the next 1-2 business days", 'Hey, I just won ₹${_claimAmt} on Fello! \nYou should try it out too: https://fello.in/app/download');
+        showSuccessPrizeWithdrawalDialog(
+            choice == PrizeClaimChoice.AMZ_VOUCHER
+                ? "You will receive the gift card on your registered email and mobile in the next 1-2 business days"
+                : "The gold in grams shall be credited to your wallet in the next 1-2 business days",
+            'Hey, I just won ₹${_claimAmt} on Fello! \nYou should try it out too: https://fello.in/app/download');
       }
     });
   }
