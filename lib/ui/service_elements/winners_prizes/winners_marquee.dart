@@ -26,8 +26,8 @@ class WinnersMarqueeStrip extends StatelessWidget {
                 ? [
                     "Shourya won ₹ 1000",
                     "Manish won ₹ 2000",
-                    "Shreeyash won ₹ 1200"
-                        "CJ won ₹ 800"
+                    "Shreeyash won ₹ 1200",
+                    "CJ won ₹ 800"
                   ]
                 : List.generate(
                     WModel.winners.length,

@@ -45,7 +45,7 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
   bool calculateTime() {
     DateTime currentTime = DateTime.now();
     DateTime drawTime = DateTime(DateTime.now().year, DateTime.now().month,
-        DateTime.now().day, 18, 00, 10);
+        DateTime.now().day, 19, 09, 10);
     Duration timeDiff = currentTime.difference(drawTime);
     if (timeDiff.inSeconds < 0) {
       duration = timeDiff.abs();
@@ -57,7 +57,7 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
   void addTime() async {
     final addSeconds = countDown ? -1 : 1;
     final seconds = duration.inSeconds + addSeconds;
-    if (seconds < 0) {
+    if (seconds <= 0) {
       await _tambolaService.fetchWeeklyPicks(forcedRefresh: true);
       setState(() {
         showClock = false;
