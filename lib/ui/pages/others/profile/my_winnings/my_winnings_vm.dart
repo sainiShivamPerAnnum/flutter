@@ -131,8 +131,7 @@ class MyWinningsViewModel extends BaseModel {
 
   showSuccessPrizeWithdrawalDialog(String subtitle, String shareMessage) async {
     if (choice == null) {
-      choice = PrizeClaimChoice.GOLD_CREDIT;
-      // await getClaimChoice();
+      await getClaimChoice();
     }
     AppState.screenStack.add(ScreenItem.dialog);
     showDialog(

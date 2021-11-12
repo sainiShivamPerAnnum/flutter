@@ -83,10 +83,6 @@ class MyWinningsView extends StatelessWidget {
                                         physics: BouncingScrollPhysics(),
                                         itemCount: model.winningHistory.length,
                                         itemBuilder: (ctx, i) => ListTile(
-                                          onTap: () => model
-                                              .showSuccessPrizeWithdrawalDialog(
-                                                  model.winningHistory[i].type,
-                                                  "yo yo"),
                                           contentPadding: EdgeInsets.symmetric(
                                               horizontal: SizeConfig
                                                   .pageHorizontalMargins),
