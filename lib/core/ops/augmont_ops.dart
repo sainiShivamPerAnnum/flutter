@@ -10,6 +10,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/core/repository/investment_actions_repo.dart';
 import 'package:felloapp/core/service/augmont_invoice_service.dart';
+import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_coin_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
@@ -36,6 +37,7 @@ class AugmontModel extends ChangeNotifier {
   final UserService _userService = locator<UserService>();
   final _userCoinService = locator<UserCoinService>();
   final TransactionService _txnService = locator<TransactionService>();
+  final MixpanelService _mixpanelService = locator<MixpanelService>();
 
   ValueChanged<UserTransaction> _augmontTxnProcessListener;
   final String defaultBaseUri =
@@ -294,6 +296,7 @@ class AugmontModel extends ChangeNotifier {
 
       if (tTxn != null) {
         _baseProvider.currentAugmontTxn = tTxn;
+
         _rzpGateway.setTransactionListener(_onRazorpayPaymentProcessed);
       }
     }
@@ -347,6 +350,7 @@ class AugmontModel extends ChangeNotifier {
     if (_baseProvider.currentAugmontTxn.rzp[UserTransaction.subFldRzpStatus] ==
         UserTransaction.RZP_TRAN_STATUS_COMPLETE) {
       //payment completed successfully
+      _mixpanelService.mixpanel.track("Invested in gold");
       _onPaymentComplete();
     } else {
       _onPaymentFailed();
@@ -599,7 +603,6 @@ class AugmontModel extends ChangeNotifier {
           _baseProvider.myUser.uid, FailType.UserAugmontSellFailed, _failMap);
       if (_augmontTxnProcessListener != null)
         _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
-  
     } else {
       //success
       _baseProvider.currentAugmontTxn.tranStatus =

@@ -6,6 +6,7 @@ import 'package:felloapp/core/model/signzy_pan/signzy_login.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
+import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/core/service/pan_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -31,6 +32,7 @@ class KYCDetailsViewModel extends BaseModel {
   final _httpModel = locator<HttpModel>();
   final _baseUtil = locator<BaseUtil>();
   final _userRepo = locator<UserRepository>();
+  final _mixpanelService = locator<MixpanelService>();
 
   FocusNode panFocusNode = FocusNode();
   TextInputType panTextInputType = TextInputType.name;
@@ -219,6 +221,7 @@ class KYCDetailsViewModel extends BaseModel {
               refresh();
               return;
             } else {
+              _mixpanelService.mixpanel.track("Pan Verified");
               BaseUtil.showPositiveAlert(
                   'Verification Successful', 'You are successfully verified!');
               _isKycInProgress = false;

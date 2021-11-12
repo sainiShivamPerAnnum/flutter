@@ -3,6 +3,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
+import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/augmont_confirm_register_dialog.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
@@ -12,6 +13,7 @@ import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/icici_api_util.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/palette.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -45,6 +47,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
   TextEditingController _bankAccNoController;
   TextEditingController _bankIfscController;
   TextEditingController _bankAccNoConfirmController;
+  final MixpanelService _mixpanelService = locator<MixpanelService>();
   bool _isInitialized = false;
   DBModel dbProvider;
   BaseUtil baseProvider;
@@ -477,6 +480,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                     baseProvider.isEditAugmontBankDetailInProgress = false;
                     setState(() {});
                     if (flag) {
+                      _mixpanelService.mixpanel.track('Bank details updated');
                       BaseUtil.showPositiveAlert(
                           'Complete', 'Your details have been updated');
                       AppState.backButtonDispatcher.didPopRoute();
