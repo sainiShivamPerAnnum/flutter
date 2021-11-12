@@ -43,7 +43,7 @@ class UserEmailVerificationMark extends StatelessWidget {
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
       properties: [UserServiceProperties.myEmailVerification],
-      builder: (context, model, property) => model.isEmailVerified
+      builder: (context, model, property) => model.isEmailVerified ?? false
           ? Icon(
               Icons.verified,
               color: UiConstants.primaryColor,
