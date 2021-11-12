@@ -1,5 +1,6 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:felloapp/core/base_analytics.dart';
+import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -19,7 +20,7 @@ void main() async {
           signzyPanStage: SignzyPanStage.DEV,
           baseUriUS: 'us-central1-fello-dev-station.cloudfunctions.net',
           baseUriAsia: 'asia-south1-fello-dev-station.cloudfunctions.net',
-           mixpanelToken: BaseAnalytics.DEV_TOKEN,
+           mixpanelToken: MixpanelService.DEV_TOKEN,
           dynamicLinkPrefix: 'https://dev.fello.in/test'));
   await mainInit();
   runApp(MyApp());

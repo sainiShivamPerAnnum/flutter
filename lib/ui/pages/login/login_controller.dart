@@ -12,6 +12,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
+import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -71,6 +72,7 @@ class _LoginControllerState extends State<LoginController>
   final UserService userService = locator<UserService>();
   final FcmListener fcmListener = locator<FcmListener>();
   final AugmontModel augmontProvider = locator<AugmontModel>();
+  final MixpanelService _mixpanelService = locator<MixpanelService>();
   AnimationController animationController;
 
   String userMobile;
@@ -688,6 +690,7 @@ class _LoginControllerState extends State<LoginController>
   }
 
   Future _onSignUpComplete() async {
+    _mixpanelService.mixpanel.track("Logging in user");
     await BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
     await BaseAnalytics.logUserProfile(baseProvider.myUser);
     await userService.init();

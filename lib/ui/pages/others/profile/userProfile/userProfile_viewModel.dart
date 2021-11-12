@@ -9,6 +9,7 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
+import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -37,6 +38,7 @@ class UserProfileVM extends BaseModel {
   final BaseUtil _baseUtil = locator<BaseUtil>();
   final DBModel _dbModel = locator<DBModel>();
   final fcmlistener = locator<FcmListener>();
+  final MixpanelService _mixpanelService = locator<MixpanelService>();
   final S _locale = locator<S>();
   double picSize;
   XFile selectedProfilePicture;
@@ -341,10 +343,10 @@ class UserProfileVM extends BaseModel {
               confirmAction: () {
                 _chooseprofilePicture();
               },
-              cancelAction: (){}));
+              cancelAction: () {}));
     } else if (_status.isGranted) {
       await _chooseprofilePicture();
-      // needsRefresh(true);
+      _mixpanelService.mixpanel.track("Updated profile picture");
     } else {
       BaseUtil.showNegativeAlert('Permission Unavailable',
           'Please enable permission from settings to continue');

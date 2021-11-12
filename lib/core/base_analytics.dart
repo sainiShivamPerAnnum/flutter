@@ -8,7 +8,6 @@ class BaseAnalytics {
   static FirebaseAnalytics _analytics;
   static FirebaseAnalyticsObserver _observer;
 
-  static Mixpanel _mixpanel;
 
   static const String PAGE_FINANCE = 'finance';
   static const String PAGE_GAME = 'game';
@@ -16,16 +15,14 @@ class BaseAnalytics {
   static const String PAGE_PROFILE = 'profile';
   static const String PAGE_TAMBOLA = 'tambola';
 
-  static const String DEV_TOKEN = "6bc0994f4244fc5b193213df643f14dc";
-  static const String PROD_TOKEN = "03de57e684d04e87999e089fd605fcdd";
+
 
   static init()async {
     _analytics = FirebaseAnalytics();
     _observer = FirebaseAnalyticsObserver(analytics: _analytics);
 
-     _mixpanel = await Mixpanel.init(FlavorConfig.instance.values.mixpanelToken, optOutTrackingDefault: false);
-    _mixpanel.track("tester");
-    _mixpanel.track('Plan Selected', properties: {'Plan': 'Shourya'});
+
+
   }
 
   static logUserProfile(BaseUser user) async {
