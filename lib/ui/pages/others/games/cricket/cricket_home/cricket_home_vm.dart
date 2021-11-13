@@ -7,6 +7,7 @@ import 'package:felloapp/core/model/leader_board_modal.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/repository/statistics_repo.dart';
+import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/core/service/prize_service.dart';
 import 'package:felloapp/core/service/user_coin_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
@@ -27,6 +28,7 @@ class CricketHomeViewModel extends BaseModel {
   final _logger = locator<Logger>();
   final _stats = locator<StatisticsRepository>();
   final _prizeService = locator<PrizeService>();
+  final _mixpanelService = locator<MixpanelService>();
 
   PageController pageController = new PageController(initialPage: 0);
 
@@ -68,6 +70,7 @@ class CricketHomeViewModel extends BaseModel {
   }
 
   startGame() {
+        _mixpanelService.mixpanel.track("Plays Cricket");
     AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: CricketGamePageConfig,
