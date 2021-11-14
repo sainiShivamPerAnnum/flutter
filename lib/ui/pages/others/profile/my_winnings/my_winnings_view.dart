@@ -50,8 +50,9 @@ class MyWinningsView extends StatelessWidget {
                       ),
                       padding: EdgeInsets.only(
                           top: SizeConfig.pageHorizontalMargins),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      child: ListView(
+                        padding: EdgeInsets.zero,
+                        //crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Hero(
                             tag: "myWinnings",
@@ -76,48 +77,82 @@ class MyWinningsView extends StatelessWidget {
                               ? ListLoader()
                               : (model.winningHistory != null &&
                                       model.winningHistory.isNotEmpty
-                                  ? Expanded(
-                                      child: ListView.builder(
-                                        padding: EdgeInsets.only(
-                                            bottom: SizeConfig.navBarHeight),
-                                        physics: BouncingScrollPhysics(),
-                                        itemCount: model.winningHistory.length,
-                                        itemBuilder: (ctx, i) => ListTile(
-                                          contentPadding: EdgeInsets.symmetric(
-                                              horizontal: SizeConfig
-                                                  .pageHorizontalMargins),
-                                          leading: CircleAvatar(
-                                            radius: SizeConfig.padding24,
-                                            backgroundColor: model.colorList[
-                                                Random().nextInt(
-                                                    model.colorList.length)],
-                                            child: Padding(
-                                              padding: EdgeInsets.all(
-                                                  SizeConfig.padding4),
-                                              child: SvgPicture.asset(
-                                                  Assets.congrats),
+                                  ? Container(
+                                      child: Column(
+                                        // padding: EdgeInsets.only(
+                                        //     bottom: SizeConfig.navBarHeight),
+                                        // physics: BouncingScrollPhysics(),
+                                        // itemCount: model.winningHistory.length,
+                                        children: List.generate(
+                                          model.winningHistory.length,
+                                          (i) => ListTile(
+                                            onTap: () =>
+                                                model.showPrizeDetailsDialog(
+                                                    model.winningHistory[i]
+                                                            .redeemType ??
+                                                        "",
+                                                    model.winningHistory[i]
+                                                            .amount ??
+                                                        0.0),
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    horizontal: SizeConfig
+                                                        .pageHorizontalMargins),
+                                            leading: CircleAvatar(
+                                              radius: SizeConfig.padding24,
+                                              backgroundColor: model
+                                                  .getWinningHistoryLeadingBg(
+                                                      model.winningHistory[i]
+                                                              .redeemType ??
+                                                          ""),
+                                              child: Padding(
+                                                padding: EdgeInsets.all(
+                                                    SizeConfig.padding12),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color: Colors.black
+                                                              .withOpacity(0.2),
+                                                          blurRadius: 2,
+                                                          offset: Offset(4, 4),
+                                                          spreadRadius: 2,
+                                                        )
+                                                      ]),
+                                                  child: Image.asset(model
+                                                      .getWinningHistoryLeadingImage(
+                                                          model.winningHistory[i]
+                                                                  .redeemType ??
+                                                              "")),
+                                                ),
+                                              ),
                                             ),
-                                          ),
-                                          title: Text(
-                                            model.getWinningHistoryTitle(model
-                                                .winningHistory[i].subType),
-                                            style: TextStyles.body2.bold,
-                                          ),
-                                          subtitle: Text(
-                                            DateFormat("dd MMM, yyyy").format(
-                                                model
-                                                    .winningHistory[i].timestamp
-                                                    .toDate()),
-                                            style: TextStyles.body3
-                                                .colour(Colors.grey),
-                                          ),
-                                          trailing: Text(
-                                            "₹ ${model.winningHistory[i]?.amount}",
-                                            style: TextStyles.body2.bold.colour(
-                                                model.winningHistory[i].amount >
-                                                        0
-                                                    ? UiConstants.primaryColor
-                                                    : Colors.red[300]),
+                                            title: Text(
+                                              model.getWinningHistoryTitle(model
+                                                      .winningHistory[i]
+                                                      .redeemType ??
+                                                  ""),
+                                              style: TextStyles.body2.bold,
+                                            ),
+                                            subtitle: Text(
+                                              DateFormat("dd MMM, yyyy").format(
+                                                  model.winningHistory[i]
+                                                      .timestamp
+                                                      .toDate()),
+                                              style: TextStyles.body3
+                                                  .colour(Colors.grey),
+                                            ),
+                                            trailing: Text(
+                                              "₹ ${model.winningHistory[i]?.amount}",
+                                              style: TextStyles.body2.bold
+                                                  .colour(model
+                                                              .winningHistory[i]
+                                                              .amount >
+                                                          0
+                                                      ? UiConstants.primaryColor
+                                                      : Colors.red[300]),
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -141,49 +176,3 @@ class MyWinningsView extends StatelessWidget {
     );
   }
 }
-
-
-//                             Card(
-//                             margin: EdgeInsets.symmetric(vertical: 20),
-//                             child: Padding(
-//                               padding: const EdgeInsets.symmetric(
-//                                   horizontal: 8.0, vertical: 25),
-//                               child: Column(
-//                                 children: [
-//                                   Row(
-//                                     mainAxisAlignment:
-//                                         MainAxisAlignment.spaceAround,
-//                                     children: [
-//                                       Text("My winnings",
-//                                           style: TextStyles.body3.light),
-//                                       PropertyChangeConsumer<UserService,
-//                                           UserServiceProperties>(
-//                                         builder: (ctx, model, child) => Text(
-//                                           //"₹ 0.00",
-//                                           "₹ ${model.userFundWallet.unclaimedBalance}",
-//                                           style: TextStyles.body2.bold
-//                                               .colour(UiConstants.primaryColor),
-//                                         ),
-//                                       ),
-//                                     ],
-//                                   ),
-//                                   // SizedBox(height: 12),
-//                                   // Widgets().getBodyBold("Redeem for", Colors.black),
-//                                   SizedBox(height: 12),
-//                                   //if (model.getUnclaimedPrizeBalance > 0)
-//                                   PropertyChangeConsumer<UserService,
-//                                       UserServiceProperties>(
-//                                     builder: (ctx, m, child) => FelloButton(
-//                                       defaultButtonText: m.userFundWallet
-//                                               .isPrizeBalanceUnclaimed()
-//                                           ? "Redeem"
-//                                           : "Share",
-//                                       onPressedAsync: () =>
-//                                           model.prizeBalanceAction(context),
-//                                       defaultButtonColor: Colors.orange,
-//                                     ),
-//                                   ),
-//                                 ],
-//                               ),
-//                             ),
-//                           ),

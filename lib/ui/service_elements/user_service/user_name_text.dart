@@ -12,8 +12,8 @@ class UserNameTextSE extends StatelessWidget {
       properties: [UserServiceProperties.myUserName],
       builder: (context, model, property) => Text(
         "${model.myUserName?.split(' ')?.first ?? "user"}",
-        style: GoogleFonts.montserrat(
-            fontWeight: FontWeight.w500, fontSize: SizeConfig.largeTextSize),
+        style: GoogleFonts.sourceSansPro(
+            fontWeight: FontWeight.w600, fontSize: SizeConfig.largeTextSize),
       ),
     );
   }

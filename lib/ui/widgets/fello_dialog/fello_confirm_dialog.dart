@@ -18,6 +18,7 @@ class FelloConfirmationDialog extends StatefulWidget {
   final bool showCrossIcon;
   final String title;
   final String asset;
+  final String assetpng;
   final String subtitle;
   final String accept;
   final String reject;
@@ -32,6 +33,7 @@ class FelloConfirmationDialog extends StatefulWidget {
     this.subtitle,
     this.title,
     this.accept,
+    this.assetpng,
     this.acceptColor,
     this.rejectColor,
     this.reject,
@@ -55,10 +57,16 @@ class _FelloConfirmationDialogState extends State<FelloConfirmationDialog> {
               : Column(
                   children: [
                     SizedBox(height: SizeConfig.screenHeight * 0.04),
-                    SvgPicture.asset(
-                      widget.asset,
-                      height: SizeConfig.screenHeight * 0.16,
-                    ),
+                    if (widget.asset != null)
+                      SvgPicture.asset(
+                        widget.asset,
+                        height: SizeConfig.screenHeight * 0.16,
+                      ),
+                    if (widget.assetpng != null)
+                      Image.asset(
+                        widget.assetpng,
+                        height: SizeConfig.screenHeight * 0.16,
+                      ),
                     SizedBox(
                       height: SizeConfig.screenHeight * 0.04,
                     ),

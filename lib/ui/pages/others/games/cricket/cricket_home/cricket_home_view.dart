@@ -18,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 
 class CricketHomeView extends StatelessWidget {
   @override
@@ -224,24 +225,33 @@ class CricketHomeView extends StatelessWidget {
 class NoRecordDisplayWidget extends StatelessWidget {
   final String asset;
   final String assetSvg;
+  final String assetLottie;
   final String text;
 
-  NoRecordDisplayWidget({this.asset, this.text, this.assetSvg});
+  NoRecordDisplayWidget(
+      {this.asset, this.text, this.assetSvg, this.assetLottie});
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(height: SizeConfig.screenHeight * 0.1),
-        asset != null
-            ? Image.asset(
-                asset,
-                height: SizeConfig.screenHeight * 0.16,
-              )
-            : SvgPicture.asset(
-                assetSvg,
-                height: SizeConfig.screenHeight * 0.16,
-              ),
+        if (asset != null)
+          Image.asset(
+            asset,
+            height: SizeConfig.screenHeight * 0.16,
+          ),
+        if (assetSvg != null)
+          SvgPicture.asset(
+            assetSvg,
+            height: SizeConfig.screenHeight * 0.16,
+          ),
+        if (assetLottie != null)
+          Lottie.asset(
+            assetLottie,
+            repeat: false,
+            height: SizeConfig.screenHeight * 0.26,
+          ),
         SizedBox(
           height: SizeConfig.padding16,
         ),

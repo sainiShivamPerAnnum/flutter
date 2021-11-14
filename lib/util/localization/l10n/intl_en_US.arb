@@ -46,7 +46,7 @@
   "saveGoldBalanceValue": "{goldAmount} gm",
   "saveSecure": "100% secure",
   "saveBaseline": "You get 1 token for every Rupee saved",
-  "saveWinningsLabel": "My Total Winnings",
+  "saveWinningsLabel": "My total Winnings",
   "saveWinningsValue": "₹ {winningsAmout}",
   "saveHistory": "History",
   "saveViewAll": "View All",

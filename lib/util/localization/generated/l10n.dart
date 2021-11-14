@@ -463,10 +463,10 @@ class S {
     );
   }
 
-  /// `My Total Winnings`
+  /// `My total Winnings`
   String get saveWinningsLabel {
     return Intl.message(
-      'My Total Winnings',
+      'My total Winnings',
       name: 'saveWinningsLabel',
       desc: '',
       args: [],
