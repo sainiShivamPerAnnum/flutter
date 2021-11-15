@@ -1037,15 +1037,15 @@ class BaseUtil extends ChangeNotifier {
   //   notifyListeners();
   // }
 
-  Future<bool> isOfflineSnackBar(BuildContext context) async {
-    ConnectivityStatus connectivityStatus =
-        Provider.of<ConnectivityStatus>(context, listen: false);
+  // Future<bool> isOfflineSnackBar(BuildContext context) async {
+  //   ConnectivityStatus connectivityStatus =
+  //       Provider.of<ConnectivityStatus>(context, listen: false);
 
-    if (connectivityStatus == ConnectivityStatus.Offline) {
-      await showNegativeAlert('Offline', 'Please connect to internet',
-          seconds: 3);
-      return true;
-    }
-    return false;
-  }
+  //   if (connectivityStatus == ConnectivityStatus.Offline) {
+  //     await showNegativeAlert('Offline', 'Please connect to internet',
+  //         seconds: 3);
+  //     return true;
+  //   }
+  //   return false;
+  // }
 }

@@ -9,6 +9,7 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
+import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -37,6 +38,7 @@ class UserProfileVM extends BaseModel {
   final BaseUtil _baseUtil = locator<BaseUtil>();
   final DBModel _dbModel = locator<DBModel>();
   final fcmlistener = locator<FcmListener>();
+  final _txnService = locator<TransactionService>();
   final S _locale = locator<S>();
   double picSize;
   XFile selectedProfilePicture;
@@ -261,9 +263,11 @@ class UserProfileVM extends BaseModel {
           buttonText: 'Yes',
           confirmAction: () {
             Haptic.vibrate();
+
             _userService.signout().then((flag) {
               if (flag) {
                 //log.debug('Sign out process complete');
+                _txnService.signOut();
                 AppState.delegate.appState.currentAction = PageAction(
                     state: PageState.replaceAll, page: SplashPageConfig);
                 BaseUtil.showPositiveAlert(
@@ -341,7 +345,7 @@ class UserProfileVM extends BaseModel {
               confirmAction: () {
                 _chooseprofilePicture();
               },
-              cancelAction: (){}));
+              cancelAction: () {}));
     } else if (_status.isGranted) {
       await _chooseprofilePicture();
       // needsRefresh(true);

@@ -14,6 +14,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 
 class FelloCoinBar extends StatelessWidget {
+  const FelloCoinBar();
   @override
   Widget build(BuildContext context) {
     return BaseView<FelloCoinBarViewModel>(

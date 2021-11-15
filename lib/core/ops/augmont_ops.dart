@@ -439,12 +439,15 @@ class AugmontModel extends ChangeNotifier {
 
       ApiResponse<DepositResponseModel> _onCompleteDepositResponse =
           await _investmentActionsRepository.completeUserDeposit(
-              amount: _baseProvider.currentAugmontTxn.amount,
-              augUpdates: augUpdates,
-              rzpUpdates: rzpUpdates,
-              userUid: _baseProvider.myUser.uid,
-              txnId: _initialDepositResponse
-                  .model.response.transactionDoc.transactionId);
+        amount: _baseProvider.currentAugmontTxn.amount,
+        augUpdates: augUpdates,
+        rzpUpdates: rzpUpdates,
+        userUid: _baseProvider.myUser.uid,
+        txnId:
+            _initialDepositResponse.model.response.transactionDoc.transactionId,
+        enqueuedTaskDetails: _initialDepositResponse
+            .model.response.transactionDoc.enqueuedTaskDetails,
+      );
 
       double newAugPrinciple =
           _onCompleteDepositResponse.model.response.augmontPrinciple;
@@ -515,7 +518,9 @@ class AugmontModel extends ChangeNotifier {
             _initialDepositResponse.model.response.transactionDoc.transactionId,
         userUid: _baseProvider.myUser.uid,
         rzpMap: rzpMap,
-        augMap: augMap);
+        augMap: augMap,
+        enqueuedTaskDetails: _initialDepositResponse
+            .model.response.transactionDoc.enqueuedTaskDetails);
 
     if (_augmontTxnProcessListener != null)
       _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
@@ -599,7 +604,6 @@ class AugmontModel extends ChangeNotifier {
           _baseProvider.myUser.uid, FailType.UserAugmontSellFailed, _failMap);
       if (_augmontTxnProcessListener != null)
         _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
-  
     } else {
       //success
       _baseProvider.currentAugmontTxn.tranStatus =

@@ -9,6 +9,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
+import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -19,13 +20,13 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_html/shims/dart_ui_real.dart';
-import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -35,6 +36,7 @@ class MyWinningsViewModel extends BaseModel {
   final _logger = locator<Logger>();
   final _httpModel = locator<HttpModel>();
   final _userService = locator<UserService>();
+  final _transactionService = locator<TransactionService>();
   final _localDBModel = locator<LocalDBModel>();
   final _dbModel = locator<DBModel>();
 
@@ -52,12 +54,6 @@ class MyWinningsViewModel extends BaseModel {
     this._isWinningHistoryLoading = value;
     notifyListeners();
   }
-
-  List<Color> colorList = [
-    UiConstants.tertiarySolid,
-    UiConstants.primaryColor,
-    Color(0xff11192B)
-  ];
 
   List<UserTransaction> get winningHistory => this._winningHistory;
   set winningHistory(List<UserTransaction> value) {
@@ -86,20 +82,46 @@ class MyWinningsViewModel extends BaseModel {
 
   getWinningHistoryTitle(String subtype) {
     switch (subtype) {
-      case "CRICKET":
+      case "CRICK_2021":
         return "Cricket";
         break;
-      case "AUGGOLD99":
-        return "Augmont Gold";
+      case "GOLD_CREDIT":
+        return "Augmont Digital Gold";
         break;
-      case "TAMBOLA":
+      case "TAMBOLA_2021":
         return "Tambola";
         break;
-      case "AMZPAY":
-        return "Amazon Pay";
+      case "AMZ_VOUCHER":
+        return "Amazon Gift Voucher";
         break;
       default:
-        return "Fello Prize";
+        return "Fello Rewards";
+    }
+  }
+
+  getWinningHistoryLeadingBg(String subtype) {
+    switch (subtype) {
+      case "GOLD_CREDIT":
+        return UiConstants.primaryColor;
+        break;
+      case "AMZ_VOUCHER":
+        return UiConstants.tertiarySolid;
+        break;
+      default:
+        return Color(0xff11192B);
+    }
+  }
+
+  getWinningHistoryLeadingImage(String subtype) {
+    switch (subtype) {
+      case "GOLD_CREDIT":
+        return Assets.digitalGold;
+        break;
+      case "AMZ_VOUCHER":
+        return Assets.amazonGiftVoucher;
+        break;
+      default:
+        return Assets.felloRewards;
     }
   }
 
@@ -110,10 +132,13 @@ class MyWinningsViewModel extends BaseModel {
       hapticVibrate: true,
       content: FelloConfirmationDialog(
         result: (res) async {
-          if (res) await claim(choice, _userService.userFundWallet.unclaimedBalance);
+          if (res)
+            await claim(choice, _userService.userFundWallet.unclaimedBalance);
         },
         showCrossIcon: true,
-        asset: Assets.prizeClaimConfirm,
+        assetpng: choice == PrizeClaimChoice.AMZ_VOUCHER
+            ? Assets.amazonGiftVoucher
+            : Assets.digitalGold,
         title: "Confirmation",
         subtitle: choice == PrizeClaimChoice.AMZ_VOUCHER
             ? "Are you sure you want to redeem ₹ ${_userService.userFundWallet.unclaimedBalance} as an Amazon gift voucher?"
@@ -127,55 +152,65 @@ class MyWinningsViewModel extends BaseModel {
     );
   }
 
-  showSuccessPrizeWithdrawalDialog(String subtitle, String shareMessage) async {
-    if (choice == null) await getClaimChoice();
+  showSuccessPrizeWithdrawalDialog(
+      PrizeClaimChoice choice, String subtitle, String shareMessage) async {
     AppState.screenStack.add(ScreenItem.dialog);
     showDialog(
         context: AppState.delegate.navigatorKey.currentContext,
         builder: (ctx) {
-          return Container(
-            width: SizeConfig.screenWidth,
-            height: SizeConfig.screenHeight,
-            child: Stack(
-              children: [
-                // Align(
-                //   alignment: Alignment.bottomCenter,
-                //   child: RepaintBoundary(
-                //     key: imageKey,
-                //     child: ShareCard(
-                //       dpUrl: _userService.myUserDpUrl,
-                //       claimChoice: choice,
-                //       prizeAmount: _userService.userFundWallet.prizeBalance,
-                //       username: _userService.baseUser.name,
-                //     ),
-                //   ),
-                // ),
-                FelloConfirmationDialog(
-                  result: (res) async {
-                    if (res) {
-                      AppState.backButtonDispatcher.didPopRoute();
-                      if (Platform.isIOS) {
-                        Share.share(shareMessage);
-                      } else {
-                        FlutterShareMe().shareToSystem(msg: shareMessage).then((flag) {
-                          _logger.d(flag);
-                        });
-                      }
-                    }
-                  },
-                  showCrossIcon: false,
-                  asset: Assets.goldenTicket,
-                  title: "Congratulations",
-                  subtitle: subtitle,
-                  accept: "Share",
-                  reject: "Done",
-                  acceptColor: UiConstants.primaryColor,
-                  rejectColor: Colors.grey[400],
-                  //onAccept: buyAmazonGiftCard,
-                  onReject: AppState.backButtonDispatcher.didPopRoute,
-                )
-              ],
-            ),
+          return Stack(
+            children: [
+              FelloConfirmationDialog(
+                result: (res) async {
+                  if (res) {
+                    caputure(shareMessage);
+                  }
+                },
+                content: Column(
+                  children: [
+                    SizedBox(height: SizeConfig.screenHeight * 0.02),
+                    Container(
+                      height: SizeConfig.screenHeight * 0.38,
+                      width: SizeConfig.screenWidth,
+                      child: FittedBox(
+                        fit: BoxFit.contain,
+                        child: RepaintBoundary(
+                          key: imageKey,
+                          child: ShareCard(
+                            dpUrl: _userService.myUserDpUrl,
+                            claimChoice: choice,
+                            prizeAmount:
+                                _userService.userFundWallet.prizeBalance,
+                            username: _userService.baseUser.name,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: SizeConfig.screenHeight * 0.02),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        "Congratulations!",
+                        style: TextStyles.title2.bold,
+                      ),
+                    ),
+                    SizedBox(height: SizeConfig.padding16),
+                    Text(
+                      subtitle,
+                      textAlign: TextAlign.center,
+                      style: TextStyles.body2.colour(Colors.grey),
+                    ),
+                    SizedBox(height: SizeConfig.screenHeight * 0.03),
+                  ],
+                ),
+                showCrossIcon: true,
+                accept: "Share",
+                reject: "Done",
+                acceptColor: UiConstants.primaryColor,
+                rejectColor: Colors.grey[300],
+                onReject: AppState.backButtonDispatcher.didPopRoute,
+              ),
+            ],
           );
         });
   }
@@ -190,9 +225,13 @@ class MyWinningsViewModel extends BaseModel {
     _registerClaimChoice(choice).then((flag) {
       AppState.backButtonDispatcher.didPopRoute();
       if (flag) {
-        showSuccessPrizeWithdrawalDialog(choice == PrizeClaimChoice.AMZ_VOUCHER
-            ? "You will receive the gift card on your registered email and mobile in the next 1-2 business days"
-            : "The gold in grams shall be credited to your wallet in the next 1-2 business days", 'Hey, I just won ₹${_claimAmt} on Fello! \nYou should try it out too: https://fello.in/app/download');
+        getWinningHistory();
+        showSuccessPrizeWithdrawalDialog(
+            choice,
+            choice == PrizeClaimChoice.AMZ_VOUCHER
+                ? "You will receive the gift card on your registered email and mobile in the next 1-2 business days"
+                : "The gold in grams shall be credited to your wallet in the next 1-2 business days",
+            'Hey, I just won ₹${_claimAmt.abs()} on Fello! \nYou should try it out too: https://fello.in/app/download');
       }
     });
   }
@@ -206,6 +245,7 @@ class MyWinningsViewModel extends BaseModel {
         choice);
     if (response['status'] != null && response['status']) {
       _userService.getUserFundWalletData();
+      _transactionService.updateTransactions();
       notifyListeners();
       await _localDBModel.savePrizeClaimChoice(choice);
 
@@ -216,16 +256,80 @@ class MyWinningsViewModel extends BaseModel {
     }
   }
 
-  getClaimChoice() async {
-    choice = await _localDBModel.getPrizeClaimChoice();
+  showPrizeDetailsDialog(String type, double amount) async {
+    if (type == "AMZ_VOUCHER")
+      choice = PrizeClaimChoice.AMZ_VOUCHER;
+    else if (type == "GOLD_CREDIT")
+      choice = PrizeClaimChoice.GOLD_CREDIT;
+    else
+      choice = PrizeClaimChoice.FELLO_PRIZE;
+    AppState.screenStack.add(ScreenItem.dialog);
+    showDialog(
+        context: AppState.delegate.navigatorKey.currentContext,
+        builder: (ctx) {
+          return Stack(
+            children: [
+              FelloConfirmationDialog(
+                result: (res) async {
+                  if (res) {
+                    caputure(
+                        'Hey, I just won ₹$amount on Fello! \nYou should try it out too: https://fello.in/app/download');
+                  }
+                },
+                content: Column(
+                  children: [
+                    SizedBox(height: SizeConfig.screenHeight * 0.02),
+                    Container(
+                      height: SizeConfig.screenHeight * 0.38,
+                      width: SizeConfig.screenWidth,
+                      child: FittedBox(
+                        fit: BoxFit.contain,
+                        child: RepaintBoundary(
+                          key: imageKey,
+                          child: ShareCard(
+                            dpUrl: _userService.myUserDpUrl,
+                            claimChoice: choice,
+                            prizeAmount: amount.abs(),
+                            username: _userService.baseUser.name,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: SizeConfig.screenHeight * 0.02),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        "Congratulations!",
+                        style: TextStyles.title2.bold,
+                      ),
+                    ),
+                    SizedBox(height: SizeConfig.padding16),
+                    Text(
+                      "Prize",
+                      textAlign: TextAlign.center,
+                      style: TextStyles.body2.colour(Colors.grey),
+                    ),
+                    SizedBox(height: SizeConfig.screenHeight * 0.03),
+                  ],
+                ),
+                showCrossIcon: true,
+                accept: "Share",
+                reject: "Done",
+                acceptColor: UiConstants.primaryColor,
+                rejectColor: Colors.grey[300],
+                onReject: AppState.backButtonDispatcher.didPopRoute,
+              ),
+            ],
+          );
+        });
   }
 
 // Capture Share card Logic
-  caputure() {
-    Future.delayed(Duration(seconds: 1), () {
+  caputure(String shareMessage) {
+    Future.delayed(Duration(seconds: 3), () {
       captureCard().then((image) {
         AppState.backButtonDispatcher.didPopRoute();
-        if (image != null) shareCard(image);
+        if (image != null) shareCard(image, shareMessage);
       });
     });
   }
@@ -256,7 +360,7 @@ class MyWinningsViewModel extends BaseModel {
     return null;
   }
 
-  shareCard(Uint8List image) async {
+  shareCard(Uint8List image, String shareMessage) async {
     try {
       if (Platform.isAndroid) {
         final directory = (await getExternalStorageDirectory()).path;
@@ -266,8 +370,7 @@ class MyWinningsViewModel extends BaseModel {
         Share.shareFiles(
           [imgg.path],
           subject: 'Fello Rewards',
-          text:
-              'Fello is a really rewarding way to play games and invest in assets! Save and play with me and get rewarded: https://fello.in/download/app',
+          text: shareMessage ?? "",
         ).catchError((onError) {
           if (_userService.baseUser.uid != null) {
             Map<String, dynamic> errorDetails = {
@@ -279,7 +382,7 @@ class MyWinningsViewModel extends BaseModel {
           print(onError);
         });
       } else if (Platform.isIOS) {
-        final directory = (await getTemporaryDirectory());
+        final directory = await getTemporaryDirectory();
         if (!await directory.exists()) await directory.create(recursive: true);
         String dt = DateTime.now().toString();
         File imgg = new File('${directory.path}/fello-reward-$dt.png');
@@ -287,8 +390,7 @@ class MyWinningsViewModel extends BaseModel {
         Share.shareFiles(
           [imgg.path],
           subject: 'Fello Rewards',
-          text:
-              'Fello is a really rewarding way to play games and invest in assets! Save and play with me and get rewarded: https://fello.in/download/app',
+          text: shareMessage ?? "",
         ).catchError((onError) {
           if (_userService.baseUser.uid != null) {
             Map<String, dynamic> errorDetails = {
