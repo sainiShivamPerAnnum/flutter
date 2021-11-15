@@ -5,7 +5,7 @@ import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_vm.dart';
-import 'package:felloapp/ui/pages/others/profile/referrals/referral_history/referrals_page.dart';
+import 'package:felloapp/ui/pages/others/profile/referrals/referral_history/referral_history_view.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';

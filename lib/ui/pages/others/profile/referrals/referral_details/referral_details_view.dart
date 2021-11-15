@@ -99,15 +99,7 @@ class ReferralDetailsView extends StatelessWidget {
                                           style: TextStyles.body3,
                                         ),
                                         InkWell(
-                                          onTap: () {
-                                            Clipboard.setData(ClipboardData(
-                                                    text: model.userUrlCode))
-                                                .then((_) {
-                                              BaseUtil.showPositiveAlert(
-                                                  "Code: ${model.userUrlCode}",
-                                                  "Copied to Clipboard");
-                                            });
-                                          },
+                                          onTap: () => model.copyReferCode,
                                           child: Container(
                                             padding: EdgeInsets.symmetric(
                                               horizontal: SizeConfig.padding8,

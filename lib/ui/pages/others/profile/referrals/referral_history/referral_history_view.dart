@@ -3,10 +3,13 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
+import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/mixpanel_events.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -26,6 +29,7 @@ class ReferralHistoryView extends StatefulWidget {
 class _ReferralHistoryViewState extends State<ReferralHistoryView> {
   BaseUtil baseProvider;
   DBModel dbProvider;
+  final _mixpanelService = locator<MixpanelService>();
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +54,9 @@ class _ReferralHistoryViewState extends State<ReferralHistoryView> {
           }
           if (baseProvider.myReferralInfo != null && _t < _n) {
             baseProvider.myReferralInfo.refCount = _n;
+            if (_n != null && _n > 0)
+              _mixpanelService.mixpanel.track(MixpanelEvents.referralCount,
+                  properties: {"count": _n});
             dbProvider.updateUserReferralCount(baseProvider.myUser.uid,
                 baseProvider.myReferralInfo); //await not required
           }

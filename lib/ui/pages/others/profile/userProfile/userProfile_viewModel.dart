@@ -10,6 +10,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
+import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -21,6 +22,7 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/mixpanel_events.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -39,6 +41,7 @@ class UserProfileVM extends BaseModel {
   final DBModel _dbModel = locator<DBModel>();
   final fcmlistener = locator<FcmListener>();
   final _txnService = locator<TransactionService>();
+  final MixpanelService _mixpanelService = locator<MixpanelService>();
   final S _locale = locator<S>();
   double picSize;
   XFile selectedProfilePicture;
@@ -348,7 +351,7 @@ class UserProfileVM extends BaseModel {
               cancelAction: () {}));
     } else if (_status.isGranted) {
       await _chooseprofilePicture();
-      // needsRefresh(true);
+      _mixpanelService.mixpanel.track(MixpanelEvents.updatedProfilePicture);
     } else {
       BaseUtil.showNegativeAlert('Permission Unavailable',
           'Please enable permission from settings to continue');

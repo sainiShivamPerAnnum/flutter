@@ -37,7 +37,7 @@ import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_view.
 import 'package:felloapp/ui/pages/others/profile/claim_username.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
-import 'package:felloapp/ui/pages/others/profile/referrals/referral_history/referrals_page.dart';
+import 'package:felloapp/ui/pages/others/profile/referrals/referral_history/referral_history_view.dart';
 import 'package:felloapp/ui/pages/others/profile/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_view.dart';

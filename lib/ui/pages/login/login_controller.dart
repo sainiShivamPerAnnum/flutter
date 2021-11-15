@@ -12,6 +12,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
+import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -27,6 +28,7 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/mixpanel_events.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -71,6 +73,7 @@ class _LoginControllerState extends State<LoginController>
   final UserService userService = locator<UserService>();
   final FcmListener fcmListener = locator<FcmListener>();
   final AugmontModel augmontProvider = locator<AugmontModel>();
+  final MixpanelService _mixpanelService = locator<MixpanelService>();
   AnimationController animationController;
 
   String userMobile;
@@ -426,6 +429,7 @@ class _LoginControllerState extends State<LoginController>
             bool flag = await baseProvider.authenticateUser(baseProvider
                 .generateAuthCredential(_augmentedVerificationId, otp));
             if (flag) {
+              _mixpanelService.mixpanel.track(MixpanelEvents.mobileOtpDone);
               AppState.isOnboardingInProgress = true;
               _otpScreenKey.currentState.onOtpReceived();
               _onSignInSuccess();
@@ -524,6 +528,8 @@ class _LoginControllerState extends State<LoginController>
               baseProvider.isLoginNextInProgress = false;
               setState(() {});
             }).then((value) {
+              _mixpanelService.mixpanel
+                  .track(MixpanelEvents.profileInformationAdded);
               _controller.animateToPage(Username.index,
                   duration: Duration(milliseconds: 500),
                   curve: Curves.easeInToLinear);
@@ -555,6 +561,8 @@ class _LoginControllerState extends State<LoginController>
                   bool flag = await dbProvider.updateUser(baseProvider.myUser);
 
                   if (flag) {
+                    _mixpanelService.mixpanel
+                        .track(MixpanelEvents.userNameAdded);
                     log.debug("User object saved successfully");
                     _onSignUpComplete();
                   } else {
