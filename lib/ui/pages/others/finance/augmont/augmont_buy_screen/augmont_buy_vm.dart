@@ -433,7 +433,8 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
         ///check if referral bonuses need to be unlocked
         if (_userService.userFundWallet.augGoldPrinciple >=
-            BaseRemoteConfig.UNLOCK_REFERRAL_AMT) {
+            BaseUtil.toInt(BaseRemoteConfig.remoteConfig
+                .getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT))) {
           bool _isUnlocked =
               await _dbModel.unlockReferralTickets(_baseUtil.myUser.uid);
           if (_isUnlocked) {

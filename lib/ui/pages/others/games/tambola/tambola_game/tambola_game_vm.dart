@@ -43,7 +43,6 @@ class TambolaGameViewModel extends BaseModel {
   final _fclActionRepo = locator<FlcActionsRepo>();
   final _mixpanelService = locator<MixpanelService>();
 
-
   int get dailyPicksCount => tambolaService.dailyPicksCount;
 
   List<int> get todaysPicks => tambolaService.todaysPicks;
@@ -258,7 +257,7 @@ class TambolaGameViewModel extends BaseModel {
     if (_flcResponse.model != null && _flcResponse.code == 200) {
       ticketBuyInProgress = false;
       notifyListeners();
-       _mixpanelService.mixpanel.track(MixpanelEvents.playsTambola);
+      _mixpanelService.mixpanel.track(MixpanelEvents.playsTambola);
       BaseUtil.showPositiveAlert(
           "Request is now processing", "Generating your tickets, please wait");
 
@@ -435,8 +434,9 @@ class TambolaGameViewModel extends BaseModel {
     double totalInvestedPrinciple =
         _userService.userFundWallet.augGoldPrinciple +
             _userService.userFundWallet.iciciPrinciple;
-    bool _isEligible =
-        (totalInvestedPrinciple >= BaseRemoteConfig.UNLOCK_REFERRAL_AMT);
+    bool _isEligible = (totalInvestedPrinciple >=
+        BaseUtil.toInt(BaseRemoteConfig.remoteConfig
+            .getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT)));
 
     _logger.i('Resultant wins: ${ticketCodeWinIndex.toString()}');
 

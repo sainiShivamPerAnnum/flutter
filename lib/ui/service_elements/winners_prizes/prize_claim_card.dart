@@ -1,3 +1,4 @@
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/tambola_winners_details.dart';
@@ -223,7 +224,7 @@ class PrizeClaimCard extends StatelessWidget {
                             ),
                             child: FittedBox(
                               child: Text(
-                                "You have to invest at least ₹100 to before redeeming prizes.",
+                                "You need to save at least ₹${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT)} to redeem your winnings.",
                                 style:
                                     TextStyles.body3.colour(Colors.redAccent),
                               ),

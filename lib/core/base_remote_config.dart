@@ -243,12 +243,5 @@ class BaseRemoteConfig {
 
   static String get TAMBOLA_THUMBNAIL_URI => _TAMBOLA_THUMBNAIL_URI.keys.first;
 
-  static int get UNLOCK_REFERRAL_AMT {
-    String _val = _UNLOCK_REFERRAL_AMT.keys.first;
-    if (_val != null || _val.isNotEmpty) {
-      int iVal = BaseUtil.toInt(_val);
-      return (iVal > 0) ? iVal : 100;
-    }
-    return 100;
-  }
+  static String get UNLOCK_REFERRAL_AMT => _UNLOCK_REFERRAL_AMT.keys.first;
 }
