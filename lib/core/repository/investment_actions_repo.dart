@@ -11,7 +11,7 @@ class InvestmentActionsRepository {
   final _apiPaths = locator<ApiPath>();
   final _logger = locator<Logger>();
 
-  Future<String> _getBearerToken() async{
+  Future<String> _getBearerToken() async {
     String token = await _userService.firebaseUser.getIdToken();
     _logger.d(token);
 
@@ -19,7 +19,10 @@ class InvestmentActionsRepository {
   }
 
   Future<ApiResponse<DepositResponseModel>> initiateUserDeposit(
-      {Map<String, dynamic> initAugMap, Map<String, dynamic> initRzpMap, double amount, String userUid}) async {
+      {Map<String, dynamic> initAugMap,
+      Map<String, dynamic> initRzpMap,
+      double amount,
+      String userUid}) async {
     Map<String, dynamic> _body = {
       'user_id': userUid,
       'amount': amount,
@@ -47,18 +50,21 @@ class InvestmentActionsRepository {
     }
   }
 
-  Future<ApiResponse<DepositResponseModel>> completeUserDeposit(
-      {String txnId,
-      double amount,
-      Map<String, dynamic> rzpUpdates,
-      Map<String, dynamic> augUpdates,
-      String userUid}) async {
+  Future<ApiResponse<DepositResponseModel>> completeUserDeposit({
+    String txnId,
+    double amount,
+    Map<String, dynamic> rzpUpdates,
+    Map<String, dynamic> augUpdates,
+    String userUid,
+    EnqueuedTaskDetails enqueuedTaskDetails,
+  }) async {
     Map<String, dynamic> _body = {
       "user_id": userUid,
       "amount": amount,
       "rzp_map": rzpUpdates,
       "aug_map": augUpdates,
-      "tran_id": txnId
+      "tran_id": txnId,
+      "enqueuedTaskDetails": enqueuedTaskDetails.toMap()
     };
     _logger.d("completeUserDeposit : $_body");
     try {
@@ -75,16 +81,19 @@ class InvestmentActionsRepository {
     }
   }
 
-  Future<ApiResponse<DepositResponseModel>> cancelUserDeposit(
-      {String txnId,
-      String userUid,
-      Map<String, dynamic> rzpMap,
-      Map<String, dynamic> augMap}) async {
+  Future<ApiResponse<DepositResponseModel>> cancelUserDeposit({
+    String txnId,
+    String userUid,
+    Map<String, dynamic> rzpMap,
+    Map<String, dynamic> augMap,
+    EnqueuedTaskDetails enqueuedTaskDetails,
+  }) async {
     Map<String, dynamic> _body = {
       "user_id": userUid,
       "rzp_map": rzpMap,
       "aug_map": augMap,
       "tran_id": txnId,
+      "enqueuedTaskDetails": enqueuedTaskDetails.toMap()
     };
 
     _logger.d("completeUserDeposit : $_body");
