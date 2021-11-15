@@ -86,8 +86,7 @@ class Win extends StatelessWidget {
                             children: [
                               SizedBox(width: SizeConfig.pageHorizontalMargins),
                               Container(
-                                height: SizeConfig.screenWidth * 0.309,
-                                width: SizeConfig.screenWidth * 0.405,
+                                width: SizeConfig.screenWidth * 0.410,
                                 margin: EdgeInsets.only(
                                     right: SizeConfig.padding12),
                                 decoration: BoxDecoration(
@@ -99,8 +98,7 @@ class Win extends StatelessWidget {
                                 ),
                               ),
                               Container(
-                                height: SizeConfig.screenWidth * 0.309,
-                                width: SizeConfig.screenWidth * 0.405,
+                                width: SizeConfig.screenWidth * 0.410,
                                 margin: EdgeInsets.only(
                                     right: SizeConfig.padding12),
                                 decoration: BoxDecoration(
@@ -112,8 +110,7 @@ class Win extends StatelessWidget {
                                 ),
                               ),
                               Container(
-                                height: SizeConfig.screenWidth * 0.309,
-                                width: SizeConfig.screenWidth * 0.405,
+                                width: SizeConfig.screenWidth * 0.410,
                                 margin: EdgeInsets.only(
                                     right: SizeConfig.padding12),
                                 decoration: BoxDecoration(
@@ -121,6 +118,18 @@ class Win extends StatelessWidget {
                                       SizeConfig.roundness32),
                                   image: DecorationImage(
                                       image: AssetImage(Assets.gplayCoupon),
+                                      fit: BoxFit.cover),
+                                ),
+                              ),
+                              Container(
+                                width: SizeConfig.screenWidth * 0.410,
+                                margin: EdgeInsets.only(
+                                    right: SizeConfig.padding12),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                      SizeConfig.roundness32),
+                                  image: DecorationImage(
+                                      image: AssetImage(Assets.bdubsCoupon),
                                       fit: BoxFit.cover),
                                 ),
                               ),

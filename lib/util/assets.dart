@@ -89,7 +89,8 @@ class Assets {
 
   static final String amazonCoupon = "assets/images/amazon_coupon.png";
   static final String myntraCoupon = "assets/images/myntra_coupon.png";
-  static final String gplayCoupon = "assets/images/ggv.png";
+  static final String gplayCoupon = "assets/images/google_coupon.png";
+  static final String bdubsCoupon = "assets/images/bdubs_coupon.png";
 
   // TRANSACTIONS
 

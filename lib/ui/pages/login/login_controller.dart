@@ -186,14 +186,19 @@ class _LoginControllerState extends State<LoginController>
         (FirebaseAuthException exception) {
       log.debug('::VERIFIED_FAILED::INVOKED');
       log.error(exception.stackTrace.toString());
+      String exceptionMessage =
+          'Please check your network or number and try again';
       //codes: 'quotaExceeded'
-      if (exception.code == 'quotaExceeded') {
+      if (exception.code == 'too-many-requests') {
         log.error("Quota for otps exceeded");
+        exceptionMessage =
+            'We have blocked all requests from this device due to too many OTP requests. Try again later.';
       }
+      log.error(exception.code);
       log.error("Verification process failed:  ${exception.message}");
       BaseUtil.showNegativeAlert(
         'Sign In Failed',
-        'Please check your network or number and try again',
+        exceptionMessage,
       );
       baseProvider.isLoginNextInProgress = false;
       setState(() {});
