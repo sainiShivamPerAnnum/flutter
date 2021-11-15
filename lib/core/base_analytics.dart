@@ -1,8 +1,6 @@
 import 'package:felloapp/core/model/base_user_model.dart';
-import 'package:felloapp/util/flavor_config.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
-import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 
 class BaseAnalytics {
   static FirebaseAnalytics _analytics;

@@ -13,4 +13,6 @@ class MixpanelEvents {
   static const profileInformationAdded="Profile information entered";
   static const mobileOtpDone="Mobile-otp done";
   static const userNameAdded="Use name added";
+  static const initiateChatSupport="Initiated Chat Support";
+  static const requestedCallback="Requested Callback";
 }

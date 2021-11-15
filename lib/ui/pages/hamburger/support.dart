@@ -105,7 +105,7 @@ class _SupportPageState extends State<SupportPage> {
                           onTap: () {
                             Haptic.vibrate();
                             _mixpanelService.mixpanel
-                                .track("Initiated Chat Support");
+                                .track(MixpanelEvents.initiateChatSupport);
                             appState.currentAction = PageAction(
                                 state: PageState.addPage,
                                 page: ChatSupportPageConfig);
@@ -453,7 +453,7 @@ class _SupportPageState extends State<SupportPage> {
                                   callTimes[_selectedTimeSlotIndex]);
                               if (res) {
                                 _mixpanelService.mixpanel
-                                    .track("Requested Callback");
+                                    .track(MixpanelEvents.requestedCallback);
                                 BaseUtil.showPositiveAlert(
                                   'Callback Placed',
                                   'Thank you for letting us know, we will call you soon!',
