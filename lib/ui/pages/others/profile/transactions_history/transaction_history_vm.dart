@@ -109,7 +109,7 @@ class TransactionsHistoryViewModel extends BaseModel {
     } else if (type == UserTransaction.TRAN_SUBTYPE_REWARD_REDEEM) {
       return "Rewards Redeemed";
     }
-    return "Fund Name";
+    return "Fello Rewards";
   }
 
   String getTileSubtitle(String type) {

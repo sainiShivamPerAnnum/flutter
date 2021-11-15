@@ -24,7 +24,7 @@ class OctFestInfoModal extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Fello October Fest 🍺",
+                      "Fello November Fest 🍺",
                       textAlign: TextAlign.center,
                       style: TextStyles.title3.bold
                           .colour(UiConstants.primaryColor),

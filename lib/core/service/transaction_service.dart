@@ -75,4 +75,10 @@ class TransactionService
     await fetchTransactions(4);
     _logger.i("Transactions got updated");
   }
+
+  signOut() {
+    lastTransactionListDocument = null;
+    hasMoreTransactionListDocuments = null;
+    txnList.clear();
+  }
 }
