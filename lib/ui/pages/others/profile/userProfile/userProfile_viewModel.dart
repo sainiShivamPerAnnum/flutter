@@ -21,6 +21,7 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/mixpanel_events.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -346,7 +347,7 @@ class UserProfileVM extends BaseModel {
               cancelAction: () {}));
     } else if (_status.isGranted) {
       await _chooseprofilePicture();
-      _mixpanelService.mixpanel.track("Updated profile picture");
+      _mixpanelService.mixpanel.track(MixpanelEvents.updatedProfilePicture);
     } else {
       BaseUtil.showNegativeAlert('Permission Unavailable',
           'Please enable permission from settings to continue');

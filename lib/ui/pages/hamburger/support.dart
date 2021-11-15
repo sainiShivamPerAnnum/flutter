@@ -13,6 +13,7 @@ import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/mixpanel_events.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:felloapp/base_util.dart';
@@ -497,7 +498,7 @@ class _SupportPageState extends State<SupportPage> {
   }
 
   void _launchEmail() {
-    _mixpanelService.mixpanel.track("Email Initiated");
+    _mixpanelService.mixpanel.track(MixpanelEvents.emailInitiated);
     final Uri emailLaunchUri = Uri(scheme: 'mailto', path: 'hello@fello.in');
     launch(emailLaunchUri.toString());
   }

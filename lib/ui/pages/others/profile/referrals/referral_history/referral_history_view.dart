@@ -8,6 +8,7 @@ import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/mixpanel_events.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -52,7 +53,8 @@ class _ReferralHistoryViewState extends State<ReferralHistoryView> {
           if (baseProvider.myReferralInfo != null && _t < _n) {
             baseProvider.myReferralInfo.refCount = _n;
             if (_n != null && _n > 0)
-              _mixpanelService.mixpanel.track("No of referrals $_n");
+              _mixpanelService.mixpanel.track(MixpanelEvents.referralCount,
+                  properties: {"count": _n});
             dbProvider.updateUserReferralCount(baseProvider.myUser.uid,
                 baseProvider.myReferralInfo); //await not required
           }

@@ -18,6 +18,7 @@ import 'package:felloapp/ui/pages/others/games/cricket/cricket_game/cricket_game
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/mixpanel_events.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
@@ -70,7 +71,7 @@ class CricketHomeViewModel extends BaseModel {
   }
 
   startGame() {
-        _mixpanelService.mixpanel.track("Plays Cricket");
+        _mixpanelService.mixpanel.track(MixpanelEvents.playsCricket);
     AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: CricketGamePageConfig,

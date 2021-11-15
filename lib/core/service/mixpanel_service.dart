@@ -17,6 +17,4 @@ class MixpanelService {
         optOutTrackingDefault: false);
   }
 
-  // _mixpanel.track("tester");
-  // _mixpanel.track('Plan Selected', properties: {'Plan': 'Shourya'});
 }

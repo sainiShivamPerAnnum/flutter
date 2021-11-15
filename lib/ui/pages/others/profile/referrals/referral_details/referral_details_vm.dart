@@ -13,6 +13,7 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/mixpanel_events.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_share_me/flutter_share_me.dart';
@@ -82,7 +83,7 @@ class ReferralDetailsViewModel extends BaseModel {
 
 
   void copyReferCode() {
-    _mixpanelService.mixpanel.track("Refer code copied");
+    _mixpanelService.mixpanel.track(MixpanelEvents.referCodeCopied);
     Clipboard.setData(ClipboardData(text: userUrlCode)).then((_) {
       BaseUtil.showPositiveAlert(
           "Code: $userUrlCode", "Copied to Clipboard");
@@ -104,7 +105,7 @@ class ReferralDetailsViewModel extends BaseModel {
         .then((url) async {
       _logger.d(url);
       shareLinkInProgress = false;
-  _mixpanelService.mixpanel.track("Link Share");
+  _mixpanelService.mixpanel.track(MixpanelEvents.linkShared);
       refresh();
       if (Platform.isIOS) {
         Share.share(_shareMsg + url);
@@ -142,7 +143,7 @@ class ReferralDetailsViewModel extends BaseModel {
     else
       _logger.d(url);
     try {
-      _mixpanelService.mixpanel.track("Whatsapp Share");
+      _mixpanelService.mixpanel.track(MixpanelEvents.whatsappShare);
       FlutterShareMe().shareToWhatsApp(msg: _shareMsg + url).then((flag) {
         if (flag == "false") {
           FlutterShareMe()
