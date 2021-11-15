@@ -231,7 +231,7 @@ class MyWinningsViewModel extends BaseModel {
             choice == PrizeClaimChoice.AMZ_VOUCHER
                 ? "You will receive the gift card on your registered email and mobile in the next 1-2 business days"
                 : "The gold in grams shall be credited to your wallet in the next 1-2 business days",
-            'Hey, I just won ₹${_claimAmt} on Fello! \nYou should try it out too: https://fello.in/app/download');
+            'Hey, I just won ₹${_claimAmt.abs()} on Fello! \nYou should try it out too: https://fello.in/app/download');
       }
     });
   }

@@ -96,7 +96,7 @@ class PrizeClaimCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                if (m.userFundWallet.unclaimedBalance > 0)
+                if (m.userFundWallet.isPrizeBalanceUnclaimed())
                   Container(
                     margin: EdgeInsets.only(
                         bottom: SizeConfig.padding24,
@@ -163,7 +163,7 @@ class PrizeClaimCard extends StatelessWidget {
                         ),
                         SizedBox(height: SizeConfig.padding8),
                         if (m.userFundWallet.unclaimedBalance >= 100 &&
-                            m.userFundWallet.augGoldBalance >= 100)
+                            m.userFundWallet.augGoldPrinciple >= 100)
                           Container(
                             margin: EdgeInsets.symmetric(
                                 vertical: SizeConfig.padding6),
@@ -208,7 +208,7 @@ class PrizeClaimCard extends StatelessWidget {
                               ),
                             ),
                           )
-                        else if (m.userFundWallet.augGoldBalance < 100)
+                        else if (m.userFundWallet.augGoldPrinciple < 100)
                           Container(
                             margin: EdgeInsets.symmetric(
                                 vertical: SizeConfig.padding6),
@@ -223,7 +223,7 @@ class PrizeClaimCard extends StatelessWidget {
                             ),
                             child: FittedBox(
                               child: Text(
-                                "You have to invest at least ₹100 to before redeeming prizes",
+                                "You have to invest at least ₹100 to before redeeming prizes.",
                                 style:
                                     TextStyles.body3.colour(Colors.redAccent),
                               ),

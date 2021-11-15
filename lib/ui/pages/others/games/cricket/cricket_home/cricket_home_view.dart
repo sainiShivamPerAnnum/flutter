@@ -468,7 +468,9 @@ class LeaderBoardView extends StatelessWidget {
                       ),
                       SizedBox(width: SizeConfig.padding12),
                       Expanded(
-                        child: Text(model.scoreboard[i].username ?? "Username",
+                        child: Text(
+                            model.scoreboard[i].username.replaceAll('@', '.') ??
+                                "username",
                             style: TextStyles.body3),
                       ),
                       TextButton.icon(

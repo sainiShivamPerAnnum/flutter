@@ -9,6 +9,7 @@ class UserTransaction {
   double _closingBalance;
   String _type;
   String _subType;
+  String _redeemType;
   int _ticketUpCount;
   String _note;
   String _userId;
@@ -23,6 +24,7 @@ class UserTransaction {
   static final String fldClosingBalance = 'tClosingBalance';
   static final String fldNote = 'tNote';
   static final String fldSubType = 'tSubtype';
+  static final String fldRedeemType = 'tRedeemType';
   static final String fldType = 'tType';
   static final String fldTicketUpCount = 'tTicketUpdCount';
   static final String fldTranStatus = 'tTranStatus';
@@ -80,6 +82,10 @@ class UserTransaction {
   static const String TRAN_SUBTYPE_GLDN_TCK = 'GLD_TCK_WIN';
   static const String TRAN_SUBTYPE_REWARD_REDEEM = 'REWARD_REDEMPTION';
 
+  // REWARD REDEEM type
+  static const String TRAN_REDEEMTYPE_AUGMONT_GOLD = "GOLD_CREDIT";
+  static const String TRAN_REDEEMTYPE_AMZ_VOUCHER = "AMZ_VOUCHER";
+
   UserTransaction(
       this._docKey,
       this._amount,
@@ -87,6 +93,7 @@ class UserTransaction {
       this._note,
       this._subType,
       this._type,
+      this._redeemType,
       this._ticketUpCount,
       this._userId,
       this._tranStatus,
@@ -104,6 +111,7 @@ class UserTransaction {
             data[fldNote],
             data[fldSubType],
             data[fldType],
+            data[fldRedeemType],
             data[fldTicketUpCount],
             data[fldUserId],
             data[fldTranStatus],
@@ -115,19 +123,22 @@ class UserTransaction {
 
   UserTransaction.fromJSON(Map<String, dynamic> data, String documentID)
       : this(
-      documentID,
-      BaseUtil.toDouble(data[fldAmount]),
-      BaseUtil.toDouble(data[fldClosingBalance]),
-      data[fldNote],
-      data[fldSubType],
-      data[fldType],
-      data[fldTicketUpCount],
-      data[fldUserId],
-      data[fldTranStatus],
-      data[fldIciciMap],
-      data[fldRzpMap],
-      data[fldAugmontMap],
-      null, null);  //TODO JSON response received as HashMap for Timestamps
+            documentID,
+            BaseUtil.toDouble(data[fldAmount]),
+            BaseUtil.toDouble(data[fldClosingBalance]),
+            data[fldNote],
+            data[fldSubType],
+            data[fldType],
+            data[fldRedeemType],
+            data[fldTicketUpCount],
+            data[fldUserId],
+            data[fldTranStatus],
+            data[fldIciciMap],
+            data[fldRzpMap],
+            data[fldAugmontMap],
+            null,
+            null);
+  //TODO JSON response received as HashMap for Timestamps
 
   //ICICI investment initiated by new investor
   UserTransaction.mfDeposit(String tranId, String multipleId,
@@ -139,6 +150,7 @@ class UserTransaction {
             'NA',
             TRAN_SUBTYPE_ICICI,
             TRAN_TYPE_DEPOSIT,
+            null,
             0,
             userId,
             TRAN_STATUS_PENDING,
@@ -162,6 +174,7 @@ class UserTransaction {
             note ?? 'NA',
             TRAN_SUBTYPE_ICICI,
             TRAN_TYPE_WITHDRAW,
+            null,
             0,
             userId,
             TRAN_STATUS_COMPLETE,
@@ -184,6 +197,7 @@ class UserTransaction {
             note ?? 'NA',
             TRAN_SUBTYPE_ICICI,
             TRAN_TYPE_WITHDRAW,
+            null,
             0,
             userId,
             TRAN_STATUS_COMPLETE,
@@ -207,6 +221,7 @@ class UserTransaction {
             'NA',
             TRAN_SUBTYPE_AUGMONT_GOLD,
             TRAN_TYPE_DEPOSIT,
+            null,
             0,
             userId,
             TRAN_STATUS_PENDING,
@@ -232,6 +247,7 @@ class UserTransaction {
             'NA',
             TRAN_SUBTYPE_AUGMONT_GOLD,
             TRAN_TYPE_WITHDRAW,
+            null,
             0,
             userId,
             TRAN_STATUS_PENDING,
@@ -299,6 +315,12 @@ class UserTransaction {
 
   set subType(String value) {
     _subType = value;
+  }
+
+  String get redeemType => _redeemType;
+
+  set redeemType(String value) {
+    _redeemType = value;
   }
 
   String get note => _note;

@@ -92,7 +92,8 @@ class MyWinningsView extends StatelessWidget {
                                                             .redeemType ??
                                                         "",
                                                     model.winningHistory[i]
-                                                            .amount ??
+                                                            .amount
+                                                            .abs() ??
                                                         0.0),
                                             contentPadding:
                                                 EdgeInsets.symmetric(

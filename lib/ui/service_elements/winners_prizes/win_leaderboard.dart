@@ -186,7 +186,8 @@ class WinnerboardView extends StatelessWidget {
                         children: [
                           Text(
                               //"avc",
-                              winners[i].username ?? "Username",
+                              winners[i].username.replaceAll('@', '.') ??
+                                  "username",
                               style: TextStyles.body3),
                           SizedBox(height: SizeConfig.padding4),
                           Text(
