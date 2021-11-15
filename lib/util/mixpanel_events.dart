@@ -10,4 +10,7 @@ class MixpanelEvents {
   static const whatsappShare="Whatsapp Share";
   static const referralCount="Referral Count";
   static const updatedProfilePicture="Updated profile picture";
+  static const profileInformationAdded="Profile information entered";
+  static const mobileOtpDone="Mobile-otp done";
+  static const userNameAdded="Use name added";
 }
