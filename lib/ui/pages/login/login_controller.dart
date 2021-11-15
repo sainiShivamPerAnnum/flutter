@@ -192,7 +192,7 @@ class _LoginControllerState extends State<LoginController>
       if (exception.code == 'too-many-requests') {
         log.error("Quota for otps exceeded");
         exceptionMessage =
-            'We have blocked all requests from this device due to too many OTP requests. Try again later.';
+            "You have exceeded the number of allowed OTP attempts. Please try again in sometime";
       }
       log.error(exception.code);
       log.error("Verification process failed:  ${exception.message}");
