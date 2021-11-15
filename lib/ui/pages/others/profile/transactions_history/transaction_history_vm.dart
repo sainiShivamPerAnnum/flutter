@@ -304,10 +304,13 @@ class TransactionsHistoryViewModel extends BaseModel {
   }
 
   bool getBeerTicketStatus(UserTransaction transaction) {
+    double minBeerDeposit = double.tryParse(BaseRemoteConfig.remoteConfig
+            .getString(BaseRemoteConfig.OCT_FEST_MIN_DEPOSIT) ??
+        '150.0');
     _logger.d(baseProvider.firstAugmontTransaction);
     if (baseProvider.firstAugmontTransaction != null &&
         baseProvider.firstAugmontTransaction == transaction &&
-        transaction.amount >= 150.0 &&
+        transaction.amount >= minBeerDeposit &&
         isOfferStillValid(transaction.timestamp)) return true;
     return false;
   }

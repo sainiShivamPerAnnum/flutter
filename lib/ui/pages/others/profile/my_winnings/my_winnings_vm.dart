@@ -27,6 +27,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_html/shims/dart_ui_real.dart';
+import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -326,10 +327,20 @@ class MyWinningsViewModel extends BaseModel {
 
 // Capture Share card Logic
   caputure(String shareMessage) {
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(Duration(seconds: 1), () {
       captureCard().then((image) {
         AppState.backButtonDispatcher.didPopRoute();
-        if (image != null) shareCard(image, shareMessage);
+        if (image != null)
+          shareCard(image, shareMessage);
+        else {
+          if (Platform.isIOS) {
+            Share.share(shareMessage);
+          } else {
+            FlutterShareMe().shareToSystem(msg: shareMessage).then((flag) {
+              _logger.d(flag);
+            });
+          }
+        }
       });
     });
   }
