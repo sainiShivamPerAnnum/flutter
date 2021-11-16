@@ -258,11 +258,14 @@ class MyWinningsViewModel extends BaseModel {
   }
 
   showPrizeDetailsDialog(String type, double amount) async {
-    if (type == "AMZ_VOUCHER")
+    String subtitle = "Fello Rewards";
+    if (type == "AMZ_VOUCHER") {
       choice = PrizeClaimChoice.AMZ_VOUCHER;
-    else if (type == "GOLD_CREDIT")
+      subtitle = "Amazon Gift Voucher";
+    } else if (type == "GOLD_CREDIT") {
       choice = PrizeClaimChoice.GOLD_CREDIT;
-    else
+      subtitle = "Digital Gold";
+    } else
       choice = PrizeClaimChoice.FELLO_PRIZE;
     AppState.screenStack.add(ScreenItem.dialog);
     showDialog(
@@ -306,7 +309,7 @@ class MyWinningsViewModel extends BaseModel {
                     ),
                     SizedBox(height: SizeConfig.padding16),
                     Text(
-                      "Prize",
+                      subtitle,
                       textAlign: TextAlign.center,
                       style: TextStyles.body2.colour(Colors.grey),
                     ),
