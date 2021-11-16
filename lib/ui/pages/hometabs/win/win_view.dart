@@ -91,10 +91,10 @@ class Win extends StatelessWidget {
                                 onTap: () => model.openVoucherModal(
                                     Assets.amazonCoupon,
                                     "Amazon Pay Gift Voucher",
-                                    "One liner text",
+                                    "",
                                     UiConstants.tertiarySolid,
                                     false,
-                                    ["One liner text for amazon gift voucher"]),
+                                    ["Redeem your game and referral winnings as an Amazon voucher sent directly to your email and mobile!"]),
                                 child: Container(
                                   width: SizeConfig.screenWidth * 0.410,
                                   margin: EdgeInsets.only(
@@ -138,8 +138,8 @@ class Win extends StatelessWidget {
                               InkWell(
                                 onTap: () => model.openVoucherModal(
                                     Assets.gplayCoupon,
-                                    "Google Play Voucher",
-                                    "Comming soon",
+                                    "Google Play Credits",
+                                    "Coming soon",
                                     Colors.blue,
                                     true, []),
                                 child: Container(
@@ -159,7 +159,7 @@ class Win extends StatelessWidget {
                                 onTap: () => model.openVoucherModal(
                                     Assets.myntraCoupon,
                                     "Myntra Shopping Voucher",
-                                    "Comming soon",
+                                    "Coming soon",
                                     Color(0xff611919),
                                     true, []),
                                 child: Container(
@@ -414,7 +414,7 @@ class VoucherModal extends StatelessWidget {
                         : SizeConfig.padding20),
                 commingSoon
                     ? Text(subtitle.toUpperCase() ?? "subtitle",
-                        style: TextStyles.body1.letterSpace(8))
+                        style: TextStyles.body1)
                     : Padding(
                         padding: EdgeInsets.symmetric(
                             horizontal: SizeConfig.pageHorizontalMargins),

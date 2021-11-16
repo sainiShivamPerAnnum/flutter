@@ -85,7 +85,7 @@ class PrizeClaimCard extends StatelessWidget {
                                 ),
                                 SizedBox(height: SizeConfig.padding4),
                                 Text(
-                                  "Unlock these rewards once your friends make their first savings of atleast ₹$refUnlock",
+                                  "Unlock these rewards once your referred friends make their first savings of atleast ₹$refUnlock",
                                   maxLines: 3,
                                   style: TextStyles.body3.colour(Colors.grey),
                                 )
