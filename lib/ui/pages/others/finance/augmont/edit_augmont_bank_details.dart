@@ -1,6 +1,7 @@
 //Project Imports
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/core/service/mixpanel_service.dart';
@@ -11,6 +12,7 @@ import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.da
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/mixpanel_events.dart';
@@ -82,6 +84,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
           setState(() {});
         });
       }
+      if(baseProvider.augmontDetail == null) baseProvider.augmontDetail = UserAugmontDetail.newUser('', '', '', '', '', '');
       if (baseProvider.augmontDetail == null ||
           widget.isWithdrawFlow ||
           baseProvider.augmontDetail.bankAccNo == null ||
@@ -356,10 +359,14 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                                                   TextCapitalization.characters,
                                               validator: (value) {
                                                 print(value);
-                                                return (value != null &&
-                                                        value.trim().isNotEmpty)
-                                                    ? null
-                                                    : 'Please enter a valid bank IFSC';
+                                                if (value == null &&
+                                                    value.trim().isEmpty)
+                                                  return 'Please enter a valid bank IFSC';
+                                                else if (value.trim().length <
+                                                    6 ||
+                                                    value.trim().length > 25)
+                                                  return 'Please enter a valid bank IFSC';
+                                                return null;
                                               },
                                             ),
                                           ],
@@ -382,8 +389,8 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                                               },
                                               title: FittedBox(
                                                 child: Text(
-                                                  "I hereby confirm that the information provided is true and correct",
-                                                  style: TextStyles.body3
+                                                  "I confirm that the details provided by me are correct",
+                                                  style: TextStyles.body4
                                                       .colour(Colors.black45),
                                                 ),
                                               ),
@@ -546,22 +553,22 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
       return;
     }
 
-    // ///NOW CHECK IF IFSC IS VALID
-    // if (!iProvider.isInit()) await iProvider.init();
-    // var bankDetail =
-    //     await iProvider.getBankInfo(baseProvider.userRegdPan, pBankIfsc);
-    // if (bankDetail == null ||
-    //     bankDetail[QUERY_SUCCESS_FLAG] == QUERY_FAILED ||
-    //     bankDetail[GetBankDetail.resBankName] == null) {
-    //   log.error('Couldnt fetch an appropriate response');
-    //   BaseUtil.showNegativeAlert(
-    //     'Update Failed',
-    //     'Invalid IFSC Code entered',
-    //   );
-    //   baseProvider.isEditAugmontBankDetailInProgress = false;
-    //   setState(() {});
-    //   return;
-    // }
+    ///NOW CHECK IF IFSC IS VALID
+    if (!iProvider.isInit()) await iProvider.init();
+    var bankDetail =
+        await iProvider.getBankInfo(baseProvider.userRegdPan, pBankIfsc);
+    if (bankDetail == null ||
+        bankDetail[QUERY_SUCCESS_FLAG] == QUERY_FAILED ||
+        bankDetail[GetBankDetail.resBankName] == null) {
+      log.error('Couldnt fetch an appropriate response');
+      // BaseUtil.showNegativeAlert(
+      //   'Update Failed',
+      //   'Invalid IFSC Code entered',
+      // );
+      // baseProvider.isEditAugmontBankDetailInProgress = false;
+      // setState(() {});
+      // return;
+    }
 
     ///NOW SHOW CONFIRMATION DIALOG TO USER
     AppState.screenStack.add(ScreenItem.dialog);
@@ -572,17 +579,17 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
               bankHolderName: pBankHolderName,
               bankAccNo: pBankAccNo,
               bankIfsc: pBankIfsc,
-              // bankName: bankDetail[GetBankDetail.resBankName],
-              // bankBranchName: bankDetail[GetBankDetail.resBranchName],
+              bankName: (bankDetail == null || bankDetail[GetBankDetail.resBankName] == null)?'':bankDetail[GetBankDetail.resBankName],
+              bankBranchName: (bankDetail == null || bankDetail[GetBankDetail.resBranchName] == null)?'':bankDetail[GetBankDetail.resBranchName],
               dialogColor: UiConstants.primaryColor,
               customMessage: (widget.isWithdrawFlow)
                   ? 'Are you sure you want to continue? ${baseProvider.activeGoldWithdrawalQuantity.toString()} grams of digital gold shall be processed.'
                   : '',
               onAccept: () async {
                 ///FINALLY NOW UPDATE THE BANK DETAILS
-                // baseProvider.augmontDetail.bankHolderName = pBankHolderName;
-                // baseProvider.augmontDetail.bankAccNo = pBankAccNo;
-                // baseProvider.augmontDetail.ifsc = pBankIfsc;
+                baseProvider.augmontDetail.bankHolderName = pBankHolderName;
+                baseProvider.augmontDetail.bankAccNo = pBankAccNo;
+                baseProvider.augmontDetail.ifsc = pBankIfsc;
                 baseProvider.updateAugmontDetails(
                     pBankHolderName, pBankAccNo, pBankIfsc);
                 dbProvider
