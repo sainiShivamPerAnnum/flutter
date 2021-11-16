@@ -16,6 +16,7 @@ import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/core/service/connectivity_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
+import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
@@ -55,6 +56,7 @@ void main() async {
           signzyStage: SignzyStage.PROD,
           signzyPanStage: SignzyPanStage.PROD,
           baseUriUS: 'us-central1-fello-d3a9c.cloudfunctions.net',
+          mixpanelToken: MixpanelService.PROD_TOKEN,
           baseUriAsia: 'asia-south1-fello-d3a9c.cloudfunctions.net',
           dynamicLinkPrefix: 'https://fello.in'));
   await mainInit();
