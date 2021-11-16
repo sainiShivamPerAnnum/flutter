@@ -15,6 +15,7 @@ import 'package:felloapp/ui/dialogs/augmont_confirm_register_dialog.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/mixpanel_events.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -313,6 +314,16 @@ class KYCDetailsViewModel extends BaseModel {
     }
     if (!_flag) {
       print('returning false flag');
+      Map _data = {
+        'flag': _flag,
+        'fail_code': _failCode,
+        'reason': _reason,
+        'user_pan_name': enteredPanName,
+        'user_pan_number': enteredPan,
+        'upstream_name': upstreamName,
+      };
+      _dbModel.logFailure(
+          _userService.baseUser.uid, FailType.UserKYCFlagFetchFailed, _data);
       return {'flag': _flag, 'fail_code': _failCode, 'reason': _reason};
     }
 
