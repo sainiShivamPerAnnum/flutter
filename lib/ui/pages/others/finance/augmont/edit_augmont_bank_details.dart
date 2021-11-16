@@ -53,6 +53,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
   DBModel dbProvider;
   BaseUtil baseProvider;
   ICICIModel iProvider;
+  bool isConfirm = false;
 
   @override
   Widget build(BuildContext context) {
@@ -302,9 +303,33 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                                   ),
                                 ],
                               ),
-
-                              SizedBox(height: 24),
-
+                              Transform.translate(
+                                offset: Offset(0, 0),
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: SizeConfig.padding6,
+                                  ),
+                                  child: CheckboxListTile(
+                                    shape: CircleBorder(),
+                                    value: isConfirm,
+                                    controlAffinity:
+                                        ListTileControlAffinity.leading,
+                                    onChanged: (val) {
+                                      setState(() {
+                                        isConfirm = val;
+                                      });
+                                    },
+                                    title: FittedBox(
+                                      child: Text(
+                                        "I hereby confirm that the information provided is true and correct",
+                                        style: TextStyles.body3
+                                            .colour(Colors.black45),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: SizeConfig.padding6),
                               Container(
                                 width: SizeConfig.navBarWidth,
                                 child: FelloButtonLg(
@@ -411,6 +436,15 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
       noChanges = false;
     if (curBankAccNo == null || pBankAccNo != curBankAccNo) noChanges = false;
     if (curBankIfsc == null || pBankIfsc != curBankIfsc) noChanges = false;
+    if (!isConfirm) {
+      BaseUtil.showNegativeAlert(
+        'Confirm Details',
+        'Please check mark to confirm details',
+      );
+      baseProvider.isEditAugmontBankDetailInProgress = false;
+      setState(() {});
+      return;
+    }
     if (noChanges) {
       BaseUtil.showNegativeAlert(
         'No Update',
@@ -431,22 +465,22 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
       return;
     }
 
-    ///NOW CHECK IF IFSC IS VALID
-    if (!iProvider.isInit()) await iProvider.init();
-    var bankDetail =
-        await iProvider.getBankInfo(baseProvider.userRegdPan, pBankIfsc);
-    if (bankDetail == null ||
-        bankDetail[QUERY_SUCCESS_FLAG] == QUERY_FAILED ||
-        bankDetail[GetBankDetail.resBankName] == null) {
-      log.error('Couldnt fetch an appropriate response');
-      BaseUtil.showNegativeAlert(
-        'Update Failed',
-        'Invalid IFSC Code entered',
-      );
-      baseProvider.isEditAugmontBankDetailInProgress = false;
-      setState(() {});
-      return;
-    }
+    // ///NOW CHECK IF IFSC IS VALID
+    // if (!iProvider.isInit()) await iProvider.init();
+    // var bankDetail =
+    //     await iProvider.getBankInfo(baseProvider.userRegdPan, pBankIfsc);
+    // if (bankDetail == null ||
+    //     bankDetail[QUERY_SUCCESS_FLAG] == QUERY_FAILED ||
+    //     bankDetail[GetBankDetail.resBankName] == null) {
+    //   log.error('Couldnt fetch an appropriate response');
+    //   BaseUtil.showNegativeAlert(
+    //     'Update Failed',
+    //     'Invalid IFSC Code entered',
+    //   );
+    //   baseProvider.isEditAugmontBankDetailInProgress = false;
+    //   setState(() {});
+    //   return;
+    // }
 
     ///NOW SHOW CONFIRMATION DIALOG TO USER
     AppState.screenStack.add(ScreenItem.dialog);
@@ -457,8 +491,8 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
               bankHolderName: pBankHolderName,
               bankAccNo: pBankAccNo,
               bankIfsc: pBankIfsc,
-              bankName: bankDetail[GetBankDetail.resBankName],
-              bankBranchName: bankDetail[GetBankDetail.resBranchName],
+              // bankName: bankDetail[GetBankDetail.resBankName],
+              // bankBranchName: bankDetail[GetBankDetail.resBranchName],
               dialogColor: UiConstants.primaryColor,
               customMessage: (widget.isWithdrawFlow)
                   ? 'Are you sure you want to continue? ${baseProvider.activeGoldWithdrawalQuantity.toString()} grams of digital gold shall be processed.'
@@ -481,7 +515,8 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                     baseProvider.isEditAugmontBankDetailInProgress = false;
                     setState(() {});
                     if (flag) {
-                      _mixpanelService.mixpanel.track(MixpanelEvents.bankDetailsUpdated);
+                      _mixpanelService.mixpanel
+                          .track(MixpanelEvents.bankDetailsUpdated);
                       BaseUtil.showPositiveAlert(
                           'Complete', 'Your details have been updated');
                       AppState.backButtonDispatcher.didPopRoute();

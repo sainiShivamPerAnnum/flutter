@@ -12,7 +12,9 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/Prize-Card/card.dart';
 import 'package:felloapp/ui/dialogs/share-card.dart';
+import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
@@ -75,4 +77,30 @@ class WinViewModel extends BaseModel {
   //   isWinnersLoading = false;
   //   notifyListeners();
   // }
+
+  openVoucherModal(
+    String asset,
+    String title,
+    String subtitle,
+    Color color,
+    bool commingsoon,
+    List<String> instructions,
+  ) {
+    return BaseUtil.openModalBottomSheet(
+        addToScreenStack: true,
+        content: VoucherModal(
+          color: color,
+          asset: asset,
+          commingSoon: commingsoon,
+          title: title,
+          subtitle: subtitle,
+          instructions: instructions,
+        ),
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(SizeConfig.padding24),
+            topRight: Radius.circular(SizeConfig.padding24)),
+        // backgroundColor: Color(0xffFFDBF6),
+        isBarrierDismissable: false,
+        hapticVibrate: true);
+  }
 }

@@ -37,6 +37,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
   bool _showInvoiceButton = false;
   bool _isInvoiceLoading = false;
   int _timeoutMins;
+  double dialogHeight = SizeConfig.screenHeight * 0.54;
 
   @override
   void initState() {
@@ -110,6 +111,13 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
     return UiConstants.primaryColor;
   }
 
+  getDialogCardHeight() {
+    if (widget._transaction.type == UserTransaction.TRAN_TYPE_PRIZE)
+      dialogHeight = SizeConfig.screenHeight * 0.24;
+    else if (widget.showBeerBanner)
+      dialogHeight = SizeConfig.screenHeight * 0.34;
+  }
+
   Widget dialogContent(BuildContext context) {
     return Wrap(
       children: [
@@ -135,9 +143,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
           ),
         ),
         Container(
-          height: widget.showBeerBanner
-              ? SizeConfig.screenHeight * 0.34
-              : SizeConfig.screenHeight * 0.54,
+          height: getDialogCardHeight(),
           width: SizeConfig.screenWidth,
           decoration: BoxDecoration(
             color: Colors.white,
@@ -331,6 +337,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                     ),
                   ],
                 ),
+              SizedBox(height: SizeConfig.padding12)
             ],
           ),
         ),

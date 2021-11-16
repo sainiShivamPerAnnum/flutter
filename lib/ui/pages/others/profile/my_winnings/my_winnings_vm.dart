@@ -258,11 +258,14 @@ class MyWinningsViewModel extends BaseModel {
   }
 
   showPrizeDetailsDialog(String type, double amount) async {
-    if (type == "AMZ_VOUCHER")
+    String subtitle = "Fello Rewards";
+    if (type == "AMZ_VOUCHER") {
       choice = PrizeClaimChoice.AMZ_VOUCHER;
-    else if (type == "GOLD_CREDIT")
+      subtitle = "Amazon Gift Voucher";
+    } else if (type == "GOLD_CREDIT") {
       choice = PrizeClaimChoice.GOLD_CREDIT;
-    else
+      subtitle = "Digital Gold";
+    } else
       choice = PrizeClaimChoice.FELLO_PRIZE;
     AppState.screenStack.add(ScreenItem.dialog);
     showDialog(
@@ -306,7 +309,7 @@ class MyWinningsViewModel extends BaseModel {
                     ),
                     SizedBox(height: SizeConfig.padding16),
                     Text(
-                      "Prize",
+                      subtitle,
                       textAlign: TextAlign.center,
                       style: TextStyles.body2.colour(Colors.grey),
                     ),
@@ -393,11 +396,17 @@ class MyWinningsViewModel extends BaseModel {
           print(onError);
         });
       } else if (Platform.isIOS) {
+        String dt = DateTime.now().toString();
+
         final directory = await getTemporaryDirectory();
         if (!await directory.exists()) await directory.create(recursive: true);
-        String dt = DateTime.now().toString();
-        File imgg = new File('${directory.path}/fello-reward-$dt.png');
+
+        final File imgg =
+            await new File('${directory.path}/fello-reward-$dt.jpg').create();
         imgg.writeAsBytesSync(image);
+
+        _logger.d("Image file created and sharing, ${imgg.path}");
+
         Share.shareFiles(
           [imgg.path],
           subject: 'Fello Rewards',

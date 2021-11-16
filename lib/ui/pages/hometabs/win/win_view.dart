@@ -1,7 +1,9 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/modals/octfest_info_modal.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/winners_prizes/win_leaderboard.dart';
@@ -85,52 +87,92 @@ class Win extends StatelessWidget {
                             scrollDirection: Axis.horizontal,
                             children: [
                               SizedBox(width: SizeConfig.pageHorizontalMargins),
-                              Container(
-                                width: SizeConfig.screenWidth * 0.410,
-                                margin: EdgeInsets.only(
-                                    right: SizeConfig.padding12),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(
-                                      SizeConfig.roundness32),
-                                  image: DecorationImage(
-                                      image: AssetImage(Assets.amazonCoupon),
-                                      fit: BoxFit.cover),
+                              InkWell(
+                                onTap: () => model.openVoucherModal(
+                                    Assets.amazonCoupon,
+                                    "Amazon Pay Gift Voucher",
+                                    "One liner text",
+                                    UiConstants.tertiarySolid,
+                                    false,
+                                    ["One liner text for amazon gift voucher"]),
+                                child: Container(
+                                  width: SizeConfig.screenWidth * 0.410,
+                                  margin: EdgeInsets.only(
+                                      right: SizeConfig.padding12),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(
+                                        SizeConfig.roundness32),
+                                    image: DecorationImage(
+                                        image: AssetImage(Assets.amazonCoupon),
+                                        fit: BoxFit.cover),
+                                  ),
                                 ),
                               ),
-                              Container(
-                                width: SizeConfig.screenWidth * 0.410,
-                                margin: EdgeInsets.only(
-                                    right: SizeConfig.padding12),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(
-                                      SizeConfig.roundness32),
-                                  image: DecorationImage(
-                                      image: AssetImage(Assets.myntraCoupon),
-                                      fit: BoxFit.cover),
+                              InkWell(
+                                onTap: () => model.openVoucherModal(
+                                    Assets.myntraCoupon,
+                                    "Myntra Shopping Voucher",
+                                    "Comming soon",
+                                    Color(0xff611919),
+                                    true, []),
+                                child: Container(
+                                  width: SizeConfig.screenWidth * 0.410,
+                                  margin: EdgeInsets.only(
+                                      right: SizeConfig.padding12),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(
+                                        SizeConfig.roundness32),
+                                    image: DecorationImage(
+                                        image: AssetImage(Assets.myntraCoupon),
+                                        fit: BoxFit.cover),
+                                  ),
                                 ),
                               ),
-                              Container(
-                                width: SizeConfig.screenWidth * 0.410,
-                                margin: EdgeInsets.only(
-                                    right: SizeConfig.padding12),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(
-                                      SizeConfig.roundness32),
-                                  image: DecorationImage(
-                                      image: AssetImage(Assets.gplayCoupon),
-                                      fit: BoxFit.cover),
+                              InkWell(
+                                onTap: () => model.openVoucherModal(
+                                    Assets.gplayCoupon,
+                                    "Google Play Voucher",
+                                    "Comming soon",
+                                    Colors.blue,
+                                    true, []),
+                                child: Container(
+                                  width: SizeConfig.screenWidth * 0.410,
+                                  margin: EdgeInsets.only(
+                                      right: SizeConfig.padding12),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(
+                                        SizeConfig.roundness32),
+                                    image: DecorationImage(
+                                        image: AssetImage(Assets.gplayCoupon),
+                                        fit: BoxFit.cover),
+                                  ),
                                 ),
                               ),
-                              Container(
-                                width: SizeConfig.screenWidth * 0.410,
-                                margin: EdgeInsets.only(
-                                    right: SizeConfig.padding12),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(
-                                      SizeConfig.roundness32),
-                                  image: DecorationImage(
-                                      image: AssetImage(Assets.bdubsCoupon),
-                                      fit: BoxFit.cover),
+                              InkWell(
+                                onTap: () {
+                                  BaseUtil.openModalBottomSheet(
+                                    addToScreenStack: true,
+                                    content: OctFestInfoModal(),
+                                    isBarrierDismissable: true,
+                                    hapticVibrate: true,
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(
+                                            SizeConfig.padding24),
+                                        topRight: Radius.circular(
+                                            SizeConfig.padding24)),
+                                  );
+                                },
+                                child: Container(
+                                  width: SizeConfig.screenWidth * 0.410,
+                                  margin: EdgeInsets.only(
+                                      right: SizeConfig.padding12),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(
+                                        SizeConfig.roundness32),
+                                    image: DecorationImage(
+                                        image: AssetImage(Assets.bdubsCoupon),
+                                        fit: BoxFit.cover),
+                                  ),
                                 ),
                               ),
                             ],
@@ -274,6 +316,149 @@ class BigPrizeContainer extends StatelessWidget {
             )
           ],
         ),
+      ),
+    );
+  }
+}
+
+class VoucherModal extends StatelessWidget {
+  final String asset, title, subtitle;
+  final bool commingSoon;
+  final Color color;
+  final List<String> instructions;
+  const VoucherModal(
+      {this.asset,
+      this.commingSoon,
+      this.subtitle,
+      this.title,
+      this.color,
+      this.instructions});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(SizeConfig.padding24),
+            topRight: Radius.circular(SizeConfig.padding24),
+          ),
+          image: DecorationImage(
+            image: AssetImage(
+              Assets.voucherBg,
+            ),
+            fit: BoxFit.cover,
+          ),
+
+          // gradient: LinearGradient(
+          //     colors: [Colors.white, Colors.white, Colors.white.withOpacity(0.2)],
+          //     begin: Alignment.topCenter,
+          //     end: Alignment.bottomCenter),
+        ),
+        height: SizeConfig.screenHeight * 0.4,
+        child: Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(SizeConfig.padding24),
+                  topRight: Radius.circular(SizeConfig.padding24),
+                ),
+                color: Colors.white.withOpacity(0.8),
+              ),
+            ),
+            Column(
+              children: [
+                Container(
+                  padding: EdgeInsets.only(
+                      left: SizeConfig.pageHorizontalMargins,
+                      right: SizeConfig.pageHorizontalMargins / 2,
+                      top: SizeConfig.padding16,
+                      bottom: 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        title ?? "title",
+                        textAlign: TextAlign.center,
+                        style: TextStyles.title3.bold
+                            .colour(color ?? Colors.black54),
+                      ),
+                      CircleAvatar(
+                        backgroundColor: Colors.black,
+                        child: IconButton(
+                          onPressed: () {
+                            AppState.backButtonDispatcher.didPopRoute();
+                          },
+                          icon: Icon(
+                            Icons.close,
+                            size: SizeConfig.iconSize1,
+                            color: Colors.white,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                Divider(),
+                Spacer(),
+                Container(
+                    decoration: BoxDecoration(
+                        borderRadius:
+                            BorderRadius.circular(SizeConfig.roundness24),
+                        boxShadow: [
+                          BoxShadow(
+                              color: color.withOpacity(0.16),
+                              offset: Offset(20, 10),
+                              blurRadius: 50,
+                              spreadRadius: 10)
+                        ]),
+                    child: Image.asset(asset,
+                        width: SizeConfig.screenWidth * 0.4)),
+                SizedBox(
+                    height: commingSoon
+                        ? SizeConfig.padding6
+                        : SizeConfig.padding12),
+                commingSoon
+                    ? Text(subtitle ?? "subtitle", style: TextStyles.body1)
+                    : Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.pageHorizontalMargins),
+                        child: Column(
+                          children: List.generate(
+                            instructions.length,
+                            (i) => referralTile(
+                              instructions[i],
+                            ),
+                          ),
+                        ),
+                      ),
+                Spacer(),
+                SizedBox(
+                  height: SizeConfig.padding24,
+                )
+              ],
+            ),
+          ],
+        ));
+  }
+
+  Widget referralTile(String title) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 20.0),
+      child: Row(
+        children: [
+          Icon(
+            Icons.brightness_1,
+            size: 12,
+            color: color,
+          ),
+          SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              title,
+              style: TextStyles.body4,
+            ),
+          ),
+        ],
       ),
     );
   }

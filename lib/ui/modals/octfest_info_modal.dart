@@ -19,7 +19,10 @@ class OctFestInfoModal extends StatelessWidget {
             children: [
               Container(
                 padding: EdgeInsets.only(
-                    left: SizeConfig.pageHorizontalMargins, top: 16, bottom: 0),
+                    left: SizeConfig.pageHorizontalMargins,
+                    right: SizeConfig.pageHorizontalMargins / 2,
+                    top: 16,
+                    bottom: 0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -29,14 +32,17 @@ class OctFestInfoModal extends StatelessWidget {
                       style: TextStyles.title3.bold
                           .colour(UiConstants.primaryColor),
                     ),
-                    IconButton(
-                      onPressed: () {
-                        AppState.backButtonDispatcher.didPopRoute();
-                      },
-                      icon: Icon(
-                        Icons.close,
-                        size: SizeConfig.iconSize1,
-                        color: Colors.black,
+                    CircleAvatar(
+                      backgroundColor: Colors.black,
+                      child: IconButton(
+                        onPressed: () {
+                          AppState.backButtonDispatcher.didPopRoute();
+                        },
+                        icon: Icon(
+                          Icons.close,
+                          size: SizeConfig.iconSize1,
+                          color: Colors.white,
+                        ),
                       ),
                     )
                   ],
