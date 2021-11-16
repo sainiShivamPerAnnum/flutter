@@ -333,12 +333,34 @@ class MyWinningsViewModel extends BaseModel {
         if (image != null)
           shareCard(image, shareMessage);
         else {
-          if (Platform.isIOS) {
-            Share.share(shareMessage);
-          } else {
-            FlutterShareMe().shareToSystem(msg: shareMessage).then((flag) {
-              _logger.d(flag);
-            });
+          try {
+            if (Platform.isIOS) {
+              Share.share(shareMessage).catchError((onError) {
+                if (_userService.baseUser.uid != null) {
+                  Map<String, dynamic> errorDetails = {
+                    'error_msg': 'Share reward text in My winnings failed'
+                  };
+                  _dbModel.logFailure(_userService.baseUser.uid,
+                      FailType.FelloRewardTextShareFailed, errorDetails);
+                }
+                _logger.e(onError);
+              });
+            } else {
+              FlutterShareMe()
+                  .shareToSystem(msg: shareMessage)
+                  .catchError((onError) {
+                if (_userService.baseUser.uid != null) {
+                  Map<String, dynamic> errorDetails = {
+                    'error_msg': 'Share reward text in My winnings failed'
+                  };
+                  _dbModel.logFailure(_userService.baseUser.uid,
+                      FailType.FelloRewardTextShareFailed, errorDetails);
+                }
+                _logger.e(onError);
+              });
+            }
+          } catch (e) {
+            _logger.e(e.toString());
           }
         }
       });
