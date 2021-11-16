@@ -73,6 +73,8 @@ class MyWinningsViewModel extends BaseModel {
     isWinningHistoryLoading = true;
     ApiResponse<List<UserTransaction>> temp =
         await userRepo.getWinningHistory(_userService.baseUser.uid);
+    temp.model.sort(
+        (a, b) => a.timestamp.toDate().isBefore(b.timestamp.toDate()) ? 1 : 0);
     isWinningHistoryLoading = false;
     if (temp != null)
       winningHistory = temp.model;

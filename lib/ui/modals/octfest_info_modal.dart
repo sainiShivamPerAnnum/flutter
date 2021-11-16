@@ -27,7 +27,7 @@ class OctFestInfoModal extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Fello November Fest 🍺",
+                      "Buffalo Wild Wings 🍨",
                       textAlign: TextAlign.center,
                       style: TextStyles.title3.bold
                           .colour(UiConstants.primaryColor),
@@ -55,35 +55,36 @@ class OctFestInfoModal extends StatelessWidget {
                 ),
                 child: Stack(
                   children: [
-                    Positioned(
-                      bottom: 10,
-                      child: Container(
-                        width: SizeConfig.screenWidth,
-                        height: SizeConfig.screenWidth * 0.5,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Transform.translate(
-                              offset: Offset(
-                                  -SizeConfig.blockSizeHorizontal * 5, 0),
-                              child: Image.asset(
-                                "images/beerInfoModal.png",
-                                width: SizeConfig.screenWidth * 0.44,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    // Positioned(
+                    //   bottom: 10,
+                    //   child: Container(
+                    //     width: SizeConfig.screenWidth,
+                    //     height: SizeConfig.screenWidth * 0.5,
+                    //     child: Row(
+                    //       mainAxisAlignment: MainAxisAlignment.center,
+                    //       children: [
+                    //         Transform.translate(
+                    //           offset: Offset(
+                    //               -SizeConfig.blockSizeHorizontal * 5, 0),
+                    //           child: Image.asset(
+                    //             "images/beerInfoModal.png",
+                    //             width: SizeConfig.screenWidth * 0.44,
+                    //           ),
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        SizedBox(height: SizeConfig.padding12),
                         referralTile(
-                          "This November, visit any of our partner FnB outlets and get a free beverage on us.",
+                          "Visit any of our partner FnB outlets and get a free beverage on us.",
                           0,
                         ),
                         referralTile(
-                            "Make your first investment of ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.OCT_FEST_MIN_DEPOSIT)} or more and show the transaction to the outlet to avail the offer.",
+                            "Make your first investment of ₹ ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.OCT_FEST_MIN_DEPOSIT)} or more and show the transaction to the outlet to avail the offer.",
                             SizeConfig.screenWidth * 0.1),
                         referralTile(
                             "This offer can only be availed once per user, using the outlet's download link.",
@@ -94,7 +95,6 @@ class OctFestInfoModal extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 20),
             ],
           ),
         )
