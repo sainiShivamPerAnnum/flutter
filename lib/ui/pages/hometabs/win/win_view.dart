@@ -109,12 +109,19 @@ class Win extends StatelessWidget {
                                 ),
                               ),
                               InkWell(
-                                onTap: () => model.openVoucherModal(
-                                    Assets.myntraCoupon,
-                                    "Myntra Shopping Voucher",
-                                    "Comming soon",
-                                    Color(0xff611919),
-                                    true, []),
+                                onTap: () {
+                                  BaseUtil.openModalBottomSheet(
+                                    addToScreenStack: true,
+                                    content: OctFestInfoModal(),
+                                    isBarrierDismissable: true,
+                                    hapticVibrate: true,
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(
+                                            SizeConfig.padding24),
+                                        topRight: Radius.circular(
+                                            SizeConfig.padding24)),
+                                  );
+                                },
                                 child: Container(
                                   width: SizeConfig.screenWidth * 0.410,
                                   margin: EdgeInsets.only(
@@ -123,7 +130,7 @@ class Win extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(
                                         SizeConfig.roundness32),
                                     image: DecorationImage(
-                                        image: AssetImage(Assets.myntraCoupon),
+                                        image: AssetImage(Assets.bdubsCoupon),
                                         fit: BoxFit.cover),
                                   ),
                                 ),
@@ -149,19 +156,12 @@ class Win extends StatelessWidget {
                                 ),
                               ),
                               InkWell(
-                                onTap: () {
-                                  BaseUtil.openModalBottomSheet(
-                                    addToScreenStack: true,
-                                    content: OctFestInfoModal(),
-                                    isBarrierDismissable: true,
-                                    hapticVibrate: true,
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(
-                                            SizeConfig.padding24),
-                                        topRight: Radius.circular(
-                                            SizeConfig.padding24)),
-                                  );
-                                },
+                                onTap: () => model.openVoucherModal(
+                                    Assets.myntraCoupon,
+                                    "Myntra Shopping Voucher",
+                                    "Comming soon",
+                                    Color(0xff611919),
+                                    true, []),
                                 child: Container(
                                   width: SizeConfig.screenWidth * 0.410,
                                   margin: EdgeInsets.only(
@@ -170,7 +170,7 @@ class Win extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(
                                         SizeConfig.roundness32),
                                     image: DecorationImage(
-                                        image: AssetImage(Assets.bdubsCoupon),
+                                        image: AssetImage(Assets.myntraCoupon),
                                         fit: BoxFit.cover),
                                   ),
                                 ),
@@ -347,11 +347,6 @@ class VoucherModal extends StatelessWidget {
             ),
             fit: BoxFit.cover,
           ),
-
-          // gradient: LinearGradient(
-          //     colors: [Colors.white, Colors.white, Colors.white.withOpacity(0.2)],
-          //     begin: Alignment.topCenter,
-          //     end: Alignment.bottomCenter),
         ),
         height: SizeConfig.screenHeight * 0.4,
         child: Stack(
@@ -362,7 +357,7 @@ class VoucherModal extends StatelessWidget {
                   topLeft: Radius.circular(SizeConfig.padding24),
                   topRight: Radius.circular(SizeConfig.padding24),
                 ),
-                color: Colors.white.withOpacity(0.8),
+                color: Colors.white.withOpacity(0.9),
               ),
             ),
             Column(
@@ -380,7 +375,7 @@ class VoucherModal extends StatelessWidget {
                         title ?? "title",
                         textAlign: TextAlign.center,
                         style: TextStyles.title3.bold
-                            .colour(color ?? Colors.black54),
+                            .colour(UiConstants.primaryColor),
                       ),
                       CircleAvatar(
                         backgroundColor: Colors.black,
@@ -415,10 +410,11 @@ class VoucherModal extends StatelessWidget {
                         width: SizeConfig.screenWidth * 0.4)),
                 SizedBox(
                     height: commingSoon
-                        ? SizeConfig.padding6
-                        : SizeConfig.padding12),
+                        ? SizeConfig.padding12
+                        : SizeConfig.padding20),
                 commingSoon
-                    ? Text(subtitle ?? "subtitle", style: TextStyles.body1)
+                    ? Text(subtitle.toUpperCase() ?? "subtitle",
+                        style: TextStyles.body1.letterSpace(8))
                     : Padding(
                         padding: EdgeInsets.symmetric(
                             horizontal: SizeConfig.pageHorizontalMargins),
@@ -455,7 +451,7 @@ class VoucherModal extends StatelessWidget {
           Expanded(
             child: Text(
               title,
-              style: TextStyles.body4,
+              style: TextStyles.body3,
             ),
           ),
         ],
