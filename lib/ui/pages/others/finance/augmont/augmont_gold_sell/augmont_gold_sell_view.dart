@@ -161,6 +161,9 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                                     style: TextStyles.title5.light),
                                 PropertyChangeConsumer<UserService,
                                     UserServiceProperties>(
+                                  properties: [
+                                    UserServiceProperties.myUserFund
+                                  ],
                                   builder: (ctx, model, child) => Text(
                                     locale.saveGoldBalanceValue(
                                         model.userFundWallet.augGoldQuantity ??

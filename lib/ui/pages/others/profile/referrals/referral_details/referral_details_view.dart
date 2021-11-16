@@ -315,12 +315,12 @@ class ReferralDetailsView extends StatelessWidget {
                               leadingAsset: Assets.paperClip,
                             ),
                             InfoTile(
-                              title: locale.refStep2,
+                              title: "Your friend makes their first saving of ₹ ${model.unlock_referral_bonus} on the app.",
                               leadingAsset: Assets.wmtsaveMoney,
                             ),
                             InfoTile(
                               title:
-                                  "You and your friend gets ₹${model.referral_bonus} and ${model.referral_flc_bonus} Fello tokens in your account",
+                                  "You and your friend get ₹${model.referral_bonus} and ${model.referral_flc_bonus} Fello tokens in your account",
                               leadingAsset: Assets.tickets,
                             ),
                             SizedBox(height: SizeConfig.navBarHeight),

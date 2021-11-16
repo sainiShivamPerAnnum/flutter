@@ -10,10 +10,10 @@ void main() async {
       flavor: Flavor.PROD,
       color: Colors.deepPurpleAccent,
       values: FlavorValues(
-          awsAugmontStage: AWSAugmontStage.PROD,
+          awsAugmontStage: AWSAugmontStage.DEV,
           awsIciciStage: AWSIciciStage.PROD,
           freshchatStage: FreshchatStage.DEV,
-          razorpayStage: RazorpayStage.PROD,
+          razorpayStage: RazorpayStage.DEV,
           signzyStage: SignzyStage.PROD,
           signzyPanStage: SignzyPanStage.PROD,
           baseUriUS: 'us-central1-fello-d3a9c.cloudfunctions.net',

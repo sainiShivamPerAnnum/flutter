@@ -35,6 +35,8 @@ class ReferralDetailsViewModel extends BaseModel {
       .getString(BaseRemoteConfig.REFERRAL_TICKET_BONUS);
   String referral_flc_bonus = BaseRemoteConfig.remoteConfig
       .getString(BaseRemoteConfig.REFERRAL_FLC_BONUS);
+  String unlock_referral_bonus = BaseRemoteConfig.remoteConfig
+      .getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT);
   String _userUrl = "";
   String _userUrlPrefix = "";
   String _userUrlCode = "";
