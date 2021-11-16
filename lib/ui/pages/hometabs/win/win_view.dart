@@ -113,7 +113,7 @@ class Win extends StatelessWidget {
                                   BaseUtil.openModalBottomSheet(
                                     addToScreenStack: true,
                                     content: OctFestInfoModal(),
-                                    isBarrierDismissable: true,
+                                    isBarrierDismissable: false,
                                     hapticVibrate: true,
                                     borderRadius: BorderRadius.only(
                                         topLeft: Radius.circular(
@@ -413,8 +413,7 @@ class VoucherModal extends StatelessWidget {
                         ? SizeConfig.padding12
                         : SizeConfig.padding20),
                 commingSoon
-                    ? Text(subtitle.toUpperCase() ?? "subtitle",
-                        style: TextStyles.body1.letterSpace(8))
+                    ? Text(subtitle ?? "subtitle", style: TextStyles.body1)
                     : Padding(
                         padding: EdgeInsets.symmetric(
                             horizontal: SizeConfig.pageHorizontalMargins),
@@ -445,7 +444,7 @@ class VoucherModal extends StatelessWidget {
           Icon(
             Icons.brightness_1,
             size: 12,
-            color: color,
+            color: UiConstants.primaryColor,
           ),
           SizedBox(width: 10),
           Expanded(

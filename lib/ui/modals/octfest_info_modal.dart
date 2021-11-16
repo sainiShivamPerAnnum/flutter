@@ -68,7 +68,7 @@ class OctFestInfoModal extends StatelessWidget {
                                   -SizeConfig.blockSizeHorizontal * 5, 0),
                               child: Image.asset(
                                 "images/beerInfoModal.png",
-                                width: SizeConfig.screenWidth * 0.5,
+                                width: SizeConfig.screenWidth * 0.44,
                               ),
                             ),
                           ],
@@ -104,7 +104,7 @@ class OctFestInfoModal extends StatelessWidget {
 
   Widget referralTile(String title, double rightPad) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 20.0, right: rightPad),
+      padding: EdgeInsets.only(bottom: 20.0),
       child: Row(
         children: [
           Icon(
@@ -116,7 +116,7 @@ class OctFestInfoModal extends StatelessWidget {
           Expanded(
             child: Text(
               title,
-              style: TextStyles.body4,
+              style: TextStyles.body3,
             ),
           ),
         ],

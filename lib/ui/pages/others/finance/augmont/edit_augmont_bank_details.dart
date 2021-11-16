@@ -54,6 +54,8 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
   BaseUtil baseProvider;
   ICICIModel iProvider;
   bool isConfirm = false;
+  bool inEditMode = false;
+  FocusNode focusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +72,14 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
           _isInitialized = false;
           baseProvider.augmontDetail = detail;
           setState(() {});
+        });
+      }
+      if (baseProvider.augmontDetail == null ||
+          widget.isWithdrawFlow ||
+          baseProvider.augmontDetail.bankAccNo == null ||
+          baseProvider.augmontDetail.bankAccNo == "") {
+        setState(() {
+          inEditMode = true;
         });
       }
       _bankHolderNameController = (baseProvider.augmontDetail != null &&
@@ -186,6 +196,8 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                                   ),
                                   SizedBox(height: 6),
                                   TextFormField(
+                                    enabled: inEditMode,
+                                    autofocus: true,
                                     keyboardType: TextInputType.name,
                                     inputFormatters: [
                                       UpperCaseTextFormatter(),
@@ -221,6 +233,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                                   ),
                                   SizedBox(height: 6),
                                   TextFormField(
+                                    enabled: inEditMode,
                                     controller: _bankAccNoController,
                                     keyboardType:
                                         TextInputType.numberWithOptions(
@@ -255,6 +268,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                                   ),
                                   SizedBox(height: 6),
                                   TextFormField(
+                                    enabled: inEditMode,
                                     controller: _bankAccNoConfirmController,
                                     keyboardType: TextInputType.visiblePassword,
                                     obscureText: true,
@@ -289,6 +303,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                                   ),
                                   SizedBox(height: 6),
                                   TextFormField(
+                                    enabled: inEditMode,
                                     controller: _bankIfscController,
                                     keyboardType: TextInputType.streetAddress,
                                     textCapitalization:
@@ -303,9 +318,8 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                                   ),
                                 ],
                               ),
-                              Transform.translate(
-                                offset: Offset(0, 0),
-                                child: Container(
+                              if (inEditMode)
+                                Container(
                                   padding: EdgeInsets.symmetric(
                                     vertical: SizeConfig.padding6,
                                   ),
@@ -328,15 +342,14 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                                     ),
                                   ),
                                 ),
-                              ),
-                              SizedBox(height: SizeConfig.padding6),
+                              SizedBox(height: SizeConfig.padding24),
                               Container(
                                 width: SizeConfig.navBarWidth,
                                 child: FelloButtonLg(
                                   child: (!baseProvider
                                           .isEditAugmontBankDetailInProgress)
                                       ? Text(
-                                          'UPDATE',
+                                          inEditMode ? 'UPDATE' : 'EDIT',
                                           style: Theme.of(context)
                                               .textTheme
                                               .button
@@ -347,10 +360,20 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                                           size: 18.0,
                                         ),
                                   onPressed: () {
-                                    FocusScope.of(context).unfocus();
-                                    if (BaseUtil.showNoInternetAlert()) return;
-                                    if (_formKey.currentState.validate()) {
-                                      _onUpdateClicked();
+                                    if (inEditMode) {
+                                      FocusScope.of(context).unfocus();
+                                      if (BaseUtil.showNoInternetAlert())
+                                        return;
+
+                                      if (_formKey.currentState.validate()) {
+                                        _onUpdateClicked();
+                                      }
+                                    } else {
+                                      setState(() {
+                                        inEditMode = true;
+                                      });
+                                      FocusScope.of(context)
+                                          .autofocus(focusNode);
                                     }
                                   },
                                 ),
@@ -517,6 +540,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                     if (flag) {
                       _mixpanelService.mixpanel
                           .track(MixpanelEvents.bankDetailsUpdated);
+                      print("mixpanel added");
                       BaseUtil.showPositiveAlert(
                           'Complete', 'Your details have been updated');
                       AppState.backButtonDispatcher.didPopRoute();
