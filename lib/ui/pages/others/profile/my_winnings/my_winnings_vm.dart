@@ -217,7 +217,7 @@ class MyWinningsViewModel extends BaseModel {
   }
 
   shareOnWhatsapp() {
-    _logger.i("Whatsapp share trigerred");
+    _logger.i("Whatsapp share triggered");
     AppState.backButtonDispatcher.didPopRoute();
   }
 
@@ -225,6 +225,7 @@ class MyWinningsViewModel extends BaseModel {
     double _claimAmt = claimPrize;
     _registerClaimChoice(choice).then((flag) {
       AppState.backButtonDispatcher.didPopRoute();
+      flag = true;
       if (flag) {
         getWinningHistory();
         showSuccessPrizeWithdrawalDialog(
@@ -232,7 +233,7 @@ class MyWinningsViewModel extends BaseModel {
             choice == PrizeClaimChoice.AMZ_VOUCHER
                 ? "You will receive the gift card on your registered email and mobile in the next 1-2 business days"
                 : "The gold in grams shall be credited to your wallet in the next 1-2 business days",
-            'Hey, I just won ₹${_claimAmt.abs()} on Fello! \nYou should try it out too: https://fello.in/app/download');
+            'Hey, I won ₹${_claimAmt.abs()} on Fello! \nLet\'s save and play together: https://fello.in/app/download');
       }
     });
   }
@@ -277,7 +278,7 @@ class MyWinningsViewModel extends BaseModel {
                 result: (res) async {
                   if (res) {
                     caputure(
-                        'Hey, I just won ₹$amount on Fello! \nYou should try it out too: https://fello.in/app/download');
+                        'Hey, I won ₹$amount on Fello! \nLet\'s save and play together: https://fello.in/app/download');
                   }
                 },
                 content: Column(

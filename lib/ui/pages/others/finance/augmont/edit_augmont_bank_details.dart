@@ -462,7 +462,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
     if (!isConfirm) {
       BaseUtil.showNegativeAlert(
         'Confirm Details',
-        'Please check mark to confirm details',
+        'Please confirm ',
       );
       baseProvider.isEditAugmontBankDetailInProgress = false;
       setState(() {});
