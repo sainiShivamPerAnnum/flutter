@@ -85,13 +85,13 @@ class MyWinningsViewModel extends BaseModel {
 
   getWinningHistoryTitle(String subtype) {
     switch (subtype) {
-      case "CRICK_2021":
+      case "GM_CRIC2020":
         return "Cricket";
         break;
       case "GOLD_CREDIT":
         return "Augmont Digital Gold";
         break;
-      case "TAMBOLA_2021":
+      case "GM_TAMBOLA2020":
         return "Tambola";
         break;
       case "AMZ_VOUCHER":
@@ -227,7 +227,6 @@ class MyWinningsViewModel extends BaseModel {
     double _claimAmt = claimPrize;
     _registerClaimChoice(choice).then((flag) {
       AppState.backButtonDispatcher.didPopRoute();
-      flag = true;
       if (flag) {
         getWinningHistory();
         showSuccessPrizeWithdrawalDialog(
