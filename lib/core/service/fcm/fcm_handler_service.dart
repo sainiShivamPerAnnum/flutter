@@ -50,7 +50,7 @@ class FcmHandler extends ChangeNotifier {
                     showCrossIcon: false,
                     title: "Game Over",
                     subtitle:
-                        "Your score is: ${data['game_score']??'Unavailable'}.",
+                        "Your score is: ${data['game_score'] ?? 'Unavailable'}.",
                     action: Container(
                       width: SizeConfig.screenWidth,
                       child: FelloButtonLg(
@@ -66,6 +66,31 @@ class FcmHandler extends ChangeNotifier {
                 );
               });
             }
+          }
+          break;
+        case 'showDialog':
+          {
+            BaseUtil.openDialog(
+              addToScreenStack: true,
+              isBarrierDismissable: true,
+              hapticVibrate: false,
+              content: FelloInfoDialog(
+                showCrossIcon: false,
+                title: title,
+                subtitle: body,
+                action: Container(
+                  width: SizeConfig.screenWidth,
+                  child: FelloButtonLg(
+                    child: Text(
+                      "OK",
+                      style: TextStyles.body2.bold.colour(Colors.white),
+                    ),
+                    onPressed: () =>
+                        AppState.backButtonDispatcher.didPopRoute(),
+                  ),
+                ),
+              ),
+            );
           }
           break;
         default:

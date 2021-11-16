@@ -45,10 +45,10 @@ class S {
     );
   }
 
-  /// `100% safe and secure`
+  /// `🔒 safe and secure`
   String get splashSecureText {
     return Intl.message(
-      '100% safe and secure',
+      '🔒 safe and secure',
       name: 'splashSecureText',
       desc: '',
       args: [],
@@ -463,10 +463,10 @@ class S {
     );
   }
 
-  /// `My Total Winnings`
+  /// `My total Winnings`
   String get saveWinningsLabel {
     return Intl.message(
-      'My Total Winnings',
+      'My total Winnings',
       name: 'saveWinningsLabel',
       desc: '',
       args: [],
@@ -693,10 +693,10 @@ class S {
 
   // skipped getter for the '-------------------------' key
 
-  /// `Earn ₹ 25 and 10 tickets for every referral and referrer of the month will get a brand new iphone 13`
+  /// `Earn ₹ 25 and 200 Fello tokens for every referral and referrer of the month will get a brand new iphone 13`
   String get refsubtitle {
     return Intl.message(
-      'Earn ₹ 25 and 10 tickets for every referral and referrer of the month will get a brand new iphone 13',
+      'Earn ₹ 25 and 200 Fello tokens for every referral and referrer of the month will get a brand new iphone 13',
       name: 'refsubtitle',
       desc: '',
       args: [],
@@ -733,30 +733,30 @@ class S {
     );
   }
 
-  /// `Your friend installs and signs up through your link`
+  /// `Your friend installs Fello and signs up using your referral link or referral code.`
   String get refstep1 {
     return Intl.message(
-      'Your friend installs and signs up through your link',
+      'Your friend installs Fello and signs up using your referral link or referral code.',
       name: 'refstep1',
       desc: '',
       args: [],
     );
   }
 
-  /// `Your friend makes a first saving of ₹ 25 on the app`
+  /// `Your friend makes their first saving of ₹ 25 on the app.`
   String get refStep2 {
     return Intl.message(
-      'Your friend makes a first saving of ₹ 25 on the app',
+      'Your friend makes their first saving of ₹ 25 on the app.',
       name: 'refStep2',
       desc: '',
       args: [],
     );
   }
 
-  /// `You and your friend gets ₹ 25 and 10 tickets in your account`
+  /// `Both you and your friend receive ₹ 25 and 200 Fello tokens in your account.`
   String get refStep3 {
     return Intl.message(
-      'You and your friend gets ₹ 25 and 10 tickets in your account',
+      'Both you and your friend receive ₹ 25 and 200 Fello tokens in your account.',
       name: 'refStep3',
       desc: '',
       args: [],
@@ -955,10 +955,10 @@ class S {
     );
   }
 
-  /// `It's Sunday, and we are processing your tickets to see if any of your tickets won or not `
+  /// `We are processing your tickets to see if any of your tickets has won a category..`
   String get tProcessingSubtitle {
     return Intl.message(
-      'It\'s Sunday, and we are processing your tickets to see if any of your tickets won or not ',
+      'We are processing your tickets to see if any of your tickets has won a category..',
       name: 'tProcessingSubtitle',
       desc: '',
       args: [],
@@ -1035,10 +1035,10 @@ class S {
     );
   }
 
-  /// `Only users with minimun savings balance of ₹ 100 are eliglble for Fello Prizes`
+  /// `Only users with minimun savings balance of ₹ 100 are eliglble for prizes`
   String get tParWinsubtitle {
     return Intl.message(
-      'Only users with minimun savings balance of ₹ 100 are eliglble for Fello Prizes',
+      'Only users with minimun savings balance of ₹ 100 are eliglble for prizes',
       name: 'tParWinsubtitle',
       desc: '',
       args: [],

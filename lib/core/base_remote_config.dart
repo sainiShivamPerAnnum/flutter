@@ -107,6 +107,9 @@ class BaseRemoteConfig {
   static const Map<String, String> _TAMBOLA_THUMBNAIL_URI = {
     'tambola_thumbnail': 'https://fello-assets.s3.ap-south-1.amazonaws.com/fello_tambola.png'
   };
+  static const Map<String, String> _MIN_WITHDRAWABLE_PRIZE = {
+    'min_withdrawable_prize': '100'
+  };
 
   static const Map<String, dynamic> DEFAULTS = {
     ..._DRAW_PICK_TIME,
@@ -140,7 +143,8 @@ class BaseRemoteConfig {
     ..._CRICKET_PLAY_COST,
     ..._CRICKET_PLAY_PRIZE,
     ..._CRICKET_THUMBNAIL_URI,
-    ..._TAMBOLA_THUMBNAIL_URI
+    ..._TAMBOLA_THUMBNAIL_URI,
+    ..._MIN_WITHDRAWABLE_PRIZE
   };
 
   static Future<bool> init() async {
@@ -243,12 +247,7 @@ class BaseRemoteConfig {
 
   static String get TAMBOLA_THUMBNAIL_URI => _TAMBOLA_THUMBNAIL_URI.keys.first;
 
-  static int get UNLOCK_REFERRAL_AMT {
-    String _val = _UNLOCK_REFERRAL_AMT.keys.first;
-    if (_val != null || _val.isNotEmpty) {
-      int iVal = BaseUtil.toInt(_val);
-      return (iVal > 0) ? iVal : 100;
-    }
-    return 100;
-  }
+  static String get UNLOCK_REFERRAL_AMT => _UNLOCK_REFERRAL_AMT.keys.first;
+
+  static String get MIN_WITHDRAWABLE_PRIZE => _MIN_WITHDRAWABLE_PRIZE.keys.first;
 }

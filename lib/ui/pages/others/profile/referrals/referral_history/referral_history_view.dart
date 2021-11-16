@@ -2,10 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
+import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/mixpanel_events.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -15,7 +19,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class ReferralHistoryView extends StatefulWidget {
-  ReferralHistoryView();
+  final bool onlyLocked;
+  ReferralHistoryView({this.onlyLocked = false});
 
   @override
   State createState() => _ReferralHistoryViewState();
@@ -24,6 +29,7 @@ class ReferralHistoryView extends StatefulWidget {
 class _ReferralHistoryViewState extends State<ReferralHistoryView> {
   BaseUtil baseProvider;
   DBModel dbProvider;
+  final _mixpanelService = locator<MixpanelService>();
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +54,9 @@ class _ReferralHistoryViewState extends State<ReferralHistoryView> {
           }
           if (baseProvider.myReferralInfo != null && _t < _n) {
             baseProvider.myReferralInfo.refCount = _n;
+            if (_n != null && _n > 0)
+              _mixpanelService.mixpanel.track(MixpanelEvents.referralCount,
+                  properties: {"count": _n});
             dbProvider.updateUserReferralCount(baseProvider.myUser.uid,
                 baseProvider.myReferralInfo); //await not required
           }
@@ -74,41 +83,53 @@ class _ReferralHistoryViewState extends State<ReferralHistoryView> {
                 color: Colors.white,
               ),
               child: (baseProvider.referralsFetched)
-                  ? SingleChildScrollView(
-                      physics: BouncingScrollPhysics(),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            // height: SizeConfig.screenHeight*0.8,
-                            // width: SizeConfig.screenWidth*0.9,
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              padding: const EdgeInsets.all(6.0),
-                              itemBuilder: (context, i) {
-                                return _buildRefItem(
-                                    baseProvider.userReferralsList[i]);
-                              },
-                              itemCount: baseProvider.userReferralsList.length,
-                            ),
+                  ? (baseProvider.userReferralsList.isEmpty
+                      ? Center(
+                          child: NoRecordDisplayWidget(
+                            assetLottie: Assets.noData,
+                            text: "No Referral History yet",
                           ),
-                          baseProvider.isOldCustomer()
-                              ? Padding(
-                                  padding: EdgeInsets.all(10),
-                                  child: Text(
-                                    'Referrals before April 2021 are not mentioned here',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        color: Colors.grey[500],
-                                        fontSize: SizeConfig.mediumTextSize),
-                                  ),
-                                )
-                              : Container()
-                        ],
-                      ),
-                    )
+                        )
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              // height: SizeConfig.screenHeight*0.8,
+                              // width: SizeConfig.screenWidth*0.9,
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                padding: const EdgeInsets.all(6.0),
+                                itemBuilder: (context, i) {
+                                  if (widget.onlyLocked) {
+                                    if (baseProvider.userReferralsList[i]
+                                        .isUserBonusUnlocked??false)
+                                      return SizedBox();
+                                    else
+                                      return _buildRefItem(
+                                          baseProvider.userReferralsList[i]);
+                                  } else
+                                    return _buildRefItem(
+                                        baseProvider.userReferralsList[i]);
+                                },
+                                itemCount:
+                                    baseProvider.userReferralsList.length,
+                              ),
+                            ),
+                            baseProvider.isOldCustomer()
+                                ? Padding(
+                                    padding: EdgeInsets.all(10),
+                                    child: Text(
+                                      'Referrals before April 2021 are not mentioned here',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: Colors.grey[500],
+                                          fontSize: SizeConfig.mediumTextSize),
+                                    ),
+                                  )
+                                : Container()
+                          ],
+                        ))
                   : Center(
                       child: Padding(
                         padding: EdgeInsets.all(30),
@@ -142,7 +163,7 @@ class _ReferralHistoryViewState extends State<ReferralHistoryView> {
         padding: EdgeInsets.symmetric(
             horizontal: SizeConfig.padding24, vertical: SizeConfig.padding16),
         width: SizeConfig.screenWidth,
-        height: SizeConfig.screenWidth * 0.195,
+        //height: SizeConfig.screenWidth * 0.195,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [

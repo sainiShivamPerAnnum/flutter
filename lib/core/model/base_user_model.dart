@@ -107,7 +107,7 @@ class BaseUser {
             client_token,
             data[fldIsInvested] ?? false,
             data[fldIsIciciOnboarded],
-            data[fldIsAugmontOnboarded],
+            data[fldIsAugmontOnboarded] ?? false,
             data[fldIsSimpleKycVerified],
             data[fldIsKycVerified],
             data[fldKycName],
@@ -135,7 +135,7 @@ class BaseUser {
       fldCreatedOn: createdOn
     };
     if (isKycVerified != null) userObj[fldIsKycVerified] = isKycVerified;
-    if(kycName != null) userObj[fldKycName] = kycName;
+    if (kycName != null) userObj[fldKycName] = kycName;
     if (isIciciOnboarded != null)
       userObj[fldIsIciciOnboarded] = isIciciOnboarded;
     if (isIciciEnabled != null) userObj[fldIsIciciEnabled] = isIciciEnabled;

@@ -10,6 +10,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class OtpInputScreen extends StatefulWidget {
   final VoidCallback otpEntered;
@@ -48,17 +49,6 @@ class OtpInputScreenState extends State<OtpInputScreen> {
     focusNode = new FocusNode();
     focusNode.addListener(
         () => print('focusNode updated: hasFocus: ${focusNode.hasFocus}'));
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    focusNode.dispose();
-    super.dispose();
-  }
-
-  @override
-  void didChangeDependencies() {
     if (mounted)
       Future.delayed(Duration(seconds: 2), () {
         FocusScope.of(context).requestFocus(focusNode);
@@ -75,13 +65,19 @@ class OtpInputScreenState extends State<OtpInputScreen> {
           log.error('Screen no longer active');
         }
       });
+    super.initState();
+  }
 
-    super.didChangeDependencies();
+  @override
+  void dispose() {
+    focusNode.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
+    final baseProvider = Provider.of<BaseUtil>(context, listen: true);
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Container(
@@ -165,29 +161,32 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                         children: [
                           Text(
                             locale.obDidntGetOtp,
-                            style: TextStyle(
-                              color: Colors.black45,
-                              fontWeight: FontWeight.w500,
-                            ),
+                            style: TextStyles.body3.colour(Colors.black45),
                           ),
                           InkWell(
                             child: Text(
                               locale.obResend,
-                              style: TextStyle(
-                                color: Theme.of(context).primaryColor,
-                                fontWeight: FontWeight.w700,
-                              ),
+                              style: TextStyles.body3
+                                  .colour(UiConstants.primaryColor)
+                                  .bold,
                             ),
                             onTap: () {
                               log.debug("Resend action triggered");
                               FocusScope.of(context).unfocus();
-                              BaseUtil.showPositiveAlert(
-                                  "OTP resent successfully",
-                                  "Please wait for the new otp");
+
+                              setState(() {
+                                showResendOption = false;
+                              });
+
                               if (!_isResendClicked) {
                                 //ensure that button isnt clicked multiple times
                                 if (widget.resendOtp != null)
                                   widget.resendOtp();
+                              }
+                              if (baseProvider.isOtpResendCount < 3) {
+                                BaseUtil.showPositiveAlert(
+                                    "OTP resent successfully",
+                                    "Please wait for the new otp");
                               }
                             },
                           ),
@@ -198,17 +197,18 @@ class OtpInputScreenState extends State<OtpInputScreen> {
               (_isTriesExceeded)
                   ? Text(
                       locale.obOtpTryExceed,
+                      textAlign: TextAlign.center,
                       style: TextStyles.body2.colour(
                         Colors.red[400],
                       ),
                     )
                   : SizedBox(),
-              (!showResendOption)
+              (!showResendOption && !_isTriesExceeded)
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text("Didn't get an OTP? request in ",
-                            style: TextStyles.body3),
+                            style: TextStyles.body3.colour(Colors.black45)),
                         TweenAnimationBuilder<Duration>(
                             duration: Duration(seconds: 30),
                             tween: Tween(
@@ -216,6 +216,9 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                                 end: Duration.zero),
                             onEnd: () {
                               print('Timer ended');
+                              setState(() {
+                                showResendOption = true;
+                              });
                             },
                             builder: (BuildContext context, Duration value,
                                 Widget child) {

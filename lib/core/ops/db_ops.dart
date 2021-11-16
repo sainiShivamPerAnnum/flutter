@@ -961,7 +961,14 @@ class DBModel extends ChangeNotifier {
       } catch (e) {
         log.error('Crashlytics record error fail : $e');
       }
-      await _api.addFailedReportDocument(dMap);
+      if (failType == FailType.UserAugmontSellFailed ||
+          failType == FailType.UserPaymentCompleteTxnFailed) {
+        await _api.addPriorityFailedReport(dMap);
+      } else if (failType == FailType.TambolaTicketGenerationFailed) {
+        await _api.addGameFailedReport(dMap);
+      } else {
+        await _api.addFailedReportDocument(dMap);
+      }
       return true;
     } catch (e) {
       log.error(e.toString());

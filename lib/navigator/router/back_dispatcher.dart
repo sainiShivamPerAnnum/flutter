@@ -6,16 +6,13 @@ import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
-import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
-import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
-import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog_landscape.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
-
 //Flutter Imports
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   final FelloRouterDelegate _routerDelegate;
@@ -78,8 +75,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     }
     //If the cricket game is in progress
     else if (AppState.circGameInProgress)
-      return _confirmExit(
-          "Exit Game", "Are you sure you want to leave?", () {
+      return _confirmExit("Exit Game", "Are you sure you want to leave?", () {
         AppState.circGameInProgress = false;
         didPopRoute();
         return didPopRoute();
@@ -87,25 +83,17 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
     // If the root tab is not 0 at the time of exit
     else if (AppState.screenStack.length == 1 &&
-        AppState.delegate.appState.rootIndex != 1 &&
+        (AppState.delegate.appState.rootIndex != 1 ||
+            RootViewModel.scaffoldKey.currentState.isDrawerOpen) &&
         _baseUtil.isUserOnboarded) {
-      print("Press back once more to exit");
+      Logger().w("Checking if app can be closed");
       if (RootViewModel.scaffoldKey.currentState.isDrawerOpen)
         RootViewModel.scaffoldKey.currentState.openEndDrawer();
-      else
+      else if (AppState.delegate.appState.rootIndex != 1)
         AppState.delegate.appState.setCurrentTabIndex = 1;
-      //_routerDelegate.appState.returnHome();
       return Future.value(true);
     }
-    // else if (AppState.unsavedChanges)
-    //   return _confirmExit(
-    //       "You have unsaved changes", "Are you sure you want to exit", () {
-    //     print(AppState.screenStack);
-    //     AppState.unsavedChanges = false;
-    //     didPopRoute();
-    //     return didPopRoute();
-    //   });
-    // else
+
     return _routerDelegate.popRoute();
   }
 }

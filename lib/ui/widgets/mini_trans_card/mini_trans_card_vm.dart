@@ -58,7 +58,7 @@ class MiniTransactionCardViewModel extends BaseModel {
       return "Tambola Win";
     } else if (type == UserTransaction.TRAN_SUBTYPE_REF_BONUS) {
       return "Referral Bonus";
-    }else if (type == UserTransaction.TRAN_SUBTYPE_REWARD_REDEEM) {
+    } else if (type == UserTransaction.TRAN_SUBTYPE_REWARD_REDEEM) {
       return "Rewards Redeemed";
     }
     return "Fello Rewards";
@@ -115,9 +115,12 @@ class MiniTransactionCardViewModel extends BaseModel {
   }
 
   bool getBeerTicketStatus(UserTransaction transaction) {
+    double minBeerDeposit = double.tryParse(BaseRemoteConfig.remoteConfig
+            .getString(BaseRemoteConfig.OCT_FEST_MIN_DEPOSIT) ??
+        '150.0');
     if (baseProvider.firstAugmontTransaction != null &&
         baseProvider.firstAugmontTransaction == transaction &&
-        transaction.amount >= 150.0 &&
+        transaction.amount >= minBeerDeposit &&
         isOfferStillValid(transaction.timestamp)) return true;
     return false;
   }

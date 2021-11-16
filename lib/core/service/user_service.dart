@@ -32,7 +32,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   String get idToken => _idToken;
   String get dob => _dob;
   String get gender => _gender;
-  bool get isEmailVerified => _isEmailVerified;
+  bool get isEmailVerified => _isEmailVerified ?? false;
 
   UserFundWallet get userFundWallet => _userFundWallet;
 
@@ -105,7 +105,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     _firebaseUser = FirebaseAuth.instance.currentUser;
     await setBaseUser();
     if (baseUser != null) {
-      isEmailVerified = baseUser.isEmailVerified;
+      isEmailVerified = baseUser.isEmailVerified ?? false;
       await setProfilePicture();
       await getUserFundWalletData();
     }

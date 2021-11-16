@@ -2,6 +2,7 @@
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/feedback_dialog.dart';
@@ -12,6 +13,7 @@ import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/mixpanel_events.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:felloapp/base_util.dart';
@@ -44,6 +46,7 @@ class _SupportPageState extends State<SupportPage> {
   DBModel dbProvider;
   TextEditingController _requestCallPhoneController = TextEditingController();
   bool isInit = false;
+  final _mixpanelService = locator<MixpanelService>();
 
   void init() {
     _requestCallPhoneController.text = baseProvider.myUser.mobile;
@@ -68,7 +71,7 @@ class _SupportPageState extends State<SupportPage> {
     appState = Provider.of<AppState>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     ConnectivityStatus connectivityStatus =
-    Provider.of<ConnectivityStatus>(context);
+        Provider.of<ConnectivityStatus>(context);
 
     if (!isInit) {
       init();
@@ -101,6 +104,8 @@ class _SupportPageState extends State<SupportPage> {
                           title: "Chat with us",
                           onTap: () {
                             Haptic.vibrate();
+                            _mixpanelService.mixpanel
+                                .track(MixpanelEvents.initiateChatSupport);
                             appState.currentAction = PageAction(
                                 state: PageState.addPage,
                                 page: ChatSupportPageConfig);
@@ -111,7 +116,8 @@ class _SupportPageState extends State<SupportPage> {
                           title: "Request a Callback",
                           onTap: () {
                             Haptic.vibrate();
-                            if (connectivityStatus != ConnectivityStatus.Offline)
+                            if (connectivityStatus !=
+                                ConnectivityStatus.Offline)
                               _showRequestCallSheet();
                             else
                               BaseUtil.showNoInternetAlert();
@@ -162,15 +168,18 @@ class _SupportPageState extends State<SupportPage> {
                                       //feedback submission allowed even if user not signed in
                                       dbProvider
                                           .submitFeedback(
-                                          (baseProvider.firebaseUser == null ||
-                                              baseProvider
-                                                  .firebaseUser.uid ==
-                                                  null)
-                                              ? 'UNKNOWN'
-                                              : baseProvider.firebaseUser.uid,
-                                          fdbk)
+                                              (baseProvider.firebaseUser ==
+                                                          null ||
+                                                      baseProvider.firebaseUser
+                                                              .uid ==
+                                                          null)
+                                                  ? 'UNKNOWN'
+                                                  : baseProvider
+                                                      .firebaseUser.uid,
+                                              fdbk)
                                           .then((flag) {
-                                        AppState.backButtonDispatcher.didPopRoute();
+                                        AppState.backButtonDispatcher
+                                            .didPopRoute();
                                         if (flag) {
                                           BaseUtil.showPositiveAlert(
                                             'Thank You',
@@ -239,9 +248,9 @@ class _SupportPageState extends State<SupportPage> {
                                 .textTheme
                                 .headline5
                                 .copyWith(
-                                color: UiConstants.primaryColor,
-                                fontSize: SizeConfig.largeTextSize * 1.2,
-                                fontWeight: FontWeight.bold),
+                                    color: UiConstants.primaryColor,
+                                    fontSize: SizeConfig.largeTextSize * 1.2,
+                                    fontWeight: FontWeight.bold),
                           ),
                         ),
                         GestureDetector(
@@ -261,7 +270,7 @@ class _SupportPageState extends State<SupportPage> {
                     Text(
                       'Confirm your number and we will call you back.',
                       style:
-                      TextStyle(fontSize: SizeConfig.mediumTextSize * 1.3),
+                          TextStyle(fontSize: SizeConfig.mediumTextSize * 1.3),
                     ),
                     SizedBox(
                       height: SizeConfig.blockSizeVertical * 3.5,
@@ -289,7 +298,7 @@ class _SupportPageState extends State<SupportPage> {
                     Text(
                       'What time should we call you?',
                       style:
-                      TextStyle(fontSize: SizeConfig.mediumTextSize * 1.3),
+                          TextStyle(fontSize: SizeConfig.mediumTextSize * 1.3),
                     ),
                     SizedBox(
                       height: SizeConfig.blockSizeVertical * 1.5,
@@ -323,16 +332,16 @@ class _SupportPageState extends State<SupportPage> {
                                   padding: EdgeInsets.all(5.0),
                                   child: (_selectedTimeSlotIndex == index)
                                       ? Center(
-                                    child: Text(
-                                      timeSlots[index],
-                                      style:
-                                      TextStyle(color: Colors.white),
-                                    ),
-                                  )
+                                          child: Text(
+                                            timeSlots[index],
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        )
                                       : Center(
-                                      child: Text(
-                                        timeSlots[index],
-                                      )),
+                                          child: Text(
+                                          timeSlots[index],
+                                        )),
                                 ),
                               ),
                             );
@@ -358,16 +367,16 @@ class _SupportPageState extends State<SupportPage> {
                                   padding: EdgeInsets.all(5.0),
                                   child: (_selectedTimeSlotIndex == index)
                                       ? Center(
-                                    child: Text(
-                                      timeSlots[index],
-                                      style:
-                                      TextStyle(color: Colors.white),
-                                    ),
-                                  )
+                                          child: Text(
+                                            timeSlots[index],
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        )
                                       : Center(
-                                      child: Text(
-                                        timeSlots[index],
-                                      )),
+                                          child: Text(
+                                          timeSlots[index],
+                                        )),
                                 ),
                               ),
                             );
@@ -390,16 +399,16 @@ class _SupportPageState extends State<SupportPage> {
                                   padding: EdgeInsets.all(5.0),
                                   child: (_selectedTimeSlotIndex == index)
                                       ? Center(
-                                    child: Text(
-                                      timeSlots[index],
-                                      style:
-                                      TextStyle(color: Colors.white),
-                                    ),
-                                  )
+                                          child: Text(
+                                            timeSlots[index],
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        )
                                       : Center(
-                                      child: Text(
-                                        timeSlots[index],
-                                      )),
+                                          child: Text(
+                                          timeSlots[index],
+                                        )),
                                 ),
                               ),
                             );
@@ -428,8 +437,8 @@ class _SupportPageState extends State<SupportPage> {
                           onPressed: () async {
                             try {
                               if (_requestCallPhoneController.text
-                                  .trim()
-                                  .length !=
+                                      .trim()
+                                      .length !=
                                   10) {
                                 BaseUtil.showNegativeAlert(
                                   'Incorrect',
@@ -443,6 +452,8 @@ class _SupportPageState extends State<SupportPage> {
                                   _requestCallPhoneController.text.trim(),
                                   callTimes[_selectedTimeSlotIndex]);
                               if (res) {
+                                _mixpanelService.mixpanel
+                                    .track(MixpanelEvents.requestedCallback);
                                 BaseUtil.showPositiveAlert(
                                   'Callback Placed',
                                   'Thank you for letting us know, we will call you soon!',
@@ -456,9 +467,9 @@ class _SupportPageState extends State<SupportPage> {
                                 if (baseProvider.myUser.uid != null) {
                                   Map<String, dynamic> errorDetails = {
                                     'error_msg':
-                                    'Placing a call request failed',
+                                        'Placing a call request failed',
                                     'Phone Number':
-                                    _requestCallPhoneController.text.trim(),
+                                        _requestCallPhoneController.text.trim(),
                                   };
                                   dbProvider.logFailure(
                                       baseProvider.myUser.uid,
@@ -487,11 +498,11 @@ class _SupportPageState extends State<SupportPage> {
   }
 
   void _launchEmail() {
+    _mixpanelService.mixpanel.track(MixpanelEvents.emailInitiated);
     final Uri emailLaunchUri = Uri(scheme: 'mailto', path: 'hello@fello.in');
     launch(emailLaunchUri.toString());
   }
 }
-
 
 class TermsRow extends StatelessWidget {
   const TermsRow();

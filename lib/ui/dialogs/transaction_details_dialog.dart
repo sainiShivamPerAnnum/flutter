@@ -8,6 +8,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/modals/octfest_info_modal.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +37,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
   bool _showInvoiceButton = false;
   bool _isInvoiceLoading = false;
   int _timeoutMins;
+  double dialogHeight = SizeConfig.screenHeight * 0.54;
 
   @override
   void initState() {
@@ -109,6 +111,13 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
     return UiConstants.primaryColor;
   }
 
+  getDialogCardHeight() {
+    if (widget._transaction.type == UserTransaction.TRAN_TYPE_PRIZE)
+      dialogHeight = SizeConfig.screenHeight * 0.24;
+    else if (widget.showBeerBanner)
+      dialogHeight = SizeConfig.screenHeight * 0.34;
+  }
+
   Widget dialogContent(BuildContext context) {
     return Wrap(
       children: [
@@ -134,9 +143,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
           ),
         ),
         Container(
-          height: widget.showBeerBanner
-              ? SizeConfig.screenHeight * 0.34
-              : SizeConfig.screenHeight * 0.54,
+          height: getDialogCardHeight(),
           width: SizeConfig.screenWidth,
           decoration: BoxDecoration(
             color: Colors.white,
@@ -330,6 +337,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                     ),
                   ],
                 ),
+              SizedBox(height: SizeConfig.padding12)
             ],
           ),
         ),
@@ -339,11 +347,12 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
             width: SizeConfig.screenWidth,
             height: SizeConfig.screenWidth * 0.5,
             decoration: BoxDecoration(
+              color: UiConstants.primaryColor,
               borderRadius: BorderRadius.circular(12),
-              gradient: new LinearGradient(colors: [
-                UiConstants.primaryColor,
-                UiConstants.primaryColor.withBlue(190),
-              ], begin: Alignment.centerLeft, end: Alignment.bottomRight),
+              // gradient: new LinearGradient(colors: [
+              //   UiConstants.primaryColor,
+              //   UiConstants.primaryColor.withBlue(190),
+              // ], begin: Alignment.centerLeft, end: Alignment.bottomRight),
             ),
             padding: EdgeInsets.only(
                 right: SizeConfig.globalMargin,
@@ -444,6 +453,11 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                     onPressed: () {
                       AppState.screenStack.add(ScreenItem.dialog);
                       showModalBottomSheet(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(SizeConfig.roundness24),
+                            topRight: Radius.circular(SizeConfig.roundness24),
+                          )),
                           context: context,
                           builder: (ctx) {
                             return OctFestInfoModal();
@@ -563,9 +577,8 @@ class BeerTicketItem extends StatelessWidget {
           if (label != null)
             Text(
               "$label:",
-              style: TextStyle(
-                fontSize: SizeConfig.smallTextSize,
-                color: Colors.white.withOpacity(0.5),
+              style: TextStyles.body4.colour(
+                Colors.white.withOpacity(0.5),
               ),
             ),
           Container(
@@ -574,10 +587,7 @@ class BeerTicketItem extends StatelessWidget {
               value,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: GoogleFonts.montserrat(
-                  color: Colors.white,
-                  fontSize: SizeConfig.largeTextSize,
-                  fontWeight: FontWeight.w500),
+              style: TextStyles.body1.bold.colour(Colors.white),
             ),
           ),
         ]);
