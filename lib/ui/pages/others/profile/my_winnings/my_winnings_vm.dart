@@ -396,11 +396,17 @@ class MyWinningsViewModel extends BaseModel {
           print(onError);
         });
       } else if (Platform.isIOS) {
+        String dt = DateTime.now().toString();
+
         final directory = await getTemporaryDirectory();
         if (!await directory.exists()) await directory.create(recursive: true);
-        String dt = DateTime.now().toString();
-        File imgg = new File('${directory.path}/fello-reward-$dt.png');
+
+        final File imgg =
+            await new File('${directory.path}/fello-reward-$dt.jpg').create();
         imgg.writeAsBytesSync(image);
+
+        _logger.d("Image file created and sharing, ${imgg.path}");
+
         Share.shareFiles(
           [imgg.path],
           subject: 'Fello Rewards',
