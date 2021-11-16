@@ -99,7 +99,7 @@ class ReferralDetailsView extends StatelessWidget {
                                           style: TextStyles.body3,
                                         ),
                                         InkWell(
-                                          onTap: () => model.copyReferCode,
+                                          onTap: model.copyReferCode,
                                           child: Container(
                                             padding: EdgeInsets.symmetric(
                                               horizontal: SizeConfig.padding8,
@@ -315,7 +315,8 @@ class ReferralDetailsView extends StatelessWidget {
                               leadingAsset: Assets.paperClip,
                             ),
                             InfoTile(
-                              title: "Your friend makes their first saving of ₹ ${model.unlock_referral_bonus} on the app.",
+                              title:
+                                  "Your friend makes their first saving of ₹ ${model.unlock_referral_bonus} on the app.",
                               leadingAsset: Assets.wmtsaveMoney,
                             ),
                             InfoTile(

@@ -961,11 +961,12 @@ class DBModel extends ChangeNotifier {
       } catch (e) {
         log.error('Crashlytics record error fail : $e');
       }
-      if(failType == FailType.UserAugmontSellFailed || failType == FailType.UserPaymentCompleteTxnFailed) {
+      if (failType == FailType.UserAugmontSellFailed ||
+          failType == FailType.UserPaymentCompleteTxnFailed) {
         await _api.addPriorityFailedReport(dMap);
-      }else if(failType == FailType.TambolaTicketGenerationFailed) {
+      } else if (failType == FailType.TambolaTicketGenerationFailed) {
         await _api.addGameFailedReport(dMap);
-      }else {
+      } else {
         await _api.addFailedReportDocument(dMap);
       }
       return true;
