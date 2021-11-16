@@ -79,7 +79,7 @@ class OctFestInfoModal extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         referralTile(
-                          "This October, visit any of our partner FnB outlets and get a free beverage on us.",
+                          "This November, visit any of our partner FnB outlets and get a free beverage on us.",
                           0,
                         ),
                         referralTile(
