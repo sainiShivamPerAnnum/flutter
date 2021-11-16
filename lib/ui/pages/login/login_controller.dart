@@ -427,6 +427,7 @@ class _LoginControllerState extends State<LoginController>
         }
       case OtpInputScreen.index:
         {
+          await _mixpanelService.init();
           String otp = _otpScreenKey.currentState.otp; //otpInScreen.getOtp();
           if (otp != null && otp.isNotEmpty && otp.length == 6) {
             baseProvider.isLoginNextInProgress = true;

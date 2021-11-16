@@ -8,11 +8,7 @@ class MixpanelService {
   Mixpanel _mixpanel;
   Mixpanel get mixpanel => _mixpanel;
 
-  MixpanelService() {
-    init();
-  }
-
-  init() async {
+ Future<void> init() async {
     _mixpanel = await Mixpanel.init(FlavorConfig.instance.values.mixpanelToken,
         optOutTrackingDefault: false);
   }
