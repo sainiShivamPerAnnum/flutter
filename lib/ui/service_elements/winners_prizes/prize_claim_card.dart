@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
@@ -21,6 +22,10 @@ class PrizeClaimCard extends StatelessWidget {
   PrizeClaimCard({this.model});
   @override
   Widget build(BuildContext context) {
+    String minWithdrawPrize = BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.MIN_WITHDRAWABLE_PRIZE);
+    String refUnlock = BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT);
+    int refUnlockAmt = BaseUtil.toInt(refUnlock);
+    int minWithdrawPrizeAmt = BaseUtil.toInt(minWithdrawPrize);
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
         properties: [UserServiceProperties.myUserFund],
         builder: (context, m, property) => Column(
@@ -80,8 +85,8 @@ class PrizeClaimCard extends StatelessWidget {
                                 ),
                                 SizedBox(height: SizeConfig.padding4),
                                 Text(
-                                  "One line description of locked balance. can be two liners also",
-                                  maxLines: 2,
+                                  "Unlock these rewards once your friends make their first savings of atleast ₹$refUnlock",
+                                  maxLines: 3,
                                   style: TextStyles.body3.colour(Colors.grey),
                                 )
                               ],
@@ -144,12 +149,13 @@ class PrizeClaimCard extends StatelessWidget {
                                       ),
                                     ),
                                     SizedBox(height: SizeConfig.padding4),
-                                    Text(
-                                      "One line description of locked balance. can be two liners also",
+                                    (m.userFundWallet.unclaimedBalance >= refUnlockAmt &&
+                                        m.userFundWallet.augGoldPrinciple >= refUnlockAmt)?Text(
+                                      "Redeem your rewards using any of the following options",
                                       maxLines: 2,
                                       style:
                                           TextStyles.body3.colour(Colors.grey),
-                                    )
+                                    ):Container()
                                   ],
                                 ),
                               ),
@@ -163,8 +169,8 @@ class PrizeClaimCard extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: SizeConfig.padding8),
-                        if (m.userFundWallet.unclaimedBalance >= 100 &&
-                            m.userFundWallet.augGoldPrinciple >= 100)
+                        if (m.userFundWallet.unclaimedBalance >= refUnlockAmt &&
+                            m.userFundWallet.augGoldPrinciple >= refUnlockAmt)
                           Container(
                             margin: EdgeInsets.symmetric(
                                 vertical: SizeConfig.padding6),
@@ -203,13 +209,13 @@ class PrizeClaimCard extends StatelessWidget {
                             ),
                             child: FittedBox(
                               child: Text(
-                                "Winnings can be redeemed after reaching ₹100",
+                                "Winnings can be redeemed on reaching ₹$minWithdrawPrize",
                                 style:
                                     TextStyles.body3.colour(Colors.redAccent),
                               ),
                             ),
                           )
-                        else if (m.userFundWallet.augGoldPrinciple < 100)
+                        else if (m.userFundWallet.augGoldPrinciple < refUnlockAmt)
                           Container(
                             margin: EdgeInsets.symmetric(
                                 vertical: SizeConfig.padding6),
@@ -224,7 +230,7 @@ class PrizeClaimCard extends StatelessWidget {
                             ),
                             child: FittedBox(
                               child: Text(
-                                "You need to save at least ₹${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT)} to redeem your winnings.",
+                                "You need to save a minimum of ₹$refUnlock to redeem your winnings.",
                                 style:
                                     TextStyles.body3.colour(Colors.redAccent),
                               ),

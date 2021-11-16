@@ -103,7 +103,7 @@ class _ReferralHistoryViewState extends State<ReferralHistoryView> {
                                 itemBuilder: (context, i) {
                                   if (widget.onlyLocked) {
                                     if (baseProvider.userReferralsList[i]
-                                        .isUserBonusUnlocked)
+                                        .isUserBonusUnlocked??false)
                                       return SizedBox();
                                     else
                                       return _buildRefItem(
