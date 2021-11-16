@@ -653,7 +653,7 @@ class AugmontModel extends ChangeNotifier {
       }
       double newAugQuantity =
           _onSellCompleteResponse.model.response.augmontGoldQty;
-      if (newAugQuantity != null && newAugQuantity > 0) {
+      if (newAugQuantity != null && newAugQuantity >= 0) {
         _userService.augGoldQuantity = newAugQuantity;
       }
       int newFlcBalance = _onSellCompleteResponse.model.response.flcBalance;

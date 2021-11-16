@@ -38,13 +38,13 @@ class ShareCard extends StatelessWidget {
   getTitle() {
     switch (claimChoice) {
       case PrizeClaimChoice.AMZ_VOUCHER:
-        return "I won Amazon Gift Voucher\nof worth";
+        return "You've won an Amazon Gift Voucher\n worth";
         break;
       case PrizeClaimChoice.GOLD_CREDIT:
-        return "I won Augmont Digital Gold\nof worth";
+        return "You've won Digital Gold\n worth";
         break;
       default:
-        return "I won Fello Rewards\nof worth";
+        return "You've won Fello Rewards\n worth";
     }
   }
 
