@@ -534,14 +534,24 @@ class AugmontModel extends ChangeNotifier {
     _baseProvider.currentAugmontTxn.tranStatus =
         UserTransaction.TRAN_STATUS_CANCELLED;
 
-    await _investmentActionsRepository.cancelUserDeposit(
-        txnId:
-            _initialDepositResponse.model.response.transactionDoc.transactionId,
-        userUid: _baseProvider.myUser.uid,
-        rzpMap: rzpMap,
-        augMap: augMap,
-        enqueuedTaskDetails: _initialDepositResponse
-            .model.response.transactionDoc.enqueuedTaskDetails);
+    ApiResponse<DepositResponseModel> _onCancleUserDepositResponse =
+        await _investmentActionsRepository.cancelUserDeposit(
+            txnId: _initialDepositResponse
+                .model.response.transactionDoc.transactionId,
+            userUid: _baseProvider.myUser.uid,
+            rzpMap: rzpMap,
+            augMap: augMap,
+            enqueuedTaskDetails: _initialDepositResponse
+                .model.response.transactionDoc.enqueuedTaskDetails);
+
+    if (_onCancleUserDepositResponse.code == 400) {
+      _dbModel.logFailure(
+          _baseProvider.myUser.uid,
+          FailType.CompleteUserDepositApiFailed,
+          {'message': _onCancleUserDepositResponse.errorMessage});
+      BaseUtil.showNegativeAlert(
+          'Something went wrong', _onCancleUserDepositResponse.errorMessage);
+    }
 
     if (_augmontTxnProcessListener != null)
       _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
