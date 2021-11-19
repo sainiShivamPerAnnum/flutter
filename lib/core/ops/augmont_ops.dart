@@ -300,6 +300,13 @@ class AugmontModel extends ChangeNotifier {
 
         _rzpGateway.setTransactionListener(_onRazorpayPaymentProcessed);
       }
+    } else {
+      _dbModel.logFailure(
+          _baseProvider.myUser.uid,
+          FailType.InitiateUserDepositApiFailed,
+          {'message': _initialDepositResponse.errorMessage});
+      BaseUtil.showNegativeAlert(
+          'Something went wrong', _initialDepositResponse.errorMessage);
     }
 
     return _baseProvider.currentAugmontTxn;
@@ -472,6 +479,13 @@ class AugmontModel extends ChangeNotifier {
         }
         _baseProvider.currentAugmontTxn = _onCompleteDepositResponse
             .model.response.transactionDoc.transactionDetail;
+      } else {
+        _dbModel.logFailure(
+            _baseProvider.myUser.uid,
+            FailType.CompleteUserDepositApiFailed,
+            {'message': _initialDepositResponse.errorMessage});
+        BaseUtil.showNegativeAlert(
+            'Something went wrong', _initialDepositResponse.errorMessage);
       }
 
       _txnService.updateTransactions();
@@ -667,6 +681,13 @@ class AugmontModel extends ChangeNotifier {
         }
         _baseProvider.currentAugmontTxn = _onSellCompleteResponse
             .model.response.transactionDoc.transactionDetail;
+      } else {
+        _dbModel.logFailure(
+            _baseProvider.myUser.uid,
+            FailType.WithdrawlCompleteApiFailed,
+            {'message': _initialDepositResponse.errorMessage});
+        BaseUtil.showNegativeAlert(
+            'Something went wrong', _initialDepositResponse.errorMessage);
       }
 
       if (_augmontTxnProcessListener != null)
