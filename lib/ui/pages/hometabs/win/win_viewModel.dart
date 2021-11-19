@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
@@ -86,21 +88,24 @@ class WinViewModel extends BaseModel {
     bool commingsoon,
     List<String> instructions,
   ) {
-    return BaseUtil.openModalBottomSheet(
-        addToScreenStack: true,
-        content: VoucherModal(
-          color: color,
-          asset: asset,
-          commingSoon: commingsoon,
-          title: title,
-          subtitle: subtitle,
-          instructions: instructions,
-        ),
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(SizeConfig.padding24),
-            topRight: Radius.circular(SizeConfig.padding24)),
-        // backgroundColor: Color(0xffFFDBF6),
-        isBarrierDismissable: false,
-        hapticVibrate: true);
+    if (Platform.isIOS && commingsoon)
+      return;
+    else
+      return BaseUtil.openModalBottomSheet(
+          addToScreenStack: true,
+          content: VoucherModal(
+            color: color,
+            asset: asset,
+            commingSoon: commingsoon,
+            title: title,
+            subtitle: subtitle,
+            instructions: instructions,
+          ),
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(SizeConfig.padding24),
+              topRight: Radius.circular(SizeConfig.padding24)),
+          // backgroundColor: Color(0xffFFDBF6),
+          isBarrierDismissable: false,
+          hapticVibrate: true);
   }
 }

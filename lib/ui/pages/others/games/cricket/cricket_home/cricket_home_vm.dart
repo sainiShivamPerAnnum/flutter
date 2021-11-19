@@ -71,7 +71,8 @@ class CricketHomeViewModel extends BaseModel {
   }
 
   startGame() {
-        _mixpanelService.mixpanel.track(MixpanelEvents.playsCricket);
+    _mixpanelService.track(
+        MixpanelEvents.playsCricket, {'userId': _userService.baseUser.uid});
     AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: CricketGamePageConfig,
@@ -122,7 +123,7 @@ class CricketHomeViewModel extends BaseModel {
   Future<void> getLeaderboard() async {
     isLeaderboardLoading = true;
     notifyListeners();
-    var temp = await _stats.getLeaderBoard("GM_CRIC2020", "daily");
+    var temp = await _stats.getLeaderBoard("GM_CRIC2020", "weekly");
     if (temp != null)
       _cricLeaderboard = temp.model;
     else

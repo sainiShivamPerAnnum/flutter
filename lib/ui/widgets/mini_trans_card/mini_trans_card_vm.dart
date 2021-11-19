@@ -36,16 +36,23 @@ class MiniTransactionCardViewModel extends BaseModel {
   }
 
   Widget getTileLead(String type) {
+    IconData icon;
+    Color iconColor;
     if (type == UserTransaction.TRAN_STATUS_COMPLETE) {
-      return SvgPicture.asset("images/svgs/completed.svg",
-          color: UiConstants.primaryColor, fit: BoxFit.contain);
+      icon = Icons.check_circle;
+      iconColor = UiConstants.primaryColor;
     } else if (type == UserTransaction.TRAN_STATUS_CANCELLED) {
-      return SvgPicture.asset("images/svgs/cancel.svg",
-          color: Colors.redAccent, fit: BoxFit.contain);
+      icon = Icons.cancel;
+      iconColor = Colors.red;
     } else if (type == UserTransaction.TRAN_STATUS_PENDING) {
-      return SvgPicture.asset("images/svgs/pending.svg",
-          color: Colors.amber, fit: BoxFit.contain);
+      icon = Icons.access_time_filled;
+      iconColor = Colors.amber;
+    } else if (type == UserTransaction.TRAN_STATUS_REFUNDED) {
+      icon = Icons.remove_circle;
+      iconColor = Colors.blue;
     }
+    if (icon != null) return Icon(icon, color: iconColor);
+
     return Image.asset("images/fello_logo.png", fit: BoxFit.contain);
   }
 

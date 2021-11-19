@@ -86,21 +86,15 @@ class RazorpayModel extends ChangeNotifier {
     //TODO
   }
 
-  Future<String> createOrderId(double amount, String note) async {
+  Future<String> createOrderId(double amount, String note, String noteDetail) async {
     Map<String, dynamic> orderDetails =
-        await _httpModel.generateRzpOrderId(amount, note);
+        await _httpModel.generateRzpOrderId(amount, note, noteDetail);
     if (orderDetails == null) {
       log.error('Failed to generate order id');
       return null;
     }
 
     return orderDetails['order_id'];
-    //
-    // if (_currentTxn.rzp == null) {
-    //   _currentTxn.rzp = {};
-    // }
-    // _currentTxn.rzp[UserTransaction.subFldRzpOrderId] =
-    // orderDetails['order_id'];
   }
 
   //generate order id

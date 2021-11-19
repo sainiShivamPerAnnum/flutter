@@ -223,7 +223,8 @@ class KYCDetailsViewModel extends BaseModel {
               refresh();
               return;
             } else {
-              _mixpanelService.mixpanel.track(MixpanelEvents.panVerified);
+              _mixpanelService.track(MixpanelEvents.panVerified,
+                  {'userId': _userService.baseUser.uid});
               BaseUtil.showPositiveAlert(
                   'Verification Successful', 'You are successfully verified!');
               _isKycInProgress = false;

@@ -435,6 +435,10 @@ class Api {
         .catchError((onErr) => false);
   }
 
+  DocumentReference getUserTransactionDocumentKey(String userId) {
+    return _db.collection(Constants.COLN_USERS).doc(userId).collection(Constants.SUBCOLN_USER_TXNS).doc();
+  }
+
   Future<QuerySnapshot> getRecentAugmontDepositTxn(
       String userId, Timestamp cmpTimestamp) {
     Query _query = _db

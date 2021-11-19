@@ -1044,6 +1044,10 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  String getMerchantTxnId(String uid) {
+    return _api.getUserTransactionDocumentKey(uid).id;
+  }
+
   ///Total Gold Balance = (current total grams owned * current selling rate)
   ///Total Gold Principle = old principle + changeAmount
   ///it shouldnt matter if its a deposit or a sell, all based on selling rate

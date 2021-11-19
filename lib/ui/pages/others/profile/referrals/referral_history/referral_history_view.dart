@@ -55,8 +55,8 @@ class _ReferralHistoryViewState extends State<ReferralHistoryView> {
           if (baseProvider.myReferralInfo != null && _t < _n) {
             baseProvider.myReferralInfo.refCount = _n;
             if (_n != null && _n > 0)
-              _mixpanelService.mixpanel.track(MixpanelEvents.referralCount,
-                  properties: {"count": _n});
+              _mixpanelService.track(MixpanelEvents.referralCount,
+                  {'userId':baseProvider.myUser.uid,"count": _n});
             dbProvider.updateUserReferralCount(baseProvider.myUser.uid,
                 baseProvider.myReferralInfo); //await not required
           }

@@ -26,7 +26,7 @@ class _UpdateRequiredScreenState extends State<UpdateRequiredScreen> {
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
-    
+
     return Scaffold(
       body: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
         SafeArea(
@@ -63,7 +63,7 @@ class _UpdateRequiredScreenState extends State<UpdateRequiredScreen> {
         SizedBox(height: SizeConfig.blockSizeVertical * 8),
         Center(
             child: Text(
-          'App Update Available!',
+          'New Update Available!',
           style: TextStyle(
               color: UiConstants.primaryColor,
               fontSize: SizeConfig.cardTitleTextSize,
@@ -74,7 +74,7 @@ class _UpdateRequiredScreenState extends State<UpdateRequiredScreen> {
           padding: EdgeInsets.all(8.0),
           width: SizeConfig.screenWidth * 0.9,
           child: Text(
-            'We have updated the app to ensure that we deliver the best experience for you. Please update the app to proceed.',
+            'We have updated the app to ensure that we deliver the best experience to you. Please update the app to proceed.',
             textAlign: TextAlign.center,
             style: TextStyle(
                 fontSize: SizeConfig.cardTitleTextSize * 0.65,
@@ -88,12 +88,7 @@ class _UpdateRequiredScreenState extends State<UpdateRequiredScreen> {
             child: Container(
               width: double.infinity,
               height: MediaQuery.of(context).size.height * 0.07,
-              decoration: BoxDecoration(
-                gradient: new LinearGradient(colors: [
-                  UiConstants.primaryColor,
-                  UiConstants.primaryColor.withBlue(200),
-                ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0)),
-              ),
+              decoration: BoxDecoration(color: UiConstants.primaryColor),
               alignment: Alignment.bottomCenter,
               child: new Material(
                 child: MaterialButton(

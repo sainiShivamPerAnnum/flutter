@@ -42,8 +42,8 @@ class Play extends StatelessWidget {
                                 BorderRadius.circular(SizeConfig.roundness32),
                             child: OfferCard(
                               shimmer: true,
-                              model: PromoCardModel(
-                                  1, null, null, null, null, 4281648039, null),
+                              model: PromoCardModel(1, null, null, null, null,
+                                  4281648039, null, 1),
                             ),
                           ),
                           ClipRRect(
@@ -51,8 +51,8 @@ class Play extends StatelessWidget {
                                 BorderRadius.circular(SizeConfig.roundness32),
                             child: OfferCard(
                               shimmer: true,
-                              model: PromoCardModel(
-                                  1, null, null, null, null, 4294942219, null),
+                              model: PromoCardModel(1, null, null, null, null,
+                                  4294942219, null, 1),
                             ),
                           ),
                         ],

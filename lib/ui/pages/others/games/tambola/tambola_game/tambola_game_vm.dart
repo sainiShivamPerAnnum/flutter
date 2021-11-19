@@ -257,7 +257,7 @@ class TambolaGameViewModel extends BaseModel {
     if (_flcResponse.model != null && _flcResponse.code == 200) {
       ticketBuyInProgress = false;
       notifyListeners();
-      _mixpanelService.mixpanel.track(MixpanelEvents.playsTambola);
+      _mixpanelService.track(MixpanelEvents.playsTambola,{'userId': _userService.baseUser.uid});
       BaseUtil.showPositiveAlert(
           "Request is now processing", "Generating your tickets, please wait");
 

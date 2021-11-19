@@ -5,6 +5,7 @@ import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/core/service/mixpanel_service.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/augmont_confirm_register_dialog.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
@@ -39,6 +40,7 @@ class EditAugmontBankDetail extends StatefulWidget {
 
 class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
   Log log = new Log('EditAugmontBankDetail');
+  final _userService = locator<UserService>();
   final _formKey = GlobalKey<FormState>();
   TextEditingController _bankHolderNameController;
   TextEditingController _bankAccNoController;
@@ -84,7 +86,9 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
           setState(() {});
         });
       }
-      if(baseProvider.augmontDetail == null) baseProvider.augmontDetail = UserAugmontDetail.newUser('', '', '', '', '', '');
+      if (baseProvider.augmontDetail == null)
+        baseProvider.augmontDetail =
+            UserAugmontDetail.newUser('', '', '', '', '', '');
       if (baseProvider.augmontDetail == null ||
           widget.isWithdrawFlow ||
           baseProvider.augmontDetail.bankAccNo == null ||
@@ -363,7 +367,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                                                     value.trim().isEmpty)
                                                   return 'Please enter a valid bank IFSC';
                                                 else if (value.trim().length <
-                                                    6 ||
+                                                        6 ||
                                                     value.trim().length > 25)
                                                   return 'Please enter a valid bank IFSC';
                                                 return null;
@@ -526,8 +530,8 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
     if (curBankIfsc == null || pBankIfsc != curBankIfsc) noChanges = false;
     if (!isConfirm) {
       BaseUtil.showNegativeAlert(
-        'Confirm Details',
-        'Please confirm ',
+        'Confirmation Required',
+        'Please confirm that the details added are correct',
       );
       baseProvider.isEditAugmontBankDetailInProgress = false;
       setState(() {});
@@ -579,8 +583,14 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
               bankHolderName: pBankHolderName,
               bankAccNo: pBankAccNo,
               bankIfsc: pBankIfsc,
-              bankName: (bankDetail == null || bankDetail[GetBankDetail.resBankName] == null)?'':bankDetail[GetBankDetail.resBankName],
-              bankBranchName: (bankDetail == null || bankDetail[GetBankDetail.resBranchName] == null)?'':bankDetail[GetBankDetail.resBranchName],
+              bankName: (bankDetail == null ||
+                      bankDetail[GetBankDetail.resBankName] == null)
+                  ? ''
+                  : bankDetail[GetBankDetail.resBankName],
+              bankBranchName: (bankDetail == null ||
+                      bankDetail[GetBankDetail.resBranchName] == null)
+                  ? ''
+                  : bankDetail[GetBankDetail.resBranchName],
               dialogColor: UiConstants.primaryColor,
               customMessage: (widget.isWithdrawFlow)
                   ? 'Are you sure you want to continue? ${baseProvider.activeGoldWithdrawalQuantity.toString()} grams of digital gold shall be processed.'
@@ -603,8 +613,8 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                     baseProvider.isEditAugmontBankDetailInProgress = false;
                     setState(() {});
                     if (flag) {
-                      _mixpanelService.mixpanel
-                          .track(MixpanelEvents.bankDetailsUpdated);
+                      _mixpanelService.track(MixpanelEvents.bankDetailsUpdated,
+                          {'userId': _userService.baseUser.uid});
                       print("mixpanel added");
                       BaseUtil.showPositiveAlert(
                           'Complete', 'Your details have been updated');

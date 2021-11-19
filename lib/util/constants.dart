@@ -70,7 +70,7 @@ class Constants {
   static const int REFERRAL_AMT_BONUS = 25;
 
   // static const int TOTAL_DRAWS = 35;
-  static const int NEW_USER_TICKET_COUNT = 5;
+  static const int NEW_USER_TICKET_COUNT = 3;
   static const int MAX_TICKET_GEN_PER_REQUEST = 30;
   static const int KYC_UNTESTED = 0;
   static const int KYC_INVALID = 1;
