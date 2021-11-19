@@ -463,10 +463,10 @@ class S {
     );
   }
 
-  /// `My total Winnings`
+  /// `My Total Winnings`
   String get saveWinningsLabel {
     return Intl.message(
-      'My total Winnings',
+      'My Total Winnings',
       name: 'saveWinningsLabel',
       desc: '',
       args: [],
@@ -743,10 +743,10 @@ class S {
     );
   }
 
-  /// `Your friend makes their first saving of ₹ 25 on the app.`
+  /// `Your friend makes their first saving of ₹ 100 on the app.`
   String get refStep2 {
     return Intl.message(
-      'Your friend makes their first saving of ₹ 25 on the app.',
+      'Your friend makes their first saving of ₹ 100 on the app.',
       name: 'refStep2',
       desc: '',
       args: [],
