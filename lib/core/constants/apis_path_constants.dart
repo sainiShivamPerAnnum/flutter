@@ -10,6 +10,7 @@ class ApiPath {
 
   get kGetCoinBalance => "/felloCoins/$stage/api/felloCoin/balance";
 
+  get kCreateTranId => "/userFinanceOps/$stage/api/transaction/id";
   get kDepositComplete => "/userFinanceOps/$stage/api/deposit/complete";
   get kDepositPending => "/userFinanceOps/$stage/api/deposit/pending";
   get kDepositCancelled => "/userFinanceOps/$stage/api/deposit/cancelled";

@@ -48,6 +48,7 @@ class AugmontModel extends ChangeNotifier {
   var headers;
 
   ApiResponse<DepositResponseModel> _initialDepositResponse;
+  ApiResponse<String> _tranIdResponse;
 
   Future<bool> _init() async {
     if (_dbModel == null) return false;
@@ -257,8 +258,15 @@ class AugmontModel extends ChangeNotifier {
       return null;
     }
 
-    String rzpOrderId = await _rzpGateway.createOrderId(amount,
-        'BlockID: ${buyRates.blockId},gPrice: ${buyRates.goldBuyPrice}');
+    _tranIdResponse = await _investmentActionsRepository.createTranId(userUid: _baseProvider.myUser.uid);
+    if(_tranIdResponse.code != 200 || _tranIdResponse.model == null || _tranIdResponse.model.isEmpty) {
+      _logger.e('Failed to create a transaction id');
+      return null;
+    }
+
+    String _note1 = 'BlockID: ${buyRates.blockId},gPrice: ${buyRates.goldBuyPrice}';
+    String _note2 = 'MerchantTxnID: ${_tranIdResponse.model}';
+    String rzpOrderId = await _rzpGateway.createOrderId(amount,_note1, _note2);
     if (rzpOrderId == null) {
       _logger.e("Received null from create Order id");
       return null;
@@ -281,6 +289,7 @@ class AugmontModel extends ChangeNotifier {
 
     _initialDepositResponse =
         await _investmentActionsRepository.initiateUserDeposit(
+            tranId: _tranIdResponse.model,
             userUid: _baseProvider.myUser.uid,
             amount: amount,
             initAugMap: _initAugMap,
@@ -375,6 +384,7 @@ class AugmontModel extends ChangeNotifier {
           .toString(),
       SubmitGoldPurchase.fldPaymode: _baseProvider
           .currentAugmontTxn.augmnt[UserTransaction.subFldAugPaymode],
+      SubmitGoldPurchase.fldMerchantTranId: _baseProvider.currentAugmontTxn.docKey
     };
 
     var _request = http.Request(
@@ -555,6 +565,12 @@ class AugmontModel extends ChangeNotifier {
         quantity,
         _baseProvider.myUser.uid);
 
+    _tranIdResponse = await _investmentActionsRepository.createTranId(userUid: _baseProvider.myUser.uid);
+    if(_tranIdResponse.code != 200 || _tranIdResponse.model == null || _tranIdResponse.model.isEmpty) {
+      _logger.e('Failed to create a transaction id');
+      return null;
+    }
+
     Map<String, String> _params = {
       SubmitGoldSell.fldMobile: _baseProvider.myUser.mobile,
       SubmitGoldSell.fldQuantity: quantity.toString(),
@@ -565,7 +581,9 @@ class AugmontModel extends ChangeNotifier {
           _baseProvider.augmontDetail.bankHolderName,
       SubmitGoldSell.fldAccNo: _baseProvider.augmontDetail.bankAccNo,
       SubmitGoldSell.fldIfsc: _baseProvider.augmontDetail.ifsc,
+      SubmitGoldSell.fldMerchantTranId: _tranIdResponse.model
     };
+
     var _request = http.Request(
         'GET', Uri.parse(_constructRequest(SubmitGoldSell.path, _params)));
     _request.headers.addAll(headers);
@@ -578,9 +596,7 @@ class AugmontModel extends ChangeNotifier {
       _baseProvider.currentAugmontTxn.tranStatus =
           UserTransaction.TRAN_STATUS_CANCELLED;
 
-      // String docKey = await _dbModel.addUserTransaction(
-      //     _baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
-      //Call Cancelled Withdrawl API
+      //Call Cancelled Withdrawal API
       Map<String, dynamic> augMap = {};
       if (resMap != null) {
         augMap = {
@@ -597,6 +613,7 @@ class AugmontModel extends ChangeNotifier {
 
       final ApiResponse<DepositResponseModel> _apiResponse =
           await _investmentActionsRepository.withdrawlCancelled(
+              tranDocId: _tranIdResponse.model,
               augMap: augMap,
               userUid: _baseProvider.myUser.uid,
               amount: -1 * _baseProvider.currentAugmontTxn.amount);
@@ -642,6 +659,7 @@ class AugmontModel extends ChangeNotifier {
 
       ApiResponse<DepositResponseModel> _onSellCompleteResponse =
           await _investmentActionsRepository.withdrawlComplete(
+              tranDocId: _tranIdResponse.model,
               amount: -1 * _baseProvider.currentAugmontTxn.amount,
               augMap: augMap,
               userUid: _baseProvider.myUser.uid);
