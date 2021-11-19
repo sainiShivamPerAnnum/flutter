@@ -14,6 +14,7 @@ import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_coin_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/augmont_api_util.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -297,16 +298,14 @@ class AugmontModel extends ChangeNotifier {
 
       if (tTxn != null) {
         _baseProvider.currentAugmontTxn = tTxn;
-
         _rzpGateway.setTransactionListener(_onRazorpayPaymentProcessed);
       }
     } else {
       _dbModel.logFailure(
           _baseProvider.myUser.uid,
           FailType.InitiateUserDepositApiFailed,
-          {'message': _initialDepositResponse.errorMessage});
-      BaseUtil.showNegativeAlert(
-          'Something went wrong', _initialDepositResponse.errorMessage);
+          {'message': _initialDepositResponse?.errorMessage});
+      return null;
     }
 
     return _baseProvider.currentAugmontTxn;
@@ -479,19 +478,28 @@ class AugmontModel extends ChangeNotifier {
         }
         _baseProvider.currentAugmontTxn = _onCompleteDepositResponse
             .model.response.transactionDoc.transactionDetail;
+
+        _txnService.updateTransactions();
+
+        if (_augmontTxnProcessListener != null)
+          _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
       } else {
         _dbModel.logFailure(
             _baseProvider.myUser.uid,
             FailType.CompleteUserDepositApiFailed,
             {'message': _initialDepositResponse.errorMessage});
+
         BaseUtil.showNegativeAlert(
-            'Something went wrong', _initialDepositResponse.errorMessage);
+            'Deposit Failed', 'Please try again in sometime or contact us');
+
+        _baseProvider.currentAugmontTxn.tranStatus =
+            UserTransaction.TRAN_STATUS_CANCELLED;
+
+        if (_augmontTxnProcessListener != null)
+          _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
+
+        AppState.backButtonDispatcher.didPopRoute();
       }
-
-      _txnService.updateTransactions();
-
-      if (_augmontTxnProcessListener != null)
-        _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
     }
   }
 
@@ -546,15 +554,23 @@ class AugmontModel extends ChangeNotifier {
 
     if (_onCancleUserDepositResponse.code == 400) {
       _dbModel.logFailure(
-          _baseProvider.myUser.uid,
-          FailType.CompleteUserDepositApiFailed,
-          {'message': _onCancleUserDepositResponse.errorMessage});
+          _baseProvider.myUser.uid, FailType.CompleteUserDepositApiFailed, {
+        'message': _onCancleUserDepositResponse?.errorMessage ??
+            "Cancel user deposit failed"
+      });
       BaseUtil.showNegativeAlert(
           'Something went wrong', _onCancleUserDepositResponse.errorMessage);
-    }
+      _baseProvider.currentAugmontTxn.tranStatus =
+          UserTransaction.TRAN_STATUS_CANCELLED;
 
-    if (_augmontTxnProcessListener != null)
-      _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
+      if (_augmontTxnProcessListener != null)
+        _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
+
+      AppState.backButtonDispatcher.didPopRoute();
+    } else {
+      if (_augmontTxnProcessListener != null)
+        _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
+    }
   }
 
   ///submit gold purchase augmont api
@@ -691,19 +707,27 @@ class AugmontModel extends ChangeNotifier {
         }
         _baseProvider.currentAugmontTxn = _onSellCompleteResponse
             .model.response.transactionDoc.transactionDetail;
+        _txnService.updateTransactions();
+        if (_augmontTxnProcessListener != null)
+          _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
       } else {
         _dbModel.logFailure(
-            _baseProvider.myUser.uid,
-            FailType.WithdrawlCompleteApiFailed,
-            {'message': _initialDepositResponse.errorMessage});
-        BaseUtil.showNegativeAlert(
-            'Something went wrong', _initialDepositResponse.errorMessage);
-      }
+            _baseProvider.myUser.uid, FailType.WithdrawlCompleteApiFailed, {
+          'message':
+              _initialDepositResponse?.errorMessage ?? "Withdrawl api failed"
+        });
 
-      if (_augmontTxnProcessListener != null)
-        _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
+        BaseUtil.showNegativeAlert(
+            'Deposit Failed', 'Please try again in sometime or contact us');
+
+        _baseProvider.currentAugmontTxn.tranStatus =
+            UserTransaction.TRAN_STATUS_CANCELLED;
+        if (_augmontTxnProcessListener != null)
+          _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
+
+        AppState.backButtonDispatcher.didPopRoute();
+      }
     }
-    _txnService.updateTransactions();
   }
 
   ///returns path where invoice is generated and saved
