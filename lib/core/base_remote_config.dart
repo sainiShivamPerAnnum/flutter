@@ -26,6 +26,9 @@ class BaseRemoteConfig {
   static const Map<String, String> _FORCE_MIN_BUILD_NUMBER = {
     'force_min_build_number': '0'
   };
+  static const Map<String, String> _FORCE_MIN_BUILD_NUMBER_2 = {
+    'force_min_build_number_2': '0'
+  };
   static const Map<String, String> _DEPOSIT_UPI_ADDRESS = {
     'deposit_upi_address': '9769637379@okbizaxis'
   };
@@ -102,10 +105,12 @@ class BaseRemoteConfig {
     'cricket_play_prize': '25,000'
   };
   static const Map<String, String> _CRICKET_THUMBNAIL_URI = {
-    'cricket_thumbnail': 'https://fello-assets.s3.ap-south-1.amazonaws.com/fello_cricket.png'
+    'cricket_thumbnail':
+        'https://fello-assets.s3.ap-south-1.amazonaws.com/fello_cricket.png'
   };
   static const Map<String, String> _TAMBOLA_THUMBNAIL_URI = {
-    'tambola_thumbnail': 'https://fello-assets.s3.ap-south-1.amazonaws.com/fello_tambola.png'
+    'tambola_thumbnail':
+        'https://fello-assets.s3.ap-south-1.amazonaws.com/fello_tambola.png'
   };
   static const Map<String, String> _MIN_WITHDRAWABLE_PRIZE = {
     'min_withdrawable_prize': '100'
@@ -117,6 +122,7 @@ class BaseRemoteConfig {
     ..._TAMBOLA_HEADER_SECOND,
     ..._TAMBOLA_DAILY_PICK_COUNT,
     ..._FORCE_MIN_BUILD_NUMBER,
+    ..._FORCE_MIN_BUILD_NUMBER_2,
     ..._DEPOSIT_UPI_ADDRESS,
     ..._PLAY_SCREEN_FIRST,
     ..._TAMBOLA_WIN_CORNER,
@@ -180,6 +186,8 @@ class BaseRemoteConfig {
 
   static String get FORCE_MIN_BUILD_NUMBER =>
       _FORCE_MIN_BUILD_NUMBER.keys.first;
+  static String get FORCE_MIN_BUILD_NUMBER_2 =>
+      _FORCE_MIN_BUILD_NUMBER_2.keys.first;
 
   static String get DRAW_PICK_TIME => _DRAW_PICK_TIME.keys.first;
 
@@ -249,5 +257,6 @@ class BaseRemoteConfig {
 
   static String get UNLOCK_REFERRAL_AMT => _UNLOCK_REFERRAL_AMT.keys.first;
 
-  static String get MIN_WITHDRAWABLE_PRIZE => _MIN_WITHDRAWABLE_PRIZE.keys.first;
+  static String get MIN_WITHDRAWABLE_PRIZE =>
+      _MIN_WITHDRAWABLE_PRIZE.keys.first;
 }

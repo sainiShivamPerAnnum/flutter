@@ -133,41 +133,7 @@ class OfferCard extends StatelessWidget {
                         ],
                       ),
                     )
-                  : Container(
-                      // decoration: BoxDecoration(
-                      //   gradient: LinearGradient(
-                      //     begin: Alignment.bottomCenter,
-                      //     end: Alignment.topCenter,
-                      //     colors: [
-                      //       Colors.black.withOpacity(0.8),
-                      //       Colors.transparent
-                      //     ],
-                      //   ),
-                      // ),
-                      // child: Align(
-                      //   alignment: Alignment.bottomLeft,
-                      //   child: (model.buttonText != null)
-                      //       ? Container(
-                      //           margin: EdgeInsets.only(
-                      //               left: SizeConfig.screenWidth * 0.07,
-                      //               bottom: SizeConfig.screenWidth * 0.05),
-                      //           alignment: Alignment.center,
-                      //           width: SizeConfig.screenWidth * 0.171,
-                      //           height: SizeConfig.screenWidth * 0.065,
-                      //           decoration: BoxDecoration(
-                      //             color: Color(model.bgColor),
-                      //             borderRadius: BorderRadius.circular(100),
-                      //           ),
-                      //           child: Text(
-                      //             model.buttonText ?? "Button",
-                      //             style: TextStyles.body4
-                      //                 .colour(Colors.white)
-                      //                 .bold,
-                      //           ),
-                      //         )
-                      //       : Container(),
-                      // ),
-                      ),
+                  : Container(),
             ),
           ),
         ),

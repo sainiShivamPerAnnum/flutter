@@ -35,19 +35,6 @@ class MiniTransactionCardViewModel extends BaseModel {
     setState(ViewState.Idle);
   }
 
-  // Widget getTileLead(String type) {
-  //   if (type == UserTransaction.TRAN_STATUS_COMPLETE) {
-  //     return SvgPicture.asset("images/svgs/completed.svg",
-  //         color: UiConstants.primaryColor, fit: BoxFit.contain);
-  //   } else if (type == UserTransaction.TRAN_STATUS_CANCELLED) {
-  //     return SvgPicture.asset("images/svgs/cancel.svg",
-  //         color: Colors.redAccent, fit: BoxFit.contain);
-  //   } else if (type == UserTransaction.TRAN_STATUS_PENDING) {
-  //     return SvgPicture.asset("images/svgs/pending.svg",
-  //         color: Colors.amber, fit: BoxFit.contain);
-  //   }
-  //   return Image.asset("images/fello_logo.png", fit: BoxFit.contain);
-  // }
   Widget getTileLead(String type) {
     IconData icon;
     Color iconColor;

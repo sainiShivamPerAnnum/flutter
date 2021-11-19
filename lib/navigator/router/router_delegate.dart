@@ -585,6 +585,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'transactions':
         pageConfiguration = TransactionsHistoryPageConfig;
         break;
+      case 'txns':
+        pageConfiguration = TransactionsHistoryPageConfig;
+        break;
+      case 'trans':
+        pageConfiguration = TransactionsHistoryPageConfig;
+        break;
       case 'referral':
         pageConfiguration = ReferralDetailsPageConfig;
         break;

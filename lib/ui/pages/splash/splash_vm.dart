@@ -90,8 +90,17 @@ class LauncherViewModel extends BaseModel {
       );
     }
 
+    bool isThereBreakingUpdateTest = await checkBreakingUpdateTest();
+    if (isThereBreakingUpdateTest) {
+      AppState.isUpdateScreen = true;
+      navigator.currentAction =
+          PageAction(state: PageState.replaceAll, page: UpdateRequiredConfig);
+      return;
+    }
+
     bool isThereBreakingUpdate = await checkBreakingUpdate();
     if (isThereBreakingUpdate) {
+      AppState.isUpdateScreen = true;
       navigator.currentAction =
           PageAction(state: PageState.replaceAll, page: UpdateRequiredConfig);
       return;
@@ -157,10 +166,35 @@ class LauncherViewModel extends BaseModel {
     String minBuild = BaseRemoteConfig.remoteConfig
         .getString(BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER);
     _logger.v('Min Build Required $minBuild');
-    // minBuild = "0";
+    //minBuild = "50";
     try {
       if (int.parse(currentBuild) < int.parse(minBuild)) {
         return true;
+      }
+      return false;
+    } catch (e) {
+      _logger.e(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> checkBreakingUpdateTest() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    String currentBuild = packageInfo.buildNumber;
+    _logger.i('Current Build $currentBuild');
+    String minBuild = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER_2);
+    _logger.v('Min Build Required $minBuild');
+    //minBuild = "50";
+    try {
+      if (int.parse(currentBuild) < int.parse(minBuild)) {
+        if (userService != null && userService.baseUser != null) {
+          _logger.i("User mobile no: ${userService.baseUser.mobile}");
+          if (userService.baseUser.mobile.startsWith('99999000') ||
+              userService.baseUser.mobile.startsWith('88888000')) return true;
+          return false;
+        }
+        return false;
       }
       return false;
     } catch (e) {
