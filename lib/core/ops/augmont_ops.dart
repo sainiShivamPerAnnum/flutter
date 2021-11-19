@@ -266,7 +266,7 @@ class AugmontModel extends ChangeNotifier {
     }
 
     String _note1 = 'BlockID: ${buyRates.blockId},gPrice: ${buyRates.goldBuyPrice}';
-    String _note2 = 'MerchantTxnID: ${_tranIdResponse.model}';
+    String _note2 = 'UserId:${_baseProvider.myUser.uid},MerchantTxnID: ${_tranIdResponse.model}';
     String rzpOrderId = await _rzpGateway.createOrderId(amount,_note1, _note2);
     if (rzpOrderId == null) {
       _logger.e("Received null from create Order id");
@@ -569,7 +569,7 @@ class AugmontModel extends ChangeNotifier {
             "Cancel user deposit failed"
       });
       BaseUtil.showNegativeAlert(
-          'Something went wrong', _onCancleUserDepositResponse.errorMessage);
+          'Something went wrong', 'Please try again in sometime or contact us for more assistance');
       _baseProvider.currentAugmontTxn.tranStatus =
           UserTransaction.TRAN_STATUS_CANCELLED;
 
