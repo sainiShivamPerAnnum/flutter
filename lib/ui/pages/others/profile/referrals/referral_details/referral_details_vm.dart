@@ -6,13 +6,16 @@ import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
+import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/mixpanel_events.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:logger/logger.dart';
 import 'package:share_plus/share_plus.dart';
@@ -24,6 +27,7 @@ class ReferralDetailsViewModel extends BaseModel {
   final _razorpayModel = locator<RazorpayModel>();
   final _fcmListener = locator<FcmListener>();
   final _userService = locator<UserService>();
+  final _mixpanelService = locator<MixpanelService>();
 
   String referral_bonus =
       BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS);
@@ -31,6 +35,8 @@ class ReferralDetailsViewModel extends BaseModel {
       .getString(BaseRemoteConfig.REFERRAL_TICKET_BONUS);
   String referral_flc_bonus = BaseRemoteConfig.remoteConfig
       .getString(BaseRemoteConfig.REFERRAL_FLC_BONUS);
+  String unlock_referral_bonus = BaseRemoteConfig.remoteConfig
+      .getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT);
   String _userUrl = "";
   String _userUrlPrefix = "";
   String _userUrlCode = "";
@@ -55,9 +61,9 @@ class ReferralDetailsViewModel extends BaseModel {
             ? '10'
             : referral_ticket_bonus;
     referral_flc_bonus =
-    (referral_flc_bonus == null || referral_flc_bonus.isEmpty)
-        ? '200'
-        : referral_flc_bonus;
+        (referral_flc_bonus == null || referral_flc_bonus.isEmpty)
+            ? '200'
+            : referral_flc_bonus;
     _shareMsg =
         'Hey I am gifting you ₹$referral_bonus and $referral_flc_bonus gaming tokens. Lets start saving and playing together! ';
   }
@@ -77,14 +83,25 @@ class ReferralDetailsViewModel extends BaseModel {
     refresh();
   }
 
+
+  void copyReferCode() {
+    _mixpanelService.track(MixpanelEvents.referCodeCopied,{'userId':_userService.baseUser.uid});
+    Clipboard.setData(ClipboardData(text: userUrlCode)).then((_) {
+      BaseUtil.showPositiveAlert(
+          "Code: $userUrlCode", "Copied to Clipboard");
+    });
+  }
+
   shareLink() async {
     if (shareLinkInProgress) return;
     if (await BaseUtil.showNoInternetAlert()) return;
+
     _fcmListener.addSubscription(FcmTopic.REFERRER);
     BaseAnalytics.analytics.logShare(
         contentType: 'referral',
         itemId: _userService.baseUser.uid,
         method: 'message');
+        _mixpanelService.track(MixpanelEvents.linkShared,{'userId':_userService.baseUser.uid});
     shareLinkInProgress = true;
     refresh();
     _createDynamicLink(_userService.baseUser.uid, true, 'Other')
@@ -128,6 +145,7 @@ class ReferralDetailsViewModel extends BaseModel {
     else
       _logger.d(url);
     try {
+      _mixpanelService.track(MixpanelEvents.whatsappShare,{'userId':_userService.baseUser.uid});
       FlutterShareMe().shareToWhatsApp(msg: _shareMsg + url).then((flag) {
         if (flag == "false") {
           FlutterShareMe()

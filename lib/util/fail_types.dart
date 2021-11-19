@@ -40,7 +40,11 @@ enum FailType {
   GameVoteFailed,
   ProfilePictureUpdateFailed,
   GoldRateFetchFailed,
-  AndroidInAppUpdateFailed
+  AndroidInAppUpdateFailed,
+  InitiateUserDepositApiFailed,
+  CompleteUserDepositApiFailed,
+  WithdrawlCompleteApiFailed,
+  CancleUserDepositApiFailed,
 }
 
 extension ParseToString on FailType {

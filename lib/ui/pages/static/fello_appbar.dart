@@ -50,6 +50,7 @@ class FelloAppBar extends StatelessWidget {
 }
 
 class NotificationButton extends StatelessWidget {
+  const NotificationButton();
   @override
   Widget build(BuildContext context) {
     return InkWell(

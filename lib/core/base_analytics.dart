@@ -6,15 +6,21 @@ class BaseAnalytics {
   static FirebaseAnalytics _analytics;
   static FirebaseAnalyticsObserver _observer;
 
+
   static const String PAGE_FINANCE = 'finance';
   static const String PAGE_GAME = 'game';
   static const String PAGE_HOME = 'home';
   static const String PAGE_PROFILE = 'profile';
   static const String PAGE_TAMBOLA = 'tambola';
 
-  static init() {
+
+
+  static init()async {
     _analytics = FirebaseAnalytics();
     _observer = FirebaseAnalyticsObserver(analytics: _analytics);
+
+
+
   }
 
   static logUserProfile(BaseUser user) async {

@@ -25,7 +25,7 @@ class DailyPicksDrawViewModel extends BaseModel {
 
   init() async {
     setState(ViewState.Busy);
-    await _tambolaService.fetchWeeklyPicks();
+    await _tambolaService.fetchWeeklyPicks(forcedRefresh: true);
     setState(ViewState.Idle);
     startAnimation();
   }

@@ -11,22 +11,50 @@ class InvestmentActionsRepository {
   final _apiPaths = locator<ApiPath>();
   final _logger = locator<Logger>();
 
-  Future<String> _getBearerToken() async{
+  Future<String> _getBearerToken() async {
     String token = await _userService.firebaseUser.getIdToken();
     _logger.d(token);
 
     return token;
   }
 
+  Future<ApiResponse<String>> createTranId({String userUid}) async {
+    Map<String, dynamic> _params = {
+      'uid': userUid,
+    };
+    _logger.d("CreateTranID : $_params");
+
+    try {
+      final String _bearer = await _getBearerToken();
+      final response = await APIService.instance.getData(
+          _apiPaths.kCreateTranId,
+          queryParams: _params,
+          token: _bearer);
+
+      _logger.d(response.toString());
+      String _tranId = response['txnDocRefId'];
+
+      return ApiResponse(model: _tranId, code: 200);
+    } catch (e) {
+      _logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
   Future<ApiResponse<DepositResponseModel>> initiateUserDeposit(
-      {Map<String, dynamic> initAugMap, Map<String, dynamic> initRzpMap, double amount, String userUid}) async {
+      {String tranId,
+      Map<String, dynamic> initAugMap,
+      Map<String, dynamic> initRzpMap,
+      double amount,
+      String userUid}) async {
     Map<String, dynamic> _body = {
+      'tran_doc_id': tranId,
       'user_id': userUid,
       'amount': amount,
       "aug_map": initAugMap,
       "rzp_map": initRzpMap
     };
-    _logger.d("completeUserDeposit : $_body");
+    _logger.d("initiateUserDeposit : $_body");
 
     try {
       final String _bearer = await _getBearerToken();
@@ -47,18 +75,21 @@ class InvestmentActionsRepository {
     }
   }
 
-  Future<ApiResponse<DepositResponseModel>> completeUserDeposit(
-      {String txnId,
-      double amount,
-      Map<String, dynamic> rzpUpdates,
-      Map<String, dynamic> augUpdates,
-      String userUid}) async {
+  Future<ApiResponse<DepositResponseModel>> completeUserDeposit({
+    String txnId,
+    double amount,
+    Map<String, dynamic> rzpUpdates,
+    Map<String, dynamic> augUpdates,
+    String userUid,
+    EnqueuedTaskDetails enqueuedTaskDetails,
+  }) async {
     Map<String, dynamic> _body = {
       "user_id": userUid,
       "amount": amount,
       "rzp_map": rzpUpdates,
       "aug_map": augUpdates,
-      "tran_id": txnId
+      "tran_id": txnId,
+      "enqueuedTaskDetails": enqueuedTaskDetails.toMap()
     };
     _logger.d("completeUserDeposit : $_body");
     try {
@@ -75,16 +106,19 @@ class InvestmentActionsRepository {
     }
   }
 
-  Future<ApiResponse<DepositResponseModel>> cancelUserDeposit(
-      {String txnId,
-      String userUid,
-      Map<String, dynamic> rzpMap,
-      Map<String, dynamic> augMap}) async {
+  Future<ApiResponse<DepositResponseModel>> cancelUserDeposit({
+    String txnId,
+    String userUid,
+    Map<String, dynamic> rzpMap,
+    Map<String, dynamic> augMap,
+    EnqueuedTaskDetails enqueuedTaskDetails,
+  }) async {
     Map<String, dynamic> _body = {
       "user_id": userUid,
       "rzp_map": rzpMap,
       "aug_map": augMap,
       "tran_id": txnId,
+      "enqueuedTaskDetails": enqueuedTaskDetails.toMap()
     };
 
     _logger.d("completeUserDeposit : $_body");
@@ -106,8 +140,12 @@ class InvestmentActionsRepository {
   }
 
   Future<ApiResponse<DepositResponseModel>> withdrawlComplete(
-      {double amount, String userUid, Map<String, dynamic> augMap}) async {
+      {String tranDocId,
+      double amount,
+      String userUid,
+      Map<String, dynamic> augMap}) async {
     Map<String, dynamic> _body = {
+      "tran_doc_id": tranDocId,
       "user_id": userUid,
       "amount": amount,
       "aug_map": augMap,
@@ -132,14 +170,18 @@ class InvestmentActionsRepository {
   }
 
   Future<ApiResponse<DepositResponseModel>> withdrawlCancelled(
-      {double amount, String userUid, Map<String, dynamic> augMap}) async {
+      {String tranDocId,
+      double amount,
+      String userUid,
+      Map<String, dynamic> augMap}) async {
     Map<String, dynamic> _body = {
+      "tran_doc_id": tranDocId,
       "user_id": userUid,
       "amount": amount,
       "aug_map": augMap,
     };
 
-    _logger.d("withdrawlComplete : $_body");
+    _logger.d("withdrawlCancelled : $_body");
     try {
       final String _bearer = await _getBearerToken();
       final response = await APIService.instance

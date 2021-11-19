@@ -112,12 +112,11 @@ class BaseUtil extends ChangeNotifier {
   bool show_security_prompt = false;
   String zeroBalanceAssetUri;
   static List<GameModel> gamesList;
-  static String manualReferralCode; // = 'jdF1';
+  static String manualReferralCode;
+  static bool isNewUser, isFirstFetchDone; // = 'jdF1';
 
   ///Flags in various screens defined as global variables
   bool isUserOnboarded,
-      isNewUser,
-      isFirstFetchDone,
       isLoginNextInProgress,
       isEditProfileNextInProgress,
       isRedemptionOtpInProgress,
@@ -155,7 +154,7 @@ class BaseUtil extends ChangeNotifier {
 
   _setRuntimeDefaults() {
     isNewUser = false;
-    isFirstFetchDone = false;
+    isFirstFetchDone = true;
     isUserOnboarded = false;
     isLoginNextInProgress = false;
     isEditProfileNextInProgress = false;
@@ -200,7 +199,7 @@ class BaseUtil extends ChangeNotifier {
     _setRuntimeDefaults();
 
     //Analytics logs app open state.
-    BaseAnalytics.init();
+    await BaseAnalytics.init();
     BaseAnalytics.analytics.logAppOpen();
 
     //remote config for various remote variables
@@ -538,6 +537,7 @@ class BaseUtil extends ChangeNotifier {
       AppState.screenStack.add(ScreenItem.dialog);
     if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
     return showModalBottomSheet(
+        enableDrag: false,
         shape: RoundedRectangleBorder(
             borderRadius: borderRadius ?? BorderRadius.zero),
         backgroundColor:
@@ -556,18 +556,13 @@ class BaseUtil extends ChangeNotifier {
   }
 
   Future<bool> authenticateUser(AuthCredential credential) {
-    log.debug("Verification credetials: " + credential.toString());
+    logger.d("Verification credetials: " + credential.toString());
     return FirebaseAuth.instance.signInWithCredential(credential).then((res) {
       this.firebaseUser = res.user;
-      isNewUser = res.additionalUserInfo.isNewUser;
-      if (isNewUser) {
-        isFirstFetchDone = false;
-      }
-
-      logger.i("New Firebase User: $isNewUser");
+      logger.i("New Firebase User: ${res.additionalUserInfo.isNewUser}");
       return true;
     }).catchError((e) {
-      log.error(
+      logger.e(
           "User Authentication failed with credential: Error: " + e.toString());
       return false;
     });
@@ -1043,15 +1038,15 @@ class BaseUtil extends ChangeNotifier {
   //   notifyListeners();
   // }
 
-  Future<bool> isOfflineSnackBar(BuildContext context) async {
-    ConnectivityStatus connectivityStatus =
-        Provider.of<ConnectivityStatus>(context, listen: false);
+  // Future<bool> isOfflineSnackBar(BuildContext context) async {
+  //   ConnectivityStatus connectivityStatus =
+  //       Provider.of<ConnectivityStatus>(context, listen: false);
 
-    if (connectivityStatus == ConnectivityStatus.Offline) {
-      await showNegativeAlert('Offline', 'Please connect to internet',
-          seconds: 3);
-      return true;
-    }
-    return false;
-  }
+  //   if (connectivityStatus == ConnectivityStatus.Offline) {
+  //     await showNegativeAlert('Offline', 'Please connect to internet',
+  //         seconds: 3);
+  //     return true;
+  //   }
+  //   return false;
+  // }
 }

@@ -44,4 +44,5 @@ extension TextStyleHelpers on TextStyle {
   TextStyle letterSpace(double value) => copyWith(letterSpacing: value);
   TextStyle weight(FontWeight weight) => copyWith(fontWeight: weight);
   TextStyle colour(Color color) => copyWith(color: color);
+  TextStyle setHeight(double height) => copyWith(height: height);
 }

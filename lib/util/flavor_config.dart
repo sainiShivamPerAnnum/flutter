@@ -13,7 +13,9 @@ class FlavorValues {
       @required this.razorpayStage,
       @required this.baseUriAsia,
       @required this.baseUriUS,
-      @required this.dynamicLinkPrefix});
+      @required this.dynamicLinkPrefix,
+       @required this.mixpanelToken,
+      });
 
   final AWSIciciStage awsIciciStage;
   final FreshchatStage freshchatStage;
@@ -24,6 +26,7 @@ class FlavorValues {
   final String baseUriAsia;
   final String baseUriUS;
   final String dynamicLinkPrefix;
+  final String mixpanelToken;
 //Add other flavor specific values, e.g database name
 }
 

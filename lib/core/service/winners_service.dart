@@ -51,6 +51,8 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
       _winners.addAll(_cricketWinners.model.winners);
       _logger.d(_cricketWinners.model.winners.toString());
       _logger.d("Cricket Winners added to leaderboard");
+    } else {
+      _logger.i("Cricket Winners not added to leaderboard");
     }
 
     if (_tambolaWinners != null &&
@@ -61,6 +63,8 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
       _tambolaWinnersLength = _tambolaWinners.model?.winners?.length;
       _winners.addAll(_tambolaWinners.model.winners);
       _logger.d("Tambola Winners added to leaderboard");
+    } else {
+      _logger.i("Tambola Winners not added to leaderboard");
     }
 
     if (_tambolaWinners.model?.winners?.length == 0 &&

@@ -272,6 +272,14 @@ class Api {
     return _db.collection(Constants.COLN_FEEDBACK).add(data);
   }
 
+  Future<void> addGameFailedReport(Map data) {
+    return _db.collection('gamefailreports').add(data);
+  }
+
+  Future<void> addPriorityFailedReport(Map data) {
+    return _db.collection('priorityfailreports').add(data);
+  }
+
   Future<void> addFailedReportDocument(Map data) {
     return _db.collection(Constants.COLN_FAILREPORTS).add(data);
   }
@@ -425,6 +433,10 @@ class Api {
         })
         .then((value) => true)
         .catchError((onErr) => false);
+  }
+
+  DocumentReference getUserTransactionDocumentKey(String userId) {
+    return _db.collection(Constants.COLN_USERS).doc(userId).collection(Constants.SUBCOLN_USER_TXNS).doc();
   }
 
   Future<QuerySnapshot> getRecentAugmontDepositTxn(

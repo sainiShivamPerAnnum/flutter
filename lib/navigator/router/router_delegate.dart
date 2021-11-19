@@ -21,6 +21,7 @@ import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_page.dart';
 import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_view.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/edit_augmont_bank_details.dart';
 import 'package:felloapp/ui/pages/others/finance/finance_report.dart';
 import 'package:felloapp/ui/pages/others/finance/icici/mf_details_page.dart';
@@ -37,7 +38,7 @@ import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_view.
 import 'package:felloapp/ui/pages/others/profile/claim_username.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
-import 'package:felloapp/ui/pages/others/profile/referrals/referral_history/referrals_page.dart';
+import 'package:felloapp/ui/pages/others/profile/referrals/referral_history/referral_history_view.dart';
 import 'package:felloapp/ui/pages/others/profile/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_view.dart';
@@ -254,7 +255,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(CricketGameView(), CricketGamePageConfig);
           break;
         case Pages.AugGoldBuy:
-          _addPageData(AugmontGoldBuyView(), CricketHomePageConfig);
+          _addPageData(AugmontGoldBuyView(), AugmontGoldBuyPageConfig);
+          break;
+        case Pages.AugGoldSell:
+          _addPageData(AugmontGoldSellView(), AugmontGoldSellPageConfig);
           break;
         case Pages.AugGoldDetails:
           _addPageData(AugmontGoldDetailsView(), AugmontGoldDetailsPageConfig);
@@ -438,6 +442,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.AugGoldBuy:
         AugmontGoldBuyPageConfig.currentPageAction = action;
         break;
+      case Pages.AugGoldSell:
+        AugmontGoldSellPageConfig.currentPageAction = action;
+        break;
       case Pages.AugGoldDetails:
         AugmontGoldDetailsPageConfig.currentPageAction = action;
         break;
@@ -571,8 +578,17 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'augBuy':
         pageConfiguration = AugmontGoldBuyPageConfig;
         break;
+      case 'augSell':
+        pageConfiguration = AugmontGoldSellPageConfig;
+        break;
 
-      case 'tran':
+      case 'transactions':
+        pageConfiguration = TransactionsHistoryPageConfig;
+        break;
+      case 'txns':
+        pageConfiguration = TransactionsHistoryPageConfig;
+        break;
+      case 'trans':
         pageConfiguration = TransactionsHistoryPageConfig;
         break;
       case 'referral':

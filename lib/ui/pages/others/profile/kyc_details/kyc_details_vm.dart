@@ -6,6 +6,7 @@ import 'package:felloapp/core/model/signzy_pan/signzy_login.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
+import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/core/service/pan_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -14,7 +15,9 @@ import 'package:felloapp/ui/dialogs/augmont_confirm_register_dialog.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/mixpanel_events.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +34,7 @@ class KYCDetailsViewModel extends BaseModel {
   final _httpModel = locator<HttpModel>();
   final _baseUtil = locator<BaseUtil>();
   final _userRepo = locator<UserRepository>();
+  final _mixpanelService = locator<MixpanelService>();
 
   FocusNode panFocusNode = FocusNode();
   TextInputType panTextInputType = TextInputType.name;
@@ -219,6 +223,8 @@ class KYCDetailsViewModel extends BaseModel {
               refresh();
               return;
             } else {
+              _mixpanelService.track(MixpanelEvents.panVerified,
+                  {'userId': _userService.baseUser.uid});
               BaseUtil.showPositiveAlert(
                   'Verification Successful', 'You are successfully verified!');
               _isKycInProgress = false;
@@ -309,6 +315,16 @@ class KYCDetailsViewModel extends BaseModel {
     }
     if (!_flag) {
       print('returning false flag');
+      Map _data = {
+        'flag': _flag,
+        'fail_code': _failCode,
+        'reason': _reason,
+        'user_pan_name': enteredPanName,
+        'user_pan_number': enteredPan,
+        'upstream_name': upstreamName,
+      };
+      _dbModel.logFailure(
+          _userService.baseUser.uid, FailType.UserKYCFlagFetchFailed, _data);
       return {'flag': _flag, 'fail_code': _failCode, 'reason': _reason};
     }
 

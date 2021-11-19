@@ -19,10 +19,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 
 enum TranFilterType { Type, Subtype }
 
 class TransactionsHistoryViewModel extends BaseModel {
+  final _logger = locator<Logger>();
   int _subfilter = 1;
   int _filter = 1;
   bool _init = true;
@@ -82,16 +84,23 @@ class TransactionsHistoryViewModel extends BaseModel {
   }
 
   Widget getTileLead(String type) {
+    IconData icon;
+    Color iconColor;
     if (type == UserTransaction.TRAN_STATUS_COMPLETE) {
-      return SvgPicture.asset("images/svgs/completed.svg",
-          color: UiConstants.primaryColor, fit: BoxFit.contain);
+      icon = Icons.check_circle;
+      iconColor = UiConstants.primaryColor;
     } else if (type == UserTransaction.TRAN_STATUS_CANCELLED) {
-      return SvgPicture.asset("images/svgs/cancel.svg",
-          color: Colors.redAccent, fit: BoxFit.contain);
+      icon = Icons.cancel;
+      iconColor = Colors.red;
     } else if (type == UserTransaction.TRAN_STATUS_PENDING) {
-      return SvgPicture.asset("images/svgs/pending.svg",
-          color: Colors.amber, fit: BoxFit.contain);
+      icon = Icons.access_time_filled;
+      iconColor = Colors.amber;
+    } else if (type == UserTransaction.TRAN_STATUS_REFUNDED) {
+      icon = Icons.remove_circle;
+      iconColor = Colors.blue;
     }
+    if (icon != null) return Icon(icon, color: iconColor);
+
     return Image.asset("images/fello_logo.png", fit: BoxFit.contain);
   }
 
@@ -104,10 +113,10 @@ class TransactionsHistoryViewModel extends BaseModel {
       return "Tambola Win";
     } else if (type == UserTransaction.TRAN_SUBTYPE_REF_BONUS) {
       return "Referral Bonus";
-    }else if (type == UserTransaction.TRAN_SUBTYPE_REWARD_REDEEM) {
+    } else if (type == UserTransaction.TRAN_SUBTYPE_REWARD_REDEEM) {
       return "Rewards Redeemed";
     }
-    return "Fund Name";
+    return "Fello Rewards";
   }
 
   String getTileSubtitle(String type) {
@@ -302,9 +311,13 @@ class TransactionsHistoryViewModel extends BaseModel {
   }
 
   bool getBeerTicketStatus(UserTransaction transaction) {
+    double minBeerDeposit = double.tryParse(BaseRemoteConfig.remoteConfig
+            .getString(BaseRemoteConfig.OCT_FEST_MIN_DEPOSIT) ??
+        '150.0');
+    _logger.d(baseProvider.firstAugmontTransaction);
     if (baseProvider.firstAugmontTransaction != null &&
         baseProvider.firstAugmontTransaction == transaction &&
-        transaction.amount >= 150.0 &&
+        transaction.amount >= minBeerDeposit &&
         isOfferStillValid(transaction.timestamp)) return true;
     return false;
   }

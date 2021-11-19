@@ -117,13 +117,22 @@ class TransactionDoc {
   bool status;
   String transactionId;
   UserTransaction transactionDetail;
+  EnqueuedTaskDetails enqueuedTaskDetails;
 
-  TransactionDoc({this.status, this.transactionId, this.transactionDetail});
+  TransactionDoc({
+    this.status,
+    this.transactionId,
+    this.transactionDetail,
+    this.enqueuedTaskDetails,
+  });
 
   TransactionDoc.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     transactionId = json['transactionId'];
-    transactionDetail = UserTransaction.fromMap(json['transactionDetails'], transactionId);
+    transactionDetail =
+        UserTransaction.fromMap(json['transactionDetails'], transactionId);
+    enqueuedTaskDetails =
+        EnqueuedTaskDetails.fromMap(json['enqueuedTaskDetails']);
   }
 
   Map<String, dynamic> toJson() {
@@ -131,6 +140,7 @@ class TransactionDoc {
     data['status'] = this.status;
     data['transactionId'] = this.transactionId;
     data['transactionDetails'] = this.transactionDetail;
+    data['enqueuedTaskDetails'] = this.enqueuedTaskDetails;
     return data;
   }
 
@@ -138,7 +148,8 @@ class TransactionDoc {
     return {
       'status': status,
       'transactionId': transactionId,
-      'transactionDetail': transactionDetail
+      'transactionDetail': transactionDetail,
+      'enqueuedTaskDetails': enqueuedTaskDetails
     };
   }
 
@@ -146,11 +157,52 @@ class TransactionDoc {
     return TransactionDoc(
       status: map['status'],
       transactionId: map['transactionId'],
-      transactionDetail: UserTransaction.fromJSON(map['transactionDetails'], map['transactionId'])
+      transactionDetail: UserTransaction.fromJSON(
+          map['transactionDetails'], map['transactionId']),
+      enqueuedTaskDetails: map['enqueuedTaskDetails'] != null
+          ? EnqueuedTaskDetails.fromJson(map['enqueuedTaskDetails'])
+          : EnqueuedTaskDetails(name: "", queuePath: ""),
     );
   }
 
   @override
   String toString() =>
-      'TransactionDoc(status: $status, transactionId: $transactionId, transactionDetail: ${transactionDetail.toJson().toString()})';
+      'TransactionDoc(status: $status, transactionId: $transactionId, transactionDetail: ${transactionDetail.toJson().toString()}, enqueuedTaskDetails: ${enqueuedTaskDetails.toJson().toString()})';
+}
+
+class EnqueuedTaskDetails {
+  String name;
+  String queuePath;
+
+  EnqueuedTaskDetails({this.name, this.queuePath});
+
+  EnqueuedTaskDetails.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+    queuePath = json['queuePath'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = this.name;
+    data['queuePath'] = this.queuePath;
+    return data;
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'queuePath': queuePath,
+    };
+  }
+
+  factory EnqueuedTaskDetails.fromMap(Map<String, dynamic> map) {
+    return EnqueuedTaskDetails(
+      name: map['name'],
+      queuePath: map['queuePath'],
+    );
+  }
+
+  @override
+  String toString() =>
+      'EnqueuedTaskDetails(name: $name, queuePath: $queuePath)';
 }

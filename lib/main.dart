@@ -16,6 +16,7 @@ import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/core/service/connectivity_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
+import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
@@ -35,6 +36,7 @@ import 'package:felloapp/util/styles/app_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logger/logger.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
@@ -54,6 +56,7 @@ void main() async {
           signzyStage: SignzyStage.PROD,
           signzyPanStage: SignzyPanStage.PROD,
           baseUriUS: 'us-central1-fello-d3a9c.cloudfunctions.net',
+          mixpanelToken: MixpanelService.PROD_TOKEN,
           baseUriAsia: 'asia-south1-fello-d3a9c.cloudfunctions.net',
           dynamicLinkPrefix: 'https://fello.in'));
   await mainInit();
@@ -95,56 +98,62 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => locator<DBModel>()),
-        ChangeNotifierProvider(create: (_) => locator<LocalDBModel>()),
-        ChangeNotifierProvider(create: (_) => locator<HttpModel>()),
-        ChangeNotifierProvider(create: (_) => locator<ICICIModel>()),
-        ChangeNotifierProvider(create: (_) => locator<RazorpayModel>()),
-        ChangeNotifierProvider(create: (_) => locator<AugmontModel>()),
-        ChangeNotifierProvider(create: (_) => locator<BaseUtil>()),
-        ChangeNotifierProvider(create: (_) => locator<FcmHandler>()),
-        ChangeNotifierProvider(create: (_) => locator<PaymentService>()),
-        ChangeNotifierProvider(create: (_) => locator<TransactionService>()),
-        StreamProvider<ConnectivityStatus>(
-          create: (_) {
-            ConnectivityService connectivityService =
-                locator<ConnectivityService>();
-            connectivityService.initialLoad();
-            return connectivityService.connectionStatusController.stream;
-          },
-          initialData: ConnectivityStatus.Offline,
-        ),
-        ChangeNotifierProvider(create: (_) => appState),
-      ],
-      child: PropertyChangeProvider<TransactionService,
-          TransactionServiceProperties>(
-        value: locator<TransactionService>(),
-        child:
-            PropertyChangeProvider<UserCoinService, UserCoinServiceProperties>(
-          value: locator<UserCoinService>(),
-          child: PropertyChangeProvider<UserService, UserServiceProperties>(
-            value: locator<UserService>(),
-            child:
-                PropertyChangeProvider<WinnerService, WinnerServiceProperties>(
-              value: locator<WinnerService>(),
-              child: MaterialApp.router(
-                locale: DevicePreview.locale(context), // Add the locale here
-                builder: DevicePreview.appBuilder,
-                title: Constants.APP_NAME,
-                theme: FelloTheme.lightMode(),
-                debugShowCheckedModeBanner: false,
-                backButtonDispatcher: backButtonDispatcher,
-                routerDelegate: delegate,
-                routeInformationParser: parser,
-                localizationsDelegates: [
-                  S.delegate,
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
-                ],
-                supportedLocales: S.delegate.supportedLocales,
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+          statusBarBrightness: Brightness.dark,
+          statusBarIconBrightness: Brightness.dark,
+          statusBarColor: Colors.transparent),
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => locator<DBModel>()),
+          ChangeNotifierProvider(create: (_) => locator<LocalDBModel>()),
+          ChangeNotifierProvider(create: (_) => locator<HttpModel>()),
+          ChangeNotifierProvider(create: (_) => locator<ICICIModel>()),
+          ChangeNotifierProvider(create: (_) => locator<RazorpayModel>()),
+          ChangeNotifierProvider(create: (_) => locator<AugmontModel>()),
+          ChangeNotifierProvider(create: (_) => locator<BaseUtil>()),
+          ChangeNotifierProvider(create: (_) => locator<FcmHandler>()),
+          ChangeNotifierProvider(create: (_) => locator<PaymentService>()),
+          ChangeNotifierProvider(create: (_) => locator<TransactionService>()),
+          StreamProvider<ConnectivityStatus>(
+            create: (_) {
+              ConnectivityService connectivityService =
+                  locator<ConnectivityService>();
+              connectivityService.initialLoad();
+              return connectivityService.connectionStatusController.stream;
+            },
+            initialData: ConnectivityStatus.Offline,
+          ),
+          ChangeNotifierProvider(create: (_) => appState),
+        ],
+        child: PropertyChangeProvider<TransactionService,
+            TransactionServiceProperties>(
+          value: locator<TransactionService>(),
+          child: PropertyChangeProvider<UserCoinService,
+              UserCoinServiceProperties>(
+            value: locator<UserCoinService>(),
+            child: PropertyChangeProvider<UserService, UserServiceProperties>(
+              value: locator<UserService>(),
+              child: PropertyChangeProvider<WinnerService,
+                  WinnerServiceProperties>(
+                value: locator<WinnerService>(),
+                child: MaterialApp.router(
+                  locale: DevicePreview.locale(context), // Add the locale here
+                  builder: DevicePreview.appBuilder,
+                  title: Constants.APP_NAME,
+                  theme: FelloTheme.lightMode(),
+                  debugShowCheckedModeBanner: false,
+                  backButtonDispatcher: backButtonDispatcher,
+                  routerDelegate: delegate,
+                  routeInformationParser: parser,
+                  localizationsDelegates: [
+                    S.delegate,
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
+                  ],
+                  supportedLocales: S.delegate.supportedLocales,
+                ),
               ),
             ),
           ),

@@ -161,6 +161,9 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                                     style: TextStyles.title5.light),
                                 PropertyChangeConsumer<UserService,
                                     UserServiceProperties>(
+                                  properties: [
+                                    UserServiceProperties.myUserFund
+                                  ],
                                   builder: (ctx, model, child) => Text(
                                     locale.saveGoldBalanceValue(
                                         model.userFundWallet.augGoldQuantity ??
@@ -319,11 +322,24 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                             SizedBox(
                               height: SizeConfig.padding20,
                             ),
-                            Text(
-                              "You will receive the amount within 24-48 hours",
+                            RichText(
                               textAlign: TextAlign.center,
-                              style: TextStyles.body3.colour(Colors.grey),
+                              text: TextSpan(
+                                text: "Your balance will be credited to your registered bank account within ",
+                                style: TextStyles.body3.colour(Colors.grey),
+                                children: [
+                                  TextSpan(
+                                    text: "1-2 business working days",
+                                    style: TextStyles.body3.bold.colour(Colors.grey),
+                                  )
+                                ],
+                              ),
                             ),
+                            // Text(
+                            //   "You will receive the amount within 24-48 hours",
+                            //   textAlign: TextAlign.center,
+                            //   style: TextStyles.body3.colour(Colors.grey),
+                            // ),
                             SizedBox(height: SizeConfig.padding80),
 
                             // SizedBox(

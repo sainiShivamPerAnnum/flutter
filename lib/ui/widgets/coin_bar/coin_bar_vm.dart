@@ -6,7 +6,6 @@ import 'package:logger/logger.dart';
 
 class FelloCoinBarViewModel extends BaseModel {
   final _userCoinService = locator<UserCoinService>();
-  final _baseUtil = locator<BaseUtil>();
   final _logger = locator<Logger>();
 
   bool _isLoadingFlc = true;
@@ -15,13 +14,17 @@ class FelloCoinBarViewModel extends BaseModel {
   getFlc() async {
     _isLoadingFlc = true;
     notifyListeners();
-    if (_baseUtil.isNewUser && !_baseUtil.isFirstFetchDone) {
-      await Future.delayed(const Duration(seconds: 5));
+    _logger.d(
+        "Inside get FLC -  new user : ${BaseUtil.isNewUser} and first fetch done: ${BaseUtil.isFirstFetchDone}");
+    if (BaseUtil.isNewUser && !BaseUtil.isFirstFetchDone) {
+      _logger.d("New user flc loading");
+      await Future.delayed(const Duration(seconds: 7));
       await _userCoinService
           ?.getUserCoinBalance()
           ?.onError((error, stackTrace) => _logger.e(error))
-          ?.then((value) => _baseUtil.isFirstFetchDone = true);
+          ?.then((value) => BaseUtil.isFirstFetchDone = true);
     } else {
+      _logger.d("Old user flc loading");
       await _userCoinService
           ?.getUserCoinBalance()
           ?.onError((error, stackTrace) => _logger.e(error));

@@ -8,6 +8,7 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
+import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/core/service/tambola_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -37,6 +38,7 @@ class LauncherViewModel extends BaseModel {
   final _httpModel = locator<HttpModel>();
   final _logger = locator<Logger>();
   final _tambolaService = locator<TambolaService>();
+  final _mixpanelService = locator<MixpanelService>();
 
   //GETTERS
   ui.Image get logo => _logo;
@@ -77,6 +79,7 @@ class LauncherViewModel extends BaseModel {
     await _baseUtil.init();
     _tambolaService.init();
     await _fcmListener.setupFcm();
+    await _mixpanelService.init();
     _httpModel.init();
     _timer3.cancel();
     try {
@@ -87,8 +90,17 @@ class LauncherViewModel extends BaseModel {
       );
     }
 
+    bool isThereBreakingUpdateTest = await checkBreakingUpdateTest();
+    if (isThereBreakingUpdateTest) {
+      AppState.isUpdateScreen = true;
+      navigator.currentAction =
+          PageAction(state: PageState.replaceAll, page: UpdateRequiredConfig);
+      return;
+    }
+
     bool isThereBreakingUpdate = await checkBreakingUpdate();
     if (isThereBreakingUpdate) {
+      AppState.isUpdateScreen = true;
       navigator.currentAction =
           PageAction(state: PageState.replaceAll, page: UpdateRequiredConfig);
       return;
@@ -154,10 +166,35 @@ class LauncherViewModel extends BaseModel {
     String minBuild = BaseRemoteConfig.remoteConfig
         .getString(BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER);
     _logger.v('Min Build Required $minBuild');
-    // minBuild = "0";
+    //minBuild = "50";
     try {
       if (int.parse(currentBuild) < int.parse(minBuild)) {
         return true;
+      }
+      return false;
+    } catch (e) {
+      _logger.e(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> checkBreakingUpdateTest() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    String currentBuild = packageInfo.buildNumber;
+    _logger.i('Current Build $currentBuild');
+    String minBuild = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER_2);
+    _logger.v('Min Build Required $minBuild');
+    //minBuild = "50";
+    try {
+      if (int.parse(currentBuild) < int.parse(minBuild)) {
+        if (userService != null && userService.baseUser != null) {
+          _logger.i("User mobile no: ${userService.baseUser.mobile}");
+          if (userService.baseUser.mobile.startsWith('99999000') ||
+              userService.baseUser.mobile.startsWith('88888000')) return true;
+          return false;
+        }
+        return false;
       }
       return false;
     } catch (e) {
