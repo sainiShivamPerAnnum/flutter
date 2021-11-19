@@ -101,13 +101,13 @@ class ReferralDetailsViewModel extends BaseModel {
         contentType: 'referral',
         itemId: _userService.baseUser.uid,
         method: 'message');
+        _mixpanelService.track(MixpanelEvents.linkShared,{'userId':_userService.baseUser.uid});
     shareLinkInProgress = true;
     refresh();
     _createDynamicLink(_userService.baseUser.uid, true, 'Other')
         .then((url) async {
       _logger.d(url);
       shareLinkInProgress = false;
-  _mixpanelService.track(MixpanelEvents.linkShared,{'userId':_userService.baseUser.uid});
       refresh();
       if (Platform.isIOS) {
         Share.share(_shareMsg + url);
