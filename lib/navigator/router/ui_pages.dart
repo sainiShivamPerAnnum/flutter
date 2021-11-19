@@ -38,6 +38,7 @@ const String TransactionsHistoryPath = 'transHistory';
 const String KycDetailsPath = 'kycDetails';
 const String BankDetailsPath = 'bankDetails';
 const String AugmontGoldBuyPath = '/augBuy';
+const String AugmontGoldSellPath = '/augSell';
 const String AugmontGoldDetailsPath = '/augDetails';
 const String ReferralDetailsPath = '/referralDetails';
 const String ReferralHistoryPath = '/referralHistory';
@@ -81,6 +82,7 @@ enum Pages {
   KycDetails,
   BankDetails,
   AugGoldBuy,
+  AugGoldSell,
   AugGoldDetails,
   ReferralDetails,
   ReferralHistory,
@@ -293,6 +295,11 @@ PageConfiguration AugmontGoldBuyPageConfig = PageConfiguration(
   key: 'augGoldBuy',
   path: AugmontGoldBuyPath,
   uiPage: Pages.AugGoldBuy,
+);
+PageConfiguration AugmontGoldSellPageConfig = PageConfiguration(
+  key: 'augGoldSell',
+  path: AugmontGoldSellPath,
+  uiPage: Pages.AugGoldSell,
 );
 
 PageConfiguration AugmontGoldDetailsPageConfig = PageConfiguration(
