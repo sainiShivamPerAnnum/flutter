@@ -454,25 +454,27 @@ class AugmontModel extends ChangeNotifier {
             .model.response.transactionDoc.enqueuedTaskDetails,
       );
 
-      double newAugPrinciple =
-          _onCompleteDepositResponse.model.response.augmontPrinciple;
-      if (newAugPrinciple != null && newAugPrinciple > 0) {
-        _userService.augGoldPrinciple = newAugPrinciple;
-      }
-      double newAugQuantity =
-          _onCompleteDepositResponse.model.response.augmontGoldQty;
-      if (newAugQuantity != null && newAugQuantity > 0) {
-        _userService.augGoldQuantity = newAugQuantity;
-      }
-      int newFlcBalance = _onCompleteDepositResponse.model.response.flcBalance;
-      if (newFlcBalance > 0) {
-        _userCoinService.setFlcBalance(newFlcBalance);
+      if (_onCompleteDepositResponse.code == 200) {
+        double newAugPrinciple =
+            _onCompleteDepositResponse.model.response.augmontPrinciple;
+        if (newAugPrinciple != null && newAugPrinciple > 0) {
+          _userService.augGoldPrinciple = newAugPrinciple;
+        }
+        double newAugQuantity =
+            _onCompleteDepositResponse.model.response.augmontGoldQty;
+        if (newAugQuantity != null && newAugQuantity > 0) {
+          _userService.augGoldQuantity = newAugQuantity;
+        }
+        int newFlcBalance =
+            _onCompleteDepositResponse.model.response.flcBalance;
+        if (newFlcBalance > 0) {
+          _userCoinService.setFlcBalance(newFlcBalance);
+        }
+        _baseProvider.currentAugmontTxn = _onCompleteDepositResponse
+            .model.response.transactionDoc.transactionDetail;
       }
 
       _txnService.updateTransactions();
-
-      _baseProvider.currentAugmontTxn = _onCompleteDepositResponse
-          .model.response.transactionDoc.transactionDetail;
 
       if (_augmontTxnProcessListener != null)
         _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
@@ -601,10 +603,12 @@ class AugmontModel extends ChangeNotifier {
               userUid: _baseProvider.myUser.uid,
               amount: -1 * _baseProvider.currentAugmontTxn.amount);
 
-      log.error('Query Failed');
       Map<String, dynamic> _failMap = {
-        'txnDocId': _apiResponse.model.response.transactionDoc.transactionId
+        'txnDocId': _apiResponse?.model?.response?.transactionDoc?.transactionId
       };
+
+      log.error('Query Failed');
+
       await _dbModel.logFailure(
           _baseProvider.myUser.uid, FailType.UserAugmontSellFailed, _failMap);
       if (_augmontTxnProcessListener != null)
@@ -646,23 +650,24 @@ class AugmontModel extends ChangeNotifier {
               augMap: augMap,
               userUid: _baseProvider.myUser.uid);
 
-      double newAugPrinciple =
-          _onSellCompleteResponse.model.response.augmontPrinciple;
-      if (newAugPrinciple != null && newAugPrinciple > 0) {
-        _userService.augGoldPrinciple = newAugPrinciple;
+      if (_onSellCompleteResponse.code == 200) {
+        double newAugPrinciple =
+            _onSellCompleteResponse.model.response.augmontPrinciple;
+        if (newAugPrinciple != null && newAugPrinciple > 0) {
+          _userService.augGoldPrinciple = newAugPrinciple;
+        }
+        double newAugQuantity =
+            _onSellCompleteResponse.model.response.augmontGoldQty;
+        if (newAugQuantity != null && newAugQuantity >= 0) {
+          _userService.augGoldQuantity = newAugQuantity;
+        }
+        int newFlcBalance = _onSellCompleteResponse.model.response.flcBalance;
+        if (newFlcBalance > 0) {
+          _userCoinService.setFlcBalance(newFlcBalance);
+        }
+        _baseProvider.currentAugmontTxn = _onSellCompleteResponse
+            .model.response.transactionDoc.transactionDetail;
       }
-      double newAugQuantity =
-          _onSellCompleteResponse.model.response.augmontGoldQty;
-      if (newAugQuantity != null && newAugQuantity >= 0) {
-        _userService.augGoldQuantity = newAugQuantity;
-      }
-      int newFlcBalance = _onSellCompleteResponse.model.response.flcBalance;
-      if (newFlcBalance > 0) {
-        _userCoinService.setFlcBalance(newFlcBalance);
-      }
-
-      _baseProvider.currentAugmontTxn = _onSellCompleteResponse
-          .model.response.transactionDoc.transactionDetail;
 
       if (_augmontTxnProcessListener != null)
         _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
