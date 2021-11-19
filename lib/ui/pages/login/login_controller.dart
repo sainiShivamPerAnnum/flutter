@@ -434,7 +434,7 @@ class _LoginControllerState extends State<LoginController>
             bool flag = await baseProvider.authenticateUser(baseProvider
                 .generateAuthCredential(_augmentedVerificationId, otp));
             if (flag) {
-              _mixpanelService.mixpanel.track(MixpanelEvents.mobileOtpDone);
+              _mixpanelService.track(MixpanelEvents.mobileOtpDone,{'userId':userService.baseUser.uid});
               AppState.isOnboardingInProgress = true;
               _otpScreenKey.currentState.onOtpReceived();
               _onSignInSuccess();
@@ -533,8 +533,8 @@ class _LoginControllerState extends State<LoginController>
               baseProvider.isLoginNextInProgress = false;
               setState(() {});
             }).then((value) {
-              _mixpanelService.mixpanel
-                  .track(MixpanelEvents.profileInformationAdded);
+              _mixpanelService
+                  .track(MixpanelEvents.profileInformationAdded,{'userId':userService.baseUser.uid});
               _controller.animateToPage(Username.index,
                   duration: Duration(milliseconds: 500),
                   curve: Curves.easeInToLinear);
@@ -566,8 +566,8 @@ class _LoginControllerState extends State<LoginController>
                   bool flag = await dbProvider.updateUser(baseProvider.myUser);
 
                   if (flag) {
-                    _mixpanelService.mixpanel
-                        .track(MixpanelEvents.userNameAdded);
+                    _mixpanelService
+                        .track(MixpanelEvents.userNameAdded,{'userId':userService.baseUser.uid});
                     log.debug("User object saved successfully");
                     _onSignUpComplete();
                   } else {

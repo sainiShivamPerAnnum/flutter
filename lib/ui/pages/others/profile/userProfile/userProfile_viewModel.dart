@@ -351,7 +351,7 @@ class UserProfileVM extends BaseModel {
               cancelAction: () {}));
     } else if (_status.isGranted) {
       await _chooseprofilePicture();
-      _mixpanelService.mixpanel.track(MixpanelEvents.updatedProfilePicture);
+      _mixpanelService.track(MixpanelEvents.updatedProfilePicture,{'userId':_userService.baseUser.uid});
     } else {
       BaseUtil.showNegativeAlert('Permission Unavailable',
           'Please enable permission from settings to continue');

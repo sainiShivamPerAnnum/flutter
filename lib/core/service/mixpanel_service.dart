@@ -6,11 +6,19 @@ class MixpanelService {
   static const String PROD_TOKEN = "03de57e684d04e87999e089fd605fcdd";
 
   Mixpanel _mixpanel;
-  Mixpanel get mixpanel => _mixpanel;
 
- Future<void> init() async {
+  Future<void> init() async {
     _mixpanel = await Mixpanel.init(FlavorConfig.instance.values.mixpanelToken,
         optOutTrackingDefault: false);
   }
 
+  void track(String eventName, Map<String, dynamic> properties) {
+    if (_mixpanel == null) init();
+    try {
+      _mixpanel.track(eventName, properties: properties);
+    } catch (e) {
+      String error = e ?? "Unable to track event: $eventName";
+      throw error;
+    }
+  }
 }
