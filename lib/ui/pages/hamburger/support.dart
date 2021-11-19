@@ -3,6 +3,7 @@ import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/mixpanel_service.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/feedback_dialog.dart';
@@ -41,6 +42,7 @@ class SupportPage extends StatefulWidget {
 
 class _SupportPageState extends State<SupportPage> {
   final Logger logger = locator<Logger>();
+  final UserService _userService = locator<UserService>();
   BaseUtil baseProvider;
   AppState appState;
   DBModel dbProvider;
@@ -104,8 +106,8 @@ class _SupportPageState extends State<SupportPage> {
                           title: "Chat with us",
                           onTap: () {
                             Haptic.vibrate();
-                            _mixpanelService.mixpanel
-                                .track(MixpanelEvents.initiateChatSupport);
+                            _mixpanelService
+                                .track(MixpanelEvents.initiateChatSupport,{'userId':_userService.baseUser.uid});
                             appState.currentAction = PageAction(
                                 state: PageState.addPage,
                                 page: ChatSupportPageConfig);
@@ -452,8 +454,7 @@ class _SupportPageState extends State<SupportPage> {
                                   _requestCallPhoneController.text.trim(),
                                   callTimes[_selectedTimeSlotIndex]);
                               if (res) {
-                                _mixpanelService.mixpanel
-                                    .track(MixpanelEvents.requestedCallback);
+                                _mixpanelService.track(MixpanelEvents.requestedCallback,{'userId':_userService.baseUser.uid});
                                 BaseUtil.showPositiveAlert(
                                   'Callback Placed',
                                   'Thank you for letting us know, we will call you soon!',
@@ -498,7 +499,7 @@ class _SupportPageState extends State<SupportPage> {
   }
 
   void _launchEmail() {
-    _mixpanelService.mixpanel.track(MixpanelEvents.emailInitiated);
+    _mixpanelService.track(MixpanelEvents.emailInitiated,{'userId':_userService.baseUser.uid});
     final Uri emailLaunchUri = Uri(scheme: 'mailto', path: 'hello@fello.in');
     launch(emailLaunchUri.toString());
   }

@@ -71,7 +71,8 @@ class CricketHomeViewModel extends BaseModel {
   }
 
   startGame() {
-        _mixpanelService.mixpanel.track(MixpanelEvents.playsCricket);
+    _mixpanelService.track(
+        MixpanelEvents.playsCricket, {'userId': _userService.baseUser.uid});
     AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: CricketGamePageConfig,
