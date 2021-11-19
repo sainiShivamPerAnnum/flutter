@@ -270,6 +270,7 @@ class UserProfileVM extends BaseModel {
             _userService.signout().then((flag) {
               if (flag) {
                 //log.debug('Sign out process complete');
+                _mixpanelService.track(MixpanelEvents.signOut,{'userId':_userService.baseUser.uid});
                 _txnService.signOut();
                 AppState.delegate.appState.currentAction = PageAction(
                     state: PageState.replaceAll, page: SplashPageConfig);

@@ -15,4 +15,5 @@ class MixpanelEvents {
   static const userNameAdded="Use name added";
   static const initiateChatSupport="Initiated Chat Support";
   static const requestedCallback="Requested Callback";
+  static const signOut="User Signed Out";
 }
