@@ -14,6 +14,7 @@ import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_coin_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/augmont_api_util.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -306,9 +307,14 @@ class AugmontModel extends ChangeNotifier {
 
       if (tTxn != null) {
         _baseProvider.currentAugmontTxn = tTxn;
-
         _rzpGateway.setTransactionListener(_onRazorpayPaymentProcessed);
       }
+    } else {
+      _dbModel.logFailure(
+          _baseProvider.myUser.uid,
+          FailType.InitiateUserDepositApiFailed,
+          {'message': _initialDepositResponse?.errorMessage});
+      return null;
     }
 
     return _baseProvider.currentAugmontTxn;
@@ -464,28 +470,46 @@ class AugmontModel extends ChangeNotifier {
             .model.response.transactionDoc.enqueuedTaskDetails,
       );
 
-      double newAugPrinciple =
-          _onCompleteDepositResponse.model.response.augmontPrinciple;
-      if (newAugPrinciple != null && newAugPrinciple > 0) {
-        _userService.augGoldPrinciple = newAugPrinciple;
-      }
-      double newAugQuantity =
-          _onCompleteDepositResponse.model.response.augmontGoldQty;
-      if (newAugQuantity != null && newAugQuantity > 0) {
-        _userService.augGoldQuantity = newAugQuantity;
-      }
-      int newFlcBalance = _onCompleteDepositResponse.model.response.flcBalance;
-      if (newFlcBalance > 0) {
-        _userCoinService.setFlcBalance(newFlcBalance);
-      }
+      if (_onCompleteDepositResponse.code == 200) {
+        double newAugPrinciple =
+            _onCompleteDepositResponse.model.response.augmontPrinciple;
+        if (newAugPrinciple != null && newAugPrinciple > 0) {
+          _userService.augGoldPrinciple = newAugPrinciple;
+        }
+        double newAugQuantity =
+            _onCompleteDepositResponse.model.response.augmontGoldQty;
+        if (newAugQuantity != null && newAugQuantity > 0) {
+          _userService.augGoldQuantity = newAugQuantity;
+        }
+        int newFlcBalance =
+            _onCompleteDepositResponse.model.response.flcBalance;
+        if (newFlcBalance > 0) {
+          _userCoinService.setFlcBalance(newFlcBalance);
+        }
+        _baseProvider.currentAugmontTxn = _onCompleteDepositResponse
+            .model.response.transactionDoc.transactionDetail;
 
-      _txnService.updateTransactions();
+        _txnService.updateTransactions();
 
-      _baseProvider.currentAugmontTxn = _onCompleteDepositResponse
-          .model.response.transactionDoc.transactionDetail;
+        if (_augmontTxnProcessListener != null)
+          _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
+      } else {
+        _dbModel.logFailure(
+            _baseProvider.myUser.uid,
+            FailType.CompleteUserDepositApiFailed,
+            {'message': _initialDepositResponse.errorMessage});
 
-      if (_augmontTxnProcessListener != null)
-        _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
+        BaseUtil.showNegativeAlert(
+            'Deposit Failed', 'Please try again in sometime or contact us');
+
+        _baseProvider.currentAugmontTxn.tranStatus =
+            UserTransaction.TRAN_STATUS_CANCELLED;
+
+        if (_augmontTxnProcessListener != null)
+          _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
+
+        AppState.backButtonDispatcher.didPopRoute();
+      }
     }
   }
 
@@ -528,17 +552,35 @@ class AugmontModel extends ChangeNotifier {
     _baseProvider.currentAugmontTxn.tranStatus =
         UserTransaction.TRAN_STATUS_CANCELLED;
 
-    await _investmentActionsRepository.cancelUserDeposit(
-        txnId:
-            _initialDepositResponse.model.response.transactionDoc.transactionId,
-        userUid: _baseProvider.myUser.uid,
-        rzpMap: rzpMap,
-        augMap: augMap,
-        enqueuedTaskDetails: _initialDepositResponse
-            .model.response.transactionDoc.enqueuedTaskDetails);
+    ApiResponse<DepositResponseModel> _onCancleUserDepositResponse =
+        await _investmentActionsRepository.cancelUserDeposit(
+            txnId: _initialDepositResponse
+                .model.response.transactionDoc.transactionId,
+            userUid: _baseProvider.myUser.uid,
+            rzpMap: rzpMap,
+            augMap: augMap,
+            enqueuedTaskDetails: _initialDepositResponse
+                .model.response.transactionDoc.enqueuedTaskDetails);
 
-    if (_augmontTxnProcessListener != null)
-      _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
+    if (_onCancleUserDepositResponse.code == 400) {
+      _dbModel.logFailure(
+          _baseProvider.myUser.uid, FailType.CompleteUserDepositApiFailed, {
+        'message': _onCancleUserDepositResponse?.errorMessage ??
+            "Cancel user deposit failed"
+      });
+      BaseUtil.showNegativeAlert(
+          'Something went wrong', _onCancleUserDepositResponse.errorMessage);
+      _baseProvider.currentAugmontTxn.tranStatus =
+          UserTransaction.TRAN_STATUS_CANCELLED;
+
+      if (_augmontTxnProcessListener != null)
+        _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
+
+      AppState.backButtonDispatcher.didPopRoute();
+    } else {
+      if (_augmontTxnProcessListener != null)
+        _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
+    }
   }
 
   ///submit gold purchase augmont api
@@ -618,10 +660,12 @@ class AugmontModel extends ChangeNotifier {
               userUid: _baseProvider.myUser.uid,
               amount: -1 * _baseProvider.currentAugmontTxn.amount);
 
-      log.error('Query Failed');
       Map<String, dynamic> _failMap = {
-        'txnDocId': _apiResponse.model.response.transactionDoc.transactionId
+        'txnDocId': _apiResponse?.model?.response?.transactionDoc?.transactionId
       };
+
+      log.error('Query Failed');
+
       await _dbModel.logFailure(
           _baseProvider.myUser.uid, FailType.UserAugmontSellFailed, _failMap);
       if (_augmontTxnProcessListener != null)
@@ -664,28 +708,44 @@ class AugmontModel extends ChangeNotifier {
               augMap: augMap,
               userUid: _baseProvider.myUser.uid);
 
-      double newAugPrinciple =
-          _onSellCompleteResponse.model.response.augmontPrinciple;
-      if (newAugPrinciple != null && newAugPrinciple > 0) {
-        _userService.augGoldPrinciple = newAugPrinciple;
-      }
-      double newAugQuantity =
-          _onSellCompleteResponse.model.response.augmontGoldQty;
-      if (newAugQuantity != null && newAugQuantity >= 0) {
-        _userService.augGoldQuantity = newAugQuantity;
-      }
-      int newFlcBalance = _onSellCompleteResponse.model.response.flcBalance;
-      if (newFlcBalance > 0) {
-        _userCoinService.setFlcBalance(newFlcBalance);
-      }
+      if (_onSellCompleteResponse.code == 200) {
+        double newAugPrinciple =
+            _onSellCompleteResponse.model.response.augmontPrinciple;
+        if (newAugPrinciple != null && newAugPrinciple > 0) {
+          _userService.augGoldPrinciple = newAugPrinciple;
+        }
+        double newAugQuantity =
+            _onSellCompleteResponse.model.response.augmontGoldQty;
+        if (newAugQuantity != null && newAugQuantity >= 0) {
+          _userService.augGoldQuantity = newAugQuantity;
+        }
+        int newFlcBalance = _onSellCompleteResponse.model.response.flcBalance;
+        if (newFlcBalance > 0) {
+          _userCoinService.setFlcBalance(newFlcBalance);
+        }
+        _baseProvider.currentAugmontTxn = _onSellCompleteResponse
+            .model.response.transactionDoc.transactionDetail;
+        _txnService.updateTransactions();
+        if (_augmontTxnProcessListener != null)
+          _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
+      } else {
+        _dbModel.logFailure(
+            _baseProvider.myUser.uid, FailType.WithdrawlCompleteApiFailed, {
+          'message':
+              _initialDepositResponse?.errorMessage ?? "Withdrawl api failed"
+        });
 
-      _baseProvider.currentAugmontTxn = _onSellCompleteResponse
-          .model.response.transactionDoc.transactionDetail;
+        BaseUtil.showNegativeAlert(
+            'Deposit Failed', 'Please try again in sometime or contact us');
 
-      if (_augmontTxnProcessListener != null)
-        _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
+        _baseProvider.currentAugmontTxn.tranStatus =
+            UserTransaction.TRAN_STATUS_CANCELLED;
+        if (_augmontTxnProcessListener != null)
+          _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
+
+        AppState.backButtonDispatcher.didPopRoute();
+      }
     }
-    _txnService.updateTransactions();
   }
 
   ///returns path where invoice is generated and saved
