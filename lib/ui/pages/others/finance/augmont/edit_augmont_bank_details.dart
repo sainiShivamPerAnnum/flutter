@@ -530,8 +530,8 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
     if (curBankIfsc == null || pBankIfsc != curBankIfsc) noChanges = false;
     if (!isConfirm) {
       BaseUtil.showNegativeAlert(
-        'Confirm Details',
-        'Please confirm ',
+        'Confirmation Required',
+        'Please confirm that the details added are correct',
       );
       baseProvider.isEditAugmontBankDetailInProgress = false;
       setState(() {});
