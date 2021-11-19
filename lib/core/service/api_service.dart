@@ -51,7 +51,7 @@ class APIService implements API {
       final response = await http.get(
         Uri.parse(finalPath),
         headers: {
-          HttpHeaders.authorizationHeader: token != null ? token : '',
+          HttpHeaders.authorizationHeader: token != null ? 'Bearer $token' : '',
           'platform': Platform.isAndroid ? 'android' : 'iOS',
           'version': await _getAppVersion(),
         },
