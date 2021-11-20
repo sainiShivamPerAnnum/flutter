@@ -89,13 +89,13 @@ class MyWinningsViewModel extends BaseModel {
         return "Cricket";
         break;
       case "GOLD_CREDIT":
-        return "Augmont Digital Gold";
+        return "Digital Gold Redemption";
         break;
       case "GM_TAMBOLA2020":
         return "Tambola";
         break;
       case "AMZ_VOUCHER":
-        return "Amazon Gift Voucher";
+        return "Amazon Voucher Redemption";
         break;
       default:
         return "Fello Rewards";

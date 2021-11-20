@@ -214,7 +214,11 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                             children: [
                               referralTile(
                                   'Purchase Rate:',
-                                  '₹ ${widget._transaction.augmnt[UserTransaction.subFldAugLockPrice] ?? 'N/A'}/gm',
+                                  widget._transaction.augmnt[UserTransaction
+                                              .subFldAugLockPrice] !=
+                                          null
+                                      ? '₹ ${widget._transaction.augmnt[UserTransaction.subFldAugLockPrice]}/gm'
+                                      : "Unavailable",
                                   UiConstants.primaryColor),
                               referralTile(
                                   'Gold Purchased:',
@@ -253,17 +257,17 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                     //         '${widget._transaction.ticketUpCount ?? 'Unavailable'}',
                     //         Colors.redAccent.withOpacity(0.6),
                     //       ),
-                    (widget._transaction.subType ==
-                            UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD)
-                        ? referralTileWide(
-                            'Closing Gold Balance:',
-                            widget._transaction.augmnt[
-                                        UserTransaction.subFldAugTotalGoldGm] ==
-                                    null
-                                ? "Unavailable"
-                                : '${widget._transaction.augmnt[UserTransaction.subFldAugTotalGoldGm] ?? 'Unavailable'} grams',
-                            UiConstants.primaryColor)
-                        : Container(),
+                    // (widget._transaction.subType ==
+                    //         UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD)
+                    //     ? referralTileWide(
+                    //         'Closing Gold Balance:',
+                    //         widget._transaction.augmnt[
+                    //                     UserTransaction.subFldAugTotalGoldGm] ==
+                    //                 null
+                    //             ? "Unavailable"
+                    //             : '${widget._transaction.augmnt[UserTransaction.subFldAugTotalGoldGm] ?? 'Unavailable'} grams',
+                    //         UiConstants.primaryColor)
+                    //     : Container(),
                     (widget._transaction.closingBalance > 0)
                         ? referralTileWide(
                             'Overall Closing Balance:',
