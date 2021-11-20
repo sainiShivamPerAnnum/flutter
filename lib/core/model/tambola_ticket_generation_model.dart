@@ -126,8 +126,8 @@ class AssignedTime {
 
   factory AssignedTime.fromMap(Map<String, dynamic> map) {
     return AssignedTime(
-      iSeconds: map['iSeconds'],
-      iNanoseconds: map['iNanoseconds'],
+      iSeconds: map != null ? map['iSeconds'] ?? 0 : 0,
+      iNanoseconds: map != null ? map['iNanoseconds'] ?? 0 : 0,
     );
   }
 

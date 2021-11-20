@@ -286,7 +286,7 @@ class TambolaGameViewModel extends BaseModel {
     //     ticketCount);
   }
 
-  Future<bool> _processTicketGeneration(int activeTambolaCardCount) async {
+  checkIfMoreTicketNeedsToBeGenerated() async {
     tambolaService.ticketGenerateCount = 0;
 
     if (activeTambolaCardCount != null &&
@@ -308,26 +308,25 @@ class TambolaGameViewModel extends BaseModel {
               userId: _userService.baseUser.uid,
               numberOfTickets: tambolaService.ticketGenerateCount);
       if (_response.code == 200) {
-        return _response.model.flag;
+        if (_response.model.flag) {
+          _refreshTambolaTickets();
+          BaseUtil.showPositiveAlert('Tickets successfully generated 🥳',
+              'Your weekly odds are now way better!');
+        } else {
+          BaseUtil.showNegativeAlert(
+            'Tickets generation failed',
+            'The issue has been noted and your tickets will soon be credited',
+          );
+        }
       } else {
-        return false;
+        _logger.d("Api failed");
+        BaseUtil.showNegativeAlert(
+          'Tickets generation failed',
+          'The issue has been noted and your tickets will soon be credited',
+        );
       }
-    }
-
-    return false;
-  }
-
-  checkIfMoreTicketNeedsToBeGenerated() async {
-    bool _isGenerating = await _processTicketGeneration(activeTambolaCardCount);
-    if (_isGenerating) {
-      _refreshTambolaTickets();
-      BaseUtil.showPositiveAlert('Tickets successfully generated 🥳',
-          'Your weekly odds are now way better!');
     } else {
-      BaseUtil.showNegativeAlert(
-        'Tickets generation failed',
-        'The issue has been noted and your tickets will soon be credited',
-      );
+      _logger.d("No tickets to generate");
     }
   }
 
