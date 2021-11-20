@@ -134,12 +134,13 @@ class HttpModel extends ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> registerPrizeClaim(
-      String userId, double amount, PrizeClaimChoice claimChoice) async {
+      String userId, String userName, double amount, PrizeClaimChoice claimChoice) async {
     if (userId == null || amount == null || claimChoice == null) return null;
 
     final Uri _uri = Uri.https(
         US_BASE_URI, '/userTxnOps/$_stage/api/prize/claim', {
       'userId': userId,
+      'userName': userName,
       'amount': '$amount',
       'redeemType': claimChoice.value()
     });

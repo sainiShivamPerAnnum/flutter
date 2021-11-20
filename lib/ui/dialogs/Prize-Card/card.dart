@@ -431,7 +431,7 @@ class _TicketState extends State<FCard> {
   Future<bool> _registerClaimChoice(PrizeClaimChoice choice) async {
     if (choice == PrizeClaimChoice.NA) return false;
     Map<String, dynamic> response = await httpProvider.registerPrizeClaim(
-        baseProvider.myUser.uid, widget.unclaimedPrize, choice);
+        baseProvider.myUser.uid, baseProvider.myUser.username, widget.unclaimedPrize, choice);
     if (response['status'] != null && response['status']) {
       _userService.getUserFundWalletData();
       await localDBModel.savePrizeClaimChoice(choice);
