@@ -6,6 +6,7 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
+import 'package:felloapp/core/model/tambola_ticket_generation_model.dart';
 import 'package:felloapp/core/model/user_ticket_wallet_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
@@ -302,11 +303,12 @@ class TambolaGameViewModel extends BaseModel {
 
     if (tambolaService.ticketGenerateCount > 0) {
       //Call Generation API
-      ApiResponse _response = await _ticketGenerationRepo.generateTickets(
-          userId: _userService.baseUser.uid,
-          numberOfTickets: tambolaService.ticketGenerateCount);
+      ApiResponse<TambolaTicketGenerationModel> _response =
+          await _ticketGenerationRepo.generateTickets(
+              userId: _userService.baseUser.uid,
+              numberOfTickets: tambolaService.ticketGenerateCount);
       if (_response.code == 200) {
-        return _response.model['response'];
+        return _response.model.flag;
       } else {
         return false;
       }
@@ -316,7 +318,6 @@ class TambolaGameViewModel extends BaseModel {
   }
 
   checkIfMoreTicketNeedsToBeGenerated() async {
-
     bool _isGenerating = await _processTicketGeneration(activeTambolaCardCount);
     if (_isGenerating) {
       _refreshTambolaTickets();
@@ -328,7 +329,6 @@ class TambolaGameViewModel extends BaseModel {
         'The issue has been noted and your tickets will soon be credited',
       );
     }
-
   }
 
   Ticket buildBoardView(TambolaBoard board) {
