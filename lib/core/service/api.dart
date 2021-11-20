@@ -436,7 +436,11 @@ class Api {
   }
 
   DocumentReference getUserTransactionDocumentKey(String userId) {
-    return _db.collection(Constants.COLN_USERS).doc(userId).collection(Constants.SUBCOLN_USER_TXNS).doc();
+    return _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
+        .collection(Constants.SUBCOLN_USER_TXNS)
+        .doc();
   }
 
   Future<QuerySnapshot> getRecentAugmontDepositTxn(
@@ -705,6 +709,18 @@ class Api {
       if (_querySnapshot.docs != null) {
         logger.i("No prizes for perticular category and freq");
       }
+      return _querySnapshot.docs?.first;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<QueryDocumentSnapshot> fetchFaqs(String category) async {
+    Query _query = _db
+        .collection(Constants.COLN_FAQS)
+        .where('category', isEqualTo: category);
+    try {
+      QuerySnapshot _querySnapshot = await _query.get();
       return _querySnapshot.docs?.first;
     } catch (e) {
       throw e;
