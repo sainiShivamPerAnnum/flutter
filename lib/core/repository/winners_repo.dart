@@ -35,18 +35,11 @@ class WinnersRepository {
 
   Future<ApiResponse<List<String>>> getTopWinners() async {
     try {
-      List<String> _response = [
-        "NEWUSER000e1 won Amazon gift voucher worth ₹.50",
-        "test101 won Amazon gift voucher worth ₹.20",
-        "user201 won Augmont gold credit worth ₹.10"
-      ];
+      final _apiResponse =
+          await APIService.instance.getData(_apiPaths.kTopWinners);
+      TopWinnersModel _topWinnersModel = TopWinnersModel.fromMap(_apiResponse);
 
-      // final _apiResponse =
-      //     await APIService.instance.getData(_apiPaths.kTopWinners);
-      // TopWinnersModel _topWinnersModel = TopWinnersModel.fromMap(_apiResponse);
-      // _response = _topWinnersModel.currentTopWinners;
-
-      return ApiResponse(model: _response, code: 200);
+      return ApiResponse(model: _topWinnersModel.currentTopWinners, code: 200);
     } catch (e) {
       _logger.e(e);
       return ApiResponse.withError(e.toString(), 400);
