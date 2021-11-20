@@ -10,6 +10,7 @@ import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/repository/investment_actions_repo.dart';
 import 'package:felloapp/core/repository/prizes_repo.dart';
 import 'package:felloapp/core/repository/statistics_repo.dart';
+import 'package:felloapp/core/repository/ticket_generation_repo.dart';
 import 'package:felloapp/core/repository/winners_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/api.dart';
@@ -99,6 +100,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => FlcActionsRepo());
   locator.registerLazySingleton(() => StatisticsRepository());
   locator.registerLazySingleton(() => WinnersRepository());
+  locator.registerLazySingleton(() => TicketGenerationRepo());
   locator.registerLazySingleton(() => InvestmentActionsRepository());
 
   // SPLASH
