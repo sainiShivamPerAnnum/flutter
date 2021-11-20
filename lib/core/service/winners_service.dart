@@ -18,8 +18,10 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
   Timestamp _timestamp;
 
   List<Winners> _winners = [];
+  List<String> _topWinners = [];
 
   List<Winners> get winners => this._winners;
+  List<String> get topWinners => this._topWinners;
 
   get cricketWinnersLength => this._cricketWinnersLength;
 
@@ -30,6 +32,21 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
   setWinners() {
     notifyListeners(WinnerServiceProperties.winLeaderboard);
     _logger.d("Win View leaderboard updated, property listeners notified");
+  }
+
+  setTopWinners() {
+    notifyListeners(WinnerServiceProperties.topWinners);
+    _logger.d("Top Winners updated, property listeners notified");
+  }
+
+  fetchTopWinner() async {
+    ApiResponse<List<String>> response = await _winnersRepo.getTopWinners();
+    if (response.code == 200) {
+      _topWinners.clear();
+      _topWinners = response.model;
+      setTopWinners();
+      _logger.d("Top winners successfully fetched");
+    }
   }
 
   fetchWinners() async {
