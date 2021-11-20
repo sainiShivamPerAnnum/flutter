@@ -316,9 +316,8 @@ class TambolaGameViewModel extends BaseModel {
   }
 
   checkIfMoreTicketNeedsToBeGenerated() async {
-    bool _isGenerating = await _tambolaTicketService
-        .processTicketGenerationRequirement(activeTambolaCardCount);
 
+    bool _isGenerating = await _processTicketGeneration(activeTambolaCardCount);
     if (_isGenerating) {
       _refreshTambolaTickets();
       BaseUtil.showPositiveAlert('Tickets successfully generated 🥳',
@@ -329,28 +328,7 @@ class TambolaGameViewModel extends BaseModel {
         'The issue has been noted and your tickets will soon be credited',
       );
     }
-    // if (_isGenerating) {
-    //   ticketsBeingGenerated = true;
-    //   _tambolaTicketService.setTambolaTicketGenerationResultListener((flag) {
-    //     ticketsBeingGenerated = false;
-    //     if (flag == TambolaGenerationService.GENERATION_COMPLETE) {
-    //       //new tickets have arrived
-    //       _refreshTambolaTickets();
-    //       BaseUtil.showPositiveAlert('Tickets successfully generated 🥳',
-    //           'Your weekly odds are now way better!');
-    //     } else if (flag ==
-    //         TambolaGenerationService.GENERATION_PARTIALLY_COMPLETE) {
-    //       _refreshTambolaTickets();
-    //       BaseUtil.showPositiveAlert('Tickets partially generated',
-    //           'The remaining tickets shall soon be credited');
-    //     } else {
-    //       BaseUtil.showNegativeAlert(
-    //         'Tickets generation failed',
-    //         'The issue has been noted and your tickets will soon be credited',
-    //       );
-    //     }
-    //   });
-    // }
+
   }
 
   Ticket buildBoardView(TambolaBoard board) {
