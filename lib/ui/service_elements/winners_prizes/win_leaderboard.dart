@@ -192,7 +192,7 @@ class WinnerboardView extends StatelessWidget {
                           SizedBox(height: SizeConfig.padding4),
                           Text(
                             winners[i].gameType == Constants.GAME_TYPE_CRICKET
-                                ? "Circket"
+                                ? "Cricket"
                                 : "Tambola",
                             style: TextStyles.body4
                                 .colour(UiConstants.primaryColor),

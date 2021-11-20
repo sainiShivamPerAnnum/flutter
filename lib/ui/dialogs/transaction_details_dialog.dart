@@ -268,12 +268,12 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                     //             : '${widget._transaction.augmnt[UserTransaction.subFldAugTotalGoldGm] ?? 'Unavailable'} grams',
                     //         UiConstants.primaryColor)
                     //     : Container(),
-                    (widget._transaction.closingBalance > 0)
-                        ? referralTileWide(
-                            'Overall Closing Balance:',
-                            '₹${widget._transaction.closingBalance.toStringAsFixed(2) ?? 'Unavailable'}',
-                            UiConstants.primaryColor)
-                        : Container(),
+                    // (widget._transaction.closingBalance > 0)
+                    //     ? referralTileWide(
+                    //         'Overall Closing Balance:',
+                    //         '₹${widget._transaction.closingBalance.toStringAsFixed(2) ?? 'Unavailable'}',
+                    //         UiConstants.primaryColor)
+                    //     : Container(),
                     widget._transaction.tranStatus != null
                         ? referralTileWide('Transaction Status',
                             widget._transaction.tranStatus, getFlagColor())

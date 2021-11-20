@@ -17,11 +17,14 @@ import 'package:felloapp/ui/dialogs/share-card.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fail_types.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -83,23 +86,44 @@ class MyWinningsViewModel extends BaseModel {
           "Winning History fetch failed", temp.errorMessage);
   }
 
-  getWinningHistoryTitle(String subtype) {
-    switch (subtype) {
-      case "GM_CRIC2020":
-        return "Cricket";
-        break;
-      case "GOLD_CREDIT":
-        return "Digital Gold Redemption";
-        break;
-      case "GM_TAMBOLA2020":
-        return "Tambola";
-        break;
-      case "AMZ_VOUCHER":
-        return "Amazon Voucher Redemption";
-        break;
-      default:
-        return "Fello Rewards";
+  getWinningHistoryTitle(UserTransaction tran) {
+    String redeemtype = tran.redeemType;
+    String subtype = tran.subType;
+    if (redeemtype != null && redeemtype != "") {
+      switch (redeemtype) {
+        case UserTransaction.TRAN_REDEEMTYPE_AUGMONT_GOLD:
+          return "Digital Gold Redemption";
+          break;
+        case UserTransaction.TRAN_REDEEMTYPE_AMZ_VOUCHER:
+          return "Amazon Voucher Redemption";
+          break;
+        default:
+          return "Fello Rewards";
+      }
     }
+
+    if (subtype != null && subtype != "") {
+      switch (subtype) {
+        case UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD:
+          return "Digital Gold";
+          break;
+        case UserTransaction.TRAN_SUBTYPE_GLDN_TCK:
+          return "Fello Golden Ticket";
+          break;
+        case UserTransaction.TRAN_SUBTYPE_REF_BONUS:
+          return "Fello Referral Bonus";
+          break;
+        case UserTransaction.TRAN_SUBTYPE_TAMBOLA_WIN:
+          return "Tambola Win";
+          break;
+        case UserTransaction.TRAN_SUBTYPE_CRICKET_WIN:
+          return "Cricket Win";
+          break;
+        default:
+          return "Fello Rewards";
+      }
+    }
+    return "Fello Rewards";
   }
 
   getWinningHistoryLeadingBg(String subtype) {
@@ -198,11 +222,7 @@ class MyWinningsViewModel extends BaseModel {
                       ),
                     ),
                     SizedBox(height: SizeConfig.padding16),
-                    Text(
-                      subtitle,
-                      textAlign: TextAlign.center,
-                      style: TextStyles.body2.colour(Colors.grey),
-                    ),
+                    getSubtitleWidget(subtitle),
                     SizedBox(height: SizeConfig.screenHeight * 0.03),
                   ],
                 ),
@@ -231,9 +251,7 @@ class MyWinningsViewModel extends BaseModel {
         getWinningHistory();
         showSuccessPrizeWithdrawalDialog(
             choice,
-            choice == PrizeClaimChoice.AMZ_VOUCHER
-                ? "You will receive the gift card on your registered email and mobile in the next 1-2 business days"
-                : "The gold in grams shall be credited to your wallet in the next 1-2 business days",
+            choice == PrizeClaimChoice.AMZ_VOUCHER ? "amazon" : "gold",
             'Hey, I won ₹${_claimAmt.abs()} on Fello! \nLet\'s save and play together: https://fello.in/app/download');
       }
     });
@@ -269,6 +287,7 @@ class MyWinningsViewModel extends BaseModel {
       subtitle = "Digital Gold";
     } else
       choice = PrizeClaimChoice.FELLO_PRIZE;
+
     AppState.screenStack.add(ScreenItem.dialog);
     showDialog(
         context: AppState.delegate.navigatorKey.currentContext,
@@ -278,8 +297,10 @@ class MyWinningsViewModel extends BaseModel {
               FelloConfirmationDialog(
                 result: (res) async {
                   if (res) {
+                    String url = await _createDynamicLink(
+                        _userService.baseUser.uid, true, 'Other');
                     caputure(
-                        'Hey, I won ₹$amount on Fello! \nLet\'s save and play together: https://fello.in/app/download');
+                        'Hey, I won ₹$amount on Fello! \nLet\'s save and play together: $url');
                   }
                 },
                 content: Column(
@@ -328,6 +349,30 @@ class MyWinningsViewModel extends BaseModel {
             ],
           );
         });
+  }
+
+  Widget getSubtitleWidget(String subtitle) {
+    if (subtitle == "gold" || subtitle == "amazon")
+      return RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          text: subtitle == "gold"
+              ? "The gold in grams shall be credited to your wallet in the next "
+              : "You will receive the gift card on your registered email and mobile in the next ",
+          style: TextStyles.body3.colour(Colors.grey),
+          children: [
+            TextSpan(
+              text: "1-2 business working days",
+              style: TextStyles.body3.bold.colour(Colors.grey),
+            )
+          ],
+        ),
+      );
+    return Text(
+      subtitle,
+      textAlign: TextAlign.center,
+      style: TextStyles.body2.colour(Colors.grey),
+    );
   }
 
 // Capture Share card Logic
@@ -430,5 +475,46 @@ class MyWinningsViewModel extends BaseModel {
       BaseUtil.showNegativeAlert(
           "Task Failed", "Unable to share the picture at the moment");
     }
+  }
+
+  Future<String> _createDynamicLink(
+      String userId, bool short, String source) async {
+    final DynamicLinkParameters parameters = DynamicLinkParameters(
+      uriPrefix:
+          '${FlavorConfig.instance.values.dynamicLinkPrefix}/app/referral',
+      link: Uri.parse('https://fello.in/$userId'),
+      socialMetaTagParameters: SocialMetaTagParameters(
+          title: 'Download ${Constants.APP_NAME}',
+          description:
+              'Fello makes saving fun, and investing a lot more simple!',
+          imageUrl: Uri.parse(
+              'https://fello-assets.s3.ap-south-1.amazonaws.com/ic_social.png')),
+      googleAnalyticsParameters: GoogleAnalyticsParameters(
+        campaign: 'referrals',
+        medium: 'social',
+        source: source,
+      ),
+      androidParameters: AndroidParameters(
+        packageName: 'in.fello.felloapp',
+        minimumVersion: 0,
+      ),
+      dynamicLinkParametersOptions: DynamicLinkParametersOptions(
+        shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
+      ),
+      iosParameters: IosParameters(
+          bundleId: 'in.fello.felloappiOS',
+          minimumVersion: '0',
+          appStoreId: '1558445254'),
+    );
+
+    Uri url;
+    if (short) {
+      final ShortDynamicLink shortLink = await parameters.buildShortLink();
+      url = shortLink.shortUrl;
+    } else {
+      url = await parameters.buildUrl();
+    }
+
+    return url.toString();
   }
 }
