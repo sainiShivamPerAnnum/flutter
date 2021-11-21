@@ -6,10 +6,12 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
+import 'package:felloapp/core/model/tambola_ticket_generation_model.dart';
 import 'package:felloapp/core/model/user_ticket_wallet_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
+import 'package:felloapp/core/repository/ticket_generation_repo.dart';
 import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/core/service/tambola_generation_service.dart';
 import 'package:felloapp/core/service/tambola_service.dart';
@@ -41,6 +43,7 @@ class TambolaGameViewModel extends BaseModel {
   Logger _logger = locator<Logger>();
   LocalDBModel _localDBModel = locator<LocalDBModel>();
   final _fclActionRepo = locator<FlcActionsRepo>();
+  final _ticketGenerationRepo = locator<TicketGenerationRepo>();
   final _mixpanelService = locator<MixpanelService>();
 
   int get dailyPicksCount => tambolaService.dailyPicksCount;
@@ -257,7 +260,8 @@ class TambolaGameViewModel extends BaseModel {
     if (_flcResponse.model != null && _flcResponse.code == 200) {
       ticketBuyInProgress = false;
       notifyListeners();
-      _mixpanelService.track(MixpanelEvents.playsTambola,{'userId': _userService.baseUser.uid});
+      _mixpanelService.track(
+          MixpanelEvents.playsTambola, {'userId': _userService.baseUser.uid});
       BaseUtil.showPositiveAlert(
           "Request is now processing", "Generating your tickets, please wait");
 
@@ -283,29 +287,46 @@ class TambolaGameViewModel extends BaseModel {
   }
 
   checkIfMoreTicketNeedsToBeGenerated() async {
-    bool _isGenerating = await _tambolaTicketService
-        .processTicketGenerationRequirement(activeTambolaCardCount);
-    if (_isGenerating) {
-      ticketsBeingGenerated = true;
-      _tambolaTicketService.setTambolaTicketGenerationResultListener((flag) {
-        ticketsBeingGenerated = false;
-        if (flag == TambolaGenerationService.GENERATION_COMPLETE) {
-          //new tickets have arrived
+    tambolaService.ticketGenerateCount = 0;
+
+    if (activeTambolaCardCount != null &&
+        tambolaService.userTicketWallet.getActiveTickets() > 0) {
+      if (activeTambolaCardCount <
+          tambolaService.userTicketWallet.getActiveTickets()) {
+        _logger
+            .d('Currently generated ticket count is less than needed tickets');
+        tambolaService.ticketGenerateCount =
+            tambolaService.userTicketWallet.getActiveTickets() -
+                activeTambolaCardCount;
+      }
+    }
+
+    if (tambolaService.ticketGenerateCount > 0) {
+      //Call Generation API
+      ApiResponse<TambolaTicketGenerationModel> _response =
+          await _ticketGenerationRepo.generateTickets(
+              userId: _userService.baseUser.uid,
+              numberOfTickets: tambolaService.ticketGenerateCount);
+      if (_response.code == 200) {
+        if (_response.model.flag) {
           _refreshTambolaTickets();
           BaseUtil.showPositiveAlert('Tickets successfully generated 🥳',
               'Your weekly odds are now way better!');
-        } else if (flag ==
-            TambolaGenerationService.GENERATION_PARTIALLY_COMPLETE) {
-          _refreshTambolaTickets();
-          BaseUtil.showPositiveAlert('Tickets partially generated',
-              'The remaining tickets shall soon be credited');
         } else {
           BaseUtil.showNegativeAlert(
             'Tickets generation failed',
             'The issue has been noted and your tickets will soon be credited',
           );
         }
-      });
+      } else {
+        _logger.d("Api failed");
+        BaseUtil.showNegativeAlert(
+          'Tickets generation failed',
+          'The issue has been noted and your tickets will soon be credited',
+        );
+      }
+    } else {
+      _logger.d("No tickets to generate");
     }
   }
 
