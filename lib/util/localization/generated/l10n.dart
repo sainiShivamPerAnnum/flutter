@@ -998,7 +998,7 @@ class S {
   /// `CONGRATULATIONS!`
   String get tWinTitle {
     return Intl.message(
-      'CONGRATULATIONS!',
+      'CONGRATULATIONS! 🎁',
       name: 'tWinTitle',
       desc: '',
       args: [],
@@ -1038,7 +1038,7 @@ class S {
   /// `Only users with minimun savings balance of ₹ 100 are eliglble for prizes`
   String get tParWinsubtitle {
     return Intl.message(
-      'Only users with minimun savings balance of ₹ 100 are eliglble for prizes',
+      'Only users with a minimum savings balance of ₹ 100 are eligible for prizes',
       name: 'tParWinsubtitle',
       desc: '',
       args: [],

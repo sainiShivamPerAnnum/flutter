@@ -600,7 +600,7 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> addWinClaim(String uid, String name, String mobile,
+  Future<bool> addWinClaim(String uid, String userName, String name, String mobile,
       int currentTickCount, bool isEligible, Map<String, int> resMap) async {
     try {
       DateTime date = new DateTime.now();
@@ -610,6 +610,7 @@ class DBModel extends ChangeNotifier {
       data['user_id'] = uid;
       data['mobile'] = mobile;
       data['name'] = name;
+      data['username'] = userName;
       data['tck_count'] = currentTickCount;
       data['week_code'] = weekCde;
       data['ticket_cat_map'] = resMap;

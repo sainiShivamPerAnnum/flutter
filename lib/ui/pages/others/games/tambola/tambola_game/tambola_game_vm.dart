@@ -463,6 +463,7 @@ class TambolaGameViewModel extends BaseModel {
       _dbModel
           .addWinClaim(
               _userService.baseUser.uid,
+              _userService.baseUser.username,
               _userService.baseUser.name,
               _userService.baseUser.mobile,
               tambolaService.userTicketWallet.getActiveTickets(),

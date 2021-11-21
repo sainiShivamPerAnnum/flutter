@@ -37,9 +37,9 @@ class _WeeklyResultState extends State<WeeklyResult> {
         setState(() {
           showBack = true;
         });
-        if (!widget.isEligible && widget.winningsmap.isNotEmpty)
-          _pageController.jumpToPage(3);
-        else if (widget.isEligible && widget.winningsmap.isNotEmpty)
+        // if (!widget.isEligible && widget.winningsmap.isNotEmpty)
+        //   _pageController.jumpToPage(3);
+        if (widget.winningsmap.isNotEmpty)
           _pageController.jumpToPage(2);
         else
           _pageController.jumpToPage(1);

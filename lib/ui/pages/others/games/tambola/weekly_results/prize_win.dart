@@ -68,10 +68,10 @@ class _PrizeWinState extends State<PrizeWin> {
                 Spacer(
                   flex: 1,
                 ),
-                Text(
+                FittedBox(child: Text(
                   locale.tWinTitle,
                   style: TextStyles.title1.bold,
-                ),
+                ),),
                 WinnerBox(
                   winningsmap: widget.winningsMap,
                 ),
