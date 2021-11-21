@@ -18,6 +18,6 @@ class ApiPath {
   get kWithdrawlCancelled => "/userFinanceOps/$stage/api/withdraw/cancelled";
   get kBuyTambola => "/felloCoins/$stage/api/tambola/buy-tambola-tickets";
   get kGenerateTambolaTickets => "/tambolaGame/$stage/api/generate";
-  get kTopWinners => "/rewardDistribution/$stage/api/reward/current-top-winners";
+  get kTopWinners => "/prizingOps/$stage/api/reward/current-top-winners";
 
 }

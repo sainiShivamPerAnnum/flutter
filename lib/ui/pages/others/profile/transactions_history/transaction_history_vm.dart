@@ -141,7 +141,7 @@ class TransactionsHistoryViewModel extends BaseModel {
     } else if (type == UserTransaction.TRAN_STATUS_REFUNDED) {
       return Colors.blue;
     }
-    return Colors.deepPurple[400];
+    return Colors.black87;
   }
 
   filterTransactions() {

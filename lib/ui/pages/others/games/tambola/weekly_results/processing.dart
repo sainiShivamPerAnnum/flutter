@@ -29,7 +29,7 @@ class PrizeProcessing extends StatelessWidget {
               child: Text(
                 locale.tProcessingSubtitle,
                 textAlign: TextAlign.center,
-                style: TextStyles.body3.letterSpace(2),
+                style: TextStyles.body3,
               ),
             ),
             LottieBuilder.asset(
@@ -46,7 +46,7 @@ class PrizeProcessing extends StatelessWidget {
                     fontSize: SizeConfig.largeTextSize,
                     height: 1.5,
                     fontWeight: FontWeight.w700,
-                    letterSpacing: 5),
+                    letterSpacing: 2),
               ),
             ),
             Spacer(

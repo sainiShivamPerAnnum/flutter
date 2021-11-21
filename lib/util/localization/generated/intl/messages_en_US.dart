@@ -124,7 +124,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "splashSlowConnection" : MessageLookupByLibrary.simpleMessage("Connection taking longer than usual"),
     "splashTagline" : MessageLookupByLibrary.simpleMessage("Your savings and gaming app"),
     "tLossSubtitle" : MessageLookupByLibrary.simpleMessage("None of your tickets matched this week"),
-    "tLossSubtitle2" : MessageLookupByLibrary.simpleMessage("Get ready for next week tambola from now on."),
+    "tLossSubtitle2" : MessageLookupByLibrary.simpleMessage("Get ready for next week\'s Tambola"),
     "tLossTitle" : MessageLookupByLibrary.simpleMessage("Tambola Results"),
     "tParWinTitle" : MessageLookupByLibrary.simpleMessage("Tambola Results"),
     "tParWinsubtitle" : MessageLookupByLibrary.simpleMessage("Only users with minimun savings balance of ₹ 100 are eliglble for prizes"),

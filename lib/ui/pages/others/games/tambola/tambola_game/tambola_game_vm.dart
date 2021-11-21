@@ -119,16 +119,6 @@ class TambolaGameViewModel extends BaseModel {
 
   TambolaBoard get currentBoard => _currentBoard;
 
-  // set currentBoardView(val) {
-  //   _currentBoardView = val;
-  //   notifyListeners();
-  // }
-
-  // set currentBoard(val) {
-  //   _currentBoard = val;
-  //   notifyListeners();
-  // }
-
   int get ticketPurchaseCost {
     String _tambolaCost = BaseRemoteConfig.remoteConfig
         .getString(BaseRemoteConfig.TAMBOLA_PLAY_COST);
@@ -146,9 +136,6 @@ class TambolaGameViewModel extends BaseModel {
     ticketCountController =
         new TextEditingController(text: buyTicketCount.toString());
 
-    // BaseAnalytics.analytics
-
-    //     .setCurrentScreen(screenName: BaseAnalytics.PAGE_TAMBOLA);
     _tambolaTicketService = new TambolaGenerationService();
     // Ticket wallet check
     if (userTicketWallet == null)

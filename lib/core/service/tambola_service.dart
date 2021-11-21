@@ -112,6 +112,7 @@ class TambolaService extends ChangeNotifier {
   Future<bool> _initiateNewTicketWallet() async {
     userTicketWallet = UserTicketWallet.newTicketWallet();
     int _t = userTicketWallet.initTck;
+
     userTicketWallet = await _dbModel.updateInitUserTicketCount(
         _userService.baseUser.uid,
         _userTicketWallet,
