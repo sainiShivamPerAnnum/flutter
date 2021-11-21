@@ -78,27 +78,133 @@ class MyWinningsView extends StatelessWidget {
                               : (model.winningHistory != null &&
                                       model.winningHistory.isNotEmpty
                                   ? Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal:
+                                              SizeConfig.pageHorizontalMargins /
+                                                  4),
                                       child: Column(
-                                        // padding: EdgeInsets.only(
-                                        //     bottom: SizeConfig.navBarHeight),
-                                        // physics: BouncingScrollPhysics(),
-                                        // itemCount: model.winningHistory.length,
                                         children: List.generate(
                                           model.winningHistory.length,
-                                          (i) => ListTile(
-                                            onTap: () =>
-                                                model.showPrizeDetailsDialog(
-                                                    model.winningHistory[i]
-                                                            .redeemType ??
-                                                        "",
-                                                    model.winningHistory[i]
-                                                            .amount
-                                                            .abs() ??
-                                                        0.0),
-                                            contentPadding:
-                                                EdgeInsets.symmetric(
-                                                    horizontal: SizeConfig
-                                                        .pageHorizontalMargins),
+                                          (i) => ExpansionTile(
+                                            expandedCrossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            expandedAlignment:
+                                                Alignment.centerLeft,
+                                            children: [
+                                              Container(
+                                                margin: EdgeInsets.only(
+                                                    bottom:
+                                                        SizeConfig.padding8),
+                                                padding: EdgeInsets.only(
+                                                  left: SizeConfig
+                                                          .pageHorizontalMargins +
+                                                      SizeConfig.padding24 * 2 +
+                                                      SizeConfig.padding8,
+                                                  right: SizeConfig
+                                                          .pageHorizontalMargins /
+                                                      2,
+                                                ),
+                                                child: Row(
+                                                  children: [
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            Text("TYPE: "),
+                                                            Text((model.winningHistory[i].redeemType !=
+                                                                        null &&
+                                                                    model.winningHistory[i]
+                                                                            .redeemType !=
+                                                                        "")
+                                                                ? "REDEMPTION"
+                                                                : "CREDIT"),
+                                                          ],
+                                                        ),
+                                                        SizedBox(
+                                                            height: SizeConfig
+                                                                .padding4),
+                                                        Row(
+                                                          children: [
+                                                            Text("STATUS: "),
+                                                            Text(model
+                                                                    .winningHistory[
+                                                                        i]
+                                                                    .tranStatus ??
+                                                                "COMPLETED"),
+                                                          ],
+                                                        )
+                                                      ],
+                                                    ),
+                                                    Spacer(),
+                                                    if (model.winningHistory[i]
+                                                                .redeemType !=
+                                                            null &&
+                                                        model.winningHistory[i]
+                                                                .redeemType !=
+                                                            "")
+                                                      InkWell(
+                                                        onTap: () => model
+                                                            .showPrizeDetailsDialog(
+                                                                model
+                                                                        .winningHistory[
+                                                                            i]
+                                                                        .redeemType ??
+                                                                    "",
+                                                                model.winningHistory[i]
+                                                                        .amount
+                                                                        .abs() ??
+                                                                    0.0),
+                                                        child: Container(
+                                                          padding: EdgeInsets.symmetric(
+                                                              horizontal:
+                                                                  SizeConfig
+                                                                      .padding12,
+                                                              vertical:
+                                                                  SizeConfig
+                                                                      .padding8),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8),
+                                                            color: UiConstants
+                                                                .primaryColor,
+                                                          ),
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              SvgPicture.asset(
+                                                                Assets.plane,
+                                                                color: Colors
+                                                                    .white,
+                                                                width: SizeConfig
+                                                                    .padding12,
+                                                              ),
+                                                              SizedBox(
+                                                                  width: SizeConfig
+                                                                      .padding8),
+                                                              Text(
+                                                                "Share",
+                                                                style: TextStyles
+                                                                    .body3
+                                                                    .colour(Colors
+                                                                        .white),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                            textColor: Colors.black,
                                             leading: CircleAvatar(
                                               radius: SizeConfig.padding24,
                                               backgroundColor: model
@@ -130,19 +236,45 @@ class MyWinningsView extends StatelessWidget {
                                               ),
                                             ),
                                             title: Text(
-                                              model.getWinningHistoryTitle(model
-                                                      .winningHistory[i]
-                                                      .redeemType ??
-                                                  ""),
+                                              model.getWinningHistoryTitle(
+                                                  model.winningHistory[i]),
                                               style: TextStyles.body2.bold,
                                             ),
-                                            subtitle: Text(
-                                              DateFormat("dd MMM, yyyy").format(
-                                                  model.winningHistory[i]
-                                                      .timestamp
-                                                      .toDate()),
-                                              style: TextStyles.body3
-                                                  .colour(Colors.grey),
+                                            subtitle: Row(
+                                              children: [
+                                                Text(
+                                                  DateFormat("dd MMM, yyyy")
+                                                      .format(model
+                                                          .winningHistory[i]
+                                                          .timestamp
+                                                          .toDate()),
+                                                  style: TextStyles.body3
+                                                      .colour(Colors.grey),
+                                                ),
+                                                SizedBox(width: 10),
+                                                if (model.winningHistory[i]
+                                                        .tranStatus ==
+                                                    "PROCESSING")
+                                                  Container(
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              100),
+                                                      color: Colors.yellow,
+                                                    ),
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 8,
+                                                            vertical: 2),
+                                                    child: Text(
+                                                      model.winningHistory[i]
+                                                          .tranStatus,
+                                                      style: TextStyles
+                                                          .body4.bold
+                                                          .colour(Colors.white),
+                                                    ),
+                                                  )
+                                              ],
                                             ),
                                             trailing: Text(
                                               "₹ ${model.winningHistory[i]?.amount}",
@@ -152,7 +284,7 @@ class MyWinningsView extends StatelessWidget {
                                                               .amount >
                                                           0
                                                       ? UiConstants.primaryColor
-                                                      : Colors.red[300]),
+                                                      : Colors.blue[700]),
                                             ),
                                           ),
                                         ),

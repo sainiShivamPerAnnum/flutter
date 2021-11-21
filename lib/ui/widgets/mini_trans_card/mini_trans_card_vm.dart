@@ -89,8 +89,10 @@ class MiniTransactionCardViewModel extends BaseModel {
       return UiConstants.primaryColor;
     } else if (type == UserTransaction.TRAN_STATUS_PENDING) {
       return Colors.amber;
+    } else if (type == UserTransaction.TRAN_STATUS_REFUNDED) {
+      return Colors.blue;
     }
-    return Colors.blue;
+    return Colors.purpleAccent;
   }
 
   String getFormattedTime(Timestamp tTime) {

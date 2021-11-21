@@ -7,6 +7,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
+import 'package:felloapp/core/model/faq_model.dart';
 import 'package:felloapp/core/model/feed_card_model.dart';
 import 'package:felloapp/core/model/prize_leader_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
@@ -24,6 +25,7 @@ import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/model/signzy_pan/signzy_login.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -1306,5 +1308,16 @@ class DBModel extends ChangeNotifier {
 
   Future<bool> sendEmailToVerifyEmail(String email, String otp) async {
     return await _api.createEmailVerificationDocument(email, otp);
+  }
+
+  Future fetchCategorySpecificFAQ(String category) async {
+    try {
+      final DocumentSnapshot response = await _api.fetchFaqs(category);
+      logger.d(response.data().toString());
+      return ApiResponse(model: FAQModel.fromMap(response.data()), code: 200);
+    } catch (e) {
+      logger.e(e);
+      return ApiResponse.withError(e.toString(), 400);
+    }
   }
 }
