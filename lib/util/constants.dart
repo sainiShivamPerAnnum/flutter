@@ -26,6 +26,7 @@ class Constants {
   static final String COLN_STATISTICS = "statistics";
   static final String WINNERS = "winners";
   static final String COLN_PRIZES = "prizes";
+  static final String COLN_FAQS = "faqs";
 
   //Sub-collections
   static final String SUBCOLN_USER_FCM = "fcm";

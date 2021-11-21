@@ -2,6 +2,8 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
+import 'package:felloapp/ui/widgets/faq_card/faq_card_view.dart';
+import 'package:felloapp/ui/widgets/faq_card/faq_card_vm.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -59,9 +61,17 @@ class _FAQList extends State<FAQPage> {
                 padding: EdgeInsets.zero,
                 shrinkWrap: true,
                 children: [
-                  FAQCard(
-                    faqheaders,
-                    faqAnswers,
+                  // FAQCard(
+                  //   faqheaders,
+                  //   faqAnswers,
+                  // ),
+                  FAQCardView(
+                    category: FAQCardViewModel.FAQ_CAT_GENERAL,
+                    catTitle: true,
+                  ),
+                  FAQCardView(
+                    category: FAQCardViewModel.FAQ_CAT_AUGMONT,
+                    catTitle: true,
                   ),
                 ],
               ),
