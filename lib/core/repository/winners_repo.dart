@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/core/constants/apis_path_constants.dart';
+import 'package:felloapp/core/model/top_winners_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/service/api.dart';
+import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/code_from_freq.dart';
 import 'package:felloapp/util/locator.dart';
@@ -9,6 +12,7 @@ import 'package:logger/logger.dart';
 class WinnersRepository {
   final _api = locator<Api>();
   final _logger = locator<Logger>();
+  final _apiPaths = locator<ApiPath>();
 
   Future<ApiResponse<WinnersModel>> getWinners(
       String gameType, String freq) async {
@@ -23,6 +27,19 @@ class WinnersRepository {
 
       _logger.d(_response.data().toString());
       return ApiResponse(model: _responseModel, code: 200);
+    } catch (e) {
+      _logger.e(e);
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<List<String>>> getTopWinners() async {
+    try {
+      final _apiResponse =
+          await APIService.instance.getData(_apiPaths.kTopWinners);
+      TopWinnersModel _topWinnersModel = TopWinnersModel.fromMap(_apiResponse);
+
+      return ApiResponse(model: _topWinnersModel.currentTopWinners, code: 200);
     } catch (e) {
       _logger.e(e);
       return ApiResponse.withError(e.toString(), 400);

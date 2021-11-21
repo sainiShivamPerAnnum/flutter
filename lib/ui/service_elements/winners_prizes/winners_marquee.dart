@@ -10,7 +10,7 @@ class WinnersMarqueeStrip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<WinnerService, WinnerServiceProperties>(
-      properties: [WinnerServiceProperties.winLeaderboard],
+      properties: [WinnerServiceProperties.topWinners],
       builder: (context, WModel, properties) {
         return Container(
           width: SizeConfig.screenWidth,
@@ -22,7 +22,7 @@ class WinnersMarqueeStrip extends StatelessWidget {
             color: UiConstants.tertiaryLight.withOpacity(0.5),
           ),
           child: MarqueeText(
-            infoList: WModel.winners == null || WModel.winners.isEmpty
+            infoList: WModel.topWinners == null || WModel.topWinners.isEmpty
                 ? [
                     "Shourya won ₹ 1000",
                     "Manish won ₹ 2000",
@@ -30,9 +30,7 @@ class WinnersMarqueeStrip extends StatelessWidget {
                     "CJ won ₹ 800"
                   ]
                 : List.generate(
-                    WModel.winners.length,
-                    (i) =>
-                        "${WModel.winners[i].username.replaceAll('@', '.')} won ₹${WModel.winners[i].amount}"),
+                    WModel.topWinners.length, (i) => WModel.topWinners[i]),
             showBullet: true,
             bulletColor: UiConstants.tertiarySolid,
           ),

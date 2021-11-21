@@ -85,6 +85,7 @@ class AppState extends ChangeNotifier {
     _rootIndex = index;
     if (index == 2 && isWinOpened == false) {
       _winnerService.fetchWinners();
+      _winnerService.fetchTopWinner();
       isWinOpened = true;
     }
     print(_rootIndex);
