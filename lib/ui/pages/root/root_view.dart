@@ -103,9 +103,10 @@ class Root extends StatelessWidget {
                       ),
                     ),
                   ),
-                  WantMoreTickets(
-                    model: model,
-                  ),
+                  if (SizeConfig.screenWidth < 600)
+                    WantMoreTickets(
+                      model: model,
+                    ),
                   BottomNavBar(
                     model: model,
                   ),
