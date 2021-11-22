@@ -111,7 +111,7 @@ class MyWinningsViewModel extends BaseModel {
           return "Fello Golden Ticket";
           break;
         case UserTransaction.TRAN_SUBTYPE_REF_BONUS:
-          return "Fello Referral Bonus";
+          return "Referral Bonus";
           break;
         case UserTransaction.TRAN_SUBTYPE_TAMBOLA_WIN:
           return "Tambola Win";
@@ -130,10 +130,8 @@ class MyWinningsViewModel extends BaseModel {
     switch (subtype) {
       case "GOLD_CREDIT":
         return UiConstants.primaryColor;
-        break;
       case "AMZ_VOUCHER":
         return UiConstants.tertiarySolid;
-        break;
       default:
         return Color(0xff11192B);
     }
@@ -143,7 +141,6 @@ class MyWinningsViewModel extends BaseModel {
     switch (subtype) {
       case "GOLD_CREDIT":
         return Assets.digitalGold;
-        break;
       case "AMZ_VOUCHER":
         return Assets.amazonGiftVoucher;
         break;

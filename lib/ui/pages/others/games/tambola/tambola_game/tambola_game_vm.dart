@@ -213,7 +213,7 @@ class TambolaGameViewModel extends BaseModel {
       buyTicketCount -= 1;
     else
       BaseUtil.showNegativeAlert(
-          "Failed", "We currently don't support negative counts");
+          "Failed", "Negative counts not supported");
     ticketCountController.text = buyTicketCount.toString();
     notifyListeners();
   }

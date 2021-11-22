@@ -356,7 +356,7 @@ class PrizesView extends StatelessWidget {
                     PrizeChip(
                       color: UiConstants.primaryColor,
                       png: Assets.moneyIcon,
-                      text: "Rs ${model.prizesA[i].amt}",
+                      text: "₹ ${model.prizesA[i].amt}",
                     )
                   ],
                 ),
