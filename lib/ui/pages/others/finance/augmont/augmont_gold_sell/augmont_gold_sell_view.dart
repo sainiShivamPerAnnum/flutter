@@ -31,6 +31,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 //Pub Imports
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:intl/intl.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
 
@@ -174,6 +175,32 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                                 ),
                               ],
                             ),
+                            SizedBox(height: SizeConfig.padding8),
+                            (model.isQntFetching || model.nonWithdrawableQnt > 0)?Container(
+                              margin: EdgeInsets.only(top: SizeConfig.padding8),
+                              decoration: BoxDecoration(
+                                color: UiConstants.tertiaryLight,
+                                // image: DecorationImage(
+                                //   image: AssetImage("assets/images/confetti.png"),
+                                //   fit: BoxFit.cover,
+                                //   colorFilter: new ColorFilter.mode(
+                                //       UiConstants.tertiaryLight.withOpacity(0.1),
+                                //       BlendMode.dstATop),
+                                // ),
+                                borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+                              ),
+                              padding: EdgeInsets.all(SizeConfig.padding16),
+                              child: Stack(
+                                children: [
+                                  //Image.asset("assets/images/confetti.png"),
+                                  Text(
+                                    _buildNonWithdrawString(model),
+                                    textAlign: TextAlign.center,
+                                    style: TextStyles.body3.light,
+                                  ),
+                                ],
+                              ),
+                            ):SizedBox(),
                             SizedBox(height: SizeConfig.padding32),
                             Row(
                               children: [
@@ -341,163 +368,6 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                             //   style: TextStyles.body3.colour(Colors.grey),
                             // ),
                             SizedBox(height: SizeConfig.padding80),
-
-                            // SizedBox(
-                            //   child: Image(
-                            //     image: AssetImage(Assets.onboardingSlide[1]),
-                            //     fit: BoxFit.contain,
-                            //   ),
-                            //   width: SizeConfig.screenWidth * 0.3,
-                            //   height: SizeConfig.screenWidth * 0.3,
-                            // ),
-                            // Text(
-                            //   'WITHDRAW',
-                            //   textAlign: TextAlign.center,
-                            //   style: TextStyle(
-                            //       fontSize: 28,
-                            //       fontWeight: FontWeight.w700,
-                            //       color: FelloColorPalette.augmontFundPalette()
-                            //           .primaryColor),
-                            // ),
-                            // (_isLoading)
-                            //     ? Padding(
-                            //         padding: EdgeInsets.all(30),
-                            //         child: SpinKitWave(
-                            //           color: UiConstants.primaryColor,
-                            //         ))
-                            //     : Container(),
-                            // (_errorMessage != null && !_isLoading)
-                            //     ? Row(
-                            //         mainAxisAlignment: MainAxisAlignment.center,
-                            //         children: [
-                            //           Container(
-                            //             width: _width * 0.7,
-                            //             child: Text('Error: $_errorMessage',
-                            //                 textAlign: TextAlign.center,
-                            //                 style: TextStyle(
-                            //                     color: Colors.redAccent,
-                            //                     fontSize: 16)),
-                            //           )
-                            //         ],
-                            //       )
-                            //     : Container(),
-                            // SizedBox(
-                            //   height: 10,
-                            // ),
-                            // (!_isLoading)
-                            //     ? _buildRow('Current Gold Selling Rate',
-                            //         '₹${widget.sellRate} per gram')
-                            //     : Container(),
-                            // (!_isLoading)
-                            //     ? SizedBox(
-                            //         height: 5,
-                            //       )
-                            //     : Container(),
-                            // (!_isLoading)
-                            //     ? _buildRow('Total Gold Owned',
-                            //         '${model.userFundWallet.augGoldQuantity.toStringAsFixed(4)} grams')
-                            //     : Container(),
-                            // (!_isLoading &&
-                            //         widget.withdrawableGoldQnty !=
-                            //             model.userFundWallet.augGoldQuantity)
-                            //     ? _buildLockedGoldRow(
-                            //         'Total Gold available for withdrawal',
-                            //         '${widget.withdrawableGoldQnty.toStringAsFixed(4)} grams',
-                            //         model)
-                            //     : Container(),
-                            // (!_isLoading)
-                            //     ? SizedBox(
-                            //         height: 5,
-                            //       )
-                            //     : Container(),
-                            // (!_isLoading)
-                            //     ? _buildRow('Total withdrawable balance',
-                            //         '${widget.withdrawableGoldQnty.toStringAsFixed(4)} * ${widget.sellRate} = ₹${_getTotalGoldAvailable().toStringAsFixed(3)}')
-                            //     : Container(),
-                            // (!_isLoading)
-                            //     ? SizedBox(
-                            //         height: 30,
-                            //       )
-                            //     : Container(),
-                            // (!_isLoading)
-                            //     ? Container(
-                            //         margin: EdgeInsets.only(top: 12),
-                            //         child: Row(
-                            //           children: <Widget>[
-                            //             Expanded(
-                            //               child: Theme(
-                            //                 data: ThemeData.light().copyWith(
-                            //                     textTheme: GoogleFonts
-                            //                         .montserratTextTheme(),
-                            //                     colorScheme: ColorScheme.light(
-                            //                         primary: FelloColorPalette
-                            //                                 .augmontFundPalette()
-                            //                             .primaryColor)),
-                            //                 child: TextField(
-                            //                   controller: _quantityController,
-                            //                   keyboardType: (Platform.isAndroid)
-                            //                       ? TextInputType.number
-                            //                       : TextInputType
-                            //                           .numberWithOptions(
-                            //                               decimal: true),
-                            //                   readOnly: false,
-                            //                   enabled: true,
-                            //                   autofocus: false,
-                            //                   decoration:
-                            //                       augmontFieldInputDecoration(
-                            //                           'Quantity (in grams)',
-                            //                           null),
-                            //                   onChanged: (value) {
-                            //                     setState(() {});
-                            //                   },
-                            //                 ),
-                            //               ),
-                            //             ),
-                            //           ],
-                            //         ),
-                            //       )
-                            //     : Container(),
-                            // (!_isLoading)
-                            //     ? Padding(
-                            //         padding: EdgeInsets.only(top: 10),
-                            //         child: _getGoldAmount(
-                            //             _quantityController.text),
-                            //       )
-                            //     : Container(),
-                            // (!_isLoading && _amountError != null)
-                            //     ? Container(
-                            //         margin: EdgeInsets.only(top: 4, left: 12),
-                            //         child: Text(
-                            //           _amountError,
-                            //           style: TextStyle(color: Colors.red),
-                            //         ),
-                            //       )
-                            //     : Container(),
-                            // SizedBox(
-                            //   height: 25,
-                            // ),
-
-                            // (!_isLoading)
-                            //     ? _buildSubmitButton(context)
-                            //     : Container(),
-                            // // (!_isLoading)
-                            // //     ? Padding(
-                            // //         padding: EdgeInsets.only(
-                            // //           top: 10,
-                            // //         ),
-                            // //         child: Text(
-                            // //           'All withdrawals are processed within 2 business working days.',
-                            // //           textAlign: TextAlign.center,
-                            // //           style: TextStyle(
-                            // //               color: Colors.blueGrey[600],
-                            // //               fontSize: SizeConfig.mediumTextSize,
-                            // //               fontWeight: FontWeight.w400),
-                            // //         ),
-                            // //       )
-                            // //     : Container(),
-                            // SizedBox(
-                            //   height: 10,
-                            // ),
                           ],
                         )),
                   ),
@@ -508,6 +378,14 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
         ),
       ),
     );
+  }
+
+  _buildNonWithdrawString(AugmontGoldSellViewModel model) {
+    DateTime _dt = new DateTime.now().add(Duration(days: Constants.AUG_GOLD_WITHDRAW_OFFSET));
+    String _dtStr = DateFormat("dd MMMM")
+        .format(_dt);
+
+    return 'You can withdraw ${model.nonWithdrawableQnt} grams of Gold on $_dtStr or later.';
   }
 
   dialogContent(BuildContext context) {

@@ -439,6 +439,8 @@ class HttpModel extends ChangeNotifier {
               PanVerificationResModel.fromJson(json.decode(res.body));
           if (_panVerificationResModel.response.result.verified) {
             return ApiResponse(model: _panVerificationResModel, code: 200);
+          }else{
+            return ApiResponse(model: _panVerificationResModel, code: 400);
           }
         } else if (res.statusCode == 404) {
           throw Exception('PAN not found');

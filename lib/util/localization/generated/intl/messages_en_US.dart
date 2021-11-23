@@ -78,7 +78,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "obOtpLabel" : MessageLookupByLibrary.simpleMessage("OTP Authentication"),
     "obOtpTryExceed" : MessageLookupByLibrary.simpleMessage("OTP requests exceeded. Please try again in sometime or contact us."),
     "obResend" : MessageLookupByLibrary.simpleMessage(" Resend"),
-    "obUsernameHint" : MessageLookupByLibrary.simpleMessage("Choose a usename"),
+    "obUsernameHint" : MessageLookupByLibrary.simpleMessage("Pick a username"),
     "obUsernameLabel" : MessageLookupByLibrary.simpleMessage("Unique username"),
     "obUsernameRule1" : MessageLookupByLibrary.simpleMessage("must be more than 4 and less than 20 letters"),
     "obUsernameRule2" : MessageLookupByLibrary.simpleMessage("only lowercase alphabets, numbers and dot(.) symbols allowed."),

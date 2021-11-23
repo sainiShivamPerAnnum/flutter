@@ -315,7 +315,7 @@ class KYCDetailsViewModel extends BaseModel {
     }
     if (!_flag) {
       print('returning false flag');
-      Map _data = {
+      Map<String, dynamic> _data = {
         'flag': _flag,
         'fail_code': _failCode,
         'reason': _reason,
