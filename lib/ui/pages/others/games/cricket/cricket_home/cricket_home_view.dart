@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/leader_board_modal.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
@@ -125,7 +126,7 @@ class CricketHomeView extends StatelessWidget {
                                                     controller:
                                                         model.scrollController,
                                                     subtitle:
-                                                        "Stand in the leaderboard and win prizes every week! Winners are announced every Monday",
+                                                        BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.GAME_CRICKET_ANNOUNCEMENT)??'The highest scorers of the week win prizes every Sunday at midnight',
                                                     leading: List.generate(
                                                         model.cPrizes.prizesA
                                                             .length,

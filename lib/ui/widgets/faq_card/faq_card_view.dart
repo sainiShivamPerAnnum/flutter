@@ -41,7 +41,7 @@ class FAQCardView extends StatelessWidget {
               children: [
                 Text(
                   (catTitle != null && catTitle == true)
-                      ? category.toUpperCase()
+                      ? category.replaceAll("_", " ").toUpperCase()
                       : "FAQs",
                   style: GoogleFonts.montserrat(
                     color: Colors.black,

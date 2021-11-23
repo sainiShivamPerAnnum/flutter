@@ -357,7 +357,7 @@ class _TambolaGameViewState extends State<TambolaGameView>
                     )
                   : NoRecordDisplayWidget(
                       assetSvg: Assets.noTickets,
-                      text: "You do have any Tambola tickets right now",
+                      text: "You do not have any Tambola tickets",
                     ),
             ),
           ),

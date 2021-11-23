@@ -8,10 +8,10 @@ import 'package:logger/logger.dart';
 
 class FAQCardViewModel extends BaseModel {
   static const String FAQ_CAT_GENERAL = 'general';
-  static const String FAQ_CAT_AUGMONT = 'augmont';
+  static const String FAQ_CAT_AUGMONT = 'digital_gold';
+  static const String FAQ_CAT_REFERRALS = 'referrals';
   static const String FAQ_CAT_TAMBOLA = 'tambola';
   static const String FAQ_CAT_MUTUALFUNDS = 'mututalfunds';
-  static const String FAQ_CAT_REFERRALS = 'referrals';
 
   final _dbModel = locator<DBModel>();
   final _logger = locator<Logger>();
