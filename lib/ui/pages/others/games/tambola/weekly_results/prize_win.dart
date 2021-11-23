@@ -68,10 +68,10 @@ class _PrizeWinState extends State<PrizeWin> {
                 Spacer(
                   flex: 1,
                 ),
-                Text(
+                FittedBox(child: Text(
                   locale.tWinTitle,
                   style: TextStyles.title1.bold,
-                ),
+                ),),
                 WinnerBox(
                   winningsmap: widget.winningsMap,
                 ),
@@ -86,7 +86,7 @@ class _PrizeWinState extends State<PrizeWin> {
                   padding: const EdgeInsets.all(12.0),
                   child: Text(locale.tWinSubtitle2,
                       textAlign: TextAlign.center,
-                      style: TextStyles.body3.letterSpace(2)),
+                      style: TextStyles.body3),
                 ),
                 SizedBox(height: SizeConfig.padding12),
                 Container(

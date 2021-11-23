@@ -115,6 +115,12 @@ class BaseRemoteConfig {
   static const Map<String, String> _MIN_WITHDRAWABLE_PRIZE = {
     'min_withdrawable_prize': '100'
   };
+  static const Map<String, String> _GAME_TAMBOLA_ANNOUNCEMENT = {
+    'game_tambola_announcement': 'Stand to win big prizes every week by matching your tambola tickets! Winners are announced every Monday'
+  };
+  static const Map<String, String> _GAME_CRICKET_ANNOUNCEMENT = {
+    'game_cricket_announcement': 'The highest scorers of the week win prizes every Sunday at midnight'
+  };
 
   static const Map<String, dynamic> DEFAULTS = {
     ..._DRAW_PICK_TIME,
@@ -150,7 +156,9 @@ class BaseRemoteConfig {
     ..._CRICKET_PLAY_PRIZE,
     ..._CRICKET_THUMBNAIL_URI,
     ..._TAMBOLA_THUMBNAIL_URI,
-    ..._MIN_WITHDRAWABLE_PRIZE
+    ..._MIN_WITHDRAWABLE_PRIZE,
+    ..._GAME_TAMBOLA_ANNOUNCEMENT,
+    ..._GAME_CRICKET_ANNOUNCEMENT
   };
 
   static Future<bool> init() async {
@@ -259,4 +267,10 @@ class BaseRemoteConfig {
 
   static String get MIN_WITHDRAWABLE_PRIZE =>
       _MIN_WITHDRAWABLE_PRIZE.keys.first;
+
+  static String get GAME_TAMBOLA_ANNOUNCEMENT =>
+      _GAME_TAMBOLA_ANNOUNCEMENT.keys.first;
+
+  static String get GAME_CRICKET_ANNOUNCEMENT =>
+      _GAME_CRICKET_ANNOUNCEMENT.keys.first;
 }

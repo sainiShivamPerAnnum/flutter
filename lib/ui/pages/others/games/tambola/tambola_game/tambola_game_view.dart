@@ -138,32 +138,6 @@ class _TambolaGameViewState extends State<TambolaGameView>
                                         color: Colors.blueGrey
                                       ),
                                     ):Container(),
-                                    // InkWell(
-                                    //   onTap: model.showAllBoards,
-                                    //   highlightColor: UiConstants.primaryColor
-                                    //       .withOpacity(0.3),
-                                    //   borderRadius: BorderRadius.circular(100),
-                                    //   child: Container(
-                                    //     padding: EdgeInsets.symmetric(
-                                    //       horizontal: 16,
-                                    //       vertical: 8,
-                                    //     ),
-                                    //     decoration: BoxDecoration(
-                                    //       border: Border.all(
-                                    //         color: UiConstants.primaryColor,
-                                    //       ),
-                                    //       borderRadius:
-                                    //           BorderRadius.circular(100),
-                                    //     ),
-                                    //     child: Text(
-                                    //       "Show All tickets",
-                                    //       style: GoogleFonts.montserrat(
-                                    //         color: UiConstants.primaryColor,
-                                    //         fontSize: SizeConfig.mediumTextSize,
-                                    //       ),
-                                    //     ),
-                                    //   ),
-                                    // ),
                                     SizedBox(height: SizeConfig.padding40),
                                   ],
                                 ),
@@ -383,7 +357,7 @@ class _TambolaGameViewState extends State<TambolaGameView>
                     )
                   : NoRecordDisplayWidget(
                       assetSvg: Assets.noTickets,
-                      text: "You do have any Tambola tickets right now",
+                      text: "You do not have any Tambola tickets",
                     ),
             ),
           ),

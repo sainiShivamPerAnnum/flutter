@@ -20,7 +20,7 @@ class MarqueeText extends StatelessWidget {
           horizontal: SizeConfig.globalMargin, vertical: 16),
       child: MarqueeWidget(
         pauseDuration: Duration(seconds: 1),
-        animationDuration: Duration(seconds: infoList.length * 2),
+        animationDuration: Duration(seconds: infoList.length * 5),
         backDuration: Duration(seconds: infoList.length * 2),
         direction: Axis.horizontal,
         child: Row(

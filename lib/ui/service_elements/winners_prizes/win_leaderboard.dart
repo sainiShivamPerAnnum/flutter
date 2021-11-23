@@ -2,8 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/enums/winner_service_enum.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/service/winners_service.dart';
-import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
-import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -192,7 +190,7 @@ class WinnerboardView extends StatelessWidget {
                           SizedBox(height: SizeConfig.padding4),
                           Text(
                             winners[i].gameType == Constants.GAME_TYPE_CRICKET
-                                ? "Circket"
+                                ? "Cricket"
                                 : "Tambola",
                             style: TextStyles.body4
                                 .colour(UiConstants.primaryColor),
@@ -203,7 +201,7 @@ class WinnerboardView extends StatelessWidget {
                     PrizeChip(
                       color: UiConstants.primaryColor,
                       png: Assets.moneyIcon,
-                      text: "Rs ${winners[i].amount.toString() ?? "00"}",
+                      text: "₹ ${winners[i].amount.toString() ?? "00"}",
                     ),
                   ],
                 ),

@@ -32,7 +32,8 @@ class TransactionsHistoryViewModel extends BaseModel {
     "All": 1,
     "Deposit": 2,
     "Withdrawal": 3,
-    "Prize": 4
+    "Prize": 4,
+    "Refunded": 5
   };
   Map<String, int> _tranSubTypeFilterItems = {
     "All": 1,
@@ -137,8 +138,10 @@ class TransactionsHistoryViewModel extends BaseModel {
       return UiConstants.primaryColor;
     } else if (type == UserTransaction.TRAN_STATUS_PENDING) {
       return Colors.amber;
+    } else if (type == UserTransaction.TRAN_STATUS_REFUNDED) {
+      return Colors.blue;
     }
-    return Colors.blue;
+    return Colors.black87;
   }
 
   filterTransactions() {
@@ -161,9 +164,15 @@ class TransactionsHistoryViewModel extends BaseModel {
               addItemFlag = true;
             else
               addItemFlag = false;
-          } else {
+          } else if (filter == 4) {
             //only prizes
             if (txn.type == UserTransaction.TRAN_TYPE_PRIZE)
+              addItemFlag = true;
+            else
+              addItemFlag = false;
+          } else if (filter == 5) {
+            // only refunded txns
+            if (txn.tranStatus == UserTransaction.TRAN_STATUS_REFUNDED)
               addItemFlag = true;
             else
               addItemFlag = false;

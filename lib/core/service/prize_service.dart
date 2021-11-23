@@ -30,6 +30,6 @@ class PrizeService extends ChangeNotifier {
 
   fetchCricketPrizes() async {
     cricketPrizes =
-        await _prizeRepo.getPrizesPerGamePerFreq("GM_CRIC2020", "daily");
+        await _prizeRepo.getPrizesPerGamePerFreq("GM_CRIC2020", "weekly");
   }
 }

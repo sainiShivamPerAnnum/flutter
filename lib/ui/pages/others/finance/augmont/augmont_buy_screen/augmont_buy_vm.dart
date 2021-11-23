@@ -207,8 +207,8 @@ class AugmontGoldBuyViewModel extends BaseModel {
     }
     if (buyAmount < 10) {
       BaseUtil.showNegativeAlert(
-        'Minimum amount should be 10',
-        'Please enter a minimum purchase amount or Rs 10',
+        'Minimum amount should be ₹ 10',
+        'Please enter a minimum purchase amount or ₹ 10',
       );
       return;
     }

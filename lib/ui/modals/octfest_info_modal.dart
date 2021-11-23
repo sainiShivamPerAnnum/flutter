@@ -1,13 +1,9 @@
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
-import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class OctFestInfoModal extends StatelessWidget {
   @override
@@ -53,45 +49,20 @@ class OctFestInfoModal extends StatelessWidget {
                 padding: EdgeInsets.symmetric(
                   horizontal: SizeConfig.blockSizeHorizontal * 5,
                 ),
-                child: Stack(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Positioned(
-                    //   bottom: 10,
-                    //   child: Container(
-                    //     width: SizeConfig.screenWidth,
-                    //     height: SizeConfig.screenWidth * 0.5,
-                    //     child: Row(
-                    //       mainAxisAlignment: MainAxisAlignment.center,
-                    //       children: [
-                    //         Transform.translate(
-                    //           offset: Offset(
-                    //               -SizeConfig.blockSizeHorizontal * 5, 0),
-                    //           child: Image.asset(
-                    //             "images/beerInfoModal.png",
-                    //             width: SizeConfig.screenWidth * 0.44,
-                    //           ),
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: SizeConfig.padding12),
-                        referralTile(
-                          "Visit any of our partner FnB outlets and get a free beverage on us.",
-                          0,
-                        ),
-                        referralTile(
-                            "Make your first investment of ₹ ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.OCT_FEST_MIN_DEPOSIT)} or more and show the transaction to the outlet to avail the offer.",
-                            SizeConfig.screenWidth * 0.1),
-                        referralTile(
-                            "This offer can only be availed once per user, using the outlet's download link.",
-                            SizeConfig.screenWidth * 0.2),
-                        SizedBox(height: SizeConfig.screenHeight * 0.2),
-                      ],
+                    SizedBox(height: SizeConfig.padding12),
+                    referralTile(
+                      "Visit any of our partner FnB outlets and get a free beverage on us.",
+                      0,
                     ),
+                    referralTile(
+                        "Make your first investment of ₹ ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.OCT_FEST_MIN_DEPOSIT)} or more and show the transaction to the outlet to avail the offer.",
+                        SizeConfig.screenWidth * 0.1),
+                    referralTile(
+                        "This offer can only be availed once per user, using the outlet's download link.",
+                        SizeConfig.screenWidth * 0.2),
                   ],
                 ),
               ),

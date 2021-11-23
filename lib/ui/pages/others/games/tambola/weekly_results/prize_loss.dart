@@ -45,7 +45,7 @@ class Loser extends StatelessWidget {
                   horizontal: SizeConfig.blockSizeHorizontal * 5),
               child: Text(locale.tLossSubtitle2,
                   textAlign: TextAlign.center,
-                  style: TextStyles.body3.letterSpace(2)),
+                  style: TextStyles.body3),
             ),
             Column(
               children: [
@@ -67,7 +67,7 @@ class Loser extends StatelessWidget {
                   child: FelloButtonLg(
                       color: UiConstants.tertiarySolid,
                       child: Text(
-                        "Save",
+                        "Save More Money",
                         style: TextStyles.body3.bold.colour(Colors.white),
                       ),
                       onPressed: () {

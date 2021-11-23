@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/leader_board_modal.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
@@ -124,6 +125,8 @@ class CricketHomeView extends StatelessWidget {
                                                     model: model.cPrizes,
                                                     controller:
                                                         model.scrollController,
+                                                    subtitle:
+                                                        BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.GAME_CRICKET_ANNOUNCEMENT)??'The highest scorers of the week win prizes every Sunday at midnight',
                                                     leading: List.generate(
                                                         model.cPrizes.prizesA
                                                             .length,
@@ -298,8 +301,9 @@ class PrizesView extends StatelessWidget {
   final PrizesModel model;
   final ScrollController controller;
   final List<Widget> leading;
+  final String subtitle;
 
-  PrizesView({this.model, this.leading, this.controller});
+  PrizesView({this.model, this.leading, this.controller, this.subtitle});
   @override
   Widget build(BuildContext context) {
     return NotificationListener<OverscrollNotification>(
@@ -318,51 +322,79 @@ class PrizesView extends StatelessWidget {
         return true;
       },
       child: ListView.builder(
-        itemCount: model.prizesA.length,
-        shrinkWrap: true,
-        physics: BouncingScrollPhysics(),
+        itemCount: model.prizesA.length + 1,
         padding: EdgeInsets.only(bottom: SizeConfig.navBarHeight),
         itemBuilder: (ctx, i) {
-          return Container(
-            width: SizeConfig.screenWidth,
-            padding: EdgeInsets.all(SizeConfig.padding12),
-            margin: EdgeInsets.symmetric(vertical: SizeConfig.padding8),
-            decoration: BoxDecoration(
-              color: UiConstants.primaryLight.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-            ),
-            child: Row(
-              children: [
-                CircleAvatar(
-                    radius: SizeConfig.padding24,
-                    backgroundColor: UiConstants.primaryColor.withOpacity(0.3),
-                    child: leading[i]),
-                SizedBox(width: SizeConfig.padding12),
-                Expanded(
-                  child: Text(
-                    model.prizesA[i].displayName ?? "Prize ${i + 1}",
-                    style: TextStyles.body3.bold,
+          if (i == 0)
+            return Container(
+              margin: EdgeInsets.only(top: SizeConfig.padding8),
+              decoration: BoxDecoration(
+                color: UiConstants.tertiaryLight,
+                image: DecorationImage(
+                  image: AssetImage("assets/images/confetti.png"),
+                  fit: BoxFit.cover,
+                  colorFilter: new ColorFilter.mode(
+                      UiConstants.tertiaryLight.withOpacity(0.1),
+                      BlendMode.dstATop),
+                ),
+                borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+              ),
+              padding: EdgeInsets.all(SizeConfig.padding16),
+              child: Stack(
+                children: [
+                  //Image.asset("assets/images/confetti.png"),
+                  Text(
+                    subtitle,
+                    textAlign: TextAlign.center,
+                    style: TextStyles.body3.light,
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    PrizeChip(
-                      color: UiConstants.tertiarySolid,
-                      svg: Assets.tokens,
-                      text: "${model.prizesA[i].flc}",
+                ],
+              ),
+            );
+          else {
+            i--;
+            return Container(
+              width: SizeConfig.screenWidth,
+              padding: EdgeInsets.all(SizeConfig.padding12),
+              margin: EdgeInsets.symmetric(vertical: SizeConfig.padding8),
+              decoration: BoxDecoration(
+                color: UiConstants.primaryLight.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+              ),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                      radius: SizeConfig.padding24,
+                      backgroundColor:
+                          UiConstants.primaryColor.withOpacity(0.3),
+                      child: leading[i]),
+                  SizedBox(width: SizeConfig.padding12),
+                  Expanded(
+                    child: Text(
+                      model.prizesA[i].displayName ?? "Prize ${i + 1}",
+                      style: TextStyles.body3.bold,
                     ),
-                    SizedBox(width: SizeConfig.padding16),
-                    PrizeChip(
-                      color: UiConstants.primaryColor,
-                      png: Assets.moneyIcon,
-                      text: "Rs ${model.prizesA[i].amt}",
-                    )
-                  ],
-                ),
-              ],
-            ),
-          );
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      PrizeChip(
+                        color: UiConstants.tertiarySolid,
+                        svg: Assets.tokens,
+                        text: "${model.prizesA[i].flc}",
+                      ),
+                      SizedBox(width: SizeConfig.padding16),
+                      PrizeChip(
+                        color: UiConstants.primaryColor,
+                        png: Assets.moneyIcon,
+                        text: "₹ ${model.prizesA[i].amt}",
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            );
+          }
         },
       ),
     );
