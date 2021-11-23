@@ -110,6 +110,8 @@ class TambolaHomeView extends StatelessWidget {
                                                     model: model.tPrizes,
                                                     controller:
                                                         model.scrollController,
+                                                    subtitle:
+                                                        "Stand to win big prizes every week by matching your tambola tickets! Winners are announced every Monday",
                                                     leading: [
                                                       Icons.apps,
                                                       Icons.border_top,
