@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/deposit_response_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
@@ -9,6 +10,7 @@ import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/core/repository/investment_actions_repo.dart';
+import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/augmont_invoice_service.dart';
 import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
@@ -30,6 +32,8 @@ import 'package:logger/logger.dart';
 class AugmontModel extends ChangeNotifier {
   final Log log = new Log('AugmontModel');
   final Logger _logger = locator<Logger>();
+  final _apiPaths = locator<ApiPath>();
+
   final InvestmentActionsRepository _investmentActionsRepository =
       locator<InvestmentActionsRepository>();
 
@@ -65,6 +69,13 @@ class AugmontModel extends ChangeNotifier {
   }
 
   bool isInit() => (_apiKey != null);
+
+  Future<String> _getBearerToken() async {
+    String token = await _userService.firebaseUser.getIdToken();
+    _logger.d(token);
+
+    return token;
+  }
 
   // String _constructUid(String pan) {
   //   var rnd = new Random();
@@ -190,6 +201,37 @@ class AugmontModel extends ChangeNotifier {
       }
 
       return _baseProvider.augmontDetail;
+
+      // String uid = _userService.baseUser.uid;
+      // var data = {
+      //   CreateUser.fldMobile: mobile,
+      //   CreateUser.fldID: uid,
+      //   CreateUser.fldStateId: stateId,
+      // };
+      // Map<String, dynamic> _body = {"data": data};
+      // _logger.d(_body);
+
+      // try {
+      //   final String _bearer = await _getBearerToken();
+      //   final res = await APIService.instance
+      //       .postData(_apiPaths.kCreateSimpleUser, body: _body);
+      //   _logger.d("Create Simple User Api response: ${res.toString()})");
+      //   if (res["flag"]) {
+      //     final _uid = res['aUid'];
+      //     final _uname = res['aUname'];
+      //     _baseProvider.augmontDetail =
+      //         UserAugmontDetail.newUser(_uid, _uname, stateId, '', '', '');
+
+      //     _baseProvider.updateAugmontOnboarded(true);
+      //     await _dbModel.updateUser(_baseProvider.myUser);
+      //   }
+      // } catch (e) {
+      //   _logger.e('Query Failed $e');
+      //   return null;
+      // }
+
+      // return _baseProvider.augmontDetail;
+
     }
   }
 
@@ -259,15 +301,20 @@ class AugmontModel extends ChangeNotifier {
       return null;
     }
 
-    _tranIdResponse = await _investmentActionsRepository.createTranId(userUid: _baseProvider.myUser.uid);
-    if(_tranIdResponse.code != 200 || _tranIdResponse.model == null || _tranIdResponse.model.isEmpty) {
+    _tranIdResponse = await _investmentActionsRepository.createTranId(
+        userUid: _baseProvider.myUser.uid);
+    if (_tranIdResponse.code != 200 ||
+        _tranIdResponse.model == null ||
+        _tranIdResponse.model.isEmpty) {
       _logger.e('Failed to create a transaction id');
       return null;
     }
 
-    String _note1 = 'BlockID: ${buyRates.blockId},gPrice: ${buyRates.goldBuyPrice}';
-    String _note2 = 'UserId:${_baseProvider.myUser.uid},MerchantTxnID: ${_tranIdResponse.model}';
-    String rzpOrderId = await _rzpGateway.createOrderId(amount,_note1, _note2);
+    String _note1 =
+        'BlockID: ${buyRates.blockId},gPrice: ${buyRates.goldBuyPrice}';
+    String _note2 =
+        'UserId:${_baseProvider.myUser.uid},MerchantTxnID: ${_tranIdResponse.model}';
+    String rzpOrderId = await _rzpGateway.createOrderId(amount, _note1, _note2);
     if (rzpOrderId == null) {
       _logger.e("Received null from create Order id");
       return null;
@@ -366,7 +413,8 @@ class AugmontModel extends ChangeNotifier {
     if (_baseProvider.currentAugmontTxn.rzp[UserTransaction.subFldRzpStatus] ==
         UserTransaction.RZP_TRAN_STATUS_COMPLETE) {
       //payment completed successfully
-      _mixpanelService.track(MixpanelEvents.investedInGold,{'userId':_userService.baseUser.uid});
+      _mixpanelService.track(
+          MixpanelEvents.investedInGold, {'userId': _userService.baseUser.uid});
       _onPaymentComplete();
     } else {
       _onPaymentFailed();
@@ -390,7 +438,8 @@ class AugmontModel extends ChangeNotifier {
           .toString(),
       SubmitGoldPurchase.fldPaymode: _baseProvider
           .currentAugmontTxn.augmnt[UserTransaction.subFldAugPaymode],
-      SubmitGoldPurchase.fldMerchantTranId: _baseProvider.currentAugmontTxn.docKey
+      SubmitGoldPurchase.fldMerchantTranId:
+          _baseProvider.currentAugmontTxn.docKey
     };
 
     var _request = http.Request(
@@ -427,17 +476,6 @@ class AugmontModel extends ChangeNotifier {
       if (_augmontTxnProcessListener != null)
         _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
     } else {
-      //success - update transaction fields and call listener
-      _baseProvider.currentAugmontTxn.tranStatus =
-          UserTransaction.TRAN_STATUS_COMPLETE;
-      _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId] =
-          resMap[SubmitGoldPurchase.resAugTranId];
-      _baseProvider
-              .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId] =
-          resMap[SubmitGoldPurchase.resTranId];
-      _baseProvider
-              .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm] =
-          double.tryParse(resMap[SubmitGoldPurchase.resGoldBalance]) ?? 0.0;
       //bool flag = await _dbModel.updateUserTransaction(_baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
 
       Map<String, dynamic> rzpUpdates = {
@@ -471,6 +509,19 @@ class AugmontModel extends ChangeNotifier {
       );
 
       if (_onCompleteDepositResponse.code == 200) {
+        //Update these feilds from deposit API
+        _baseProvider.currentAugmontTxn.tranStatus =
+            UserTransaction.TRAN_STATUS_COMPLETE;
+        _baseProvider
+                .currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId] =
+            resMap[SubmitGoldPurchase.resAugTranId];
+        _baseProvider.currentAugmontTxn
+                .augmnt[UserTransaction.subFldMerchantTranId] =
+            resMap[SubmitGoldPurchase.resTranId];
+        _baseProvider.currentAugmontTxn
+                .augmnt[UserTransaction.subFldAugTotalGoldGm] =
+            double.tryParse(resMap[SubmitGoldPurchase.resGoldBalance]) ?? 0.0;
+
         double newAugPrinciple =
             _onCompleteDepositResponse.model.response.augmontPrinciple;
         if (newAugPrinciple != null && newAugPrinciple > 0) {
@@ -568,8 +619,8 @@ class AugmontModel extends ChangeNotifier {
         'message': _onCancleUserDepositResponse?.errorMessage ??
             "Cancel user deposit failed"
       });
-      BaseUtil.showNegativeAlert(
-          'Something went wrong', 'Please try again in sometime or contact us for more assistance');
+      BaseUtil.showNegativeAlert('Something went wrong',
+          'Please try again in sometime or contact us for more assistance');
       _baseProvider.currentAugmontTxn.tranStatus =
           UserTransaction.TRAN_STATUS_CANCELLED;
 
@@ -607,8 +658,11 @@ class AugmontModel extends ChangeNotifier {
         quantity,
         _baseProvider.myUser.uid);
 
-    _tranIdResponse = await _investmentActionsRepository.createTranId(userUid: _baseProvider.myUser.uid);
-    if(_tranIdResponse.code != 200 || _tranIdResponse.model == null || _tranIdResponse.model.isEmpty) {
+    _tranIdResponse = await _investmentActionsRepository.createTranId(
+        userUid: _baseProvider.myUser.uid);
+    if (_tranIdResponse.code != 200 ||
+        _tranIdResponse.model == null ||
+        _tranIdResponse.model.isEmpty) {
       _logger.e('Failed to create a transaction id');
       return null;
     }
