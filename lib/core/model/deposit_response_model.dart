@@ -32,14 +32,14 @@ class DepositResponseModel {
   Map<String, dynamic> toMap() {
     return {
       'response': response.toMap(),
-      'augResponse': augResponse.toMap(),
+      'augResponse': augResponse?.toMap(),
     };
   }
 
   factory DepositResponseModel.fromMap(Map<String, dynamic> map) {
     return DepositResponseModel(
       response: Response.fromMap(map['response']),
-      augResponse: AugResponse.fromMap(map['augResponse']),
+      augResponse: AugResponse?.fromMap(map['augResponse']),
     );
   }
 
@@ -244,15 +244,15 @@ class AugResponse {
     return {
       'flag': flag,
       'message': message,
-      'data': data.toMap(),
+      'data': data?.toMap(),
     };
   }
 
   factory AugResponse.fromMap(Map<String, dynamic> map) {
     return AugResponse(
-      flag: map['flag'],
-      message: map['message'],
-      data: Data.fromMap(map['data']),
+      flag: map != null ? map['flag'] : null,
+      message: map != null ? map['message'] : null,
+      data: map != null ? Data.fromMap(map['data']) : null,
     );
   }
 }
@@ -349,7 +349,7 @@ class Data {
       'mobileNumber': mobileNumber,
       'goldBalance': goldBalance,
       'silverBalance': silverBalance,
-      'taxes': taxes.toMap(),
+      'taxes': taxes?.toMap(),
       'invoiceNumber': invoiceNumber,
     };
   }
@@ -368,7 +368,7 @@ class Data {
       mobileNumber: map['mobileNumber'],
       goldBalance: map['goldBalance'],
       silverBalance: map['silverBalance'],
-      taxes: Taxes.fromMap(map['taxes']),
+      taxes: Taxes?.fromMap(map['taxes']),
       invoiceNumber: map['invoiceNumber'],
     );
   }

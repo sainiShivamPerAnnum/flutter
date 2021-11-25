@@ -460,7 +460,6 @@ class AugmontModel extends ChangeNotifier {
     _logger.d(_initialDepositResponse
         .model.response.transactionDoc.enqueuedTaskDetails);
 
-
     ApiResponse<DepositResponseModel> _onCompleteDepositResponse =
         await _investmentActionsRepository.completeUserDeposit(
       amount: _baseProvider.currentAugmontTxn.amount,

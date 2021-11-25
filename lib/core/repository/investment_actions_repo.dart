@@ -56,7 +56,7 @@ class InvestmentActionsRepository {
     };
     _logger.d("initiateUserDeposit : $_body");
 
-    try {
+    // try {
       final String _bearer = await _getBearerToken();
       final response = await APIService.instance
           .postData(_apiPaths.kDepositPending, body: _body, token: _bearer);
@@ -69,10 +69,10 @@ class InvestmentActionsRepository {
       _logger.d("response from api: ${_investmentDepositModel.toString()}");
 
       return ApiResponse(model: _investmentDepositModel, code: 200);
-    } catch (e) {
-      _logger.e(e.toString());
-      return ApiResponse.withError(e.toString(), 400);
-    }
+    // } catch (e) {
+    //   _logger.e(e.toString());
+    //   return ApiResponse.withError(e.toString(), 400);
+    // }
   }
 
   Future<ApiResponse<DepositResponseModel>> completeUserDeposit({
