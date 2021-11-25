@@ -1,7 +1,13 @@
+import 'dart:io';
+
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/cache_type_enum.dart';
+import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_rating_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
@@ -11,6 +17,8 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
 class FcmHandler extends ChangeNotifier {
+  static const COMMAND_USER_PRIZE_WIN = 'userPrizeWin';
+
   final Logger logger = locator<Logger>();
   Log log = new Log("FcmHandler");
   ValueChanged<Map> notifListener;
@@ -91,6 +99,39 @@ class FcmHandler extends ChangeNotifier {
                 ),
               ),
             );
+          }
+          break;
+        case COMMAND_USER_PRIZE_WIN:
+          {
+            String isUserRated =
+                await CacheManager.readCache(key: "isUserRated");
+            if (isUserRated == null) {
+              await CacheManager.writeCache(
+                  key: "isUserRated",
+                  value: false.toString(),
+                  type: CacheType.string);
+              isUserRated = false.toString();
+            }
+
+            int dailogShowCount;
+            String dsc = await CacheManager.readCache(key: "RDShowCount");
+            if (dsc == null) {
+              await CacheManager.writeCache(
+                  key: "RDShowCount",
+                  value: 1.toString(),
+                  type: CacheType.string);
+              dailogShowCount = 1;
+            } else {
+              dailogShowCount = int.tryParse(dsc);
+            }
+            if (isUserRated == "false" && dailogShowCount < 5)
+              BaseUtil.openDialog(
+                  addToScreenStack: true,
+                  isBarrierDismissable: false,
+                  hapticVibrate: false,
+                  content: FelloRatingDialog(
+                    dailogShowCount: dailogShowCount,
+                  ));
           }
           break;
         default:
