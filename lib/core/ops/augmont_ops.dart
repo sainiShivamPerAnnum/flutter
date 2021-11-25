@@ -442,125 +442,90 @@ class AugmontModel extends ChangeNotifier {
           _baseProvider.currentAugmontTxn.docKey
     };
 
-    var _request = http.Request(
-        'GET', Uri.parse(_constructRequest(SubmitGoldPurchase.path, _params)));
-    _request.headers.addAll(headers);
-    http.StreamedResponse _response = await _request.send();
+    Map<String, dynamic> rzpUpdates = {
+      "rOrderId":
+          _baseProvider.currentAugmontTxn.rzp[UserTransaction.subFldRzpOrderId],
+      "rPaymentId": _baseProvider
+          .currentAugmontTxn.rzp[UserTransaction.subFldRzpPaymentId],
+      "rStatus":
+          _baseProvider.currentAugmontTxn.rzp[UserTransaction.subFldRzpStatus],
+    };
 
-    final resMap = await _processResponse(_response);
+    _logger.d(_baseProvider.currentAugmontTxn.amount);
+    _logger.d(rzpUpdates);
+    _logger.d(_params);
+    _logger.d(_baseProvider.myUser.uid);
+    _logger
+        .d(_initialDepositResponse.model.response.transactionDoc.transactionId);
+    _logger.d(_initialDepositResponse
+        .model.response.transactionDoc.enqueuedTaskDetails);
 
-    if (resMap == null ||
-        !resMap[INTERNAL_FAIL_FLAG] ||
-        resMap[SubmitGoldPurchase.resTranId] == null) {
-      log.error('Query Failed');
-      // _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId] =
-      //     resMap[SubmitGoldPurchase.resAugTranId];
-      // _baseProvider
-      //         .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId] =
-      //     resMap[SubmitGoldPurchase.resTranId];
-      // _baseProvider
-      //         .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm] =
-      //     double.tryParse(resMap[SubmitGoldPurchase.resGoldBalance]) ?? 0.0;
 
-      Map<String, dynamic> _failMap = {
-        'txnDocId': _baseProvider.currentAugmontTxn.docKey,
-      };
+    ApiResponse<DepositResponseModel> _onCompleteDepositResponse =
+        await _investmentActionsRepository.completeUserDeposit(
+      amount: _baseProvider.currentAugmontTxn.amount,
+      rzpUpdates: rzpUpdates,
+      submitGoldUpdates: _params,
+      userUid: _baseProvider.myUser.uid,
+      txnId:
+          _initialDepositResponse.model.response.transactionDoc.transactionId,
+      enqueuedTaskDetails: _initialDepositResponse
+          .model.response.transactionDoc.enqueuedTaskDetails,
+    );
 
-      await _dbModel.logFailure(_baseProvider.myUser.uid,
-          FailType.UserPaymentCompleteTxnFailed, _failMap);
+    if (_onCompleteDepositResponse.code == 200) {
+      //Update these feilds from deposit API
+      _baseProvider.currentAugmontTxn.tranStatus =
+          UserTransaction.TRAN_STATUS_COMPLETE;
+      _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId] =
+          _onCompleteDepositResponse.model.augResponse.data.transactionId;
 
-      // bool flag = await _dbModel.updateUserTransaction(
-      //     _baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
-      // _txnService.updateTransactions();
+      _baseProvider
+              .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId] =
+          _onCompleteDepositResponse
+              .model.augResponse.data.merchantTransactionId;
+      _baseProvider.currentAugmontTxn
+          .augmnt[UserTransaction.subFldAugTotalGoldGm] = double.tryParse(
+              _onCompleteDepositResponse.model.augResponse.data.goldBalance) ??
+          0.0;
+
+      double newAugPrinciple =
+          _onCompleteDepositResponse.model.response.augmontPrinciple;
+      if (newAugPrinciple != null && newAugPrinciple > 0) {
+        _userService.augGoldPrinciple = newAugPrinciple;
+      }
+      double newAugQuantity =
+          _onCompleteDepositResponse.model.response.augmontGoldQty;
+      if (newAugQuantity != null && newAugQuantity > 0) {
+        _userService.augGoldQuantity = newAugQuantity;
+      }
+      int newFlcBalance = _onCompleteDepositResponse.model.response.flcBalance;
+      if (newFlcBalance > 0) {
+        _userCoinService.setFlcBalance(newFlcBalance);
+      }
+      _baseProvider.currentAugmontTxn = _onCompleteDepositResponse
+          .model.response.transactionDoc.transactionDetail;
+
+      _txnService.updateTransactions();
 
       if (_augmontTxnProcessListener != null)
         _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
     } else {
-      //bool flag = await _dbModel.updateUserTransaction(_baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
+      _dbModel.logFailure(
+          _baseProvider.myUser.uid,
+          FailType.CompleteUserDepositApiFailed,
+          {'message': _initialDepositResponse.errorMessage});
 
-      Map<String, dynamic> rzpUpdates = {
-        "rOrderId": _baseProvider
-            .currentAugmontTxn.rzp[UserTransaction.subFldRzpOrderId],
-        "rPaymentId": _baseProvider
-            .currentAugmontTxn.rzp[UserTransaction.subFldRzpPaymentId],
-        "rStatus": _baseProvider
-            .currentAugmontTxn.rzp[UserTransaction.subFldRzpStatus],
-      };
+      BaseUtil.showNegativeAlert(
+          'Deposit Failed', 'Please try again in sometime or contact us');
 
-      Map<String, dynamic> augUpdates = {
-        "aTranId": _baseProvider
-            .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId],
-        "aAugTranId": _baseProvider
-            .currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId],
-        "aGoldBalance": _baseProvider
-            .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm]
-      };
+      _baseProvider.currentAugmontTxn.tranStatus =
+          UserTransaction.TRAN_STATUS_CANCELLED;
 
-      ApiResponse<DepositResponseModel> _onCompleteDepositResponse =
-          await _investmentActionsRepository.completeUserDeposit(
-        amount: _baseProvider.currentAugmontTxn.amount,
-        augUpdates: augUpdates,
-        rzpUpdates: rzpUpdates,
-        userUid: _baseProvider.myUser.uid,
-        txnId:
-            _initialDepositResponse.model.response.transactionDoc.transactionId,
-        enqueuedTaskDetails: _initialDepositResponse
-            .model.response.transactionDoc.enqueuedTaskDetails,
-      );
+      if (_augmontTxnProcessListener != null)
+        _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
 
-      if (_onCompleteDepositResponse.code == 200) {
-        //Update these feilds from deposit API
-        _baseProvider.currentAugmontTxn.tranStatus =
-            UserTransaction.TRAN_STATUS_COMPLETE;
-        _baseProvider
-                .currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId] =
-            resMap[SubmitGoldPurchase.resAugTranId];
-        _baseProvider.currentAugmontTxn
-                .augmnt[UserTransaction.subFldMerchantTranId] =
-            resMap[SubmitGoldPurchase.resTranId];
-        _baseProvider.currentAugmontTxn
-                .augmnt[UserTransaction.subFldAugTotalGoldGm] =
-            double.tryParse(resMap[SubmitGoldPurchase.resGoldBalance]) ?? 0.0;
-
-        double newAugPrinciple =
-            _onCompleteDepositResponse.model.response.augmontPrinciple;
-        if (newAugPrinciple != null && newAugPrinciple > 0) {
-          _userService.augGoldPrinciple = newAugPrinciple;
-        }
-        double newAugQuantity =
-            _onCompleteDepositResponse.model.response.augmontGoldQty;
-        if (newAugQuantity != null && newAugQuantity > 0) {
-          _userService.augGoldQuantity = newAugQuantity;
-        }
-        int newFlcBalance =
-            _onCompleteDepositResponse.model.response.flcBalance;
-        if (newFlcBalance > 0) {
-          _userCoinService.setFlcBalance(newFlcBalance);
-        }
-        _baseProvider.currentAugmontTxn = _onCompleteDepositResponse
-            .model.response.transactionDoc.transactionDetail;
-
-        _txnService.updateTransactions();
-
-        if (_augmontTxnProcessListener != null)
-          _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
-      } else {
-        _dbModel.logFailure(
-            _baseProvider.myUser.uid,
-            FailType.CompleteUserDepositApiFailed,
-            {'message': _initialDepositResponse.errorMessage});
-
-        BaseUtil.showNegativeAlert(
-            'Deposit Failed', 'Please try again in sometime or contact us');
-
-        _baseProvider.currentAugmontTxn.tranStatus =
-            UserTransaction.TRAN_STATUS_CANCELLED;
-
-        if (_augmontTxnProcessListener != null)
-          _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
-
-        AppState.backButtonDispatcher.didPopRoute();
-      }
+      AppState.backButtonDispatcher.didPopRoute();
     }
   }
 

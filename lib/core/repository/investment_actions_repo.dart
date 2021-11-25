@@ -79,7 +79,7 @@ class InvestmentActionsRepository {
     String txnId,
     double amount,
     Map<String, dynamic> rzpUpdates,
-    Map<String, dynamic> augUpdates,
+    Map<String, dynamic> submitGoldUpdates,
     String userUid,
     EnqueuedTaskDetails enqueuedTaskDetails,
   }) async {
@@ -87,7 +87,7 @@ class InvestmentActionsRepository {
       "user_id": userUid,
       "amount": amount,
       "rzp_map": rzpUpdates,
-      "aug_map": augUpdates,
+      "submit_gold_map": submitGoldUpdates,
       "tran_id": txnId,
       "enqueuedTaskDetails": enqueuedTaskDetails.toMap()
     };
