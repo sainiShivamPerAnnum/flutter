@@ -143,12 +143,12 @@ class InvestmentActionsRepository {
       {String tranDocId,
       double amount,
       String userUid,
-      Map<String, dynamic> augMap}) async {
+      Map<String, dynamic> sellGoldMap}) async {
     Map<String, dynamic> _body = {
       "tran_doc_id": tranDocId,
       "user_id": userUid,
       "amount": amount,
-      "aug_map": augMap,
+      "sell_gold_map": sellGoldMap,
     };
 
     _logger.d("withdrawlComplete : $_body");
