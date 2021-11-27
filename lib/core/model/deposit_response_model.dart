@@ -413,9 +413,11 @@ class Taxes {
 
   factory Taxes.fromMap(Map<String, dynamic> map) {
     return Taxes(
-      totalTaxAmount: map['totalTaxAmount'],
-      taxSplit:
-          List<TaxSplit>.from(map['taxSplit']?.map((x) => TaxSplit.fromMap(x))),
+      totalTaxAmount: map != null ? map['totalTaxAmount'] : null,
+      taxSplit: map != null
+          ? List<TaxSplit>.from(
+              map['taxSplit']?.map((x) => TaxSplit.fromMap(x)))
+          : null,
     );
   }
 
@@ -455,9 +457,9 @@ class TaxSplit {
 
   factory TaxSplit.fromMap(Map<String, dynamic> map) {
     return TaxSplit(
-      type: map['type'],
-      taxPerc: map['taxPerc'],
-      taxAmount: map['taxAmount'],
+      type: map != null ? map['type'] : null,
+      taxPerc: map != null ? map['taxPerc'] : null,
+      taxAmount: map != null ? map['taxAmount'] : null,
     );
   }
 

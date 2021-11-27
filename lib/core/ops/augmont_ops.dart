@@ -643,6 +643,7 @@ class AugmontModel extends ChangeNotifier {
     };
 
     _logger.d(_params);
+    _logger.d(_params);
 
     ApiResponse<DepositResponseModel> _onSellCompleteResponse =
         await _investmentActionsRepository.withdrawlComplete(
