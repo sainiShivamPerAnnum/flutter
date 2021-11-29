@@ -20,5 +20,5 @@ class ApiPath {
   get kGenerateTambolaTickets => "/tambolaGame/$stage/api/generate";
   get kTopWinners => "/prizingOps/$stage/api/reward/current-top-winners";
   //Augmont Ops
-  get kCreateSimpleUser => "augmontOps/$stage/api/create-simple-user";
+  get kCreateSimpleUser => "/augmontOps/$stage/api/v2/create-simple-user";
 }
