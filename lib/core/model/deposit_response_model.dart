@@ -218,22 +218,16 @@ class EnqueuedTaskDetails {
 }
 
 class AugResponse {
-  bool flag;
-  String message;
   Data data;
 
-  AugResponse({this.flag, this.message, this.data});
+  AugResponse({this.data});
 
   AugResponse.fromJson(Map<String, dynamic> json) {
-    flag = json['flag'];
-    message = json['message'];
     data = json['data'] != null ? new Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['flag'] = this.flag;
-    data['message'] = this.message;
     if (this.data != null) {
       data['data'] = this.data.toJson();
     }
@@ -242,228 +236,56 @@ class AugResponse {
 
   Map<String, dynamic> toMap() {
     return {
-      'flag': flag,
-      'message': message,
       'data': data?.toMap(),
     };
   }
 
   factory AugResponse.fromMap(Map<String, dynamic> map) {
     return AugResponse(
-      flag: map != null ? map['flag'] : null,
-      message: map != null ? map['message'] : null,
       data: map != null ? Data.fromMap(map['data']) : null,
     );
   }
 }
 
 class Data {
-  String quantity;
-  String totalAmount;
-  String preTaxAmount;
-  String metalType;
-  String rate;
-  String uniqueId;
   String transactionId;
-  String userName;
   String merchantTransactionId;
-  String mobileNumber;
   String goldBalance;
-  String silverBalance;
-  Taxes taxes;
-  String invoiceNumber;
-  Null referenceType;
-  Null referenceId;
 
-  Data(
-      {this.quantity,
-      this.totalAmount,
-      this.preTaxAmount,
-      this.metalType,
-      this.rate,
-      this.uniqueId,
-      this.transactionId,
-      this.userName,
-      this.merchantTransactionId,
-      this.mobileNumber,
-      this.goldBalance,
-      this.silverBalance,
-      this.taxes,
-      this.invoiceNumber,
-      this.referenceType,
-      this.referenceId});
+  Data({this.transactionId, this.merchantTransactionId, this.goldBalance});
 
   Data.fromJson(Map<String, dynamic> json) {
-    quantity = json['quantity'];
-    totalAmount = json['totalAmount'];
-    preTaxAmount = json['preTaxAmount'];
-    metalType = json['metalType'];
-    rate = json['rate'];
-    uniqueId = json['uniqueId'];
     transactionId = json['transactionId'];
-    userName = json['userName'];
     merchantTransactionId = json['merchantTransactionId'];
-    mobileNumber = json['mobileNumber'];
     goldBalance = json['goldBalance'];
-    silverBalance = json['silverBalance'];
-    taxes = json['taxes'] != null ? new Taxes.fromJson(json['taxes']) : null;
-    invoiceNumber = json['invoiceNumber'];
-    referenceType = json['referenceType'];
-    referenceId = json['referenceId'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['quantity'] = this.quantity;
-    data['totalAmount'] = this.totalAmount;
-    data['preTaxAmount'] = this.preTaxAmount;
-    data['metalType'] = this.metalType;
-    data['rate'] = this.rate;
-    data['uniqueId'] = this.uniqueId;
     data['transactionId'] = this.transactionId;
-    data['userName'] = this.userName;
     data['merchantTransactionId'] = this.merchantTransactionId;
-    data['mobileNumber'] = this.mobileNumber;
     data['goldBalance'] = this.goldBalance;
-    data['silverBalance'] = this.silverBalance;
-    if (this.taxes != null) {
-      data['taxes'] = this.taxes.toJson();
-    }
-    data['invoiceNumber'] = this.invoiceNumber;
-    data['referenceType'] = this.referenceType;
-    data['referenceId'] = this.referenceId;
     return data;
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'quantity': quantity,
-      'totalAmount': totalAmount,
-      'preTaxAmount': preTaxAmount,
-      'metalType': metalType,
-      'rate': rate,
-      'uniqueId': uniqueId,
       'transactionId': transactionId,
-      'userName': userName,
       'merchantTransactionId': merchantTransactionId,
-      'mobileNumber': mobileNumber,
       'goldBalance': goldBalance,
-      'silverBalance': silverBalance,
-      'taxes': taxes?.toMap(),
-      'invoiceNumber': invoiceNumber,
     };
   }
 
   factory Data.fromMap(Map<String, dynamic> map) {
     return Data(
-      quantity: map['quantity'],
-      totalAmount: map['totalAmount'],
-      preTaxAmount: map['preTaxAmount'],
-      metalType: map['metalType'],
-      rate: map['rate'],
-      uniqueId: map['uniqueId'],
       transactionId: map['transactionId'],
-      userName: map['userName'],
       merchantTransactionId: map['merchantTransactionId'],
-      mobileNumber: map['mobileNumber'],
       goldBalance: map['goldBalance'],
-      silverBalance: map['silverBalance'],
-      taxes: Taxes?.fromMap(map['taxes']),
-      invoiceNumber: map['invoiceNumber'],
     );
   }
 
   @override
   String toString() {
-    return 'Data(quantity: $quantity, totalAmount: $totalAmount, preTaxAmount: $preTaxAmount, metalType: $metalType, rate: $rate, uniqueId: $uniqueId, transactionId: $transactionId, userName: $userName, merchantTransactionId: $merchantTransactionId, mobileNumber: $mobileNumber, goldBalance: $goldBalance, silverBalance: $silverBalance, taxes: $taxes, invoiceNumber: $invoiceNumber)';
+    return 'Data(transactionId: $transactionId, merchantTransactionId: $merchantTransactionId, goldBalance: $goldBalance)';
   }
-}
-
-class Taxes {
-  String totalTaxAmount;
-  List<TaxSplit> taxSplit;
-
-  Taxes({this.totalTaxAmount, this.taxSplit});
-
-  Taxes.fromJson(Map<String, dynamic> json) {
-    totalTaxAmount = json['totalTaxAmount'];
-    if (json['taxSplit'] != null) {
-      taxSplit = new List<TaxSplit>();
-      json['taxSplit'].forEach((v) {
-        taxSplit.add(new TaxSplit.fromJson(v));
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['totalTaxAmount'] = this.totalTaxAmount;
-    if (this.taxSplit != null) {
-      data['taxSplit'] = this.taxSplit.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'totalTaxAmount': totalTaxAmount,
-      'taxSplit': taxSplit?.map((x) => x.toMap())?.toList(),
-    };
-  }
-
-  factory Taxes.fromMap(Map<String, dynamic> map) {
-    return Taxes(
-      totalTaxAmount: map != null ? map['totalTaxAmount'] : null,
-      taxSplit: map != null
-          ? List<TaxSplit>.from(
-              map['taxSplit']?.map((x) => TaxSplit.fromMap(x)))
-          : null,
-    );
-  }
-
-  @override
-  String toString() =>
-      'Taxes(totalTaxAmount: $totalTaxAmount, taxSplit: $taxSplit)';
-}
-
-class TaxSplit {
-  String type;
-  String taxPerc;
-  String taxAmount;
-
-  TaxSplit({this.type, this.taxPerc, this.taxAmount});
-
-  TaxSplit.fromJson(Map<String, dynamic> json) {
-    type = json['type'];
-    taxPerc = json['taxPerc'];
-    taxAmount = json['taxAmount'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['type'] = this.type;
-    data['taxPerc'] = this.taxPerc;
-    data['taxAmount'] = this.taxAmount;
-    return data;
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'type': type,
-      'taxPerc': taxPerc,
-      'taxAmount': taxAmount,
-    };
-  }
-
-  factory TaxSplit.fromMap(Map<String, dynamic> map) {
-    return TaxSplit(
-      type: map != null ? map['type'] : null,
-      taxPerc: map != null ? map['taxPerc'] : null,
-      taxAmount: map != null ? map['taxAmount'] : null,
-    );
-  }
-
-  @override
-  String toString() =>
-      'TaxSplit(type: $type, taxPerc: $taxPerc, taxAmount: $taxAmount)';
 }

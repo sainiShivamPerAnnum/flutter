@@ -214,7 +214,7 @@ class AugmontModel extends ChangeNotifier {
     try {
       final String _bearer = await _getBearerToken();
       final res = await APIService.instance
-          .postData(_apiPaths.kCreateSimpleUser, body: _body,token: _bearer);
+          .postData(_apiPaths.kCreateSimpleUser, body: _body, token: _bearer);
       _logger.d("Create Simple User Api response: ${res.toString()})");
       if (res["flag"]) {
         final _uid = res['aUid'];
@@ -476,7 +476,6 @@ class AugmontModel extends ChangeNotifier {
           UserTransaction.TRAN_STATUS_COMPLETE;
       _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId] =
           _onCompleteDepositResponse.model.augResponse.data.transactionId;
-
       _baseProvider
               .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId] =
           _onCompleteDepositResponse
