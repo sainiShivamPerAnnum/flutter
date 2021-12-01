@@ -49,12 +49,5 @@
                 "--profile"
               ]
         },
-        {
-            "name": "felloapp-release-ios",
-            "request": "launch",
-            "type": "dart",
-            "program": "lib/main.dart",
-        },
-  
     ]
 }
