@@ -86,41 +86,43 @@ class MyWinningsView extends StatelessWidget {
                                         children: List.generate(
                                           model.winningHistory.length,
                                           (i) => Theme(
-                                            data: ThemeData().copyWith(dividerColor: Colors.grey[50]),
+                                            data: ThemeData().copyWith(
+                                                dividerColor: Colors.grey[50]),
                                             child: ExpansionTile(
                                               expandedCrossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                                  CrossAxisAlignment.start,
                                               expandedAlignment:
-                                              Alignment.centerLeft,
+                                                  Alignment.centerLeft,
                                               children: [
                                                 Container(
                                                   margin: EdgeInsets.only(
                                                       bottom:
-                                                      SizeConfig.padding8),
+                                                          SizeConfig.padding8),
                                                   padding: EdgeInsets.only(
                                                     left: SizeConfig
-                                                        .pageHorizontalMargins +
-                                                        SizeConfig.padding24 * 2 +
+                                                            .pageHorizontalMargins +
+                                                        SizeConfig.padding20 *
+                                                            2 +
                                                         SizeConfig.padding8,
                                                     right: SizeConfig
-                                                        .pageHorizontalMargins /
+                                                            .pageHorizontalMargins /
                                                         2,
                                                   ),
                                                   child: Row(
                                                     children: [
                                                       Column(
                                                         crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
+                                                            CrossAxisAlignment
+                                                                .start,
                                                         children: [
                                                           Row(
                                                             children: [
                                                               Text("Type: "),
                                                               Text((model.winningHistory[i].redeemType !=
-                                                                  null &&
-                                                                  model.winningHistory[i]
-                                                                      .redeemType !=
-                                                                      "")
+                                                                          null &&
+                                                                      model.winningHistory[i]
+                                                                              .redeemType !=
+                                                                          "")
                                                                   ? "REDEMPTION"
                                                                   : "CREDIT"),
                                                             ],
@@ -132,56 +134,58 @@ class MyWinningsView extends StatelessWidget {
                                                             children: [
                                                               Text("Status: "),
                                                               Text(model
-                                                                  .winningHistory[
-                                                              i]
-                                                                  .tranStatus ??
+                                                                      .winningHistory[
+                                                                          i]
+                                                                      .tranStatus ??
                                                                   "COMPLETED"),
                                                             ],
                                                           )
                                                         ],
                                                       ),
                                                       Spacer(),
-                                                      if (model.winningHistory[i]
-                                                          .redeemType !=
-                                                          null &&
+                                                      if (model
+                                                                  .winningHistory[
+                                                                      i]
+                                                                  .redeemType !=
+                                                              null &&
                                                           model.winningHistory[i]
-                                                              .redeemType !=
+                                                                  .redeemType !=
                                                               "")
                                                         InkWell(
-                                                          onTap: () => model
-                                                              .showPrizeDetailsDialog(
+                                                          onTap: () => model.showPrizeDetailsDialog(
                                                               model
-                                                                  .winningHistory[
-                                                              i]
-                                                                  .redeemType ??
+                                                                      .winningHistory[
+                                                                          i]
+                                                                      .redeemType ??
                                                                   "",
                                                               model.winningHistory[i]
-                                                                  .amount
-                                                                  .abs() ??
+                                                                      .amount
+                                                                      .abs() ??
                                                                   0.0),
                                                           child: Container(
                                                             padding: EdgeInsets.symmetric(
                                                                 horizontal:
-                                                                SizeConfig
-                                                                    .padding12,
+                                                                    SizeConfig
+                                                                        .padding12,
                                                                 vertical:
-                                                                SizeConfig
-                                                                    .padding8),
+                                                                    SizeConfig
+                                                                        .padding8),
                                                             decoration:
-                                                            BoxDecoration(
+                                                                BoxDecoration(
                                                               borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                  8),
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8),
                                                               color: UiConstants
                                                                   .primaryColor,
                                                             ),
                                                             child: Row(
                                                               mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
+                                                                  MainAxisAlignment
+                                                                      .center,
                                                               children: [
-                                                                SvgPicture.asset(
+                                                                SvgPicture
+                                                                    .asset(
                                                                   Assets.plane,
                                                                   color: Colors
                                                                       .white,
@@ -196,7 +200,7 @@ class MyWinningsView extends StatelessWidget {
                                                                   style: TextStyles
                                                                       .body3
                                                                       .colour(Colors
-                                                                      .white),
+                                                                          .white),
                                                                 )
                                                               ],
                                                             ),
@@ -211,9 +215,9 @@ class MyWinningsView extends StatelessWidget {
                                                 radius: SizeConfig.padding24,
                                                 backgroundColor: model
                                                     .getWinningHistoryLeadingBg(
-                                                    model.winningHistory[i]
-                                                        .redeemType ??
-                                                        ""),
+                                                        model.winningHistory[i]
+                                                                .redeemType ??
+                                                            ""),
                                                 child: Padding(
                                                   padding: EdgeInsets.all(
                                                       SizeConfig.padding12),
@@ -223,17 +227,19 @@ class MyWinningsView extends StatelessWidget {
                                                         boxShadow: [
                                                           BoxShadow(
                                                             color: Colors.black
-                                                                .withOpacity(0.2),
+                                                                .withOpacity(
+                                                                    0.2),
                                                             blurRadius: 2,
-                                                            offset: Offset(4, 4),
+                                                            offset:
+                                                                Offset(4, 4),
                                                             spreadRadius: 2,
                                                           )
                                                         ]),
                                                     child: Image.asset(model
                                                         .getWinningHistoryLeadingImage(
-                                                        model.winningHistory[i]
-                                                            .redeemType ??
-                                                            "")),
+                                                            model.winningHistory[i]
+                                                                    .redeemType ??
+                                                                "")),
                                                   ),
                                                 ),
                                               ),
@@ -247,46 +253,54 @@ class MyWinningsView extends StatelessWidget {
                                                   Text(
                                                     DateFormat("dd MMM, yyyy")
                                                         .format(model
-                                                        .winningHistory[i]
-                                                        .timestamp
-                                                        .toDate()),
+                                                            .winningHistory[i]
+                                                            .timestamp
+                                                            .toDate()),
                                                     style: TextStyles.body3
                                                         .colour(Colors.grey),
                                                   ),
                                                   SizedBox(width: 10),
                                                   if (model.winningHistory[i]
-                                                      .tranStatus ==
+                                                          .tranStatus ==
                                                       "PROCESSING")
                                                     Container(
                                                       decoration: BoxDecoration(
                                                         borderRadius:
-                                                        BorderRadius.circular(
-                                                            100),
+                                                            BorderRadius
+                                                                .circular(100),
                                                         color: Colors.yellow,
                                                       ),
                                                       padding:
-                                                      EdgeInsets.symmetric(
-                                                          horizontal: 8,
-                                                          vertical: 2),
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 8,
+                                                              vertical: 2),
                                                       child: Text(
                                                         model.winningHistory[i]
                                                             .tranStatus,
                                                         style: TextStyles
                                                             .body4.bold
-                                                            .colour(Colors.white),
+                                                            .colour(
+                                                                Colors.white),
                                                       ),
                                                     )
                                                 ],
                                               ),
                                               trailing: Text(
-                                                "₹ ${model.winningHistory[i]?.amount}",
+                                                (model.winningHistory[i]
+                                                                .amount >
+                                                            0
+                                                        ? ""
+                                                        : "-") +
+                                                    " ₹ " +
+                                                    "${model.winningHistory[i].amount.abs()}",
                                                 style: TextStyles.body2.bold
-                                                    .colour(model
-                                                    .winningHistory[i]
-                                                    .amount >
-                                                    0
-                                                    ? UiConstants.primaryColor
-                                                    : Colors.blue[700]),
+                                                    .colour(
+                                                        model.winningHistory[i]
+                                                                    .amount >
+                                                                0
+                                                            ? UiConstants
+                                                                .primaryColor
+                                                            : Colors.blue[700]),
                                               ),
                                             ),
                                           ),

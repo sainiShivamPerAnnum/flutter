@@ -176,7 +176,7 @@ class MyWinningsViewModel extends BaseModel {
   }
 
   showSuccessPrizeWithdrawalDialog(
-      PrizeClaimChoice choice, String subtitle, String shareMessage) async {
+      PrizeClaimChoice choice, String subtitle) async {
     AppState.screenStack.add(ScreenItem.dialog);
     showDialog(
         context: AppState.delegate.navigatorKey.currentContext,
@@ -186,7 +186,16 @@ class MyWinningsViewModel extends BaseModel {
               FelloConfirmationDialog(
                 result: (res) async {
                   if (res) {
-                    caputure(shareMessage);
+                    try {
+                      String url =
+                          await _userService.createDynamicLink(true, 'Other');
+                      caputure(
+                          'Hey, I won ₹${_userService.userFundWallet.prizeBalance.toInt()} on Fello! \nLet\'s save and play together: $url');
+                    } catch (e) {
+                      _logger.e(e.toString());
+                      BaseUtil.showNegativeAlert(
+                          "An error occured!", "Please try again");
+                    }
                   }
                 },
                 content: Column(
@@ -246,9 +255,7 @@ class MyWinningsViewModel extends BaseModel {
       if (flag) {
         getWinningHistory();
         showSuccessPrizeWithdrawalDialog(
-            choice,
-            choice == PrizeClaimChoice.AMZ_VOUCHER ? "amazon" : "gold",
-            'Hey, I won ₹${_claimAmt.abs()} on Fello! \nLet\'s save and play together: https://fello.in/app/download');
+            choice, choice == PrizeClaimChoice.AMZ_VOUCHER ? "amazon" : "gold");
       }
     });
   }
@@ -294,10 +301,16 @@ class MyWinningsViewModel extends BaseModel {
               FelloConfirmationDialog(
                 result: (res) async {
                   if (res) {
-                    String url = await _createDynamicLink(
-                        _userService.baseUser.uid, true, 'Other');
-                    caputure(
-                        'Hey, I won ₹$amount on Fello! \nLet\'s save and play together: $url');
+                    try {
+                      String url =
+                          await _userService.createDynamicLink(true, 'Other');
+                      caputure(
+                          'Hey, I won ₹${amount.toInt()} on Fello! \nLet\'s save and play together: $url');
+                    } catch (e) {
+                      _logger.e(e.toString());
+                      BaseUtil.showNegativeAlert(
+                          "An error occured!", "Please try again");
+                    }
                   }
                 },
                 content: Column(
@@ -472,46 +485,5 @@ class MyWinningsViewModel extends BaseModel {
       BaseUtil.showNegativeAlert(
           "Task Failed", "Unable to share the picture at the moment");
     }
-  }
-
-  Future<String> _createDynamicLink(
-      String userId, bool short, String source) async {
-    final DynamicLinkParameters parameters = DynamicLinkParameters(
-      uriPrefix:
-          '${FlavorConfig.instance.values.dynamicLinkPrefix}/app/referral',
-      link: Uri.parse('https://fello.in/$userId'),
-      socialMetaTagParameters: SocialMetaTagParameters(
-          title: 'Download ${Constants.APP_NAME}',
-          description:
-              'Fello makes saving fun, and investing a lot more simple!',
-          imageUrl: Uri.parse(
-              'https://fello-assets.s3.ap-south-1.amazonaws.com/ic_social.png')),
-      googleAnalyticsParameters: GoogleAnalyticsParameters(
-        campaign: 'referrals',
-        medium: 'social',
-        source: source,
-      ),
-      androidParameters: AndroidParameters(
-        packageName: 'in.fello.felloapp',
-        minimumVersion: 0,
-      ),
-      dynamicLinkParametersOptions: DynamicLinkParametersOptions(
-        shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
-      ),
-      iosParameters: IosParameters(
-          bundleId: 'in.fello.felloappiOS',
-          minimumVersion: '0',
-          appStoreId: '1558445254'),
-    );
-
-    Uri url;
-    if (short) {
-      final ShortDynamicLink shortLink = await parameters.buildShortLink();
-      url = shortLink.shortUrl;
-    } else {
-      url = await parameters.buildUrl();
-    }
-
-    return url.toString();
   }
 }
