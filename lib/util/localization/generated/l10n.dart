@@ -14,22 +14,23 @@ import 'intl/messages_all.dart';
 
 class S {
   S();
-  
+
   static S current;
-  
-  static const AppLocalizationDelegate delegate =
-    AppLocalizationDelegate();
+
+  static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name = (locale.countryCode?.isEmpty ?? false) ? locale.languageCode : locale.toString();
-    final localeName = Intl.canonicalizedLocale(name); 
+    final name = (locale.countryCode?.isEmpty ?? false)
+        ? locale.languageCode
+        : locale.toString();
+    final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
       S.current = S();
-      
+
       return S.current;
     });
-  } 
+  }
 
   static S of(BuildContext context) {
     return Localizations.of<S>(context, S);
@@ -77,20 +78,20 @@ class S {
 
   // skipped getter for the '----------------------------------' key
 
-  /// `Enter the phone number`
+  /// `Enter your phone number`
   String get obEnterMobile {
     return Intl.message(
-      'Enter the phone number',
+      'Enter your phone number',
       name: 'obEnterMobile',
       desc: '',
       args: [],
     );
   }
 
-  /// `For verification purposes, an OTP shall be sent to this number.`
+  /// `For verification purposes, an OTP will be sent to this number.`
   String get obMobileDesc {
     return Intl.message(
-      'For verification purposes, an OTP shall be sent to this number.',
+      'For verification purposes, an OTP will be sent to this number.',
       name: 'obMobileDesc',
       desc: '',
       args: [],

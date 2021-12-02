@@ -17,6 +17,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logger/logger.dart';
 
 class AugmontGoldSellViewModel extends BaseModel {
@@ -208,23 +209,52 @@ class AugmontGoldSellViewModel extends BaseModel {
       hapticVibrate: true,
       isBarrierDismissable: false,
       content: FelloInfoDialog(
-        asset: Assets.prizeClaimConfirm,
-        title: "Successful!",
-        subtitle:
-            "Your withdrawal is successful, the amount will be credited in 1-2 business days!",
-        action: Container(
-          width: SizeConfig.screenWidth,
-          child: FelloButtonLg(
-            child: Text(
-              "OK",
-              style: TextStyles.body3.colour(Colors.white),
+        customContent: Column(
+          children: [
+            SizedBox(height: SizeConfig.screenHeight * 0.04),
+            SvgPicture.asset(
+              Assets.prizeClaimConfirm,
+              height: SizeConfig.screenHeight * 0.16,
             ),
-            color: UiConstants.primaryColor,
-            onPressed: () {
-              AppState.backButtonDispatcher.didPopRoute();
-              AppState.backButtonDispatcher.didPopRoute();
-            },
-          ),
+            SizedBox(
+              height: SizeConfig.screenHeight * 0.04,
+            ),
+            Text(
+              "Successful!",
+              style: TextStyles.title3.bold,
+            ),
+            SizedBox(height: SizeConfig.padding16),
+            RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                text:
+                    "Your withdrawal is successful, the amount will be credited in ",
+                style: TextStyles.body3.colour(Colors.black54),
+                children: [
+                  TextSpan(
+                    text: "1-2 business working days",
+                    style:
+                        TextStyles.body3.bold.colour(UiConstants.tertiarySolid),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(height: SizeConfig.screenHeight * 0.02),
+            Container(
+              width: SizeConfig.screenWidth,
+              child: FelloButtonLg(
+                child: Text(
+                  "OK",
+                  style: TextStyles.body3.colour(Colors.white),
+                ),
+                color: UiConstants.primaryColor,
+                onPressed: () {
+                  AppState.backButtonDispatcher.didPopRoute();
+                  AppState.backButtonDispatcher.didPopRoute();
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );

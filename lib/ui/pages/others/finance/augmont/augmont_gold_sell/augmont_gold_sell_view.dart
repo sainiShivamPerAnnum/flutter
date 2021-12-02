@@ -325,12 +325,14 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                             RichText(
                               textAlign: TextAlign.center,
                               text: TextSpan(
-                                text: "Your balance will be credited to your registered bank account within ",
+                                text:
+                                    "Your balance will be credited to your registered bank account within ",
                                 style: TextStyles.body3.colour(Colors.grey),
                                 children: [
                                   TextSpan(
                                     text: "1-2 business working days",
-                                    style: TextStyles.body3.bold.colour(Colors.grey),
+                                    style: TextStyles.body3.bold
+                                        .colour(UiConstants.tertiarySolid),
                                   )
                                 ],
                               ),
