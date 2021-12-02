@@ -1,11 +1,13 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/referral_board_modal.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/modals/octfest_info_modal.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
+import 'package:felloapp/ui/service_elements/leaderboards/referral_leaderboard.dart';
 import 'package:felloapp/ui/service_elements/winners_prizes/win_leaderboard.dart';
 import 'package:felloapp/ui/service_elements/winners_prizes/winners_marquee.dart';
 import 'package:felloapp/util/assets.dart';
@@ -179,6 +181,7 @@ class Win extends StatelessWidget {
                             ],
                           ),
                         ),
+                        ReferralLeaderboard(),
                         SizedBox(
                           height: SizeConfig.screenHeight * 0.24,
                         )

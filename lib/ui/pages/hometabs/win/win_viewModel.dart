@@ -2,12 +2,9 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/enums/screen_item_enum.dart';
-import 'package:felloapp/core/model/referral_board_modal.dart';
 import 'package:felloapp/core/model/tambola_winners_details.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
-import 'package:felloapp/core/repository/statistics_repo.dart';
 import 'package:felloapp/core/repository/winners_repo.dart';
 import 'package:felloapp/core/service/leaderboard_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
@@ -15,13 +12,10 @@ import 'package:felloapp/core/service/winners_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/dialogs/Prize-Card/card.dart';
-import 'package:felloapp/ui/dialogs/share-card.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 
 class WinViewModel extends BaseModel {

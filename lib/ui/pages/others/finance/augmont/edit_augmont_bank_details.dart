@@ -394,8 +394,8 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                                               title: FittedBox(
                                                 child: Text(
                                                   "I confirm that the details provided by me are correct",
-                                                  style: TextStyles.body4
-                                                      .colour(Colors.black45),
+                                                  style: TextStyles.body2
+                                                      .weight(FontWeight.w500),
                                                 ),
                                               ),
                                             ),

@@ -21,7 +21,7 @@ class FcmHandler extends ChangeNotifier {
   Log log = new Log("FcmHandler");
   ValueChanged<Map> notifListener;
   String url;
-  int tab;
+  int tab, dailogShowCount;
 
   Future<bool> handleMessage(Map data) async {
     logger.d(data.toString());
@@ -107,47 +107,7 @@ class FcmHandler extends ChangeNotifier {
           break;
         case COMMAND_USER_PRIZE_WIN:
           {
-            int hitCount;
-            String htc = await CacheManager.readCache(
-                key: CacheManager.CACHE_RATING_HIT_COUNT);
-            if (htc == null) {
-              await CacheManager.writeCache(
-                  key: CacheManager.CACHE_RATING_HIT_COUNT,
-                  value: 2.toString(),
-                  type: CacheType.string);
-              hitCount = 2;
-            } else {
-              hitCount = int.tryParse(htc) + 1;
-              await CacheManager.writeCache(
-                  key: CacheManager.CACHE_RATING_HIT_COUNT,
-                  value: hitCount.toString(),
-                  type: CacheType.string);
-            }
-            String isUserRated = await CacheManager.readCache(
-                key: CacheManager.CACHE_RATING_IS_RATED);
-            if (isUserRated == null) {
-              await CacheManager.writeCache(
-                  key: CacheManager.CACHE_RATING_IS_RATED,
-                  value: false.toString(),
-                  type: CacheType.string);
-              isUserRated = false.toString();
-            }
-
-            int dailogShowCount;
-            String dsc = await CacheManager.readCache(
-                key: CacheManager.CACHE_RATING_DIALOG_OPEN_COUNT);
-            if (dsc == null) {
-              await CacheManager.writeCache(
-                  key: CacheManager.CACHE_RATING_DIALOG_OPEN_COUNT,
-                  value: 1.toString(),
-                  type: CacheType.string);
-              dailogShowCount = 1;
-            } else {
-              dailogShowCount = int.tryParse(dsc);
-            }
-            if (isUserRated == "false" &&
-                testPrime(hitCount) &&
-                dailogShowCount < 5)
+            if (await reviewDialogCanAppear())
               BaseUtil.openDialog(
                   addToScreenStack: true,
                   isBarrierDismissable: false,
@@ -186,21 +146,53 @@ class FcmHandler extends ChangeNotifier {
     this.notifListener = listener;
   }
 
-  bool testPrime(int testPrime) {
-    int startingPoint = 1;
-    int factors = 0;
-    int endPoint = testPrime;
-    for (startingPoint = 1; startingPoint <= endPoint; startingPoint++) {
-      if (endPoint % startingPoint == 0) {
-        factors++;
+  Future<bool> reviewDialogCanAppear() async {
+    int hitCount;
+    String isUserRated;
+    List<int> arr = [2, 5, 7, 11, 13, 15];
+    try {
+      String htc = await CacheManager.readCache(
+          key: CacheManager.CACHE_RATING_HIT_COUNT);
+      if (htc == null) {
+        await CacheManager.writeCache(
+            key: CacheManager.CACHE_RATING_HIT_COUNT,
+            value: 2.toString(),
+            type: CacheType.string);
+        hitCount = 2;
+      } else {
+        hitCount = int.tryParse(htc) + 1;
+        await CacheManager.writeCache(
+            key: CacheManager.CACHE_RATING_HIT_COUNT,
+            value: hitCount.toString(),
+            type: CacheType.string);
       }
+      isUserRated =
+          await CacheManager.readCache(key: CacheManager.CACHE_RATING_IS_RATED);
+      if (isUserRated == null) {
+        await CacheManager.writeCache(
+            key: CacheManager.CACHE_RATING_IS_RATED,
+            value: false.toString(),
+            type: CacheType.string);
+        isUserRated = false.toString();
+      }
+
+      String dsc = await CacheManager.readCache(
+          key: CacheManager.CACHE_RATING_DIALOG_OPEN_COUNT);
+      if (dsc == null) {
+        await CacheManager.writeCache(
+            key: CacheManager.CACHE_RATING_DIALOG_OPEN_COUNT,
+            value: 1.toString(),
+            type: CacheType.string);
+        dailogShowCount = 1;
+      } else {
+        dailogShowCount = int.tryParse(dsc);
+      }
+    } catch (e) {
+      logger.e(e.toString());
     }
-    if (factors <= 2) {
-      print('$endPoint is prime.');
+
+    if (isUserRated == "false" && arr.contains(hitCount) && dailogShowCount < 5)
       return true;
-    } else {
-      print('$endPoint is not prime.');
-      return false;
-    }
+    return false;
   }
 }
