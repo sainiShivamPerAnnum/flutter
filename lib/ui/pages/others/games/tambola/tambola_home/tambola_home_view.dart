@@ -126,22 +126,22 @@ class TambolaHomeView extends StatelessWidget {
                                                             ))
                                                         .toList(),
                                                   )),
-                                        model.isLeaderboardLoading
-                                            ? ListLoader()
-                                            : (model.tlboard == null ||
-                                                    model.tlboard.scoreboard
-                                                        .isEmpty
-                                                ? NoRecordDisplayWidget(
-                                                    asset:
-                                                        "images/leaderboard.png",
-                                                    text:
-                                                        "Leaderboard will be updated soon",
-                                                  )
-                                                : LeaderBoardView(
-                                                    controller:
-                                                        model.scrollController,
-                                                    model: model.tlboard,
-                                                  ))
+                                        // model.isLeaderboardLoading
+                                        //     ? ListLoader()
+                                        //     : (model.tlboard == null ||
+                                        //             model.tlboard.scoreboard
+                                        //                 .isEmpty
+                                        //         ? NoRecordDisplayWidget(
+                                        //             asset:
+                                        //                 "images/leaderboard.png",
+                                        //             text:
+                                        //                 "Leaderboard will be updated soon",
+                                        //           )
+                                        //         : LeaderBoardView(
+                                        //             controller:
+                                        //                 model.scrollController,
+                                        //             model: model.tlboard,
+                                        //           ))
                                       ]),
                                 ),
                                 SizedBox(height: SizeConfig.padding64)

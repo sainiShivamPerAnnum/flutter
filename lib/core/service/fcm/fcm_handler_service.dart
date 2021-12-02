@@ -1,14 +1,11 @@
-import 'dart:io';
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/core/service/leaderboard_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
-import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_rating_dialog.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -20,6 +17,7 @@ class FcmHandler extends ChangeNotifier {
   static const COMMAND_USER_PRIZE_WIN = 'userPrizeWin';
 
   final Logger logger = locator<Logger>();
+  final _lbService = locator<LeaderboardService>();
   Log log = new Log("FcmHandler");
   ValueChanged<Map> notifListener;
   String url;
@@ -74,6 +72,12 @@ class FcmHandler extends ChangeNotifier {
                 );
               });
             }
+            // update cricket scoreboard
+            Future.delayed(Duration(seconds: 2), () {
+              _lbService
+                  .fetchCricketLeaderBoard()
+                  .then((value) => _lbService.scrollToUserIndexIfAvaiable());
+            });
           }
           break;
         case 'showDialog':
