@@ -19,5 +19,6 @@ class ApiPath {
   get kBuyTambola => "/felloCoins/$stage/api/tambola/buy-tambola-tickets";
   get kGenerateTambolaTickets => "/tambolaGame/$stage/api/generate";
   get kTopWinners => "/prizingOps/$stage/api/reward/current-top-winners";
+  get kAddNewUser => "/userOps/api/v2/$stage/newuser";
 
 }

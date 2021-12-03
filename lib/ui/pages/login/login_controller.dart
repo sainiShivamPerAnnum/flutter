@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
+import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
@@ -10,6 +11,7 @@ import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/mixpanel_service.dart';
@@ -43,6 +45,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 class LoginController extends StatefulWidget {
@@ -74,6 +77,9 @@ class _LoginControllerState extends State<LoginController>
   final FcmListener fcmListener = locator<FcmListener>();
   final AugmontModel augmontProvider = locator<AugmontModel>();
   final MixpanelService _mixpanelService = locator<MixpanelService>();
+  final _userService = locator<UserService>();
+  final _logger = locator<Logger>();
+  final _apiPaths = locator<ApiPath>();
   AnimationController animationController;
 
   String userMobile;
@@ -401,6 +407,13 @@ class _LoginControllerState extends State<LoginController>
     );
   }
 
+  Future<String> _getBearerToken() async {
+    String token = await _userService.firebaseUser.getIdToken();
+    _logger.d(token);
+
+    return token;
+  }
+
   _processScreenInput(int currentPage) async {
     FocusScope.of(context).unfocus();
     switch (currentPage) {
@@ -434,7 +447,8 @@ class _LoginControllerState extends State<LoginController>
             bool flag = await baseProvider.authenticateUser(baseProvider
                 .generateAuthCredential(_augmentedVerificationId, otp));
             if (flag) {
-              _mixpanelService.track(MixpanelEvents.mobileOtpDone,{'userId':baseProvider?.myUser?.uid});
+              _mixpanelService.track(MixpanelEvents.mobileOtpDone,
+                  {'userId': baseProvider?.myUser?.uid});
               AppState.isOnboardingInProgress = true;
               _otpScreenKey.currentState.onOtpReceived();
               _onSignInSuccess();
@@ -533,8 +547,8 @@ class _LoginControllerState extends State<LoginController>
               baseProvider.isLoginNextInProgress = false;
               setState(() {});
             }).then((value) {
-              _mixpanelService
-                  .track(MixpanelEvents.profileInformationAdded,{'userId':baseProvider?.myUser?.uid});
+              _mixpanelService.track(MixpanelEvents.profileInformationAdded,
+                  {'userId': baseProvider?.myUser?.uid});
               _controller.animateToPage(Username.index,
                   duration: Duration(milliseconds: 500),
                   curve: Curves.easeInToLinear);
@@ -563,11 +577,27 @@ class _LoginControllerState extends State<LoginController>
                     username, baseProvider.firebaseUser.uid);
                 if (res) {
                   baseProvider.myUser.username = username;
-                  bool flag = await dbProvider.updateUser(baseProvider.myUser);
+                  bool flag = false;
+                  _logger.d(baseProvider.myUser.toJson());
+                  try {
+                    final String _bearer = await _getBearerToken();
+                    final res = await APIService.instance.postData(
+                        _apiPaths.kAddNewUser,
+                        body: {
+                          'uid': baseProvider.myUser.uid,
+                          'data': baseProvider.myUser.toJson()
+                        },
+                        token: _bearer);
+                    res['message'] == 'Success' ? flag = true : flag = false;
+                  } catch (e) {
+                    _logger.d(e);
+                    flag = false;
+                  }
+                  // bool flag = await dbProvider.updateUser(baseProvider.myUser);
 
                   if (flag) {
-                    _mixpanelService
-                        .track(MixpanelEvents.userNameAdded,{'userId':baseProvider?.myUser?.uid});
+                    _mixpanelService.track(MixpanelEvents.userNameAdded,
+                        {'userId': baseProvider?.myUser?.uid});
                     log.debug("User object saved successfully");
                     _onSignUpComplete();
                   } else {
