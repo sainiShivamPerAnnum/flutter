@@ -184,7 +184,6 @@ class AugmontModel extends ChangeNotifier {
             UserAugmontDetail.newUser(_uid, _uname, stateId, '', '', '');
 
         _baseProvider.updateAugmontOnboarded(true);
-        await _dbModel.updateUser(_baseProvider.myUser);
       } else {
         _logger.e('Create Simple user failed.');
         return null;
