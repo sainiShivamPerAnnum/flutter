@@ -28,7 +28,7 @@ class TransactionsHistory extends StatelessWidget {
             children: [
               FelloAppBar(
                 leading: FelloAppBarBackButton(),
-                title: "Transactions History",
+                title: "Transaction History",
               ),
               Expanded(
                 child: Container(

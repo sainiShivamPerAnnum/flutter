@@ -19,94 +19,79 @@ class WinnersLeaderBoardSE extends StatelessWidget {
     return PropertyChangeConsumer<WinnerService, WinnerServiceProperties>(
         properties: [WinnerServiceProperties.winLeaderboard],
         builder: (context, model, properties) {
-          return Container(
-            child: DraggableScrollableSheet(
-              initialChildSize: 0.2,
-              maxChildSize: 0.94,
-              minChildSize: 0.2,
-              builder: (BuildContext context, myscrollController) {
-                return Stack(
+          return DraggableScrollableSheet(
+            initialChildSize: 0.2,
+            maxChildSize: 0.92,
+            minChildSize: 0.2,
+            builder: (BuildContext context, myscrollController) {
+              return SingleChildScrollView(
+                controller: myscrollController,
+                child: Column(
                   children: [
-                    // Positioned(
-                    //   top: -SizeConfig.screenHeight * 0.19,
-                    //   child: Container(
-                    //     height: SizeConfig.screenHeight * 2,
-                    //     // color: Colors.red,
-                    //     width: SizeConfig.screenWidth,
-                    //     child: Column(
-                    //       children: [
-                    //         Expanded(
-                    //           child: Container(
-                    //             width: SizeConfig.screenWidth,
-                    //             child: CustomPaint(
-                    //               painter: ModalCustomBackground(),
-                    //             ),
-                    //           ),
-                    //         ),
-                    //         Expanded(
-                    //           child: Container(
-                    //             color: Colors.white,
-                    //           ),
-                    //         )
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ),
-                    Column(
-                      children: [
-                        Transform.translate(
-                          offset: Offset(0, 1),
-                          child: SvgPicture.asset(
-                            Assets.clip,
-                            width: SizeConfig.screenWidth,
-                          ),
-                        ),
-                        Expanded(child: Container(color: Colors.white))
-                      ],
-                    ),
-                    Positioned(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                            vertical: SizeConfig.screenWidth * 0.08,
-                            horizontal: SizeConfig.pageHorizontalMargins),
-                        child: Text(
-                          "Leaderboard",
-                          style: TextStyles.title3.bold,
-                        ),
+                    Transform.translate(
+                      offset: Offset(0, 1),
+                      child: SvgPicture.asset(
+                        Assets.clip,
+                        width: SizeConfig.screenWidth,
                       ),
                     ),
-                    Container(
-                      child: model.winners == null
-                          ? Center(
-                              child: SpinKitWave(
-                                color: UiConstants.primaryColor,
+                    Column(
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              width: SizeConfig.screenWidth,
+                              color: Colors.white,
+                              padding: EdgeInsets.only(
+                                  bottom: SizeConfig.padding16,
+                                  left: SizeConfig.pageHorizontalMargins),
+                              child: Text(
+                                "Leaderboard",
+                                style: TextStyles.title3.bold,
                               ),
-                            )
-                          : (model.winners.isEmpty
-                              ? Container(
-                                  child: ListView(
-                                    controller: myscrollController,
-                                    children: [
-                                      Center(
-                                        child: NoRecordDisplayWidget(
+                            ),
+                          ],
+                        ),
+                        Container(
+                          color: Colors.white,
+                          child: model.winners == null
+                              ? Column(
+                                  children: [
+                                    Center(
+                                      child: SpinKitWave(
+                                        color: UiConstants.primaryColor,
+                                      ),
+                                    ),
+                                    Container(
+                                      height: SizeConfig.screenHeight * 0.7,
+                                    )
+                                  ],
+                                )
+                              : (model.winners.isEmpty
+                                  ? Column(
+                                      children: [
+                                        NoRecordDisplayWidget(
                                           asset: "images/leaderboard.png",
                                           text:
                                               "Leaderboard will be upadated soon",
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              : WinnerboardView(
-                                  winners: model.winners,
-                                  controller: myscrollController,
-                                  timeStamp: model.timeStamp,
-                                )),
+                                        Container(
+                                          height: SizeConfig.screenHeight * 0.7,
+                                        )
+                                      ],
+                                    )
+                                  : WinnerboardView(
+                                      winners: model.winners,
+                                      controller: myscrollController,
+                                      timeStamp: model.timeStamp,
+                                    )),
+                        ),
+                      ],
                     ),
                   ],
-                );
-              },
-            ),
+                ),
+              );
+            },
           );
         });
   }
@@ -124,38 +109,32 @@ class WinnerboardView extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      controller: controller,
-      // physics: NeverScrollableScrollPhysics(),
-      child: Column(
-        children: [
-          SizedBox(height: SizeConfig.padding80),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.pageHorizontalMargins,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Previous week\'s prize winners:',
-                  style: TextStyles.body4.colour(Colors.grey),
-                ),
-                Text(
-                  timeStamp != null
-                      ? "Updated on: ${DateFormat('dd-MMM-yyyy | hh:mm:ss').format(timeStamp.toDate())}"
-                      : "",
-                  style: TextStyles.body4.colour(Colors.grey),
-                ),
-              ],
-            ),
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: SizeConfig.pageHorizontalMargins,
           ),
-          ListView.builder(
-            controller: controller,
-            shrinkWrap: true,
-            itemCount: winners.length,
-            padding: EdgeInsets.only(bottom: SizeConfig.navBarHeight),
-            itemBuilder: (ctx, i) {
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Previous week\'s prize winners:',
+                style: TextStyles.body4.colour(Colors.grey),
+              ),
+              Text(
+                timeStamp != null
+                    ? "Updated on: ${DateFormat('dd-MMM-yyyy | hh:mm:ss').format(timeStamp.toDate())}"
+                    : "",
+                style: TextStyles.body4.colour(Colors.grey),
+              ),
+            ],
+          ),
+        ),
+        Column(
+          children: List.generate(
+            winners.length,
+            (i) {
               return Container(
                 width: SizeConfig.screenWidth,
                 padding: EdgeInsets.all(SizeConfig.padding12),
@@ -208,8 +187,177 @@ class WinnerboardView extends StatelessWidget {
               );
             },
           ),
-        ],
-      ),
+        ),
+        SizedBox(
+          height: SizeConfig.navBarHeight * 1.5,
+        )
+      ],
     );
   }
 }
+
+
+
+// class CustomDraggableLeaderboard extends StatefulWidget {
+//   @override
+//   State<CustomDraggableLeaderboard> createState() =>
+//       _CustomDraggableLeaderboardState();
+// }
+
+// class _CustomDraggableLeaderboardState
+//     extends State<CustomDraggableLeaderboard> {
+//   double animatedHeight = SizeConfig.screenHeight * 0.24;
+
+//   animate() {
+//     setState(() {
+//       animatedHeight = SizeConfig.screenHeight * 0.7;
+//     });
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return PropertyChangeConsumer<WinnerService, WinnerServiceProperties>(
+//         properties: [WinnerServiceProperties.winLeaderboard],
+//         builder: (context, model, properties) {
+//           return Container(
+//               color: Colors.white,
+//               // duration: Duration(seconds: 1),
+//               // curve: Curves.easeIn,
+//               height: SizeConfig.screenHeight * 0.5,
+//               width: SizeConfig.screenWidth,
+//               child: Column(
+//                 children: [
+//                   SvgPicture.asset(
+//                     Assets.clip,
+//                     width: SizeConfig.screenWidth,
+//                   ),
+//                   Text(
+//                     "Leaderboard",
+//                     style: TextStyles.title3.bold,
+//                   ),
+//                   model.winners == null
+//                       ? Center(
+//                           child: SpinKitWave(
+//                             color: UiConstants.primaryColor,
+//                           ),
+//                         )
+//                       : (model.winners.isEmpty
+//                           ? Container(
+//                               child: Center(
+//                                 child: NoRecordDisplayWidget(
+//                                   asset: "images/leaderboard.png",
+//                                   text: "Leaderboard will be upadated soon",
+//                                 ),
+//                               ),
+//                             )
+//                           : Column(
+//                               children: [
+//                                 SizedBox(height: SizeConfig.padding80),
+//                                 Padding(
+//                                   padding: EdgeInsets.symmetric(
+//                                     horizontal:
+//                                         SizeConfig.pageHorizontalMargins,
+//                                   ),
+//                                   child: Row(
+//                                     mainAxisAlignment:
+//                                         MainAxisAlignment.spaceBetween,
+//                                     children: [
+//                                       Text(
+//                                         'Previous week\'s prize winners:',
+//                                         style: TextStyles.body4
+//                                             .colour(Colors.grey),
+//                                       ),
+//                                       Text(
+//                                         model.timeStamp != null
+//                                             ? "Updated on: ${DateFormat('dd-MMM-yyyy | hh:mm:ss').format(model.timeStamp.toDate())}"
+//                                             : "",
+//                                         style: TextStyles.body4
+//                                             .colour(Colors.grey),
+//                                       ),
+//                                     ],
+//                                   ),
+//                                 ),
+//                                 Expanded(
+//                                   child: ListView.builder(
+//                                     //controller: controller,
+//                                     shrinkWrap: true,
+//                                     itemCount: model.winners.length,
+//                                     padding: EdgeInsets.only(
+//                                         bottom: SizeConfig.navBarHeight),
+//                                     itemBuilder: (ctx, i) {
+//                                       return Container(
+//                                         width: SizeConfig.screenWidth,
+//                                         padding: EdgeInsets.all(
+//                                             SizeConfig.padding12),
+//                                         margin: EdgeInsets.symmetric(
+//                                             vertical: SizeConfig.padding8,
+//                                             horizontal: SizeConfig
+//                                                 .pageHorizontalMargins),
+//                                         decoration: BoxDecoration(
+//                                           color: Color(0xfff6f6f6),
+//                                           borderRadius: BorderRadius.circular(
+//                                               SizeConfig.roundness16),
+//                                         ),
+//                                         child: Row(
+//                                           children: [
+//                                             CircleAvatar(
+//                                               backgroundColor:
+//                                                   UiConstants.primaryColor,
+//                                               radius: SizeConfig.padding16,
+//                                               child: Text(
+//                                                 "${i + 1}",
+//                                                 style: TextStyles.body4
+//                                                     .colour(Colors.white),
+//                                               ),
+//                                             ),
+//                                             SizedBox(
+//                                                 width: SizeConfig.padding12),
+//                                             Expanded(
+//                                               child: Column(
+//                                                 crossAxisAlignment:
+//                                                     CrossAxisAlignment.start,
+//                                                 mainAxisAlignment:
+//                                                     MainAxisAlignment.center,
+//                                                 children: [
+//                                                   Text(
+//                                                       //"avc",
+//                                                       model.winners[i].username
+//                                                               .replaceAll(
+//                                                                   '@', '.') ??
+//                                                           "username",
+//                                                       style: TextStyles.body3),
+//                                                   SizedBox(
+//                                                       height:
+//                                                           SizeConfig.padding4),
+//                                                   Text(
+//                                                     model.winners[i].gameType ==
+//                                                             Constants
+//                                                                 .GAME_TYPE_CRICKET
+//                                                         ? "Cricket"
+//                                                         : "Tambola",
+//                                                     style: TextStyles.body4
+//                                                         .colour(UiConstants
+//                                                             .primaryColor),
+//                                                   )
+//                                                 ],
+//                                               ),
+//                                             ),
+//                                             PrizeChip(
+//                                               color: UiConstants.primaryColor,
+//                                               png: Assets.moneyIcon,
+//                                               text:
+//                                                   "Rs ${model.winners[i].amount.toString() ?? "00"}",
+//                                             ),
+//                                           ],
+//                                         ),
+//                                       );
+//                                     },
+//                                   ),
+//                                 ),
+//                               ],
+//                             )),
+//                 ],
+//               ));
+//         });
+//   }
+// }

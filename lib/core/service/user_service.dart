@@ -5,8 +5,11 @@ import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:logger/logger.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
@@ -186,5 +189,45 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     userFundWallet = (_userFundWallet == null)
         ? UserFundWallet.newWallet()
         : _userFundWallet;
+  }
+
+  Future<String> createDynamicLink(bool short, String source) async {
+    final DynamicLinkParameters parameters = DynamicLinkParameters(
+      uriPrefix:
+          '${FlavorConfig.instance.values.dynamicLinkPrefix}/app/referral',
+      link: Uri.parse('https://fello.in/${_baseUser.uid}'),
+      socialMetaTagParameters: SocialMetaTagParameters(
+          title: 'Download ${Constants.APP_NAME}',
+          description:
+              'Fello makes saving fun, and investing a lot more simple!',
+          imageUrl: Uri.parse(
+              'https://fello-assets.s3.ap-south-1.amazonaws.com/ic_social.png')),
+      googleAnalyticsParameters: GoogleAnalyticsParameters(
+        campaign: 'referrals',
+        medium: 'social',
+        source: source,
+      ),
+      androidParameters: AndroidParameters(
+        packageName: 'in.fello.felloapp',
+        minimumVersion: 0,
+      ),
+      dynamicLinkParametersOptions: DynamicLinkParametersOptions(
+        shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
+      ),
+      iosParameters: IosParameters(
+          bundleId: 'in.fello.felloappiOS',
+          minimumVersion: '0',
+          appStoreId: '1558445254'),
+    );
+
+    Uri url;
+    if (short) {
+      final ShortDynamicLink shortLink = await parameters.buildShortLink();
+      url = shortLink.shortUrl;
+    } else {
+      url = await parameters.buildUrl();
+    }
+
+    return url.toString();
   }
 }

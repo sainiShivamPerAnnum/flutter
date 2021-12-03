@@ -7,6 +7,7 @@ import 'package:felloapp/core/model/leader_board_modal.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/repository/statistics_repo.dart';
+import 'package:felloapp/core/service/leaderboard_service.dart';
 import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/core/service/prize_service.dart';
 import 'package:felloapp/core/service/user_coin_service.dart';
@@ -29,6 +30,7 @@ class CricketHomeViewModel extends BaseModel {
   final _logger = locator<Logger>();
   final _stats = locator<StatisticsRepository>();
   final _prizeService = locator<PrizeService>();
+  final _lbService = locator<LeaderboardService>();
   final _mixpanelService = locator<MixpanelService>();
 
   PageController pageController = new PageController(initialPage: 0);
@@ -39,7 +41,7 @@ class CricketHomeViewModel extends BaseModel {
   LeaderBoardModal _cricLeaderboard;
   bool isLeaderboardLoading = false;
   bool isPrizesLoading = false;
-  ScrollController scrollController = ScrollController();
+  ScrollController scrollController;
   double cardOpacity = 1;
 
   udpateCardOpacity() {
@@ -66,13 +68,15 @@ class CricketHomeViewModel extends BaseModel {
   }
 
   init() {
-    getLeaderboard();
+    scrollController = _lbService.parentController;
+    _lbService.fetchCricketLeaderBoard();
     if (cPrizes == null) getPrizes();
   }
 
   startGame() {
     _mixpanelService.track(
         MixpanelEvents.playsCricket, {'userId': _userService.baseUser.uid});
+    viewpage(1);
     AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: CricketGamePageConfig,
@@ -131,5 +135,9 @@ class CricketHomeViewModel extends BaseModel {
           "Leaderboard failed to update", temp.errorMessage);
     isLeaderboardLoading = false;
     notifyListeners();
+  }
+
+  refreshLeaderboard() async {
+    await _lbService.fetchCricketLeaderBoard();
   }
 }

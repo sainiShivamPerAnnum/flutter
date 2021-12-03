@@ -13,6 +13,7 @@ import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/ui/widgets/drawer/drawer_view.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -61,6 +62,15 @@ class Root extends StatelessWidget {
                       : SizeConfig.screenHeight * 0.2),
               child: Stack(
                 children: [
+                  if (FlavorConfig.isDevelopment())
+                    Container(
+                      width: SizeConfig.screenWidth,
+                      child: Banner(
+                        message: FlavorConfig.getStage(),
+                        location: BannerLocation.topEnd,
+                        color: FlavorConfig.instance.color,
+                      ),
+                    ),
                   RefreshIndicator(
                     color: UiConstants.primaryColor,
                     backgroundColor: Colors.black,
