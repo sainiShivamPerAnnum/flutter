@@ -56,7 +56,7 @@ class InvestmentActionsRepository {
     };
     _logger.d("initiateUserDeposit : $_body");
 
-    try {
+    // try {
       final String _bearer = await _getBearerToken();
       final response = await APIService.instance
           .postData(_apiPaths.kDepositPending, body: _body, token: _bearer);
@@ -69,17 +69,17 @@ class InvestmentActionsRepository {
       _logger.d("response from api: ${_investmentDepositModel.toString()}");
 
       return ApiResponse(model: _investmentDepositModel, code: 200);
-    } catch (e) {
-      _logger.e(e.toString());
-      return ApiResponse.withError(e.toString(), 400);
-    }
+    // } catch (e) {
+    //   _logger.e(e.toString());
+    //   return ApiResponse.withError(e.toString(), 400);
+    // }
   }
 
   Future<ApiResponse<DepositResponseModel>> completeUserDeposit({
     String txnId,
     double amount,
     Map<String, dynamic> rzpUpdates,
-    Map<String, dynamic> augUpdates,
+    Map<String, dynamic> submitGoldUpdates,
     String userUid,
     EnqueuedTaskDetails enqueuedTaskDetails,
   }) async {
@@ -87,7 +87,7 @@ class InvestmentActionsRepository {
       "user_id": userUid,
       "amount": amount,
       "rzp_map": rzpUpdates,
-      "aug_map": augUpdates,
+      "submit_gold_map": submitGoldUpdates,
       "tran_id": txnId,
       "enqueuedTaskDetails": enqueuedTaskDetails.toMap()
     };
@@ -143,16 +143,16 @@ class InvestmentActionsRepository {
       {String tranDocId,
       double amount,
       String userUid,
-      Map<String, dynamic> augMap}) async {
+      Map<String, dynamic> sellGoldMap}) async {
     Map<String, dynamic> _body = {
       "tran_doc_id": tranDocId,
       "user_id": userUid,
       "amount": amount,
-      "aug_map": augMap,
+      "sell_gold_map": sellGoldMap,
     };
 
     _logger.d("withdrawlComplete : $_body");
-    try {
+    // try {
       final String _bearer = await _getBearerToken();
       final response = await APIService.instance
           .postData(_apiPaths.kWithdrawlComplete, body: _body, token: _bearer);
@@ -163,10 +163,10 @@ class InvestmentActionsRepository {
       _logger.d(_investmentDepositModel.toString());
 
       return ApiResponse(model: _investmentDepositModel, code: 200);
-    } catch (e) {
-      _logger.e(e);
-      return ApiResponse.withError(e.toString(), 400);
-    }
+    // } catch (e) {
+    //   _logger.e(e);
+    //   return ApiResponse.withError(e.toString(), 400);
+    // }
   }
 
   Future<ApiResponse<DepositResponseModel>> withdrawlCancelled(

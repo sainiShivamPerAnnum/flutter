@@ -18,6 +18,7 @@ import 'package:felloapp/core/service/connectivity_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/lcl_db_api.dart';
+import 'package:felloapp/core/service/leaderboard_service.dart';
 import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/core/service/prize_service.dart';
@@ -88,6 +89,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => TambolaService());
   locator.registerLazySingleton(() => PrizeService());
   locator.registerLazySingleton(() => WinnerService());
+  locator.registerLazySingleton(() => LeaderboardService());
 
   //Repository
   locator.registerLazySingleton(() => DBModel());

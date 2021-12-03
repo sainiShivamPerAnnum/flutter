@@ -71,8 +71,7 @@ class ReferralDetailsViewModel extends BaseModel {
   Future<void> generateLink() async {
     loadingUrl = true;
     notifyListeners();
-    _userUrl =
-        await _createDynamicLink(_userService.baseUser.uid, true, 'Other');
+    _userUrl = await _userService.createDynamicLink(true, 'Other');
     _userUrlPrefix = _userUrl;
     _userUrlCode = _userUrlPrefix.split('/').removeLast();
     List<String> splittedUrl = _userUrlPrefix.split('/');
@@ -83,12 +82,11 @@ class ReferralDetailsViewModel extends BaseModel {
     refresh();
   }
 
-
   void copyReferCode() {
-    _mixpanelService.track(MixpanelEvents.referCodeCopied,{'userId':_userService.baseUser.uid});
+    _mixpanelService.track(
+        MixpanelEvents.referCodeCopied, {'userId': _userService.baseUser.uid});
     Clipboard.setData(ClipboardData(text: userUrlCode)).then((_) {
-      BaseUtil.showPositiveAlert(
-          "Code: $userUrlCode", "Copied to Clipboard");
+      BaseUtil.showPositiveAlert("Code: $userUrlCode", "Copied to Clipboard");
     });
   }
 
@@ -101,11 +99,11 @@ class ReferralDetailsViewModel extends BaseModel {
         contentType: 'referral',
         itemId: _userService.baseUser.uid,
         method: 'message');
-        _mixpanelService.track(MixpanelEvents.linkShared,{'userId':_userService.baseUser.uid});
+    _mixpanelService.track(
+        MixpanelEvents.linkShared, {'userId': _userService.baseUser.uid});
     shareLinkInProgress = true;
     refresh();
-    _createDynamicLink(_userService.baseUser.uid, true, 'Other')
-        .then((url) async {
+    _userService.createDynamicLink(true, 'Other').then((url) async {
       _logger.d(url);
       shareLinkInProgress = false;
       refresh();
@@ -131,8 +129,7 @@ class ReferralDetailsViewModel extends BaseModel {
     refresh();
     String url;
     try {
-      url =
-          await _createDynamicLink(_userService.baseUser.uid, true, 'Whatsapp');
+      url = await _userService.createDynamicLink(true, 'Whatsapp');
     } catch (e) {
       _logger.e('Failed to create dynamic link');
       _logger.e(e);
@@ -145,7 +142,8 @@ class ReferralDetailsViewModel extends BaseModel {
     else
       _logger.d(url);
     try {
-      _mixpanelService.track(MixpanelEvents.whatsappShare,{'userId':_userService.baseUser.uid});
+      _mixpanelService.track(
+          MixpanelEvents.whatsappShare, {'userId': _userService.baseUser.uid});
       FlutterShareMe().shareToWhatsApp(msg: _shareMsg + url).then((flag) {
         if (flag == "false") {
           FlutterShareMe()
@@ -170,46 +168,5 @@ class ReferralDetailsViewModel extends BaseModel {
     // }).catchError((err) {
     //  _logger.e('Share to whatsapp biz failed as well');
     // });
-  }
-
-  Future<String> _createDynamicLink(
-      String userId, bool short, String source) async {
-    final DynamicLinkParameters parameters = DynamicLinkParameters(
-      uriPrefix:
-          '${FlavorConfig.instance.values.dynamicLinkPrefix}/app/referral',
-      link: Uri.parse('https://fello.in/$userId'),
-      socialMetaTagParameters: SocialMetaTagParameters(
-          title: 'Download ${Constants.APP_NAME}',
-          description:
-              'Fello makes saving fun, and investing a lot more simple!',
-          imageUrl: Uri.parse(
-              'https://fello-assets.s3.ap-south-1.amazonaws.com/ic_social.png')),
-      googleAnalyticsParameters: GoogleAnalyticsParameters(
-        campaign: 'referrals',
-        medium: 'social',
-        source: source,
-      ),
-      androidParameters: AndroidParameters(
-        packageName: 'in.fello.felloapp',
-        minimumVersion: 0,
-      ),
-      dynamicLinkParametersOptions: DynamicLinkParametersOptions(
-        shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
-      ),
-      iosParameters: IosParameters(
-          bundleId: 'in.fello.felloappiOS',
-          minimumVersion: '0',
-          appStoreId: '1558445254'),
-    );
-
-    Uri url;
-    if (short) {
-      final ShortDynamicLink shortLink = await parameters.buildShortLink();
-      url = shortLink.shortUrl;
-    } else {
-      url = await parameters.buildUrl();
-    }
-
-    return url.toString();
   }
 }

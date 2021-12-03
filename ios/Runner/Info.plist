@@ -2,21 +2,21 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-<key>CFBundleLocalizations</key>
-<array>
-    <string>en_US</string>
-    <string>pt_BR</string>
-</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Fello</string>
+	<string>$(APP_BUILD_NAME)</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en_US</string>
+		<string>pt_BR</string>
+	</array>
 	<key>CFBundleName</key>
 	<string>felloapp</string>
 	<key>CFBundlePackageType</key>
@@ -43,6 +43,14 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>fello.page.link</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.76548371644-2mphkjd1hahmsrem16sce0lsonic5ce2</string>
 			</array>
 		</dict>
 	</array>
@@ -97,11 +105,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-    <key>FirebaseDynamicLinksCustomDomains</key>
-    <array>
-        <string>https://fello.in/download/app</string>
-        <string>https://fello.in/app/referral</string>
-        <string>https://fello.in/claim/goldenticket</string>
-    </array>
 </dict>
 </plist>

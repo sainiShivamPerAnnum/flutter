@@ -6,6 +6,7 @@ import 'package:felloapp/core/model/tambola_winners_details.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/winners_repo.dart';
+import 'package:felloapp/core/service/leaderboard_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/core/service/winners_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -22,6 +23,7 @@ class WinViewModel extends BaseModel {
   final _winnersRepo = locator<WinnersRepository>();
   final _logger = locator<Logger>();
   final _winnerService = locator<WinnerService>();
+  final _lbService = locator<LeaderboardService>();
 
   LocalDBModel _localDBModel = locator<LocalDBModel>();
   bool isWinnersLoading = false;
