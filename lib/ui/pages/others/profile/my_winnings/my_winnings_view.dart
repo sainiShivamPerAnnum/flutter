@@ -286,13 +286,10 @@ class MyWinningsView extends StatelessWidget {
                                                 ],
                                               ),
                                               trailing: Text(
-                                                (model.winningHistory[i]
-                                                                .amount >
-                                                            0
-                                                        ? ""
-                                                        : "-") +
-                                                    " ₹ " +
-                                                    "${model.winningHistory[i].amount.abs()}",
+                                                model.txnService
+                                                    .getFormattedTxnAmount(model
+                                                        .winningHistory[i]
+                                                        .amount),
                                                 style: TextStyles.body2.bold
                                                     .colour(
                                                         model.winningHistory[i]

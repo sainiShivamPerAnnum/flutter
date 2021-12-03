@@ -206,78 +206,59 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                 margin: EdgeInsets.only(bottom: 20),
                 child: Column(
                   children: [
-                    (widget._transaction.subType ==
-                                UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
-                            widget._transaction.type ==
-                                UserTransaction.TRAN_TYPE_DEPOSIT)
-                        ? Row(
-                            children: [
-                              referralTile(
-                                  'Purchase Rate:',
-                                  widget._transaction.augmnt[UserTransaction
-                                              .subFldAugLockPrice] !=
-                                          null
-                                      ? '₹ ${widget._transaction.augmnt[UserTransaction.subFldAugLockPrice]}/gm'
-                                      : "Unavailable",
-                                  UiConstants.primaryColor),
-                              referralTile(
-                                  'Gold Purchased:',
-                                  '${_getAugmontGoldGrams(BaseUtil.toDouble(widget._transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm]) ?? 'N/A')} grams',
-                                  UiConstants.primaryColor)
-                            ],
+                    if (widget._transaction.subType ==
+                            UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
+                        widget._transaction.type ==
+                            UserTransaction.TRAN_TYPE_DEPOSIT)
+                      Row(
+                        children: [
+                          referralTile(
+                              'Purchase Rate:',
+                              widget._transaction.augmnt[
+                                          UserTransaction.subFldAugLockPrice] !=
+                                      null
+                                  ? '₹ ${widget._transaction.augmnt[UserTransaction.subFldAugLockPrice]}/gm'
+                                  : "Unavailable",
+                              UiConstants.primaryColor),
+                          referralTile(
+                              'Gold Purchased:',
+                              '${_getAugmontGoldGrams(BaseUtil.toDouble(widget._transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm]) ?? 'N/A')} grams',
+                              UiConstants.primaryColor)
+                        ],
+                      ),
+                    if (widget._transaction.subType ==
+                            UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
+                        widget._transaction.type ==
+                            UserTransaction.TRAN_TYPE_WITHDRAW)
+                      Row(
+                        children: [
+                          referralTile(
+                            'Sell Rate:',
+                            '₹ ${widget._transaction.augmnt[UserTransaction.subFldAugLockPrice] ?? 'N/A'}/gm',
+                            Colors.redAccent.withOpacity(0.6),
+                          ),
+                          referralTile(
+                            'Gold Sold:',
+                            '${_getAugmontGoldGrams(BaseUtil.toDouble(widget._transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm]) ?? 'N/A')} grams',
+                            Colors.redAccent.withOpacity(0.6),
                           )
-                        : Container(),
-                    (widget._transaction.subType ==
-                                UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
-                            widget._transaction.type ==
-                                UserTransaction.TRAN_TYPE_WITHDRAW)
-                        ? Row(
-                            children: [
-                              referralTile(
-                                'Sell Rate:',
-                                '₹ ${widget._transaction.augmnt[UserTransaction.subFldAugLockPrice] ?? 'N/A'}/gm',
-                                Colors.redAccent.withOpacity(0.6),
-                              ),
-                              referralTile(
-                                'Gold Sold:',
-                                '${_getAugmontGoldGrams(BaseUtil.toDouble(widget._transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm]) ?? 'N/A')} grams',
-                                Colors.redAccent.withOpacity(0.6),
-                              )
-                            ],
-                          )
-                        : Container(),
-                    // (widget._transaction.type !=
-                    //         UserTransaction.TRAN_TYPE_WITHDRAW)
-                    //     ? referralTileWide(
-                    //         'Tickets Added:',
-                    //         '${widget._transaction.ticketUpCount ?? 'Unavailable'}',
-                    //         UiConstants.primaryColor)
-                    //     : referralTileWide(
-                    //         'Tickets Reduced:',
-                    //         '${widget._transaction.ticketUpCount ?? 'Unavailable'}',
-                    //         Colors.redAccent.withOpacity(0.6),
-                    //       ),
-                    // (widget._transaction.subType ==
-                    //         UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD)
-                    //     ? referralTileWide(
-                    //         'Closing Gold Balance:',
-                    //         widget._transaction.augmnt[
-                    //                     UserTransaction.subFldAugTotalGoldGm] ==
-                    //                 null
-                    //             ? "Unavailable"
-                    //             : '${widget._transaction.augmnt[UserTransaction.subFldAugTotalGoldGm] ?? 'Unavailable'} grams',
-                    //         UiConstants.primaryColor)
-                    //     : Container(),
-                    // (widget._transaction.closingBalance > 0)
-                    //     ? referralTileWide(
-                    //         'Overall Closing Balance:',
-                    //         '₹${widget._transaction.closingBalance.toStringAsFixed(2) ?? 'Unavailable'}',
-                    //         UiConstants.primaryColor)
-                    //     : Container(),
-                    widget._transaction.tranStatus != null
-                        ? referralTileWide('Transaction Status',
+                        ],
+                      ),
+                    (widget._transaction.tranStatus != null)
+                        ? referralTileWide('Transaction Status:',
                             widget._transaction.tranStatus, getFlagColor())
-                        : Container()
+                        : referralTileWide('Transaction Status:', "COMPLETED",
+                            UiConstants.primaryColor),
+                    if (widget._transaction.redeemType != null &&
+                        widget._transaction.redeemType != "")
+                      referralTileWide(
+                          "Redeem type:",
+                          getRedeemTypeValue(widget._transaction.redeemType),
+                          UiConstants.tertiarySolid),
+                    referralTileWide(
+                        "Date & Time",
+                        "${_getFormattedDate(widget._transaction.timestamp)}, ${_getFormattedTime(widget._transaction.timestamp)}",
+                        Colors.black)
                   ],
                 ),
               ),
@@ -476,6 +457,19 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
     );
   }
 
+  String getRedeemTypeValue(String redeemtype) {
+    switch (redeemtype) {
+      case UserTransaction.TRAN_REDEEMTYPE_AUGMONT_GOLD:
+        return "Augmont Digital Gold";
+        break;
+      case UserTransaction.TRAN_REDEEMTYPE_AMZ_VOUCHER:
+        return "Amazon Gift Voucher";
+        break;
+      default:
+        return "Fello Rewards";
+    }
+  }
+
   Duration getOfferDuration(int totalMins) {
     Duration difference;
     DateTime tTime = DateTime.fromMillisecondsSinceEpoch(
@@ -513,17 +507,11 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
           Expanded(
             child: Text(
               title,
-              style: GoogleFonts.montserrat(
-                  fontSize: SizeConfig.mediumTextSize, color: Colors.black45),
+              style: TextStyles.body3.colour(Colors.black45),
             ),
           ),
           Expanded(
-            child: Text(
-              value,
-              style: GoogleFonts.montserrat(
-                  fontWeight: FontWeight.w500,
-                  fontSize: SizeConfig.mediumTextSize),
-            ),
+            child: Text(value, style: TextStyles.body3.bold),
           ),
         ],
       ),
@@ -548,16 +536,10 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
               children: [
                 Text(
                   title,
-                  style: GoogleFonts.montserrat(
-                      fontSize: SizeConfig.mediumTextSize, color: Colors.grey),
+                  style: TextStyles.body3.colour(Colors.black45),
                 ),
                 SizedBox(height: 4),
-                Text(
-                  value,
-                  style: GoogleFonts.montserrat(
-                      fontWeight: FontWeight.w500,
-                      fontSize: SizeConfig.mediumTextSize),
-                ),
+                Text(value, style: TextStyles.body3.bold),
               ],
             ),
           ],
@@ -597,3 +579,33 @@ class BeerTicketItem extends StatelessWidget {
         ]);
   }
 }
+
+
+// (widget._transaction.type !=
+//         UserTransaction.TRAN_TYPE_WITHDRAW)
+//     ? referralTileWide(
+//         'Tickets Added:',
+//         '${widget._transaction.ticketUpCount ?? 'Unavailable'}',
+//         UiConstants.primaryColor)
+//     : referralTileWide(
+//         'Tickets Reduced:',
+//         '${widget._transaction.ticketUpCount ?? 'Unavailable'}',
+//         Colors.redAccent.withOpacity(0.6),
+//       ),
+// (widget._transaction.subType ==
+//         UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD)
+//     ? referralTileWide(
+//         'Closing Gold Balance:',
+//         widget._transaction.augmnt[
+//                     UserTransaction.subFldAugTotalGoldGm] ==
+//                 null
+//             ? "Unavailable"
+//             : '${widget._transaction.augmnt[UserTransaction.subFldAugTotalGoldGm] ?? 'Unavailable'} grams',
+//         UiConstants.primaryColor)
+//     : Container(),
+// (widget._transaction.closingBalance > 0)
+//     ? referralTileWide(
+//         'Overall Closing Balance:',
+//         '₹${widget._transaction.closingBalance.toStringAsFixed(2) ?? 'Unavailable'}',
+//         UiConstants.primaryColor)
+//     : Container(),

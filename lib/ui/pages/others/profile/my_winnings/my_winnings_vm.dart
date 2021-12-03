@@ -66,6 +66,7 @@ class MyWinningsViewModel extends BaseModel {
   }
 
   UserService get userService => _userService;
+  TransactionService get txnService => _transactionService;
 
   set choice(value) {
     this._choice = value;
@@ -373,7 +374,7 @@ class MyWinningsViewModel extends BaseModel {
           children: [
             TextSpan(
               text: "1-2 business working days",
-              style: TextStyles.body3.bold.colour(Colors.grey),
+              style: TextStyles.body3.bold.colour(UiConstants.tertiarySolid),
             )
           ],
         ),
