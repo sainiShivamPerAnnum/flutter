@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/deposit_response_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
@@ -9,6 +10,7 @@ import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/core/repository/investment_actions_repo.dart';
+import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/augmont_invoice_service.dart';
 import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
@@ -30,6 +32,8 @@ import 'package:logger/logger.dart';
 class AugmontModel extends ChangeNotifier {
   final Log log = new Log('AugmontModel');
   final Logger _logger = locator<Logger>();
+  final _apiPaths = locator<ApiPath>();
+
   final InvestmentActionsRepository _investmentActionsRepository =
       locator<InvestmentActionsRepository>();
 
@@ -65,6 +69,13 @@ class AugmontModel extends ChangeNotifier {
   }
 
   bool isInit() => (_apiKey != null);
+
+  Future<String> _getBearerToken() async {
+    String token = await _userService.firebaseUser.getIdToken();
+    _logger.d(token);
+
+    return token;
+  }
 
   // String _constructUid(String pan) {
   //   var rnd = new Random();
@@ -152,45 +163,37 @@ class AugmontModel extends ChangeNotifier {
       String mobile, String stateId) async {
     if (!isInit()) await _init();
 
-    String _uid = _constructUid(mobile);
-    String _uname = _constructUsername();
-    var _params = {
+    String uid = _userService.baseUser.uid;
+    var data = {
       CreateUser.fldMobile: mobile,
-      CreateUser.fldID: _uid,
-      CreateUser.fldUserName: _uname,
+      CreateUser.fldID: uid,
       CreateUser.fldStateId: stateId,
     };
+    Map<String, dynamic> _body = {"data": data};
+    _logger.d(_body);
 
-    var _request = http.Request(
-        'GET', Uri.parse(_constructRequest(CreateUser.path, _params)));
-    _request.headers.addAll(headers);
-    http.StreamedResponse _response = await _request.send();
+    try {
+      final String _bearer = await _getBearerToken();
+      final res = await APIService.instance
+          .postData(_apiPaths.kCreateSimpleUser, body: _body, token: _bearer);
+      _logger.d("Create Simple User Api response: ${res.toString()})");
+      if (res["flag"]) {
+        final _uid = res['aUid'];
+        final _uname = res['aUname'];
+        _baseProvider.augmontDetail =
+            UserAugmontDetail.newUser(_uid, _uname, stateId, '', '', '');
 
-    final resMap = await _processResponse(_response);
-    if (resMap == null || !resMap[INTERNAL_FAIL_FLAG]) {
-      log.error('Query Failed');
-      return null;
-    } else {
-      log.debug(resMap[CreateUser.resStatusCode].toString());
-      resMap["flag"] = QUERY_PASSED;
-
-      ///create augmont detail object
-      _baseProvider.augmontDetail =
-          UserAugmontDetail.newUser(_uid, _uname, stateId, '', '', '');
-      bool _a = false;
-
-      ///push the augmont detail object
-      _a = await _dbModel.updateUserAugmontDetails(
-          _baseProvider.myUser.uid, _baseProvider.augmontDetail);
-
-      ///switch augmont onboarding to true and notify listeners if everything goes in order
-      if (_a) {
         _baseProvider.updateAugmontOnboarded(true);
-        await _dbModel.updateUser(_baseProvider.myUser);
+      } else {
+        _logger.e('Create Simple user failed.');
+        return null;
       }
-
-      return _baseProvider.augmontDetail;
+    } catch (e) {
+      _logger.e('Query Failed $e');
+      return null;
     }
+
+    return _baseProvider.augmontDetail;
   }
 
   Future<AugmontRates> getRates() async {
@@ -259,15 +262,20 @@ class AugmontModel extends ChangeNotifier {
       return null;
     }
 
-    _tranIdResponse = await _investmentActionsRepository.createTranId(userUid: _baseProvider.myUser.uid);
-    if(_tranIdResponse.code != 200 || _tranIdResponse.model == null || _tranIdResponse.model.isEmpty) {
+    _tranIdResponse = await _investmentActionsRepository.createTranId(
+        userUid: _baseProvider.myUser.uid);
+    if (_tranIdResponse.code != 200 ||
+        _tranIdResponse.model == null ||
+        _tranIdResponse.model.isEmpty) {
       _logger.e('Failed to create a transaction id');
       return null;
     }
 
-    String _note1 = 'BlockID: ${buyRates.blockId},gPrice: ${buyRates.goldBuyPrice}';
-    String _note2 = 'UserId:${_baseProvider.myUser.uid},MerchantTxnID: ${_tranIdResponse.model}';
-    String rzpOrderId = await _rzpGateway.createOrderId(amount,_note1, _note2);
+    String _note1 =
+        'BlockID: ${buyRates.blockId},gPrice: ${buyRates.goldBuyPrice}';
+    String _note2 =
+        'UserId:${_baseProvider.myUser.uid},MerchantTxnID: ${_tranIdResponse.model}';
+    String rzpOrderId = await _rzpGateway.createOrderId(amount, _note1, _note2);
     if (rzpOrderId == null) {
       _logger.e("Received null from create Order id");
       return null;
@@ -366,7 +374,8 @@ class AugmontModel extends ChangeNotifier {
     if (_baseProvider.currentAugmontTxn.rzp[UserTransaction.subFldRzpStatus] ==
         UserTransaction.RZP_TRAN_STATUS_COMPLETE) {
       //payment completed successfully
-      _mixpanelService.track(MixpanelEvents.investedInGold,{'userId':_userService.baseUser.uid});
+      _mixpanelService.track(
+          MixpanelEvents.investedInGold, {'userId': _userService.baseUser.uid});
       _onPaymentComplete();
     } else {
       _onPaymentFailed();
@@ -390,126 +399,92 @@ class AugmontModel extends ChangeNotifier {
           .toString(),
       SubmitGoldPurchase.fldPaymode: _baseProvider
           .currentAugmontTxn.augmnt[UserTransaction.subFldAugPaymode],
-      SubmitGoldPurchase.fldMerchantTranId: _baseProvider.currentAugmontTxn.docKey
+      SubmitGoldPurchase.fldMerchantTranId:
+          _baseProvider.currentAugmontTxn.docKey
     };
 
-    var _request = http.Request(
-        'GET', Uri.parse(_constructRequest(SubmitGoldPurchase.path, _params)));
-    _request.headers.addAll(headers);
-    http.StreamedResponse _response = await _request.send();
+    Map<String, dynamic> rzpUpdates = {
+      "rOrderId":
+          _baseProvider.currentAugmontTxn.rzp[UserTransaction.subFldRzpOrderId],
+      "rPaymentId": _baseProvider
+          .currentAugmontTxn.rzp[UserTransaction.subFldRzpPaymentId],
+      "rStatus":
+          _baseProvider.currentAugmontTxn.rzp[UserTransaction.subFldRzpStatus],
+    };
 
-    final resMap = await _processResponse(_response);
+    _logger.d(_baseProvider.currentAugmontTxn.amount);
+    _logger.d(rzpUpdates);
+    _logger.d(_params);
+    _logger.d(_baseProvider.myUser.uid);
+    _logger
+        .d(_initialDepositResponse.model.response.transactionDoc.transactionId);
+    _logger.d(_initialDepositResponse
+        .model.response.transactionDoc.enqueuedTaskDetails);
 
-    if (resMap == null ||
-        !resMap[INTERNAL_FAIL_FLAG] ||
-        resMap[SubmitGoldPurchase.resTranId] == null) {
-      log.error('Query Failed');
-      // _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId] =
-      //     resMap[SubmitGoldPurchase.resAugTranId];
-      // _baseProvider
-      //         .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId] =
-      //     resMap[SubmitGoldPurchase.resTranId];
-      // _baseProvider
-      //         .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm] =
-      //     double.tryParse(resMap[SubmitGoldPurchase.resGoldBalance]) ?? 0.0;
+    ApiResponse<DepositResponseModel> _onCompleteDepositResponse =
+        await _investmentActionsRepository.completeUserDeposit(
+      amount: _baseProvider.currentAugmontTxn.amount,
+      rzpUpdates: rzpUpdates,
+      submitGoldUpdates: _params,
+      userUid: _baseProvider.myUser.uid,
+      txnId:
+          _initialDepositResponse.model.response.transactionDoc.transactionId,
+      enqueuedTaskDetails: _initialDepositResponse
+          .model.response.transactionDoc.enqueuedTaskDetails,
+    );
 
-      Map<String, dynamic> _failMap = {
-        'txnDocId': _baseProvider.currentAugmontTxn.docKey,
-      };
+    if (_onCompleteDepositResponse.code == 200) {
+      //Update these feilds from deposit API
+      _baseProvider.currentAugmontTxn.tranStatus =
+          UserTransaction.TRAN_STATUS_COMPLETE;
+      _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId] =
+          _onCompleteDepositResponse.model.augResponse.data.transactionId;
+      _baseProvider
+              .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId] =
+          _onCompleteDepositResponse
+              .model.augResponse.data.merchantTransactionId;
+      _baseProvider.currentAugmontTxn
+          .augmnt[UserTransaction.subFldAugTotalGoldGm] = double.tryParse(
+              _onCompleteDepositResponse.model.augResponse.data.goldBalance) ??
+          0.0;
 
-      await _dbModel.logFailure(_baseProvider.myUser.uid,
-          FailType.UserPaymentCompleteTxnFailed, _failMap);
+      double newAugPrinciple =
+          _onCompleteDepositResponse.model.response.augmontPrinciple;
+      if (newAugPrinciple != null && newAugPrinciple > 0) {
+        _userService.augGoldPrinciple = newAugPrinciple;
+      }
+      double newAugQuantity =
+          _onCompleteDepositResponse.model.response.augmontGoldQty;
+      if (newAugQuantity != null && newAugQuantity > 0) {
+        _userService.augGoldQuantity = newAugQuantity;
+      }
+      int newFlcBalance = _onCompleteDepositResponse.model.response.flcBalance;
+      if (newFlcBalance > 0) {
+        _userCoinService.setFlcBalance(newFlcBalance);
+      }
+      _baseProvider.currentAugmontTxn = _onCompleteDepositResponse
+          .model.response.transactionDoc.transactionDetail;
 
-      // bool flag = await _dbModel.updateUserTransaction(
-      //     _baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
-      // _txnService.updateTransactions();
+      _txnService.updateTransactions();
 
       if (_augmontTxnProcessListener != null)
         _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
     } else {
-      //success - update transaction fields and call listener
+      _dbModel.logFailure(
+          _baseProvider.myUser.uid,
+          FailType.CompleteUserDepositApiFailed,
+          {'message': _initialDepositResponse.errorMessage});
+
+      BaseUtil.showNegativeAlert(
+          'Deposit Failed', 'Please try again in sometime or contact us');
+
       _baseProvider.currentAugmontTxn.tranStatus =
-          UserTransaction.TRAN_STATUS_COMPLETE;
-      _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId] =
-          resMap[SubmitGoldPurchase.resAugTranId];
-      _baseProvider
-              .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId] =
-          resMap[SubmitGoldPurchase.resTranId];
-      _baseProvider
-              .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm] =
-          double.tryParse(resMap[SubmitGoldPurchase.resGoldBalance]) ?? 0.0;
-      //bool flag = await _dbModel.updateUserTransaction(_baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
+          UserTransaction.TRAN_STATUS_CANCELLED;
 
-      Map<String, dynamic> rzpUpdates = {
-        "rOrderId": _baseProvider
-            .currentAugmontTxn.rzp[UserTransaction.subFldRzpOrderId],
-        "rPaymentId": _baseProvider
-            .currentAugmontTxn.rzp[UserTransaction.subFldRzpPaymentId],
-        "rStatus": _baseProvider
-            .currentAugmontTxn.rzp[UserTransaction.subFldRzpStatus],
-      };
+      if (_augmontTxnProcessListener != null)
+        _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
 
-      Map<String, dynamic> augUpdates = {
-        "aTranId": _baseProvider
-            .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId],
-        "aAugTranId": _baseProvider
-            .currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId],
-        "aGoldBalance": _baseProvider
-            .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm]
-      };
-
-      ApiResponse<DepositResponseModel> _onCompleteDepositResponse =
-          await _investmentActionsRepository.completeUserDeposit(
-        amount: _baseProvider.currentAugmontTxn.amount,
-        augUpdates: augUpdates,
-        rzpUpdates: rzpUpdates,
-        userUid: _baseProvider.myUser.uid,
-        txnId:
-            _initialDepositResponse.model.response.transactionDoc.transactionId,
-        enqueuedTaskDetails: _initialDepositResponse
-            .model.response.transactionDoc.enqueuedTaskDetails,
-      );
-
-      if (_onCompleteDepositResponse.code == 200) {
-        double newAugPrinciple =
-            _onCompleteDepositResponse.model.response.augmontPrinciple;
-        if (newAugPrinciple != null && newAugPrinciple > 0) {
-          _userService.augGoldPrinciple = newAugPrinciple;
-        }
-        double newAugQuantity =
-            _onCompleteDepositResponse.model.response.augmontGoldQty;
-        if (newAugQuantity != null && newAugQuantity > 0) {
-          _userService.augGoldQuantity = newAugQuantity;
-        }
-        int newFlcBalance =
-            _onCompleteDepositResponse.model.response.flcBalance;
-        if (newFlcBalance > 0) {
-          _userCoinService.setFlcBalance(newFlcBalance);
-        }
-        _baseProvider.currentAugmontTxn = _onCompleteDepositResponse
-            .model.response.transactionDoc.transactionDetail;
-
-        _txnService.updateTransactions();
-
-        if (_augmontTxnProcessListener != null)
-          _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
-      } else {
-        _dbModel.logFailure(
-            _baseProvider.myUser.uid,
-            FailType.CompleteUserDepositApiFailed,
-            {'message': _initialDepositResponse.errorMessage});
-
-        BaseUtil.showNegativeAlert(
-            'Deposit Failed', 'Please try again in sometime or contact us');
-
-        _baseProvider.currentAugmontTxn.tranStatus =
-            UserTransaction.TRAN_STATUS_CANCELLED;
-
-        if (_augmontTxnProcessListener != null)
-          _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
-
-        AppState.backButtonDispatcher.didPopRoute();
-      }
+      AppState.backButtonDispatcher.didPopRoute();
     }
   }
 
@@ -568,8 +543,8 @@ class AugmontModel extends ChangeNotifier {
         'message': _onCancleUserDepositResponse?.errorMessage ??
             "Cancel user deposit failed"
       });
-      BaseUtil.showNegativeAlert(
-          'Something went wrong', 'Please try again in sometime or contact us for more assistance');
+      BaseUtil.showNegativeAlert('Something went wrong',
+          'Please try again in sometime or contact us for more assistance');
       _baseProvider.currentAugmontTxn.tranStatus =
           UserTransaction.TRAN_STATUS_CANCELLED;
 
@@ -607,8 +582,11 @@ class AugmontModel extends ChangeNotifier {
         quantity,
         _baseProvider.myUser.uid);
 
-    _tranIdResponse = await _investmentActionsRepository.createTranId(userUid: _baseProvider.myUser.uid);
-    if(_tranIdResponse.code != 200 || _tranIdResponse.model == null || _tranIdResponse.model.isEmpty) {
+    _tranIdResponse = await _investmentActionsRepository.createTranId(
+        userUid: _baseProvider.myUser.uid);
+    if (_tranIdResponse.code != 200 ||
+        _tranIdResponse.model == null ||
+        _tranIdResponse.model.isEmpty) {
       _logger.e('Failed to create a transaction id');
       return null;
     }
@@ -626,125 +604,64 @@ class AugmontModel extends ChangeNotifier {
       SubmitGoldSell.fldMerchantTranId: _tranIdResponse.model
     };
 
-    var _request = http.Request(
-        'GET', Uri.parse(_constructRequest(SubmitGoldSell.path, _params)));
-    _request.headers.addAll(headers);
-    http.StreamedResponse _response = await _request.send();
+    _logger.d(_params);
+    _logger.d(_params);
 
-    final resMap = await _processResponse(_response);
-    if (resMap == null ||
-        !resMap[INTERNAL_FAIL_FLAG] ||
-        resMap[SubmitGoldSell.resTranId] == null) {
-      _baseProvider.currentAugmontTxn.tranStatus =
-          UserTransaction.TRAN_STATUS_CANCELLED;
+    ApiResponse<DepositResponseModel> _onSellCompleteResponse =
+        await _investmentActionsRepository.withdrawlComplete(
+            tranDocId: _tranIdResponse.model,
+            amount: -1 * _baseProvider.currentAugmontTxn.amount,
+            sellGoldMap: _params,
+            userUid: _baseProvider.myUser.uid);
 
-      //Call Cancelled Withdrawal API
-      Map<String, dynamic> augMap = {};
-      if (resMap != null) {
-        augMap = {
-          "aTranId": resMap[SubmitGoldSell.resTranId] ?? '',
-          "aAugTranId": resMap[SubmitGoldSell.resAugTranId] ?? '',
-          "aGoldBalance": resMap[SubmitGoldSell.resGoldBalance] ?? '',
-          "aBlockId": sellRates.blockId,
-          "aLockPrice": sellRates.goldSellPrice,
-          "aPaymode": "RZP",
-          "aGoldInTxn": quantity,
-          "aTaxedGoldBalance": resMap[SubmitGoldSell.resPreTaxAmount] ?? '',
-        };
-      }
-
-      final ApiResponse<DepositResponseModel> _apiResponse =
-          await _investmentActionsRepository.withdrawlCancelled(
-              tranDocId: _tranIdResponse.model,
-              augMap: augMap,
-              userUid: _baseProvider.myUser.uid,
-              amount: -1 * _baseProvider.currentAugmontTxn.amount);
-
-      Map<String, dynamic> _failMap = {
-        'txnDocId': _apiResponse?.model?.response?.transactionDoc?.transactionId
-      };
-
-      log.error('Query Failed');
-
-      await _dbModel.logFailure(
-          _baseProvider.myUser.uid, FailType.UserAugmontSellFailed, _failMap);
-      if (_augmontTxnProcessListener != null)
-        _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
-    } else {
-      //success
+    if (_onSellCompleteResponse.code == 200) {
       _baseProvider.currentAugmontTxn.tranStatus =
           UserTransaction.TRAN_STATUS_COMPLETE;
       _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId] =
-          resMap[SubmitGoldSell.resAugTranId];
+          _onSellCompleteResponse.model.augResponse.data.transactionId;
       _baseProvider
               .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId] =
-          resMap[SubmitGoldSell.resTranId];
-      _baseProvider
-              .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm] =
-          double.tryParse(resMap[SubmitGoldSell.resGoldBalance]) ?? 0.0;
+          _onSellCompleteResponse.model.augResponse.data.merchantTransactionId;
+      _baseProvider.currentAugmontTxn
+          .augmnt[UserTransaction.subFldAugTotalGoldGm] = double.tryParse(
+              _onSellCompleteResponse.model.augResponse.data.goldBalance) ??
+          0.0;
 
-      Map<String, dynamic> augMap = {
-        "aTranId": _baseProvider
-            .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId],
-        "aAugTranId": _baseProvider
-            .currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId],
-        "aGoldBalance": _baseProvider
-            .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm],
-        "aBlockId": _baseProvider
-            .currentAugmontTxn.augmnt[UserTransaction.subFldAugBlockId],
-        "aLockPrice": _baseProvider
-            .currentAugmontTxn.augmnt[UserTransaction.subFldAugLockPrice],
-        "aPaymode": "RZP",
-        "aGoldInTxn": _baseProvider
-            .currentAugmontTxn.augmnt[UserTransaction.subFldAugCurrentGoldGm],
-        "aTaxedGoldBalance": _baseProvider
-            .currentAugmontTxn.augmnt[UserTransaction.subFldAugPostTaxTotal],
-      };
-
-      ApiResponse<DepositResponseModel> _onSellCompleteResponse =
-          await _investmentActionsRepository.withdrawlComplete(
-              tranDocId: _tranIdResponse.model,
-              amount: -1 * _baseProvider.currentAugmontTxn.amount,
-              augMap: augMap,
-              userUid: _baseProvider.myUser.uid);
-
-      if (_onSellCompleteResponse.code == 200) {
-        double newAugPrinciple =
-            _onSellCompleteResponse.model.response.augmontPrinciple;
-        if (newAugPrinciple != null && newAugPrinciple > 0) {
-          _userService.augGoldPrinciple = newAugPrinciple;
-        }
-        double newAugQuantity =
-            _onSellCompleteResponse.model.response.augmontGoldQty;
-        if (newAugQuantity != null && newAugQuantity >= 0) {
-          _userService.augGoldQuantity = newAugQuantity;
-        }
-        int newFlcBalance = _onSellCompleteResponse.model.response.flcBalance;
-        if (newFlcBalance > 0) {
-          _userCoinService.setFlcBalance(newFlcBalance);
-        }
-        _baseProvider.currentAugmontTxn = _onSellCompleteResponse
-            .model.response.transactionDoc.transactionDetail;
-        _txnService.updateTransactions();
-        if (_augmontTxnProcessListener != null)
-          _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
-      } else {
-        _dbModel.logFailure(
-            _baseProvider.myUser.uid, FailType.WithdrawlCompleteApiFailed, {
-          'message':
-              _initialDepositResponse?.errorMessage ?? "Withdrawl api failed"
-        });
-
-        BaseUtil.showNegativeAlert(
-            'Deposit Failed', 'Please try again in sometime or contact us');
-
-        _baseProvider.currentAugmontTxn.tranStatus =
-            UserTransaction.TRAN_STATUS_CANCELLED;
-        if (_augmontTxnProcessListener != null)
-          _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
-
-        AppState.backButtonDispatcher.didPopRoute();
+      double newAugPrinciple =
+          _onSellCompleteResponse.model.response.augmontPrinciple;
+      if (newAugPrinciple != null && newAugPrinciple > 0) {
+        _userService.augGoldPrinciple = newAugPrinciple;
       }
+      double newAugQuantity =
+          _onSellCompleteResponse.model.response.augmontGoldQty;
+      if (newAugQuantity != null && newAugQuantity >= 0) {
+        _userService.augGoldQuantity = newAugQuantity;
+      }
+      int newFlcBalance = _onSellCompleteResponse.model.response.flcBalance;
+      if (newFlcBalance > 0) {
+        _userCoinService.setFlcBalance(newFlcBalance);
+      }
+      _baseProvider.currentAugmontTxn = _onSellCompleteResponse
+          .model.response.transactionDoc.transactionDetail;
+      _txnService.updateTransactions();
+      if (_augmontTxnProcessListener != null)
+        _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
+    } else {
+      _dbModel.logFailure(
+          _baseProvider.myUser.uid, FailType.WithdrawlCompleteApiFailed, {
+        'message':
+            _initialDepositResponse?.errorMessage ?? "Withdrawl api failed"
+      });
+
+      BaseUtil.showNegativeAlert(
+          'Deposit Failed', 'Please try again in sometime or contact us');
+
+      _baseProvider.currentAugmontTxn.tranStatus =
+          UserTransaction.TRAN_STATUS_CANCELLED;
+      if (_augmontTxnProcessListener != null)
+        _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
+
+      AppState.backButtonDispatcher.didPopRoute();
     }
   }
 

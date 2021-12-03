@@ -7,6 +7,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OfferCard extends StatelessWidget {
   final PromoCardModel model;
@@ -27,10 +28,16 @@ class OfferCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
+      onTap: () async {
         if (model.actionUri != null) {
           print(model.actionUri.toString());
-          AppState.delegate.parseRoute(Uri.parse(model.actionUri));
+          if (model.actionUri.startsWith("http")) {
+            if (await canLaunch(model.actionUri)) {
+              launch(model.actionUri);
+            }
+          } else {
+            AppState.delegate.parseRoute(Uri.parse(model.actionUri));
+          }
         }
       },
       child: ClipRRect(

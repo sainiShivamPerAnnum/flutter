@@ -18,6 +18,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logger/logger.dart';
 import 'dart:math' as math;
 
@@ -115,13 +116,19 @@ class AugmontGoldSellViewModel extends BaseModel {
     isQntFetching = true;
     refresh();
     await _userService.getUserFundWalletData();
-    nonWithdrawableQnt = await _dbModel.getNonWithdrawableAugGoldQuantity(_baseUtil.myUser.uid);
+    nonWithdrawableQnt =
+        await _dbModel.getNonWithdrawableAugGoldQuantity(_baseUtil.myUser.uid);
 
-    if(nonWithdrawableQnt == null || nonWithdrawableQnt < 0) nonWithdrawableQnt = 0.0;
-    if(userFundWallet == null || userFundWallet.augGoldQuantity == null || userFundWallet.augGoldQuantity <= 0.0)withdrawableQnt = 0.0;
-    else withdrawableQnt = userFundWallet.augGoldQuantity;
+    if (nonWithdrawableQnt == null || nonWithdrawableQnt < 0)
+      nonWithdrawableQnt = 0.0;
+    if (userFundWallet == null ||
+        userFundWallet.augGoldQuantity == null ||
+        userFundWallet.augGoldQuantity <= 0.0)
+      withdrawableQnt = 0.0;
+    else
+      withdrawableQnt = userFundWallet.augGoldQuantity;
 
-    withdrawableQnt = math.max(0.0, withdrawableQnt-nonWithdrawableQnt);
+    withdrawableQnt = math.max(0.0, withdrawableQnt - nonWithdrawableQnt);
     isQntFetching = false;
     refresh();
   }
@@ -193,7 +200,7 @@ class AugmontGoldSellViewModel extends BaseModel {
       return;
     }
     bool _disabled = await _dbModel.isAugmontSellDisabled();
-    if(_disabled != null && _disabled) {
+    if (_disabled != null && _disabled) {
       BaseUtil.showNegativeAlert(
         'Sell Failed',
         'Gold sell is currently on hold. Please try again after sometime.',
@@ -238,23 +245,52 @@ class AugmontGoldSellViewModel extends BaseModel {
       hapticVibrate: true,
       isBarrierDismissable: false,
       content: FelloInfoDialog(
-        asset: Assets.prizeClaimConfirm,
-        title: "Success",
-        subtitle:
-            "Your withdrawal is successful and will be credited to your bank account in 1-2 business working days!",
-        action: Container(
-          width: SizeConfig.screenWidth,
-          child: FelloButtonLg(
-            child: Text(
-              "OK",
-              style: TextStyles.body3.colour(Colors.white),
+        customContent: Column(
+          children: [
+            SizedBox(height: SizeConfig.screenHeight * 0.04),
+            SvgPicture.asset(
+              Assets.prizeClaimConfirm,
+              height: SizeConfig.screenHeight * 0.16,
             ),
-            color: UiConstants.primaryColor,
-            onPressed: () {
-              AppState.backButtonDispatcher.didPopRoute();
-              AppState.backButtonDispatcher.didPopRoute();
-            },
-          ),
+            SizedBox(
+              height: SizeConfig.screenHeight * 0.04,
+            ),
+            Text(
+              "Successful!",
+              style: TextStyles.title3.bold,
+            ),
+            SizedBox(height: SizeConfig.padding16),
+            RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                text:
+                    "Your withdrawal is successful, the amount will be credited in ",
+                style: TextStyles.body3.colour(Colors.black54),
+                children: [
+                  TextSpan(
+                    text: "1-2 business working days",
+                    style:
+                        TextStyles.body3.bold.colour(UiConstants.tertiarySolid),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(height: SizeConfig.screenHeight * 0.02),
+            Container(
+              width: SizeConfig.screenWidth,
+              child: FelloButtonLg(
+                child: Text(
+                  "OK",
+                  style: TextStyles.body3.colour(Colors.white),
+                ),
+                color: UiConstants.primaryColor,
+                onPressed: () {
+                  AppState.backButtonDispatcher.didPopRoute();
+                  AppState.backButtonDispatcher.didPopRoute();
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );

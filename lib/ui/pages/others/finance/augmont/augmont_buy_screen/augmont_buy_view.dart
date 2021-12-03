@@ -263,15 +263,13 @@ class AugmontGoldBuyView extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.asset(Assets.augLogo,
-                              height: SizeConfig.padding24),
+                              color: Colors.grey, height: SizeConfig.padding24),
                           SizedBox(width: SizeConfig.padding20),
                           Image.asset(Assets.amfiGraphic,
-                              color: UiConstants.primaryColor,
-                              height: SizeConfig.padding24),
+                              color: Colors.grey, height: SizeConfig.padding24),
                           SizedBox(width: SizeConfig.padding20),
                           Image.asset(Assets.sebiGraphic,
-                              color: Color(0xff2E2A81),
-                              height: SizeConfig.padding20),
+                              color: Colors.grey, height: SizeConfig.padding20),
                         ],
                       ),
                       SizedBox(height: SizeConfig.viewInsets.bottom)
