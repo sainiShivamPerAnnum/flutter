@@ -1,9 +1,7 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/leaderboard_service_enum.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
-import 'package:felloapp/core/model/leader_board_modal.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
-import 'package:felloapp/core/service/leaderboard_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
@@ -20,9 +18,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
-import 'package:property_change_notifier/property_change_notifier.dart';
 
 class CricketHomeView extends StatelessWidget {
   @override
@@ -128,8 +124,12 @@ class CricketHomeView extends StatelessWidget {
                                                     model: model.cPrizes,
                                                     controller:
                                                         model.scrollController,
-                                                    subtitle:
-                                                        "Stand in the leaderboard and win prizes every week! Winners are announced every Monday",
+                                                    subtitle: BaseRemoteConfig
+                                                            .remoteConfig
+                                                            .getString(
+                                                                BaseRemoteConfig
+                                                                    .GAME_CRICKET_ANNOUNCEMENT) ??
+                                                        'The highest scorers of the week win prizes every Sunday at midnight',
                                                     leading: List.generate(
                                                         model.cPrizes.prizesA
                                                             .length,

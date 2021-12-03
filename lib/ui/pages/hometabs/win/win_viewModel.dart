@@ -42,9 +42,10 @@ class WinViewModel extends BaseModel {
       _userService.userFundWallet.unclaimedBalance;
 
   init() {
-    //_lbService.fetchReferralLeaderBoard();
-    // _winnerService.fetchTopWinner();
-    // _winnerService.fetchWinners();
+    // if (!AppState.isWinOpened) {
+    //   _winnerService.fetchTopWinner();
+    //   AppState.isWinOpened = true;
+    // }
   }
 
   getWinningsButtonText() {

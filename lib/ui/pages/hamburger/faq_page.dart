@@ -73,6 +73,10 @@ class _FAQList extends State<FAQPage> {
                     category: FAQCardViewModel.FAQ_CAT_AUGMONT,
                     catTitle: true,
                   ),
+                  FAQCardView(
+                    category: FAQCardViewModel.FAQ_CAT_REFERRALS,
+                    catTitle: true,
+                  ),
                 ],
               ),
               //  ListView(

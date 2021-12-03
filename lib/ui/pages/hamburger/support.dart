@@ -113,18 +113,18 @@ class _SupportPageState extends State<SupportPage> {
                                 page: ChatSupportPageConfig);
                           },
                         ),
-                        FelloBriefTile(
-                          leadingIcon: Icons.call,
-                          title: "Request a Callback",
-                          onTap: () {
-                            Haptic.vibrate();
-                            if (connectivityStatus !=
-                                ConnectivityStatus.Offline)
-                              _showRequestCallSheet();
-                            else
-                              BaseUtil.showNoInternetAlert();
-                          },
-                        ),
+                        // FelloBriefTile(
+                        //   leadingIcon: Icons.call,
+                        //   title: "Request a Callback",
+                        //   onTap: () {
+                        //     Haptic.vibrate();
+                        //     if (connectivityStatus !=
+                        //         ConnectivityStatus.Offline)
+                        //       _showRequestCallSheet();
+                        //     else
+                        //       BaseUtil.showNoInternetAlert();
+                        //   },
+                        // ),
                         FelloBriefTile(
                           leadingAsset: Assets.hsMail,
                           title: "Email us your query",

@@ -299,7 +299,7 @@ class BigPrizeContainer extends StatelessWidget {
                                 style: TextStyles.body4.colour(Colors.white),
                               ),
                               Text(
-                                bigText ?? "Rs. 1 Lakh every week",
+                                bigText ?? "₹ 1 Lakh every week",
                                 style:
                                     TextStyles.body1.colour(Colors.white).bold,
                               )

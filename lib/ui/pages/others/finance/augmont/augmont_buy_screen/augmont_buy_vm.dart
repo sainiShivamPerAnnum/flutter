@@ -207,8 +207,8 @@ class AugmontGoldBuyViewModel extends BaseModel {
     }
     if (buyAmount < 10) {
       BaseUtil.showNegativeAlert(
-        'Minimum amount should be 10',
-        'Please enter a minimum purchase amount or Rs 10',
+        'Minimum amount should be ₹ 10',
+        'Please enter a minimum purchase amount of ₹ 10',
       );
       return;
     }
@@ -221,6 +221,14 @@ class AugmontGoldBuyViewModel extends BaseModel {
       BaseUtil.showNegativeAlert(
         'Deposit Failed',
         'Please try again in sometime or contact us',
+      );
+      return;
+    }
+    bool _disabled = await _dbModel.isAugmontBuyDisabled();
+    if(_disabled != null && _disabled) {
+      BaseUtil.showNegativeAlert(
+        'Purchase Failed',
+        'Gold buying is currently on hold. Please try again after sometime.',
       );
       return;
     }
