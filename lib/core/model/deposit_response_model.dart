@@ -5,12 +5,16 @@ import 'package:felloapp/core/model/user_transaction_model.dart';
 
 class DepositResponseModel {
   Response response;
+  AugResponse augResponse;
 
-  DepositResponseModel({this.response});
+  DepositResponseModel({this.response, this.augResponse});
 
   DepositResponseModel.fromJson(Map<String, dynamic> json) {
     response = json['response'] != null
         ? new Response.fromJson(json['response'])
+        : null;
+    augResponse = json['augResponse'] != null
+        ? new AugResponse.fromJson(json['augResponse'])
         : null;
   }
 
@@ -19,23 +23,29 @@ class DepositResponseModel {
     if (this.response != null) {
       data['response'] = this.response.toJson();
     }
+    if (this.augResponse != null) {
+      data['augResponse'] = this.augResponse.toJson();
+    }
     return data;
   }
-
-  @override
-  String toString() => 'DepositResponseModel(response: $response)';
 
   Map<String, dynamic> toMap() {
     return {
       'response': response.toMap(),
+      'augResponse': augResponse?.toMap(),
     };
   }
 
   factory DepositResponseModel.fromMap(Map<String, dynamic> map) {
     return DepositResponseModel(
       response: Response.fromMap(map['response']),
+      augResponse: AugResponse?.fromMap(map['augResponse']),
     );
   }
+
+  @override
+  String toString() =>
+      'DepositResponseModel(response: $response, augResponse: $augResponse)';
 }
 
 class Response {
@@ -205,4 +215,77 @@ class EnqueuedTaskDetails {
   @override
   String toString() =>
       'EnqueuedTaskDetails(name: $name, queuePath: $queuePath)';
+}
+
+class AugResponse {
+  Data data;
+
+  AugResponse({this.data});
+
+  AugResponse.fromJson(Map<String, dynamic> json) {
+    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.data != null) {
+      data['data'] = this.data.toJson();
+    }
+    return data;
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'data': data?.toMap(),
+    };
+  }
+
+  factory AugResponse.fromMap(Map<String, dynamic> map) {
+    return AugResponse(
+      data: map != null ? Data.fromMap(map['data']) : null,
+    );
+  }
+}
+
+class Data {
+  String transactionId;
+  String merchantTransactionId;
+  String goldBalance;
+
+  Data({this.transactionId, this.merchantTransactionId, this.goldBalance});
+
+  Data.fromJson(Map<String, dynamic> json) {
+    transactionId = json['transactionId'];
+    merchantTransactionId = json['merchantTransactionId'];
+    goldBalance = json['goldBalance'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['transactionId'] = this.transactionId;
+    data['merchantTransactionId'] = this.merchantTransactionId;
+    data['goldBalance'] = this.goldBalance;
+    return data;
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'transactionId': transactionId,
+      'merchantTransactionId': merchantTransactionId,
+      'goldBalance': goldBalance,
+    };
+  }
+
+  factory Data.fromMap(Map<String, dynamic> map) {
+    return Data(
+      transactionId: map['transactionId'],
+      merchantTransactionId: map['merchantTransactionId'],
+      goldBalance: map['goldBalance'],
+    );
+  }
+
+  @override
+  String toString() {
+    return 'Data(transactionId: $transactionId, merchantTransactionId: $merchantTransactionId, goldBalance: $goldBalance)';
+  }
 }
