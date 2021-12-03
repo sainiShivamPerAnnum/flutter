@@ -181,7 +181,7 @@ class Win extends StatelessWidget {
                             ],
                           ),
                         ),
-                        ReferralLeaderboard(),
+                        //ReferralLeaderboard(),
                         SizedBox(
                           height: SizeConfig.screenHeight * 0.24,
                         )

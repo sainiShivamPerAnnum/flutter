@@ -4,8 +4,10 @@ import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
+import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/modals/octfest_info_modal.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -38,6 +40,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
   bool _isInvoiceLoading = false;
   int _timeoutMins;
   double dialogHeight = SizeConfig.screenHeight * 0.54;
+  final txnService = locator<TransactionService>();
 
   @override
   void initState() {
@@ -166,7 +169,9 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                   Padding(
                     padding: EdgeInsets.only(bottom: 8),
                     child: Text(
-                      '₹ ${widget._transaction.amount.toStringAsFixed(2)}',
+                      txnService
+                          .getFormattedTxnAmount(widget._transaction.amount),
+                      // '₹ ${widget._transaction.amount.toStringAsFixed(2)}',
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: SizeConfig.cardTitleTextSize * 2,

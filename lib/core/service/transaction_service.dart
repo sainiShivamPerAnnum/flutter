@@ -83,9 +83,9 @@ class TransactionService
 
   String getFormattedTxnAmount(double amount) {
     if (amount > 0)
-      return "₹ ${amount.abs()}";
+      return "₹ ${amount.abs().toStringAsFixed(2)}";
     else
-      return "- ₹ ${amount.abs()}";
+      return "- ₹ ${amount.abs().toStringAsFixed(2)}";
   }
 
   Widget getTileLead(String type) {
