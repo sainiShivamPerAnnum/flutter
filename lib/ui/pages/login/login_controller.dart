@@ -578,17 +578,27 @@ class _LoginControllerState extends State<LoginController>
                 if (res) {
                   baseProvider.myUser.username = username;
                   bool flag = false;
-                  _logger.d(baseProvider.myUser.toJson());
+                  _logger.d(baseProvider.myUser.toJson().toString());
                   try {
                     final String _bearer = await _getBearerToken();
-                    final res = await APIService.instance.postData(
-                        _apiPaths.kAddNewUser,
-                        body: {
-                          'uid': baseProvider.myUser.uid,
-                          'data': baseProvider.myUser.toJson()
-                        },
-                        token: _bearer);
-                    res['message'] == 'Success' ? flag = true : flag = false;
+                    _logger.d(baseProvider.myUser.uid);
+                    final _body = {
+                      'uid': baseProvider.myUser.uid,
+                      'data': {
+                                "mMobile": baseProvider.myUser.mobile,
+                                "mName": baseProvider.myUser.name,
+                                "mEmail": baseProvider.myUser.email,
+                                "mDob": baseProvider.myUser.dob,
+                                "mGender": baseProvider.myUser.gender,
+                                "mUsername": baseProvider.myUser.username,
+                                "mUserPrefs": {"tn": 1, "al": 0}
+                              }
+                    };
+                    final res = await APIService.instance
+                        .postData(_apiPaths.kAddNewUser,
+                            body: _body,
+                            token: _bearer);
+                    res['flag'] ? flag = true : flag = false;
                   } catch (e) {
                     _logger.d(e);
                     flag = false;
