@@ -373,7 +373,7 @@ class AugmontModel extends ChangeNotifier {
       //payment completed successfully
       _mixpanelService.track(MixpanelEvents.investedInGold, {
         'userId': _userService.baseUser.uid,
-        'gold quantity': goldTxn.amount
+        'goldQuantity': goldTxn.amount
       });
       _onPaymentComplete();
     } else {
@@ -722,9 +722,9 @@ class AugmontModel extends ChangeNotifier {
 
       _mixpanelService.track(MixpanelEvents.goldWithdrawal, {
         'userId': _userService.baseUser.uid,
-        'gold quantity': _baseProvider
+        'goldQuantity': _baseProvider
             .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm],
-        'gold principle':
+        'goldPrinciple':
             _onSellCompleteResponse.model.response.augmontPrinciple
       });
 
