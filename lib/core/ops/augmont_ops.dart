@@ -259,15 +259,20 @@ class AugmontModel extends ChangeNotifier {
       return null;
     }
 
-    _tranIdResponse = await _investmentActionsRepository.createTranId(userUid: _baseProvider.myUser.uid);
-    if(_tranIdResponse.code != 200 || _tranIdResponse.model == null || _tranIdResponse.model.isEmpty) {
+    _tranIdResponse = await _investmentActionsRepository.createTranId(
+        userUid: _baseProvider.myUser.uid);
+    if (_tranIdResponse.code != 200 ||
+        _tranIdResponse.model == null ||
+        _tranIdResponse.model.isEmpty) {
       _logger.e('Failed to create a transaction id');
       return null;
     }
 
-    String _note1 = 'BlockID: ${buyRates.blockId},gPrice: ${buyRates.goldBuyPrice}';
-    String _note2 = 'UserId:${_baseProvider.myUser.uid},MerchantTxnID: ${_tranIdResponse.model}';
-    String rzpOrderId = await _rzpGateway.createOrderId(amount,_note1, _note2);
+    String _note1 =
+        'BlockID: ${buyRates.blockId},gPrice: ${buyRates.goldBuyPrice}';
+    String _note2 =
+        'UserId:${_baseProvider.myUser.uid},MerchantTxnID: ${_tranIdResponse.model}';
+    String rzpOrderId = await _rzpGateway.createOrderId(amount, _note1, _note2);
     if (rzpOrderId == null) {
       _logger.e("Received null from create Order id");
       return null;
@@ -366,7 +371,10 @@ class AugmontModel extends ChangeNotifier {
     if (_baseProvider.currentAugmontTxn.rzp[UserTransaction.subFldRzpStatus] ==
         UserTransaction.RZP_TRAN_STATUS_COMPLETE) {
       //payment completed successfully
-      _mixpanelService.track(MixpanelEvents.investedInGold,{'userId':_userService.baseUser.uid});
+      _mixpanelService.track(MixpanelEvents.investedInGold, {
+        'userId': _userService.baseUser.uid,
+        'gold quantity': goldTxn.amount
+      });
       _onPaymentComplete();
     } else {
       _onPaymentFailed();
@@ -390,7 +398,8 @@ class AugmontModel extends ChangeNotifier {
           .toString(),
       SubmitGoldPurchase.fldPaymode: _baseProvider
           .currentAugmontTxn.augmnt[UserTransaction.subFldAugPaymode],
-      SubmitGoldPurchase.fldMerchantTranId: _baseProvider.currentAugmontTxn.docKey
+      SubmitGoldPurchase.fldMerchantTranId:
+          _baseProvider.currentAugmontTxn.docKey
     };
 
     var _request = http.Request(
@@ -568,8 +577,8 @@ class AugmontModel extends ChangeNotifier {
         'message': _onCancleUserDepositResponse?.errorMessage ??
             "Cancel user deposit failed"
       });
-      BaseUtil.showNegativeAlert(
-          'Something went wrong', 'Please try again in sometime or contact us for more assistance');
+      BaseUtil.showNegativeAlert('Something went wrong',
+          'Please try again in sometime or contact us for more assistance');
       _baseProvider.currentAugmontTxn.tranStatus =
           UserTransaction.TRAN_STATUS_CANCELLED;
 
@@ -607,8 +616,11 @@ class AugmontModel extends ChangeNotifier {
         quantity,
         _baseProvider.myUser.uid);
 
-    _tranIdResponse = await _investmentActionsRepository.createTranId(userUid: _baseProvider.myUser.uid);
-    if(_tranIdResponse.code != 200 || _tranIdResponse.model == null || _tranIdResponse.model.isEmpty) {
+    _tranIdResponse = await _investmentActionsRepository.createTranId(
+        userUid: _baseProvider.myUser.uid);
+    if (_tranIdResponse.code != 200 ||
+        _tranIdResponse.model == null ||
+        _tranIdResponse.model.isEmpty) {
       _logger.e('Failed to create a transaction id');
       return null;
     }
@@ -707,6 +719,14 @@ class AugmontModel extends ChangeNotifier {
               amount: -1 * _baseProvider.currentAugmontTxn.amount,
               augMap: augMap,
               userUid: _baseProvider.myUser.uid);
+
+      _mixpanelService.track(MixpanelEvents.goldWithdrawal, {
+        'userId': _userService.baseUser.uid,
+        'gold quantity': _baseProvider
+            .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm],
+        'gold principle':
+            _onSellCompleteResponse.model.response.augmontPrinciple
+      });
 
       if (_onSellCompleteResponse.code == 200) {
         double newAugPrinciple =
