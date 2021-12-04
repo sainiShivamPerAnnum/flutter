@@ -374,8 +374,10 @@ class AugmontModel extends ChangeNotifier {
     if (_baseProvider.currentAugmontTxn.rzp[UserTransaction.subFldRzpStatus] ==
         UserTransaction.RZP_TRAN_STATUS_COMPLETE) {
       //payment completed successfully
-      _mixpanelService.track(
-          MixpanelEvents.investedInGold, {'userId': _userService.baseUser.uid});
+      _mixpanelService.track(MixpanelEvents.investedInGold, {
+        'userId': _userService.baseUser.uid,
+        'goldQuantity': goldTxn.amount
+      });
       _onPaymentComplete();
     } else {
       _onPaymentFailed();
