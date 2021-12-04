@@ -13,10 +13,6 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:intl/intl.dart';
 
 class MiniTransactionCardViewModel extends BaseModel {
   final Log dblog = new Log("DBModel");
@@ -27,78 +23,13 @@ class MiniTransactionCardViewModel extends BaseModel {
   AppState appState;
 
   List<UserTransaction> get txnList => _txnService.txnList;
+  TransactionService get txnService => _txnService;
 
   getMiniTransactions() async {
     bulog.debug("Getting mini transactions");
     setState(ViewState.Busy);
     await _txnService.fetchTransactions(4);
     setState(ViewState.Idle);
-  }
-
-  Widget getTileLead(String type) {
-    IconData icon;
-    Color iconColor;
-    if (type == UserTransaction.TRAN_STATUS_COMPLETE) {
-      icon = Icons.check_circle;
-      iconColor = UiConstants.primaryColor;
-    } else if (type == UserTransaction.TRAN_STATUS_CANCELLED) {
-      icon = Icons.cancel;
-      iconColor = Colors.red;
-    } else if (type == UserTransaction.TRAN_STATUS_PENDING) {
-      icon = Icons.access_time_filled;
-      iconColor = Colors.amber;
-    } else if (type == UserTransaction.TRAN_STATUS_REFUNDED) {
-      icon = Icons.remove_circle;
-      iconColor = Colors.blue;
-    }
-    if (icon != null) return Icon(icon, color: iconColor);
-
-    return Image.asset("images/fello_logo.png", fit: BoxFit.contain);
-  }
-
-  String getTileTitle(String type) {
-    if (type == UserTransaction.TRAN_SUBTYPE_ICICI) {
-      return "ICICI Prudential Fund";
-    } else if (type == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD) {
-      return "Digital Gold";
-    } else if (type == UserTransaction.TRAN_SUBTYPE_TAMBOLA_WIN) {
-      return "Tambola Win";
-    } else if (type == UserTransaction.TRAN_SUBTYPE_REF_BONUS) {
-      return "Referral Bonus";
-    } else if (type == UserTransaction.TRAN_SUBTYPE_REWARD_REDEEM) {
-      return "Rewards Redeemed";
-    }
-    return "Fello Rewards";
-  }
-
-  String getTileSubtitle(String type) {
-    if (type == UserTransaction.TRAN_TYPE_DEPOSIT) {
-      return "Deposit";
-    } else if (type == UserTransaction.TRAN_TYPE_PRIZE) {
-      return "Prize";
-    } else if (type == UserTransaction.TRAN_TYPE_WITHDRAW) {
-      return "Withdrawal";
-    }
-    return "";
-  }
-
-  Color getTileColor(String type) {
-    if (type == UserTransaction.TRAN_STATUS_CANCELLED) {
-      return Colors.redAccent;
-    } else if (type == UserTransaction.TRAN_STATUS_COMPLETE) {
-      return UiConstants.primaryColor;
-    } else if (type == UserTransaction.TRAN_STATUS_PENDING) {
-      return Colors.amber;
-    } else if (type == UserTransaction.TRAN_STATUS_REFUNDED) {
-      return Colors.blue;
-    }
-    return Colors.black87;
-  }
-
-  String getFormattedTime(Timestamp tTime) {
-    DateTime now =
-        DateTime.fromMillisecondsSinceEpoch(tTime.millisecondsSinceEpoch);
-    return DateFormat('yyyy-MM-dd – kk:mm').format(now);
   }
 
   viewAllTransaction() async {

@@ -9,12 +9,14 @@ import 'package:felloapp/core/model/tambola_winners_details.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/Prize-Card/fold-card.dart';
 import 'package:felloapp/ui/dialogs/share-card.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/mixpanel_events.dart';
 import 'package:felloapp/util/styles/palette.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -64,6 +66,7 @@ class _TicketState extends State<FCard> {
   bool _tChoice;
   bool _isclaimed = false;
   UserService _userService = locator<UserService>();
+  MixpanelService _mixpanelService = locator<MixpanelService>();
 
   Widget get backCard => Container(
         decoration: BoxDecoration(
@@ -340,6 +343,10 @@ class _TicketState extends State<FCard> {
                         if (flag) {
                           _isclaimed = true;
                           _tChoice = true;
+                            _mixpanelService.track(MixpanelEvents.prizeAWS, {
+                            'userId': _userService.baseUser.uid,
+                            'amount': widget.unclaimedPrize
+                          });
                           setState(() {
                             _isPrizeProcessing = false;
                             claimtype = PrizeClaimChoice.AMZ_VOUCHER;
@@ -388,7 +395,10 @@ class _TicketState extends State<FCard> {
                         _tChoice = true;
                         if (flag) {
                           _isclaimed = true;
-
+                          _mixpanelService.track(MixpanelEvents.prizeGold, {
+                            'userId': _userService.baseUser.uid,
+                            'amount': widget.unclaimedPrize
+                          });
                           setState(() {
                             _isPrizeProcessing = false;
                             claimtype = PrizeClaimChoice.GOLD_CREDIT;
@@ -431,13 +441,16 @@ class _TicketState extends State<FCard> {
   Future<bool> _registerClaimChoice(PrizeClaimChoice choice) async {
     if (choice == PrizeClaimChoice.NA) return false;
     Map<String, dynamic> response = await httpProvider.registerPrizeClaim(
-        baseProvider.myUser.uid, baseProvider.myUser.username, widget.unclaimedPrize, choice);
+        baseProvider.myUser.uid,
+        baseProvider.myUser.username,
+        widget.unclaimedPrize,
+        choice);
     if (response['status'] != null && response['status']) {
       _userService.getUserFundWalletData();
       await localDBModel.savePrizeClaimChoice(choice);
 
       return true;
-    }else{
+    } else {
       BaseUtil.showNegativeAlert('Withdrawal Failed', response['message']);
       return false;
     }
