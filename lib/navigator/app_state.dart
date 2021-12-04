@@ -1,4 +1,5 @@
 //Project imports
+import 'package:felloapp/core/service/leaderboard_service.dart';
 import 'package:felloapp/core/service/winners_service.dart';
 import 'package:felloapp/navigator/router/back_dispatcher.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
@@ -25,6 +26,7 @@ class PageAction {
 
 class AppState extends ChangeNotifier {
   final _winnerService = locator<WinnerService>();
+  final _lbService = locator<LeaderboardService>();
   int _rootIndex = 1;
   static ScrollController homeCardListController = ScrollController();
   static String _fcmData;
@@ -86,6 +88,8 @@ class AppState extends ChangeNotifier {
     if (index == 2 && isWinOpened == false) {
       _winnerService.fetchWinners();
       _winnerService.fetchTopWinner();
+      _lbService.fetchReferralLeaderBoard();
+
       isWinOpened = true;
     }
     print(_rootIndex);
