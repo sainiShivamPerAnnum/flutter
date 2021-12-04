@@ -63,6 +63,7 @@ class _LoginControllerState extends State<LoginController>
   final Log log = new Log("LoginController");
   final int initPage;
   double _formProgress = 0.2;
+  bool _isSignup = false;
 
   _LoginControllerState(this.initPage);
 
@@ -696,6 +697,7 @@ class _LoginControllerState extends State<LoginController>
       }
 
       ///First time user!
+      _isSignup = true;
       log.debug(
           "No existing user details found or found incomplete details for user. Moving to details page");
       baseProvider.myUser = user ??
@@ -741,7 +743,7 @@ class _LoginControllerState extends State<LoginController>
   }
 
   Future _onSignUpComplete() async {
-    await BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
+    if(_isSignup)await BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
     await BaseAnalytics.logUserProfile(baseProvider.myUser);
     await userService.init();
     await baseProvider.init();
