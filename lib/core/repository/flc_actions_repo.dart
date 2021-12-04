@@ -11,9 +11,10 @@ import 'package:logger/logger.dart';
 
 class FlcActionsRepo {
   final _userService = locator<UserService>();
+    final _logger = locator<Logger>();
   final _apiPaths = locator<ApiPath>();
   final _api = locator<Api>();
-  final _logger = locator<Logger>();
+
 
   Future<String> _getBearerToken() async{
     String token = await _userService.firebaseUser.getIdToken();
