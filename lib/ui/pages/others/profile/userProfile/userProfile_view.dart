@@ -16,6 +16,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class UserProfileDetails extends StatefulWidget {
@@ -142,6 +143,10 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                               TextFormField(
                                 enabled: model.inEditMode,
                                 controller: model.nameController,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'[a-zA-Z ]'))
+                                ],
                                 validator: (value) {
                                   return (value != null && value.isNotEmpty)
                                       ? null
