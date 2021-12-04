@@ -1,5 +1,6 @@
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
 import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 
@@ -13,6 +14,7 @@ class MixpanelService {
   Future<void> init() async {
     _mixpanel = await Mixpanel.init(FlavorConfig.instance.values.mixpanelToken,
         optOutTrackingDefault: false);
+    if(FirebaseAuth?.instance?.currentUser?.uid != null)_mixpanel.identify(FirebaseAuth.instance.currentUser.uid);
   }
 
   void track(String eventName, Map<String, dynamic> properties) {
