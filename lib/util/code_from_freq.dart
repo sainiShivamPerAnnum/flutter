@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:intl/intl.dart';
 
 class CodeFromFreq {
@@ -7,7 +8,7 @@ class CodeFromFreq {
     String response = monthlyFormat.format(_currentTime);
 
     if (freq == 'weekly' || freq == 'daily') {
-      int weekcode = getWeekNumber(_currentTime);
+      int weekcode = BaseUtil.getWeekNumber(currentDate: _currentTime);
       response += "-$weekcode";
       if (freq == 'daily') {
         final dailyFormat = new DateFormat('dd');
@@ -20,7 +21,7 @@ class CodeFromFreq {
   static int getYearWeekCode() {
     final DateTime _currentTime = getCorrectedMondayDate();
     final int currentYear = _currentTime.year;
-    final int weekcode = getWeekNumber(_currentTime);
+    final int weekcode = BaseUtil.getWeekNumber(currentDate: _currentTime);
 
     final response = currentYear * 100 + weekcode;
     return response;
@@ -37,11 +38,5 @@ class CodeFromFreq {
       _correctedDate = _currentDate;
     }
     return _correctedDate;
-  }
-
-  //Add getWeekNumber method here..
-  static int getWeekNumber(DateTime date) {
-    int dayOfYear = int.parse(DateFormat("D").format(date));
-    return ((dayOfYear - date.weekday + 10) / 7).floor();
   }
 }

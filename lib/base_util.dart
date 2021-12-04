@@ -695,8 +695,8 @@ class BaseUtil extends ChangeNotifier {
     return (userCreationTimestamp.isBefore(Constants.VERSION_2_RELEASE_DATE));
   }
 
-  static int getWeekNumber() {
-    DateTime tdt = new DateTime.now();
+  static int getWeekNumber({DateTime currentDate}) {
+    DateTime tdt = (currentDate != null)?currentDate:new DateTime.now();
     int dayn = tdt.weekday;
     //tdt = new DateTime(tdt.year, tdt.month, tdt.day-dayn+3);
     //tdt.setDate(tdt.getDate() - dayn + 3);
