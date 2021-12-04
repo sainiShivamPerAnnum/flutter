@@ -1,20 +1,33 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 
 class MixpanelService {
   final _logger = locator<Logger>();
+
   static const String DEV_TOKEN = "6bc0994f4244fc5b193213df643f14dc";
   static const String PROD_TOKEN = "03de57e684d04e87999e089fd605fcdd";
 
   Mixpanel _mixpanel;
 
-  Future<void> init() async {
+  Future<void> init({bool isOnboarded, BaseUser baseUser}) async {
     _mixpanel = await Mixpanel.init(FlavorConfig.instance.values.mixpanelToken,
         optOutTrackingDefault: false);
-    if(FirebaseAuth?.instance?.currentUser?.uid != null)_mixpanel.identify(FirebaseAuth.instance.currentUser.uid);
+    if(isOnboarded != null && isOnboarded && baseUser != null) {
+      _mixpanel.identify(baseUser.uid);
+      _mixpanel.registerSuperPropertiesOnce({
+        'userId': baseUser.uid??'',
+        'gender': baseUser.gender??'O',
+        'kycVerified': baseUser.isSimpleKycVerified??false,
+        'signupDate':_getSignupDate(baseUser.createdOn),
+        'age':_getAge(baseUser.dob)??0
+      });
+    }
   }
 
   void track(String eventName, Map<String, dynamic> properties) {
@@ -26,6 +39,39 @@ class MixpanelService {
     } catch (e) {
       String error = e ?? "Unable to track event: $eventName";
       _logger.e(error);
+    }
+  }
+
+  String _getSignupDate(Timestamp signupDate) {
+    if(signupDate == null)signupDate = Timestamp.now();
+    try {
+      return DateFormat('yyyy-MM-dd').format(signupDate.toDate());
+    }catch(e) {
+      return '';
+    }
+  }
+
+  int _getAge(String dob) {
+    if(dob == null || dob.isEmpty) return 0;
+    try {
+      DateTime birthDate = DateFormat("yyyy-MM-dd").parse(dob);
+      DateTime currentDate = DateTime.now();
+      int age = currentDate.year - birthDate.year;
+      int month1 = currentDate.month;
+      int month2 = birthDate.month;
+      if (month2 > month1) {
+        age--;
+      } else if (month1 == month2) {
+        int day1 = currentDate.day;
+        int day2 = birthDate.day;
+        if (day2 > day1) {
+          age--;
+        }
+      }
+      return age;
+    }catch(e) {
+      _logger.e('$e');
+      return 0;
     }
   }
   
