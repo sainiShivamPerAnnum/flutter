@@ -115,7 +115,7 @@ class LauncherViewModel extends BaseModel {
     }
     //
     // ///now check if app needs to be open securely
-    // bool _unlocked = true;
+    bool _unlocked = true;
     // if (_baseUtil.myUser.userPreferences.getPreference(Preferences.APPLOCK) ==
     //         1 &&
     //     deviceUnlock != null) {
@@ -131,13 +131,13 @@ class LauncherViewModel extends BaseModel {
     //   }
     // }
 
-    // if (_unlocked) {
-    //   navigator.currentAction =
-    //       PageAction(state: PageState.replaceAll, page: RootPageConfig);
-    // } else {
-    //   BaseUtil.showNegativeAlert(
-    //       'Authentication Failed', 'Please reopen and try again');
-    // }
+    if (_unlocked) {
+      navigator.currentAction =
+          PageAction(state: PageState.replaceAll, page: RootPageConfig);
+    } else {
+      BaseUtil.showNegativeAlert(
+          'Authentication Failed', 'Please reopen and try again');
+    }
   }
 
   Future<bool> authenticateDevice() async {

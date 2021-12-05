@@ -87,8 +87,8 @@ class FcmListener {
     });
 
     _fcm.getInitialMessage().then((RemoteMessage message) {
-      logger.d("onMessage recieved: " + message.toString());
       if (message != null && message.data != null) {
+        logger.d("onMessage recieved: " + message.toString());
         _handler.handleMessage(message.data);
       }
     });
