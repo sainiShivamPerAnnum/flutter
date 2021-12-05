@@ -26,6 +26,7 @@ import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -431,6 +432,13 @@ class _LoginControllerState extends State<LoginController>
             setState(() {
               LoginController.mobileno = this.userMobile;
             });
+
+            ///disable regular numbers for QA
+            if(FlavorConfig.isQA() && !this.userMobile.startsWith('999990000')) {
+              BaseUtil.showNegativeAlert(
+                  'Mobile number not allowed', 'Only dummy numbers are allowed in QA mode');
+              break;
+            }
             this._verificationId = '+91' + this.userMobile;
             _verifyPhone();
             baseProvider.isLoginNextInProgress = true;
