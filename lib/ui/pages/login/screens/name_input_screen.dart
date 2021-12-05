@@ -275,6 +275,9 @@ class NameInputScreenState extends State<NameInputScreen> {
               cursorColor: UiConstants.primaryColor,
               controller: _nameFieldController,
               keyboardType: TextInputType.text,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z ]'))
+              ],
               decoration: InputDecoration(
                 hintText: locale.obNameHint,
                 prefixIcon: Icon(

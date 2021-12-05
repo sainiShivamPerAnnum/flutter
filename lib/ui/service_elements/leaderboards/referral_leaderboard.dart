@@ -19,74 +19,89 @@ class ReferralLeaderboard extends StatelessWidget {
             LeaderBoardServiceProperties>(
         properties: [LeaderBoardServiceProperties.ReferralLeaderboard],
         builder: (context, model, properties) {
-          return Container(
-            height: SizeConfig.screenHeight * 0.5,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(SizeConfig.roundness32),
-            ),
-            padding: EdgeInsets.all(SizeConfig.padding12),
-            margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-            child: model.referralLeaderBoard == null
-                ? ListLoader()
-                : (model.referralLeaderBoard.isEmpty
-                    ? NoRecordDisplayWidget(
-                        asset: "images/leaderboard.png",
-                        text: "Leaderboard will be updated soon",
-                      )
-                    : ListView.builder(
-                        itemCount: model.referralLeaderBoard.length,
-                        shrinkWrap: true,
-                        itemBuilder: (ctx, i) {
-                          return Container(
+          return Column(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                ),
+                padding: EdgeInsets.all(SizeConfig.padding12),
+                child: model.referralLeaderBoard == null
+                    ? Container(
+                        width: SizeConfig.screenWidth,
+                        color: Colors.white,
+                        alignment: Alignment.center,
+                        child: ListLoader())
+                    : (model.referralLeaderBoard.isEmpty
+                        ? Container(
                             width: SizeConfig.screenWidth,
-                            padding: EdgeInsets.all(SizeConfig.padding12),
-                            margin: EdgeInsets.symmetric(
-                                vertical: SizeConfig.padding8),
-                            decoration: BoxDecoration(
-                              color: UiConstants.primaryLight.withOpacity(0.1),
-                              borderRadius:
-                                  BorderRadius.circular(SizeConfig.roundness16),
+                            color: Colors.white,
+                            child: NoRecordDisplayWidget(
+                              asset: "images/leaderboard.png",
+                              text: "Referral Leaderboard will be updated soon",
                             ),
-                            child: Row(
-                              children: [
-                                CircleAvatar(
-                                  backgroundColor: UiConstants.primaryColor,
-                                  radius: SizeConfig.padding16,
-                                  child: Text(
-                                    "${i + 1}",
-                                    style: TextStyles.body4.bold
-                                        .colour(Colors.white),
-                                  ),
+                          )
+                        : Column(
+                            children: List.generate(
+                                model.referralLeaderBoard.length, (i) {
+                              return Container(
+                                width: SizeConfig.screenWidth,
+                                padding: EdgeInsets.all(SizeConfig.padding12),
+                                margin: EdgeInsets.symmetric(
+                                    vertical: SizeConfig.padding8),
+                                decoration: BoxDecoration(
+                                  color:
+                                      UiConstants.primaryLight.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(
+                                      SizeConfig.roundness16),
                                 ),
-                                SizedBox(width: SizeConfig.padding12),
-                                Expanded(
-                                  child: Text(
-                                      model.referralLeaderBoard[i].username
-                                              .replaceAll('@', '.') ??
-                                          "username",
-                                      style: TextStyles.body3),
-                                ),
-                                TextButton.icon(
-                                    icon: CircleAvatar(
-                                      radius: SizeConfig.screenWidth * 0.029,
-                                      backgroundColor:
-                                          UiConstants.tertiaryLight,
-                                      child: SvgPicture.asset(Assets.plane,
-                                          color: UiConstants.tertiarySolid,
-                                          height: SizeConfig.iconSize3),
+                                child: Row(
+                                  children: [
+                                    CircleAvatar(
+                                      backgroundColor: UiConstants.primaryColor,
+                                      radius: SizeConfig.padding16,
+                                      child: Text(
+                                        "${i + 1}",
+                                        style: TextStyles.body4.bold
+                                            .colour(Colors.white),
+                                      ),
                                     ),
-                                    label: Text(
-                                        model.referralLeaderBoard[i].refCount
-                                                .toString() ??
-                                            "00",
-                                        style: TextStyles.body3
-                                            .colour(Colors.black54)),
-                                    onPressed: () {}),
-                              ],
-                            ),
-                          );
-                        })),
+                                    SizedBox(width: SizeConfig.padding12),
+                                    Expanded(
+                                      child: Text(
+                                          model.referralLeaderBoard[i].username
+                                                  .replaceAll('@', '.') ??
+                                              "username",
+                                          style: TextStyles.body3),
+                                    ),
+                                    TextButton.icon(
+                                        icon: CircleAvatar(
+                                          radius:
+                                              SizeConfig.screenWidth * 0.029,
+                                          backgroundColor:
+                                              UiConstants.tertiaryLight,
+                                          child: SvgPicture.asset(Assets.plane,
+                                              color: UiConstants.tertiarySolid,
+                                              height: SizeConfig.iconSize3),
+                                        ),
+                                        label: Text(
+                                            model.referralLeaderBoard[i]
+                                                    .refCount
+                                                    .toString() ??
+                                                "00",
+                                            style: TextStyles.body3
+                                                .colour(Colors.black54)),
+                                        onPressed: () {}),
+                                  ],
+                                ),
+                              );
+                            }),
+                          )),
+              ),
+              SizedBox(
+                height: SizeConfig.navBarHeight * 1.5,
+              )
+            ],
           );
         });
   }
