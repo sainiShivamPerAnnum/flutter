@@ -98,7 +98,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "OTP requests exceeded. Please try again in sometime or contact us."),
         "obResend": MessageLookupByLibrary.simpleMessage(" Resend"),
         "obUsernameHint":
-            MessageLookupByLibrary.simpleMessage("Choose a usename"),
+            MessageLookupByLibrary.simpleMessage("Choose a username"),
         "obUsernameLabel":
             MessageLookupByLibrary.simpleMessage("Unique username"),
         "obUsernameRule1": MessageLookupByLibrary.simpleMessage(

@@ -281,7 +281,7 @@ class S {
   /// `Choose a usename`
   String get obUsernameHint {
     return Intl.message(
-      'Choose a usename',
+      'Choose a username',
       name: 'obUsernameHint',
       desc: '',
       args: [],
