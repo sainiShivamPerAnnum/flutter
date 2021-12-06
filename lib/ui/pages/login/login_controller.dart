@@ -410,9 +410,8 @@ class _LoginControllerState extends State<LoginController>
   }
 
   Future<String> _getBearerToken() async {
-    String token = await _userService.firebaseUser.getIdToken();
-    _logger.d(token);
-
+    String token = await baseProvider.firebaseUser.getIdToken(); 
+    _logger.d("BearerToken: $token");
     return token;
   }
 
