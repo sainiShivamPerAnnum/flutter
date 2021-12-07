@@ -107,7 +107,7 @@ class FcmHandler extends ChangeNotifier {
           break;
         case COMMAND_USER_PRIZE_WIN:
           {
-            if (await reviewDialogCanAppear())
+            if (await reviewDialogCanAppear(COMMAND_USER_PRIZE_WIN))
               BaseUtil.openDialog(
                   addToScreenStack: true,
                   isBarrierDismissable: false,
@@ -146,7 +146,7 @@ class FcmHandler extends ChangeNotifier {
     this.notifListener = listener;
   }
 
-  Future<bool> reviewDialogCanAppear() async {
+  Future<bool> reviewDialogCanAppear(String command) async {
     int hitCount;
     String isUserRated;
     List<int> arr = [2, 5, 7, 11, 13, 15];
@@ -168,13 +168,13 @@ class FcmHandler extends ChangeNotifier {
       }
       isUserRated =
           await CacheManager.readCache(key: CacheManager.CACHE_RATING_IS_RATED);
-      if (isUserRated == null) {
-        await CacheManager.writeCache(
-            key: CacheManager.CACHE_RATING_IS_RATED,
-            value: false.toString(),
-            type: CacheType.string);
-        isUserRated = false.toString();
-      }
+      // if (isUserRated == null) {
+      //   await CacheManager.writeCache(
+      //       key: CacheManager.CACHE_RATING_IS_RATED,
+      //       value: command,
+      //       type: CacheType.string);
+      //   isUserRated = false.toString();
+      // }
 
       String dsc = await CacheManager.readCache(
           key: CacheManager.CACHE_RATING_DIALOG_OPEN_COUNT);
@@ -191,7 +191,7 @@ class FcmHandler extends ChangeNotifier {
       logger.e(e.toString());
     }
 
-    if (isUserRated == "false" && arr.contains(hitCount) && dailogShowCount < 5)
+    if ((isUserRated == null || isUserRated != command) && arr.contains(hitCount) && dailogShowCount < 5)
       return true;
     return false;
   }

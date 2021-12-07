@@ -25,6 +25,7 @@ class TransactionsHistoryViewModel extends BaseModel {
   int _subfilter = 1;
   int _filter = 1;
   bool _init = true;
+  bool _isMoreTxnsBeingFetched = false;
   Map<String, int> _tranTypeFilterItems = {
     "All": 1,
     "Deposit": 2,
@@ -38,7 +39,7 @@ class TransactionsHistoryViewModel extends BaseModel {
     "Augmont": 3
   };
   List<UserTransaction> _filteredList;
-  final ScrollController _scrollController = ScrollController();
+  ScrollController _scrollController;
 
   int get subFilter => _subfilter;
 
@@ -51,6 +52,7 @@ class TransactionsHistoryViewModel extends BaseModel {
   List<UserTransaction> get filteredList => _filteredList;
 
   ScrollController get tranListController => _scrollController;
+  bool get isMoreTxnsBeingFetched => _isMoreTxnsBeingFetched;
 
   set subFilter(int val) {
     _subfilter = val;
@@ -64,6 +66,11 @@ class TransactionsHistoryViewModel extends BaseModel {
 
   set filteredList(List<UserTransaction> val) {
     _filteredList = val;
+    notifyListeners();
+  }
+
+  set isMoreTxnsBeingFetched(bool val) {
+    _isMoreTxnsBeingFetched = val;
     notifyListeners();
   }
 
@@ -81,8 +88,15 @@ class TransactionsHistoryViewModel extends BaseModel {
     setState(ViewState.Idle);
   }
 
+  getMoreTransactions() async {
+    isMoreTxnsBeingFetched = true;
+    await _transactionService.fetchTransactions(30);
+    _filteredList = _transactionService.txnList;
+    filterTransactions();
+    isMoreTxnsBeingFetched = false;
+  }
+
   filterTransactions() {
-    setState(ViewState.Busy);
     filteredList = List.from(_transactionService.txnList);
     if (filter != 1 || subFilter != 1) {
       filteredList.clear();
@@ -140,7 +154,6 @@ class TransactionsHistoryViewModel extends BaseModel {
         if (addItemFlag) filteredList.add(txn);
       });
     }
-    setState(ViewState.Idle);
   }
 
   String _getFormattedTime(Timestamp tTime) {
@@ -222,6 +235,7 @@ class TransactionsHistoryViewModel extends BaseModel {
   }
 
   init() {
+    _scrollController = ScrollController();
     if (_transactionService.txnList == null ||
         _transactionService.txnList.length < 5) {
       getTransactions();
@@ -238,7 +252,8 @@ class TransactionsHistoryViewModel extends BaseModel {
             !_scrollController.position.outOfRange) {
           if (_transactionService.hasMoreTransactionListDocuments &&
               state == ViewState.Idle) {
-            getTransactions();
+            _logger.d("init pagination");
+            getMoreTransactions();
           }
         }
       });
