@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_dialog.dart';
@@ -53,17 +54,17 @@ class _FelloRatingDialogState extends State<FelloRatingDialog> {
           FittedBox(
             fit: BoxFit.scaleDown,
             child: Text(
-              "Enjoying the experience",
+              "Enjoying Fello?",
               style: TextStyles.title2.bold,
             ),
           ),
           SizedBox(height: SizeConfig.padding16),
           Text(
-            "Express you feelings by rating us on ${Platform.isAndroid ? "Playstore" : "Appstore"}",
+            "We are constantly improving the app and your feedback would be really valuable.",
             textAlign: TextAlign.center,
             style: TextStyles.body2.colour(Colors.grey),
           ),
-          SizedBox(height: SizeConfig.screenHeight * 0.04),
+          SizedBox(height: SizeConfig.screenHeight * 0.025),
           Container(
             width: SizeConfig.screenWidth,
             alignment: Alignment.center,
@@ -86,11 +87,12 @@ class _FelloRatingDialogState extends State<FelloRatingDialog> {
               },
             ),
           ),
+          SizedBox(height: SizeConfig.screenHeight * 0.025),
           if (showEmptyRatingError)
             Padding(
-              padding: EdgeInsets.all(SizeConfig.padding12),
+              padding: EdgeInsets.all(SizeConfig.padding4),
               child: Text(
-                "No rating found!!",
+                "Please select a rating",
                 style: TextStyles.body3.bold.colour(UiConstants.tertiarySolid),
               ),
             ),
@@ -129,7 +131,7 @@ class _FelloRatingDialogState extends State<FelloRatingDialog> {
                           try {
                             await CacheManager.writeCache(
                                 key: CacheManager.CACHE_RATING_IS_RATED,
-                                value: true.toString(),
+                                value: FcmHandler.COMMAND_USER_PRIZE_WIN,
                                 type: CacheType.string);
                           } catch (e) {
                             showLoading(false);
@@ -161,8 +163,8 @@ class _FelloRatingDialogState extends State<FelloRatingDialog> {
                             }
                           } else {
                             BaseUtil.showPositiveAlert(
-                                "Thanks for rating our app",
-                                "We'll try to make your experience buttery smooth");
+                                "Thank you for your feedback",
+                                "We hope to serve you better");
                           }
                           AppState.backButtonDispatcher.didPopRoute();
                         },
