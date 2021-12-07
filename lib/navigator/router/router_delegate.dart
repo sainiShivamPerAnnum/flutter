@@ -597,6 +597,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'tambolaHome':
         _baseUtil.openTambolaHome();
         break;
+      case 'cricketHome':
+        pageConfiguration = CricketHomePageConfig;
+        break;
       case 'myWinnings':
         pageConfiguration = MyWinnigsPageConfig;
         break;

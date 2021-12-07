@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 void main() async {
   FlavorConfig(
       flavor: Flavor.QA,
-      color: Colors.amberAccent,
+      color: Color(0xffa32638),
       values: FlavorValues(
           awsAugmontStage: AWSAugmontStage.PROD,
           awsIciciStage: AWSIciciStage.PROD,

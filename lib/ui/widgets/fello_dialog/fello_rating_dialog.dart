@@ -33,7 +33,7 @@ class _FelloRatingDialogState extends State<FelloRatingDialog> {
 
   showLoading(bool value) {
     setState(() {
-      showButtons = value;
+      showButtons = !value;
     });
   }
 
