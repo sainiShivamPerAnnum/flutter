@@ -8,7 +8,7 @@ import 'package:felloapp/ui/modals/octfest_info_modal.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/referral_leaderboard.dart';
-import 'package:felloapp/ui/pages/static/win_leaderboard.dart';
+import 'package:felloapp/ui/pages/static/leaderboard_sheet.dart';
 import 'package:felloapp/ui/service_elements/winners_prizes/winners_marquee.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';

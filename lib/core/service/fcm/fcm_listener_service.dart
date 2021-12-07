@@ -26,8 +26,6 @@ class FcmListener {
   bool isTambolaNotificationLoading = false;
 
   static Future<dynamic> backgroundMessageHandler(RemoteMessage message) async {
-    print('background notif');
-
     Freshchat.isFreshchatNotification(message.data).then((flag) {
       if (flag) {
         _handleFreshchatNotif(message.data);

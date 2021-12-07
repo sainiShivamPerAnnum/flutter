@@ -20,7 +20,7 @@ class TransactionService
 
   List<UserTransaction> _txnList;
   DocumentSnapshot lastTransactionListDocument;
-  bool hasMoreTransactionListDocuments;
+  bool hasMoreTransactionListDocuments = true;
 
   List<UserTransaction> get txnList => _txnList;
 
@@ -45,14 +45,14 @@ class TransactionService
 
       if (_txnList == null || _txnList.length == 0) {
         txnList = List.from(tMap['listOfTransactions']);
-        _logger.d("Transactions list length: ${txnList.length}");
       } else {
         appendTxns(List.from(tMap['listOfTransactions']));
       }
+      _logger.d("Current Transaction List length: ${_txnList.length}");
       if (tMap['lastDocument'] != null) {
         lastTransactionListDocument = tMap['lastDocument'];
       }
-      if (tMap['length'] < 30) {
+      if (tMap['length'] < limit) {
         hasMoreTransactionListDocuments = false;
         findFirstAugmontTransaction();
       }
@@ -73,7 +73,7 @@ class TransactionService
 
   updateTransactions() async {
     lastTransactionListDocument = null;
-    hasMoreTransactionListDocuments = null;
+    hasMoreTransactionListDocuments = true;
     txnList.clear();
     await fetchTransactions(4);
     _logger.i("Transactions got updated");
@@ -158,7 +158,7 @@ class TransactionService
 // Clear transactions
   signOut() {
     lastTransactionListDocument = null;
-    hasMoreTransactionListDocuments = null;
+    hasMoreTransactionListDocuments = true;
     txnList.clear();
   }
 }

@@ -290,7 +290,7 @@ class DBModel extends ChangeNotifier {
           log.error('Failed to parse user transaction $txn');
         }
       });
-      print("LENGTH----------------->" + requestedTxns.length.toString());
+      logger.d("No of transactions fetched: ${requestedTxns.length}");
       resultTransactionsMap['listOfTransactions'] = requestedTxns;
       return resultTransactionsMap;
     } catch (err) {
@@ -510,12 +510,14 @@ class DBModel extends ChangeNotifier {
       if (querySnapshot != null && querySnapshot.docs.length == 1) {
         DocumentSnapshot snapshot = querySnapshot.docs[0];
         Map<String, dynamic> _doc = snapshot.data();
-        if (snapshot.exists && _doc != null && _doc['isDepLocked'] != null &&
+        if (snapshot.exists &&
+            _doc != null &&
+            _doc['isDepLocked'] != null &&
             _doc['isDepLocked']) {
           return true;
         }
       }
-    }catch(e) {
+    } catch (e) {
       logger.e(e.toString());
     }
     return false;
@@ -540,12 +542,14 @@ class DBModel extends ChangeNotifier {
       if (querySnapshot != null && querySnapshot.docs.length == 1) {
         DocumentSnapshot snapshot = querySnapshot.docs[0];
         Map<String, dynamic> _doc = snapshot.data();
-        if (snapshot.exists && _doc != null && _doc['isSellLocked'] != null &&
+        if (snapshot.exists &&
+            _doc != null &&
+            _doc['isSellLocked'] != null &&
             _doc['isSellLocked']) {
           return true;
         }
       }
-    }catch(e) {
+    } catch (e) {
       logger.e(e.toString());
     }
 
@@ -660,8 +664,14 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> addWinClaim(String uid, String userName, String name, String mobile,
-      int currentTickCount, bool isEligible, Map<String, int> resMap) async {
+  Future<bool> addWinClaim(
+      String uid,
+      String userName,
+      String name,
+      String mobile,
+      int currentTickCount,
+      bool isEligible,
+      Map<String, int> resMap) async {
     try {
       DateTime date = new DateTime.now();
       int weekCde = date.year * 100 + BaseUtil.getWeekNumber();
@@ -1182,8 +1192,7 @@ class DBModel extends ChangeNotifier {
             if (_txn != null &&
                 _txn.augmnt != null &&
                 _txn.augmnt[UserTransaction.subFldAugCurrentGoldGm] != null &&
-                _txn.rzp != null
-            ) {
+                _txn.rzp != null) {
               double _qnt = BaseUtil.toDouble(
                   _txn.augmnt[UserTransaction.subFldAugCurrentGoldGm]);
               _netQuantity += _qnt;
