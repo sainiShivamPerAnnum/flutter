@@ -20,6 +20,11 @@ class MixpanelService {
         optOutTrackingDefault: false);
     if (isOnboarded != null && isOnboarded && baseUser != null) {
       _mixpanel.identify(baseUser.uid);
+      _mixpanel.getPeople().set("Mobile", baseUser.mobile ?? '');
+      _mixpanel.getPeople().set("Name", baseUser.name ?? '');
+      _mixpanel.getPeople().set("Email", baseUser.email ?? '');
+      _mixpanel.getPeople().set("Age", _getAge(baseUser.dob) ?? 0);
+
       _mixpanel.registerSuperPropertiesOnce({
         'userId': baseUser.uid ?? '',
         'gender': baseUser.gender ?? 'O',
@@ -27,6 +32,10 @@ class MixpanelService {
         'signupDate': _getSignupDate(baseUser.createdOn),
         'age': _getAge(baseUser.dob) ?? 0
       });
+
+      //Use flush only for testing.
+      // _mixpanel.flush();
+      _logger.d("MIXPANEL SERVICE :: User identify properties added.");
     }
   }
 
