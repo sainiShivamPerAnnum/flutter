@@ -269,7 +269,8 @@ class UserProfileVM extends BaseModel {
 
             _mixpanelService.track(
                 MixpanelEvents.signOut, {'userId': _userService.baseUser.uid});
-                
+            _mixpanelService.signOut();
+
             _userService.signout().then((flag) {
               if (flag) {
                 //log.debug('Sign out process complete');
