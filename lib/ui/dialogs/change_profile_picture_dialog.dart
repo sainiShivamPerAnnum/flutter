@@ -5,6 +5,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -54,13 +55,8 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Text(
-                  "Update Profile Picture",
-                  style: GoogleFonts.montserrat(
-                    fontWeight: FontWeight.w500,
-                    fontSize: SizeConfig.largeTextSize,
-                  ),
-                ),
+                child: Text("Update Profile Picture",
+                    style: TextStyles.title3.bold),
               ),
               Container(
                 height: SizeConfig.screenHeight * 0.2,
@@ -102,11 +98,7 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
                           child: FelloButtonLg(
                             child: Text(
                               "Update",
-                              style: GoogleFonts.montserrat(
-                                color: Colors.white,
-                                fontSize: SizeConfig.mediumTextSize,
-                                fontWeight: FontWeight.w500,
-                              ),
+                              style: TextStyles.body3.bold.colour(Colors.white),
                             ),
                             onPressed: () {
                               setState(() {
@@ -123,11 +115,7 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
                               color: Colors.grey[300],
                               child: Text(
                                 "Cancel",
-                                style: GoogleFonts.montserrat(
-                                  color: Colors.black,
-                                  fontSize: SizeConfig.mediumTextSize,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                                style: TextStyles.body3.bold,
                               ),
                               onPressed: () =>
                                   AppState.backButtonDispatcher.didPopRoute()),

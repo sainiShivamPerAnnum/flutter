@@ -29,6 +29,11 @@ class FcmHandler extends ChangeNotifier {
       String title = data['dialog_title'];
       String body = data['dialog_body'];
       String command = data['command'];
+      String url = data['deep_uri'];
+
+      if (url != null && url.isNotEmpty) {
+        AppState.delegate.parseRoute(Uri.parse(url));
+      }
 
       if (title != null &&
           title.isNotEmpty &&
@@ -107,7 +112,9 @@ class FcmHandler extends ChangeNotifier {
           break;
         case COMMAND_USER_PRIZE_WIN:
           {
-            if (await reviewDialogCanAppear(COMMAND_USER_PRIZE_WIN))
+            if (await reviewDialogCanAppear(COMMAND_USER_PRIZE_WIN)) {
+              AppState.delegate.appState.setCurrentTabIndex = 2;
+              notifyListeners();
               BaseUtil.openDialog(
                   addToScreenStack: true,
                   isBarrierDismissable: false,
@@ -115,6 +122,7 @@ class FcmHandler extends ChangeNotifier {
                   content: FelloRatingDialog(
                     dailogShowCount: dailogShowCount,
                   ));
+            }
           }
           break;
         default:
@@ -191,8 +199,9 @@ class FcmHandler extends ChangeNotifier {
       logger.e(e.toString());
     }
 
-    if ((isUserRated == null || isUserRated != command) && arr.contains(hitCount) && dailogShowCount < 5)
-      return true;
+    if ((isUserRated == null || isUserRated != command) &&
+        arr.contains(hitCount) &&
+        dailogShowCount < 5) return true;
     return false;
   }
 }

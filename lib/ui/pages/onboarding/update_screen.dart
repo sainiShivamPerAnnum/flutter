@@ -29,25 +29,23 @@ class _UpdateRequiredScreenState extends State<UpdateRequiredScreen> {
 
     return Scaffold(
       body: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-        SafeArea(
+        if (Platform.isAndroid)
+          SafeArea(
             child: GestureDetector(
-          onTap: () {
-            if (Platform.isIOS) {
-              AppState.backButtonDispatcher.didPopRoute();
-            } else if (Platform.isAndroid) {
-              SystemNavigator.pop();
-            }
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Align(
-                alignment: Alignment.centerLeft,
-                child: Icon(
-                  Icons.close,
-                  size: SizeConfig.blockSizeVertical * 4,
-                )),
+              onTap: () {
+                SystemNavigator.pop();
+              },
+              child: Padding(
+                padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Icon(
+                      Icons.close,
+                      size: SizeConfig.blockSizeVertical * 3,
+                    )),
+              ),
+            ),
           ),
-        )),
         SizedBox(
           height: SizeConfig.blockSizeVertical * 5,
         ),
