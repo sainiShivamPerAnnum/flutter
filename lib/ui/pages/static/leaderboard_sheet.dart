@@ -21,11 +21,32 @@ class _WinnersLeaderBoardSEState extends State<WinnersLeaderBoardSE> {
     });
   }
 
+  double scrollExtent = 0.0;
+
+  bool isOverScrolled = false;
+  double maxScrollExtent = 0.92;
+  double minScrollExtent = 0.2;
+
+  setScrollExtent(double extent) {
+    scrollExtent = extent;
+    if (extent == maxScrollExtent) {
+      if (isOverScrolled == false)
+        setState(() {
+          isOverScrolled = true;
+        });
+    } else if (extent == minScrollExtent) {
+      if (isOverScrolled == true)
+        setState(() {
+          isOverScrolled = false;
+        });
+    }
+  }
+
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
-      initialChildSize: 0.2,
-      maxChildSize: 0.92,
-      minChildSize: 0.2,
+      initialChildSize: minScrollExtent,
+      maxChildSize: maxScrollExtent,
+      minChildSize: minScrollExtent,
       builder: (BuildContext context, myscrollController) {
         return Container(
           child: Stack(
@@ -36,68 +57,135 @@ class _WinnersLeaderBoardSEState extends State<WinnersLeaderBoardSE> {
                   color: Colors.white,
                 ),
               ),
-              NotificationListener<OverscrollIndicatorNotification>(
+              NotificationListener<DraggableScrollableNotification>(
                 onNotification: (overscroll) {
-                  overscroll.disallowGlow();
+                  setScrollExtent(overscroll.extent);
+                  return true;
                 },
-                child: SingleChildScrollView(
-                  controller: myscrollController,
-                  child: Column(
-                    children: [
-                      Transform.translate(
-                        offset: Offset(0, 1),
-                        child: SvgPicture.asset(
-                          Assets.clip,
-                          width: SizeConfig.screenWidth,
-                        ),
-                      ),
-                      Column(
+                child: isOverScrolled
+                    ? Column(
                         children: [
-                          Row(
-                            children: [
-                              Container(
-                                width: SizeConfig.screenWidth,
-                                color: Colors.white,
-                                padding: EdgeInsets.only(
-                                    bottom: SizeConfig.padding16,
-                                    left: SizeConfig.pageHorizontalMargins),
-                                child: Text(
-                                  "Leaderboard",
-                                  style: TextStyles.title3.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            color: Colors.white,
-                            padding: EdgeInsets.only(
-                              left: SizeConfig.pageHorizontalMargins,
-                              bottom: SizeConfig.padding4,
-                            ),
-                            alignment: Alignment.center,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
+                          SingleChildScrollView(
+                            controller: myscrollController,
+                            child: Column(
                               children: [
-                                leaderboardChips(
-                                  0,
-                                  "Games",
+                                SvgPicture.asset(
+                                  Assets.clip,
+                                  width: SizeConfig.screenWidth,
                                 ),
-                                SizedBox(width: 16),
-                                leaderboardChips(
-                                  1,
-                                  "Referrals",
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: SizeConfig.screenWidth,
+                                      color: Colors.white,
+                                      padding: EdgeInsets.only(
+                                          bottom: SizeConfig.padding16,
+                                          left:
+                                              SizeConfig.pageHorizontalMargins),
+                                      child: Text(
+                                        "Leaderboard",
+                                        style: TextStyles.title3.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Container(
+                                  color: Colors.white,
+                                  padding: EdgeInsets.only(
+                                    left: SizeConfig.pageHorizontalMargins,
+                                    bottom: SizeConfig.padding4,
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      leaderboardChips(
+                                        0,
+                                        "Games",
+                                      ),
+                                      SizedBox(width: 16),
+                                      leaderboardChips(
+                                        1,
+                                        "Referrals",
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
                           ),
-                          currentPage == 0
-                              ? WinnerboardView()
-                              : ReferralLeaderboard(),
+                          Expanded(
+                            child: SingleChildScrollView(
+                              controller: myscrollController,
+                              child: currentPage == 0
+                                  ? WinnerboardView()
+                                  : ReferralLeaderboard(),
+                            ),
+                          )
                         ],
+                      )
+                    : SingleChildScrollView(
+                        controller: myscrollController,
+                        physics: isOverScrolled
+                            ? NeverScrollableScrollPhysics()
+                            : ScrollPhysics(),
+                        child: Column(
+                          children: [
+                            Transform.translate(
+                              offset: Offset(0, 1),
+                              child: SvgPicture.asset(
+                                Assets.clip,
+                                width: SizeConfig.screenWidth,
+                              ),
+                            ),
+                            Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: SizeConfig.screenWidth,
+                                      color: Colors.white,
+                                      padding: EdgeInsets.only(
+                                          bottom: SizeConfig.padding16,
+                                          left:
+                                              SizeConfig.pageHorizontalMargins),
+                                      child: Text(
+                                        "Leaderboard",
+                                        style: TextStyles.title3.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Container(
+                                  color: Colors.white,
+                                  padding: EdgeInsets.only(
+                                    left: SizeConfig.pageHorizontalMargins,
+                                    bottom: SizeConfig.padding4,
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      leaderboardChips(
+                                        0,
+                                        "Games",
+                                      ),
+                                      SizedBox(width: 16),
+                                      leaderboardChips(
+                                        1,
+                                        "Referrals",
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                currentPage == 0
+                                    ? WinnerboardView()
+                                    : ReferralLeaderboard()
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
-                ),
               ),
             ],
           ),

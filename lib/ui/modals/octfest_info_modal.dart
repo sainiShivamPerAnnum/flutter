@@ -4,6 +4,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 
 class OctFestInfoModal extends StatelessWidget {
   @override
@@ -20,14 +21,22 @@ class OctFestInfoModal extends StatelessWidget {
                     top: 16,
                     bottom: 0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Buffalo Wild Wings 🍨",
+                      "Buffalo Wild Wings",
                       textAlign: TextAlign.center,
                       style: TextStyles.title3.bold
                           .colour(UiConstants.primaryColor),
                     ),
+                    SizedBox(width: SizeConfig.padding4),
+                    Shimmer(
+                      child: Icon(
+                        Icons.check_circle,
+                        color: UiConstants.primaryColor,
+                        size: 32,
+                      ),
+                    ),
+                    Spacer(),
                     CircleAvatar(
                       backgroundColor: Colors.black,
                       child: IconButton(
@@ -66,6 +75,7 @@ class OctFestInfoModal extends StatelessWidget {
                   ],
                 ),
               ),
+              SizedBox(height: SizeConfig.padding24),
             ],
           ),
         )
