@@ -18,16 +18,29 @@ class MixpanelService {
   Future<void> init({bool isOnboarded, BaseUser baseUser}) async {
     _mixpanel = await Mixpanel.init(FlavorConfig.instance.values.mixpanelToken,
         optOutTrackingDefault: false);
-    if(isOnboarded != null && isOnboarded && baseUser != null) {
+    if (isOnboarded != null && isOnboarded && baseUser != null) {
       _mixpanel.identify(baseUser.uid);
+      _mixpanel.getPeople().set("Mobile", baseUser.mobile ?? '');
+      _mixpanel.getPeople().set("Name", baseUser.name ?? '');
+      _mixpanel.getPeople().set("Email", baseUser.email ?? '');
+      _mixpanel.getPeople().set("Age", _getAge(baseUser.dob) ?? 0);
+
       _mixpanel.registerSuperPropertiesOnce({
-        'userId': baseUser.uid??'',
-        'gender': baseUser.gender??'O',
-        'kycVerified': baseUser.isSimpleKycVerified??false,
-        'signupDate':_getSignupDate(baseUser.createdOn),
-        'age':_getAge(baseUser.dob)??0
+        'userId': baseUser.uid ?? '',
+        'gender': baseUser.gender ?? 'O',
+        'kycVerified': baseUser.isSimpleKycVerified ?? false,
+        'signupDate': _getSignupDate(baseUser.createdOn),
+        'age': _getAge(baseUser.dob) ?? 0
       });
+
+      //Use flush only for testing.
+      // _mixpanel.flush();
+      _logger.d("MIXPANEL SERVICE :: User identify properties added.");
     }
+  }
+
+  void signOut() {
+    _mixpanel.reset();
   }
 
   void track(String eventName, Map<String, dynamic> properties) {
@@ -43,16 +56,16 @@ class MixpanelService {
   }
 
   String _getSignupDate(Timestamp signupDate) {
-    if(signupDate == null)signupDate = Timestamp.now();
+    if (signupDate == null) signupDate = Timestamp.now();
     try {
       return DateFormat('yyyy-MM-dd').format(signupDate.toDate());
-    }catch(e) {
+    } catch (e) {
       return '';
     }
   }
 
   int _getAge(String dob) {
-    if(dob == null || dob.isEmpty) return 0;
+    if (dob == null || dob.isEmpty) return 0;
     try {
       DateTime birthDate = DateFormat("yyyy-MM-dd").parse(dob);
       DateTime currentDate = DateTime.now();
@@ -69,10 +82,9 @@ class MixpanelService {
         }
       }
       return age;
-    }catch(e) {
+    } catch (e) {
       _logger.e('$e');
       return 0;
     }
   }
-  
 }

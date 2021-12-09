@@ -410,7 +410,7 @@ class _LoginControllerState extends State<LoginController>
   }
 
   Future<String> _getBearerToken() async {
-    String token = await baseProvider.firebaseUser.getIdToken(); 
+    String token = await baseProvider.firebaseUser.getIdToken();
     _logger.d("BearerToken: $token");
     return token;
   }
@@ -433,9 +433,10 @@ class _LoginControllerState extends State<LoginController>
             });
 
             ///disable regular numbers for QA
-            if(FlavorConfig.isQA() && !this.userMobile.startsWith('999990000')) {
-              BaseUtil.showNegativeAlert(
-                  'Mobile number not allowed', 'Only dummy numbers are allowed in QA mode');
+            if (FlavorConfig.isQA() &&
+                !this.userMobile.startsWith('999990000')) {
+              BaseUtil.showNegativeAlert('Mobile number not allowed',
+                  'Only dummy numbers are allowed in QA mode');
               break;
             }
             this._verificationId = '+91' + this.userMobile;
@@ -593,19 +594,19 @@ class _LoginControllerState extends State<LoginController>
                     final _body = {
                       'uid': baseProvider.myUser.uid,
                       'data': {
-                                "mMobile": baseProvider.myUser.mobile,
-                                "mName": baseProvider.myUser.name,
-                                "mEmail": baseProvider.myUser.email,
-                                "mDob": baseProvider.myUser.dob,
-                                "mGender": baseProvider.myUser.gender,
-                                "mUsername": baseProvider.myUser.username,
-                                "mUserPrefs": {"tn": 1, "al": 0}
-                              }
+                        "mMobile": baseProvider.myUser.mobile,
+                        "mName": baseProvider.myUser.name,
+                        "mEmail": baseProvider.myUser.email,
+                        "mDob": baseProvider.myUser.dob,
+                        "mGender": baseProvider.myUser.gender,
+                        "mUsername": baseProvider.myUser.username,
+                        "mUserPrefs": {"tn": 1, "al": 0}
+                      }
                     };
-                    final res = await APIService.instance
-                        .postData(_apiPaths.kAddNewUser,
-                            body: _body,
-                            token: _bearer);
+                    final res = await APIService.instance.postData(
+                        _apiPaths.kAddNewUser,
+                        body: _body,
+                        token: _bearer);
                     res['flag'] ? flag = true : flag = false;
                   } catch (e) {
                     _logger.d(e);
@@ -750,11 +751,16 @@ class _LoginControllerState extends State<LoginController>
   }
 
   Future _onSignUpComplete() async {
-    if(_isSignup)await BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
+    if (_isSignup)
+      await BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
     await BaseAnalytics.logUserProfile(baseProvider.myUser);
     await userService.init();
     await baseProvider.init();
     await fcmListener.setupFcm();
+    _logger.i("Calling mixpanel init for new onborded user");
+    await _mixpanelService.init(
+        isOnboarded: userService.isUserOnborded,
+        baseUser: userService.baseUser);
     AppState.isOnboardingInProgress = false;
     if (baseProvider.isLoginNextInProgress == true) {
       baseProvider.isLoginNextInProgress = false;
