@@ -269,17 +269,24 @@ class DBModel extends ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> getFilteredUserTransactions(
-      BaseUser user,
+      {@required BaseUser user,
       String type,
       String subtype,
+      String status,
       DocumentSnapshot lastDocument,
-      int limit) async {
+      @required int limit}) async {
     Map<String, dynamic> resultTransactionsMap = Map<String, dynamic>();
     List<UserTransaction> requestedTxns = [];
     try {
       String _id = user.uid;
       QuerySnapshot _querySnapshot = await _api.getUserTransactionsByField(
-          _id, type, subtype, lastDocument, limit);
+        userId: _id,
+        type: type,
+        subtype: subtype,
+        status: status,
+        lastDocument: lastDocument,
+        limit: limit,
+      );
       resultTransactionsMap['lastDocument'] = _querySnapshot.docs.last;
       resultTransactionsMap['length'] = _querySnapshot.docs.length;
       _querySnapshot.docs.forEach((txn) {
@@ -294,7 +301,7 @@ class DBModel extends ChangeNotifier {
       resultTransactionsMap['listOfTransactions'] = requestedTxns;
       return resultTransactionsMap;
     } catch (err) {
-      log.error('Failed to fetch user mini transactions');
+      log.error('Failed to fetch transactions:: $err');
       resultTransactionsMap['length'] = 0;
       resultTransactionsMap['listOfTransactions'] = requestedTxns;
       resultTransactionsMap['lastDocument'] = lastDocument;

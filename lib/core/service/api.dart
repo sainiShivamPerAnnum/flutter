@@ -8,6 +8,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:firebase_database/firebase_database.dart' as rdb;
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 
@@ -308,16 +309,24 @@ class Api {
     return query.get();
   }
 
-  Future<QuerySnapshot> getUserTransactionsByField(String user_id, String type,
-      String subtype, DocumentSnapshot lastDocument, int limit) {
+  Future<QuerySnapshot> getUserTransactionsByField({
+    @required String userId,
+    String type,
+    String subtype,
+    String status,
+    DocumentSnapshot lastDocument,
+    @required int limit,
+  }) {
     Query query = _db
         .collection(Constants.COLN_USERS)
-        .doc(user_id)
+        .doc(userId)
         .collection(Constants.SUBCOLN_USER_TXNS);
     if (type != null)
       query = query.where(UserTransaction.fldType, isEqualTo: type);
     if (subtype != null)
       query = query.where(UserTransaction.fldSubType, isEqualTo: subtype);
+    if (status != null)
+      query = query.where(UserTransaction.fldTranStatus, isEqualTo: status);
     if (limit != -1 && limit > 3) query = query.limit(limit);
     query = query.orderBy(UserTransaction.fldTimestamp, descending: true);
     if (lastDocument != null) query = query.startAfterDocument(lastDocument);
