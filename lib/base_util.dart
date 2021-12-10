@@ -228,7 +228,7 @@ class BaseUtil extends ChangeNotifier {
       zeroBalanceAssetUri = 'zerobal/zerobal_${rnd.nextInt(4) + 1}';
 
       ///see if security needs to be shown -> Move to save tab
-      show_security_prompt = true; // await _lModel.showSecurityPrompt();
+      show_security_prompt = await _lModel.showSecurityPrompt();
 
       await setUserDefaults();
     }

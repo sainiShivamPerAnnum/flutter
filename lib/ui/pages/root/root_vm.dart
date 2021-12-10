@@ -151,7 +151,7 @@ class RootViewModel extends BaseModel {
               0) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _showSecurityBottomSheet();
-          // _localDBModel.updateSecurityPrompt(false);
+          _localDBModel.updateSecurityPrompt(false);
         });
       }
       _baseUtil.isUnreadFreshchatSupportMessages().then((flag) {
