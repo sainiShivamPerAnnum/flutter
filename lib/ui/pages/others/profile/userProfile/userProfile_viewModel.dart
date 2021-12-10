@@ -47,7 +47,7 @@ class UserProfileVM extends BaseModel {
   XFile selectedProfilePicture;
   ValueChanged<bool> upload;
   bool isUpdaingUserDetails = false;
-  bool isTambolaNotificationLoading = false;
+  bool _isTambolaNotificationLoading = false;
   int gen;
   String gender;
   DateTime selectedDate;
@@ -63,6 +63,7 @@ class UserProfileVM extends BaseModel {
   String get myGender => _userService.baseUser.gender ?? "";
   String get myMobile => _userService.baseUser.mobile ?? "";
   bool get isEmailVerified => _userService.baseUser.isEmailVerified;
+  bool get isTambolaNotificationLoading => _isTambolaNotificationLoading;
 
   bool get applock =>
       _userService.baseUser.userPreferences
@@ -72,8 +73,14 @@ class UserProfileVM extends BaseModel {
       _userService.baseUser.userPreferences
           .getPreference(Preferences.TAMBOLANOTIFICATIONS) ==
       1;
-  //controllers
 
+  // Setters
+  set isTambolaNotificationLoading(bool val) {
+    _isTambolaNotificationLoading = val;
+    notifyListeners();
+  }
+
+  //controllers
   TextEditingController nameController,
       dobController,
       genderController,
@@ -458,16 +465,21 @@ class UserProfileVM extends BaseModel {
 
   onAppLockPreferenceChanged(val) async {
     if (await BaseUtil.showNoInternetAlert()) return;
-    _baseUtil.flipSecurityValue(val);
+    _userService.baseUser.userPreferences
+        .setPreference(Preferences.APPLOCK, (val) ? 1 : 0);
+    AppState.unsavedPrefs = true;
     notifyListeners();
   }
 
   onTambolaNotificationPreferenceChanged(val) async {
     if (await BaseUtil.showNoInternetAlert()) return;
     isTambolaNotificationLoading = true;
-    notifyListeners();
-    await fcmlistener.toggleTambolaDrawNotificationStatus(val);
+    bool res = await fcmlistener.toggleTambolaDrawNotificationStatus(val);
+    if (res) {
+      _userService.baseUser.userPreferences
+          .setPreference(Preferences.TAMBOLANOTIFICATIONS, (val) ? 1 : 0);
+      AppState.unsavedPrefs = true;
+    }
     isTambolaNotificationLoading = false;
-    notifyListeners();
   }
 }

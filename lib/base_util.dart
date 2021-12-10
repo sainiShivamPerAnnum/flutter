@@ -228,7 +228,7 @@ class BaseUtil extends ChangeNotifier {
       zeroBalanceAssetUri = 'zerobal/zerobal_${rnd.nextInt(4) + 1}';
 
       ///see if security needs to be shown -> Move to save tab
-      // show_security_prompt = await _lModel.showSecurityPrompt();
+      show_security_prompt = true; // await _lModel.showSecurityPrompt();
 
       await setUserDefaults();
     }
@@ -696,7 +696,7 @@ class BaseUtil extends ChangeNotifier {
   }
 
   static int getWeekNumber({DateTime currentDate}) {
-    DateTime tdt = (currentDate != null)?currentDate:new DateTime.now();
+    DateTime tdt = (currentDate != null) ? currentDate : new DateTime.now();
     int dayn = tdt.weekday;
     //tdt = new DateTime(tdt.year, tdt.month, tdt.day-dayn+3);
     //tdt.setDate(tdt.getDate() - dayn + 3);
@@ -879,12 +879,12 @@ class BaseUtil extends ChangeNotifier {
     notifyListeners();
   }
 
-  void toggleTambolaNotificationStatus(bool value) {
-    _myUser.userPreferences
-        .setPreference(Preferences.TAMBOLANOTIFICATIONS, (value) ? 1 : 0);
-    AppState.unsavedPrefs = true;
-    notifyListeners();
-  }
+  // void toggleTambolaNotificationStatus(bool value) {
+  //   _myUser.userPreferences
+  //       .setPreference(Preferences.TAMBOLANOTIFICATIONS, (value) ? 1 : 0);
+  //   AppState.unsavedPrefs = true;
+  //   notifyListeners();
+  // }
 
   //Saving and fetching app lock user preference
   // void saveSecurityValue(bool newValue) async {

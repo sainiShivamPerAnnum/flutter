@@ -14,10 +14,6 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/golden_ticket_claim.dart';
 import 'package:felloapp/ui/modals_sheets/security_modal_sheet.dart';
 import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
-import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
-import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
-import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -112,16 +108,23 @@ class RootViewModel extends BaseModel {
   }
 
   void _showSecurityBottomSheet() {
-    showModalBottomSheet(
-        context: AppState.delegate.navigatorKey.currentContext,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30.0),
-                topRight: Radius.circular(30.0))),
+    BaseUtil.openModalBottomSheet(
+        addToScreenStack: true,
+        isBarrierDismissable: false,
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
         backgroundColor: UiConstants.bottomNavBarColor,
-        builder: (context) {
-          return const SecurityModalSheet();
-        });
+        content: const SecurityModalSheet());
+    // showModalBottomSheet(
+    //     context: AppState.delegate.navigatorKey.currentContext,
+    //     shape: RoundedRectangleBorder(
+    //         borderRadius: BorderRadius.only(
+    //             topLeft: Radius.circular(30.0),
+    //             topRight: Radius.circular(30.0))),
+    //     backgroundColor: UiConstants.bottomNavBarColor,
+    //     builder: (context) {
+    //       return const SecurityModalSheet();
+    //     });
   }
 
   initialize() async {
@@ -148,7 +151,7 @@ class RootViewModel extends BaseModel {
               0) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _showSecurityBottomSheet();
-          _localDBModel.updateSecurityPrompt(false);
+          // _localDBModel.updateSecurityPrompt(false);
         });
       }
       _baseUtil.isUnreadFreshchatSupportMessages().then((flag) {

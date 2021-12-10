@@ -214,8 +214,7 @@ class FcmListener {
 // TAMBOLA DRAW NOTIFICATION STATUS HANDLE CODE
 
   // TOGGLE THE SUBSCRIPTION
-  Future toggleTambolaDrawNotificationStatus(bool val) async {
-    print("Draw notification val : $val");
+  Future<bool> toggleTambolaDrawNotificationStatus(bool val) async {
     try {
       if (val) {
         await addSubscription(FcmTopic.TAMBOLAPLAYER);
@@ -224,7 +223,8 @@ class FcmListener {
         await removeSubscription(FcmTopic.TAMBOLAPLAYER);
         print("subscription removed");
       }
-      _baseUtil.toggleTambolaNotificationStatus(val);
+      //_baseUtil.toggleTambolaNotificationStatus(val);
+      return true;
     } catch (e) {
       logger.e(e.toString());
       if (_baseUtil.myUser.uid != null) {
@@ -235,6 +235,7 @@ class FcmListener {
             FailType.TambolaDrawNotificationSettingFailed, errorDetails);
       }
       BaseUtil.showNegativeAlert("Error", "Please try again");
+      return false;
     }
   }
 }
