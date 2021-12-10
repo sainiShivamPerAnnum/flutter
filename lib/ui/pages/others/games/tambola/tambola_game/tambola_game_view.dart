@@ -104,6 +104,7 @@ class _TambolaGameViewState extends State<TambolaGameView>
                                         model.showBuyModal = value;
                                       },
                                     ),
+                                    // For TESTING
                                     // Padding(
                                     //   padding: EdgeInsets.all(40),
                                     //   child: ElevatedButton(
@@ -130,14 +131,16 @@ class _TambolaGameViewState extends State<TambolaGameView>
                                             ),
                                           ),
                                     SizedBox(height: SizeConfig.padding20),
-                                    (Platform.isIOS)?Text(
-                                      'Apple is not associated with Fello Tambola',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w100,
-                                        fontSize: SizeConfig.mediumTextSize,
-                                        color: Colors.blueGrey
-                                      ),
-                                    ):Container(),
+                                    (Platform.isIOS)
+                                        ? Text(
+                                            'Apple is not associated with Fello Tambola',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w100,
+                                                fontSize:
+                                                    SizeConfig.mediumTextSize,
+                                                color: Colors.blueGrey),
+                                          )
+                                        : Container(),
                                     SizedBox(height: SizeConfig.padding40),
                                   ],
                                 ),

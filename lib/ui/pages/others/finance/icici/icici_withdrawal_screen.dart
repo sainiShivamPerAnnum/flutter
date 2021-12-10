@@ -2,7 +2,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/dialogs/icici_redemption_otp_dialog.dart';
-import 'package:felloapp/ui/elements/faq_card.dart';
+import 'package:felloapp/ui/widgets/faq_card/faq_card_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -277,9 +277,8 @@ class ICICIWithdrawalState extends State<ICICIWithdrawal> {
                           ],
                         ),
                       ),
-                      FAQCard(
-                        Assets.mfFaqHeaders,
-                        Assets.mfFaqAnswers,
+                      FAQCardView(
+                        category: 'icici',
                       ),
                     ],
                   ),

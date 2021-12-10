@@ -10,11 +10,8 @@ import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/repository/investment_actions_repo.dart';
 import 'package:felloapp/core/repository/prizes_repo.dart';
 import 'package:felloapp/core/repository/statistics_repo.dart';
-<<<<<<< HEAD
 import 'package:felloapp/core/repository/ticket_generation_repo.dart';
 import 'package:felloapp/core/repository/winners_repo.dart';
-=======
->>>>>>> fitfello
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/repository/winners_repo.dart';
 import 'package:felloapp/core/service/api.dart';
@@ -135,11 +132,7 @@ void setupLocator() {
   locator.registerFactory(() => FDrawerVM());
   locator.registerFactory(() => MiniTransactionCardViewModel());
   locator.registerFactory(() => FelloCoinBarViewModel());
-<<<<<<< HEAD
   locator.registerFactory(() => FAQCardViewModel());
-  locator.registerFactory(() => SimpleKycModelsheetViewModel());
-=======
->>>>>>> fitfello
 
   //....
 }
