@@ -489,7 +489,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
     } else {
       AppState.backButtonDispatcher.didPopRoute();
       BaseUtil.showNegativeAlert('Failed',
-          'Your gold deposit failed. Please try again or contact us if you are facing issues',
+          'Your gold deposit did not complete. Any money deducted will be refunded to you shortly.',
           seconds: 5);
     }
   }

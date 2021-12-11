@@ -478,7 +478,7 @@ class AugmontModel extends ChangeNotifier {
           {'message': _initialDepositResponse.errorMessage});
 
       BaseUtil.showNegativeAlert(
-          'Deposit Failed', 'Please try again in sometime or contact us');
+          'Deposit Failed', 'Any money deducted will be refunded to you shortly.');
 
       _baseProvider.currentAugmontTxn.tranStatus =
           UserTransaction.TRAN_STATUS_CANCELLED;
@@ -545,8 +545,8 @@ class AugmontModel extends ChangeNotifier {
         'message': _onCancleUserDepositResponse?.errorMessage ??
             "Cancel user deposit failed"
       });
-      BaseUtil.showNegativeAlert('Something went wrong',
-          'Please try again in sometime or contact us for more assistance');
+      BaseUtil.showNegativeAlert('Deposit failed',
+          'Your payment failed. Please try again');
       _baseProvider.currentAugmontTxn.tranStatus =
           UserTransaction.TRAN_STATUS_CANCELLED;
 
@@ -652,11 +652,11 @@ class AugmontModel extends ChangeNotifier {
       _dbModel.logFailure(
           _baseProvider.myUser.uid, FailType.WithdrawlCompleteApiFailed, {
         'message':
-            _initialDepositResponse?.errorMessage ?? "Withdrawl api failed"
+            _initialDepositResponse?.errorMessage ?? "Withdrawal api failed"
       });
 
       BaseUtil.showNegativeAlert(
-          'Deposit Failed', 'Please try again in sometime or contact us');
+          'Withdrawal Failed', 'Please try again in sometime.');
 
       _baseProvider.currentAugmontTxn.tranStatus =
           UserTransaction.TRAN_STATUS_CANCELLED;

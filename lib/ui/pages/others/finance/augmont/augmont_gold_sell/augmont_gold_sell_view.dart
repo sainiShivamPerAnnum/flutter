@@ -386,8 +386,9 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
     DateTime _dt = new DateTime.now().add(Duration(days: Constants.AUG_GOLD_WITHDRAW_OFFSET));
     String _dtStr = DateFormat("dd MMMM")
         .format(_dt);
+    int _hrs = Constants.AUG_GOLD_WITHDRAW_OFFSET*24;
 
-    return 'You can withdraw ${model.nonWithdrawableQnt} grams of Gold on $_dtStr or later.';
+    return '${model.nonWithdrawableQnt} grams is locked. Digital Gold can be withdrawn after $_hrs hours of successful deposit.';
   }
 
   dialogContent(BuildContext context) {
