@@ -107,7 +107,7 @@ class _SupportPageState extends State<SupportPage> {
                           onTap: () {
                             Haptic.vibrate();
                             _mixpanelService
-                                .track(MixpanelEvents.initiateChatSupport,{'userId':_userService.baseUser.uid});
+                                .track(eventName: MixpanelEvents.initiateChatSupport,properties: {'userId':_userService.baseUser.uid});
                             appState.currentAction = PageAction(
                                 state: PageState.addPage,
                                 page: ChatSupportPageConfig);
@@ -454,7 +454,7 @@ class _SupportPageState extends State<SupportPage> {
                                   _requestCallPhoneController.text.trim(),
                                   callTimes[_selectedTimeSlotIndex]);
                               if (res) {
-                                _mixpanelService.track(MixpanelEvents.requestedCallback,{'userId':_userService.baseUser.uid});
+                                _mixpanelService.track(eventName: MixpanelEvents.requestedCallback);
                                 BaseUtil.showPositiveAlert(
                                   'Callback Placed',
                                   'Thank you for letting us know, we will call you soon!',
@@ -499,7 +499,7 @@ class _SupportPageState extends State<SupportPage> {
   }
 
   void _launchEmail() {
-    _mixpanelService.track(MixpanelEvents.emailInitiated,{'userId':_userService.baseUser.uid});
+    _mixpanelService.track(eventName: MixpanelEvents.emailInitiated);
     final Uri emailLaunchUri = Uri(scheme: 'mailto', path: 'hello@fello.in');
     launch(emailLaunchUri.toString());
   }
