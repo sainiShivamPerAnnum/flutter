@@ -65,24 +65,22 @@ class NameInputScreenState extends State<NameInputScreen> {
 
   bool _isSigningIn = false;
   bool _isContinuedWithGoogle = false;
-  bool _emailEnabled = true;
+  bool _emailEnabled = false;
   String emailText = "Email";
-  bool isEmailEntered = true;
+  bool isEmailEntered = false;
   bool isUploaded = false;
 
   showEmailOptions() {
-    AppState.screenStack.add(ScreenItem.dialog);
     baseProvider.isGoogleSignInProgress = false;
-    showModalBottomSheet(
-        isDismissible: baseProvider.isGoogleSignInProgress ? false : true,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        context: context,
-        builder: (ctx) {
-          return SignInOptions(
-            onEmailSignIn: continueWithEmail,
-            onGoogleSignIn: continueWithGoogle,
-          );
-        });
+    BaseUtil.openModalBottomSheet(
+        isBarrierDismissable: false,
+        borderRadius: BorderRadius.circular(15),
+        content: SignInOptions(
+          onEmailSignIn: continueWithEmail,
+          onGoogleSignIn: continueWithGoogle,
+        ),
+        addToScreenStack: true,
+        hapticVibrate: true);
   }
 
   continueWithGoogle() async {
@@ -142,7 +140,7 @@ class NameInputScreenState extends State<NameInputScreen> {
             "No account selected", "Please choose an account from the list");
       }
     } catch (e) {
-      print(e.toString());
+      print("Google Signin failed: ${e.toString()}");
       baseProvider.isGoogleSignInProgress = false;
       BaseUtil.showNegativeAlert(
           "Unable to verify", "Please try a different method");
@@ -491,78 +489,6 @@ class NameInputScreenState extends State<NameInputScreen> {
                     .toList(),
               ),
             ),
-            // Container(
-            //   width: SizeConfig.screenWidth,
-            //   height: SizeConfig.screenWidth * 0.115,
-            //   decoration: BoxDecoration(
-            //     color: UiConstants.primaryColor.withOpacity(0.1),
-            //     borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-            //   ),
-            //   padding: EdgeInsets.all(SizeConfig.padding2),
-            //   child: Stack(
-            //     children: [
-            //       AnimatedPositioned(
-            //         left: _isInvested ? 0 : SizeConfig.screenWidth * 0.45,
-            //         duration: Duration(milliseconds: 400),
-            //         child: Container(
-            //           height: SizeConfig.screenWidth * 0.106,
-            //           width: SizeConfig.screenWidth * 0.422,
-            //           decoration: BoxDecoration(
-            //             color: Colors.white,
-            //             borderRadius:
-            //                 BorderRadius.circular(SizeConfig.roundness12),
-            //           ),
-            //         ),
-            //       ),
-            //       Container(
-            //         width: SizeConfig.screenWidth,
-            //         height: SizeConfig.screenWidth * 0.115,
-            //         child: Row(
-            //           children: [
-            //             Expanded(
-            //               child: Center(
-            //                 child: TextButton(
-            //                   onPressed: () {
-            //                     setState(() {
-            //                       _isInvested = true;
-            //                     });
-            //                   },
-            //                   child: Text(
-            //                     "YES",
-            //                     style: TextStyles.body2.colour(
-            //                       _isInvested
-            //                           ? UiConstants.primaryColor
-            //                           : Colors.grey,
-            //                     ),
-            //                   ),
-            //                 ),
-            //               ),
-            //             ),
-            //             Expanded(
-            //               child: Center(
-            //                 child: TextButton(
-            //                   onPressed: () {
-            //                     setState(() {
-            //                       _isInvested = false;
-            //                     });
-            //                   },
-            //                   child: Text(
-            //                     "NO",
-            //                     style: TextStyles.body2.colour(
-            //                       !_isInvested
-            //                           ? UiConstants.primaryColor
-            //                           : Colors.grey,
-            //                     ),
-            //                   ),
-            //                 ),
-            //               ),
-            //             ),
-            //           ],
-            //         ),
-            //       )
-            //     ],
-            //   ),
-            // ),
             SizedBox(height: SizeConfig.navBarHeight),
             SizedBox(height: SizeConfig.viewInsets.bottom)
           ],
@@ -793,13 +719,32 @@ class _SignInOptionsState extends State<SignInOptions> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "Choose an email option",
-                  style: TextStyle(
-                    color: Colors.black54,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 24,
-                  ),
+                Row(
+                  children: [
+                    Text(
+                      "Choose an email option",
+                      style: TextStyle(
+                        color: Colors.black54,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 24,
+                      ),
+                    ),
+                    Spacer(),
+                    CircleAvatar(
+                      backgroundColor: Colors.black,
+                      child: IconButton(
+                        onPressed: () {
+                          baseProvider.isGoogleSignInProgress = false;
+                          AppState.backButtonDispatcher.didPopRoute();
+                        },
+                        icon: Icon(
+                          Icons.close,
+                          size: SizeConfig.iconSize1,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
+                  ],
                 ),
                 Divider(
                   height: 32,

@@ -351,8 +351,8 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                 ),
                                 controller: model.emailController,
                               ),
-                              // if (!model.inEditMode)
-                              //   UserEmailVerificationButton(),
+                              if (!model.inEditMode)
+                                UserEmailVerificationButton(),
                               TextFieldLabel(locale.obMobileLabel),
                               TextFormField(
                                 enabled: false,

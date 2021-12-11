@@ -39,6 +39,10 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   UserFundWallet get userFundWallet => _userFundWallet;
 
+  set firebaseUser(User firebaseUser) {
+    _firebaseUser = firebaseUser;
+  }
+
   setMyUserDpUrl(String url) {
     _myUserDpUrl = url;
     notifyListeners(UserServiceProperties.myUserDpUrl);

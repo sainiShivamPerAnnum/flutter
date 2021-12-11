@@ -693,7 +693,7 @@ class _LoginControllerState extends State<LoginController>
   void _onSignInSuccess() async {
     log.debug("User authenticated. Now check if details previously available.");
     baseProvider.firebaseUser = FirebaseAuth.instance.currentUser;
-    //userService.baseUser = FirebaseAuth.instance.currentUser;
+    userService.firebaseUser = FirebaseAuth.instance.currentUser;
     log.debug("User is set: " + baseProvider.firebaseUser.uid);
     BaseUser user = await dbProvider.getUser(baseProvider.firebaseUser.uid);
     //user variable is pre cast into User object
