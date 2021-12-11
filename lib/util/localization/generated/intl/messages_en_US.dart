@@ -131,7 +131,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "refStep2": MessageLookupByLibrary.simpleMessage(
             "Your friend makes their first saving of ₹ 100 on the app."),
         "refStep3": MessageLookupByLibrary.simpleMessage(
-            "Both you and your friend receive ₹ 25 and 200 Fello tokens in your account."),
+            "Both you and your friend receive ₹ 25 and 100 Fello tokens in your account."),
         "refWhatsapp": MessageLookupByLibrary.simpleMessage("WhatsApp"),
         "refstep1": MessageLookupByLibrary.simpleMessage(
             "Your friend installs Fello and signs up using your referral link or referral code."),

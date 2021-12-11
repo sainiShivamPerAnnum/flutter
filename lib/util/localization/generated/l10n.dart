@@ -754,10 +754,10 @@ class S {
     );
   }
 
-  /// `Both you and your friend receive ₹ 25 and 200 Fello tokens in your account.`
+  /// `Both you and your friend receive ₹ 25 and 100 Fello tokens in your account.`
   String get refStep3 {
     return Intl.message(
-      'Both you and your friend receive ₹ 25 and 200 Fello tokens in your account.',
+      'Both you and your friend receive ₹ 25 and 100 Fello tokens in your account.',
       name: 'refStep3',
       desc: '',
       args: [],
