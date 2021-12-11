@@ -15,6 +15,7 @@ import 'package:logger/logger.dart';
 
 class FcmHandler extends ChangeNotifier {
   static const COMMAND_USER_PRIZE_WIN = 'userPrizeWin';
+  static const COMMAND_USER_PRIZE_WIN_2 = 'userPrizeWinWithPrompt';
 
   final Logger logger = locator<Logger>();
   final _lbService = locator<LeaderboardService>();
@@ -110,18 +111,20 @@ class FcmHandler extends ChangeNotifier {
             );
           }
           break;
-        case COMMAND_USER_PRIZE_WIN:
+        case COMMAND_USER_PRIZE_WIN_2:
           {
-            if (await reviewDialogCanAppear(COMMAND_USER_PRIZE_WIN)) {
+            if (await reviewDialogCanAppear(COMMAND_USER_PRIZE_WIN_2)) {
               AppState.delegate.appState.setCurrentTabIndex = 2;
               notifyListeners();
-              BaseUtil.openDialog(
-                  addToScreenStack: true,
-                  isBarrierDismissable: false,
-                  hapticVibrate: false,
-                  content: FelloRatingDialog(
-                    dailogShowCount: dailogShowCount,
-                  ));
+              Future.delayed(Duration(seconds: 4), () {
+                BaseUtil.openDialog(
+                    addToScreenStack: true,
+                    isBarrierDismissable: false,
+                    hapticVibrate: false,
+                    content: FelloRatingDialog(
+                      dailogShowCount: dailogShowCount,
+                    ));
+              });
             }
           }
           break;
