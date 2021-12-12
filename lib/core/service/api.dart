@@ -47,14 +47,23 @@ class Api {
     return documentRef.update(data);
   }
 
-  Future<QuerySnapshot> getUserNotifications(String userId) async {
+  Future<QuerySnapshot> getUserNotifications(
+      String userId, DocumentSnapshot lastDoc) async {
     Future<QuerySnapshot> snapshot;
-    ref = _db
+    Query query = _db
         .collection(Constants.COLN_USERS)
         .doc(userId)
         .collection(Constants.SUBCOLN_USER_ALERTS);
     try {
-      snapshot = ref.orderBy('created_time').limit(20).get();
+      if (lastDoc != null)
+        snapshot = query
+            .orderBy('created_time', descending: true)
+            .startAfterDocument(lastDoc)
+            .limit(10)
+            .get();
+      else
+        snapshot =
+            query.orderBy('created_time', descending: true).limit(10).get();
     } catch (e) {
       logger.e(e);
     }
@@ -65,7 +74,7 @@ class Api {
     Future<QuerySnapshot> snapshot;
     ref = _db.collection(Constants.COLN_ANNOUNCEMENTS);
     try {
-      snapshot = ref.orderBy('created_time').limit(20).get();
+      snapshot = ref.orderBy('created_time').get();
     } catch (e) {
       logger.e(e);
     }

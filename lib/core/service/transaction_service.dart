@@ -50,7 +50,7 @@ class TransactionService
         _logger.d("a duplicate txn");
       }
     });
-    _txnList.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    _txnList.sort((a, b) => b.timestamp.seconds.compareTo(a.timestamp.seconds));
     notifyListeners(TransactionServiceProperties.transactionList);
   }
 

@@ -116,14 +116,18 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<List<AlertModel>> getUserNotifications(String userId) async {
+  Future<Map<String, dynamic>> getUserNotifications(
+      String userId, DocumentSnapshot lastDoc, bool more) async {
     List<AlertModel> alerts = [];
     List<AlertModel> announcements = [];
     List<AlertModel> notifications = [];
+    DocumentSnapshot lastAlertDoc;
     logger.d("user id - $userId");
 
     try {
-      QuerySnapshot querySnapshot = await _api.getUserNotifications(userId);
+      QuerySnapshot querySnapshot =
+          await _api.getUserNotifications(userId, lastDoc);
+      lastAlertDoc = querySnapshot.docs.last;
       for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
         AlertModel alert = AlertModel.fromMap(documentSnapshot.data());
         logger.d(alert.subtitle);
@@ -132,16 +136,17 @@ class DBModel extends ChangeNotifier {
     } catch (e) {
       logger.e(e);
     }
-
-    try {
-      QuerySnapshot querySnapshot = await _api.getAnnoucements();
-      for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
-        AlertModel announcement = AlertModel.fromMap(documentSnapshot.data());
-        logger.d(announcement.subtitle);
-        announcements.add(announcement);
+    if (!more) {
+      try {
+        QuerySnapshot querySnapshot = await _api.getAnnoucements();
+        for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
+          AlertModel announcement = AlertModel.fromMap(documentSnapshot.data());
+          logger.d(announcement.subtitle);
+          announcements.add(announcement);
+        }
+      } catch (e) {
+        logger.e(e);
       }
-    } catch (e) {
-      logger.e(e);
     }
 
     notifications.addAll(alerts);
@@ -150,7 +155,11 @@ class DBModel extends ChangeNotifier {
     notifications
         .sort((a, b) => b.createdTime.seconds.compareTo(a.createdTime.seconds));
 
-    return notifications;
+    return {
+      'notifications': notifications,
+      'lastAlertDoc': lastAlertDoc,
+      'alertsLength': alerts.length
+    };
   }
 
   /// return obj:
