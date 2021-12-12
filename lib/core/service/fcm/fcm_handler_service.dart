@@ -79,7 +79,7 @@ class FcmHandler extends ChangeNotifier {
               });
             }
             // update cricket scoreboard
-            Future.delayed(Duration(seconds: 2), () {
+            Future.delayed(Duration(milliseconds: 2500), () {
               _lbService
                   .fetchCricketLeaderBoard()
                   .then((value) => _lbService.scrollToUserIndexIfAvaiable());

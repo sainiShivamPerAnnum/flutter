@@ -606,8 +606,6 @@ class AugmontModel extends ChangeNotifier {
     };
 
     _logger.d(_params);
-    _logger.d(_params);
-
     ApiResponse<DepositResponseModel> _onSellCompleteResponse =
         await _investmentActionsRepository.withdrawlComplete(
             tranDocId: _tranIdResponse.model,
@@ -615,43 +613,54 @@ class AugmontModel extends ChangeNotifier {
             sellGoldMap: _params,
             userUid: _baseProvider.myUser.uid);
 
+    bool _successFlag = true;
     if (_onSellCompleteResponse.code == 200) {
-      _baseProvider.currentAugmontTxn.tranStatus =
-          UserTransaction.TRAN_STATUS_COMPLETE;
-      _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId] =
-          _onSellCompleteResponse.model.augResponse.data.transactionId;
-      _baseProvider
-              .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId] =
-          _onSellCompleteResponse.model.augResponse.data.merchantTransactionId;
-      _baseProvider.currentAugmontTxn
-          .augmnt[UserTransaction.subFldAugTotalGoldGm] = double.tryParse(
-              _onSellCompleteResponse.model.augResponse.data.goldBalance) ??
-          0.0;
+      try {
+        _baseProvider.currentAugmontTxn.tranStatus =
+            UserTransaction.TRAN_STATUS_COMPLETE;
+        _baseProvider.currentAugmontTxn.augmnt[UserTransaction
+            .subFldAugTranId] =
+            _onSellCompleteResponse.model.augResponse.data.transactionId;
+        _baseProvider
+            .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId] =
+            _onSellCompleteResponse.model.augResponse.data
+                .merchantTransactionId;
+        _baseProvider.currentAugmontTxn
+            .augmnt[UserTransaction.subFldAugTotalGoldGm] = double.tryParse(
+            _onSellCompleteResponse.model.augResponse.data.goldBalance) ??
+            0.0;
 
-      double newAugPrinciple =
-          _onSellCompleteResponse.model.response.augmontPrinciple;
-      if (newAugPrinciple != null && newAugPrinciple > 0) {
-        _userService.augGoldPrinciple = newAugPrinciple;
+        double newAugPrinciple =
+            _onSellCompleteResponse.model.response.augmontPrinciple;
+        if (newAugPrinciple != null && newAugPrinciple > 0) {
+          _userService.augGoldPrinciple = newAugPrinciple;
+        }
+        double newAugQuantity =
+            _onSellCompleteResponse.model.response.augmontGoldQty;
+        if (newAugQuantity != null && newAugQuantity >= 0) {
+          _userService.augGoldQuantity = newAugQuantity;
+        }
+        int newFlcBalance = _onSellCompleteResponse.model.response.flcBalance;
+        if (newFlcBalance > 0) {
+          _userCoinService.setFlcBalance(newFlcBalance);
+        }
+        _baseProvider.currentAugmontTxn = _onSellCompleteResponse
+            .model.response.transactionDoc.transactionDetail;
+        _txnService.updateTransactions();
+        if (_augmontTxnProcessListener != null)
+          _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
+      }catch(e) {
+        _successFlag = false;
       }
-      double newAugQuantity =
-          _onSellCompleteResponse.model.response.augmontGoldQty;
-      if (newAugQuantity != null && newAugQuantity >= 0) {
-        _userService.augGoldQuantity = newAugQuantity;
-      }
-      int newFlcBalance = _onSellCompleteResponse.model.response.flcBalance;
-      if (newFlcBalance > 0) {
-        _userCoinService.setFlcBalance(newFlcBalance);
-      }
-      _baseProvider.currentAugmontTxn = _onSellCompleteResponse
-          .model.response.transactionDoc.transactionDetail;
-      _txnService.updateTransactions();
-      if (_augmontTxnProcessListener != null)
-        _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
     } else {
+      _successFlag = false;
+    }
+
+    if(!_successFlag) {
       _dbModel.logFailure(
           _baseProvider.myUser.uid, FailType.WithdrawlCompleteApiFailed, {
         'message':
-            _initialDepositResponse?.errorMessage ?? "Withdrawal api failed"
+        _initialDepositResponse?.errorMessage ?? "Withdrawal api failed"
       });
 
       BaseUtil.showNegativeAlert(
