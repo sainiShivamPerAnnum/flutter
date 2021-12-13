@@ -56,7 +56,7 @@ class _ReferralHistoryViewState extends State<ReferralHistoryView> {
             baseProvider.myReferralInfo.refCount = _n;
             if (_n != null && _n > 0)
               _mixpanelService.track(MixpanelEvents.referralCount,
-                  {'userId':baseProvider.myUser.uid,"count": _n});
+                  {'userId': baseProvider.myUser.uid, "count": _n});
             dbProvider.updateUserReferralCount(baseProvider.myUser.uid,
                 baseProvider.myReferralInfo); //await not required
           }
@@ -103,7 +103,8 @@ class _ReferralHistoryViewState extends State<ReferralHistoryView> {
                                 itemBuilder: (context, i) {
                                   if (widget.onlyLocked) {
                                     if (baseProvider.userReferralsList[i]
-                                        .isUserBonusUnlocked??false)
+                                            .isUserBonusUnlocked ??
+                                        false)
                                       return SizedBox();
                                     else
                                       return _buildRefItem(
@@ -153,6 +154,7 @@ class _ReferralHistoryViewState extends State<ReferralHistoryView> {
         rDetail.isRefereeBonusUnlocked ||
         rDetail.isUserBonusUnlocked == null ||
         rDetail.isUserBonusUnlocked);
+
     return Container(
         margin: EdgeInsets.symmetric(vertical: SizeConfig.padding12),
         decoration: BoxDecoration(
@@ -178,29 +180,50 @@ class _ReferralHistoryViewState extends State<ReferralHistoryView> {
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(rDetail.userName ?? '',
-                            maxLines: 2,
-                            overflow: TextOverflow.clip,
-                            style: TextStyles.body2.bold),
-                      ),
-                      Text(
-                        _getBonusText(rDetail),
-                        style: TextStyles.body4.bold.colour(_isBonusUnlocked
-                            ? UiConstants.primaryColor
-                            : UiConstants.tertiarySolid),
-                      ),
-                    ],
-                  ),
+                  Text(rDetail.userName ?? '',
+                      maxLines: 2,
+                      overflow: TextOverflow.clip,
+                      style: TextStyles.body2.bold),
                   SizedBox(height: SizeConfig.padding2),
                   Text('${_getUserMembershipDate(rDetail.timestamp)}',
                       maxLines: 2, style: TextStyles.body3.colour(Colors.grey)),
                 ],
               ),
+            ),
+            SizedBox(width: SizeConfig.padding2),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  _getBonusText(rDetail),
+                  style: TextStyles.body4.bold.colour(_isBonusUnlocked
+                      ? UiConstants.primaryColor
+                      : UiConstants.tertiarySolid),
+                ),
+                SizedBox(height: SizeConfig.padding2),
+                InkWell(
+                  onTap: () {
+                    BaseUtil.showPositiveAlert(
+                        "${rDetail.userName} pinged 👍🏼",
+                        "You can ping again after 48 hours");
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: UiConstants.tertiarySolid,
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness12),
+                    ),
+                    padding: EdgeInsets.symmetric(
+                        vertical: SizeConfig.padding6,
+                        horizontal: SizeConfig.padding12),
+                    child: Text(
+                      "Ping",
+                      style: TextStyles.body3.bold.colour(Colors.white),
+                    ),
+                  ),
+                )
+              ],
             ),
           ],
         ));

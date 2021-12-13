@@ -24,6 +24,7 @@ class NotificationsViewModel extends BaseModel {
   bool _isMoreNotificationsLoading = false;
   int postHighlightIndex = 0;
   String lastReadLatestNotificationTime;
+  int newNotificationsCount = 0;
 
   bool get isMoreNotificationsLoading => _isMoreNotificationsLoading;
 
@@ -94,6 +95,7 @@ class NotificationsViewModel extends BaseModel {
       if (notifications[i].createdTime.millisecondsSinceEpoch >
           int.tryParse(lastReadLatestNotificationTime))
         notifications[i].isHighlighted = true;
+      newNotificationsCount++;
     }
   }
 
