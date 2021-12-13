@@ -43,6 +43,7 @@ class UserProfileVM extends BaseModel {
   final _txnService = locator<TransactionService>();
   final MixpanelService _mixpanelService = locator<MixpanelService>();
   final S _locale = locator<S>();
+  final BaseUtil baseProvider = locator<BaseUtil>();
   double picSize;
   XFile selectedProfilePicture;
   ValueChanged<bool> upload;
@@ -267,14 +268,16 @@ class UserProfileVM extends BaseModel {
           confirmAction: () {
             Haptic.vibrate();
 
-            _mixpanelService.track(eventName:
-                MixpanelEvents.signOut);
+            _mixpanelService.track(eventName: MixpanelEvents.signOut);
             _mixpanelService.signOut();
 
             _userService.signout().then((flag) {
               if (flag) {
                 //log.debug('Sign out process complete');
+
                 _txnService.signOut();
+                _baseUtil.signOut();
+                
                 AppState.delegate.appState.currentAction = PageAction(
                     state: PageState.replaceAll, page: SplashPageConfig);
                 BaseUtil.showPositiveAlert(
