@@ -24,6 +24,7 @@ import 'package:felloapp/core/model/user_icici_detail_model.dart';
 import 'package:felloapp/core/model/user_ticket_wallet_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/api.dart';
+import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/credentials_stage.dart';
@@ -114,6 +115,41 @@ class DBModel extends ChangeNotifier {
       log.error("Failed to update user preference field: $e");
       return false;
     }
+  }
+
+  Future<bool> checkIfUserHasNewNotifications(String userId) async {
+    try {
+      QuerySnapshot notificationSnapshot =
+          await _api.checkForLatestNotification(userId);
+      QuerySnapshot announcementSnapshot =
+          await _api.checkForLatestAnnouncment(userId);
+      AlertModel lastestNotification =
+          AlertModel.fromMap(notificationSnapshot.docs.first.data());
+      AlertModel lastestAnnouncement =
+          AlertModel.fromMap(announcementSnapshot.docs.first.data());
+
+      String latestNotifTime = await CacheManager.readCache(
+          key: CacheManager.CACHE_LATEST_NOTIFICATION_TIME);
+      if (latestNotifTime != null) {
+        int latestTimeInMilliSeconds = int.tryParse(latestNotifTime);
+        AlertModel latestAlert =
+            lastestNotification.createdTime.millisecondsSinceEpoch >
+                    lastestAnnouncement.createdTime.millisecondsSinceEpoch
+                ? lastestNotification
+                : lastestAnnouncement;
+        if (latestAlert.createdTime.millisecondsSinceEpoch >
+            latestTimeInMilliSeconds)
+          return true;
+        else
+          return false;
+      } else {
+        logger.d("No past notification time found");
+        return false;
+      }
+    } catch (e) {
+      logger.e(e);
+    }
+    return false;
   }
 
   Future<Map<String, dynamic>> getUserNotifications(

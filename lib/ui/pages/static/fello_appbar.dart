@@ -1,6 +1,7 @@
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -50,23 +51,37 @@ class FelloAppBar extends StatelessWidget {
 }
 
 class NotificationButton extends StatelessWidget {
-  const NotificationButton();
+  final RootViewModel model;
+  NotificationButton({this.model});
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        model.hasNewNotifications = false;
         AppState.delegate.appState.currentAction =
             PageAction(state: PageState.addPage, page: NotificationsConfig);
       },
-      child: CircleAvatar(
-        backgroundColor: Colors.black,
-        radius: SizeConfig.avatarRadius,
-        child: Padding(
-          padding: EdgeInsets.all(SizeConfig.padding12),
-          child: SvgPicture.asset(
-            Assets.alerts,
+      child: Stack(
+        children: [
+          CircleAvatar(
+            backgroundColor: Colors.black,
+            radius: SizeConfig.avatarRadius,
+            child: Padding(
+              padding: EdgeInsets.all(SizeConfig.padding12),
+              child: SvgPicture.asset(
+                Assets.alerts,
+              ),
+            ),
           ),
-        ),
+          if (model.hasNewNotifications)
+            Positioned(
+              right: 0,
+              child: CircleAvatar(
+                radius: SizeConfig.iconSize4 / 1.4,
+                backgroundColor: Colors.red,
+              ),
+            )
+        ],
       ),
     );
   }

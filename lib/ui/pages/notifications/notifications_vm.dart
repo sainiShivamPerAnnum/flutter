@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/locator.dart';
@@ -20,6 +22,8 @@ class NotificationsViewModel extends BaseModel {
   bool hasMoreAlerts = true;
   DocumentSnapshot lastAlertDocument;
   bool _isMoreNotificationsLoading = false;
+  int postHighlightIndex = 0;
+  String lastReadLatestNotificationTime;
 
   bool get isMoreNotificationsLoading => _isMoreNotificationsLoading;
 
@@ -32,6 +36,8 @@ class NotificationsViewModel extends BaseModel {
 
   void init() async {
     setState(ViewState.Busy);
+    lastReadLatestNotificationTime = await CacheManager.readCache(
+        key: CacheManager.CACHE_LATEST_NOTIFICATION_TIME);
     await fetchNotifications(false);
     _scrollController.addListener(() async {
       if (_scrollController.offset >=
@@ -48,16 +54,26 @@ class NotificationsViewModel extends BaseModel {
 
   fetchNotifications(bool more) async {
     if (more) isMoreNotificationsLoading = true;
+
     Map<String, dynamic> aMap = await _dbModel.getUserNotifications(
         _userService.baseUser.uid, lastAlertDocument, more);
     _logger.d("no of alerts fetched: ${aMap['notifications'].length}");
     if (notifications == null || notifications.length == 0) {
       notifications = aMap['notifications'];
     } else {
+      postHighlightIndex = notifications.length - 1;
       appendNotifications(aMap['notifications']);
     }
     lastAlertDocument = aMap['lastAlertDoc'];
     hasMoreAlerts = aMap['alertsLength'] == 10;
+    if (!more) {
+      await CacheManager.writeCache(
+          key: CacheManager.CACHE_LATEST_NOTIFICATION_TIME,
+          value:
+              notifications.first.createdTime.millisecondsSinceEpoch.toString(),
+          type: CacheType.string);
+    }
+    highlightNewNotifications(postHighlightIndex);
     if (more) isMoreNotificationsLoading = false;
   }
 
@@ -70,5 +86,19 @@ class NotificationsViewModel extends BaseModel {
     notifications.forEach((e) {
       print(e.title);
     });
+  }
+
+  highlightNewNotifications(int indexPostHighlight) {
+    if (lastReadLatestNotificationTime == null) return;
+    for (int i = indexPostHighlight; i < notifications.length; i++) {
+      if (notifications[i].createdTime.millisecondsSinceEpoch >
+          int.tryParse(lastReadLatestNotificationTime))
+        notifications[i].isHighlighted = true;
+    }
+  }
+
+  updateHighlightStatus(int index) {
+    notifications[index].isHighlighted = false;
+    notifyListeners();
   }
 }

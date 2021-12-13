@@ -5,6 +5,7 @@ class AlertModel {
   Timestamp createdTime;
   String subtitle;
   String title;
+  bool isHighlighted = false;
 
   AlertModel({this.actionUri, this.createdTime, this.subtitle, this.title});
 

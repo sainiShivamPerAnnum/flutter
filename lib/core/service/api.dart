@@ -47,6 +47,20 @@ class Api {
     return documentRef.update(data);
   }
 
+  Future<QuerySnapshot> checkForLatestNotification(String userId) {
+    Future<QuerySnapshot> snapshot;
+    Query query = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
+        .collection(Constants.SUBCOLN_USER_ALERTS);
+    try {
+      snapshot = query.orderBy('created_time', descending: true).limit(1).get();
+    } catch (e) {
+      logger.e(e);
+    }
+    return snapshot;
+  }
+
   Future<QuerySnapshot> getUserNotifications(
       String userId, DocumentSnapshot lastDoc) async {
     Future<QuerySnapshot> snapshot;
@@ -64,6 +78,17 @@ class Api {
       else
         snapshot =
             query.orderBy('created_time', descending: true).limit(10).get();
+    } catch (e) {
+      logger.e(e);
+    }
+    return snapshot;
+  }
+
+  Future<QuerySnapshot> checkForLatestAnnouncment(String userId) {
+    Future<QuerySnapshot> snapshot;
+    ref = _db.collection(Constants.COLN_ANNOUNCEMENTS);
+    try {
+      snapshot = ref.orderBy('created_time', descending: true).limit(1).get();
     } catch (e) {
       logger.e(e);
     }
