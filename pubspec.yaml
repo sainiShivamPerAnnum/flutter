@@ -77,6 +77,8 @@ dependencies:
   webview_flutter: ^2.0.13
   flutter_rating_bar: ^4.0.0
   in_app_review: ^2.0.3
+  rsa_encrypt: ^2.0.0
+
 
 
 
