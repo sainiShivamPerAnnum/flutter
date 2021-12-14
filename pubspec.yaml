@@ -78,6 +78,8 @@ dependencies:
   flutter_rating_bar: ^4.0.0
   in_app_review: ^2.0.3
   rsa_encrypt: ^2.0.0
+  fast_rsa: ^3.1.0
+
 
 
 
@@ -100,6 +102,7 @@ flutter:
     - resources/augmont/fello-augmont-invoice.html
     - resources/fello-email-verification.html
 
+    - assets/public.key
     - assets/images/
     - assets/images/icons/
     - assets/vectors/
