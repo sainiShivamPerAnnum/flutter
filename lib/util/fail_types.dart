@@ -45,6 +45,7 @@ enum FailType {
   CompleteUserDepositApiFailed,
   WithdrawlCompleteApiFailed,
   CancleUserDepositApiFailed,
+  RSAEncryterInitFailed,
 }
 
 extension ParseToString on FailType {
