@@ -214,7 +214,6 @@ class MyWinningsViewModel extends BaseModel {
                             claimChoice: choice,
                             prizeAmount:
                                 _userService.userFundWallet.prizeBalance,
-                            username: _userService.baseUser.name,
                           ),
                         ),
                       ),
@@ -328,7 +327,6 @@ class MyWinningsViewModel extends BaseModel {
                             dpUrl: _userService.myUserDpUrl,
                             claimChoice: choice,
                             prizeAmount: amount.abs(),
-                            username: _userService.baseUser.name,
                           ),
                         ),
                       ),

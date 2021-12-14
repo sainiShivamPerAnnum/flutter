@@ -27,6 +27,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   String _idToken;
   UserFundWallet _userFundWallet;
   bool _isEmailVerified;
+  bool _isSimpleKycVerified;
 
   User get firebaseUser => _firebaseUser;
   BaseUser get baseUser => _baseUser;
@@ -36,6 +37,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   String get dob => _dob;
   String get gender => _gender;
   bool get isEmailVerified => _isEmailVerified ?? false;
+  bool get isSimpleKycVerified => _isSimpleKycVerified ?? false;
 
   UserFundWallet get userFundWallet => _userFundWallet;
 
@@ -97,6 +99,12 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     _logger.d("Email:User email verified, property listeners notified");
   }
 
+  set isSimpleKycVerified(bool val) {
+    _isSimpleKycVerified = val;
+    notifyListeners(UserServiceProperties.mySimpleKycVerified);
+    _logger.d("Email:User simple kyc verified, property listeners notified");
+  }
+
   bool get isUserOnborded {
     if (_firebaseUser != null &&
         _baseUser != null &&
@@ -113,6 +121,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     await setBaseUser();
     if (baseUser != null) {
       isEmailVerified = baseUser.isEmailVerified ?? false;
+      isSimpleKycVerified = baseUser.isSimpleKycVerified ?? false;
       await setProfilePicture();
       await getUserFundWalletData();
     }

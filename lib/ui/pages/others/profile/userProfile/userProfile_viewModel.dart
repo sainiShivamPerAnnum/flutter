@@ -63,6 +63,7 @@ class UserProfileVM extends BaseModel {
   String get myGender => _userService.baseUser.gender ?? "";
   String get myMobile => _userService.baseUser.mobile ?? "";
   bool get isEmailVerified => _userService.baseUser.isEmailVerified;
+  bool get isSimpleKycVerified => _userService.isSimpleKycVerified;
   bool get isTambolaNotificationLoading => _isTambolaNotificationLoading;
 
   bool get applock =>
@@ -281,6 +282,7 @@ class UserProfileVM extends BaseModel {
             _userService.signout().then((flag) {
               if (flag) {
                 //log.debug('Sign out process complete');
+                _baseUtil.signOut();
                 _txnService.signOut();
                 AppState.delegate.appState.currentAction = PageAction(
                     state: PageState.replaceAll, page: SplashPageConfig);

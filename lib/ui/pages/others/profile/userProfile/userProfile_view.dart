@@ -141,8 +141,18 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                             children: [
                               TextFieldLabel(locale.obNameLabel),
                               TextFormField(
-                                enabled: model.inEditMode,
+                                enabled: model.isSimpleKycVerified
+                                    ? false
+                                    : model.inEditMode,
                                 controller: model.nameController,
+                                decoration: InputDecoration(
+                                  suffixIcon: model.isSimpleKycVerified
+                                      ? Icon(
+                                          Icons.verified,
+                                          color: UiConstants.primaryColor,
+                                        )
+                                      : SizedBox(),
+                                ),
                                 inputFormatters: [
                                   FilteringTextInputFormatter.allow(
                                       RegExp(r'[a-zA-Z ]'))

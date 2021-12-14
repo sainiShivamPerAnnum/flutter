@@ -328,7 +328,6 @@ class _YourFundsState extends State<YourFunds> {
           dpUrl: baseProvider.myUserDpUrl,
           claimChoice: choice,
           prizeAmount: baseProvider.userFundWallet.prizeBalance,
-          username: baseProvider.myUser.name,
         ),
       );
     }
