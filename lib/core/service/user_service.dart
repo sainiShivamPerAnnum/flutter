@@ -6,6 +6,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -117,13 +118,22 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   }
 
   Future<void> init() async {
-    _firebaseUser = FirebaseAuth.instance.currentUser;
-    await setBaseUser();
-    if (baseUser != null) {
-      isEmailVerified = baseUser.isEmailVerified ?? false;
-      isSimpleKycVerified = baseUser.isSimpleKycVerified ?? false;
-      await setProfilePicture();
-      await getUserFundWalletData();
+    try {
+      _firebaseUser = FirebaseAuth.instance.currentUser;
+      await setBaseUser();
+      if (baseUser != null) {
+        isEmailVerified = baseUser.isEmailVerified ?? false;
+        isSimpleKycVerified = baseUser.isSimpleKycVerified ?? false;
+        await setProfilePicture();
+        await getUserFundWalletData();
+      }
+    } catch (e) {
+      _logger.e(e.toString());
+      if (baseUser != null)
+        _dbModel.logFailure(baseUser.uid, FailType.UserServiceInitFailed, {
+          "title": "UserService initialization Failed",
+          "error": e.toString(),
+        });
     }
   }
 

@@ -1,14 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 
 class MixpanelService {
   final _logger = locator<Logger>();
+  final _dbModel = locator<DBModel>();
 
   static const String DEV_TOKEN = "6bc0994f4244fc5b193213df643f14dc";
   static const String PROD_TOKEN = "03de57e684d04e87999e089fd605fcdd";
@@ -16,26 +18,36 @@ class MixpanelService {
   Mixpanel _mixpanel;
 
   Future<void> init({bool isOnboarded, BaseUser baseUser}) async {
-    _mixpanel = await Mixpanel.init(FlavorConfig.instance.values.mixpanelToken,
-        optOutTrackingDefault: false);
-    if (isOnboarded != null && isOnboarded && baseUser != null) {
-      _mixpanel.identify(baseUser.uid);
-      _mixpanel.getPeople().set("Mobile", baseUser.mobile ?? '');
-      _mixpanel.getPeople().set("Name", baseUser.name ?? '');
-      _mixpanel.getPeople().set("Email", baseUser.email ?? '');
-      _mixpanel.getPeople().set("Age", _getAge(baseUser.dob) ?? 0);
+    try {
+      _mixpanel = await Mixpanel.init(
+          FlavorConfig.instance.values.mixpanelToken,
+          optOutTrackingDefault: false);
+      if (isOnboarded != null && isOnboarded && baseUser != null) {
+        _mixpanel.identify(baseUser.uid);
+        _mixpanel.getPeople().set("Mobile", baseUser.mobile ?? '');
+        _mixpanel.getPeople().set("Name", baseUser.name ?? '');
+        _mixpanel.getPeople().set("Email", baseUser.email ?? '');
+        _mixpanel.getPeople().set("Age", _getAge(baseUser.dob) ?? 0);
 
-      _mixpanel.registerSuperPropertiesOnce({
-        'userId': baseUser.uid ?? '',
-        'gender': baseUser.gender ?? 'O',
-        'kycVerified': baseUser.isSimpleKycVerified ?? false,
-        'signupDate': _getSignupDate(baseUser.createdOn),
-        'age': _getAge(baseUser.dob) ?? 0
-      });
+        _mixpanel.registerSuperPropertiesOnce({
+          'userId': baseUser.uid ?? '',
+          'gender': baseUser.gender ?? 'O',
+          'kycVerified': baseUser.isSimpleKycVerified ?? false,
+          'signupDate': _getSignupDate(baseUser.createdOn),
+          'age': _getAge(baseUser.dob) ?? 0
+        });
 
-      //Use flush only for testing.
-      // _mixpanel.flush();
-      _logger.d("MIXPANEL SERVICE :: User identify properties added.");
+        //Use flush only for testing.
+        // _mixpanel.flush();
+        _logger.d("MIXPANEL SERVICE :: User identify properties added.");
+      }
+    } catch (e) {
+      _logger.e(e.toString());
+      if (baseUser != null)
+        _dbModel.logFailure(baseUser.uid, FailType.MixpanelServiceInitFailed, {
+          "title": "Mixpanel initialization Failed",
+          "error": e.toString(),
+        });
     }
   }
 
