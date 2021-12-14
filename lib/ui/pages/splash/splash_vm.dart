@@ -69,6 +69,14 @@ class LauncherViewModel extends BaseModel {
       );
     }
 
+    ///check if the account is blocked
+    if (userService.baseUser != null && userService.baseUser.isBlocked) {
+      AppState.isUpdateScreen = true;
+      navigator.currentAction =
+          PageAction(state: PageState.replaceAll, page: BlockedUserPageConfig);
+      return;
+    }
+
     ///check for breaking update (TESTING)
     if (await checkBreakingUpdateTest()) {
       AppState.isUpdateScreen = true;
@@ -95,11 +103,11 @@ class LauncherViewModel extends BaseModel {
 
     ///Ceck if app needs to be open securely
     bool _unlocked = true;
-    if (_baseUtil.myUser.userPreferences.getPreference(Preferences.APPLOCK) ==
-            1 &&
-        deviceUnlock != null) {
-      _unlocked = await authenticateDevice();
-    }
+    // if (_baseUtil.myUser.userPreferences.getPreference(Preferences.APPLOCK) ==
+    //         1 &&
+    //     deviceUnlock != null) {
+    //   _unlocked = await authenticateDevice();
+    // }
 
     if (_unlocked) {
       navigator.currentAction =

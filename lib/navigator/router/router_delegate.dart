@@ -16,6 +16,7 @@ import 'package:felloapp/ui/pages/hamburger/support.dart';
 import 'package:felloapp/ui/pages/hamburger/tnc_page.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_view.dart';
+import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/get_started_page.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_page.dart';
 import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
@@ -272,6 +273,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.MyWinnings:
           _addPageData(MyWinningsView(), MyWinnigsPageConfig);
           break;
+        case Pages.blockedUser:
+          _addPageData(BlockedUserView(), BlockedUserPageConfig);
+          break;
         default:
           break;
       }
@@ -403,9 +407,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.WalkThrough:
         WalkThroughConfig.currentPageAction = action;
         break;
-      // case Pages.WalkThroughCompleted:
-      //   WalkThroughCompletedConfig.currentPageAction = action;
-      //   break;
       case Pages.YourFunds:
         YourFundsConfig.currentPageAction = action;
         break;
@@ -456,6 +457,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.MyWinnings:
         MyWinnigsPageConfig.currentPageAction = action;
+        break;
+      case Pages.blockedUser:
+        BlockedUserPageConfig.currentPageAction = action;
         break;
       default:
         break;
@@ -620,9 +624,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case 'walkthrough':
         pageConfiguration = WalkThroughConfig;
-      // case 'tambolaTickets':
-      //   pageConfiguration = TambolaTicketsPageConfig;
-      //   break;
+        break;
+      case 'blocked':
+        pageConfiguration = BlockedUserPageConfig;
+        break;
     }
     if (pageConfiguration != null) {
       addPage(pageConfiguration);

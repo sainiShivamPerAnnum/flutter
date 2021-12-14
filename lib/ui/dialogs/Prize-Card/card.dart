@@ -343,7 +343,7 @@ class _TicketState extends State<FCard> {
                         if (flag) {
                           _isclaimed = true;
                           _tChoice = true;
-                            _mixpanelService.track(MixpanelEvents.prizeAWS, {
+                          _mixpanelService.track(MixpanelEvents.prizeAWS, {
                             'userId': _userService.baseUser.uid,
                             'amount': widget.unclaimedPrize
                           });
@@ -667,7 +667,6 @@ class _CloseCardState extends State<CloseCard> {
                             claimChoice: widget.claimtype,
                             prizeAmount:
                                 baseProvider.userFundWallet.prizeBalance,
-                            username: baseProvider.myUser.name,
                           ),
                         );
                       },

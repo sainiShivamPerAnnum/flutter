@@ -43,6 +43,7 @@ const String AugmontGoldDetailsPath = '/augDetails';
 const String ReferralDetailsPath = '/referralDetails';
 const String ReferralHistoryPath = '/referralHistory';
 const String MyWinningsPath = '/myWinnings';
+const String blockedUserPath = '/blockeUser';
 
 enum Pages {
   Splash,
@@ -86,7 +87,8 @@ enum Pages {
   AugGoldDetails,
   ReferralDetails,
   ReferralHistory,
-  MyWinnings
+  MyWinnings,
+  blockedUser
 }
 
 class PageConfiguration {
@@ -323,4 +325,9 @@ PageConfiguration MyWinnigsPageConfig = PageConfiguration(
   key: 'myWinnings',
   path: MyWinningsPath,
   uiPage: Pages.MyWinnings,
+);
+PageConfiguration BlockedUserPageConfig = PageConfiguration(
+  key: 'blockedUser',
+  path: blockedUserPath,
+  uiPage: Pages.blockedUser,
 );
