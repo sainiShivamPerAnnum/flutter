@@ -8,6 +8,7 @@ import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/rsa_encryption.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -100,7 +101,9 @@ class _RSAFinalState extends State<RSAFinal> {
     "age": 4,
     "friends": ["Ash", "Koko"]
   };
-  String et = "";
+  String et = "", dt = "";
+
+  RSAEncryption _rsaEncryption = new RSAEncryption();
 
   Future<T> parseWithRootBundle<T extends RSAAsymmetricKey>(
       String filename) async {
@@ -110,17 +113,33 @@ class _RSAFinalState extends State<RSAFinal> {
   }
 
   encrypt() async {
-    final data = json.encode(ot);
-    final publicKey =
-        await parseWithRootBundle<RSAPublicKey>("assets/public.key");
-    final encrypter = Encrypter(RSA(
-      publicKey: publicKey,
-    ));
-    final encrypted = encrypter.encrypt(data);
+    // final data = json.encode(ot);
+    // final publicKey =
+    //     await parseWithRootBundle<RSAPublicKey>("assets/public.key");
+    // final encrypter = Encrypter(RSA(
+    //   publicKey: publicKey,
+    // ));
+    // final encrypted = encrypter.encrypt(data);
+
     setState(() {
-      et = encrypted.base64;
+      et = _rsaEncryption.encypt(ot);
     });
-    Logger().d(encrypted.base64);
+    Logger().d(et);
+  }
+
+  decrypt() {
+    setState(() {
+      dt = _rsaEncryption.decrypt(et);
+    });
+    Logger().d(et);
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _rsaEncryption.init();
+    });
+    super.initState();
   }
 
   @override
@@ -149,6 +168,17 @@ class _RSAFinalState extends State<RSAFinal> {
             ],
           ),
           SizedBox(height: 20),
+          Row(
+            children: [
+              Text("Decrypted text:  ", style: TextStyles.body3.bold),
+              Expanded(
+                  child: SelectableText(
+                "$dt",
+                //maxLines: 3,
+              )),
+            ],
+          ),
+          SizedBox(height: 20),
           Container(
             width: SizeConfig.screenWidth,
             child: FelloButtonLg(
@@ -157,6 +187,18 @@ class _RSAFinalState extends State<RSAFinal> {
                 style: TextStyles.body2.bold.colour(Colors.white),
               ),
               onPressed: encrypt,
+            ),
+          ),
+          SizedBox(height: 10),
+          Container(
+            width: SizeConfig.screenWidth,
+            child: FelloButtonLg(
+              color: UiConstants.tertiarySolid,
+              child: Text(
+                "Decrypt",
+                style: TextStyles.body2.bold.colour(Colors.white),
+              ),
+              onPressed: decrypt,
             ),
           )
         ],

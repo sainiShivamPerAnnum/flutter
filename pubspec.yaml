@@ -100,6 +100,7 @@ flutter:
     - resources/augmont/fello-augmont-invoice.html
     - resources/fello-email-verification.html
     - resources/public.key
+    - resources/private.key
 
     - assets/images/
     - assets/images/icons/

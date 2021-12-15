@@ -18,8 +18,11 @@ class RSAEncryption {
     try {
       final publicKey =
           await parseWithRootBundle<RSAPublicKey>("resources/public.key");
+      final privateKey =
+          await parseWithRootBundle<RSAPrivateKey>("resources/private.key");
       encrypter = Encrypter(RSA(
         publicKey: publicKey,
+        privateKey: privateKey,
       ));
     } catch (e) {
       _logger.e(e.toString());
@@ -43,5 +46,10 @@ class RSAEncryption {
     final jsonEncodedData = json.encode(data);
     final encryptedData = encrypter.encrypt(jsonEncodedData);
     return encryptedData.base64;
+  }
+
+  String decrypt(String data) {
+    final decryptedData = encrypter.decrypt64(data);
+    return decryptedData;
   }
 }
