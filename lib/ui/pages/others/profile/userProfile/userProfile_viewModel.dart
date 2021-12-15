@@ -267,9 +267,10 @@ class UserProfileVM extends BaseModel {
           confirmAction: () {
             Haptic.vibrate();
 
-            _mixpanelService.track(
-                MixpanelEvents.signOut, {'userId': _userService.baseUser.uid});
-                
+            _mixpanelService.track(eventName:
+                MixpanelEvents.signOut);
+            _mixpanelService.signOut();
+
             _userService.signout().then((flag) {
               if (flag) {
                 //log.debug('Sign out process complete');
@@ -354,8 +355,7 @@ class UserProfileVM extends BaseModel {
               cancelAction: () {}));
     } else if (_status.isGranted) {
       await _chooseprofilePicture();
-      _mixpanelService.track(MixpanelEvents.updatedProfilePicture,
-          {'userId': _userService.baseUser.uid});
+      _mixpanelService.track(eventName: MixpanelEvents.updatedProfilePicture);
     } else {
       BaseUtil.showNegativeAlert('Permission Unavailable',
           'Please enable permission from settings to continue');

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
+import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
@@ -10,6 +11,7 @@ import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/mixpanel_service.dart';
@@ -24,6 +26,7 @@ import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -43,6 +46,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 class LoginController extends StatefulWidget {
@@ -60,6 +64,7 @@ class _LoginControllerState extends State<LoginController>
   final Log log = new Log("LoginController");
   final int initPage;
   double _formProgress = 0.2;
+  bool _isSignup = false;
 
   _LoginControllerState(this.initPage);
 
@@ -74,6 +79,9 @@ class _LoginControllerState extends State<LoginController>
   final FcmListener fcmListener = locator<FcmListener>();
   final AugmontModel augmontProvider = locator<AugmontModel>();
   final MixpanelService _mixpanelService = locator<MixpanelService>();
+  final _userService = locator<UserService>();
+  final _logger = locator<Logger>();
+  final _apiPaths = locator<ApiPath>();
   AnimationController animationController;
 
   String userMobile;
@@ -401,6 +409,12 @@ class _LoginControllerState extends State<LoginController>
     );
   }
 
+  Future<String> _getBearerToken() async {
+    String token = await baseProvider.firebaseUser.getIdToken();
+    _logger.d("BearerToken: $token");
+    return token;
+  }
+
   _processScreenInput(int currentPage) async {
     FocusScope.of(context).unfocus();
     switch (currentPage) {
@@ -417,6 +431,14 @@ class _LoginControllerState extends State<LoginController>
             setState(() {
               LoginController.mobileno = this.userMobile;
             });
+
+            ///disable regular numbers for QA
+            if (FlavorConfig.isQA() &&
+                !this.userMobile.startsWith('999990000')) {
+              BaseUtil.showNegativeAlert('Mobile number not allowed',
+                  'Only dummy numbers are allowed in QA mode');
+              break;
+            }
             this._verificationId = '+91' + this.userMobile;
             _verifyPhone();
             baseProvider.isLoginNextInProgress = true;
@@ -434,7 +456,7 @@ class _LoginControllerState extends State<LoginController>
             bool flag = await baseProvider.authenticateUser(baseProvider
                 .generateAuthCredential(_augmentedVerificationId, otp));
             if (flag) {
-              _mixpanelService.track(MixpanelEvents.mobileOtpDone,{'userId':baseProvider?.myUser?.uid});
+              _mixpanelService.track(eventName: MixpanelEvents.mobileOtpDone);
               AppState.isOnboardingInProgress = true;
               _otpScreenKey.currentState.onOtpReceived();
               _onSignInSuccess();
@@ -533,8 +555,8 @@ class _LoginControllerState extends State<LoginController>
               baseProvider.isLoginNextInProgress = false;
               setState(() {});
             }).then((value) {
-              _mixpanelService
-                  .track(MixpanelEvents.profileInformationAdded,{'userId':baseProvider?.myUser?.uid});
+              _mixpanelService.track(eventName: MixpanelEvents.profileInformationAdded,
+                  properties: {'userId': baseProvider?.myUser?.uid});
               _controller.animateToPage(Username.index,
                   duration: Duration(milliseconds: 500),
                   curve: Curves.easeInToLinear);
@@ -563,11 +585,37 @@ class _LoginControllerState extends State<LoginController>
                     username, baseProvider.firebaseUser.uid);
                 if (res) {
                   baseProvider.myUser.username = username;
-                  bool flag = await dbProvider.updateUser(baseProvider.myUser);
+                  bool flag = false;
+                  _logger.d(baseProvider.myUser.toJson().toString());
+                  try {
+                    final String _bearer = await _getBearerToken();
+                    _logger.d(baseProvider.myUser.uid);
+                    final _body = {
+                      'uid': baseProvider.myUser.uid,
+                      'data': {
+                        "mMobile": baseProvider.myUser.mobile,
+                        "mName": baseProvider.myUser.name,
+                        "mEmail": baseProvider.myUser.email,
+                        "mDob": baseProvider.myUser.dob,
+                        "mGender": baseProvider.myUser.gender,
+                        "mUsername": baseProvider.myUser.username,
+                        "mUserPrefs": {"tn": 1, "al": 0}
+                      }
+                    };
+                    final res = await APIService.instance.postData(
+                        _apiPaths.kAddNewUser,
+                        body: _body,
+                        token: _bearer);
+                    res['flag'] ? flag = true : flag = false;
+                  } catch (e) {
+                    _logger.d(e);
+                    flag = false;
+                  }
+                  // bool flag = await dbProvider.updateUser(baseProvider.myUser);
 
                   if (flag) {
-                    _mixpanelService
-                        .track(MixpanelEvents.userNameAdded,{'userId':baseProvider?.myUser?.uid});
+                    _mixpanelService.track(eventName: MixpanelEvents.userNameAdded,
+                        properties: {'userId': baseProvider?.myUser?.uid});
                     log.debug("User object saved successfully");
                     _onSignUpComplete();
                   } else {
@@ -656,6 +704,7 @@ class _LoginControllerState extends State<LoginController>
       }
 
       ///First time user!
+      _isSignup = true;
       log.debug(
           "No existing user details found or found incomplete details for user. Moving to details page");
       baseProvider.myUser = user ??
@@ -701,11 +750,16 @@ class _LoginControllerState extends State<LoginController>
   }
 
   Future _onSignUpComplete() async {
-    await BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
+    if (_isSignup)
+      await BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
     await BaseAnalytics.logUserProfile(baseProvider.myUser);
     await userService.init();
     await baseProvider.init();
     await fcmListener.setupFcm();
+    _logger.i("Calling mixpanel init for new onborded user");
+    await _mixpanelService.init(
+        isOnboarded: userService.isUserOnborded,
+        baseUser: userService.baseUser);
     AppState.isOnboardingInProgress = false;
     if (baseProvider.isLoginNextInProgress == true) {
       baseProvider.isLoginNextInProgress = false;

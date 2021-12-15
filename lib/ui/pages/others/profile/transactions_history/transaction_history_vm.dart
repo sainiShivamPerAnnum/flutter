@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
@@ -14,10 +13,8 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 
@@ -28,11 +25,13 @@ class TransactionsHistoryViewModel extends BaseModel {
   int _subfilter = 1;
   int _filter = 1;
   bool _init = true;
+  bool _isMoreTxnsBeingFetched = false;
   Map<String, int> _tranTypeFilterItems = {
     "All": 1,
     "Deposit": 2,
     "Withdrawal": 3,
-    "Prize": 4
+    "Prize": 4,
+    "Refunded": 5
   };
   Map<String, int> _tranSubTypeFilterItems = {
     "All": 1,
@@ -40,7 +39,7 @@ class TransactionsHistoryViewModel extends BaseModel {
     "Augmont": 3
   };
   List<UserTransaction> _filteredList;
-  final ScrollController _scrollController = ScrollController();
+  ScrollController _scrollController;
 
   int get subFilter => _subfilter;
 
@@ -53,6 +52,7 @@ class TransactionsHistoryViewModel extends BaseModel {
   List<UserTransaction> get filteredList => _filteredList;
 
   ScrollController get tranListController => _scrollController;
+  bool get isMoreTxnsBeingFetched => _isMoreTxnsBeingFetched;
 
   set subFilter(int val) {
     _subfilter = val;
@@ -66,6 +66,11 @@ class TransactionsHistoryViewModel extends BaseModel {
 
   set filteredList(List<UserTransaction> val) {
     _filteredList = val;
+    notifyListeners();
+  }
+
+  set isMoreTxnsBeingFetched(bool val) {
+    _isMoreTxnsBeingFetched = val;
     notifyListeners();
   }
 
@@ -83,66 +88,15 @@ class TransactionsHistoryViewModel extends BaseModel {
     setState(ViewState.Idle);
   }
 
-  Widget getTileLead(String type) {
-    IconData icon;
-    Color iconColor;
-    if (type == UserTransaction.TRAN_STATUS_COMPLETE) {
-      icon = Icons.check_circle;
-      iconColor = UiConstants.primaryColor;
-    } else if (type == UserTransaction.TRAN_STATUS_CANCELLED) {
-      icon = Icons.cancel;
-      iconColor = Colors.red;
-    } else if (type == UserTransaction.TRAN_STATUS_PENDING) {
-      icon = Icons.access_time_filled;
-      iconColor = Colors.amber;
-    } else if (type == UserTransaction.TRAN_STATUS_REFUNDED) {
-      icon = Icons.remove_circle;
-      iconColor = Colors.blue;
-    }
-    if (icon != null) return Icon(icon, color: iconColor);
-
-    return Image.asset("images/fello_logo.png", fit: BoxFit.contain);
-  }
-
-  String getTileTitle(String type) {
-    if (type == UserTransaction.TRAN_SUBTYPE_ICICI) {
-      return "ICICI Prudential Fund";
-    } else if (type == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD) {
-      return "Digital Gold";
-    } else if (type == UserTransaction.TRAN_SUBTYPE_TAMBOLA_WIN) {
-      return "Tambola Win";
-    } else if (type == UserTransaction.TRAN_SUBTYPE_REF_BONUS) {
-      return "Referral Bonus";
-    } else if (type == UserTransaction.TRAN_SUBTYPE_REWARD_REDEEM) {
-      return "Rewards Redeemed";
-    }
-    return "Fello Rewards";
-  }
-
-  String getTileSubtitle(String type) {
-    if (type == UserTransaction.TRAN_TYPE_DEPOSIT) {
-      return "Deposit";
-    } else if (type == UserTransaction.TRAN_TYPE_PRIZE) {
-      return "Prize";
-    } else if (type == UserTransaction.TRAN_TYPE_WITHDRAW) {
-      return "Withdrawal";
-    }
-    return "";
-  }
-
-  Color getTileColor(String type) {
-    if (type == UserTransaction.TRAN_STATUS_CANCELLED) {
-      return Colors.redAccent;
-    } else if (type == UserTransaction.TRAN_STATUS_COMPLETE) {
-      return UiConstants.primaryColor;
-    } else if (type == UserTransaction.TRAN_STATUS_PENDING) {
-      return Colors.amber;
-    }
-    return Colors.blue;
+  getMoreTransactions() async {
+    isMoreTxnsBeingFetched = true;
+    await _transactionService.fetchTransactions(30);
+    _filteredList = _transactionService.txnList;
+    filterTransactions();
+    isMoreTxnsBeingFetched = false;
   }
 
   filterTransactions() {
-    setState(ViewState.Busy);
     filteredList = List.from(_transactionService.txnList);
     if (filter != 1 || subFilter != 1) {
       filteredList.clear();
@@ -161,9 +115,15 @@ class TransactionsHistoryViewModel extends BaseModel {
               addItemFlag = true;
             else
               addItemFlag = false;
-          } else {
+          } else if (filter == 4) {
             //only prizes
             if (txn.type == UserTransaction.TRAN_TYPE_PRIZE)
+              addItemFlag = true;
+            else
+              addItemFlag = false;
+          } else if (filter == 5) {
+            // only refunded txns
+            if (txn.tranStatus == UserTransaction.TRAN_STATUS_REFUNDED)
               addItemFlag = true;
             else
               addItemFlag = false;
@@ -194,7 +154,6 @@ class TransactionsHistoryViewModel extends BaseModel {
         if (addItemFlag) filteredList.add(txn);
       });
     }
-    setState(ViewState.Idle);
   }
 
   String _getFormattedTime(Timestamp tTime) {
@@ -225,10 +184,11 @@ class TransactionsHistoryViewModel extends BaseModel {
           padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
           height: SizeConfig.blockSizeVertical * 5,
           width: SizeConfig.blockSizeVertical * 5,
-          child: getTileLead(filteredList[index].tranStatus),
+          child:
+              _transactionService.getTileLead(filteredList[index].tranStatus),
         ),
         title: Text(
-          getTileTitle(
+          _transactionService.getTileTitle(
             filteredList[index].subType.toString(),
           ),
           style: TextStyle(
@@ -236,9 +196,10 @@ class TransactionsHistoryViewModel extends BaseModel {
           ),
         ),
         subtitle: Text(
-          getTileSubtitle(filteredList[index].type),
+          _transactionService.getTileSubtitle(filteredList[index].type),
           style: TextStyle(
-            color: getTileColor(filteredList[index].tranStatus),
+            color: _transactionService
+                .getTileColor(filteredList[index].tranStatus),
             fontSize: SizeConfig.smallTextSize,
           ),
         ),
@@ -247,10 +208,13 @@ class TransactionsHistoryViewModel extends BaseModel {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
-              (filteredList[index].type == "WITHDRAWAL" ? "- " : "+ ") +
-                  "₹ ${filteredList[index].type == "WITHDRAWAL" ? (filteredList[index].amount * -1).toString() : filteredList[index].amount.toString()}",
+              _transactionService
+                  .getFormattedTxnAmount(filteredList[index].amount),
+              // (filteredList[index].type == "WITHDRAWAL" ? "- " : "+ ") +
+              //     "₹ ${filteredList[index].type == "WITHDRAWAL" ? (filteredList[index].amount * -1).toString() : filteredList[index].amount.toString()}",
               style: TextStyle(
-                color: getTileColor(filteredList[index].tranStatus),
+                color: _transactionService
+                    .getTileColor(filteredList[index].tranStatus),
                 fontSize: SizeConfig.mediumTextSize,
               ),
             ),
@@ -258,7 +222,8 @@ class TransactionsHistoryViewModel extends BaseModel {
             Text(
               _getFormattedTime(filteredList[index].timestamp),
               style: TextStyle(
-                  color: getTileColor(filteredList[index].tranStatus),
+                  color: _transactionService
+                      .getTileColor(filteredList[index].tranStatus),
                   fontSize: SizeConfig.smallTextSize),
             )
           ],
@@ -270,6 +235,7 @@ class TransactionsHistoryViewModel extends BaseModel {
   }
 
   init() {
+    _scrollController = ScrollController();
     if (_transactionService.txnList == null ||
         _transactionService.txnList.length < 5) {
       getTransactions();
@@ -286,7 +252,8 @@ class TransactionsHistoryViewModel extends BaseModel {
             !_scrollController.position.outOfRange) {
           if (_transactionService.hasMoreTransactionListDocuments &&
               state == ViewState.Idle) {
-            getTransactions();
+            _logger.d("init pagination");
+            getMoreTransactions();
           }
         }
       });

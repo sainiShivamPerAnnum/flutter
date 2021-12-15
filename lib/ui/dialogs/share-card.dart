@@ -121,7 +121,7 @@ class ShareCard extends StatelessWidget {
                           ),
                           children: [
                             TextSpan(
-                              text: "${prizeAmount.round()}",
+                              text: "${prizeAmount.toInt()}",
                               style: GoogleFonts.poppins(
                                 color: Colors.white,
                                 shadows: [

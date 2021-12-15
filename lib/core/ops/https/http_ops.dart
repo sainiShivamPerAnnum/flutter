@@ -134,12 +134,13 @@ class HttpModel extends ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> registerPrizeClaim(
-      String userId, double amount, PrizeClaimChoice claimChoice) async {
+      String userId, String userName, double amount, PrizeClaimChoice claimChoice) async {
     if (userId == null || amount == null || claimChoice == null) return null;
 
     final Uri _uri = Uri.https(
         US_BASE_URI, '/userTxnOps/$_stage/api/prize/claim', {
       'userId': userId,
+      'userName': userName,
       'amount': '$amount',
       'redeemType': claimChoice.value()
     });
@@ -438,6 +439,8 @@ class HttpModel extends ChangeNotifier {
               PanVerificationResModel.fromJson(json.decode(res.body));
           if (_panVerificationResModel.response.result.verified) {
             return ApiResponse(model: _panVerificationResModel, code: 200);
+          }else{
+            return ApiResponse(model: _panVerificationResModel, code: 400);
           }
         } else if (res.statusCode == 404) {
           throw Exception('PAN not found');

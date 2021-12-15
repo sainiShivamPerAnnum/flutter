@@ -10,6 +10,7 @@ import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/repository/investment_actions_repo.dart';
 import 'package:felloapp/core/repository/prizes_repo.dart';
 import 'package:felloapp/core/repository/statistics_repo.dart';
+import 'package:felloapp/core/repository/ticket_generation_repo.dart';
 import 'package:felloapp/core/repository/winners_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/api.dart';
@@ -17,6 +18,7 @@ import 'package:felloapp/core/service/connectivity_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/lcl_db_api.dart';
+import 'package:felloapp/core/service/leaderboard_service.dart';
 import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/core/service/prize_service.dart';
@@ -54,6 +56,7 @@ import 'package:felloapp/ui/widgets/buttons/sell_gold_button/sellGoldBtn_vm.dart
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_vm.dart';
 import 'package:felloapp/ui/widgets/drawer/drawer_vm.dart';
+import 'package:felloapp/ui/widgets/faq_card/faq_card_vm.dart';
 import 'package:felloapp/ui/widgets/mini_trans_card/mini_trans_card_vm.dart';
 import 'package:felloapp/ui/widgets/simple_kyc_modalsheet/simple_kyc_modelsheet_vm.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -86,6 +89,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => TambolaService());
   locator.registerLazySingleton(() => PrizeService());
   locator.registerLazySingleton(() => WinnerService());
+  locator.registerLazySingleton(() => LeaderboardService());
 
   //Repository
   locator.registerLazySingleton(() => DBModel());
@@ -99,6 +103,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => FlcActionsRepo());
   locator.registerLazySingleton(() => StatisticsRepository());
   locator.registerLazySingleton(() => WinnersRepository());
+  locator.registerLazySingleton(() => TicketGenerationRepo());
   locator.registerLazySingleton(() => InvestmentActionsRepository());
 
   // SPLASH
@@ -134,6 +139,7 @@ void setupLocator() {
   locator.registerFactory(() => FelloAppBarVM());
   locator.registerFactory(() => MiniTransactionCardViewModel());
   locator.registerFactory(() => FelloCoinBarViewModel());
+  locator.registerFactory(() => FAQCardViewModel());
   locator.registerFactory(() => SimpleKycModelsheetViewModel());
 
   //....

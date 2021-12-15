@@ -18,6 +18,7 @@ class WalkThroughPage extends StatefulWidget {
 class _WalkThroughPageState extends State<WalkThroughPage> {
   PageController _pageController;
   ValueNotifier<double> _pageNotifier;
+  bool showLotties = false;
 
   List<String> lottieList = [Assets.onb1, Assets.onb2, Assets.onb3];
   List<String> titleList = ["SAVE", "PLAY", "WIN"];
@@ -31,6 +32,11 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
     _pageController = PageController();
     _pageController.addListener(_pageListener);
     _pageNotifier = ValueNotifier(0.0);
+    Future.delayed(Duration(milliseconds: 800), () {
+      setState(() {
+        showLotties = true;
+      });
+    });
     super.initState();
   }
 
@@ -88,38 +94,67 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                                 .toDouble()),
                       ),
                     ),
-                    Positioned(
-                      child: Container(
-                        height: SizeConfig.screenWidth,
-                        width: SizeConfig.screenWidth,
-                        child: PageView(
-                          controller: _pageController,
-                          children: [
-                            Transform.scale(
-                              scale: 1.2,
-                              child: Lottie.asset(
-                                Assets.onb1,
-                                height: SizeConfig.screenWidth,
-                                width: SizeConfig.screenWidth,
-                              ),
-                            ),
-                            Transform.scale(
-                              scale: 1.1,
-                              child: Lottie.asset(
-                                Assets.onb2,
-                                height: SizeConfig.screenWidth,
-                                width: SizeConfig.screenWidth,
-                              ),
-                            ),
-                            Lottie.asset(
-                              Assets.onb3,
+                    showLotties
+                        ? ValueListenableBuilder(
+                            valueListenable: _pageNotifier,
+                            builder: (ctx, value, _) {
+                              return Positioned(
+                                child: Container(
+                                  height: SizeConfig.screenWidth,
+                                  width: SizeConfig.screenWidth,
+                                  child: PageView(
+                                    controller: _pageController,
+                                    children: [
+                                      Transform.scale(
+                                        scale: 1.2,
+                                        child: Lottie.asset(
+                                          Assets.onb1,
+                                          animate: value != 0.0 ? false : true,
+                                          height: SizeConfig.screenWidth,
+                                          width: SizeConfig.screenWidth,
+                                        ),
+                                      ),
+                                      Transform.scale(
+                                        scale: 1.1,
+                                        child: Lottie.asset(
+                                          Assets.onb2,
+                                          animate: value != 1.0 ? false : true,
+                                          height: SizeConfig.screenWidth,
+                                          width: SizeConfig.screenWidth,
+                                        ),
+                                      ),
+                                      Lottie.asset(
+                                        Assets.onb3,
+                                        animate: value != 2.0 ? false : true,
+                                        height: SizeConfig.screenWidth,
+                                        width: SizeConfig.screenWidth,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+                        : Positioned(
+                            child: Container(
                               height: SizeConfig.screenWidth,
                               width: SizeConfig.screenWidth,
+                              child: PageView(
+                                controller: _pageController,
+                                children: [
+                                  Transform.scale(
+                                    scale: 1.2,
+                                    child: Lottie.asset(
+                                      Assets.onb1,
+                                      height: SizeConfig.screenWidth,
+                                      animate: false,
+                                      width: SizeConfig.screenWidth,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
+                          ),
                   ],
                 ),
               ),

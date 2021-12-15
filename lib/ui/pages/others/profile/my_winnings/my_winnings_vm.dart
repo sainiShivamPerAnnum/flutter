@@ -17,11 +17,14 @@ import 'package:felloapp/ui/dialogs/share-card.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fail_types.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -63,6 +66,7 @@ class MyWinningsViewModel extends BaseModel {
   }
 
   UserService get userService => _userService;
+  TransactionService get txnService => _transactionService;
 
   set choice(value) {
     this._choice = value;
@@ -73,8 +77,7 @@ class MyWinningsViewModel extends BaseModel {
     isWinningHistoryLoading = true;
     ApiResponse<List<UserTransaction>> temp =
         await userRepo.getWinningHistory(_userService.baseUser.uid);
-    temp.model.sort(
-        (a, b) => a.timestamp.toDate().isBefore(b.timestamp.toDate()) ? 1 : 0);
+    temp.model.sort((a, b) => b.timestamp.compareTo(a.timestamp));
     isWinningHistoryLoading = false;
     if (temp != null)
       winningHistory = temp.model;
@@ -83,33 +86,52 @@ class MyWinningsViewModel extends BaseModel {
           "Winning History fetch failed", temp.errorMessage);
   }
 
-  getWinningHistoryTitle(String subtype) {
-    switch (subtype) {
-      case "GM_CRIC2020":
-        return "Cricket";
-        break;
-      case "GOLD_CREDIT":
-        return "Augmont Digital Gold";
-        break;
-      case "GM_TAMBOLA2020":
-        return "Tambola";
-        break;
-      case "AMZ_VOUCHER":
-        return "Amazon Gift Voucher";
-        break;
-      default:
-        return "Fello Rewards";
+  getWinningHistoryTitle(UserTransaction tran) {
+    String redeemtype = tran.redeemType;
+    String subtype = tran.subType;
+    if (redeemtype != null && redeemtype != "") {
+      switch (redeemtype) {
+        case UserTransaction.TRAN_REDEEMTYPE_AUGMONT_GOLD:
+          return "Digital Gold Redemption";
+          break;
+        case UserTransaction.TRAN_REDEEMTYPE_AMZ_VOUCHER:
+          return "Amazon Voucher Redemption";
+          break;
+        default:
+          return "Fello Rewards";
+      }
     }
+
+    if (subtype != null && subtype != "") {
+      switch (subtype) {
+        case UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD:
+          return "Digital Gold";
+          break;
+        case UserTransaction.TRAN_SUBTYPE_GLDN_TCK:
+          return "Fello Golden Ticket";
+          break;
+        case UserTransaction.TRAN_SUBTYPE_REF_BONUS:
+          return "Referral Bonus";
+          break;
+        case UserTransaction.TRAN_SUBTYPE_TAMBOLA_WIN:
+          return "Tambola Win";
+          break;
+        case UserTransaction.TRAN_SUBTYPE_CRICKET_WIN:
+          return "Cricket Win";
+          break;
+        default:
+          return "Fello Rewards";
+      }
+    }
+    return "Fello Rewards";
   }
 
   getWinningHistoryLeadingBg(String subtype) {
     switch (subtype) {
       case "GOLD_CREDIT":
         return UiConstants.primaryColor;
-        break;
       case "AMZ_VOUCHER":
         return UiConstants.tertiarySolid;
-        break;
       default:
         return Color(0xff11192B);
     }
@@ -119,7 +141,6 @@ class MyWinningsViewModel extends BaseModel {
     switch (subtype) {
       case "GOLD_CREDIT":
         return Assets.digitalGold;
-        break;
       case "AMZ_VOUCHER":
         return Assets.amazonGiftVoucher;
         break;
@@ -156,7 +177,7 @@ class MyWinningsViewModel extends BaseModel {
   }
 
   showSuccessPrizeWithdrawalDialog(
-      PrizeClaimChoice choice, String subtitle, String shareMessage) async {
+      PrizeClaimChoice choice, String subtitle) async {
     AppState.screenStack.add(ScreenItem.dialog);
     showDialog(
         context: AppState.delegate.navigatorKey.currentContext,
@@ -166,7 +187,16 @@ class MyWinningsViewModel extends BaseModel {
               FelloConfirmationDialog(
                 result: (res) async {
                   if (res) {
-                    caputure(shareMessage);
+                    try {
+                      String url =
+                          await _userService.createDynamicLink(true, 'Other');
+                      caputure(
+                          'Hey, I won ₹${_userService.userFundWallet.prizeBalance.toInt()} on Fello! \nLet\'s save and play together: $url');
+                    } catch (e) {
+                      _logger.e(e.toString());
+                      BaseUtil.showNegativeAlert(
+                          "An error occured!", "Please try again");
+                    }
                   }
                 },
                 content: Column(
@@ -198,11 +228,7 @@ class MyWinningsViewModel extends BaseModel {
                       ),
                     ),
                     SizedBox(height: SizeConfig.padding16),
-                    Text(
-                      subtitle,
-                      textAlign: TextAlign.center,
-                      style: TextStyles.body2.colour(Colors.grey),
-                    ),
+                    getSubtitleWidget(subtitle),
                     SizedBox(height: SizeConfig.screenHeight * 0.03),
                   ],
                 ),
@@ -230,11 +256,7 @@ class MyWinningsViewModel extends BaseModel {
       if (flag) {
         getWinningHistory();
         showSuccessPrizeWithdrawalDialog(
-            choice,
-            choice == PrizeClaimChoice.AMZ_VOUCHER
-                ? "You will receive the gift card on your registered email and mobile in the next 1-2 business days"
-                : "The gold in grams shall be credited to your wallet in the next 1-2 business days",
-            'Hey, I won ₹${_claimAmt.abs()} on Fello! \nLet\'s save and play together: https://fello.in/app/download');
+            choice, choice == PrizeClaimChoice.AMZ_VOUCHER ? "amazon" : "gold");
       }
     });
   }
@@ -244,6 +266,7 @@ class MyWinningsViewModel extends BaseModel {
     if (choice == PrizeClaimChoice.NA) return false;
     Map<String, dynamic> response = await _httpModel.registerPrizeClaim(
         _userService.baseUser.uid,
+        _userService.baseUser.username,
         _userService.userFundWallet.unclaimedBalance,
         choice);
     if (response['status'] != null && response['status']) {
@@ -269,6 +292,7 @@ class MyWinningsViewModel extends BaseModel {
       subtitle = "Digital Gold";
     } else
       choice = PrizeClaimChoice.FELLO_PRIZE;
+
     AppState.screenStack.add(ScreenItem.dialog);
     showDialog(
         context: AppState.delegate.navigatorKey.currentContext,
@@ -278,8 +302,16 @@ class MyWinningsViewModel extends BaseModel {
               FelloConfirmationDialog(
                 result: (res) async {
                   if (res) {
-                    caputure(
-                        'Hey, I won ₹$amount on Fello! \nLet\'s save and play together: https://fello.in/app/download');
+                    try {
+                      String url =
+                          await _userService.createDynamicLink(true, 'Other');
+                      caputure(
+                          'Hey, I won ₹${amount.toInt()} on Fello! \nLet\'s save and play together: $url');
+                    } catch (e) {
+                      _logger.e(e.toString());
+                      BaseUtil.showNegativeAlert(
+                          "An error occured!", "Please try again");
+                    }
                   }
                 },
                 content: Column(
@@ -328,6 +360,30 @@ class MyWinningsViewModel extends BaseModel {
             ],
           );
         });
+  }
+
+  Widget getSubtitleWidget(String subtitle) {
+    if (subtitle == "gold" || subtitle == "amazon")
+      return RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          text: subtitle == "gold"
+              ? "The gold in grams shall be credited to your wallet in the next "
+              : "You will receive the gift card on your registered email and mobile in the next ",
+          style: TextStyles.body3.colour(Colors.grey),
+          children: [
+            TextSpan(
+              text: "1-2 business working days",
+              style: TextStyles.body3.bold.colour(UiConstants.tertiarySolid),
+            )
+          ],
+        ),
+      );
+    return Text(
+      subtitle,
+      textAlign: TextAlign.center,
+      style: TextStyles.body2.colour(Colors.grey),
+    );
   }
 
 // Capture Share card Logic

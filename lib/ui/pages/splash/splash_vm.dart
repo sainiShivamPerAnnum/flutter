@@ -79,16 +79,16 @@ class LauncherViewModel extends BaseModel {
     await _baseUtil.init();
     _tambolaService.init();
     await _fcmListener.setupFcm();
-    await _mixpanelService.init();
+    await _mixpanelService.init(isOnboarded: userService.isUserOnborded, baseUser: userService.baseUser);
     _httpModel.init();
     _timer3.cancel();
-    try {
-      deviceUnlock = DeviceUnlock();
-    } catch (e) {
-      _logger.e(
-        e.toString(),
-      );
-    }
+    // try {
+    //   deviceUnlock = DeviceUnlock();
+    // } catch (e) {
+    //   _logger.e(
+    //     e.toString(),
+    //   );
+    // }
 
     bool isThereBreakingUpdateTest = await checkBreakingUpdateTest();
     if (isThereBreakingUpdateTest) {
@@ -113,23 +113,23 @@ class LauncherViewModel extends BaseModel {
           PageAction(state: PageState.replaceAll, page: LoginPageConfig);
       return;
     }
-
-    ///now check if app needs to be open securely
+    //
+    // ///now check if app needs to be open securely
     bool _unlocked = true;
-    if (_baseUtil.myUser.userPreferences.getPreference(Preferences.APPLOCK) ==
-            1 &&
-        deviceUnlock != null) {
-      try {
-        _unlocked = await deviceUnlock.request(localizedReason: 'Unlock Fello');
-      } on DeviceUnlockUnavailable {
-        BaseUtil.showPositiveAlert('No Device Authentication Found',
-            'Logging in, please enable device security to add lock');
-        _unlocked = true;
-      } on RequestInProgress {
-        _unlocked = false;
-        print('Request in progress');
-      }
-    }
+    // if (_baseUtil.myUser.userPreferences.getPreference(Preferences.APPLOCK) ==
+    //         1 &&
+    //     deviceUnlock != null) {
+    //   try {
+    //     _unlocked = await deviceUnlock.request(localizedReason: 'Unlock Fello');
+    //   } on DeviceUnlockUnavailable {
+    //     BaseUtil.showPositiveAlert('No Device Authentication Found',
+    //         'Logging in, please enable device security to add lock');
+    //     _unlocked = true;
+    //   } on RequestInProgress {
+    //     _unlocked = false;
+    //     print('Request in progress');
+    //   }
+    // }
 
     if (_unlocked) {
       navigator.currentAction =

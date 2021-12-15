@@ -3,6 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CacheManager {
+  static const CACHE_RATING_IS_RATED = "isUserRated";
+  static const CACHE_RATING_HIT_COUNT = "rHitCount";
+  static const CACHE_RATING_DIALOG_OPEN_COUNT = "RDShowCount";
+
   static Future readCache({@required String key}) async {
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();

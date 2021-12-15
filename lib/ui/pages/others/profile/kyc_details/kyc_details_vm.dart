@@ -223,8 +223,7 @@ class KYCDetailsViewModel extends BaseModel {
               refresh();
               return;
             } else {
-              _mixpanelService.track(MixpanelEvents.panVerified,
-                  {'userId': _userService.baseUser.uid});
+              _mixpanelService.track(eventName: MixpanelEvents.panVerified);
               BaseUtil.showPositiveAlert(
                   'Verification Successful', 'You are successfully verified!');
               _isKycInProgress = false;
@@ -315,7 +314,7 @@ class KYCDetailsViewModel extends BaseModel {
     }
     if (!_flag) {
       print('returning false flag');
-      Map _data = {
+      Map<String, dynamic> _data = {
         'flag': _flag,
         'fail_code': _failCode,
         'reason': _reason,

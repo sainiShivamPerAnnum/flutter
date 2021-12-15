@@ -5,13 +5,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info/device_info.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
+import 'package:felloapp/core/model/faq_model.dart';
 import 'package:felloapp/core/model/feed_card_model.dart';
 import 'package:felloapp/core/model/prize_leader_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/referral_leader_model.dart';
+import 'package:felloapp/core/model/signzy_pan/signzy_login.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/model/tambola_winners_details.dart';
 import 'package:felloapp/core/model/ticket_request_model.dart';
@@ -20,10 +23,8 @@ import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/model/user_icici_detail_model.dart';
 import 'package:felloapp/core/model/user_ticket_wallet_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
-import 'package:felloapp/core/model/alert_model.dart';
-import 'package:felloapp/core/model/signzy_pan/signzy_login.dart';
 import 'package:felloapp/core/service/api.dart';
-import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -34,8 +35,8 @@ import 'package:felloapp/util/logger.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:synchronized/synchronized.dart';
 import 'package:logger/logger.dart';
+import 'package:synchronized/synchronized.dart';
 
 class DBModel extends ChangeNotifier {
   Api _api = locator<Api>();
@@ -289,7 +290,7 @@ class DBModel extends ChangeNotifier {
           log.error('Failed to parse user transaction $txn');
         }
       });
-      print("LENGTH----------------->" + requestedTxns.length.toString());
+      logger.d("No of transactions fetched: ${requestedTxns.length}");
       resultTransactionsMap['listOfTransactions'] = requestedTxns;
       return resultTransactionsMap;
     } catch (err) {
@@ -490,6 +491,137 @@ class DBModel extends ChangeNotifier {
     return null;
   }
 
+  Future<String> showAugmontBuyNotice() async {
+    try {
+      String _awsKeyIndex = BaseRemoteConfig.remoteConfig
+          .getString(BaseRemoteConfig.AWS_AUGMONT_KEY_INDEX);
+      if (_awsKeyIndex == null || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
+      int keyIndex = 1;
+      try {
+        keyIndex = int.parse(_awsKeyIndex);
+      } catch (e) {
+        log.error('Aws Index key parsing failed: ' + e.toString());
+        keyIndex = 1;
+      }
+      QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
+          'aws-augmont',
+          FlavorConfig.instance.values.awsAugmontStage.value(),
+          keyIndex);
+      if (querySnapshot != null && querySnapshot.docs.length == 1) {
+        DocumentSnapshot snapshot = querySnapshot.docs[0];
+        Map<String, dynamic> _doc = snapshot.data();
+        if (snapshot.exists &&
+            _doc != null &&
+            _doc['depNotice'] != null &&
+            _doc['depNotice'].isNotEmpty) {
+          return _doc['depNotice'];
+        }
+      }
+    } catch (e) {
+      logger.e(e.toString());
+    }
+
+    return null;
+  }
+
+  Future<bool> isAugmontBuyDisabled() async {
+    try {
+      String _awsKeyIndex = BaseRemoteConfig.remoteConfig
+          .getString(BaseRemoteConfig.AWS_AUGMONT_KEY_INDEX);
+      if (_awsKeyIndex == null || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
+      int keyIndex = 1;
+      try {
+        keyIndex = int.parse(_awsKeyIndex);
+      } catch (e) {
+        log.error('Aws Index key parsing failed: ' + e.toString());
+        keyIndex = 1;
+      }
+      QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
+          'aws-augmont',
+          FlavorConfig.instance.values.awsAugmontStage.value(),
+          keyIndex);
+      if (querySnapshot != null && querySnapshot.docs.length == 1) {
+        DocumentSnapshot snapshot = querySnapshot.docs[0];
+        Map<String, dynamic> _doc = snapshot.data();
+        if (snapshot.exists &&
+            _doc != null &&
+            _doc['isDepLocked'] != null &&
+            _doc['isDepLocked']) {
+          return true;
+        }
+      }
+    } catch (e) {
+      logger.e(e.toString());
+    }
+    return false;
+  }
+
+  Future<String> showAugmontSellNotice() async {
+    try {
+      String _awsKeyIndex = BaseRemoteConfig.remoteConfig
+          .getString(BaseRemoteConfig.AWS_AUGMONT_KEY_INDEX);
+      if (_awsKeyIndex == null || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
+      int keyIndex = 1;
+      try {
+        keyIndex = int.parse(_awsKeyIndex);
+      } catch (e) {
+        log.error('Aws Index key parsing failed: ' + e.toString());
+        keyIndex = 1;
+      }
+      QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
+          'aws-augmont',
+          FlavorConfig.instance.values.awsAugmontStage.value(),
+          keyIndex);
+      if (querySnapshot != null && querySnapshot.docs.length == 1) {
+        DocumentSnapshot snapshot = querySnapshot.docs[0];
+        Map<String, dynamic> _doc = snapshot.data();
+        if (snapshot.exists &&
+            _doc != null &&
+            _doc['sellNotice'] != null &&
+            _doc['sellNotice'].isNotEmpty) {
+          return _doc['sellNotice'];
+        }
+      }
+    } catch (e) {
+      logger.e(e.toString());
+    }
+
+    return null;
+  }
+
+  Future<bool> isAugmontSellDisabled() async {
+    try {
+      String _awsKeyIndex = BaseRemoteConfig.remoteConfig
+          .getString(BaseRemoteConfig.AWS_AUGMONT_KEY_INDEX);
+      if (_awsKeyIndex == null || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
+      int keyIndex = 1;
+      try {
+        keyIndex = int.parse(_awsKeyIndex);
+      } catch (e) {
+        log.error('Aws Index key parsing failed: ' + e.toString());
+        keyIndex = 1;
+      }
+      QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
+          'aws-augmont',
+          FlavorConfig.instance.values.awsAugmontStage.value(),
+          keyIndex);
+      if (querySnapshot != null && querySnapshot.docs.length == 1) {
+        DocumentSnapshot snapshot = querySnapshot.docs[0];
+        Map<String, dynamic> _doc = snapshot.data();
+        if (snapshot.exists &&
+            _doc != null &&
+            _doc['isSellLocked'] != null &&
+            _doc['isSellLocked']) {
+          return true;
+        }
+      }
+    } catch (e) {
+      logger.e(e.toString());
+    }
+
+    return false;
+  }
+
   Future<SignzyPanLogin> getActiveSignzyPanApiKey() async {
     int keyIndex = 1;
     QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
@@ -598,8 +730,14 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> addWinClaim(String uid, String name, String mobile,
-      int currentTickCount, bool isEligible, Map<String, int> resMap) async {
+  Future<bool> addWinClaim(
+      String uid,
+      String userName,
+      String name,
+      String mobile,
+      int currentTickCount,
+      bool isEligible,
+      Map<String, int> resMap) async {
     try {
       DateTime date = new DateTime.now();
       int weekCde = date.year * 100 + BaseUtil.getWeekNumber();
@@ -608,6 +746,7 @@ class DBModel extends ChangeNotifier {
       data['user_id'] = uid;
       data['mobile'] = mobile;
       data['name'] = name;
+      data['username'] = userName;
       data['tck_count'] = currentTickCount;
       data['week_code'] = weekCde;
       data['ticket_cat_map'] = resMap;
@@ -1118,7 +1257,8 @@ class DBModel extends ChangeNotifier {
                 UserTransaction.fromMap(snapshot.data(), snapshot.id);
             if (_txn != null &&
                 _txn.augmnt != null &&
-                _txn.augmnt[UserTransaction.subFldAugCurrentGoldGm] != null) {
+                _txn.augmnt[UserTransaction.subFldAugCurrentGoldGm] != null &&
+                _txn.rzp != null) {
               double _qnt = BaseUtil.toDouble(
                   _txn.augmnt[UserTransaction.subFldAugCurrentGoldGm]);
               _netQuantity += _qnt;
@@ -1306,5 +1446,16 @@ class DBModel extends ChangeNotifier {
 
   Future<bool> sendEmailToVerifyEmail(String email, String otp) async {
     return await _api.createEmailVerificationDocument(email, otp);
+  }
+
+  Future fetchCategorySpecificFAQ(String category) async {
+    try {
+      final DocumentSnapshot response = await _api.fetchFaqs(category);
+      logger.d(response.data().toString());
+      return ApiResponse(model: FAQModel.fromMap(response.data()), code: 200);
+    } catch (e) {
+      logger.e(e);
+      return ApiResponse.withError(e.toString(), 400);
+    }
   }
 }

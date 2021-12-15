@@ -8,8 +8,10 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:provider/provider.dart';
 
@@ -28,7 +30,7 @@ class TransactionsHistory extends StatelessWidget {
             children: [
               FelloAppBar(
                 leading: FelloAppBarBackButton(),
-                title: "Transactions History",
+                title: "Transaction History",
               ),
               Expanded(
                 child: Container(
@@ -40,7 +42,12 @@ class TransactionsHistory extends StatelessWidget {
                     ),
                   ),
                   child: model.state == ViewState.Busy
-                      ? Center(child: CircularProgressIndicator())
+                      ? Center(
+                          child: SpinKitWave(
+                            color: UiConstants.primaryColor,
+                            size: SizeConfig.padding32,
+                          ),
+                        )
                       : Container(
                           padding: EdgeInsets.only(
                               right: SizeConfig.blockSizeHorizontal * 3),
@@ -74,6 +81,27 @@ class TransactionsHistory extends StatelessWidget {
                                         children: model.getTxns(),
                                       )),
                               ),
+                              if (model.isMoreTxnsBeingFetched)
+                                Container(
+                                  width: SizeConfig.screenWidth,
+                                  padding: EdgeInsets.all(SizeConfig.padding12),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      SpinKitWave(
+                                        color: UiConstants.primaryColor,
+                                        size: SizeConfig.padding16,
+                                      ),
+                                      SizedBox(height: SizeConfig.padding4),
+                                      Text(
+                                        "Loading past transactions, please wait ...",
+                                        style: TextStyles.body4
+                                            .colour(Colors.grey),
+                                      )
+                                    ],
+                                  ),
+                                )
                             ],
                           ),
                         ),

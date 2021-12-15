@@ -57,6 +57,23 @@ class AugmontGoldBuyView extends StatelessWidget {
                     padding: EdgeInsets.zero,
                     shrinkWrap: true,
                     children: [
+                      (model.buyNotice != null && model.buyNotice.isNotEmpty)?Container(
+                        decoration: BoxDecoration(
+                          color: UiConstants.primaryLight,
+                          borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+                        ),
+                        padding: EdgeInsets.all(SizeConfig.padding16),
+                        child: Stack(
+                          children: [
+                            Text(
+                              model.buyNotice,
+                              textAlign: TextAlign.center,
+                              style: TextStyles.body3.light,
+                            ),
+                          ],
+                        ),
+                      ):SizedBox(),
+                      SizedBox(height: SizeConfig.padding16),
                       Text(
                         "Enter Amount",
                         style: TextStyles.title4.bold,
@@ -263,15 +280,13 @@ class AugmontGoldBuyView extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.asset(Assets.augLogo,
-                              height: SizeConfig.padding24),
+                              color: Colors.grey, height: SizeConfig.padding24),
                           SizedBox(width: SizeConfig.padding20),
                           Image.asset(Assets.amfiGraphic,
-                              color: UiConstants.primaryColor,
-                              height: SizeConfig.padding24),
+                              color: Colors.grey, height: SizeConfig.padding24),
                           SizedBox(width: SizeConfig.padding20),
                           Image.asset(Assets.sebiGraphic,
-                              color: Color(0xff2E2A81),
-                              height: SizeConfig.padding20),
+                              color: Colors.grey, height: SizeConfig.padding20),
                         ],
                       ),
                       SizedBox(height: SizeConfig.viewInsets.bottom)

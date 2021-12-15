@@ -394,8 +394,8 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                                               title: FittedBox(
                                                 child: Text(
                                                   "I confirm that the details provided by me are correct",
-                                                  style: TextStyles.body4
-                                                      .colour(Colors.black45),
+                                                  style: TextStyles.body2
+                                                      .weight(FontWeight.w500),
                                                 ),
                                               ),
                                             ),
@@ -613,8 +613,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                     baseProvider.isEditAugmontBankDetailInProgress = false;
                     setState(() {});
                     if (flag) {
-                      _mixpanelService.track(MixpanelEvents.bankDetailsUpdated,
-                          {'userId': _userService.baseUser.uid});
+                      _mixpanelService.track(eventName: MixpanelEvents.bankDetailsUpdated);
                       print("mixpanel added");
                       BaseUtil.showPositiveAlert(
                           'Complete', 'Your details have been updated');

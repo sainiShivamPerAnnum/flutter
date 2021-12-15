@@ -3,7 +3,7 @@ description: Game-based Investments
 
 publish_to: "none"
 
-version: 3.0.2+37
+version: 3.0.7+41
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -75,6 +75,10 @@ dependencies:
   url_launcher: ^6.0.9
   video_player: ^2.1.12
   webview_flutter: ^2.0.13
+  flutter_rating_bar: ^4.0.0
+  in_app_review: ^2.0.3
+
+
 
 dev_dependencies:
   flutter_test:

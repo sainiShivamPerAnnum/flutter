@@ -1,4 +1,5 @@
 import 'package:felloapp/core/enums/winner_service_enum.dart';
+import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/service/winners_service.dart';
 import 'package:felloapp/ui/elements/texts/marquee_text.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -10,7 +11,7 @@ class WinnersMarqueeStrip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<WinnerService, WinnerServiceProperties>(
-      properties: [WinnerServiceProperties.winLeaderboard],
+      properties: [WinnerServiceProperties.topWinners],
       builder: (context, WModel, properties) {
         return Container(
           width: SizeConfig.screenWidth,
@@ -22,17 +23,7 @@ class WinnersMarqueeStrip extends StatelessWidget {
             color: UiConstants.tertiaryLight.withOpacity(0.5),
           ),
           child: MarqueeText(
-            infoList: WModel.winners == null || WModel.winners.isEmpty
-                ? [
-                    "Shourya won ₹ 1000",
-                    "Manish won ₹ 2000",
-                    "Shreeyash won ₹ 1200",
-                    "CJ won ₹ 800"
-                  ]
-                : List.generate(
-                    WModel.winners.length,
-                    (i) =>
-                        "${WModel.winners[i].username.replaceAll('@', '.')} won ₹${WModel.winners[i].amount}"),
+            infoList: _getMarqueeText(WModel.topWinners, WModel.winners),
             showBullet: true,
             bulletColor: UiConstants.tertiarySolid,
           ),
@@ -40,4 +31,17 @@ class WinnersMarqueeStrip extends StatelessWidget {
       },
     );
   }
+}
+
+List<String> _getMarqueeText(List<String> topWinners, List<Winners> winners) {
+  if(topWinners != null && topWinners.isNotEmpty) return List.generate(
+      topWinners.length, (i) => topWinners[i]);
+  else if(winners != null && winners.isNotEmpty) return List.generate(
+      winners.length, (i) => "${winners[i].username.replaceAll('@', '.')} won ₹${winners[i].amount}");
+  else return [
+      "shravan25 won ₹ 1000",
+      "thenewhulk won ₹ 2000",
+      "paytmking won ₹ 1200",
+      "rohitdabest won ₹ 800"
+    ];
 }

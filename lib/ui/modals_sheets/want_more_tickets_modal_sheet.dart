@@ -1,3 +1,4 @@
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -7,6 +8,12 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
 class WantMoreTicketsModalSheet extends StatelessWidget {
+  String referral_bonus =
+  BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS);
+  String referral_ticket_bonus = BaseRemoteConfig.remoteConfig
+      .getString(BaseRemoteConfig.REFERRAL_TICKET_BONUS);
+  String referral_flc_bonus = BaseRemoteConfig.remoteConfig
+      .getString(BaseRemoteConfig.REFERRAL_FLC_BONUS);
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -51,7 +58,7 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                   FelloTile(
                     leadingAsset: Assets.wmtShare,
                     title: "Refer your friends",
-                    subtitle: "Get ₹25 and 200 tokens per referral",
+                    subtitle: "Get ₹$referral_bonus and $referral_flc_bonus tokens per referral",
                     trailingIcon: Icons.arrow_forward_ios_rounded,
                     onTap: () {
                       AppState.backButtonDispatcher.didPopRoute();

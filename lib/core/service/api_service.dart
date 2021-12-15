@@ -79,8 +79,11 @@ class APIService implements API {
     await metric.start();
     var responseJson;
     try {
-      Map<String, String> _headers = {'Content-Type': 'application/json; charset=UTF-8'};
-      if(token != null) _headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
+      Map<String, String> _headers = {
+        'Content-Type': 'application/json; charset=UTF-8'
+      };
+      if (token != null)
+        _headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
       String _url = _baseUrl + url;
       logger.d("response from $url");
 
@@ -200,7 +203,6 @@ class APIService implements API {
   @override
   dynamic returnResponse(http.Response response) {
     var responseJson = json.decode(response.body);
-    logger.d("response $response");
     switch (response.statusCode) {
       case 200:
         return responseJson;

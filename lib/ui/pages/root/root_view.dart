@@ -13,6 +13,7 @@ import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/ui/widgets/drawer/drawer_view.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -23,12 +24,6 @@ import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
 class Root extends StatelessWidget {
-  // final AnimationController controller;
-
-  // Root({Key key, @required this.controller})
-  //     : animation = RootAnimation(controller),
-  //       super(key: key);
-  // final RootAnimation animation;
   @override
   Widget build(BuildContext context) {
     return BaseView<RootViewModel>(
@@ -40,77 +35,86 @@ class Root extends StatelessWidget {
       },
       builder: (ctx, model, child) {
         model.initialize();
-        return WillPopScope(
-          onWillPop: () async {
-            if (RootViewModel.scaffoldKey.currentState.isDrawerOpen) {
-              print("Pop Popped");
-              Navigator.pop(context);
-              return false;
-            }
-            return true;
-          },
-          child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            key: RootViewModel.scaffoldKey,
-            drawer: FDrawer(),
-            drawerEnableOpenDragGesture: false,
-            body: HomeBackground(
-              whiteBackground: WhiteBackground(
-                  height: model.currentTabIndex == 1
-                      ? SizeConfig.screenHeight * 0.17
-                      : SizeConfig.screenHeight * 0.2),
-              child: Stack(
-                children: [
-                  RefreshIndicator(
-                    color: UiConstants.primaryColor,
-                    backgroundColor: Colors.black,
-                    onRefresh: model.refresh,
-                    child: Container(
-                      margin: EdgeInsets.only(top: SizeConfig.viewInsets.top),
-                      child: Consumer<AppState>(
-                        builder: (ctx, m, child) => IndexedStack(
-                            children: [Save(), Play(), Win()],
-                            index: m.rootIndex),
-                      ),
+        return Scaffold(
+          resizeToAvoidBottomInset: false,
+          key: RootViewModel.scaffoldKey,
+          drawer: FDrawer(),
+          drawerEnableOpenDragGesture: false,
+          body: HomeBackground(
+            whiteBackground: WhiteBackground(
+                height: model.currentTabIndex == 1
+                    ? SizeConfig.screenHeight * 0.17
+                    : SizeConfig.screenHeight * 0.2),
+            child: Stack(
+              children: [
+                if (FlavorConfig.isDevelopment())
+                  Container(
+                    width: SizeConfig.screenWidth,
+                    child: Banner(
+                      message: FlavorConfig.getStage(),
+                      location: BannerLocation.topEnd,
+                      color: FlavorConfig.instance.color,
                     ),
                   ),
-                  FelloAppBar(
-                    leading: InkWell(
-                      onTap: () => model.showDrawer(),
-                      child: ProfileImageSE(
-                        radius: SizeConfig.avatarRadius,
-                      ),
+                if (FlavorConfig.isQA())
+                  Container(
+                    width: SizeConfig.screenWidth,
+                    child: Banner(
+                      message: FlavorConfig.getStage(),
+                      location: BannerLocation.topEnd,
+                      color: FlavorConfig.instance.color,
                     ),
-                    actions: [
-                      const FelloCoinBar(),
-                      SizedBox(width: 16),
-                      const NotificationButton(),
-                    ],
                   ),
-                  Positioned(
-                    bottom: 0,
-                    child: ClipRect(
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                        child: Container(
-                          color: Colors.transparent,
-                          width: SizeConfig.screenWidth,
-                          height: SizeConfig.navBarHeight,
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                          ),
+                RefreshIndicator(
+                  color: UiConstants.primaryColor,
+                  backgroundColor: Colors.black,
+                  onRefresh: model.refresh,
+                  child: Container(
+                    margin: EdgeInsets.only(top: SizeConfig.viewInsets.top),
+                    child: Consumer<AppState>(
+                      builder: (ctx, m, child) => IndexedStack(
+                          children: [Save(), Play(), Win()],
+                          index: m.rootIndex),
+                    ),
+                  ),
+                ),
+                FelloAppBar(
+                  leading: InkWell(
+                    onTap: () => model.showDrawer(),
+                    child: ProfileImageSE(
+                      radius: SizeConfig.avatarRadius,
+                    ),
+                  ),
+                  actions: [
+                    const FelloCoinBar(),
+                    SizedBox(width: 16),
+                    const NotificationButton(),
+                  ],
+                ),
+                Positioned(
+                  bottom: 0,
+                  child: ClipRect(
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                      child: Container(
+                        color: Colors.transparent,
+                        width: SizeConfig.screenWidth,
+                        height: SizeConfig.navBarHeight,
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                         ),
                       ),
                     ),
                   ),
+                ),
+                if (SizeConfig.screenWidth < 600)
                   WantMoreTickets(
                     model: model,
                   ),
-                  BottomNavBar(
-                    model: model,
-                  ),
-                ],
-              ),
+                BottomNavBar(
+                  model: model,
+                ),
+              ],
             ),
           ),
         );

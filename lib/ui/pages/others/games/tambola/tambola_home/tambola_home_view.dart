@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
@@ -110,6 +111,8 @@ class TambolaHomeView extends StatelessWidget {
                                                     model: model.tPrizes,
                                                     controller:
                                                         model.scrollController,
+                                                    subtitle:
+                                                        BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.GAME_TAMBOLA_ANNOUNCEMENT)??"Stand to win big prizes every week by matching your tambola tickets! Winners are announced every Monday",
                                                     leading: [
                                                       Icons.apps,
                                                       Icons.border_top,
@@ -124,22 +127,22 @@ class TambolaHomeView extends StatelessWidget {
                                                             ))
                                                         .toList(),
                                                   )),
-                                        model.isLeaderboardLoading
-                                            ? ListLoader()
-                                            : (model.tlboard == null ||
-                                                    model.tlboard.scoreboard
-                                                        .isEmpty
-                                                ? NoRecordDisplayWidget(
-                                                    asset:
-                                                        "images/leaderboard.png",
-                                                    text:
-                                                        "Leaderboard will be updated soon",
-                                                  )
-                                                : LeaderBoardView(
-                                                    controller:
-                                                        model.scrollController,
-                                                    model: model.tlboard,
-                                                  ))
+                                        // model.isLeaderboardLoading
+                                        //     ? ListLoader()
+                                        //     : (model.tlboard == null ||
+                                        //             model.tlboard.scoreboard
+                                        //                 .isEmpty
+                                        //         ? NoRecordDisplayWidget(
+                                        //             asset:
+                                        //                 "images/leaderboard.png",
+                                        //             text:
+                                        //                 "Leaderboard will be updated soon",
+                                        //           )
+                                        //         : LeaderBoardView(
+                                        //             controller:
+                                        //                 model.scrollController,
+                                        //             model: model.tlboard,
+                                        //           ))
                                       ]),
                                 ),
                                 SizedBox(height: SizeConfig.padding64)
