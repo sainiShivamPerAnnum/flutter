@@ -212,6 +212,7 @@ class KYCDetailsViewModel extends BaseModel {
               if (veriDetails['upstreamName'] != null &&
                   veriDetails['upstreamName'] != '') {
                 _baseUtil.myUser.kycName = veriDetails['upstreamName'];
+                _baseUtil.myUser.name = veriDetails['upstreamName'];
               }
               _baseUtil.setKycVerified(true);
               _q = await _dbModel.updateUser(_userService.baseUser);
@@ -223,7 +224,11 @@ class KYCDetailsViewModel extends BaseModel {
               refresh();
               return;
             } else {
-              _mixpanelService.track(eventName: MixpanelEvents.panVerified);
+              _mixpanelService.track(
+                  eventName: MixpanelEvents.panVerified,
+                  properties: {'userId': _userService.baseUser.uid});
+              _userService.isSimpleKycVerified = true;
+              _userService.setMyUserName(_userService.baseUser.name);
               BaseUtil.showPositiveAlert(
                   'Verification Successful', 'You are successfully verified!');
               _isKycInProgress = false;

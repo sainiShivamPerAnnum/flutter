@@ -79,7 +79,9 @@ class LauncherViewModel extends BaseModel {
     await _baseUtil.init();
     _tambolaService.init();
     await _fcmListener.setupFcm();
-    await _mixpanelService.init(isOnboarded: userService.isUserOnborded, baseUser: userService.baseUser);
+    await _mixpanelService.init(
+        isOnboarded: userService.isUserOnborded,
+        baseUser: userService.baseUser);
     _httpModel.init();
     _timer3.cancel();
     // try {
@@ -90,6 +92,13 @@ class LauncherViewModel extends BaseModel {
     //   );
     // }
 
+    ///check if the account is blocked
+    if (userService.baseUser != null && userService.baseUser.isBlocked) {
+      AppState.isUpdateScreen = true;
+      navigator.currentAction =
+          PageAction(state: PageState.replaceAll, page: BlockedUserPageConfig);
+      return;
+    }
     bool isThereBreakingUpdateTest = await checkBreakingUpdateTest();
     if (isThereBreakingUpdateTest) {
       AppState.isUpdateScreen = true;

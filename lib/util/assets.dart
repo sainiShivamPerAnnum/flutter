@@ -47,7 +47,7 @@ class Assets {
   static final String onb2 = "assets/lotties/slide2.json";
   static final String onb3 = "assets/lotties/slide3.json";
   static final String indFlag = "assets/images/indflag.jpg";
-
+  static final String blocked = "assets/vectors/blocked.svg";
   // WANT MORE MODAL
   static final String wmtsaveMoney = "assets/vectors/icons/wmt_save_money.svg";
   static final String wmtShare = "assets/vectors/icons/wmt_share.svg";

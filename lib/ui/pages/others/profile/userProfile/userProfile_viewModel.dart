@@ -64,6 +64,7 @@ class UserProfileVM extends BaseModel {
   String get myGender => _userService.baseUser.gender ?? "";
   String get myMobile => _userService.baseUser.mobile ?? "";
   bool get isEmailVerified => _userService.baseUser.isEmailVerified;
+  bool get isSimpleKycVerified => _userService.isSimpleKycVerified;
 
   bool get applock =>
       _userService.baseUser.userPreferences
@@ -277,7 +278,7 @@ class UserProfileVM extends BaseModel {
 
                 _txnService.signOut();
                 _baseUtil.signOut();
-                
+
                 AppState.delegate.appState.currentAction = PageAction(
                     state: PageState.replaceAll, page: SplashPageConfig);
                 BaseUtil.showPositiveAlert(
