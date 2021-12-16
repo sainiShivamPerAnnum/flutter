@@ -135,6 +135,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       _myUserName = null;
       _idToken = null;
       _isEmailVerified = false;
+      _isSimpleKycVerified = false;
       return true;
     } catch (e) {
       _logger.e("Failed to logout user: ${e.toString()}");

@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -10,6 +11,18 @@ import 'package:url_launcher/url_launcher.dart';
 class SaveViewModel extends BaseModel {
   BaseUtil _baseUtil = locator<BaseUtil>();
   UserService _userService = locator<UserService>();
+
+  bool isAugmontBuyEnabled() {
+    return _userService.baseUser.userPermissions
+            .getPermission(Permissions.AUGMONTBUY) ==
+        1;
+  }
+
+  bool isAugmontSellEnabled() {
+    return _userService.baseUser.userPermissions
+            .getPermission(Permissions.AUGMONTSELL) ==
+        1;
+  }
 
   getGoldBalance() {
     return _baseUtil.userFundWallet?.augGoldQuantity ?? 0.0;
@@ -22,6 +35,11 @@ class SaveViewModel extends BaseModel {
   navigateToBuyScreen() {
     AppState.delegate.appState.currentAction =
         PageAction(state: PageState.addPage, page: AugmontGoldBuyPageConfig);
+  }
+
+  navigateToSellScreen() {
+    AppState.delegate.appState.currentAction =
+        PageAction(state: PageState.addPage, page: AugmontGoldSellPageConfig);
   }
 
   navigateToAboutGold() {

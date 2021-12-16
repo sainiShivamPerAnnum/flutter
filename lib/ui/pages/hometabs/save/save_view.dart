@@ -254,12 +254,11 @@ class AugmontCard extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Expanded(
-                      child: Center(
+                    if (model.isAugmontBuyEnabled())
+                      Expanded(
                         child: FelloButton(
                           onPressed: model.navigateToBuyScreen,
                           activeButtonUI: Container(
-                            width: SizeConfig.screenWidth * 0.367, //152
                             height: SizeConfig.screenWidth * 0.12, //50
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(100),
@@ -272,7 +271,6 @@ class AugmontCard extends StatelessWidget {
                             ),
                           ),
                           offlineButtonUI: Container(
-                            width: SizeConfig.screenWidth * 0.367, //152
                             height: SizeConfig.screenWidth * 0.12, //50
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(100),
@@ -286,55 +284,58 @@ class AugmontCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(width: SizeConfig.padding20),
-                    Expanded(
-                        child: Center(
-                      child: SellGoldBtn(
-                        activeButtonUI: Container(
-                          width: SizeConfig.screenWidth * 0.367,
-                          height: SizeConfig.screenWidth * 0.12,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                                color: UiConstants.tertiarySolid, width: 2),
-                            borderRadius: BorderRadius.circular(100),
+                    if (model.isAugmontBuyEnabled() &&
+                        model.isAugmontSellEnabled())
+                      SizedBox(width: SizeConfig.padding16),
+                    if (model.isAugmontSellEnabled())
+                      Expanded(
+                        child: FelloButton(
+                          onPressed: model.navigateToSellScreen,
+                          activeButtonUI: Container(
+                            height: SizeConfig.screenWidth * 0.12,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: UiConstants.tertiarySolid, width: 2),
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            alignment: Alignment.center,
+                            child: Text(
+                              locale.saveSellButton,
+                              style: TextStyles.title5.bold,
+                            ),
                           ),
-                          alignment: Alignment.center,
-                          child: Text(
-                            locale.saveSellButton,
-                            style: TextStyles.title5.bold,
-                          ),
-                        ),
-                        loadingButtonUI: Container(
-                          width: SizeConfig.screenWidth * 0.367,
-                          height: SizeConfig.screenWidth * 0.12,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                                color: UiConstants.tertiarySolid, width: 2),
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          alignment: Alignment.center,
-                          child: SpinKitThreeBounce(
-                            size: SizeConfig.title5,
-                            color: UiConstants.tertiarySolid,
-                          ),
-                        ),
-                        disabledButtonUI: Container(
-                          width: SizeConfig.screenWidth * 0.367,
-                          height: SizeConfig.screenWidth * 0.12,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey, width: 2),
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          alignment: Alignment.center,
-                          child: Text(
-                            locale.saveSellButton,
-                            style: TextStyles.title5.bold.colour(Colors.grey),
+                          offlineButtonUI: Container(
+                            height: SizeConfig.screenWidth * 0.12,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey, width: 2),
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            alignment: Alignment.center,
+                            child: Text(
+                              locale.saveSellButton,
+                              style: TextStyles.title5.bold.colour(Colors.grey),
+                            ),
                           ),
                         ),
                       ),
-                      // ),
-                    )),
+                    if (!model.isAugmontBuyEnabled() &&
+                        !model.isAugmontSellEnabled())
+                      Expanded(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              vertical: SizeConfig.pageHorizontalMargins / 2,
+                              horizontal: SizeConfig.pageHorizontalMargins),
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.circular(SizeConfig.roundness16),
+                            color: Colors.red.withOpacity(0.05),
+                          ),
+                          child: Text(
+                            "Augmont Transactions are temporarily disabled for your account. Contact us for more details",
+                            style: TextStyles.body3.colour(Colors.redAccent),
+                          ),
+                        ),
+                      )
                   ],
                 ),
               ),
@@ -386,7 +387,19 @@ class AugmontCard extends StatelessWidget {
                     style: TextStyles.body3.colour(UiConstants.tertiarySolid),
                   ),
                 ),
-              )
+              ),
+              // Row(
+              //   children: [
+              //     Text("IsAugmontGoldBuyEnbled: "),
+              //     Text(model.isAugmontBuyEnabled().toString())
+              //   ],
+              // ),
+              // Row(
+              //   children: [
+              //     Text("IsAugmontGoldSellEnbled: "),
+              //     Text(model.isAugmontSellEnabled().toString())
+              //   ],
+              // ),
             ],
           ),
         ),
