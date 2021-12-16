@@ -4,14 +4,18 @@ import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/rsa_encryption.dart';
 import 'package:felloapp/util/rsa_encryption.dart';
+import 'dart:developer';
+
 import 'package:logger/logger.dart';
 
 class InvestmentActionsRepository {
   final _userService = locator<UserService>();
   final _apiPaths = locator<ApiPath>();
   final _logger = locator<Logger>();
+  final _rsaEncryption = new RSAEncryption();
 
   Future<String> _getBearerToken() async {
     String token = await _userService.firebaseUser.getIdToken();
@@ -57,15 +61,17 @@ class InvestmentActionsRepository {
       "rzp_map": initRzpMap
     };
     _logger.d("initiateUserDeposit : $_body");
-    final _rsaEncryption = new RSAEncryption();
-    await _rsaEncryption.init();
-    Map<String, dynamic> _encryptedBody = _rsaEncryption.encrypt(_body);
+    if (await _rsaEncryption.init()) {
+      Map<String, dynamic> _encryptedBody = _rsaEncryption.encrypt(_body);
+      log(_encryptedBody.toString());
+    } else {
+      _logger.e("Encrypter initialization failed!! exiting method");
+    }
+
     // try {
     final String _bearer = await _getBearerToken();
-    final response = await APIService.instance.postData(
-        _apiPaths.kDepositPending,
-        body: _encryptedBody,
-        token: _bearer);
+    final response = await APIService.instance
+        .postData(_apiPaths.kDepositPending, body: _body, token: _bearer);
 
     _logger.d(response.toString());
 
@@ -98,6 +104,12 @@ class InvestmentActionsRepository {
       "enqueuedTaskDetails": enqueuedTaskDetails.toMap()
     };
     _logger.d("completeUserDeposit : $_body");
+    if (await _rsaEncryption.init()) {
+      Map<String, dynamic> _encryptedBody = _rsaEncryption.encrypt(_body);
+      log(_encryptedBody.toString());
+    } else {
+      _logger.e("Encrypter initialization failed!! exiting method");
+    }
     try {
       final String _bearer = await _getBearerToken();
       final response = await APIService.instance
@@ -128,6 +140,12 @@ class InvestmentActionsRepository {
     };
 
     _logger.d("completeUserDeposit : $_body");
+    if (await _rsaEncryption.init()) {
+      Map<String, dynamic> _encryptedBody = _rsaEncryption.encrypt(_body);
+      log(_encryptedBody.toString());
+    } else {
+      _logger.e("Encrypter initialization failed!! exiting method");
+    }
     try {
       final String _bearer = await _getBearerToken();
       final response = await APIService.instance
@@ -158,6 +176,12 @@ class InvestmentActionsRepository {
     };
 
     _logger.d("withdrawlComplete : $_body");
+    if (await _rsaEncryption.init()) {
+      Map<String, dynamic> _encryptedBody = _rsaEncryption.encrypt(_body);
+      log(_encryptedBody.toString());
+    } else {
+      _logger.e("Encrypter initialization failed!! exiting method");
+    }
     // try {
     final String _bearer = await _getBearerToken();
     final response = await APIService.instance
@@ -188,6 +212,12 @@ class InvestmentActionsRepository {
     };
 
     _logger.d("withdrawlCancelled : $_body");
+    if (await _rsaEncryption.init()) {
+      Map<String, dynamic> _encryptedBody = _rsaEncryption.encrypt(_body);
+      log(_encryptedBody.toString());
+    } else {
+      _logger.e("Encrypter initialization failed!! exiting method");
+    }
     try {
       final String _bearer = await _getBearerToken();
       final response = await APIService.instance

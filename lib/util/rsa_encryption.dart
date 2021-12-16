@@ -24,18 +24,21 @@ class RSAEncryption {
   IV iv;
   Key aesKey;
 
-  init() async {
-    await initializeRSAEncrypter();
-    initializeAESEncrypter();
+  Future<bool> init() async {
+    bool rsaStatus = await initializeRSAEncrypter();
+    bool aesStatus = initializeAESEncrypter();
+    if (rsaStatus && aesStatus) return true;
+    return false;
   }
 
-  initializeRSAEncrypter() async {
+  Future<bool> initializeRSAEncrypter() async {
     try {
       final publicKey =
           await parseWithRootBundle<RSAPublicKey>("resources/public.key");
       rsaEncrypter = Encrypter(RSA(
         publicKey: publicKey,
       ));
+      return true;
     } catch (e) {
       _logger.e(e.toString());
       if (_userService.isUserOnborded)
@@ -44,10 +47,11 @@ class RSAEncryption {
           "message": "RSA Encrypter generation Failed",
           "error": e.toString()
         });
+      return false;
     }
   }
 
-  initializeAESEncrypter() {
+  bool initializeAESEncrypter() {
     try {
       randomAesKey = getRandomString(32);
       aesKey = Key.fromUtf8(randomAesKey);
@@ -55,6 +59,7 @@ class RSAEncryption {
       iv = IV.fromUtf8(randomIv);
       aesEncrypter =
           Encrypter(AES(aesKey, mode: AESMode.cbc, padding: "PKCS7"));
+      return true;
     } catch (e) {
       _logger.e(e.toString());
       if (_userService.isUserOnborded)
@@ -63,6 +68,7 @@ class RSAEncryption {
           "message": "AES Encrypter generation Failed",
           "error": e.toString()
         });
+      return false;
     }
   }
 
