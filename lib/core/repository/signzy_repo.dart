@@ -1,6 +1,7 @@
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/transfer_amount_api_model.dart';
 import 'package:felloapp/core/model/verify_amount_api_response_model.dart';
+import 'package:felloapp/core/model/verify_pan_response_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -17,6 +18,32 @@ class SignzyRepository {
     _logger.d(token);
 
     return token;
+  }
+
+  Future<ApiResponse<VerifyPanResponseModel>> verifyPan(
+      {String panName, String panNumber}) async {
+    final Map<String, dynamic> body = {
+      "panName": panName,
+      "panNumber": panNumber
+    };
+
+    try {
+      final String token = await _getBearerToken();
+
+      final response = await APIService.instance
+          .postData(_apiPaths.kVerifyPan, body: body, token: token);
+
+      VerifyPanResponseModel _verifyPanApiResponse =
+          VerifyPanResponseModel.fromMap(response);
+      if (_verifyPanApiResponse.flag) {
+        return ApiResponse(model: _verifyPanApiResponse, code: 200);
+      } else {
+        return ApiResponse(model: _verifyPanApiResponse, code: 400);
+      }
+    } catch (e) {
+      _logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
   }
 
   Future<ApiResponse<TransferAmountApiResponseModel>> transferAmount(
@@ -47,13 +74,9 @@ class SignzyRepository {
     }
   }
 
-
   Future<ApiResponse<VerifyAmountApiResponseModel>> verifyAmount(
       {String signzyId}) async {
-    final Map<String, dynamic> body = {
-      "amount": 1.01,
-      "signzyId": signzyId
-    };
+    final Map<String, dynamic> body = {"amount": 1.01, "signzyId": signzyId};
 
     try {
       final String token = await _getBearerToken();
@@ -73,6 +96,4 @@ class SignzyRepository {
       return ApiResponse.withError(e.toString(), 400);
     }
   }
-
-
 }

@@ -2,8 +2,10 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/signzy_pan/pan_verification_res_model.dart';
 import 'package:felloapp/core/model/signzy_pan/signzy_login.dart';
+import 'package:felloapp/core/model/verify_pan_response_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
+import 'package:felloapp/core/repository/signzy_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -25,6 +27,7 @@ class SimpleKycModelsheetViewModel extends BaseModel {
   final _httpModel = locator<HttpModel>();
   final _baseUtil = locator<BaseUtil>();
   final _userRepo = locator<UserRepository>();
+  final _signzyRepository = locator<SignzyRepository>();
 
   final depositformKey3 = GlobalKey<FormState>();
 
@@ -163,35 +166,24 @@ class SimpleKycModelsheetViewModel extends BaseModel {
       _reason =
           'This PAN number is already associated with a different account';
     }
-   
+
     if (_flag) {
-      SignzyPanLogin _signzyPanLogin =
-          await _dbModel.getActiveSignzyPanApiKey();
-
       try {
-        ApiResponse<PanVerificationResModel> _response =
-            await _httpModel.verifyPanSignzy(
-                baseUrl: _signzyPanLogin.baseUrl,
-                panNumber: enteredPan,
-                panName: enteredPanName,
-                authToken: _signzyPanLogin.accessToken,
-                patronId: _signzyPanLogin.userId);
+        ApiResponse<VerifyPanResponseModel> _response = await _signzyRepository
+            .verifyPan(panNumber: enteredPan, panName: enteredPanName);
 
-        _flag = _response.model.response.result.verified;
+        if (_response.code == 200) {
+          _flag = true;
+        } else {
+          _flag = false;
+        }
 
         if (!_flag) {
-          _reason = 'The name on your PAN card does not match with the entered name. Please try again.';
-          // try {
-          //   _userRepo.addKycName(
-          //       userUid: _userService.baseUser.uid,
-          //       upstreamKycName: _response.model.response.result.upstreamName);
-          // } catch (e) {
-          //   _logger.e(e);
-          // }
-        }else{
-          upstreamName = _response.model.response.result.upstreamName;
+          _reason =
+              'The name on your PAN card does not match with the entered name. Please try again.';
+        } else {
+          upstreamName = _response.model.upstreamName;
         }
-        
       } catch (e) {
         _flag = false;
         _logger.e(e.toString());
