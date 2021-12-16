@@ -596,7 +596,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
     } else {
       BaseUtil.showNegativeAlert(
         'Account Verification Failed',
-        'Please contact, customer support.',
+        'Please check your bank account number and ifsc code.',
       );
       baseProvider.isEditAugmontBankDetailInProgress = false;
       setState(() {});
