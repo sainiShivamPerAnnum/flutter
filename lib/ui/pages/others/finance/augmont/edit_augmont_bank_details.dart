@@ -3,6 +3,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/transfer_amount_api_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
+import 'package:felloapp/core/model/verify_amount_api_response_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/core/repository/signzy_repo.dart';
@@ -560,44 +561,42 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
       return;
     }
 
-    final ApiResponse<TransferAmountApiResponseModel> _response =
+    final ApiResponse<TransferAmountApiResponseModel> response =
         await _signzyRepository.transferAmount(
             mobile: baseProvider.myUser.mobile,
             name: baseProvider.myUser.name,
             ifsc: pBankIfsc,
             accountNo: pConfirmBankAccNo);
 
-    if (_response.code == 200) {
-      final TransferAmountApiResponseModel _transferAmountApiResponseModel =
-          _response.model;
+    if (response.code == 200) {
+      final TransferAmountApiResponseModel _transferAmountResponse =
+          response.model;
+      //Verify Transfer
 
-    //Verify Transfer 
-    
+      final ApiResponse<VerifyAmountApiResponseModel> res =
+          await _signzyRepository.verifyAmount(
+        signzyId: _transferAmountResponse.signzyReferenceId,
+      );
 
+      if (res.code != 200) {
+        BaseUtil.showNegativeAlert(
+          'Account Verification Failed',
+          'Please contact, customer support.',
+        );
+        baseProvider.isEditAugmontBankDetailInProgress = false;
+        setState(() {});
+        return;
+      }
       
     } else {
       BaseUtil.showNegativeAlert(
         'Account Verification Failed',
         'Please contact, customer support.',
       );
+      baseProvider.isEditAugmontBankDetailInProgress = false;
+      setState(() {});
+      return;
     }
-
-    // ///NOW CHECK IF IFSC IS VALID
-    // if (!iProvider.isInit()) await iProvider.init();
-    // var bankDetail =
-    //     await iProvider.getBankInfo(baseProvider.userRegdPan, pBankIfsc);
-    // if (bankDetail == null ||
-    //     bankDetail[QUERY_SUCCESS_FLAG] == QUERY_FAILED ||
-    //     bankDetail[GetBankDetail.resBankName] == null) {
-    //   log.error('Couldnt fetch an appropriate response');
-    //   // BaseUtil.showNegativeAlert(
-    //   //   'Update Failed',
-    //   //   'Invalid IFSC Code entered',
-    //   // );
-    //   // baseProvider.isEditAugmontBankDetailInProgress = false;
-    //   // setState(() {});
-    //   // return;
-    // }
 
     ///NOW SHOW CONFIRMATION DIALOG TO USER
     AppState.screenStack.add(ScreenItem.dialog);
