@@ -12,7 +12,28 @@ import 'package:logger/logger.dart';
 import 'package:pointycastle/asymmetric/api.dart';
 import 'package:archive/archive.dart';
 
-// FOR TESTING: CHECKOUT THE RSAFINAL WIDGET IN transactions_view.dart file
+///
+/// ** [FOR TESTING: CHECKOUT THE RSAFINAL WIDGET IN transactions_view.dart file] **
+///
+/// init(): initializes rsa and aes encrypter
+///
+/// RSA(Rivest, Shamir, Adleman) uses:
+/// *public key
+/// *RSAEncoding PKCS1(Public Key Cryptography Standards)
+///
+/// AES(Advanced Encryption Standard) uses:
+/// *randomized(32) key converted to utf8 encoded aesKey
+/// *randomized(16) iv
+/// *AESMode.cbc
+/// *PKCS7
+///
+/// Returning map contains:
+/// *iv: randomIv
+/// *encK: rsa encrypted aes key in base64 format
+/// *encrypted: aes encrypted data in base16 format
+///
+///
+
 class RSAEncryption {
   final _userService = locator<UserService>();
   final _dbModel = locator<DBModel>();
