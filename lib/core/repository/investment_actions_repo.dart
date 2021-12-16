@@ -4,6 +4,8 @@ import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/rsa_encryption.dart';
+import 'package:felloapp/util/rsa_encryption.dart';
 import 'package:logger/logger.dart';
 
 class InvestmentActionsRepository {
@@ -55,20 +57,24 @@ class InvestmentActionsRepository {
       "rzp_map": initRzpMap
     };
     _logger.d("initiateUserDeposit : $_body");
-
+    final _rsaEncryption = new RSAEncryption();
+    await _rsaEncryption.init();
+    Map<String, dynamic> _encryptedBody = _rsaEncryption.encrypt(_body);
     // try {
-      final String _bearer = await _getBearerToken();
-      final response = await APIService.instance
-          .postData(_apiPaths.kDepositPending, body: _body, token: _bearer);
+    final String _bearer = await _getBearerToken();
+    final response = await APIService.instance.postData(
+        _apiPaths.kDepositPending,
+        body: _encryptedBody,
+        token: _bearer);
 
-      _logger.d(response.toString());
+    _logger.d(response.toString());
 
-      DepositResponseModel _investmentDepositModel =
-          DepositResponseModel.fromMap(response);
+    DepositResponseModel _investmentDepositModel =
+        DepositResponseModel.fromMap(response);
 
-      _logger.d("response from api: ${_investmentDepositModel.toString()}");
+    _logger.d("response from api: ${_investmentDepositModel.toString()}");
 
-      return ApiResponse(model: _investmentDepositModel, code: 200);
+    return ApiResponse(model: _investmentDepositModel, code: 200);
     // } catch (e) {
     //   _logger.e(e.toString());
     //   return ApiResponse.withError(e.toString(), 400);
@@ -153,16 +159,16 @@ class InvestmentActionsRepository {
 
     _logger.d("withdrawlComplete : $_body");
     // try {
-      final String _bearer = await _getBearerToken();
-      final response = await APIService.instance
-          .postData(_apiPaths.kWithdrawlComplete, body: _body, token: _bearer);
+    final String _bearer = await _getBearerToken();
+    final response = await APIService.instance
+        .postData(_apiPaths.kWithdrawlComplete, body: _body, token: _bearer);
 
-      DepositResponseModel _investmentDepositModel =
-          DepositResponseModel.fromMap(response);
+    DepositResponseModel _investmentDepositModel =
+        DepositResponseModel.fromMap(response);
 
-      _logger.d(_investmentDepositModel.toString());
+    _logger.d(_investmentDepositModel.toString());
 
-      return ApiResponse(model: _investmentDepositModel, code: 200);
+    return ApiResponse(model: _investmentDepositModel, code: 200);
     // } catch (e) {
     //   _logger.e(e);
     //   return ApiResponse.withError(e.toString(), 400);

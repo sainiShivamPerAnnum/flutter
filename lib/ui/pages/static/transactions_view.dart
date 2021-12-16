@@ -1,23 +1,20 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:encrypt/encrypt.dart';
-import 'package:encrypt/encrypt_io.dart';
-import 'package:felloapp/core/repository/winners_repo.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/static/FelloTile.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
-import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/rsa_encryption.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
-import 'package:pointycastle/asymmetric/api.dart';
-// import 'package:pointycastle/api.dart' as crypto;
-// import 'package:rsa_encrypt/rsa_encrypt.dart';
 
 class Transactions extends StatelessWidget {
   @override
@@ -40,7 +37,7 @@ class Transactions extends StatelessWidget {
           children: [
             FelloAppBar(
               leading: FelloAppBarBackButton(),
-              title: "Transactions",
+              title: "Encryption Test",
             ),
             Expanded(
               child: Container(
@@ -56,29 +53,29 @@ class Transactions extends StatelessWidget {
                 child: Column(
                   children: [
                     SizedBox(height: SizeConfig.scaffoldMargin),
-                    // FelloBriefTile(
-                    //   leadingAsset: Assets.bankDetails,
-                    //   title: "Bank Account Details",
-                    //   trailingIcon: Icons.arrow_forward_ios_rounded,
-                    //   onTap: () {
-                    //     AppState.delegate.appState.currentAction = PageAction(
-                    //       state: PageState.addPage,
-                    //       page: EditAugBankDetailsPageConfig,
-                    //     );
-                    //   },
-                    // ),
-                    // FelloBriefTile(
-                    //   leadingAsset: Assets.txnHistory,
-                    //   title: "Transaction History and Invoice",
-                    //   trailingIcon: Icons.arrow_forward_ios_rounded,
-                    //   onTap: () {
-                    //     AppState.delegate.appState.currentAction = PageAction(
-                    //       state: PageState.addPage,
-                    //       page: TransactionsHistoryPageConfig,
-                    //     );
-                    //   },
-                    // ),
-                    RSAFinal()
+                    FelloBriefTile(
+                      leadingAsset: Assets.bankDetails,
+                      title: "Bank Account Details",
+                      trailingIcon: Icons.arrow_forward_ios_rounded,
+                      onTap: () {
+                        AppState.delegate.appState.currentAction = PageAction(
+                          state: PageState.addPage,
+                          page: EditAugBankDetailsPageConfig,
+                        );
+                      },
+                    ),
+                    FelloBriefTile(
+                      leadingAsset: Assets.txnHistory,
+                      title: "Transaction History and Invoice",
+                      trailingIcon: Icons.arrow_forward_ios_rounded,
+                      onTap: () {
+                        AppState.delegate.appState.currentAction = PageAction(
+                          state: PageState.addPage,
+                          page: TransactionsHistoryPageConfig,
+                        );
+                      },
+                    ),
+                    //RSAFinal()
                   ],
                 ),
               ),
@@ -97,42 +94,51 @@ class RSAFinal extends StatefulWidget {
 
 class _RSAFinalState extends State<RSAFinal> {
   Map<String, dynamic> ot = {
-    "name": "Pikachu",
-    "age": 4,
-    "friends": ["Ash", "Koko"]
+    "user_id": "sZrvh5oA5yMzVQf6HCv4AfLYArC3",
+    "amount": 2000.0,
+    "rzp_map": {
+      "rOrderId": "order_IPx0QoVpNw5EBq",
+      "rPaymentId": "pay_IPx0uqEsr8wdFo",
+      "rStatus": "COMPLETE"
+    },
+    "tran_id": "UMpWr6wMr4ggGQQEadXQ",
+    "enqueuedTaskDetails": {
+      "name":
+          "projects/fello-dev-station/locations/asia-south1/queues/fello-txns/tasks/23941070123975424721",
+      "queuePath":
+          "projects/fello-dev-station/locations/asia-south1/queues/fello-txns"
+    },
+    "submit_gold_map": {
+      "mobile": "8888800002",
+      "stateid": "PJ7nDXlY",
+      "amount": "2000.0",
+      "uname": "felloSswlnUFbYNVSBHQeowQMurr",
+      "uid": "fello798888800002",
+      "blockid": "O9jxmG6q",
+      "lockprice": "4900.55",
+      "paymode": "RZP",
+      "merchantTranId": "UMpWr6wMr4ggGQQEadXQ"
+    }
   };
   String et = "", dt = "";
 
   RSAEncryption _rsaEncryption = new RSAEncryption();
 
-  Future<T> parseWithRootBundle<T extends RSAAsymmetricKey>(
-      String filename) async {
-    final key = await rootBundle.loadString(filename);
-    final parser = RSAKeyParser();
-    return parser.parse(key) as T;
-  }
-
   encrypt() async {
-    // final data = json.encode(ot);
-    // final publicKey =
-    //     await parseWithRootBundle<RSAPublicKey>("assets/public.key");
-    // final encrypter = Encrypter(RSA(
-    //   publicKey: publicKey,
-    // ));
-    // final encrypted = encrypter.encrypt(data);
-
+    print(json.encode(ot.toString()));
+    print(json.encode(ot.toString()).length);
     setState(() {
-      et = _rsaEncryption.encypt(ot);
+      et = _rsaEncryption.encrypt(ot).toString();
     });
     Logger().d(et);
   }
 
-  decrypt() {
-    setState(() {
-      dt = _rsaEncryption.decrypt(et);
-    });
-    Logger().d(et);
-  }
+  // decrypt() {
+  //   setState(() {
+  //     dt = _rsaEncryption.decrypt(et);
+  //   });
+  //   Logger().d(et);
+  // }
 
   @override
   void initState() {
@@ -144,64 +150,85 @@ class _RSAFinalState extends State<RSAFinal> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: UiConstants.tertiaryLight,
-      width: SizeConfig.screenWidth,
-      padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Text("Original text:   ", style: TextStyles.body3.bold),
-              Text(ot.toString()),
-            ],
-          ),
-          SizedBox(height: 20),
-          Row(
-            children: [
-              Text("Encrypted text:  ", style: TextStyles.body3.bold),
-              Expanded(
-                  child: SelectableText(
-                "$et",
-                //maxLines: 3,
-              )),
-            ],
-          ),
-          SizedBox(height: 20),
-          Row(
-            children: [
-              Text("Decrypted text:  ", style: TextStyles.body3.bold),
-              Expanded(
-                  child: SelectableText(
-                "$dt",
-                //maxLines: 3,
-              )),
-            ],
-          ),
-          SizedBox(height: 20),
-          Container(
-            width: SizeConfig.screenWidth,
-            child: FelloButtonLg(
-              child: Text(
-                "Encrypt",
-                style: TextStyles.body2.bold.colour(Colors.white),
-              ),
-              onPressed: encrypt,
+    return Expanded(
+      child: Container(
+        decoration: BoxDecoration(
+          color: UiConstants.tertiaryLight,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        width: SizeConfig.screenWidth,
+        padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            Row(
+              children: [
+                Text("Original text:   ", style: TextStyles.body3.bold),
+                Expanded(
+                  child: Text(
+                    ot.toString(),
+                    maxLines: 2,
+                  ),
+                ),
+              ],
             ),
-          ),
-          SizedBox(height: 10),
-          Container(
-            width: SizeConfig.screenWidth,
-            child: FelloButtonLg(
-              color: UiConstants.tertiarySolid,
-              child: Text(
-                "Decrypt",
-                style: TextStyles.body2.bold.colour(Colors.white),
-              ),
-              onPressed: decrypt,
+            SizedBox(height: 20),
+            Row(
+              children: [
+                Text("Encrypted text:  ", style: TextStyles.body3.bold),
+                Expanded(
+                    child: SelectableText(
+                  "$et",
+                )),
+              ],
             ),
-          )
-        ],
+            SizedBox(height: 20),
+            Row(
+              children: [
+                Text("Decrypted text:  ", style: TextStyles.body3.bold),
+                Expanded(
+                    child: SelectableText(
+                  "$dt",
+                )),
+              ],
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 10),
+              width: SizeConfig.screenWidth,
+              child: FelloButtonLg(
+                child: Text(
+                  "Encrypt",
+                  style: TextStyles.body2.bold.colour(Colors.white),
+                ),
+                onPressed: encrypt,
+              ),
+            ),
+            // Container(
+            //   margin: EdgeInsets.only(top: 10),
+            //   width: SizeConfig.screenWidth,
+            //   child: FelloButtonLg(
+            //     color: UiConstants.tertiarySolid,
+            //     child: Text(
+            //       "Decrypt",
+            //       style: TextStyles.body2.bold.colour(Colors.white),
+            //     ),
+            //     onPressed: decrypt,
+            //   ),
+            // ),
+            Container(
+              margin: EdgeInsets.only(top: 10),
+              width: SizeConfig.screenWidth,
+              child: FelloButtonLg(
+                color: Colors.purple[900],
+                child: Text(
+                  "Symmetric Encryption",
+                  style: TextStyles.body2.bold.colour(Colors.white),
+                ),
+                onPressed: () {},
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

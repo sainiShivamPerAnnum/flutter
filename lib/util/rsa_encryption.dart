@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:math';
 
 import 'package:encrypt/encrypt.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -8,21 +10,31 @@ import 'package:felloapp/util/locator.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import 'package:pointycastle/asymmetric/api.dart';
+import 'package:archive/archive.dart';
 
+// FOR TESTING: CHECKOUT THE RSAFINAL WIDGET IN transactions_view.dart file
 class RSAEncryption {
   final _userService = locator<UserService>();
   final _dbModel = locator<DBModel>();
   final _logger = locator<Logger>();
-  Encrypter encrypter;
+  Encrypter rsaEncrypter, aesEncrypter;
+  final _chars = 'abcdef1234567890';
+  Random _rnd = Random();
+  String randomIv, randomAesKey;
+  IV iv;
+  Key aesKey;
+
   init() async {
+    await initializeRSAEncrypter();
+    initializeAESEncrypter();
+  }
+
+  initializeRSAEncrypter() async {
     try {
       final publicKey =
           await parseWithRootBundle<RSAPublicKey>("resources/public.key");
-      final privateKey =
-          await parseWithRootBundle<RSAPrivateKey>("resources/private.key");
-      encrypter = Encrypter(RSA(
+      rsaEncrypter = Encrypter(RSA(
         publicKey: publicKey,
-        privateKey: privateKey,
       ));
     } catch (e) {
       _logger.e(e.toString());
@@ -35,6 +47,46 @@ class RSAEncryption {
     }
   }
 
+  initializeAESEncrypter() {
+    try {
+      randomAesKey = getRandomString(32);
+      aesKey = Key.fromUtf8(randomAesKey);
+      randomIv = getRandomString(16);
+      iv = IV.fromUtf8(randomIv);
+      aesEncrypter =
+          Encrypter(AES(aesKey, mode: AESMode.cbc, padding: "PKCS7"));
+    } catch (e) {
+      _logger.e(e.toString());
+      if (_userService.isUserOnborded)
+        _dbModel.logFailure(
+            _userService.baseUser.uid, FailType.AESEncryptionInitFailed, {
+          "message": "AES Encrypter generation Failed",
+          "error": e.toString()
+        });
+    }
+  }
+
+  String rsaEncrypt() {
+    _logger.d("KEY: $randomAesKey");
+    final encryptedKey = rsaEncrypter.encrypt(aesKey.base64);
+    return encryptedKey.base64;
+  }
+
+  String aesEncypt(Map<String, dynamic> data) {
+    final plainText = json.encode(data).toString();
+    final encryptedData = aesEncrypter.encrypt(plainText, iv: iv);
+    return encryptedData.base16;
+  }
+
+  Map<String, dynamic> encrypt(Map<String, dynamic> data) {
+    final encrypted = aesEncypt(data);
+    final encK = rsaEncrypt();
+    final iv = getIv();
+    return {"iv": iv, "encK": encK, "encrypted": encrypted};
+  }
+
+  // Helper Methods
+
   Future<T> parseWithRootBundle<T extends RSAAsymmetricKey>(
       String filename) async {
     final key = await rootBundle.loadString(filename);
@@ -42,14 +94,45 @@ class RSAEncryption {
     return parser.parse(key) as T;
   }
 
-  String encypt(Map<String, dynamic> data) {
-    final jsonEncodedData = json.encode(data);
-    final encryptedData = encrypter.encrypt(jsonEncodedData);
-    return encryptedData.base64;
+  String getRandomString(int length) => String.fromCharCodes(
+        Iterable.generate(
+          length,
+          (_) => _chars.codeUnitAt(
+            _rnd.nextInt(_chars.length),
+          ),
+        ),
+      );
+
+  String getIv() {
+    return randomIv;
   }
 
-  String decrypt(String data) {
-    final decryptedData = encrypter.decrypt64(data);
-    return decryptedData;
-  }
+  // Helper Methods - END
+
+  // String decrypt(String data) {
+  //   final decryptedData = rsaEncrypter.decrypt64(data);
+  //   return decryptedData;
+  // }
 }
+
+// class SymmetricEncryption {
+//   final _chars = 'abcdef1234567890';
+//   Random _rnd = Random();
+
+//   String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
+//       length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+//   main(String ot) {
+//     final plainText = json.encode(ot);
+//     final key = Key.fromUtf8('my 32 length key............wide');
+//     final iv = IV.fromLength(16);
+
+//     final encrypter = Encrypter(AES(key));
+
+//     final encrypted = encrypter.encrypt(plainText, iv: iv);
+//     final decrypted = encrypter.decrypt(encrypted, iv: iv);
+
+//     print(decrypted); // Lorem ipsum dolor sit amet, consectetur adipiscing elit
+//     print(encrypted.base64);
+//     print(encrypted.base64.length);
+//   }
+// }
