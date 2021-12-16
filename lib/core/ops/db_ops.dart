@@ -14,7 +14,6 @@ import 'package:felloapp/core/model/prize_leader_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/referral_leader_model.dart';
-import 'package:felloapp/core/model/signzy_pan/signzy_login.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/model/tambola_winners_details.dart';
 import 'package:felloapp/core/model/ticket_request_model.dart';
