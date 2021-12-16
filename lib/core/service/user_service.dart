@@ -95,6 +95,10 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     _logger.d("Email:User email verified, property listeners notified");
   }
 
+  set firebaseUser(User firebaseUser) {
+    _firebaseUser = firebaseUser;
+  }
+
   set isSimpleKycVerified(bool val) {
     _isSimpleKycVerified = val;
     notifyListeners(UserServiceProperties.mySimpleKycVerified);

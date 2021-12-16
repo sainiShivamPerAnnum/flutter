@@ -17,6 +17,8 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/change_profile_picture_dialog.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -257,16 +259,16 @@ class UserProfileVM extends BaseModel {
     BaseUtil.openDialog(
       isBarrierDismissable: false,
       addToScreenStack: true,
-      content: WillPopScope(
-        onWillPop: () {
-          AppState.backButtonDispatcher.didPopRoute();
-          return Future.value(true);
-        },
-        child: ConfirmActionDialog(
+      content: FelloConfirmationDialog(
           title: 'Confirm',
-          description: 'Are you sure you want to sign out?',
-          buttonText: 'Yes',
-          confirmAction: () {
+          subtitle: 'Are you sure you want to sign out?',
+          accept: 'Yes',
+          acceptColor: UiConstants.primaryColor,
+          asset: Assets.signout,
+          reject: "No",
+          rejectColor: UiConstants.tertiarySolid,
+          showCrossIcon: false,
+          onAccept: () {
             Haptic.vibrate();
 
             _mixpanelService.track(eventName: MixpanelEvents.signOut);
@@ -278,7 +280,7 @@ class UserProfileVM extends BaseModel {
 
                 _txnService.signOut();
                 _baseUtil.signOut();
-
+                AppState.backButtonDispatcher.didPopRoute();
                 AppState.delegate.appState.currentAction = PageAction(
                     state: PageState.replaceAll, page: SplashPageConfig);
                 BaseUtil.showPositiveAlert(
@@ -292,9 +294,9 @@ class UserProfileVM extends BaseModel {
               }
             });
           },
-          cancelAction: () {},
-        ),
-      ),
+          onReject: () {
+            AppState.backButtonDispatcher.didPopRoute();
+          }),
     );
   }
 

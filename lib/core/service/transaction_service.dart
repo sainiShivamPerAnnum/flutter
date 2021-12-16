@@ -156,9 +156,9 @@ class TransactionService
   }
 
 // Clear transactions
-  signOut() {
+  void signOut() {
     lastTransactionListDocument = null;
     hasMoreTransactionListDocuments = true;
-    txnList.clear();
+    txnList?.clear();
   }
 }

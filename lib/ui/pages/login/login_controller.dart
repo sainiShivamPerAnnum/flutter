@@ -555,7 +555,8 @@ class _LoginControllerState extends State<LoginController>
               baseProvider.isLoginNextInProgress = false;
               setState(() {});
             }).then((value) {
-              _mixpanelService.track(eventName: MixpanelEvents.profileInformationAdded,
+              _mixpanelService.track(
+                  eventName: MixpanelEvents.profileInformationAdded,
                   properties: {'userId': baseProvider?.myUser?.uid});
               _controller.animateToPage(Username.index,
                   duration: Duration(milliseconds: 500),
@@ -614,7 +615,8 @@ class _LoginControllerState extends State<LoginController>
                   // bool flag = await dbProvider.updateUser(baseProvider.myUser);
 
                   if (flag) {
-                    _mixpanelService.track(eventName: MixpanelEvents.userNameAdded,
+                    _mixpanelService.track(
+                        eventName: MixpanelEvents.userNameAdded,
                         properties: {'userId': baseProvider?.myUser?.uid});
                     log.debug("User object saved successfully");
                     _onSignUpComplete();
@@ -692,7 +694,7 @@ class _LoginControllerState extends State<LoginController>
   void _onSignInSuccess() async {
     log.debug("User authenticated. Now check if details previously available.");
     baseProvider.firebaseUser = FirebaseAuth.instance.currentUser;
-    //userService.baseUser = FirebaseAuth.instance.currentUser;
+    userService.firebaseUser = FirebaseAuth.instance.currentUser;
     log.debug("User is set: " + baseProvider.firebaseUser.uid);
     BaseUser user = await dbProvider.getUser(baseProvider.firebaseUser.uid);
     //user variable is pre cast into User object
@@ -764,6 +766,14 @@ class _LoginControllerState extends State<LoginController>
     if (baseProvider.isLoginNextInProgress == true) {
       baseProvider.isLoginNextInProgress = false;
       setState(() {});
+    }
+
+    ///check if the account is blocked
+    if (userService.baseUser != null && userService.baseUser.isBlocked) {
+      AppState.isUpdateScreen = true;
+      appStateProvider.currentAction =
+          PageAction(state: PageState.replaceAll, page: BlockedUserPageConfig);
+      return;
     }
     appStateProvider.currentAction =
         PageAction(state: PageState.replaceAll, page: RootPageConfig);
