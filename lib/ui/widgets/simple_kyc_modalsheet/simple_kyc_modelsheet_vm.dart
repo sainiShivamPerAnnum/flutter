@@ -1,7 +1,5 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
-import 'package:felloapp/core/model/signzy_pan/pan_verification_res_model.dart';
-import 'package:felloapp/core/model/signzy_pan/signzy_login.dart';
 import 'package:felloapp/core/model/verify_pan_response_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
@@ -14,7 +12,6 @@ import 'package:felloapp/ui/dialogs/augmont_confirm_register_dialog.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
