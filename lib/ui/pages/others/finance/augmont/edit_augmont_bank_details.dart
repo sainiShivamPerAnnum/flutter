@@ -1,9 +1,11 @@
 //Project Imports
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/model/transfer_amount_api_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
+import 'package:felloapp/core/repository/signzy_repo.dart';
 import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -13,7 +15,7 @@ import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.da
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
-import 'package:felloapp/util/icici_api_util.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/mixpanel_events.dart';
@@ -47,6 +49,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
   TextEditingController _bankIfscController;
   TextEditingController _bankAccNoConfirmController;
   final MixpanelService _mixpanelService = locator<MixpanelService>();
+  final SignzyRepository _signzyRepository = locator<SignzyRepository>();
   bool _isInitialized = false;
   DBModel dbProvider;
   BaseUtil baseProvider;
@@ -557,22 +560,44 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
       return;
     }
 
-    ///NOW CHECK IF IFSC IS VALID
-    if (!iProvider.isInit()) await iProvider.init();
-    var bankDetail =
-        await iProvider.getBankInfo(baseProvider.userRegdPan, pBankIfsc);
-    if (bankDetail == null ||
-        bankDetail[QUERY_SUCCESS_FLAG] == QUERY_FAILED ||
-        bankDetail[GetBankDetail.resBankName] == null) {
-      log.error('Couldnt fetch an appropriate response');
-      // BaseUtil.showNegativeAlert(
-      //   'Update Failed',
-      //   'Invalid IFSC Code entered',
-      // );
-      // baseProvider.isEditAugmontBankDetailInProgress = false;
-      // setState(() {});
-      // return;
+    final ApiResponse<TransferAmountApiResponseModel> _response =
+        await _signzyRepository.transferAmount(
+            mobile: baseProvider.myUser.mobile,
+            name: baseProvider.myUser.name,
+            ifsc: pBankIfsc,
+            accountNo: pConfirmBankAccNo);
+
+    if (_response.code == 200) {
+      final TransferAmountApiResponseModel _transferAmountApiResponseModel =
+          _response.model;
+
+    //Verify Transfer 
+    
+
+      
+    } else {
+      BaseUtil.showNegativeAlert(
+        'Account Verification Failed',
+        'Please contact, customer support.',
+      );
     }
+
+    // ///NOW CHECK IF IFSC IS VALID
+    // if (!iProvider.isInit()) await iProvider.init();
+    // var bankDetail =
+    //     await iProvider.getBankInfo(baseProvider.userRegdPan, pBankIfsc);
+    // if (bankDetail == null ||
+    //     bankDetail[QUERY_SUCCESS_FLAG] == QUERY_FAILED ||
+    //     bankDetail[GetBankDetail.resBankName] == null) {
+    //   log.error('Couldnt fetch an appropriate response');
+    //   // BaseUtil.showNegativeAlert(
+    //   //   'Update Failed',
+    //   //   'Invalid IFSC Code entered',
+    //   // );
+    //   // baseProvider.isEditAugmontBankDetailInProgress = false;
+    //   // setState(() {});
+    //   // return;
+    // }
 
     ///NOW SHOW CONFIRMATION DIALOG TO USER
     AppState.screenStack.add(ScreenItem.dialog);
@@ -583,14 +608,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
               bankHolderName: pBankHolderName,
               bankAccNo: pBankAccNo,
               bankIfsc: pBankIfsc,
-              bankName: (bankDetail == null ||
-                      bankDetail[GetBankDetail.resBankName] == null)
-                  ? ''
-                  : bankDetail[GetBankDetail.resBankName],
-              bankBranchName: (bankDetail == null ||
-                      bankDetail[GetBankDetail.resBranchName] == null)
-                  ? ''
-                  : bankDetail[GetBankDetail.resBranchName],
+              bankName: "",
               dialogColor: UiConstants.primaryColor,
               customMessage: (widget.isWithdrawFlow)
                   ? 'Are you sure you want to continue? ${baseProvider.activeGoldWithdrawalQuantity.toString()} grams of digital gold shall be processed.'
@@ -613,7 +631,8 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                     baseProvider.isEditAugmontBankDetailInProgress = false;
                     setState(() {});
                     if (flag) {
-                      _mixpanelService.track(eventName: MixpanelEvents.bankDetailsUpdated);
+                      _mixpanelService.track(
+                          eventName: MixpanelEvents.bankDetailsUpdated);
                       print("mixpanel added");
                       BaseUtil.showPositiveAlert(
                           'Complete', 'Your details have been updated');

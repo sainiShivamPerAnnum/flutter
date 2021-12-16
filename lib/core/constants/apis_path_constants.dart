@@ -23,4 +23,7 @@ class ApiPath {
 
   //Augmont Ops
   get kCreateSimpleUser => "/augmontOps/$stage/api/v2/create-simple-user";
+
+  //Signzy Apis
+  get kAmountTransfer => "/userOps/$stage/api/v2/accountTransfer";
 }
