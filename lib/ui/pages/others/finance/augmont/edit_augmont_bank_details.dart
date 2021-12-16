@@ -571,8 +571,19 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
     if (response.code == 200) {
       final TransferAmountApiResponseModel _transferAmountResponse =
           response.model;
-      //Verify Transfer
 
+      if (!_transferAmountResponse.active ||
+          !_transferAmountResponse.nameMatch) {
+        BaseUtil.showNegativeAlert(
+          'Account Verification Failed',
+          'Please check your beneficiary name and account number.',
+        );
+        baseProvider.isEditAugmontBankDetailInProgress = false;
+        setState(() {});
+        return;
+      }
+
+      //Verify Transfer
       final ApiResponse<VerifyAmountApiResponseModel> res =
           await _signzyRepository.verifyAmount(
         signzyId: _transferAmountResponse.signzyReferenceId,
@@ -592,7 +603,6 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
         'Account Verification Successful',
         'Your account has been verified by depositing ₹1',
       );
-
     } else {
       BaseUtil.showNegativeAlert(
         'Account Verification Failed',
@@ -619,11 +629,11 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                   : '',
               onAccept: () async {
                 ///FINALLY NOW UPDATE THE BANK DETAILS
-                baseProvider.augmontDetail.bankHolderName = pBankHolderName;
-                baseProvider.augmontDetail.bankAccNo = pBankAccNo;
-                baseProvider.augmontDetail.ifsc = pBankIfsc;
+                baseProvider.augmontDetail.bankHolderName = pBankHolderName.trim();
+                baseProvider.augmontDetail.bankAccNo = pBankAccNo.trim();
+                baseProvider.augmontDetail.ifsc = pBankIfsc.trim();
                 baseProvider.updateAugmontDetails(
-                    pBankHolderName, pBankAccNo, pBankIfsc);
+                    pBankHolderName.trim(), pBankAccNo.trim(), pBankIfsc.trim());
                 dbProvider
                     .updateUserAugmontDetails(
                         baseProvider.myUser.uid, baseProvider.augmontDetail)
