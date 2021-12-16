@@ -59,7 +59,7 @@ class SignzyRepository {
       final String token = await _getBearerToken();
 
       final response = await APIService.instance
-          .postData(_apiPaths.kAmountTransfer, body: body, token: token);
+          .postData(_apiPaths.kVerifyTransfer, body: body, token: token);
 
       VerifyAmountApiResponseModel _verifyAmountApiResponse =
           VerifyAmountApiResponseModel.fromMap(response);

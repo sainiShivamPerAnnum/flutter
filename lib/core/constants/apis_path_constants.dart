@@ -26,4 +26,5 @@ class ApiPath {
 
   //Signzy Apis
   get kAmountTransfer => "/userOps/$stage/api/v2/accountTransfer";
+  get kVerifyTransfer => "/userOps/$stage/api/v2/verifyTransfer";
 }
