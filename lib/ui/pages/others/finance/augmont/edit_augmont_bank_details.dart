@@ -587,7 +587,12 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
         setState(() {});
         return;
       }
-      
+
+      BaseUtil.showPositiveAlert(
+        'Account Verification Successful',
+        'Your account has been verified by depositing ₹1',
+      );
+
     } else {
       BaseUtil.showNegativeAlert(
         'Account Verification Failed',
