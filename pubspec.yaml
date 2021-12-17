@@ -80,6 +80,8 @@ dependencies:
 
 
 
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -97,6 +99,7 @@ flutter:
     - images/zerobal/
     - resources/augmont/fello-augmont-invoice.html
     - resources/fello-email-verification.html
+    - resources/public.key
 
     - assets/images/
     - assets/images/icons/
