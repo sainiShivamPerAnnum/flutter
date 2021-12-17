@@ -4,7 +4,6 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
-import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -16,9 +15,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/augmont_disabled_dialog.dart';
 import 'package:felloapp/ui/modals_sheets/augmont_register_modal_sheet.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
-import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -51,6 +48,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   FocusNode buyFieldNode = FocusNode();
   bool _augOnbRegInProgress = false;
   bool _augRegFailed = false;
+  String buyNotice;
 
   double goldBuyAmount = 0;
   double goldAmountInGrams = 0.0;
@@ -97,11 +95,18 @@ class AugmontGoldBuyViewModel extends BaseModel {
   init() {
     goldAmountController = TextEditingController();
     fetchGoldRates();
+    fetchNotices();
     status = checkAugmontStatus();
 
     if (status == STATUS_REGISTER) {
       _onboardUser();
     }
+  }
+
+  fetchNotices() async {
+    buyNotice = await _dbModel.showAugmontBuyNotice();
+
+    if(buyNotice != null && buyNotice.isNotEmpty)refresh();
   }
 
 // UI ESSENTIALS
@@ -392,30 +397,6 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
         await _augmontModel
             .setAugmontTxnProcessListener(_onDepositTransactionComplete);
-        // BaseUtil.openModalBottomSheet(
-        //     isBarrierDismissable: false,
-        //     content: AugmontDepositModalSheet(
-        //       key: _modalKey2,
-        //       onDepositConfirmed: (double amount) {
-        //         _augmontModel.initiateGoldPurchase(
-        //             _baseUtil.augmontGoldRates, amount);
-        //         _augmontModel.setAugmontTxnProcessListener(
-        //             _onDepositTransactionComplete);
-        //       },
-        //       currentRates: _baseUtil.augmontGoldRates,
-        //     ),
-        //     addToScreenStack: true);
-        // showModalBottomSheet(
-        //     isDismissible: false,
-        //     // backgroundColor: Colors.transparent,
-        //     shape: RoundedRectangleBorder(
-        //       borderRadius: BorderRadius.circular(16),
-        //     ),
-        //     context: augContext,
-        //     isScrollControlled: true,
-        //     builder: (context) {
-        //       return;
-        //     });
       }
     }
     return true;
@@ -489,7 +470,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
     } else {
       AppState.backButtonDispatcher.didPopRoute();
       BaseUtil.showNegativeAlert('Failed',
-          'Your gold deposit failed. Please try again or contact us if you are facing issues',
+          'Your gold deposit did not complete. Any money deducted will be refunded to you shortly.',
           seconds: 5);
     }
   }

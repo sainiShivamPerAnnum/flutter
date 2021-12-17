@@ -491,6 +491,39 @@ class DBModel extends ChangeNotifier {
     return null;
   }
 
+  Future<String> showAugmontBuyNotice() async {
+    try {
+      String _awsKeyIndex = BaseRemoteConfig.remoteConfig
+          .getString(BaseRemoteConfig.AWS_AUGMONT_KEY_INDEX);
+      if (_awsKeyIndex == null || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
+      int keyIndex = 1;
+      try {
+        keyIndex = int.parse(_awsKeyIndex);
+      } catch (e) {
+        log.error('Aws Index key parsing failed: ' + e.toString());
+        keyIndex = 1;
+      }
+      QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
+          'aws-augmont',
+          FlavorConfig.instance.values.awsAugmontStage.value(),
+          keyIndex);
+      if (querySnapshot != null && querySnapshot.docs.length == 1) {
+        DocumentSnapshot snapshot = querySnapshot.docs[0];
+        Map<String, dynamic> _doc = snapshot.data();
+        if (snapshot.exists &&
+            _doc != null &&
+            _doc['depNotice'] != null &&
+            _doc['depNotice'].isNotEmpty) {
+          return _doc['depNotice'];
+        }
+      }
+    } catch (e) {
+      logger.e(e.toString());
+    }
+
+    return null;
+  }
+
   Future<bool> isAugmontBuyDisabled() async {
     try {
       String _awsKeyIndex = BaseRemoteConfig.remoteConfig
@@ -521,6 +554,39 @@ class DBModel extends ChangeNotifier {
       logger.e(e.toString());
     }
     return false;
+  }
+
+  Future<String> showAugmontSellNotice() async {
+    try {
+      String _awsKeyIndex = BaseRemoteConfig.remoteConfig
+          .getString(BaseRemoteConfig.AWS_AUGMONT_KEY_INDEX);
+      if (_awsKeyIndex == null || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
+      int keyIndex = 1;
+      try {
+        keyIndex = int.parse(_awsKeyIndex);
+      } catch (e) {
+        log.error('Aws Index key parsing failed: ' + e.toString());
+        keyIndex = 1;
+      }
+      QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
+          'aws-augmont',
+          FlavorConfig.instance.values.awsAugmontStage.value(),
+          keyIndex);
+      if (querySnapshot != null && querySnapshot.docs.length == 1) {
+        DocumentSnapshot snapshot = querySnapshot.docs[0];
+        Map<String, dynamic> _doc = snapshot.data();
+        if (snapshot.exists &&
+            _doc != null &&
+            _doc['sellNotice'] != null &&
+            _doc['sellNotice'].isNotEmpty) {
+          return _doc['sellNotice'];
+        }
+      }
+    } catch (e) {
+      logger.e(e.toString());
+    }
+
+    return null;
   }
 
   Future<bool> isAugmontSellDisabled() async {

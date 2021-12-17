@@ -613,8 +613,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                     baseProvider.isEditAugmontBankDetailInProgress = false;
                     setState(() {});
                     if (flag) {
-                      _mixpanelService.track(MixpanelEvents.bankDetailsUpdated,
-                          {'userId': _userService.baseUser.uid});
+                      _mixpanelService.track(eventName: MixpanelEvents.bankDetailsUpdated);
                       print("mixpanel added");
                       BaseUtil.showPositiveAlert(
                           'Complete', 'Your details have been updated');

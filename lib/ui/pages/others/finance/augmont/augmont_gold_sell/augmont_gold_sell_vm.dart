@@ -35,6 +35,7 @@ class AugmontGoldSellViewModel extends BaseModel {
   AugmontRates goldRates;
   bool _isGoldSellInProgress = false;
   FocusNode sellFieldNode = FocusNode();
+  String sellNotice;
 
   double goldSellGrams = 0;
   double goldAmountFromGrams = 0.0;
@@ -57,6 +58,7 @@ class AugmontGoldSellViewModel extends BaseModel {
 
   init() {
     goldAmountController = TextEditingController();
+    fetchNotices();
     fetchGoldRates();
     fetchLockedGoldQnt();
 
@@ -66,6 +68,12 @@ class AugmontGoldSellViewModel extends BaseModel {
         refresh();
       });
     }
+  }
+
+  fetchNotices() async {
+    sellNotice = await _dbModel.showAugmontSellNotice();
+
+    if(sellNotice != null && sellNotice.isNotEmpty)refresh();
   }
 
   Widget amoutChip(double amt) {
@@ -234,7 +242,7 @@ class AugmontGoldSellViewModel extends BaseModel {
     } else {
       AppState.backButtonDispatcher.didPopRoute();
       BaseUtil.showNegativeAlert('Failed',
-          'Your gold Sell failed. Please try again or contact us if you are facing issues',
+          'Your gold sell failed. Please try again after sometime.',
           seconds: 5);
     }
   }

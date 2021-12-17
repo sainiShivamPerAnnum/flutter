@@ -343,8 +343,7 @@ class _TicketState extends State<FCard> {
                         if (flag) {
                           _isclaimed = true;
                           _tChoice = true;
-                            _mixpanelService.track(MixpanelEvents.prizeAWS, {
-                            'userId': _userService.baseUser.uid,
+                            _mixpanelService.track(eventName: MixpanelEvents.prizeAWS, properties: {
                             'amount': widget.unclaimedPrize
                           });
                           setState(() {
@@ -395,8 +394,7 @@ class _TicketState extends State<FCard> {
                         _tChoice = true;
                         if (flag) {
                           _isclaimed = true;
-                          _mixpanelService.track(MixpanelEvents.prizeGold, {
-                            'userId': _userService.baseUser.uid,
+                          _mixpanelService.track(eventName: MixpanelEvents.prizeGold, properties: {
                             'amount': widget.unclaimedPrize
                           });
                           setState(() {

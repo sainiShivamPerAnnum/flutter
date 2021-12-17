@@ -83,8 +83,8 @@ class ReferralDetailsViewModel extends BaseModel {
   }
 
   void copyReferCode() {
-    _mixpanelService.track(
-        MixpanelEvents.referCodeCopied, {'userId': _userService.baseUser.uid});
+    _mixpanelService.track(eventName:
+        MixpanelEvents.referCodeCopied);
     Clipboard.setData(ClipboardData(text: userUrlCode)).then((_) {
       BaseUtil.showPositiveAlert("Code: $userUrlCode", "Copied to Clipboard");
     });
@@ -99,8 +99,8 @@ class ReferralDetailsViewModel extends BaseModel {
         contentType: 'referral',
         itemId: _userService.baseUser.uid,
         method: 'message');
-    _mixpanelService.track(
-        MixpanelEvents.linkShared, {'userId': _userService.baseUser.uid});
+    _mixpanelService.track(eventName:
+        MixpanelEvents.linkShared);
     shareLinkInProgress = true;
     refresh();
     _userService.createDynamicLink(true, 'Other').then((url) async {
@@ -142,8 +142,8 @@ class ReferralDetailsViewModel extends BaseModel {
     else
       _logger.d(url);
     try {
-      _mixpanelService.track(
-          MixpanelEvents.whatsappShare, {'userId': _userService.baseUser.uid});
+      _mixpanelService.track(eventName:
+          MixpanelEvents.whatsappShare);
       FlutterShareMe().shareToWhatsApp(msg: _shareMsg + url).then((flag) {
         if (flag == "false") {
           FlutterShareMe()

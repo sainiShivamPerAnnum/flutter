@@ -55,7 +55,7 @@ class BaseRemoteConfig {
     'referral_ticket_bonus': '10'
   };
   static const Map<String, String> _REFERRAL_FLC_BONUS = {
-    'referral_flc_bonus': '200'
+    'referral_flc_bonus': '100'
   };
   static const Map<String, String> _AWS_ICICI_KEY_INDEX = {
     'aws_icici_key_index': '1'

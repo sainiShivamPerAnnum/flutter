@@ -24,14 +24,17 @@ class MixpanelService {
       _mixpanel.getPeople().set("Name", baseUser.name ?? '');
       _mixpanel.getPeople().set("Email", baseUser.email ?? '');
       _mixpanel.getPeople().set("Age", _getAge(baseUser.dob) ?? 0);
+      _mixpanel.getPeople().set("Gender", baseUser.gender ?? 'O');
+      _mixpanel.getPeople().set("Signed Up", _getSignupDate(baseUser.createdOn));
+      _mixpanel.getPeople().set("KYC Verified", baseUser.isSimpleKycVerified ?? false);
 
-      _mixpanel.registerSuperPropertiesOnce({
-        'userId': baseUser.uid ?? '',
-        'gender': baseUser.gender ?? 'O',
-        'kycVerified': baseUser.isSimpleKycVerified ?? false,
-        'signupDate': _getSignupDate(baseUser.createdOn),
-        'age': _getAge(baseUser.dob) ?? 0
-      });
+      // _mixpanel.registerSuperPropertiesOnce({
+      //   'userId': baseUser.uid ?? '',
+      //   'gender': baseUser.gender ?? 'O',
+      //   'kycVerified': baseUser.isSimpleKycVerified ?? false,
+      //   'signupDate': _getSignupDate(baseUser.createdOn),
+      //   'age': _getAge(baseUser.dob) ?? 0
+      // });
 
       //Use flush only for testing.
       // _mixpanel.flush();
@@ -43,12 +46,16 @@ class MixpanelService {
     _mixpanel.reset();
   }
 
-  void track(String eventName, Map<String, dynamic> properties) {
+  void track({String eventName, Map<String, dynamic> properties}) {
     if (_mixpanel == null) init();
     try {
-      _mixpanel.track(eventName, properties: properties);
-      _logger.i(
-          "Event: $eventName, Properties: ${properties.toString()}. Successfully tracked");
+      if(properties != null && properties.isNotEmpty) {
+        _mixpanel.track(eventName, properties: properties);
+        _logger.i(
+            "Event: $eventName, Properties: ${properties.toString()}. Successfully tracked");
+      }else{
+        _mixpanel.track(eventName);
+      }
     } catch (e) {
       String error = e ?? "Unable to track event: $eventName";
       _logger.e(error);

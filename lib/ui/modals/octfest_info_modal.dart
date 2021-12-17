@@ -66,9 +66,9 @@ class OctFestInfoModal extends StatelessWidget {
                       "Visit any of our partner FnB outlets and get a free beverage on us.",
                       0,
                     ),
-                    referralTile(
-                        "Make your first investment of ₹ ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.OCT_FEST_MIN_DEPOSIT)} or more and show the transaction to the outlet to avail the offer.",
-                        SizeConfig.screenWidth * 0.1),
+                    // referralTile(
+                    //     "Make your first investment of ₹ ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.OCT_FEST_MIN_DEPOSIT)} or more and show the transaction to the outlet to avail the offer.",
+                    //     SizeConfig.screenWidth * 0.1),
                     referralTile(
                         "This offer can only be availed once per user, using the outlet's download link.",
                         SizeConfig.screenWidth * 0.2),

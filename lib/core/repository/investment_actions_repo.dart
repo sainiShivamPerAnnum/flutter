@@ -182,21 +182,21 @@ class InvestmentActionsRepository {
     } else {
       _logger.e("Encrypter initialization failed!! exiting method");
     }
-    // try {
-    final String _bearer = await _getBearerToken();
-    final response = await APIService.instance
-        .postData(_apiPaths.kWithdrawlComplete, body: _body, token: _bearer);
+    try {
+      final String _bearer = await _getBearerToken();
+      final response = await APIService.instance
+          .postData(_apiPaths.kWithdrawlComplete, body: _body, token: _bearer);
 
-    DepositResponseModel _investmentDepositModel =
-        DepositResponseModel.fromMap(response);
+      DepositResponseModel _investmentDepositModel =
+          DepositResponseModel.fromMap(response);
 
-    _logger.d(_investmentDepositModel.toString());
+      _logger.d(_investmentDepositModel.toString());
 
-    return ApiResponse(model: _investmentDepositModel, code: 200);
-    // } catch (e) {
-    //   _logger.e(e);
-    //   return ApiResponse.withError(e.toString(), 400);
-    // }
+      return ApiResponse(model: _investmentDepositModel, code: 200);
+    } catch (e) {
+      _logger.e(e);
+      return ApiResponse.withError(e.toString(), 400);
+    }
   }
 
   Future<ApiResponse<DepositResponseModel>> withdrawlCancelled(

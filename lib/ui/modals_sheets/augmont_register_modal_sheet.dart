@@ -186,7 +186,7 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
         baseProvider.myUser.mobile, stateChosenValue);
     if (detail == null) {
       BaseUtil.showNegativeAlert('Registration Failed',
-          'Failed to regsiter at the moment. Please try again.');
+          'Failed to register at the moment. Please try again.');
       baseProvider.isAugmontRegnInProgress = false;
       setState(() {});
       AppState.backButtonDispatcher.didPopRoute();

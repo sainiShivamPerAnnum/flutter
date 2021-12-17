@@ -176,17 +176,10 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                               ],
                             ),
                             SizedBox(height: SizeConfig.padding8),
-                            (model.isQntFetching || model.nonWithdrawableQnt > 0)?Container(
+                            (model.sellNotice == null && model.nonWithdrawableQnt > 0)?Container(
                               margin: EdgeInsets.only(top: SizeConfig.padding8),
                               decoration: BoxDecoration(
                                 color: UiConstants.tertiaryLight,
-                                // image: DecorationImage(
-                                //   image: AssetImage("assets/images/confetti.png"),
-                                //   fit: BoxFit.cover,
-                                //   colorFilter: new ColorFilter.mode(
-                                //       UiConstants.tertiaryLight.withOpacity(0.1),
-                                //       BlendMode.dstATop),
-                                // ),
                                 borderRadius: BorderRadius.circular(SizeConfig.roundness16),
                               ),
                               padding: EdgeInsets.all(SizeConfig.padding16),
@@ -195,6 +188,24 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                                   //Image.asset("assets/images/confetti.png"),
                                   Text(
                                     _buildNonWithdrawString(model),
+                                    textAlign: TextAlign.center,
+                                    style: TextStyles.body3.light,
+                                  ),
+                                ],
+                              ),
+                            ):SizedBox(),
+                            SizedBox(height: SizeConfig.padding8),
+                            (model.sellNotice != null && model.sellNotice.isNotEmpty)?Container(
+                              margin: EdgeInsets.only(top: SizeConfig.padding8),
+                              decoration: BoxDecoration(
+                                color: UiConstants.primaryLight,
+                                borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+                              ),
+                              padding: EdgeInsets.all(SizeConfig.padding16),
+                              child: Stack(
+                                children: [
+                                  Text(
+                                    model.sellNotice,
                                     textAlign: TextAlign.center,
                                     style: TextStyles.body3.light,
                                   ),
@@ -386,8 +397,9 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
     DateTime _dt = new DateTime.now().add(Duration(days: Constants.AUG_GOLD_WITHDRAW_OFFSET));
     String _dtStr = DateFormat("dd MMMM")
         .format(_dt);
+    int _hrs = Constants.AUG_GOLD_WITHDRAW_OFFSET*24;
 
-    return 'You can withdraw ${model.nonWithdrawableQnt} grams of Gold on $_dtStr or later.';
+    return '${model.nonWithdrawableQnt} grams is locked. Digital Gold can be withdrawn after $_hrs hours of successful deposit.';
   }
 
   dialogContent(BuildContext context) {
