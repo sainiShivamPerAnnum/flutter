@@ -55,18 +55,4 @@ class WinnersRepository {
       return ApiResponse.withError(e.toString(), 400);
     }
   }
-
-  Future<ApiResponse<Map<String, dynamic>>> getDecryptedData(
-      Map<String, dynamic> body) async {
-    try {
-      final String _bearer = await _getBearerToken();
-      final _apiResponse = await APIService.instance
-          .postData("testRsa/protected", body: body, token: _bearer);
-
-      return ApiResponse(model: _apiResponse, code: 200);
-    } catch (e) {
-      _logger.e(e);
-      return ApiResponse.withError(e.toString(), 400);
-    }
-  }
 }

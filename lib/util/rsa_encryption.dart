@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:math';
 
 import 'package:encrypt/encrypt.dart';
@@ -10,10 +9,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import 'package:pointycastle/asymmetric/api.dart';
-import 'package:archive/archive.dart';
 
-///
-/// ** [FOR TESTING: CHECKOUT THE RSAFINAL WIDGET IN transactions_view.dart file] **
 ///
 /// init(): initializes rsa and aes encrypter
 ///
@@ -116,9 +112,13 @@ class RSAEncryption {
 
   Future<T> parseWithRootBundle<T extends RSAAsymmetricKey>(
       String filename) async {
-    final key = await rootBundle.loadString(filename);
-    final parser = RSAKeyParser();
-    return parser.parse(key) as T;
+    try {
+      final key = await rootBundle.loadString(filename);
+      final parser = RSAKeyParser();
+      return parser.parse(key) as T;
+    } catch (e) {
+      _logger.e(e.toString());
+    }
   }
 
   String getRandomString(int length) => String.fromCharCodes(
@@ -136,30 +136,4 @@ class RSAEncryption {
 
   // Helper Methods - END
 
-  // String decrypt(String data) {
-  //   final decryptedData = rsaEncrypter.decrypt64(data);
-  //   return decryptedData;
-  // }
 }
-
-// class SymmetricEncryption {
-//   final _chars = 'abcdef1234567890';
-//   Random _rnd = Random();
-
-//   String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
-//       length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
-//   main(String ot) {
-//     final plainText = json.encode(ot);
-//     final key = Key.fromUtf8('my 32 length key............wide');
-//     final iv = IV.fromLength(16);
-
-//     final encrypter = Encrypter(AES(key));
-
-//     final encrypted = encrypter.encrypt(plainText, iv: iv);
-//     final decrypted = encrypter.decrypt(encrypted, iv: iv);
-
-//     print(decrypted); // Lorem ipsum dolor sit amet, consectetur adipiscing elit
-//     print(encrypted.base64);
-//     print(encrypted.base64.length);
-//   }
-// }
