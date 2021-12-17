@@ -222,7 +222,7 @@ class AugmontGoldSellViewModel extends BaseModel {
 
   Future<void> _onSellTransactionComplete(UserTransaction txn) async {
     if (_baseUtil.currentAugmontTxn == null) return;
-    if (txn.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE) {
+    if (txn.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE || txn.tranStatus == UserTransaction.TRAN_STATUS_PROCESSING) {
       ///update UI
       onSellComplete(true);
       _augmontModel.completeTransaction();
