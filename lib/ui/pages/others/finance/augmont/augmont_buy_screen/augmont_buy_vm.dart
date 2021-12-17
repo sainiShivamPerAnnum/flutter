@@ -4,6 +4,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -92,6 +93,12 @@ class AugmontGoldBuyViewModel extends BaseModel {
     notifyListeners();
   }
 
+  bool isAugmontBuyEnabled() {
+    return _userService.baseUser.userPermissions
+            .getPermission(Permissions.AUGMONTBUY) ==
+        1;
+  }
+
   init() {
     goldAmountController = TextEditingController();
     fetchGoldRates();
@@ -106,7 +113,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   fetchNotices() async {
     buyNotice = await _dbModel.showAugmontBuyNotice();
 
-    if(buyNotice != null && buyNotice.isNotEmpty)refresh();
+    if (buyNotice != null && buyNotice.isNotEmpty) refresh();
   }
 
 // UI ESSENTIALS
@@ -230,7 +237,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
       return;
     }
     bool _disabled = await _dbModel.isAugmontBuyDisabled();
-    if(_disabled != null && _disabled) {
+    if (_disabled != null && _disabled) {
       BaseUtil.showNegativeAlert(
         'Purchase Failed',
         'Gold buying is currently on hold. Please try again after sometime.',

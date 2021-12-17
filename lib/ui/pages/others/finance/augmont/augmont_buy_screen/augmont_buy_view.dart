@@ -57,22 +57,25 @@ class AugmontGoldBuyView extends StatelessWidget {
                     padding: EdgeInsets.zero,
                     shrinkWrap: true,
                     children: [
-                      (model.buyNotice != null && model.buyNotice.isNotEmpty)?Container(
-                        decoration: BoxDecoration(
-                          color: UiConstants.primaryLight,
-                          borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-                        ),
-                        padding: EdgeInsets.all(SizeConfig.padding16),
-                        child: Stack(
-                          children: [
-                            Text(
-                              model.buyNotice,
-                              textAlign: TextAlign.center,
-                              style: TextStyles.body3.light,
-                            ),
-                          ],
-                        ),
-                      ):SizedBox(),
+                      (model.buyNotice != null && model.buyNotice.isNotEmpty)
+                          ? Container(
+                              decoration: BoxDecoration(
+                                color: UiConstants.primaryLight,
+                                borderRadius: BorderRadius.circular(
+                                    SizeConfig.roundness16),
+                              ),
+                              padding: EdgeInsets.all(SizeConfig.padding16),
+                              child: Stack(
+                                children: [
+                                  Text(
+                                    model.buyNotice,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyles.body3.light,
+                                  ),
+                                ],
+                              ),
+                            )
+                          : SizedBox(),
                       SizedBox(height: SizeConfig.padding16),
                       Text(
                         "Enter Amount",
@@ -213,7 +216,9 @@ class AugmontGoldBuyView extends StatelessWidget {
                             ),
                           ],
                         ),
-                      if (!model.augOnbRegInProgress && !model.augRegFailed)
+                      if (!model.augOnbRegInProgress &&
+                          !model.augRegFailed &&
+                          model.isAugmontBuyEnabled())
                         FelloButtonLg(
                           child: model.isGoldBuyInProgress
                               ? SpinKitThreeBounce(
@@ -232,6 +237,21 @@ class AugmontGoldBuyView extends StatelessWidget {
                               model.initiateBuy();
                             }
                           },
+                        ),
+                      if (!model.isAugmontBuyEnabled())
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              vertical: SizeConfig.pageHorizontalMargins / 2,
+                              horizontal: SizeConfig.pageHorizontalMargins),
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.circular(SizeConfig.roundness16),
+                            color: Colors.red.withOpacity(0.05),
+                          ),
+                          child: Text(
+                            "Augmont Transactions are temporarily disabled for your account. Contact us for more details",
+                            style: TextStyles.body3.colour(Colors.redAccent),
+                          ),
                         ),
                       // SizedBox(
                       //   height: SizeConfig.padding20,
