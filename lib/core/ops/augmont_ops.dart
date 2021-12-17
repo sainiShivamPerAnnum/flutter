@@ -477,7 +477,7 @@ class AugmontModel extends ChangeNotifier {
           {'message': _initialDepositResponse.errorMessage});
 
       BaseUtil.showNegativeAlert(
-          'Deposit Failed', 'Any money deducted will be refunded to you shortly.');
+          'Verifying transaction', 'Your transaction is being verified and will be updated shortly');
 
       _baseProvider.currentAugmontTxn.tranStatus =
           UserTransaction.TRAN_STATUS_CANCELLED;
@@ -664,7 +664,7 @@ class AugmontModel extends ChangeNotifier {
       });
 
       BaseUtil.showNegativeAlert(
-          'Withdrawal Failed', 'Please try again in sometime.');
+          'Verifying Withdrawal', 'Your transaction is being verified and will be updated shortly');
 
       _baseProvider.currentAugmontTxn.tranStatus =
           UserTransaction.TRAN_STATUS_CANCELLED;
