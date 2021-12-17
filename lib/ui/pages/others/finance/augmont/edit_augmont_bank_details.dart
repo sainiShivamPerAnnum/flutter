@@ -29,6 +29,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 //Pub Imports
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 class EditAugmontBankDetail extends StatefulWidget {
@@ -51,6 +52,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
   TextEditingController _bankAccNoConfirmController;
   final MixpanelService _mixpanelService = locator<MixpanelService>();
   final SignzyRepository _signzyRepository = locator<SignzyRepository>();
+  final Logger _logger = locator<Logger>();
   bool _isInitialized = false;
   DBModel dbProvider;
   BaseUtil baseProvider;
@@ -564,13 +566,15 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
     final ApiResponse<TransferAmountApiResponseModel> response =
         await _signzyRepository.transferAmount(
             mobile: baseProvider.myUser.mobile,
-            name: baseProvider.myUser.name,
+            name: pBankHolderName,
             ifsc: pBankIfsc,
             accountNo: pConfirmBankAccNo);
 
     if (response.code == 200) {
       final TransferAmountApiResponseModel _transferAmountResponse =
           response.model;
+
+      _logger.d(_transferAmountResponse.toString());
 
       if (!_transferAmountResponse.active ||
           !_transferAmountResponse.nameMatch) {
@@ -629,11 +633,12 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                   : '',
               onAccept: () async {
                 ///FINALLY NOW UPDATE THE BANK DETAILS
-                baseProvider.augmontDetail.bankHolderName = pBankHolderName.trim();
+                baseProvider.augmontDetail.bankHolderName =
+                    pBankHolderName.trim();
                 baseProvider.augmontDetail.bankAccNo = pBankAccNo.trim();
                 baseProvider.augmontDetail.ifsc = pBankIfsc.trim();
-                baseProvider.updateAugmontDetails(
-                    pBankHolderName.trim(), pBankAccNo.trim(), pBankIfsc.trim());
+                baseProvider.updateAugmontDetails(pBankHolderName.trim(),
+                    pBankAccNo.trim(), pBankIfsc.trim());
                 dbProvider
                     .updateUserAugmontDetails(
                         baseProvider.myUser.uid, baseProvider.augmontDetail)
