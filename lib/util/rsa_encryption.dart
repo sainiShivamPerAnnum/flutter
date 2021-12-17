@@ -35,23 +35,43 @@ class RSAEncryption {
   final _dbModel = locator<DBModel>();
   final _logger = locator<Logger>();
   Encrypter rsaEncrypter, aesEncrypter;
-  final _chars = 'abcdef1234567890';
+  static const String _chars = 'abcdef1234567890';
+  static const String ENCRYPT_VERSION = 'v1';
+  static const String PUBLIC_KEY_FILE_PATH = 'resources/public.key';
   Random _rnd = Random();
   String randomIv, randomAesKey;
   IV iv;
   Key aesKey;
 
+  ///initialises a fresh AES key and IV on init
   Future<bool> init() async {
-    bool rsaStatus = await initializeRSAEncrypter();
-    bool aesStatus = initializeAESEncrypter();
+    bool rsaStatus = await _initializeRSAEncryptor();
+    bool aesStatus = _initializeAESEncryptor();
     if (rsaStatus && aesStatus) return true;
     return false;
   }
 
-  Future<bool> initializeRSAEncrypter() async {
+  Map<String, dynamic> encryptRequestBody(Map<String, dynamic> data) {
+    try {
+      final encrypted = _aesEncypt(data);
+      final encK = _rsaEncrypt();
+      final iv = _getIv();
+      return {
+        "encv": ENCRYPT_VERSION,
+        "iv": iv,
+        "key": encK,
+        "data": encrypted
+      };
+    } catch (e) {
+      _logger.e('Encryption Failed: $e');
+      return data;
+    }
+  }
+
+  Future<bool> _initializeRSAEncryptor() async {
     try {
       final publicKey =
-          await parseWithRootBundle<RSAPublicKey>("resources/public.key");
+          await _parseWithRootBundle<RSAPublicKey>(PUBLIC_KEY_FILE_PATH);
       rsaEncrypter = Encrypter(RSA(
         publicKey: publicKey,
       ));
@@ -61,19 +81,21 @@ class RSAEncryption {
       if (_userService.isUserOnborded)
         _dbModel.logFailure(
             _userService.baseUser.uid, FailType.RSAEncryterInitFailed, {
-          "message": "RSA Encrypter generation Failed",
-          "error": e.toString()
+          "err_message":
+              "RSA Encrypter generation Failed while parsing local file",
         });
       return false;
     }
   }
 
-  bool initializeAESEncrypter() {
+  bool _initializeAESEncryptor() {
     try {
-      randomAesKey = getRandomString(32);
+      randomAesKey = _getRandomString(32);
       aesKey = Key.fromUtf8(randomAesKey);
-      randomIv = getRandomString(16);
+
+      randomIv = _getRandomString(16);
       iv = IV.fromUtf8(randomIv);
+
       aesEncrypter =
           Encrypter(AES(aesKey, mode: AESMode.cbc, padding: "PKCS7"));
       return true;
@@ -83,34 +105,25 @@ class RSAEncryption {
         _dbModel.logFailure(
             _userService.baseUser.uid, FailType.AESEncryptionInitFailed, {
           "message": "AES Encrypter generation Failed",
-          "error": e.toString()
         });
       return false;
     }
   }
 
-  String rsaEncrypt() {
+  String _rsaEncrypt() {
     _logger.d("KEY: $randomAesKey");
     final encryptedKey = rsaEncrypter.encrypt(aesKey.base64);
     return encryptedKey.base64;
   }
 
-  String aesEncypt(Map<String, dynamic> data) {
+  String _aesEncypt(Map<String, dynamic> data) {
     final plainText = json.encode(data).toString();
     final encryptedData = aesEncrypter.encrypt(plainText, iv: iv);
     return encryptedData.base16;
   }
 
-  Map<String, dynamic> encrypt(Map<String, dynamic> data) {
-    final encrypted = aesEncypt(data);
-    final encK = rsaEncrypt();
-    final iv = getIv();
-    return {"iv": iv, "encK": encK, "encrypted": encrypted};
-  }
-
   // Helper Methods
-
-  Future<T> parseWithRootBundle<T extends RSAAsymmetricKey>(
+  Future<T> _parseWithRootBundle<T extends RSAAsymmetricKey>(
       String filename) async {
     try {
       final key = await rootBundle.loadString(filename);
@@ -121,7 +134,7 @@ class RSAEncryption {
     }
   }
 
-  String getRandomString(int length) => String.fromCharCodes(
+  String _getRandomString(int length) => String.fromCharCodes(
         Iterable.generate(
           length,
           (_) => _chars.codeUnitAt(
@@ -130,10 +143,7 @@ class RSAEncryption {
         ),
       );
 
-  String getIv() {
+  String _getIv() {
     return randomIv;
   }
-
-  // Helper Methods - END
-
 }
