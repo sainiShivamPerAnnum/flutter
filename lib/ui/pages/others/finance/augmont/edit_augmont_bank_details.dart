@@ -381,81 +381,6 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                                             ),
                                           ],
                                         ),
-                                        if (inEditMode)
-                                          Container(
-                                            padding: EdgeInsets.symmetric(
-                                              vertical: SizeConfig.padding6,
-                                            ),
-                                            child: CheckboxListTile(
-                                              shape: CircleBorder(),
-                                              value: isConfirm,
-                                              controlAffinity:
-                                                  ListTileControlAffinity
-                                                      .leading,
-                                              onChanged: (val) {
-                                                setState(() {
-                                                  isConfirm = val;
-                                                });
-                                              },
-                                              title: FittedBox(
-                                                child: Text(
-                                                  "I confirm that the details provided by me are correct",
-                                                  style: TextStyles.body2
-                                                      .weight(FontWeight.w500),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-
-                                        // new Container(
-                                        //   height: 50.0,
-                                        //   width: double.infinity,
-                                        //   decoration: BoxDecoration(
-                                        //     gradient: new LinearGradient(
-                                        //         colors: [
-                                        //           FelloColorPalette.augmontFundPalette()
-                                        //               .primaryColor,
-                                        //           FelloColorPalette.augmontFundPalette()
-                                        //               .primaryColor2
-                                        //         ],
-                                        //         begin: Alignment(0.5, -1.0),
-                                        //         end: Alignment(0.5, 1.0)),
-                                        //     borderRadius: new BorderRadius.circular(10.0),
-                                        //   ),
-                                        //   child: new Material(
-                                        //     child: MaterialButton(
-                                        //       child: (!baseProvider
-                                        //               .isEditAugmontBankDetailInProgress)
-                                        //           ? Text(
-                                        //               (baseProvider.augmontDetail
-                                        //                           .bankAccNo ==
-                                        //                       '')
-                                        //                   ? 'WITHDRAW'
-                                        //                   : 'UPDATE',
-                                        //               style: Theme.of(context)
-                                        //                   .textTheme
-                                        //                   .button
-                                        //                   .copyWith(color: Colors.white),
-                                        //             )
-                                        //           : SpinKitThreeBounce(
-                                        //               color: UiConstants.spinnerColor2,
-                                        //               size: 18.0,
-                                        //             ),
-                                        //       onPressed: () {
-                                        //         FocusScope.of(context).unfocus();
-                                        //         if (BaseUtil.showNoInternetAlert())
-                                        //           return;
-                                        //         if (_formKey.currentState.validate()) {
-                                        //           _onUpdateClicked();
-                                        //         }
-                                        //       },
-                                        //       highlightColor: Colors.white30,
-                                        //       splashColor: Colors.white30,
-                                        //     ),
-                                        //     color: Colors.transparent,
-                                        //     borderRadius: new BorderRadius.circular(30.0),
-                                        //   ),
-                                        // ),
                                       ],
                                     )),
                               ),
@@ -534,15 +459,6 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
       noChanges = false;
     if (curBankAccNo == null || pBankAccNo != curBankAccNo) noChanges = false;
     if (curBankIfsc == null || pBankIfsc != curBankIfsc) noChanges = false;
-    if (!isConfirm) {
-      BaseUtil.showNegativeAlert(
-        'Confirmation Required',
-        'Please confirm that the details added are correct',
-      );
-      baseProvider.isEditAugmontBankDetailInProgress = false;
-      setState(() {});
-      return;
-    }
     if (noChanges) {
       BaseUtil.showNegativeAlert(
         'No Update',
@@ -557,6 +473,28 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
       BaseUtil.showNegativeAlert(
         'Fields mismatch',
         'Bank account numbers do not match',
+      );
+      baseProvider.isEditAugmontBankDetailInProgress = false;
+      setState(() {});
+      return;
+    }
+
+    final ifscCodeValidation = RegExp(r'^[^\s]{4}\d{7}$');
+    if (!ifscCodeValidation.hasMatch(pBankIfsc)) {
+      BaseUtil.showNegativeAlert(
+        'Invalid IFSC Code',
+        'Please check your ifsc code.',
+      );
+      baseProvider.isEditAugmontBankDetailInProgress = false;
+      setState(() {});
+      return;
+    }
+
+    final accountNoValidation = RegExp(r'^\d{9,18}$');
+    if (!accountNoValidation.hasMatch(pConfirmBankAccNo)) {
+      BaseUtil.showNegativeAlert(
+        'Invalid Account Number',
+        'Please check your account number.',
       );
       baseProvider.isEditAugmontBankDetailInProgress = false;
       setState(() {});
@@ -580,7 +518,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
           !_transferAmountResponse.nameMatch) {
         BaseUtil.showNegativeAlert(
           'Account Verification Failed',
-          'Please check your beneficiary name and account number.',
+          'Please recheck your entered account number and name',
         );
         baseProvider.isEditAugmontBankDetailInProgress = false;
         setState(() {});
@@ -605,12 +543,12 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
 
       BaseUtil.showPositiveAlert(
         'Account Verification Successful',
-        'Your account has been verified by depositing ₹1',
+        'Your bank account details has been successfully verified!',
       );
     } else {
       BaseUtil.showNegativeAlert(
-        'Account Verification Failed',
-        'Please check your bank account number and ifsc code.',
+        'Account could not be verified',
+        'Please verify your account details and try again',
       );
       baseProvider.isEditAugmontBankDetailInProgress = false;
       setState(() {});
