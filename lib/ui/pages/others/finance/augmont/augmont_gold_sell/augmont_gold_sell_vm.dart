@@ -255,7 +255,7 @@ class AugmontGoldSellViewModel extends BaseModel {
     } else {
       AppState.backButtonDispatcher.didPopRoute();
       BaseUtil.showNegativeAlert(
-          'Failed', 'Your gold sell failed. Please try again after sometime.',
+          'Sell did not complete', 'Your gold sell could not be completed at the moment',
           seconds: 5);
     }
   }
