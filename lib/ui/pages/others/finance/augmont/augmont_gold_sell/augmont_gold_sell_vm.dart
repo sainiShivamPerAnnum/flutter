@@ -285,7 +285,7 @@ class AugmontGoldSellViewModel extends BaseModel {
               textAlign: TextAlign.center,
               text: TextSpan(
                 text:
-                    "Your withdrawal is successful, the amount will be credited in ",
+                    "Your withdrawal is successfully being processed and will be credited to your bank within ",
                 style: TextStyles.body3.colour(Colors.black54),
                 children: [
                   TextSpan(

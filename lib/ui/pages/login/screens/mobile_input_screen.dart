@@ -183,6 +183,10 @@ class MobileInputScreenState extends State<MobileInputScreen> {
                             hintText: "Enter your referral code here",
                             hintStyle: TextStyles.body3.colour(Colors.grey),
                           ),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'[a-zA-Z0-9]'))
+                          ],
                           validator: (val) {
                             if (val.trim().length == 0 || val == null)
                               return null;
