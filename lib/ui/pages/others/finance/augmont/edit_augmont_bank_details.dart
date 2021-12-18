@@ -534,7 +534,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
       if (res.code != 200) {
         BaseUtil.showNegativeAlert(
           'Account Verification Failed',
-          'Please contact, customer support.',
+          'Please verify your account details and try again',
         );
         baseProvider.isEditAugmontBankDetailInProgress = false;
         setState(() {});
