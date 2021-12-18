@@ -41,4 +41,9 @@ class AlertModel {
       title: map['title'],
     );
   }
+
+  @override
+  String toString() {
+    return 'AlertModel(actionUri: $actionUri, createdTime: $createdTime, subtitle: $subtitle, title: $title)';
+  }
 }

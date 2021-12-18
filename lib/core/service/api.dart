@@ -54,7 +54,7 @@ class Api {
         .doc(userId)
         .collection(Constants.SUBCOLN_USER_ALERTS);
     try {
-      snapshot = ref.orderBy('created_time').limit(20).get();
+      snapshot = ref.orderBy('created_time', descending: true).limit(30).get();
     } catch (e) {
       logger.e(e);
     }
