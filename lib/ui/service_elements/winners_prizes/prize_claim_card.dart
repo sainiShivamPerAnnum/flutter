@@ -19,7 +19,9 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 
 class PrizeClaimCard extends StatelessWidget {
   final MyWinningsViewModel model;
+
   PrizeClaimCard({this.model});
+
   @override
   Widget build(BuildContext context) {
     String minWithdrawPrize = BaseRemoteConfig.remoteConfig
@@ -84,7 +86,7 @@ class PrizeClaimCard extends StatelessWidget {
                                             m.userFundWallet.augGoldPrinciple >=
                                                 refUnlockAmt)
                                         ? Text(
-                                            "Redeem your rewards using any of the following options",
+                                            "Redeem your rewards using the following options",
                                             maxLines: 2,
                                             style: TextStyles.body3
                                                 .colour(Colors.grey),
@@ -110,21 +112,25 @@ class PrizeClaimCard extends StatelessWidget {
                                 vertical: SizeConfig.padding6),
                             child: Row(
                               children: [
-                                ClaimButton(
-                                  color: Color(0xff11192B),
-                                  image: Assets.amazonClaim,
-                                  onTap: () => model.showConfirmDialog(
-                                      PrizeClaimChoice.AMZ_VOUCHER),
-                                  text: "Redeem as Amazon Pay Gift Card",
-                                ),
-                                SizedBox(width: SizeConfig.padding12),
+                                _isAmazonVoucherRedemptionAvailable()
+                                    ? ClaimButton(
+                                        color: Color(0xff11192B),
+                                        image: Assets.amazonClaim,
+                                        onTap: () => model.showConfirmDialog(
+                                            PrizeClaimChoice.AMZ_VOUCHER),
+                                        text: "Redeem as Amazon Pay Gift Card",
+                                      )
+                                    : SizedBox(),
+                                _isAmazonVoucherRedemptionAvailable()
+                                    ? SizedBox(width: SizeConfig.padding12)
+                                    : SizedBox(),
                                 ClaimButton(
                                   color: UiConstants.tertiarySolid,
                                   image: Assets.goldClaim,
                                   onTap: () => model.showConfirmDialog(
                                       PrizeClaimChoice.GOLD_CREDIT),
                                   text: "Redeem as Digital Gold",
-                                ),
+                                )
                               ],
                             ),
                           ),
@@ -248,6 +254,14 @@ class PrizeClaimCard extends StatelessWidget {
                   ),
               ],
             ));
+  }
+
+  bool _isAmazonVoucherRedemptionAvailable() {
+    String option = BaseRemoteConfig.remoteConfig
+            .getString(BaseRemoteConfig.AMZ_VOUCHER_REDEMPTION) ??
+        '1';
+    int op = int.tryParse(option);
+    return (op == null || op == 1);
   }
 }
 
