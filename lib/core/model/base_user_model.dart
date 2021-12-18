@@ -26,7 +26,6 @@ class BaseUser {
   bool isAugmontEnabled;
   bool isEmailVerified;
   UserPreferences userPreferences;
-  UserPermissions userPermissions;
   Timestamp createdOn;
 
   static final String fldId = "mID";
@@ -51,7 +50,6 @@ class BaseUser {
   static final String fldIsIciciEnabled = "mIsIciciEnabled";
   static final String fldIsAugmontEnabled = "mIsAugmontEnabled";
   static final String fldUserPrefs = "mUserPrefs";
-  static final String fldUserPermissions = "mUserPermissions";
   static final String fldCreatedOn = "mCreatedOn";
   static final String fldKycName = "mKycName";
 
@@ -76,7 +74,6 @@ class BaseUser {
       this.isEmailVerified,
       this.isBlocked,
       this.userPreferences,
-      this.userPermissions,
       this.createdOn);
 
   BaseUser.newUser(String id, String mobile)
@@ -101,7 +98,6 @@ class BaseUser {
             false,
             false,
             UserPreferences(null),
-            UserPermissions(null),
             Timestamp.now());
 
   BaseUser.fromMap(Map<String, dynamic> data, String id, [String client_token])
@@ -126,7 +122,6 @@ class BaseUser {
             data[fldIsEmailVerified],
             data[fldIsBlocked] ?? false,
             UserPreferences(data[fldUserPrefs]),
-            UserPermissions(data[fldUserPermissions]),
             data[fldCreatedOn]);
 
   //to send user object to server
@@ -153,8 +148,6 @@ class BaseUser {
       userObj[fldIsAugmontEnabled] = isAugmontEnabled;
     if (userPreferences != null)
       userObj[fldUserPrefs] = userPreferences.toJson();
-    if (userPermissions != null)
-      userObj[fldUserPermissions] = userPermissions.toJson();
     if (isBlocked != null) userObj[fldIsBlocked] = isBlocked;
     return userObj;
   }
@@ -166,8 +159,6 @@ class BaseUser {
 }
 
 enum Preferences { TAMBOLANOTIFICATIONS, APPLOCK }
-
-enum Permissions { AUGMONTBUY, AUGMONTSELL }
 
 class UserPreferences {
   //setup index with firebase keys
@@ -202,36 +193,4 @@ class UserPreferences {
   setPreference(Preferences p, int val) => _activePrefs[_index[p]] = val;
 
   toJson() => _activePrefs;
-}
-
-class UserPermissions {
-  //setup index with firebase keys
-  static const Map<Permissions, String> _index = {
-    Permissions.AUGMONTBUY: 'augBuy',
-    Permissions.AUGMONTSELL: 'augSell'
-  };
-
-  //setup defaults
-  final Map<Permissions, int> _defValues = {
-    Permissions.AUGMONTBUY: 1,
-    Permissions.AUGMONTSELL: 1
-  };
-
-  //current values
-  Map<String, int> _activePermissions = {};
-
-  UserPermissions(Map<dynamic, dynamic> remValues) {
-    for (Permissions p in Permissions.values) {
-      String _fKey = _index[p];
-      int _defValue = _defValues[p];
-      _activePermissions[_fKey] = (remValues != null &&
-              remValues[_fKey] != null &&
-              remValues[_fKey] is int)
-          ? remValues[_fKey]
-          : _defValue;
-    }
-  }
-
-  int getPermission(Permissions p) => _activePermissions[_index[p]];
-  toJson() => _activePermissions;
 }

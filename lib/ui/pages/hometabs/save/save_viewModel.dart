@@ -12,18 +12,6 @@ class SaveViewModel extends BaseModel {
   BaseUtil _baseUtil = locator<BaseUtil>();
   UserService _userService = locator<UserService>();
 
-  bool isAugmontBuyEnabled() {
-    return _userService.baseUser.userPermissions
-            .getPermission(Permissions.AUGMONTBUY) ==
-        1;
-  }
-
-  bool isAugmontSellEnabled() {
-    return _userService.baseUser.userPermissions
-            .getPermission(Permissions.AUGMONTSELL) ==
-        1;
-  }
-
   getGoldBalance() {
     return _baseUtil.userFundWallet?.augGoldQuantity ?? 0.0;
   }

@@ -176,42 +176,50 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                               ],
                             ),
                             SizedBox(height: SizeConfig.padding8),
-                            (model.sellNotice == null && model.nonWithdrawableQnt > 0)?Container(
-                              margin: EdgeInsets.only(top: SizeConfig.padding8),
-                              decoration: BoxDecoration(
-                                color: UiConstants.tertiaryLight,
-                                borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-                              ),
-                              padding: EdgeInsets.all(SizeConfig.padding16),
-                              child: Stack(
-                                children: [
-                                  //Image.asset("assets/images/confetti.png"),
-                                  Text(
-                                    _buildNonWithdrawString(model),
-                                    textAlign: TextAlign.center,
-                                    style: TextStyles.body3.light,
-                                  ),
-                                ],
-                              ),
-                            ):SizedBox(),
+                            (model.sellNotice == null &&
+                                    model.nonWithdrawableQnt > 0)
+                                ? Container(
+                                    margin: EdgeInsets.only(
+                                        top: SizeConfig.padding8),
+                                    decoration: BoxDecoration(
+                                      color: UiConstants.tertiaryLight,
+                                      borderRadius: BorderRadius.circular(
+                                          SizeConfig.roundness16),
+                                    ),
+                                    padding:
+                                        EdgeInsets.all(SizeConfig.padding16),
+                                    child: Stack(
+                                      children: [
+                                        //Image.asset("assets/images/confetti.png"),
+                                        Text(
+                                          _buildNonWithdrawString(model),
+                                          textAlign: TextAlign.center,
+                                          style: TextStyles.body3.light,
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : SizedBox(),
                             SizedBox(height: SizeConfig.padding8),
-                            (model.sellNotice != null && model.sellNotice.isNotEmpty)?Container(
-                              margin: EdgeInsets.only(top: SizeConfig.padding8),
-                              decoration: BoxDecoration(
-                                color: UiConstants.primaryLight,
-                                borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-                              ),
-                              padding: EdgeInsets.all(SizeConfig.padding16),
-                              child: Stack(
-                                children: [
-                                  Text(
-                                    model.sellNotice,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyles.body3.light,
-                                  ),
-                                ],
-                              ),
-                            ):SizedBox(),
+                            (model.sellNotice != null &&
+                                    model.sellNotice.isNotEmpty)
+                                ? Container(
+                                    width: SizeConfig.screenWidth,
+                                    margin: EdgeInsets.only(
+                                        top: SizeConfig.padding8),
+                                    decoration: BoxDecoration(
+                                      color: UiConstants.primaryLight,
+                                      borderRadius: BorderRadius.circular(
+                                          SizeConfig.roundness16),
+                                    ),
+                                    padding:
+                                        EdgeInsets.all(SizeConfig.padding16),
+                                    child: Text(
+                                      model.sellNotice,
+                                      style: TextStyles.body3.light,
+                                    ),
+                                  )
+                                : SizedBox(),
                             SizedBox(height: SizeConfig.padding32),
                             Row(
                               children: [
@@ -394,10 +402,10 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
   }
 
   _buildNonWithdrawString(AugmontGoldSellViewModel model) {
-    DateTime _dt = new DateTime.now().add(Duration(days: Constants.AUG_GOLD_WITHDRAW_OFFSET));
-    String _dtStr = DateFormat("dd MMMM")
-        .format(_dt);
-    int _hrs = Constants.AUG_GOLD_WITHDRAW_OFFSET*24;
+    DateTime _dt = new DateTime.now()
+        .add(Duration(days: Constants.AUG_GOLD_WITHDRAW_OFFSET));
+    String _dtStr = DateFormat("dd MMMM").format(_dt);
+    int _hrs = Constants.AUG_GOLD_WITHDRAW_OFFSET * 24;
 
     return '${model.nonWithdrawableQnt} grams is locked. Digital Gold can be withdrawn after $_hrs hours of successful deposit.';
   }
@@ -486,12 +494,12 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
       Navigator.of(context).pop();
     }
     if (!flag) {
-      BaseUtil.showNegativeAlert('Verifying Withdrawal',
-          'Your transaction is being verified and will be updated shortly',
+      BaseUtil.showNegativeAlert('Withdrawal Failed',
+          'Please try again in some time or contact us for assistance',
           seconds: 5);
     } else {
       BaseUtil.showPositiveAlert('Withdrawal Request is now processing',
-          'You will be notified once the withdrawal is complete');
+          'We will inform you once the withdrawal is complete!');
     }
   }
 

@@ -65,14 +65,9 @@ class AugmontGoldBuyView extends StatelessWidget {
                                     SizeConfig.roundness16),
                               ),
                               padding: EdgeInsets.all(SizeConfig.padding16),
-                              child: Stack(
-                                children: [
-                                  Text(
-                                    model.buyNotice,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyles.body3.light,
-                                  ),
-                                ],
+                              child: Text(
+                                model.buyNotice,
+                                style: TextStyles.body3.light,
                               ),
                             )
                           : SizedBox(),
@@ -216,9 +211,7 @@ class AugmontGoldBuyView extends StatelessWidget {
                             ),
                           ],
                         ),
-                      if (!model.augOnbRegInProgress &&
-                          !model.augRegFailed &&
-                          model.isAugmontBuyEnabled())
+                      if (!model.augOnbRegInProgress && !model.augRegFailed)
                         FelloButtonLg(
                           child: model.isGoldBuyInProgress
                               ? SpinKitThreeBounce(
@@ -238,21 +231,7 @@ class AugmontGoldBuyView extends StatelessWidget {
                             }
                           },
                         ),
-                      if (!model.isAugmontBuyEnabled())
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: SizeConfig.pageHorizontalMargins / 2,
-                              horizontal: SizeConfig.pageHorizontalMargins),
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.circular(SizeConfig.roundness16),
-                            color: Colors.red.withOpacity(0.05),
-                          ),
-                          child: Text(
-                            "Augmont Transactions are temporarily disabled for your account. Contact us for more details",
-                            style: TextStyles.body3.colour(Colors.redAccent),
-                          ),
-                        ),
+
                       // SizedBox(
                       //   height: SizeConfig.padding20,
                       // ),

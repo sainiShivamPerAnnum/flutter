@@ -254,88 +254,64 @@ class AugmontCard extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    if (model.isAugmontBuyEnabled())
-                      Expanded(
-                        child: FelloButton(
-                          onPressed: model.navigateToBuyScreen,
-                          activeButtonUI: Container(
-                            height: SizeConfig.screenWidth * 0.12, //50
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(100),
-                                color: UiConstants.primaryColor),
-                            alignment: Alignment.center,
-                            child: Text(
-                              locale.saveBuyButton,
-                              style:
-                                  TextStyles.title5.bold.colour(Colors.white),
-                            ),
-                          ),
-                          offlineButtonUI: Container(
-                            height: SizeConfig.screenWidth * 0.12, //50
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(100),
-                                color: Colors.grey),
-                            alignment: Alignment.center,
-                            child: Text(
-                              locale.saveBuyButton,
-                              style:
-                                  TextStyles.title5.bold.colour(Colors.white),
-                            ),
-                          ),
-                        ),
-                      ),
-                    if (model.isAugmontBuyEnabled() &&
-                        model.isAugmontSellEnabled())
-                      SizedBox(width: SizeConfig.padding16),
-                    if (model.isAugmontSellEnabled())
-                      Expanded(
-                        child: FelloButton(
-                          onPressed: model.navigateToSellScreen,
-                          activeButtonUI: Container(
-                            height: SizeConfig.screenWidth * 0.12,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: UiConstants.tertiarySolid, width: 2),
-                              borderRadius: BorderRadius.circular(100),
-                            ),
-                            alignment: Alignment.center,
-                            child: Text(
-                              locale.saveSellButton,
-                              style: TextStyles.title5.bold,
-                            ),
-                          ),
-                          offlineButtonUI: Container(
-                            height: SizeConfig.screenWidth * 0.12,
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey, width: 2),
-                              borderRadius: BorderRadius.circular(100),
-                            ),
-                            alignment: Alignment.center,
-                            child: Text(
-                              locale.saveSellButton,
-                              style: TextStyles.title5.bold.colour(Colors.grey),
-                            ),
-                          ),
-                        ),
-                      ),
-                    if (!model.isAugmontBuyEnabled() &&
-                        !model.isAugmontSellEnabled())
-                      Expanded(
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: SizeConfig.pageHorizontalMargins / 2,
-                              horizontal: SizeConfig.pageHorizontalMargins),
+                    Expanded(
+                      child: FelloButton(
+                        onPressed: model.navigateToBuyScreen,
+                        activeButtonUI: Container(
+                          height: SizeConfig.screenWidth * 0.12, //50
                           decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.circular(SizeConfig.roundness16),
-                            color: Colors.red.withOpacity(0.05),
-                          ),
+                              borderRadius: BorderRadius.circular(100),
+                              color: UiConstants.primaryColor),
+                          alignment: Alignment.center,
                           child: Text(
-                            "Augmont Transactions are temporarily disabled for your account. Contact us for more details",
-                            style: TextStyles.body3.colour(Colors.redAccent),
+                            locale.saveBuyButton,
+                            style: TextStyles.title5.bold.colour(Colors.white),
                           ),
                         ),
-                      )
+                        offlineButtonUI: Container(
+                          height: SizeConfig.screenWidth * 0.12, //50
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100),
+                              color: Colors.grey),
+                          alignment: Alignment.center,
+                          child: Text(
+                            locale.saveBuyButton,
+                            style: TextStyles.title5.bold.colour(Colors.white),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: SizeConfig.padding12),
+                    Expanded(
+                      child: FelloButton(
+                        onPressed: model.navigateToSellScreen,
+                        activeButtonUI: Container(
+                          height: SizeConfig.screenWidth * 0.12,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                color: UiConstants.tertiarySolid, width: 2),
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            locale.saveSellButton,
+                            style: TextStyles.title5.bold,
+                          ),
+                        ),
+                        offlineButtonUI: Container(
+                          height: SizeConfig.screenWidth * 0.12,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey, width: 2),
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            locale.saveSellButton,
+                            style: TextStyles.title5.bold.colour(Colors.grey),
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
