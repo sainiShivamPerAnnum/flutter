@@ -9,6 +9,7 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
+import 'package:felloapp/core/service/tambola_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
@@ -43,6 +44,7 @@ class UserProfileVM extends BaseModel {
   final DBModel _dbModel = locator<DBModel>();
   final fcmlistener = locator<FcmListener>();
   final _txnService = locator<TransactionService>();
+  final _tambolaService = locator<TambolaService>();
   final MixpanelService _mixpanelService = locator<MixpanelService>();
   final S _locale = locator<S>();
   final BaseUtil baseProvider = locator<BaseUtil>();
@@ -280,6 +282,7 @@ class UserProfileVM extends BaseModel {
 
                 _txnService.signOut();
                 _baseUtil.signOut();
+                _tambolaService.signOut();
                 AppState.backButtonDispatcher.didPopRoute();
                 AppState.delegate.appState.currentAction = PageAction(
                     state: PageState.replaceAll, page: SplashPageConfig);
