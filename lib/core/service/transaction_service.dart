@@ -97,9 +97,10 @@ class TransactionService
     } else if (type == UserTransaction.TRAN_STATUS_CANCELLED) {
       icon = Icons.cancel;
       iconColor = Colors.red;
-    } else if (type == UserTransaction.TRAN_STATUS_PENDING) {
+    } else if (type == UserTransaction.TRAN_STATUS_PENDING ||
+        type == UserTransaction.TRAN_STATUS_PROCESSING) {
       icon = Icons.access_time_filled;
-      iconColor = Colors.amber;
+      iconColor = UiConstants.tertiarySolid;
     } else if (type == UserTransaction.TRAN_STATUS_REFUNDED) {
       icon = Icons.remove_circle;
       iconColor = Colors.blue;

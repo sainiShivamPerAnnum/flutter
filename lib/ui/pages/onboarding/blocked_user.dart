@@ -82,11 +82,13 @@ class BlockedUserView extends StatelessWidget {
                                 Haptic.vibrate();
                                 Haptic.vibrate();
                                 try {
-                                  _launchEmail();
+                                  Haptic.vibrate();
+                                  BaseUtil.launchUrl(
+                                      'https://fello.in/policy/tnc');
                                 } catch (e) {
                                   BaseUtil.showNegativeAlert(
                                     'Error',
-                                    'Something went wrong, could not launch email right now. Please try again later',
+                                    'Something went wrong, could not launch T&C right now. Please try again later',
                                   );
                                 }
                               },
@@ -105,13 +107,5 @@ class BlockedUserView extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  void _launchEmail() {
-    _mixpanelService.track(
-        eventName: MixpanelEvents.emailInitiated,
-        properties: {'userId': _userService.baseUser.uid});
-    final Uri emailLaunchUri = Uri(scheme: 'mailto', path: 'hello@fello.in');
-    launch(emailLaunchUri.toString());
   }
 }

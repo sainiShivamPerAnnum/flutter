@@ -69,7 +69,8 @@ class AugmontGoldSellViewModel extends BaseModel {
           await _dbModel.getUserAugmontDetails(_baseUtil.myUser.uid);
     }
     // Check if sell is locked the this particular user
-    if (_baseUtil.augmontDetail.sellNotice != null &&
+    if (_baseUtil.augmontDetail != null &&
+        _baseUtil.augmontDetail.sellNotice != null &&
         _baseUtil.augmontDetail.sellNotice.isNotEmpty)
       sellNotice = _baseUtil.augmontDetail.sellNotice;
     setState(ViewState.Idle);

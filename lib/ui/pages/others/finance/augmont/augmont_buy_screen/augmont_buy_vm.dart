@@ -104,20 +104,20 @@ class AugmontGoldBuyViewModel extends BaseModel {
     await fetchNotices();
     status = checkAugmontStatus();
 
+    //Check if user is registered on augmont
+    if (status == STATUS_REGISTER) {
+      _onboardUser();
+    }
     if (_baseUtil.augmontDetail == null) {
       _baseUtil.augmontDetail =
           await _dbModel.getUserAugmontDetails(_baseUtil.myUser.uid);
     }
     // Check if deposit is locked the this particular user
-    if (_baseUtil.augmontDetail.depNotice != null &&
+    if (_baseUtil.augmontDetail != null &&
+        _baseUtil.augmontDetail.depNotice != null &&
         _baseUtil.augmontDetail.depNotice.isNotEmpty)
       buyNotice = _baseUtil.augmontDetail.depNotice;
     setState(ViewState.Idle);
-
-    //Check if user is registered on augmont
-    if (status == STATUS_REGISTER) {
-      _onboardUser();
-    }
   }
 
   fetchNotices() async {
