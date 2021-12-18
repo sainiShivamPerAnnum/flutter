@@ -45,8 +45,8 @@ class WinnersRepository {
   Future<ApiResponse<List<String>>> getTopWinners() async {
     try {
       final String _bearer = await _getBearerToken();
-      final _apiResponse =
-          await APIService.instance.getData(_apiPaths.kTopWinners,token: _bearer);
+      final _apiResponse = await APIService.instance
+          .getData(_apiPaths.kTopWinners, token: _bearer);
       TopWinnersModel _topWinnersModel = TopWinnersModel.fromMap(_apiResponse);
 
       return ApiResponse(model: _topWinnersModel.currentTopWinners, code: 200);

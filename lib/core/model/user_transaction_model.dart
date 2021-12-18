@@ -64,6 +64,8 @@ class UserTransaction {
   static const String TRAN_STATUS_COMPLETE = 'COMPLETE';
   static const String TRAN_STATUS_CANCELLED = 'CANCELLED';
   static const String TRAN_STATUS_REFUNDED = 'REFUNDED';
+  static const String TRAN_STATUS_PROCESSING = 'PROCESSING';
+
 
   ///Razorpay payment status
   static const String RZP_TRAN_STATUS_NEW = 'NEW';

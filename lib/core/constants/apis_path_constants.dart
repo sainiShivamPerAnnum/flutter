@@ -12,10 +12,10 @@ class ApiPath {
 
   get kCreateTranId => "/userFinanceOps/$stage/api/transaction/id";
   get kDepositComplete => "/userFinanceOps/$stage/api/v2/deposit/complete";
-  get kDepositPending => "/userFinanceOps/$stage/api/deposit/pending";
-  get kDepositCancelled => "/userFinanceOps/$stage/api/deposit/cancelled";
+  get kDepositPending => "/userFinanceOps/$stage/api/v2/deposit/pending";
+  get kDepositCancelled => "/userFinanceOps/$stage/api/v2/deposit/cancelled";
   get kWithdrawlComplete => "/userFinanceOps/$stage/api/v2/withdraw/complete";
-  get kWithdrawlCancelled => "/userFinanceOps/$stage/api/withdraw/cancelled";
+  get kWithdrawlCancelled => "/userFinanceOps/$stage/api/v2/withdraw/cancelled";
   get kBuyTambola => "/felloCoins/$stage/api/tambola/buy-tambola-tickets";
   get kGenerateTambolaTickets => "/tambolaGame/$stage/api/generate";
   get kTopWinners => "/prizingOps/$stage/api/reward/current-top-winners";

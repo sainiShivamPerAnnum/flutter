@@ -486,12 +486,12 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
       Navigator.of(context).pop();
     }
     if (!flag) {
-      BaseUtil.showNegativeAlert('Withdrawal Failed',
-          'Please try again in some time or contact us for assistance',
+      BaseUtil.showNegativeAlert('Verifying Withdrawal',
+          'Your transaction is being verified and will be updated shortly',
           seconds: 5);
     } else {
       BaseUtil.showPositiveAlert('Withdrawal Request is now processing',
-          'We will inform you once the withdrawal is complete!');
+          'You will be notified once the withdrawal is complete');
     }
   }
 

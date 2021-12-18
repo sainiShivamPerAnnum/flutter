@@ -480,8 +480,8 @@ class AugmontGoldBuyViewModel extends BaseModel {
       showSuccessGoldBuyDialog();
     } else {
       AppState.backButtonDispatcher.didPopRoute();
-      BaseUtil.showNegativeAlert('Failed',
-          'Your gold deposit did not complete. Any money deducted will be refunded to you shortly.',
+      BaseUtil.showNegativeAlert('Verifying Transaction',
+          'Your transaction is being verified and will be updated shortly',
           seconds: 5);
     }
   }
