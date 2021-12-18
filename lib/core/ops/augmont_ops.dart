@@ -538,6 +538,7 @@ class AugmontModel extends ChangeNotifier {
             enqueuedTaskDetails: _initialDepositResponse
                 .model.response.transactionDoc.enqueuedTaskDetails);
 
+    _txnService.updateTransactions();
     if (_onCancleUserDepositResponse.code == 400) {
       _dbModel.logFailure(
           _baseProvider.myUser.uid, FailType.CompleteUserDepositApiFailed, {
