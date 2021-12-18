@@ -541,10 +541,10 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
         return;
       }
 
-      BaseUtil.showPositiveAlert(
-        'Account Verification Successful',
-        'Your bank account details has been successfully verified!',
-      );
+      // BaseUtil.showPositiveAlert(
+      //   'Account Verification Successful',
+      //   'Your bank account details has been successfully verified!',
+      // );
     } else {
       BaseUtil.showNegativeAlert(
         'Account could not be verified',

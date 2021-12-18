@@ -1,33 +1,21 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
-import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
-import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/mixpanel_events.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class BlockedUserView extends StatelessWidget {
-  final _mixpanelService = locator<MixpanelService>();
-  final _userService = locator<UserService>();
-  final BaseUtil _baseUtil = locator<BaseUtil>();
-  final _txnService = locator<TransactionService>();
+
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
@@ -62,10 +50,13 @@ class BlockedUserView extends StatelessWidget {
                       height: SizeConfig.blockSizeVertical * 35,
                     ),
                     Spacer(),
-                    Text(
-                      locale.obBlockedTitle,
-                      style: TextStyles.title3.bold
-                          .colour(UiConstants.tertiarySolid),
+                    Center(
+                      child: Text(
+                        locale.obBlockedTitle,
+                        textAlign: TextAlign.center,
+                        style: TextStyles.title3.bold
+                            .colour(UiConstants.tertiarySolid),
+                      ),
                     ),
                     SizedBox(height: SizeConfig.padding12),
                     RichText(
