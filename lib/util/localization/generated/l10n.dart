@@ -347,31 +347,21 @@ class S {
     );
   }
 
-  /// `Access Denied!`
+  /// `Your Account has been blocked`
   String get obBlockedTitle {
     return Intl.message(
-      'Access Denied!',
+      'Your Account has been blocked',
       name: 'obBlockedTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Your account has been disabled. Please write us at`
+  /// `Your Fello Account has been banned for activity that violates our `
   String get obBlockedSubtitle1 {
     return Intl.message(
-      'Your account has been disabled. Please write us at',
+      'Your Fello Account has been banned for activity that violates our ',
       name: 'obBlockedSubtitle1',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `for more details`
-  String get obBlockedSubtitle2 {
-    return Intl.message(
-      'for more details',
-      name: 'obBlockedSubtitle2',
       desc: '',
       args: [],
     );

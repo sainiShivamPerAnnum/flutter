@@ -51,31 +51,32 @@ class BlockedUserView extends StatelessWidget {
                   color: Colors.white,
                 ),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    SizedBox(
+                      height: SizeConfig.navBarHeight,
+                    ),
+                    Spacer(),
                     Image.asset(
                       Assets.blocked,
                       width: SizeConfig.screenWidth * 0.7,
                       height: SizeConfig.blockSizeVertical * 35,
                     ),
-                    Center(
-                        child: Text(
+                    Spacer(),
+                    Text(
                       locale.obBlockedTitle,
-                      style: TextStyles.title2.bold
+                      style: TextStyles.title3.bold
                           .colour(UiConstants.tertiarySolid),
-                    )),
-                    SizedBox(height: SizeConfig.padding8),
+                    ),
+                    SizedBox(height: SizeConfig.padding12),
                     RichText(
                       textAlign: TextAlign.center,
                       text: new TextSpan(
                         text: locale.obBlockedSubtitle1,
-                        style: TextStyles.body2.colour(Colors.black),
+                        style: TextStyles.body2.colour(Colors.grey),
                         children: [
                           new TextSpan(
-                            text: ' hello@fello.in ',
-                            style: TextStyles.body2
-                                .colour(UiConstants.primaryColor)
-                                .underline,
+                            text: 'Terms of use',
+                            style: TextStyles.body2.underline,
                             recognizer: new TapGestureRecognizer()
                               ..onTap = () {
                                 Haptic.vibrate();
@@ -90,28 +91,11 @@ class BlockedUserView extends StatelessWidget {
                                 }
                               },
                           ),
-                          new TextSpan(
-                            text: locale.obBlockedSubtitle2,
-                            style: TextStyles.body2,
-                          ),
                         ],
                       ),
                     ),
-                    Container(
-                      padding: EdgeInsets.all(SizeConfig.padding20),
-                      child: Text("OR",
-                          style:
-                              TextStyles.body3.light.colour(Colors.grey[400])),
-                    ),
-                    Container(
-                      width: SizeConfig.screenWidth / 2,
-                      child: FelloButtonLg(
-                        onPressed: signout,
-                        child: Text(
-                          locale.signout,
-                          style: TextStyles.body2.bold.colour(Colors.white),
-                        ),
-                      ),
+                    SizedBox(
+                      height: SizeConfig.navBarHeight,
                     )
                   ],
                 ),
@@ -129,51 +113,5 @@ class BlockedUserView extends StatelessWidget {
         properties: {'userId': _userService.baseUser.uid});
     final Uri emailLaunchUri = Uri(scheme: 'mailto', path: 'hello@fello.in');
     launch(emailLaunchUri.toString());
-  }
-
-  signout() async {
-    if (await BaseUtil.showNoInternetAlert()) return;
-    BaseUtil.openDialog(
-      isBarrierDismissable: false,
-      addToScreenStack: true,
-      content: FelloConfirmationDialog(
-          title: 'Confirm',
-          subtitle: 'Are you sure you want to sign out?',
-          accept: 'Yes',
-          acceptColor: UiConstants.primaryColor,
-          asset: Assets.signout,
-          reject: "No",
-          rejectColor: UiConstants.tertiarySolid,
-          showCrossIcon: false,
-          onAccept: () {
-            Haptic.vibrate();
-
-            _mixpanelService.track(eventName: MixpanelEvents.signOut);
-            _mixpanelService.signOut();
-
-            _userService.signout().then((flag) {
-              if (flag) {
-                //log.debug('Sign out process complete');
-
-                _txnService.signOut();
-                _baseUtil.signOut();
-                AppState.backButtonDispatcher.didPopRoute();
-                AppState.delegate.appState.currentAction = PageAction(
-                    state: PageState.replaceAll, page: SplashPageConfig);
-                BaseUtil.showPositiveAlert(
-                  'Signed out',
-                  'Hope to see you soon',
-                );
-              } else {
-                BaseUtil.showNegativeAlert(
-                    'Sign out failed', 'Couldn\'t signout. Please try again');
-                //log.error('Sign out process failed');
-              }
-            });
-          },
-          onReject: () {
-            AppState.backButtonDispatcher.didPopRoute();
-          }),
-    );
   }
 }

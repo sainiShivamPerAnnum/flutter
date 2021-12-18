@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:developer';
+import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
@@ -104,7 +106,13 @@ class AugmontGoldBuyViewModel extends BaseModel {
     fetchGoldRates();
     fetchNotices();
     status = checkAugmontStatus();
-
+    if (_baseUtil.augmontDetail == null) {
+      _dbModel.getUserAugmontDetails(_baseUtil.myUser.uid).then((value) {
+        _baseUtil.augmontDetail = value;
+        print(_baseUtil.augmontDetail.userId);
+        refresh();
+      });
+    }
     if (status == STATUS_REGISTER) {
       _onboardUser();
     }
@@ -225,10 +233,6 @@ class AugmontGoldBuyViewModel extends BaseModel {
       return;
     }
 
-    if (_baseUtil.augmontDetail == null) {
-      _baseUtil.augmontDetail =
-          await _dbModel.getUserAugmontDetails(_baseUtil.myUser.uid);
-    }
     if (_baseUtil.augmontDetail == null) {
       BaseUtil.showNegativeAlert(
         'Deposit Failed',
