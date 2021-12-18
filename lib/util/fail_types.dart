@@ -37,6 +37,7 @@ enum FailType {
   TambolaTicketGenerationFailed,
   RequestCallbackFailed,
   FelloRewardCardShareFailed,
+  FelloRewardTextShareFailed,
   GameVoteFailed,
   ProfilePictureUpdateFailed,
   GoldRateFetchFailed,
