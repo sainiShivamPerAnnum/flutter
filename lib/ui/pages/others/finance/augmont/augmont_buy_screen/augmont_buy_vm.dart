@@ -1,9 +1,13 @@
 import 'dart:async';
+import 'dart:developer';
+import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -25,12 +29,13 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 class AugmontGoldBuyViewModel extends BaseModel {
   static const int STATUS_UNAVAILABLE = 0;
   static const int STATUS_REGISTER = 1;
   static const int STATUS_OPEN = 2;
-  final Log log = new Log("AugmontBuy");
+  final _logger = locator<Logger>();
   BaseUtil _baseUtil = locator<BaseUtil>();
   DBModel _dbModel = locator<DBModel>();
   AugmontModel _augmontModel = locator<AugmontModel>();
@@ -92,21 +97,31 @@ class AugmontGoldBuyViewModel extends BaseModel {
     notifyListeners();
   }
 
-  init() {
+  init() async {
+    setState(ViewState.Busy);
     goldAmountController = TextEditingController();
     fetchGoldRates();
-    fetchNotices();
+    await fetchNotices();
     status = checkAugmontStatus();
 
+    //Check if user is registered on augmont
     if (status == STATUS_REGISTER) {
       _onboardUser();
     }
+    if (_baseUtil.augmontDetail == null) {
+      _baseUtil.augmontDetail =
+          await _dbModel.getUserAugmontDetails(_baseUtil.myUser.uid);
+    }
+    // Check if deposit is locked the this particular user
+    if (_baseUtil.augmontDetail != null &&
+        _baseUtil.augmontDetail.depNotice != null &&
+        _baseUtil.augmontDetail.depNotice.isNotEmpty)
+      buyNotice = _baseUtil.augmontDetail.depNotice;
+    setState(ViewState.Idle);
   }
 
   fetchNotices() async {
     buyNotice = await _dbModel.showAugmontBuyNotice();
-
-    if(buyNotice != null && buyNotice.isNotEmpty)refresh();
   }
 
 // UI ESSENTIALS
@@ -219,18 +234,23 @@ class AugmontGoldBuyViewModel extends BaseModel {
     }
 
     if (_baseUtil.augmontDetail == null) {
-      _baseUtil.augmontDetail =
-          await _dbModel.getUserAugmontDetails(_baseUtil.myUser.uid);
-    }
-    if (_baseUtil.augmontDetail == null) {
       BaseUtil.showNegativeAlert(
         'Deposit Failed',
         'Please try again in sometime or contact us',
       );
       return;
     }
+
+    if (_baseUtil.augmontDetail.isDepLocked) {
+      BaseUtil.showNegativeAlert(
+        'Purchase Failed',
+        "${buyNotice ?? 'Gold buying is currently on hold. Please try again after sometime.'}",
+      );
+      return;
+    }
+
     bool _disabled = await _dbModel.isAugmontBuyDisabled();
-    if(_disabled != null && _disabled) {
+    if (_disabled != null && _disabled) {
       BaseUtil.showNegativeAlert(
         'Purchase Failed',
         'Gold buying is currently on hold. Please try again after sometime.',
@@ -251,7 +271,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   }
 
   onBuyValueChanged(String val) {
-    log.debug("Value: $val");
+    _logger.d("Value: $val");
     if (showMaxCapText) showMaxCapText = false;
     if (val != null && val.isNotEmpty) {
       if (double.tryParse(val.trim()) != null &&
@@ -444,14 +464,14 @@ class AugmontGoldBuyViewModel extends BaseModel {
       }
     } else if (txn.tranStatus == UserTransaction.TRAN_STATUS_CANCELLED) {
       //razorpay payment failed
-      log.debug('Payment cancelled');
+      _logger.d('Payment cancelled');
       if (_baseUtil.currentAugmontTxn != null) {
         onDepositComplete(false);
         _augmontModel.completeTransaction();
       }
     } else if (txn.tranStatus == UserTransaction.TRAN_STATUS_PENDING) {
       //razorpay completed but augmont purchase didnt go through
-      log.debug('Payment pending');
+      _logger.d('Payment pending');
       if (_baseUtil.currentAugmontTxn != null) {
         onDepositComplete(false);
         _augmontModel.completeTransaction();

@@ -5,6 +5,7 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
+import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_coin_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/core/service/winners_service.dart';
@@ -37,6 +38,7 @@ class RootViewModel extends BaseModel {
   final AppState _appState = locator<AppState>();
   final Logger _logger = locator<Logger>();
   final winnerService = locator<WinnerService>();
+  final txnService = locator<TransactionService>();
 
   BuildContext rootContext;
   bool _isInitialized = false;
@@ -47,6 +49,8 @@ class RootViewModel extends BaseModel {
   Future<void> refresh() async {
     await _userCoinService.getUserCoinBalance();
     await _userService.getUserFundWalletData();
+    txnService.signOut();
+    await txnService.fetchTransactions(4);
   }
 
   static final GlobalKey<ScaffoldState> scaffoldKey =

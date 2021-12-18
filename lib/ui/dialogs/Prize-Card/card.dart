@@ -343,9 +343,9 @@ class _TicketState extends State<FCard> {
                         if (flag) {
                           _isclaimed = true;
                           _tChoice = true;
-                            _mixpanelService.track(eventName: MixpanelEvents.prizeAWS, properties: {
-                            'amount': widget.unclaimedPrize
-                          });
+                          _mixpanelService.track(
+                              eventName: MixpanelEvents.prizeAWS,
+                              properties: {'amount': widget.unclaimedPrize});
                           setState(() {
                             _isPrizeProcessing = false;
                             claimtype = PrizeClaimChoice.AMZ_VOUCHER;
@@ -394,9 +394,9 @@ class _TicketState extends State<FCard> {
                         _tChoice = true;
                         if (flag) {
                           _isclaimed = true;
-                          _mixpanelService.track(eventName: MixpanelEvents.prizeGold, properties: {
-                            'amount': widget.unclaimedPrize
-                          });
+                          _mixpanelService.track(
+                              eventName: MixpanelEvents.prizeGold,
+                              properties: {'amount': widget.unclaimedPrize});
                           setState(() {
                             _isPrizeProcessing = false;
                             claimtype = PrizeClaimChoice.GOLD_CREDIT;
@@ -665,7 +665,6 @@ class _CloseCardState extends State<CloseCard> {
                             claimChoice: widget.claimtype,
                             prizeAmount:
                                 baseProvider.userFundWallet.prizeBalance,
-                            username: baseProvider.myUser.name,
                           ),
                         );
                       },

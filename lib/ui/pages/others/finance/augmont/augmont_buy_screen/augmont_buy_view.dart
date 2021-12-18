@@ -57,22 +57,20 @@ class AugmontGoldBuyView extends StatelessWidget {
                     padding: EdgeInsets.zero,
                     shrinkWrap: true,
                     children: [
-                      (model.buyNotice != null && model.buyNotice.isNotEmpty)?Container(
-                        decoration: BoxDecoration(
-                          color: UiConstants.primaryLight,
-                          borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-                        ),
-                        padding: EdgeInsets.all(SizeConfig.padding16),
-                        child: Stack(
-                          children: [
-                            Text(
-                              model.buyNotice,
-                              textAlign: TextAlign.center,
-                              style: TextStyles.body3.light,
-                            ),
-                          ],
-                        ),
-                      ):SizedBox(),
+                      (model.buyNotice != null && model.buyNotice.isNotEmpty)
+                          ? Container(
+                              decoration: BoxDecoration(
+                                color: UiConstants.primaryLight,
+                                borderRadius: BorderRadius.circular(
+                                    SizeConfig.roundness16),
+                              ),
+                              padding: EdgeInsets.all(SizeConfig.padding16),
+                              child: Text(
+                                model.buyNotice,
+                                style: TextStyles.body3.light,
+                              ),
+                            )
+                          : SizedBox(),
                       SizedBox(height: SizeConfig.padding16),
                       Text(
                         "Enter Amount",
@@ -233,6 +231,7 @@ class AugmontGoldBuyView extends StatelessWidget {
                             }
                           },
                         ),
+
                       // SizedBox(
                       //   height: SizeConfig.padding20,
                       // ),

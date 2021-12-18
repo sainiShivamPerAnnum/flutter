@@ -14,23 +14,22 @@ import 'intl/messages_all.dart';
 
 class S {
   S();
-
+  
   static S current;
-
-  static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
+  
+  static const AppLocalizationDelegate delegate =
+    AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name = (locale.countryCode?.isEmpty ?? false)
-        ? locale.languageCode
-        : locale.toString();
-    final localeName = Intl.canonicalizedLocale(name);
+    final name = (locale.countryCode?.isEmpty ?? false) ? locale.languageCode : locale.toString();
+    final localeName = Intl.canonicalizedLocale(name); 
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
       S.current = S();
-
+      
       return S.current;
     });
-  }
+  } 
 
   static S of(BuildContext context) {
     return Localizations.of<S>(context, S);
@@ -281,7 +280,7 @@ class S {
   /// `Choose a usename`
   String get obUsernameHint {
     return Intl.message(
-      'Choose a username',
+      'Choose a usename',
       name: 'obUsernameHint',
       desc: '',
       args: [],
@@ -333,6 +332,36 @@ class S {
     return Intl.message(
       'dot(.) are not allowed at the beginning and at the end example: .abc , abcd. are invalid usernames ',
       name: 'obUsernameRule4',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Account Activity`
+  String get obBlockedAb {
+    return Intl.message(
+      'Account Activity',
+      name: 'obBlockedAb',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your Account has been blocked`
+  String get obBlockedTitle {
+    return Intl.message(
+      'Your Account has been blocked',
+      name: 'obBlockedTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your Fello Account has been banned for activity that violates our `
+  String get obBlockedSubtitle1 {
+    return Intl.message(
+      'Your Fello Account has been banned for activity that violates our ',
+      name: 'obBlockedSubtitle1',
       desc: '',
       args: [],
     );
@@ -754,10 +783,10 @@ class S {
     );
   }
 
-  /// `Both you and your friend receive ₹ 25 and 100 Fello tokens in your account.`
+  /// `Both you and your friend receive ₹ 25 and 200 Fello tokens in your account.`
   String get refStep3 {
     return Intl.message(
-      'Both you and your friend receive ₹ 25 and 100 Fello tokens in your account.',
+      'Both you and your friend receive ₹ 25 and 200 Fello tokens in your account.',
       name: 'refStep3',
       desc: '',
       args: [],
@@ -999,7 +1028,7 @@ class S {
   /// `CONGRATULATIONS!`
   String get tWinTitle {
     return Intl.message(
-      'CONGRATULATIONS! 🎁',
+      'CONGRATULATIONS!',
       name: 'tWinTitle',
       desc: '',
       args: [],
@@ -1039,7 +1068,7 @@ class S {
   /// `Only users with minimun savings balance of ₹ 100 are eliglble for prizes`
   String get tParWinsubtitle {
     return Intl.message(
-      'Only users with a minimum savings balance of ₹ 100 are eligible for prizes',
+      'Only users with minimun savings balance of ₹ 100 are eliglble for prizes',
       name: 'tParWinsubtitle',
       desc: '',
       args: [],
