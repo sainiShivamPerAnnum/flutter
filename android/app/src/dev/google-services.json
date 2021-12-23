@@ -8,12 +8,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:76548371644:android:bfebda5878a97473174cb9",
+        "mobilesdk_app_id": "1:76548371644:android:8d8b7d9513f201c0174cb9",
         "android_client_info": {
-          "package_name": "in.fello.felloapp"
+          "package_name": "in.fello.felloapp.dev"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "76548371644-91391eok0njtib8251orf76npp2au7s1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "in.fello.felloapp.dev",
+            "certificate_hash": "6fa3feb4b59486aec86089fa8d519fd99851e58d"
+          }
+        },
         {
           "client_id": "76548371644-v44cjfu14vrhd66593e77kkvv7upfdeo.apps.googleusercontent.com",
           "client_type": 3
@@ -30,6 +38,13 @@
             {
               "client_id": "76548371644-v44cjfu14vrhd66593e77kkvv7upfdeo.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "76548371644-2mphkjd1hahmsrem16sce0lsonic5ce2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "in.fello.felloapp.iOS"
+              }
             }
           ]
         }
