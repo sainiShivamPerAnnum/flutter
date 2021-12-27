@@ -694,7 +694,7 @@ class BaseUtil extends ChangeNotifier {
   }
 
   static int getWeekNumber({DateTime currentDate}) {
-    DateTime tdt = (currentDate != null)?currentDate:new DateTime.now();
+    DateTime tdt = (currentDate != null) ? currentDate : new DateTime.now();
     int dayn = tdt.weekday;
     //tdt = new DateTime(tdt.year, tdt.month, tdt.day-dayn+3);
     //tdt.setDate(tdt.getDate() - dayn + 3);
@@ -1021,30 +1021,4 @@ class BaseUtil extends ChangeNotifier {
     this._isGoogleSignInProgress = value;
     notifyListeners();
   }
-
-  // int get atomicTicketGenerationLeftCount => _atomicTicketGenerationLeftCount;
-
-  // set atomicTicketGenerationLeftCount(int value) {
-  //   _atomicTicketGenerationLeftCount = value;
-  //   notifyListeners();
-  // }
-
-  // int get dailyPicksCount => _dailyPickCount;
-
-  // set dailyPicksCount(int count) {
-  //   _dailyPickCount = count;
-  //   notifyListeners();
-  // }
-
-  // Future<bool> isOfflineSnackBar(BuildContext context) async {
-  //   ConnectivityStatus connectivityStatus =
-  //       Provider.of<ConnectivityStatus>(context, listen: false);
-
-  //   if (connectivityStatus == ConnectivityStatus.Offline) {
-  //     await showNegativeAlert('Offline', 'Please connect to internet',
-  //         seconds: 3);
-  //     return true;
-  //   }
-  //   return false;
-  // }
 }

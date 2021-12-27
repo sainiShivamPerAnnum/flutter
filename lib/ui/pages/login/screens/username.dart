@@ -48,14 +48,6 @@ class UsernameState extends State<Username> {
   final _formKey = GlobalKey<FormState>();
   UsernameResponse response;
 
-  // @override
-  // void initState() {
-  //   focusNode = new FocusNode();
-  //   focusNode.addListener(
-  //       () => print('focusNode updated: hasFocus: ${focusNode.hasFocus}'));
-  //   super.initState();
-  // }
-
   @override
   void dispose() {
     focusNode?.dispose();

@@ -5,10 +5,7 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/tambola_winners_details.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
-import 'package:felloapp/core/repository/winners_repo.dart';
-import 'package:felloapp/core/service/leaderboard_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
-import 'package:felloapp/core/service/winners_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -16,16 +13,9 @@ import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:felloapp/util/locator.dart';
-import 'package:logger/logger.dart';
 
 class WinViewModel extends BaseModel {
   final _userService = locator<UserService>();
-  final _winnersRepo = locator<WinnersRepository>();
-  final _logger = locator<Logger>();
-  final _winnerService = locator<WinnerService>();
-  final _lbService = locator<LeaderboardService>();
-
   LocalDBModel _localDBModel = locator<LocalDBModel>();
   bool isWinnersLoading = false;
   WinnersModel _winners;
@@ -42,12 +32,7 @@ class WinViewModel extends BaseModel {
   double get getUnclaimedPrizeBalance =>
       _userService.userFundWallet.unclaimedBalance;
 
-  init() {
-    // if (!AppState.isWinOpened) {
-    //   _winnerService.fetchTopWinner();
-    //   AppState.isWinOpened = true;
-    // }
-  }
+  init() {}
 
   getWinningsButtonText() {
     if (_userService.userFundWallet.isPrizeBalanceUnclaimed())
@@ -64,20 +49,6 @@ class WinViewModel extends BaseModel {
     AppState.delegate.appState.currentAction =
         PageAction(state: PageState.addPage, page: MyWinnigsPageConfig);
   }
-
-  // fetchWinners() async {
-  //   isWinnersLoading = true;
-  //   notifyListeners();
-  //   var temp = await _winnersRepo.getWinners("GM_CRIC2020", "weekly");
-  //   if (temp != null) {
-  //     winners = temp.model;
-  //     _logger.d("Winners fetched");
-  //   } else
-  //     BaseUtil.showNegativeAlert(
-  //         "Unable to fetch winners", "try again in sometime");
-  //   isWinnersLoading = false;
-  //   notifyListeners();
-  // }
 
   openVoucherModal(
     String asset,

@@ -584,33 +584,3 @@ class BeerTicketItem extends StatelessWidget {
         ]);
   }
 }
-
-
-// (widget._transaction.type !=
-//         UserTransaction.TRAN_TYPE_WITHDRAW)
-//     ? referralTileWide(
-//         'Tickets Added:',
-//         '${widget._transaction.ticketUpCount ?? 'Unavailable'}',
-//         UiConstants.primaryColor)
-//     : referralTileWide(
-//         'Tickets Reduced:',
-//         '${widget._transaction.ticketUpCount ?? 'Unavailable'}',
-//         Colors.redAccent.withOpacity(0.6),
-//       ),
-// (widget._transaction.subType ==
-//         UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD)
-//     ? referralTileWide(
-//         'Closing Gold Balance:',
-//         widget._transaction.augmnt[
-//                     UserTransaction.subFldAugTotalGoldGm] ==
-//                 null
-//             ? "Unavailable"
-//             : '${widget._transaction.augmnt[UserTransaction.subFldAugTotalGoldGm] ?? 'Unavailable'} grams',
-//         UiConstants.primaryColor)
-//     : Container(),
-// (widget._transaction.closingBalance > 0)
-//     ? referralTileWide(
-//         'Overall Closing Balance:',
-//         '₹${widget._transaction.closingBalance.toStringAsFixed(2) ?? 'Unavailable'}',
-//         UiConstants.primaryColor)
-//     : Container(),
