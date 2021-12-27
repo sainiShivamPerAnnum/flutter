@@ -1,6 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:encrypt/encrypt.dart' as encrypt;
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 
 class BaseUser {

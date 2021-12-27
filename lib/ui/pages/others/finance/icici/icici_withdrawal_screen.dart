@@ -2,13 +2,11 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/dialogs/icici_redemption_otp_dialog.dart';
-import 'package:felloapp/ui/elements/faq_card.dart';
-import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/ui/widgets/faq_card/faq_card_view.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
@@ -277,9 +275,8 @@ class ICICIWithdrawalState extends State<ICICIWithdrawal> {
                           ],
                         ),
                       ),
-                      FAQCard(
-                        Assets.mfFaqHeaders,
-                        Assets.mfFaqAnswers,
+                      FAQCardView(
+                        category: 'icici',
                       ),
                     ],
                   ),

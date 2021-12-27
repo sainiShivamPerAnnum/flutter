@@ -1,4 +1,3 @@
-import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';

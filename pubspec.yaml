@@ -92,11 +92,8 @@ flutter:
   assets:
     - images/
     - images/Tambola/
-    - images/GamePoll/
     - images/svgs/
     - images/lottie/
-    - images/process/
-    - images/zerobal/
     - resources/augmont/fello-augmont-invoice.html
     - resources/fello-email-verification.html
     - resources/public.key

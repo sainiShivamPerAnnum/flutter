@@ -73,6 +73,7 @@ class AugmontGoldSellViewModel extends BaseModel {
         _baseUtil.augmontDetail.sellNotice != null &&
         _baseUtil.augmontDetail.sellNotice.isNotEmpty)
       sellNotice = _baseUtil.augmontDetail.sellNotice;
+
     setState(ViewState.Idle);
   }
 
@@ -254,8 +255,8 @@ class AugmontGoldSellViewModel extends BaseModel {
       showSuccessGoldSellDialog();
     } else {
       AppState.backButtonDispatcher.didPopRoute();
-      BaseUtil.showNegativeAlert(
-          'Sell did not complete', 'Your gold sell could not be completed at the moment',
+      BaseUtil.showNegativeAlert('Sell did not complete',
+          'Your gold sell could not be completed at the moment',
           seconds: 5);
     }
   }

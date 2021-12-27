@@ -16,6 +16,7 @@ import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:logger/logger.dart';
 
 class WinViewModel extends BaseModel {
