@@ -1,5 +1,4 @@
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/elements/faq_card.dart';
 import 'package:felloapp/ui/elements/plots/fund_graph.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
