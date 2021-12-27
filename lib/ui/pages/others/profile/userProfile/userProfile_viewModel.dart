@@ -238,23 +238,6 @@ class UserProfileVM extends BaseModel {
 
     return adultDate.isBefore(today);
   }
-  // showUnsavedChanges() {
-  //   if (_checkForChanges()) {
-  //     AppState.unsavedChanges = true;
-  //     BaseUtil.openDialog(
-  //         addToScreenStack: true,
-  //         isBarrierDismissable: false,
-  //         content: ConfirmActionDialog(
-  //             title: "You have unsaved changes",
-  //             description:
-  //                 "Are you sure want to exit. All changes will be discarded",
-  //             buttonText: "Yes",
-  //             confirmAction: () {
-  //               AppState.backButtonDispatcher.didPopRoute();
-  //             },
-  //             cancelAction: () {}));
-  //   }
-  // }
 
   signout() async {
     if (await BaseUtil.showNoInternetAlert()) return;

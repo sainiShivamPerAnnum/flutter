@@ -132,17 +132,6 @@ class FcmHandler extends ChangeNotifier {
       }
     }
 
-    // try {
-    //   url = data["deep_uri"] ?? '';
-    //   print("------------------->" + url);
-    //   if (url.isNotEmpty) {
-    //     AppState().setFcmData = url;
-    //   }
-    //   tab = int.tryParse(data["misc_data"]) ?? 0;
-    // } catch (e) {
-    //   log.error('$e');
-    // }
-
     return true;
   }
 

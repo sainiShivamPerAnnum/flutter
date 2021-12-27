@@ -20,29 +20,11 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
 class PlayViewModel extends BaseModel {
-  // List<OfferCardModel> _offerList = [
-  //   OfferCardModel(
-  //     title1: "2X Multiplier",
-  //     title2: "Double your tokens",
-  //     bgColor: UiConstants.tertiarySolid,
-  //     buttonText: "Explore",
-  //     routePath: '/not/yet/defined',
-  //   ),
-  //   OfferCardModel(
-  //     title1: "WIN",
-  //     title2: "2 games, 200 tokens",
-  //     bgColor: UiConstants.primaryColor,
-  //     buttonText: "Hop in",
-  //     routePath: '/not/yet/defined',
-  //   ),
-  // ];
-
   final _fclActionRepo = locator<FlcActionsRepo>();
   final _userCoinService = locator<UserCoinService>();
   final _userService = locator<UserService>();
   final _dbProvider = locator<DBModel>();
   final _logger = locator<Logger>();
-  final _baseUtil = locator<BaseUtil>();
 
   String _message;
   String _sessionId;

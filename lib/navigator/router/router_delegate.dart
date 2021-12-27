@@ -9,7 +9,6 @@ import 'package:felloapp/ui/pages/hamburger/chatsupport_page.dart';
 import 'package:felloapp/ui/pages/hamburger/faq_page.dart';
 import 'package:felloapp/ui/pages/hamburger/referral_policy_page.dart';
 import 'package:felloapp/ui/pages/hamburger/support.dart';
-import 'package:felloapp/ui/pages/hamburger/tnc_page.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
 import 'package:felloapp/ui/pages/notifications/notifications.dart';
 import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
@@ -177,10 +176,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
         case Pages.BankDetails:
           _addPageData(BankDetailsView(), BankDetailsPageConfig);
-          break;
-
-        case Pages.Tnc:
-          _addPageData(TnC(), TncPageConfig);
           break;
         case Pages.Faq:
           _addPageData(FAQPage(), FaqPageConfig);
@@ -360,10 +355,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
       case Pages.Referral:
         ReferralPageConfig.currentPageAction = action;
-        break;
-
-      case Pages.Tnc:
-        TncPageConfig.currentPageAction = action;
         break;
       case Pages.Faq:
         FaqPageConfig.currentPageAction = action;
