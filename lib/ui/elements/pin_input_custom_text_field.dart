@@ -335,7 +335,7 @@ class PinInputTextField extends StatefulWidget {
                     (decoration.gapSpaces?.length ?? (pinLength - 1)))),
         inputFormatters = inputFormatter == null
             ? <TextInputFormatter>[
-                WhitelistingTextInputFormatter.digitsOnly,
+                FilteringTextInputFormatter.digitsOnly,
                 LengthLimitingTextInputFormatter(pinLength)
               ]
             : inputFormatter
@@ -1012,7 +1012,7 @@ class PinInputTextFormField extends FormField<String> {
               }
               return result;
             },
-            autovalidate: autovalidate,
+            autovalidateMode: autovalidate ? AutovalidateMode.always : AutovalidateMode.disabled,
             enabled: enabled,
             builder: (FormFieldState<String> field) {
               final _PinInputTextFormFieldState state = field;
