@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';

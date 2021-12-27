@@ -5,7 +5,6 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/help_types.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class TransactionHelpDialog extends StatelessWidget {

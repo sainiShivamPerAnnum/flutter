@@ -7,7 +7,6 @@ import 'package:felloapp/util/augmont_api_util.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_html_to_pdf/flutter_html_to_pdf.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 

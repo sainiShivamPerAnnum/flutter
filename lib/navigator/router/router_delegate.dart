@@ -42,7 +42,6 @@ import 'package:felloapp/ui/pages/static/transactions_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 //Flutter Imports
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 

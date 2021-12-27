@@ -12,7 +12,6 @@ import 'package:felloapp/core/repository/prizes_repo.dart';
 import 'package:felloapp/core/repository/signzy_repo.dart';
 import 'package:felloapp/core/repository/statistics_repo.dart';
 import 'package:felloapp/core/repository/ticket_generation_repo.dart';
-import 'package:felloapp/core/repository/winners_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/repository/winners_repo.dart';
 import 'package:felloapp/core/service/api.dart';
@@ -50,7 +49,6 @@ import 'package:felloapp/ui/pages/others/profile/transactions_history/transactio
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_viewModel.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/splash/splash_vm.dart';
-import 'package:felloapp/ui/widgets/buttons/sell_gold_button/sellGoldBtn_vm.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_vm.dart';
 import 'package:felloapp/ui/widgets/drawer/drawer_vm.dart';
 import 'package:felloapp/ui/widgets/faq_card/faq_card_vm.dart';
