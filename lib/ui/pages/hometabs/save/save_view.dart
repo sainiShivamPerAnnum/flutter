@@ -254,44 +254,37 @@ class AugmontCard extends StatelessWidget {
                 child: Row(
                   children: [
                     Expanded(
-                      child: Center(
-                        child: FelloButton(
-                          onPressed: model.navigateToBuyScreen,
-                          activeButtonUI: Container(
-                            width: SizeConfig.screenWidth * 0.367, //152
-                            height: SizeConfig.screenWidth * 0.12, //50
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(100),
-                                color: UiConstants.primaryColor),
-                            alignment: Alignment.center,
-                            child: Text(
-                              locale.saveBuyButton,
-                              style:
-                                  TextStyles.title5.bold.colour(Colors.white),
-                            ),
+                      child: FelloButton(
+                        onPressed: model.navigateToBuyScreen,
+                        activeButtonUI: Container(
+                          height: SizeConfig.screenWidth * 0.12, //50
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100),
+                              color: UiConstants.primaryColor),
+                          alignment: Alignment.center,
+                          child: Text(
+                            locale.saveBuyButton,
+                            style: TextStyles.title5.bold.colour(Colors.white),
                           ),
-                          offlineButtonUI: Container(
-                            width: SizeConfig.screenWidth * 0.367, //152
-                            height: SizeConfig.screenWidth * 0.12, //50
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(100),
-                                color: Colors.grey),
-                            alignment: Alignment.center,
-                            child: Text(
-                              locale.saveBuyButton,
-                              style:
-                                  TextStyles.title5.bold.colour(Colors.white),
-                            ),
+                        ),
+                        offlineButtonUI: Container(
+                          height: SizeConfig.screenWidth * 0.12, //50
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100),
+                              color: Colors.grey),
+                          alignment: Alignment.center,
+                          child: Text(
+                            locale.saveBuyButton,
+                            style: TextStyles.title5.bold.colour(Colors.white),
                           ),
                         ),
                       ),
                     ),
-                    SizedBox(width: SizeConfig.padding20),
+                    SizedBox(width: SizeConfig.padding12),
                     Expanded(
-                        child: Center(
-                      child: SellGoldBtn(
+                      child: FelloButton(
+                        onPressed: model.navigateToSellScreen,
                         activeButtonUI: Container(
-                          width: SizeConfig.screenWidth * 0.367,
                           height: SizeConfig.screenWidth * 0.12,
                           decoration: BoxDecoration(
                             border: Border.all(
@@ -304,22 +297,7 @@ class AugmontCard extends StatelessWidget {
                             style: TextStyles.title5.bold,
                           ),
                         ),
-                        loadingButtonUI: Container(
-                          width: SizeConfig.screenWidth * 0.367,
-                          height: SizeConfig.screenWidth * 0.12,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                                color: UiConstants.tertiarySolid, width: 2),
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          alignment: Alignment.center,
-                          child: SpinKitThreeBounce(
-                            size: SizeConfig.title5,
-                            color: UiConstants.tertiarySolid,
-                          ),
-                        ),
-                        disabledButtonUI: Container(
-                          width: SizeConfig.screenWidth * 0.367,
+                        offlineButtonUI: Container(
                           height: SizeConfig.screenWidth * 0.12,
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.grey, width: 2),
@@ -332,8 +310,7 @@ class AugmontCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                      // ),
-                    )),
+                    ),
                   ],
                 ),
               ),
@@ -385,7 +362,19 @@ class AugmontCard extends StatelessWidget {
                     style: TextStyles.body3.colour(UiConstants.tertiarySolid),
                   ),
                 ),
-              )
+              ),
+              // Row(
+              //   children: [
+              //     Text("IsAugmontGoldBuyEnbled: "),
+              //     Text(model.isAugmontBuyEnabled().toString())
+              //   ],
+              // ),
+              // Row(
+              //   children: [
+              //     Text("IsAugmontGoldSellEnbled: "),
+              //     Text(model.isAugmontSellEnabled().toString())
+              //   ],
+              // ),
             ],
           ),
         ),

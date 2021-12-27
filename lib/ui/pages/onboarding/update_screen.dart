@@ -131,12 +131,11 @@ class _UpdateRequiredScreenState extends State<UpdateRequiredScreen> {
             'Update Error',
             'Oops! Something went wrong while updating your app',
           );
-          log.error(err);
+          log.error(err.toString());
           dbProvider.logFailure(
-              baseProvider.myUser.uid, FailType.AndroidInAppUpdateFailed, {
-            'cause':
-                'InAppUpdate did not work, ${err.toString().substring(0, 80)}'
-          });
+              baseProvider.myUser.uid,
+              FailType.AndroidInAppUpdateFailed,
+              {'cause': 'InAppUpdate did not work, ${err.toString()}'});
           BaseUtil.launchUrl(
               'https://play.google.com/store/apps/details?id=in.fello.felloapp');
         });
@@ -144,11 +143,11 @@ class _UpdateRequiredScreenState extends State<UpdateRequiredScreen> {
     } catch (e) {
       BaseUtil.showNegativeAlert(
           'Update Error', 'Oops! Something went wrong while updating your app');
-      log.error(e);
+      log.error(e.toString());
       dbProvider.logFailure(
-          baseProvider.myUser.uid, FailType.AndroidInAppUpdateFailed, {
-        'cause': 'InAppUpdate did not work, ${e.toString().substring(0, 80)}'
-      });
+          baseProvider.myUser.uid,
+          FailType.AndroidInAppUpdateFailed,
+          {'cause': 'InAppUpdate did not work, ${e.toString()}'});
       BaseUtil.launchUrl(
           'https://play.google.com/store/apps/details?id=in.fello.felloapp');
     }

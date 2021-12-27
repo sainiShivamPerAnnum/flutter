@@ -27,6 +27,16 @@ class TambolaService extends ChangeNotifier {
   int _atomicTicketDeletionLeftCount;
   int ticketGenerateCount;
 
+  signOut() {
+    _weeklyDrawFetched = false;
+    _weeklyTicksFetched = false;
+    _winnerDialogCalled = false;
+    _weeklyDigits = null;
+    _todaysPicks = null;
+    _userTicketWallet = null;
+    _userWeeklyBoards = null;
+  }
+
   UserTicketWallet get userTicketWallet => _userTicketWallet;
 
   get atomicTicketGenerationLeftCount => _atomicTicketGenerationLeftCount;

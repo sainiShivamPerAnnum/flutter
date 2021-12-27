@@ -234,7 +234,7 @@ class UsernameState extends State<Username> {
             RuleTile(rule: locale.obUsernameRule1),
             RuleTile(rule: locale.obUsernameRule2),
             RuleTile(rule: locale.obUsernameRule3),
-            RuleTile(rule: locale.obUsernameRule4),
+            // RuleTile(rule: locale.obUsernameRule4),
             SizedBox(
               height: SizeConfig.screenHeight * 0.3,
             ),

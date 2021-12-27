@@ -9,6 +9,7 @@ import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/repository/investment_actions_repo.dart';
 import 'package:felloapp/core/repository/prizes_repo.dart';
+import 'package:felloapp/core/repository/signzy_repo.dart';
 import 'package:felloapp/core/repository/statistics_repo.dart';
 import 'package:felloapp/core/repository/ticket_generation_repo.dart';
 import 'package:felloapp/core/repository/winners_repo.dart';
@@ -100,6 +101,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => WinnersRepository());
   locator.registerLazySingleton(() => TicketGenerationRepo());
   locator.registerLazySingleton(() => InvestmentActionsRepository());
+  locator.registerLazySingleton(() => SignzyRepository());
 
   // SPLASH
   locator.registerFactory(() => LauncherViewModel());
@@ -128,7 +130,7 @@ void setupLocator() {
   locator.registerFactory(() => MyWinningsViewModel());
 
   //WIDGETS
-  locator.registerFactory(() => SellGoldBtnVM());
+  // locator.registerFactory(() => SellGoldBtnVM());
   locator.registerFactory(() => FDrawerVM());
   locator.registerFactory(() => MiniTransactionCardViewModel());
   locator.registerFactory(() => FelloCoinBarViewModel());

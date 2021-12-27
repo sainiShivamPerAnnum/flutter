@@ -2,7 +2,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
-import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
@@ -13,18 +12,17 @@ import 'package:felloapp/ui/pages/hamburger/support.dart';
 import 'package:felloapp/ui/pages/hamburger/tnc_page.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
 import 'package:felloapp/ui/pages/notifications/notifications.dart';
+import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_page.dart';
 import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/edit_augmont_bank_details.dart';
-import 'package:felloapp/ui/pages/others/finance/icici/mf_details_page.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_game/cricket_game_view.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/dailyPicksDraw/dailyPicksDraw_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/show_all_tickets.dart';
-import 'package:felloapp/ui/pages/others/games/tambola/summary_tickets_display.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_game/tambola_game_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_walkthrough.dart';
@@ -33,18 +31,16 @@ import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_view.
 import 'package:felloapp/ui/pages/others/profile/claim_username.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
+import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/referrals/referral_history/referral_history_view.dart';
 import 'package:felloapp/ui/pages/others/profile/transactions_history/transactions_history_view.dart';
-import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_view.dart';
 import 'package:felloapp/ui/pages/others/profile/verify_email.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/pages/splash/splash_view.dart';
 import 'package:felloapp/ui/pages/static/transactions_view.dart';
-import 'package:felloapp/util/locator.dart';
-
 import 'package:felloapp/util/assets.dart';
-
+import 'package:felloapp/util/locator.dart';
 //Flutter Imports
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -267,6 +263,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.MyWinnings:
           _addPageData(MyWinningsView(), MyWinnigsPageConfig);
           break;
+        case Pages.blockedUser:
+          _addPageData(BlockedUserView(), BlockedUserPageConfig);
+          break;
         default:
           break;
       }
@@ -452,6 +451,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.MyWinnings:
         MyWinnigsPageConfig.currentPageAction = action;
         break;
+      case Pages.blockedUser:
+        BlockedUserPageConfig.currentPageAction = action;
+        break;
       default:
         break;
     }
@@ -606,9 +608,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case 'walkthrough':
         pageConfiguration = WalkThroughConfig;
-      // case 'tambolaTickets':
-      //   pageConfiguration = TambolaTicketsPageConfig;
-      //   break;
+        break;
+      case 'blocked':
+        pageConfiguration = BlockedUserPageConfig;
+        break;
     }
     if (pageConfiguration != null) {
       addPage(pageConfiguration);

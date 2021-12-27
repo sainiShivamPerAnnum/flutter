@@ -1,15 +1,18 @@
+
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/deposit_response_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/rsa_encryption.dart';
 import 'package:logger/logger.dart';
 
 class InvestmentActionsRepository {
   final _userService = locator<UserService>();
   final _apiPaths = locator<ApiPath>();
   final _logger = locator<Logger>();
+  final _rsaEncryption = new RSAEncryption();
 
   Future<String> _getBearerToken() async {
     String token = await _userService.firebaseUser.getIdToken();
@@ -54,10 +57,18 @@ class InvestmentActionsRepository {
       "aug_map": initAugMap,
       "rzp_map": initRzpMap
     };
-    _logger.d("initiateUserDeposit : $_body");
+    _logger.d("initiateUserDeposit:: Pre encryption: $_body");
+    if (await _rsaEncryption.init()) {
+      _body = _rsaEncryption.encryptRequestBody(_body);
+      _logger.d("initiateUserDeposit:: Post encryption: ${_body.toString()}");
+    } else {
+      _logger.e("Encrypter initialization failed!! exiting method");
+    }
 
-    // try {
+    try {
+      ///Add the authorisation bearer token
       final String _bearer = await _getBearerToken();
+
       final response = await APIService.instance
           .postData(_apiPaths.kDepositPending, body: _body, token: _bearer);
 
@@ -69,10 +80,10 @@ class InvestmentActionsRepository {
       _logger.d("response from api: ${_investmentDepositModel.toString()}");
 
       return ApiResponse(model: _investmentDepositModel, code: 200);
-    // } catch (e) {
-    //   _logger.e(e.toString());
-    //   return ApiResponse.withError(e.toString(), 400);
-    // }
+    } catch (e) {
+      _logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
   }
 
   Future<ApiResponse<DepositResponseModel>> completeUserDeposit({
@@ -91,7 +102,13 @@ class InvestmentActionsRepository {
       "tran_id": txnId,
       "enqueuedTaskDetails": enqueuedTaskDetails.toMap()
     };
-    _logger.d("completeUserDeposit : $_body");
+    _logger.d("completeUserDeposit:: Pre encryption: $_body");
+    if (await _rsaEncryption.init()) {
+      _body = _rsaEncryption.encryptRequestBody(_body);
+      _logger.d("completeUserDeposit:: Post encryption: ${_body.toString()}");
+    } else {
+      _logger.e("Encrypter initialization failed.");
+    }
     try {
       final String _bearer = await _getBearerToken();
       final response = await APIService.instance
@@ -121,7 +138,13 @@ class InvestmentActionsRepository {
       "enqueuedTaskDetails": enqueuedTaskDetails.toMap()
     };
 
-    _logger.d("completeUserDeposit : $_body");
+    _logger.d("cancelUserDeposit:: Pre encryption: $_body");
+    if (await _rsaEncryption.init()) {
+      _body = _rsaEncryption.encryptRequestBody(_body);
+      _logger.d("cancelUserDeposit:: Post encryption: ${_body.toString()}");
+    } else {
+      _logger.e("Encryption initialization failed.");
+    }
     try {
       final String _bearer = await _getBearerToken();
       final response = await APIService.instance
@@ -151,8 +174,14 @@ class InvestmentActionsRepository {
       "sell_gold_map": sellGoldMap,
     };
 
-    _logger.d("withdrawlComplete : $_body");
-    // try {
+    _logger.d("withdrawComplete:: Pre encryption: $_body");
+    if (await _rsaEncryption.init()) {
+      _body = _rsaEncryption.encryptRequestBody(_body);
+      _logger.d("withdrawComplete:: Post encryption: ${_body.toString()}");
+    } else {
+      _logger.e("Encryption initialization failed.");
+    }
+    try {
       final String _bearer = await _getBearerToken();
       final response = await APIService.instance
           .postData(_apiPaths.kWithdrawlComplete, body: _body, token: _bearer);
@@ -163,10 +192,10 @@ class InvestmentActionsRepository {
       _logger.d(_investmentDepositModel.toString());
 
       return ApiResponse(model: _investmentDepositModel, code: 200);
-    // } catch (e) {
-    //   _logger.e(e);
-    //   return ApiResponse.withError(e.toString(), 400);
-    // }
+    } catch (e) {
+      _logger.e(e);
+      return ApiResponse.withError(e.toString(), 400);
+    }
   }
 
   Future<ApiResponse<DepositResponseModel>> withdrawlCancelled(
@@ -181,7 +210,13 @@ class InvestmentActionsRepository {
       "aug_map": augMap,
     };
 
-    _logger.d("withdrawlCancelled : $_body");
+    _logger.d("withdrawCancelled:: Pre encryption: $_body");
+    if (await _rsaEncryption.init()) {
+      _body = _rsaEncryption.encryptRequestBody(_body);
+      _logger.d("withdrawCancelled:: Post encryption: ${_body.toString()}");
+    } else {
+      _logger.e("Encryption initialization failed.");
+    }
     try {
       final String _bearer = await _getBearerToken();
       final response = await APIService.instance

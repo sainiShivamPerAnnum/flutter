@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
@@ -35,6 +36,7 @@ class AugmontGoldSellViewModel extends BaseModel {
   AugmontRates goldRates;
   bool _isGoldSellInProgress = false;
   FocusNode sellFieldNode = FocusNode();
+  String sellNotice;
 
   double goldSellGrams = 0;
   double goldAmountFromGrams = 0.0;
@@ -55,17 +57,28 @@ class AugmontGoldSellViewModel extends BaseModel {
     notifyListeners();
   }
 
-  init() {
+  init() async {
+    setState(ViewState.Busy);
     goldAmountController = TextEditingController();
+    await fetchNotices();
     fetchGoldRates();
     fetchLockedGoldQnt();
 
     if (_baseUtil.augmontDetail == null) {
-      _dbModel.getUserAugmontDetails(_baseUtil.myUser.uid).then((value) {
-        _baseUtil.augmontDetail = value;
-        refresh();
-      });
+      _baseUtil.augmontDetail =
+          await _dbModel.getUserAugmontDetails(_baseUtil.myUser.uid);
     }
+    // Check if sell is locked the this particular user
+    if (_baseUtil.augmontDetail != null &&
+        _baseUtil.augmontDetail.sellNotice != null &&
+        _baseUtil.augmontDetail.sellNotice.isNotEmpty)
+      sellNotice = _baseUtil.augmontDetail.sellNotice;
+
+    setState(ViewState.Idle);
+  }
+
+  fetchNotices() async {
+    sellNotice = await _dbModel.showAugmontSellNotice();
   }
 
   Widget amoutChip(double amt) {
@@ -199,6 +212,14 @@ class AugmontGoldSellViewModel extends BaseModel {
       );
       return;
     }
+
+    if (_baseUtil.augmontDetail.isSellLocked) {
+      BaseUtil.showNegativeAlert(
+        'Sell Failed',
+        "${sellNotice ?? 'Gold sell is currently on hold. Please try again after sometime.'}",
+      );
+      return;
+    }
     bool _disabled = await _dbModel.isAugmontSellDisabled();
     if (_disabled != null && _disabled) {
       BaseUtil.showNegativeAlert(
@@ -214,7 +235,8 @@ class AugmontGoldSellViewModel extends BaseModel {
 
   Future<void> _onSellTransactionComplete(UserTransaction txn) async {
     if (_baseUtil.currentAugmontTxn == null) return;
-    if (txn.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE) {
+    if (txn.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE ||
+        txn.tranStatus == UserTransaction.TRAN_STATUS_PROCESSING) {
       ///update UI
       onSellComplete(true);
       _augmontModel.completeTransaction();
@@ -233,8 +255,8 @@ class AugmontGoldSellViewModel extends BaseModel {
       showSuccessGoldSellDialog();
     } else {
       AppState.backButtonDispatcher.didPopRoute();
-      BaseUtil.showNegativeAlert('Failed',
-          'Your gold Sell failed. Please try again or contact us if you are facing issues',
+      BaseUtil.showNegativeAlert('Sell did not complete',
+          'Your gold sell could not be completed at the moment',
           seconds: 5);
     }
   }
@@ -264,7 +286,7 @@ class AugmontGoldSellViewModel extends BaseModel {
               textAlign: TextAlign.center,
               text: TextSpan(
                 text:
-                    "Your withdrawal is successful, the amount will be credited in ",
+                    "Your withdrawal is successfully being processed and will be credited to your bank within ",
                 style: TextStyles.body3.colour(Colors.black54),
                 children: [
                   TextSpan(

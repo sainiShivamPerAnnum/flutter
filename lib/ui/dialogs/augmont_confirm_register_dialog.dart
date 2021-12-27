@@ -1,10 +1,12 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/palette.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -59,12 +61,14 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
     _width = MediaQuery.of(context).size.width;
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     return WillPopScope(
-        onWillPop: () async {
-          AppState.backButtonDispatcher.didPopRoute();
-          baseProvider.isAugmontRegnInProgress = false;
-          print(AppState.screenStack);
-          return false;
-        },
+      onWillPop: () async {
+        AppState.backButtonDispatcher.didPopRoute();
+        baseProvider.isAugmontRegnInProgress = false;
+        print(AppState.screenStack);
+        return false;
+      },
+      child: Container(
+        margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
         child: Dialog(
           insetPadding:
               EdgeInsets.only(left: 20, top: 50, bottom: 80, right: 20),
@@ -74,7 +78,9 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
           elevation: 0.0,
           backgroundColor: Colors.white,
           child: dialogContent(context),
-        ));
+        ),
+      ),
+    );
   }
 
   dialogContent(BuildContext context) {
@@ -87,7 +93,7 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
             child: Padding(
                 padding: EdgeInsets.symmetric(
                     vertical: SizeConfig.globalMargin * 2,
-                    horizontal: SizeConfig.globalMargin),
+                    horizontal: SizeConfig.pageHorizontalMargins),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -163,60 +169,84 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
                             : Container(),
                       ],
                     ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.globalMargin),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                widget.onReject();
-                                AppState.backButtonDispatcher.didPopRoute();
-                              },
-                              style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all(Colors.black),
-                              ),
-                              child: FittedBox(
-                                child: Text(
-                                  "Cancel",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                AppState.backButtonDispatcher.didPopRoute();
+                    Container(
+                      width: SizeConfig.screenWidth,
+                      child: FelloButtonLg(
+                        onPressed: () {
+                          AppState.backButtonDispatcher.didPopRoute();
 
-                                widget.onAccept();
-                              },
-                              style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(
-                                    widget.dialogColor),
-                              ),
-                              child: FittedBox(
-                                child: Text(
-                                  "Confirm",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+                          widget.onAccept();
+                        },
+                        child: Text("Confirm",
+                            style: TextStyles.body2.bold.colour(Colors.white)),
                       ),
                     ),
+                    SizedBox(height: SizeConfig.padding12),
+                    Container(
+                      width: SizeConfig.screenWidth,
+                      child: FelloButtonLg(
+                        onPressed: () {
+                          widget.onReject();
+                          AppState.backButtonDispatcher.didPopRoute();
+                        },
+                        color: UiConstants.tertiarySolid,
+                        child: Text("Cancel", style: TextStyles.body2.bold),
+                      ),
+                    ),
+                    // Padding(
+                    //   padding: EdgeInsets.symmetric(
+                    //       horizontal: SizeConfig.globalMargin),
+                    //   child: Row(
+                    //     children: [
+                    //       Expanded(
+                    //         child: ElevatedButton(
+                    //           onPressed: () {
+                    //             widget.onReject();
+                    //             AppState.backButtonDispatcher.didPopRoute();
+                    //           },
+                    //           style: ButtonStyle(
+                    //             backgroundColor:
+                    //                 MaterialStateProperty.all(Colors.black),
+                    //           ),
+                    //           child: FittedBox(
+                    //             child: Text(
+                    //               "Cancel",
+                    //               style: TextStyle(
+                    //                 color: Colors.white,
+                    //                 fontWeight: FontWeight.w500,
+                    //               ),
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //       SizedBox(
+                    //         width: 20,
+                    //       ),
+                    //       Expanded(
+                    //         child: ElevatedButton(
+                    //           onPressed: () {
+                    //             AppState.backButtonDispatcher.didPopRoute();
+
+                    //             widget.onAccept();
+                    //           },
+                    //           style: ButtonStyle(
+                    //             backgroundColor: MaterialStateProperty.all(
+                    //                 widget.dialogColor),
+                    //           ),
+                    //           child: FittedBox(
+                    //             child: Text(
+                    //               "Confirm",
+                    //               style: TextStyle(
+                    //                 color: Colors.white,
+                    //                 fontWeight: FontWeight.w500,
+                    //               ),
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                   ],
                 )),
           )

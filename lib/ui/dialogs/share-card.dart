@@ -11,7 +11,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ShareCard extends StatelessWidget {
-  final String username, dpUrl;
+  final dpUrl;
   final double prizeAmount;
   final PrizeClaimChoice claimChoice;
 
@@ -19,7 +19,6 @@ class ShareCard extends StatelessWidget {
     this.claimChoice,
     this.dpUrl,
     this.prizeAmount,
-    this.username,
   });
 
   getImage() {
