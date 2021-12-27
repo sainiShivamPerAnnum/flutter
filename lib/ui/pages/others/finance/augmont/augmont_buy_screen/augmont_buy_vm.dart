@@ -1,13 +1,9 @@
 import 'dart:async';
-import 'dart:developer';
-import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
-import 'package:felloapp/core/model/base_user_model.dart';
-import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -24,7 +20,6 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -117,6 +112,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
         _baseUtil.augmontDetail.depNotice != null &&
         _baseUtil.augmontDetail.depNotice.isNotEmpty)
       buyNotice = _baseUtil.augmontDetail.depNotice;
+
     setState(ViewState.Idle);
   }
 

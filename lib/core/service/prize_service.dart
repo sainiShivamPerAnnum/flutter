@@ -1,6 +1,5 @@
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/repository/prizes_repo.dart';
-import 'package:felloapp/core/repository/statistics_repo.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/cupertino.dart';

@@ -7,7 +7,6 @@ import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
-import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
@@ -38,7 +37,6 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 
 //Dart and Flutter Imports
 import 'dart:async';
-import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 

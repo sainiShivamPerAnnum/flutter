@@ -1,12 +1,10 @@
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/elements/faq_card.dart';
 import 'package:felloapp/ui/elements/plots/fund_graph.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/faq_card/faq_card_view.dart';
 import 'package:felloapp/ui/widgets/faq_card/faq_card_vm.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';

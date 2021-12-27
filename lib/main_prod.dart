@@ -1,4 +1,3 @@
-import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/util/credentials_stage.dart';

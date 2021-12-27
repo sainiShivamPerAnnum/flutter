@@ -1,4 +1,3 @@
-import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -7,7 +6,6 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class Loser extends StatelessWidget {
   const Loser({Key key}) : super(key: key);

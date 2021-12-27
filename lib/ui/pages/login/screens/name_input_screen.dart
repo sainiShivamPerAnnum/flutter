@@ -1,4 +1,7 @@
 //Project Imports
+//Dart and Flutter Imports
+import 'dart:typed_data';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
@@ -9,18 +12,11 @@ import 'package:felloapp/util/augmont_state_list.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-
-//Dart and Flutter Imports
-import 'dart:typed_data';
-import 'dart:ui';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
 //Pub Imports
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
@@ -491,78 +487,6 @@ class NameInputScreenState extends State<NameInputScreen> {
                     .toList(),
               ),
             ),
-            // Container(
-            //   width: SizeConfig.screenWidth,
-            //   height: SizeConfig.screenWidth * 0.115,
-            //   decoration: BoxDecoration(
-            //     color: UiConstants.primaryColor.withOpacity(0.1),
-            //     borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-            //   ),
-            //   padding: EdgeInsets.all(SizeConfig.padding2),
-            //   child: Stack(
-            //     children: [
-            //       AnimatedPositioned(
-            //         left: _isInvested ? 0 : SizeConfig.screenWidth * 0.45,
-            //         duration: Duration(milliseconds: 400),
-            //         child: Container(
-            //           height: SizeConfig.screenWidth * 0.106,
-            //           width: SizeConfig.screenWidth * 0.422,
-            //           decoration: BoxDecoration(
-            //             color: Colors.white,
-            //             borderRadius:
-            //                 BorderRadius.circular(SizeConfig.roundness12),
-            //           ),
-            //         ),
-            //       ),
-            //       Container(
-            //         width: SizeConfig.screenWidth,
-            //         height: SizeConfig.screenWidth * 0.115,
-            //         child: Row(
-            //           children: [
-            //             Expanded(
-            //               child: Center(
-            //                 child: TextButton(
-            //                   onPressed: () {
-            //                     setState(() {
-            //                       _isInvested = true;
-            //                     });
-            //                   },
-            //                   child: Text(
-            //                     "YES",
-            //                     style: TextStyles.body2.colour(
-            //                       _isInvested
-            //                           ? UiConstants.primaryColor
-            //                           : Colors.grey,
-            //                     ),
-            //                   ),
-            //                 ),
-            //               ),
-            //             ),
-            //             Expanded(
-            //               child: Center(
-            //                 child: TextButton(
-            //                   onPressed: () {
-            //                     setState(() {
-            //                       _isInvested = false;
-            //                     });
-            //                   },
-            //                   child: Text(
-            //                     "NO",
-            //                     style: TextStyles.body2.colour(
-            //                       !_isInvested
-            //                           ? UiConstants.primaryColor
-            //                           : Colors.grey,
-            //                     ),
-            //                   ),
-            //                 ),
-            //               ),
-            //             ),
-            //           ],
-            //         ),
-            //       )
-            //     ],
-            //   ),
-            // ),
             SizedBox(height: SizeConfig.navBarHeight),
             SizedBox(height: SizeConfig.viewInsets.bottom)
           ],

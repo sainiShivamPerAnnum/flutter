@@ -1,14 +1,10 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
-import 'package:felloapp/ui/elements/custom-art/tambola_ticket_painter.dart';
-import 'package:felloapp/ui/elements/tambola-global/weekly_picks.dart';
-import 'package:felloapp/ui/pages/others/games/tambola/tambola_game/tambola_game_view.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:shimmer_animation/shimmer_animation.dart';
 
 class Ticket extends StatelessWidget {
   Ticket({

@@ -18,7 +18,6 @@ import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/mixpanel_events.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
@@ -55,42 +54,6 @@ class KYCDetailsViewModel extends BaseModel {
     panController = new TextEditingController();
     checkForKycExistence();
   }
-
-  // _getPanKeyboardType() {
-  //   if (panController.text.length >= 0 && panController.text.length < 5) {
-  //     return TextInputType.name;
-  //   } else if (panController.text.length >= 5 &&
-  //       panController.text.length < 9) {
-  //     return TextInputType.number;
-  //   }
-  //   return TextInputType.name;
-  // }
-
-  // onPanEntered() {
-  //   bool _change = false;
-  //   if (_getPanKeyboardType() == TextInputType.name &&
-  //       panTextInputType == TextInputType.number) {
-  //     panFocusNode.unfocus();
-  //     panTextInputType = TextInputType.name;
-  //     _change = true;
-  //     panFocusNode.requestFocus();
-  //     notifyListeners();
-  //   } else if (_getPanKeyboardType() == TextInputType.number &&
-  //       panTextInputType == TextInputType.name) {
-  //     panFocusNode.unfocus();
-  //     panTextInputType = TextInputType.number;
-  //     _change = true;
-  //     panFocusNode.requestFocus();
-  //     notifyListeners();
-  //   } else {}
-
-  //   // if (_change) {
-  //   //   panFocusNode.unfocus();
-  //   //   notifyListeners();
-  //   // }
-
-  //   return _change;
-  // }
 
   checkForKeyboardChange(String val) {
     if (val.length >= 0 &&

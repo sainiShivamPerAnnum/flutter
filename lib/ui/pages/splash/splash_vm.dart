@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:typed_data';
+import 'dart:ui' as ui show Image, instantiateImageCodec;
 
 import 'package:device_unlock/device_unlock.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/mixpanel_service.dart';
@@ -14,8 +14,6 @@ import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'dart:ui' as ui show Image, instantiateImageCodec;
-
 import 'package:felloapp/ui/elements/logo/logo_canvas.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';

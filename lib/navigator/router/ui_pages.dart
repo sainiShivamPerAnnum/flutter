@@ -10,7 +10,6 @@ const String MfDetailsPath = '/mfDetails';
 const String AugDetailsPath = '/augDetails';
 const String TransactionPath = '/tran';
 const String ReferralPath = '/referral';
-const String TncPath = '/tnc';
 const String FaqPath = '/faq';
 const String AugOnboardingPath = '/augOnboard';
 const String AugWithdrawalPath = '/augWithdrawal';
@@ -54,7 +53,6 @@ enum Pages {
   AugDetails,
   Transaction,
   Referral,
-  Tnc,
   Faq,
   AugOnboard,
   UpdateRequired,
@@ -157,11 +155,6 @@ PageConfiguration ReferralPageConfig = PageConfiguration(
   uiPage: Pages.Referral,
 );
 
-PageConfiguration TncPageConfig = PageConfiguration(
-  key: 'Tnc',
-  path: TncPath,
-  uiPage: Pages.Tnc,
-);
 PageConfiguration FaqPageConfig = PageConfiguration(
   key: 'Faq',
   path: FaqPath,

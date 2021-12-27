@@ -1,12 +1,9 @@
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/dialogs/augmont_regn_security_dialog.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_winnings.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
-import 'package:felloapp/ui/widgets/buttons/sell_gold_button/sellGoldBtn_view.dart';
 import 'package:felloapp/ui/widgets/mini_trans_card/mini_trans_card_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -14,7 +11,6 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logger/logger.dart';
 
@@ -364,18 +360,6 @@ class AugmontCard extends StatelessWidget {
                   ),
                 ),
               ),
-              // Row(
-              //   children: [
-              //     Text("IsAugmontGoldBuyEnbled: "),
-              //     Text(model.isAugmontBuyEnabled().toString())
-              //   ],
-              // ),
-              // Row(
-              //   children: [
-              //     Text("IsAugmontGoldSellEnbled: "),
-              //     Text(model.isAugmontSellEnabled().toString())
-              //   ],
-              // ),
             ],
           ),
         ),

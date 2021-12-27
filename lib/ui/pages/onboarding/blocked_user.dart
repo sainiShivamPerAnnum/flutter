@@ -1,13 +1,9 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/service/mixpanel_service.dart';
-import 'package:felloapp/core/service/transaction_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';

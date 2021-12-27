@@ -1,11 +1,8 @@
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/pages/others/profile/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:flutter/material.dart';
 
 class DrawerModel {
   String title;
