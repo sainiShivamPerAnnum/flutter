@@ -15,14 +15,14 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="in.fello.felloapp.Application"
-        android:label="Fello"
+        android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round">
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="in.fello.felloapp"
+            android:authorities="${applicationId}.contentprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
