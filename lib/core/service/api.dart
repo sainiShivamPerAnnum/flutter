@@ -73,13 +73,13 @@ class Api {
         snapshot = query
             .orderBy('created_time', descending: true)
             .startAfterDocument(lastDoc)
-            .limit(10)
+            .limit(20)
             .get();
       else
         snapshot =
-            query.orderBy('created_time', descending: true).limit(10).get();
+            query.orderBy('created_time', descending: true).limit(20).get();
     } catch (e) {
-      logger.e(e);
+      logger.e(e.toString());
     }
     return snapshot;
   }

@@ -162,11 +162,13 @@ class DBModel extends ChangeNotifier {
     try {
       QuerySnapshot querySnapshot =
           await _api.getUserNotifications(userId, lastDoc);
-      lastAlertDoc = querySnapshot.docs.last;
-      for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
-        AlertModel alert = AlertModel.fromMap(documentSnapshot.data());
-        logger.d(alert.toString());
-        alerts.add(alert);
+      if (querySnapshot != null) {
+        lastAlertDoc = querySnapshot.docs.last;
+        for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
+          AlertModel alert = AlertModel.fromMap(documentSnapshot.data());
+          logger.d(alert.toString());
+          alerts.add(alert);
+        }
       }
     } catch (e) {
       logger.e(e);

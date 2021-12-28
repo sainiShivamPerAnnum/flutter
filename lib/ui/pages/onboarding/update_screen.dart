@@ -9,7 +9,6 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:in_app_update/in_app_update.dart';
 import 'package:provider/provider.dart';
 
 class UpdateRequiredScreen extends StatefulWidget {
@@ -101,12 +100,17 @@ class _UpdateRequiredScreenState extends State<UpdateRequiredScreen> {
                   highlightColor: Colors.white30,
                   splashColor: Colors.white30,
                   onPressed: () {
-                    if (Platform.isIOS) {
-                      BaseUtil.launchUrl(
-                          'https://apps.apple.com/in/app/fello-save-play-win/id1558445254');
-                    } else if (Platform.isAndroid) {
-                      // BaseUtil.launchUrl('https://play.google.com/store/apps/details?id=in.fello.felloapp');
-                      autoUpdate();
+                    try {
+                      if (Platform.isIOS)
+                        BaseUtil.launchUrl(
+                            'https://apps.apple.com/in/app/fello-save-play-win/id1558445254');
+                      else if (Platform.isAndroid)
+                        BaseUtil.launchUrl(
+                            'https://play.google.com/store/apps/details?id=in.fello.felloapp');
+                    } catch (e) {
+                      Log(e.toString());
+                      BaseUtil.showNegativeAlert(
+                          "Something went wrong", "Please try again");
                     }
                   },
                 ),
@@ -118,37 +122,5 @@ class _UpdateRequiredScreenState extends State<UpdateRequiredScreen> {
         ),
       ]),
     );
-  }
-
-  Future<void> autoUpdate() async {
-    AppUpdateInfo updateInfo;
-    try {
-      updateInfo = await InAppUpdate.checkForUpdate();
-      if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
-        InAppUpdate.performImmediateUpdate().catchError((err) {
-          BaseUtil.showNegativeAlert(
-            'Update Error',
-            'Oops! Something went wrong while updating your app',
-          );
-          log.error(err.toString());
-          dbProvider.logFailure(
-              baseProvider.myUser.uid,
-              FailType.AndroidInAppUpdateFailed,
-              {'cause': 'InAppUpdate did not work, ${err.toString()}'});
-          BaseUtil.launchUrl(
-              'https://play.google.com/store/apps/details?id=in.fello.felloapp');
-        });
-      }
-    } catch (e) {
-      BaseUtil.showNegativeAlert(
-          'Update Error', 'Oops! Something went wrong while updating your app');
-      log.error(e.toString());
-      dbProvider.logFailure(
-          baseProvider.myUser.uid,
-          FailType.AndroidInAppUpdateFailed,
-          {'cause': 'InAppUpdate did not work, ${e.toString()}'});
-      BaseUtil.launchUrl(
-          'https://play.google.com/store/apps/details?id=in.fello.felloapp');
-    }
   }
 }

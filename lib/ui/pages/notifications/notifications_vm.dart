@@ -66,7 +66,7 @@ class NotificationsViewModel extends BaseModel {
       appendNotifications(aMap['notifications']);
     }
     lastAlertDocument = aMap['lastAlertDoc'];
-    hasMoreAlerts = aMap['alertsLength'] == 10;
+    hasMoreAlerts = aMap['alertsLength'] == 20;
     if (!more) {
       await CacheManager.writeCache(
           key: CacheManager.CACHE_LATEST_NOTIFICATION_TIME,

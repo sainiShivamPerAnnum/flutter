@@ -163,6 +163,7 @@ class RootViewModel extends BaseModel {
       // show security modal
       if (_baseUtil.show_security_prompt &&
           _baseUtil.myUser.isAugmontOnboarded &&
+          _userService.userFundWallet.augGoldQuantity > 0 &&
           _baseUtil.myUser.userPreferences.getPreference(Preferences.APPLOCK) ==
               0) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
