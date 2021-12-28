@@ -40,23 +40,15 @@ class RootViewModel extends BaseModel {
 
   BuildContext rootContext;
   bool _isInitialized = false;
-  bool _hasNewNotifications = false;
 
   String get myUserDpUrl => _userService.myUserDpUrl;
   int get currentTabIndex => _appState.rootIndex;
-  bool get hasNewNotifications => _hasNewNotifications;
-
-  set hasNewNotifications(bool val) {
-    _hasNewNotifications = val;
-    notifyListeners();
-  }
 
   Future<void> refresh() async {
     await _userCoinService.getUserCoinBalance();
     await _userService.getUserFundWalletData();
     txnService.signOut();
     await txnService.fetchTransactions(limit: 4);
-    checkForNewNotifications();
   }
 
   static final GlobalKey<ScaffoldState> scaffoldKey =
@@ -67,7 +59,6 @@ class RootViewModel extends BaseModel {
     // pages = <Widget>[Save(), Play(), Win()];
     AppState().setCurrentTabIndex = 1;
     AppState().setRootLoadValue = true;
-    checkForNewNotifications();
     _initDynamicLinks(AppState.delegate.navigatorKey.currentContext);
     _verifyManualReferral(AppState.delegate.navigatorKey.currentContext);
   }
@@ -101,15 +92,6 @@ class RootViewModel extends BaseModel {
   void onItemTapped(int index) {
     AppState.delegate.appState.setCurrentTabIndex = index;
     notifyListeners();
-  }
-
-  checkForNewNotifications() {
-    _logger.d("Looking for new notifications");
-    _dbModel
-        .checkIfUserHasNewNotifications(_userService.baseUser.uid)
-        .then((value) {
-      if (value) hasNewNotifications = true;
-    });
   }
 
   _initAdhocNotifications() {

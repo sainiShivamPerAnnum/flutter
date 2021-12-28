@@ -39,6 +39,16 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   String get gender => _gender;
   bool get isEmailVerified => _isEmailVerified ?? false;
   bool get isSimpleKycVerified => _isSimpleKycVerified ?? false;
+  bool _hasNewNotifications = false;
+
+  bool get hasNewNotifications => _hasNewNotifications;
+
+  set hasNewNotifications(bool val) {
+    _hasNewNotifications = val;
+    notifyListeners(UserServiceProperties.myNotificationStatus);
+    _logger.d(
+        "Notification Status updated in userservice, property listeners notified");
+  }
 
   UserFundWallet get userFundWallet => _userFundWallet;
 
@@ -126,6 +136,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         isSimpleKycVerified = baseUser.isSimpleKycVerified ?? false;
         await setProfilePicture();
         await getUserFundWalletData();
+        checkForNewNotifications();
       }
     } catch (e) {
       _logger.e(e.toString());
@@ -213,6 +224,13 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     userFundWallet = (_userFundWallet == null)
         ? UserFundWallet.newWallet()
         : _userFundWallet;
+  }
+
+  checkForNewNotifications() {
+    _logger.d("Looking for new notifications");
+    _dbModel.checkIfUserHasNewNotifications(baseUser.uid).then((value) {
+      if (value) hasNewNotifications = true;
+    });
   }
 
   Future<String> createDynamicLink(bool short, String source) async {
