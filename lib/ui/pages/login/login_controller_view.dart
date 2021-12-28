@@ -17,7 +17,6 @@ import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/login/login_controller.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input_screen.dart';
@@ -434,7 +433,7 @@ class _LoginControllerViewState extends State<LoginControllerView>
             if (refCode != null && refCode.isNotEmpty)
               BaseUtil.manualReferralCode = refCode;
             setState(() {
-              LoginController.mobileno = this.userMobile;
+              LoginControllerView.mobileno = this.userMobile;
             });
 
             ///disable regular numbers for QA

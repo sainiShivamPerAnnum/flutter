@@ -1,6 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/elements/pin_input_custom_text_field.dart';
-import 'package:felloapp/ui/pages/login/login_controller.dart';
+import 'package:felloapp/ui/pages/login/login_controller_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/logger.dart';
@@ -97,7 +97,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
               ),
               SizedBox(height: SizeConfig.padding12),
               Text(
-                locale.obOtpDesc(LoginController.mobileno.substring(6)),
+                locale.obOtpDesc(LoginControllerView.mobileno.substring(6)),
                 textAlign: TextAlign.center,
                 style: TextStyles.body2,
               ),
