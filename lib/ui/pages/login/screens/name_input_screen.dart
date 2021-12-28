@@ -61,24 +61,22 @@ class NameInputScreenState extends State<NameInputScreen> {
 
   bool _isSigningIn = false;
   bool _isContinuedWithGoogle = false;
-  bool _emailEnabled = true;
+  bool _emailEnabled = false;
   String emailText = "Email";
-  bool isEmailEntered = true;
+  bool isEmailEntered = false;
   bool isUploaded = false;
 
   showEmailOptions() {
-    AppState.screenStack.add(ScreenItem.dialog);
     baseProvider.isGoogleSignInProgress = false;
-    showModalBottomSheet(
-        isDismissible: baseProvider.isGoogleSignInProgress ? false : true,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        context: context,
-        builder: (ctx) {
-          return SignInOptions(
-            onEmailSignIn: continueWithEmail,
-            onGoogleSignIn: continueWithGoogle,
-          );
-        });
+    BaseUtil.openModalBottomSheet(
+        isBarrierDismissable: false,
+        borderRadius: BorderRadius.circular(15),
+        content: SignInOptions(
+          onEmailSignIn: continueWithEmail,
+          onGoogleSignIn: continueWithGoogle,
+        ),
+        addToScreenStack: true,
+        hapticVibrate: true);
   }
 
   continueWithGoogle() async {
@@ -138,7 +136,7 @@ class NameInputScreenState extends State<NameInputScreen> {
             "No account selected", "Please choose an account from the list");
       }
     } catch (e) {
-      print(e.toString());
+      print("Google Signin failed: ${e.toString()}");
       baseProvider.isGoogleSignInProgress = false;
       BaseUtil.showNegativeAlert(
           "Unable to verify", "Please try a different method");
@@ -717,13 +715,32 @@ class _SignInOptionsState extends State<SignInOptions> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "Choose an email option",
-                  style: TextStyle(
-                    color: Colors.black54,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 24,
-                  ),
+                Row(
+                  children: [
+                    Text(
+                      "Choose an email option",
+                      style: TextStyle(
+                        color: Colors.black54,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 24,
+                      ),
+                    ),
+                    Spacer(),
+                    CircleAvatar(
+                      backgroundColor: Colors.black,
+                      child: IconButton(
+                        onPressed: () {
+                          baseProvider.isGoogleSignInProgress = false;
+                          AppState.backButtonDispatcher.didPopRoute();
+                        },
+                        icon: Icon(
+                          Icons.close,
+                          size: SizeConfig.iconSize1,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
+                  ],
                 ),
                 Divider(
                   height: 32,

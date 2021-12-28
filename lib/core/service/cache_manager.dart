@@ -6,6 +6,7 @@ class CacheManager {
   static const CACHE_RATING_IS_RATED = "isUserRated";
   static const CACHE_RATING_HIT_COUNT = "rHitCount";
   static const CACHE_RATING_DIALOG_OPEN_COUNT = "RDShowCount";
+  static const CACHE_LATEST_NOTIFICATION_TIME = "latestNotification";
 
   static Future readCache({@required String key}) async {
     final SharedPreferences sharedPreferences =

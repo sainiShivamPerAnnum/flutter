@@ -32,8 +32,14 @@
   "obUsernameRule3": "consecutive dot(.) are not allowed. example: abc..xyz is an invalid username",
   "obUsernameRule4": "dot(.) are not allowed at the beginning and at the end example: .abc , abcd. are invalid usernames ",
   "obBlockedAb": "Account Activity",
+<<<<<<< HEAD
   "obBlockedTitle": "Your Account has been blocked",
   "obBlockedSubtitle1": "Your Fello Account has been banned for activity that violates our ",
+=======
+  "obBlockedTitle": "Access Denied!",
+  "obBlockedSubtitle1": "Your account has been disabled. Please write us at",
+  "obBlockedSubtitle2": "for more details",
+>>>>>>> 0be1114d47c27dae94a53c1505bd98aaf6cb3376
   "-----------------------------------": "----------------------------",
   "navBarFinance": "Save",
   "navBarPlay": "Play",

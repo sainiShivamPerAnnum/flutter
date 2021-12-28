@@ -8,7 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ShareCard extends StatelessWidget {
-  final dpUrl;
+  final String dpUrl;
   final double prizeAmount;
   final PrizeClaimChoice claimChoice;
 

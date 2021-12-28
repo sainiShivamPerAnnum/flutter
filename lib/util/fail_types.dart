@@ -48,6 +48,11 @@ enum FailType {
   CancleUserDepositApiFailed,
   RSAEncryterInitFailed,
   AESEncryptionInitFailed,
+  UserServiceInitFailed,
+  BaseUtilInitFailed,
+  FcmListenerSetupFailed,
+  MixpanelServiceInitFailed,
+  HttpModelInitFailed,
 }
 
 extension ParseToString on FailType {

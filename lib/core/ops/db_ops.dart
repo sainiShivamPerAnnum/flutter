@@ -23,6 +23,7 @@ import 'package:felloapp/core/model/user_icici_detail_model.dart';
 import 'package:felloapp/core/model/user_ticket_wallet_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/api.dart';
+import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/credentials_stage.dart';
@@ -115,14 +116,53 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<List<AlertModel>> getUserNotifications(String userId) async {
+  Future<bool> checkIfUserHasNewNotifications(String userId) async {
+    try {
+      QuerySnapshot notificationSnapshot =
+          await _api.checkForLatestNotification(userId);
+      QuerySnapshot announcementSnapshot =
+          await _api.checkForLatestAnnouncment(userId);
+      AlertModel lastestNotification =
+          AlertModel.fromMap(notificationSnapshot.docs.first.data());
+      AlertModel lastestAnnouncement =
+          AlertModel.fromMap(announcementSnapshot.docs.first.data());
+
+      String latestNotifTime = await CacheManager.readCache(
+          key: CacheManager.CACHE_LATEST_NOTIFICATION_TIME);
+      if (latestNotifTime != null) {
+        int latestTimeInMilliSeconds = int.tryParse(latestNotifTime);
+        AlertModel latestAlert =
+            lastestNotification.createdTime.millisecondsSinceEpoch >
+                    lastestAnnouncement.createdTime.millisecondsSinceEpoch
+                ? lastestNotification
+                : lastestAnnouncement;
+        if (latestAlert.createdTime.millisecondsSinceEpoch >
+            latestTimeInMilliSeconds)
+          return true;
+        else
+          return false;
+      } else {
+        logger.d("No past notification time found");
+        return false;
+      }
+    } catch (e) {
+      logger.e(e);
+    }
+    return false;
+  }
+
+  Future<Map<String, dynamic>> getUserNotifications(
+      String userId, DocumentSnapshot lastDoc, bool more) async {
     List<AlertModel> alerts = [];
     List<AlertModel> announcements = [];
     List<AlertModel> notifications = [];
+    DocumentSnapshot lastAlertDoc;
     logger.d("user id - $userId");
 
     try {
-      QuerySnapshot querySnapshot = await _api.getUserNotifications(userId);
+      QuerySnapshot querySnapshot =
+          await _api.getUserNotifications(userId, lastDoc);
+      lastAlertDoc = querySnapshot.docs.last;
       for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
         AlertModel alert = AlertModel.fromMap(documentSnapshot.data());
         logger.d(alert.toString());
@@ -131,16 +171,17 @@ class DBModel extends ChangeNotifier {
     } catch (e) {
       logger.e(e);
     }
-
-    try {
-      QuerySnapshot querySnapshot = await _api.getAnnoucements();
-      for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
-        AlertModel announcement = AlertModel.fromMap(documentSnapshot.data());
-        logger.d(announcement.subtitle);
-        announcements.add(announcement);
+    if (!more) {
+      try {
+        QuerySnapshot querySnapshot = await _api.getAnnoucements();
+        for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
+          AlertModel announcement = AlertModel.fromMap(documentSnapshot.data());
+          logger.d(announcement.subtitle);
+          announcements.add(announcement);
+        }
+      } catch (e) {
+        logger.e(e);
       }
-    } catch (e) {
-      logger.e(e);
     }
 
     notifications.addAll(alerts);
@@ -149,7 +190,11 @@ class DBModel extends ChangeNotifier {
     notifications
         .sort((a, b) => b.createdTime.seconds.compareTo(a.createdTime.seconds));
 
-    return notifications;
+    return {
+      'notifications': notifications,
+      'lastAlertDoc': lastAlertDoc,
+      'alertsLength': alerts.length
+    };
   }
 
   /// return obj:
@@ -268,17 +313,24 @@ class DBModel extends ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> getFilteredUserTransactions(
-      BaseUser user,
+      {@required BaseUser user,
       String type,
       String subtype,
+      String status,
       DocumentSnapshot lastDocument,
-      int limit) async {
+      @required int limit}) async {
     Map<String, dynamic> resultTransactionsMap = Map<String, dynamic>();
     List<UserTransaction> requestedTxns = [];
     try {
       String _id = user.uid;
       QuerySnapshot _querySnapshot = await _api.getUserTransactionsByField(
-          _id, type, subtype, lastDocument, limit);
+        userId: _id,
+        type: type,
+        subtype: subtype,
+        status: status,
+        lastDocument: lastDocument,
+        limit: limit,
+      );
       resultTransactionsMap['lastDocument'] = _querySnapshot.docs.last;
       resultTransactionsMap['length'] = _querySnapshot.docs.length;
       _querySnapshot.docs.forEach((txn) {
@@ -293,7 +345,7 @@ class DBModel extends ChangeNotifier {
       resultTransactionsMap['listOfTransactions'] = requestedTxns;
       return resultTransactionsMap;
     } catch (err) {
-      log.error('Failed to fetch user mini transactions');
+      log.error('Failed to fetch transactions:: $err');
       resultTransactionsMap['length'] = 0;
       resultTransactionsMap['listOfTransactions'] = requestedTxns;
       resultTransactionsMap['lastDocument'] = lastDocument;
