@@ -39,16 +39,10 @@ class TransactionService
   }
 
   appendTxns(List<UserTransaction> list) {
-    //_txnList.addAll(list);
     list.forEach((txn) {
       UserTransaction duplicate = _txnList
           .firstWhere((t) => t.timestamp == txn.timestamp, orElse: () => null);
-      if (duplicate == null) {
-        _logger.d("not a duplicate txn");
-        _txnList.add(txn);
-      } else {
-        _logger.d("a duplicate txn");
-      }
+      if (duplicate == null) _txnList.add(txn);
     });
     _txnList.sort((a, b) => b.timestamp.seconds.compareTo(a.timestamp.seconds));
     notifyListeners(TransactionServiceProperties.transactionList);
@@ -128,7 +122,7 @@ class TransactionService
       hasMoreRefundedTxns = false;
       hasMoreWithdrawalTxns = false;
       findFirstAugmontTransaction();
-      //Transaction fetch complete, no more operations from here on
+      _logger.d("Transaction fetch complete, no more operations from here on");
     } else if (status != null) {
       hasMoreRefundedTxns = false;
     } else if (type != null) {

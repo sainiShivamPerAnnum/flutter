@@ -412,7 +412,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                               Text(
                                 "App Preferences",
                                 style: TextStyle(
-                                    color: Colors.grey,
+                                    color: Colors.grey[400],
                                     fontWeight: FontWeight.w600,
                                     fontSize: SizeConfig.body1),
                               ),
@@ -431,30 +431,35 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                     onChanged: (val) =>
                                         model.onAppLockPreferenceChanged(val)),
                               ]),
-                              Row(children: [
-                                Text(
-                                  "Tambola Draw Notifications",
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: SizeConfig.body3,
+                              Container(
+                                height: SizeConfig.padding40,
+                                child: Row(children: [
+                                  Text(
+                                    "Tambola Notifications",
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: SizeConfig.body3,
+                                    ),
                                   ),
-                                ),
-                                Spacer(),
-                                model.isTambolaNotificationLoading
-                                    ? Container(
-                                        padding:
-                                            EdgeInsets.all(SizeConfig.padding2),
-                                        height: SizeConfig.title3,
-                                        width: SizeConfig.title3,
-                                        child: CircularProgressIndicator(),
-                                      )
-                                    : Switch.adaptive(
-                                        activeColor: UiConstants.primaryColor,
-                                        value: model.tambolaNotification,
-                                        onChanged: (val) => model
-                                            .onTambolaNotificationPreferenceChanged(
-                                                val)),
-                              ]),
+                                  Spacer(),
+                                  model.isTambolaNotificationLoading
+                                      ? Container(
+                                          margin: EdgeInsets.only(
+                                              right: SizeConfig.padding12),
+                                          padding: EdgeInsets.all(
+                                              SizeConfig.padding2),
+                                          height: SizeConfig.title3,
+                                          width: SizeConfig.title3,
+                                          child: CircularProgressIndicator(),
+                                        )
+                                      : Switch.adaptive(
+                                          activeColor: UiConstants.primaryColor,
+                                          value: model.tambolaNotification,
+                                          onChanged: (val) => model
+                                              .onTambolaNotificationPreferenceChanged(
+                                                  val)),
+                                ]),
+                              ),
                             ],
                           ),
                         ),

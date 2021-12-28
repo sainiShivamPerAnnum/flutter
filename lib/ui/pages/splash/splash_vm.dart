@@ -103,11 +103,11 @@ class LauncherViewModel extends BaseModel {
 
     ///Ceck if app needs to be open securely
     bool _unlocked = true;
-    // if (_baseUtil.myUser.userPreferences.getPreference(Preferences.APPLOCK) ==
-    //         1 &&
-    //     deviceUnlock != null) {
-    //   _unlocked = await authenticateDevice();
-    // }
+    if (_baseUtil.myUser.userPreferences.getPreference(Preferences.APPLOCK) ==
+            1 &&
+        deviceUnlock != null) {
+      _unlocked = await authenticateDevice();
+    }
 
     if (_unlocked) {
       navigator.currentAction =
@@ -131,6 +131,7 @@ class LauncherViewModel extends BaseModel {
       _res = false;
       print('Request in progress');
     } catch (e) {
+      _logger.e("error", [e]);
       BaseUtil.showNegativeAlert('Authentication Failed',
           'Please restart the application to try again.');
     }
