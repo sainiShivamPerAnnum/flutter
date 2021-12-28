@@ -10,6 +10,7 @@ import 'package:felloapp/ui/pages/hamburger/faq_page.dart';
 import 'package:felloapp/ui/pages/hamburger/referral_policy_page.dart';
 import 'package:felloapp/ui/pages/hamburger/support.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
+import 'package:felloapp/ui/pages/login/login_controller_view.dart';
 import 'package:felloapp/ui/pages/notifications/notifications.dart';
 import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_page.dart';
@@ -148,7 +149,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(LauncherView(), SplashPageConfig);
           break;
         case Pages.Login:
-          _addPageData(LoginController(), LoginPageConfig);
+          _addPageData(LoginControllerView(), LoginPageConfig);
           break;
         case Pages.Root:
           _addPageData(Root(), RootPageConfig);
