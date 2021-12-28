@@ -33,6 +33,10 @@ import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
+import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_vm.dart';
+import 'package:felloapp/ui/pages/login/screens/name_input/name_input_vm.dart';
+import 'package:felloapp/ui/pages/login/screens/otp_input/otp_input_vm.dart';
+import 'package:felloapp/ui/pages/login/screens/username_input/username_input_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_vm.dart';
@@ -114,6 +118,10 @@ void setupLocator() {
   //REST
   locator.registerFactory(() => TransactionsHistoryViewModel());
   locator.registerFactory(() => LoginControllerViewModel());
+  locator.registerFactory(() => UsernameInputScreenViewModel());
+  locator.registerFactory(() => OtpInputScreenViewModel());
+  locator.registerFactory(() => NameInputScreenViewModel());
+  locator.registerFactory(() => MobileInputScreenViewModel());
   locator.registerFactory(() => DailyPicksDrawViewModel());
   locator.registerFactory(() => UserProfileVM());
   locator.registerFactory(() => KYCDetailsViewModel());
