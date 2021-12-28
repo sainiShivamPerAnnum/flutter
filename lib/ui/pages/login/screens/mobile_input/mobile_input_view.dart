@@ -18,10 +18,10 @@ class MobileInputScreenView extends StatefulWidget {
   const MobileInputScreenView({Key key}) : super(key: key);
 
   @override
-  State<MobileInputScreenView> createState() => _MobileInputScreenViewState();
+  State<MobileInputScreenView> createState() => MobileInputScreenViewState();
 }
 
-class _MobileInputScreenViewState extends State<MobileInputScreenView> {
+class MobileInputScreenViewState extends State<MobileInputScreenView> {
   final _formKey = GlobalKey<FormState>();
   final _mobileController = TextEditingController();
   final _referralCodeController = TextEditingController();

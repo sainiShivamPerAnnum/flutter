@@ -18,10 +18,10 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
-import 'package:felloapp/ui/pages/login/screens/mobile_input_screen.dart';
-import 'package:felloapp/ui/pages/login/screens/name_input_screen.dart';
-import 'package:felloapp/ui/pages/login/screens/otp_input_screen.dart';
-import 'package:felloapp/ui/pages/login/screens/username.dart';
+import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_view.dart';
+import 'package:felloapp/ui/pages/login/screens/name_input/name_input_view.dart';
+import 'package:felloapp/ui/pages/login/screens/otp_input/otp_input_view.dart';
+import 'package:felloapp/ui/pages/login/screens/username_input/username_input_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
@@ -89,7 +89,7 @@ class _LoginControllerViewState extends State<LoginControllerView>
   ValueNotifier<double> _pageNotifier;
   static List<Widget> _pages;
   int _currentPage;
-  final _mobileScreenKey = new GlobalKey<MobileInputScreenState>();
+  final _mobileScreenKey = new GlobalKey<MobileInputScreenViewState>();
   final _otpScreenKey = new GlobalKey<OtpInputScreenState>();
   final _nameScreenKey = new GlobalKey<NameInputScreenState>();
   final _usernameKey = new GlobalKey<UsernameState>();
@@ -97,13 +97,13 @@ class _LoginControllerViewState extends State<LoginControllerView>
   @override
   void initState() {
     super.initState();
-    _currentPage = (initPage != null) ? initPage : MobileInputScreen.index;
+    _currentPage = (initPage != null) ? initPage : MobileInputScreenView.index;
     _formProgress = 0.2 * (_currentPage + 1);
     _controller = new PageController(initialPage: _currentPage);
     _controller.addListener(_pageListener);
     _pageNotifier = ValueNotifier(0.0);
     _pages = [
-      MobileInputScreen(key: _mobileScreenKey),
+      MobileInputScreenView(key: _mobileScreenKey),
       OtpInputScreen(
         key: _otpScreenKey,
         otpEntered: _onOtpFilled,
@@ -336,7 +336,7 @@ class _LoginControllerViewState extends State<LoginControllerView>
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      (_currentPage == MobileInputScreen.index)
+                      (_currentPage == MobileInputScreenView.index)
                           ? Padding(
                               padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                               child: RichText(
@@ -422,7 +422,7 @@ class _LoginControllerViewState extends State<LoginControllerView>
   _processScreenInput(int currentPage) async {
     FocusScope.of(context).unfocus();
     switch (currentPage) {
-      case MobileInputScreen.index:
+      case MobileInputScreenView.index:
         {
           //in mobile input screen. Get and set mobile/ set error interface if not correct
           if (_mobileScreenKey.currentState.formKey.currentState.validate()) {
@@ -748,7 +748,7 @@ class _LoginControllerViewState extends State<LoginControllerView>
   _onChangeNumberRequest() {
     if (!baseProvider.isLoginNextInProgress) {
       AppState.isOnboardingInProgress = false;
-      _controller.animateToPage(MobileInputScreen.index,
+      _controller.animateToPage(MobileInputScreenView.index,
           duration: Duration(milliseconds: 500), curve: Curves.easeInToLinear);
     }
   }
