@@ -1,104 +1,109 @@
-// import 'package:logger/src/filters/development_filter.dart';
-// import 'package:logger/src/printers/pretty_printer.dart';
-// import 'package:logger/src/outputs/console_output.dart';
-// import 'package:logger/src/log_filter.dart';
-// import 'package:logger/src/log_printer.dart';
-// import 'package:logger/src/log_output.dart';
+import 'dart:math';
 
+import 'package:encrypt/encrypt.dart';
 import 'package:felloapp/util/flavor_config.dart';
-import 'package:felloapp/util/rsa_encryption.dart';
 import 'package:logger/logger.dart';
 
-/// [Level]s to control logging output. Logging can be enabled to include all
-/// levels above certain [Level].
-enum Level2 {
-  verbose,
-  debug,
-  info,
-  warning,
-  error,
-  wtf,
-  nothing,
-}
-
-class CustomLogEvent {
-  final Level level;
-  final dynamic message;
-  final dynamic error;
-  final StackTrace stackTrace;
-
-  CustomLogEvent(this.level, this.message, this.error, this.stackTrace);
-
-  @override
-  String toString() => 'CustomLogEvent($level)';
-}
-
-class CustomOutputEvent {
-  final Level level;
-  final List<String> lines;
-
-  CustomOutputEvent(this.level, this.lines);
-}
-
-@Deprecated('Use a custom LogFilter instead')
-typedef LogCallback = void Function(LogEvent event);
-
-@Deprecated('Use a custom LogOutput instead')
-typedef OutputCallback = void Function(OutputEvent event);
-
-/// Use instances of logger to send log messages to the [LogPrinter].
 class CustomLogger {
-  /// The current logging level of the app.
-  ///
-  /// All logs with levels below this level will be omitted.
   static Level level = Level.verbose;
 
-  final _rsaEncryption = new RSAEncryption();
-  static bool isEnc = FlavorConfig.isDevelopment()??false;
+  ///Encryption Utils
+  Encrypter aesEncrypter;
+  Random _rnd = Random();
+  String randomIv, randomAesKey;
+  IV iv;
+  Key aesKey;
+  static const String _chars = 'abcdef1234567890';
+  static bool isEnc = FlavorConfig.isProduction()??false;
 
   final LogFilter _filter;
   final LogPrinter _printer;
   final LogOutput _output;
   bool _active = true;
 
-  /// Create a new instance of Logger.
-  ///
-  /// You can provide a custom [printer], [filter] and [output]. Otherwise the
-  /// defaults: [PrettyPrinter], [DevelopmentFilter] and [ConsoleOutput] will be
-  /// used.
-  CustomLogger({
-    LogFilter filter,
-    LogPrinter printer,
-    LogOutput output,
-    Level level,
-  })  : _filter = filter ?? DevelopmentFilter(),
-        _printer = printer ?? PrettyPrinter(),
-        _output = output ?? ConsoleOutput() {
+  CustomLogger()  : _filter = DevelopmentFilter(),
+        _printer = PrettyPrinter(),
+        _output = ConsoleOutput() {
     _filter.init();
     _filter.level = level ?? Logger.level;
     _printer.init();
     _output.init();
-    _rsaEncryption.init();
+
+    try {
+      print('Logger AES initiated: ' + _initializeAESEncryptor().toString());
+    }catch(e) {
+      print('$e');
+    }
   }
 
   /// Log a message at level [Level.verbose].
   void v(dynamic message, [dynamic error, StackTrace stackTrace]) {
-    log(Level.verbose, processMessage(message), error, stackTrace);
+    log(Level.verbose, _processMessage(message), error, stackTrace);
   }
 
   /// Log a message at level [Level.debug].
   void d(dynamic message, [dynamic error, StackTrace stackTrace]) {
-    log(Level.debug, processMessage(message), error, stackTrace);
+    log(Level.debug, _processMessage(message), error, stackTrace);
   }
 
-  dynamic processMessage(dynamic message) {
+  /// Log a message at level [Level.info].
+  void i(dynamic message, [dynamic error, StackTrace stackTrace]) {
+    log(Level.info, _processMessage(message), error, stackTrace);
+  }
+
+  /// Log a message at level [Level.warning].
+  void w(dynamic message, [dynamic error, StackTrace stackTrace]) {
+    log(Level.warning, _processMessage(message), error, stackTrace);
+  }
+
+  /// Log a message at level [Level.error].
+  void e(dynamic message, [dynamic error, StackTrace stackTrace]) {
+    log(Level.error, _processMessage(message), error, stackTrace);
+  }
+
+  /// Log a message at level [Level.wtf].
+  void wtf(dynamic message, [dynamic error, StackTrace stackTrace]) {
+    log(Level.wtf, _processMessage(message), error, stackTrace);
+  }
+
+  bool _initializeAESEncryptor() {
+    try {
+      randomAesKey = _getRandomString(32);
+      aesKey = Key.fromUtf8(randomAesKey);
+      randomIv = _getRandomString(16);
+      iv = IV.fromUtf8(randomIv);
+
+      aesEncrypter =
+          Encrypter(AES(aesKey, mode: AESMode.cbc, padding: "PKCS7"));
+      return true;
+    } catch (e) {
+      print('$e');
+      return false;
+    }
+  }
+
+  String _aesEncyptStr(String plainText) {
+    final encryptedData = aesEncrypter.encrypt(plainText, iv: iv);
+    return encryptedData.base16;
+  }
+
+  String _getRandomString(int length) => String.fromCharCodes(
+    Iterable.generate(
+      length,
+          (_) => _chars.codeUnitAt(
+        _rnd.nextInt(_chars.length),
+      ),
+    ),
+  );
+
+  dynamic _processMessage(dynamic message) {
     try {
       if (isEnc) {
-        if(_rsaEncryption != null) return 'REDACTED OBJ';
+        if(aesEncrypter == null) return 'REDACTED OBJ';
 
         String _msg = _castString<String>(message);
         if(_msg == null) return 'REDACTED OBJ';
-        else return _rsaEncryption.aesEncyptStr(_msg);
+        else return _aesEncyptStr(_msg);
       }else {
         return message;
       }
@@ -116,26 +121,6 @@ class CustomLogger {
         return null;
       }
     }
-  }
-
-  /// Log a message at level [Level.info].
-  void i(dynamic message, [dynamic error, StackTrace stackTrace]) {
-    log(Level.info, processMessage(message), error, stackTrace);
-  }
-
-  /// Log a message at level [Level.warning].
-  void w(dynamic message, [dynamic error, StackTrace stackTrace]) {
-    log(Level.warning, message, error, stackTrace);
-  }
-
-  /// Log a message at level [Level.error].
-  void e(dynamic message, [dynamic error, StackTrace stackTrace]) {
-    log(Level.error, message, error, stackTrace);
-  }
-
-  /// Log a message at level [Level.wtf].
-  void wtf(dynamic message, [dynamic error, StackTrace stackTrace]) {
-    log(Level.wtf, message, error, stackTrace);
   }
 
   /// Log a message with [level].

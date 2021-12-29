@@ -18,7 +18,6 @@ import 'package:felloapp/core/service/connectivity_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/leaderboard_service.dart';
-import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
@@ -29,52 +28,47 @@ import 'package:felloapp/navigator/router/route_parser.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/constants.dart';
-import 'package:felloapp/util/credentials_stage.dart';
-import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/app_theme.dart';
+
 //Pub imports
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:felloapp/util/custom_logger.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
 
 import 'core/service/user_coin_service.dart';
 
-void main() async {
-  FlavorConfig(
-      flavor: Flavor.PROD,
-      color: Colors.deepPurpleAccent,
-      values: FlavorValues(
-          awsAugmontStage: AWSAugmontStage.PROD,
-          awsIciciStage: AWSIciciStage.PROD,
-          freshchatStage: FreshchatStage.DEV,
-          razorpayStage: RazorpayStage.PROD,
-          signzyStage: SignzyStage.PROD,
-          signzyPanStage: SignzyPanStage.PROD,
-          baseUriUS: 'us-central1-fello-d3a9c.cloudfunctions.net',
-          mixpanelToken: MixpanelService.PROD_TOKEN,
-          baseUriAsia: 'asia-south1-fello-d3a9c.cloudfunctions.net',
-          dynamicLinkPrefix: 'https://fello.in'));
-  await mainInit();
-  runApp(MyApp());
-}
+// void main() async {
+//   FlavorConfig(
+//       flavor: Flavor.PROD,
+//       color: Colors.deepPurpleAccent,
+//       values: FlavorValues(
+//           awsAugmontStage: AWSAugmontStage.PROD,
+//           awsIciciStage: AWSIciciStage.PROD,
+//           freshchatStage: FreshchatStage.DEV,
+//           razorpayStage: RazorpayStage.PROD,
+//           signzyStage: SignzyStage.PROD,
+//           signzyPanStage: SignzyPanStage.PROD,
+//           baseUriUS: 'us-central1-fello-d3a9c.cloudfunctions.net',
+//           mixpanelToken: MixpanelService.PROD_TOKEN,
+//           baseUriAsia: 'asia-south1-fello-d3a9c.cloudfunctions.net',
+//           dynamicLinkPrefix: 'https://fello.in'));
+//   await mainInit();
+//   runApp(MyApp());
+// }
 
 Future mainInit() async {
   setupLocator();
-
-  final logger = locator<CustomLogger>();
   WidgetsFlutterBinding.ensureInitialized();
   try {
     await Firebase.initializeApp();
-    logger.d("Firebase Initialised");
   } catch (e) {
-    logger.e(e.toString());
+    print('$e');
   }
   FirebaseMessaging.onBackgroundMessage(FcmListener.backgroundMessageHandler);
 }
@@ -143,8 +137,8 @@ class _MyAppState extends State<MyApp> {
                     WinnerServiceProperties>(
                   value: locator<WinnerService>(),
                   child: MaterialApp.router(
-                    locale:
-                        DevicePreview.locale(context), // Add the locale here
+                    locale: DevicePreview.locale(context),
+                    // Add the locale here
                     builder: DevicePreview.appBuilder,
                     title: Constants.APP_NAME,
                     theme: FelloTheme.lightMode(),
