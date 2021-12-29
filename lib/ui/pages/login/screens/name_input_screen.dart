@@ -87,7 +87,6 @@ class NameInputScreenState extends State<NameInputScreen> {
         if (await httpProvider.isEmailNotRegistered(
             baseProvider.myUser.uid, googleUser.email)) {
           _nameFieldController.text = googleUser.displayName;
-          baseProvider.myUser.isEmailVerified = true;
           baseProvider.myUserDpUrl = googleUser.photoUrl;
           Uint8List bytes =
               (await NetworkAssetBundle(Uri.parse(googleUser.photoUrl))
@@ -105,11 +104,13 @@ class NameInputScreenState extends State<NameInputScreen> {
             if (url != null) {
               baseProvider.isProfilePictureUpdated = true;
               baseProvider.setDisplayPictureUrl(url);
+              baseProvider.setEmailVerified();
               setState(() {
                 isUploaded = true;
                 isEmailEntered = true;
                 _isContinuedWithGoogle = true;
                 emailText = googleUser.email;
+                baseProvider.myUser.email = googleUser.email;
                 baseProvider.isGoogleSignInProgress = false;
               });
             } else {
@@ -249,8 +250,10 @@ class NameInputScreenState extends State<NameInputScreen> {
                           Text(
                             emailText,
                             style: TextStyle(
-                              fontSize: 16,
-                            ),
+                                fontSize: 16,
+                                color: emailText != "Email"
+                                    ? Colors.black
+                                    : Colors.black54),
                           ),
                           Spacer(),
                           emailText != "Email"
@@ -564,6 +567,8 @@ class NameInputScreenState extends State<NameInputScreen> {
   }
 
   String get name => _nameFieldController.text;
+
+  bool get isEmailVerified => _isContinuedWithGoogle && emailText != "Email";
 
   set name(String value) {
     //_name = value;

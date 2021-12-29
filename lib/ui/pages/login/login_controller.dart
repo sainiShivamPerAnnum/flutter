@@ -527,7 +527,8 @@ class _LoginControllerState extends State<LoginController>
             if (email != null && email.isNotEmpty) {
               baseProvider.myUser.email = email;
             }
-
+            baseProvider.myUser.isEmailVerified =
+                _nameScreenKey.currentState.isEmailVerified;
             String dob = "${_nameScreenKey.currentState.selectedDate.toLocal()}"
                 .split(" ")[0];
 
@@ -595,6 +596,8 @@ class _LoginControllerState extends State<LoginController>
                         "mMobile": baseProvider.myUser.mobile,
                         "mName": baseProvider.myUser.name,
                         "mEmail": baseProvider.myUser.email,
+                        "mIsEmailVerified":
+                            baseProvider.myUser.isEmailVerified ?? false,
                         "mDob": baseProvider.myUser.dob,
                         "mGender": baseProvider.myUser.gender,
                         "mUsername": baseProvider.myUser.username,
