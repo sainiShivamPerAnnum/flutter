@@ -425,11 +425,13 @@ class _LoginControllerViewState extends State<LoginControllerView>
       case MobileInputScreenView.index:
         {
           //in mobile input screen. Get and set mobile/ set error interface if not correct
-          if (_mobileScreenKey.currentState.formKey.currentState.validate()) {
+          if (_mobileScreenKey.currentState.model.formKey.currentState
+              .validate()) {
             log.debug(
-                'Mobile number validated: ${_mobileScreenKey.currentState.getMobile()}');
-            this.userMobile = _mobileScreenKey.currentState.getMobile();
-            String refCode = _mobileScreenKey.currentState.getReferralCode();
+                'Mobile number validated: ${_mobileScreenKey.currentState.model.getMobile()}');
+            this.userMobile = _mobileScreenKey.currentState.model.getMobile();
+            String refCode =
+                _mobileScreenKey.currentState.model.getReferralCode();
             if (refCode != null && refCode.isNotEmpty)
               BaseUtil.manualReferralCode = refCode;
             setState(() {

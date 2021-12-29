@@ -1,17 +1,13 @@
-import 'dart:io';
-
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_vm.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
-import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:sms_autofill/sms_autofill.dart';
 
 class MobileInputScreenView extends StatefulWidget {
   static const int index = 0; //pager index
@@ -22,35 +18,14 @@ class MobileInputScreenView extends StatefulWidget {
 }
 
 class MobileInputScreenViewState extends State<MobileInputScreenView> {
-  final _formKey = GlobalKey<FormState>();
-  final _mobileController = TextEditingController();
-  final _referralCodeController = TextEditingController();
-  bool _validate = true;
-  bool showAvailableMobileNos = true;
-  Log log = new Log("MobileInputScreen");
-  static final GlobalKey<FormFieldState<String>> _phoneFieldKey =
-      GlobalKey<FormFieldState<String>>();
-  String code = "+91";
-  bool hasReferralCode = false;
-
-  void showAvailablePhoneNumbers() async {
-    if (Platform.isAndroid && showAvailableMobileNos) {
-      final SmsAutoFill _autoFill = SmsAutoFill();
-      String completePhoneNumber = await _autoFill.hint;
-      if (completePhoneNumber != null) {
-        setState(() {
-          _mobileController.text =
-              completePhoneNumber.substring(completePhoneNumber.length - 10);
-        });
-      }
-      showAvailableMobileNos = false;
-    }
-  }
-
+  MobileInputScreenViewModel model;
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return BaseView<MobileInputScreenViewModel>(
+      onModelReady: (m) {
+        model = m;
+      },
       builder: (ctx, model, child) => Container(
         child: SingleChildScrollView(
           child: Column(
@@ -84,11 +59,11 @@ class MobileInputScreenViewState extends State<MobileInputScreenView> {
               ),
               SizedBox(height: SizeConfig.padding6),
               Form(
-                key: _formKey,
+                key: model.formKey,
                 child: Column(
                   children: [
                     TextFormField(
-                      key: _phoneFieldKey,
+                      key: model.phoneFieldKey,
                       keyboardType: TextInputType.phone,
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
@@ -110,9 +85,9 @@ class MobileInputScreenViewState extends State<MobileInputScreenView> {
                       onChanged: (val) {
                         if (val.length == 10) FocusScope.of(context).unfocus();
                       },
-                      onTap: showAvailablePhoneNumbers,
-                      controller: _mobileController,
-                      validator: (value) => _validateMobile(),
+                      onTap: model.showAvailablePhoneNumbers,
+                      controller: model.mobileController,
+                      validator: (value) => model.validateMobile(),
                       onFieldSubmitted: (v) {
                         FocusScope.of(context).requestFocus(FocusNode());
                       },
@@ -120,9 +95,10 @@ class MobileInputScreenViewState extends State<MobileInputScreenView> {
                     SizedBox(
                       height: SizeConfig.blockSizeVertical,
                     ),
-                    hasReferralCode
+                    model.hasReferralCode
                         ? TextFormField(
-                            controller: _referralCodeController,
+                            controller: model.referralCodeController,
+                            onChanged: (val) {},
                             //maxLength: 10,
                             decoration: InputDecoration(
                               hintText: "Enter your referral code here",
@@ -143,7 +119,7 @@ class MobileInputScreenViewState extends State<MobileInputScreenView> {
                         : TextButton(
                             onPressed: () {
                               setState(() {
-                                hasReferralCode = true;
+                                model.hasReferralCode = true;
                               });
                             },
                             child: Text(
@@ -152,7 +128,7 @@ class MobileInputScreenViewState extends State<MobileInputScreenView> {
                                   .colour(UiConstants.primaryColor),
                             ),
                           ),
-                    if (hasReferralCode)
+                    if (model.hasReferralCode)
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
@@ -175,26 +151,4 @@ class MobileInputScreenViewState extends State<MobileInputScreenView> {
       ),
     );
   }
-
-  setError() {
-    setState(() {
-      _validate = false;
-    });
-  }
-
-  String _validateMobile() {
-    Pattern pattern = "^[0-9]*\$";
-    RegExp regex = new RegExp(pattern);
-    if (!regex.hasMatch(_mobileController.text) ||
-        _mobileController.text.length != 10)
-      return "Enter a valid mobile number";
-    else
-      return null;
-  }
-
-  String getMobile() => _mobileController.text;
-
-  String getReferralCode() => _referralCodeController.text;
-
-  get formKey => _formKey;
 }
