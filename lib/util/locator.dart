@@ -61,6 +61,7 @@ GetIt locator = GetIt.instance;
 
 void setupLocator() {
   //Utils
+  locator.registerLazySingleton(() => CustomLogger());
   locator.registerLazySingleton(() => ApiPath());
   locator.registerLazySingleton(() => S());
 
@@ -134,6 +135,5 @@ void setupLocator() {
   locator.registerFactory(() => FAQCardViewModel());
 
   //....
-  locator.registerLazySingleton(() => CustomLogger());
 
 }
