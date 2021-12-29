@@ -17,7 +17,7 @@ class FcmHandler extends ChangeNotifier {
   static const COMMAND_USER_PRIZE_WIN = 'userPrizeWin';
   static const COMMAND_USER_PRIZE_WIN_2 = 'userPrizeWinWithPrompt';
 
-  final Logger logger = locator<CustomLogger>();
+  final CustomLogger logger = locator<CustomLogger>();
   final _lbService = locator<LeaderboardService>();
   Log log = new Log("FcmHandler");
   ValueChanged<Map> notifListener;

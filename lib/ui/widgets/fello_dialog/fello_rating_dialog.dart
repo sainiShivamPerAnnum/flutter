@@ -28,7 +28,7 @@ class FelloRatingDialog extends StatefulWidget {
 
 class _FelloRatingDialogState extends State<FelloRatingDialog> {
   double rating = 0;
-  Logger logger = locator<CustomLogger>();
+  final CustomLogger logger = locator<CustomLogger>();
   bool showEmptyRatingError = false;
   bool showButtons = true;
 

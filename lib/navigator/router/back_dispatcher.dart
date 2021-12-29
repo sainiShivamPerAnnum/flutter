@@ -16,6 +16,7 @@ import 'package:felloapp/util/custom_logger.dart';
 
 class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   final FelloRouterDelegate _routerDelegate;
+  final CustomLogger logger = locator<CustomLogger>();
   DBModel _dbModel = locator<DBModel>();
   BaseUtil _baseUtil = locator<BaseUtil>();
   AppState _appState = locator<AppState>();
@@ -89,7 +90,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
         AppState.screenStack.length == 1 &&
         (AppState.delegate.appState.rootIndex != 1 ||
             RootViewModel.scaffoldKey.currentState.isDrawerOpen)) {
-      CustomLogger().w("Checking if app can be closed");
+      logger.w("Checking if app can be closed");
       if (RootViewModel.scaffoldKey.currentState.isDrawerOpen)
         RootViewModel.scaffoldKey.currentState.openEndDrawer();
       else if (AppState.delegate.appState.rootIndex != 1)

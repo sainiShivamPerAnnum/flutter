@@ -116,7 +116,7 @@ class LauncherViewModel extends BaseModel {
 
     ///check if user is onboarded
     if (!userService.isUserOnborded) {
-      _logger.d2("New user. Moving to Onboarding..");
+      _logger.d("New user. Moving to Onboarding..");
       navigator.currentAction =
           PageAction(state: PageState.replaceAll, page: LoginPageConfig);
       return;

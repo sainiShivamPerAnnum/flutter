@@ -54,7 +54,7 @@ class CustomLogger {
   static Level level = Level.verbose;
 
   final _rsaEncryption = new RSAEncryption();
-  static bool isEnc = FlavorConfig.isProduction()??false;
+  static bool isEnc = FlavorConfig.isDevelopment()??false;
 
   final LogFilter _filter;
   final LogPrinter _printer;
@@ -83,21 +83,44 @@ class CustomLogger {
 
   /// Log a message at level [Level.verbose].
   void v(dynamic message, [dynamic error, StackTrace stackTrace]) {
-    log(Level.verbose, message, error, stackTrace);
+    log(Level.verbose, processMessage(message), error, stackTrace);
   }
 
   /// Log a message at level [Level.debug].
   void d(dynamic message, [dynamic error, StackTrace stackTrace]) {
-    log(Level.debug, message, error, stackTrace);
+    log(Level.debug, processMessage(message), error, stackTrace);
   }
 
-  void d2(String message, [dynamic error, StackTrace stackTrace]) {
-    log(Level.debug, (isEnc)?_rsaEncryption.aesEncyptStr(message):message, error, stackTrace);
+  dynamic processMessage(dynamic message) {
+    try {
+      if (isEnc) {
+        if(_rsaEncryption != null) return 'REDACTED OBJ';
+
+        String _msg = _castString<String>(message);
+        if(_msg == null) return 'REDACTED OBJ';
+        else return _rsaEncryption.aesEncyptStr(_msg);
+      }else {
+        return message;
+      }
+    }catch(e) {
+        return 'REDACTED STR';
+    }
+  }
+
+  String _castString<T>(x) {
+    if(x is String) return x;
+    else {
+      try {
+        return x.toString();
+      } catch (e) {
+        return null;
+      }
+    }
   }
 
   /// Log a message at level [Level.info].
   void i(dynamic message, [dynamic error, StackTrace stackTrace]) {
-    log(Level.info, message, error, stackTrace);
+    log(Level.info, processMessage(message), error, stackTrace);
   }
 
   /// Log a message at level [Level.warning].

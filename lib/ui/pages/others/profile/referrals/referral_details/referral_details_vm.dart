@@ -18,7 +18,7 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:share_plus/share_plus.dart';
 
 class ReferralDetailsViewModel extends BaseModel {
-  CustomLogger _logger = new Logger();
+  final CustomLogger _logger = locator<CustomLogger>();
   final _baseUtil = locator<BaseUtil>();
   final _dbModel = locator<DBModel>();
   final _razorpayModel = locator<RazorpayModel>();
