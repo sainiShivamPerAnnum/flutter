@@ -7,7 +7,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:firebase_performance/firebase_performance.dart';
 import 'package:http/http.dart' as http;
 import 'package:package_info/package_info.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 abstract class API {
   void setBaseUrl(String url);
@@ -24,7 +24,7 @@ class APIService implements API {
   String _baseUrl = 'https://' + FlavorConfig.instance.values.baseUriAsia;
   //"https://asia-south1-fello-dev-station.cloudfunctions.net";
   String _versionString;
-  final logger = locator<Logger>();
+  final logger = locator<CustomLogger>();
 
   APIService._();
   static final instance = APIService._();

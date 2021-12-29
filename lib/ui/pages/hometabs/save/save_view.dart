@@ -12,7 +12,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class Save extends StatelessWidget {
   @override
@@ -83,7 +83,7 @@ class Save extends StatelessWidget {
                                   svg: 'images/svgs/gold.svg',
                                   title: "About digital Gold",
                                   onPressed: () {
-                                    Logger().d("Save info tile tap check");
+                                    CustomLogger().d("Save info tile tap check");
                                     model.navigateToAboutGold();
                                   },
                                 ),

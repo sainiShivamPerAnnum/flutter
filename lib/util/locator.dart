@@ -53,15 +53,15 @@ import 'package:felloapp/ui/widgets/coin_bar/coin_bar_vm.dart';
 import 'package:felloapp/ui/widgets/drawer/drawer_vm.dart';
 import 'package:felloapp/ui/widgets/faq_card/faq_card_vm.dart';
 import 'package:felloapp/ui/widgets/mini_trans_card/mini_trans_card_vm.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:get_it/get_it.dart';
-import 'package:logger/logger.dart';
 
 GetIt locator = GetIt.instance;
 
 void setupLocator() {
   //Utils
-  locator.registerLazySingleton(() => Logger());
+  locator.registerLazySingleton(() => CustomLogger());
   locator.registerLazySingleton(() => ApiPath());
   locator.registerLazySingleton(() => S());
 

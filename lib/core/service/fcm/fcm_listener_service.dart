@@ -13,12 +13,12 @@ import 'package:felloapp/util/locator.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class FcmListener {
   final BaseUtil _baseUtil = locator<BaseUtil>();
   final DBModel _dbModel = locator<DBModel>();
-  final Logger logger = locator<Logger>();
+  final CustomLogger logger = locator<CustomLogger>();
   final FcmHandler _handler = locator<FcmHandler>();
   final UserService _userService = locator<UserService>();
 

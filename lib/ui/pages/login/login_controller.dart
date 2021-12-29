@@ -44,7 +44,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:provider/provider.dart';
 
 class LoginController extends StatefulWidget {
@@ -78,7 +78,7 @@ class _LoginControllerState extends State<LoginController>
   final AugmontModel augmontProvider = locator<AugmontModel>();
   final MixpanelService _mixpanelService = locator<MixpanelService>();
   final _userService = locator<UserService>();
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
   final _apiPaths = locator<ApiPath>();
   AnimationController animationController;
 

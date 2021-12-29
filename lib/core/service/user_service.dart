@@ -10,12 +10,12 @@ import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   final _dbModel = locator<DBModel>();
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
   final _userRepo = locator<UserRepository>();
 
   User _firebaseUser;

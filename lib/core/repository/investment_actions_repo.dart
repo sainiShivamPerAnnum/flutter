@@ -6,12 +6,12 @@ import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/rsa_encryption.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class InvestmentActionsRepository {
   final _userService = locator<UserService>();
   final _apiPaths = locator<ApiPath>();
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
   final _rsaEncryption = new RSAEncryption();
 
   Future<String> _getBearerToken() async {

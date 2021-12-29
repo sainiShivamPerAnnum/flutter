@@ -34,14 +34,14 @@ import 'package:felloapp/util/logger.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:synchronized/synchronized.dart';
 
 class DBModel extends ChangeNotifier {
   Api _api = locator<Api>();
   Lock _lock = new Lock();
   final Log log = new Log("DBModel");
-  final logger = locator<Logger>();
+  final logger = locator<CustomLogger>();
   ValueChanged<TicketRequest> _ticketRequestListener;
   FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.instance;
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();

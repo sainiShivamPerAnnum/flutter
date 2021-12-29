@@ -50,12 +50,13 @@ import 'package:logger/logger.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 import 'core/model/game_model.dart';
 
 class BaseUtil extends ChangeNotifier {
   final Log log = new Log("BaseUtil");
-  final Logger logger = locator<Logger>();
+  final Logger logger = locator<CustomLogger>();
   final DBModel _dbModel = locator<DBModel>();
   final LocalDBModel _lModel = locator<LocalDBModel>();
   final AppState _appState = locator<AppState>();

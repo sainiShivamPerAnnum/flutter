@@ -14,11 +14,11 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/mixpanel_events.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_share_me/flutter_share_me.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:share_plus/share_plus.dart';
 
 class ReferralDetailsViewModel extends BaseModel {
-  Logger _logger = new Logger();
+  CustomLogger _logger = new Logger();
   final _baseUtil = locator<BaseUtil>();
   final _dbModel = locator<DBModel>();
   final _razorpayModel = locator<RazorpayModel>();

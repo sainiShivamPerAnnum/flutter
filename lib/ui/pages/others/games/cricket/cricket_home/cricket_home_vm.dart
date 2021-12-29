@@ -20,13 +20,13 @@ import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/mixpanel_events.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class CricketHomeViewModel extends BaseModel {
   final _userService = locator<UserService>();
   final _fclActionRepo = locator<FlcActionsRepo>();
   final _userCoinService = locator<UserCoinService>();
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
   final _stats = locator<StatisticsRepository>();
   final _prizeService = locator<PrizeService>();
   final _lbService = locator<LeaderboardService>();

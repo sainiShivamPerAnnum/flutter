@@ -28,7 +28,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 //Pub Imports
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:provider/provider.dart';
 
 class EditAugmontBankDetail extends StatefulWidget {
@@ -51,7 +51,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
   TextEditingController _bankAccNoConfirmController;
   final MixpanelService _mixpanelService = locator<MixpanelService>();
   final SignzyRepository _signzyRepository = locator<SignzyRepository>();
-  final Logger _logger = locator<Logger>();
+  final CustomLogger _logger = locator<CustomLogger>();
   bool _isInitialized = false;
   DBModel dbProvider;
   BaseUtil baseProvider;

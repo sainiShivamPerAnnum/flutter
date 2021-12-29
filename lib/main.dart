@@ -40,7 +40,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
 
@@ -68,7 +68,7 @@ void main() async {
 Future mainInit() async {
   setupLocator();
 
-  final logger = locator<Logger>();
+  final logger = locator<CustomLogger>();
   WidgetsFlutterBinding.ensureInitialized();
   try {
     await Firebase.initializeApp();

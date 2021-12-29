@@ -15,7 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:in_app_review/in_app_review.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class FelloRatingDialog extends StatefulWidget {
   final int dailogShowCount;
@@ -28,7 +28,7 @@ class FelloRatingDialog extends StatefulWidget {
 
 class _FelloRatingDialogState extends State<FelloRatingDialog> {
   double rating = 0;
-  Logger logger = locator<Logger>();
+  Logger logger = locator<CustomLogger>();
   bool showEmptyRatingError = false;
   bool showButtons = true;
 

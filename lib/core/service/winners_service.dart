@@ -6,11 +6,11 @@ import 'package:felloapp/core/repository/winners_repo.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
   final _winnersRepo = locator<WinnersRepository>();
 
   int _cricketWinnersLength = 0;

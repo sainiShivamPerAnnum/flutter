@@ -9,7 +9,7 @@ import 'package:felloapp/util/logger.dart';
 import 'package:firebase_database/firebase_database.dart' as rdb;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class Api {
   Log log = new Log("Api");
@@ -18,7 +18,7 @@ class Api {
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final rdb.FirebaseDatabase _realtimeDatabase = rdb.FirebaseDatabase.instance;
 
-  final logger = locator<Logger>();
+  final logger = locator<CustomLogger>();
 
   String path;
   CollectionReference ref;

@@ -16,12 +16,12 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 enum TranFilterType { Type, Subtype }
 
 class TransactionsHistoryViewModel extends BaseModel {
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
   int _subfilter = 1;
   int _filter = 1;
   bool _init = true;

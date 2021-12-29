@@ -17,14 +17,15 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class PlayViewModel extends BaseModel {
   final _fclActionRepo = locator<FlcActionsRepo>();
   final _userCoinService = locator<UserCoinService>();
   final _userService = locator<UserService>();
   final _dbProvider = locator<DBModel>();
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
+  final _baseUtil = locator<BaseUtil>();
 
   String _message;
   String _sessionId;

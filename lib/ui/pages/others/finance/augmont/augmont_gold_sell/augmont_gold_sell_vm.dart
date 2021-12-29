@@ -20,11 +20,11 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'dart:math' as math;
 
 class AugmontGoldSellViewModel extends BaseModel {
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
   BaseUtil _baseUtil = locator<BaseUtil>();
   DBModel _dbModel = locator<DBModel>();
   AugmontModel _augmontModel = locator<AugmontModel>();

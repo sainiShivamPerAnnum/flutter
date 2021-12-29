@@ -10,11 +10,11 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class HttpModel extends ChangeNotifier {
   final _userService = locator<UserService>();
-  final logger = locator<Logger>();
+  final logger = locator<CustomLogger>();
 
   final Log log = new Log('HttpModel');
   static final String ASIA_BASE_URI = FlavorConfig.instance.values.baseUriAsia;
