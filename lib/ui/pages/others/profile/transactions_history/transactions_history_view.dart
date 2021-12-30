@@ -244,7 +244,7 @@ class TransactionTile extends StatelessWidget {
           Text(
             _txnService.getFormattedTxnAmount(txn.amount),
             style: TextStyle(
-              color: _txnService.getTileColor(txn.tranStatus),
+              // color: _txnService.getTileColor(txn.tranStatus),
               fontSize: SizeConfig.mediumTextSize,
             ),
           ),
@@ -252,7 +252,8 @@ class TransactionTile extends StatelessWidget {
           Text(
             _txnService.getFormattedTime(txn.timestamp),
             style: TextStyle(
-                color: _txnService.getTileColor(txn.tranStatus),
+                // color: _txnService.getTileColor(txn.tranStatus),
+                color: Colors.black45,
                 fontSize: SizeConfig.smallTextSize),
           )
         ],

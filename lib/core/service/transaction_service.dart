@@ -5,6 +5,7 @@ import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -230,10 +231,12 @@ class TransactionService
       return UiConstants.primaryColor;
     } else if (type == UserTransaction.TRAN_STATUS_PENDING) {
       return Colors.amber;
+    } else if (type == UserTransaction.TRAN_STATUS_PROCESSING) {
+      return Colors.amber;
     } else if (type == UserTransaction.TRAN_STATUS_REFUNDED) {
       return Colors.blue;
     }
-    return Colors.black87;
+    return Colors.black54;
   }
 
   // BEER FEST SPECIFIC CODE

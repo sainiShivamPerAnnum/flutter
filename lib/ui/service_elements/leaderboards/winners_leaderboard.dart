@@ -12,6 +12,19 @@ import 'package:intl/intl.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class WinnerboardView extends StatelessWidget {
+  final int count;
+  WinnerboardView({this.count});
+
+  getLength(int listLength) {
+    if (count != null) {
+      if (listLength < count)
+        return listLength;
+      else
+        return count;
+    } else
+      return listLength;
+  }
+
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<WinnerService, WinnerServiceProperties>(
@@ -63,7 +76,7 @@ class WinnerboardView extends StatelessWidget {
                           ),
                           Column(
                             children: List.generate(
-                              model.winners.length,
+                              getLength(model.winners.length),
                               (i) {
                                 return Container(
                                   width: SizeConfig.screenWidth,

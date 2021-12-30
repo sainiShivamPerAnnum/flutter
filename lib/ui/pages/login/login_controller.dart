@@ -611,6 +611,8 @@ class _LoginControllerState extends State<LoginController>
                     res['flag'] ? flag = true : flag = false;
                   } catch (e) {
                     _logger.d(e);
+                    _usernameKey.currentState.enabled = true;
+
                     flag = false;
                   }
                   // bool flag = await dbProvider.updateUser(baseProvider.myUser);
