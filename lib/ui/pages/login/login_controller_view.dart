@@ -484,7 +484,8 @@ class _LoginControllerViewState extends State<LoginControllerView>
         {
           //if(nameInScreen.validate()) {
 
-          if (_nameScreenKey.currentState.model.formKey.currentState.validate() &&
+          if (_nameScreenKey.currentState.model.formKey.currentState
+                  .validate() &&
               _nameScreenKey.currentState.model.isValidDate()) {
             if (!_nameScreenKey.currentState.model.isEmailEntered) {
               BaseUtil.showNegativeAlert(
@@ -498,7 +499,8 @@ class _LoginControllerViewState extends State<LoginControllerView>
                 'Please enter a valid date of birth',
               );
               return false;
-            } else if (!_isAdult(_nameScreenKey.currentState.model.selectedDate)) {
+            } else if (!_isAdult(
+                _nameScreenKey.currentState.model.selectedDate)) {
               BaseUtil.showNegativeAlert(
                 'Ineligible',
                 'You need to be above 18 to join',
@@ -530,14 +532,16 @@ class _LoginControllerViewState extends State<LoginControllerView>
                   formatMobileNumber(baseProvider.firebaseUser.phoneNumber));
             }
             //baseProvider.myUser.name = nameInScreen.getName();
-            baseProvider.myUser.name = _nameScreenKey.currentState.model.name.trim();
+            baseProvider.myUser.name =
+                _nameScreenKey.currentState.model.name.trim();
             String email = _nameScreenKey.currentState.model.email.trim();
             if (email != null && email.isNotEmpty) {
               baseProvider.myUser.email = email;
             }
 
-            String dob = "${_nameScreenKey.currentState.model.selectedDate.toLocal()}"
-                .split(" ")[0];
+            String dob =
+                "${_nameScreenKey.currentState.model.selectedDate.toLocal()}"
+                    .split(" ")[0];
 
             baseProvider.myUser.dob = dob.trim();
 
@@ -574,19 +578,19 @@ class _LoginControllerViewState extends State<LoginControllerView>
 
       case Username.index:
         {
-          if (_usernameKey.currentState.formKey.currentState.validate()) {
-            if (!await _usernameKey.currentState.validate()) {
+          if (_usernameKey.currentState.model.formKey.currentState.validate()) {
+            if (!await _usernameKey.currentState.model.validate()) {
               return false;
             }
-            if (!_usernameKey.currentState.isLoading &&
-                _usernameKey.currentState.isValid) {
+            if (!_usernameKey.currentState.model.isLoading &&
+                _usernameKey.currentState.model.isValid) {
               baseProvider.isLoginNextInProgress = true;
               setState(() {});
 
               String username =
-                  _usernameKey.currentState.username.replaceAll('.', '@');
+                  _usernameKey.currentState.model.username.replaceAll('.', '@');
               if (await dbProvider.checkIfUsernameIsAvailable(username)) {
-                _usernameKey.currentState.enabled = false;
+                _usernameKey.currentState.model.enabled = false;
                 setState(() {});
                 bool res = await dbProvider.setUsername(
                     username, baseProvider.firebaseUser.uid);
@@ -631,7 +635,7 @@ class _LoginControllerViewState extends State<LoginControllerView>
                       'Update failed',
                       'Please try again in sometime',
                     );
-                    _usernameKey.currentState.enabled = false;
+                    _usernameKey.currentState.model.enabled = false;
 
                     baseProvider.isLoginNextInProgress = false;
                     setState(() {});
@@ -641,7 +645,7 @@ class _LoginControllerViewState extends State<LoginControllerView>
                     'Username update failed',
                     'Please try again in sometime',
                   );
-                  _usernameKey.currentState.enabled = false;
+                  _usernameKey.currentState.model.enabled = false;
 
                   baseProvider.isLoginNextInProgress = false;
                   setState(() {});
@@ -651,7 +655,7 @@ class _LoginControllerViewState extends State<LoginControllerView>
                   'username not available',
                   'Please choose another username',
                 );
-                _usernameKey.currentState.enabled = false;
+                _usernameKey.currentState.model.enabled = false;
 
                 baseProvider.isLoginNextInProgress = false;
                 setState(() {});

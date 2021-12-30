@@ -21,17 +21,17 @@ class _ClaimUsernameState extends State<ClaimUsername> {
   final regex = RegExp(r"^(?!\.)(?!.*\.$)(?!.*?\.\.)[a-z0-9.]{4,20}$");
 
   setUsername() async {
-    if (_usernameKey.currentState.formKey.currentState.validate()) {
-      if (!await _usernameKey.currentState.validate()) {
+    if (_usernameKey.currentState.model.formKey.currentState.validate()) {
+      if (!await _usernameKey.currentState.model.validate()) {
         return false;
       }
-      if (!_usernameKey.currentState.isLoading &&
-          _usernameKey.currentState.isValid) {
+      if (!_usernameKey.currentState.model.isLoading &&
+          _usernameKey.currentState.model.isValid) {
         setState(() {
           _isUpdating = true;
         });
         String username =
-            _usernameKey.currentState.username.trim().replaceAll('.', '@');
+            _usernameKey.currentState.model.username.trim().replaceAll('.', '@');
         if (regex.hasMatch(username) &&
             await dbProvider.checkIfUsernameIsAvailable(username)) {
           bool res = await dbProvider.setUsername(

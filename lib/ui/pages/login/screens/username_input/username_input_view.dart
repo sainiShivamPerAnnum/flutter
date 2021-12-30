@@ -36,19 +36,8 @@ class Username extends StatefulWidget {
 }
 
 class UsernameState extends State<Username> {
-  TextEditingController usernameController = TextEditingController();
-  BaseUtil baseProvider;
-  DBModel dbProvider;
-  String username = "";
+    UsernameInputScreenViewModel model;
   FocusNode focusNode;
-  bool enabled = true;
-  final regex = RegExp(r"^(?!\.)(?!.*\.$)(?!.*?\.\.)[a-z0-9.]{4,20}$");
-  bool isValid;
-  bool isLoading = false;
-  bool isUpdating = false;
-  bool isUpdated = false;
-  final _formKey = GlobalKey<FormState>();
-  UsernameResponse response;
 
   @override
   void dispose() {
@@ -56,41 +45,9 @@ class UsernameState extends State<Username> {
     super.dispose();
   }
 
-  Future<bool> validate() async {
-    username = usernameController.text.trim();
-    setState(() {
-      isLoading = true;
-    });
-    if (username == "" || username == null)
-      setState(() {
-        isValid = null;
-        response = UsernameResponse.EMPTY;
-      });
-    else if (regex.hasMatch(username)) {
-      bool res = await dbProvider
-          .checkIfUsernameIsAvailable(username.replaceAll('.', '@'));
-      setState(() {
-        isValid = res;
-        if (res)
-          response = UsernameResponse.AVAILABLE;
-        else
-          response = UsernameResponse.UNAVAILABLE;
-      });
-    } else {
-      setState(() {
-        isValid = false;
-        response = UsernameResponse.INVALID;
-      });
-    }
-    setState(() {
-      isLoading = false;
-    });
-    return isValid;
-  }
-
-  Widget showResult() {
-    print(response);
-    if (isLoading) {
+  Widget showResult(model) {
+    print(model.response);
+    if (model.isLoading) {
       return Container(
         height: 16,
         width: 16,
@@ -98,30 +55,30 @@ class UsernameState extends State<Username> {
           strokeWidth: 2,
         ),
       );
-    } else if (response == UsernameResponse.EMPTY)
+    } else if (model.response == UsernameResponse.EMPTY)
       return FittedBox(
         child: Text("username cannot be empty",
             style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w500)),
       );
-    else if (response == UsernameResponse.AVAILABLE)
+    else if (model.response == UsernameResponse.AVAILABLE)
       return FittedBox(
-        child: Text("@${usernameController.text.trim()} is available",
+        child: Text("@${model.usernameController.text.trim()} is available",
             style: TextStyle(
                 color: UiConstants.primaryColor, fontWeight: FontWeight.w500)),
       );
-    else if (response == UsernameResponse.UNAVAILABLE)
+    else if (model.response == UsernameResponse.UNAVAILABLE)
       return FittedBox(
-        child: Text("@${usernameController.text.trim()} is not available",
+        child: Text("@${model.usernameController.text.trim()} is not available",
             style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500)),
       );
-    else if (response == UsernameResponse.INVALID) {
-      if (usernameController.text.trim().length < 5)
+    else if (model.response == UsernameResponse.INVALID) {
+      if (model.usernameController.text.trim().length < 5)
         return FittedBox(
           child: Text("please enter a username with more than 4 characters.",
               maxLines: 2,
               style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500)),
         );
-      else if (usernameController.text.trim().length > 20)
+      else if (model.usernameController.text.trim().length > 20)
         return FittedBox(
           child: Text("please enter a username with less than 20 characters.",
               maxLines: 2,
@@ -129,7 +86,7 @@ class UsernameState extends State<Username> {
         );
       else
         return FittedBox(
-          child: Text("@${usernameController.text.trim()} is invalid",
+          child: Text("@${model.usernameController.text.trim()} is invalid",
               maxLines: 2,
               style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500)),
         );
@@ -153,8 +110,6 @@ class UsernameState extends State<Username> {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    baseProvider = Provider.of<BaseUtil>(context, listen: false);
-    dbProvider = Provider.of<DBModel>(context, listen: false);
     return BaseView<UsernameInputScreenViewModel>(
       builder: (ctx, model, child) => Container(
         child: SingleChildScrollView(
@@ -175,18 +130,18 @@ class UsernameState extends State<Username> {
               TextFieldLabel(locale.obUsernameLabel),
               SizedBox(height: SizeConfig.padding6),
               Form(
-                key: _formKey,
+                key: model.formKey,
                 child: Container(
                   child: TextFormField(
                     focusNode: focusNode,
-                    controller: usernameController,
+                    controller: model.usernameController,
                     inputFormatters: [
                       LowerCaseTextFormatter(),
                       //FilteringTextInputFormatter.allow(regex)
                     ],
                     textCapitalization: TextCapitalization.none,
                     autofocus: true,
-                    enabled: enabled,
+                    enabled: model.enabled,
                     cursorColor: UiConstants.primaryColor,
                     keyboardType: TextInputType.text,
                     validator: (val) {
@@ -203,7 +158,7 @@ class UsernameState extends State<Username> {
                       ),
                     ),
                     onChanged: (value) {
-                      validate();
+                      model.validate();
                     },
                   ),
                 ),
@@ -215,7 +170,7 @@ class UsernameState extends State<Username> {
                   left: 8,
                 ),
                 height: 40,
-                child: showResult(),
+                child: showResult(model),
               ),
               //Text(responseText),
               SizedBox(height: SizeConfig.padding40),
@@ -242,8 +197,6 @@ class UsernameState extends State<Username> {
       ),
     );
   }
-
-  get formKey => _formKey;
 }
 
 class RuleTile extends StatelessWidget {
