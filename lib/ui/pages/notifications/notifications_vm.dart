@@ -6,15 +6,15 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:logger/logger.dart';
 
 class NotificationsViewModel extends BaseModel {
   //dependencies
   final _dbModel = locator<DBModel>();
   final _userService = locator<UserService>();
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
 
   //local variables
   List<AlertModel> notifications;

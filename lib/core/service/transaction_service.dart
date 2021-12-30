@@ -172,7 +172,7 @@ class TransactionService
   String getFormattedTime(Timestamp tTime) {
     DateTime now =
         DateTime.fromMillisecondsSinceEpoch(tTime.millisecondsSinceEpoch);
-    return DateFormat('yyyy-MM-dd – hh:mm').format(now);
+    return DateFormat('yyyy-MM-dd – hh:mm a').format(now);
   }
 
   Widget getTileLead(String type) {

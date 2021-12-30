@@ -492,6 +492,13 @@ class AugmontGoldBuyViewModel extends BaseModel {
     }
   }
 
+  getAmount(double amount) {
+    if (amount > amount.toInt())
+      return amount;
+    else
+      return amount.toInt();
+  }
+
   showSuccessGoldBuyDialog() {
     BaseUtil.openDialog(
       addToScreenStack: true,
@@ -501,7 +508,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
         asset: Assets.goldenTicket,
         title: "Congratulations",
         subtitle:
-            "You have successfully saved ${_baseUtil.currentAugmontTxn.amount} and earned ${_baseUtil.currentAugmontTxn.amount.ceil()} tokens!",
+            "You have successfully saved ₹ ${getAmount(_baseUtil.currentAugmontTxn.amount)} and earned ${_baseUtil.currentAugmontTxn.amount.ceil()} tokens!",
         result: (res) {
           // if (res) ;
         },
