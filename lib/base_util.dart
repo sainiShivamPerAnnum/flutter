@@ -192,42 +192,52 @@ class BaseUtil extends ChangeNotifier {
   }
 
   Future init() async {
-    logger.i('inside init base util');
-    _setRuntimeDefaults();
+    try {
+      _logger.i('inside init base util');
+      _setRuntimeDefaults();
 
-    //Analytics logs app open state.
-    await BaseAnalytics.init();
-    BaseAnalytics.analytics.logAppOpen();
+      //Analytics logs app open state.
+      await BaseAnalytics.init();
+      BaseAnalytics.analytics.logAppOpen();
 
-    //remote config for various remote variables
-    logger.i('base util remote config');
-    await BaseRemoteConfig.init();
+      //remote config for various remote variables
+      _logger.i('base util remote config');
+      await BaseRemoteConfig.init();
 
-    setPackageInfo();
-    setGameDefaults();
+      setPackageInfo();
+      setGameDefaults();
 
-    ///fetch on-boarding status and User details
-    firebaseUser = _userService.firebaseUser;
-    isUserOnboarded = _userService.isUserOnborded;
+      ///fetch on-boarding status and User details
+      firebaseUser = _userService.firebaseUser;
+      isUserOnboarded = _userService.isUserOnborded;
 
-    // isUserOnboarded =
-    //     (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
+      // isUserOnboarded =
+      //     (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
 
-    if (isUserOnboarded) {
-      //set current user
-      myUser = _userService.baseUser;
+      if (isUserOnboarded) {
+        //set current user
+        myUser = _userService.baseUser;
 
-      ///get user creation time
-      _userCreationTimestamp = firebaseUser.metadata.creationTime;
+        ///get user creation time
+        _userCreationTimestamp = firebaseUser.metadata.creationTime;
 
-      ///pick zerobalance asset
-      Random rnd = new Random();
-      zeroBalanceAssetUri = 'zerobal/zerobal_${rnd.nextInt(4) + 1}';
+        ///pick zerobalance asset
+        Random rnd = new Random();
+        zeroBalanceAssetUri = 'zerobal/zerobal_${rnd.nextInt(4) + 1}';
 
-      ///see if security needs to be shown -> Move to save tab
-      // show_security_prompt = await _lModel.showSecurityPrompt();
+        ///see if security needs to be shown -> Move to save tab
+        show_security_prompt = await _lModel.showSecurityPrompt();
 
-      await setUserDefaults();
+        await setUserDefaults();
+      }
+    } catch (e) {
+      _logger.e(e.toString());
+      if (_userService.isUserOnborded != null)
+        _dbModel.logFailure(
+            _userService.baseUser.uid, FailType.BaseUtilInitFailed, {
+          "title": "BaseUtil initialization Failed",
+          "error": e.toString(),
+        });
     }
   }
 
@@ -553,13 +563,13 @@ class BaseUtil extends ChangeNotifier {
   }
 
   Future<bool> authenticateUser(AuthCredential credential) {
-    logger.d("Verification credetials: " + credential.toString());
+    _logger.d("Verification credetials: " + credential.toString());
     return FirebaseAuth.instance.signInWithCredential(credential).then((res) {
       this.firebaseUser = res.user;
-      logger.i("New Firebase User: ${res.additionalUserInfo.isNewUser}");
+      _logger.i("New Firebase User: ${res.additionalUserInfo.isNewUser}");
       return true;
     }).catchError((e) {
-      logger.e(
+      _logger.e(
           "User Authentication failed with credential: Error: " + e.toString());
       return false;
     });
@@ -875,12 +885,12 @@ class BaseUtil extends ChangeNotifier {
     notifyListeners();
   }
 
-  void toggleTambolaNotificationStatus(bool value) {
-    _myUser.userPreferences
-        .setPreference(Preferences.TAMBOLANOTIFICATIONS, (value) ? 1 : 0);
-    AppState.unsavedPrefs = true;
-    notifyListeners();
-  }
+  // void toggleTambolaNotificationStatus(bool value) {
+  //   _myUser.userPreferences
+  //       .setPreference(Preferences.TAMBOLANOTIFICATIONS, (value) ? 1 : 0);
+  //   AppState.unsavedPrefs = true;
+  //   notifyListeners();
+  // }
 
   //Saving and fetching app lock user preference
   // void saveSecurityValue(bool newValue) async {

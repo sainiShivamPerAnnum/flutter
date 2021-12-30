@@ -10,8 +10,8 @@ import 'package:felloapp/ui/pages/hamburger/faq_page.dart';
 import 'package:felloapp/ui/pages/hamburger/referral_policy_page.dart';
 import 'package:felloapp/ui/pages/hamburger/support.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
-import 'package:felloapp/ui/pages/notifications/notifications.dart';
 import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
+import 'package:felloapp/ui/pages/notifications/notifications_view.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_page.dart';
 import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_view.dart';
@@ -387,9 +387,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.WalkThrough:
         WalkThroughConfig.currentPageAction = action;
         break;
-      // case Pages.WalkThroughCompleted:
-      //   WalkThroughCompletedConfig.currentPageAction = action;
-      //   break;
       case Pages.YourFunds:
         YourFundsConfig.currentPageAction = action;
         break;

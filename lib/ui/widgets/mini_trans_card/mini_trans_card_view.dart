@@ -49,7 +49,7 @@ class MiniTransactionCard extends StatelessWidget {
                                   return ListTile(
                                     onTap: () {
                                       Haptic.vibrate();
-                                      bool freeBeerStatus = model
+                                      bool freeBeerStatus = model.txnService
                                           .getBeerTicketStatus(m.txnList[i]);
                                       showDialog(
                                           context: AppState.delegate
@@ -98,9 +98,9 @@ class MiniTransactionCard extends StatelessWidget {
                                               .getFormattedTxnAmount(
                                                   m.txnList[i].amount),
                                           style: TextStyle(
-                                            color: model.txnService
-                                                .getTileColor(
-                                                    m.txnList[i].tranStatus),
+                                            // color: model.txnService
+                                            //     .getTileColor(
+                                            //         m.txnList[i].tranStatus),
                                             fontSize: SizeConfig.mediumTextSize,
                                           ),
                                         ),
@@ -108,9 +108,10 @@ class MiniTransactionCard extends StatelessWidget {
                                           model.txnService.getFormattedTime(
                                               m.txnList[i].timestamp),
                                           style: TextStyle(
-                                              color: model.txnService
-                                                  .getTileColor(
-                                                      m.txnList[i].tranStatus),
+                                              // color: model.txnService
+                                              //     .getTileColor(
+                                              //         m.txnList[i].tranStatus),
+                                              color: Colors.black45,
                                               fontSize:
                                                   SizeConfig.smallTextSize),
                                         )

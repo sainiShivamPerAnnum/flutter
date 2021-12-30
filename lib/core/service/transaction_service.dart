@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -19,8 +21,16 @@ class TransactionService
   final _logger = locator<CustomLogger>();
 
   List<UserTransaction> _txnList;
-  DocumentSnapshot lastTransactionListDocument;
-  bool hasMoreTransactionListDocuments = true;
+  DocumentSnapshot lastTxnDoc,
+      lastPrizeTxnDoc,
+      lastDepositTxnDoc,
+      lastWithdrawalTxnDoc,
+      lastRefundedTxnDoc;
+  bool hasMoreTxns = true,
+      hasMorePrizeTxns = true,
+      hasMoreDepositTxns = true,
+      hasMoreWithdrawalTxns = true,
+      hasMoreRefundedTxns = true;
 
   List<UserTransaction> get txnList => _txnList;
 
@@ -30,32 +40,99 @@ class TransactionService
   }
 
   appendTxns(List<UserTransaction> list) {
-    _txnList.addAll(list);
+    list.forEach((txn) {
+      UserTransaction duplicate = _txnList
+          .firstWhere((t) => t.timestamp == txn.timestamp, orElse: () => null);
+      if (duplicate == null) _txnList.add(txn);
+    });
+    _txnList.sort((a, b) => b.timestamp.seconds.compareTo(a.timestamp.seconds));
     notifyListeners(TransactionServiceProperties.transactionList);
   }
 
-  fetchTransactions(int limit) async {
+  fetchTransactions({
+    @required int limit,
+    String status,
+    String type,
+    String subtype,
+  }) async {
     if (_dBModel != null && _userService != null) {
+      //fetch filtered transactions
       Map<String, dynamic> tMap = await _dBModel.getFilteredUserTransactions(
-          _userService.baseUser,
-          null,
-          null,
-          lastTransactionListDocument,
-          limit);
-
+        user: _userService.baseUser,
+        type: type,
+        subtype: subtype,
+        status: status,
+        lastDocument: getLastTxnDocType(status: status, type: type),
+        limit: limit,
+      );
+      // if transaction list is empty
       if (_txnList == null || _txnList.length == 0) {
         txnList = List.from(tMap['listOfTransactions']);
       } else {
-        appendTxns(List.from(tMap['listOfTransactions']));
+        // if transaction list already have some items
+        appendTxns(tMap['listOfTransactions']);
       }
       _logger.d("Current Transaction List length: ${_txnList.length}");
-      if (tMap['lastDocument'] != null) {
-        lastTransactionListDocument = tMap['lastDocument'];
-      }
-      if (tMap['length'] < limit) {
-        hasMoreTransactionListDocuments = false;
-        findFirstAugmontTransaction();
-      }
+      // set proper lastDocument snapshot for further fetches
+      if (tMap['lastDocument'] != null)
+        setLastTxnDocType(
+            status: status, type: type, lastDocSnapshot: tMap['lastDocument']);
+      // check and set which category has no more items to fetch
+      if (tMap['length'] < limit)
+        setHasMoreTxnsValue(type: type, status: status);
+    }
+  }
+
+  DocumentSnapshot getLastTxnDocType({String status, String type}) {
+    if (status == null && type == null) return lastTxnDoc;
+    if (status != null) return lastRefundedTxnDoc;
+    if (type != null) {
+      if (type == UserTransaction.TRAN_TYPE_DEPOSIT) return lastDepositTxnDoc;
+      if (type == UserTransaction.TRAN_TYPE_PRIZE) return lastPrizeTxnDoc;
+      if (type == UserTransaction.TRAN_TYPE_WITHDRAW)
+        return lastWithdrawalTxnDoc;
+    }
+    return lastTxnDoc;
+  }
+
+  setLastTxnDocType(
+      {String status, String type, DocumentSnapshot lastDocSnapshot}) {
+    if (status == null && type == null) {
+      lastTxnDoc = lastDocSnapshot;
+      lastRefundedTxnDoc = lastDocSnapshot;
+      lastDepositTxnDoc = lastDocSnapshot;
+      lastWithdrawalTxnDoc = lastDocSnapshot;
+      lastPrizeTxnDoc = lastDocSnapshot;
+    } else if (status != null)
+      lastRefundedTxnDoc = lastDocSnapshot;
+    else if (type != null) {
+      if (type == UserTransaction.TRAN_TYPE_DEPOSIT)
+        lastDepositTxnDoc = lastDocSnapshot;
+      if (type == UserTransaction.TRAN_TYPE_PRIZE)
+        lastPrizeTxnDoc = lastDocSnapshot;
+      if (type == UserTransaction.TRAN_TYPE_WITHDRAW)
+        lastWithdrawalTxnDoc = lastDocSnapshot;
+    }
+  }
+
+  setHasMoreTxnsValue({String status, String type}) {
+    if (status == null && type == null) {
+      hasMoreTxns = false;
+      hasMorePrizeTxns = false;
+      hasMoreDepositTxns = false;
+      hasMoreRefundedTxns = false;
+      hasMoreWithdrawalTxns = false;
+      findFirstAugmontTransaction();
+      _logger.d("Transaction fetch complete, no more operations from here on");
+    } else if (status != null) {
+      hasMoreRefundedTxns = false;
+    } else if (type != null) {
+      if (type == UserTransaction.TRAN_TYPE_DEPOSIT)
+        hasMoreDepositTxns = false;
+      else if (type == UserTransaction.TRAN_TYPE_WITHDRAW)
+        hasMoreWithdrawalTxns = false;
+      else if (type == UserTransaction.TRAN_TYPE_PRIZE)
+        hasMorePrizeTxns = false;
     }
   }
 
@@ -72,10 +149,14 @@ class TransactionService
   }
 
   updateTransactions() async {
-    lastTransactionListDocument = null;
-    hasMoreTransactionListDocuments = true;
+    lastTxnDoc = null;
+    hasMoreTxns = true;
+    hasMorePrizeTxns = true;
+    hasMoreDepositTxns = true;
+    hasMoreWithdrawalTxns = true;
+    hasMoreRefundedTxns = true;
     txnList.clear();
-    await fetchTransactions(4);
+    await fetchTransactions(limit: 4);
     _logger.i("Transactions got updated");
   }
 
@@ -86,6 +167,12 @@ class TransactionService
       return "₹ ${amount.abs().toStringAsFixed(2)}";
     else
       return "- ₹ ${amount.abs().toStringAsFixed(2)}";
+  }
+
+  String getFormattedTime(Timestamp tTime) {
+    DateTime now =
+        DateTime.fromMillisecondsSinceEpoch(tTime.millisecondsSinceEpoch);
+    return DateFormat('yyyy-MM-dd – hh:mm').format(now);
   }
 
   Widget getTileLead(String type) {
@@ -144,22 +231,51 @@ class TransactionService
       return UiConstants.primaryColor;
     } else if (type == UserTransaction.TRAN_STATUS_PENDING) {
       return Colors.amber;
+    } else if (type == UserTransaction.TRAN_STATUS_PROCESSING) {
+      return Colors.amber;
     } else if (type == UserTransaction.TRAN_STATUS_REFUNDED) {
       return Colors.blue;
     }
-    return Colors.black87;
+    return Colors.black54;
   }
 
-  String getFormattedTime(Timestamp tTime) {
-    DateTime now =
-        DateTime.fromMillisecondsSinceEpoch(tTime.millisecondsSinceEpoch);
-    return DateFormat('yyyy-MM-dd – kk:mm').format(now);
+  // BEER FEST SPECIFIC CODE
+
+  bool isOfferStillValid(Timestamp time) {
+    String _timeoutMins = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.OCT_FEST_OFFER_TIMEOUT);
+    if (_timeoutMins == null || _timeoutMins.isEmpty) _timeoutMins = '10';
+    int _timeout = int.tryParse(_timeoutMins);
+
+    DateTime tTime =
+        DateTime.fromMillisecondsSinceEpoch(time.millisecondsSinceEpoch);
+    Duration difference = DateTime.now().difference(tTime);
+    if (difference.inSeconds <= _timeout * 60) {
+      return true;
+    }
+    return false;
+  }
+
+  bool getBeerTicketStatus(UserTransaction transaction) {
+    double minBeerDeposit = double.tryParse(BaseRemoteConfig.remoteConfig
+            .getString(BaseRemoteConfig.OCT_FEST_MIN_DEPOSIT) ??
+        '150.0');
+    _logger.d(_baseUtil.firstAugmontTransaction);
+    if (_baseUtil.firstAugmontTransaction != null &&
+        _baseUtil.firstAugmontTransaction == transaction &&
+        transaction.amount >= minBeerDeposit &&
+        isOfferStillValid(transaction.timestamp)) return true;
+    return false;
   }
 
 // Clear transactions
-  void signOut() {
-    lastTransactionListDocument = null;
-    hasMoreTransactionListDocuments = true;
-    txnList?.clear();
+  signOut() {
+    lastTxnDoc = null;
+    hasMoreTxns = true;
+    hasMorePrizeTxns = true;
+    hasMoreDepositTxns = true;
+    hasMoreWithdrawalTxns = true;
+    hasMoreRefundedTxns = true;
+    txnList.clear();
   }
 }

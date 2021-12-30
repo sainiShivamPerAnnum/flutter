@@ -43,6 +43,7 @@ const String ReferralDetailsPath = '/referralDetails';
 const String ReferralHistoryPath = '/referralHistory';
 const String MyWinningsPath = '/myWinnings';
 const String blockedUserPath = '/blockeUser';
+
 enum Pages {
   Splash,
   Login,
