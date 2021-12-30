@@ -1,10 +1,4 @@
-//Project Imports
-//Dart and Flutter Imports
-import 'dart:typed_data';
-
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/screen_item_enum.dart';
-import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input/name_input_vm.dart';
@@ -15,12 +9,9 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-//Pub Imports
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
 class NameInputScreen extends StatefulWidget {
@@ -36,167 +27,77 @@ class NameInputScreenState extends State<NameInputScreen> {
   Log log = new Log("NameInputScreen");
   RegExp _emailRegex = RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-  String _name;
-  String _email;
-  String _age;
-  bool _isInvested = true;
-  bool _isInitialized = false;
-  bool _validate = true;
-  int gen = null;
-  bool isPlayer = false;
-  TextEditingController _nameFieldController;
-  TextEditingController _emailFieldController;
-  TextEditingController _dateFieldController;
-  TextEditingController _monthFieldController;
-  TextEditingController _yearFieldController;
-  String dateInputError = "";
-  static String stateChosenValue;
 
-  HttpModel httpProvider;
-  BaseUtil authProvider;
+  int gen;
+  int get gender => gen;
+
+  static String stateChosenValue;
+  String get state => stateChosenValue;
+
+  String dateInputError = "";
+
   DateTime initialDate = DateTime(1997, 1, 1, 0, 0);
   List<bool> _selections = [false, true];
-  final _formKey = GlobalKey<FormState>();
-  DateTime selectedDate = null;
-  static BaseUtil baseProvider;
-  TextEditingController _dateController = new TextEditingController(text: '');
 
-  bool _isSigningIn = false;
-  bool _isContinuedWithGoogle = false;
-  bool _emailEnabled = true;
-  String emailText = "Email";
-  bool isEmailEntered = true;
-  bool isUploaded = false;
-
-  showEmailOptions() {
-    AppState.screenStack.add(ScreenItem.dialog);
-    baseProvider.isGoogleSignInProgress = false;
-    showModalBottomSheet(
-        isDismissible: baseProvider.isGoogleSignInProgress ? false : true,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        context: context,
-        builder: (ctx) {
-          return SignInOptions(
-            onEmailSignIn: continueWithEmail,
-            onGoogleSignIn: continueWithGoogle,
-          );
-        });
-  }
-
-  continueWithGoogle() async {
-    try {
-      await GoogleSignIn().signOut();
-      final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
-      if (googleUser != null) {
-        if (await httpProvider.isEmailNotRegistered(
-            baseProvider.myUser.uid, googleUser.email)) {
-          _nameFieldController.text = googleUser.displayName;
-          baseProvider.myUser.isEmailVerified = true;
-          baseProvider.myUserDpUrl = googleUser.photoUrl;
-          Uint8List bytes =
-              (await NetworkAssetBundle(Uri.parse(googleUser.photoUrl))
-                      .load(googleUser.photoUrl))
-                  .buffer
-                  .asUint8List();
-          FirebaseStorage storage = FirebaseStorage.instance;
-
-          Reference ref =
-              storage.ref().child("dps/${baseProvider.myUser.uid}/image");
-          UploadTask uploadTask = ref.putData(bytes);
-          try {
-            var res = await uploadTask;
-            String url = await res.ref.getDownloadURL();
-            if (url != null) {
-              baseProvider.isProfilePictureUpdated = true;
-              baseProvider.setDisplayPictureUrl(url);
-              setState(() {
-                isUploaded = true;
-                isEmailEntered = true;
-                _isContinuedWithGoogle = true;
-                emailText = googleUser.email;
-                baseProvider.isGoogleSignInProgress = false;
-              });
-            } else {
-              baseProvider.isGoogleSignInProgress = false;
-              BaseUtil.showNegativeAlert(
-                  "Error getting profile picture", "Please try again");
-            }
-          } catch (e) {
-            baseProvider.isGoogleSignInProgress = false;
-            BaseUtil.showNegativeAlert(
-                "Error uploading profile picture", "Please try again");
-          }
-          AppState.backButtonDispatcher.didPopRoute();
-        } else {
-          baseProvider.isGoogleSignInProgress = false;
-          BaseUtil.showNegativeAlert(
-              "Email already registered", "Please try with another email");
-        }
-      } else {
-        setState(() {
-          baseProvider.isGoogleSignInProgress = false;
-        });
-        BaseUtil.showNegativeAlert(
-            "No account selected", "Please choose an account from the list");
-      }
-    } catch (e) {
-      print(e.toString());
-      baseProvider.isGoogleSignInProgress = false;
-      BaseUtil.showNegativeAlert(
-          "Unable to verify", "Please try a different method");
-    }
-  }
-
-  continueWithEmail() {
-    setState(() {
-      isEmailEntered = true;
-      _emailEnabled = true;
-    });
-    AppState.backButtonDispatcher.didPopRoute();
-  }
-
-  void _showAndroidDatePicker() async {
-    var res = await showDatePicker(
-      context: context,
-      initialDate: DateTime(2000, 1, 1),
-      firstDate: DateTime(1950, 1, 1),
-      lastDate: DateTime(2002, 1, 1),
+  Row abc(isInvested) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        ElevatedButton(
+          // color: (_isInvested ?? false)
+          //     ? UiConstants.primaryColor
+          //     : Color(0xffe9e9ea),
+          style: ElevatedButton.styleFrom(
+            primary: (isInvested ?? false)
+                ? UiConstants.primaryColor
+                : Color(0xffe9e9ea),
+            shadowColor: UiConstants.primaryColor.withOpacity(0.3),
+          ),
+          onPressed: () {
+            setState(() {
+              isInvested = true;
+            });
+          },
+          child: Text(
+            " YES ",
+            style: TextStyle(
+                color: (isInvested ?? false) ? Colors.white : Colors.grey),
+          ),
+        ),
+        SizedBox(
+          width: 20,
+        ),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            primary: (isInvested ?? true)
+                ? Color(0xffe9e9ea)
+                : UiConstants.primaryColor,
+            shadowColor: UiConstants.primaryColor.withOpacity(0.3),
+          ),
+          onPressed: () {
+            setState(() {
+              isInvested = false;
+            });
+          },
+          child: Text(
+            " NO ",
+            style: TextStyle(
+                color: (isInvested ?? true) ? Colors.grey : Colors.white),
+          ),
+        ),
+      ],
     );
-    if (res != null)
-      setState(() {
-        print(res);
-        selectedDate = res;
-        _dateController.text = "${res.toLocal()}".split(' ')[0];
-        _dateFieldController.text = res.day.toString().padLeft(2, '0');
-        _monthFieldController.text = res.month.toString().padLeft(2, '0');
-        _yearFieldController.text = res.year.toString();
-      });
   }
 
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    baseProvider = Provider.of<BaseUtil>(context, listen: false);
-    httpProvider = Provider.of<HttpModel>(context, listen: false);
-    if (!_isInitialized) {
-      _isInitialized = true;
-      authProvider = Provider.of<BaseUtil>(context, listen: false);
-      _nameFieldController =
-          (authProvider.myUser != null && authProvider.myUser.name != null)
-              ? new TextEditingController(text: authProvider.myUser.name)
-              : new TextEditingController();
-      _emailFieldController =
-          (authProvider.myUser != null && authProvider.myUser.email != null)
-              ? new TextEditingController(text: authProvider.myUser.email)
-              : new TextEditingController();
-      _dateFieldController = new TextEditingController();
-      _monthFieldController = new TextEditingController();
-      _yearFieldController = new TextEditingController();
-    }
+
     return BaseView<NameInputScreenViewModel>(
+      onModelReady: (model) => model.init(),
       builder: (ctx, model, child) => Container(
         child: Form(
-          key: _formKey,
+          key: model.formKey,
           child: ListView(
             padding: EdgeInsets.symmetric(
                 vertical: SizeConfig.pageHorizontalMargins),
@@ -204,9 +105,9 @@ class NameInputScreenState extends State<NameInputScreen> {
             // crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               TextFieldLabel(locale.obEmailLabel),
-              _emailEnabled
+              model.emailEnabled
                   ? TextFormField(
-                      controller: _emailFieldController,
+                      controller: model.emailFieldController,
                       keyboardType: TextInputType.emailAddress,
                       autofocus: true,
                       decoration: InputDecoration(
@@ -230,7 +131,9 @@ class NameInputScreenState extends State<NameInputScreen> {
                       },
                     )
                   : InkWell(
-                      onTap: _isContinuedWithGoogle ? () {} : showEmailOptions,
+                      onTap: model.isContinuedWithGoogle
+                          ? () {}
+                          : model.showEmailOptions(context),
                       child: Container(
                         height: 60,
                         padding:
@@ -247,18 +150,18 @@ class NameInputScreenState extends State<NameInputScreen> {
                           children: [
                             Icon(Icons.email,
                                 size: 20,
-                                color: _isContinuedWithGoogle
+                                color: model.isContinuedWithGoogle
                                     ? UiConstants.primaryColor
                                     : Colors.grey),
                             SizedBox(width: 12),
                             Text(
-                              emailText,
+                              model.emailText,
                               style: TextStyle(
                                 fontSize: 16,
                               ),
                             ),
                             Spacer(),
-                            emailText != "Email"
+                            model.emailText != "Email"
                                 ? Icon(
                                     Icons.verified,
                                     size: SizeConfig.blockSizeVertical * 2.4,
@@ -272,7 +175,7 @@ class NameInputScreenState extends State<NameInputScreen> {
               TextFieldLabel(locale.obNameLabel),
               TextFormField(
                 cursorColor: UiConstants.primaryColor,
-                controller: _nameFieldController,
+                controller: model.nameFieldController,
                 keyboardType: TextInputType.text,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z ]'))
@@ -371,7 +274,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                       width: SizeConfig.blockSizeHorizontal * 5,
                     ),
                     DateField(
-                      controller: _dateFieldController,
+                      controller: model.dateFieldController,
                       fieldWidth: SizeConfig.screenWidth * 0.12,
                       labelText: "dd",
                       maxlength: 2,
@@ -391,7 +294,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                     ),
                     Expanded(child: Center(child: Text("/"))),
                     DateField(
-                      controller: _monthFieldController,
+                      controller: model.monthFieldController,
                       fieldWidth: SizeConfig.screenWidth * 0.12,
                       labelText: "mm",
                       maxlength: 2,
@@ -411,7 +314,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                     ),
                     Expanded(child: Center(child: Text("/"))),
                     DateField(
-                      controller: _yearFieldController,
+                      controller: model.yearFieldController,
                       fieldWidth: SizeConfig.screenWidth * 0.16,
                       labelText: "yyyy",
                       maxlength: 4,
@@ -433,7 +336,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                       width: 16,
                     ),
                     IconButton(
-                      onPressed: _showAndroidDatePicker,
+                      onPressed: () => model.showAndroidDatePicker(context),
                       icon: Icon(
                         Icons.calendar_today,
                         size: 20,
@@ -499,143 +402,6 @@ class NameInputScreenState extends State<NameInputScreen> {
         ),
       ),
     );
-  }
-
-  Row abc() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        ElevatedButton(
-          // color: (_isInvested ?? false)
-          //     ? UiConstants.primaryColor
-          //     : Color(0xffe9e9ea),
-          style: ElevatedButton.styleFrom(
-            primary: (_isInvested ?? false)
-                ? UiConstants.primaryColor
-                : Color(0xffe9e9ea),
-            shadowColor: UiConstants.primaryColor.withOpacity(0.3),
-          ),
-          onPressed: () {
-            setState(() {
-              _isInvested = true;
-            });
-          },
-          child: Text(
-            " YES ",
-            style: TextStyle(
-                color: (_isInvested ?? false) ? Colors.white : Colors.grey),
-          ),
-        ),
-        SizedBox(
-          width: 20,
-        ),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            primary: (_isInvested ?? true)
-                ? Color(0xffe9e9ea)
-                : UiConstants.primaryColor,
-            shadowColor: UiConstants.primaryColor.withOpacity(0.3),
-          ),
-          onPressed: () {
-            setState(() {
-              _isInvested = false;
-            });
-          },
-          child: Text(
-            " NO ",
-            style: TextStyle(
-                color: (isInvested ?? true) ? Colors.grey : Colors.white),
-          ),
-        ),
-      ],
-    );
-  }
-
-  setError() {
-    setState(() {
-      _validate = false;
-    });
-  }
-
-  String get email {
-    if (!_isContinuedWithGoogle)
-      return _emailFieldController.text;
-    else if (emailText == 'Email')
-      return null;
-    else
-      return emailText;
-  }
-
-  set email(String value) {
-    _emailFieldController.text = value;
-    //_email = value;
-  }
-
-  String get name => _nameFieldController.text;
-
-  set name(String value) {
-    //_name = value;
-    _nameFieldController.text = value;
-  }
-
-  bool get isInvested => _isInvested;
-
-  set isInvested(bool value) {
-    _isInvested = value;
-  }
-
-  DateTime get dob {
-    return selectedDate;
-  }
-
-  int get gender => gen;
-
-  set isSigningin(bool val) {
-    _isSigningIn = val;
-  }
-
-  String get state => stateChosenValue;
-  get formKey => _formKey;
-
-  bool isValidDate() {
-    setState(() {
-      dateInputError = "";
-    });
-    String inputDate = _yearFieldController.text +
-        _monthFieldController.text +
-        _dateFieldController.text;
-    print("Input date : " + inputDate);
-    if (inputDate == null || inputDate.isEmpty) {
-      setState(() {
-        dateInputError = "Invalid date";
-      });
-      return false;
-    }
-    final date = DateTime.tryParse(inputDate);
-    if (date == null) {
-      setState(() {
-        dateInputError = "Invalid date";
-      });
-      return false;
-    } else {
-      final originalFormatString = toOriginalFormatString(date);
-      if (inputDate == originalFormatString) {
-        selectedDate = date;
-        return true;
-      } else {
-        setState(() {
-          dateInputError = "Invalid date";
-        });
-        return false;
-      }
-    }
-  }
-
-  String toOriginalFormatString(DateTime dateTime) {
-    final y = dateTime.year.toString().padLeft(4, '0');
-    final m = dateTime.month.toString().padLeft(2, '0');
-    final d = dateTime.day.toString().padLeft(2, '0');
-    return "$y$m$d";
   }
 }
 
