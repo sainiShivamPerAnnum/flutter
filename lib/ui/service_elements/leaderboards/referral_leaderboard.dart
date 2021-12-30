@@ -11,7 +11,17 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class ReferralLeaderboard extends StatelessWidget {
-  const ReferralLeaderboard({Key key}) : super(key: key);
+  final int count;
+  ReferralLeaderboard({this.count});
+  getLength(int listLength) {
+    if (count != null) {
+      if (listLength < count)
+        return listLength;
+      else
+        return count;
+    } else
+      return listLength;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +53,8 @@ class ReferralLeaderboard extends StatelessWidget {
                           )
                         : Column(
                             children: List.generate(
-                                model.referralLeaderBoard.length, (i) {
+                                getLength(model.referralLeaderBoard.length),
+                                (i) {
                               return Container(
                                 width: SizeConfig.screenWidth,
                                 padding: EdgeInsets.all(SizeConfig.padding12),

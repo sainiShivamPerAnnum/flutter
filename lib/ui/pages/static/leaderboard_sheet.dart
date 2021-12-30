@@ -89,28 +89,28 @@ class _WinnersLeaderBoardSEState extends State<WinnersLeaderBoardSE> {
                                     ),
                                   ],
                                 ),
-                                // Container(
-                                //   color: Colors.white,
-                                //   padding: EdgeInsets.only(
-                                //     left: SizeConfig.pageHorizontalMargins,
-                                //     bottom: SizeConfig.padding4,
-                                //   ),
-                                //   alignment: Alignment.center,
-                                //   child: Row(
-                                //     mainAxisAlignment: MainAxisAlignment.start,
-                                //     children: [
-                                //       leaderboardChips(
-                                //         0,
-                                //         "Games",
-                                //       ),
-                                //       SizedBox(width: 16),
-                                //       leaderboardChips(
-                                //         1,
-                                //         "Referrals",
-                                //       ),
-                                //     ],
-                                //   ),
-                                // ),
+                                Container(
+                                  color: Colors.white,
+                                  padding: EdgeInsets.only(
+                                    left: SizeConfig.pageHorizontalMargins,
+                                    bottom: SizeConfig.padding4,
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      leaderboardChips(
+                                        0,
+                                        "Games",
+                                      ),
+                                      SizedBox(width: 16),
+                                      leaderboardChips(
+                                        1,
+                                        "Referrals",
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -156,31 +156,35 @@ class _WinnersLeaderBoardSEState extends State<WinnersLeaderBoardSE> {
                                     ),
                                   ],
                                 ),
-                                // Container(
-                                //   color: Colors.white,
-                                //   padding: EdgeInsets.only(
-                                //     left: SizeConfig.pageHorizontalMargins,
-                                //     bottom: SizeConfig.padding4,
-                                //   ),
-                                //   alignment: Alignment.center,
-                                //   child: Row(
-                                //     mainAxisAlignment: MainAxisAlignment.start,
-                                //     children: [
-                                //       leaderboardChips(
-                                //         0,
-                                //         "Games",
-                                //       ),
-                                //       SizedBox(width: 16),
-                                //       leaderboardChips(
-                                //         1,
-                                //         "Referrals",
-                                //       ),
-                                //     ],
-                                //   ),
-                                // ),
+                                Container(
+                                  color: Colors.white,
+                                  padding: EdgeInsets.only(
+                                    left: SizeConfig.pageHorizontalMargins,
+                                    bottom: SizeConfig.padding4,
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      leaderboardChips(
+                                        0,
+                                        "Games",
+                                      ),
+                                      SizedBox(width: 16),
+                                      leaderboardChips(
+                                        1,
+                                        "Referrals",
+                                      ),
+                                    ],
+                                  ),
+                                ),
                                 currentPage == 0
-                                    ? WinnerboardView()
-                                    : ReferralLeaderboard()
+                                    ? WinnerboardView(
+                                        count: 10,
+                                      )
+                                    : ReferralLeaderboard(
+                                        count: 10,
+                                      )
                               ],
                             ),
                           ],

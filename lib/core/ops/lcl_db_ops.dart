@@ -183,7 +183,7 @@ class LocalDBModel extends ChangeNotifier {
       if (_prefs.containsKey("SECURITY_PROMPT")) {
         flag = _prefs.getBool("SECURITY_PROMPT");
       } else {
-        flag = false;
+        flag = true;
       }
       return flag;
     } catch (e) {
