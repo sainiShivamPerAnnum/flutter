@@ -7,7 +7,7 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class CricketGameView extends StatelessWidget {
@@ -17,7 +17,7 @@ class CricketGameView extends StatelessWidget {
   final String stage;
 
   CricketGameView({this.sessionId, this.userId, this.userName, this.stage});
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
   @override
   Widget build(BuildContext context) {
     Completer<WebViewController> _controller = Completer<WebViewController>();

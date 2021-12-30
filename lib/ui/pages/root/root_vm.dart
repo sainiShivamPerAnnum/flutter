@@ -23,7 +23,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class RootViewModel extends BaseModel {
   final BaseUtil _baseUtil = locator<BaseUtil>();
@@ -34,7 +34,7 @@ class RootViewModel extends BaseModel {
   final UserService _userService = locator<UserService>();
   final UserCoinService _userCoinService = locator<UserCoinService>();
   final AppState _appState = locator<AppState>();
-  final Logger _logger = locator<Logger>();
+  final CustomLogger _logger = locator<CustomLogger>();
   final winnerService = locator<WinnerService>();
   final txnService = locator<TransactionService>();
 

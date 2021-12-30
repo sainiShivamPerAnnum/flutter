@@ -5,13 +5,15 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
+import 'package:intl/intl.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 enum TranFilterType { Type, Subtype }
 
 class TransactionsHistoryViewModel extends BaseModel {
+  final _logger = locator<CustomLogger>();
+  int _subfilter = 1;
   //locators
-  final _logger = locator<Logger>();
   final TransactionService _txnService = locator<TransactionService>();
 
   //local variables

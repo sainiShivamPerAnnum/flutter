@@ -6,10 +6,10 @@ import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class SignzyRepository {
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
   final _userService = locator<UserService>();
   final _apiPaths = locator<ApiPath>();
 

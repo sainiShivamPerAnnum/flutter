@@ -3,10 +3,10 @@ import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class PrizesRepository {
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
   final _api = locator<Api>();
 
   Future<ApiResponse<PrizesModel>> getPrizesPerGamePerFreq(

@@ -4,10 +4,10 @@ import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class UserRepository {
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
   final _api = locator<Api>();
 
 //Stack overflow condition when we inject _userUid from user service.

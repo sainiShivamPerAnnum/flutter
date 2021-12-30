@@ -31,7 +31,7 @@ import 'package:felloapp/util/styles/palette.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class TambolaGameViewModel extends BaseModel {
   TambolaService tambolaService = locator<TambolaService>();
@@ -40,7 +40,7 @@ class TambolaGameViewModel extends BaseModel {
   // tambolaService. _tambolaService. = locator<tambolaService.>();
   UserService _userService = locator<UserService>();
   UserCoinService _coinService = locator<UserCoinService>();
-  Logger _logger = locator<Logger>();
+  CustomLogger _logger = locator<CustomLogger>();
   LocalDBModel _localDBModel = locator<LocalDBModel>();
   final _fclActionRepo = locator<FlcActionsRepo>();
   final _ticketGenerationRepo = locator<TicketGenerationRepo>();

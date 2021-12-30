@@ -27,6 +27,8 @@ import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class SupportPage extends StatefulWidget {
   const SupportPage({Key key}) : super(key: key);
@@ -36,7 +38,7 @@ class SupportPage extends StatefulWidget {
 }
 
 class _SupportPageState extends State<SupportPage> {
-  final Logger logger = locator<Logger>();
+  final CustomLogger logger = locator<CustomLogger>();
   final UserService _userService = locator<UserService>();
   BaseUtil baseProvider;
   AppState appState;

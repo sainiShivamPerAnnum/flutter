@@ -34,10 +34,10 @@ import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -46,7 +46,6 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:logger/logger.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -54,8 +53,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'core/model/game_model.dart';
 
 class BaseUtil extends ChangeNotifier {
-  final Log log = new Log("BaseUtil");
-  final Logger _logger = locator<Logger>();
+  // final Log log = new Log("BaseUtil");
+  final CustomLogger logger = locator<CustomLogger>();
   final DBModel _dbModel = locator<DBModel>();
   final LocalDBModel _lModel = locator<LocalDBModel>();
   final AppState _appState = locator<AppState>();
@@ -315,7 +314,7 @@ class BaseUtil extends ChangeNotifier {
               'Transaction Closed', 'The transaction was not completed',
               seconds: 5);
         } else {
-          log.debug('Received notif for pending transaction: $value');
+          logger.d('Received notif for pending transaction: $value');
         }
       });
     }
@@ -331,7 +330,7 @@ class BaseUtil extends ChangeNotifier {
       var unreadCount = await Freshchat.getUnreadCountAsync;
       return (unreadCount['count'] > 0);
     } catch (e) {
-      log.error('Error reading unread count variable: $e');
+      logger.e('Error reading unread count variable: $e');
       Map<String, dynamic> errorDetails = {
         'User number': _myUser.mobile,
         'Error Type': 'Unread message count failed'
@@ -579,7 +578,7 @@ class BaseUtil extends ChangeNotifier {
   Future<bool> signOut() async {
     try {
       await _lModel.deleteLocalAppData();
-      log.debug('Cleared local cache');
+      logger.d('Cleared local cache');
       _appState.setCurrentTabIndex = 0;
 
       //remove fcm token from remote
@@ -630,7 +629,7 @@ class BaseUtil extends ChangeNotifier {
 
       return true;
     } catch (e) {
-      log.error('Failed to clear data/sign out user: ' + e.toString());
+      logger.e('Failed to clear data/sign out user: ' + e.toString());
       return false;
     }
   }
@@ -638,7 +637,7 @@ class BaseUtil extends ChangeNotifier {
   int checkTicketCountValidity(List<TambolaBoard> requestedBoards) {
     if (requestedBoards != null && _userTicketWallet.getActiveTickets() > 0) {
       if (requestedBoards.length < _userTicketWallet.getActiveTickets()) {
-        log.debug('Requested board count is less than needed tickets');
+        logger.d('Requested board count is less than needed tickets');
         int ticketCountRequired =
             _userTicketWallet.getActiveTickets() - requestedBoards.length;
 
@@ -650,7 +649,7 @@ class BaseUtil extends ChangeNotifier {
       }
       if (BaseUtil.ticketRequestSent) {
         if (requestedBoards.length > BaseUtil.ticketCountBeforeRequest) {
-          log.debug(
+          logger.d(
               'Previous request had completed and now the ticket count has increased');
           //BaseUtil.ticketRequestSent = false; //not really needed i think
         }
@@ -667,10 +666,10 @@ class BaseUtil extends ChangeNotifier {
           await CacheManager.writeCache(
               key: 'dpUrl', value: myUserDpUrl, type: CacheType.string);
           setDisplayPictureUrl(myUserDpUrl);
-          log.debug("No profile picture found in cache, fetched from server");
+          logger.d("No profile picture found in cache, fetched from server");
         }
       } catch (e) {
-        log.error(e.toString());
+        logger.e(e.toString());
       }
     } else
       setDisplayPictureUrl(await CacheManager.readCache(key: 'dpUrl'));
@@ -721,7 +720,6 @@ class BaseUtil extends ChangeNotifier {
         ((firstThursday.millisecondsSinceEpoch - tdt.millisecondsSinceEpoch) /
                 604800000)
             .ceil();
-    //log.debug("Current week number: " + n.toString());
     return n;
   }
 

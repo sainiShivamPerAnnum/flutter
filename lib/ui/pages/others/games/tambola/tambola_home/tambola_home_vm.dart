@@ -7,12 +7,12 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class TambolaHomeViewModel extends BaseModel {
   final _stats = locator<StatisticsRepository>();
   final _prizeService = locator<PrizeService>();
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
 
   bool isLeaderboardLoading = false;
   bool isPrizesLoading = false;

@@ -5,12 +5,11 @@ import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:intl/intl.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 
 class MixpanelService {
-  final _logger = locator<Logger>();
-  final _dbModel = locator<DBModel>();
+  final _logger = locator<CustomLogger>();
 
   static const String DEV_TOKEN = "6bc0994f4244fc5b193213df643f14dc";
   static const String PROD_TOKEN = "03de57e684d04e87999e089fd605fcdd";

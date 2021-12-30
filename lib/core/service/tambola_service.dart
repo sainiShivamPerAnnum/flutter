@@ -8,10 +8,10 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class TambolaService extends ChangeNotifier {
-  Logger _logger = locator<Logger>();
+  CustomLogger _logger = locator<CustomLogger>();
   DBModel _dbModel = locator<DBModel>();
   UserService _userService = locator<UserService>();
 

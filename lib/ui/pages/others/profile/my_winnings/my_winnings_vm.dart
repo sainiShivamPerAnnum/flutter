@@ -28,13 +28,13 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_html/shims/dart_ui_real.dart';
 import 'package:flutter_share_me/flutter_share_me.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 class MyWinningsViewModel extends BaseModel {
   //LOCATORS
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
   final _httpModel = locator<HttpModel>();
   final _userService = locator<UserService>();
   final _transactionService = locator<TransactionService>();

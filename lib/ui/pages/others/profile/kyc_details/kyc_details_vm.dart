@@ -19,14 +19,14 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/mixpanel_events.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class KYCDetailsViewModel extends BaseModel {
   String stateChosenValue;
   TextEditingController nameController, panController;
   bool inEditMode = true;
   bool isUpadtingKycDetails = false;
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
   final _userService = locator<UserService>();
   final _dbModel = locator<DBModel>();
   final _httpModel = locator<HttpModel>();

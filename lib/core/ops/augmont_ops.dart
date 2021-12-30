@@ -27,11 +27,11 @@ import 'package:felloapp/util/mixpanel_events.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class AugmontModel extends ChangeNotifier {
   final Log log = new Log('AugmontModel');
-  final Logger _logger = locator<Logger>();
+  final CustomLogger _logger = locator<CustomLogger>();
   final _apiPaths = locator<ApiPath>();
 
   final InvestmentActionsRepository _investmentActionsRepository =

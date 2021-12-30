@@ -4,7 +4,7 @@ import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class BaseRemoteConfig {
   static RemoteConfig remoteConfig;
@@ -166,7 +166,7 @@ class BaseRemoteConfig {
   };
 
   static Future<bool> init() async {
-    final Logger logger = locator<Logger>();
+    final CustomLogger logger = locator<CustomLogger>();
     logger.i('initializing remote config');
     remoteConfig = RemoteConfig.instance;
     try {

@@ -11,13 +11,13 @@ import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class FcmHandler extends ChangeNotifier {
   static const COMMAND_USER_PRIZE_WIN = 'userPrizeWin';
   static const COMMAND_USER_PRIZE_WIN_2 = 'userPrizeWinWithPrompt';
 
-  final Logger logger = locator<Logger>();
+  final CustomLogger logger = locator<CustomLogger>();
   final _lbService = locator<LeaderboardService>();
   Log log = new Log("FcmHandler");
   ValueChanged<Map> notifListener;

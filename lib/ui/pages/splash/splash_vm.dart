@@ -12,8 +12,12 @@ import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/elements/logo/logo_canvas.dart';
+import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:logger/logger.dart';
+import 'package:flutter/services.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:package_info/package_info.dart';
 
 class LauncherViewModel extends BaseModel {
@@ -27,7 +31,7 @@ class LauncherViewModel extends BaseModel {
   final _fcmListener = locator<FcmListener>();
   final userService = locator<UserService>();
   final _httpModel = locator<HttpModel>();
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
   final _tambolaService = locator<TambolaService>();
   final _mixpanelService = locator<MixpanelService>();
 
