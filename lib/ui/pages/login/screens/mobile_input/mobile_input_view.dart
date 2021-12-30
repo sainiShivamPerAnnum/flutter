@@ -23,8 +23,8 @@ class MobileInputScreenViewState extends State<MobileInputScreenView> {
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return BaseView<MobileInputScreenViewModel>(
-      onModelReady: (m) {
-        model = m;
+      onModelReady: (model) {
+        this.model = model;
       },
       builder: (ctx, model, child) => Container(
         child: SingleChildScrollView(

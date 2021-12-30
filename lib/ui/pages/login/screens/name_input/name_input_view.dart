@@ -96,7 +96,10 @@ class NameInputScreenState extends State<NameInputScreen> {
     S locale = S.of(context);
 
     return BaseView<NameInputScreenViewModel>(
-      onModelReady: (model) => model.init(),
+      onModelReady: (model) {
+        model.init();
+        this.model = model;
+      },
       builder: (ctx, model, child) => Container(
         child: Form(
           key: model.formKey,

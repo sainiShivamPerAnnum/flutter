@@ -36,7 +36,7 @@ class Username extends StatefulWidget {
 }
 
 class UsernameState extends State<Username> {
-    UsernameInputScreenViewModel model;
+  UsernameInputScreenViewModel model;
   FocusNode focusNode;
 
   @override
@@ -111,6 +111,7 @@ class UsernameState extends State<Username> {
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return BaseView<UsernameInputScreenViewModel>(
+      onModelReady: (model) => this.model = model,
       builder: (ctx, model, child) => Container(
         child: SingleChildScrollView(
           child: Column(

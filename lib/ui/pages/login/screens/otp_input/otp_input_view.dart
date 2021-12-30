@@ -38,7 +38,6 @@ class OtpInputScreenState extends State<OtpInputScreen> {
   FocusNode focusNode;
   bool showResendOption = false;
 
-
   @override
   void initState() {
     focusNode = new FocusNode();
@@ -74,6 +73,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
     S locale = S.of(context);
     final baseProvider = Provider.of<BaseUtil>(context, listen: true);
     return BaseView<OtpInputScreenViewModel>(
+      onModelReady: (model) => this.model = model,
       builder: (ctx, model, child) => Scaffold(
         backgroundColor: Colors.transparent,
         body: Container(

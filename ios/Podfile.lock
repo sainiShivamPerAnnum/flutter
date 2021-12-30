@@ -196,8 +196,6 @@ PODS:
   - flutter_facebook_sdk (0.0.1):
     - FBSDKCoreKit (~> 9.1.0)
     - Flutter
-  - flutter_html_to_pdf (0.0.1):
-    - Flutter
   - flutter_image_compress (0.0.1):
     - Flutter
     - Mantle
@@ -260,8 +258,6 @@ PODS:
     - AppAuth/Core (~> 1.4)
     - GTMSessionFetcher/Core (~> 1.5)
   - GTMSessionFetcher/Core (1.7.0)
-  - image_gallery_saver (1.5.0):
-    - Flutter
   - image_picker (0.0.1):
     - Flutter
   - in_app_review (0.2.0):
@@ -350,12 +346,10 @@ DEPENDENCIES:
   - FirebaseFirestore (from `https://github.com/invertase/firestore-ios-sdk-frameworks.git`, tag `8.7.0`)
   - Flutter (from `Flutter`)
   - flutter_facebook_sdk (from `.symlinks/plugins/flutter_facebook_sdk/ios`)
-  - flutter_html_to_pdf (from `.symlinks/plugins/flutter_html_to_pdf/ios`)
   - flutter_image_compress (from `.symlinks/plugins/flutter_image_compress/ios`)
   - flutter_share_me (from `.symlinks/plugins/flutter_share_me/ios`)
   - freshchat_sdk (from `.symlinks/plugins/freshchat_sdk/ios`)
   - google_sign_in (from `.symlinks/plugins/google_sign_in/ios`)
-  - image_gallery_saver (from `.symlinks/plugins/image_gallery_saver/ios`)
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
   - in_app_review (from `.symlinks/plugins/in_app_review/ios`)
   - mixpanel_flutter (from `.symlinks/plugins/mixpanel_flutter/ios`)
@@ -452,8 +446,6 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_facebook_sdk:
     :path: ".symlinks/plugins/flutter_facebook_sdk/ios"
-  flutter_html_to_pdf:
-    :path: ".symlinks/plugins/flutter_html_to_pdf/ios"
   flutter_image_compress:
     :path: ".symlinks/plugins/flutter_image_compress/ios"
   flutter_share_me:
@@ -462,8 +454,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/freshchat_sdk/ios"
   google_sign_in:
     :path: ".symlinks/plugins/google_sign_in/ios"
-  image_gallery_saver:
-    :path: ".symlinks/plugins/image_gallery_saver/ios"
   image_picker:
     :path: ".symlinks/plugins/image_picker/ios"
   in_app_review:
@@ -541,7 +531,6 @@ SPEC CHECKSUMS:
   FirebaseStorage: 2e6e58fe31fb0061fdce3f156d0ebc964e9de6ba
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
   flutter_facebook_sdk: 82c8d10c6226b66de5459d6115ab02d1ecd66cd9
-  flutter_html_to_pdf: 0fd9f8d04f335d68b06a7c4ab5fc85d22e1ef91b
   flutter_image_compress: fd2b476345226e1a10ea352fa306af95704642c1
   flutter_share_me: dd04bcb65a595f76bd2fa0537df08fffc5a04903
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
@@ -554,7 +543,6 @@ SPEC CHECKSUMS:
   GoogleUtilities: 8de2a97a17e15b6b98e38e8770e2d129a57c0040
   GTMAppAuth: ad5c2b70b9a8689e1a04033c9369c4915bfcbe89
   GTMSessionFetcher: 43748f93435c2aa068b1cbe39655aaf600652e91
-  image_gallery_saver: 259eab68fb271cfd57d599904f7acdc7832e7ef2
   image_picker: e06f7a68f000bd36f552c1847e33cda96ed31f1f
   in_app_review: 4a97249f7a2f539a0f294c2d9196b7fe35e49541
   leveldb-library: 50c7b45cbd7bf543c81a468fe557a16ae3db8729
