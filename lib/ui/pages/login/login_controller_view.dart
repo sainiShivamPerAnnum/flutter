@@ -140,7 +140,7 @@ class _LoginControllerViewState extends State<LoginControllerView>
       log.debug('::AUTO_RETRIEVE::INVOKED');
       log.debug("Phone number hasnt been auto verified yet");
       if (_otpScreenKey.currentState != null)
-        _otpScreenKey.currentState.onOtpAutoDetectTimeout();
+        _otpScreenKey.currentState.model.onOtpAutoDetectTimeout();
     };
 
     final PhoneCodeSent smsCodeSent = (String verId, [int forceCodeResend]) {
@@ -157,7 +157,7 @@ class _LoginControllerViewState extends State<LoginControllerView>
         setState(() {});
       } else {
         ///the otp was requested to be resent
-        _otpScreenKey.currentState.onOtpResendConfirmed(true);
+        _otpScreenKey.currentState.model.onOtpResendConfirmed(true);
       }
     };
 
@@ -170,7 +170,7 @@ class _LoginControllerViewState extends State<LoginControllerView>
         setState(() {});
       }
       if (_currentPage == OtpInputScreen.index) {
-        _otpScreenKey.currentState.onOtpReceived();
+        _otpScreenKey.currentState.model.onOtpReceived();
       }
       log.debug("Now verifying user");
       bool flag = await baseProvider.authenticateUser(user); //.then((flag) {
@@ -455,7 +455,8 @@ class _LoginControllerViewState extends State<LoginControllerView>
         }
       case OtpInputScreen.index:
         {
-          String otp = _otpScreenKey.currentState.otp; //otpInScreen.getOtp();
+          String otp =
+              _otpScreenKey.currentState.model.otp; //otpInScreen.getOtp();
           if (otp != null && otp.isNotEmpty && otp.length == 6) {
             baseProvider.isLoginNextInProgress = true;
             setState(() {});
@@ -464,10 +465,10 @@ class _LoginControllerViewState extends State<LoginControllerView>
             if (flag) {
               _mixpanelService.track(eventName: MixpanelEvents.mobileOtpDone);
               AppState.isOnboardingInProgress = true;
-              _otpScreenKey.currentState.onOtpReceived();
+              _otpScreenKey.currentState.model.onOtpReceived();
               _onSignInSuccess();
             } else {
-              _otpScreenKey.currentState.pinEditingController.text = "";
+              _otpScreenKey.currentState.model.pinEditingController.text = "";
               BaseUtil.showNegativeAlert(
                   'Invalid Otp', 'Please enter a valid otp');
               baseProvider.isLoginNextInProgress = false;
@@ -747,7 +748,7 @@ class _LoginControllerViewState extends State<LoginControllerView>
       baseProvider.isOtpResendCount++;
       _verifyPhone();
     } else {
-      _otpScreenKey.currentState.onOtpResendConfirmed(false);
+      _otpScreenKey.currentState.model.onOtpResendConfirmed(false);
     }
   }
 

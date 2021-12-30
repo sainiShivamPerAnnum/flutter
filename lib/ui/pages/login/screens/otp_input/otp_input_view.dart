@@ -34,16 +34,10 @@ class OtpInputScreen extends StatefulWidget {
 
 class OtpInputScreenState extends State<OtpInputScreen> {
   Log log = new Log("OtpInputScreen");
-  String _otp;
-  String _loaderMessage = "Enter the received OTP..";
-  bool _otpFieldEnabled = true;
-  bool _autoDetectingOtp = true;
-  bool _isResendClicked = false;
-  bool _isTriesExceeded = false;
-  bool showResendOption = false;
-  final pinEditingController = new TextEditingController();
+  OtpInputScreenViewModel model;
   FocusNode focusNode;
-  String mobileNo;
+  bool showResendOption = false;
+
 
   @override
   void initState() {
@@ -127,7 +121,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                     horizontal: SizeConfig.pageHorizontalMargins,
                   ),
                   child: PinInputTextField(
-                    enabled: _otpFieldEnabled,
+                    enabled: model.otpFieldEnabled,
                     autoFocus: true,
                     focusNode: focusNode,
                     pinLength: 6,
@@ -138,7 +132,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                       strokeWidth: 0,
                       textStyle: TextStyles.body2.bold.colour(Colors.black),
                     ),
-                    controller: pinEditingController,
+                    controller: model.pinEditingController,
                     onChanged: (value) {
                       if (value.length == 6) {
                         if (widget.otpEntered != null) widget.otpEntered();
@@ -155,7 +149,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                   height: SizeConfig.padding16,
                 ),
 
-                (showResendOption && !_isTriesExceeded)
+                (showResendOption && !model.isTriesExceeded)
                     ? Padding(
                         padding: EdgeInsets.all(SizeConfig.padding4),
                         child: Row(
@@ -180,7 +174,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                                   showResendOption = false;
                                 });
 
-                                if (!_isResendClicked) {
+                                if (!model.isResendClicked) {
                                   //ensure that button isnt clicked multiple times
                                   if (widget.resendOtp != null)
                                     widget.resendOtp();
@@ -196,7 +190,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                         ),
                       )
                     : SizedBox(),
-                (_isTriesExceeded)
+                (model.isTriesExceeded)
                     ? Text(
                         locale.obOtpTryExceed,
                         textAlign: TextAlign.center,
@@ -205,7 +199,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                         ),
                       )
                     : SizedBox(),
-                (!showResendOption && !_isTriesExceeded)
+                (!showResendOption && !model.isTriesExceeded)
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -247,42 +241,4 @@ class OtpInputScreenState extends State<OtpInputScreen> {
       ),
     );
   }
-
-  onOtpReceived() {
-    setState(() {
-      _otpFieldEnabled = false;
-      _loaderMessage = "Signing in..";
-    });
-  }
-
-  onOtpAutoDetectTimeout() {
-    setState(() {
-      _otpFieldEnabled = true;
-      _autoDetectingOtp = false;
-      _loaderMessage = "Please enter the received otp or request another";
-    });
-  }
-
-  onOtpResendConfirmed(bool flag) {
-    if (flag) {
-      //otp successfully resent
-      _isTriesExceeded = false;
-      _isResendClicked = false;
-      _otpFieldEnabled = true;
-      _loaderMessage = 'OTP has been successfully resent';
-      _autoDetectingOtp = true;
-      setState(() {});
-    } else {
-      //otp tries exceeded
-      _isTriesExceeded = true;
-      _isResendClicked = true;
-      _otpFieldEnabled = true;
-      _autoDetectingOtp = false;
-      _loaderMessage =
-          'OTP requests exceeded. Please try again in sometime or contact us';
-      setState(() {});
-    }
-  }
-
-  String get otp => pinEditingController.text;
 }
