@@ -484,21 +484,21 @@ class _LoginControllerViewState extends State<LoginControllerView>
         {
           //if(nameInScreen.validate()) {
 
-          if (_nameScreenKey.currentState.formKey.currentState.validate() &&
-              _nameScreenKey.currentState.isValidDate()) {
-            if (!_nameScreenKey.currentState.isEmailEntered) {
+          if (_nameScreenKey.currentState.model.formKey.currentState.validate() &&
+              _nameScreenKey.currentState.model.isValidDate()) {
+            if (!_nameScreenKey.currentState.model.isEmailEntered) {
               BaseUtil.showNegativeAlert(
                   'Email field empty', 'Please enter a valid email');
               return false;
             }
 
-            if (_nameScreenKey.currentState.selectedDate == null) {
+            if (_nameScreenKey.currentState.model.selectedDate == null) {
               BaseUtil.showNegativeAlert(
                 'Invalid Date of Birth',
                 'Please enter a valid date of birth',
               );
               return false;
-            } else if (!_isAdult(_nameScreenKey.currentState.selectedDate)) {
+            } else if (!_isAdult(_nameScreenKey.currentState.model.selectedDate)) {
               BaseUtil.showNegativeAlert(
                 'Ineligible',
                 'You need to be above 18 to join',
@@ -506,7 +506,7 @@ class _LoginControllerViewState extends State<LoginControllerView>
               return false;
             }
             if (_nameScreenKey.currentState.gen == null ||
-                _nameScreenKey.currentState.isInvested == null) {
+                _nameScreenKey.currentState.model.isInvested == null) {
               BaseUtil.showNegativeAlert(
                 'Invalid details',
                 'Please enter all the fields',
@@ -530,13 +530,13 @@ class _LoginControllerViewState extends State<LoginControllerView>
                   formatMobileNumber(baseProvider.firebaseUser.phoneNumber));
             }
             //baseProvider.myUser.name = nameInScreen.getName();
-            baseProvider.myUser.name = _nameScreenKey.currentState.name.trim();
-            String email = _nameScreenKey.currentState.email.trim();
+            baseProvider.myUser.name = _nameScreenKey.currentState.model.name.trim();
+            String email = _nameScreenKey.currentState.model.email.trim();
             if (email != null && email.isNotEmpty) {
               baseProvider.myUser.email = email;
             }
 
-            String dob = "${_nameScreenKey.currentState.selectedDate.toLocal()}"
+            String dob = "${_nameScreenKey.currentState.model.selectedDate.toLocal()}"
                 .split(" ")[0];
 
             baseProvider.myUser.dob = dob.trim();
@@ -551,7 +551,7 @@ class _LoginControllerViewState extends State<LoginControllerView>
                 baseProvider.myUser.gender = "O";
             }
 
-            bool isInv = _nameScreenKey.currentState.isInvested;
+            bool isInv = _nameScreenKey.currentState.model.isInvested;
             if (isInv != null) baseProvider.myUser.isInvested = isInv;
             state = _nameScreenKey.currentState.state;
             await CacheManager.writeCache(

@@ -24,6 +24,8 @@ class NameInputScreen extends StatefulWidget {
 }
 
 class NameInputScreenState extends State<NameInputScreen> {
+  NameInputScreenViewModel model;
+
   Log log = new Log("NameInputScreen");
   RegExp _emailRegex = RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
