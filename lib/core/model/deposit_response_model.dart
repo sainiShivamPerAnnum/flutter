@@ -1,4 +1,3 @@
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 
@@ -16,9 +15,7 @@ class DepositResponseModel {
     augResponse = json['augResponse'] != null
         ? new AugResponse.fromJson(json['augResponse'])
         : null;
-    note = json['note'] != null
-        ? new Note.fromJson(json['note'])
-        : null;
+    note = json['note'] != null ? new Note.fromJson(json['note']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -47,7 +44,7 @@ class DepositResponseModel {
     return DepositResponseModel(
       response: Response.fromMap(map['response']),
       augResponse: AugResponse?.fromMap(map['augResponse']),
-      note: Note?.fromMap(map['note']),
+      note: Note?.fromMap(map['note'] ?? {}),
     );
   }
 
@@ -229,7 +226,7 @@ class Note {
   String title;
   String body;
 
-  Note({this.title,this.body});
+  Note({this.title, this.body});
 
   Note.fromJson(Map<String, dynamic> json) {
     title = json['title'];
@@ -256,10 +253,6 @@ class Note {
       body: map['body'],
     );
   }
-
-
-
-
 }
 
 class AugResponse {
