@@ -486,9 +486,9 @@ class AugmontGoldBuyViewModel extends BaseModel {
       showSuccessGoldBuyDialog();
     } else {
       AppState.backButtonDispatcher.didPopRoute();
-      BaseUtil.showNegativeAlert('Verifying Transaction',
-          'Your transaction is being verified and will be updated shortly',
-          seconds: 5);
+      // BaseUtil.showNegativeAlert('Verifying Transaction',
+      //     'Your transaction is being verified and will be updated shortly',
+      //     seconds: 5);
     }
   }
 

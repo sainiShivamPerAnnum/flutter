@@ -14,14 +14,15 @@ class CustomLogger {
   IV iv;
   Key aesKey;
   static const String _chars = 'abcdef1234567890';
-  static bool isEnc = FlavorConfig.isProduction()??false;
+  static bool isEnc = FlavorConfig.isProduction() ?? false;
 
   final LogFilter _filter;
   final LogPrinter _printer;
   final LogOutput _output;
   bool _active = true;
 
-  CustomLogger()  : _filter = DevelopmentFilter(),
+  CustomLogger()
+      : _filter = DevelopmentFilter(),
         _printer = PrettyPrinter(),
         _output = ConsoleOutput() {
     _filter.init();
@@ -31,39 +32,39 @@ class CustomLogger {
 
     try {
       print('Logger AES initiated: ' + _initializeAESEncryptor().toString());
-    }catch(e) {
+    } catch (e) {
       print('$e');
     }
   }
 
   /// Log a message at level [Level.verbose].
   void v(dynamic message, [dynamic error, StackTrace stackTrace]) {
-    log(Level.verbose, _processMessage(message), error, stackTrace);
+    log(Level.verbose, _processMessage(message), error, StackTrace.current);
   }
 
   /// Log a message at level [Level.debug].
   void d(dynamic message, [dynamic error, StackTrace stackTrace]) {
-    log(Level.debug, _processMessage(message), error, stackTrace);
+    log(Level.debug, _processMessage(message), error, StackTrace.current);
   }
 
   /// Log a message at level [Level.info].
   void i(dynamic message, [dynamic error, StackTrace stackTrace]) {
-    log(Level.info, _processMessage(message), error, stackTrace);
+    log(Level.info, _processMessage(message), error, StackTrace.current);
   }
 
   /// Log a message at level [Level.warning].
   void w(dynamic message, [dynamic error, StackTrace stackTrace]) {
-    log(Level.warning, _processMessage(message), error, stackTrace);
+    log(Level.warning, _processMessage(message), error, StackTrace.current);
   }
 
   /// Log a message at level [Level.error].
   void e(dynamic message, [dynamic error, StackTrace stackTrace]) {
-    log(Level.error, _processMessage(message), error, stackTrace);
+    log(Level.error, _processMessage(message), error, StackTrace.current);
   }
 
   /// Log a message at level [Level.wtf].
   void wtf(dynamic message, [dynamic error, StackTrace stackTrace]) {
-    log(Level.wtf, _processMessage(message), error, stackTrace);
+    log(Level.wtf, _processMessage(message), error, StackTrace.current);
   }
 
   bool _initializeAESEncryptor() {
@@ -88,32 +89,35 @@ class CustomLogger {
   }
 
   String _getRandomString(int length) => String.fromCharCodes(
-    Iterable.generate(
-      length,
+        Iterable.generate(
+          length,
           (_) => _chars.codeUnitAt(
-        _rnd.nextInt(_chars.length),
-      ),
-    ),
-  );
+            _rnd.nextInt(_chars.length),
+          ),
+        ),
+      );
 
   dynamic _processMessage(dynamic message) {
     try {
       if (isEnc) {
-        if(aesEncrypter == null) return 'REDACTED OBJ';
+        if (aesEncrypter == null) return 'REDACTED OBJ';
 
         String _msg = _castString<String>(message);
-        if(_msg == null) return 'REDACTED OBJ';
-        else return _aesEncyptStr(_msg);
-      }else {
+        if (_msg == null)
+          return 'REDACTED OBJ';
+        else
+          return _aesEncyptStr(_msg);
+      } else {
         return message;
       }
-    }catch(e) {
-        return 'REDACTED STR';
+    } catch (e) {
+      return 'REDACTED STR';
     }
   }
 
   String _castString<T>(x) {
-    if(x is String) return x;
+    if (x is String)
+      return x;
     else {
       try {
         return x.toString();

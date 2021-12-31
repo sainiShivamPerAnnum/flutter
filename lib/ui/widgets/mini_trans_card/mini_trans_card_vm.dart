@@ -5,8 +5,8 @@ import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/locator.dart';
 
 class MiniTransactionCardViewModel extends BaseModel {
   final _logger = locator<CustomLogger>();

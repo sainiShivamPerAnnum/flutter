@@ -1,12 +1,12 @@
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 
 class DepositResponseModel {
   Response response;
   AugResponse augResponse;
+  Note note;
 
-  DepositResponseModel({this.response, this.augResponse});
+  DepositResponseModel({this.response, this.augResponse, this.note});
 
   DepositResponseModel.fromJson(Map<String, dynamic> json) {
     response = json['response'] != null
@@ -15,6 +15,7 @@ class DepositResponseModel {
     augResponse = json['augResponse'] != null
         ? new AugResponse.fromJson(json['augResponse'])
         : null;
+    note = json['note'] != null ? new Note.fromJson(json['note']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -25,6 +26,9 @@ class DepositResponseModel {
     if (this.augResponse != null) {
       data['augResponse'] = this.augResponse.toJson();
     }
+    if (this.note != null) {
+      data['note'] = this.note.toJson();
+    }
     return data;
   }
 
@@ -32,6 +36,7 @@ class DepositResponseModel {
     return {
       'response': response.toMap(),
       'augResponse': augResponse?.toMap(),
+      'note': note?.toMap(),
     };
   }
 
@@ -39,12 +44,13 @@ class DepositResponseModel {
     return DepositResponseModel(
       response: Response.fromMap(map['response']),
       augResponse: AugResponse?.fromMap(map['augResponse']),
+      note: Note?.fromMap(map['note'] ?? {}),
     );
   }
 
   @override
   String toString() =>
-      'DepositResponseModel(response: $response, augResponse: $augResponse)';
+      'DepositResponseModel(response: $response, augResponse: $augResponse, note: $note)';
 }
 
 class Response {
@@ -214,6 +220,39 @@ class EnqueuedTaskDetails {
   @override
   String toString() =>
       'EnqueuedTaskDetails(name: $name, queuePath: $queuePath)';
+}
+
+class Note {
+  String title;
+  String body;
+
+  Note({this.title, this.body});
+
+  Note.fromJson(Map<String, dynamic> json) {
+    title = json['title'];
+    body = json['body'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['title'] = this.title;
+    data['body'] = this.body;
+    return data;
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'title': title,
+      'body': body,
+    };
+  }
+
+  factory Note.fromMap(Map<String, dynamic> map) {
+    return Note(
+      title: map['title'],
+      body: map['body'],
+    );
+  }
 }
 
 class AugResponse {
