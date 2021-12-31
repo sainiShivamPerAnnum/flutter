@@ -33,18 +33,17 @@ class LoginControllerView extends StatefulWidget {
       _LoginControllerViewState(initPage);
 }
 
-class _LoginControllerViewState extends State<LoginControllerView>
-    with TickerProviderStateMixin {
+class _LoginControllerViewState extends State<LoginControllerView> {
   final Log log = new Log("######## LoginController View ##########");
   final int initPage;
-  double _formProgress = 0.2;
-  bool _isSignup = false;
+  // double _formProgress = 0.2;
+  // bool _isSignup = false;
 
   _LoginControllerViewState(this.initPage);
 
-  ValueNotifier<double> _pageNotifier;
-  static List<Widget> _pages;
-  int _currentPage;
+  // ValueNotifier<double> _pageNotifier;
+  // static List<Widget> model.pages;
+  // int model.currentPage;
 
   @override
   void initState() {
@@ -94,7 +93,7 @@ class _LoginControllerViewState extends State<LoginControllerView>
                   child: Column(
                     children: [
                       ValueListenableBuilder(
-                          valueListenable: _pageNotifier,
+                          valueListenable: model.pageNotifier,
                           builder: (ctx, value, child) {
                             return value < 2.0
                                 ? SizedBox(
@@ -136,23 +135,24 @@ class _LoginControllerViewState extends State<LoginControllerView>
                               physics: new NeverScrollableScrollPhysics(),
                               scrollDirection: Axis.horizontal,
                               controller: model.controller,
-                              itemCount: _pages.length,
+                              itemCount: model.pages.length,
                               itemBuilder: (BuildContext context, int index) {
                                 //print(index - _controller.page);
                                 return ValueListenableBuilder(
-                                    valueListenable: _pageNotifier,
+                                    valueListenable: model.pageNotifier,
                                     builder: (ctx, value, _) {
                                       final factorChange = value - index;
                                       return Opacity(
                                           opacity: (1 - factorChange.abs())
                                               .clamp(0.0, 1.0),
-                                          child: _pages[index % _pages.length]);
+                                          child: model.pages[
+                                              index % model.pages.length]);
                                     });
                               },
                               onPageChanged: (int index) {
                                 setState(() {
-                                  _formProgress = 0.2 * (index + 1);
-                                  _currentPage = index;
+                                  model.formProgress = 0.2 * (index + 1);
+                                  model.currentPage = index;
                                 });
                               },
                             ),
@@ -169,7 +169,7 @@ class _LoginControllerViewState extends State<LoginControllerView>
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      (_currentPage == MobileInputScreenView.index)
+                      (model.currentPage == MobileInputScreenView.index)
                           ? Padding(
                               padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                               child: RichText(
@@ -218,7 +218,7 @@ class _LoginControllerViewState extends State<LoginControllerView>
                                 child:
                                     (!model.baseProvider.isLoginNextInProgress)
                                         ? Text(
-                                            _currentPage == Username.index
+                                            model.currentPage == Username.index
                                                 ? 'FINISH'
                                                 : 'NEXT',
                                             style: TextStyles.body2
@@ -230,7 +230,7 @@ class _LoginControllerViewState extends State<LoginControllerView>
                                           ),
                                 onPressed: () {
                                   if (!model.baseProvider.isLoginNextInProgress)
-                                    model.processScreenInput(_currentPage);
+                                    model.processScreenInput(model.currentPage);
                                 },
                               ),
                             ),

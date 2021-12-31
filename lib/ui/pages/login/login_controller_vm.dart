@@ -48,15 +48,14 @@ class LoginControllerViewModel extends BaseModel {
   get controller => _controller;
 
   // static FcmListener fcmProvider;
-  static LocalDBModel lclDbProvider;
-  static AppState appStateProvider;
-
+  static LocalDBModel lclDbProvider = locator<LocalDBModel>();
+  static AppState appStateProvider = AppState.delegate.appState;
   AnimationController animationController;
 
   String userMobile;
   String _verificationId;
   String _augmentedVerificationId;
-  String state;
+  String cstate;
   ValueNotifier<double> _pageNotifier;
   static List<Widget> _pages;
   int _currentPage;
@@ -64,6 +63,21 @@ class LoginControllerViewModel extends BaseModel {
   final _otpScreenKey = new GlobalKey<OtpInputScreenState>();
   final _nameScreenKey = new GlobalKey<NameInputScreenState>();
   final _usernameKey = new GlobalKey<UsernameState>();
+
+  get pageNotifier => _pageNotifier;
+  get pages => _pages;
+  get currentPage => _currentPage;
+  get formProgress => _formProgress;
+
+  set currentPage(int page) {
+    _currentPage = page;
+    notifyListeners();
+  }
+
+  set formProgress(double progress) {
+    _formProgress = progress;
+    notifyListeners();
+  }
 
   void _onSignInSuccess() async {
     logger.d("User authenticated. Now check if details previously available.");
@@ -220,7 +234,7 @@ class LoginControllerViewModel extends BaseModel {
   }
 
   processScreenInput(int currentPage) async {
-    FocusScope.of(context).unfocus();
+    FocusScope.of(AppState.delegate.navigatorKey.currentContext).unfocus();
     switch (currentPage) {
       case MobileInputScreenView.index:
         {
@@ -358,9 +372,9 @@ class LoginControllerViewModel extends BaseModel {
 
             bool isInv = _nameScreenKey.currentState.model.isInvested;
             if (isInv != null) baseProvider.myUser.isInvested = isInv;
-            state = _nameScreenKey.currentState.state;
+            cstate = _nameScreenKey.currentState.state;
             await CacheManager.writeCache(
-                key: "UserAugmontState", value: state, type: CacheType.string);
+                key: "UserAugmontState", value: cstate, type: CacheType.string);
 
             Future.delayed(Duration(seconds: 1), () {
               baseProvider.isLoginNextInProgress = false;
@@ -386,7 +400,7 @@ class LoginControllerViewModel extends BaseModel {
             if (!_usernameKey.currentState.model.isLoading &&
                 _usernameKey.currentState.model.isValid) {
               baseProvider.isLoginNextInProgress = true;
-            notifyListeners();
+              notifyListeners();
 
               String username =
                   _usernameKey.currentState.model.username.replaceAll('.', '@');
@@ -421,6 +435,7 @@ class LoginControllerViewModel extends BaseModel {
                     res['flag'] ? flag = true : flag = false;
                   } catch (e) {
                     logger.d(e);
+                    _usernameKey.currentState.model.enabled = false;
                     flag = false;
                   }
                   // bool flag = await dbProvider.updateUser(baseProvider.myUser);
