@@ -29,7 +29,6 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
 class LoginControllerViewModel extends BaseModel {
-
   double _formProgress = 0.2;
   bool _isSignup = false;
 
@@ -38,6 +37,7 @@ class LoginControllerViewModel extends BaseModel {
   final augmontProvider = locator<AugmontModel>();
   final mixpanelService = locator<MixpanelService>();
   final userService = locator<UserService>();
+  final _apiPaths = locator<ApiPath>();
   final logger = locator<Logger>();
   final apiPaths = locator<ApiPath>();
 
@@ -46,7 +46,6 @@ class LoginControllerViewModel extends BaseModel {
 
   PageController _controller;
   get controller => _controller;
-
 
   // static FcmListener fcmProvider;
   static LocalDBModel lclDbProvider;
@@ -57,18 +56,17 @@ class LoginControllerViewModel extends BaseModel {
   String userMobile;
   String _verificationId;
   String _augmentedVerificationId;
-  // String state;
+  String state;
   ValueNotifier<double> _pageNotifier;
   static List<Widget> _pages;
   int _currentPage;
-  // final _mobileScreenKey = new GlobalKey<MobileInputScreenViewState>();
+  final _mobileScreenKey = new GlobalKey<MobileInputScreenViewState>();
   final _otpScreenKey = new GlobalKey<OtpInputScreenState>();
   final _nameScreenKey = new GlobalKey<NameInputScreenState>();
-   final _usernameKey = new GlobalKey<UsernameState>();
-
+  final _usernameKey = new GlobalKey<UsernameState>();
 
   void _onSignInSuccess() async {
-   logger.d("User authenticated. Now check if details previously available.");
+    logger.d("User authenticated. Now check if details previously available.");
     baseProvider.firebaseUser = FirebaseAuth.instance.currentUser;
     userService.firebaseUser = FirebaseAuth.instance.currentUser;
     logger.d("User is set: " + baseProvider.firebaseUser.uid);
@@ -104,7 +102,6 @@ class LoginControllerViewModel extends BaseModel {
     }
   }
 
-
   Future _onSignUpComplete() async {
     if (_isSignup)
       await BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
@@ -119,7 +116,7 @@ class LoginControllerViewModel extends BaseModel {
     AppState.isOnboardingInProgress = false;
     if (baseProvider.isLoginNextInProgress == true) {
       baseProvider.isLoginNextInProgress = false;
-     notifyListeners();
+      notifyListeners();
     }
 
     ///check if the account is blocked
@@ -139,8 +136,7 @@ class LoginControllerViewModel extends BaseModel {
     //TODO move to home through animation
   }
 
-
- Future<void> _verifyPhone() async {
+  Future<void> _verifyPhone() async {
     final PhoneCodeAutoRetrievalTimeout autoRetrieve = (String verId) {
       logger.d('::AUTO_RETRIEVE::INVOKED');
       logger.d("Phone number hasnt been auto verified yet");
@@ -151,15 +147,14 @@ class LoginControllerViewModel extends BaseModel {
     final PhoneCodeSent smsCodeSent = (String verId, [int forceCodeResend]) {
       logger.d('::SMS_CODE_SENT::INVOKED');
       this._augmentedVerificationId = verId;
-      logger.d(
-          "User mobile number format verified. Sending otp and verifying");
+      logger.d("User mobile number format verified. Sending otp and verifying");
       if (baseProvider.isOtpResendCount == 0) {
         ///this is the first time that the otp was requested
         baseProvider.isLoginNextInProgress = false;
         _controller.animateToPage(OtpInputScreen.index,
             duration: Duration(milliseconds: 500),
             curve: Curves.easeInToLinear);
-      notifyListeners();
+        notifyListeners();
       } else {
         ///the otp was requested to be resent
         _otpScreenKey.currentState.model.onOtpResendConfirmed(true);
@@ -169,7 +164,7 @@ class LoginControllerViewModel extends BaseModel {
     final PhoneVerificationCompleted verifiedSuccess =
         (AuthCredential user) async {
       logger.d('::VERIFIED_SUCCESS::INVOKED');
-     logger.d("Verified automagically!");
+      logger.d("Verified automagically!");
       if (!baseProvider.isLoginNextInProgress) {
         baseProvider.isLoginNextInProgress = true;
         notifyListeners();
@@ -189,10 +184,9 @@ class LoginControllerViewModel extends BaseModel {
           'Sign In Failed',
           'Please check your network or number and try again',
         );
-       notifyListeners();
+        notifyListeners();
       }
     };
-
 
     final PhoneVerificationFailed veriFailed =
         (FirebaseAuthException exception) {
@@ -213,7 +207,7 @@ class LoginControllerViewModel extends BaseModel {
         exceptionMessage,
       );
       baseProvider.isLoginNextInProgress = false;
-     notifyListeners();
+      notifyListeners();
     };
 
     await FirebaseAuth.instance.verifyPhoneNumber(
@@ -225,8 +219,7 @@ class LoginControllerViewModel extends BaseModel {
         verificationFailed: veriFailed);
   }
 
-
-  _processScreenInput(int currentPage) async {
+  processScreenInput(int currentPage) async {
     FocusScope.of(context).unfocus();
     switch (currentPage) {
       case MobileInputScreenView.index:
@@ -241,9 +234,9 @@ class LoginControllerViewModel extends BaseModel {
                 _mobileScreenKey.currentState.model.getReferralCode();
             if (refCode != null && refCode.isNotEmpty)
               BaseUtil.manualReferralCode = refCode;
-            
-              LoginControllerView.mobileno = this.userMobile;
-           notifyListeners();
+
+            LoginControllerView.mobileno = this.userMobile;
+            notifyListeners();
 
             ///disable regular numbers for QA
             if (FlavorConfig.isQA() &&
@@ -256,7 +249,7 @@ class LoginControllerViewModel extends BaseModel {
             _verifyPhone();
             baseProvider.isLoginNextInProgress = true;
             FocusScope.of(_mobileScreenKey.currentContext).unfocus();
-           notifyListeners();
+            notifyListeners();
           }
           break;
         }
@@ -266,7 +259,7 @@ class LoginControllerViewModel extends BaseModel {
               _otpScreenKey.currentState.model.otp; //otpInScreen.getOtp();
           if (otp != null && otp.isNotEmpty && otp.length == 6) {
             baseProvider.isLoginNextInProgress = true;
-        notifyListeners();
+            notifyListeners();
             bool flag = await baseProvider.authenticateUser(baseProvider
                 .generateAuthCredential(_augmentedVerificationId, otp));
             if (flag) {
@@ -280,7 +273,7 @@ class LoginControllerViewModel extends BaseModel {
                   'Invalid Otp', 'Please enter a valid otp');
               baseProvider.isLoginNextInProgress = false;
               FocusScope.of(_otpScreenKey.currentContext).unfocus();
-              setState(() {});
+              notifyListeners();
             }
           } else {
             BaseUtil.showNegativeAlert(
@@ -332,7 +325,7 @@ class LoginControllerViewModel extends BaseModel {
             }
             FocusScope.of(_nameScreenKey.currentContext).unfocus();
             baseProvider.isLoginNextInProgress = true;
-           notifyListeners();
+            notifyListeners();
             if (baseProvider.myUser == null) {
               //firebase user should never be null at this point
               baseProvider.myUser = BaseUser.newUser(
@@ -371,7 +364,7 @@ class LoginControllerViewModel extends BaseModel {
 
             Future.delayed(Duration(seconds: 1), () {
               baseProvider.isLoginNextInProgress = false;
-             notifyListeners();
+              notifyListeners();
             }).then((value) {
               mixpanelService.track(
                   eventName: MixpanelEvents.profileInformationAdded,
@@ -393,7 +386,7 @@ class LoginControllerViewModel extends BaseModel {
             if (!_usernameKey.currentState.model.isLoading &&
                 _usernameKey.currentState.model.isValid) {
               baseProvider.isLoginNextInProgress = true;
-              setState(() {});
+            notifyListeners();
 
               String username =
                   _usernameKey.currentState.model.username.replaceAll('.', '@');
@@ -456,7 +449,7 @@ class LoginControllerViewModel extends BaseModel {
                   _usernameKey.currentState.model.enabled = false;
 
                   baseProvider.isLoginNextInProgress = false;
-             notifyListeners();
+                  notifyListeners();
                 }
               } else {
                 BaseUtil.showNegativeAlert(
@@ -466,7 +459,7 @@ class LoginControllerViewModel extends BaseModel {
                 _usernameKey.currentState.model.enabled = false;
 
                 baseProvider.isLoginNextInProgress = false;
-               notifyListeners();
+                notifyListeners();
               }
             } else {
               BaseUtil.showNegativeAlert(
@@ -481,13 +474,12 @@ class LoginControllerViewModel extends BaseModel {
     }
   }
 
- Future<String> _getBearerToken() async {
+  Future<String> _getBearerToken() async {
     String token = await baseProvider.firebaseUser.getIdToken();
     logger.d("BearerToken: $token");
     return token;
   }
-  
-  
+
   String formatMobileNumber(String pNumber) {
     if (pNumber != null && pNumber.isNotEmpty) {
       if (RegExp("^[0-9+]*\$").hasMatch(pNumber)) {
@@ -517,7 +509,7 @@ class LoginControllerViewModel extends BaseModel {
   }
 
   _onOtpFilled() {
-    if (!baseProvider.isLoginNextInProgress) _processScreenInput(_currentPage);
+    if (!baseProvider.isLoginNextInProgress) processScreenInput(_currentPage);
   }
 
   _onOtpResendRequested() {
@@ -537,9 +529,33 @@ class LoginControllerViewModel extends BaseModel {
     }
   }
 
-  
-  
-  
-  init() {}
-  exit() {}
+  void _pageListener() {
+    _pageNotifier.value = _controller.page;
+  }
+
+  init(initPage) {
+    _currentPage = (initPage != null) ? initPage : MobileInputScreenView.index;
+    _formProgress = 0.2 * (_currentPage + 1);
+    _controller = new PageController(initialPage: _currentPage);
+    _controller.addListener(_pageListener);
+    _pageNotifier = ValueNotifier(0.0);
+    _pages = [
+      MobileInputScreenView(key: _mobileScreenKey),
+      OtpInputScreen(
+        key: _otpScreenKey,
+        otpEntered: _onOtpFilled,
+        resendOtp: _onOtpResendRequested,
+        changeNumber: _onChangeNumberRequest,
+        mobileNo: this.userMobile,
+      ),
+      NameInputScreen(key: _nameScreenKey),
+      Username(key: _usernameKey)
+      // AddressInputScreen(key: _addressScreenKey),
+    ];
+  }
+
+  exit() {
+    _controller.removeListener(_pageListener);
+    _controller.dispose();
+  }
 }

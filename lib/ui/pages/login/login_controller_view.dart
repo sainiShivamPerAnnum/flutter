@@ -1,47 +1,26 @@
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_analytics.dart';
-import 'package:felloapp/core/constants/apis_path_constants.dart';
-import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/model/base_user_model.dart';
-import 'package:felloapp/core/ops/augmont_ops.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/ops/lcl_db_ops.dart';
-import 'package:felloapp/core/service/api_service.dart';
-import 'package:felloapp/core/service/cache_manager.dart';
-import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
-import 'package:felloapp/core/service/mixpanel_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_view.dart';
-import 'package:felloapp/ui/pages/login/screens/name_input/name_input_view.dart';
-import 'package:felloapp/ui/pages/login/screens/otp_input/otp_input_view.dart';
 import 'package:felloapp/ui/pages/login/screens/username_input/username_input_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
-import 'package:felloapp/util/constants.dart';
-import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/mixpanel_events.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:logger/logger.dart';
-import 'package:provider/provider.dart';
 
 class LoginControllerView extends StatefulWidget {
   final int initPage;
@@ -63,77 +42,27 @@ class _LoginControllerViewState extends State<LoginControllerView>
 
   _LoginControllerViewState(this.initPage);
 
-  PageController _controller;
-
-  // static FcmListener fcmProvider;
-  static LocalDBModel lclDbProvider;
-  static AppState appStateProvider;
-
-  AnimationController animationController;
-
-  String userMobile;
-  String _verificationId;
-  String _augmentedVerificationId;
-  String state;
   ValueNotifier<double> _pageNotifier;
   static List<Widget> _pages;
   int _currentPage;
-  final _mobileScreenKey = new GlobalKey<MobileInputScreenViewState>();
-  final _otpScreenKey = new GlobalKey<OtpInputScreenState>();
-  final _nameScreenKey = new GlobalKey<NameInputScreenState>();
-  final _usernameKey = new GlobalKey<UsernameState>();
 
   @override
   void initState() {
     super.initState();
-    _currentPage = (initPage != null) ? initPage : MobileInputScreenView.index;
-    _formProgress = 0.2 * (_currentPage + 1);
-    _controller = new PageController(initialPage: _currentPage);
-    _controller.addListener(_pageListener);
-    _pageNotifier = ValueNotifier(0.0);
-    _pages = [
-      MobileInputScreenView(key: _mobileScreenKey),
-      OtpInputScreen(
-        key: _otpScreenKey,
-        otpEntered: _onOtpFilled,
-        resendOtp: _onOtpResendRequested,
-        changeNumber: _onChangeNumberRequest,
-        mobileNo: this.userMobile,
-      ),
-      NameInputScreen(key: _nameScreenKey),
-      Username(key: _usernameKey)
-      // AddressInputScreen(key: _addressScreenKey),
-    ];
-    animationController = AnimationController(
-      vsync: this,
-      duration: Duration(seconds: 3),
-    )
-      ..forward()
-      ..repeat(reverse: false);
   }
 
   @override
   void dispose() {
-    _controller.removeListener(_pageListener);
-    _controller.dispose();
-    animationController.dispose();
     super.dispose();
-  }
-
-  void _pageListener() {
-    _pageNotifier.value = _controller.page;
   }
 
   @override
   Widget build(BuildContext context) {
-
-    lclDbProvider = Provider.of<LocalDBModel>(context, listen: false);
-    appStateProvider = Provider.of<AppState>(context, listen: false);
     S locale = S.of(context);
     bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
 
     return BaseView<LoginControllerViewModel>(
-      onModelReady: (model) => model.init(),
+      onModelReady: (model) => model.init(initPage),
       onModelDispose: (model) => model.exit(),
       builder: (ctx, model, child) => Scaffold(
         backgroundColor: UiConstants.primaryColor,
@@ -175,7 +104,7 @@ class _LoginControllerViewState extends State<LoginControllerView>
                                     leading:
                                         FelloAppBarBackButton(onBackPress: () {
                                       if (value == 3)
-                                        _controller.previousPage(
+                                        model.controller.previousPage(
                                             duration:
                                                 Duration(milliseconds: 600),
                                             curve: Curves.easeInOut);
@@ -206,7 +135,7 @@ class _LoginControllerViewState extends State<LoginControllerView>
                             child: PageView.builder(
                               physics: new NeverScrollableScrollPhysics(),
                               scrollDirection: Axis.horizontal,
-                              controller: _controller,
+                              controller: model.controller,
                               itemCount: _pages.length,
                               itemBuilder: (BuildContext context, int index) {
                                 //print(index - _controller.page);
@@ -286,21 +215,22 @@ class _LoginControllerViewState extends State<LoginControllerView>
                               width: SizeConfig.screenWidth -
                                   SizeConfig.pageHorizontalMargins * 2,
                               child: FelloButtonLg(
-                                child: (!model.baseProvider.isLoginNextInProgress)
-                                    ? Text(
-                                        _currentPage == Username.index
-                                            ? 'FINISH'
-                                            : 'NEXT',
-                                        style: TextStyles.body2
-                                            .colour(Colors.white),
-                                      )
-                                    : SpinKitThreeBounce(
-                                        color: UiConstants.spinnerColor2,
-                                        size: 18.0,
-                                      ),
+                                child:
+                                    (!model.baseProvider.isLoginNextInProgress)
+                                        ? Text(
+                                            _currentPage == Username.index
+                                                ? 'FINISH'
+                                                : 'NEXT',
+                                            style: TextStyles.body2
+                                                .colour(Colors.white),
+                                          )
+                                        : SpinKitThreeBounce(
+                                            color: UiConstants.spinnerColor2,
+                                            size: 18.0,
+                                          ),
                                 onPressed: () {
                                   if (!model.baseProvider.isLoginNextInProgress)
-                                    _processScreenInput(_currentPage);
+                                    model.processScreenInput(_currentPage);
                                 },
                               ),
                             ),
@@ -316,6 +246,4 @@ class _LoginControllerViewState extends State<LoginControllerView>
       ),
     );
   }
-
- 
 }
