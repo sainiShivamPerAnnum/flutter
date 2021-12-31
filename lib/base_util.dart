@@ -247,10 +247,10 @@ class BaseUtil extends ChangeNotifier {
     // if (_userFundWallet == null) _compileUserWallet();
 
     ///get user ticket balance --> Try moving it to view and viewmodel for game
-    // _userTicketWallet = await _dbModel.getUserTicketWallet(firebaseUser.uid);
-    // if (_userTicketWallet == null) {
-    //   await _initiateNewTicketWallet();
-    // }
+    _userTicketWallet = await _dbModel.getUserTicketWallet(firebaseUser.uid);
+    if (_userTicketWallet == null) {
+      await _initiateNewTicketWallet();
+    }
 
     ///prefill pan details if available --> Profile Section (Show pan number eye)
     panService = new PanService();
