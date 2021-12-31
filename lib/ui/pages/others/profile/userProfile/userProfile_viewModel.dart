@@ -466,7 +466,7 @@ class UserProfileVM extends BaseModel {
     isApplockLoading = true;
     _userService.baseUser.userPreferences
         .setPreference(Preferences.APPLOCK, (val) ? 1 : 0);
-    _dbModel
+    await _dbModel
         .updateUserPreferences(
             _baseUtil.myUser.uid, _baseUtil.myUser.userPreferences)
         .then((value) {
