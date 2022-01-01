@@ -18,7 +18,7 @@ import 'package:felloapp/util/custom_logger.dart';
 class FcmListener {
   final BaseUtil _baseUtil = locator<BaseUtil>();
   final DBModel _dbModel = locator<DBModel>();
-  final CustomLogger _logger = locator<CustomLogger>();
+  final CustomLogger logger = locator<CustomLogger>();
   final FcmHandler _handler = locator<FcmHandler>();
   final UserService _userService = locator<UserService>();
 
