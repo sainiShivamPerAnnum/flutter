@@ -178,19 +178,6 @@ class TambolaBoard {
 
   String getTicketNumber() => id ?? 'NA';
 
-  // String getTicketNumber() {
-  //   try {
-  //     if (id != null && id.startsWith('pg')) {
-  //       String x = id.replaceAll('pg', '');
-  //       List<String> y = x.split('sh');
-  //       int a = int.parse(y[0]);
-  //       int b = int.parse(y[1]);
-  //       return (a * 100 + b).toString();
-  //     }
-  //   } catch (e) {}
-  //   return 'NA';
-  // }
-
   int get generatedDayCode {
     //TODO disabling this logic of crossing numbers based on date of generation
     return DateTime.monday;

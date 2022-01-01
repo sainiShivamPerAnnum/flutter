@@ -14,6 +14,7 @@ class MiniTransactionCardViewModel extends BaseModel {
   AppState appState;
 
   List<UserTransaction> get txnList => _txnService.txnList;
+
   TransactionService get txnService => _txnService;
 
   getMiniTransactions() async {

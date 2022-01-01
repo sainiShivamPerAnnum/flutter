@@ -573,14 +573,6 @@ class Api {
         .catchError((onErr) => false);
   }
 
-  Future<QuerySnapshot> getLeaderboardDocument(String category, int weekCde) {
-    Query _query = _db
-        .collection(Constants.COLN_LEADERBOARD)
-        .where('category', isEqualTo: category)
-        .where('week_code', isEqualTo: weekCde);
-    return _query.get();
-  }
-
   Future<QuerySnapshot> getHomeCardCollection() {
     Query _query = _db.collection(Constants.COLN_HOMECARDS).orderBy('id');
     return _query.get();
