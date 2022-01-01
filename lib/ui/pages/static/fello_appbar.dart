@@ -78,10 +78,26 @@ class NotificationButton extends StatelessWidget {
                   ),
                   if (model.hasNewNotifications)
                     Positioned(
-                      right: 0,
-                      child: CircleAvatar(
-                        radius: SizeConfig.iconSize4 / 1.4,
-                        backgroundColor: Colors.red,
+                      right: 2,
+                      top: 2,
+                      child: Container(
+                        decoration:
+                            BoxDecoration(shape: BoxShape.circle, boxShadow: [
+                          BoxShadow(
+                              blurRadius: 8,
+                              color: UiConstants.tertiarySolid,
+                              offset: Offset(3, -1),
+                              spreadRadius: 0),
+                          BoxShadow(
+                              blurRadius: 8,
+                              color: Colors.grey[700],
+                              offset: Offset(-3, 1),
+                              spreadRadius: 0)
+                        ]),
+                        child: CircleAvatar(
+                          radius: SizeConfig.iconSize4 / 1.4,
+                          backgroundColor: Colors.red,
+                        ),
                       ),
                     )
                 ],

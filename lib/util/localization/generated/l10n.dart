@@ -14,23 +14,22 @@ import 'intl/messages_all.dart';
 
 class S {
   S();
-
+  
   static S current;
-
-  static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
+  
+  static const AppLocalizationDelegate delegate =
+    AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name = (locale.countryCode?.isEmpty ?? false)
-        ? locale.languageCode
-        : locale.toString();
-    final localeName = Intl.canonicalizedLocale(name);
+    final name = (locale.countryCode?.isEmpty ?? false) ? locale.languageCode : locale.toString();
+    final localeName = Intl.canonicalizedLocale(name); 
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
       S.current = S();
-
+      
       return S.current;
     });
-  }
+  } 
 
   static S of(BuildContext context) {
     return Localizations.of<S>(context, S);
@@ -278,10 +277,10 @@ class S {
     );
   }
 
-  /// `Choose a usename`
+  /// `Enter a username`
   String get obUsernameHint {
     return Intl.message(
-      'Choose a usename',
+      'Enter a username',
       name: 'obUsernameHint',
       desc: '',
       args: [],
@@ -338,20 +337,20 @@ class S {
     );
   }
 
-  /// `Account Activity`
+  /// `Account Information`
   String get obBlockedAb {
     return Intl.message(
-      'Account Activity',
+      'Account Information',
       name: 'obBlockedAb',
       desc: '',
       args: [],
     );
   }
 
-  /// `Your Account has been blocked`
+  /// `Your Account Has Been blocked`
   String get obBlockedTitle {
     return Intl.message(
-      'Your Account has been blocked',
+      'Your Account Has Been blocked',
       name: 'obBlockedTitle',
       desc: '',
       args: [],
@@ -618,10 +617,10 @@ class S {
     );
   }
 
-  /// `Gaming Name`
+  /// `Pick a Username`
   String get abGamingName {
     return Intl.message(
-      'Gaming Name',
+      'Pick a Username',
       name: 'abGamingName',
       desc: '',
       args: [],

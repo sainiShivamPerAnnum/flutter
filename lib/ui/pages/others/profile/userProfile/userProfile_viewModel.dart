@@ -53,6 +53,7 @@ class UserProfileVM extends BaseModel {
   ValueChanged<bool> upload;
   bool isUpdaingUserDetails = false;
   bool _isTambolaNotificationLoading = false;
+  bool _isApplockLoading = false;
   int gen;
   String gender;
   DateTime selectedDate;
@@ -70,6 +71,7 @@ class UserProfileVM extends BaseModel {
   bool get isEmailVerified => _userService.baseUser.isEmailVerified;
   bool get isSimpleKycVerified => _userService.isSimpleKycVerified;
   bool get isTambolaNotificationLoading => _isTambolaNotificationLoading;
+  bool get isApplockLoading => _isApplockLoading;
 
   bool get applock =>
       _userService.baseUser.userPreferences
@@ -83,6 +85,11 @@ class UserProfileVM extends BaseModel {
   // Setters
   set isTambolaNotificationLoading(bool val) {
     _isTambolaNotificationLoading = val;
+    notifyListeners();
+  }
+
+  set isApplockLoading(bool val) {
+    _isApplockLoading = val;
     notifyListeners();
   }
 
@@ -456,10 +463,16 @@ class UserProfileVM extends BaseModel {
 
   onAppLockPreferenceChanged(val) async {
     if (await BaseUtil.showNoInternetAlert()) return;
+    isApplockLoading = true;
     _userService.baseUser.userPreferences
         .setPreference(Preferences.APPLOCK, (val) ? 1 : 0);
-    AppState.unsavedPrefs = true;
-    notifyListeners();
+    await _dbModel
+        .updateUserPreferences(
+            _baseUtil.myUser.uid, _baseUtil.myUser.userPreferences)
+        .then((value) {
+      Log("Preferences updated");
+    });
+    isApplockLoading = false;
   }
 
   onTambolaNotificationPreferenceChanged(val) async {
@@ -469,7 +482,15 @@ class UserProfileVM extends BaseModel {
     if (res) {
       _userService.baseUser.userPreferences
           .setPreference(Preferences.TAMBOLANOTIFICATIONS, (val) ? 1 : 0);
-      AppState.unsavedPrefs = true;
+      await _dbModel
+          .updateUserPreferences(
+              _baseUtil.myUser.uid, _baseUtil.myUser.userPreferences)
+          .then((value) {
+        if (val)
+          Log("Preferences updated");
+        else
+          Log("Preference update error");
+      });
     }
     isTambolaNotificationLoading = false;
   }

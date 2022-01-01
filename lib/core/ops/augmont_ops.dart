@@ -374,9 +374,9 @@ class AugmontModel extends ChangeNotifier {
     if (_baseProvider.currentAugmontTxn.rzp[UserTransaction.subFldRzpStatus] ==
         UserTransaction.RZP_TRAN_STATUS_COMPLETE) {
       //payment completed successfully
-      _mixpanelService.track(eventName: MixpanelEvents.investedInGold, properties: {
-        'goldQuantity': goldTxn.amount
-      });
+      _mixpanelService.track(
+          eventName: MixpanelEvents.investedInGold,
+          properties: {'goldQuantity': goldTxn.amount});
       _onPaymentComplete();
     } else {
       _onPaymentFailed();
@@ -474,10 +474,26 @@ class AugmontModel extends ChangeNotifier {
       _dbModel.logFailure(
           _baseProvider.myUser.uid,
           FailType.CompleteUserDepositApiFailed,
-          {'message': _initialDepositResponse.errorMessage});
+          {'message': _initialDepositResponse?.errorMessage});
 
-      BaseUtil.showNegativeAlert(
-          'Verifying transaction', 'Your transaction is being verified and will be updated shortly');
+      if (_onCompleteDepositResponse?.model != null &&
+          _onCompleteDepositResponse?.model?.note != null &&
+          _onCompleteDepositResponse?.model?.note?.title != null &&
+          _onCompleteDepositResponse.model.note.title.isNotEmpty) {
+        final title = _onCompleteDepositResponse.model.note.title;
+        String body =
+            'Your transaction is being verified and will be updated shortly';
+
+        if (_onCompleteDepositResponse?.model?.note?.body != null &&
+            _onCompleteDepositResponse.model.note.body.isNotEmpty) {
+          body = _onCompleteDepositResponse.model.note.body;
+        }
+
+        BaseUtil.showNegativeAlert(title, body);
+      } else {
+        BaseUtil.showNegativeAlert('Verifying transaction',
+            'Your transaction is being verified and will be updated shortly');
+      }
 
       _baseProvider.currentAugmontTxn.tranStatus =
           UserTransaction.TRAN_STATUS_CANCELLED;
@@ -545,8 +561,25 @@ class AugmontModel extends ChangeNotifier {
         'message': _onCancleUserDepositResponse?.errorMessage ??
             "Cancel user deposit failed"
       });
-      BaseUtil.showNegativeAlert('Deposit failed',
-          'Your payment failed. Please try again');
+
+      if (_onCancleUserDepositResponse?.model != null &&
+          _onCancleUserDepositResponse?.model?.note != null &&
+          _onCancleUserDepositResponse?.model?.note?.title != null &&
+          _onCancleUserDepositResponse.model.note.title.isNotEmpty) {
+        final title = _onCancleUserDepositResponse.model.note.title;
+        String body = 'Your payment failed. Please try again';
+
+        if (_onCancleUserDepositResponse?.model?.note?.body != null &&
+            _onCancleUserDepositResponse.model.note.body.isNotEmpty) {
+          body = _onCancleUserDepositResponse.model.note.body;
+        }
+
+        BaseUtil.showNegativeAlert(title, body);
+      } else {
+        BaseUtil.showNegativeAlert(
+            'Deposit failed', 'Your payment failed. Please try again');
+      }
+
       _baseProvider.currentAugmontTxn.tranStatus =
           UserTransaction.TRAN_STATUS_CANCELLED;
 
@@ -619,16 +652,16 @@ class AugmontModel extends ChangeNotifier {
       try {
         _baseProvider.currentAugmontTxn.tranStatus =
             UserTransaction.TRAN_STATUS_COMPLETE;
-        _baseProvider.currentAugmontTxn.augmnt[UserTransaction
-            .subFldAugTranId] =
-            _onSellCompleteResponse.model.augResponse.data.transactionId;
         _baseProvider
-            .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId] =
-            _onSellCompleteResponse.model.augResponse.data
-                .merchantTransactionId;
+                .currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId] =
+            _onSellCompleteResponse.model.augResponse.data.transactionId;
+        _baseProvider.currentAugmontTxn
+                .augmnt[UserTransaction.subFldMerchantTranId] =
+            _onSellCompleteResponse
+                .model.augResponse.data.merchantTransactionId;
         _baseProvider.currentAugmontTxn
             .augmnt[UserTransaction.subFldAugTotalGoldGm] = double.tryParse(
-            _onSellCompleteResponse.model.augResponse.data.goldBalance) ??
+                _onSellCompleteResponse.model.augResponse.data.goldBalance) ??
             0.0;
 
         double newAugPrinciple =
@@ -650,22 +683,38 @@ class AugmontModel extends ChangeNotifier {
         _txnService.updateTransactions();
         if (_augmontTxnProcessListener != null)
           _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
-      }catch(e) {
+      } catch (e) {
         _successFlag = false;
       }
     } else {
       _successFlag = false;
     }
 
-    if(!_successFlag) {
+    if (!_successFlag) {
       _dbModel.logFailure(
           _baseProvider.myUser.uid, FailType.WithdrawlCompleteApiFailed, {
         'message':
-        _initialDepositResponse?.errorMessage ?? "Withdrawal api failed"
+            _initialDepositResponse?.errorMessage ?? "Withdrawal api failed"
       });
 
-      BaseUtil.showNegativeAlert(
-          'Verifying Withdrawal', 'Your transaction is being verified and will be updated shortly');
+      if (_onSellCompleteResponse?.model != null &&
+          _onSellCompleteResponse?.model?.note != null &&
+          _onSellCompleteResponse?.model?.note?.title != null &&
+          _onSellCompleteResponse.model.note.title.isNotEmpty) {
+        final title = _onSellCompleteResponse.model.note.title;
+        String body =
+            'Your transaction is being verified and will be updated shortly';
+
+        if (_onSellCompleteResponse?.model?.note?.body != null &&
+            _onSellCompleteResponse.model.note.body.isNotEmpty) {
+          body = _onSellCompleteResponse.model.note.body;
+        }
+
+        BaseUtil.showNegativeAlert(title, body);
+      } else {
+        BaseUtil.showNegativeAlert('Verifying transaction',
+            'Your transaction is being verified and will be updated shortly');
+      }
 
       _baseProvider.currentAugmontTxn.tranStatus =
           UserTransaction.TRAN_STATUS_CANCELLED;

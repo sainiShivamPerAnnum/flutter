@@ -132,6 +132,38 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                             ),
                           ),
                         ),
+                        SizedBox(height: SizeConfig.padding16),
+                        Divider(),
+                        Container(
+                          margin: EdgeInsets.only(
+                            top: SizeConfig.padding8,
+                          ),
+                          child: Row(
+                            children: [
+                              Text(
+                                "User Details",
+                                style: TextStyle(
+                                    color: Colors.grey[400],
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: SizeConfig.body1),
+                              ),
+                              Spacer(),
+                              if (!model.inEditMode)
+                                TextButton.icon(
+                                  onPressed: model.enableEdit,
+                                  label: Text(
+                                    "Edit",
+                                    style: TextStyles.body2
+                                        .colour(UiConstants.primaryColor),
+                                  ),
+                                  icon: Icon(
+                                    Icons.edit,
+                                    color: UiConstants.primaryColor,
+                                  ),
+                                )
+                            ],
+                          ),
+                        ),
                         Form(
                           key: model.formKey,
                           child: Column(
@@ -369,41 +401,38 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                             ],
                           ),
                         ),
-                        SizedBox(height: SizeConfig.padding24),
-                        Container(
-                          width: SizeConfig.screenWidth,
-                          child: FelloButtonLg(
-                            // color: model.inEditMode
-                            //     ? UiConstants.primaryColor
-                            //     : UiConstants.tertiarySolid,
-                            child: model.isUpdaingUserDetails
-                                ? SpinKitThreeBounce(
-                                    color: Colors.white,
-                                    size: 20,
-                                  )
-                                : Text(
-                                    model.inEditMode
-                                        ? locale.btnSave
-                                        : locale.btnEdit,
-                                    style: TextStyles.body2
-                                        .colour(Colors.white)
-                                        .bold,
-                                  ),
-                            onPressed: () {
-                              if (model.inEditMode) {
-                                FocusScope.of(context).unfocus();
-                                model.updateDetails();
-                              } else {
-                                model.enableEdit();
-                              }
-                            },
+                        if (model.inEditMode)
+                          Container(
+                            margin: EdgeInsets.only(top: SizeConfig.padding24),
+                            width: SizeConfig.screenWidth,
+                            child: FelloButtonLg(
+                              // color: model.inEditMode
+                              //     ? UiConstants.primaryColor
+                              //     : UiConstants.tertiarySolid,
+                              child: model.isUpdaingUserDetails
+                                  ? SpinKitThreeBounce(
+                                      color: Colors.white,
+                                      size: 20,
+                                    )
+                                  : Text(
+                                      locale.btnSave,
+                                      style: TextStyles.body2
+                                          .colour(Colors.white)
+                                          .bold,
+                                    ),
+                              onPressed: () {
+                                if (!model.isUpdaingUserDetails) {
+                                  FocusScope.of(context).unfocus();
+                                  model.updateDetails();
+                                }
+                              },
+                            ),
                           ),
-                        ),
                         SizedBox(height: SizeConfig.padding24),
                         Divider(),
                         Container(
                           margin: EdgeInsets.symmetric(
-                              vertical: SizeConfig.padding24),
+                              vertical: SizeConfig.padding16),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -415,20 +444,33 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                     fontSize: SizeConfig.body1),
                               ),
                               SizedBox(height: SizeConfig.padding16),
-                              Row(children: [
-                                Text(
-                                  "App Lock",
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: SizeConfig.body3),
-                                ),
-                                Spacer(),
-                                Switch.adaptive(
-                                    activeColor: UiConstants.primaryColor,
-                                    value: model.applock,
-                                    onChanged: (val) =>
-                                        model.onAppLockPreferenceChanged(val)),
-                              ]),
+                              Container(
+                                height: SizeConfig.padding40,
+                                child: Row(children: [
+                                  Text(
+                                    "App Lock",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: SizeConfig.body3),
+                                  ),
+                                  Spacer(),
+                                  model.isApplockLoading
+                                      ? Container(
+                                          margin: EdgeInsets.only(
+                                              right: SizeConfig.padding12),
+                                          padding: EdgeInsets.all(
+                                              SizeConfig.padding2),
+                                          height: SizeConfig.title3,
+                                          width: SizeConfig.title3,
+                                          child: CircularProgressIndicator(),
+                                        )
+                                      : Switch.adaptive(
+                                          activeColor: UiConstants.primaryColor,
+                                          value: model.applock,
+                                          onChanged: (val) => model
+                                              .onAppLockPreferenceChanged(val)),
+                                ]),
+                              ),
                               Container(
                                 height: SizeConfig.padding40,
                                 child: Row(children: [

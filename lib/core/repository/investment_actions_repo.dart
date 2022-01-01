@@ -1,4 +1,3 @@
-
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/deposit_response_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
@@ -116,6 +115,15 @@ class InvestmentActionsRepository {
       _logger.d(response.toString());
       DepositResponseModel _investmentDepositModel =
           DepositResponseModel.fromMap(response);
+
+      if (_investmentDepositModel?.note != null &&
+          _investmentDepositModel?.note?.title != null &&
+          _investmentDepositModel.note.title.isNotEmpty)
+        return ApiResponse(
+            model: _investmentDepositModel,
+            code: 400,
+            errorMessage: "Complete user deposits failed");
+
       return ApiResponse(model: _investmentDepositModel, code: 200);
     } catch (e) {
       _logger.e(e);
@@ -154,6 +162,13 @@ class InvestmentActionsRepository {
           DepositResponseModel.fromMap(response);
 
       _logger.d(_investmentDepositModel.toString());
+      if (_investmentDepositModel?.note != null &&
+          _investmentDepositModel?.note?.title != null &&
+          _investmentDepositModel.note.title.isNotEmpty)
+        return ApiResponse(
+            model: _investmentDepositModel,
+            code: 400,
+            errorMessage: "Cancel user deposits failed");
 
       return ApiResponse(model: _investmentDepositModel, code: 200);
     } catch (e) {
@@ -190,6 +205,14 @@ class InvestmentActionsRepository {
           DepositResponseModel.fromMap(response);
 
       _logger.d(_investmentDepositModel.toString());
+
+      if (_investmentDepositModel?.note != null &&
+          _investmentDepositModel?.note?.title != null &&
+          _investmentDepositModel.note.title.isNotEmpty)
+        return ApiResponse(
+            model: _investmentDepositModel,
+            code: 400,
+            errorMessage: "Complete user withdrawal failed");
 
       return ApiResponse(model: _investmentDepositModel, code: 200);
     } catch (e) {

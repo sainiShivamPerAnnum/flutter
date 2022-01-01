@@ -24,7 +24,7 @@ class TransactionsHistoryViewModel extends BaseModel {
     "Deposit": 2,
     "Withdrawal": 3,
     "Prize": 4,
-    "Refunded": 5,
+    // "Refunded": 5,
   };
   List<UserTransaction> _filteredList;
   ScrollController _scrollController;

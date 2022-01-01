@@ -53,7 +53,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'core/model/game_model.dart';
 
 class BaseUtil extends ChangeNotifier {
-  final CustomLogger logger = locator<CustomLogger>();
+  final CustomLogger _logger = locator<CustomLogger>();
   final DBModel _dbModel = locator<DBModel>();
   final LocalDBModel _lModel = locator<LocalDBModel>();
   final AppState _appState = locator<AppState>();
@@ -245,7 +245,6 @@ class BaseUtil extends ChangeNotifier {
     // _userFundWallet = await _dbModel.getUserFundWallet(firebaseUser.uid);
     // if (_userFundWallet == null) _compileUserWallet();
 
-
     ///prefill pan details if available --> Profile Section (Show pan number eye)
     panService = new PanService();
     if (!checkKycMissing) {
@@ -308,7 +307,7 @@ class BaseUtil extends ChangeNotifier {
               'Transaction Closed', 'The transaction was not completed',
               seconds: 5);
         } else {
-          logger.d('Received notif for pending transaction: $value');
+          _logger.d('Received notif for pending transaction: $value');
         }
       });
     }
@@ -324,7 +323,7 @@ class BaseUtil extends ChangeNotifier {
       var unreadCount = await Freshchat.getUnreadCountAsync;
       return (unreadCount['count'] > 0);
     } catch (e) {
-      logger.e('Error reading unread count variable: $e');
+      _logger.e('Error reading unread count variable: $e');
       Map<String, dynamic> errorDetails = {
         'User number': _myUser.mobile,
         'Error Type': 'Unread message count failed'
@@ -572,7 +571,7 @@ class BaseUtil extends ChangeNotifier {
   Future<bool> signOut() async {
     try {
       await _lModel.deleteLocalAppData();
-      logger.d('Cleared local cache');
+      _logger.d('Cleared local cache');
       _appState.setCurrentTabIndex = 0;
 
       //remove fcm token from remote
@@ -623,7 +622,7 @@ class BaseUtil extends ChangeNotifier {
 
       return true;
     } catch (e) {
-      logger.e('Failed to clear data/sign out user: ' + e.toString());
+      _logger.e('Failed to clear data/sign out user: ' + e.toString());
       return false;
     }
   }
@@ -631,7 +630,7 @@ class BaseUtil extends ChangeNotifier {
   int checkTicketCountValidity(List<TambolaBoard> requestedBoards) {
     if (requestedBoards != null && _userTicketWallet.getActiveTickets() > 0) {
       if (requestedBoards.length < _userTicketWallet.getActiveTickets()) {
-        logger.d('Requested board count is less than needed tickets');
+        _logger.d('Requested board count is less than needed tickets');
         int ticketCountRequired =
             _userTicketWallet.getActiveTickets() - requestedBoards.length;
 
@@ -643,7 +642,7 @@ class BaseUtil extends ChangeNotifier {
       }
       if (BaseUtil.ticketRequestSent) {
         if (requestedBoards.length > BaseUtil.ticketCountBeforeRequest) {
-          logger.d(
+          _logger.d(
               'Previous request had completed and now the ticket count has increased');
           //BaseUtil.ticketRequestSent = false; //not really needed i think
         }
@@ -660,10 +659,10 @@ class BaseUtil extends ChangeNotifier {
           await CacheManager.writeCache(
               key: 'dpUrl', value: myUserDpUrl, type: CacheType.string);
           setDisplayPictureUrl(myUserDpUrl);
-          logger.d("No profile picture found in cache, fetched from server");
+          _logger.d("No profile picture found in cache, fetched from server");
         }
       } catch (e) {
-        logger.e(e.toString());
+        _logger.e(e.toString());
       }
     } else
       setDisplayPictureUrl(await CacheManager.readCache(key: 'dpUrl'));

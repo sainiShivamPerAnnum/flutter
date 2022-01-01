@@ -486,10 +486,17 @@ class AugmontGoldBuyViewModel extends BaseModel {
       showSuccessGoldBuyDialog();
     } else {
       AppState.backButtonDispatcher.didPopRoute();
-      BaseUtil.showNegativeAlert('Verifying Transaction',
-          'Your transaction is being verified and will be updated shortly',
-          seconds: 5);
+      // BaseUtil.showNegativeAlert('Verifying Transaction',
+      //     'Your transaction is being verified and will be updated shortly',
+      //     seconds: 5);
     }
+  }
+
+  getAmount(double amount) {
+    if (amount > amount.toInt())
+      return amount;
+    else
+      return amount.toInt();
   }
 
   showSuccessGoldBuyDialog() {
@@ -501,7 +508,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
         asset: Assets.goldenTicket,
         title: "Congratulations",
         subtitle:
-            "You have successfully saved ${_baseUtil.currentAugmontTxn.amount} and earned ${_baseUtil.currentAugmontTxn.amount.ceil()} tokens!",
+            "You have successfully saved ₹ ${getAmount(_baseUtil.currentAugmontTxn.amount)} and earned ${_baseUtil.currentAugmontTxn.amount.ceil()} tokens!",
         result: (res) {
           // if (res) ;
         },

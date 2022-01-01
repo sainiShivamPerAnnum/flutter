@@ -210,7 +210,6 @@ class NameInputScreenState extends State<NameInputScreen> {
                       prefixIcon: Icon(
                         Icons.email,
                         size: 20,
-                        color: UiConstants.primaryColor,
                       ),
                       focusColor: UiConstants.primaryColor,
                       border: OutlineInputBorder(
@@ -280,7 +279,6 @@ class NameInputScreenState extends State<NameInputScreen> {
                 prefixIcon: Icon(
                   Icons.person,
                   size: 20,
-                  color: UiConstants.primaryColor,
                 ),
               ),
               autofocus: false,
@@ -668,6 +666,7 @@ class DateField extends StatelessWidget {
           }
         },
         keyboardType: TextInputType.datetime,
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         style: TextStyle(
           letterSpacing: 2,
           fontWeight: FontWeight.w500,
