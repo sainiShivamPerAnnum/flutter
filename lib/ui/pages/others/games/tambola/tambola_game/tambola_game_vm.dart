@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
@@ -27,7 +26,6 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/mixpanel_events.dart';
-import 'package:felloapp/util/styles/palette.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -300,14 +298,14 @@ class TambolaGameViewModel extends BaseModel {
         } else {
           BaseUtil.showNegativeAlert(
             'Tickets generation failed',
-            'The issue has been noted and your tickets will soon be credited',
+            'Please try again after sometime',
           );
         }
       } else {
         _logger.d("Api failed");
         BaseUtil.showNegativeAlert(
           'Tickets generation failed',
-          'The issue has been noted and your tickets will soon be credited',
+          'Please try again after sometime',
         );
       }
     } else {

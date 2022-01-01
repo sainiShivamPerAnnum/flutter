@@ -47,47 +47,47 @@ class FcmListener {
     _fcm = FirebaseMessaging.instance;
     try {
       _fcm != null
-          ? _logger.d("Fcm instance created")
-          : _logger.d("Fcm instance not created");
+          ? logger.d("Fcm instance created")
+          : logger.d("Fcm instance not created");
 
       //SaveFCM
       String idToken = await CacheManager.readCache(key: 'token');
 
       idToken == null
-          ? _logger.d("No FCM token in pref")
-          : _logger.d("FCM token from pref: $idToken");
+          ? logger.d("No FCM token in pref")
+          : logger.d("FCM token from pref: $idToken");
 
       if (idToken == null) {
         idToken = await _fcm.getToken();
         await CacheManager.writeCache(
             key: 'token', value: idToken, type: CacheType.string);
-        _logger.d("fcm token added to pref: $idToken");
+        logger.d("fcm token added to pref: $idToken");
       }
 
       if (_userService.baseUser != null) {
         if (_userService.baseUser.client_token != idToken) {
           _saveDeviceToken(idToken);
-          _logger.d("User fcm token updated in firestore");
+          logger.d("User fcm token updated in firestore");
         } else {
-          _logger.d("Current device fcm and firestore fcm is same");
+          logger.d("Current device fcm and firestore fcm is same");
         }
       } else {
-        _logger.d("BaseUser null in user service.");
+        logger.d("BaseUser null in user service.");
       }
 
       ///update fcm user token if required
       Stream<String> fcmStream = _fcm.onTokenRefresh;
       fcmStream.listen((token) async {
-        _logger.d("OnTokenRefresh called, updated FCM token: $token");
+        logger.d("OnTokenRefresh called, updated FCM token: $token");
         await CacheManager.writeCache(
             key: 'token', value: token, type: CacheType.string);
         _saveDeviceToken(idToken);
-        _logger.d("FCM token added to prefs.");
+        logger.d("FCM token added to prefs.");
       });
 
       _fcm.getInitialMessage().then((RemoteMessage message) {
         if (message != null && message.data != null) {
-          _logger.d("onMessage recieved: " + message.toString());
+          logger.d("onMessage recieved: " + message.toString());
           _handler.handleMessage(message.data);
         }
       });
@@ -124,7 +124,7 @@ class FcmListener {
         _androidNativeSetup();
       }
     } catch (e) {
-      _logger.e(e.toString());
+      logger.e(e.toString());
       if (_userService.isUserOnborded != null)
         _dbModel.logFailure(
             _userService.baseUser.uid, FailType.FcmListenerSetupFailed, {
@@ -166,7 +166,7 @@ class FcmListener {
         _baseUtil.userFundWallet.augGoldBalance != null &&
         _baseUtil.userFundWallet.augGoldBalance > 300)
       addSubscription(FcmTopic.FREQUENTFLYER)
-          .then((value) => _logger.d("Added frequent flyer subscription"));
+          .then((value) => logger.d("Added frequent flyer subscription"));
 
     if (_baseUtil.userTicketWallet != null &&
         _baseUtil.userTicketWallet.getActiveTickets() > 0 &&
@@ -198,9 +198,9 @@ class FcmListener {
     _channel
         .invokeMethod('createNotificationChannel', tambolaChannelMap)
         .then((value) {
-      _logger.d('Tambola Notification channel created successfully');
+      logger.d('Tambola Notification channel created successfully');
     }).catchError((e) {
-      _logger.d('Tambola notification channel setup failed');
+      logger.d('Tambola notification channel setup failed');
     });
   }
 
@@ -212,7 +212,7 @@ class FcmListener {
         (_baseUtil.myUser.client_token == null ||
             (_baseUtil.myUser.client_token != null &&
                 _baseUtil.myUser.client_token != fcmToken))) {
-      _logger.d("Updating FCM token to local and server db");
+      logger.d("Updating FCM token to local and server db");
       _baseUtil.myUser.client_token = fcmToken;
       Freshchat.setPushRegistrationToken(fcmToken);
       flag = await _dbModel.updateClientToken(_baseUtil.myUser, fcmToken);
@@ -235,7 +235,7 @@ class FcmListener {
       //_baseUtil.toggleTambolaNotificationStatus(val);
       return true;
     } catch (e) {
-      _logger.e(e.toString());
+      logger.e(e.toString());
       if (_baseUtil.myUser.uid != null) {
         Map<String, dynamic> errorDetails = {
           'error_msg': 'Changing Tambola Notification Status failed'

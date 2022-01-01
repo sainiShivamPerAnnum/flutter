@@ -53,7 +53,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'core/model/game_model.dart';
 
 class BaseUtil extends ChangeNotifier {
-  // final Log log = new Log("BaseUtil");
   final CustomLogger logger = locator<CustomLogger>();
   final DBModel _dbModel = locator<DBModel>();
   final LocalDBModel _lModel = locator<LocalDBModel>();
@@ -193,7 +192,7 @@ class BaseUtil extends ChangeNotifier {
 
   Future init() async {
     try {
-      _logger.i('inside init base util');
+      logger.i('inside init base util');
       _setRuntimeDefaults();
 
       //Analytics logs app open state.
@@ -201,7 +200,7 @@ class BaseUtil extends ChangeNotifier {
       BaseAnalytics.analytics.logAppOpen();
 
       //remote config for various remote variables
-      _logger.i('base util remote config');
+      logger.i('base util remote config');
       await BaseRemoteConfig.init();
 
       setPackageInfo();
@@ -231,7 +230,7 @@ class BaseUtil extends ChangeNotifier {
         await setUserDefaults();
       }
     } catch (e) {
-      _logger.e(e.toString());
+      logger.e(e.toString());
       if (_userService.isUserOnborded != null)
         _dbModel.logFailure(
             _userService.baseUser.uid, FailType.BaseUtilInitFailed, {
@@ -246,11 +245,6 @@ class BaseUtil extends ChangeNotifier {
     // _userFundWallet = await _dbModel.getUserFundWallet(firebaseUser.uid);
     // if (_userFundWallet == null) _compileUserWallet();
 
-    ///get user ticket balance --> Try moving it to view and viewmodel for game
-    // _userTicketWallet = await _dbModel.getUserTicketWallet(firebaseUser.uid);
-    // if (_userTicketWallet == null) {
-    //   await _initiateNewTicketWallet();
-    // }
 
     ///prefill pan details if available --> Profile Section (Show pan number eye)
     panService = new PanService();
@@ -563,13 +557,13 @@ class BaseUtil extends ChangeNotifier {
   }
 
   Future<bool> authenticateUser(AuthCredential credential) {
-    _logger.d("Verification credetials: " + credential.toString());
+    logger.d("Verification credetials: " + credential.toString());
     return FirebaseAuth.instance.signInWithCredential(credential).then((res) {
       this.firebaseUser = res.user;
-      _logger.i("New Firebase User: ${res.additionalUserInfo.isNewUser}");
+      logger.i("New Firebase User: ${res.additionalUserInfo.isNewUser}");
       return true;
     }).catchError((e) {
-      _logger.e(
+      logger.e(
           "User Authentication failed with credential: Error: " + e.toString());
       return false;
     });
@@ -777,32 +771,6 @@ class BaseUtil extends ChangeNotifier {
   int getTicketCountForTransaction(double investment) =>
       (investment / Constants.INVESTMENT_AMOUNT_FOR_TICKET).floor();
 
-  //the new wallet logic will be empty for old user.
-  //this method will copy the old values to the new wallet
-  _compileUserWallet() {
-    _userFundWallet = (_userFundWallet == null)
-        ? UserFundWallet.newWallet()
-        : _userFundWallet;
-  }
-
-  Future<bool> _initiateNewTicketWallet() async {
-    _userTicketWallet = UserTicketWallet.newTicketWallet();
-    int _t = userTicketWallet.initTck;
-    _userTicketWallet = await _dbModel.updateInitUserTicketCount(
-        myUser.uid, _userTicketWallet, Constants.NEW_USER_TICKET_COUNT);
-    //updateInitUserTicketCount method returns no change if operations fails
-    return (_userTicketWallet.initTck != _t);
-  }
-
-  Future<bool> _initiateNewFLCWallet() async {
-    _userTicketWallet = UserTicketWallet.newTicketWallet();
-    int _t = userTicketWallet.initTck;
-    _userTicketWallet = await _dbModel.updateInitUserTicketCount(
-        myUser.uid, _userTicketWallet, Constants.NEW_USER_TICKET_COUNT);
-    //updateInitUserTicketCount method returns no change if operations fails
-    return (_userTicketWallet.initTck != _t);
-  }
-
   void setDisplayPictureUrl(String url) {
     myUserDpUrl = url;
     notifyListeners();
@@ -885,40 +853,6 @@ class BaseUtil extends ChangeNotifier {
     notifyListeners();
   }
 
-  // void toggleTambolaNotificationStatus(bool value) {
-  //   _myUser.userPreferences
-  //       .setPreference(Preferences.TAMBOLANOTIFICATIONS, (value) ? 1 : 0);
-  //   AppState.unsavedPrefs = true;
-  //   notifyListeners();
-  // }
-
-  //Saving and fetching app lock user preference
-  // void saveSecurityValue(bool newValue) async {
-  //   try {
-  //     SharedPreferences _prefs = await SharedPreferences.getInstance();
-  //     _prefs.setBool("securityEnabled", newValue);
-  //   } catch(e) {
-  //     log.debug("Error while saving security enabled value");
-  //   }
-  // }
-  //
-  // Future<bool> getSecurityValue() async {
-  //   try {
-  //     SharedPreferences _prefs = await SharedPreferences.getInstance();
-  //     if(_prefs.containsKey("securityEnabled")) {
-  //       bool _savedSecurityValue = _prefs.getBool("securityEnabled");
-  //       if(_savedSecurityValue!=null) {
-  //         return _savedSecurityValue;
-  //       }
-  //       else {
-  //         return false;
-  //       }
-  //     }
-  //   } catch(e) {
-  //     log.debug("Error while retrieving security enabled value");
-  //   }
-  //   return false;
-  // }
 
   static String getMonthName({@required int monthNum, bool trim = true}) {
     String res = "January";
