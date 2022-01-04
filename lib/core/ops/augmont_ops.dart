@@ -12,6 +12,7 @@ import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/core/repository/investment_actions_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/augmont_invoice_service.dart';
+import 'package:felloapp/core/service/golden_ticket_service.dart';
 import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_coin_service.dart';
@@ -467,6 +468,9 @@ class AugmontModel extends ChangeNotifier {
           .model.response.transactionDoc.transactionDetail;
 
       _txnService.updateTransactions();
+
+      if (_onCompleteDepositResponse.model.response.isRewarded != null)
+        GoldenTicketService.hasGoldenTicket = true;
 
       if (_augmontTxnProcessListener != null)
         _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);

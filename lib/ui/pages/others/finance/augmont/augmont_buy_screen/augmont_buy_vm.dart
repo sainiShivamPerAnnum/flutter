@@ -9,6 +9,7 @@ import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
+import 'package:felloapp/core/service/golden_ticket_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -484,6 +485,10 @@ class AugmontGoldBuyViewModel extends BaseModel {
       // BaseUtil.showPositiveAlert(
       //     'SUCCESS', 'You gold deposit was confirmed!', context);
       showSuccessGoldBuyDialog();
+      if (GoldenTicketService.hasGoldenTicket != null &&
+          GoldenTicketService.hasGoldenTicket)
+        BaseUtil.showPositiveAlert("Yayy, You won a Golden Ticket",
+            "Go to my winnings section to redeem it");
     } else {
       AppState.backButtonDispatcher.didPopRoute();
       // BaseUtil.showNegativeAlert('Verifying Transaction',

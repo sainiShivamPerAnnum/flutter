@@ -1,4 +1,3 @@
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -22,14 +21,19 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/elements/tambola-global/tambola_ticket.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/show_all_tickets.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_result.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/mixpanel_events.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'dart:developer';
 
 class TambolaGameViewModel extends BaseModel {
   TambolaService tambolaService = locator<TambolaService>();
@@ -244,6 +248,31 @@ class TambolaGameViewModel extends BaseModel {
     if (_flcResponse.model != null && _flcResponse.code == 200) {
       ticketBuyInProgress = false;
       notifyListeners();
+      if (_flcResponse.model.isGtAvailable != null &&
+          _flcResponse.model.isGtAvailable) {
+        log(_flcResponse.model.toMap().toString());
+        BaseUtil.openDialog(
+          addToScreenStack: true,
+          isBarrierDismissable: true,
+          hapticVibrate: false,
+          content: FelloInfoDialog(
+            showCrossIcon: false,
+            title: "Hurray",
+            subtitle: "You won a golden ticket",
+            action: Container(
+              width: SizeConfig.screenWidth,
+              child: FelloButtonLg(
+                child: Text(
+                  "OK",
+                  style: TextStyles.body2.bold.colour(Colors.white),
+                ),
+                onPressed: () => AppState.backButtonDispatcher.didPopRoute(),
+              ),
+            ),
+          ),
+        );
+      }
+
       _mixpanelService.track(eventName: MixpanelEvents.playsTambola);
       BaseUtil.showPositiveAlert(
           "Request is now processing", "Generating your tickets, please wait");
