@@ -1043,6 +1043,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.27.1"
+  scratcher:
+    dependency: "direct main"
+    description:
+      name: scratcher
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.0"
   share_plus:
     dependency: "direct main"
     description:

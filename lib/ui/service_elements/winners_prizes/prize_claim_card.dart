@@ -37,7 +37,7 @@ class PrizeClaimCard extends StatelessWidget {
                 if (m.userFundWallet.isPrizeBalanceUnclaimed())
                   Container(
                     margin: EdgeInsets.only(
-                        bottom: SizeConfig.padding24,
+                        top: SizeConfig.padding24,
                         left: SizeConfig.pageHorizontalMargins,
                         right: SizeConfig.pageHorizontalMargins),
                     decoration: BoxDecoration(
