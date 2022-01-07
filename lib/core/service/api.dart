@@ -762,6 +762,14 @@ class Api {
     }
   }
 
+  Future<QuerySnapshot> fetchGoldenTickets(String uid) {
+    Query _query = _db
+        .collection(Constants.COLN_USERS)
+        .doc(uid)
+        .collection(Constants.SUBCOLN_USER_REWARDS);
+    return _query.get();
+  }
+
   //---------------------------------------REALTIME DATABASE-------------------------------------------//
 
   Future<bool> checkUserNameAvailability(String username) async {

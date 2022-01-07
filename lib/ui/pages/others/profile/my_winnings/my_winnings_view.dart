@@ -5,6 +5,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_vm.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_ticket/golden_ticket_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
@@ -25,6 +26,7 @@ class MyWinningsView extends StatelessWidget {
     return BaseView<MyWinningsViewModel>(
       onModelReady: (model) {
         model.getWinningHistory();
+        model.getGoldenTickets();
       },
       builder: (ctx, model, child) {
         return Scaffold(
@@ -61,7 +63,7 @@ class MyWinningsView extends StatelessWidget {
                           PrizeClaimCard(
                             model: model,
                           ),
-                          GoldenRow(),
+                          GoldenRow(model: model),
                           Container(
                             margin: EdgeInsets.only(top: SizeConfig.padding24),
                             child: Column(
@@ -366,10 +368,8 @@ class MyWinningsView extends StatelessWidget {
 }
 
 class GoldenRow extends StatelessWidget {
-  const GoldenRow({
-    Key key,
-  }) : super(key: key);
-
+  GoldenRow({this.model});
+  final MyWinningsViewModel model;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -393,33 +393,38 @@ class GoldenRow extends StatelessWidget {
           Container(
             width: SizeConfig.screenWidth,
             height: SizeConfig.screenWidth / 4,
-            child: ListView.builder(
-              itemCount: 5,
-              scrollDirection: Axis.horizontal,
-              padding: EdgeInsets.zero,
-              itemBuilder: (ctx, i) {
-                return InkWell(
-                  onTap: () =>
-                      AppState.delegate.appState.currentAction = PageAction(
-                    page: GoldenTicketViewPageConfig,
-                    state: PageState.addPage,
-                  ),
-                  child: Hero(
-                    tag: i.toString(),
-                    child: Container(
-                      width: SizeConfig.screenWidth / 2,
-                      margin: EdgeInsets.only(
-                          left: SizeConfig.pageHorizontalMargins),
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage("images/gticket.png"),
+            child: model.goldenTicketList == null
+                ? Center(child: CircularProgressIndicator())
+                : ListView.builder(
+                    itemCount: model.goldenTicketList.length,
+                    scrollDirection: Axis.horizontal,
+                    padding: EdgeInsets.zero,
+                    itemBuilder: (ctx, i) {
+                      return InkWell(
+                        onTap: () => AppState.delegate.appState.currentAction =
+                            PageAction(
+                          page: GoldenTicketViewPageConfig,
+                          widget: GoldenTicketView(
+                            ticket: model.goldenTicketList[i],
+                          ),
+                          state: PageState.addWidget,
                         ),
-                      ),
-                    ),
+                        child: Hero(
+                          tag: i.toString(),
+                          child: Container(
+                            width: SizeConfig.screenWidth / 2,
+                            margin: EdgeInsets.only(
+                                left: SizeConfig.pageHorizontalMargins),
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage("images/gticket.png"),
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
           )
         ],
       ),

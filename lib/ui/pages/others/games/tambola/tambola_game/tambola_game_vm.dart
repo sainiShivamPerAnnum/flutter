@@ -10,6 +10,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/repository/ticket_generation_repo.dart';
+import 'package:felloapp/core/service/golden_ticket_service.dart';
 import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/core/service/tambola_generation_service.dart';
 import 'package:felloapp/core/service/tambola_service.dart';
@@ -50,6 +51,7 @@ class TambolaGameViewModel extends BaseModel {
   final _fclActionRepo = locator<FlcActionsRepo>();
   final _ticketGenerationRepo = locator<TicketGenerationRepo>();
   final _mixpanelService = locator<MixpanelService>();
+  GoldenTicketService _goldenTicketService = GoldenTicketService();
 
   int get dailyPicksCount => tambolaService.dailyPicksCount;
 
@@ -251,35 +253,9 @@ class TambolaGameViewModel extends BaseModel {
     if (_flcResponse.model != null && _flcResponse.code == 200) {
       ticketBuyInProgress = false;
       notifyListeners();
-      if (_flcResponse.model.isGtAvailable != null &&
-          _flcResponse.model.isGtAvailable) {
-        log(_flcResponse.model.toMap().toString());
-        BaseUtil.openDialog(
-          addToScreenStack: true,
-          isBarrierDismissable: false,
-          hapticVibrate: false,
-          content: FelloConfirmationDialog(
-              title: 'Yayy!',
-              subtitle: 'You won a golden ticket',
-              accept: 'Open',
-              acceptColor: UiConstants.primaryColor,
-              asset: Assets.goldenTicket,
-              reject: "ok",
-              rejectColor: UiConstants.tertiarySolid,
-              showCrossIcon: false,
-              onAccept: () async {
-                Future.delayed(Duration(seconds: 1), () {
-                  AppState.backButtonDispatcher.didPopRoute();
-                  AppState.delegate.appState.currentAction = PageAction(
-                    page: MyWinnigsPageConfig,
-                    state: PageState.addPage,
-                  );
-                });
-              },
-              onReject: () {
-                AppState.backButtonDispatcher.didPopRoute();
-              }),
-        );
+      if (_flcResponse.model.isGtRewarded != null &&
+          _flcResponse.model.isGtRewarded) {
+        GoldenTicketService.hasGoldenTicket = true;
       }
 
       _mixpanelService.track(eventName: MixpanelEvents.playsTambola);
@@ -294,6 +270,8 @@ class TambolaGameViewModel extends BaseModel {
       tambolaService.userTicketWallet =
           await _dbModel.getUserTicketWallet(_userService.baseUser.uid);
       if (tambolaService.userTicketWallet != null) _refreshTambolaTickets();
+      if (GoldenTicketService.hasGoldenTicket == true)
+        _goldenTicketService.showGoldenTicketAvailableDialog();
     } else {
       ticketBuyInProgress = false;
       notifyListeners();

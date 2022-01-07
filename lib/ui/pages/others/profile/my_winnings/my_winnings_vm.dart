@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/tambola_winners_details.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -48,6 +49,13 @@ class MyWinningsViewModel extends BaseModel {
   final GlobalKey imageKey = GlobalKey();
   final userRepo = locator<UserRepository>();
   List<UserTransaction> _winningHistory;
+  List<GoldenTicket> _goldenTicketList;
+  List<GoldenTicket> get goldenTicketList => this._goldenTicketList;
+
+  set goldenTicketList(List<GoldenTicket> value) {
+    this._goldenTicketList = value;
+    notifyListeners();
+  }
 
   //GETTERS SETTERS
   get isWinningHistoryLoading => this._isWinningHistoryLoading;
@@ -503,5 +511,12 @@ class MyWinningsViewModel extends BaseModel {
       BaseUtil.showNegativeAlert(
           "Task Failed", "Unable to share the picture at the moment");
     }
+  }
+
+//Golden tickets
+
+  void getGoldenTickets() async {
+    goldenTicketList =
+        await _dbModel.getGoldenTickets(_userService.baseUser.uid);
   }
 }

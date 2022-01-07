@@ -10,6 +10,7 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/faq_model.dart';
 import 'package:felloapp/core/model/feed_card_model.dart';
+import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
@@ -349,6 +350,22 @@ class DBModel extends ChangeNotifier {
       resultTransactionsMap['listOfTransactions'] = requestedTxns;
       resultTransactionsMap['lastDocument'] = lastDocument;
       return resultTransactionsMap;
+    }
+  }
+
+  Future<List<GoldenTicket>> getGoldenTickets(String uid) async {
+    List<GoldenTicket> goldenTickets = [];
+
+    try {
+      QuerySnapshot response = await _api.fetchGoldenTickets(uid);
+      response.docs.forEach((e) {
+        goldenTickets.add(GoldenTicket.fromJson(e.data()));
+        print(e.data());
+      });
+      return goldenTickets;
+    } catch (e) {
+      logger.e(e);
+      return goldenTickets;
     }
   }
 

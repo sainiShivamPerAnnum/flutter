@@ -1,5 +1,3 @@
-
-
 class Constants {
   static const String APP_NAME = "Fello";
   static const String PAN_AES_KEY = 'felloisquitefun!';
@@ -38,6 +36,7 @@ class Constants {
   static final String SUBCOLN_USER_WALLET = "wallet";
   static final String SUBCOLN_USER_POLL_RESPONSES = "poll";
   static final String SUBCOLN_USER_ALERTS = "alerts";
+  static final String SUBCOLN_USER_REWARDS = "rewards";
 
   //Sub-collection docs
   static final String DOC_USER_FCM_TOKEN = "client_token";

@@ -42,6 +42,11 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
         ));
   }
 
+  bool isAnyDialogOpen() {
+    if (AppState.screenStack.last == ScreenItem.dialog) return true;
+    return false;
+  }
+
   @override
   Future<bool> didPopRoute() {
     // If user is in the profile page and preferences are changed
