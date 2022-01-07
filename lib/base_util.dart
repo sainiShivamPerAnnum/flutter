@@ -2,7 +2,7 @@
 //Dart & Flutter Imports
 import 'dart:async';
 import 'dart:math';
-
+import 'dart:developer';
 //Pub Imports
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/base_analytics.dart';
@@ -46,6 +46,7 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:logger/logger.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -404,7 +405,6 @@ class BaseUtil extends ChangeNotifier {
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,
             colors: [Colors.lightBlueAccent, UiConstants.primaryColor]),
-//      backgroundColor: Colors.lightBlueAccent,
         boxShadows: [
           BoxShadow(
             color: UiConstants.positiveAlertColor,
@@ -517,6 +517,7 @@ class BaseUtil extends ChangeNotifier {
       ValueChanged<dynamic> callback}) async {
     if (addToScreenStack != null && addToScreenStack == true)
       AppState.screenStack.add(ScreenItem.dialog);
+    CustomLogger().d("Added a dialog");
     if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
     await showDialog(
       context: AppState.delegate.navigatorKey.currentContext,
@@ -851,7 +852,6 @@ class BaseUtil extends ChangeNotifier {
     AppState.unsavedPrefs = true;
     notifyListeners();
   }
-
 
   static String getMonthName({@required int monthNum, bool trim = true}) {
     String res = "January";

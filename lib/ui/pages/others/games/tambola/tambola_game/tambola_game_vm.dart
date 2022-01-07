@@ -22,13 +22,16 @@ import 'package:felloapp/ui/elements/tambola-global/tambola_ticket.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/show_all_tickets.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_result.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/mixpanel_events.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -253,23 +256,29 @@ class TambolaGameViewModel extends BaseModel {
         log(_flcResponse.model.toMap().toString());
         BaseUtil.openDialog(
           addToScreenStack: true,
-          isBarrierDismissable: true,
+          isBarrierDismissable: false,
           hapticVibrate: false,
-          content: FelloInfoDialog(
-            showCrossIcon: false,
-            title: "Hurray",
-            subtitle: "You won a golden ticket",
-            action: Container(
-              width: SizeConfig.screenWidth,
-              child: FelloButtonLg(
-                child: Text(
-                  "OK",
-                  style: TextStyles.body2.bold.colour(Colors.white),
-                ),
-                onPressed: () => AppState.backButtonDispatcher.didPopRoute(),
-              ),
-            ),
-          ),
+          content: FelloConfirmationDialog(
+              title: 'Yayy!',
+              subtitle: 'You won a golden ticket',
+              accept: 'Open',
+              acceptColor: UiConstants.primaryColor,
+              asset: Assets.goldenTicket,
+              reject: "ok",
+              rejectColor: UiConstants.tertiarySolid,
+              showCrossIcon: false,
+              onAccept: () async {
+                Future.delayed(Duration(seconds: 1), () {
+                  AppState.backButtonDispatcher.didPopRoute();
+                  AppState.delegate.appState.currentAction = PageAction(
+                    page: MyWinnigsPageConfig,
+                    state: PageState.addPage,
+                  );
+                });
+              },
+              onReject: () {
+                AppState.backButtonDispatcher.didPopRoute();
+              }),
         );
       }
 
