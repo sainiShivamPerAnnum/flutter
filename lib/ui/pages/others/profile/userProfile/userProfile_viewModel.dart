@@ -11,7 +11,7 @@ import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/tambola_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
-import 'package:felloapp/core/service/mixpanel_service.dart';
+import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -25,7 +25,7 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/mixpanel_events.dart';
+import 'package:felloapp/core/service/analytics/analytics_events.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -45,7 +45,7 @@ class UserProfileVM extends BaseModel {
   final fcmlistener = locator<FcmListener>();
   final _txnService = locator<TransactionService>();
   final _tambolaService = locator<TambolaService>();
-  final MixpanelService _mixpanelService = locator<MixpanelService>();
+  final _analyticsService = locator<WebEngageAnalytics>();
   final S _locale = locator<S>();
   final BaseUtil baseProvider = locator<BaseUtil>();
   double picSize;
@@ -270,8 +270,8 @@ class UserProfileVM extends BaseModel {
           onAccept: () {
             Haptic.vibrate();
 
-            _mixpanelService.track(eventName: MixpanelEvents.signOut);
-            _mixpanelService.signOut();
+            _analyticsService.track(eventName: AnalyticsEvents.signOut);
+            _analyticsService.signOut();
 
             _userService.signout().then((flag) {
               if (flag) {
@@ -361,7 +361,7 @@ class UserProfileVM extends BaseModel {
               cancelAction: () {}));
     } else if (_status.isGranted) {
       await _chooseprofilePicture();
-      _mixpanelService.track(eventName: MixpanelEvents.updatedProfilePicture);
+      _analyticsService.track(eventName: AnalyticsEvents.updatedProfilePicture);
     } else {
       BaseUtil.showNegativeAlert('Permission Unavailable',
           'Please enable permission from settings to continue');

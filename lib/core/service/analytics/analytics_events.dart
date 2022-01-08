@@ -1,4 +1,4 @@
-class MixpanelEvents {
+class AnalyticsEvents {
   static const investedInGold="Invested in gold";
   static const emailInitiated="Email Initiated";
   static const bankDetailsUpdated="Bank details updated";

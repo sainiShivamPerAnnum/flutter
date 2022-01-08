@@ -16,10 +16,13 @@
     <application
         android:name="in.fello.felloapp.Application"
         android:label="@string/app_name"
+        android:allowBackup="false"
         android:requestLegacyExternalStorage="true"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round">
+        
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.contentprovider"
@@ -29,6 +32,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/freshchat_file_provider_paths" />
         </provider>
+        
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -75,5 +79,7 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorPrimary" />
+
+        <meta-data android:name="com.webengage.sdk.android.environment" android:value="in" />
     </application>
 </manifest>

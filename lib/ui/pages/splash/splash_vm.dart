@@ -6,7 +6,7 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
-import 'package:felloapp/core/service/mixpanel_service.dart';
+import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
 import 'package:felloapp/core/service/tambola_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -33,7 +33,7 @@ class LauncherViewModel extends BaseModel {
   final _httpModel = locator<HttpModel>();
   final _logger = locator<CustomLogger>();
   final _tambolaService = locator<TambolaService>();
-  final _mixpanelService = locator<MixpanelService>();
+  final _analyticsService = locator<WebEngageAnalytics>();
 
   //GETTERS
   bool get isSlowConnection => _isSlowConnection;
@@ -60,7 +60,7 @@ class LauncherViewModel extends BaseModel {
     await _baseUtil.init();
     _tambolaService.init();
     await _fcmListener.setupFcm();
-    await _mixpanelService.init(
+    await _analyticsService.login(
         isOnboarded: userService.isUserOnborded,
         baseUser: userService.baseUser);
     _httpModel.init();

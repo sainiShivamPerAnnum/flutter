@@ -11,7 +11,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/repository/ticket_generation_repo.dart';
-import 'package:felloapp/core/service/mixpanel_service.dart';
+import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
 import 'package:felloapp/core/service/tambola_generation_service.dart';
 import 'package:felloapp/core/service/tambola_service.dart';
 import 'package:felloapp/core/service/user_coin_service.dart';
@@ -25,7 +25,7 @@ import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_res
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/mixpanel_events.dart';
+import 'package:felloapp/core/service/analytics/analytics_events.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -42,7 +42,7 @@ class TambolaGameViewModel extends BaseModel {
   LocalDBModel _localDBModel = locator<LocalDBModel>();
   final _fclActionRepo = locator<FlcActionsRepo>();
   final _ticketGenerationRepo = locator<TicketGenerationRepo>();
-  final _mixpanelService = locator<MixpanelService>();
+  final _analyticsService = locator<WebEngageAnalytics>();
 
   int get dailyPicksCount => tambolaService.dailyPicksCount;
 
@@ -244,7 +244,7 @@ class TambolaGameViewModel extends BaseModel {
     if (_flcResponse.model != null && _flcResponse.code == 200) {
       ticketBuyInProgress = false;
       notifyListeners();
-      _mixpanelService.track(eventName: MixpanelEvents.playsTambola);
+      _analyticsService.track(eventName: AnalyticsEvents.playsTambola);
       BaseUtil.showPositiveAlert(
           "Request is now processing", "Generating your tickets, please wait");
 
