@@ -10,6 +10,8 @@ abstract class AnalyticsService {
 
   void track({String eventName, Map<String, dynamic> properties});
 
+  void trackScreen({String screen, Map<String, dynamic> properties});
+
   String getSignupDate(Timestamp signupDate) {
     if (signupDate == null) signupDate = Timestamp.now();
     try {

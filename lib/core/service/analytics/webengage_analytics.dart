@@ -51,4 +51,9 @@ class WebEngageAnalytics extends AnalyticsService {
       _logger.e(error);
     }
   }
+
+  void trackScreen({String screen, Map<String, dynamic> properties}){
+    _logger.d('analytics : $screen');
+    WebEngagePlugin.trackScreen(screen, properties);
+  }
 }
