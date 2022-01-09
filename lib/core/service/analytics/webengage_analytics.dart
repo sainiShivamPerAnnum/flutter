@@ -9,19 +9,28 @@ class WebEngageAnalytics extends AnalyticsService {
 
   Future<void> login({bool isOnboarded, BaseUser baseUser}) async {
     if (isOnboarded != null && isOnboarded && baseUser != null) {
+      _logger.d(baseUser);
+
       WebEngagePlugin.userLogin(baseUser.uid);
       WebEngagePlugin.setUserPhone(baseUser.mobile ?? '');
       WebEngagePlugin.setUserFirstName(baseUser.name ?? '');
       WebEngagePlugin.setUserEmail(baseUser.email ?? '');
-      WebEngagePlugin.setUserBirthDate(getAge(baseUser.dob, _logger).toString() ?? '0');
-      WebEngagePlugin.setUserGender(baseUser.gender ?? '0');
+      WebEngagePlugin.setUserBirthDate(baseUser.dob ?? '0');
+      WebEngagePlugin.setUserGender(_getGender(baseUser.gender));
       WebEngagePlugin.setUserAttribute(
           "Signed Up", getSignupDate(baseUser.createdOn));
       WebEngagePlugin.setUserAttribute(
           "KYC Verified", baseUser.isSimpleKycVerified ?? false);
 
-      _logger.d("MIXPANEL SERVICE :: User identify properties added.");
+      _logger.d("Analytics SERVICE :: User identify properties added.");
     }
+  }
+
+  String _getGender(String s) {
+    if (s == 'M') return 'male';
+    if (s == 'F') return 'female';
+
+    return 'other';
   }
 
   void signOut() {

@@ -14,7 +14,6 @@ class FlavorValues {
       @required this.baseUriAsia,
       @required this.baseUriUS,
       @required this.dynamicLinkPrefix,
-       @required this.mixpanelToken,
       });
 
   final AWSIciciStage awsIciciStage;
@@ -26,7 +25,6 @@ class FlavorValues {
   final String baseUriAsia;
   final String baseUriUS;
   final String dynamicLinkPrefix;
-  final String mixpanelToken;
 //Add other flavor specific values, e.g database name
 }
 

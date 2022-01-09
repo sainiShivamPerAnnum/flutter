@@ -762,7 +762,7 @@ class _LoginControllerState extends State<LoginController>
     await userService.init();
     await baseProvider.init();
     await fcmListener.setupFcm();
-    _logger.i("Calling mixpanel init for new onborded user");
+    _logger.i("Calling analytics login for new onborded user");
     await _analyticsService.login(
         isOnboarded: userService.isUserOnborded,
         baseUser: userService.baseUser);

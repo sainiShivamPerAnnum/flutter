@@ -590,7 +590,6 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                     if (flag) {
                       _analyticsService.track(
                           eventName: AnalyticsEvents.bankDetailsUpdated);
-                      print("mixpanel added");
                       BaseUtil.showPositiveAlert(
                           'Complete', 'Your details have been updated');
                       AppState.backButtonDispatcher.didPopRoute();
