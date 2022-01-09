@@ -32,7 +32,14 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/freshchat_file_provider_paths" />
         </provider>
-        
+
+        <service
+            android:name=".MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

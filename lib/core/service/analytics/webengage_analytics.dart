@@ -14,7 +14,7 @@ class WebEngageAnalytics extends AnalyticsService {
       WebEngagePlugin.setUserFirstName(baseUser.name ?? '');
       WebEngagePlugin.setUserEmail(baseUser.email ?? '');
       WebEngagePlugin.setUserBirthDate(getAge(baseUser.dob, _logger).toString() ?? '0');
-      WebEngagePlugin.setUserGender(baseUser.gender ?? 'O');
+      WebEngagePlugin.setUserGender(baseUser.gender ?? '0');
       WebEngagePlugin.setUserAttribute(
           "Signed Up", getSignupDate(baseUser.createdOn));
       WebEngagePlugin.setUserAttribute(
