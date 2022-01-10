@@ -62,6 +62,12 @@
 			</array>
 		</dict>
 	</array>
+	<key>WEGLicenseCode</key>
+	<string>$(WEBENGAGE_LICENSE_CODE)</string>
+	<key>WEGLogLevel</key>
+	<string>VERBOSE</string>
+	<key>WEGEnvironment</key>
+	<string>IN</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
