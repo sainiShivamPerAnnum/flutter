@@ -108,7 +108,8 @@ class NotificationButton extends StatelessWidget {
 
 class FelloAppBarBackButton extends StatelessWidget {
   final Function onBackPress;
-  FelloAppBarBackButton({this.onBackPress});
+  final Color color;
+  FelloAppBarBackButton({this.onBackPress, this.color = Colors.white});
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +117,7 @@ class FelloAppBarBackButton extends StatelessWidget {
       onTap: onBackPress ?? () => AppState.backButtonDispatcher.didPopRoute(),
       child: CircleAvatar(
         radius: SizeConfig.avatarRadius,
-        backgroundColor: Colors.white.withOpacity(0.4),
+        backgroundColor: color.withOpacity(0.4),
         child: Padding(
           padding: EdgeInsets.all(SizeConfig.padding4),
           child:

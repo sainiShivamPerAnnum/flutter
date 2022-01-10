@@ -48,6 +48,7 @@ import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_vm.dart
 import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_vm.dart';
 import 'package:felloapp/ui/pages/others/profile/transactions_history/transaction_history_vm.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_viewModel.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_vm.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/splash/splash_vm.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_vm.dart';
@@ -128,6 +129,7 @@ void setupLocator() {
   locator.registerFactory(() => ReferralDetailsViewModel());
   locator.registerFactory(() => MyWinningsViewModel());
   locator.registerFactory(() => NotificationsViewModel());
+  locator.registerFactory(() => GoldenTicketsViewModel());
 
   //WIDGETS
   // locator.registerFactory(() => SellGoldBtnVM());
@@ -137,5 +139,4 @@ void setupLocator() {
   locator.registerFactory(() => FAQCardViewModel());
 
   //....
-
 }

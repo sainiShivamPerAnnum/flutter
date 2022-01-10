@@ -36,6 +36,7 @@ import 'package:felloapp/ui/pages/others/profile/transactions_history/transactio
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_view.dart';
 import 'package:felloapp/ui/pages/others/profile/verify_email.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_ticket/golden_ticket_view.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_view.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/pages/splash/splash_view.dart';
 import 'package:felloapp/ui/pages/static/transactions_view.dart';
@@ -264,6 +265,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.GoldenTicketView:
           _addPageData(GoldenTicketView(), GoldenTicketViewPageConfig);
           break;
+        case Pages.GoldenTicketsView:
+          _addPageData(GoldenTicketsView(), GoldenTicketsViewPageConfig);
+          break;
         default:
           break;
       }
@@ -448,6 +452,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.GoldenTicketView:
         GoldenTicketViewPageConfig.currentPageAction = action;
         break;
+      case Pages.GoldenTicketsView:
+        GoldenTicketsViewPageConfig.currentPageAction = action;
+        break;
       default:
         break;
     }
@@ -605,6 +612,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case 'blocked':
         pageConfiguration = BlockedUserPageConfig;
+        break;
+      case 'goldenTickets':
+        pageConfiguration = GoldenTicketsViewPageConfig;
         break;
     }
     if (pageConfiguration != null) {

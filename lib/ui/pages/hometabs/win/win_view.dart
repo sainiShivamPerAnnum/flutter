@@ -87,6 +87,27 @@ class Win extends StatelessWidget {
                             children: [
                               SizedBox(width: SizeConfig.pageHorizontalMargins),
                               InkWell(
+                                onTap: () {
+                                  AppState.delegate.appState.currentAction =
+                                      PageAction(
+                                    page: GoldenTicketsViewPageConfig,
+                                    state: PageState.addPage,
+                                  );
+                                },
+                                child: Container(
+                                  width: SizeConfig.screenWidth * 0.410,
+                                  margin: EdgeInsets.only(
+                                      right: SizeConfig.padding12),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(
+                                        SizeConfig.roundness32),
+                                    image: DecorationImage(
+                                        image: AssetImage("images/gticket.png"),
+                                        fit: BoxFit.cover),
+                                  ),
+                                ),
+                              ),
+                              InkWell(
                                 onTap: () => model.openVoucherModal(
                                     Assets.amazonCoupon,
                                     "Amazon Pay Gift Voucher",
@@ -137,11 +158,13 @@ class Win extends StatelessWidget {
                               ),
                               InkWell(
                                 onTap: () => model.openVoucherModal(
-                                    Assets.gplayCoupon,
-                                    "Google Play Credits",
-                                    "Coming soon",
-                                    Colors.blue,
-                                    true, []),
+                                  Assets.gplayCoupon,
+                                  "Google Play Credits",
+                                  "Coming soon",
+                                  Colors.blue,
+                                  true,
+                                  [],
+                                ),
                                 child: Container(
                                   width: SizeConfig.screenWidth * 0.410,
                                   margin: EdgeInsets.only(
@@ -337,104 +360,105 @@ class VoucherModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(SizeConfig.padding24),
-            topRight: Radius.circular(SizeConfig.padding24),
-          ),
-          image: DecorationImage(
-            image: AssetImage(
-              Assets.voucherBg,
-            ),
-            fit: BoxFit.cover,
-          ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(SizeConfig.padding24),
+          topRight: Radius.circular(SizeConfig.padding24),
         ),
-        height: SizeConfig.screenHeight * 0.4,
-        child: Stack(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(SizeConfig.padding24),
-                  topRight: Radius.circular(SizeConfig.padding24),
-                ),
-                color: Colors.white.withOpacity(0.9),
+        image: DecorationImage(
+          image: AssetImage(
+            Assets.voucherBg,
+          ),
+          fit: BoxFit.cover,
+        ),
+      ),
+      height: SizeConfig.screenHeight * 0.4,
+      child: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(SizeConfig.padding24),
+                topRight: Radius.circular(SizeConfig.padding24),
               ),
+              color: Colors.white.withOpacity(0.9),
             ),
-            Column(
-              children: [
-                Container(
-                  padding: EdgeInsets.only(
-                      left: SizeConfig.pageHorizontalMargins,
-                      right: SizeConfig.pageHorizontalMargins / 2,
-                      top: SizeConfig.padding16,
-                      bottom: 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        title ?? "title",
-                        textAlign: TextAlign.center,
-                        style: TextStyles.title3.bold
-                            .colour(UiConstants.primaryColor),
-                      ),
-                      CircleAvatar(
-                        backgroundColor: Colors.black,
-                        child: IconButton(
-                          onPressed: () {
-                            AppState.backButtonDispatcher.didPopRoute();
-                          },
-                          icon: Icon(
-                            Icons.close,
-                            size: SizeConfig.iconSize1,
-                            color: Colors.white,
-                          ),
+          ),
+          Column(
+            children: [
+              Container(
+                padding: EdgeInsets.only(
+                    left: SizeConfig.pageHorizontalMargins,
+                    right: SizeConfig.pageHorizontalMargins / 2,
+                    top: SizeConfig.padding16,
+                    bottom: 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      title ?? "title",
+                      textAlign: TextAlign.center,
+                      style: TextStyles.title3.bold
+                          .colour(UiConstants.primaryColor),
+                    ),
+                    CircleAvatar(
+                      backgroundColor: Colors.black,
+                      child: IconButton(
+                        onPressed: () {
+                          AppState.backButtonDispatcher.didPopRoute();
+                        },
+                        icon: Icon(
+                          Icons.close,
+                          size: SizeConfig.iconSize1,
+                          color: Colors.white,
                         ),
-                      )
-                    ],
-                  ),
+                      ),
+                    )
+                  ],
                 ),
-                Divider(),
-                Spacer(),
-                Container(
-                    decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.circular(SizeConfig.roundness24),
-                        boxShadow: [
-                          BoxShadow(
-                              color: color.withOpacity(0.16),
-                              offset: Offset(20, 10),
-                              blurRadius: 50,
-                              spreadRadius: 10)
-                        ]),
-                    child: Image.asset(asset,
-                        width: SizeConfig.screenWidth * 0.4)),
-                SizedBox(
-                    height: commingSoon
-                        ? SizeConfig.padding12
-                        : SizeConfig.padding20),
-                commingSoon
-                    ? Text(subtitle ?? "subtitle", style: TextStyles.body1)
-                    : Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.pageHorizontalMargins),
-                        child: Column(
-                          children: List.generate(
-                            instructions.length,
-                            (i) => referralTile(
-                              instructions[i],
-                            ),
+              ),
+              Divider(),
+              Spacer(),
+              Container(
+                  decoration: BoxDecoration(
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness24),
+                      boxShadow: [
+                        BoxShadow(
+                            color: color.withOpacity(0.16),
+                            offset: Offset(20, 10),
+                            blurRadius: 50,
+                            spreadRadius: 10)
+                      ]),
+                  child:
+                      Image.asset(asset, width: SizeConfig.screenWidth * 0.4)),
+              SizedBox(
+                  height: commingSoon
+                      ? SizeConfig.padding12
+                      : SizeConfig.padding20),
+              commingSoon
+                  ? Text(subtitle ?? "subtitle", style: TextStyles.body1)
+                  : Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.pageHorizontalMargins),
+                      child: Column(
+                        children: List.generate(
+                          instructions.length,
+                          (i) => referralTile(
+                            instructions[i],
                           ),
                         ),
                       ),
-                Spacer(),
-                SizedBox(
-                  height: SizeConfig.padding24,
-                )
-              ],
-            ),
-          ],
-        ));
+                    ),
+              Spacer(),
+              SizedBox(
+                height: SizeConfig.padding24,
+              )
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   Widget referralTile(String title) {

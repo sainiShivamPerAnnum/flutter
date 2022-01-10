@@ -44,6 +44,7 @@ const String ReferralHistoryPath = '/referralHistory';
 const String MyWinningsPath = '/myWinnings';
 const String blockedUserPath = '/blockeUser';
 const String GoldenTicketViewPath = '/goldenTicketView';
+const String GoldenTicketsViewPath = '/goldenTicketsView';
 
 enum Pages {
   Splash,
@@ -88,7 +89,8 @@ enum Pages {
   ReferralHistory,
   MyWinnings,
   blockedUser,
-  GoldenTicketView
+  GoldenTicketView,
+  GoldenTicketsView
 }
 
 class PageConfiguration {
@@ -332,4 +334,10 @@ PageConfiguration GoldenTicketViewPageConfig = PageConfiguration(
   key: 'GoldenTicketView',
   path: GoldenTicketViewPath,
   uiPage: Pages.GoldenTicketView,
+);
+
+PageConfiguration GoldenTicketsViewPageConfig = PageConfiguration(
+  key: 'GoldenTicketsView',
+  path: GoldenTicketsViewPath,
+  uiPage: Pages.GoldenTicketsView,
 );
