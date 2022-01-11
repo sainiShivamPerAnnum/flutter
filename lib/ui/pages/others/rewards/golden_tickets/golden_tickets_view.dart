@@ -1,14 +1,18 @@
 import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/hero_router.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_ticket/golden_ticket_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:scratcher/scratcher.dart';
@@ -49,14 +53,14 @@ class GoldenTicketsView extends StatelessWidget {
                             itemCount: model.goldenTicketList.length,
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisSpacing: 10,
-                                    childAspectRatio: 2 / 1,
+                                    crossAxisSpacing: 20,
+                                    childAspectRatio: 1 / 1,
                                     crossAxisCount: 2,
-                                    mainAxisSpacing: 10),
+                                    mainAxisSpacing: 20),
                             itemBuilder: (ctx, i) {
                               return InkWell(
                                 onTap:
-                                    //  () {
+                                    // () {
                                     //   AppState.delegate.appState.currentAction =
                                     //       PageAction(
                                     //     page: GoldenTicketViewPageConfig,
@@ -80,20 +84,8 @@ class GoldenTicketsView extends StatelessWidget {
                                     ),
                                   );
                                 },
-                                child: Hero(
-                                  tag: model.goldenTicketList[i].createdOn
-                                      .toString(),
-                                  createRectTween: (begin, end) {
-                                    return CustomRectTween(
-                                        begin: begin, end: end);
-                                  },
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(8),
-                                    child: Image.asset(
-                                      "images/gticket.png",
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
+                                child: GoldenTicketCard(
+                                  ticket: model.goldenTicketList[i],
                                 ),
                               );
                             },
@@ -106,6 +98,52 @@ class GoldenTicketsView extends StatelessWidget {
         );
       },
     );
+  }
+}
+
+class GoldenTicketCard extends StatelessWidget {
+  final GoldenTicket ticket;
+  final bool enabled;
+  GoldenTicketCard({this.ticket, this.enabled = false});
+  @override
+  Widget build(BuildContext context) {
+    return Hero(
+        key: Key(ticket.createdOn.toString()),
+        tag: ticket.createdOn.toString(),
+        createRectTween: (begin, end) {
+          return CustomRectTween(begin: begin, end: end);
+        },
+        child: Material(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(32),
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(32),
+              image: DecorationImage(
+                  image: AssetImage("images/gticket.png"), fit: BoxFit.cover),
+            ),
+            height: SizeConfig.screenWidth * 0.6,
+            width: SizeConfig.screenWidth * 0.6,
+          ),
+        )
+        // ClipRRect(
+        //   borderRadius: BorderRadius.circular(32),
+        //   child: Scratcher(
+        //     enabled: enabled,
+        //     image: Image.asset(
+        //       "images/gticket.png",
+        //       fit: BoxFit.cover,
+        //     ),
+        //     child: Container(
+        //       height: SizeConfig.screenWidth * 0.6,
+        //       color: Colors.white,
+        //       width: SizeConfig.screenWidth * 0.6,
+        //       margin: EdgeInsets.only(left: SizeConfig.pageHorizontalMargins),
+        //     ),
+        //   ),
+        // ),
+        );
   }
 }
 
@@ -145,57 +183,94 @@ class _AddTodoPopupCardState extends State<_AddTodoPopupCard> {
               ),
             ),
             Spacer(),
-            Hero(
-              tag: widget.ticket.createdOn.toString(),
-              createRectTween: (begin, end) {
-                return CustomRectTween(begin: begin, end: end);
-              },
-              child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  child: viewScratcher
-                      ? Scratcher(
-                          key: scratchKey,
-                          threshold: 40,
-                          onThreshold: () {
-                            scratchKey.currentState.reveal();
+            viewScratcher
+                ? Hero(
+                    key: Key(widget.ticket.createdOn.toString()),
+                    tag: widget.ticket.createdOn.toString(),
+                    createRectTween: (begin, end) {
+                      return CustomRectTween(begin: begin, end: end);
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(32),
+                      child: Scratcher(
+                        brushSize: 50,
+                        threshold: 40,
+                        key: scratchKey,
+                        onThreshold: () {
+                          scratchKey.currentState.reveal();
 
-                            BaseUtil.showPositiveAlert("Reward Redeemed",
-                                "Prizes will be credited soon to your account");
-                          },
-                          onScratchEnd: () {
-                            BaseUtil.showPositiveAlert("Yo yo yo bruh",
-                                "that's it. you won't get much");
-                          },
-                          onScratchUpdate: () {
-                            print("Scratch update");
-                          },
-                          image: Image.asset(
-                            "images/gticket.png",
-                            fit: BoxFit.cover,
-                          ),
+                          BaseUtil.showPositiveAlert("Reward Redeemed",
+                              "Prizes will be credited soon to your account");
+                        },
+                        image: Image.asset(
+                          "images/gticket.png",
+                          fit: BoxFit.cover,
+                        ),
+                        child: Card(
                           child: Container(
-                            height: (SizeConfig.screenWidth * 0.8) / 2,
+                            height: SizeConfig.screenWidth * 0.6,
                             color: Colors.white,
-                            width: SizeConfig.screenWidth * 0.8,
+                            width: SizeConfig.screenWidth * 0.6,
                             margin: EdgeInsets.only(
                                 left: SizeConfig.pageHorizontalMargins),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: List.generate(
-                                widget.ticket.rewards.length,
-                                (idx) => Text(
-                                    "${widget.ticket.rewards[idx].type}: ${widget.ticket.rewards[idx].value}"),
-                              ),
-                            ),
                           ),
-                        )
-                      : Image.asset(
-                          "images/gticket.png",
-                          width: SizeConfig.screenWidth * 0.8,
-                          height: (SizeConfig.screenWidth * 0.8) / 2,
-                          fit: BoxFit.cover,
-                        )),
-            ),
+                        ),
+                      ),
+                    ),
+                  )
+                : GoldenTicketCard(
+                    ticket: widget.ticket,
+                    enabled: true,
+                  ),
+            // Hero(
+            //   tag: widget.ticket.createdOn.toString(),
+            //   createRectTween: (begin, end) {
+            //     return CustomRectTween(begin: begin, end: end);
+            //   },
+            //   child: ClipRRect(
+            //     borderRadius: BorderRadius.circular(16),
+            //     child: Card(
+            //         shape: RoundedRectangleBorder(
+            //           borderRadius: BorderRadius.circular(16),
+            //         ),
+            //         child: Scratcher(
+            //           key: Key(widget.ticket.createdOn.toString()),
+            //           threshold: 40,
+
+            //           image: Image.asset(
+            //             "images/gticket.png",
+            //             height: SizeConfig.screenWidth * 0.6,
+            //             width: SizeConfig.screenWidth * 0.6,
+            //             fit: BoxFit.cover,
+            //           ),
+            //           child: Container(
+            //             height: SizeConfig.screenWidth * 0.6,
+            //             width: SizeConfig.screenWidth * 0.6,
+            //             decoration: BoxDecoration(
+            //               color: Colors.white,
+            //               borderRadius: BorderRadius.circular(16),
+            //             ),
+            //             margin: EdgeInsets.only(
+            //                 left: SizeConfig.pageHorizontalMargins),
+            //             child: Column(
+            //               mainAxisAlignment: MainAxisAlignment.center,
+            //               children: List.generate(
+            //                 widget.ticket.rewards.length,
+            //                 (idx) => Text(
+            //                     "${widget.ticket.rewards[idx].type}: ${widget.ticket.rewards[idx].value}"),
+            //               ),
+            //             ),
+            //           ),
+            //         )
+            //         // : Image.asset(
+            //         //     "images/gticket.png",
+            //         //     width: SizeConfig.screenWidth * 0.8,
+            //         //     height: (SizeConfig.screenWidth * 0.8) / 2,
+            //         //     fit: BoxFit.cover,
+            //         //   )
+            //         ),
+            //   ),
+            // ),
             Spacer(),
             FelloAppBar()
           ],
