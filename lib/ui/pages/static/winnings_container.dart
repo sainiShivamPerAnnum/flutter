@@ -14,8 +14,13 @@ class WinningsContainer extends StatelessWidget {
   final Widget child;
   final double height;
   final Function onTap;
+  final double borderRadius;
   WinningsContainer(
-      {this.child, @required this.shadow, this.height, this.onTap});
+      {this.child,
+      @required this.shadow,
+      this.height,
+      this.onTap,
+      this.borderRadius});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +32,8 @@ class WinningsContainer extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
             color: UiConstants.primaryColor,
-            borderRadius: BorderRadius.circular(SizeConfig.roundness24),
+            borderRadius:
+                BorderRadius.circular(borderRadius ?? SizeConfig.roundness24),
             boxShadow: [
               if (shadow)
                 BoxShadow(

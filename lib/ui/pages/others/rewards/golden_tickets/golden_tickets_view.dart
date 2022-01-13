@@ -1,8 +1,10 @@
 import 'dart:developer';
 import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/hero_router.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -28,6 +30,9 @@ class GoldenTicketsView extends StatelessWidget {
       onModelReady: (model) {
         model.init();
       },
+      onModelDispose: (model) {
+        model.disp();
+      },
       builder: (ctx, model, child) {
         return Scaffold(
           body: HomeBackground(
@@ -52,6 +57,7 @@ class GoldenTicketsView extends StatelessWidget {
                       child: Column(
                         children: [
                           WinningsContainer(
+                            borderRadius: SizeConfig.roundness12,
                             shadow: false,
                             height: SizeConfig.screenWidth * 0.12,
                             child: Container(
@@ -81,16 +87,48 @@ class GoldenTicketsView extends StatelessWidget {
                             },
                           ),
                           Expanded(
-                            child: model.arrangedGoldenTicketList == null
-                                ? Center(child: CircularProgressIndicator())
-                                : (model.arrangedGoldenTicketList.length == 0
-                                    ? Center(
-                                        child: NoRecordDisplayWidget(
-                                          assetLottie: Assets.noData,
-                                          text: "No Golden Scratch Cards yet",
-                                        ),
-                                      )
-                                    : GridView.builder(
+                              child:
+                                  // model.arrangedGoldenTicketList == null
+                                  //     ? Center(child: CircularProgressIndicator())
+                                  //     :
+                                  // (model.arrangedGoldenTicketList.length == 0
+                                  //     ? Center(
+                                  //         child: NoRecordDisplayWidget(
+                                  //           assetLottie: Assets.noData,
+                                  //           text: "No Golden Scratch Cards yet",
+                                  //         ),
+                                  //       )
+                                  //     :
+                                  NotificationListener<ScrollNotification>(
+                            onNotification: (ScrollNotification scrollInfo) {
+                              if (scrollInfo.metrics.maxScrollExtent ==
+                                  scrollInfo.metrics.pixels) {
+                                log("loading more data");
+                                model.requestNextPage();
+                              }
+                              return true;
+                            },
+                            child: RefreshIndicator(
+                              onRefresh: () async => model.refresh(),
+                              child: StreamBuilder<List<DocumentSnapshot>>(
+                                stream: model.streamController.stream,
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<List<DocumentSnapshot>>
+                                        snapshot) {
+                                  if (snapshot.hasError)
+                                    return new Text('Error: ${snapshot.error}');
+                                  switch (snapshot.connectionState) {
+                                    case ConnectionState.waiting:
+                                      return new Text('Loading...');
+                                    default:
+                                      log("Items: " +
+                                          snapshot.data.length.toString());
+                                      model.goldenTicketList = snapshot.data
+                                          .map((e) => GoldenTicket.fromJson(
+                                              e.data(), e.id))
+                                          .toList();
+                                      model.arrangeGoldenTickets();
+                                      return GridView.builder(
                                         itemCount: model
                                             .arrangedGoldenTicketList.length,
                                         gridDelegate:
@@ -131,8 +169,14 @@ class GoldenTicketsView extends StatelessWidget {
                                             ),
                                           );
                                         },
-                                      )),
+                                      );
+                                  }
+                                },
+                              ),
+                            ),
                           )
+                              //),
+                              )
                         ],
                       )),
                 ),
