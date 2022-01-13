@@ -49,13 +49,6 @@ class MyWinningsViewModel extends BaseModel {
   final GlobalKey imageKey = GlobalKey();
   final userRepo = locator<UserRepository>();
   List<UserTransaction> _winningHistory;
-  List<GoldenTicket> _goldenTicketList;
-  List<GoldenTicket> get goldenTicketList => this._goldenTicketList;
-
-  set goldenTicketList(List<GoldenTicket> value) {
-    this._goldenTicketList = value;
-    notifyListeners();
-  }
 
   //GETTERS SETTERS
   get isWinningHistoryLoading => this._isWinningHistoryLoading;
@@ -512,11 +505,4 @@ class MyWinningsViewModel extends BaseModel {
           "Task Failed", "Unable to share the picture at the moment");
     }
   }
-
-//Golden tickets
-
-  // void getGoldenTickets() async {
-  //   goldenTicketList =
-  //       await _dbModel.getGoldenTickets(_userService.baseUser.uid);
-  // }
 }

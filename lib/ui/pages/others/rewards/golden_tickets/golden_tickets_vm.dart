@@ -80,10 +80,8 @@ class GoldenTicketsViewModel extends BaseModel {
           .postData(_apiPaths.kRedeemGtReward, token: _bearer, body: _body);
       _logger.d(_apiResponse.toString());
       await updateGoldenTickets();
-      //return _apiResponse; //ApiResponse(model: _topWinnersModel.currentTopWinners, code: 200);
     } catch (e) {
       _logger.e(e);
-      //return ApiResponse.withError(e.toString(), 400);
     }
   }
 }
