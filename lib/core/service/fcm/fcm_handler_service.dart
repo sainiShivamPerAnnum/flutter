@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/core/service/golden_ticket_service.dart';
 import 'package:felloapp/core/service/leaderboard_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
@@ -19,6 +20,7 @@ class FcmHandler extends ChangeNotifier {
 
   final CustomLogger logger = locator<CustomLogger>();
   final _lbService = locator<LeaderboardService>();
+  GoldenTicketService _gtService = GoldenTicketService();
   Log log = new Log("FcmHandler");
   ValueChanged<Map> notifListener;
   String url;
@@ -126,6 +128,12 @@ class FcmHandler extends ChangeNotifier {
                     ));
               });
             }
+          }
+          break;
+        case COMMAND_USER_PRIZE_WIN:
+          {
+            logger.d(data.toString());
+            _gtService.showGoldenTicketAvailableDialog();
           }
           break;
         default:

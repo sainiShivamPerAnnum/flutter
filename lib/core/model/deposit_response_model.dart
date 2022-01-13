@@ -61,7 +61,7 @@ class Response {
   double augmontPrinciple;
   double augmontGoldQty;
   int flcBalance;
-  bool isRewarded;
+  bool isGtRewarded;
 
   Response({
     this.status,
@@ -71,7 +71,7 @@ class Response {
     this.augmontGoldQty,
     this.augmontPrinciple,
     this.flcBalance,
-    this.isRewarded,
+    this.isGtRewarded,
   });
 
   Response.fromJson(Map<String, dynamic> json) {
@@ -84,7 +84,7 @@ class Response {
     augmontPrinciple = json['augmontPrinciple'];
     augmontGoldQty = json['augmontGoldQty'];
     flcBalance = json['flcBalance'];
-    isRewarded = json['isRewarded'];
+    isGtRewarded = json['isGtRewarded'];
   }
 
   Map<String, dynamic> toJson() {
@@ -99,7 +99,7 @@ class Response {
     data['augmontPrinciple'] = this.augmontPrinciple;
     data['augmontGoldQty'] = this.augmontGoldQty;
     data['flcBalance'] = this.flcBalance;
-    data['isRewarded'] = this.isRewarded;
+    data['isGtRewarded'] = this.isGtRewarded;
     return data;
   }
 
@@ -112,7 +112,7 @@ class Response {
       'augmontPrinciple': augmontPrinciple,
       'augmontGoldQty': augmontGoldQty,
       'flcBalance': flcBalance,
-      'isRewarded': isRewarded,
+      'isGtRewarded': isGtRewarded,
     };
   }
 
@@ -125,7 +125,7 @@ class Response {
       augmontPrinciple: BaseUtil.toDouble(map['augmontPrinciple']),
       augmontGoldQty: BaseUtil.toDouble(map['augmontGoldQty']),
       flcBalance: BaseUtil.toInt(map['flcBalance']),
-      isRewarded: map['isRewarded'],
+      isGtRewarded: map['isGtRewarded'],
     );
   }
 

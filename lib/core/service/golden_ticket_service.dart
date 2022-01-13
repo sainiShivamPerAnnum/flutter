@@ -15,34 +15,36 @@ class GoldenTicketService {
   // }
 
   void showGoldenTicketAvailableDialog() {
-    hasGoldenTicket = false;
-    Future.delayed(Duration(seconds: 1), () {
-      BaseUtil.openDialog(
-        addToScreenStack: true,
-        isBarrierDismissable: false,
-        hapticVibrate: false,
-        content: FelloConfirmationDialog(
-            title: 'Yayy!',
-            subtitle: 'You won a golden ticket',
-            accept: 'Open',
-            acceptColor: UiConstants.primaryColor,
-            asset: Assets.goldenTicket,
-            reject: "Ok",
-            rejectColor: UiConstants.tertiarySolid,
-            showCrossIcon: false,
-            onAccept: () async {
-              Future.delayed(Duration(seconds: 1), () {
+    if (hasGoldenTicket) {
+      hasGoldenTicket = false;
+      Future.delayed(Duration(seconds: 1), () {
+        BaseUtil.openDialog(
+          addToScreenStack: true,
+          isBarrierDismissable: false,
+          hapticVibrate: false,
+          content: FelloConfirmationDialog(
+              title: 'Yayy!',
+              subtitle: 'You won a golden ticket',
+              accept: 'Open',
+              acceptColor: UiConstants.primaryColor,
+              asset: Assets.goldenTicket,
+              reject: "Ok",
+              rejectColor: UiConstants.tertiarySolid,
+              showCrossIcon: false,
+              onAccept: () async {
+                Future.delayed(Duration(milliseconds: 500), () {
+                  AppState.backButtonDispatcher.didPopRoute();
+                  AppState.delegate.appState.currentAction = PageAction(
+                    page: GoldenTicketsViewPageConfig,
+                    state: PageState.addPage,
+                  );
+                });
+              },
+              onReject: () {
                 AppState.backButtonDispatcher.didPopRoute();
-                AppState.delegate.appState.currentAction = PageAction(
-                  page: MyWinnigsPageConfig,
-                  state: PageState.addPage,
-                );
-              });
-            },
-            onReject: () {
-              AppState.backButtonDispatcher.didPopRoute();
-            }),
-      );
-    });
+              }),
+        );
+      });
+    }
   }
 }

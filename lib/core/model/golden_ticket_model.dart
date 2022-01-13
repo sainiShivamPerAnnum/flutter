@@ -4,9 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
 class GoldenTicket {
+  String gtId;
   String ticketId;
   Timestamp createdOn;
-  Timestamp unlockedOn;
+  Timestamp redeemedTimestamp;
+  Timestamp revealedTimestamp;
   String eventType;
   String gtType;
   bool isTransferrable;
@@ -15,6 +17,7 @@ class GoldenTicket {
   Map<String, dynamic> ownershipMap;
 
   GoldenTicket({
+    this.gtId,
     this.createdOn,
     this.eventType,
     this.gtType,
@@ -22,16 +25,20 @@ class GoldenTicket {
     this.ownershipMap,
     this.rewards,
     this.ticketId,
-    this.unlockedOn,
+    this.redeemedTimestamp,
+    this.revealedTimestamp,
     this.version,
   });
 
-  GoldenTicket.fromJson(Map<String, dynamic> json) {
+  GoldenTicket.fromJson(Map<String, dynamic> json, String docId) {
+    gtId = docId;
     createdOn = json['createdTimestamp'];
     eventType = json['eventType'];
     gtType = json['gtType'];
     isTransferrable = json['isTransferrable'];
-    ownershipMap = json['ownershipMap'] ?? {};
+    redeemedTimestamp = json['redeemedTimestamp'];
+    revealedTimestamp = json['revealedTimestamp'];
+    ownershipMap = json['ownershipMap'];
     rewards = Reward.objArray(json['rewards']);
     version = json['version'];
   }

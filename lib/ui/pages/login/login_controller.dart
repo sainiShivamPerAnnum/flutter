@@ -1,4 +1,5 @@
 //Project Imports
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
@@ -13,6 +14,7 @@ import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
+import 'package:felloapp/core/service/golden_ticket_service.dart';
 import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -609,6 +611,11 @@ class _LoginControllerState extends State<LoginController>
                         body: _body,
                         token: _bearer);
                     res['flag'] ? flag = true : flag = false;
+                    _logger
+                        .d("Is Golden Ticket Rewarded: ${res['isGtRewarded']}");
+                    if (res['isGtRewarded'] != null &&
+                        res['isGtRewarded'] == true)
+                      GoldenTicketService.hasGoldenTicket = true;
                   } catch (e) {
                     _logger.d(e);
                     _usernameKey.currentState.enabled = true;

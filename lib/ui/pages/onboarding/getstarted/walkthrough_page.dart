@@ -1,3 +1,4 @@
+import 'package:felloapp/core/service/golden_ticket_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
@@ -17,6 +18,7 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
   PageController _pageController;
   ValueNotifier<double> _pageNotifier;
   bool showLotties = false;
+  GoldenTicketService _gtService = GoldenTicketService();
 
   List<String> lottieList = [Assets.onb1, Assets.onb2, Assets.onb3];
   List<String> titleList = ["SAVE", "PLAY", "WIN"];
@@ -216,11 +218,13 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                         style: TextStyles.body2.bold.colour(Colors.white),
                       ),
                       onPressed: () {
-                        value.toInt() == 2
-                            ? AppState.backButtonDispatcher.didPopRoute()
-                            : _pageController.nextPage(
-                                duration: Duration(milliseconds: 400),
-                                curve: Curves.easeIn);
+                        if (value.toInt() == 2) {
+                          AppState.backButtonDispatcher.didPopRoute();
+                          _gtService.showGoldenTicketAvailableDialog();
+                        } else
+                          _pageController.nextPage(
+                              duration: Duration(milliseconds: 400),
+                              curve: Curves.easeIn);
                       },
                     );
                   },
@@ -229,6 +233,7 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
               TextButton(
                 onPressed: () {
                   AppState.backButtonDispatcher.didPopRoute();
+                  _gtService.showGoldenTicketAvailableDialog();
                 },
                 child: Text(
                   "Skip",

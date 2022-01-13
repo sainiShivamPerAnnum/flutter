@@ -1,0 +1,62 @@
+import 'package:felloapp/core/constants/apis_path_constants.dart';
+import 'package:felloapp/core/service/api.dart';
+import 'package:felloapp/core/service/api_service.dart';
+import 'package:felloapp/core/service/golden_ticket_service.dart';
+import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+
+class GoldenScratchCardViewModel extends BaseModel {
+  bool _viewScratcher = false;
+  double _detailsModalHeight = 0;
+  bool _bottompadding = true;
+  bool _viewScratched = false;
+  double _opacity = 0;
+  double get opacity => this._opacity;
+
+  set opacity(double value) {
+    this._opacity = value;
+    notifyListeners();
+  }
+
+  get viewScratched => this._viewScratched;
+
+  set viewScratched(value) => this._viewScratched = value;
+
+  get viewScratcher => this._viewScratcher;
+
+  set viewScratcher(value) => this._viewScratcher = value;
+
+  get detailsModalHeight => this._detailsModalHeight;
+
+  set detailsModalHeight(value) => this._detailsModalHeight = value;
+
+  get bottompadding => this._bottompadding;
+
+  set bottompadding(value) => this._bottompadding = value;
+
+  showDetailsModal() {
+    opacity = 1;
+    _bottompadding = false;
+    _detailsModalHeight = SizeConfig.screenHeight * 0.5;
+    notifyListeners();
+  }
+
+  changeToUnlockedUI() {
+    opacity = 1;
+    _bottompadding = false;
+    _detailsModalHeight = SizeConfig.screenHeight * 0.5;
+    _viewScratched = true;
+    notifyListeners();
+  }
+
+  init() {
+    Future.delayed(Duration(seconds: 0), () {
+      _viewScratcher = true;
+      notifyListeners();
+    });
+  }
+}

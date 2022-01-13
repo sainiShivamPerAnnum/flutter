@@ -7,7 +7,6 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_vm.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_ticket/golden_ticket_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
@@ -31,11 +30,11 @@ class MyWinningsView extends StatelessWidget {
     return BaseView<MyWinningsViewModel>(
       onModelReady: (model) {
         model.getWinningHistory();
-        model.getGoldenTickets();
+        // model.getGoldenTickets();
       },
       builder: (ctx, model, child) {
         return Scaffold(
-          floatingActionButton: AddTodoButton(),
+          //floatingActionButton: AddTodoButton(),
           backgroundColor: UiConstants.primaryColor,
           body: HomeBackground(
             child: Column(
@@ -69,7 +68,7 @@ class MyWinningsView extends StatelessWidget {
                           PrizeClaimCard(
                             model: model,
                           ),
-                          GoldenRow(model: model),
+                          //GoldenRow(model: model),
                           Container(
                             margin: EdgeInsets.only(top: SizeConfig.padding24),
                             child: Column(
@@ -373,207 +372,207 @@ class MyWinningsView extends StatelessWidget {
   }
 }
 
-class GoldenRow extends StatelessWidget {
-  GoldenRow({this.model});
-  final MyWinningsViewModel model;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(top: SizeConfig.padding24),
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.pageHorizontalMargins),
-            child: Row(
-              children: [
-                Text(
-                  "Golden Tickets",
-                  style: TextStyles.title3.bold,
-                ),
-                Spacer(),
-                TextButton(onPressed: () {}, child: Text('Show All'))
-              ],
-            ),
-          ),
-          Container(
-            width: SizeConfig.screenWidth,
-            height: SizeConfig.screenWidth / 4,
-            child: model.goldenTicketList == null
-                ? Center(child: CircularProgressIndicator())
-                : ListView.builder(
-                    itemCount: model.goldenTicketList.length,
-                    scrollDirection: Axis.horizontal,
-                    padding: EdgeInsets.zero,
-                    itemBuilder: (ctx, i) {
-                      return InkWell(
-                        onTap: () {
-                          AppState.delegate.appState.currentAction = PageAction(
-                            page: GoldenTicketViewPageConfig,
-                            widget: GoldenTicketView(
-                              ticket: model.goldenTicketList[i],
-                            ),
-                            state: PageState.addWidget,
-                          );
-                        },
-                        child: Hero(
-                          tag: i.toString(),
-                          child: Container(
-                            width: SizeConfig.screenWidth / 2,
-                            margin: EdgeInsets.only(
-                                left: SizeConfig.pageHorizontalMargins),
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: AssetImage("images/gticket.png"),
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-          )
-        ],
-      ),
-    );
-  }
-}
+// class GoldenRow extends StatelessWidget {
+//   GoldenRow({this.model});
+//   final MyWinningsViewModel model;
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       margin: EdgeInsets.only(top: SizeConfig.padding24),
+//       child: Column(
+//         children: [
+//           Padding(
+//             padding: EdgeInsets.symmetric(
+//                 horizontal: SizeConfig.pageHorizontalMargins),
+//             child: Row(
+//               children: [
+//                 Text(
+//                   "Golden Tickets",
+//                   style: TextStyles.title3.bold,
+//                 ),
+//                 Spacer(),
+//                 TextButton(onPressed: () {}, child: Text('Show All'))
+//               ],
+//             ),
+//           ),
+//           Container(
+//             width: SizeConfig.screenWidth,
+//             height: SizeConfig.screenWidth / 4,
+//             child: model.goldenTicketList == null
+//                 ? Center(child: CircularProgressIndicator())
+//                 : ListView.builder(
+//                     itemCount: model.goldenTicketList.length,
+//                     scrollDirection: Axis.horizontal,
+//                     padding: EdgeInsets.zero,
+//                     itemBuilder: (ctx, i) {
+//                       return InkWell(
+//                         onTap: () {
+//                           AppState.delegate.appState.currentAction = PageAction(
+//                             page: GoldenTicketViewPageConfig,
+//                             widget: GoldenTicketView(
+//                               ticket: model.goldenTicketList[i],
+//                             ),
+//                             state: PageState.addWidget,
+//                           );
+//                         },
+//                         child: Hero(
+//                           tag: i.toString(),
+//                           child: Container(
+//                             width: SizeConfig.screenWidth / 2,
+//                             margin: EdgeInsets.only(
+//                                 left: SizeConfig.pageHorizontalMargins),
+//                             decoration: BoxDecoration(
+//                               image: DecorationImage(
+//                                 image: AssetImage("images/gticket.png"),
+//                               ),
+//                             ),
+//                           ),
+//                         ),
+//                       );
+//                     },
+//                   ),
+//           )
+//         ],
+//       ),
+//     );
+//   }
+// }
 
-/// {@template add_todo_button}
-/// Button to add a new [Todo].
-///
-/// Opens a [HeroDialogRoute] of [_AddTodoPopupCard].
-///
-/// Uses a [Hero] with tag [_heroAddTodo].
-/// {@endtemplate}
-class AddTodoButton extends StatelessWidget {
-  /// {@macro add_todo_button}
-  const AddTodoButton({Key key}) : super(key: key);
+// /// {@template add_todo_button}
+// /// Button to add a new [Todo].
+// ///
+// /// Opens a [HeroDialogRoute] of [_AddTodoPopupCard].
+// ///
+// /// Uses a [Hero] with tag [_heroAddTodo].
+// /// {@endtemplate}
+// class AddTodoButton extends StatelessWidget {
+//   /// {@macro add_todo_button}
+//   const AddTodoButton({Key key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(32.0),
-      child: GestureDetector(
-        onTap: () {
-          AppState.screenStack.add(ScreenItem.dialog);
-          Navigator.of(context).push(HeroDialogRoute(builder: (context) {
-            return const _AddTodoPopupCard();
-          }));
-        },
-        child: Hero(
-          tag: _heroAddTodo,
-          createRectTween: (begin, end) {
-            return CustomRectTween(begin: begin, end: end);
-          },
-          child: Material(
-            color: Colors.amber,
-            elevation: 2,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
-            child: const Icon(
-              Icons.add_rounded,
-              size: 56,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.all(32.0),
+//       child: GestureDetector(
+//         onTap: () {
+//           AppState.screenStack.add(ScreenItem.dialog);
+//           Navigator.of(context).push(HeroDialogRoute(builder: (context) {
+//             return const _AddTodoPopupCard();
+//           }));
+//         },
+//         child: Hero(
+//           tag: _heroAddTodo,
+//           createRectTween: (begin, end) {
+//             return CustomRectTween(begin: begin, end: end);
+//           },
+//           child: Material(
+//             color: Colors.amber,
+//             elevation: 2,
+//             shape:
+//                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+//             child: const Icon(
+//               Icons.add_rounded,
+//               size: 56,
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
-/// Tag-value used for the add todo popup button.
-const String _heroAddTodo = 'add-todo-hero';
+// /// Tag-value used for the add todo popup button.
+// const String _heroAddTodo = 'add-todo-hero';
 
-/// {@template add_todo_popup_card}
-/// Popup card to add a new [Todo]. Should be used in conjuction with
-/// [HeroDialogRoute] to achieve the popup effect.
-///
-/// Uses a [Hero] with tag [_heroAddTodo].
-/// {@endtemplate}
-class _AddTodoPopupCard extends StatelessWidget {
-  /// {@macro add_todo_popup_card}
-  const _AddTodoPopupCard({Key key}) : super(key: key);
+// /// {@template add_todo_popup_card}
+// /// Popup card to add a new [Todo]. Should be used in conjuction with
+// /// [HeroDialogRoute] to achieve the popup effect.
+// ///
+// /// Uses a [Hero] with tag [_heroAddTodo].
+// /// {@endtemplate}
+// class _AddTodoPopupCard extends StatelessWidget {
+//   /// {@macro add_todo_popup_card}
+//   const _AddTodoPopupCard({Key key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32.0),
-        child: Hero(
-          tag: _heroAddTodo,
-          createRectTween: (begin, end) {
-            return CustomRectTween(begin: begin, end: end);
-          },
-          child: Material(
-            color: Colors.amber,
-            elevation: 2,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const TextField(
-                      decoration: InputDecoration(
-                        hintText: 'New todo',
-                        border: InputBorder.none,
-                      ),
-                      cursorColor: Colors.white,
-                    ),
-                    const Divider(
-                      color: Colors.white,
-                      thickness: 0.2,
-                    ),
-                    const TextField(
-                      decoration: InputDecoration(
-                        hintText: 'Write a note',
-                        border: InputBorder.none,
-                      ),
-                      cursorColor: Colors.white,
-                      maxLines: 6,
-                    ),
-                    const Divider(
-                      color: Colors.white,
-                      thickness: 0.2,
-                    ),
-                    FlatButton(
-                      onPressed: () {},
-                      child: const Text('Add'),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Center(
+//       child: Padding(
+//         padding: const EdgeInsets.all(32.0),
+//         child: Hero(
+//           tag: _heroAddTodo,
+//           createRectTween: (begin, end) {
+//             return CustomRectTween(begin: begin, end: end);
+//           },
+//           child: Material(
+//             color: Colors.amber,
+//             elevation: 2,
+//             shape:
+//                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+//             child: SingleChildScrollView(
+//               child: Padding(
+//                 padding: const EdgeInsets.all(16.0),
+//                 child: Column(
+//                   mainAxisSize: MainAxisSize.min,
+//                   children: [
+//                     const TextField(
+//                       decoration: InputDecoration(
+//                         hintText: 'New todo',
+//                         border: InputBorder.none,
+//                       ),
+//                       cursorColor: Colors.white,
+//                     ),
+//                     const Divider(
+//                       color: Colors.white,
+//                       thickness: 0.2,
+//                     ),
+//                     const TextField(
+//                       decoration: InputDecoration(
+//                         hintText: 'Write a note',
+//                         border: InputBorder.none,
+//                       ),
+//                       cursorColor: Colors.white,
+//                       maxLines: 6,
+//                     ),
+//                     const Divider(
+//                       color: Colors.white,
+//                       thickness: 0.2,
+//                     ),
+//                     FlatButton(
+//                       onPressed: () {},
+//                       child: const Text('Add'),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
-/// {@template custom_rect_tween}
-/// Linear RectTween with a [Curves.easeOut] curve.
-///
-/// Less dramatic that the regular [RectTween] used in [Hero] animations.
-/// {@endtemplate}
-class CustomRectTween extends RectTween {
-  /// {@macro custom_rect_tween}
-  CustomRectTween({
-    @required Rect begin,
-    @required Rect end,
-  }) : super(begin: begin, end: end);
+// /// {@template custom_rect_tween}
+// /// Linear RectTween with a [Curves.easeOut] curve.
+// ///
+// /// Less dramatic that the regular [RectTween] used in [Hero] animations.
+// /// {@endtemplate}
+// class CustomRectTween extends RectTween {
+//   /// {@macro custom_rect_tween}
+//   CustomRectTween({
+//     @required Rect begin,
+//     @required Rect end,
+//   }) : super(begin: begin, end: end);
 
-  @override
-  Rect lerp(double t) {
-    final elasticCurveValue = Curves.easeOut.transform(t);
-    return Rect.fromLTRB(
-      lerpDouble(begin.left, end.left, elasticCurveValue),
-      lerpDouble(begin.top, end.top, elasticCurveValue),
-      lerpDouble(begin.right, end.right, elasticCurveValue),
-      lerpDouble(begin.bottom, end.bottom, elasticCurveValue),
-    );
-  }
-}
+//   @override
+//   Rect lerp(double t) {
+//     final elasticCurveValue = Curves.easeOut.transform(t);
+//     return Rect.fromLTRB(
+//       lerpDouble(begin.left, end.left, elasticCurveValue),
+//       lerpDouble(begin.top, end.top, elasticCurveValue),
+//       lerpDouble(begin.right, end.right, elasticCurveValue),
+//       lerpDouble(begin.bottom, end.bottom, elasticCurveValue),
+//     );
+//   }
+// }

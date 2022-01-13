@@ -359,7 +359,7 @@ class DBModel extends ChangeNotifier {
     try {
       QuerySnapshot response = await _api.fetchGoldenTickets(uid);
       response.docs.forEach((e) {
-        goldenTickets.add(GoldenTicket.fromJson(e.data()));
+        goldenTickets.add(GoldenTicket.fromJson(e.data(), e.id));
         print(e.data());
       });
       return goldenTickets;

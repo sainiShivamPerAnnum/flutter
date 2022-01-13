@@ -515,8 +515,8 @@ class MyWinningsViewModel extends BaseModel {
 
 //Golden tickets
 
-  void getGoldenTickets() async {
-    goldenTicketList =
-        await _dbModel.getGoldenTickets(_userService.baseUser.uid);
-  }
+  // void getGoldenTickets() async {
+  //   goldenTicketList =
+  //       await _dbModel.getGoldenTickets(_userService.baseUser.uid);
+  // }
 }

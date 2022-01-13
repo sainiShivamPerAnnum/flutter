@@ -98,8 +98,11 @@ class FcmListener {
           if (flag) {
             _handleFreshchatNotif(message.data);
           } else if (message.data != null && message.data.isNotEmpty) {
+            logger.d("Handle Message: ${message.data.toString()}");
             _handler.handleMessage(message.data);
           } else if (notification != null) {
+            logger.d(
+                "Handle Notification: ${notification.title} ${notification.body}");
             _handler.handleNotification(notification.title, notification.body);
           }
         });

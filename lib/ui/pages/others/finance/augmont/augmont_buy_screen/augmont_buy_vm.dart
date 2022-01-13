@@ -39,6 +39,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   FcmListener _fcmListener = locator<FcmListener>();
   UserService _userService = locator<UserService>();
   TransactionService _txnService = locator<TransactionService>();
+  GoldenTicketService _gtService = GoldenTicketService();
 
   int _status = 0;
 
@@ -525,9 +526,11 @@ class AugmontGoldBuyViewModel extends BaseModel {
           AppState.backButtonDispatcher.didPopRoute();
           AppState.backButtonDispatcher.didPopRoute();
           AppState.delegate.appState.setCurrentTabIndex = 1;
+          _gtService.showGoldenTicketAvailableDialog();
         },
         onAccept: () {
           AppState.backButtonDispatcher.didPopRoute();
+          _gtService.showGoldenTicketAvailableDialog();
         },
       ),
     );

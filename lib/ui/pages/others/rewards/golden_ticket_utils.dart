@@ -1,0 +1,131 @@
+import 'package:felloapp/core/model/golden_ticket_model.dart';
+import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_html/shims/dart_ui_real.dart';
+
+class CustomRectTween extends RectTween {
+  CustomRectTween({
+    @required Rect begin,
+    @required Rect end,
+  }) : super(begin: begin, end: end);
+
+  @override
+  Rect lerp(double t) {
+    final elasticCurveValue = Curves.easeOut.transform(t);
+    return Rect.fromLTRB(
+      lerpDouble(begin.left, end.left, elasticCurveValue),
+      lerpDouble(begin.top, end.top, elasticCurveValue),
+      lerpDouble(begin.right, end.right, elasticCurveValue),
+      lerpDouble(begin.bottom, end.bottom, elasticCurveValue),
+    );
+  }
+}
+
+class GoldenTicketGridItemCard extends StatelessWidget {
+  final GoldenTicket ticket;
+  final TextStyle titleStyle;
+  GoldenTicketGridItemCard({@required this.ticket, @required this.titleStyle});
+  @override
+  Widget build(BuildContext context) {
+    return Hero(
+      key: Key(ticket.createdOn.toString()),
+      tag: ticket.createdOn.toString(),
+      createRectTween: (begin, end) {
+        return CustomRectTween(begin: begin, end: end);
+      },
+      child: ticket.redeemedTimestamp == null
+          ? UnRedeemedGoldenScratchCard(
+              ticket: ticket,
+            )
+          : RedeemedGoldenScratchCard(ticket: ticket, titleStyle: titleStyle),
+    );
+  }
+}
+
+class UnRedeemedGoldenScratchCard extends StatelessWidget {
+  final GoldenTicket ticket;
+  UnRedeemedGoldenScratchCard({@required this.ticket});
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+      ),
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeIn,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+          image: DecorationImage(
+              image: AssetImage("images/gticket.png"), fit: BoxFit.cover),
+        ),
+        height: SizeConfig.screenWidth * 0.6,
+        width: SizeConfig.screenWidth * 0.6,
+      ),
+    );
+  }
+}
+
+class RedeemedGoldenScratchCard extends StatelessWidget {
+  final GoldenTicket ticket;
+  final TextStyle titleStyle;
+  RedeemedGoldenScratchCard({@required this.ticket, @required this.titleStyle});
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+      ),
+      child: AnimatedContainer(
+        height: SizeConfig.screenWidth * 0.6,
+        width: SizeConfig.screenWidth * 0.6,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeIn,
+        decoration: BoxDecoration(
+          color: UiConstants.tertiaryLight,
+          borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+        ),
+        child: Stack(
+          children: [
+            Positioned(
+              bottom: 0,
+              left: 25,
+              child: Image.asset("images/fello-short-logo.png",
+                  height: SizeConfig.screenWidth * 0.14,
+                  color: UiConstants.tertiarySolid.withOpacity(0.1)),
+            ),
+            Positioned(
+              bottom: 5, // SizeConfig.pageHorizontalMargins,
+              right: 5, //SizeConfig.pageHorizontalMargins,
+              child: Image.asset(
+                Assets.felloRewards,
+                width: SizeConfig.screenWidth * 0.2,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          "You won ₹${ticket.rewards.firstWhere((e) => e.type == 'rupee').value ?? '0'} and ${ticket.rewards.firstWhere((e) => e.type == 'flc').value ?? '0'} fello coins",
+                          style: titleStyle,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}

@@ -35,7 +35,7 @@ import 'package:felloapp/ui/pages/others/profile/referrals/referral_history/refe
 import 'package:felloapp/ui/pages/others/profile/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_view.dart';
 import 'package:felloapp/ui/pages/others/profile/verify_email.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_ticket/golden_ticket_view.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/golden_scratch_card_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_view.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/pages/splash/splash_view.dart';
@@ -263,7 +263,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(BlockedUserView(), BlockedUserPageConfig);
           break;
         case Pages.GoldenTicketView:
-          _addPageData(GoldenTicketView(), GoldenTicketViewPageConfig);
+          _addPageData(GoldenScratchCardView(), GoldenTicketViewPageConfig);
           break;
         case Pages.GoldenTicketsView:
           _addPageData(GoldenTicketsView(), GoldenTicketsViewPageConfig);
