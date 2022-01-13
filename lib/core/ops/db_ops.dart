@@ -1307,6 +1307,12 @@ class DBModel extends ChangeNotifier {
     return _cards;
   }
 
+  Future<Map<String, dynamic>> getMilestonesList() async {
+    QueryDocumentSnapshot response =
+        await _api.fetchGoldenTicketMilestonesList();
+    return response.data();
+  }
+
   Future<bool> checkIfUsernameIsAvailable(String username) async {
     return await _api.checkUserNameAvailability(username);
   }

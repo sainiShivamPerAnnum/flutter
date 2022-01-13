@@ -12,14 +12,18 @@ import 'package:flutter/material.dart';
 class WinningsContainer extends StatelessWidget {
   final bool shadow;
   final Widget child;
-  WinningsContainer({this.child, @required this.shadow});
+  final double height;
+  final Function onTap;
+  WinningsContainer(
+      {this.child, @required this.shadow, this.height, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return InkWell(
-      onTap: () => AppState.delegate.appState.currentAction =
-          PageAction(state: PageState.addPage, page: MyWinnigsPageConfig),
+      onTap: onTap ??
+          () => AppState.delegate.appState.currentAction =
+              PageAction(state: PageState.addPage, page: MyWinnigsPageConfig),
       child: Container(
         decoration: BoxDecoration(
             color: UiConstants.primaryColor,
@@ -36,7 +40,7 @@ class WinningsContainer extends StatelessWidget {
                   spreadRadius: -30,
                 )
             ]),
-        height: SizeConfig.screenWidth * 0.24,
+        height: height ?? SizeConfig.screenWidth * 0.24,
         margin:
             EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
         child: Stack(

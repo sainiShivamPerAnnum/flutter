@@ -14,18 +14,7 @@ import 'package:flutter/material.dart';
 class Transactions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
     return Scaffold(
-      floatingActionButton: keyboardIsOpen && Platform.isIOS
-          ? FloatingActionButton(
-              child: Icon(
-                Icons.done,
-                color: Colors.white,
-              ),
-              backgroundColor: UiConstants.tertiarySolid,
-              onPressed: () => FocusScope.of(context).unfocus(),
-            )
-          : SizedBox(),
       backgroundColor: UiConstants.primaryColor,
       body: HomeBackground(
         child: Column(

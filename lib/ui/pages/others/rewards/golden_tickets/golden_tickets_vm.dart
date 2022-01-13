@@ -58,7 +58,9 @@ class GoldenTicketsViewModel extends BaseModel {
       }
     });
     goldenTicketList.forEach((e) {
-      if (e.redeemedTimestamp != null) {
+      if (e.redeemedTimestamp != null &&
+          e.rewards != null &&
+          e.rewards.isNotEmpty) {
         arrangedGoldenTicketList.add(e);
       }
     });

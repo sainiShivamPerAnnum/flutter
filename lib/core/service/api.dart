@@ -770,6 +770,21 @@ class Api {
     return _query.get();
   }
 
+  Future<QueryDocumentSnapshot> fetchGoldenTicketMilestonesList() async {
+    Query _query = _db
+        .collection(Constants.COLN_PRIZES)
+        .where('category', isEqualTo: "GT_MILESTONES");
+    try {
+      QuerySnapshot _querySnapshot = await _query.get();
+      if (_querySnapshot.docs != null) {
+        logger.i("No prizes for perticular category and freq");
+      }
+      return _querySnapshot.docs?.first;
+    } catch (e) {
+      throw e;
+    }
+  }
+
   //---------------------------------------REALTIME DATABASE-------------------------------------------//
 
   Future<bool> checkUserNameAvailability(String username) async {

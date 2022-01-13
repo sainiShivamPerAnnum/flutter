@@ -114,7 +114,9 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          "You won ₹${ticket.rewards.firstWhere((e) => e.type == 'rupee').value ?? '0'} and ${ticket.rewards.firstWhere((e) => e.type == 'flc').value ?? '0'} fello coins",
+                          ticket.rewards != null && ticket.rewards.isNotEmpty
+                              ? "You won ₹${ticket.rewards.firstWhere((e) => e.type == 'rupee').value ?? '0'} and ${ticket.rewards.firstWhere((e) => e.type == 'flc').value ?? '0'} fello coins"
+                              : "Better Luck Next Time",
                           style: titleStyle,
                         ),
                       ),

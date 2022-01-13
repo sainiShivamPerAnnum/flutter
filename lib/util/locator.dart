@@ -48,6 +48,8 @@ import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_vm.dart
 import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_vm.dart';
 import 'package:felloapp/ui/pages/others/profile/transactions_history/transaction_history_vm.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_viewModel.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_milestones/golden_milestones_view.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_milestones/golden_milestones_vm.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/golden_scratch_card_vm.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_vm.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
@@ -132,6 +134,7 @@ void setupLocator() {
   locator.registerFactory(() => NotificationsViewModel());
   locator.registerFactory(() => GoldenTicketsViewModel());
   locator.registerFactory(() => GoldenScratchCardViewModel());
+  locator.registerFactory(() => GoldenMilestonesViewModel());
 
   //WIDGETS
   // locator.registerFactory(() => SellGoldBtnVM());
