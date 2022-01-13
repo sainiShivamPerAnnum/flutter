@@ -64,6 +64,8 @@ class GoldenTicketsViewModel extends BaseModel {
         arrangedGoldenTicketList.add(e);
       }
     });
+
+    arrangedGoldenTicketList.sort((a, b) => b.createdOn.compareTo(a.createdOn));
   }
 
   updateGoldenTickets() {

@@ -65,6 +65,10 @@ class Reward {
     });
     return rewards;
   }
+
+  toString() {
+    return "Type: $type || Value: $value";
+  }
 }
 
 

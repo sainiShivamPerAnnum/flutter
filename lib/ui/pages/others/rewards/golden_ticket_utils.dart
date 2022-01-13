@@ -114,9 +114,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          ticket.rewards != null && ticket.rewards.isNotEmpty
-                              ? "You won ₹${ticket.rewards.firstWhere((e) => e.type == 'rupee').value ?? '0'} and ${ticket.rewards.firstWhere((e) => e.type == 'flc').value ?? '0'} fello coins"
-                              : "Better Luck Next Time",
+                          getRewardText(ticket.rewards),
                           style: titleStyle,
                         ),
                       ),
@@ -129,5 +127,18 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String getRewardText(List<Reward> rewards) {
+    if (rewards == null || rewards.isEmpty) {
+      return "Better Luck Next Time";
+    } else if (rewards.length == 1) {
+      if (rewards[0].type == "rupee")
+        return "You won ₹${rewards[0].value}";
+      else if (rewards[0].type == "flc")
+        return "You won ${rewards[0].value} fello coins";
+    } else {
+      return "You won ₹${rewards.firstWhere((e) => e.type == 'rupee').value ?? '0'} and ${rewards.firstWhere((e) => e.type == 'flc').value ?? '0'} fello coins";
+    }
   }
 }
