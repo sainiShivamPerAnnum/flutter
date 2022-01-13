@@ -36,7 +36,7 @@ class GoldenTicketsViewModel extends BaseModel {
     getGoldenTickets();
   }
 
-  void getGoldenTickets() async {
+  Future<void> getGoldenTickets() async {
     goldenTicketList =
         await _dbModel.getGoldenTickets(_userService.baseUser.uid);
     arrangeGoldenTickets();
@@ -52,6 +52,7 @@ class GoldenTicketsViewModel extends BaseModel {
 
   arrangeGoldenTickets() {
     arrangedGoldenTicketList = [];
+    goldenTicketList.sort((a, b) => b.createdOn.compareTo(a.createdOn));
     goldenTicketList.forEach((e) {
       if (e.redeemedTimestamp == null) {
         arrangedGoldenTicketList.add(e);
@@ -64,13 +65,6 @@ class GoldenTicketsViewModel extends BaseModel {
         arrangedGoldenTicketList.add(e);
       }
     });
-
-    arrangedGoldenTicketList.sort((a, b) => b.createdOn.compareTo(a.createdOn));
-  }
-
-  updateGoldenTickets() {
-    getGoldenTickets();
-    arrangeGoldenTickets();
   }
 
   redeemTicket(String gtId) async {
@@ -83,7 +77,7 @@ class GoldenTicketsViewModel extends BaseModel {
       final _apiResponse = await APIService.instance
           .postData(_apiPaths.kRedeemGtReward, token: _bearer, body: _body);
       _logger.d(_apiResponse.toString());
-      await updateGoldenTickets();
+      await getGoldenTickets();
     } catch (e) {
       _logger.e(e);
     }
