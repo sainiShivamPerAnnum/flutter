@@ -1,3 +1,4 @@
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/golden_scratch_card_vm.dart';
@@ -9,6 +10,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:scratcher/scratcher.dart';
 
 final scratchKey = GlobalKey<ScratcherState>();
@@ -58,11 +60,8 @@ class GoldenScratchCardView extends StatelessWidget {
                                 brushSize: 50,
                                 threshold: 40,
                                 key: scratchKey,
-                                onThreshold: () {
-                                  scratchKey.currentState.reveal();
-                                  model.showDetailsModal();
-                                  superModel.redeemTicket(ticket.gtId);
-                                },
+                                onThreshold: () =>
+                                    model.redeemCard(superModel, ticket.gtId),
                                 image: Image.asset(
                                   "images/gticket.png",
                                   fit: BoxFit.cover,
@@ -100,33 +99,50 @@ class GoldenScratchCardView extends StatelessWidget {
                     curve: Curves.easeIn,
                     width: SizeConfig.screenWidth,
                     padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Image.asset(
-                                "images/fello_logo.png",
-                                height: SizeConfig.padding40,
-                              ),
-                            ],
+                    child: model.state == ViewState.Busy
+                        ? Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SpinKitWave(
+                                  color: UiConstants.primaryColor,
+                                  size: SizeConfig.padding32,
+                                ),
+                                SizedBox(height: SizeConfig.padding12),
+                                Text(
+                                  "Please wait, registering your prize",
+                                  style: TextStyles.body2.bold,
+                                )
+                              ],
+                            ),
+                          )
+                        : SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Image.asset(
+                                      "images/fello_logo.png",
+                                      height: SizeConfig.padding40,
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: SizeConfig.padding16),
+                                Text(
+                                  "Reward Details",
+                                  style: TextStyles.title3.bold
+                                      .colour(Colors.black87),
+                                ),
+                                SizedBox(height: SizeConfig.padding12),
+                                referralTile("Event type: ${ticket.eventType}"),
+                                referralTile(
+                                    "Date: ${ticket.createdOn.toDate().toString()}"),
+                                referralTile("Ticket Id: ${ticket.gtId}"),
+                                referralTile("Version: ${ticket.version}")
+                              ],
+                            ),
                           ),
-                          SizedBox(height: SizeConfig.padding16),
-                          Text(
-                            "Reward Details",
-                            style:
-                                TextStyles.title3.bold.colour(Colors.black87),
-                          ),
-                          SizedBox(height: SizeConfig.padding12),
-                          referralTile("Event type: ${ticket.eventType}"),
-                          referralTile(
-                              "Date: ${ticket.createdOn.toDate().toString()}"),
-                          referralTile("Ticket Id: ${ticket.gtId}"),
-                          referralTile("Version: ${ticket.version}")
-                        ],
-                      ),
-                    ),
                   ),
                 )
               ],

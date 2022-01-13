@@ -38,8 +38,8 @@ class GoldenTicket {
     isTransferrable = json['isTransferrable'];
     redeemedTimestamp = json['redeemedTimestamp'];
     revealedTimestamp = json['revealedTimestamp'];
-    ownershipMap = json['ownershipMap'];
-    rewards = Reward.objArray(json['rewards']);
+    ownershipMap = json['ownershipMap'] ?? [];
+    rewards = json['rewards'] != null ? Reward.objArray(json['rewards']) : [];
     version = json['version'];
   }
 }

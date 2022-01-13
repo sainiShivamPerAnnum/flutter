@@ -26,7 +26,7 @@ class FcmHandler extends ChangeNotifier {
   String url;
   int tab, dailogShowCount;
 
-  Future<bool> handleMessage(Map data) async {
+  Future<bool> handleMessage(Map data, {bool isAppInForeground = false}) async {
     logger.d(data.toString());
     if (data['command'] != null) {
       String title = data['dialog_title'];
@@ -34,8 +34,10 @@ class FcmHandler extends ChangeNotifier {
       String command = data['command'];
       String url = data['deep_uri'];
 
-      if (url != null && url.isNotEmpty) {
-        AppState.delegate.parseRoute(Uri.parse(url));
+      if (!isAppInForeground) {
+        if (url != null && url.isNotEmpty) {
+          AppState.delegate.parseRoute(Uri.parse(url));
+        }
       }
 
       if (title != null &&
@@ -133,6 +135,7 @@ class FcmHandler extends ChangeNotifier {
         case COMMAND_USER_PRIZE_WIN:
           {
             logger.d(data.toString());
+            GoldenTicketService.hasGoldenTicket = true;
             _gtService.showGoldenTicketAvailableDialog();
           }
           break;

@@ -99,7 +99,7 @@ class FcmListener {
             _handleFreshchatNotif(message.data);
           } else if (message.data != null && message.data.isNotEmpty) {
             logger.d("Handle Message: ${message.data.toString()}");
-            _handler.handleMessage(message.data);
+            _handler.handleMessage(message.data, isAppInForeground: true);
           } else if (notification != null) {
             logger.d(
                 "Handle Notification: ${notification.title} ${notification.body}");
