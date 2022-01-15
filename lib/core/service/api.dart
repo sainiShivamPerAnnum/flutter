@@ -762,14 +762,6 @@ class Api {
     }
   }
 
-  Future<QuerySnapshot> fetchGoldenTickets(String uid) {
-    Query _query = _db
-        .collection(Constants.COLN_USERS)
-        .doc(uid)
-        .collection(Constants.SUBCOLN_USER_REWARDS);
-    return _query.get();
-  }
-
   Future<QueryDocumentSnapshot> fetchGoldenTicketMilestonesList() async {
     Query _query = _db
         .collection(Constants.COLN_PRIZES)

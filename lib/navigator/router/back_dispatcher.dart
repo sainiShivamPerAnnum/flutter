@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/golden_ticket_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
@@ -20,6 +21,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   DBModel _dbModel = locator<DBModel>();
   BaseUtil _baseUtil = locator<BaseUtil>();
   AppState _appState = locator<AppState>();
+  GoldenTicketService _gtService = GoldenTicketService();
 
   FelloBackButtonDispatcher(this._routerDelegate) : super();
 
@@ -68,6 +70,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       Navigator.pop(_routerDelegate.navigatorKey.currentContext);
       AppState.screenStack.removeLast();
       print("Current Stack: ${AppState.screenStack}");
+      _gtService.showGoldenTicketAvailableDialog();
       return Future.value(true);
     }
 

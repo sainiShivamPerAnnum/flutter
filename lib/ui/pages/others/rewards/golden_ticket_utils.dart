@@ -31,8 +31,8 @@ class GoldenTicketGridItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Hero(
-      key: Key(ticket.createdOn.toString()),
-      tag: ticket.createdOn.toString(),
+      key: Key(ticket.timestamp.toString()),
+      tag: ticket.timestamp.toString(),
       createRectTween: (begin, end) {
         return CustomRectTween(begin: begin, end: end);
       },
@@ -93,7 +93,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
             Positioned(
               bottom: 0,
               left: 25,
-              child: Image.asset("images/fello-short-logo.png",
+              child: Image.asset(Assets.logoShortform,
                   height: SizeConfig.screenWidth * 0.14,
                   color: UiConstants.tertiarySolid.withOpacity(0.1)),
             ),
@@ -114,7 +114,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          getRewardText(ticket.rewards),
+                          getRewardText(ticket.rewardArr),
                           style: titleStyle,
                         ),
                       ),
@@ -140,5 +140,6 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
     } else {
       return "You won ₹${rewards.firstWhere((e) => e.type == 'rupee').value ?? '0'} and ${rewards.firstWhere((e) => e.type == 'flc').value ?? '0'} fello coins";
     }
+    return "";
   }
 }

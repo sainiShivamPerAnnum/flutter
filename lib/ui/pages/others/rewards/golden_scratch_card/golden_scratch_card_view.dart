@@ -1,6 +1,7 @@
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/golden_scratch_card_vm.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_ticket_utils.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_vm.dart';
@@ -47,8 +48,8 @@ class GoldenScratchCardView extends StatelessWidget {
                       )
                     : (model.viewScratcher
                         ? Hero(
-                            key: Key(ticket.createdOn.toString()),
-                            tag: ticket.createdOn.toString(),
+                            key: Key(ticket.timestamp.toString()),
+                            tag: ticket.timestamp.toString(),
                             createRectTween: (begin, end) {
                               return CustomRectTween(begin: begin, end: end);
                             },
@@ -116,33 +117,40 @@ class GoldenScratchCardView extends StatelessWidget {
                               ],
                             ),
                           )
-                        : SingleChildScrollView(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
+                        : (!model.isTicketRedeemedSuccessfully
+                            ? NoRecordDisplayWidget(
+                                asset: "images/badticket.png",
+                                text:
+                                    "An error occured while redeeming your ticket",
+                              )
+                            : SingleChildScrollView(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Image.asset(
-                                      "images/fello_logo.png",
-                                      height: SizeConfig.padding40,
+                                    Row(
+                                      children: [
+                                        Image.asset(
+                                          "images/fello_logo.png",
+                                          height: SizeConfig.padding40,
+                                        ),
+                                      ],
                                     ),
+                                    SizedBox(height: SizeConfig.padding16),
+                                    Text(
+                                      "Reward Details",
+                                      style: TextStyles.title3.bold
+                                          .colour(Colors.black87),
+                                    ),
+                                    SizedBox(height: SizeConfig.padding12),
+                                    referralTile(
+                                        "Event type: ${ticket.eventType}"),
+                                    referralTile(
+                                        "Date: ${ticket.timestamp.toDate().toString()}"),
+                                    referralTile("Ticket Id: ${ticket.gtId}"),
+                                    referralTile("Version: ${ticket.version}")
                                   ],
                                 ),
-                                SizedBox(height: SizeConfig.padding16),
-                                Text(
-                                  "Reward Details",
-                                  style: TextStyles.title3.bold
-                                      .colour(Colors.black87),
-                                ),
-                                SizedBox(height: SizeConfig.padding12),
-                                referralTile("Event type: ${ticket.eventType}"),
-                                referralTile(
-                                    "Date: ${ticket.createdOn.toDate().toString()}"),
-                                referralTile("Ticket Id: ${ticket.gtId}"),
-                                referralTile("Version: ${ticket.version}")
-                              ],
-                            ),
-                          ),
+                              )),
                   ),
                 )
               ],

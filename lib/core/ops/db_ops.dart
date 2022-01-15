@@ -353,22 +353,6 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<List<GoldenTicket>> getGoldenTickets(String uid) async {
-    List<GoldenTicket> goldenTickets = [];
-
-    try {
-      QuerySnapshot response = await _api.fetchGoldenTickets(uid);
-      response.docs.forEach((e) {
-        goldenTickets.add(GoldenTicket.fromJson(e.data(), e.id));
-        print(e.data());
-      });
-      return goldenTickets;
-    } catch (e) {
-      logger.e(e);
-      return goldenTickets;
-    }
-  }
-
   ///////////////////////TAMBOLA TICKETING/////////////////////////
   Future<List<TambolaBoard>> getWeeksTambolaTickets(String userId) async {
     try {

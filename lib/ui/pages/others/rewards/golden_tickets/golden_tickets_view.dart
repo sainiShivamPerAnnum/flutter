@@ -19,7 +19,9 @@ import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class GoldenTicketsView extends StatelessWidget {
   const GoldenTicketsView({Key key}) : super(key: key);
@@ -42,68 +44,54 @@ class GoldenTicketsView extends StatelessWidget {
                   leading: FelloAppBarBackButton(),
                   title: "Golden Rewards",
                 ),
-                //Container(height: SizeConfig.screenHeight * 0.2),
                 Expanded(
                   child: Container(
-                      padding: EdgeInsets.only(
-                          top: SizeConfig.pageHorizontalMargins),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(SizeConfig.roundness40),
-                          topRight: Radius.circular(SizeConfig.roundness40),
-                        ),
-                        color: Colors.white,
+                    padding:
+                        EdgeInsets.only(top: SizeConfig.pageHorizontalMargins),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(SizeConfig.roundness40),
+                        topRight: Radius.circular(SizeConfig.roundness40),
                       ),
-                      child: Column(
-                        children: [
-                          WinningsContainer(
-                            borderRadius: SizeConfig.roundness12,
-                            shadow: false,
-                            height: SizeConfig.screenWidth * 0.12,
-                            child: Container(
-                              alignment: Alignment.center,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: SizeConfig.pageHorizontalMargins),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    "Upcoming reward on your path",
-                                    style: TextStyles.body2.bold
-                                        .colour(Colors.white),
-                                  ),
-                                  Spacer(),
-                                  Icon(
-                                    Icons.navigate_next_outlined,
-                                    color: Colors.white,
-                                  ),
-                                ],
-                              ),
+                      color: Colors.white,
+                    ),
+                    child: Column(
+                      children: [
+                        WinningsContainer(
+                          borderRadius: SizeConfig.roundness12,
+                          shadow: false,
+                          height: SizeConfig.screenWidth * 0.12,
+                          child: Container(
+                            alignment: Alignment.center,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: SizeConfig.pageHorizontalMargins),
+                            child: Row(
+                              children: [
+                                Text(
+                                  "Upcoming reward on your path",
+                                  style: TextStyles.body2.bold
+                                      .colour(Colors.white),
+                                ),
+                                Spacer(),
+                                Icon(
+                                  Icons.navigate_next_outlined,
+                                  color: Colors.white,
+                                ),
+                              ],
                             ),
-                            onTap: () {
-                              AppState.delegate.appState.currentAction =
-                                  PageAction(
-                                      state: PageState.addPage,
-                                      page: GoldenMilestonesViewPageConfig);
-                            },
                           ),
-                          Expanded(
-                              child:
-                                  // model.arrangedGoldenTicketList == null
-                                  //     ? Center(child: CircularProgressIndicator())
-                                  //     :
-                                  // (model.arrangedGoldenTicketList.length == 0
-                                  //     ? Center(
-                                  //         child: NoRecordDisplayWidget(
-                                  //           assetLottie: Assets.noData,
-                                  //           text: "No Golden Scratch Cards yet",
-                                  //         ),
-                                  //       )
-                                  //     :
-                                  NotificationListener<ScrollNotification>(
+                          onTap: () {
+                            AppState.delegate.appState.currentAction =
+                                PageAction(
+                                    state: PageState.addPage,
+                                    page: GoldenMilestonesViewPageConfig);
+                          },
+                        ),
+                        Expanded(
+                          child: NotificationListener<ScrollNotification>(
                             onNotification: (ScrollNotification scrollInfo) {
                               if (scrollInfo.metrics.maxScrollExtent ==
                                   scrollInfo.metrics.pixels) {
-                                log("loading more data");
                                 model.requestNextPage();
                               }
                               return true;
@@ -116,10 +104,18 @@ class GoldenTicketsView extends StatelessWidget {
                                     AsyncSnapshot<List<DocumentSnapshot>>
                                         snapshot) {
                                   if (snapshot.hasError)
-                                    return new Text('Error: ${snapshot.error}');
+                                    return new NoRecordDisplayWidget(
+                                      asset: "Assets.badticket.png",
+                                      text:
+                                          "Unable to load your tickets at the moment",
+                                    );
                                   switch (snapshot.connectionState) {
                                     case ConnectionState.waiting:
-                                      return new Text('Loading...');
+                                      return Center(
+                                        child: SpinKitWave(
+                                            color: UiConstants.primaryColor,
+                                            size: SizeConfig.padding32),
+                                      );
                                     default:
                                       log("Items: " +
                                           snapshot.data.length.toString());
@@ -128,57 +124,72 @@ class GoldenTicketsView extends StatelessWidget {
                                               e.data(), e.id))
                                           .toList();
                                       model.arrangeGoldenTickets();
-                                      return GridView.builder(
-                                        itemCount: model
-                                            .arrangedGoldenTicketList.length,
-                                        gridDelegate:
-                                            SliverGridDelegateWithFixedCrossAxisCount(
-                                                crossAxisSpacing:
-                                                    SizeConfig.padding8,
-                                                childAspectRatio: 1 / 1,
-                                                crossAxisCount: 2,
-                                                mainAxisSpacing:
-                                                    SizeConfig.padding8),
-                                        padding: EdgeInsets.all(
-                                            SizeConfig.pageHorizontalMargins),
-                                        itemBuilder: (ctx, i) {
-                                          return InkWell(
-                                            onTap: () {
-                                              AppState.screenStack
-                                                  .add(ScreenItem.dialog);
-                                              Navigator.of(AppState
-                                                      .delegate
-                                                      .navigatorKey
-                                                      .currentContext)
-                                                  .push(
-                                                HeroDialogRoute(
-                                                  builder: (context) {
-                                                    return GoldenScratchCardView(
-                                                      ticket: model
-                                                          .arrangedGoldenTicketList[i],
-                                                      superModel: model,
+                                      return model.arrangedGoldenTicketList ==
+                                                  null ||
+                                              model.arrangedGoldenTicketList
+                                                      .length ==
+                                                  0
+                                          ? Center(
+                                              child: NoRecordDisplayWidget(
+                                                assetLottie: Assets.noData,
+                                                text:
+                                                    "No Golden Scratch Cards yet",
+                                              ),
+                                            )
+                                          : GridView.builder(
+                                              itemCount: model
+                                                  .arrangedGoldenTicketList
+                                                  .length,
+                                              gridDelegate:
+                                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                                      crossAxisSpacing:
+                                                          SizeConfig.padding8,
+                                                      childAspectRatio: 1 / 1,
+                                                      crossAxisCount: 2,
+                                                      mainAxisSpacing:
+                                                          SizeConfig.padding8),
+                                              padding: EdgeInsets.all(SizeConfig
+                                                  .pageHorizontalMargins),
+                                              itemBuilder: (ctx, i) {
+                                                return InkWell(
+                                                  onTap: () {
+                                                    AppState.screenStack
+                                                        .add(ScreenItem.dialog);
+                                                    Navigator.of(AppState
+                                                            .delegate
+                                                            .navigatorKey
+                                                            .currentContext)
+                                                        .push(
+                                                      HeroDialogRoute(
+                                                        builder: (context) {
+                                                          return GoldenScratchCardView(
+                                                            ticket: model
+                                                                .arrangedGoldenTicketList[i],
+                                                            superModel: model,
+                                                          );
+                                                        },
+                                                      ),
                                                     );
                                                   },
-                                                ),
-                                              );
-                                            },
-                                            child: GoldenTicketGridItemCard(
-                                              ticket: model
-                                                  .arrangedGoldenTicketList[i],
-                                              titleStyle: TextStyles.body1,
-                                            ),
-                                          );
-                                        },
-                                      );
+                                                  child:
+                                                      GoldenTicketGridItemCard(
+                                                    ticket: model
+                                                        .arrangedGoldenTicketList[i],
+                                                    titleStyle:
+                                                        TextStyles.body1,
+                                                  ),
+                                                );
+                                              },
+                                            );
                                   }
                                 },
                               ),
                             ),
-                          )
-                              //),
-                              )
-                        ],
-                      )),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),

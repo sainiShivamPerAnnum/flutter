@@ -24,7 +24,7 @@ class GoldenTicketsViewModel extends BaseModel {
   StreamController<List<DocumentSnapshot>> streamController =
       StreamController<List<DocumentSnapshot>>();
   List<DocumentSnapshot> _goldenTicketDocs = [];
-
+  Query _query;
   bool _isRequesting = false;
   bool _isFinish = false;
 
@@ -44,6 +44,11 @@ class GoldenTicketsViewModel extends BaseModel {
   }
 
   void init() {
+    _query = _db
+        .collection(Constants.COLN_USERS)
+        .doc(_userService.baseUser.uid)
+        .collection(Constants.SUBCOLN_USER_REWARDS)
+        .orderBy('timestamp', descending: true);
     getGoldenTickets();
   }
 
@@ -52,13 +57,7 @@ class GoldenTicketsViewModel extends BaseModel {
   }
 
   Future<void> getGoldenTickets() async {
-    _db
-        .collection(Constants.COLN_USERS)
-        .doc(_userService.baseUser.uid)
-        .collection(Constants.SUBCOLN_USER_REWARDS)
-        .orderBy('createdTimestamp', descending: true)
-        .snapshots()
-        .listen((data) => onChangeData(data.docChanges));
+    _query.snapshots().listen((data) => onChangeData(data.docChanges));
     requestNextPage();
   }
 
@@ -121,7 +120,7 @@ class GoldenTicketsViewModel extends BaseModel {
 
   arrangeGoldenTickets() {
     arrangedGoldenTicketList = [];
-    goldenTicketList.sort((a, b) => b.createdOn.compareTo(a.createdOn));
+    goldenTicketList.sort((a, b) => b.timestamp.compareTo(a.timestamp));
     goldenTicketList.forEach((e) {
       if (e.redeemedTimestamp == null) {
         arrangedGoldenTicketList.add(e);
@@ -129,14 +128,14 @@ class GoldenTicketsViewModel extends BaseModel {
     });
     goldenTicketList.forEach((e) {
       if (e.redeemedTimestamp != null &&
-          e.rewards != null &&
-          e.rewards.isNotEmpty) {
+          e.rewardArr != null &&
+          e.rewardArr.isNotEmpty) {
         arrangedGoldenTicketList.add(e);
       }
     });
   }
 
-  redeemTicket(String gtId) async {
+  Future<bool> redeemTicket(String gtId) async {
     Map<String, dynamic> _body = {
       "uid": _userService.baseUser.uid,
       "gtId": gtId
@@ -146,10 +145,10 @@ class GoldenTicketsViewModel extends BaseModel {
       final _apiResponse = await APIService.instance
           .postData(_apiPaths.kRedeemGtReward, token: _bearer, body: _body);
       _logger.d(_apiResponse.toString());
-
-      ///await getGoldenTickets();
+      return true;
     } catch (e) {
       _logger.e(e);
+      return false;
     }
   }
 
@@ -158,35 +157,25 @@ class GoldenTicketsViewModel extends BaseModel {
       QuerySnapshot querySnapshot;
       _isRequesting = true;
       if (_goldenTicketDocs.isEmpty) {
-        querySnapshot = await _db
-            .collection(Constants.COLN_USERS)
-            .doc(_userService.baseUser.uid)
-            .collection(Constants.SUBCOLN_USER_REWARDS)
-            .orderBy('createdTimestamp', descending: true)
-            .limit(20)
-            .get();
+        querySnapshot = await _query.limit(20).get();
       } else {
-        querySnapshot = await _db
-            .collection(Constants.COLN_USERS)
-            .doc(_userService.baseUser.uid)
-            .collection(Constants.SUBCOLN_USER_REWARDS)
-            .orderBy('createdTimestamp', descending: true)
+        querySnapshot = await _query
             .startAfterDocument(_goldenTicketDocs[_goldenTicketDocs.length - 1])
             .limit(20)
             .get();
       }
-
       if (querySnapshot != null) {
         int oldSize = _goldenTicketDocs.length;
         _goldenTicketDocs.addAll(querySnapshot.docs);
         int newSize = _goldenTicketDocs.length;
+        streamController.add(_goldenTicketDocs);
         if (oldSize != newSize) {
-          streamController.add(_goldenTicketDocs);
           _logger.d("New data loaded");
         } else {
           _isFinish = true;
         }
       }
+
       _isRequesting = false;
     }
   }

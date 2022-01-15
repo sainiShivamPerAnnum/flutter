@@ -5,25 +5,29 @@ import 'package:flutter/foundation.dart';
 
 class GoldenTicket {
   String gtId;
+  String userId;
   String ticketId;
-  Timestamp createdOn;
+  Timestamp timestamp;
   Timestamp redeemedTimestamp;
   Timestamp revealedTimestamp;
   String eventType;
   String gtType;
-  bool isTransferrable;
+  bool canTransfer;
+  bool isRewarding;
   String version;
-  List<Reward> rewards;
-  Map<String, dynamic> ownershipMap;
+  List<Reward> rewardArr;
+  //Map<String, dynamic> ownershipMap;
 
   GoldenTicket({
     this.gtId,
-    this.createdOn,
+    this.userId,
+    this.timestamp,
     this.eventType,
     this.gtType,
-    this.isTransferrable,
-    this.ownershipMap,
-    this.rewards,
+    this.canTransfer,
+    //this.ownershipMap,
+    this.isRewarding,
+    this.rewardArr,
     this.ticketId,
     this.redeemedTimestamp,
     this.revealedTimestamp,
@@ -32,14 +36,17 @@ class GoldenTicket {
 
   GoldenTicket.fromJson(Map<String, dynamic> json, String docId) {
     gtId = docId;
-    createdOn = json['createdTimestamp'];
+    userId = json['userId'];
+    timestamp = json['timestamp'];
     eventType = json['eventType'];
     gtType = json['gtType'];
-    isTransferrable = json['isTransferrable'];
+    canTransfer = json['canTransfer'];
+    isRewarding = json['isRewarding'];
     redeemedTimestamp = json['redeemedTimestamp'];
     revealedTimestamp = json['revealedTimestamp'];
-    ownershipMap = json['ownershipMap'] ?? [];
-    rewards = json['rewards'] != null ? Reward.objArray(json['rewards']) : [];
+    //ownershipMap = json['ownershipMap'] ?? [];
+    rewardArr =
+        json['rewardArr'] != null ? Reward.objArray(json['rewardArr']) : [];
     version = json['version'];
   }
 }

@@ -19,6 +19,7 @@ class GoldenScratchCardViewModel extends BaseModel {
   bool _viewScratched = false;
   double _opacity = 0;
   double get opacity => this._opacity;
+  bool isTicketRedeemedSuccessfully = false;
 
   set opacity(double value) {
     this._opacity = value;
@@ -60,7 +61,7 @@ class GoldenScratchCardViewModel extends BaseModel {
     scratchKey.currentState.reveal();
     showDetailsModal();
     setState(ViewState.Busy);
-    await superModel.redeemTicket(gtId);
+    isTicketRedeemedSuccessfully = await superModel.redeemTicket(gtId);
     setState(ViewState.Idle);
   }
 

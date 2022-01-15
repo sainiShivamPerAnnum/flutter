@@ -14,9 +14,13 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:felloapp/util/custom_logger.dart';
 
+enum MsgSource { Foreground, Background, Terminated }
+
 class FcmHandler extends ChangeNotifier {
   static const COMMAND_USER_PRIZE_WIN = 'userPrizeWin';
   static const COMMAND_USER_PRIZE_WIN_2 = 'userPrizeWinWithPrompt';
+  static const COMMAND_CRIC_GAME_END = 'cric2020GameEnd';
+  static const COMMAND_GOLDEN_TICKET_WIN = 'goldenTicketWin';
 
   final CustomLogger logger = locator<CustomLogger>();
   final _lbService = locator<LeaderboardService>();
@@ -26,31 +30,26 @@ class FcmHandler extends ChangeNotifier {
   String url;
   int tab, dailogShowCount;
 
-  Future<bool> handleMessage(Map data, {bool isAppInForeground = false}) async {
+  Future<bool> handleMessage(Map data, MsgSource source) async {
     logger.d(data.toString());
+    bool showSnackbar = false;
+    String title = data['dialog_title'];
+    String body = data['dialog_body'];
+    String command = data['command'];
+    String url = data['deep_uri'];
+
+    // If notifications contains an url for navigation
+    if (url != null && url.isNotEmpty) {
+      if (source == MsgSource.Background || source == MsgSource.Terminated) {
+        AppState.delegate.parseRoute(Uri.parse(url));
+        return true;
+      }
+    }
+
+    // If message has a command payload
     if (data['command'] != null) {
-      String title = data['dialog_title'];
-      String body = data['dialog_body'];
-      String command = data['command'];
-      String url = data['deep_uri'];
-
-      if (!isAppInForeground) {
-        if (url != null && url.isNotEmpty) {
-          AppState.delegate.parseRoute(Uri.parse(url));
-        }
-      }
-
-      if (title != null &&
-          title.isNotEmpty &&
-          body != null &&
-          body.isNotEmpty) {
-        logger.d('Recevied message from server: $title $body');
-        Map<String, String> _map = {'title': title, 'body': body};
-        if (this.notifListener != null) this.notifListener(_map);
-      }
-
       switch (command) {
-        case 'cric2020GameEnd':
+        case COMMAND_CRIC_GAME_END:
           {
             logger.i("FCM Command received to end Cricket game");
             //Navigate back to CricketView
@@ -132,8 +131,9 @@ class FcmHandler extends ChangeNotifier {
             }
           }
           break;
-        case COMMAND_USER_PRIZE_WIN:
+        case COMMAND_GOLDEN_TICKET_WIN:
           {
+            showSnackbar = false;
             logger.d(data.toString());
             GoldenTicketService.hasGoldenTicket = true;
             _gtService.showGoldenTicketAvailableDialog();
@@ -143,13 +143,19 @@ class FcmHandler extends ChangeNotifier {
       }
     }
 
+    // If app is in foreground and needs to show a snackbar
+    if (source == MsgSource.Foreground && showSnackbar == true) {
+      handleNotification(title, body);
+    }
+
     return true;
   }
 
   Future<bool> handleNotification(String title, String body) async {
-    Map<String, String> _map = {'title': title, 'body': body};
-    if (this.notifListener != null) this.notifListener(_map);
-
+    if (title != null && title.isNotEmpty && body != null && body.isNotEmpty) {
+      Map<String, String> _map = {'title': title, 'body': body};
+      if (this.notifListener != null) this.notifListener(_map);
+    }
     return true;
   }
 
@@ -179,14 +185,6 @@ class FcmHandler extends ChangeNotifier {
       }
       isUserRated =
           await CacheManager.readCache(key: CacheManager.CACHE_RATING_IS_RATED);
-      // if (isUserRated == null) {
-      //   await CacheManager.writeCache(
-      //       key: CacheManager.CACHE_RATING_IS_RATED,
-      //       value: command,
-      //       type: CacheType.string);
-      //   isUserRated = false.toString();
-      // }
-
       String dsc = await CacheManager.readCache(
           key: CacheManager.CACHE_RATING_DIALOG_OPEN_COUNT);
       if (dsc == null) {
