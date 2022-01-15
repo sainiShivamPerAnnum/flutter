@@ -33,7 +33,7 @@ class GoldenTicketsView extends StatelessWidget {
         model.init();
       },
       onModelDispose: (model) {
-        model.disp();
+        model.finish();
       },
       builder: (ctx, model, child) {
         return Scaffold(
@@ -92,12 +92,12 @@ class GoldenTicketsView extends StatelessWidget {
                             onNotification: (ScrollNotification scrollInfo) {
                               if (scrollInfo.metrics.maxScrollExtent ==
                                   scrollInfo.metrics.pixels) {
-                                model.requestNextPage();
+                                model.requestMoreData();
                               }
                               return true;
                             },
                             child: RefreshIndicator(
-                              onRefresh: () async => model.refresh(),
+                              onRefresh: () => model.refresh(),
                               child: StreamBuilder<List<DocumentSnapshot>>(
                                 stream: model.streamController.stream,
                                 builder: (BuildContext context,
@@ -119,22 +119,22 @@ class GoldenTicketsView extends StatelessWidget {
                                     default:
                                       log("Items: " +
                                           snapshot.data.length.toString());
-                                      model.goldenTicketList = snapshot.data
-                                          .map((e) => GoldenTicket.fromJson(
-                                              e.data(), e.id))
-                                          .toList();
-                                      model.arrangeGoldenTickets();
+
+                                      model.arrangeGoldenTickets(snapshot.data);
                                       return model.arrangedGoldenTicketList ==
                                                   null ||
                                               model.arrangedGoldenTicketList
                                                       .length ==
                                                   0
-                                          ? Center(
-                                              child: NoRecordDisplayWidget(
-                                                assetLottie: Assets.noData,
-                                                text:
-                                                    "No Golden Scratch Cards yet",
-                                              ),
+                                          ? ListView(
+                                              shrinkWrap: true,
+                                              children: [
+                                                NoRecordDisplayWidget(
+                                                  assetLottie: Assets.noData,
+                                                  text:
+                                                      "No Golden Scratch Cards yet",
+                                                )
+                                              ],
                                             )
                                           : GridView.builder(
                                               itemCount: model

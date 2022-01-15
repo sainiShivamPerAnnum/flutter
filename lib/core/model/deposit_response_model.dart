@@ -5,8 +5,10 @@ class DepositResponseModel {
   Response response;
   AugResponse augResponse;
   Note note;
+  bool isGtRewarded;
 
-  DepositResponseModel({this.response, this.augResponse, this.note});
+  DepositResponseModel(
+      {this.response, this.augResponse, this.note, this.isGtRewarded});
 
   DepositResponseModel.fromJson(Map<String, dynamic> json) {
     response = json['response'] != null
@@ -16,6 +18,7 @@ class DepositResponseModel {
         ? new AugResponse.fromJson(json['augResponse'])
         : null;
     note = json['note'] != null ? new Note.fromJson(json['note']) : null;
+    isGtRewarded = json['isGtRewarded'] != null ? json['isGtRewarded'] : false;
   }
 
   Map<String, dynamic> toJson() {
@@ -29,6 +32,9 @@ class DepositResponseModel {
     if (this.note != null) {
       data['note'] = this.note.toJson();
     }
+    if (this.isGtRewarded != null) {
+      data['isGtRewarded'] = this.isGtRewarded;
+    }
     return data;
   }
 
@@ -37,20 +43,21 @@ class DepositResponseModel {
       'response': response.toMap(),
       'augResponse': augResponse?.toMap(),
       'note': note?.toMap(),
+      'isGtRewarded': isGtRewarded
     };
   }
 
   factory DepositResponseModel.fromMap(Map<String, dynamic> map) {
     return DepositResponseModel(
-      response: Response.fromMap(map['response']),
-      augResponse: AugResponse?.fromMap(map['augResponse']),
-      note: Note?.fromMap(map['note'] ?? {}),
-    );
+        response: Response.fromMap(map['response']),
+        augResponse: AugResponse?.fromMap(map['augResponse']),
+        note: Note?.fromMap(map['note'] ?? {}),
+        isGtRewarded: map['isGtRewarded'] ?? false);
   }
 
   @override
   String toString() =>
-      'DepositResponseModel(response: $response, augResponse: $augResponse, note: $note)';
+      'DepositResponseModel(response: $response, augResponse: $augResponse, note: $note, isGtRewarded: $isGtRewarded)';
 }
 
 class Response {
@@ -61,7 +68,6 @@ class Response {
   double augmontPrinciple;
   double augmontGoldQty;
   int flcBalance;
-  bool isGtRewarded;
 
   Response({
     this.status,
@@ -71,7 +77,6 @@ class Response {
     this.augmontGoldQty,
     this.augmontPrinciple,
     this.flcBalance,
-    this.isGtRewarded,
   });
 
   Response.fromJson(Map<String, dynamic> json) {
@@ -84,7 +89,6 @@ class Response {
     augmontPrinciple = json['augmontPrinciple'];
     augmontGoldQty = json['augmontGoldQty'];
     flcBalance = json['flcBalance'];
-    isGtRewarded = json['isGtRewarded'];
   }
 
   Map<String, dynamic> toJson() {
@@ -99,7 +103,6 @@ class Response {
     data['augmontPrinciple'] = this.augmontPrinciple;
     data['augmontGoldQty'] = this.augmontGoldQty;
     data['flcBalance'] = this.flcBalance;
-    data['isGtRewarded'] = this.isGtRewarded;
     return data;
   }
 
@@ -112,7 +115,6 @@ class Response {
       'augmontPrinciple': augmontPrinciple,
       'augmontGoldQty': augmontGoldQty,
       'flcBalance': flcBalance,
-      'isGtRewarded': isGtRewarded,
     };
   }
 
@@ -125,7 +127,6 @@ class Response {
       augmontPrinciple: BaseUtil.toDouble(map['augmontPrinciple']),
       augmontGoldQty: BaseUtil.toDouble(map['augmontGoldQty']),
       flcBalance: BaseUtil.toInt(map['flcBalance']),
-      isGtRewarded: map['isGtRewarded'],
     );
   }
 

@@ -53,6 +53,7 @@ class GoldenScratchCardViewModel extends BaseModel {
     opacity = 1;
     _bottompadding = false;
     _detailsModalHeight = SizeConfig.screenHeight * 0.5;
+    isTicketRedeemedSuccessfully = true;
     _viewScratched = true;
     notifyListeners();
   }

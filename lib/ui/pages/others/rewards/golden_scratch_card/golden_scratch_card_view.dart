@@ -82,11 +82,8 @@ class GoldenScratchCardView extends StatelessWidget {
                           )),
                 Spacer(),
                 if (model.bottompadding) FelloAppBar(),
-                AnimatedOpacity(
-                  curve: Curves.easeIn,
-                  duration: Duration(milliseconds: 200),
-                  opacity: model.opacity,
-                  child: AnimatedContainer(
+                if (ticket.rewardArr != null && ticket.rewardArr.isNotEmpty)
+                  AnimatedContainer(
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius:
@@ -147,12 +144,11 @@ class GoldenScratchCardView extends StatelessWidget {
                                     referralTile(
                                         "Date: ${ticket.timestamp.toDate().toString()}"),
                                     referralTile("Ticket Id: ${ticket.gtId}"),
-                                    referralTile("Version: ${ticket.version}")
+                                    referralTile("Version: ${ticket.version}"),
                                   ],
                                 ),
                               )),
-                  ),
-                )
+                  )
               ],
             ),
           ),
