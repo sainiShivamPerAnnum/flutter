@@ -16,7 +16,6 @@ class GoldenTicket {
   bool isRewarding;
   String version;
   List<Reward> rewardArr;
-  //Map<String, dynamic> ownershipMap;
 
   GoldenTicket({
     this.gtId,
@@ -25,7 +24,6 @@ class GoldenTicket {
     this.eventType,
     this.gtType,
     this.canTransfer,
-    //this.ownershipMap,
     this.isRewarding,
     this.rewardArr,
     this.ticketId,
@@ -44,7 +42,6 @@ class GoldenTicket {
     isRewarding = json['isRewarding'];
     redeemedTimestamp = json['redeemedTimestamp'];
     revealedTimestamp = json['revealedTimestamp'];
-    //ownershipMap = json['ownershipMap'] ?? [];
     rewardArr =
         json['rewardArr'] != null ? Reward.objArray(json['rewardArr']) : [];
     version = json['version'];
