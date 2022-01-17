@@ -11,11 +11,11 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/golden_ticket_service.dart';
-import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -32,7 +32,7 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/mixpanel_events.dart';
+import 'package:felloapp/core/service/analytics/analytics_events.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -78,7 +78,7 @@ class _LoginControllerState extends State<LoginController>
   final UserService userService = locator<UserService>();
   final FcmListener fcmListener = locator<FcmListener>();
   final AugmontModel augmontProvider = locator<AugmontModel>();
-  final MixpanelService _mixpanelService = locator<MixpanelService>();
+  final _analyticsService = locator<AnalyticsService>();
   final _userService = locator<UserService>();
   final _logger = locator<CustomLogger>();
   final _apiPaths = locator<ApiPath>();
@@ -456,7 +456,7 @@ class _LoginControllerState extends State<LoginController>
             bool flag = await baseProvider.authenticateUser(baseProvider
                 .generateAuthCredential(_augmentedVerificationId, otp));
             if (flag) {
-              _mixpanelService.track(eventName: MixpanelEvents.mobileOtpDone);
+              _analyticsService.track(eventName: AnalyticsEvents.mobileOtpDone);
               AppState.isOnboardingInProgress = true;
               _otpScreenKey.currentState.onOtpReceived();
               _onSignInSuccess();
@@ -556,8 +556,8 @@ class _LoginControllerState extends State<LoginController>
               baseProvider.isLoginNextInProgress = false;
               setState(() {});
             }).then((value) {
-              _mixpanelService.track(
-                  eventName: MixpanelEvents.profileInformationAdded,
+              _analyticsService.track(
+                  eventName: AnalyticsEvents.profileInformationAdded,
                   properties: {'userId': baseProvider?.myUser?.uid});
               _controller.animateToPage(Username.index,
                   duration: Duration(milliseconds: 500),
@@ -625,8 +625,8 @@ class _LoginControllerState extends State<LoginController>
                   // bool flag = await dbProvider.updateUser(baseProvider.myUser);
 
                   if (flag) {
-                    _mixpanelService.track(
-                        eventName: MixpanelEvents.userNameAdded,
+                    _analyticsService.track(
+                        eventName: AnalyticsEvents.userNameAdded,
                         properties: {'userId': baseProvider?.myUser?.uid});
                     log.debug("User object saved successfully");
                     _onSignUpComplete();
@@ -768,8 +768,8 @@ class _LoginControllerState extends State<LoginController>
     await userService.init();
     await baseProvider.init();
     await fcmListener.setupFcm();
-    _logger.i("Calling mixpanel init for new onborded user");
-    await _mixpanelService.init(
+    _logger.i("Calling analytics login for new onborded user");
+    await _analyticsService.login(
         isOnboarded: userService.isUserOnborded,
         baseUser: userService.baseUser);
     AppState.isOnboardingInProgress = false;

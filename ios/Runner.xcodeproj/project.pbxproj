@@ -1610,6 +1610,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
+				WEBENGAGE_LICENSE_CODE = d3a49caa;
 			};
 			name = "Profile-prod";
 		};
@@ -1700,6 +1701,7 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
+				WEBENGAGE_LICENSE_CODE = d3a49caa;
 			};
 			name = "Debug-dev";
 		};
@@ -1785,6 +1787,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
+				WEBENGAGE_LICENSE_CODE = 76aa370;
 			};
 			name = "Release-dev";
 		};
@@ -1868,6 +1871,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
+				WEBENGAGE_LICENSE_CODE = d3a49caa;
 			};
 			name = "Profile-dev";
 		};
@@ -2010,6 +2014,7 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
+				WEBENGAGE_LICENSE_CODE = d3a49caa;
 			};
 			name = "Debug-prod";
 		};
@@ -2043,6 +2048,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
+				WEBENGAGE_LICENSE_CODE = 76aa370;
 			};
 			name = "Release-prod";
 		};

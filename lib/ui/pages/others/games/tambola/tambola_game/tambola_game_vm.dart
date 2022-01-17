@@ -11,7 +11,7 @@ import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/repository/ticket_generation_repo.dart';
 import 'package:felloapp/core/service/golden_ticket_service.dart';
-import 'package:felloapp/core/service/mixpanel_service.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/tambola_generation_service.dart';
 import 'package:felloapp/core/service/tambola_service.dart';
 import 'package:felloapp/core/service/user_coin_service.dart';
@@ -22,22 +22,14 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/elements/tambola-global/tambola_ticket.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/show_all_tickets.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_result.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
-import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
-import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/mixpanel_events.dart';
-import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:felloapp/core/service/analytics/analytics_events.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:felloapp/util/custom_logger.dart';
-import 'dart:developer';
 
 class TambolaGameViewModel extends BaseModel {
   TambolaService tambolaService = locator<TambolaService>();
@@ -50,8 +42,8 @@ class TambolaGameViewModel extends BaseModel {
   LocalDBModel _localDBModel = locator<LocalDBModel>();
   final _fclActionRepo = locator<FlcActionsRepo>();
   final _ticketGenerationRepo = locator<TicketGenerationRepo>();
-  final _mixpanelService = locator<MixpanelService>();
   GoldenTicketService _goldenTicketService = GoldenTicketService();
+  final _analyticsService = locator<AnalyticsService>();
 
   int get dailyPicksCount => tambolaService.dailyPicksCount;
 
@@ -257,8 +249,7 @@ class TambolaGameViewModel extends BaseModel {
           _flcResponse.model.isGtRewarded) {
         GoldenTicketService.hasGoldenTicket = true;
       }
-
-      _mixpanelService.track(eventName: MixpanelEvents.playsTambola);
+      _analyticsService.track(eventName: AnalyticsEvents.playsTambola);
       BaseUtil.showPositiveAlert(
           "Request is now processing", "Generating your tickets, please wait");
 

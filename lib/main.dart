@@ -40,6 +40,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
+import 'package:webengage_flutter/webengage_flutter.dart';
 
 import 'core/service/user_coin_service.dart';
 
@@ -83,6 +84,12 @@ class _MyAppState extends State<MyApp> {
   final parser = FelloParser();
   FelloRouterDelegate delegate;
   FelloBackButtonDispatcher backButtonDispatcher;
+
+  @override
+  void initState() {
+    super.initState();
+    new WebEngagePlugin();
+  }
 
   _MyAppState() {
     delegate = FelloRouterDelegate(appState);
