@@ -4,7 +4,7 @@ import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -45,7 +45,7 @@ class _SupportPageState extends State<SupportPage> {
   DBModel dbProvider;
   TextEditingController _requestCallPhoneController = TextEditingController();
   bool isInit = false;
-  final _analyticsService = locator<WebEngageAnalytics>();
+  final _analyticsService = locator<AnalyticsService>();
 
   void init() {
     _requestCallPhoneController.text = baseProvider.myUser.mobile;

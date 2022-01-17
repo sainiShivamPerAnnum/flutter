@@ -6,8 +6,8 @@ import 'package:felloapp/core/model/leader_board_modal.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/repository/statistics_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/leaderboard_service.dart';
-import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
 import 'package:felloapp/core/service/prize_service.dart';
 import 'package:felloapp/core/service/user_coin_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
@@ -30,7 +30,7 @@ class CricketHomeViewModel extends BaseModel {
   final _stats = locator<StatisticsRepository>();
   final _prizeService = locator<PrizeService>();
   final _lbService = locator<LeaderboardService>();
-  final _analyticsService = locator<WebEngageAnalytics>();
+  final _analyticsService = locator<AnalyticsService>();
 
   PageController pageController = new PageController(initialPage: 0);
 

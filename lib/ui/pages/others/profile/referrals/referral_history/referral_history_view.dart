@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
-import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/util/assets.dart';
@@ -29,7 +29,7 @@ class ReferralHistoryView extends StatefulWidget {
 class _ReferralHistoryViewState extends State<ReferralHistoryView> {
   BaseUtil baseProvider;
   DBModel dbProvider;
-  final _analyticsService = locator<WebEngageAnalytics>();
+  final _analyticsService = locator<AnalyticsService>();
 
   @override
   Widget build(BuildContext context) {

@@ -6,7 +6,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/repository/signzy_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
-import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -32,7 +32,7 @@ class KYCDetailsViewModel extends BaseModel {
   final _httpModel = locator<HttpModel>();
   final _baseUtil = locator<BaseUtil>();
   final _userRepo = locator<UserRepository>();
-  final _analyticsService = locator<WebEngageAnalytics>();
+  final _analyticsService = locator<AnalyticsService>();
   final _signzyRepository = locator<SignzyRepository>();
 
   FocusNode panFocusNode = FocusNode();

@@ -51,6 +51,7 @@ enum FailType {
   UserServiceInitFailed,
   BaseUtilInitFailed,
   FcmListenerSetupFailed,
+  MixpanelServiceInitFailed,
   HttpModelInitFailed,
 }
 

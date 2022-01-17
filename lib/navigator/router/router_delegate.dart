@@ -1,10 +1,8 @@
 //Project Imports
-import 'dart:developer';
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
-import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
@@ -50,7 +48,7 @@ import 'package:flutter/material.dart';
 class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
   
-  final _analytics = locator<WebEngageAnalytics>();
+  final _analytics = locator<AnalyticsService>();
 
   final List<Page> _pages = [];
 

@@ -1,10 +1,10 @@
 import 'package:felloapp/core/model/base_user_model.dart';
-import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/analytics/base_analytics_service.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:webengage_flutter/webengage_flutter.dart';
 
-class WebEngageAnalytics extends AnalyticsService {
+class WebEngageAnalytics extends BaseAnalyticsService {
   final _logger = locator<CustomLogger>();
 
   Future<void> login({bool isOnboarded, BaseUser baseUser}) async {
@@ -52,7 +52,7 @@ class WebEngageAnalytics extends AnalyticsService {
     }
   }
 
-  void trackScreen({String screen, Map<String, dynamic> properties}){
+  void trackScreen({String screen, Map<String, dynamic> properties}) {
     _logger.d('analytics : $screen');
     WebEngagePlugin.trackScreen(screen, properties);
   }

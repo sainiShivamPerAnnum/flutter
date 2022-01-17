@@ -1,47 +1,30 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
-import 'package:felloapp/util/custom_logger.dart';
-import 'package:intl/intl.dart';
+import 'package:felloapp/core/service/analytics/base_analytics_service.dart';
+import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
+import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
+import 'package:felloapp/util/locator.dart';
 
-abstract class AnalyticsService {
-  Future<void> login({bool isOnboarded, BaseUser baseUser});
+class AnalyticsService extends BaseAnalyticsService {
+  final _mixpanel = locator<MixpanelAnalytics>();
+  final _webengage = locator<WebEngageAnalytics>();
 
-  void signOut();
-
-  void track({String eventName, Map<String, dynamic> properties});
-
-  void trackScreen({String screen, Map<String, dynamic> properties});
-
-  String getSignupDate(Timestamp signupDate) {
-    if (signupDate == null) signupDate = Timestamp.now();
-    try {
-      return DateFormat('yyyy-MM-dd').format(signupDate.toDate());
-    } catch (e) {
-      return '';
-    }
+  Future<void> login({bool isOnboarded, BaseUser baseUser}) async {
+    _mixpanel.login(isOnboarded: isOnboarded, baseUser: baseUser);
+    _webengage.login(isOnboarded: isOnboarded, baseUser: baseUser);
   }
 
-  int getAge(String dob, CustomLogger logger) {
-    if (dob == null || dob.isEmpty) return 0;
-    try {
-      DateTime birthDate = DateFormat("yyyy-MM-dd").parse(dob);
-      DateTime currentDate = DateTime.now();
-      int age = currentDate.year - birthDate.year;
-      int month1 = currentDate.month;
-      int month2 = birthDate.month;
-      if (month2 > month1) {
-        age--;
-      } else if (month1 == month2) {
-        int day1 = currentDate.day;
-        int day2 = birthDate.day;
-        if (day2 > day1) {
-          age--;
-        }
-      }
-      return age;
-    } catch (e) {
-      logger.e('$e');
-      return 0;
-    }
+  void signOut() {
+    _mixpanel.signOut();
+    _webengage.signOut();
+  }
+
+  void track({String eventName, Map<String, dynamic> properties}) {
+    _mixpanel.track(eventName: eventName, properties: properties);
+    _webengage.track(eventName: eventName, properties: properties);
+  }
+
+  void trackScreen({String screen, Map<String, dynamic> properties}) {
+    _mixpanel.track(eventName: screen, properties: properties);
+    _webengage.track(eventName: screen, properties: properties);
   }
 }

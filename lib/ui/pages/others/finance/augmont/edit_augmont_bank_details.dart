@@ -8,7 +8,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/core/repository/signzy_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
+import 'package:felloapp/core/service/analytics/base_analytics_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/augmont_confirm_register_dialog.dart';
@@ -50,7 +50,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
   TextEditingController _bankAccNoController;
   TextEditingController _bankIfscController;
   TextEditingController _bankAccNoConfirmController;
-  final AnalyticsService _analyticsService = locator<WebEngageAnalytics>();
+  final BaseAnalyticsService _analyticsService = locator<AnalyticsService>();
   final SignzyRepository _signzyRepository = locator<SignzyRepository>();
   final CustomLogger _logger = locator<CustomLogger>();
   bool _isInitialized = false;

@@ -10,9 +10,9 @@ import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/core/repository/investment_actions_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/augmont_invoice_service.dart';
-import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_coin_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
@@ -43,7 +43,7 @@ class AugmontModel extends ChangeNotifier {
   final UserService _userService = locator<UserService>();
   final _userCoinService = locator<UserCoinService>();
   final TransactionService _txnService = locator<TransactionService>();
-  final _analyticsService = locator<WebEngageAnalytics>();
+  final _analyticsService = locator<AnalyticsService>();
 
   ValueChanged<UserTransaction> _augmontTxnProcessListener;
   final String defaultBaseUri =

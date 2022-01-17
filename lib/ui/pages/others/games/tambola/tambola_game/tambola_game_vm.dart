@@ -1,4 +1,3 @@
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -11,7 +10,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/repository/ticket_generation_repo.dart';
-import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/tambola_generation_service.dart';
 import 'package:felloapp/core/service/tambola_service.dart';
 import 'package:felloapp/core/service/user_coin_service.dart';
@@ -42,7 +41,7 @@ class TambolaGameViewModel extends BaseModel {
   LocalDBModel _localDBModel = locator<LocalDBModel>();
   final _fclActionRepo = locator<FlcActionsRepo>();
   final _ticketGenerationRepo = locator<TicketGenerationRepo>();
-  final _analyticsService = locator<WebEngageAnalytics>();
+  final _analyticsService = locator<AnalyticsService>();
 
   int get dailyPicksCount => tambolaService.dailyPicksCount;
 

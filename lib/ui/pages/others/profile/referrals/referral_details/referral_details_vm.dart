@@ -5,8 +5,8 @@ import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
-import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/fcm_topics.dart';
@@ -24,7 +24,7 @@ class ReferralDetailsViewModel extends BaseModel {
   final _razorpayModel = locator<RazorpayModel>();
   final _fcmListener = locator<FcmListener>();
   final _userService = locator<UserService>();
-  final _analyticsService = locator<WebEngageAnalytics>();
+  final _analyticsService = locator<AnalyticsService>();
 
   String referral_bonus =
       BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS);
