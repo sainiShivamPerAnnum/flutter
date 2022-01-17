@@ -58,7 +58,7 @@ class GoldenTicketsViewModel extends BaseModel {
   Future refresh() async {
     _isFinish = false;
     _goldenTicketDocs = [];
-    getGoldenTickets();
+    requestMoreData();
   }
 
   //Local Methods
@@ -91,6 +91,7 @@ class GoldenTicketsViewModel extends BaseModel {
 
 //Stream Methods
   void onChangeData(List<DocumentChange> documentChanges) {
+    if (_goldenTicketDocs.isEmpty) return;
     _logger.d("Data Updated");
     var isChange = false;
     documentChanges.forEach((productChange) {
@@ -144,7 +145,7 @@ class GoldenTicketsViewModel extends BaseModel {
         _goldenTicketDocs.addAll(querySnapshot.docs);
         int newSize = _goldenTicketDocs.length;
         streamController.add(_goldenTicketDocs);
-        if (oldSize == 0) {
+        if (oldSize == 0 && newSize > 0) {
           //first fetch
           //cache the latest Golden Ticket
           int timestamp = GoldenTicket.fromJson(
@@ -190,5 +191,9 @@ class GoldenTicketsViewModel extends BaseModel {
         arrangedGoldenTicketList.add(e);
       }
     });
+    // CODE FOR TICKET DISTINCTION - USE IF REQUIRED
+    // final ids = Set();
+    // arrangedGoldenTicketList.retainWhere((x) => ids.add(x.gtId));
+    // arrangedGoldenTicketList = ids.toList();
   }
 }

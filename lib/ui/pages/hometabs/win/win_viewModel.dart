@@ -17,6 +17,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class WinViewModel extends BaseModel {
   final _userService = locator<UserService>();
@@ -28,6 +29,14 @@ class WinViewModel extends BaseModel {
   LocalDBModel _localDBModel = locator<LocalDBModel>();
   bool isWinnersLoading = false;
   WinnersModel _winners;
+  int _currentPage = 0;
+  int get getCurrentPage => this._currentPage;
+  PanelController panelController = PanelController();
+
+  set setCurrentPage(int currentPage) {
+    this._currentPage = currentPage;
+    notifyListeners();
+  }
 
   WinnersModel get winners => _winners;
 

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
@@ -17,26 +19,19 @@ class GoldenScratchCardViewModel extends BaseModel {
   bool _viewScratcher = false;
   double _detailsModalHeight = 0;
   bool _bottompadding = true;
-  bool _viewScratched = false;
-  double _opacity = 0;
-  double get opacity => this._opacity;
-  bool _isTicketRedeemedSuccessfully = true;
+  bool _viewScratchedCard = false;
+  // bool _isTicketRedeemedSuccessfully = true;
 
-  get isTicketRedeemedSuccessfully => this._isTicketRedeemedSuccessfully;
+  // get isTicketRedeemedSuccessfully => this._isTicketRedeemedSuccessfully;
 
-  set isTicketRedeemedSuccessfully(value) {
-    this._isTicketRedeemedSuccessfully = value;
-    notifyListeners();
-  }
+  // set isTicketRedeemedSuccessfully(value) {
+  //   this._isTicketRedeemedSuccessfully = value;
+  //   notifyListeners();
+  // }
 
-  set opacity(double value) {
-    this._opacity = value;
-    notifyListeners();
-  }
+  get viewScratchedCard => this._viewScratchedCard;
 
-  get viewScratched => this._viewScratched;
-
-  set viewScratched(value) => this._viewScratched = value;
+  set viewScratchedCard(value) => this._viewScratchedCard = value;
 
   get viewScratcher => this._viewScratcher;
 
@@ -51,7 +46,6 @@ class GoldenScratchCardViewModel extends BaseModel {
   set bottompadding(value) => this._bottompadding = value;
 
   showDetailsModal(bool isRewarding) {
-    opacity = 1;
     _bottompadding = false;
     _detailsModalHeight = isRewarding
         ? SizeConfig.screenHeight * 0.5
@@ -60,11 +54,10 @@ class GoldenScratchCardViewModel extends BaseModel {
   }
 
   changeToUnlockedUI() {
-    opacity = 1;
     _bottompadding = false;
     _detailsModalHeight = SizeConfig.screenHeight * 0.5;
-    isTicketRedeemedSuccessfully = true;
-    _viewScratched = true;
+    //isTicketRedeemedSuccessfully = true;
+    _viewScratchedCard = true;
     notifyListeners();
   }
 
@@ -73,10 +66,21 @@ class GoldenScratchCardViewModel extends BaseModel {
     showDetailsModal(ticket.isRewarding);
     setState(ViewState.Busy);
     await superModel.redeemTicket(ticket.gtId);
+    log(ticket.redeemedTimestamp.toString());
     setState(ViewState.Idle);
   }
 
-  init() {
+  init(GoldenTicket ticket) {
+    if (ticket.redeemedTimestamp != null) {
+      //Redeemed ticket
+      changeToUnlockedUI();
+    } else {
+      if (ticket.isRewarding) {
+        //ticket has some reward
+      } else {
+        //Pity ticket
+      }
+    }
     Future.delayed(Duration(seconds: 0), () {
       _viewScratcher = true;
       notifyListeners();

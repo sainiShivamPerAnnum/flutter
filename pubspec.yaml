@@ -78,6 +78,8 @@ dependencies:
   in_app_review: ^2.0.3
   scratcher: ^2.1.0
   timelines: ^0.1.0
+  sliding_up_panel: ^2.0.0+1
+
 
 
 

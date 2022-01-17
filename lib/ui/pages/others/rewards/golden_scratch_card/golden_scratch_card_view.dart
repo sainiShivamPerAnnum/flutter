@@ -26,10 +26,7 @@ class GoldenScratchCardView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseView<GoldenScratchCardViewModel>(
       onModelReady: (model) {
-        if (ticket.redeemedTimestamp != null) {
-          model.changeToUnlockedUI();
-        }
-        model.init();
+        model.init(ticket);
       },
       builder: (ctx, model, child) {
         return Scaffold(
@@ -43,7 +40,7 @@ class GoldenScratchCardView extends StatelessWidget {
                   ),
                 ),
                 Spacer(),
-                model.viewScratched
+                model.viewScratchedCard
                     ? GoldenTicketGridItemCard(
                         ticket: ticket,
                         titleStyle: TextStyles.title1,
@@ -66,7 +63,7 @@ class GoldenScratchCardView extends StatelessWidget {
                                 onThreshold: () =>
                                     model.redeemCard(superModel, ticket),
                                 image: Image.asset(
-                                  "images/gticket.png",
+                                  "assets/images/gtbg.png",
                                   fit: BoxFit.cover,
                                   height: SizeConfig.screenWidth * 0.6,
                                   width: SizeConfig.screenWidth * 0.6,
@@ -99,19 +96,21 @@ class GoldenScratchCardView extends StatelessWidget {
                   padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
                   child: model.state == ViewState.Busy
                       ? Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SpinKitWave(
-                                color: UiConstants.primaryColor,
-                                size: SizeConfig.padding32,
-                              ),
-                              SizedBox(height: SizeConfig.padding12),
-                              Text(
-                                "Please wait, registering your ticket",
-                                style: TextStyles.body2.bold,
-                              )
-                            ],
+                          child: FittedBox(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SpinKitWave(
+                                  color: UiConstants.primaryColor,
+                                  size: SizeConfig.padding32,
+                                ),
+                                SizedBox(height: SizeConfig.padding12),
+                                Text(
+                                  "Please wait, registering your ticket",
+                                  style: TextStyles.body2.bold,
+                                )
+                              ],
+                            ),
                           ),
                         )
                       : (
@@ -134,21 +133,24 @@ class GoldenScratchCardView extends StatelessWidget {
                                   ),
                                 ],
                               ),
+                              SizedBox(height: SizeConfig.padding16),
                               Column(
                                 children: ticket.isRewarding
                                     ? [
-                                        SizedBox(height: SizeConfig.padding16),
-                                        Text(
-                                          "Reward Details",
-                                          style: TextStyles.title3.bold
-                                              .colour(Colors.black87),
-                                        ),
-                                        SizedBox(height: SizeConfig.padding12),
+                                        // Text(
+                                        //   "Reward Details",
+                                        //   style: TextStyles.title3.bold
+                                        //       .colour(Colors.black87),
+                                        // ),
+                                        //SizedBox(height: SizeConfig.padding12),
                                         referralTile("${ticket.note}"),
                                         referralTile(
                                             "Rewards have been credited to your wallet"),
-                                        //referralTile(
-                                        //    "Redeemed on ${DateFormat('dd MMM, yyyy').format(ticket.redeemedTimestamp.toDate())} | ${DateFormat('h:mm a').format(ticket.redeemedTimestamp.toDate())}"),
+                                        ticket.redeemedTimestamp != null
+                                            ? referralTile(
+                                                "Redeemed on ${DateFormat('dd MMM, yyyy').format(ticket.redeemedTimestamp.toDate())} | ${DateFormat('h:mm a').format(ticket.redeemedTimestamp.toDate())}")
+                                            : referralTile(
+                                                "Recieved on ${DateFormat('dd MMM, yyyy').format(ticket.timestamp.toDate())} | ${DateFormat('h:mm a').format(ticket.timestamp.toDate())}")
                                         //referralTile("Version: ${ticket.version}"),
                                       ]
                                     : [

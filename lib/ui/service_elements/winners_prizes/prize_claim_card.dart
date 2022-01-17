@@ -59,11 +59,9 @@ class PrizeClaimCard extends StatelessWidget {
                               CircleAvatar(
                                 backgroundColor:
                                     UiConstants.primaryColor.withOpacity(0.2),
-                                radius: SizeConfig.screenWidth * 0.067,
-                                child: Icon(
-                                  Icons.lock_open_sharp,
-                                  size: SizeConfig.padding32,
-                                  color: UiConstants.primaryColor,
+                                child: Image.asset(
+                                  Assets.moneyIcon,
+                                  width: SizeConfig.iconSize1,
                                 ),
                               ),
                               SizedBox(
@@ -80,18 +78,18 @@ class PrizeClaimCard extends StatelessWidget {
                                         style: TextStyles.body1.bold,
                                       ),
                                     ),
-                                    SizedBox(height: SizeConfig.padding4),
-                                    (m.userFundWallet.unclaimedBalance >=
-                                                refUnlockAmt &&
-                                            m.userFundWallet.augGoldPrinciple >=
-                                                refUnlockAmt)
-                                        ? Text(
-                                            "Redeem your rewards using the following options",
-                                            maxLines: 2,
-                                            style: TextStyles.body3
-                                                .colour(Colors.grey),
-                                          )
-                                        : Container()
+                                    // SizedBox(height: SizeConfig.padding4),
+                                    // (m.userFundWallet.unclaimedBalance >=
+                                    //             refUnlockAmt &&
+                                    //         m.userFundWallet.augGoldPrinciple >=
+                                    //             refUnlockAmt)
+                                    //     ? Text(
+                                    //         "Redeem your rewards using the following options",
+                                    //         maxLines: 2,
+                                    //         style: TextStyles.body3
+                                    //             .colour(Colors.grey),
+                                    //       )
+                                    //     : Container()
                                   ],
                                 ),
                               ),

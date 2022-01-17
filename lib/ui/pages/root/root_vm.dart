@@ -45,6 +45,7 @@ class RootViewModel extends BaseModel {
   int get currentTabIndex => _appState.rootIndex;
 
   Future<void> refresh() async {
+    if (AppState().getCurrentTabIndex == 2) return;
     await _userCoinService.getUserCoinBalance();
     await _userService.getUserFundWalletData();
     txnService.signOut();

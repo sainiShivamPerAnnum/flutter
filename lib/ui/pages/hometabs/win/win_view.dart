@@ -57,10 +57,9 @@ class Win extends StatelessWidget {
                                 image: Assets.iphone,
                                 painter: IphoneCustomPaint(),
                                 onPressed: () {
-                                  AppState.delegate.appState.currentAction =
-                                      PageAction(
-                                          state: PageState.addPage,
-                                          page: ReferralDetailsPageConfig);
+                                  model.panelController
+                                      .animatePanelToPosition(1);
+                                  model.setCurrentPage = 1;
                                 },
                               ),
                             ],
@@ -86,27 +85,6 @@ class Win extends StatelessWidget {
                             scrollDirection: Axis.horizontal,
                             children: [
                               SizedBox(width: SizeConfig.pageHorizontalMargins),
-                              InkWell(
-                                onTap: () {
-                                  AppState.delegate.appState.currentAction =
-                                      PageAction(
-                                    page: GoldenTicketsViewPageConfig,
-                                    state: PageState.addPage,
-                                  );
-                                },
-                                child: Container(
-                                  width: SizeConfig.screenWidth * 0.410,
-                                  margin: EdgeInsets.only(
-                                      right: SizeConfig.padding12),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(
-                                        SizeConfig.roundness32),
-                                    image: DecorationImage(
-                                        image: AssetImage("images/gticket.png"),
-                                        fit: BoxFit.cover),
-                                  ),
-                                ),
-                              ),
                               InkWell(
                                 onTap: () => model.openVoucherModal(
                                     Assets.amazonCoupon,
@@ -220,7 +198,9 @@ class Win extends StatelessWidget {
                 ),
               ),
             ),
-            WinnersLeaderBoardSE()
+            WinnersLeaderBoardSE(
+              model: model,
+            )
           ],
         );
       },

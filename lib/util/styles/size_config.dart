@@ -7,6 +7,7 @@ class SizeConfig {
   // dimens
   static double screenWidth;
   static double screenHeight;
+  static double safeScreenHeight;
 
   static double pixelRatio;
   static double textScaleFactor;
@@ -32,6 +33,9 @@ class SizeConfig {
     _mediaQueryData = MediaQuery.of(context);
     screenWidth = _mediaQueryData.size.width;
     screenHeight = _mediaQueryData.size.height;
+    safeScreenHeight = _mediaQueryData.size.height -
+        _mediaQueryData.padding.top -
+        _mediaQueryData.padding.bottom;
     pixelRatio = _mediaQueryData.devicePixelRatio;
     textScaleFactor = _mediaQueryData.textScaleFactor;
     viewInsets = _mediaQueryData.padding;

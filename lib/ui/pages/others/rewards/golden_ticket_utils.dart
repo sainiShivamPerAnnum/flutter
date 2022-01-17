@@ -60,7 +60,7 @@ class UnRedeemedGoldenScratchCard extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(SizeConfig.roundness12),
           image: DecorationImage(
-              image: AssetImage("images/gticket.png"), fit: BoxFit.cover),
+              image: AssetImage("assets/images/gtbg.png"), fit: BoxFit.cover),
         ),
         height: SizeConfig.screenWidth * 0.6,
         width: SizeConfig.screenWidth * 0.6,
