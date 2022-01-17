@@ -1,34 +1,31 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 
 class GoldenTicket {
   String gtId;
-  String userId;
-  String ticketId;
-  Timestamp timestamp;
-  Timestamp redeemedTimestamp;
-  Timestamp revealedTimestamp;
+  bool canTransfer;
   String eventType;
   String gtType;
-  bool canTransfer;
   bool isRewarding;
-  String version;
+  String note;
+  String prizeSubtype;
+  Timestamp redeemedTimestamp;
   List<Reward> rewardArr;
+  Timestamp timestamp;
+  String userId;
+  String version;
 
   GoldenTicket({
     this.gtId,
     this.userId,
     this.timestamp,
     this.eventType,
+    this.prizeSubtype,
+    this.note,
     this.gtType,
     this.canTransfer,
     this.isRewarding,
     this.rewardArr,
-    this.ticketId,
     this.redeemedTimestamp,
-    this.revealedTimestamp,
     this.version,
   });
 
@@ -38,10 +35,11 @@ class GoldenTicket {
     timestamp = json['timestamp'];
     eventType = json['eventType'];
     gtType = json['gtType'];
+    prizeSubtype = json['prizeSubtype'];
+    note = json['note'];
     canTransfer = json['canTransfer'];
     isRewarding = json['isRewarding'];
     redeemedTimestamp = json['redeemedTimestamp'];
-    revealedTimestamp = json['revealedTimestamp'];
     rewardArr =
         json['rewardArr'] != null ? Reward.objArray(json['rewardArr']) : [];
     version = json['version'];

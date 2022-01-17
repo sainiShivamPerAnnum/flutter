@@ -47,6 +47,20 @@ class Api {
     return documentRef.update(data);
   }
 
+  Future<QuerySnapshot> checkForLatestGoldenTicket(String userId) {
+    Future<QuerySnapshot> snapshot;
+    Query query = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
+        .collection(Constants.SUBCOLN_USER_REWARDS);
+    try {
+      snapshot = query.orderBy('timestamp', descending: true).limit(1).get();
+    } catch (e) {
+      logger.e(e);
+    }
+    return snapshot;
+  }
+
   Future<QuerySnapshot> checkForLatestNotification(String userId) {
     Future<QuerySnapshot> snapshot;
     Query query = _db

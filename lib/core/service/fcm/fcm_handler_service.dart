@@ -32,7 +32,7 @@ class FcmHandler extends ChangeNotifier {
 
   Future<bool> handleMessage(Map data, MsgSource source) async {
     logger.d(data.toString());
-    bool showSnackbar = false;
+    bool showSnackbar = true;
     String title = data['dialog_title'];
     String body = data['dialog_body'];
     String command = data['command'];
@@ -41,6 +41,7 @@ class FcmHandler extends ChangeNotifier {
     // If notifications contains an url for navigation
     if (url != null && url.isNotEmpty) {
       if (source == MsgSource.Background || source == MsgSource.Terminated) {
+        showSnackbar = false;
         AppState.delegate.parseRoute(Uri.parse(url));
         return true;
       }
@@ -48,6 +49,7 @@ class FcmHandler extends ChangeNotifier {
 
     // If message has a command payload
     if (data['command'] != null) {
+      showSnackbar = false;
       switch (command) {
         case COMMAND_CRIC_GAME_END:
           {
@@ -56,6 +58,12 @@ class FcmHandler extends ChangeNotifier {
             if (AppState.circGameInProgress) {
               AppState.circGameInProgress = false;
               AppState.backButtonDispatcher.didPopRoute();
+              //check if payload has a golden ticket
+              if (data['is_gt_rewarded'] != null &&
+                  data['is_gt_rewarded'].toString().isNotEmpty) {
+                logger.d(data.toString());
+                GoldenTicketService.hasGoldenTicket = true;
+              }
               Future.delayed(Duration(milliseconds: 100), () {
                 BaseUtil.openDialog(
                   addToScreenStack: true,
@@ -69,13 +77,14 @@ class FcmHandler extends ChangeNotifier {
                     action: Container(
                       width: SizeConfig.screenWidth,
                       child: FelloButtonLg(
-                        child: Text(
-                          "OK",
-                          style: TextStyles.body2.bold.colour(Colors.white),
-                        ),
-                        onPressed: () =>
-                            AppState.backButtonDispatcher.didPopRoute(),
-                      ),
+                          child: Text(
+                            "OK",
+                            style: TextStyles.body2.bold.colour(Colors.white),
+                          ),
+                          onPressed: () {
+                            AppState.backButtonDispatcher.didPopRoute();
+                            _gtService.showGoldenTicketAvailableDialog();
+                          }),
                     ),
                   ),
                 );
@@ -133,7 +142,7 @@ class FcmHandler extends ChangeNotifier {
           break;
         case COMMAND_GOLDEN_TICKET_WIN:
           {
-            showSnackbar = false;
+            //showSnackbar = false;
             logger.d(data.toString());
             GoldenTicketService.hasGoldenTicket = true;
             _gtService.showGoldenTicketAvailableDialog();

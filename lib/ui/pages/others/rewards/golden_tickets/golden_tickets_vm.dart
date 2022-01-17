@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
+import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
+import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/constants.dart';
@@ -142,6 +144,18 @@ class GoldenTicketsViewModel extends BaseModel {
         _goldenTicketDocs.addAll(querySnapshot.docs);
         int newSize = _goldenTicketDocs.length;
         streamController.add(_goldenTicketDocs);
+        if (oldSize == 0) {
+          //first fetch
+          //cache the latest Golden Ticket
+          int timestamp = GoldenTicket.fromJson(
+                  _goldenTicketDocs[0].data(), _goldenTicketDocs[0].id)
+              .timestamp
+              .millisecondsSinceEpoch;
+          CacheManager.writeCache(
+              key: CacheManager.CACHE_LATEST_GOLDEN_TICKET_TIME,
+              value: timestamp,
+              type: CacheType.int);
+        }
         if (oldSize != newSize) {
           _logger.d("New data loaded");
         } else {
@@ -172,9 +186,7 @@ class GoldenTicketsViewModel extends BaseModel {
       }
     });
     goldenTicketList.forEach((e) {
-      if (e.redeemedTimestamp != null &&
-          e.rewardArr != null &&
-          e.rewardArr.isNotEmpty) {
+      if (e.redeemedTimestamp != null && e.isRewarding) {
         arrangedGoldenTicketList.add(e);
       }
     });

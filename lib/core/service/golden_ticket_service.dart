@@ -8,16 +8,10 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 
 class GoldenTicketService {
   static bool hasGoldenTicket = false;
-
-  // get hasGoldenTicket => _hasGoldenTicket;
-  // set hasGoldenTicket(bool val) {
-  //   _hasGoldenTicket = val;
-  // }
-
   void showGoldenTicketAvailableDialog() {
     if (hasGoldenTicket) {
       hasGoldenTicket = false;
-      Future.delayed(Duration(seconds: 1), () {
+      Future.delayed(Duration(milliseconds: 800), () {
         BaseUtil.openDialog(
           addToScreenStack: true,
           isBarrierDismissable: false,

@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -12,6 +13,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:intl/intl.dart';
 import 'package:scratcher/scratcher.dart';
 
 final scratchKey = GlobalKey<ScratcherState>();
@@ -62,7 +64,7 @@ class GoldenScratchCardView extends StatelessWidget {
                                 threshold: 40,
                                 key: scratchKey,
                                 onThreshold: () =>
-                                    model.redeemCard(superModel, ticket.gtId),
+                                    model.redeemCard(superModel, ticket),
                                 image: Image.asset(
                                   "images/gticket.png",
                                   fit: BoxFit.cover,
@@ -82,73 +84,82 @@ class GoldenScratchCardView extends StatelessWidget {
                           )),
                 Spacer(),
                 if (model.bottompadding) FelloAppBar(),
-                if (ticket.rewardArr != null && ticket.rewardArr.isNotEmpty)
-                  AnimatedContainer(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness16),
-                      image: DecorationImage(
-                          image: AssetImage(Assets.splashBackground),
-                          fit: BoxFit.fill),
-                    ),
-                    height: model.detailsModalHeight,
-                    duration: Duration(seconds: 1),
-                    curve: Curves.easeIn,
-                    width: SizeConfig.screenWidth,
-                    padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                    child: model.state == ViewState.Busy
-                        ? Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SpinKitWave(
-                                  color: UiConstants.primaryColor,
-                                  size: SizeConfig.padding32,
-                                ),
-                                SizedBox(height: SizeConfig.padding12),
-                                Text(
-                                  "Please wait, registering your prize",
-                                  style: TextStyles.body2.bold,
-                                )
-                              ],
-                            ),
-                          )
-                        : (!model.isTicketRedeemedSuccessfully
-                            ? NoRecordDisplayWidget(
-                                asset: "images/badticket.png",
-                                text:
-                                    "An error occured while redeeming your ticket",
+                AnimatedContainer(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+                    image: DecorationImage(
+                        image: AssetImage(Assets.splashBackground),
+                        fit: BoxFit.fill),
+                  ),
+                  height: model.detailsModalHeight,
+                  duration: Duration(seconds: 1),
+                  curve: Curves.easeIn,
+                  width: SizeConfig.screenWidth,
+                  padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                  child: model.state == ViewState.Busy
+                      ? Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SpinKitWave(
+                                color: UiConstants.primaryColor,
+                                size: SizeConfig.padding32,
+                              ),
+                              SizedBox(height: SizeConfig.padding12),
+                              Text(
+                                "Please wait, registering your ticket",
+                                style: TextStyles.body2.bold,
                               )
-                            : SingleChildScrollView(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Image.asset(
-                                          "images/fello_logo.png",
-                                          height: SizeConfig.padding40,
+                            ],
+                          ),
+                        )
+                      : (
+                          // !model.isTicketRedeemedSuccessfully
+                          //   ? NoRecordDisplayWidget(
+                          //       asset: "images/badticket.png",
+                          //       text:
+                          //           "An error occured while redeeming your ticket",
+                          //     )
+                          //   :
+                          SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Image.asset(
+                                    "images/fello_logo.png",
+                                    height: SizeConfig.padding40,
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                children: ticket.isRewarding
+                                    ? [
+                                        SizedBox(height: SizeConfig.padding16),
+                                        Text(
+                                          "Reward Details",
+                                          style: TextStyles.title3.bold
+                                              .colour(Colors.black87),
                                         ),
+                                        SizedBox(height: SizeConfig.padding12),
+                                        referralTile("${ticket.note}"),
+                                        referralTile(
+                                            "Rewards have been credited to your wallet"),
+                                        //referralTile(
+                                        //    "Redeemed on ${DateFormat('dd MMM, yyyy').format(ticket.redeemedTimestamp.toDate())} | ${DateFormat('h:mm a').format(ticket.redeemedTimestamp.toDate())}"),
+                                        //referralTile("Version: ${ticket.version}"),
+                                      ]
+                                    : [
+                                        referralTile(
+                                            "Keep investing, keep playing to earn more golden tickets"),
                                       ],
-                                    ),
-                                    SizedBox(height: SizeConfig.padding16),
-                                    Text(
-                                      "Reward Details",
-                                      style: TextStyles.title3.bold
-                                          .colour(Colors.black87),
-                                    ),
-                                    SizedBox(height: SizeConfig.padding12),
-                                    referralTile(
-                                        "Event type: ${ticket.eventType}"),
-                                    referralTile(
-                                        "Date: ${ticket.timestamp.toDate().toString()}"),
-                                    referralTile("Ticket Id: ${ticket.gtId}"),
-                                    referralTile("Version: ${ticket.version}"),
-                                  ],
-                                ),
-                              )),
-                  )
+                              ),
+                            ],
+                          ),
+                        )),
+                )
               ],
             ),
           ),

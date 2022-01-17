@@ -114,6 +114,30 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  Future<bool> checkIfUserHasNewGoldenTicket(String userId) async {
+    try {
+      QuerySnapshot gtSnapshot = await _api.checkForLatestGoldenTicket(userId);
+      if (gtSnapshot != null) {
+        if (await CacheManager.exits(
+            CacheManager.CACHE_LATEST_GOLDEN_TICKET_TIME)) {
+          int savedTimestamp = await CacheManager.readCache(
+              key: CacheManager.CACHE_LATEST_GOLDEN_TICKET_TIME);
+          int latestTimestamp = GoldenTicket.fromJson(
+                  gtSnapshot.docs.first.data(), gtSnapshot.docs.first.id)
+              .timestamp
+              .millisecondsSinceEpoch;
+          if (latestTimestamp > savedTimestamp)
+            return true;
+          else
+            return false;
+        }
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
   Future<bool> checkIfUserHasNewNotifications(String userId) async {
     try {
       QuerySnapshot notificationSnapshot =

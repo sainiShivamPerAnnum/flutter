@@ -1,5 +1,6 @@
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/golden_ticket_service.dart';
@@ -19,7 +20,14 @@ class GoldenScratchCardViewModel extends BaseModel {
   bool _viewScratched = false;
   double _opacity = 0;
   double get opacity => this._opacity;
-  bool isTicketRedeemedSuccessfully = false;
+  bool _isTicketRedeemedSuccessfully = true;
+
+  get isTicketRedeemedSuccessfully => this._isTicketRedeemedSuccessfully;
+
+  set isTicketRedeemedSuccessfully(value) {
+    this._isTicketRedeemedSuccessfully = value;
+    notifyListeners();
+  }
 
   set opacity(double value) {
     this._opacity = value;
@@ -42,10 +50,12 @@ class GoldenScratchCardViewModel extends BaseModel {
 
   set bottompadding(value) => this._bottompadding = value;
 
-  showDetailsModal() {
+  showDetailsModal(bool isRewarding) {
     opacity = 1;
     _bottompadding = false;
-    _detailsModalHeight = SizeConfig.screenHeight * 0.5;
+    _detailsModalHeight = isRewarding
+        ? SizeConfig.screenHeight * 0.5
+        : SizeConfig.screenHeight * 0.2;
     notifyListeners();
   }
 
@@ -58,11 +68,11 @@ class GoldenScratchCardViewModel extends BaseModel {
     notifyListeners();
   }
 
-  redeemCard(GoldenTicketsViewModel superModel, String gtId) async {
+  redeemCard(GoldenTicketsViewModel superModel, GoldenTicket ticket) async {
     scratchKey.currentState.reveal();
-    showDetailsModal();
+    showDetailsModal(ticket.isRewarding);
     setState(ViewState.Busy);
-    isTicketRedeemedSuccessfully = await superModel.redeemTicket(gtId);
+    await superModel.redeemTicket(ticket.gtId);
     setState(ViewState.Idle);
   }
 
