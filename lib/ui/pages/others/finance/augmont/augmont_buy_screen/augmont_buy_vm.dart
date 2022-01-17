@@ -7,6 +7,8 @@ import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/golden_ticket_service.dart';
@@ -40,6 +42,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   UserService _userService = locator<UserService>();
   TransactionService _txnService = locator<TransactionService>();
   GoldenTicketService _gtService = GoldenTicketService();
+  final _analyticsService = locator<AnalyticsService>();
 
   int _status = 0;
 
@@ -257,6 +260,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
       return;
     }
     isGoldBuyInProgress = true;
+    _analyticsService.track(eventName: AnalyticsEvents.buyGold);
     _augmontModel.initiateGoldPurchase(goldRates, buyAmount).then((txn) {
       if (txn == null) {
         isGoldBuyInProgress = false;
@@ -488,10 +492,15 @@ class AugmontGoldBuyViewModel extends BaseModel {
       showSuccessGoldBuyDialog();
       if (GoldenTicketService.hasGoldenTicket != null &&
           GoldenTicketService.hasGoldenTicket)
-        BaseUtil.showPositiveAlert("Yayy, You won a Golden Ticket",
-            "Go to my winnings section to redeem it");
+        BaseUtil.showPositiveAlert(
+          "Yayy, You won a Golden Ticket",
+          "Go to my winnings section to redeem it",
+        );
+
+      _analyticsService.track(eventName: AnalyticsEvents.buyGoldSuccess);
     } else {
       AppState.backButtonDispatcher.didPopRoute();
+      _analyticsService.track(eventName: AnalyticsEvents.buyGoldFailed);
       // BaseUtil.showNegativeAlert('Verifying Transaction',
       //     'Your transaction is being verified and will be updated shortly',
       //     seconds: 5);
@@ -527,10 +536,12 @@ class AugmontGoldBuyViewModel extends BaseModel {
           AppState.backButtonDispatcher.didPopRoute();
           AppState.delegate.appState.setCurrentTabIndex = 1;
           _gtService.showGoldenTicketAvailableDialog();
+          _analyticsService.track(eventName: AnalyticsEvents.buyGoldPlay);
         },
         onAccept: () {
           AppState.backButtonDispatcher.didPopRoute();
           _gtService.showGoldenTicketAvailableDialog();
+          _analyticsService.track(eventName: AnalyticsEvents.buyGoldInvestMore);
         },
       ),
     );

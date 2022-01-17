@@ -135,6 +135,7 @@ class KYCDetailsViewModel extends BaseModel {
     FocusScope.of(context).unfocus();
 
     isKycInProgress = true;
+    _analyticsService.track(eventName: AnalyticsEvents.openKYCSection);
 
     ///next get all details required for registration
     Map<String, dynamic> veriDetails =
@@ -181,6 +182,11 @@ class KYCDetailsViewModel extends BaseModel {
               _q = await _dbModel.updateUser(_userService.baseUser);
             }
             if (!_p || !_q) {
+              _analyticsService.track(
+                eventName: AnalyticsEvents.kycVerificationFailed,
+                properties: {'userId': _userService.baseUser.uid},
+              );
+
               BaseUtil.showNegativeAlert('Verification Failed',
                   'Failed to verify at the moment. Please try again.');
               _isKycInProgress = false;
@@ -188,8 +194,10 @@ class KYCDetailsViewModel extends BaseModel {
               return;
             } else {
               _analyticsService.track(
-                  eventName: AnalyticsEvents.panVerified,
-                  properties: {'userId': _userService.baseUser.uid});
+                eventName: AnalyticsEvents.panVerified,
+                properties: {'userId': _userService.baseUser.uid},
+              );
+
               _userService.isSimpleKycVerified = true;
               _userService.setMyUserName(_userService.baseUser.name);
               BaseUtil.showPositiveAlert(
@@ -224,7 +232,10 @@ class KYCDetailsViewModel extends BaseModel {
 
       isKycInProgress = false;
 
-      return;
+      _analyticsService.track(
+        eventName: AnalyticsEvents.kycVerificationFailed,
+        properties: {'userId': _userService.baseUser.uid},
+      );
     }
   }
 

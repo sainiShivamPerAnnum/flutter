@@ -57,10 +57,7 @@ class Win extends StatelessWidget {
                                 image: Assets.iphone,
                                 painter: IphoneCustomPaint(),
                                 onPressed: () {
-                                  AppState.delegate.appState.currentAction =
-                                      PageAction(
-                                          state: PageState.addPage,
-                                          page: ReferralDetailsPageConfig);
+                                  model.navigateToRefer();
                                 },
                               ),
                             ],
@@ -102,8 +99,9 @@ class Win extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(
                                         SizeConfig.roundness32),
                                     image: DecorationImage(
-                                        image: AssetImage("images/gticket.png"),
-                                        fit: BoxFit.cover),
+                                      image: AssetImage("images/gticket.png"),
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -151,8 +149,9 @@ class Win extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(
                                         SizeConfig.roundness32),
                                     image: DecorationImage(
-                                        image: AssetImage(Assets.bdubsCoupon),
-                                        fit: BoxFit.cover),
+                                      image: AssetImage(Assets.bdubsCoupon),
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -173,8 +172,9 @@ class Win extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(
                                         SizeConfig.roundness32),
                                     image: DecorationImage(
-                                        image: AssetImage(Assets.gplayCoupon),
-                                        fit: BoxFit.cover),
+                                      image: AssetImage(Assets.gplayCoupon),
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -193,8 +193,9 @@ class Win extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(
                                         SizeConfig.roundness32),
                                     image: DecorationImage(
-                                        image: AssetImage(Assets.myntraCoupon),
-                                        fit: BoxFit.cover),
+                                      image: AssetImage(Assets.myntraCoupon),
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -217,6 +218,7 @@ class Win extends StatelessWidget {
                 tag: "myWinnigs",
                 child: WinningsContainer(
                   shadow: false,
+                  onTap: () => model.navigateToMyWinnings(),
                 ),
               ),
             ),

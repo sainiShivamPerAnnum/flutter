@@ -1,5 +1,4 @@
 //Project Imports
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
@@ -153,9 +152,11 @@ class _LoginControllerState extends State<LoginController>
       if (baseProvider.isOtpResendCount == 0) {
         ///this is the first time that the otp was requested
         baseProvider.isLoginNextInProgress = false;
-        _controller.animateToPage(OtpInputScreen.index,
-            duration: Duration(milliseconds: 500),
-            curve: Curves.easeInToLinear);
+        _controller.animateToPage(
+          OtpInputScreen.index,
+          duration: Duration(milliseconds: 500),
+          curve: Curves.easeInToLinear,
+        );
         setState(() {});
       } else {
         ///the otp was requested to be resent
@@ -213,12 +214,13 @@ class _LoginControllerState extends State<LoginController>
     };
 
     await FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: this._verificationId,
-        codeAutoRetrievalTimeout: autoRetrieve,
-        codeSent: smsCodeSent,
-        timeout: const Duration(seconds: 30),
-        verificationCompleted: verifiedSuccess,
-        verificationFailed: veriFailed);
+      phoneNumber: this._verificationId,
+      codeAutoRetrievalTimeout: autoRetrieve,
+      codeSent: smsCodeSent,
+      timeout: const Duration(seconds: 30),
+      verificationCompleted: verifiedSuccess,
+      verificationFailed: veriFailed,
+    );
   }
 
   @override
@@ -439,6 +441,10 @@ class _LoginControllerState extends State<LoginController>
                   'Only dummy numbers are allowed in QA mode');
               break;
             }
+
+            _analyticsService.track(
+              eventName: AnalyticsEvents.signupEnterMobile,
+            );
             this._verificationId = '+91' + this.userMobile;
             _verifyPhone();
             baseProvider.isLoginNextInProgress = true;
@@ -557,8 +563,9 @@ class _LoginControllerState extends State<LoginController>
               setState(() {});
             }).then((value) {
               _analyticsService.track(
-                  eventName: AnalyticsEvents.profileInformationAdded,
-                  properties: {'userId': baseProvider?.myUser?.uid});
+                eventName: AnalyticsEvents.profileInformationAdded,
+                properties: {'userId': baseProvider?.myUser?.uid},
+              );
               _controller.animateToPage(Username.index,
                   duration: Duration(milliseconds: 500),
                   curve: Curves.easeInToLinear);
@@ -626,8 +633,10 @@ class _LoginControllerState extends State<LoginController>
 
                   if (flag) {
                     _analyticsService.track(
-                        eventName: AnalyticsEvents.userNameAdded,
-                        properties: {'userId': baseProvider?.myUser?.uid});
+                      eventName: AnalyticsEvents.userNameAdded,
+                      properties: {'userId': baseProvider?.myUser?.uid},
+                    );
+
                     log.debug("User object saved successfully");
                     _onSignUpComplete();
                   } else {
@@ -762,16 +771,20 @@ class _LoginControllerState extends State<LoginController>
   }
 
   Future _onSignUpComplete() async {
-    if (_isSignup)
+    if (_isSignup) {
       await BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
+      _analyticsService.track(eventName: AnalyticsEvents.signupComplete);
+    }
+
     await BaseAnalytics.logUserProfile(baseProvider.myUser);
     await userService.init();
     await baseProvider.init();
     await fcmListener.setupFcm();
     _logger.i("Calling analytics login for new onborded user");
     await _analyticsService.login(
-        isOnboarded: userService.isUserOnborded,
-        baseUser: userService.baseUser);
+      isOnboarded: userService.isUserOnborded,
+      baseUser: userService.baseUser,
+    );
     AppState.isOnboardingInProgress = false;
     if (baseProvider.isLoginNextInProgress == true) {
       baseProvider.isLoginNextInProgress = false;

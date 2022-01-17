@@ -37,8 +37,16 @@ class Play extends StatelessWidget {
                                 BorderRadius.circular(SizeConfig.roundness32),
                             child: OfferCard(
                               shimmer: true,
-                              model: PromoCardModel(1, null, null, null, null,
-                                  4281648039, null, 1),
+                              model: PromoCardModel(
+                                1,
+                                null,
+                                null,
+                                null,
+                                null,
+                                4281648039,
+                                null,
+                                1,
+                              ),
                             ),
                           ),
                           ClipRRect(
@@ -84,15 +92,13 @@ class Play extends StatelessWidget {
                       ),
                   child: ListView(padding: EdgeInsets.zero, children: [
                     GestureDetector(
-                      onTap: () =>
-                          model.openGame(BaseUtil.gamesList[0].pageConfig),
+                      onTap: () => model.openGame(BaseUtil.gamesList[0]),
                       child: GameCard(
                         gameData: BaseUtil.gamesList[0],
                       ),
                     ),
                     GestureDetector(
-                      onTap: () =>
-                          model.openGame(BaseUtil.gamesList[1].pageConfig),
+                      onTap: () => model.openGame(BaseUtil.gamesList[1]),
                       child: GameCard(
                         gameData: BaseUtil.gamesList[1],
                       ),

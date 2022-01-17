@@ -1,6 +1,9 @@
+import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/referral_leaderboard.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/winners_leaderboard.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -13,6 +16,7 @@ class WinnersLeaderBoardSE extends StatefulWidget {
 }
 
 class _WinnersLeaderBoardSEState extends State<WinnersLeaderBoardSE> {
+  final _analyticsService = locator<AnalyticsService>();
   int currentPage = 0;
 
   void switchPage(int index) {
@@ -30,6 +34,7 @@ class _WinnersLeaderBoardSEState extends State<WinnersLeaderBoardSE> {
   setScrollExtent(double extent) {
     scrollExtent = extent;
     if (extent == maxScrollExtent) {
+      _analyticsService.track(eventName: AnalyticsEvents.winLeaderboard);
       if (isOverScrolled == false)
         setState(() {
           isOverScrolled = true;

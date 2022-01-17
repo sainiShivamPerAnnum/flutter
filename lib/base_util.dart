@@ -27,6 +27,7 @@ import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/service/analytics/analytics_events.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/pan_service.dart';
 import 'package:felloapp/core/service/payment_service.dart';
@@ -277,6 +278,7 @@ class BaseUtil extends ChangeNotifier {
         prizeAmount: BaseRemoteConfig.remoteConfig
                 .getString(BaseRemoteConfig.CRICKET_PLAY_PRIZE) ??
             "50000",
+        analyticEvent: AnalyticsEvents.selectPlayCricket,
       ),
       GameModel(
         gameName: "Tambola",
@@ -290,6 +292,7 @@ class BaseUtil extends ChangeNotifier {
         prizeAmount: BaseRemoteConfig.remoteConfig
                 .getString(BaseRemoteConfig.TAMBOLA_PLAY_PRIZE) ??
             "10,000",
+        analyticEvent: AnalyticsEvents.selectPlayTambola,
       ),
     ];
   }

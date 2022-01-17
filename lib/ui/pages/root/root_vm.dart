@@ -5,6 +5,8 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_coin_service.dart';
@@ -37,6 +39,7 @@ class RootViewModel extends BaseModel {
   final CustomLogger _logger = locator<CustomLogger>();
   final winnerService = locator<WinnerService>();
   final txnService = locator<TransactionService>();
+  final _analyticsService = locator<AnalyticsService>();
 
   BuildContext rootContext;
   bool _isInitialized = false;
@@ -90,6 +93,19 @@ class RootViewModel extends BaseModel {
   }
 
   void onItemTapped(int index) {
+    switch (index) {
+      case 0:
+        _analyticsService.track(eventName: AnalyticsEvents.saveSection);
+        break;
+      case 1:
+        _analyticsService.track(eventName: AnalyticsEvents.playSection);
+        break;
+      case 2:
+        _analyticsService.track(eventName: AnalyticsEvents.winSection);
+        break;
+      default:
+    }
+
     AppState.delegate.appState.setCurrentTabIndex = index;
     notifyListeners();
   }
@@ -288,5 +304,16 @@ class RootViewModel extends BaseModel {
       _logger.e('$e');
       return -1;
     }
+  }
+
+  void earnMoreTokens() {
+    _analyticsService.track(eventName: AnalyticsEvents.earnMoreTokens);
+    BaseUtil.openModalBottomSheet(
+      addToScreenStack: true,
+      content: WantMoreTicketsModalSheet(),
+      hapticVibrate: true,
+      backgroundColor: Colors.transparent,
+      isBarrierDismissable: true,
+    );
   }
 }

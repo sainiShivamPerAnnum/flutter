@@ -238,6 +238,10 @@ class TambolaGameViewModel extends BaseModel {
 
     ticketBuyInProgress = true;
     notifyListeners();
+    _analyticsService.track(
+      eventName: AnalyticsEvents.buyTambolaTickets,
+      properties: {'count': ticketCount},
+    );
     ApiResponse<FlcModel> _flcResponse = await _fclActionRepo.buyTambolaTickets(
         cost: (-1 * ticketPurchaseCost),
         noOfTickets: ticketCount,
@@ -249,7 +253,6 @@ class TambolaGameViewModel extends BaseModel {
           _flcResponse.model.isGtRewarded) {
         GoldenTicketService.hasGoldenTicket = true;
       }
-      _analyticsService.track(eventName: AnalyticsEvents.playsTambola);
       BaseUtil.showPositiveAlert(
           "Request is now processing", "Generating your tickets, please wait");
 

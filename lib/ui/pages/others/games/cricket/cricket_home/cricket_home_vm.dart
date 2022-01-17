@@ -73,8 +73,7 @@ class CricketHomeViewModel extends BaseModel {
   }
 
   startGame() {
-    _analyticsService.track(
-       eventName:  AnalyticsEvents.playsCricket);
+    _analyticsService.track(eventName: AnalyticsEvents.playsCricket);
     viewpage(1);
     AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,

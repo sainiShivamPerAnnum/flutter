@@ -80,8 +80,7 @@ class ReferralDetailsViewModel extends BaseModel {
   }
 
   void copyReferCode() {
-    _analyticsService.track(eventName:
-        AnalyticsEvents.referCodeCopied);
+    _analyticsService.track(eventName: AnalyticsEvents.referCodeCopied);
     Clipboard.setData(ClipboardData(text: userUrlCode)).then((_) {
       BaseUtil.showPositiveAlert("Code: $userUrlCode", "Copied to Clipboard");
     });
@@ -93,13 +92,15 @@ class ReferralDetailsViewModel extends BaseModel {
 
     _fcmListener.addSubscription(FcmTopic.REFERRER);
     BaseAnalytics.analytics.logShare(
-        contentType: 'referral',
-        itemId: _userService.baseUser.uid,
-        method: 'message');
-    _analyticsService.track(eventName:
-        AnalyticsEvents.linkShared);
+      contentType: 'referral',
+      itemId: _userService.baseUser.uid,
+      method: 'message',
+    );
+    
+    _analyticsService.track(eventName: AnalyticsEvents.linkShared);
     shareLinkInProgress = true;
     refresh();
+    
     _userService.createDynamicLink(true, 'Other').then((url) async {
       _logger.d(url);
       shareLinkInProgress = false;
@@ -139,8 +140,7 @@ class ReferralDetailsViewModel extends BaseModel {
     else
       _logger.d(url);
     try {
-      _analyticsService.track(eventName:
-          AnalyticsEvents.whatsappShare);
+      _analyticsService.track(eventName: AnalyticsEvents.whatsappShare);
       FlutterShareMe().shareToWhatsApp(msg: _shareMsg + url).then((flag) {
         if (flag == "false") {
           FlutterShareMe()

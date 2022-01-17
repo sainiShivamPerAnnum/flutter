@@ -30,6 +30,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/app_theme.dart';
 
 //Pub imports
@@ -67,6 +68,7 @@ Future mainInit() async {
   setupLocator();
   WidgetsFlutterBinding.ensureInitialized();
   try {
+    await PreferenceHelper.initiate();
     await Firebase.initializeApp();
   } catch (e) {
     print('$e');
