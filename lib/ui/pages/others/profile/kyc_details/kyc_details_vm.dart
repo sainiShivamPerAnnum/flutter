@@ -247,8 +247,7 @@ class KYCDetailsViewModel extends BaseModel {
 
     if (_flag) {
       try {
-        ApiResponse<VerifyPanResponseModel> _response = await _signzyRepository
-            .verifyPan(panNumber: enteredPan, panName: enteredPanName);
+        ApiResponse<VerifyPanResponseModel> _response = await _signzyRepository.verifyPan(uid: _userService.baseUser.uid, panNumber: enteredPan, panName: enteredPanName);
 
         if (_response.code == 200) {
           _flag = true;

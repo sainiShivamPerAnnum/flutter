@@ -23,9 +23,11 @@ import 'package:felloapp/util/mixpanel_events.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
+
 //Dart and Flutter Imports
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 //Pub Imports
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -502,7 +504,8 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
 
     final ApiResponse<TransferAmountApiResponseModel> response =
         await _signzyRepository.transferAmount(
-            mobile: baseProvider.myUser.mobile,
+            uid: _userService.baseUser.uid,
+            mobile: _userService.baseUser.mobile,
             name: pBankHolderName,
             ifsc: pBankIfsc,
             accountNo: pConfirmBankAccNo);
@@ -527,6 +530,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
       //Verify Transfer
       final ApiResponse<VerifyAmountApiResponseModel> res =
           await _signzyRepository.verifyAmount(
+        uid: _userService.baseUser.uid,
         signzyId: _transferAmountResponse.signzyReferenceId,
       );
 
