@@ -65,7 +65,7 @@ class GoldenScratchCardViewModel extends BaseModel {
     scratchKey.currentState.reveal();
     showDetailsModal(ticket.isRewarding);
     setState(ViewState.Busy);
-    await superModel.redeemTicket(ticket.gtId);
+    await superModel.redeemTicket(ticket);
     log(ticket.redeemedTimestamp.toString());
     setState(ViewState.Idle);
   }

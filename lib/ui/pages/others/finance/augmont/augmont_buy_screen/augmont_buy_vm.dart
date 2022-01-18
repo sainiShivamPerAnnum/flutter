@@ -486,10 +486,10 @@ class AugmontGoldBuyViewModel extends BaseModel {
       // BaseUtil.showPositiveAlert(
       //     'SUCCESS', 'You gold deposit was confirmed!', context);
       showSuccessGoldBuyDialog();
-      if (GoldenTicketService.hasGoldenTicket != null &&
-          GoldenTicketService.hasGoldenTicket)
-        BaseUtil.showPositiveAlert("Yayy, You won a Golden Ticket",
-            "Go to my winnings section to redeem it");
+      // if (GoldenTicketService.hasGoldenTicket != null &&
+      //     GoldenTicketService.hasGoldenTicket)
+      //   BaseUtil.showPositiveAlert("Yayy, You won a Golden Ticket",
+      //       "Go to my winnings section to redeem it");
     } else {
       AppState.backButtonDispatcher.didPopRoute();
       // BaseUtil.showNegativeAlert('Verifying Transaction',
@@ -526,11 +526,11 @@ class AugmontGoldBuyViewModel extends BaseModel {
           AppState.backButtonDispatcher.didPopRoute();
           AppState.backButtonDispatcher.didPopRoute();
           AppState.delegate.appState.setCurrentTabIndex = 1;
-          _gtService.showGoldenTicketAvailableDialog();
+          // _gtService.showGoldenTicketAvailableDialog();
         },
         onAccept: () {
           AppState.backButtonDispatcher.didPopRoute();
-          _gtService.showGoldenTicketAvailableDialog();
+          // _gtService.showGoldenTicketAvailableDialog();
         },
       ),
     );

@@ -469,9 +469,9 @@ class AugmontModel extends ChangeNotifier {
 
       _txnService.updateTransactions();
 
-      if (_onCompleteDepositResponse.model.isGtRewarded != null &&
-          _onCompleteDepositResponse.model.isGtRewarded == true)
-        GoldenTicketService.hasGoldenTicket = true;
+      // if (_onCompleteDepositResponse.model.isGtRewarded != null &&
+      //     _onCompleteDepositResponse.model.isGtRewarded == true)
+      //   GoldenTicketService.hasGoldenTicket = true;
 
       if (_augmontTxnProcessListener != null)
         _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);

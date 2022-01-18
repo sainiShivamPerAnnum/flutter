@@ -1,13 +1,9 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/tambola_winners_details.dart';
 import 'package:felloapp/core/service/user_service.dart';
-import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_vm.dart';
-import 'package:felloapp/ui/pages/others/profile/referrals/referral_history/referral_history_view.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -78,18 +74,6 @@ class PrizeClaimCard extends StatelessWidget {
                                         style: TextStyles.body1.bold,
                                       ),
                                     ),
-                                    // SizedBox(height: SizeConfig.padding4),
-                                    // (m.userFundWallet.unclaimedBalance >=
-                                    //             refUnlockAmt &&
-                                    //         m.userFundWallet.augGoldPrinciple >=
-                                    //             refUnlockAmt)
-                                    //     ? Text(
-                                    //         "Redeem your rewards using the following options",
-                                    //         maxLines: 2,
-                                    //         style: TextStyles.body3
-                                    //             .colour(Colors.grey),
-                                    //       )
-                                    //     : Container()
                                   ],
                                 ),
                               ),
@@ -176,78 +160,6 @@ class PrizeClaimCard extends StatelessWidget {
                             ),
                           ),
                       ],
-                    ),
-                  ),
-                if (m.userFundWallet.lockedPrizeBalance > 0)
-                  InkWell(
-                    onTap: () {
-                      AppState.delegate.appState.currentAction = PageAction(
-                        state: PageState.addWidget,
-                        page: ReferralHistoryPageConfig,
-                        widget: ReferralHistoryView(
-                          onlyLocked: true,
-                        ),
-                      );
-                    },
-                    child: Container(
-                      margin: EdgeInsets.only(
-                        left: SizeConfig.pageHorizontalMargins,
-                        right: SizeConfig.pageHorizontalMargins,
-                        bottom: SizeConfig.padding24,
-                      ),
-                      //height: SizeConfig.screenWidth * 0.28,
-                      decoration: BoxDecoration(
-                        color: UiConstants.tertiaryLight,
-                        borderRadius:
-                            BorderRadius.circular(SizeConfig.roundness16),
-                      ),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.padding16,
-                        vertical: SizeConfig.padding20,
-                      ),
-                      child: Row(
-                        children: [
-                          CircleAvatar(
-                            backgroundColor:
-                                UiConstants.tertiarySolid.withOpacity(0.2),
-                            radius: SizeConfig.screenWidth * 0.067,
-                            child: Icon(
-                              Icons.lock_outline,
-                              size: SizeConfig.padding32,
-                              color: UiConstants.tertiarySolid,
-                            ),
-                          ),
-                          SizedBox(
-                            width: SizeConfig.padding12,
-                          ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                FittedBox(
-                                  child: Text(
-                                    "Locked Balance",
-                                    style: TextStyles.body1.bold,
-                                  ),
-                                ),
-                                SizedBox(height: SizeConfig.padding4),
-                                Text(
-                                  "Unlock these rewards once your referred friends make their first savings of atleast ₹$refUnlock",
-                                  maxLines: 3,
-                                  style: TextStyles.body3.colour(Colors.grey),
-                                )
-                              ],
-                            ),
-                          ),
-                          SizedBox(width: SizeConfig.padding12),
-                          Text(
-                            "₹${m.userFundWallet.lockedPrizeBalance ?? '-'}",
-                            style: TextStyles.body1.bold
-                                .colour(UiConstants.tertiarySolid),
-                          ),
-                        ],
-                      ),
                     ),
                   ),
               ],

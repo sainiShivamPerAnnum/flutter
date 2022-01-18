@@ -253,10 +253,10 @@ class TambolaGameViewModel extends BaseModel {
     if (_flcResponse.model != null && _flcResponse.code == 200) {
       ticketBuyInProgress = false;
       notifyListeners();
-      if (_flcResponse.model.isGtRewarded != null &&
-          _flcResponse.model.isGtRewarded) {
-        GoldenTicketService.hasGoldenTicket = true;
-      }
+      // if (_flcResponse.model.isGtRewarded != null &&
+      //     _flcResponse.model.isGtRewarded) {
+      //   GoldenTicketService.hasGoldenTicket = true;
+      // }
 
       _mixpanelService.track(eventName: MixpanelEvents.playsTambola);
       BaseUtil.showPositiveAlert(
@@ -270,8 +270,8 @@ class TambolaGameViewModel extends BaseModel {
       tambolaService.userTicketWallet =
           await _dbModel.getUserTicketWallet(_userService.baseUser.uid);
       if (tambolaService.userTicketWallet != null) _refreshTambolaTickets();
-      if (GoldenTicketService.hasGoldenTicket == true)
-        _goldenTicketService.showGoldenTicketAvailableDialog();
+      // if (GoldenTicketService.hasGoldenTicket == true)
+      // _goldenTicketService.showGoldenTicketAvailableDialog();
     } else {
       ticketBuyInProgress = false;
       notifyListeners();

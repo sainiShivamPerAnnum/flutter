@@ -23,8 +23,6 @@ class WinnersLeaderBoardSE extends StatelessWidget {
   final double initialScrollExtent = 0.2;
 
   build(BuildContext context) {
-    log("draggable sheet updated");
-
     return SlidingUpPanel(
         minHeight: SizeConfig.safeScreenHeight * minScrollExtent,
         maxHeight: SizeConfig.safeScreenHeight * maxScrollExtent,
