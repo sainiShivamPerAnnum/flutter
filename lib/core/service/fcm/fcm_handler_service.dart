@@ -58,12 +58,6 @@ class FcmHandler extends ChangeNotifier {
             if (AppState.circGameInProgress) {
               AppState.circGameInProgress = false;
               AppState.backButtonDispatcher.didPopRoute();
-              //check if payload has a golden ticket
-              // if (data['is_gt_rewarded'] != null &&
-              //     data['is_gt_rewarded'].toString().isNotEmpty) {
-              //   logger.d(data.toString());
-              //   GoldenTicketService.hasGoldenTicket = true;
-              // }
               Future.delayed(Duration(milliseconds: 100), () {
                 BaseUtil.openDialog(
                   addToScreenStack: true,
@@ -145,7 +139,7 @@ class FcmHandler extends ChangeNotifier {
             if (AppState.backButtonDispatcher.isAnyDialogOpen())
               GoldenTicketService.hasGoldenTicket = true;
             else
-              _gtService.showGoldenTicketAvailableDialog();
+              _gtService.showGoldenTicketFlushbar();
           }
           break;
         default:

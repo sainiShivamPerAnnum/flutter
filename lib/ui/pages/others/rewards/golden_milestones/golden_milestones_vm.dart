@@ -53,12 +53,14 @@ class GoldenMilestonesViewModel extends BaseModel {
             subtilte: _fms.title,
             isCompleted: true,
             amt: _ums.netAmt,
+            type: _ums.type,
             flc: _ums.netFlc));
       } else {
         _milestones.add(MilestoneRecord(
             title: fe.title,
             subtilte: fe.title,
             isCompleted: false,
+            type: fe.prizeSubtype,
             amt: 0,
             flc: 0));
       }
@@ -82,34 +84,15 @@ class GoldenMilestonesViewModel extends BaseModel {
       }
     });
     _milestones = temp;
-  }
-
-  bool checkIfCompleted(String id) {
-    switch (id) {
-      case "signup":
-        return true;
-        break;
-      case "kyc":
-        return _userService.baseUser.isSimpleKycVerified;
-        break;
-      case "bankVerify":
-        return _userAugmontDetails.bankAccNo != null &&
-                _userAugmontDetails.bankAccNo.isNotEmpty
-            ? true
-            : false;
-        break;
-      case "firstCricketGame":
-        return false;
-        break;
-      case "augregistration":
-        return _userService.baseUser.isAugmontOnboarded;
-        break;
-      case "firstGoldBuy":
-        return _userService.userFundWallet.augGoldBalance > 0;
-        break;
-      default:
-        return false;
-    }
+    //HARDCODED CHECKS FOR SIGNUP AND KYC_VERIFY
+    _milestones.forEach((e) {
+      if (e.type == 'KYC_VERIFY') {
+        e.isCompleted = _userService.baseUser.isSimpleKycVerified ?? false;
+      }
+      if (e.type == 'NEW_USER') {
+        e.isCompleted = true;
+      }
+    });
   }
 
   fetchMilestones() async {
@@ -121,18 +104,20 @@ class GoldenMilestonesViewModel extends BaseModel {
 }
 
 class MilestoneRecord {
-  final String title;
-  final String subtilte;
-  final bool isCompleted;
-  final int amt;
-  final int flc;
+  String title;
+  String subtilte;
+  bool isCompleted;
+  int amt;
+  int flc;
+  String type;
 
   MilestoneRecord(
       {@required this.title,
       @required this.subtilte,
       @required this.isCompleted,
       @required this.amt,
-      @required this.flc});
+      @required this.flc,
+      @required this.type});
 }
 
 class FelloMilestoneModel {

@@ -82,7 +82,10 @@ class GoldenScratchCardView extends StatelessWidget {
               if (model.bottompadding) FelloAppBar(),
               AnimatedContainer(
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    gradient: LinearGradient(
+                        colors: [UiConstants.scaffoldColor, Colors.white],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter),
                     borderRadius: BorderRadius.circular(SizeConfig.roundness16),
                     // image: DecorationImage(
                     //     image: AssetImage(Assets.splashBackground),

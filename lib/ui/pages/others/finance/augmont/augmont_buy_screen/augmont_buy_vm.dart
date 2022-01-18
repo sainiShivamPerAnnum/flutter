@@ -479,22 +479,11 @@ class AugmontGoldBuyViewModel extends BaseModel {
   }
 
   onDepositComplete(bool flag) {
-    // _isDepositInProgress = false;
-    // setState(() {});
     isGoldBuyInProgress = false;
     if (flag) {
-      // BaseUtil.showPositiveAlert(
-      //     'SUCCESS', 'You gold deposit was confirmed!', context);
       showSuccessGoldBuyDialog();
-      // if (GoldenTicketService.hasGoldenTicket != null &&
-      //     GoldenTicketService.hasGoldenTicket)
-      //   BaseUtil.showPositiveAlert("Yayy, You won a Golden Ticket",
-      //       "Go to my winnings section to redeem it");
     } else {
       AppState.backButtonDispatcher.didPopRoute();
-      // BaseUtil.showNegativeAlert('Verifying Transaction',
-      //     'Your transaction is being verified and will be updated shortly',
-      //     seconds: 5);
     }
   }
 
