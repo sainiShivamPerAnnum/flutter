@@ -46,68 +46,87 @@ class MyWinningsView extends StatelessWidget {
                       topRight: Radius.circular(SizeConfig.padding40),
                     ),
                     child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                      ),
-                      child: Column(
-                        // padding: EdgeInsets.zero,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          PrizeClaimCard(
-                            model: model,
-                          ),
-                          SizedBox(height: SizeConfig.padding24),
-                          WinningsContainer(
-                            shadow: false,
-                            onTap: () {
-                              AppState.delegate.appState.currentAction =
-                                  PageAction(
-                                      state: PageState.addPage,
-                                      page: GoldenMilestonesViewPageConfig);
-                            },
-                            child: Container(
-                              child: Padding(
-                                padding: EdgeInsets.all(SizeConfig.padding16),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SvgPicture.asset(
-                                      Assets.giftBoxOpen,
-                                    ),
-                                    SizedBox(
-                                        width: SizeConfig.screenWidth * 0.05),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                        ),
+                        child: NestedScrollView(
+                          // allows you to build a list of elements that would be scrolled away till the body reached the top
+                          headerSliverBuilder: (context, _) {
+                            return [
+                              SliverList(
+                                delegate: SliverChildListDelegate([
+                                  PrizeClaimCard(
+                                    model: model,
+                                  ),
+                                ]),
+                              ),
+                            ];
+                          },
+                          body: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: SizeConfig.padding24),
+                              WinningsContainer(
+                                shadow: false,
+                                onTap: () {
+                                  AppState.delegate.appState.currentAction =
+                                      PageAction(
+                                          state: PageState.addPage,
+                                          page: GoldenMilestonesViewPageConfig);
+                                },
+                                child: Container(
+                                  child: Padding(
+                                    padding:
+                                        EdgeInsets.all(SizeConfig.padding16),
+                                    child: Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
+                                          MainAxisAlignment.center,
                                       children: [
-                                        Text(
-                                          "See upcoming rewards\non your path",
-                                          style: TextStyles.body1
-                                              .colour(Colors.white)
-                                              .light,
+                                        SvgPicture.asset(
+                                          Assets.giftBoxOpen,
                                         ),
+                                        SizedBox(
+                                            width:
+                                                SizeConfig.screenWidth * 0.05),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            Text(
+                                              "See upcoming rewards\non your path",
+                                              style: TextStyles.body1
+                                                  .colour(Colors.white)
+                                                  .light,
+                                            ),
+                                          ],
+                                        )
                                       ],
-                                    )
-                                  ],
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    top: SizeConfig.padding16,
+                                    left: SizeConfig.pageHorizontalMargins),
+                                child: Text(
+                                  "Golden Tickets",
+                                  style: TextStyles.title3.bold,
+                                ),
+                              ),
+                              GoldenTicketsView()
+                            ],
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                                top: SizeConfig.padding16,
-                                left: SizeConfig.pageHorizontalMargins),
-                            child: Text(
-                              "Golden Tickets",
-                              style: TextStyles.title3.bold,
-                            ),
-                          ),
-                          GoldenTicketsView()
-                        ],
-                      ),
-                    ),
+                        )
+                        //  ListView(
+                        //   padding: EdgeInsets.zero,
+                        //   // crossAxisAlignment: CrossAxisAlignment.start,
+                        //   children: [
+
+                        // ),
+                        ),
                   ),
                 )
               ],

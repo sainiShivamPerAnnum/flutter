@@ -29,56 +29,7 @@ class GoldenTicketsView extends StatelessWidget {
         model.finish();
       },
       builder: (ctx, model, child) {
-        return
-            // Scaffold(
-            //   body: HomeBackground(
-            //     child: Column(
-            //       children: [
-            //         FelloAppBar(
-            //           leading: FelloAppBarBackButton(),
-            //           title: "Golden Rewards",
-            //         ),
-            //   Expanded(
-            // child: Container(
-            //   padding: EdgeInsets.only(top: SizeConfig.pageHorizontalMargins),
-            //   decoration: BoxDecoration(
-            //     borderRadius: BorderRadius.only(
-            //       topLeft: Radius.circular(SizeConfig.roundness40),
-            //       topRight: Radius.circular(SizeConfig.roundness40),
-            //     ),
-            //     color: Colors.white,
-            //   ),
-            //   child: Column(
-            //     children: [
-            //       WinningsContainer(
-            //         borderRadius: SizeConfig.roundness12,
-            //         shadow: false,
-            //         height: SizeConfig.screenWidth * 0.12,
-            //         child: Container(
-            //           alignment: Alignment.center,
-            //           padding: EdgeInsets.symmetric(
-            //               horizontal: SizeConfig.pageHorizontalMargins),
-            //           child: Row(
-            //             children: [
-            //               Text(
-            //                 "Upcoming reward on your path",
-            //                 style: TextStyles.body2.bold.colour(Colors.white),
-            //               ),
-            //               Spacer(),
-            //               Icon(
-            //                 Icons.navigate_next_outlined,
-            //                 color: Colors.white,
-            //               ),
-            //             ],
-            //           ),
-            //         ),
-            //         onTap: () {
-            // AppState.delegate.appState.currentAction = PageAction(
-            //     state: PageState.addPage,
-            //     page: GoldenMilestonesViewPageConfig);
-            //         },
-            //       ),
-            Expanded(
+        return Expanded(
           child: NotificationListener<ScrollNotification>(
             onNotification: (ScrollNotification scrollInfo) {
               if (scrollInfo.metrics.maxScrollExtent ==
@@ -161,14 +112,6 @@ class GoldenTicketsView extends StatelessWidget {
               ),
             ),
           ),
-          //)
-          //     ],
-          //   ),
-          // ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
         );
       },
     );
