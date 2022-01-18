@@ -66,19 +66,19 @@ class GoldenMilestonesView extends StatelessWidget {
                                   Text("Complete task, earn rewards!",
                                       style: TextStyles.body4),
                                   SizedBox(height: SizeConfig.padding12),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                          color: UiConstants.primaryColor,
-                                          width: SizeConfig.padding2),
-                                    ),
-                                    padding:
-                                        EdgeInsets.all(SizeConfig.padding4),
-                                    child: ProfileImageSE(
-                                        radius: SizeConfig.padding16),
-                                  ),
+                                  // Container(
+                                  //   decoration: BoxDecoration(
+                                  //     color: Colors.white,
+                                  //     shape: BoxShape.circle,
+                                  //     border: Border.all(
+                                  //         color: UiConstants.primaryColor,
+                                  //         width: SizeConfig.padding2),
+                                  //   ),
+                                  //   padding:
+                                  //       EdgeInsets.all(SizeConfig.padding4),
+                                  //   child: ProfileImageSE(
+                                  //       radius: SizeConfig.padding16),
+                                  // ),
                                   model.milestones == null
                                       ? Center(
                                           child: SpinKitWave(
@@ -156,21 +156,26 @@ class MilestonePath extends StatelessWidget {
         padding: EdgeInsets.zero,
         builder: TimelineTileBuilder.connected(
           indicatorBuilder: (context, index) {
-            return Container(
-              height: SizeConfig.padding24,
-              width: SizeConfig.padding24,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(SizeConfig.padding2),
-                  color: data[index].isCompleted
-                      ? UiConstants.primaryColor
-                      : Colors.grey[400]),
-              alignment: Alignment.center,
-              child: Text(
-                index.toString(),
-                style: TextStyles.body4.bold.colour(
-                    data[index].isCompleted ? Colors.white : Colors.black),
-              ),
-            );
+            return CircleAvatar(
+                radius: SizeConfig.iconSize4,
+                backgroundColor: data[index].isCompleted
+                    ? UiConstants.primaryColor
+                    : Colors.grey[400]);
+            // Container(
+            //   height: SizeConfig.padding24,
+            //   width: SizeConfig.padding24,
+            //   decoration: BoxDecoration(
+            //       borderRadius: BorderRadius.circular(SizeConfig.padding2),
+            // color: data[index].isCompleted
+            //     ? UiConstants.primaryColor
+            //     : Colors.grey[400]),
+            //   alignment: Alignment.center,
+            //   child: Text(
+            //     index.toString(),
+            //     style: TextStyles.body4.bold.colour(
+            //         data[index].isCompleted ? Colors.white : Colors.black),
+            //   ),
+            // );
           },
           connectorBuilder: (_, index, connectorType) {
             var color;
@@ -188,18 +193,69 @@ class MilestonePath extends StatelessWidget {
               thickness: 3,
             );
           },
-          contentsBuilder: (_, index) => ListTile(
-            title: Text(data[index].title),
-            subtitle: Text(data[index].subtilte),
-          ),
+          contentsBuilder: (_, index) => Container(
+              // height: SizeConfig.padding64,
+              margin: EdgeInsets.only(left: SizeConfig.padding16),
+              decoration: BoxDecoration(
+                color: data[index].isCompleted
+                    ? UiConstants.primaryLight.withOpacity(0.5)
+                    : Colors.grey[100],
+                borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+              ),
+              padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins / 2),
+              child: ListView(
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                children: [
+                  Text(
+                    data[index].title,
+                    style: TextStyles.body3.colour(data[index].isCompleted
+                        ? UiConstants.primaryColor
+                        : Colors.grey[700]),
+                  ),
+                  Row(
+                    children: [
+                      data[index].amt != 0
+                          ? bulletpoints(
+                              "₹ ${data[index].amt} ", UiConstants.primaryColor)
+                          : SizedBox(),
+                      data[index].flc != 0
+                          ? bulletpoints("${data[index].flc} coins",
+                              UiConstants.tertiarySolid)
+                          : SizedBox(),
+                    ],
+                  )
+                ],
+              )),
           itemExtentBuilder: (_, __) {
-            return 80;
+            return 100;
           },
           itemCount: data.length,
         ),
       ),
     );
   }
+}
+
+Widget bulletpoints(String title, Color color) {
+  return Padding(
+    padding: EdgeInsets.only(right: 8, top: 4),
+    child: Wrap(
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        Icon(
+          Icons.brightness_1,
+          size: 12,
+          color: color,
+        ),
+        SizedBox(width: 10),
+        Text(
+          title,
+          style: TextStyles.body3,
+        ),
+      ],
+    ),
+  );
 }
 
 class MyBehavior extends ScrollBehavior {

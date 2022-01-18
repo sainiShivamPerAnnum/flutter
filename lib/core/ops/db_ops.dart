@@ -22,6 +22,7 @@ import 'package:felloapp/core/model/user_ticket_wallet_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_milestones/golden_milestones_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/code_from_freq.dart';
 import 'package:felloapp/util/constants.dart';
@@ -1315,10 +1316,29 @@ class DBModel extends ChangeNotifier {
     return _cards;
   }
 
-  Future<Map<String, dynamic>> getMilestonesList() async {
-    QueryDocumentSnapshot response =
+  Future<List<UserMilestoneModel>> getUserAchievedMilestones(String uid) async {
+    List<UserMilestoneModel> userMilestones = [];
+    Map<String, dynamic> userMilestonesData =
+        await _api.fetchUserAchievedTicketMilestonesList(uid);
+    logger.d(userMilestonesData.toString());
+    if (userMilestonesData != null) {
+      userMilestonesData['prizeArr']
+          .forEach((e) => userMilestones.add(UserMilestoneModel.fromJson(e)));
+    }
+    return userMilestones;
+  }
+
+  Future<List<FelloMilestoneModel>> getMilestonesList() async {
+    List<FelloMilestoneModel> felloMilestones = [];
+    Map<String, dynamic> felloMilestonesData =
         await _api.fetchGoldenTicketMilestonesList();
-    return response.data();
+    logger.d(felloMilestonesData.toString());
+    if (felloMilestonesData != null) {
+      felloMilestonesData['checkpoints']
+          .forEach((e) => felloMilestones.add(FelloMilestoneModel.fromJson(e)));
+    }
+
+    return felloMilestones;
   }
 
   Future<bool> checkIfUsernameIsAvailable(String username) async {

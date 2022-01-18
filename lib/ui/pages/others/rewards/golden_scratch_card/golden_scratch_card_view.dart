@@ -31,146 +31,162 @@ class GoldenScratchCardView extends StatelessWidget {
       builder: (ctx, model, child) {
         return Scaffold(
           backgroundColor: Colors.transparent,
-          body: SafeArea(
-            child: Column(
-              children: [
-                FelloAppBar(
-                  leading: FelloAppBarBackButton(
-                    color: Colors.black,
-                  ),
+          body: Column(
+            children: [
+              FelloAppBar(
+                leading: FelloAppBarBackButton(
+                  color: Colors.black,
                 ),
-                Spacer(),
-                model.viewScratchedCard
-                    ? GoldenTicketGridItemCard(
-                        ticket: ticket,
-                        titleStyle: TextStyles.title1,
-                      )
-                    : (model.viewScratcher
-                        ? Hero(
-                            key: Key(ticket.timestamp.toString()),
-                            tag: ticket.timestamp.toString(),
-                            createRectTween: (begin, end) {
-                              return CustomRectTween(begin: begin, end: end);
-                            },
-                            child: ClipRRect(
-                              borderRadius:
-                                  BorderRadius.circular(SizeConfig.roundness16),
-                              child: Scratcher(
-                                accuracy: ScratchAccuracy.low,
-                                brushSize: 50,
-                                threshold: 40,
-                                key: scratchKey,
-                                onThreshold: () =>
-                                    model.redeemCard(superModel, ticket),
-                                image: Image.asset(
-                                  "assets/images/gtbg.png",
-                                  fit: BoxFit.cover,
-                                  height: SizeConfig.screenWidth * 0.6,
-                                  width: SizeConfig.screenWidth * 0.6,
-                                ),
-                                child: RedeemedGoldenScratchCard(
-                                  ticket: ticket,
-                                  titleStyle: TextStyles.title1,
-                                ),
+              ),
+              Spacer(),
+              model.viewScratchedCard
+                  ? GoldenTicketGridItemCard(
+                      ticket: ticket,
+                      titleStyle: TextStyles.title2,
+                    )
+                  : (model.viewScratcher
+                      ? Hero(
+                          key: Key(ticket.timestamp.toString()),
+                          tag: ticket.timestamp.toString(),
+                          createRectTween: (begin, end) {
+                            return CustomRectTween(begin: begin, end: end);
+                          },
+                          child: ClipRRect(
+                            borderRadius:
+                                BorderRadius.circular(SizeConfig.roundness16),
+                            child: Scratcher(
+                              accuracy: ScratchAccuracy.low,
+                              brushSize: 50,
+                              threshold: 40,
+                              key: scratchKey,
+                              onThreshold: () =>
+                                  model.redeemCard(superModel, ticket),
+                              image: Image.asset(
+                                "assets/images/gtbg.png",
+                                fit: BoxFit.cover,
+                                height: SizeConfig.screenWidth * 0.6,
+                                width: SizeConfig.screenWidth * 0.6,
                               ),
-                            ),
-                          )
-                        : GoldenTicketGridItemCard(
-                            ticket: ticket,
-                            titleStyle: TextStyles.title1,
-                          )),
-                Spacer(),
-                if (model.bottompadding) FelloAppBar(),
-                AnimatedContainer(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-                    image: DecorationImage(
-                        image: AssetImage(Assets.splashBackground),
-                        fit: BoxFit.fill),
-                  ),
-                  height: model.detailsModalHeight,
-                  duration: Duration(seconds: 1),
-                  curve: Curves.easeIn,
-                  width: SizeConfig.screenWidth,
-                  padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                  child: model.state == ViewState.Busy
-                      ? Center(
-                          child: FittedBox(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SpinKitWave(
-                                  color: UiConstants.primaryColor,
-                                  size: SizeConfig.padding32,
-                                ),
-                                SizedBox(height: SizeConfig.padding12),
-                                Text(
-                                  "Please wait, registering your ticket",
-                                  style: TextStyles.body2.bold,
-                                )
-                              ],
+                              child: RedeemedGoldenScratchCard(
+                                ticket: ticket,
+                                titleStyle: TextStyles.title2,
+                              ),
                             ),
                           ),
                         )
-                      : (
-                          // !model.isTicketRedeemedSuccessfully
-                          //   ? NoRecordDisplayWidget(
-                          //       asset: "images/badticket.png",
-                          //       text:
-                          //           "An error occured while redeeming your ticket",
-                          //     )
-                          //   :
-                          SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Image.asset(
-                                    "images/fello_logo.png",
-                                    height: SizeConfig.padding40,
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: SizeConfig.padding16),
-                              Column(
-                                children: ticket.isRewarding
-                                    ? [
-                                        // Text(
-                                        //   "Reward Details",
-                                        //   style: TextStyles.title3.bold
-                                        //       .colour(Colors.black87),
-                                        // ),
-                                        //SizedBox(height: SizeConfig.padding12),
-                                        referralTile("${ticket.note}"),
-                                        referralTile(
-                                            "Rewards have been credited to your wallet"),
-                                        ticket.redeemedTimestamp != null
-                                            ? referralTile(
-                                                "Redeemed on ${DateFormat('dd MMM, yyyy').format(ticket.redeemedTimestamp.toDate())} | ${DateFormat('h:mm a').format(ticket.redeemedTimestamp.toDate())}")
-                                            : referralTile(
-                                                "Recieved on ${DateFormat('dd MMM, yyyy').format(ticket.timestamp.toDate())} | ${DateFormat('h:mm a').format(ticket.timestamp.toDate())}")
-                                        //referralTile("Version: ${ticket.version}"),
-                                      ]
-                                    : [
-                                        referralTile(
-                                            "Keep investing, keep playing to earn more golden tickets"),
-                                      ],
-                              ),
-                            ],
-                          ),
+                      : GoldenTicketGridItemCard(
+                          ticket: ticket,
+                          titleStyle: TextStyles.title2,
                         )),
-                )
-              ],
-            ),
+              Spacer(),
+              if (model.bottompadding) FelloAppBar(),
+              AnimatedContainer(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+                    // image: DecorationImage(
+                    //     image: AssetImage(Assets.splashBackground),
+                    //     fit: BoxFit.fill),
+                  ),
+                  duration: Duration(seconds: 1),
+                  curve: Curves.easeIn,
+                  width: SizeConfig.screenWidth,
+                  child: setModalContent(model))
+            ],
           ),
         );
       },
     );
   }
 
-  Widget referralTile(String title) {
+  Widget setModalContent(GoldenScratchCardViewModel model) {
+    if (ticket.redeemedTimestamp != null) {
+      //redeemed ticket -> just show the details
+      return Padding(
+        padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Congratulations!", style: TextStyles.title2.bold),
+            SizedBox(height: SizeConfig.padding16),
+            Column(children: [
+              bulletTiles("${ticket.note}"),
+              bulletTiles("Rewards have been credited to your wallet"),
+              ticket.redeemedTimestamp != null
+                  ? bulletTiles(
+                      "Redeemed on ${DateFormat('dd MMM, yyyy').format(ticket.redeemedTimestamp.toDate())} | ${DateFormat('h:mm a').format(ticket.redeemedTimestamp.toDate())}")
+                  : bulletTiles(
+                      "Recieved on ${DateFormat('dd MMM, yyyy').format(ticket.timestamp.toDate())} | ${DateFormat('h:mm a').format(ticket.timestamp.toDate())}")
+            ]),
+          ],
+        ),
+      );
+    } else {
+      if (model.isCardScratched) {
+        if (!ticket.isRewarding ||
+            ticket.rewardArr == null ||
+            ticket.rewardArr.isEmpty)
+          return Padding(
+            padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Don't lose hope 🙃", style: TextStyles.title2.bold),
+                SizedBox(height: SizeConfig.padding16),
+                Column(children: [
+                  bulletTiles("Keep investing, keep playing and win big!!"),
+                ]),
+              ],
+            ),
+          );
+        else {
+          if (model.state == ViewState.Busy) {
+            return Padding(
+              padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SpinKitWave(
+                    color: UiConstants.primaryColor,
+                    size: SizeConfig.padding32,
+                  ),
+                  SizedBox(height: SizeConfig.padding12),
+                  Text(
+                    "Please wait, registering your ticket",
+                    style: TextStyles.body2.bold,
+                  )
+                ],
+              ),
+            );
+          } else {
+            return Padding(
+              padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Congratulations!", style: TextStyles.title2.bold),
+                  SizedBox(height: SizeConfig.padding16),
+                  Column(children: [
+                    bulletTiles("${ticket.note}"),
+                    bulletTiles("Rewards have been credited to your wallet"),
+                    ticket.redeemedTimestamp != null
+                        ? bulletTiles(
+                            "Redeemed on ${DateFormat('dd MMM, yyyy').format(ticket.redeemedTimestamp.toDate())} | ${DateFormat('h:mm a').format(ticket.redeemedTimestamp.toDate())}")
+                        : bulletTiles(
+                            "Recieved on ${DateFormat('dd MMM, yyyy').format(ticket.timestamp.toDate())} | ${DateFormat('h:mm a').format(ticket.timestamp.toDate())}")
+                  ]),
+                ],
+              ),
+            );
+          }
+        }
+      } else {
+        return SizedBox(height: 0);
+      }
+    }
+  }
+
+  Widget bulletTiles(String title) {
     return Padding(
       padding: EdgeInsets.only(bottom: 20.0),
       child: Row(

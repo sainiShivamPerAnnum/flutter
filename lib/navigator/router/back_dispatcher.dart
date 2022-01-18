@@ -59,6 +59,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     //   return Future.value(true);
     // }
     // If user is in the profile page and preferences are changed
+
     if (AppState.unsavedPrefs) {
       if (_baseUtil != null &&
           _baseUtil.myUser != null &&
@@ -77,7 +78,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       Navigator.pop(_routerDelegate.navigatorKey.currentContext);
       AppState.screenStack.removeLast();
       print("Current Stack: ${AppState.screenStack}");
-      // _gtService.showGoldenTicketAvailableDialog();
+      _gtService.showGoldenTicketAvailableDialog();
       return Future.value(true);
     }
 

@@ -20,6 +20,7 @@ class GoldenScratchCardViewModel extends BaseModel {
   double _detailsModalHeight = 0;
   bool _bottompadding = true;
   bool _viewScratchedCard = false;
+  bool isCardScratched = false;
   // bool _isTicketRedeemedSuccessfully = true;
 
   // get isTicketRedeemedSuccessfully => this._isTicketRedeemedSuccessfully;
@@ -45,17 +46,18 @@ class GoldenScratchCardViewModel extends BaseModel {
 
   set bottompadding(value) => this._bottompadding = value;
 
-  showDetailsModal(bool isRewarding) {
-    _bottompadding = false;
-    _detailsModalHeight = isRewarding
-        ? SizeConfig.screenHeight * 0.5
-        : SizeConfig.screenHeight * 0.2;
-    notifyListeners();
-  }
+  // showDetailsModal(bool isRewarding) {
+  //   _bottompadding = false;
+  //   _detailsModalHeight = isRewarding
+  //       ? SizeConfig.screenHeight * 0.5
+  //       : SizeConfig.screenHeight * 0.2;
+  //   notifyListeners();
+  // }
 
   changeToUnlockedUI() {
     _bottompadding = false;
     _detailsModalHeight = SizeConfig.screenHeight * 0.5;
+    isCardScratched = true;
     //isTicketRedeemedSuccessfully = true;
     _viewScratchedCard = true;
     notifyListeners();
@@ -63,7 +65,8 @@ class GoldenScratchCardViewModel extends BaseModel {
 
   redeemCard(GoldenTicketsViewModel superModel, GoldenTicket ticket) async {
     scratchKey.currentState.reveal();
-    showDetailsModal(ticket.isRewarding);
+    // showDetailsModal(ticket.isRewarding);
+    isCardScratched = true;
     setState(ViewState.Busy);
     await superModel.redeemTicket(ticket);
     log(ticket.redeemedTimestamp.toString());

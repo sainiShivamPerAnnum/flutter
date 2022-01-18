@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
@@ -17,6 +19,8 @@ class GoldenMilestonesViewModel extends BaseModel {
   List<dynamic> _rawData;
   List<MilestoneRecord> _milestones;
   UserAugmontDetail _userAugmontDetails;
+  List<UserMilestoneModel> userMilestones;
+  List<FelloMilestoneModel> felloMilestones;
 
   List<MilestoneRecord> get milestones => _milestones;
 
@@ -29,19 +33,37 @@ class GoldenMilestonesViewModel extends BaseModel {
     setState(ViewState.Busy);
     _userAugmontDetails =
         await _dbModel.getUserAugmontDetails(_userService.baseUser.uid);
+
     setState(ViewState.Idle);
     fetchMilestones();
   }
 
   formatData() {
     _milestones = [];
-    for (int i = 0; i < _rawData.length; i++) {
-      _milestones.add(MilestoneRecord(
-        title: _rawData[i]['id'],
-        subtilte: _rawData[i]['title'],
-        isCompleted: checkIfCompleted(_rawData[i]['id']),
-      ));
-    }
+    felloMilestones.forEach((fe) {
+      if (userMilestones.firstWhere((ue) => ue.type == fe.prizeSubtype,
+              orElse: () => null) !=
+          null) {
+        FelloMilestoneModel _fms = fe;
+        UserMilestoneModel _ums =
+            userMilestones.firstWhere((ue) => fe.prizeSubtype == ue.type);
+        log(_fms.prizeSubtype + _ums.type);
+        _milestones.add(MilestoneRecord(
+            title: _fms.title,
+            subtilte: _fms.title,
+            isCompleted: true,
+            amt: _ums.netAmt,
+            flc: _ums.netFlc));
+      } else {
+        _milestones.add(MilestoneRecord(
+            title: fe.title,
+            subtilte: fe.title,
+            isCompleted: false,
+            amt: 0,
+            flc: 0));
+      }
+    });
+
     arrangeMilestonesList();
 
     notifyListeners();
@@ -91,10 +113,10 @@ class GoldenMilestonesViewModel extends BaseModel {
   }
 
   fetchMilestones() async {
-    var response = await _dbModel.getMilestonesList();
-    _rawData = response["checkpoints"];
+    felloMilestones = await _dbModel.getMilestonesList();
+    userMilestones =
+        await _dbModel.getUserAchievedMilestones(_userService.baseUser.uid);
     formatData();
-    _logger.d(response);
   }
 }
 
@@ -102,9 +124,41 @@ class MilestoneRecord {
   final String title;
   final String subtilte;
   final bool isCompleted;
+  final int amt;
+  final int flc;
 
   MilestoneRecord(
       {@required this.title,
       @required this.subtilte,
-      @required this.isCompleted});
+      @required this.isCompleted,
+      @required this.amt,
+      @required this.flc});
+}
+
+class FelloMilestoneModel {
+  String id;
+  String prizeSubtype;
+  String title;
+
+  FelloMilestoneModel({this.id, this.prizeSubtype, this.title});
+
+  FelloMilestoneModel.fromJson(Map<String, dynamic> data) {
+    id = data['id'] ?? "";
+    prizeSubtype = data['prizeSubtype'] ?? "";
+    title = data['title'] ?? "";
+  }
+}
+
+class UserMilestoneModel {
+  int netAmt;
+  int netFlc;
+  String type;
+
+  UserMilestoneModel({this.netAmt, this.netFlc, this.type});
+
+  UserMilestoneModel.fromJson(Map<String, dynamic> data) {
+    netAmt = data['netAmt'] ?? 0;
+    netFlc = data['netFlc'] ?? 0;
+    type = data['type'] ?? "";
+  }
 }

@@ -75,58 +75,58 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
   RedeemedGoldenScratchCard({@required this.ticket, @required this.titleStyle});
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-      ),
-      child: AnimatedContainer(
-        height: SizeConfig.screenWidth * 0.6,
-        width: SizeConfig.screenWidth * 0.6,
-        duration: Duration(milliseconds: 300),
-        curve: Curves.easeIn,
-        decoration: BoxDecoration(
-          color: UiConstants.tertiaryLight,
+    return LayoutBuilder(builder: (context, constraint) {
+      return Card(
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(SizeConfig.roundness12),
         ),
-        child: Stack(
-          children: [
-            Positioned(
-              bottom: 0,
-              left: 25,
-              child: Image.asset(Assets.logoShortform,
-                  height: SizeConfig.screenWidth * 0.14,
-                  color: UiConstants.tertiarySolid.withOpacity(0.1)),
-            ),
-            Positioned(
-              bottom: 5, // SizeConfig.pageHorizontalMargins,
-              right: 5, //SizeConfig.pageHorizontalMargins,
-              child: Image.asset(
-                Assets.felloRewards,
-                width: SizeConfig.screenWidth * 0.2,
+        child: AnimatedContainer(
+          height: SizeConfig.screenWidth * 0.6,
+          width: SizeConfig.screenWidth * 0.6,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeIn,
+          decoration: BoxDecoration(
+            color: UiConstants.tertiaryLight,
+            borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+          ),
+          child: Stack(
+            children: [
+              Positioned(
+                bottom: 0,
+                left: 25,
+                child: Image.asset(Assets.logoShortform,
+                    height: SizeConfig.screenWidth * 0.14,
+                    color: UiConstants.tertiarySolid.withOpacity(0.1)),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          getRewardText(ticket.rewardArr),
-                          style: titleStyle,
+              Positioned(
+                bottom: 5, // SizeConfig.pageHorizontalMargins,
+                right: 5, //SizeConfig.pageHorizontalMargins,
+                child: Image.asset(
+                  Assets.felloRewards,
+                  width: SizeConfig.screenWidth * 0.2,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(getRewardText(ticket.rewardArr),
+                              style: titleStyle),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            )
-          ],
+                      ],
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   String getRewardText(List<Reward> rewards) {

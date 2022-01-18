@@ -70,7 +70,7 @@ class PrizeClaimCard extends StatelessWidget {
                                   children: [
                                     FittedBox(
                                       child: Text(
-                                        "Available Balance",
+                                        "My Active Winnings",
                                         style: TextStyles.body1.bold,
                                       ),
                                     ),

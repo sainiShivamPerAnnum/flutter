@@ -7,12 +7,12 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_rating_dialog.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
-import 'package:felloapp/util/custom_logger.dart';
 
 enum MsgSource { Foreground, Background, Terminated }
 
@@ -142,10 +142,10 @@ class FcmHandler extends ChangeNotifier {
           break;
         case COMMAND_GOLDEN_TICKET_WIN:
           {
-            //showSnackbar = false;
-            // logger.d(data.toString());
-            // GoldenTicketService.hasGoldenTicket = true;
-            _gtService.showGoldenTicketAvailableDialog();
+            if (AppState.backButtonDispatcher.isAnyDialogOpen())
+              GoldenTicketService.hasGoldenTicket = true;
+            else
+              _gtService.showGoldenTicketAvailableDialog();
           }
           break;
         default:

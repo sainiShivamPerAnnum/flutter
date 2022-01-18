@@ -8,11 +8,11 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 
 class GoldenTicketService {
-  // static bool hasGoldenTicket = false;
+  static bool hasGoldenTicket = false;
   void showGoldenTicketAvailableDialog() {
-    // if (hasGoldenTicket) {
-    // hasGoldenTicket = false;
-    Future.delayed(Duration(milliseconds: 800), () {
+    if (hasGoldenTicket) {
+      hasGoldenTicket = false;
+
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Flushbar(
           flushbarPosition: FlushbarPosition.BOTTOM,
@@ -50,33 +50,6 @@ class GoldenTicketService {
           ],
         )..show(AppState.delegate.navigatorKey.currentContext);
       });
-      // BaseUtil.openDialog(
-      //   addToScreenStack: true,
-      //   isBarrierDismissable: false,
-      //   hapticVibrate: false,
-      //   content: FelloConfirmationDialog(
-      //       title: 'Yayy!',
-      //       subtitle: 'You won a golden ticket',
-      //       accept: 'Open',
-      //       acceptColor: UiConstants.primaryColor,
-      //       asset: Assets.goldenTicket,
-      //       reject: "Ok",
-      //       rejectColor: UiConstants.tertiarySolid,
-      //       showCrossIcon: false,
-      // onAccept: () async {
-      //   Future.delayed(Duration(milliseconds: 500), () {
-      //     AppState.backButtonDispatcher.didPopRoute();
-      //     AppState.delegate.appState.currentAction = PageAction(
-      //       page: MyWinnigsPageConfig,
-      //       state: PageState.addPage,
-      //     );
-      //   });
-      // },
-      //       onReject: () {
-      //         AppState.backButtonDispatcher.didPopRoute();
-      //       }),
-      // );
-    });
-    // }
+    }
   }
 }
