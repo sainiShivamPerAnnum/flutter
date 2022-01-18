@@ -79,6 +79,12 @@ class Constants {
       2; //no of days to wait before withdrawal
   static const int UNLOCK_REFERRAL_AMT = 100;
   static final DateTime VERSION_2_RELEASE_DATE = DateTime(2021, 4, 1);
-  static final String GAME_CRICKET_URI =
+  static const String GAME_CRICKET_URI =
       'https://prod.freakx.in/fello/cricket-2021/';
+
+  static const INSTALL_CLICK_ID = 'FELLO_INSTALL';
+  static const SIGNUP_CLICK_ID = 'FELLO_SIGNUP';
+
+  static const acquisitionTrackURL =
+      "https://optimidea.vnative.co/acquisition?security_token=fc8979c42862e88b9081&goal_value=783&click_id=";
 }
