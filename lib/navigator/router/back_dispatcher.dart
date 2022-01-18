@@ -54,10 +54,10 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
   @override
   Future<bool> didPopRoute() {
-    if (WinViewModel().panelController.isPanelOpen) {
-      WinViewModel().panelController.close();
-      return Future.value(true);
-    }
+    // if (WinViewModel().panelController.isPanelOpen) {
+    //   WinViewModel().panelController.close();
+    //   return Future.value(true);
+    // }
     // If user is in the profile page and preferences are changed
     if (AppState.unsavedPrefs) {
       if (_baseUtil != null &&
