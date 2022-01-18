@@ -6,6 +6,7 @@ import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/core/service/user_coin_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/constants.dart';
@@ -15,6 +16,7 @@ import 'package:felloapp/util/locator.dart';
 class GoldenTicketsViewModel extends BaseModel {
   //Dependencies
   final _userService = locator<UserService>();
+  final _userCoinService = locator<UserCoinService>();
   final _logger = locator<CustomLogger>();
   final _apiPaths = locator<ApiPath>();
 
@@ -72,16 +74,18 @@ class GoldenTicketsViewModel extends BaseModel {
     _logger.e(error, stacktrace);
   }
 
-  Future<bool> redeemTicket(String gtId) async {
+  Future<bool> redeemTicket(GoldenTicket ticket) async {
     Map<String, dynamic> _body = {
       "uid": _userService.baseUser.uid,
-      "gtId": gtId
+      "gtId": ticket.gtId
     };
     try {
       final String _bearer = await _getBearerToken();
       final _apiResponse = await APIService.instance
           .postData(_apiPaths.kRedeemGtReward, token: _bearer, body: _body);
       _logger.d(_apiResponse.toString());
+      _userService.getUserFundWalletData();
+      _userCoinService.getUserCoinBalance();
       return true;
     } catch (e) {
       _logger.e(e);

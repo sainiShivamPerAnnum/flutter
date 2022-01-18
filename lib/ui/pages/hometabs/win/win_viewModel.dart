@@ -31,7 +31,13 @@ class WinViewModel extends BaseModel {
   WinnersModel _winners;
   int _currentPage = 0;
   int get getCurrentPage => this._currentPage;
-  PanelController panelController = PanelController();
+  static PanelController _panelController = PanelController();
+  PanelController get panelController => _panelController;
+
+  set panelController(val) {
+    _panelController = val;
+    notifyListeners();
+  }
 
   set setCurrentPage(int currentPage) {
     this._currentPage = currentPage;
