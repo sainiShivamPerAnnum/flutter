@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -7,8 +10,18 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 
-class GoldenTicketService {
+class GoldenTicketService extends ChangeNotifier {
   static bool hasGoldenTicket = false;
+
+  List<GoldenTicket> _activeGoldenTickets;
+
+  List<GoldenTicket> get activeGoldenTickets => this._activeGoldenTickets ?? [];
+
+  set activeGoldenTickets(List<GoldenTicket> value) {
+    this._activeGoldenTickets = value;
+    notifyListeners();
+    log("GoldenTicket list updated");
+  }
 
   void showGoldenTicketFlushbar() {
     hasGoldenTicket = false;
@@ -48,12 +61,14 @@ class GoldenTicketService {
           style: TextStyles.body2.bold.colour(Colors.white),
         ),
         backgroundGradient: new LinearGradient(
-          colors: [UiConstants.primaryColor,
-            UiConstants.primaryColor.withGreen(150)],
+          colors: [
+            UiConstants.primaryColor,
+            UiConstants.primaryColor.withGreen(150)
+          ],
         ),
         boxShadows: [
           BoxShadow(
-            color:  UiConstants.primaryColor.withOpacity(0.5),
+            color: UiConstants.primaryColor.withOpacity(0.5),
             offset: Offset(0.0, 2.0),
             blurRadius: 8.0,
           )

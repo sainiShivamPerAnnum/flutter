@@ -64,7 +64,8 @@ class GoldenMilestonesView extends StatelessWidget {
                                   Text("Your Upcoming rewards",
                                       style: TextStyles.title4),
                                   SizedBox(height: SizeConfig.padding2),
-                                  Text("Keep on reaching milestones and win fun rewards!",
+                                  Text(
+                                      "Keep on reaching milestones and win fun rewards!",
                                       style: TextStyles.body4),
                                   SizedBox(height: SizeConfig.padding12),
                                   // Container(
@@ -139,38 +140,40 @@ class GoldenMilestonesView extends StatelessWidget {
                                                                         700]),
                                                           ),
                                                         ),
-                                                        Row(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            if (data[index]
-                                                                    .flc !=
-                                                                0)
-                                                              PrizeChip(
-                                                                color: UiConstants
-                                                                    .tertiarySolid,
-                                                                svg: Assets
-                                                                    .tokens,
-                                                                text:
-                                                                    "${data[index].flc}",
-                                                              ),
-                                                            SizedBox(
-                                                                width: SizeConfig
-                                                                    .padding16),
-                                                            if (data[index]
-                                                                    .amt !=
-                                                                0)
-                                                              PrizeChip(
-                                                                color: UiConstants
-                                                                    .primaryColor,
-                                                                png: Assets
-                                                                    .moneyIcon,
-                                                                text:
-                                                                    "${data[index].amt}",
-                                                              )
-                                                          ],
-                                                        ),
+                                                        if (data[index]
+                                                            .showPrize)
+                                                          Row(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              if (data[index]
+                                                                      .flc !=
+                                                                  0)
+                                                                PrizeChip(
+                                                                  color: UiConstants
+                                                                      .tertiarySolid,
+                                                                  svg: Assets
+                                                                      .tokens,
+                                                                  text:
+                                                                      "${data[index].flc}",
+                                                                ),
+                                                              SizedBox(
+                                                                  width: SizeConfig
+                                                                      .padding16),
+                                                              if (data[index]
+                                                                      .amt !=
+                                                                  0)
+                                                                PrizeChip(
+                                                                  color: UiConstants
+                                                                      .primaryColor,
+                                                                  png: Assets
+                                                                      .moneyIcon,
+                                                                  text:
+                                                                      "${data[index].amt}",
+                                                                )
+                                                            ],
+                                                          ),
                                                         // Row(
                                                         //   children: [
                                                         //     data[index].amt != 0

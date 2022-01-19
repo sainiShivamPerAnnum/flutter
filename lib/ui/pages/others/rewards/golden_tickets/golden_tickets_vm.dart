@@ -6,6 +6,7 @@ import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/core/service/golden_ticket_service.dart';
 import 'package:felloapp/core/service/user_coin_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -19,6 +20,7 @@ class GoldenTicketsViewModel extends BaseModel {
   final _userCoinService = locator<UserCoinService>();
   final _logger = locator<CustomLogger>();
   final _apiPaths = locator<ApiPath>();
+  final _gtService = locator<GoldenTicketService>();
 
   //Local Variables
   List<GoldenTicket> _goldenTicketList;
@@ -195,6 +197,7 @@ class GoldenTicketsViewModel extends BaseModel {
         arrangedGoldenTicketList.add(e);
       }
     });
+    _gtService.activeGoldenTickets = goldenTicketList;
     // CODE FOR TICKET DISTINCTION - USE IF REQUIRED
     // final ids = Set();
     // arrangedGoldenTicketList.retainWhere((x) => ids.add(x.gtId));

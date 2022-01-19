@@ -1,9 +1,11 @@
 import 'dart:developer';
 
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/golden_ticket_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -15,6 +17,7 @@ class GoldenMilestonesViewModel extends BaseModel {
   final _logger = locator<CustomLogger>();
   final _userService = locator<UserService>();
   final _augModel = locator<AugmontModel>();
+  final _gtService = locator<GoldenTicketService>();
 
   List<dynamic> _rawData;
   List<MilestoneRecord> _milestones;
@@ -47,13 +50,13 @@ class GoldenMilestonesViewModel extends BaseModel {
         FelloMilestoneModel _fms = fe;
         UserMilestoneModel _ums =
             userMilestones.firstWhere((ue) => fe.prizeSubtype == ue.type);
-        log(_fms.prizeSubtype + _ums.type);
         _milestones.add(MilestoneRecord(
             title: _fms.title,
             subtilte: _fms.title,
             isCompleted: true,
             amt: _ums.netAmt,
             type: _ums.type,
+            showPrize: false,
             flc: _ums.netFlc));
       } else {
         _milestones.add(MilestoneRecord(
@@ -62,12 +65,11 @@ class GoldenMilestonesViewModel extends BaseModel {
             isCompleted: false,
             type: fe.prizeSubtype,
             amt: 0,
+            showPrize: false,
             flc: 0));
       }
     });
-
     arrangeMilestonesList();
-
     notifyListeners();
   }
 
@@ -93,6 +95,19 @@ class GoldenMilestonesViewModel extends BaseModel {
         e.isCompleted = true;
       }
     });
+
+    //CHECK IF THE MILESTONE REWARD IS SCRATCHED OR NOT
+    _milestones.forEach((m) {
+      if (m.isCompleted) {
+        if (_gtService.activeGoldenTickets
+                .firstWhere((gt) => gt.prizeSubtype == m.type, orElse: null) !=
+            null) {
+          GoldenTicket gt = _gtService.activeGoldenTickets
+              .firstWhere((gt) => gt.prizeSubtype == m.type);
+          if (gt.redeemedTimestamp != null) m.showPrize = true;
+        }
+      }
+    });
   }
 
   fetchMilestones() async {
@@ -110,14 +125,17 @@ class MilestoneRecord {
   int amt;
   int flc;
   String type;
+  bool showPrize;
 
-  MilestoneRecord(
-      {@required this.title,
-      @required this.subtilte,
-      @required this.isCompleted,
-      @required this.amt,
-      @required this.flc,
-      @required this.type});
+  MilestoneRecord({
+    @required this.title,
+    @required this.subtilte,
+    @required this.isCompleted,
+    @required this.amt,
+    @required this.flc,
+    @required this.type,
+    this.showPrize,
+  });
 }
 
 class FelloMilestoneModel {
