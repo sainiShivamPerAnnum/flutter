@@ -30,7 +30,7 @@ class GoldenMilestonesView extends StatelessWidget {
               children: [
                 FelloAppBar(
                   leading: FelloAppBarBackButton(),
-                  title: "Milestones",
+                  title: "Upcoming Rewards",
                 ),
                 Expanded(
                   child: Container(
@@ -61,10 +61,10 @@ class GoldenMilestonesView extends StatelessWidget {
                                 children: [
                                   SizedBox(
                                       height: SizeConfig.pageHorizontalMargins),
-                                  Text("Upcoming rewards",
+                                  Text("Your Upcoming rewards",
                                       style: TextStyles.title4),
                                   SizedBox(height: SizeConfig.padding2),
-                                  Text("Complete task, earn rewards!",
+                                  Text("Keep on reaching milestones and win fun rewards!",
                                       style: TextStyles.body4),
                                   SizedBox(height: SizeConfig.padding12),
                                   // Container(

@@ -134,10 +134,10 @@ class GoldenScratchCardView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Don't lose hope 🙃", style: TextStyles.title2.bold),
+                Text("No rewards won", style: TextStyles.title2.bold),
                 SizedBox(height: SizeConfig.padding16),
                 Column(children: [
-                  bulletTiles("Keep investing, keep playing and win big!!"),
+                  bulletTiles("Keep investing, keep playing and win big!"),
                 ]),
               ],
             ),

@@ -136,9 +136,9 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
       if (rewards[0].type == "rupee")
         return "You've won ₹${rewards[0].value}";
       else if (rewards[0].type == "flc")
-        return "You've won ${rewards[0].value} fello tokens";
+        return "You've won ${rewards[0].value} Fello tokens";
     } else {
-      return "You've won ₹${rewards.firstWhere((e) => e.type == 'rupee').value ?? '0'} and ${rewards.firstWhere((e) => e.type == 'flc').value ?? '0'} fello tokens";
+      return "You've won ₹${rewards.firstWhere((e) => e.type == 'rupee').value ?? '0'} and ${rewards.firstWhere((e) => e.type == 'flc').value ?? '0'} Fello tokens";
     }
     return "";
   }

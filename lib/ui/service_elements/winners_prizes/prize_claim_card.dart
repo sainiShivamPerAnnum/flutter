@@ -70,8 +70,8 @@ class PrizeClaimCard extends StatelessWidget {
                                   children: [
                                     FittedBox(
                                       child: Text(
-                                        "My Active Winnings",
-                                        style: TextStyles.body1.bold,
+                                        "My Active Winnings: ",
+                                        style: TextStyles.body1,
                                       ),
                                     ),
                                   ],

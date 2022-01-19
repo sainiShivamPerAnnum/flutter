@@ -52,7 +52,7 @@ class WinnersLeaderBoardSE extends StatelessWidget {
                           bottom: SizeConfig.padding16,
                           left: SizeConfig.pageHorizontalMargins),
                       child: Text(
-                        "Top Winners",
+                        "Leaderboard",
                         style: TextStyles.title3.bold,
                       ),
                     ),
@@ -70,12 +70,12 @@ class WinnersLeaderBoardSE extends StatelessWidget {
                     children: [
                       leaderboardChips(
                         0,
-                        "Games",
+                        "Game Winners",
                       ),
                       SizedBox(width: 16),
                       leaderboardChips(
                         1,
-                        "Referrals",
+                        "Top Referrers",
                       ),
                     ],
                   ),

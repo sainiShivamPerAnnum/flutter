@@ -440,21 +440,13 @@ class AugmontGoldBuyViewModel extends BaseModel {
         }
 
         ///check if referral bonuses need to be unlocked
-        if (_userService.userFundWallet.augGoldPrinciple >=
-            BaseUtil.toInt(BaseRemoteConfig.remoteConfig
-                .getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT))) {
-          bool _isUnlocked =
-              await _dbModel.unlockReferralTickets(_baseUtil.myUser.uid);
-          // if (_isUnlocked) {
-          //   //give it a few seconds before showing congratulatory message
-          //   Timer(const Duration(seconds: 4), () {
-          //     BaseUtil.showPositiveAlert(
-          //       'Congratulations are in order!',
-          //       'Your referral bonus has been unlocked 🎉',
-          //     );
-          //   });
-          // }
-        }
+        // if (_userService.userFundWallet.augGoldPrinciple >=
+        //     BaseUtil.toInt(BaseRemoteConfig.remoteConfig
+        //         .getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT))) {
+        //   bool _isUnlocked =
+        //       await _dbModel.unlockReferralTickets(_baseUtil.myUser.uid);
+        //   // if (_isUnlocked) {
+        // }
 
         ///update UI
         onDepositComplete(true);

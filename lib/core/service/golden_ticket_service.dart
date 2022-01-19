@@ -3,6 +3,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 
@@ -39,19 +40,20 @@ class GoldenTicketService {
         margin: EdgeInsets.all(10),
         borderRadius: SizeConfig.roundness16,
         // title: "You won a Golden Ticket",
-        message: "Tap to find out what you won",
+        message: "Tap to find out what you have won",
         duration: Duration(seconds: 3),
         shouldIconPulse: true,
         titleText: Text(
-          "You won a Golden Ticket",
+          "You have a new Golden Ticket",
           style: TextStyles.body2.bold.colour(Colors.white),
         ),
         backgroundGradient: new LinearGradient(
-          colors: [Color(0xffA267AC), Color(0xffCE7BB0)],
+          colors: [UiConstants.primaryColor,
+            UiConstants.primaryColor.withGreen(150)],
         ),
         boxShadows: [
           BoxShadow(
-            color: Color(0xff750550).withOpacity(0.5),
+            color:  UiConstants.primaryColor.withOpacity(0.5),
             offset: Offset(0.0, 2.0),
             blurRadius: 8.0,
           )
