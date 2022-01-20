@@ -220,6 +220,7 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                       onPressed: () {
                         if (value.toInt() == 2) {
                           AppState.backButtonDispatcher.didPopRoute();
+                          _gtService.showInstantGoldenTicketView();
                         } else
                           _pageController.nextPage(
                               duration: Duration(milliseconds: 400),
@@ -232,6 +233,7 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
               TextButton(
                 onPressed: () {
                   AppState.backButtonDispatcher.didPopRoute();
+                  _gtService.showInstantGoldenTicketView();
                 },
                 child: Text(
                   "Skip",

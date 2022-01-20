@@ -56,7 +56,7 @@ class GoldenMilestonesViewModel extends BaseModel {
             isCompleted: true,
             amt: _ums.netAmt,
             type: _ums.type,
-            showPrize: false,
+            showPrize: true,
             flc: _ums.netFlc));
       } else {
         _milestones.add(MilestoneRecord(
@@ -99,12 +99,13 @@ class GoldenMilestonesViewModel extends BaseModel {
     //CHECK IF THE MILESTONE REWARD IS SCRATCHED OR NOT
     _milestones.forEach((m) {
       if (m.isCompleted) {
-        if (_gtService.activeGoldenTickets
-                .firstWhere((gt) => gt.prizeSubtype == m.type, orElse: null) !=
+        if (_gtService.activeGoldenTickets.firstWhere(
+                (gt) => gt.prizeSubtype == m.type,
+                orElse: () => null) !=
             null) {
           GoldenTicket gt = _gtService.activeGoldenTickets
               .firstWhere((gt) => gt.prizeSubtype == m.type);
-          if (gt.redeemedTimestamp != null) m.showPrize = true;
+          if (gt.redeemedTimestamp == null) m.showPrize = false;
         }
       }
     });
@@ -156,12 +157,14 @@ class UserMilestoneModel {
   int netAmt;
   int netFlc;
   String type;
+  bool isRedeemed;
 
-  UserMilestoneModel({this.netAmt, this.netFlc, this.type});
+  UserMilestoneModel({this.netAmt, this.netFlc, this.type, this.isRedeemed});
 
   UserMilestoneModel.fromJson(Map<String, dynamic> data) {
     netAmt = data['netAmt'] ?? 0;
     netFlc = data['netFlc'] ?? 0;
     type = data['type'] ?? "";
+    isRedeemed = data['isRedeemed'] ?? false;
   }
 }

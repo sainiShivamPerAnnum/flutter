@@ -1,0 +1,91 @@
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/apis_path_constants.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/model/golden_ticket_model.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/api_service.dart';
+import 'package:felloapp/core/service/golden_ticket_service.dart';
+import 'package:felloapp/core/service/user_coin_service.dart';
+import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_view.dart';
+import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/locator.dart';
+
+class GTInstantViewModel extends BaseModel {
+  final _userService = locator<UserService>();
+  final _userCoinService = locator<UserCoinService>();
+  final _logger = locator<CustomLogger>();
+  final _apiPaths = locator<ApiPath>();
+  final _gtService = locator<GoldenTicketService>();
+  final _dbModel = locator<DBModel>();
+  bool _isShimmerEnabled = false;
+  GoldenTicket _goldenTicket;
+
+  GoldenTicket get goldenTicket => this._goldenTicket;
+
+  set goldenTicket(value) {
+    this._goldenTicket = value;
+    notifyListeners();
+  }
+
+  get isShimmerEnabled => this._isShimmerEnabled;
+
+  set isShimmerEnabled(value) {
+    this._isShimmerEnabled = value;
+    notifyListeners();
+  }
+
+  bool _isCardScratched = false;
+
+  get isCardScratched => this._isCardScratched;
+
+  set isCardScratched(value) {
+    this._isCardScratched = value;
+    notifyListeners();
+  }
+
+  init() async {
+    setState(ViewState.Busy);
+    await fetchGoldenTicketByID();
+    GoldenTicketService.goldenTicketId = null;
+    setState(ViewState.Idle);
+  }
+
+  fetchGoldenTicketByID() async {
+    goldenTicket = await _dbModel.getGoldenTicketById(
+        _userService.baseUser.uid, GoldenTicketService.goldenTicketId);
+    //   goldenTicket =
+    //       await _dbModel.getLatestGoldenTicket(_userService.baseUser.uid);
+    // }
+  }
+
+  Future<void> redeemTicket() async {
+    scratchKey.currentState.reveal();
+    isCardScratched = true;
+    Map<String, dynamic> _body = {
+      "uid": _userService.baseUser.uid,
+      "gtId": goldenTicket.gtId
+    };
+    try {
+      _getBearerToken().then((String token) => APIService.instance
+              .postData(_apiPaths.kRedeemGtReward, token: token, body: _body)
+              .then((value) {
+            _userService.getUserFundWalletData();
+            _userCoinService.getUserCoinBalance();
+          }));
+    } catch (e) {
+      _logger.e(e);
+      BaseUtil.showNegativeAlert(
+          "An error occured while redeeming your golden ticket",
+          "Please try again in your winnings section");
+    }
+  }
+
+  Future<String> _getBearerToken() async {
+    String token = await _userService.firebaseUser.getIdToken();
+    _logger.d(token);
+
+    return token;
+  }
+}

@@ -139,6 +139,34 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  Future<GoldenTicket> getLatestGoldenTicket(String userId) async {
+    try {
+      QuerySnapshot gtSnapshot = await _api.checkForLatestGoldenTicket(userId);
+      if (gtSnapshot != null) {
+        GoldenTicket ticket = GoldenTicket.fromJson(
+            gtSnapshot.docs.first.data(), gtSnapshot.docs.first.id);
+        return ticket;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<GoldenTicket> getGoldenTicketById(String userId, String gtId) async {
+    GoldenTicket ticket;
+    try {
+      DocumentSnapshot goldenTicketRaw =
+          await _api.fetchGoldenTicketById(userId, gtId);
+      if (goldenTicketRaw != null) {
+        ticket =
+            GoldenTicket.fromJson(goldenTicketRaw.data(), goldenTicketRaw.id);
+      }
+      return ticket;
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<bool> checkIfUserHasNewNotifications(String userId) async {
     try {
       QuerySnapshot notificationSnapshot =

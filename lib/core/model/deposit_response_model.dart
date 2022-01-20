@@ -5,10 +5,9 @@ class DepositResponseModel {
   Response response;
   AugResponse augResponse;
   Note note;
-  bool isGtRewarded;
+  String gtId;
 
-  DepositResponseModel(
-      {this.response, this.augResponse, this.note, this.isGtRewarded});
+  DepositResponseModel({this.response, this.augResponse, this.note, this.gtId});
 
   DepositResponseModel.fromJson(Map<String, dynamic> json) {
     response = json['response'] != null
@@ -18,7 +17,7 @@ class DepositResponseModel {
         ? new AugResponse.fromJson(json['augResponse'])
         : null;
     note = json['note'] != null ? new Note.fromJson(json['note']) : null;
-    isGtRewarded = json['isGtRewarded'] != null ? json['isGtRewarded'] : false;
+    gtId = json['gtId'] != null ? json['gtId'] : false;
   }
 
   Map<String, dynamic> toJson() {
@@ -32,8 +31,8 @@ class DepositResponseModel {
     if (this.note != null) {
       data['note'] = this.note.toJson();
     }
-    if (this.isGtRewarded != null) {
-      data['isGtRewarded'] = this.isGtRewarded;
+    if (this.gtId != null) {
+      data['gtId'] = this.gtId;
     }
     return data;
   }
@@ -43,7 +42,7 @@ class DepositResponseModel {
       'response': response.toMap(),
       'augResponse': augResponse?.toMap(),
       'note': note?.toMap(),
-      'isGtRewarded': isGtRewarded
+      'gtId': gtId
     };
   }
 
@@ -52,12 +51,12 @@ class DepositResponseModel {
         response: Response.fromMap(map['response']),
         augResponse: AugResponse?.fromMap(map['augResponse']),
         note: Note?.fromMap(map['note'] ?? {}),
-        isGtRewarded: map['isGtRewarded'] ?? false);
+        gtId: map['gtId']);
   }
 
   @override
   String toString() =>
-      'DepositResponseModel(response: $response, augResponse: $augResponse, note: $note, isGtRewarded: $isGtRewarded)';
+      'DepositResponseModel(response: $response, augResponse: $augResponse, note: $note, gtId: $gtId)';
 }
 
 class Response {

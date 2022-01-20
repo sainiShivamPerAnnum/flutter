@@ -611,6 +611,10 @@ class _LoginControllerState extends State<LoginController>
                         body: _body,
                         token: _bearer);
                     res['flag'] ? flag = true : flag = false;
+                    _logger.d("Is Golden Ticket Rewarded: ${res['gtId']}");
+                    if (res['gtId'] != null &&
+                        res['gtId'].toString().isNotEmpty)
+                      GoldenTicketService.goldenTicketId = res['gtId'];
                   } catch (e) {
                     _logger.d(e);
                     _usernameKey.currentState.enabled = true;
