@@ -163,7 +163,7 @@ class DBModel extends ChangeNotifier {
       }
       return ticket;
     } catch (e) {
-      return null;
+      return ticket;
     }
   }
 

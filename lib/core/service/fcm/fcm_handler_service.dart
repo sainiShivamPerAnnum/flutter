@@ -145,10 +145,10 @@ class FcmHandler extends ChangeNotifier {
           break;
         case COMMAND_GOLDEN_TICKET_WIN:
           {
-            if (AppState.backButtonDispatcher.isAnyDialogOpen())
-              GoldenTicketService.hasGoldenTicket = true;
-            else
-              _gtService.showGoldenTicketFlushbar();
+            // if (AppState.backButtonDispatcher.isAnyDialogOpen())
+            //   GoldenTicketService.hasGoldenTicket = true;
+            // else
+            //   _gtService.showGoldenTicketFlushbar();
           }
           break;
         default:

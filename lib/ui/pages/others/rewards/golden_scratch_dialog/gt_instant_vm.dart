@@ -46,19 +46,22 @@ class GTInstantViewModel extends BaseModel {
   }
 
   init() async {
-    setState(ViewState.Busy);
-    await fetchGoldenTicketByID();
-    GoldenTicketService.goldenTicketId = null;
-    setState(ViewState.Idle);
+    //setState(ViewState.Busy);
+    // await fetchGoldenTicketByID();
+    // GoldenTicketService.goldenTicketId = null;
+    goldenTicket = GoldenTicketService.currentGT;
+    GoldenTicketService.currentGT = null;
+    // GoldenTicketService.hasGoldenTicket = false;
+    //setState(ViewState.Idle);
   }
 
-  fetchGoldenTicketByID() async {
-    goldenTicket = await _dbModel.getGoldenTicketById(
-        _userService.baseUser.uid, GoldenTicketService.goldenTicketId);
-    //   goldenTicket =
-    //       await _dbModel.getLatestGoldenTicket(_userService.baseUser.uid);
-    // }
-  }
+  // fetchGoldenTicketByID() async {
+  //   goldenTicket = await _dbModel.getGoldenTicketById(
+  //       _userService.baseUser.uid, GoldenTicketService.goldenTicketId);
+  //   //   goldenTicket =
+  //   //       await _dbModel.getLatestGoldenTicket(_userService.baseUser.uid);
+  //   // }
+  // }
 
   Future<void> redeemTicket() async {
     scratchKey.currentState.reveal();

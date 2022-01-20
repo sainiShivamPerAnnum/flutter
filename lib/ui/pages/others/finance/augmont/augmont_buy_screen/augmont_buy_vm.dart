@@ -471,9 +471,10 @@ class AugmontGoldBuyViewModel extends BaseModel {
   }
 
   onDepositComplete(bool flag) async {
+    bool gtFlag = await _gtService.fetchAndVerifyGoldenTicketByID();
     isGoldBuyInProgress = false;
     if (flag) {
-      if (GoldenTicketService.goldenTicketId != null)
+      if (gtFlag)
         _gtService.showInstantGoldenTicketView();
       else
         showSuccessGoldBuyDialog();

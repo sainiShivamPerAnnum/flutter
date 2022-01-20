@@ -78,8 +78,8 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       Navigator.pop(_routerDelegate.navigatorKey.currentContext);
       AppState.screenStack.removeLast();
       print("Current Stack: ${AppState.screenStack}");
-      if (GoldenTicketService.hasGoldenTicket)
-        _gtService.showGoldenTicketFlushbar();
+      // if (GoldenTicketService.hasGoldenTicket)
+      //   _gtService.showGoldenTicketFlushbar();
       return Future.value(true);
     }
 
