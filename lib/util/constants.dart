@@ -1,6 +1,7 @@
 class Constants {
   static const String APP_NAME = "Fello";
   static const String PAN_AES_KEY = 'felloisquitefun!';
+  static const String APP_DOWNLOAD_LINK = "https://fello.in/app/download";
 
   //Game Type
   static const String GAME_TYPE_CRICKET = "GM_CRIC2020";

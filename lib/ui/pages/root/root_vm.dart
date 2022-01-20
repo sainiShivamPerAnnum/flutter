@@ -210,7 +210,11 @@ class RootViewModel extends BaseModel {
 
   _processDynamicLink(String userId, Uri deepLink, BuildContext context) async {
     String _uri = deepLink.toString();
-    if (_uri.startsWith(Constants.GOLDENTICKET_DYNAMICLINK_PREFIX)) {
+
+    if (_uri.startsWith(Constants.APP_DOWNLOAD_LINK)) {
+      //check if click_id is null ?
+      //if not null, make api call
+    } else if (_uri.startsWith(Constants.GOLDENTICKET_DYNAMICLINK_PREFIX)) {
       //Golden ticket dynamic link
       int flag = await _submitGoldenTicket(userId, _uri, context);
     } else {
