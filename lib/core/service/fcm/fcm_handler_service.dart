@@ -7,12 +7,12 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_rating_dialog.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
-import 'package:felloapp/util/custom_logger.dart';
 
 enum MsgSource { Foreground, Background, Terminated }
 
@@ -32,7 +32,7 @@ class FcmHandler extends ChangeNotifier {
 
   Future<bool> handleMessage(Map data, MsgSource source) async {
     logger.d(data.toString());
-    bool showSnackbar = false;
+    bool showSnackbar = true;
     String title = data['dialog_title'];
     String body = data['dialog_body'];
     String command = data['command'];
@@ -41,6 +41,7 @@ class FcmHandler extends ChangeNotifier {
     // If notifications contains an url for navigation
     if (url != null && url.isNotEmpty) {
       if (source == MsgSource.Background || source == MsgSource.Terminated) {
+        showSnackbar = false;
         AppState.delegate.parseRoute(Uri.parse(url));
         return true;
       }
@@ -48,6 +49,7 @@ class FcmHandler extends ChangeNotifier {
 
     // If message has a command payload
     if (data['command'] != null) {
+      showSnackbar = false;
       switch (command) {
         case COMMAND_CRIC_GAME_END:
           {
@@ -69,13 +71,14 @@ class FcmHandler extends ChangeNotifier {
                     action: Container(
                       width: SizeConfig.screenWidth,
                       child: FelloButtonLg(
-                        child: Text(
-                          "OK",
-                          style: TextStyles.body2.bold.colour(Colors.white),
-                        ),
-                        onPressed: () =>
-                            AppState.backButtonDispatcher.didPopRoute(),
-                      ),
+                          child: Text(
+                            "OK",
+                            style: TextStyles.body2.bold.colour(Colors.white),
+                          ),
+                          onPressed: () {
+                            AppState.backButtonDispatcher.didPopRoute();
+                            // _gtService.showGoldenTicketAvailableDialog();
+                          }),
                     ),
                   ),
                 );
@@ -133,10 +136,10 @@ class FcmHandler extends ChangeNotifier {
           break;
         case COMMAND_GOLDEN_TICKET_WIN:
           {
-            showSnackbar = false;
-            logger.d(data.toString());
-            GoldenTicketService.hasGoldenTicket = true;
-            _gtService.showGoldenTicketAvailableDialog();
+            if (AppState.backButtonDispatcher.isAnyDialogOpen())
+              GoldenTicketService.hasGoldenTicket = true;
+            else
+              _gtService.showGoldenTicketFlushbar();
           }
           break;
         default:

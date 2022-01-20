@@ -444,21 +444,13 @@ class AugmontGoldBuyViewModel extends BaseModel {
         }
 
         ///check if referral bonuses need to be unlocked
-        if (_userService.userFundWallet.augGoldPrinciple >=
-            BaseUtil.toInt(BaseRemoteConfig.remoteConfig
-                .getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT))) {
-          bool _isUnlocked =
-              await _dbModel.unlockReferralTickets(_baseUtil.myUser.uid);
-          // if (_isUnlocked) {
-          //   //give it a few seconds before showing congratulatory message
-          //   Timer(const Duration(seconds: 4), () {
-          //     BaseUtil.showPositiveAlert(
-          //       'Congratulations are in order!',
-          //       'Your referral bonus has been unlocked 🎉',
-          //     );
-          //   });
-          // }
-        }
+        // if (_userService.userFundWallet.augGoldPrinciple >=
+        //     BaseUtil.toInt(BaseRemoteConfig.remoteConfig
+        //         .getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT))) {
+        //   bool _isUnlocked =
+        //       await _dbModel.unlockReferralTickets(_baseUtil.myUser.uid);
+        //   // if (_isUnlocked) {
+        // }
 
         ///update UI
         onDepositComplete(true);
@@ -483,27 +475,11 @@ class AugmontGoldBuyViewModel extends BaseModel {
   }
 
   onDepositComplete(bool flag) {
-    // _isDepositInProgress = false;
-    // setState(() {});
     isGoldBuyInProgress = false;
     if (flag) {
-      // BaseUtil.showPositiveAlert(
-      //     'SUCCESS', 'You gold deposit was confirmed!', context);
       showSuccessGoldBuyDialog();
-      if (GoldenTicketService.hasGoldenTicket != null &&
-          GoldenTicketService.hasGoldenTicket)
-        BaseUtil.showPositiveAlert(
-          "Yayy, You won a Golden Ticket",
-          "Go to my winnings section to redeem it",
-        );
-
-      _analyticsService.track(eventName: AnalyticsEvents.buyGoldSuccess);
     } else {
       AppState.backButtonDispatcher.didPopRoute();
-      _analyticsService.track(eventName: AnalyticsEvents.buyGoldFailed);
-      // BaseUtil.showNegativeAlert('Verifying Transaction',
-      //     'Your transaction is being verified and will be updated shortly',
-      //     seconds: 5);
     }
   }
 
@@ -535,13 +511,11 @@ class AugmontGoldBuyViewModel extends BaseModel {
           AppState.backButtonDispatcher.didPopRoute();
           AppState.backButtonDispatcher.didPopRoute();
           AppState.delegate.appState.setCurrentTabIndex = 1;
-          _gtService.showGoldenTicketAvailableDialog();
-          _analyticsService.track(eventName: AnalyticsEvents.buyGoldPlay);
+          // _gtService.showGoldenTicketAvailableDialog();
         },
         onAccept: () {
           AppState.backButtonDispatcher.didPopRoute();
-          _gtService.showGoldenTicketAvailableDialog();
-          _analyticsService.track(eventName: AnalyticsEvents.buyGoldInvestMore);
+          // _gtService.showGoldenTicketAvailableDialog();
         },
       ),
     );

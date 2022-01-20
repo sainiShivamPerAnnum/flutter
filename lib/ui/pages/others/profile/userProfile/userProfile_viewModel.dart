@@ -263,7 +263,7 @@ class UserProfileVM extends BaseModel {
           subtitle: 'Are you sure you want to sign out?',
           accept: 'Yes',
           acceptColor: UiConstants.primaryColor,
-          asset: Assets.signout,
+          // asset: Assets.signout,
           reject: "No",
           rejectColor: UiConstants.tertiarySolid,
           showCrossIcon: false,

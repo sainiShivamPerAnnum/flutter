@@ -119,7 +119,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "saveSecure" : MessageLookupByLibrary.simpleMessage("100% secure"),
     "saveSellButton" : MessageLookupByLibrary.simpleMessage("SELL"),
     "saveViewAll" : MessageLookupByLibrary.simpleMessage("View All"),
-    "saveWinningsLabel" : MessageLookupByLibrary.simpleMessage("My Total Winnings"),
+    "saveWinningsLabel" : MessageLookupByLibrary.simpleMessage("My Active Winnings"),
     "saveWinningsValue" : m6,
     "signout" : MessageLookupByLibrary.simpleMessage("Sign Out"),
     "splashNoInternet" : MessageLookupByLibrary.simpleMessage("No active internet connection"),

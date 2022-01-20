@@ -153,6 +153,7 @@ class NameInputScreenState extends State<NameInputScreen> {
   }
 
   void _showAndroidDatePicker() async {
+    FocusScope.of(context).unfocus();
     var res = await showDatePicker(
       context: context,
       initialDate: DateTime(2000, 1, 1),

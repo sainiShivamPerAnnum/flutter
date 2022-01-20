@@ -49,7 +49,7 @@ class HttpModel extends ChangeNotifier {
 
       String _bearer = await getBearerToken();
       Uri _uri = Uri.https(
-          ASIA_BASE_URI, '/referralOps/$_stage/api/validate', _params);
+          ASIA_BASE_URI, '/referralOps/$_stage/api/v2/validate', _params);
       http.Response _response = await http.post(_uri, headers: {HttpHeaders.authorizationHeader: 'Bearer $_bearer'});
       logger.d(_response.body);
       if (_response.statusCode == 200) {

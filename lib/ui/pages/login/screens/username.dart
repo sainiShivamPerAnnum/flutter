@@ -140,10 +140,9 @@ class UsernameState extends State<Username> {
 
   @override
   void didChangeDependencies() {
-    if (mounted)
-      Future.delayed(Duration(seconds: 2), () {
-        if (mounted) FocusScope.of(context).requestFocus(focusNode);
-      });
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (mounted) FocusScope.of(context).requestFocus();
+    });
 
     super.didChangeDependencies();
   }
@@ -175,7 +174,7 @@ class UsernameState extends State<Username> {
               key: _formKey,
               child: Container(
                 child: TextFormField(
-                  focusNode: focusNode,
+                  // focusNode: focusNode,
                   controller: usernameController,
                   inputFormatters: [
                     LowerCaseTextFormatter(),

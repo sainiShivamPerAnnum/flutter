@@ -48,6 +48,7 @@ class RootViewModel extends BaseModel {
   int get currentTabIndex => _appState.rootIndex;
 
   Future<void> refresh() async {
+    if (AppState().getCurrentTabIndex == 2) return;
     await _userCoinService.getUserCoinBalance();
     await _userService.getUserFundWalletData();
     txnService.signOut();
@@ -129,21 +130,13 @@ class RootViewModel extends BaseModel {
             topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
         backgroundColor: UiConstants.bottomNavBarColor,
         content: const SecurityModalSheet());
-    // showModalBottomSheet(
-    //     context: AppState.delegate.navigatorKey.currentContext,
-    //     shape: RoundedRectangleBorder(
-    //         borderRadius: BorderRadius.only(
-    //             topLeft: Radius.circular(30.0),
-    //             topRight: Radius.circular(30.0))),
-    //     backgroundColor: UiConstants.bottomNavBarColor,
-    //     builder: (context) {
-    //       return const SecurityModalSheet();
-    //     });
   }
 
   initialize() async {
     if (!_isInitialized) {
       _isInitialized = true;
+      _initAdhocNotifications();
+
       _localDBModel.showHomeTutorial.then((value) {
         if (value) {
           //show tutorial
@@ -154,8 +147,6 @@ class RootViewModel extends BaseModel {
           notifyListeners();
         }
       });
-
-      _initAdhocNotifications();
 
       _baseUtil.getProfilePicture();
       // show security modal

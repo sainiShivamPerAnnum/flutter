@@ -93,6 +93,7 @@ android {
         }
         qa {
             dimension "flavors"
+            resValue "string", "app_name", "Fello QA"
         }
         prod {
             applicationId "in.fello.felloapp"
