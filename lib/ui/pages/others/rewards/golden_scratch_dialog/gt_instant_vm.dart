@@ -10,7 +10,9 @@ import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_view.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:flutter/services.dart';
 
 class GTInstantViewModel extends BaseModel {
   final _userService = locator<UserService>();
@@ -21,6 +23,14 @@ class GTInstantViewModel extends BaseModel {
   final _dbModel = locator<DBModel>();
   bool _isShimmerEnabled = false;
   GoldenTicket _goldenTicket;
+  double _buttonOpacity = 0;
+
+  double get buttonOpacity => this._buttonOpacity;
+
+  set buttonOpacity(value) {
+    this._buttonOpacity = value;
+    notifyListeners();
+  }
 
   GoldenTicket get goldenTicket => this._goldenTicket;
 
@@ -49,6 +59,7 @@ class GTInstantViewModel extends BaseModel {
     //setState(ViewState.Busy);
     // await fetchGoldenTicketByID();
     // GoldenTicketService.goldenTicketId = null;
+    Haptic.vibrate();
     goldenTicket = GoldenTicketService.currentGT;
     GoldenTicketService.currentGT = null;
     // GoldenTicketService.hasGoldenTicket = false;
@@ -65,6 +76,8 @@ class GTInstantViewModel extends BaseModel {
 
   Future<void> redeemTicket() async {
     scratchKey.currentState.reveal();
+    Haptic.vibrate();
+    buttonOpacity = 1.0;
     isCardScratched = true;
     Map<String, dynamic> _body = {
       "uid": _userService.baseUser.uid,

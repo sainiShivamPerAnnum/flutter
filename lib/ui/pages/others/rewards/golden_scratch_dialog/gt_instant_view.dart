@@ -17,6 +17,8 @@ import 'package:scratcher/scratcher.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
 class GTInstantView extends StatefulWidget {
+  final String title;
+  GTInstantView({this.title});
   @override
   State<GTInstantView> createState() => _GTInstantViewState();
 }
@@ -88,10 +90,27 @@ class _GTInstantViewState extends State<GTInstantView>
                         children: [
                           Spacer(flex: 1),
                           Text(
-                            "Wohoo!!, you earned a golden ticket",
-                            style: TextStyles.title3.bold.colour(Colors.white),
+                            widget.title ?? "Hurray!!",
+                            style: TextStyles.title2.bold.colour(Colors.white),
+                            textAlign: TextAlign.center,
                           ),
-                          Spacer(flex: 1),
+                          Container(
+                            width: SizeConfig.screenWidth,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.pageHorizontalMargins,
+                              vertical: SizeConfig.padding8,
+                            ),
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                "You've earned a new golden ticket",
+                                style:
+                                    TextStyles.title3.bold.colour(Colors.white),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                          Spacer(flex: 2),
                           Transform.scale(
                             scale: 1 - _controller.value,
                             child: ClipRRect(
@@ -143,48 +162,58 @@ class _GTInstantViewState extends State<GTInstantView>
                               ),
                             ),
                           ),
-                          Spacer(flex: 1),
+                          Spacer(flex: 2),
                           Container(
                             margin: EdgeInsets.symmetric(
                                 horizontal: SizeConfig.pageHorizontalMargins),
                             child: Column(
                               children: [
-                                Container(
-                                  width: SizeConfig.screenWidth / 2,
-                                  child: FelloButtonLg(
-                                    color: UiConstants.primaryColor,
-                                    child: Text(
-                                      "View My Winnings",
-                                      style: TextStyles.body2.bold
-                                          .colour(Colors.white),
+                                Opacity(
+                                  opacity: model.buttonOpacity,
+                                  child: AnimatedContainer(
+                                    duration: Duration(seconds: 1),
+                                    curve: Curves.easeIn,
+                                    width: SizeConfig.screenWidth / 2,
+                                    child: FelloButtonLg(
+                                      color: UiConstants.primaryColor,
+                                      child: Text(
+                                        "Start Playing",
+                                        style: TextStyles.body2.bold
+                                            .colour(Colors.white),
+                                      ),
+                                      onPressed: () {
+                                        if (!model.isCardScratched) return;
+                                        AppState.delegate.appState
+                                            .setCurrentTabIndex = 1;
+                                        while (
+                                            AppState.screenStack.length > 1) {
+                                          AppState.backButtonDispatcher
+                                              .didPopRoute();
+                                        }
+                                      },
                                     ),
-                                    onPressed: () {
-                                      AppState.backButtonDispatcher
-                                          .didPopRoute();
-                                      AppState.delegate.appState.currentAction =
-                                          PageAction(
-                                              state: PageState.addPage,
-                                              page: MyWinnigsPageConfig);
-                                    },
                                   ),
                                 ),
                                 SizedBox(height: 12),
                                 TextButton(
                                   onPressed: () {
                                     AppState.backButtonDispatcher.didPopRoute();
+                                    AppState.delegate.appState.currentAction =
+                                        PageAction(
+                                            state: PageState.addPage,
+                                            page: MyWinnigsPageConfig);
                                   },
                                   child: Text(
-                                    model.isCardScratched
-                                        ? 'Close'
-                                        : "I'll do it later",
-                                    style:
-                                        TextStyles.body3.colour(Colors.white),
+                                    'My Winnings',
+                                    style: TextStyles.body3
+                                        .colour(Colors.white)
+                                        .underline,
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                          Spacer(flex: 1),
+                          Spacer(flex: 2),
                         ],
                       ),
                     )
