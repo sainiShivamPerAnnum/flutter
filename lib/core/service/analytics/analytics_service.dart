@@ -3,12 +3,15 @@ import 'package:felloapp/core/service/analytics/analytics_events.dart';
 import 'package:felloapp/core/service/analytics/base_analytics_service.dart';
 import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
 import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
+import 'package:felloapp/core/service/api_service.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 
 class AnalyticsService extends BaseAnalyticsService {
   final _mixpanel = locator<MixpanelAnalytics>();
   final _webengage = locator<WebEngageAnalytics>();
+  final _apiService = locator<APIService>();
 
   Future<void> login({bool isOnboarded, BaseUser baseUser}) async {
     await _mixpanel.login(isOnboarded: isOnboarded, baseUser: baseUser);
@@ -37,5 +40,9 @@ class AnalyticsService extends BaseAnalyticsService {
   void trackScreen({String screen, Map<String, dynamic> properties}) {
     _mixpanel.track(eventName: screen, properties: properties);
     _webengage.track(eventName: screen, properties: properties);
+  }
+
+  void trackAcquisiotion(String clickId){
+    _apiService.postData("${Constants.acquisitionTrackURL}$clickId");
   }
 }
