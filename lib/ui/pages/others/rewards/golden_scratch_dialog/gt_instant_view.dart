@@ -165,6 +165,7 @@ class _GTInstantViewState extends State<GTInstantView>
                                       : RedeemedGoldenScratchCard(
                                           ticket: model.goldenTicket,
                                           titleStyle: TextStyles.title2,
+                                          width: SizeConfig.screenWidth * 0.6,
                                         ),
                                 ),
                               ),

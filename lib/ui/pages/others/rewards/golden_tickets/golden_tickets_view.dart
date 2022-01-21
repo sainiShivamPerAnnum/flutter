@@ -101,6 +101,7 @@ class GoldenTicketsView extends StatelessWidget {
                                 child: GoldenTicketGridItemCard(
                                   ticket: model.arrangedGoldenTicketList[i],
                                   titleStyle: TextStyles.body2,
+                                  width: SizeConfig.screenWidth * 0.3,
                                 ),
                               );
                             },
