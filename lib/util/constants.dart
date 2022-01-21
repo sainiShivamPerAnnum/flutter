@@ -1,6 +1,7 @@
 class Constants {
   static const String APP_NAME = "Fello";
   static const String PAN_AES_KEY = 'felloisquitefun!';
+  static const String APP_DOWNLOAD_LINK = "https://fello.in/app/download";
 
   //Game Type
   static const String GAME_TYPE_CRICKET = "GM_CRIC2020";
@@ -81,4 +82,10 @@ class Constants {
   static final DateTime VERSION_2_RELEASE_DATE = DateTime(2021, 4, 1);
   static final String GAME_CRICKET_URI =
       'https://prod.freakx.in/fello/cricket-2021-V2/';
+
+  static const INSTALL_CLICK_ID = 'FELLO_INSTALL';
+  static const SIGNUP_CLICK_ID = 'FELLO_SIGNUP';
+
+  static const acquisitionTrackURL =
+      "https://optimidea.vnative.co/acquisition?security_token=fc8979c42862e88b9081&goal_value=783&click_id=";
 }

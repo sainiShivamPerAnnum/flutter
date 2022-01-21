@@ -5,13 +5,13 @@ import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
-import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/mixpanel_events.dart';
+import 'package:felloapp/core/service/analytics/analytics_events.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -24,7 +24,7 @@ class ReferralDetailsViewModel extends BaseModel {
   final _razorpayModel = locator<RazorpayModel>();
   final _fcmListener = locator<FcmListener>();
   final _userService = locator<UserService>();
-  final _mixpanelService = locator<MixpanelService>();
+  final _analyticsService = locator<AnalyticsService>();
 
   String referral_bonus =
       BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS);
@@ -80,8 +80,7 @@ class ReferralDetailsViewModel extends BaseModel {
   }
 
   void copyReferCode() {
-    _mixpanelService.track(eventName:
-        MixpanelEvents.referCodeCopied);
+    _analyticsService.track(eventName: AnalyticsEvents.referCodeCopied);
     Clipboard.setData(ClipboardData(text: userUrlCode)).then((_) {
       BaseUtil.showPositiveAlert("Code: $userUrlCode", "Copied to Clipboard");
     });
@@ -93,13 +92,15 @@ class ReferralDetailsViewModel extends BaseModel {
 
     _fcmListener.addSubscription(FcmTopic.REFERRER);
     BaseAnalytics.analytics.logShare(
-        contentType: 'referral',
-        itemId: _userService.baseUser.uid,
-        method: 'message');
-    _mixpanelService.track(eventName:
-        MixpanelEvents.linkShared);
+      contentType: 'referral',
+      itemId: _userService.baseUser.uid,
+      method: 'message',
+    );
+    
+    _analyticsService.track(eventName: AnalyticsEvents.linkShared);
     shareLinkInProgress = true;
     refresh();
+    
     _userService.createDynamicLink(true, 'Other').then((url) async {
       _logger.d(url);
       shareLinkInProgress = false;
@@ -139,8 +140,7 @@ class ReferralDetailsViewModel extends BaseModel {
     else
       _logger.d(url);
     try {
-      _mixpanelService.track(eventName:
-          MixpanelEvents.whatsappShare);
+      _analyticsService.track(eventName: AnalyticsEvents.whatsappShare);
       FlutterShareMe().shareToWhatsApp(msg: _shareMsg + url).then((flag) {
         if (flag == "false") {
           FlutterShareMe()

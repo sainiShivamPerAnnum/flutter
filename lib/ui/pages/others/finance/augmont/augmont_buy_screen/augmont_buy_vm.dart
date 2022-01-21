@@ -8,6 +8,8 @@ import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/golden_ticket_service.dart';
@@ -40,6 +42,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   UserService _userService = locator<UserService>();
   TransactionService _txnService = locator<TransactionService>();
   GoldenTicketService _gtService = GoldenTicketService();
+  final _analyticsService = locator<AnalyticsService>();
 
   int _status = 0;
 
@@ -257,6 +260,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
       return;
     }
     isGoldBuyInProgress = true;
+    _analyticsService.track(eventName: AnalyticsEvents.buyGold);
     _augmontModel.initiateGoldPurchase(goldRates, buyAmount).then((txn) {
       if (txn == null) {
         isGoldBuyInProgress = false;

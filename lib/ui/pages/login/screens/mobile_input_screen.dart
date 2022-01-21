@@ -162,8 +162,9 @@ class MobileInputScreenState extends State<MobileInputScreen> {
             ),
             SizedBox(height: SizeConfig.blockSizeVertical * 4),
             SizedBox(
-                height: SizeConfig.screenHeight * 0.2 +
-                    MediaQuery.of(context).padding.bottom)
+              height: SizeConfig.screenHeight * 0.2 +
+                  MediaQuery.of(context).padding.bottom,
+            ),
           ],
           //)
         ),
