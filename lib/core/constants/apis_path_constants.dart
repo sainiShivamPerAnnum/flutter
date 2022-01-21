@@ -32,4 +32,6 @@ class ApiPath {
 
   //GT Rewards
   get kRedeemGtReward => "/gtRewardsOps/$stage/api/redeemGtReward";
+
+  static const acquisitionTracking = "/userOps/api/opt-analytics";
 }

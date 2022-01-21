@@ -4,6 +4,7 @@ class PreferenceHelper {
   // keys
   static const DATE_APP_OPENED = 'date_app_opened';
   static const INSTALLATION_DAY = 'installation_day';
+  static const CAMPAIGN_ID = 'campaign_id';
 
   static SharedPreferences _prefs;
 

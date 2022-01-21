@@ -83,9 +83,6 @@ class Constants {
   static final String GAME_CRICKET_URI =
       'https://prod.freakx.in/fello/cricket-2021-V2/';
 
-  static const INSTALL_CLICK_ID = 'FELLO_INSTALL';
-  static const SIGNUP_CLICK_ID = 'FELLO_SIGNUP';
-
-  static const acquisitionTrackURL =
-      "https://optimidea.vnative.co/acquisition?security_token=fc8979c42862e88b9081&goal_value=783&click_id=";
+  static const INSTALL_TRACKING = 'FELLO_INSTALL';
+  static const SIGNUP_TRACKING = 'FELLO_SIGNUP';
 }

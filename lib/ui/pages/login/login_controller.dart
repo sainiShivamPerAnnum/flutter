@@ -773,7 +773,7 @@ class _LoginControllerState extends State<LoginController>
     if (_isSignup) {
       await BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
       _analyticsService.track(eventName: AnalyticsEvents.signupComplete);
-      _analyticsService.trackAcquisition(Constants.SIGNUP_CLICK_ID);
+      _analyticsService.trackSignup(baseProvider.myUser.uid);
     }
 
     await BaseAnalytics.logUserProfile(baseProvider.myUser);
