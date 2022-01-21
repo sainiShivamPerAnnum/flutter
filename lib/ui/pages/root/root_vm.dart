@@ -240,6 +240,7 @@ class RootViewModel extends BaseModel {
             const String _apiPath = "/userOps/api/opt-analytics";
             Map<String, dynamic> _body = {
               "clickId": campaignId,
+              "uid": userId,
             };
             final response = await APIService.instance
                 .postData(_apiPath, body: _body, token: _bearer);
