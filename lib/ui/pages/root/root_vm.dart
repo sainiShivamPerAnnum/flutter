@@ -208,12 +208,36 @@ class RootViewModel extends BaseModel {
     }
   }
 
+  _findCampaignId(String uri) {
+    int res = uri.indexOf(RegExp(r'campaign_source='));
+    int finalres = res + 16;
+    print(res);
+    print(finalres);
+    String code = '';
+    RegExp anregex = RegExp(r'^[a-zA-Z0-9]*$');
+    for (int i = finalres; i < uri.length; i++) {
+      if (anregex.hasMatch(uri[i])) {
+        code += uri[i];
+      } else {
+        break;
+      }
+    }
+    return code;
+  }
+
   _processDynamicLink(String userId, Uri deepLink, BuildContext context) async {
     String _uri = deepLink.toString();
 
     if (_uri.startsWith(Constants.APP_DOWNLOAD_LINK)) {
-      //check if click_id is null ?
-      //if not null, make api call
+      //check if champaign source is null ?
+      if (_uri.contains('campaign_source=')) {
+        String campaignId = _findCampaignId(_uri);
+        if (campaignId.isNotEmpty || campaignId == null) {
+          //Make api call
+        } else {
+          _logger.d('Campaign_id is empty');
+        }
+      }
     } else if (_uri.startsWith(Constants.GOLDENTICKET_DYNAMICLINK_PREFIX)) {
       //Golden ticket dynamic link
       int flag = await _submitGoldenTicket(userId, _uri, context);
