@@ -28,20 +28,6 @@ class AnalyticsService extends BaseAnalyticsService {
       track(eventName: AnalyticsEvents.openAppFirstTimeInADay);
       PreferenceHelper.setInt(PreferenceHelper.DATE_APP_OPENED, now.day);
     }
-
-    try {
-      // for installation event
-      final installationDate = await AppInstallDate().installDate;
-      final installationDay =
-          PreferenceHelper.getInt(PreferenceHelper.INSTALLATION_DAY);
-
-      if (installationDay == null && now.day == installationDate.day) {
-        trackAcquisition(Constants.INSTALL_CLICK_ID);
-        PreferenceHelper.setInt(PreferenceHelper.INSTALLATION_DAY, now.day);
-      }
-    } catch (e) {
-      _logger.e(e.toString());
-    }
   }
 
   void signOut() {
@@ -61,5 +47,22 @@ class AnalyticsService extends BaseAnalyticsService {
 
   void trackAcquisition(String clickId) {
     APIService.instance.postData("${Constants.acquisitionTrackURL}$clickId");
+  }
+
+  void trackInstall() async {
+    try {
+      // for installation event
+      DateTime now = DateTime.now();
+      final installationDate = await AppInstallDate().installDate;
+      final installationDay =
+          PreferenceHelper.getInt(PreferenceHelper.INSTALLATION_DAY);
+
+      if (installationDay == null && now.day == installationDate.day) {
+        trackAcquisition(Constants.INSTALL_CLICK_ID);
+        PreferenceHelper.setInt(PreferenceHelper.INSTALLATION_DAY, now.day);
+      }
+    } catch (e) {
+      _logger.e(e.toString());
+    }
   }
 }
