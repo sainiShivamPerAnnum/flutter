@@ -1,4 +1,6 @@
 PODS:
+  - app_install_date (0.0.1):
+    - Flutter
   - AppAuth (1.4.0):
     - AppAuth/Core (= 1.4.0)
     - AppAuth/ExternalUserAgent (= 1.4.0)
@@ -337,6 +339,7 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - app_install_date (from `.symlinks/plugins/app_install_date/ios`)
   - camera (from `.symlinks/plugins/camera/ios`)
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
@@ -421,6 +424,8 @@ SPEC REPOS:
     - WebEngage
 
 EXTERNAL SOURCES:
+  app_install_date:
+    :path: ".symlinks/plugins/app_install_date/ios"
   camera:
     :path: ".symlinks/plugins/camera/ios"
   cloud_firestore:
@@ -515,8 +520,9 @@ CHECKOUT OPTIONS:
     :tag: 8.7.0
 
 SPEC CHECKSUMS:
+  app_install_date: 8d9e98cd5329ec376d38012a1cb82f37810de359
   AppAuth: 31bcec809a638d7bd2f86ea8a52bd45f6e81e7c7
-  camera: 3164201dc344383e62282964016528c4f5a9ad50
+  camera: fe33292aff715a981eb34d7ce7b35b54337ff34c
   cloud_firestore: 8908c0126eb0846fa8ef9b0613367d025652e04d
   connectivity_plus: 5f0eb61093bec56935f21a1699dd2758bc895587
   device_info: d7d233b645a32c40dfdc212de5cf646ca482f175

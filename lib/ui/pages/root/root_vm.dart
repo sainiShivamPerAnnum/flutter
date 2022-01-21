@@ -7,6 +7,7 @@ import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/analytics/analytics_events.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_coin_service.dart';
@@ -208,9 +209,48 @@ class RootViewModel extends BaseModel {
     }
   }
 
+  _findCampaignId(String uri) {
+    int res = uri.indexOf(RegExp(r'campaign_source='));
+    int finalres = res + 16;
+    print(res);
+    print(finalres);
+    String code = '';
+    RegExp anregex = RegExp(r'^[a-zA-Z0-9]*$');
+    for (int i = finalres; i < uri.length; i++) {
+      if (anregex.hasMatch(uri[i])) {
+        code += uri[i];
+      } else {
+        break;
+      }
+    }
+    return code;
+  }
+
   _processDynamicLink(String userId, Uri deepLink, BuildContext context) async {
     String _uri = deepLink.toString();
-    if (_uri.startsWith(Constants.GOLDENTICKET_DYNAMICLINK_PREFIX)) {
+
+    if (_uri.startsWith(Constants.APP_DOWNLOAD_LINK)) {
+      //check if champaign source is null ?
+      if (_uri.contains('campaign_source=')) {
+        String campaignId = _findCampaignId(_uri);
+        if (campaignId.isNotEmpty || campaignId == null) {
+          try {
+            final String _bearer = await _getBearerToken();
+            //Make api call
+            const String _apiPath = "/userOps/api/opt-analytics";
+            Map<String, dynamic> _body = {
+              "clickId": campaignId,
+              "uid": userId,
+            };
+            final response = await APIService.instance
+                .postData(_apiPath, body: _body, token: _bearer);
+            _logger.d(response);
+          } catch (e) {}
+        } else {
+          _logger.d('Campaign_id is empty');
+        }
+      }
+    } else if (_uri.startsWith(Constants.GOLDENTICKET_DYNAMICLINK_PREFIX)) {
       //Golden ticket dynamic link
       int flag = await _submitGoldenTicket(userId, _uri, context);
     } else {
@@ -306,5 +346,12 @@ class RootViewModel extends BaseModel {
       backgroundColor: Colors.transparent,
       isBarrierDismissable: true,
     );
+  }
+
+  Future<String> _getBearerToken() async {
+    String token = await _userService.firebaseUser.getIdToken();
+    _logger.d(token);
+
+    return token;
   }
 }

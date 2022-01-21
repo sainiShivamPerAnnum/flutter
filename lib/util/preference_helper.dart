@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class PreferenceHelper {
   // keys
   static const DATE_APP_OPENED = 'date_app_opened';
+  static const INSTALLATION_DAY = 'installation_day';
 
   static SharedPreferences _prefs;
 
