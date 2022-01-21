@@ -454,7 +454,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
         // }
 
         ///update UI
-        onDepositComplete(true);
+        onDepositComplete(true, txn);
         _augmontModel.completeTransaction();
         return true;
       }
@@ -462,25 +462,25 @@ class AugmontGoldBuyViewModel extends BaseModel {
       //razorpay payment failed
       _logger.d('Payment cancelled');
       if (_baseUtil.currentAugmontTxn != null) {
-        onDepositComplete(false);
+        onDepositComplete(false, txn);
         _augmontModel.completeTransaction();
       }
     } else if (txn.tranStatus == UserTransaction.TRAN_STATUS_PENDING) {
       //razorpay completed but augmont purchase didnt go through
       _logger.d('Payment pending');
       if (_baseUtil.currentAugmontTxn != null) {
-        onDepositComplete(false);
+        onDepositComplete(false, txn);
         _augmontModel.completeTransaction();
       }
     }
   }
 
-  onDepositComplete(bool flag) async {
+  onDepositComplete(bool flag, UserTransaction txn) async {
     bool gtFlag = await _gtService.fetchAndVerifyGoldenTicketByID();
     isGoldBuyInProgress = false;
     if (flag) {
       if (gtFlag)
-        _gtService.showInstantGoldenTicketView(source: GTSOURCE.deposit);
+        _gtService.showInstantGoldenTicketView(title: '₹${txn.amount.toStringAsFixed(0)} saved!',source: GTSOURCE.deposit);
       else
         showSuccessGoldBuyDialog();
     } else {

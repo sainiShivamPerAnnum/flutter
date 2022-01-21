@@ -232,6 +232,7 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                               .then((bool res) {
                             if (res)
                               _gtService.showInstantGoldenTicketView(
+                                  title: 'Welcome to Fello',
                                   source: GTSOURCE.newuser);
                           });
                         } else
@@ -250,6 +251,7 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                   _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
                     if (res)
                       _gtService.showInstantGoldenTicketView(
+                          title: 'Welcome to Fello',
                           source: GTSOURCE.newuser);
                   });
                 },

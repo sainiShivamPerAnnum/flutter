@@ -212,7 +212,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
     } else {
       //RETURN BLNT
       return Column(children: [
-        Text("Oh no...", style: textStyle.bold),
+        Text("Oh no..", style: textStyle.bold),
         SizedBox(height: SizeConfig.padding2),
         Text("Better Luck Next Time", style: TextStyles.body3)
       ]);
