@@ -140,7 +140,7 @@ class Assets {
 
   //GT ASSETS
   static final String gtWon = "assets/images/gtWon.png";
-  static final String gtLose = "assets/images/gtLose.png";
+  static final String gtLose = "assets/images/gtlose.png";
   static final String gtCover = "assets/images/gtCover.png";
 
   static final List<String> onboardingHeader = [

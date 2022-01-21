@@ -43,6 +43,7 @@ class GTDetailedView extends StatelessWidget {
                   ? GoldenTicketGridItemCard(
                       ticket: ticket,
                       titleStyle: TextStyles.title2,
+                      width: SizeConfig.screenWidth * 0.6,
                     )
                   : (model.viewScratcher
                       ? Hero(
@@ -70,6 +71,7 @@ class GTDetailedView extends StatelessWidget {
                               child: RedeemedGoldenScratchCard(
                                 ticket: ticket,
                                 titleStyle: TextStyles.title2,
+                                width: SizeConfig.screenWidth * 0.6,
                               ),
                             ),
                           ),
@@ -77,6 +79,7 @@ class GTDetailedView extends StatelessWidget {
                       : GoldenTicketGridItemCard(
                           ticket: ticket,
                           titleStyle: TextStyles.title2,
+                          width: SizeConfig.screenWidth * 0.6,
                         )),
               Spacer(),
               if (model.bottompadding) FelloAppBar(),

@@ -27,7 +27,12 @@ class CustomRectTween extends RectTween {
 class GoldenTicketGridItemCard extends StatelessWidget {
   final GoldenTicket ticket;
   final TextStyle titleStyle;
-  GoldenTicketGridItemCard({@required this.ticket, @required this.titleStyle});
+  final double width;
+  GoldenTicketGridItemCard({
+    @required this.ticket,
+    @required this.titleStyle,
+    @required this.width,
+  });
   @override
   Widget build(BuildContext context) {
     return Hero(
@@ -40,7 +45,11 @@ class GoldenTicketGridItemCard extends StatelessWidget {
           ? UnRedeemedGoldenScratchCard(
               ticket: ticket,
             )
-          : RedeemedGoldenScratchCard(ticket: ticket, titleStyle: titleStyle),
+          : RedeemedGoldenScratchCard(
+              ticket: ticket,
+              titleStyle: titleStyle,
+              width: width,
+            ),
     );
   }
 }
@@ -72,7 +81,9 @@ class UnRedeemedGoldenScratchCard extends StatelessWidget {
 class RedeemedGoldenScratchCard extends StatelessWidget {
   final GoldenTicket ticket;
   final TextStyle titleStyle;
-  RedeemedGoldenScratchCard({@required this.ticket, @required this.titleStyle});
+  final double width;
+  RedeemedGoldenScratchCard(
+      {@required this.ticket, @required this.titleStyle, @required this.width});
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraint) {
@@ -81,72 +92,181 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(SizeConfig.roundness12),
         ),
         child: AnimatedContainer(
-          height: SizeConfig.screenWidth * 0.6,
-          width: SizeConfig.screenWidth * 0.6,
-          duration: Duration(milliseconds: 300),
-          curve: Curves.easeIn,
-          decoration: BoxDecoration(
-            color: UiConstants.tertiaryLight,
-            borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-          ),
-          child: Stack(
-            children: [
-              Container(
-                width: SizeConfig.screenWidth * 0.6,
-                height: SizeConfig.screenWidth * 0.6,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Spacer(flex: 1),
-                    Flexible(
-                      fit: FlexFit.tight,
-                      flex: 2,
-                      child: Image.asset(Assets.logoShortform,
-                          color: UiConstants.tertiarySolid.withOpacity(0.1)),
-                    ),
-                    Spacer(flex: 7),
-                  ],
+            height: SizeConfig.screenWidth * 0.6,
+            width: SizeConfig.screenWidth * 0.6,
+            duration: Duration(milliseconds: 300),
+            curve: Curves.easeIn,
+            decoration: BoxDecoration(
+              color: UiConstants.tertiaryLight,
+              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+            ),
+            padding: EdgeInsets.all(width * 0.04),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  ticket.isRewarding ? Assets.gtWon : Assets.gtLose,
+                  height: width * 0.5,
                 ),
-              ),
-              Container(
-                width: SizeConfig.screenWidth * 0.6,
-                height: SizeConfig.screenWidth * 0.6,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Spacer(flex: 2),
-                    Flexible(
-                      fit: FlexFit.tight,
-                      flex: 3,
-                      child: Image.asset(
-                        Assets.felloRewards,
-                        // width: SizeConfig.screenWidth * 0.2,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(getRewardText(ticket.rewardArr),
-                              style: titleStyle),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
+                SizedBox(height: width * 0.04),
+                getGTContent(ticket, titleStyle)
+              ],
+            )
+
+            // Stack(
+            //   children: [
+            //     Container(
+            //       width: SizeConfig.screenWidth * 0.6,
+            //       height: SizeConfig.screenWidth * 0.6,
+            //       child: Row(
+            //         crossAxisAlignment: CrossAxisAlignment.end,
+            //         children: [
+            //           Spacer(flex: 1),
+            //           Flexible(
+            //             fit: FlexFit.tight,
+            //             flex: 2,
+            //             child: Image.asset(Assets.logoShortform,
+            //                 color: UiConstants.tertiarySolid.withOpacity(0.1)),
+            //           ),
+            //           Spacer(flex: 7),
+            //         ],
+            //       ),
+            //     ),
+            //     Container(
+            //       width: SizeConfig.screenWidth * 0.6,
+            //       height: SizeConfig.screenWidth * 0.6,
+            //       child: Row(
+            //         crossAxisAlignment: CrossAxisAlignment.end,
+            //         children: [
+            //           Spacer(flex: 2),
+            //           Flexible(
+            //             fit: FlexFit.tight,
+            //             flex: 3,
+            //             child: Image.asset(
+            //               Assets.felloRewards,
+            //               // width: SizeConfig.screenWidth * 0.2,
+            //             ),
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //     Padding(
+            //       padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+            //       child: Column(
+            //         crossAxisAlignment: CrossAxisAlignment.start,
+            //         children: [
+            //           Row(
+            //             children: [
+            //               Expanded(
+            //                 child: Text(getRewardText(ticket.rewardArr),
+            //                     style: titleStyle),
+            //               ),
+            //             ],
+            //           ),
+            //         ],
+            //       ),
+            //     )
+            //   ],
+            // ),
+            ),
       );
     });
+  }
+
+  Widget getGTContent(GoldenTicket ticket, TextStyle textStyle) {
+    if (ticket.isRewarding) {
+      //CHECK FOR REWARDS
+      if (ticket.rewardArr.length == 1) {
+        //Has a single reward
+        return Column(
+          children: [
+            singleRewardWidget(ticket.rewardArr[0], textStyle),
+            SizedBox(height: SizeConfig.padding2),
+            Text(
+              "WON",
+              style: textStyle,
+            )
+          ],
+        );
+      } else if (ticket.rewardArr.length == 2) {
+        //Both flc and cash
+        return Column(
+          children: [
+            doubleRewardWidget(ticket.rewardArr, textStyle),
+            SizedBox(height: SizeConfig.padding2),
+            Text(
+              "WON",
+              style: textStyle,
+            )
+          ],
+        );
+      } else {
+        //we ran out of predictions
+        return Wrap(
+          children: List.generate(
+              ticket.rewardArr.length,
+              (i) => bulletTiles(
+                  '${ticket.rewardArr[i].type}: ${ticket.rewardArr[i].value}')),
+        );
+      }
+    } else {
+      //RETURN BLNT
+      return Column(children: [
+        Text("Oh no...", style: textStyle.bold),
+        SizedBox(height: SizeConfig.padding2),
+        Text("Better Luck Next Time", style: TextStyles.body3)
+      ]);
+    }
+  }
+
+  Widget singleRewardWidget(Reward reward, TextStyle textStyle) {
+    if (reward.type == 'rupee') {
+      return RichText(
+          text: TextSpan(
+              text: '₹ ',
+              style: textStyle.colour(Colors.black),
+              children: [
+            TextSpan(text: "${reward.value}", style: textStyle.bold)
+          ]));
+    } else if (reward.type == 'flc') {
+      return RichText(
+          text: TextSpan(style: textStyle.colour(Colors.black), children: [
+        TextSpan(text: "${reward.value} ", style: textStyle.bold),
+        TextSpan(
+          text: reward.value > 1 ? "Tokens" : "Token",
+        )
+      ]));
+    } else
+      return RichText(
+          text: TextSpan(style: textStyle, children: [
+        TextSpan(
+            text: "${reward.value}",
+            style: textStyle.bold.colour(Colors.black)),
+        TextSpan(
+          text: "${reward.type}",
+        )
+      ]));
+  }
+
+  doubleRewardWidget(List<Reward> rewards, TextStyle textStyle) {
+    int rupee = rewards
+            .firstWhere((e) => e.type == 'rupee', orElse: () => null)
+            .value ??
+        0;
+    int flc =
+        rewards.firstWhere((e) => e.type == 'flc', orElse: () => null).value ??
+            0;
+    return RichText(
+      text: TextSpan(
+          text: '₹ ',
+          style: textStyle.colour(Colors.black),
+          children: [
+            TextSpan(text: "$rupee", style: textStyle.bold),
+            TextSpan(text: " and "),
+            TextSpan(text: "$flc ", style: textStyle.bold),
+            TextSpan(text: flc > 1 ? "Tokens" : "Token")
+          ]),
+    );
   }
 
   String getRewardText(List<Reward> rewards) {
@@ -161,5 +281,26 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
       return "You've won ₹${rewards.firstWhere((e) => e.type == 'rupee').value ?? '0'} and ${rewards.firstWhere((e) => e.type == 'flc').value ?? '0'} Fello tokens";
     }
     return "";
+  }
+
+  Widget bulletTiles(String title) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 20.0),
+      child: Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          Icon(
+            Icons.brightness_1,
+            size: 12,
+            color: UiConstants.primaryColor,
+          ),
+          SizedBox(width: 10),
+          Text(
+            title,
+            style: TextStyles.body3,
+          ),
+        ],
+      ),
+    );
   }
 }
