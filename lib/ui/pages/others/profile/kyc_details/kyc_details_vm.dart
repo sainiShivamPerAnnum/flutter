@@ -194,7 +194,7 @@ class KYCDetailsViewModel extends BaseModel {
               _userService.setMyUserName(_userService.baseUser.name);
               BaseUtil.showPositiveAlert(
                   'Verification Successful', 'You are successfully verified!');
-              _isKycInProgress = false;
+              isKycInProgress = false;
               refresh();
               AppState.backButtonDispatcher.didPopRoute();
             }
@@ -202,7 +202,7 @@ class KYCDetailsViewModel extends BaseModel {
           onReject: () {
             BaseUtil.showNegativeAlert(
                 'Registration Cancelled', 'Please try again');
-            _isKycInProgress = false;
+            isKycInProgress = false;
             refresh();
             return;
           },
@@ -247,7 +247,11 @@ class KYCDetailsViewModel extends BaseModel {
 
     if (_flag) {
       try {
-        ApiResponse<VerifyPanResponseModel> _response = await _signzyRepository.verifyPan(uid: _userService.baseUser.uid, panNumber: enteredPan, panName: enteredPanName);
+        ApiResponse<VerifyPanResponseModel> _response =
+            await _signzyRepository.verifyPan(
+                uid: _userService.baseUser.uid,
+                panNumber: enteredPan,
+                panName: enteredPanName);
 
         if (_response.code == 200) {
           _flag = true;

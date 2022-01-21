@@ -62,7 +62,7 @@ class GTDetailedView extends StatelessWidget {
                               onThreshold: () =>
                                   model.redeemCard(superModel, ticket),
                               image: Image.asset(
-                                "assets/images/gtbg.png",
+                                Assets.gtCover,
                                 fit: BoxFit.cover,
                                 height: SizeConfig.screenWidth * 0.6,
                                 width: SizeConfig.screenWidth * 0.6,

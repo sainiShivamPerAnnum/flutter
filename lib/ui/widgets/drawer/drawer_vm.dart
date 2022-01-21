@@ -21,6 +21,11 @@ class FDrawerVM extends BaseModel {
       pageConfig: ReferralDetailsPageConfig,
     ),
     DrawerModel(
+      icon: Assets.gold24K,
+      title: "My Rewards",
+      pageConfig: MyWinnigsPageConfig,
+    ),
+    DrawerModel(
       icon: Assets.dPanKyc,
       title: "PAN & KYC",
       pageConfig: KycDetailsPageConfig,

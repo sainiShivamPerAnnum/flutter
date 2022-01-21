@@ -3,11 +3,13 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/elements/texts/breathing_text_widget.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_vm.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_ticket_utils.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -16,9 +18,12 @@ import 'package:lottie/lottie.dart';
 import 'package:scratcher/scratcher.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
+enum GTSOURCE { newuser, deposit, cricket }
+
 class GTInstantView extends StatefulWidget {
   final String title;
-  GTInstantView({this.title});
+  final GTSOURCE source;
+  GTInstantView({this.title, @required this.source});
   @override
   State<GTInstantView> createState() => _GTInstantViewState();
 }
@@ -124,6 +129,9 @@ class _GTInstantViewState extends State<GTInstantView>
                                     : false,
                                 threshold: 40,
                                 key: scratchKey,
+                                onScratchStart: () {
+                                  model.showScratchGuide = false;
+                                },
                                 onThreshold: () {
                                   if (model.goldenTicket.isRewarding) {
                                     model.isShimmerEnabled = true;
@@ -141,7 +149,7 @@ class _GTInstantViewState extends State<GTInstantView>
                                   model.redeemTicket();
                                 },
                                 image: Image.asset(
-                                  "assets/images/gtbg.png",
+                                  Assets.gtCover,
                                   fit: BoxFit.cover,
                                   height: SizeConfig.screenWidth * 0.6,
                                   width: SizeConfig.screenWidth * 0.6,
@@ -177,27 +185,30 @@ class _GTInstantViewState extends State<GTInstantView>
                                     child: FelloButtonLg(
                                       color: UiConstants.primaryColor,
                                       child: Text(
-                                        "Start Playing",
+                                        getButtonText(model, widget.source) ??
+                                            "Start Playing",
                                         style: TextStyles.body2.bold
                                             .colour(Colors.white),
                                       ),
-                                      onPressed: () {
-                                        if (!model.isCardScratched) return;
-                                        AppState.delegate.appState
-                                            .setCurrentTabIndex = 1;
-                                        while (
-                                            AppState.screenStack.length > 1) {
-                                          AppState.backButtonDispatcher
-                                              .didPopRoute();
-                                        }
-                                      },
+                                      onPressed: getButtonAction(
+                                              model, widget.source) ??
+                                          () {
+                                            if (!model.isCardScratched) return;
+                                            AppState.backButtonDispatcher
+                                                .didPopRoute();
+                                          },
                                     ),
                                   ),
                                 ),
                                 SizedBox(height: 12),
                                 TextButton(
                                   onPressed: () {
-                                    AppState.backButtonDispatcher.didPopRoute();
+                                    while (AppState.screenStack.length > 1) {
+                                      AppState.backButtonDispatcher
+                                          .didPopRoute();
+                                    }
+                                    AppState.delegate.appState
+                                        .setCurrentTabIndex = 2;
                                     AppState.delegate.appState.currentAction =
                                         PageAction(
                                             state: PageState.addPage,
@@ -224,6 +235,14 @@ class _GTInstantViewState extends State<GTInstantView>
                     alignment: Alignment.center,
                     child: Lottie.asset("assets/lotties/confetti.json",
                         height: SizeConfig.screenHeight),
+                  ),
+                if (model.showScratchGuide)
+                  Align(
+                    alignment: Alignment.center,
+                    child: BreathingText(
+                      alertText: "Scratch Here",
+                      textStyle: TextStyles.body2.colour(Colors.black54),
+                    ),
                   )
               ],
             ),
@@ -231,5 +250,34 @@ class _GTInstantViewState extends State<GTInstantView>
         );
       },
     );
+  }
+
+  Function getButtonAction(GTInstantViewModel model, GTSOURCE source) {
+    Function onPressed;
+    if (source == GTSOURCE.cricket) {
+      onPressed = () {
+        if (!model.isCardScratched) return;
+        AppState.backButtonDispatcher.didPopRoute();
+      };
+    } else {
+      onPressed = () {
+        if (!model.isCardScratched) return;
+        AppState.delegate.appState.setCurrentTabIndex = 1;
+        while (AppState.screenStack.length > 1) {
+          AppState.backButtonDispatcher.didPopRoute();
+        }
+      };
+    }
+    return onPressed;
+  }
+
+  getButtonText(GTInstantViewModel model, GTSOURCE source) {
+    String title;
+    if (source == GTSOURCE.cricket) {
+      title = "Continue";
+    } else {
+      title = "Start Playing";
+    }
+    return title;
   }
 }

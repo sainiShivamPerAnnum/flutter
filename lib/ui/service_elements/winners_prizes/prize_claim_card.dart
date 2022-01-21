@@ -108,7 +108,7 @@ class PrizeClaimCard extends StatelessWidget {
                                     : SizedBox(),
                                 ClaimButton(
                                   color: UiConstants.tertiarySolid,
-                                  image: Assets.goldClaim,
+                                  image: "images/augmont-share.png",
                                   onTap: () => model.showConfirmDialog(
                                       PrizeClaimChoice.GOLD_CREDIT),
                                   text: "Redeem as Digital Gold",
@@ -211,8 +211,11 @@ class ClaimButton extends StatelessWidget {
               CircleAvatar(
                 radius: SizeConfig.padding24,
                 backgroundColor: Colors.white.withOpacity(0.3),
-                child: Image.asset(
-                  image ?? Assets.amazonClaim,
+                child: Padding(
+                  padding: EdgeInsets.all(SizeConfig.padding6),
+                  child: Image.asset(
+                    image ?? Assets.amazonClaim,
+                  ),
                 ),
               ),
               SizedBox(width: SizeConfig.padding12),

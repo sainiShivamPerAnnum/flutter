@@ -43,8 +43,6 @@ const String ReferralDetailsPath = '/referralDetails';
 const String ReferralHistoryPath = '/referralHistory';
 const String MyWinningsPath = '/myWinnings';
 const String blockedUserPath = '/blockeUser';
-const String GoldenTicketViewPath = '/goldenTicketView';
-const String GoldenTicketsViewPath = '/goldenTicketsView';
 const String GoldenMilestonesViewPath = '/goldenMilestonesView';
 
 enum Pages {
@@ -90,8 +88,6 @@ enum Pages {
   ReferralHistory,
   MyWinnings,
   blockedUser,
-  GoldenTicketView,
-  GoldenTicketsView,
   GoldenMilestonesView,
 }
 
@@ -330,18 +326,6 @@ PageConfiguration BlockedUserPageConfig = PageConfiguration(
   key: 'blockedUser',
   path: blockedUserPath,
   uiPage: Pages.blockedUser,
-);
-
-PageConfiguration GoldenTicketViewPageConfig = PageConfiguration(
-  key: 'GoldenTicketView',
-  path: GoldenTicketViewPath,
-  uiPage: Pages.GoldenTicketView,
-);
-
-PageConfiguration GoldenTicketsViewPageConfig = PageConfiguration(
-  key: 'GoldenTicketsView',
-  path: GoldenTicketsViewPath,
-  uiPage: Pages.GoldenTicketsView,
 );
 
 PageConfiguration GoldenMilestonesViewPageConfig = PageConfiguration(

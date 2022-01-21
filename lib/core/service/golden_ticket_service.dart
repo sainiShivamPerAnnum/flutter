@@ -41,14 +41,19 @@ class GoldenTicketService extends ChangeNotifier {
     return false;
   }
 
-  showInstantGoldenTicketView() {
+  showInstantGoldenTicketView({@required GTSOURCE source, String title}) {
     if (currentGT != null) {
       Future.delayed(Duration(milliseconds: 200), () {
-        AppState.screenStack.add(ScreenItem.dialog);
-        Navigator.of(AppState.delegate.navigatorKey.currentContext).push(
-            PageRouteBuilder(
+        if (source != GTSOURCE.deposit)
+          AppState.screenStack.add(ScreenItem.dialog);
+
+        Navigator.of(AppState.delegate.navigatorKey.currentContext)
+            .push(PageRouteBuilder(
                 opaque: false,
-                pageBuilder: (BuildContext context, _, __) => GTInstantView()));
+                pageBuilder: (BuildContext context, _, __) => GTInstantView(
+                      source: source,
+                      title: title,
+                    )));
       });
     }
   }

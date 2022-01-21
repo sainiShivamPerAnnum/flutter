@@ -138,6 +138,11 @@ class Assets {
   static final String felloRewards = "assets/images/fello_prize.png";
   static final String voucherBg = "assets/images/voucher_bg.jpg";
 
+  //GT ASSETS
+  static final String gtWon = "assets/images/gtWon.png";
+  static final String gtLose = "assets/images/gtLose.png";
+  static final String gtCover = "assets/images/gtCover.png";
+
   static final List<String> onboardingHeader = [
     'Save',
     'Grow',
