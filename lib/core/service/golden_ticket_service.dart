@@ -30,7 +30,7 @@ class GoldenTicketService extends ChangeNotifier {
   }
 
   Future<bool> fetchAndVerifyGoldenTicketByID() async {
-    if (goldenTicketId != null) {
+    if (goldenTicketId != null && goldenTicketId.isNotEmpty) {
       currentGT = await _dbModel.getGoldenTicketById(
           _userservice.baseUser.uid, goldenTicketId);
       goldenTicketId = null;
