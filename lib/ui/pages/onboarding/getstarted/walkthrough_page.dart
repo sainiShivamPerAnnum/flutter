@@ -2,6 +2,7 @@ import 'package:felloapp/core/service/analytics/analytics_events.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/golden_ticket_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/assets.dart';
@@ -229,7 +230,9 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                           _gtService
                               .fetchAndVerifyGoldenTicketByID()
                               .then((bool res) {
-                            if (res) _gtService.showInstantGoldenTicketView();
+                            if (res)
+                              _gtService.showInstantGoldenTicketView(
+                                  source: GTSOURCE.newuser);
                           });
                         } else
                           _pageController.nextPage(
@@ -245,7 +248,9 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                 onPressed: () {
                   AppState.backButtonDispatcher.didPopRoute();
                   _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
-                    if (res) _gtService.showInstantGoldenTicketView();
+                    if (res)
+                      _gtService.showInstantGoldenTicketView(
+                          source: GTSOURCE.newuser);
                   });
                 },
                 child: Text(

@@ -19,6 +19,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/augmont_disabled_dialog.dart';
 import 'package:felloapp/ui/modals_sheets/augmont_register_modal_sheet.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -479,7 +480,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
     isGoldBuyInProgress = false;
     if (flag) {
       if (gtFlag)
-        _gtService.showInstantGoldenTicketView();
+        _gtService.showInstantGoldenTicketView(source: GTSOURCE.deposit);
       else
         showSuccessGoldBuyDialog();
     } else {

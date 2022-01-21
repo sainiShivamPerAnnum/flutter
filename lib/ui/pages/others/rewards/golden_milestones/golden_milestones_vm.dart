@@ -33,11 +33,6 @@ class GoldenMilestonesViewModel extends BaseModel {
   }
 
   init() async {
-    setState(ViewState.Busy);
-    _userAugmontDetails =
-        await _dbModel.getUserAugmontDetails(_userService.baseUser.uid);
-
-    setState(ViewState.Idle);
     fetchMilestones();
   }
 

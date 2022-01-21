@@ -46,6 +46,15 @@ class GTInstantViewModel extends BaseModel {
     notifyListeners();
   }
 
+  bool _showScratchGuide = false;
+
+  get showScratchGuide => this._showScratchGuide;
+
+  set showScratchGuide(value) {
+    this._showScratchGuide = value;
+    notifyListeners();
+  }
+
   bool _isCardScratched = false;
 
   get isCardScratched => this._isCardScratched;
@@ -62,6 +71,11 @@ class GTInstantViewModel extends BaseModel {
     Haptic.vibrate();
     goldenTicket = GoldenTicketService.currentGT;
     GoldenTicketService.currentGT = null;
+    Future.delayed(Duration(seconds: 6), () {
+      if (!isCardScratched) {
+        showScratchGuide = true;
+      }
+    });
     // GoldenTicketService.hasGoldenTicket = false;
     //setState(ViewState.Idle);
   }

@@ -5,6 +5,7 @@ import 'package:felloapp/core/service/golden_ticket_service.dart';
 import 'package:felloapp/core/service/leaderboard_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_rating_dialog.dart';
@@ -33,6 +34,7 @@ class FcmHandler extends ChangeNotifier {
   int tab, dailogShowCount;
 
   Future<bool> handleMessage(Map data, MsgSource source) async {
+    logger.d(data);
     bool showSnackbar = true;
     String title = data['dialog_title'];
     String body = data['dialog_body'];
@@ -66,7 +68,8 @@ class FcmHandler extends ChangeNotifier {
               AppState.backButtonDispatcher.didPopRoute();
               Future.delayed(Duration(milliseconds: 100), () async {
                 if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
-                  _gtService.showInstantGoldenTicketView();
+                  _gtService.showInstantGoldenTicketView(
+                      source: GTSOURCE.cricket);
                 } else
                   BaseUtil.openDialog(
                     addToScreenStack: true,
