@@ -7,6 +7,7 @@ import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/analytics/analytics_events.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_coin_service.dart';
@@ -233,7 +234,17 @@ class RootViewModel extends BaseModel {
       if (_uri.contains('campaign_source=')) {
         String campaignId = _findCampaignId(_uri);
         if (campaignId.isNotEmpty || campaignId == null) {
-          //Make api call
+          try {
+            final String _bearer = await _getBearerToken();
+            //Make api call
+            const String _apiPath = "/userOps/api/opt-analytics";
+            Map<String, dynamic> _body = {
+              "clickId": campaignId,
+            };
+            final response = await APIService.instance
+                .postData(_apiPath, body: _body, token: _bearer);
+            _logger.d(response);
+          } catch (e) {}
         } else {
           _logger.d('Campaign_id is empty');
         }
@@ -334,5 +345,12 @@ class RootViewModel extends BaseModel {
       backgroundColor: Colors.transparent,
       isBarrierDismissable: true,
     );
+  }
+
+  Future<String> _getBearerToken() async {
+    String token = await _userService.firebaseUser.getIdToken();
+    _logger.d(token);
+
+    return token;
   }
 }
