@@ -51,14 +51,13 @@ class AnalyticsService extends BaseAnalyticsService {
       final campaignId =
           PreferenceHelper.getString(PreferenceHelper.CAMPAIGN_ID);
 
+      if (campaignId == null) return;
+
       Map<String, dynamic> body = {
         "type": Constants.SIGNUP_TRACKING,
         "uid": userId,
+        "clickId": campaignId,
       };
-
-      if (campaignId != null) {
-        body["clickId"] = campaignId;
-      }
 
       await APIService.instance.postData(
         ApiPath.acquisitionTracking,
@@ -78,23 +77,21 @@ class AnalyticsService extends BaseAnalyticsService {
           PreferenceHelper.getInt(PreferenceHelper.INSTALLATION_DAY);
 
       if (installationDay == null && now.day == installationDate.day) {
+        PreferenceHelper.setInt(PreferenceHelper.INSTALLATION_DAY, now.day);
+
+        if (campaignId == null) return;
+
         Map<String, dynamic> body = {
           "type": Constants.INSTALL_TRACKING,
+          "clickId": campaignId,
         };
-
-        if (campaignId != null) {
-          body["clickId"] = campaignId;
-          PreferenceHelper.setString(PreferenceHelper.CAMPAIGN_ID, campaignId);
-        }
 
         await APIService.instance.postData(
           ApiPath.acquisitionTracking,
           body: body,
         );
 
-        _logger.d('asdasdasdasd');
-
-        PreferenceHelper.setInt(PreferenceHelper.INSTALLATION_DAY, now.day);
+        PreferenceHelper.setString(PreferenceHelper.CAMPAIGN_ID, campaignId);
       }
     } catch (e) {
       _logger.e(e.toString());

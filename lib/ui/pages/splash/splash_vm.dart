@@ -41,7 +41,6 @@ class LauncherViewModel extends BaseModel {
   }
 
   init() {
-    _analyticsService.trackInstall(null);
     initLogic();
     _timer3 = new Timer(const Duration(seconds: 6), () {
       //display slow internet message
