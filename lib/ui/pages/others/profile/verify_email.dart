@@ -7,6 +7,7 @@ import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/pin_input_custom_text_field.dart';
+import 'package:felloapp/ui/pages/login/screens/name_input_screen.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/util/locator.dart';
@@ -32,7 +33,7 @@ class VerifyEmailState extends State<VerifyEmail> {
   TextEditingController email = new TextEditingController();
   TextEditingController otp = new TextEditingController();
   final _userService = locator<UserService>();
-  final _baseUtil = locator<BaseUtil>();
+  // final baseProvider = locator<BaseUtil>();
   final formKey = GlobalKey<FormState>();
   Timer timer;
   bool isGmailVerifying = false;
@@ -41,7 +42,8 @@ class VerifyEmailState extends State<VerifyEmail> {
   String generatedOTP;
   HttpModel httpProvider;
   bool _isContinueWithGoogle = false;
-  //bool _baseUtil.isGoogleSignInProgress = false;
+  //bool baseProvider.isGoogleSignInProgress = false;
+  FocusNode focusNode;
   bool _isOtpSent = false;
   bool _isProcessing = false;
   bool _isVerifying = false;
@@ -53,6 +55,8 @@ class VerifyEmailState extends State<VerifyEmail> {
   void initState() {
     email = TextEditingController(text: "1000");
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      baseProvider.isGoogleSignInProgress = false;
+      focusNode = new FocusNode();
       showEmailOptions();
     });
     super.initState();
@@ -66,86 +70,101 @@ class VerifyEmailState extends State<VerifyEmail> {
   }
 
   showEmailOptions() {
-    showModalBottomSheet(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        isDismissible: false,
-        context: context,
-        builder: (ctx) {
-          return Wrap(
-            children: [
-              Container(
-                decoration: BoxDecoration(),
-                padding: EdgeInsets.all(
-                  SizeConfig.blockSizeHorizontal * 5,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          "Verification option",
-                          style: TextStyle(
-                            color: Colors.black54,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 24,
-                          ),
-                        ),
-                        Spacer(),
-                        IconButton(
-                          icon: Icon(Icons.close),
-                          iconSize: 30,
-                          onPressed: () =>
-                              AppState.backButtonDispatcher.didPopRoute(),
-                        ),
-                      ],
-                    ),
-                    Divider(
-                      height: 32,
-                      thickness: 2,
-                    ),
-                    ListTile(
-                      leading: SvgPicture.asset(
-                        "images/svgs/google.svg",
-                        height: 24,
-                        width: 24,
-                      ),
-                      title: Text("Choose a Google account"),
-                      subtitle: Text(""),
-                      onTap: verifyGmail,
-                      trailing: _baseUtil.isGoogleSignInProgress
-                          ? Container(
-                              child: CircularProgressIndicator(),
-                            )
-                          : SizedBox(),
-                    ),
-                    Divider(),
-                    ListTile(
-                      leading: Icon(
-                        Icons.alternate_email,
-                        color: UiConstants.primaryColor,
-                      ),
-                      title: Text("Receive an OTP on your email"),
-                      onTap: () {
-                        setState(() {
-                          _baseUtil.isGoogleSignInProgress = false;
-                          _isContinueWithGoogle = false;
-                          email.text = baseProvider.myUser.email;
-                          _isEmailEnabled = true;
-                        });
-                        Navigator.pop(context);
-                      },
-                    ),
-                    SizedBox(
-                      height: 24,
-                    )
-                  ],
-                ),
-                width: double.infinity,
-              ),
-            ],
-          );
-        });
+    baseProvider.isGoogleSignInProgress = false;
+    BaseUtil.openModalBottomSheet(
+        isBarrierDismissable: false,
+        borderRadius: BorderRadius.circular(15),
+        addToScreenStack: false,
+        hapticVibrate: true,
+        content: SignInOptions(
+          onGoogleSignIn: verifyGmail,
+          onEmailSignIn: () {
+            baseProvider.isGoogleSignInProgress = false;
+            // _isContinueWithGoogle = false;
+            email.text = baseProvider.myUser.email;
+            // _isEmailEnabled = true;
+
+            Navigator.pop(context);
+            focusNode.requestFocus();
+          },
+        )
+
+        // Wrap(
+        //   children: [
+        //     Container(
+        //       decoration: BoxDecoration(),
+        //       padding: EdgeInsets.all(
+        //         SizeConfig.blockSizeHorizontal * 5,
+        //       ),
+        //       child: Column(
+        //         crossAxisAlignment: CrossAxisAlignment.start,
+        //         children: [
+        //           Row(
+        //             children: [
+        //               Text(
+        //                 "Verification option",
+        //                 style: TextStyle(
+        //                   color: Colors.black54,
+        //                   fontWeight: FontWeight.w700,
+        //                   fontSize: 24,
+        //                 ),
+        //               ),
+        //               Spacer(),
+        //               IconButton(
+        //                   icon: Icon(Icons.close),
+        //                   iconSize: 30,
+        //                   onPressed: () {
+        //                     baseProvider.isGoogleSignInProgress = false;
+        //                     AppState.backButtonDispatcher.didPopRoute();
+        //                   }),
+        //             ],
+        //           ),
+        //           Divider(
+        //             height: 32,
+        //             thickness: 2,
+        //           ),
+        //           ListTile(
+        //             leading: SvgPicture.asset(
+        //               "images/svgs/google.svg",
+        //               height: 24,
+        //               width: 24,
+        //             ),
+        //             title: Text("Choose a Google account"),
+        //             subtitle: Text(""),
+        //             onTap: verifyGmail,
+        //             trailing: baseProvider.isGoogleSignInProgress
+        //                 ? Container(
+        //                     child: CircularProgressIndicator(),
+        //                   )
+        //                 : SizedBox(),
+        //           ),
+        //           Divider(),
+        //           ListTile(
+        //             leading: Icon(
+        //               Icons.alternate_email,
+        //               color: UiConstants.primaryColor,
+        //             ),
+        //             title: Text("Receive an OTP on your email"),
+        // onTap: () {
+        //   setState(() {
+        //     baseProvider.isGoogleSignInProgress = false;
+        //     _isContinueWithGoogle = false;
+        //     email.text = baseProvider.myUser.email;
+        //     _isEmailEnabled = true;
+        //   });
+        //   Navigator.pop(context);
+        // },
+        //           ),
+        //           SizedBox(
+        //             height: 24,
+        //           )
+        //         ],
+        //       ),
+        //       width: double.infinity,
+        //     ),
+        //   ],
+        // ),
+        );
   }
 
   generateOtp() {
@@ -230,9 +249,8 @@ class VerifyEmailState extends State<VerifyEmail> {
   }
 
   verifyGmail() async {
-    setState(() {
-      _baseUtil.isGoogleSignInProgress = true;
-    });
+    baseProvider.isGoogleSignInProgress = true;
+
     final _gSignIn = GoogleSignIn();
     try {
       if (await _gSignIn.isSignedIn()) await _gSignIn.signOut();
@@ -251,27 +269,27 @@ class VerifyEmailState extends State<VerifyEmail> {
         bool res = await dbProvider.updateUser(baseProvider.myUser);
         if (res) {
           setState(() {
-            _baseUtil.isGoogleSignInProgress = false;
+            baseProvider.isGoogleSignInProgress = false;
           });
           BaseUtil.showPositiveAlert("Success", "Email Verified successfully");
           Navigator.pop(context);
           AppState.backButtonDispatcher.didPopRoute();
         } else {
-          _baseUtil.isGoogleSignInProgress = false;
+          baseProvider.isGoogleSignInProgress = false;
           BaseUtil.showNegativeAlert(
             "Oops! we ran into problem",
             "Email cannot be verified at the moment",
           );
         }
       } else {
-        _baseUtil.isGoogleSignInProgress = false;
+        baseProvider.isGoogleSignInProgress = false;
         BaseUtil.showNegativeAlert(
           "Email already registered",
           "Please try with another email",
         );
       }
     } else {
-      _baseUtil.isGoogleSignInProgress = false;
+      baseProvider.isGoogleSignInProgress = false;
       BaseUtil.showNegativeAlert(
         "No account selected",
         "Please choose an account from the list",
@@ -291,7 +309,7 @@ class VerifyEmailState extends State<VerifyEmail> {
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    baseProvider = Provider.of<BaseUtil>(context);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     httpProvider = Provider.of<HttpModel>(context, listen: false);
     return Scaffold(
@@ -348,6 +366,7 @@ class VerifyEmailState extends State<VerifyEmail> {
                               child: Container(
                                 padding: EdgeInsets.only(top: 30, bottom: 10),
                                 child: TextFormField(
+                                  focusNode: focusNode,
                                   controller: email,
                                   enabled: _isProcessing || _isOtpSent
                                       ? false
