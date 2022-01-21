@@ -53,7 +53,7 @@ class LeaderboardService
 
   fetchReferralLeaderBoard() async {
     ApiResponse<ReferralBoardModal> response =
-        await _statsRepo.getReferralBoard("REF", "monthly");
+        await _statsRepo.getReferralBoard("REF-ACTIVE", "monthly");
     if (response.code == 200) {
       _referralLeaderBoard.clear();
       _referralLeaderBoard = response.model.scoreboard;
