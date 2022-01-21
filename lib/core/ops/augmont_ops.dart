@@ -467,6 +467,10 @@ class AugmontModel extends ChangeNotifier {
       _baseProvider.currentAugmontTxn = _onCompleteDepositResponse
           .model.response.transactionDoc.transactionDetail;
 
+      if (_onCompleteDepositResponse.model.gtId != null) {
+        GoldenTicketService.goldenTicketId =
+            _onCompleteDepositResponse.model.gtId;
+      }
       _txnService.updateTransactions();
 
       if (_augmontTxnProcessListener != null)

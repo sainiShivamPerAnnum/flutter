@@ -3,7 +3,7 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/golden_scratch_card_vm.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_vm.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_ticket_utils.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
@@ -18,13 +18,13 @@ import 'package:scratcher/scratcher.dart';
 
 final scratchKey = GlobalKey<ScratcherState>();
 
-class GoldenScratchCardView extends StatelessWidget {
+class GTDetailedView extends StatelessWidget {
   final GoldenTicket ticket;
   final GoldenTicketsViewModel superModel;
-  GoldenScratchCardView({@required this.ticket, @required this.superModel});
+  GTDetailedView({@required this.ticket, @required this.superModel});
   @override
   Widget build(BuildContext context) {
-    return BaseView<GoldenScratchCardViewModel>(
+    return BaseView<GTDetailedViewModel>(
       onModelReady: (model) {
         model.init(ticket);
       },
@@ -102,7 +102,7 @@ class GoldenScratchCardView extends StatelessWidget {
     );
   }
 
-  Widget setModalContent(GoldenScratchCardViewModel model) {
+  Widget setModalContent(GTDetailedViewModel model) {
     if (ticket.redeemedTimestamp != null) {
       //redeemed ticket -> just show the details
       return Padding(

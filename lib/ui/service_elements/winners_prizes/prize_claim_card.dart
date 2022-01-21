@@ -205,6 +205,8 @@ class ClaimButton extends StatelessWidget {
             vertical: SizeConfig.padding16,
           ),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CircleAvatar(
                 radius: SizeConfig.padding24,
@@ -213,13 +215,16 @@ class ClaimButton extends StatelessWidget {
                   image ?? Assets.amazonClaim,
                 ),
               ),
-              SizedBox(width: SizeConfig.padding6),
-              Expanded(
+              SizedBox(width: SizeConfig.padding12),
+              Container(
+                width: SizeConfig.screenWidth * 0.5,
                 child: Text(
                   text ?? "Redeem for amazon pay",
-                  style: TextStyles.body3.colour(Colors.white),
+                  style: TextStyles.body1.colour(Colors.white).bold,
+                  maxLines: 2,
+                  textAlign: TextAlign.start,
                 ),
-              )
+              ),
             ],
           ),
         ),

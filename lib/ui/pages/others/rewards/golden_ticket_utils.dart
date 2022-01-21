@@ -91,19 +91,39 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
           ),
           child: Stack(
             children: [
-              Positioned(
-                bottom: 0,
-                left: 25,
-                child: Image.asset(Assets.logoShortform,
-                    height: SizeConfig.screenWidth * 0.14,
-                    color: UiConstants.tertiarySolid.withOpacity(0.1)),
+              Container(
+                width: SizeConfig.screenWidth * 0.6,
+                height: SizeConfig.screenWidth * 0.6,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Spacer(flex: 1),
+                    Flexible(
+                      fit: FlexFit.tight,
+                      flex: 2,
+                      child: Image.asset(Assets.logoShortform,
+                          color: UiConstants.tertiarySolid.withOpacity(0.1)),
+                    ),
+                    Spacer(flex: 7),
+                  ],
+                ),
               ),
-              Positioned(
-                bottom: 5, // SizeConfig.pageHorizontalMargins,
-                right: 5, //SizeConfig.pageHorizontalMargins,
-                child: Image.asset(
-                  Assets.felloRewards,
-                  width: SizeConfig.screenWidth * 0.2,
+              Container(
+                width: SizeConfig.screenWidth * 0.6,
+                height: SizeConfig.screenWidth * 0.6,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Spacer(flex: 2),
+                    Flexible(
+                      fit: FlexFit.tight,
+                      flex: 3,
+                      child: Image.asset(
+                        Assets.felloRewards,
+                        // width: SizeConfig.screenWidth * 0.2,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Padding(
