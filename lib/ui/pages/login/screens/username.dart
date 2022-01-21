@@ -49,6 +49,12 @@ class UsernameState extends State<Username> {
   UsernameResponse response;
 
   @override
+  void initState() {
+    focusNode = new FocusNode();
+    super.initState();
+  }
+
+  @override
   void dispose() {
     focusNode?.dispose();
     super.dispose();
@@ -138,14 +144,14 @@ class UsernameState extends State<Username> {
     );
   }
 
-  @override
-  void didChangeDependencies() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (mounted) FocusScope.of(context).requestFocus();
-    });
+  // @override
+  // void didChangeDependencies() {
+  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+  //     if (mounted) FocusScope.of(context).requestFocus();
+  //   });
 
-    super.didChangeDependencies();
-  }
+  //   super.didChangeDependencies();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -174,7 +180,7 @@ class UsernameState extends State<Username> {
               key: _formKey,
               child: Container(
                 child: TextFormField(
-                  // focusNode: focusNode,
+                  focusNode: focusNode,
                   controller: usernameController,
                   inputFormatters: [
                     LowerCaseTextFormatter(),

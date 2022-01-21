@@ -55,6 +55,14 @@ class GTInstantViewModel extends BaseModel {
     notifyListeners();
   }
 
+  bool _isCardScratchStarted = false;
+  bool get isCardScratchStarted => this._isCardScratchStarted;
+
+  set isCardScratchStarted(bool value) {
+    this._isCardScratchStarted = value;
+    notifyListeners();
+  }
+
   bool _isCardScratched = false;
 
   get isCardScratched => this._isCardScratched;
@@ -72,7 +80,7 @@ class GTInstantViewModel extends BaseModel {
     goldenTicket = GoldenTicketService.currentGT;
     GoldenTicketService.currentGT = null;
     Future.delayed(Duration(seconds: 6), () {
-      if (!isCardScratched) {
+      if (!isCardScratchStarted) {
         showScratchGuide = true;
       }
     });

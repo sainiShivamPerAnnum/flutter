@@ -144,7 +144,10 @@ class WinnerboardView extends StatelessWidget {
                             ),
                           ),
                           SizedBox(
-                            height: SizeConfig.navBarHeight * 1.5,
+                            height: model.winners.length < 10
+                                ? (10 - model.winners.length) *
+                                    SizeConfig.padding54
+                                : SizeConfig.navBarHeight * 1.5,
                           )
                         ],
                       )),
