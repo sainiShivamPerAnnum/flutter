@@ -124,7 +124,7 @@ class LauncherViewModel extends BaseModel {
     bool _res = false;
     try {
       _res = await deviceUnlock.request(
-          localizedReason: 'Please authenticate in order to proceed');
+          localizedReason: 'Confirm your phone screen lock pattern,PIN or password');
     } on DeviceUnlockUnavailable {
       BaseUtil.showPositiveAlert('No Device Authentication Found',
           'Logging in, please enable device security to add lock');
@@ -135,7 +135,7 @@ class LauncherViewModel extends BaseModel {
     } catch (e) {
       _logger.e("error", [e]);
       BaseUtil.showNegativeAlert('Authentication Failed',
-          'Please restart the application to try again.');
+          'Please restart and try again');
     }
     return _res;
   }
