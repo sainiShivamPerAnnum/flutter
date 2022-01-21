@@ -53,7 +53,9 @@ import 'package:felloapp/ui/pages/others/profile/transactions_history/transactio
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_viewModel.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_milestones/golden_milestones_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_milestones/golden_milestones_vm.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/golden_scratch_card_vm.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_vm.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_vm.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_vm.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/splash/splash_vm.dart';
@@ -140,8 +142,9 @@ void setupLocator() {
   locator.registerFactory(() => MyWinningsViewModel());
   locator.registerFactory(() => NotificationsViewModel());
   locator.registerFactory(() => GoldenTicketsViewModel());
-  locator.registerFactory(() => GoldenScratchCardViewModel());
+  locator.registerFactory(() => GTDetailedViewModel());
   locator.registerFactory(() => GoldenMilestonesViewModel());
+  locator.registerFactory(() => GTInstantViewModel());
 
   //WIDGETS
   // locator.registerFactory(() => SellGoldBtnVM());

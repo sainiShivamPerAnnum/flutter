@@ -61,6 +61,22 @@ class Api {
     return snapshot;
   }
 
+  Future<DocumentSnapshot> fetchGoldenTicketById(
+      String userId, String gtId) async {
+    DocumentReference docRef = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
+        .collection(Constants.SUBCOLN_USER_REWARDS)
+        .doc(gtId);
+    try {
+      DocumentSnapshot docSnap = await docRef.get();
+      return docSnap;
+    } catch (e) {
+      logger.e(e);
+    }
+    return null;
+  }
+
   Future<QuerySnapshot> checkForLatestNotification(String userId) {
     Future<QuerySnapshot> snapshot;
     Query query = _db

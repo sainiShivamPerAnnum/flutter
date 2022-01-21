@@ -6,7 +6,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/hero_router.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/golden_scratch_card_view.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_ticket_utils.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_vm.dart';
 import 'package:felloapp/util/assets.dart';
@@ -91,7 +91,7 @@ class GoldenTicketsView extends StatelessWidget {
                                         .push(
                                       HeroDialogRoute(
                                         builder: (context) {
-                                          return GoldenScratchCardView(
+                                          return GTDetailedView(
                                             ticket: model
                                                 .arrangedGoldenTicketList[i],
                                             superModel: model,
@@ -102,7 +102,7 @@ class GoldenTicketsView extends StatelessWidget {
                                   },
                                   child: GoldenTicketGridItemCard(
                                     ticket: model.arrangedGoldenTicketList[i],
-                                    titleStyle: TextStyles.body1,
+                                    titleStyle: TextStyles.body2,
                                   ),
                                 );
                               },

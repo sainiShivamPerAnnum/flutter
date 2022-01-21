@@ -3,6 +3,7 @@ import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/golden_ticket_service.dart';
 import 'package:felloapp/core/service/leaderboard_service.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
@@ -25,13 +26,13 @@ class FcmHandler extends ChangeNotifier {
   final CustomLogger logger = locator<CustomLogger>();
   final _lbService = locator<LeaderboardService>();
   GoldenTicketService _gtService = GoldenTicketService();
+  final _userservice = locator<UserService>();
   Log log = new Log("FcmHandler");
   ValueChanged<Map> notifListener;
   String url;
   int tab, dailogShowCount;
 
   Future<bool> handleMessage(Map data, MsgSource source) async {
-    logger.d(data.toString());
     bool showSnackbar = true;
     String title = data['dialog_title'];
     String body = data['dialog_body'];
@@ -54,34 +55,42 @@ class FcmHandler extends ChangeNotifier {
         case COMMAND_CRIC_GAME_END:
           {
             logger.i("FCM Command received to end Cricket game");
+            //  check if payload has a golden ticket
+            if (data['gt_id'] != null && data['gt_id'].toString().isNotEmpty) {
+              logger.d(data.toString());
+              GoldenTicketService.goldenTicketId = data['gt_id'];
+            }
             //Navigate back to CricketView
             if (AppState.circGameInProgress) {
               AppState.circGameInProgress = false;
               AppState.backButtonDispatcher.didPopRoute();
-              Future.delayed(Duration(milliseconds: 100), () {
-                BaseUtil.openDialog(
-                  addToScreenStack: true,
-                  isBarrierDismissable: true,
-                  hapticVibrate: false,
-                  content: FelloInfoDialog(
-                    showCrossIcon: false,
-                    title: "Game Over",
-                    subtitle:
-                        "Your score is: ${data['game_score'] ?? 'Unavailable'}.",
-                    action: Container(
-                      width: SizeConfig.screenWidth,
-                      child: FelloButtonLg(
-                          child: Text(
-                            "OK",
-                            style: TextStyles.body2.bold.colour(Colors.white),
-                          ),
-                          onPressed: () {
-                            AppState.backButtonDispatcher.didPopRoute();
-                            // _gtService.showGoldenTicketAvailableDialog();
-                          }),
+              Future.delayed(Duration(milliseconds: 100), () async {
+                if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
+                  _gtService.showInstantGoldenTicketView();
+                } else
+                  BaseUtil.openDialog(
+                    addToScreenStack: true,
+                    isBarrierDismissable: true,
+                    hapticVibrate: false,
+                    content: FelloInfoDialog(
+                      showCrossIcon: false,
+                      title: "Game Over",
+                      subtitle:
+                          "Your score is: ${data['game_score'] ?? 'Unavailable'}.",
+                      action: Container(
+                        width: SizeConfig.screenWidth,
+                        child: FelloButtonLg(
+                            child: Text(
+                              "OK",
+                              style: TextStyles.body2.bold.colour(Colors.white),
+                            ),
+                            onPressed: () {
+                              AppState.backButtonDispatcher.didPopRoute();
+                              // _gtService.showGoldenTicketAvailableDialog();
+                            }),
+                      ),
                     ),
-                  ),
-                );
+                  );
               });
             }
             // update cricket scoreboard
@@ -136,10 +145,10 @@ class FcmHandler extends ChangeNotifier {
           break;
         case COMMAND_GOLDEN_TICKET_WIN:
           {
-            if (AppState.backButtonDispatcher.isAnyDialogOpen())
-              GoldenTicketService.hasGoldenTicket = true;
-            else
-              _gtService.showGoldenTicketFlushbar();
+            // if (AppState.backButtonDispatcher.isAnyDialogOpen())
+            //   GoldenTicketService.hasGoldenTicket = true;
+            // else
+            //   _gtService.showGoldenTicketFlushbar();
           }
           break;
         default:
@@ -150,7 +159,7 @@ class FcmHandler extends ChangeNotifier {
     if (source == MsgSource.Foreground && showSnackbar == true) {
       handleNotification(title, body);
     }
-
+    _userservice.checkForNewNotifications();
     return true;
   }
 

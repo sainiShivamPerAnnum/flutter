@@ -8,14 +8,14 @@ import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/golden_ticket_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/golden_scratch_card_view.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 
-class GoldenScratchCardViewModel extends BaseModel {
+class GTDetailedViewModel extends BaseModel {
   bool _viewScratcher = false;
   double _detailsModalHeight = 0;
   bool _bottompadding = true;
