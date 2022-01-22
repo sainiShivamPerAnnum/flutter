@@ -406,4 +406,5 @@ PageConfiguration GoldenMilestonesViewPageConfig = PageConfiguration(
   key: 'GoldenMilestonesView',
   path: GoldenMilestonesViewPath,
   uiPage: Pages.GoldenMilestonesView,
+  name: 'Milestones screen',
 );
