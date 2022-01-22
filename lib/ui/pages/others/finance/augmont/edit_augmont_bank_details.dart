@@ -7,7 +7,8 @@ import 'package:felloapp/core/model/verify_amount_api_response_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/core/repository/signzy_repo.dart';
-import 'package:felloapp/core/service/mixpanel_service.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/analytics/base_analytics_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/augmont_confirm_register_dialog.dart';
@@ -19,7 +20,7 @@ import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/mixpanel_events.dart';
+import 'package:felloapp/core/service/analytics/analytics_events.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -51,7 +52,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
   TextEditingController _bankAccNoController;
   TextEditingController _bankIfscController;
   TextEditingController _bankAccNoConfirmController;
-  final MixpanelService _mixpanelService = locator<MixpanelService>();
+  final BaseAnalyticsService _analyticsService = locator<AnalyticsService>();
   final SignzyRepository _signzyRepository = locator<SignzyRepository>();
   final CustomLogger _logger = locator<CustomLogger>();
   bool _isInitialized = false;
@@ -591,9 +592,8 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                     baseProvider.isEditAugmontBankDetailInProgress = false;
                     setState(() {});
                     if (flag) {
-                      _mixpanelService.track(
-                          eventName: MixpanelEvents.bankDetailsUpdated);
-                      print("mixpanel added");
+                      _analyticsService.track(
+                          eventName: AnalyticsEvents.bankDetailsUpdated);
                       BaseUtil.showPositiveAlert(
                           'Complete', 'Your details have been updated');
                       AppState.backButtonDispatcher.didPopRoute();

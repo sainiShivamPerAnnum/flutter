@@ -154,6 +154,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       await FirebaseAuth.instance.signOut();
       await CacheManager.clearCacheMemory();
       _logger.d("UserService signout called");
+      _userFundWallet = null;
       _firebaseUser = null;
       _baseUser = null;
       _myUserDpUrl = null;

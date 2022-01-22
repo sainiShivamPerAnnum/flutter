@@ -4,7 +4,7 @@ import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/service/mixpanel_service.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -17,7 +17,7 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/mixpanel_events.dart';
+import 'package:felloapp/core/service/analytics/analytics_events.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 //Flutter Imports
@@ -45,7 +45,7 @@ class _SupportPageState extends State<SupportPage> {
   DBModel dbProvider;
   TextEditingController _requestCallPhoneController = TextEditingController();
   bool isInit = false;
-  final _mixpanelService = locator<MixpanelService>();
+  final _analyticsService = locator<AnalyticsService>();
 
   void init() {
     _requestCallPhoneController.text = baseProvider.myUser.mobile;
@@ -103,8 +103,8 @@ class _SupportPageState extends State<SupportPage> {
                           title: "Chat with us",
                           onTap: () {
                             Haptic.vibrate();
-                            _mixpanelService
-                                .track(eventName: MixpanelEvents.initiateChatSupport,properties: {'userId':_userService.baseUser.uid});
+                            _analyticsService
+                                .track(eventName: AnalyticsEvents.initiateChatSupport,properties: {'userId':_userService.baseUser.uid});
                             appState.currentAction = PageAction(
                                 state: PageState.addPage,
                                 page: ChatSupportPageConfig);
@@ -451,7 +451,7 @@ class _SupportPageState extends State<SupportPage> {
                                   _requestCallPhoneController.text.trim(),
                                   callTimes[_selectedTimeSlotIndex]);
                               if (res) {
-                                _mixpanelService.track(eventName: MixpanelEvents.requestedCallback);
+                                _analyticsService.track(eventName: AnalyticsEvents.requestedCallback);
                                 BaseUtil.showPositiveAlert(
                                   'Callback Placed',
                                   'Thank you for letting us know, we will call you soon!',
@@ -496,7 +496,7 @@ class _SupportPageState extends State<SupportPage> {
   }
 
   void _launchEmail() {
-    _mixpanelService.track(eventName: MixpanelEvents.emailInitiated);
+    _analyticsService.track(eventName: AnalyticsEvents.emailInitiated);
     final Uri emailLaunchUri = Uri(scheme: 'mailto', path: 'hello@fello.in');
     launch(emailLaunchUri.toString());
   }

@@ -95,7 +95,7 @@ class _GTInstantViewState extends State<GTInstantView>
                         children: [
                           Spacer(flex: 1),
                           Text(
-                            widget.title ?? "Hurray!!",
+                            widget.title ?? "Hurray!",
                             style: TextStyles.title2.bold.colour(Colors.white),
                             textAlign: TextAlign.center,
                           ),

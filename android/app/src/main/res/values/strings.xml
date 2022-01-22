@@ -3,4 +3,5 @@
     <string name="freshchat_conversation_notification_channel_name">Support</string>
     <string name="facebook_app_id">523292952050769</string>
     <string name="fb_login_protocol_scheme">fb523292952050769</string>
+    <string name="webengage_code">in~76aa370</string>
 </resources>

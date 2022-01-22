@@ -5,6 +5,9 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_coin_service.dart';
@@ -37,6 +40,7 @@ class RootViewModel extends BaseModel {
   final CustomLogger _logger = locator<CustomLogger>();
   final winnerService = locator<WinnerService>();
   final txnService = locator<TransactionService>();
+  final _analyticsService = locator<AnalyticsService>();
 
   BuildContext rootContext;
   bool _isInitialized = false;
@@ -91,6 +95,19 @@ class RootViewModel extends BaseModel {
   }
 
   void onItemTapped(int index) {
+    switch (index) {
+      case 0:
+        _analyticsService.track(eventName: AnalyticsEvents.saveSection);
+        break;
+      case 1:
+        _analyticsService.track(eventName: AnalyticsEvents.playSection);
+        break;
+      case 2:
+        _analyticsService.track(eventName: AnalyticsEvents.winSection);
+        break;
+      default:
+    }
+
     AppState.delegate.appState.setCurrentTabIndex = index;
     notifyListeners();
   }
@@ -192,9 +209,48 @@ class RootViewModel extends BaseModel {
     }
   }
 
+  _findCampaignId(String uri) {
+    int res = uri.indexOf(RegExp(r'campaign_source='));
+    int finalres = res + 16;
+    print(res);
+    print(finalres);
+    String code = '';
+    RegExp anregex = RegExp(r'^[a-zA-Z0-9]*$');
+    for (int i = finalres; i < uri.length; i++) {
+      if (anregex.hasMatch(uri[i])) {
+        code += uri[i];
+      } else {
+        break;
+      }
+    }
+    return code;
+  }
+
   _processDynamicLink(String userId, Uri deepLink, BuildContext context) async {
     String _uri = deepLink.toString();
-    if (_uri.startsWith(Constants.GOLDENTICKET_DYNAMICLINK_PREFIX)) {
+
+    if (_uri.startsWith(Constants.APP_DOWNLOAD_LINK)) {
+      //check if champaign source is null ?
+      if (_uri.contains('campaign_source=')) {
+        String campaignId = _findCampaignId(_uri);
+        if (campaignId.isNotEmpty || campaignId == null) {
+          try {
+            final String _bearer = await _getBearerToken();
+            //Make api call
+            const String _apiPath = "/userOps/api/opt-analytics";
+            Map<String, dynamic> _body = {
+              "clickId": campaignId,
+              "uid": userId,
+            };
+            final response = await APIService.instance
+                .postData(_apiPath, body: _body, token: _bearer);
+            _logger.d(response);
+          } catch (e) {}
+        } else {
+          _logger.d('Campaign_id is empty');
+        }
+      }
+    } else if (_uri.startsWith(Constants.GOLDENTICKET_DYNAMICLINK_PREFIX)) {
       //Golden ticket dynamic link
       int flag = await _submitGoldenTicket(userId, _uri, context);
     } else {
@@ -279,5 +335,23 @@ class RootViewModel extends BaseModel {
       _logger.e('$e');
       return -1;
     }
+  }
+
+  void earnMoreTokens() {
+    _analyticsService.track(eventName: AnalyticsEvents.earnMoreTokens);
+    BaseUtil.openModalBottomSheet(
+      addToScreenStack: true,
+      content: WantMoreTicketsModalSheet(),
+      hapticVibrate: true,
+      backgroundColor: Colors.transparent,
+      isBarrierDismissable: true,
+    );
+  }
+
+  Future<String> _getBearerToken() async {
+    String token = await _userService.firebaseUser.getIdToken();
+    _logger.d(token);
+
+    return token;
   }
 }

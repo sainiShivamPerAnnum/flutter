@@ -1,5 +1,7 @@
 import UIKit
 import Flutter
+import WebEngage
+import webengage_flutter
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
@@ -12,6 +14,7 @@ import Flutter
     UNUserNotificationCenter.current().delegate = self as?
         UNUserNotificationCenterDelegate
     }
+    WebEngage.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }

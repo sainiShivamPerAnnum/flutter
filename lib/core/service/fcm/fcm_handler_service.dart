@@ -69,6 +69,7 @@ class FcmHandler extends ChangeNotifier {
               Future.delayed(Duration(milliseconds: 100), () async {
                 if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
                   _gtService.showInstantGoldenTicketView(
+                      title: 'Game milestone achieved',
                       source: GTSOURCE.cricket);
                 } else
                   BaseUtil.openDialog(
@@ -79,7 +80,7 @@ class FcmHandler extends ChangeNotifier {
                       showCrossIcon: false,
                       title: "Game Over",
                       subtitle:
-                          "Your score is: ${data['game_score'] ?? 'Unavailable'}.",
+                          data['game_score']?"You made ${data['game_score']} runs":"Game Over",
                       action: Container(
                         width: SizeConfig.screenWidth,
                         child: FelloButtonLg(
