@@ -1,4 +1,6 @@
+import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_vm.dart';
@@ -12,6 +14,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
 
 class UpperCaseTextFormatter extends TextInputFormatter {
   @override
@@ -121,22 +124,30 @@ class KYCDetailsView extends StatelessWidget {
                             if (model.inEditMode)
                               Container(
                                 width: SizeConfig.screenWidth,
-                                child: FelloButtonLg(
-                                    child: model.isKycInProgress
-                                        ? SpinKitThreeBounce(
-                                            color: Colors.white,
-                                            size: 20,
-                                          )
-                                        : Text(
-                                            locale.btnSumbit,
-                                            style: TextStyles.body2
-                                                .colour(Colors.white)
-                                                .bold,
-                                          ),
-                                    onPressed: () {
-                                      model.panFocusNode.unfocus();
-                                      model.onSubmit(context);
-                                    }),
+                                child: PropertyChangeConsumer<UserService,
+                                        UserServiceProperties>(
+                                    properties: [
+                                      UserServiceProperties
+                                          .myConfirmDialogViewStatus
+                                    ],
+                                    builder: (context, m, property) =>
+                                        FelloButtonLg(
+                                            child: model.isKycInProgress ||
+                                                    m.isConfirmationDialogOpen
+                                                ? SpinKitThreeBounce(
+                                                    color: Colors.white,
+                                                    size: 20,
+                                                  )
+                                                : Text(
+                                                    locale.btnSumbit,
+                                                    style: TextStyles.body2
+                                                        .colour(Colors.white)
+                                                        .bold,
+                                                  ),
+                                            onPressed: () {
+                                              model.panFocusNode.unfocus();
+                                              model.onSubmit(context);
+                                            })),
                               ),
                             SizedBox(height: 24),
                           ],

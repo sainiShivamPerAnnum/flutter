@@ -47,7 +47,7 @@ class ReferralLeaderboard extends StatelessWidget {
                       : (model.referralLeaderBoard.isEmpty
                           ? Container(
                               width: SizeConfig.screenWidth,
-                              height: SizeConfig.safeScreenHeight * 0.88,
+                              height: SizeConfig.safeScreenHeight * 0.7,
                               color: Colors.white,
                               child: NoRecordDisplayWidget(
                                 asset: "images/leaderboard.png",
@@ -126,7 +126,7 @@ class ReferralLeaderboard extends StatelessWidget {
                                             ),
                                             PrizeChip(
                                               color: UiConstants.primaryColor,
-                                              png: Assets.moneyIcon,
+                                              svg: Assets.plane,
                                               text: model.referralLeaderBoard[i]
                                                       .refCount
                                                       .toString() ??
