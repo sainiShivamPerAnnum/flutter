@@ -308,7 +308,7 @@ class VerifyEmailState extends State<VerifyEmail> {
                               vertical: SizeConfig.padding16),
                           child: Text((!_isOtpSent)
                               ? "We will send you a 6 digit code on this email."
-                              : "Please check your inbox folders for the code"),
+                              : "Please check your promotions or spam folders if you can't find the email"),
                         ),
                         SizedBox(
                           height: SizeConfig.padding24,

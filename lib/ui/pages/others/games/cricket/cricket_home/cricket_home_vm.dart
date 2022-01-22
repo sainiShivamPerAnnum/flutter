@@ -6,8 +6,8 @@ import 'package:felloapp/core/model/leader_board_modal.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/repository/statistics_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/leaderboard_service.dart';
-import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/core/service/prize_service.dart';
 import 'package:felloapp/core/service/user_coin_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
@@ -18,7 +18,7 @@ import 'package:felloapp/ui/pages/others/games/cricket/cricket_game/cricket_game
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/mixpanel_events.dart';
+import 'package:felloapp/core/service/analytics/analytics_events.dart';
 import 'package:flutter/material.dart';
 import 'package:felloapp/util/custom_logger.dart';
 
@@ -30,7 +30,7 @@ class CricketHomeViewModel extends BaseModel {
   final _stats = locator<StatisticsRepository>();
   final _prizeService = locator<PrizeService>();
   final _lbService = locator<LeaderboardService>();
-  final _mixpanelService = locator<MixpanelService>();
+  final _analyticsService = locator<AnalyticsService>();
 
   PageController pageController = new PageController(initialPage: 0);
 
@@ -73,8 +73,7 @@ class CricketHomeViewModel extends BaseModel {
   }
 
   startGame() {
-    _mixpanelService.track(
-       eventName:  MixpanelEvents.playsCricket);
+    _analyticsService.track(eventName: AnalyticsEvents.playsCricket);
     viewpage(1);
     AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,

@@ -87,7 +87,7 @@ class PrizeClaimCard extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: SizeConfig.padding8),
-                        if (m.userFundWallet.unclaimedBalance >= refUnlockAmt &&
+                        if (m.userFundWallet.unclaimedBalance >= minWithdrawPrizeAmt &&
                             m.userFundWallet.augGoldPrinciple >= refUnlockAmt)
                           Container(
                             margin: EdgeInsets.symmetric(
@@ -116,7 +116,7 @@ class PrizeClaimCard extends StatelessWidget {
                               ],
                             ),
                           ),
-                        if (m.userFundWallet.unclaimedBalance < 100)
+                        if (m.userFundWallet.unclaimedBalance < minWithdrawPrizeAmt)
                           Container(
                             margin: EdgeInsets.symmetric(
                                 vertical: SizeConfig.padding6),

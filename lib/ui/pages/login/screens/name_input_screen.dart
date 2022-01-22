@@ -779,13 +779,13 @@ class _SignInOptionsState extends State<SignInOptions> {
                       color: UiConstants.primaryColor,
                     ),
                     title: Text("Use another email"),
-                    subtitle: Text(
-                      "this option requires an extra step",
-                      style: TextStyle(
-                        fontSize: SizeConfig.smallTextSize * 1.3,
-                        color: Colors.red[300],
-                      ),
-                    ),
+                    // subtitle: Text(
+                    //   "this option requires an extra step",
+                    //   style: TextStyle(
+                    //     fontSize: SizeConfig.smallTextSize * 1.3,
+                    //     color: Colors.red[300],
+                    //   ),
+                    // ),
                     onTap: () {
                       if (!baseProvider.isGoogleSignInProgress) {
                         widget.onEmailSignIn();

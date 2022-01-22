@@ -14,6 +14,8 @@ import 'package:felloapp/core/repository/statistics_repo.dart';
 import 'package:felloapp/core/repository/ticket_generation_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/repository/winners_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/connectivity_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
@@ -21,7 +23,7 @@ import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/golden_ticket_service.dart';
 import 'package:felloapp/core/service/lcl_db_api.dart';
 import 'package:felloapp/core/service/leaderboard_service.dart';
-import 'package:felloapp/core/service/mixpanel_service.dart';
+import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/core/service/prize_service.dart';
 import 'package:felloapp/core/service/tambola_service.dart';
@@ -79,9 +81,12 @@ void setupLocator() {
   locator.registerLazySingleton(() => FcmListener());
   locator.registerLazySingleton(() => FcmHandler());
 
+  locator.registerLazySingleton(() => AnalyticsService());
+  locator.registerLazySingleton(() => MixpanelAnalytics());
+  locator.registerLazySingleton(() => WebEngageAnalytics());
+
   //Model Services
   locator.registerLazySingleton(() => BaseUtil());
-  locator.registerLazySingleton(() => MixpanelService());
   locator.registerLazySingleton(() => PaymentService());
   locator.registerLazySingleton(() => AppState());
   locator.registerLazySingleton(() => ConnectivityService());

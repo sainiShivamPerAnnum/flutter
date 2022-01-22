@@ -8,7 +8,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/repository/signzy_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
-import 'package:felloapp/core/service/mixpanel_service.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -18,7 +18,7 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/mixpanel_events.dart';
+import 'package:felloapp/core/service/analytics/analytics_events.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -34,7 +34,7 @@ class KYCDetailsViewModel extends BaseModel {
   final _httpModel = locator<HttpModel>();
   final _baseUtil = locator<BaseUtil>();
   final _userRepo = locator<UserRepository>();
-  final _mixpanelService = locator<MixpanelService>();
+  final _analyticsService = locator<AnalyticsService>();
   final _signzyRepository = locator<SignzyRepository>();
   bool get isConfirmDialogInView => _userService.isConfirmationDialogOpen;
 
@@ -139,6 +139,7 @@ class KYCDetailsViewModel extends BaseModel {
 
     isKycInProgress = true;
     _userService.isConfirmationDialogOpen = true;
+    _analyticsService.track(eventName: AnalyticsEvents.openKYCSection);
 
     ///next get all details required for registration
     Map<String, dynamic> veriDetails =
@@ -185,15 +186,22 @@ class KYCDetailsViewModel extends BaseModel {
               _q = await _dbModel.updateUser(_userService.baseUser);
             }
             if (!_p || !_q) {
+              _analyticsService.track(
+                eventName: AnalyticsEvents.kycVerificationFailed,
+                properties: {'userId': _userService.baseUser.uid},
+              );
+
               BaseUtil.showNegativeAlert('Verification Failed',
                   'Failed to verify at the moment. Please try again.');
               _isKycInProgress = false;
               refresh();
               return;
             } else {
-              _mixpanelService.track(
-                  eventName: MixpanelEvents.panVerified,
-                  properties: {'userId': _userService.baseUser.uid});
+              _analyticsService.track(
+                eventName: AnalyticsEvents.panVerified,
+                properties: {'userId': _userService.baseUser.uid},
+              );
+
               _userService.isSimpleKycVerified = true;
               _userService.setMyUserName(_userService.baseUser.name);
               BaseUtil.showPositiveAlert(
@@ -232,7 +240,10 @@ class KYCDetailsViewModel extends BaseModel {
 
       isKycInProgress = false;
 
-      return;
+      _analyticsService.track(
+        eventName: AnalyticsEvents.kycVerificationFailed,
+        properties: {'userId': _userService.baseUser.uid},
+      );
     }
   }
 
