@@ -43,6 +43,7 @@ class GTDetailedView extends StatelessWidget {
                   ? GoldenTicketGridItemCard(
                       ticket: ticket,
                       titleStyle: TextStyles.title2,
+                      subtitleStyle: TextStyles.body1,
                       width: SizeConfig.screenWidth * 0.6,
                     )
                   : (model.viewScratcher
@@ -70,6 +71,7 @@ class GTDetailedView extends StatelessWidget {
                               ),
                               child: RedeemedGoldenScratchCard(
                                 ticket: ticket,
+                                subtitleStyle: TextStyles.body1,
                                 titleStyle: TextStyles.title2,
                                 width: SizeConfig.screenWidth * 0.6,
                               ),
@@ -79,6 +81,7 @@ class GTDetailedView extends StatelessWidget {
                       : GoldenTicketGridItemCard(
                           ticket: ticket,
                           titleStyle: TextStyles.title2,
+                          subtitleStyle: TextStyles.body1,
                           width: SizeConfig.screenWidth * 0.6,
                         )),
               Spacer(),

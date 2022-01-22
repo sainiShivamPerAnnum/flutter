@@ -26,11 +26,12 @@ class CustomRectTween extends RectTween {
 
 class GoldenTicketGridItemCard extends StatelessWidget {
   final GoldenTicket ticket;
-  final TextStyle titleStyle;
+  final TextStyle titleStyle, subtitleStyle;
   final double width;
   GoldenTicketGridItemCard({
     @required this.ticket,
     @required this.titleStyle,
+    @required this.subtitleStyle,
     @required this.width,
   });
   @override
@@ -49,6 +50,7 @@ class GoldenTicketGridItemCard extends StatelessWidget {
               ticket: ticket,
               titleStyle: titleStyle,
               width: width,
+              subtitleStyle: subtitleStyle,
             ),
     );
   }
@@ -80,10 +82,13 @@ class UnRedeemedGoldenScratchCard extends StatelessWidget {
 
 class RedeemedGoldenScratchCard extends StatelessWidget {
   final GoldenTicket ticket;
-  final TextStyle titleStyle;
+  final TextStyle titleStyle, subtitleStyle;
   final double width;
   RedeemedGoldenScratchCard(
-      {@required this.ticket, @required this.titleStyle, @required this.width});
+      {@required this.ticket,
+      @required this.titleStyle,
+      @required this.subtitleStyle,
+      @required this.width});
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraint) {
@@ -92,99 +97,51 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(SizeConfig.roundness12),
         ),
         child: AnimatedContainer(
-            height: SizeConfig.screenWidth * 0.6,
-            width: SizeConfig.screenWidth * 0.6,
-            duration: Duration(milliseconds: 300),
-            curve: Curves.easeIn,
-            decoration: BoxDecoration(
-              color: UiConstants.tertiaryLight,
-              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-            ),
-            padding: EdgeInsets.all(width * 0.04),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  ticket.isRewarding ? Assets.gtWon : Assets.gtLose,
-                  height: width * 0.5,
-                ),
-                SizedBox(height: width * 0.04),
-                getGTContent(ticket, titleStyle)
-              ],
-            )
-
-            // Stack(
-            //   children: [
-            //     Container(
-            //       width: SizeConfig.screenWidth * 0.6,
-            //       height: SizeConfig.screenWidth * 0.6,
-            //       child: Row(
-            //         crossAxisAlignment: CrossAxisAlignment.end,
-            //         children: [
-            //           Spacer(flex: 1),
-            //           Flexible(
-            //             fit: FlexFit.tight,
-            //             flex: 2,
-            //             child: Image.asset(Assets.logoShortform,
-            //                 color: UiConstants.tertiarySolid.withOpacity(0.1)),
-            //           ),
-            //           Spacer(flex: 7),
-            //         ],
-            //       ),
-            //     ),
-            //     Container(
-            //       width: SizeConfig.screenWidth * 0.6,
-            //       height: SizeConfig.screenWidth * 0.6,
-            //       child: Row(
-            //         crossAxisAlignment: CrossAxisAlignment.end,
-            //         children: [
-            //           Spacer(flex: 2),
-            //           Flexible(
-            //             fit: FlexFit.tight,
-            //             flex: 3,
-            //             child: Image.asset(
-            //               Assets.felloRewards,
-            //               // width: SizeConfig.screenWidth * 0.2,
-            //             ),
-            //           ),
-            //         ],
-            //       ),
-            //     ),
-            //     Padding(
-            //       padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-            //       child: Column(
-            //         crossAxisAlignment: CrossAxisAlignment.start,
-            //         children: [
-            //           Row(
-            //             children: [
-            //               Expanded(
-            //                 child: Text(getRewardText(ticket.rewardArr),
-            //                     style: titleStyle),
-            //               ),
-            //             ],
-            //           ),
-            //         ],
-            //       ),
-            //     )
-            //   ],
-            // ),
-            ),
+          height: SizeConfig.screenWidth * 0.6,
+          width: SizeConfig.screenWidth * 0.6,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeIn,
+          decoration: BoxDecoration(
+            color: UiConstants.tertiaryLight,
+            borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+          ),
+          padding: EdgeInsets.all(width * 0.04),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                ticket.isRewarding ? Assets.gtWon : Assets.gtLose,
+                height: width == SizeConfig.screenWidth * 0.6
+                    ? width * 0.5
+                    : width * 0.6,
+              ),
+              SizedBox(
+                  height: width == SizeConfig.screenWidth * 0.6
+                      ? width * 0.04
+                      : width * 0.08),
+              FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: getGTContent(ticket, titleStyle, subtitleStyle))
+            ],
+          ),
+        ),
       );
     });
   }
 
-  Widget getGTContent(GoldenTicket ticket, TextStyle textStyle) {
+  Widget getGTContent(
+      GoldenTicket ticket, TextStyle titleStyle, TextStyle subtitleStyle) {
     if (ticket.isRewarding) {
       //CHECK FOR REWARDS
       if (ticket.rewardArr.length == 1) {
         //Has a single reward
         return Column(
           children: [
-            singleRewardWidget(ticket.rewardArr[0], textStyle),
+            singleRewardWidget(ticket.rewardArr[0], titleStyle),
             SizedBox(height: SizeConfig.padding2),
             Text(
               "WON",
-              style: textStyle,
+              style: subtitleStyle,
             )
           ],
         );
@@ -192,11 +149,11 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
         //Both flc and cash
         return Column(
           children: [
-            doubleRewardWidget(ticket.rewardArr, textStyle),
+            doubleRewardWidget(ticket.rewardArr, titleStyle),
             SizedBox(height: SizeConfig.padding2),
             Text(
               "WON",
-              style: textStyle,
+              style: subtitleStyle,
             )
           ],
         );
@@ -205,8 +162,13 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
         return Wrap(
           children: List.generate(
               ticket.rewardArr.length,
-              (i) => bulletTiles(
-                  '${ticket.rewardArr[i].type}: ${ticket.rewardArr[i].value}')),
+              (i) => Container(
+                    padding: EdgeInsets.all(SizeConfig.padding2),
+                    margin:
+                        EdgeInsets.symmetric(horizontal: SizeConfig.padding4),
+                    child: bulletTiles(
+                        '${ticket.rewardArr[i].type}: ${ticket.rewardArr[i].value}'),
+                  )),
         );
       }
     } else {
@@ -214,7 +176,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
       return Column(children: [
         Text("Oh no..", style: textStyle.bold),
         SizedBox(height: SizeConfig.padding2),
-        Text("Better Luck Next Time", style: TextStyles.body3)
+        Text("Better Luck Next Time", style: subtitleStyle)
       ]);
     }
   }
@@ -267,20 +229,6 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
             TextSpan(text: flc > 1 ? "Tokens" : "Token")
           ]),
     );
-  }
-
-  String getRewardText(List<Reward> rewards) {
-    if (rewards == null || rewards.isEmpty) {
-      return "Better Luck Next Time";
-    } else if (rewards.length == 1) {
-      if (rewards[0].type == "rupee")
-        return "You've won ₹${rewards[0].value}";
-      else if (rewards[0].type == "flc")
-        return "You've won ${rewards[0].value} Fello tokens";
-    } else {
-      return "You've won ₹${rewards.firstWhere((e) => e.type == 'rupee').value ?? '0'} and ${rewards.firstWhere((e) => e.type == 'flc').value ?? '0'} Fello tokens";
-    }
-    return "";
   }
 
   Widget bulletTiles(String title) {

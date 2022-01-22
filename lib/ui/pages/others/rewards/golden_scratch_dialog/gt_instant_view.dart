@@ -130,6 +130,7 @@ class _GTInstantViewState extends State<GTInstantView>
                                 threshold: 40,
                                 key: scratchKey,
                                 onScratchStart: () {
+                                  model.isCardScratchStarted = true;
                                   model.showScratchGuide = false;
                                 },
                                 onThreshold: () {
@@ -165,6 +166,7 @@ class _GTInstantViewState extends State<GTInstantView>
                                       : RedeemedGoldenScratchCard(
                                           ticket: model.goldenTicket,
                                           titleStyle: TextStyles.title2,
+                                          subtitleStyle: TextStyles.body1,
                                           width: SizeConfig.screenWidth * 0.6,
                                         ),
                                 ),
@@ -237,7 +239,7 @@ class _GTInstantViewState extends State<GTInstantView>
                     child: Lottie.asset("assets/lotties/confetti.json",
                         height: SizeConfig.screenHeight),
                   ),
-                if (model.showScratchGuide)
+                if (model.showScratchGuide && !model.isCardScratchStarted)
                   Align(
                     alignment: Alignment.center,
                     child: BreathingText(
@@ -274,10 +276,10 @@ class _GTInstantViewState extends State<GTInstantView>
 
   getButtonText(GTInstantViewModel model, GTSOURCE source) {
     String title;
-    if (source == GTSOURCE.cricket) {
-      title = "Continue";
-    } else {
+    if (source == GTSOURCE.deposit) {
       title = "Start Playing";
+    } else {
+      title = "Continue";
     }
     return title;
   }
