@@ -1,5 +1,5 @@
 import 'dart:ui';
-
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';

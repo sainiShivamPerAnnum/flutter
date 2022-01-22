@@ -103,11 +103,11 @@ class _SupportPageState extends State<SupportPage> {
                           title: "Chat with us",
                           onTap: () {
                             Haptic.vibrate();
-                            _mixpanelService.track(
-                                eventName: MixpanelEvents.initiateChatSupport,
-                                properties: {
-                                  'userId': _userService.baseUser.uid
-                                });
+                            // _mixpanelService.track(
+                            //     eventName: MixpanelEvents.initiateChatSupport,
+                            //     properties: {
+                            //       'userId': _userService.baseUser.uid
+                            //     });
 
                             _analyticsService
                                 .track(eventName: AnalyticsEvents.initiateChatSupport,properties: {'userId':_userService.baseUser.uid});
@@ -122,11 +122,11 @@ class _SupportPageState extends State<SupportPage> {
                           title: "Raise a token",
                           onTap: () {
                             Haptic.vibrate();
-                            _mixpanelService.track(
-                                eventName: MixpanelEvents.initiateChatSupport,
-                                properties: {
-                                  'userId': _userService.baseUser.uid
-                                });
+                            // _mixpanelService.track(
+                            //     eventName: MixpanelEvents.initiateChatSupport,
+                            //     properties: {
+                            //       'userId': _userService.baseUser.uid
+                            //     });
                             appState.currentAction = PageAction(
                                 state: PageState.addPage,
                                 page: FreshDeskHelpPageConfig);
@@ -473,9 +473,9 @@ class _SupportPageState extends State<SupportPage> {
                                   _requestCallPhoneController.text.trim(),
                                   callTimes[_selectedTimeSlotIndex]);
                               if (res) {
-                                _mixpanelService.track(
-                                    eventName:
-                                        MixpanelEvents.requestedCallback);
+                                // _mixpanelService.track(
+                                //     eventName:
+                                //         MixpanelEvents.requestedCallback);
                                 
                                 _analyticsService.track(eventName: AnalyticsEvents.requestedCallback);
                                 
