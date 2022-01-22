@@ -18,7 +18,7 @@ import 'package:lottie/lottie.dart';
 import 'package:scratcher/scratcher.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
-enum GTSOURCE { newuser, deposit, cricket }
+enum GTSOURCE { newuser, deposit, cricket, panVerify }
 
 class GTInstantView extends StatefulWidget {
   final String title;
@@ -258,7 +258,7 @@ class _GTInstantViewState extends State<GTInstantView>
 
   Function getButtonAction(GTInstantViewModel model, GTSOURCE source) {
     Function onPressed;
-    if (source == GTSOURCE.cricket) {
+    if (source == GTSOURCE.cricket || source == GTSOURCE.panVerify) {
       onPressed = () {
         if (!model.isCardScratched) return;
         AppState.backButtonDispatcher.didPopRoute();

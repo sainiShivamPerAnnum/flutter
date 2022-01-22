@@ -9,11 +9,13 @@ import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/repository/signzy_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/golden_ticket_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/augmont_confirm_register_dialog.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -36,6 +38,7 @@ class KYCDetailsViewModel extends BaseModel {
   final _userRepo = locator<UserRepository>();
   final _analyticsService = locator<AnalyticsService>();
   final _signzyRepository = locator<SignzyRepository>();
+  final _gtService = locator<GoldenTicketService>();
   bool get isConfirmDialogInView => _userService.isConfirmationDialogOpen;
 
   FocusNode panFocusNode = FocusNode();
@@ -148,78 +151,56 @@ class KYCDetailsViewModel extends BaseModel {
         veriDetails['flag'] != null &&
         veriDetails['flag']) {
       AppState.screenStack.add(ScreenItem.dialog);
+      //UPDATE DIRECTLY IN DATABASE
+      bool _p = true;
+      bool _q = true;
 
-      ///show confirmation dialog to user
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) => AugmontConfirmRegnDialog(
-          panNumber: panController.text,
-          panName: nameController.text,
-          bankHolderName: "",
-          bankBranchName: "",
-          bankAccNo: "",
-          bankIfsc: "",
-          bankName: "",
-          dialogColor: UiConstants.primaryColor,
-          onAccept: () async {
-            bool _p = true;
-            bool _q = true;
+      ///add the pan number
+      if (_baseUtil.userRegdPan == null ||
+          _baseUtil.userRegdPan.isEmpty ||
+          _baseUtil.userRegdPan != panController.text) {
+        _baseUtil.userRegdPan = panController.text;
+        _p = await _baseUtil.panService.saveUserPan(_baseUtil.userRegdPan);
+      }
+      if (_baseUtil.myUser.isSimpleKycVerified == null ||
+          !_baseUtil.myUser.isSimpleKycVerified) {
+        _baseUtil.myUser.isSimpleKycVerified = true;
+        if (veriDetails['upstreamName'] != null &&
+            veriDetails['upstreamName'] != '') {
+          _baseUtil.myUser.kycName = veriDetails['upstreamName'];
+          _baseUtil.myUser.name = veriDetails['upstreamName'];
+        }
+        _baseUtil.setKycVerified(true);
+        _q = await _dbModel.updateUser(_userService.baseUser);
+      }
+      if (!_p || !_q) {
+        _analyticsService.track(
+          eventName: AnalyticsEvents.kycVerificationFailed,
+          properties: {'userId': _userService.baseUser.uid},
+        );
 
-            ///add the pan number
-            if (_baseUtil.userRegdPan == null ||
-                _baseUtil.userRegdPan.isEmpty ||
-                _baseUtil.userRegdPan != panController.text) {
-              _baseUtil.userRegdPan = panController.text;
-              _p =
-                  await _baseUtil.panService.saveUserPan(_baseUtil.userRegdPan);
-            }
-            if (_baseUtil.myUser.isSimpleKycVerified == null ||
-                !_baseUtil.myUser.isSimpleKycVerified) {
-              _baseUtil.myUser.isSimpleKycVerified = true;
-              if (veriDetails['upstreamName'] != null &&
-                  veriDetails['upstreamName'] != '') {
-                _baseUtil.myUser.kycName = veriDetails['upstreamName'];
-                _baseUtil.myUser.name = veriDetails['upstreamName'];
-              }
-              _baseUtil.setKycVerified(true);
-              _q = await _dbModel.updateUser(_userService.baseUser);
-            }
-            if (!_p || !_q) {
-              _analyticsService.track(
-                eventName: AnalyticsEvents.kycVerificationFailed,
-                properties: {'userId': _userService.baseUser.uid},
-              );
+        BaseUtil.showNegativeAlert('Verification Failed',
+            'Failed to verify at the moment. Please try again.');
+        isKycInProgress = false;
+        return;
+      } else {
+        _analyticsService.track(
+          eventName: AnalyticsEvents.panVerified,
+          properties: {'userId': _userService.baseUser.uid},
+        );
 
-              BaseUtil.showNegativeAlert('Verification Failed',
-                  'Failed to verify at the moment. Please try again.');
-              _isKycInProgress = false;
-              refresh();
-              return;
-            } else {
-              _analyticsService.track(
-                eventName: AnalyticsEvents.panVerified,
-                properties: {'userId': _userService.baseUser.uid},
-              );
-
-              _userService.isSimpleKycVerified = true;
-              _userService.setMyUserName(_userService.baseUser.name);
-              BaseUtil.showPositiveAlert(
-                  'Verification Successful', 'You are successfully verified!');
-              isKycInProgress = false;
-              refresh();
-              AppState.backButtonDispatcher.didPopRoute();
-            }
-          },
-          onReject: () {
-            BaseUtil.showNegativeAlert(
-                'Registration Cancelled', 'Please try again');
-            isKycInProgress = false;
-            refresh();
-            return;
-          },
-        ),
-      );
+        _userService.isSimpleKycVerified = true;
+        _userService.setMyUserName(_userService.baseUser.name);
+        BaseUtil.showPositiveAlert(
+            'Verification Successful', 'You are successfully verified!');
+        isKycInProgress = false;
+        _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
+          if (res)
+            _gtService.showInstantGoldenTicketView(
+                title: 'Your PAN got verified!', source: GTSOURCE.panVerify);
+        });
+        AppState.backButtonDispatcher.didPopRoute();
+      }
     } else {
       print('inside failed name');
       if (veriDetails['fail_code'] == 0) {
@@ -273,6 +254,8 @@ class KYCDetailsViewModel extends BaseModel {
                 panName: enteredPanName);
 
         if (_response.code == 200) {
+          if (_response.model.gtId != null && _response.model.gtId.isNotEmpty)
+            GoldenTicketService.goldenTicketId = _response.model.gtId;
           _flag = true;
         } else {
           _flag = false;

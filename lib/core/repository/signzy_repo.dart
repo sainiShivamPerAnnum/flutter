@@ -33,7 +33,7 @@ class SignzyRepository {
 
       final response = await APIService.instance
           .postData(_apiPaths.kVerifyPan, body: body, token: token);
-
+      _logger.d(response);
       VerifyPanResponseModel _verifyPanApiResponse =
           VerifyPanResponseModel.fromMap(response);
       if (_verifyPanApiResponse.flag) {
@@ -48,7 +48,11 @@ class SignzyRepository {
   }
 
   Future<ApiResponse<TransferAmountApiResponseModel>> transferAmount(
-      {String uid, String accountNo, String ifsc, String name, String mobile}) async {
+      {String uid,
+      String accountNo,
+      String ifsc,
+      String name,
+      String mobile}) async {
     final Map<String, dynamic> body = {
       "uid": uid,
       "accountNo": accountNo,
@@ -78,7 +82,11 @@ class SignzyRepository {
 
   Future<ApiResponse<VerifyAmountApiResponseModel>> verifyAmount(
       {String uid, String signzyId}) async {
-    final Map<String, dynamic> body = {"uid":uid, "amount": 1.01, "signzyId": signzyId};
+    final Map<String, dynamic> body = {
+      "uid": uid,
+      "amount": 1.01,
+      "signzyId": signzyId
+    };
 
     try {
       final String token = await _getBearerToken();
