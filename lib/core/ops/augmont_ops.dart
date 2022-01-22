@@ -276,7 +276,7 @@ class AugmontModel extends ChangeNotifier {
         'BlockID: ${buyRates.blockId},gPrice: ${buyRates.goldBuyPrice}';
     String _note2 =
         'UserId:${_baseProvider.myUser.uid},MerchantTxnID: ${_tranIdResponse.model}';
-    String rzpOrderId = await _rzpGateway.createOrderId(amount, _note1, _note2);
+    String rzpOrderId = await _rzpGateway.createOrderId(amount, _baseProvider.myUser.uid, _tranIdResponse.model, _note1, _note2);
     if (rzpOrderId == null) {
       _logger.e("Received null from create Order id");
       return null;

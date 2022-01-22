@@ -80,10 +80,12 @@ class HttpModel extends ChangeNotifier {
   //amount must be integer
   //sample url: https://us-central1-fello-d3a9c.cloudfunctions.net/razorpayops/dev/api/orderid?amount=121&notes=hellp
   Future<Map<String, dynamic>> generateRzpOrderId(
-      double amount, String notes, String noteDetails) async {
+      double amount, String userId, String txnId, String notes, String noteDetails) async {
     String amx = (amount * 100).round().toString();
     String _stage = FlavorConfig.instance.values.razorpayStage.value();
     Map<String, dynamic> queryMap = {'amount': amx};
+    if(userId != null && userId.isNotEmpty) queryMap['uid'] = Uri.encodeComponent(userId);
+    if(txnId != null && txnId.isNotEmpty)queryMap['txnid'] = Uri.encodeComponent(txnId);
     if (notes != null) queryMap['notes'] = Uri.encodeComponent(notes);
     if (noteDetails != null) queryMap['notes_detail'] = Uri.encodeComponent(noteDetails);
 
