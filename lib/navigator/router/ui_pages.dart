@@ -43,7 +43,10 @@ const String AugmontGoldDetailsPath = '/augDetails';
 const String ReferralDetailsPath = '/referralDetails';
 const String ReferralHistoryPath = '/referralHistory';
 const String MyWinningsPath = '/myWinnings';
-const String blockedUserPath = '/blockeUser';
+const String BlockedUserPath = '/blockeUser';
+const String FreshdeskHelpPath = '/freshDeskHelp';
+const String GoldenTicketViewPath = '/goldenTicketView';
+const String GoldenTicketsViewPath = '/goldenTicketsView';
 const String GoldenMilestonesViewPath = '/goldenMilestonesView';
 
 enum Pages {
@@ -88,7 +91,10 @@ enum Pages {
   ReferralDetails,
   ReferralHistory,
   MyWinnings,
-  blockedUser,
+  BlockedUser,
+  FreshDeskHelp,
+  GoldenTicketView,
+  GoldenTicketsView,
   GoldenMilestonesView,
 }
 
@@ -397,9 +403,26 @@ PageConfiguration MyWinnigsPageConfig = PageConfiguration(
 
 PageConfiguration BlockedUserPageConfig = PageConfiguration(
   key: 'blockedUser',
-  path: blockedUserPath,
-  uiPage: Pages.blockedUser,
-  name: 'Blocked Users Screen',
+  path: BlockedUserPath,
+  uiPage: Pages.BlockedUser,
+);
+
+PageConfiguration FreshDeskHelpPageConfig = PageConfiguration(
+  key: 'freshDeskHelp',
+  path: FreshdeskHelpPath,
+  uiPage: Pages.FreshDeskHelp,
+);
+
+PageConfiguration GoldenTicketViewPageConfig = PageConfiguration(
+  key: 'GoldenTicketView',
+  path: GoldenTicketViewPath,
+  uiPage: Pages.GoldenTicketView,
+);
+
+PageConfiguration GoldenTicketsViewPageConfig = PageConfiguration(
+  key: 'GoldenTicketsView',
+  path: GoldenTicketsViewPath,
+  uiPage: Pages.GoldenTicketsView,
 );
 
 PageConfiguration GoldenMilestonesViewPageConfig = PageConfiguration(

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: system-ui;
+            background: #f0f0f0;
+            color: #0f0f0f;
+            text-align: center;
+            justify-content: center;
+        }
+
+        h1 {
+            color: #f0f0f0;
+        }
+
+        .header {
+            padding: 60px;
+            background: #34C3A7;
+            height: 100px;
+        }
+
+        .navbar {
+            overflow: hidden;
+            background-color: #FF9E0B;
+        }
+
+        .navbar a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+        }
+
+        .navbar .right a {
+            float: right;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <img src="https://play-lh.googleusercontent.com/yA_k3_efLEwy4slB6RUa-aBzJNuS5Bta7LudVRxYAThc0wnU0jgNih7lt95gHDgR_Ew=s180-rw"
+            , height="50" ,width="50">
+        <h1>Fello Support Center</h1>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <a>Tap on the <b>Help</b> bubble down there</a>
+    <br>
+
+
+    <script>
+        window.fwSettings = {
+            'widget_id': 82000005213
+        };
+        !function () { if ("function" != typeof window.FreshworksWidget) { var n = function () { n.q.push(arguments) }; n.q = [], window.FreshworksWidget = n } }() 
+    </script>
+    <script type='text/javascript' src='https://ind-widget.freshworks.com/widgets/82000005213.js' async defer></script>
+    <script>
+
+        function openWidget() { FreshworksWidget('open'); }
+        openWidget();
+        function prefillForm(name, email, mobile, uid) {
+            FreshworksWidget('identify', 'ticketForm', {
+                'name': name,
+                'email': email,
+
+            });
+            FreshworksWidget('prefill', 'ticketForm', {
+                custom_fields: {
+                    cf_mobile: mobile,
+                    cf_user_id: uid
+                }
+            });
+        }
+        function disableFields() {
+            FreshworksWidget('disable', 'ticketForm', ['name', 'email', 'custom_fields.cf_mobile', 'custom_fields.cf_user_id']);
+
+        }
+
+        function hideFields() {
+            FreshworksWidget('hide', 'ticketForm', ['name', 'email', 'custom_fields.cf_mobile', 'custom_fields.cf_user_id']);
+
+        }
+        async function observeWindow() {
+            var target = document.querySelector('#freshworks-container >  div');
+            const config = { attributes: true, childList: true, subtree: true };
+
+            var callback = (mutationsList, observer) => {
+                for (const mutation of mutationsList) {
+                    // console.log(mutation);
+                    for (const node of mutation.removedNodes) {
+                        if (node.id == "freshworks-frame-wrapper") {
+                            console.log(node.id);
+                            Print.postMessage('Close the window');
+                            observer.disconnect();
+                            return "close";
+                        }
+                    }
+                }
+            }
+            var observer = new MutationObserver(callback);
+            observer.observe(target, config);
+
+
+        }
+    </script>
+</body>
+
+</html>

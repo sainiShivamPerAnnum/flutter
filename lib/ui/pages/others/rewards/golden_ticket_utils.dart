@@ -1,10 +1,10 @@
+import 'dart:ui';
+
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/shims/dart_ui_real.dart';
 
 class CustomRectTween extends RectTween {
   CustomRectTween({
