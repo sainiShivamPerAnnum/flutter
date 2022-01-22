@@ -497,7 +497,7 @@ class _SupportPageState extends State<SupportPage> {
 
   void _launchEmail() {
     _analyticsService.track(eventName: AnalyticsEvents.emailInitiated);
-    final Uri emailLaunchUri = Uri(scheme: 'mailto', path: 'hello@fello.in');
+    final Uri emailLaunchUri = Uri(scheme: 'mailto', path: 'support@fello.in');
     launch(emailLaunchUri.toString());
   }
 }
