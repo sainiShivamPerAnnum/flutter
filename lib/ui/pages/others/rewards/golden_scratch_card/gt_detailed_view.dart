@@ -43,6 +43,8 @@ class GTDetailedView extends StatelessWidget {
                   ? GoldenTicketGridItemCard(
                       ticket: ticket,
                       titleStyle: TextStyles.title2,
+                      subtitleStyle: TextStyles.body1,
+                      width: SizeConfig.screenWidth * 0.6,
                     )
                   : (model.viewScratcher
                       ? Hero(
@@ -62,14 +64,16 @@ class GTDetailedView extends StatelessWidget {
                               onThreshold: () =>
                                   model.redeemCard(superModel, ticket),
                               image: Image.asset(
-                                "assets/images/gtbg.png",
+                                Assets.gtCover,
                                 fit: BoxFit.cover,
                                 height: SizeConfig.screenWidth * 0.6,
                                 width: SizeConfig.screenWidth * 0.6,
                               ),
                               child: RedeemedGoldenScratchCard(
                                 ticket: ticket,
+                                subtitleStyle: TextStyles.body1,
                                 titleStyle: TextStyles.title2,
+                                width: SizeConfig.screenWidth * 0.6,
                               ),
                             ),
                           ),
@@ -77,6 +81,8 @@ class GTDetailedView extends StatelessWidget {
                       : GoldenTicketGridItemCard(
                           ticket: ticket,
                           titleStyle: TextStyles.title2,
+                          subtitleStyle: TextStyles.body1,
+                          width: SizeConfig.screenWidth * 0.6,
                         )),
               Spacer(),
               if (model.bottompadding) FelloAppBar(),

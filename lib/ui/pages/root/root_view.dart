@@ -25,6 +25,8 @@ import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
 class Root extends StatelessWidget {
+  final pages = [Save(), Play(), Win()];
+
   @override
   Widget build(BuildContext context) {
     return BaseView<RootViewModel>(
@@ -72,8 +74,9 @@ class Root extends StatelessWidget {
                     margin: EdgeInsets.only(top: SizeConfig.viewInsets.top),
                     child: Consumer<AppState>(
                       builder: (ctx, m, child) => IndexedStack(
-                          children: [Save(), Play(), Win()],
-                          index: m.rootIndex),
+                        children: pages,
+                        index: m.rootIndex,
+                      ),
                     ),
                   ),
                 ),
@@ -145,12 +148,21 @@ class BottomNavBar extends StatelessWidget {
             itemTapped: (int index) => model.onItemTapped(index),
             currentIndex: m.rootIndex,
             items: [
-              NavBarItemData(locale.navBarFinance, Assets.navSave,
-                  SizeConfig.screenWidth * 0.27),
-              NavBarItemData(locale.navBarPlay, Assets.navPlay,
-                  SizeConfig.screenWidth * 0.27),
-              NavBarItemData(locale.navBarWin, Assets.navWin,
-                  SizeConfig.screenWidth * 0.27),
+              NavBarItemData(
+                locale.navBarFinance,
+                Assets.navSave,
+                SizeConfig.screenWidth * 0.27,
+              ),
+              NavBarItemData(
+                locale.navBarPlay,
+                Assets.navPlay,
+                SizeConfig.screenWidth * 0.27,
+              ),
+              NavBarItemData(
+                locale.navBarWin,
+                Assets.navWin,
+                SizeConfig.screenWidth * 0.27,
+              ),
             ],
           ),
         ),
@@ -176,13 +188,7 @@ class WantMoreTickets extends StatelessWidget {
         left: SizeConfig.pageHorizontalMargins,
         right: SizeConfig.pageHorizontalMargins,
         child: InkWell(
-          onTap: () => BaseUtil.openModalBottomSheet(
-            addToScreenStack: true,
-            content: WantMoreTicketsModalSheet(),
-            hapticVibrate: true,
-            backgroundColor: Colors.transparent,
-            isBarrierDismissable: true,
-          ),
+          onTap: model.earnMoreTokens,
           child: Shimmer(
             duration: Duration(seconds: 5),
             child: AnimatedContainer(

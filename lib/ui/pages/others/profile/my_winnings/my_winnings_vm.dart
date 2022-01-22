@@ -10,6 +10,8 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -40,6 +42,7 @@ class MyWinningsViewModel extends BaseModel {
   final _transactionService = locator<TransactionService>();
   final _localDBModel = locator<LocalDBModel>();
   final _dbModel = locator<DBModel>();
+  final _analyticsService = locator<AnalyticsService>();
 
   // LOCAL VARIABLES
   PrizeClaimChoice _choice;
@@ -174,7 +177,9 @@ class MyWinningsViewModel extends BaseModel {
   }
 
   showSuccessPrizeWithdrawalDialog(
-      PrizeClaimChoice choice, String subtitle) async {
+    PrizeClaimChoice choice,
+    String subtitle,
+  ) async {
     AppState.screenStack.add(ScreenItem.dialog);
     showDialog(
         context: AppState.delegate.navigatorKey.currentContext,
@@ -255,6 +260,8 @@ class MyWinningsViewModel extends BaseModel {
             choice, choice == PrizeClaimChoice.AMZ_VOUCHER ? "amazon" : "gold");
       }
     });
+
+    _analyticsService.track(eventName: AnalyticsEvents.winRedeemWinnings);
   }
 
 // SET AND GET CLAIM CHOICE

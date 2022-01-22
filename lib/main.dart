@@ -30,6 +30,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/app_theme.dart';
 
 //Pub imports
@@ -40,6 +41,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
+import 'package:webengage_flutter/webengage_flutter.dart';
 
 import 'core/service/user_coin_service.dart';
 
@@ -66,6 +68,7 @@ Future mainInit() async {
   setupLocator();
   WidgetsFlutterBinding.ensureInitialized();
   try {
+    await PreferenceHelper.initiate();
     await Firebase.initializeApp();
   } catch (e) {
     print('$e');
@@ -83,6 +86,12 @@ class _MyAppState extends State<MyApp> {
   final parser = FelloParser();
   FelloRouterDelegate delegate;
   FelloBackButtonDispatcher backButtonDispatcher;
+
+  @override
+  void initState() {
+    super.initState();
+    new WebEngagePlugin();
+  }
 
   _MyAppState() {
     delegate = FelloRouterDelegate(appState);

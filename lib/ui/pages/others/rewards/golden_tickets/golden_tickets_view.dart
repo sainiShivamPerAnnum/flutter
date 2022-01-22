@@ -38,78 +38,77 @@ class GoldenTicketsView extends StatelessWidget {
               }
               return true;
             },
-            child: RefreshIndicator(
-              onRefresh: () => model.refresh(),
-              child: StreamBuilder<List<DocumentSnapshot>>(
-                stream: model.streamController.stream,
-                builder: (BuildContext context,
-                    AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
-                  if (snapshot.hasError)
-                    return new NoRecordDisplayWidget(
-                      asset: "Assets.badticket.png",
-                      text: "Unable to load your tickets at the moment",
+            child: StreamBuilder<List<DocumentSnapshot>>(
+              stream: model.streamController.stream,
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
+                if (snapshot.hasError)
+                  return new NoRecordDisplayWidget(
+                    asset: "Assets.badticket.png",
+                    text: "Unable to load your tickets at the moment",
+                  );
+                switch (snapshot.connectionState) {
+                  case ConnectionState.waiting:
+                    return Center(
+                      child: SpinKitWave(
+                          color: UiConstants.primaryColor,
+                          size: SizeConfig.padding32),
                     );
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.waiting:
-                      return Center(
-                        child: SpinKitWave(
-                            color: UiConstants.primaryColor,
-                            size: SizeConfig.padding32),
-                      );
-                    default:
-                      log("Items: " + snapshot.data.length.toString());
+                  default:
+                    log("Items: " + snapshot.data.length.toString());
 
-                      model.arrangeGoldenTickets(snapshot.data);
-                      return model.arrangedGoldenTicketList == null ||
-                              model.arrangedGoldenTicketList.length == 0
-                          ? ListView(
-                              shrinkWrap: true,
-                              children: [
-                                NoRecordDisplayWidget(
-                                  assetLottie: Assets.noData,
-                                  text: "No Golden Scratch Cards yet",
-                                )
-                              ],
-                            )
-                          : GridView.builder(
-                              itemCount: model.arrangedGoldenTicketList.length,
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisSpacing: SizeConfig.padding8,
-                                      childAspectRatio: 1 / 1,
-                                      crossAxisCount: 2,
-                                      mainAxisSpacing: SizeConfig.padding8),
-                              padding: EdgeInsets.symmetric(
-                                  vertical: SizeConfig.padding16,
-                                  horizontal: SizeConfig.pageHorizontalMargins),
-                              itemBuilder: (ctx, i) {
-                                return InkWell(
-                                  onTap: () {
-                                    AppState.screenStack.add(ScreenItem.dialog);
-                                    Navigator.of(AppState.delegate.navigatorKey
-                                            .currentContext)
-                                        .push(
-                                      HeroDialogRoute(
-                                        builder: (context) {
-                                          return GTDetailedView(
-                                            ticket: model
-                                                .arrangedGoldenTicketList[i],
-                                            superModel: model,
-                                          );
-                                        },
-                                      ),
-                                    );
-                                  },
-                                  child: GoldenTicketGridItemCard(
-                                    ticket: model.arrangedGoldenTicketList[i],
-                                    titleStyle: TextStyles.body2,
-                                  ),
-                                );
-                              },
-                            );
-                  }
-                },
-              ),
+                    model.arrangeGoldenTickets(snapshot.data);
+                    return model.arrangedGoldenTicketList == null ||
+                            model.arrangedGoldenTicketList.length == 0
+                        ? ListView(
+                            shrinkWrap: true,
+                            children: [
+                              NoRecordDisplayWidget(
+                                assetLottie: Assets.noData,
+                                text: "No Golden Scratch Cards yet",
+                              )
+                            ],
+                          )
+                        : GridView.builder(
+                            itemCount: model.arrangedGoldenTicketList.length,
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisSpacing: SizeConfig.padding8,
+                                    childAspectRatio: 1 / 1,
+                                    crossAxisCount: 2,
+                                    mainAxisSpacing: SizeConfig.padding8),
+                            padding: EdgeInsets.symmetric(
+                                vertical: SizeConfig.padding16,
+                                horizontal: SizeConfig.pageHorizontalMargins),
+                            itemBuilder: (ctx, i) {
+                              return InkWell(
+                                onTap: () {
+                                  AppState.screenStack.add(ScreenItem.dialog);
+                                  Navigator.of(AppState
+                                          .delegate.navigatorKey.currentContext)
+                                      .push(
+                                    HeroDialogRoute(
+                                      builder: (context) {
+                                        return GTDetailedView(
+                                          ticket:
+                                              model.arrangedGoldenTicketList[i],
+                                          superModel: model,
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
+                                child: GoldenTicketGridItemCard(
+                                  ticket: model.arrangedGoldenTicketList[i],
+                                  titleStyle: TextStyles.body2,
+                                  width: SizeConfig.screenWidth * 0.36,
+                                  subtitleStyle: TextStyles.body4,
+                                ),
+                              );
+                            },
+                          );
+                }
+              },
             ),
           ),
         );

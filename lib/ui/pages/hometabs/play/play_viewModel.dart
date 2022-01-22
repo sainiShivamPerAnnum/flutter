@@ -3,9 +3,12 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
+import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/user_coin_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -26,6 +29,7 @@ class PlayViewModel extends BaseModel {
   final _dbProvider = locator<DBModel>();
   final _logger = locator<CustomLogger>();
   final _baseUtil = locator<BaseUtil>();
+  final _analyticsService = locator<AnalyticsService>();
 
   String _message;
   String _sessionId;
@@ -66,21 +70,10 @@ class PlayViewModel extends BaseModel {
   // void showMessage(context) {
   //   _baseUtil.showNegativeAlert('Permission Denied', _message, context);
   // }
-  openGame(PageConfiguration pageConfig) {
+  void openGame(GameModel game) {
+    _analyticsService.track(eventName: game.analyticEvent);
     AppState.delegate.appState.currentAction =
-        PageAction(state: PageState.addPage, page: pageConfig);
-  }
-
-  void navigateToCricketView() {
-    AppState.delegate.appState.currentAction = PageAction(
-        state: PageState.addWidget,
-        page: CricketGamePageConfig,
-        widget: CricketGameView(
-          sessionId: _sessionId,
-          userId: _userService.baseUser.uid,
-          userName: _userService.baseUser.username,
-          stage: FlavorConfig.getStage(),
-        ));
+        PageAction(state: PageState.addPage, page: game.pageConfig);
   }
 
   Future<bool> openWebView() async {

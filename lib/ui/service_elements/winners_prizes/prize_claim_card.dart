@@ -87,7 +87,7 @@ class PrizeClaimCard extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: SizeConfig.padding8),
-                        if (m.userFundWallet.unclaimedBalance >= refUnlockAmt &&
+                        if (m.userFundWallet.unclaimedBalance >= minWithdrawPrizeAmt &&
                             m.userFundWallet.augGoldPrinciple >= refUnlockAmt)
                           Container(
                             margin: EdgeInsets.symmetric(
@@ -108,7 +108,7 @@ class PrizeClaimCard extends StatelessWidget {
                                     : SizedBox(),
                                 ClaimButton(
                                   color: UiConstants.tertiarySolid,
-                                  image: Assets.goldClaim,
+                                  image: "images/augmont-share.png",
                                   onTap: () => model.showConfirmDialog(
                                       PrizeClaimChoice.GOLD_CREDIT),
                                   text: "Redeem as Digital Gold",
@@ -116,7 +116,7 @@ class PrizeClaimCard extends StatelessWidget {
                               ],
                             ),
                           ),
-                        if (m.userFundWallet.unclaimedBalance < 100)
+                        if (m.userFundWallet.unclaimedBalance < minWithdrawPrizeAmt)
                           Container(
                             margin: EdgeInsets.symmetric(
                                 vertical: SizeConfig.padding6),
@@ -211,8 +211,11 @@ class ClaimButton extends StatelessWidget {
               CircleAvatar(
                 radius: SizeConfig.padding24,
                 backgroundColor: Colors.white.withOpacity(0.3),
-                child: Image.asset(
-                  image ?? Assets.amazonClaim,
+                child: Padding(
+                  padding: EdgeInsets.all(SizeConfig.padding6),
+                  child: Image.asset(
+                    image ?? Assets.amazonClaim,
+                  ),
                 ),
               ),
               SizedBox(width: SizeConfig.padding12),

@@ -91,14 +91,7 @@ class FDrawer extends StatelessWidget {
                                 vertical: SizeConfig.padding8),
                             child: TextButton.icon(
                               onPressed: () {
-                                if (RootViewModel
-                                    .scaffoldKey.currentState.isDrawerOpen)
-                                  RootViewModel.scaffoldKey.currentState
-                                      .openEndDrawer();
-                                AppState.delegate.appState.currentAction =
-                                    PageAction(
-                                        state: PageState.addPage,
-                                        page: model.drawerList[i].pageConfig);
+                                model.onItemSelected(i);
                               },
                               icon: SvgPicture.asset(
                                 model.drawerList[i].icon,

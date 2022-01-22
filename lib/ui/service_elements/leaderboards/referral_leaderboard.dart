@@ -142,7 +142,10 @@ class ReferralLeaderboard extends StatelessWidget {
                             )),
                 ),
                 SizedBox(
-                  height: SizeConfig.navBarHeight * 1.5,
+                  height: model.referralLeaderBoard.length < 10
+                      ? (10 - model.referralLeaderBoard.length) *
+                          SizeConfig.padding54
+                      : SizeConfig.navBarHeight * 1.5,
                 )
               ],
             ),
