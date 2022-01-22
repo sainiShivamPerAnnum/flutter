@@ -7,6 +7,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/hamburger/chatsupport_page.dart';
 import 'package:felloapp/ui/pages/hamburger/faq_page.dart';
+import 'package:felloapp/ui/pages/hamburger/freshdesk_help.dart';
 import 'package:felloapp/ui/pages/hamburger/referral_policy_page.dart';
 import 'package:felloapp/ui/pages/hamburger/support.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
@@ -260,8 +261,11 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.MyWinnings:
           _addPageData(MyWinningsView(), MyWinnigsPageConfig);
           break;
-        case Pages.blockedUser:
+        case Pages.BlockedUser:
           _addPageData(BlockedUserView(), BlockedUserPageConfig);
+          break;
+        case Pages.FreshDeskHelp:
+          _addPageData(FreshDeskHelp(), FreshDeskHelpPageConfig);
           break;
         case Pages.GoldenTicketView:
           _addPageData(GTDetailedView(), GoldenTicketViewPageConfig);
@@ -450,8 +454,11 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.MyWinnings:
         MyWinnigsPageConfig.currentPageAction = action;
         break;
-      case Pages.blockedUser:
+      case Pages.BlockedUser:
         BlockedUserPageConfig.currentPageAction = action;
+        break;
+      case Pages.FreshDeskHelp:
+        FreshDeskHelpPageConfig.currentPageAction = action;
         break;
       case Pages.GoldenTicketView:
         GoldenTicketViewPageConfig.currentPageAction = action;

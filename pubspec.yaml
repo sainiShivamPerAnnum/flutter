@@ -35,7 +35,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_facebook_sdk: ^1.0.0
-  flutter_html: ^2.1.1
+  # flutter_html: ^2.1.1
   flutter_html_to_pdf: ^0.6.1
   flutter_image_compress: ^1.1.0
   flutter_localizations:
@@ -73,7 +73,7 @@ dependencies:
   synchronized: ^3.0.0
   url_launcher: ^6.0.9
   video_player: ^2.1.12
-  webview_flutter: ^2.0.13
+  webview_flutter: ^3.0.0
   flutter_rating_bar: ^4.0.0
   in_app_review: ^2.0.3
   scratcher: ^2.1.0
@@ -101,6 +101,7 @@ flutter:
     - resources/augmont/fello-augmont-invoice.html
     - resources/fello-email-verification.html
     - resources/public.key
+    - resources/freshdesk.html
 
     - assets/images/
     - assets/images/icons/
