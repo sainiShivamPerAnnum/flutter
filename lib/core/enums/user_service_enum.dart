@@ -8,4 +8,5 @@ enum UserServiceProperties {
   myEmailVerification,
   mySimpleKycVerified,
   myNotificationStatus,
+  myConfirmDialogViewStatus
 }

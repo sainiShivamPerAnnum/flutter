@@ -5,6 +5,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/golden_ticket_service.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
@@ -23,6 +24,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   final CustomLogger logger = locator<CustomLogger>();
   DBModel _dbModel = locator<DBModel>();
   BaseUtil _baseUtil = locator<BaseUtil>();
+  final _userService = locator<UserService>();
   AppState _appState = locator<AppState>();
   GoldenTicketService _gtService = GoldenTicketService();
 
@@ -54,6 +56,10 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
   @override
   Future<bool> didPopRoute() {
+    if (_userService.isConfirmationDialogOpen) {
+      logger.d("Change dialog view state");
+      _userService.isConfirmationDialogOpen = false;
+    }
     // if (WinViewModel().panelController.isPanelOpen) {
     //   WinViewModel().panelController.close();
     //   return Future.value(true);

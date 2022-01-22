@@ -29,6 +29,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   UserFundWallet _userFundWallet;
   bool _isEmailVerified;
   bool _isSimpleKycVerified;
+  bool _isConfirmationDialogOpen = false;
 
   User get firebaseUser => _firebaseUser;
   BaseUser get baseUser => _baseUser;
@@ -40,6 +41,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   bool get isEmailVerified => _isEmailVerified ?? false;
   bool get isSimpleKycVerified => _isSimpleKycVerified ?? false;
   bool _hasNewNotifications = false;
+  bool get isConfirmationDialogOpen => _isConfirmationDialogOpen;
 
   bool get hasNewNotifications => _hasNewNotifications;
 
@@ -114,6 +116,12 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     _isSimpleKycVerified = val;
     notifyListeners(UserServiceProperties.mySimpleKycVerified);
     _logger.d("Email:User simple kyc verified, property listeners notified");
+  }
+
+  set isConfirmationDialogOpen(value) {
+    _isConfirmationDialogOpen = value;
+    notifyListeners(UserServiceProperties.myConfirmDialogViewStatus);
+    _logger.d("Dialog view status: updated");
   }
 
   bool get isUserOnborded {

@@ -408,6 +408,7 @@ class PrizeChip extends StatelessWidget {
                 ? SvgPicture.asset(
                     svg,
                     height: SizeConfig.iconSize3,
+                    color: color,
                   )
                 : Image.asset(
                     png,

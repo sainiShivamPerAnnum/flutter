@@ -43,6 +43,7 @@ class GTDetailedView extends StatelessWidget {
                   ? GoldenTicketGridItemCard(
                       ticket: ticket,
                       titleStyle: TextStyles.title2,
+                      titleStyle2: TextStyles.title4,
                       subtitleStyle: TextStyles.body1,
                       width: SizeConfig.screenWidth * 0.6,
                     )
@@ -73,6 +74,7 @@ class GTDetailedView extends StatelessWidget {
                                 ticket: ticket,
                                 subtitleStyle: TextStyles.body1,
                                 titleStyle: TextStyles.title2,
+                                titleStyle2: TextStyles.title4,
                                 width: SizeConfig.screenWidth * 0.6,
                               ),
                             ),
@@ -81,6 +83,7 @@ class GTDetailedView extends StatelessWidget {
                       : GoldenTicketGridItemCard(
                           ticket: ticket,
                           titleStyle: TextStyles.title2,
+                          titleStyle2: TextStyles.title4,
                           subtitleStyle: TextStyles.body1,
                           width: SizeConfig.screenWidth * 0.6,
                         )),

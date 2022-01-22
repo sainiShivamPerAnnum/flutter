@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
@@ -34,6 +36,7 @@ class KYCDetailsViewModel extends BaseModel {
   final _userRepo = locator<UserRepository>();
   final _analyticsService = locator<AnalyticsService>();
   final _signzyRepository = locator<SignzyRepository>();
+  bool get isConfirmDialogInView => _userService.isConfirmationDialogOpen;
 
   FocusNode panFocusNode = FocusNode();
   TextInputType panTextInputType = TextInputType.name;
@@ -135,6 +138,7 @@ class KYCDetailsViewModel extends BaseModel {
     FocusScope.of(context).unfocus();
 
     isKycInProgress = true;
+    _userService.isConfirmationDialogOpen = true;
     _analyticsService.track(eventName: AnalyticsEvents.openKYCSection);
 
     ///next get all details required for registration
@@ -218,15 +222,19 @@ class KYCDetailsViewModel extends BaseModel {
       );
     } else {
       print('inside failed name');
-      if (veriDetails['fail_code'] == 0)
-        showDialog(
-            context: context,
-            builder: (BuildContext context) => MoreInfoDialog(
-                  text: veriDetails['reason'],
-                  imagePath: Assets.dummyPanCardShowNumber,
-                  title: 'Invalid Details',
-                ));
-      else
+      if (veriDetails['fail_code'] == 0) {
+        _userService.isConfirmationDialogOpen = true;
+        BaseUtil.openDialog(
+          addToScreenStack: true,
+          content: MoreInfoDialog(
+            text: veriDetails['reason'],
+            imagePath: Assets.dummyPanCardShowNumber,
+            title: 'Invalid Details',
+          ),
+          hapticVibrate: true,
+          isBarrierDismissable: false,
+        );
+      } else
         BaseUtil.showNegativeAlert(
             'Registration failed', veriDetails['reason'] ?? 'Please try again');
 
