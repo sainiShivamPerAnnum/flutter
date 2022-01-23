@@ -31,7 +31,7 @@ class GoldenMilestonesView extends StatelessWidget {
               children: [
                 FelloAppBar(
                   leading: FelloAppBarBackButton(),
-                  title: "Upcoming Rewards",
+                  title: "Winnings",
                 ),
                 Expanded(
                   child: Container(
