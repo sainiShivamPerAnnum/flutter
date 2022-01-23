@@ -141,7 +141,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                           child: Row(
                             children: [
                               Text(
-                                "User Details",
+                                "Your Details",
                                 style: TextStyle(
                                     color: Colors.grey[400],
                                     fontWeight: FontWeight.w600,
@@ -391,8 +391,8 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                 ),
                                 controller: model.emailController,
                               ),
-                              // if (!model.inEditMode)
-                              //   UserEmailVerificationButton(),
+                              if (!model.inEditMode)
+                                UserEmailVerificationButton(),
                               TextFieldLabel(locale.obMobileLabel),
                               TextFormField(
                                 enabled: false,

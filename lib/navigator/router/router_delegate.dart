@@ -2,11 +2,13 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/hamburger/chatsupport_page.dart';
 import 'package:felloapp/ui/pages/hamburger/faq_page.dart';
+import 'package:felloapp/ui/pages/hamburger/freshdesk_help.dart';
 import 'package:felloapp/ui/pages/hamburger/referral_policy_page.dart';
 import 'package:felloapp/ui/pages/hamburger/support.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
@@ -35,6 +37,9 @@ import 'package:felloapp/ui/pages/others/profile/referrals/referral_history/refe
 import 'package:felloapp/ui/pages/others/profile/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_view.dart';
 import 'package:felloapp/ui/pages/others/profile/verify_email.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_milestones/golden_milestones_view.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_view.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_view.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/pages/splash/splash_view.dart';
 import 'package:felloapp/ui/pages/static/transactions_view.dart';
@@ -46,6 +51,9 @@ import 'package:flutter/material.dart';
 
 class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
+  
+  final _analytics = locator<AnalyticsService>();
+
   final List<Page> _pages = [];
 
   @override
@@ -122,15 +130,17 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
   MaterialPage _createPage(Widget child, PageConfiguration pageConfig) {
     return MaterialPage(
-        child: child,
-        key: Key(pageConfig.key),
-        name: pageConfig.path,
-        arguments: pageConfig);
+      child: child,
+      key: Key(pageConfig.key),
+      name: pageConfig.path,
+      arguments: pageConfig,
+    );
   }
 
   void _addPageData(Widget child, PageConfiguration pageConfig) {
     AppState.screenStack.add(ScreenItem.page);
     print("Added a page ${pageConfig.key}");
+    _analytics.trackScreen(screen: pageConfig.name);
     _pages.add(
       _createPage(child, pageConfig),
     );
@@ -153,18 +163,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.Root:
           _addPageData(Root(), RootPageConfig);
           break;
-        // case Pages.Onboard:
-        //   _addPageData(GetStartedPage(), OnboardPageConfig);
-        //   break;
         case Pages.UserProfileDetails:
           _addPageData(UserProfileDetails(), UserProfileDetailsConfig);
           break;
-        // case Pages.MfDetails:
-        //   _addPageData(MFDetailsPage(), MfDetailsPageConfig);
-        //   break;
-        // case Pages.AugDetails:
-        //   _addPageData(AugmontDetailsPage(), AugDetailsPageConfig);
-        //   break;
+
         case Pages.Transaction:
           _addPageData(Transactions(), TransactionPageConfig);
           break;
@@ -205,10 +207,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.WalkThrough:
           _addPageData(WalkThroughPage(), WalkThroughConfig);
           break;
-
-        // case Pages.YourFunds:
-        //   _addPageData(YourFunds(), YourFundsConfig);
-        //   break;
         case Pages.THome:
           _addPageData(TambolaHomeView(), THomePageConfig);
           break;
@@ -227,9 +225,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.TWeeklyResult:
           _addPageData(WeeklyResult(), TWeeklyResultPageConfig);
           break;
-        // case Pages.TSummaryDetails:
-        //   _addPageData(SummaryTicketsDisplay(), TSummaryDetailsPageConfig);
-        //   break;
         case Pages.Notifications:
           _addPageData(NotficationsPage(), NotificationsConfig);
           break;
@@ -257,8 +252,21 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.MyWinnings:
           _addPageData(MyWinningsView(), MyWinnigsPageConfig);
           break;
-        case Pages.blockedUser:
+        case Pages.BlockedUser:
           _addPageData(BlockedUserView(), BlockedUserPageConfig);
+          break;
+
+        case Pages.FreshDeskHelp:
+          _addPageData(FreshDeskHelp(), FreshDeskHelpPageConfig);
+          break;
+        case Pages.GoldenTicketView:
+          _addPageData(GTDetailedView(), GoldenTicketViewPageConfig);
+          break;
+        case Pages.GoldenTicketsView:
+          _addPageData(GoldenTicketsView(), GoldenTicketsViewPageConfig);
+          break;
+        case Pages.GoldenMilestonesView:
+          _addPageData(GoldenMilestonesView(), GoldenMilestonesViewPageConfig);
           break;
         default:
           break;
@@ -438,8 +446,20 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.MyWinnings:
         MyWinnigsPageConfig.currentPageAction = action;
         break;
-      case Pages.blockedUser:
+      case Pages.BlockedUser:
         BlockedUserPageConfig.currentPageAction = action;
+        break;
+      case Pages.FreshDeskHelp:
+        FreshDeskHelpPageConfig.currentPageAction = action;
+        break;
+      case Pages.GoldenTicketView:
+        GoldenTicketViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.GoldenTicketsView:
+        GoldenTicketsViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.GoldenMilestonesView:
+        GoldenMilestonesViewPageConfig.currentPageAction = action;
         break;
       default:
         break;
@@ -599,6 +619,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'blocked':
         pageConfiguration = BlockedUserPageConfig;
         break;
+      // case 'goldenTickets':
+      //   pageConfiguration = GoldenTicketsViewPageConfig;
+      //   break;
     }
     if (pageConfiguration != null) {
       addPage(pageConfiguration);

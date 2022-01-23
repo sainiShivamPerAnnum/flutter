@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/service/golden_ticket_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -53,11 +54,11 @@ class ReferralDetailsView extends StatelessWidget {
                           children: [
                             SvgPicture.asset(
                               Assets.rAeMain,
-                              height: SizeConfig.screenHeight * 0.2,
+                              height: SizeConfig.screenHeight * 0.15,
                             ),
                             SizedBox(height: SizeConfig.padding32),
                             Text(
-                              "Earn ₹${model.referral_bonus} and ${model.referral_flc_bonus} Fello tokens for every referral. The referrer of the month wins a brand new iPhone 13!",
+                              "Earn upto ₹50 and 200 tokens from every Golden Ticket. The referrer of the month wins a brand new iPhone 13!",
                               textAlign: TextAlign.center,
                               style: TextStyles.body2,
                             ),
@@ -303,7 +304,7 @@ class ReferralDetailsView extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            SizedBox(height: SizeConfig.padding40),
+                            SizedBox(height: SizeConfig.padding32),
                             Text(
                               locale.refHIW,
                               style: TextStyles.title4.bold,
@@ -314,15 +315,29 @@ class ReferralDetailsView extends StatelessWidget {
                             ),
                             InfoTile(
                               title:
-                                  "Your friend makes their first saving of ₹ ${model.unlock_referral_bonus} on the app.",
+                                  "Once your friend completes their KYC verification, you receive a new Golden Ticket.",
                               leadingAsset: Assets.wmtsaveMoney,
                             ),
                             InfoTile(
                               title:
-                                  "You and your friend get ₹${model.referral_bonus} and ${model.referral_flc_bonus} Fello tokens in your account",
+                                  "Once your friend make their first investment of ₹${model.unlock_referral_bonus}, you receive a new Golden Ticket.",
                               leadingAsset: Assets.tickets,
                             ),
-                            SizedBox(height: SizeConfig.navBarHeight),
+                            SizedBox(height: SizeConfig.padding8),
+                            InfoTile(
+                              title:
+                              "Once your friend plays Cricket more than 10 times, you receive a new Golden Ticket.",
+                              leadingAsset: Assets.wmtShare,
+                            ),
+                            SizedBox(height: SizeConfig.padding8),
+                            Center(
+                              child: Text(
+                                "You can win upto ₹150 and 600 Fello tokens from each referral!",
+                                style: TextStyles.body3.bold,
+                                textAlign: TextAlign.center,
+                              )
+                            ),
+                            SizedBox(height: SizeConfig.navBarHeight*1.2),
                           ],
                         ),
                       ),

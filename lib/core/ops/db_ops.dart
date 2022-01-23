@@ -10,6 +10,7 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/faq_model.dart';
 import 'package:felloapp/core/model/feed_card_model.dart';
+import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
@@ -21,6 +22,7 @@ import 'package:felloapp/core/model/user_ticket_wallet_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_milestones/golden_milestones_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/code_from_freq.dart';
 import 'package:felloapp/util/constants.dart';
@@ -110,6 +112,58 @@ class DBModel extends ChangeNotifier {
     } catch (e) {
       log.error("Failed to update user preference field: $e");
       return false;
+    }
+  }
+
+  Future<bool> checkIfUserHasNewGoldenTicket(String userId) async {
+    try {
+      QuerySnapshot gtSnapshot = await _api.checkForLatestGoldenTicket(userId);
+      if (gtSnapshot != null) {
+        if (await CacheManager.exits(
+            CacheManager.CACHE_LATEST_GOLDEN_TICKET_TIME)) {
+          int savedTimestamp = await CacheManager.readCache(
+              key: CacheManager.CACHE_LATEST_GOLDEN_TICKET_TIME);
+          int latestTimestamp = GoldenTicket.fromJson(
+                  gtSnapshot.docs.first.data(), gtSnapshot.docs.first.id)
+              .timestamp
+              .millisecondsSinceEpoch;
+          if (latestTimestamp > savedTimestamp)
+            return true;
+          else
+            return false;
+        }
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<GoldenTicket> getLatestGoldenTicket(String userId) async {
+    try {
+      QuerySnapshot gtSnapshot = await _api.checkForLatestGoldenTicket(userId);
+      if (gtSnapshot != null) {
+        GoldenTicket ticket = GoldenTicket.fromJson(
+            gtSnapshot.docs.first.data(), gtSnapshot.docs.first.id);
+        return ticket;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<GoldenTicket> getGoldenTicketById(String userId, String gtId) async {
+    GoldenTicket ticket;
+    try {
+      DocumentSnapshot goldenTicketRaw =
+          await _api.fetchGoldenTicketById(userId, gtId);
+      if (goldenTicketRaw != null) {
+        ticket =
+            GoldenTicket.fromJson(goldenTicketRaw.data(), goldenTicketRaw.id);
+      }
+      return ticket;
+    } catch (e) {
+      return ticket;
     }
   }
 
@@ -1288,6 +1342,31 @@ class DBModel extends ChangeNotifier {
       log.error('Error Fetching Home cards: ${e.toString()}');
     }
     return _cards;
+  }
+
+  Future<List<UserMilestoneModel>> getUserAchievedMilestones(String uid) async {
+    List<UserMilestoneModel> userMilestones = [];
+    Map<String, dynamic> userMilestonesData =
+        await _api.fetchUserAchievedTicketMilestonesList(uid);
+    logger.d(userMilestonesData.toString());
+    if (userMilestonesData != null) {
+      userMilestonesData['prizeArr']
+          .forEach((e) => userMilestones.add(UserMilestoneModel.fromJson(e)));
+    }
+    return userMilestones;
+  }
+
+  Future<List<FelloMilestoneModel>> getMilestonesList() async {
+    List<FelloMilestoneModel> felloMilestones = [];
+    Map<String, dynamic> felloMilestonesData =
+        await _api.fetchGoldenTicketMilestonesList();
+    logger.d(felloMilestonesData.toString());
+    if (felloMilestonesData != null) {
+      felloMilestonesData['checkpoints']
+          .forEach((e) => felloMilestones.add(FelloMilestoneModel.fromJson(e)));
+    }
+
+    return felloMilestones;
   }
 
   Future<bool> checkIfUsernameIsAvailable(String username) async {

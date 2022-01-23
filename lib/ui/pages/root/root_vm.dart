@@ -5,6 +5,9 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_coin_service.dart';
@@ -37,6 +40,7 @@ class RootViewModel extends BaseModel {
   final CustomLogger _logger = locator<CustomLogger>();
   final winnerService = locator<WinnerService>();
   final txnService = locator<TransactionService>();
+  final _analyticsService = locator<AnalyticsService>();
 
   BuildContext rootContext;
   bool _isInitialized = false;
@@ -45,6 +49,7 @@ class RootViewModel extends BaseModel {
   int get currentTabIndex => _appState.rootIndex;
 
   Future<void> refresh() async {
+    if (AppState().getCurrentTabIndex == 2) return;
     await _userCoinService.getUserCoinBalance();
     await _userService.getUserFundWalletData();
     txnService.signOut();
@@ -90,6 +95,19 @@ class RootViewModel extends BaseModel {
   }
 
   void onItemTapped(int index) {
+    switch (index) {
+      case 0:
+        _analyticsService.track(eventName: AnalyticsEvents.saveSection);
+        break;
+      case 1:
+        _analyticsService.track(eventName: AnalyticsEvents.playSection);
+        break;
+      case 2:
+        _analyticsService.track(eventName: AnalyticsEvents.winSection);
+        break;
+      default:
+    }
+
     AppState.delegate.appState.setCurrentTabIndex = index;
     notifyListeners();
   }
@@ -113,21 +131,13 @@ class RootViewModel extends BaseModel {
             topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
         backgroundColor: UiConstants.bottomNavBarColor,
         content: const SecurityModalSheet());
-    // showModalBottomSheet(
-    //     context: AppState.delegate.navigatorKey.currentContext,
-    //     shape: RoundedRectangleBorder(
-    //         borderRadius: BorderRadius.only(
-    //             topLeft: Radius.circular(30.0),
-    //             topRight: Radius.circular(30.0))),
-    //     backgroundColor: UiConstants.bottomNavBarColor,
-    //     builder: (context) {
-    //       return const SecurityModalSheet();
-    //     });
   }
 
   initialize() async {
     if (!_isInitialized) {
       _isInitialized = true;
+      _initAdhocNotifications();
+
       _localDBModel.showHomeTutorial.then((value) {
         if (value) {
           //show tutorial
@@ -138,8 +148,6 @@ class RootViewModel extends BaseModel {
           notifyListeners();
         }
       });
-
-      _initAdhocNotifications();
 
       _baseUtil.getProfilePicture();
       // show security modal
@@ -183,7 +191,6 @@ class RootViewModel extends BaseModel {
         onSuccess: (PendingDynamicLinkData dynamicLink) async {
       final Uri deepLink = dynamicLink?.link;
       if (deepLink == null) return null;
-
       _logger.d('Received deep link. Process the referral');
       return _processDynamicLink(_baseUtil.myUser.uid, deepLink, context);
     }, onError: (OnLinkErrorException e) async {
@@ -201,12 +208,31 @@ class RootViewModel extends BaseModel {
     }
   }
 
+  _findCampaignId(String uri) {
+    int res = uri.indexOf(RegExp(r'campaign_source='));
+    int finalres = res + 16;
+    print(res);
+    print(finalres);
+    String code = '';
+    RegExp anregex = RegExp(r'^[a-zA-Z0-9]*$');
+    for (int i = finalres; i < uri.length; i++) {
+      if (anregex.hasMatch(uri[i])) {
+        code += uri[i];
+      } else {
+        break;
+      }
+    }
+    return code;
+  }
+
   _processDynamicLink(String userId, Uri deepLink, BuildContext context) async {
     String _uri = deepLink.toString();
     if (_uri.startsWith(Constants.GOLDENTICKET_DYNAMICLINK_PREFIX)) {
       //Golden ticket dynamic link
       int flag = await _submitGoldenTicket(userId, _uri, context);
-    } else {
+    } else if(_uri.startsWith(Constants.APP_DOWNLOAD_LINK)) {
+      _submitTrack(_uri);
+    }else {
       BaseUtil.manualReferralCode =
           null; //make manual Code null in case user used both link and code
 
@@ -219,6 +245,24 @@ class RootViewModel extends BaseModel {
       } else {
         // _logger.d('$addUserTicketCount tickets need to be added for the user');
       }
+    }
+  }
+
+  bool _submitTrack(String deepLink) {
+    try{
+      String prefix = 'https://fello.in/campaign/';
+      if (deepLink.startsWith(prefix)) {
+        String campaignId = deepLink.replaceAll(prefix, '');
+        if (campaignId.isNotEmpty || campaignId == null) {
+          _logger.d(campaignId);
+          _analyticsService.trackInstall(campaignId);
+          return true;
+        }
+      }
+      return false;
+    }catch(e) {
+      _logger.e(e);
+      return false;
     }
   }
 
@@ -288,5 +332,23 @@ class RootViewModel extends BaseModel {
       _logger.e('$e');
       return -1;
     }
+  }
+
+  void earnMoreTokens() {
+    _analyticsService.track(eventName: AnalyticsEvents.earnMoreTokens);
+    BaseUtil.openModalBottomSheet(
+      addToScreenStack: true,
+      content: WantMoreTicketsModalSheet(),
+      hapticVibrate: true,
+      backgroundColor: Colors.transparent,
+      isBarrierDismissable: true,
+    );
+  }
+
+  Future<String> _getBearerToken() async {
+    String token = await _userService.firebaseUser.getIdToken();
+    _logger.d(token);
+
+    return token;
   }
 }

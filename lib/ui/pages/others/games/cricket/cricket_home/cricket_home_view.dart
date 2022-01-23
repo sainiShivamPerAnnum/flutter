@@ -1,8 +1,13 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
@@ -12,6 +17,7 @@ import 'package:felloapp/ui/service_elements/leaderboards/cric_leaderboard.dart'
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -21,6 +27,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 
 class CricketHomeView extends StatelessWidget {
+  final _analyticsService = locator<AnalyticsService>();
   @override
   Widget build(BuildContext context) {
     return BaseView<CricketHomeViewModel>(
@@ -57,8 +64,7 @@ class CricketHomeView extends StatelessWidget {
                                 if (await model.openWebView())
                                   model.startGame();
                                 else
-                                  BaseUtil.showNegativeAlert(
-                                      "Something went wrong", model.message);
+                                  earnMoreTokens();
                               }
                             },
                             child: Opacity(
@@ -179,8 +185,7 @@ class CricketHomeView extends StatelessWidget {
                                 if (await model.openWebView())
                                   model.startGame();
                                 else
-                                  BaseUtil.showNegativeAlert(
-                                      "Something went wrong", model.message);
+                                  earnMoreTokens();
                               }
                             }),
                       ),
@@ -211,6 +216,17 @@ class CricketHomeView extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  void earnMoreTokens() {
+    _analyticsService.track(eventName: AnalyticsEvents.earnMoreTokens);
+    BaseUtil.openModalBottomSheet(
+      addToScreenStack: true,
+      content: WantMoreTicketsModalSheet(isInsufficientBalance: true,),
+      hapticVibrate: true,
+      backgroundColor: Colors.transparent,
+      isBarrierDismissable: true,
     );
   }
 }
@@ -408,6 +424,7 @@ class PrizeChip extends StatelessWidget {
                 ? SvgPicture.asset(
                     svg,
                     height: SizeConfig.iconSize3,
+                    color: color,
                   )
                 : Image.asset(
                     png,

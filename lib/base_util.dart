@@ -2,7 +2,7 @@
 //Dart & Flutter Imports
 import 'dart:async';
 import 'dart:math';
-
+import 'dart:developer';
 //Pub Imports
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/base_analytics.dart';
@@ -27,6 +27,7 @@ import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/service/analytics/analytics_events.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/pan_service.dart';
 import 'package:felloapp/core/service/payment_service.dart';
@@ -46,6 +47,7 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:logger/logger.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -231,12 +233,12 @@ class BaseUtil extends ChangeNotifier {
       }
     } catch (e) {
       logger.e(e.toString());
-      if (_userService.isUserOnborded != null)
-        _dbModel.logFailure(
-            _userService.baseUser.uid, FailType.BaseUtilInitFailed, {
-          "title": "BaseUtil initialization Failed",
-          "error": e.toString(),
-        });
+      // if (_userService.isUserOnborded != null)
+      //   _dbModel.logFailure(
+      //       _userService.baseUser.uid, FailType.BaseUtilInitFailed, {
+      //     "title": "BaseUtil initialization Failed",
+      //     "error": e.toString(),
+      //   });
     }
   }
 
@@ -276,6 +278,7 @@ class BaseUtil extends ChangeNotifier {
         prizeAmount: BaseRemoteConfig.remoteConfig
                 .getString(BaseRemoteConfig.CRICKET_PLAY_PRIZE) ??
             "50000",
+        analyticEvent: AnalyticsEvents.selectPlayCricket,
       ),
       GameModel(
         gameName: "Tambola",
@@ -289,6 +292,7 @@ class BaseUtil extends ChangeNotifier {
         prizeAmount: BaseRemoteConfig.remoteConfig
                 .getString(BaseRemoteConfig.TAMBOLA_PLAY_PRIZE) ??
             "10,000",
+        analyticEvent: AnalyticsEvents.selectPlayTambola,
       ),
     ];
   }
@@ -386,6 +390,7 @@ class BaseUtil extends ChangeNotifier {
   }
 
   static showPositiveAlert(String title, String message, {int seconds}) {
+    // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Flushbar(
         flushbarPosition: FlushbarPosition.BOTTOM,
@@ -404,7 +409,6 @@ class BaseUtil extends ChangeNotifier {
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,
             colors: [Colors.lightBlueAccent, UiConstants.primaryColor]),
-//      backgroundColor: Colors.lightBlueAccent,
         boxShadows: [
           BoxShadow(
             color: UiConstants.positiveAlertColor,
@@ -417,6 +421,7 @@ class BaseUtil extends ChangeNotifier {
   }
 
   static showNegativeAlert(String title, String message, {int seconds}) {
+    // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Flushbar(
         flushbarPosition: FlushbarPosition.BOTTOM,
@@ -517,6 +522,7 @@ class BaseUtil extends ChangeNotifier {
       ValueChanged<dynamic> callback}) async {
     if (addToScreenStack != null && addToScreenStack == true)
       AppState.screenStack.add(ScreenItem.dialog);
+    CustomLogger().d("Added a dialog");
     if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
     await showDialog(
       context: AppState.delegate.navigatorKey.currentContext,
@@ -797,6 +803,7 @@ class BaseUtil extends ChangeNotifier {
 
   void setEmail(String email) {
     myUser.email = email;
+    notifyListeners();
   }
 
   void refreshAugmontBalance() async {
@@ -851,7 +858,6 @@ class BaseUtil extends ChangeNotifier {
     AppState.unsavedPrefs = true;
     notifyListeners();
   }
-
 
   static String getMonthName({@required int monthNum, bool trim = true}) {
     String res = "January";
