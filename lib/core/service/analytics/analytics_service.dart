@@ -70,6 +70,8 @@ class AnalyticsService extends BaseAnalyticsService {
 
   void trackInstall(String campaignId) async {
     try {
+      if(campaignId != null)PreferenceHelper.setString(PreferenceHelper.CAMPAIGN_ID, campaignId);
+
       // for installation event
       DateTime now = DateTime.now();
       final installationDate = await AppInstallDate().installDate;
@@ -90,8 +92,6 @@ class AnalyticsService extends BaseAnalyticsService {
           ApiPath.acquisitionTracking,
           body: body,
         );
-
-        PreferenceHelper.setString(PreferenceHelper.CAMPAIGN_ID, campaignId);
       }
     } catch (e) {
       _logger.e(e.toString());

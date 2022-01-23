@@ -96,7 +96,7 @@ class MyWinningsView extends StatelessWidget {
                                               MainAxisAlignment.spaceEvenly,
                                           children: [
                                             Text(
-                                              "View upcoming rewards\non your path",
+                                              "Earn your next\n Golden Tickets",
                                               style: TextStyles.body1
                                                   .colour(Colors.white)
                                                   .light,

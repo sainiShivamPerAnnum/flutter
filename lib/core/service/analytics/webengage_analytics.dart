@@ -34,7 +34,11 @@ class WebEngageAnalytics extends BaseAnalyticsService {
   }
 
   void signOut() {
-    WebEngagePlugin.userLogout();
+    try {
+      WebEngagePlugin.userLogout();
+    }catch(e) {
+      _logger.e(e);
+    }
   }
 
   void track({String eventName, Map<String, dynamic> properties}) {

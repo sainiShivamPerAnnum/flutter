@@ -280,6 +280,7 @@ class UserProfileVM extends BaseModel {
                 _txnService.signOut();
                 _baseUtil.signOut();
                 _tambolaService.signOut();
+                _analyticsService.signOut();
                 AppState.backButtonDispatcher.didPopRoute();
                 AppState.delegate.appState.currentAction = PageAction(
                     state: PageState.replaceAll, page: SplashPageConfig);

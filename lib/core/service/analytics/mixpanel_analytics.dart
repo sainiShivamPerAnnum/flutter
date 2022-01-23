@@ -14,24 +14,28 @@ class MixpanelAnalytics extends BaseAnalyticsService {
   Mixpanel _mixpanel;
 
   Future<void> login({bool isOnboarded, BaseUser baseUser}) async {
-    _mixpanel = await Mixpanel.init(
-      FlavorConfig.instance.values.mixpanelToken,
-      optOutTrackingDefault: false,
-    );
+    try{
+      _mixpanel = await Mixpanel.init(
+        FlavorConfig.instance.values.mixpanelToken,
+        optOutTrackingDefault: false,
+      );
 
-    if (isOnboarded != null && isOnboarded && baseUser != null) {
-      _mixpanel.identify(baseUser.uid);
-      _mixpanel.getPeople().set("Mobile", baseUser.mobile ?? '');
-      _mixpanel.getPeople().set("Name", baseUser.name ?? '');
-      _mixpanel.getPeople().set("Email", baseUser.email ?? '');
-      _mixpanel.getPeople().set("Age", getAge(baseUser.dob, _logger) ?? 0);
-      _mixpanel.getPeople().set("Gender", baseUser.gender ?? 'O');
-      _mixpanel.getPeople().set("Signed Up", getSignupDate(baseUser.createdOn));
-      _mixpanel
-          .getPeople()
-          .set("KYC Verified", baseUser.isSimpleKycVerified ?? false);
+      if (isOnboarded != null && isOnboarded && baseUser != null) {
+        _mixpanel.identify(baseUser.uid);
+        _mixpanel.getPeople().set("Mobile", baseUser.mobile ?? '');
+        _mixpanel.getPeople().set("Name", baseUser.name ?? '');
+        _mixpanel.getPeople().set("Email", baseUser.email ?? '');
+        _mixpanel.getPeople().set("Age", getAge(baseUser.dob, _logger) ?? 0);
+        _mixpanel.getPeople().set("Gender", baseUser.gender ?? 'O');
+        _mixpanel.getPeople().set("Signed Up", getSignupDate(baseUser.createdOn));
+        _mixpanel
+            .getPeople()
+            .set("KYC Verified", baseUser.isSimpleKycVerified ?? false);
 
-      _logger.d("MIXPANEL SERVICE :: User identify properties added.");
+        _logger.d("MIXPANEL SERVICE :: User identify properties added.");
+      }
+    }catch(e) {
+      _logger.e(e.toString());
     }
   }
 
@@ -40,17 +44,21 @@ class MixpanelAnalytics extends BaseAnalyticsService {
   }
 
   void track({String eventName, Map<String, dynamic> properties}) {
-    if (_mixpanel == null) {
-      login()
-          .then((value) => track(eventName: eventName, properties: properties));
-    } else {
-      if (properties != null && properties.isNotEmpty) {
-        _mixpanel.track(eventName, properties: properties);
-        _logger.i(
-            "Event: $eventName, Properties: ${properties.toString()}. Successfully tracked");
+    try{
+      if (_mixpanel == null) {
+        login()
+            .then((value) => track(eventName: eventName, properties: properties));
       } else {
-        _mixpanel.track(eventName);
+        if (properties != null && properties.isNotEmpty) {
+          _mixpanel.track(eventName, properties: properties);
+          _logger.i(
+              "Event: $eventName, Properties: ${properties.toString()}. Successfully tracked");
+        } else {
+          _mixpanel.track(eventName);
+        }
       }
+    }catch(e) {
+      _logger.e(e.toString());
     }
   }
 

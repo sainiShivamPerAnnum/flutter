@@ -59,7 +59,7 @@ class GoldenMilestonesView extends StatelessWidget {
                             children: [
                               SizedBox(
                                   height: SizeConfig.pageHorizontalMargins),
-                              Text("Your Upcoming rewards",
+                              Text("Your Upcoming Rewards",
                                   style: TextStyles.title4),
                               SizedBox(height: SizeConfig.padding2),
                               Text(

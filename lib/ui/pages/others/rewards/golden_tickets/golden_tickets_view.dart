@@ -65,7 +65,7 @@ class GoldenTicketsView extends StatelessWidget {
                             children: [
                               NoRecordDisplayWidget(
                                 assetLottie: Assets.noData,
-                                text: "No Golden Scratch Cards yet",
+                                text: "No Golden Tickets won",
                               )
                             ],
                           )

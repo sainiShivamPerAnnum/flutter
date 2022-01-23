@@ -228,18 +228,15 @@ class RootViewModel extends BaseModel {
 
   _processDynamicLink(String userId, Uri deepLink, BuildContext context) async {
     String _uri = deepLink.toString();
-
-    if (_uri.startsWith(Constants.APP_DOWNLOAD_LINK)) {
-      //check if champaign source is null ?
-      if (_uri.contains('campaign_source=')) {
-        String campaignId = _findCampaignId(_uri);
-        if (campaignId.isNotEmpty || campaignId == null) {
-          _analyticsService.trackInstall(campaignId);
-        } else {
-          _logger.d('Campaign_id is empty');
-        }
+    if (_uri.contains('campaign_source=')) {
+      String campaignId = _findCampaignId(_uri);
+      if (campaignId.isNotEmpty || campaignId == null) {
+        _analyticsService.trackInstall(campaignId);
+      } else {
+        _logger.d('Campaign_id is empty');
       }
-    } else if (_uri.startsWith(Constants.GOLDENTICKET_DYNAMICLINK_PREFIX)) {
+    }
+    if (_uri.startsWith(Constants.GOLDENTICKET_DYNAMICLINK_PREFIX)) {
       //Golden ticket dynamic link
       int flag = await _submitGoldenTicket(userId, _uri, context);
     } else {
