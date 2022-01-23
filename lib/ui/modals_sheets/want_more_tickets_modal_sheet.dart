@@ -8,10 +8,12 @@ import 'package:felloapp/ui/pages/static/FelloTile.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 
 class WantMoreTicketsModalSheet extends StatelessWidget {
-  WantMoreTicketsModalSheet({isInsufficientBalance = false});
+  WantMoreTicketsModalSheet({this.isInsufficientBalance = false});
+  final isInsufficientBalance;
   final _analyticsService = locator<AnalyticsService>();
 
   final referralBonus =
@@ -46,7 +48,28 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  SizedBox(height: SizeConfig.padding40),
+                  (isInsufficientBalance)?SizedBox(height: SizeConfig.padding16):SizedBox(),
+                  (isInsufficientBalance)?                          Container(
+                    margin: EdgeInsets.symmetric(
+                        vertical: SizeConfig.padding6),
+                    width: SizeConfig.screenWidth,
+                    height: SizeConfig.padding32,
+                    padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.padding32),
+                    decoration: BoxDecoration(
+                      borderRadius:
+                      BorderRadius.circular(SizeConfig.roundness12),
+                      color: Colors.red.withOpacity(0.05),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "You don't have enough Fello tokens",
+                        style:
+                        TextStyles.body2.colour(Colors.redAccent),
+                      ),
+                    ),
+                  ):SizedBox(),
+                  (isInsufficientBalance)?SizedBox(height: SizeConfig.padding16):SizedBox(),
                   FelloTile(
                     leadingAsset: Assets.wmtsaveMoney,
                     title: "Save More Money",

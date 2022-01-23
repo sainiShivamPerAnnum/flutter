@@ -80,7 +80,7 @@ class FcmHandler extends ChangeNotifier {
                       showCrossIcon: false,
                       title: "Game Over",
                       subtitle:
-                          data['game_score']?"You made ${data['game_score']} runs":"Game Over",
+                      (data['game_score'] != null)?"You scored ${data['game_score']} runs":"Game Over",
                       action: Container(
                         width: SizeConfig.screenWidth,
                         child: FelloButtonLg(
