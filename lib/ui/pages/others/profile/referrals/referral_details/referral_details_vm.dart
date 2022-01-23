@@ -26,12 +26,8 @@ class ReferralDetailsViewModel extends BaseModel {
   final _userService = locator<UserService>();
   final _analyticsService = locator<AnalyticsService>();
 
-  String referral_bonus =
-      BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS);
-  String referral_ticket_bonus = BaseRemoteConfig.remoteConfig
-      .getString(BaseRemoteConfig.REFERRAL_TICKET_BONUS);
-  String referral_flc_bonus = BaseRemoteConfig.remoteConfig
-      .getString(BaseRemoteConfig.REFERRAL_FLC_BONUS);
+  String app_share_message =
+      BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.APP_SHARE_MSG);
   String unlock_referral_bonus = BaseRemoteConfig.remoteConfig
       .getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT);
   String _userUrl = "";
@@ -50,19 +46,7 @@ class ReferralDetailsViewModel extends BaseModel {
 
   init() {
     generateLink();
-    referral_bonus = (referral_bonus == null || referral_bonus.isEmpty)
-        ? '25'
-        : referral_bonus;
-    referral_ticket_bonus =
-        (referral_ticket_bonus == null || referral_ticket_bonus.isEmpty)
-            ? '10'
-            : referral_ticket_bonus;
-    referral_flc_bonus =
-        (referral_flc_bonus == null || referral_flc_bonus.isEmpty)
-            ? '200'
-            : referral_flc_bonus;
-    _shareMsg =
-        'Hey I am gifting you ₹$referral_bonus and $referral_flc_bonus gaming tokens. Lets start saving and playing together! ';
+    _shareMsg = (app_share_message != null && app_share_message.isNotEmpty)?app_share_message:'Hey I am gifting you ₹10 and 200 gaming tokens. Lets start saving and playing together! ';
   }
 
   Future<void> generateLink() async {

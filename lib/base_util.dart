@@ -233,12 +233,12 @@ class BaseUtil extends ChangeNotifier {
       }
     } catch (e) {
       logger.e(e.toString());
-      if (_userService.isUserOnborded != null)
-        _dbModel.logFailure(
-            _userService.baseUser.uid, FailType.BaseUtilInitFailed, {
-          "title": "BaseUtil initialization Failed",
-          "error": e.toString(),
-        });
+      // if (_userService.isUserOnborded != null)
+      //   _dbModel.logFailure(
+      //       _userService.baseUser.uid, FailType.BaseUtilInitFailed, {
+      //     "title": "BaseUtil initialization Failed",
+      //     "error": e.toString(),
+      //   });
     }
   }
 
