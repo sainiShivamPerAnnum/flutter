@@ -12,7 +12,6 @@ import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
@@ -33,6 +32,7 @@ class VerifyEmailState extends State<VerifyEmail> {
   TextEditingController email = new TextEditingController();
   TextEditingController otp = new TextEditingController();
   final _userService = locator<UserService>();
+  final _baseUtil = locator<BaseUtil>();
   final formKey = GlobalKey<FormState>();
   Timer timer;
   bool isGmailVerifying = false;
@@ -41,7 +41,7 @@ class VerifyEmailState extends State<VerifyEmail> {
   String generatedOTP;
   HttpModel httpProvider;
   bool _isContinueWithGoogle = false;
-  bool _isGoogleLoginInProcess = false;
+  //bool _baseUtil.isGoogleSignInProgress = false;
   bool _isOtpSent = false;
   bool _isProcessing = false;
   bool _isVerifying = false;
@@ -113,8 +113,10 @@ class VerifyEmailState extends State<VerifyEmail> {
                       title: Text("Choose a Google account"),
                       subtitle: Text(""),
                       onTap: verifyGmail,
-                      trailing: _isGoogleLoginInProcess
-                          ? CircularProgressIndicator()
+                      trailing: _baseUtil.isGoogleSignInProgress
+                          ? Container(
+                              child: CircularProgressIndicator(),
+                            )
                           : SizedBox(),
                     ),
                     Divider(),
@@ -126,7 +128,7 @@ class VerifyEmailState extends State<VerifyEmail> {
                       title: Text("Receive an OTP on your email"),
                       onTap: () {
                         setState(() {
-                          _isGoogleLoginInProcess = false;
+                          _baseUtil.isGoogleSignInProgress = false;
                           _isContinueWithGoogle = false;
                           email.text = baseProvider.myUser.email;
                           _isEmailEnabled = true;
@@ -229,7 +231,7 @@ class VerifyEmailState extends State<VerifyEmail> {
 
   verifyGmail() async {
     setState(() {
-      _isGoogleLoginInProcess = true;
+      _baseUtil.isGoogleSignInProgress = true;
     });
     final _gSignIn = GoogleSignIn();
     try {
@@ -249,27 +251,27 @@ class VerifyEmailState extends State<VerifyEmail> {
         bool res = await dbProvider.updateUser(baseProvider.myUser);
         if (res) {
           setState(() {
-            _isGoogleLoginInProcess = false;
+            _baseUtil.isGoogleSignInProgress = false;
           });
           BaseUtil.showPositiveAlert("Success", "Email Verified successfully");
           Navigator.pop(context);
           AppState.backButtonDispatcher.didPopRoute();
         } else {
-          _isGoogleLoginInProcess = false;
+          _baseUtil.isGoogleSignInProgress = false;
           BaseUtil.showNegativeAlert(
             "Oops! we ran into problem",
             "Email cannot be verified at the moment",
           );
         }
       } else {
-        _isGoogleLoginInProcess = false;
+        _baseUtil.isGoogleSignInProgress = false;
         BaseUtil.showNegativeAlert(
           "Email already registered",
           "Please try with another email",
         );
       }
     } else {
-      _isGoogleLoginInProcess = false;
+      _baseUtil.isGoogleSignInProgress = false;
       BaseUtil.showNegativeAlert(
         "No account selected",
         "Please choose an account from the list",

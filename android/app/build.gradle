@@ -88,16 +88,16 @@ android {
     productFlavors {
         dev {
             dimension "flavors"
-//            applicationIdSuffix ".dev"
-//            versionNameSuffix "-dev"
+            applicationId "in.fello.felloapp.dev"
+            resValue "string", "app_name", "Fello DEV"
         }
         qa {
             dimension "flavors"
-//            applicationIdSuffix ".qa"
-//            versionNameSuffix "-qa"
         }
         prod {
+            applicationId "in.fello.felloapp"
             dimension "flavors"
+            resValue "string", "app_name", "Fello"
         }
     }
 }

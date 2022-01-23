@@ -1,13 +1,12 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
-import 'package:felloapp/core/model/signzy_pan/pan_verification_res_model.dart';
-import 'package:felloapp/core/model/signzy_pan/signzy_login.dart';
+import 'package:felloapp/core/model/verify_pan_response_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
+import 'package:felloapp/core/repository/signzy_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/mixpanel_service.dart';
-import 'package:felloapp/core/service/pan_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -19,22 +18,22 @@ import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/mixpanel_events.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class KYCDetailsViewModel extends BaseModel {
   String stateChosenValue;
   TextEditingController nameController, panController;
   bool inEditMode = true;
   bool isUpadtingKycDetails = false;
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
   final _userService = locator<UserService>();
   final _dbModel = locator<DBModel>();
   final _httpModel = locator<HttpModel>();
   final _baseUtil = locator<BaseUtil>();
   final _userRepo = locator<UserRepository>();
   final _mixpanelService = locator<MixpanelService>();
+  final _signzyRepository = locator<SignzyRepository>();
 
   FocusNode panFocusNode = FocusNode();
   TextInputType panTextInputType = TextInputType.name;
@@ -55,42 +54,6 @@ class KYCDetailsViewModel extends BaseModel {
     panController = new TextEditingController();
     checkForKycExistence();
   }
-
-  // _getPanKeyboardType() {
-  //   if (panController.text.length >= 0 && panController.text.length < 5) {
-  //     return TextInputType.name;
-  //   } else if (panController.text.length >= 5 &&
-  //       panController.text.length < 9) {
-  //     return TextInputType.number;
-  //   }
-  //   return TextInputType.name;
-  // }
-
-  // onPanEntered() {
-  //   bool _change = false;
-  //   if (_getPanKeyboardType() == TextInputType.name &&
-  //       panTextInputType == TextInputType.number) {
-  //     panFocusNode.unfocus();
-  //     panTextInputType = TextInputType.name;
-  //     _change = true;
-  //     panFocusNode.requestFocus();
-  //     notifyListeners();
-  //   } else if (_getPanKeyboardType() == TextInputType.number &&
-  //       panTextInputType == TextInputType.name) {
-  //     panFocusNode.unfocus();
-  //     panTextInputType = TextInputType.number;
-  //     _change = true;
-  //     panFocusNode.requestFocus();
-  //     notifyListeners();
-  //   } else {}
-
-  //   // if (_change) {
-  //   //   panFocusNode.unfocus();
-  //   //   notifyListeners();
-  //   // }
-
-  //   return _change;
-  // }
 
   checkForKeyboardChange(String val) {
     if (val.length >= 0 &&
@@ -212,6 +175,7 @@ class KYCDetailsViewModel extends BaseModel {
               if (veriDetails['upstreamName'] != null &&
                   veriDetails['upstreamName'] != '') {
                 _baseUtil.myUser.kycName = veriDetails['upstreamName'];
+                _baseUtil.myUser.name = veriDetails['upstreamName'];
               }
               _baseUtil.setKycVerified(true);
               _q = await _dbModel.updateUser(_userService.baseUser);
@@ -223,7 +187,11 @@ class KYCDetailsViewModel extends BaseModel {
               refresh();
               return;
             } else {
-              _mixpanelService.track(eventName: MixpanelEvents.panVerified);
+              _mixpanelService.track(
+                  eventName: MixpanelEvents.panVerified,
+                  properties: {'userId': _userService.baseUser.uid});
+              _userService.isSimpleKycVerified = true;
+              _userService.setMyUserName(_userService.baseUser.name);
               BaseUtil.showPositiveAlert(
                   'Verification Successful', 'You are successfully verified!');
               _isKycInProgress = false;
@@ -278,32 +246,21 @@ class KYCDetailsViewModel extends BaseModel {
     }
 
     if (_flag) {
-      SignzyPanLogin _signzyPanLogin =
-          await _dbModel.getActiveSignzyPanApiKey();
-
       try {
-        ApiResponse<PanVerificationResModel> _response =
-            await _httpModel.verifyPanSignzy(
-                baseUrl: _signzyPanLogin.baseUrl,
-                panNumber: enteredPan,
-                panName: enteredPanName,
-                authToken: _signzyPanLogin.accessToken,
-                patronId: _signzyPanLogin.userId);
+        ApiResponse<VerifyPanResponseModel> _response = await _signzyRepository
+            .verifyPan(panNumber: enteredPan, panName: enteredPanName);
 
-        _flag = _response.model.response.result.verified;
+        if (_response.code == 200) {
+          _flag = true;
+        } else {
+          _flag = false;
+        }
 
         if (!_flag) {
           _reason =
               'The name on your PAN card does not match with the entered name. Please try again.';
-          // try {
-          //   _userRepo.addKycName(
-          //       userUid: _userService.baseUser.uid,
-          //       upstreamKycName: _response.model.response.result.upstreamName);
-          // } catch (e) {
-          //   _logger.e(e);
-          // }
         } else {
-          upstreamName = _response.model.response.result.upstreamName;
+          upstreamName = _response.model.upstreamName;
         }
       } catch (e) {
         _flag = false;

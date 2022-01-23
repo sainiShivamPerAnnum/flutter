@@ -1,9 +1,12 @@
 //Project Imports
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/model/transfer_amount_api_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
+import 'package:felloapp/core/model/verify_amount_api_response_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
+import 'package:felloapp/core/repository/signzy_repo.dart';
 import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -13,7 +16,7 @@ import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.da
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
-import 'package:felloapp/util/icici_api_util.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/mixpanel_events.dart';
@@ -21,11 +24,11 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 //Dart and Flutter Imports
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 //Pub Imports
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:provider/provider.dart';
 
 class EditAugmontBankDetail extends StatefulWidget {
@@ -47,6 +50,8 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
   TextEditingController _bankIfscController;
   TextEditingController _bankAccNoConfirmController;
   final MixpanelService _mixpanelService = locator<MixpanelService>();
+  final SignzyRepository _signzyRepository = locator<SignzyRepository>();
+  final CustomLogger _logger = locator<CustomLogger>();
   bool _isInitialized = false;
   DBModel dbProvider;
   BaseUtil baseProvider;
@@ -375,81 +380,6 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                                             ),
                                           ],
                                         ),
-                                        if (inEditMode)
-                                          Container(
-                                            padding: EdgeInsets.symmetric(
-                                              vertical: SizeConfig.padding6,
-                                            ),
-                                            child: CheckboxListTile(
-                                              shape: CircleBorder(),
-                                              value: isConfirm,
-                                              controlAffinity:
-                                                  ListTileControlAffinity
-                                                      .leading,
-                                              onChanged: (val) {
-                                                setState(() {
-                                                  isConfirm = val;
-                                                });
-                                              },
-                                              title: FittedBox(
-                                                child: Text(
-                                                  "I confirm that the details provided by me are correct",
-                                                  style: TextStyles.body2
-                                                      .weight(FontWeight.w500),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-
-                                        // new Container(
-                                        //   height: 50.0,
-                                        //   width: double.infinity,
-                                        //   decoration: BoxDecoration(
-                                        //     gradient: new LinearGradient(
-                                        //         colors: [
-                                        //           FelloColorPalette.augmontFundPalette()
-                                        //               .primaryColor,
-                                        //           FelloColorPalette.augmontFundPalette()
-                                        //               .primaryColor2
-                                        //         ],
-                                        //         begin: Alignment(0.5, -1.0),
-                                        //         end: Alignment(0.5, 1.0)),
-                                        //     borderRadius: new BorderRadius.circular(10.0),
-                                        //   ),
-                                        //   child: new Material(
-                                        //     child: MaterialButton(
-                                        //       child: (!baseProvider
-                                        //               .isEditAugmontBankDetailInProgress)
-                                        //           ? Text(
-                                        //               (baseProvider.augmontDetail
-                                        //                           .bankAccNo ==
-                                        //                       '')
-                                        //                   ? 'WITHDRAW'
-                                        //                   : 'UPDATE',
-                                        //               style: Theme.of(context)
-                                        //                   .textTheme
-                                        //                   .button
-                                        //                   .copyWith(color: Colors.white),
-                                        //             )
-                                        //           : SpinKitThreeBounce(
-                                        //               color: UiConstants.spinnerColor2,
-                                        //               size: 18.0,
-                                        //             ),
-                                        //       onPressed: () {
-                                        //         FocusScope.of(context).unfocus();
-                                        //         if (BaseUtil.showNoInternetAlert())
-                                        //           return;
-                                        //         if (_formKey.currentState.validate()) {
-                                        //           _onUpdateClicked();
-                                        //         }
-                                        //       },
-                                        //       highlightColor: Colors.white30,
-                                        //       splashColor: Colors.white30,
-                                        //     ),
-                                        //     color: Colors.transparent,
-                                        //     borderRadius: new BorderRadius.circular(30.0),
-                                        //   ),
-                                        // ),
                                       ],
                                     )),
                               ),
@@ -528,15 +458,6 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
       noChanges = false;
     if (curBankAccNo == null || pBankAccNo != curBankAccNo) noChanges = false;
     if (curBankIfsc == null || pBankIfsc != curBankIfsc) noChanges = false;
-    if (!isConfirm) {
-      BaseUtil.showNegativeAlert(
-        'Confirmation Required',
-        'Please confirm that the details added are correct',
-      );
-      baseProvider.isEditAugmontBankDetailInProgress = false;
-      setState(() {});
-      return;
-    }
     if (noChanges) {
       BaseUtil.showNegativeAlert(
         'No Update',
@@ -557,21 +478,80 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
       return;
     }
 
-    ///NOW CHECK IF IFSC IS VALID
-    if (!iProvider.isInit()) await iProvider.init();
-    var bankDetail =
-        await iProvider.getBankInfo(baseProvider.userRegdPan, pBankIfsc);
-    if (bankDetail == null ||
-        bankDetail[QUERY_SUCCESS_FLAG] == QUERY_FAILED ||
-        bankDetail[GetBankDetail.resBankName] == null) {
-      log.error('Couldnt fetch an appropriate response');
-      // BaseUtil.showNegativeAlert(
-      //   'Update Failed',
-      //   'Invalid IFSC Code entered',
+    final ifscCodeValidation = RegExp(r'^[^\s]{4}\d{7}$');
+    if (!ifscCodeValidation.hasMatch(pBankIfsc)) {
+      BaseUtil.showNegativeAlert(
+        'Invalid IFSC Code',
+        'Please check your ifsc code.',
+      );
+      baseProvider.isEditAugmontBankDetailInProgress = false;
+      setState(() {});
+      return;
+    }
+
+    final accountNoValidation = RegExp(r'^\d{9,18}$');
+    if (!accountNoValidation.hasMatch(pConfirmBankAccNo)) {
+      BaseUtil.showNegativeAlert(
+        'Invalid Account Number',
+        'Please check your account number.',
+      );
+      baseProvider.isEditAugmontBankDetailInProgress = false;
+      setState(() {});
+      return;
+    }
+
+    final ApiResponse<TransferAmountApiResponseModel> response =
+        await _signzyRepository.transferAmount(
+            mobile: baseProvider.myUser.mobile,
+            name: pBankHolderName,
+            ifsc: pBankIfsc,
+            accountNo: pConfirmBankAccNo);
+
+    if (response.code == 200) {
+      final TransferAmountApiResponseModel _transferAmountResponse =
+          response.model;
+
+      _logger.d(_transferAmountResponse.toString());
+
+      if (!_transferAmountResponse.active ||
+          !_transferAmountResponse.nameMatch) {
+        BaseUtil.showNegativeAlert(
+          'Account Verification Failed',
+          'Please recheck your entered account number and name',
+        );
+        baseProvider.isEditAugmontBankDetailInProgress = false;
+        setState(() {});
+        return;
+      }
+
+      //Verify Transfer
+      final ApiResponse<VerifyAmountApiResponseModel> res =
+          await _signzyRepository.verifyAmount(
+        signzyId: _transferAmountResponse.signzyReferenceId,
+      );
+
+      if (res.code != 200) {
+        BaseUtil.showNegativeAlert(
+          'Account Verification Failed',
+          'Please verify your account details and try again',
+        );
+        baseProvider.isEditAugmontBankDetailInProgress = false;
+        setState(() {});
+        return;
+      }
+
+      // BaseUtil.showPositiveAlert(
+      //   'Account Verification Successful',
+      //   'Your bank account details has been successfully verified!',
       // );
-      // baseProvider.isEditAugmontBankDetailInProgress = false;
-      // setState(() {});
-      // return;
+    } else {
+      BaseUtil.showNegativeAlert(
+        'Account could not be verified',
+        'Please verify your account details and try again',
+      );
+      baseProvider.isEditAugmontBankDetailInProgress = false;
+      setState(() {});
+      return;
     }
 
     ///NOW SHOW CONFIRMATION DIALOG TO USER
@@ -583,25 +563,19 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
               bankHolderName: pBankHolderName,
               bankAccNo: pBankAccNo,
               bankIfsc: pBankIfsc,
-              bankName: (bankDetail == null ||
-                      bankDetail[GetBankDetail.resBankName] == null)
-                  ? ''
-                  : bankDetail[GetBankDetail.resBankName],
-              bankBranchName: (bankDetail == null ||
-                      bankDetail[GetBankDetail.resBranchName] == null)
-                  ? ''
-                  : bankDetail[GetBankDetail.resBranchName],
+              bankName: "",
               dialogColor: UiConstants.primaryColor,
               customMessage: (widget.isWithdrawFlow)
                   ? 'Are you sure you want to continue? ${baseProvider.activeGoldWithdrawalQuantity.toString()} grams of digital gold shall be processed.'
                   : '',
               onAccept: () async {
                 ///FINALLY NOW UPDATE THE BANK DETAILS
-                baseProvider.augmontDetail.bankHolderName = pBankHolderName;
-                baseProvider.augmontDetail.bankAccNo = pBankAccNo;
-                baseProvider.augmontDetail.ifsc = pBankIfsc;
-                baseProvider.updateAugmontDetails(
-                    pBankHolderName, pBankAccNo, pBankIfsc);
+                baseProvider.augmontDetail.bankHolderName =
+                    pBankHolderName.trim();
+                baseProvider.augmontDetail.bankAccNo = pBankAccNo.trim();
+                baseProvider.augmontDetail.ifsc = pBankIfsc.trim();
+                baseProvider.updateAugmontDetails(pBankHolderName.trim(),
+                    pBankAccNo.trim(), pBankIfsc.trim());
                 dbProvider
                     .updateUserAugmontDetails(
                         baseProvider.myUser.uid, baseProvider.augmontDetail)
@@ -613,7 +587,8 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                     baseProvider.isEditAugmontBankDetailInProgress = false;
                     setState(() {});
                     if (flag) {
-                      _mixpanelService.track(eventName: MixpanelEvents.bankDetailsUpdated);
+                      _mixpanelService.track(
+                          eventName: MixpanelEvents.bankDetailsUpdated);
                       print("mixpanel added");
                       BaseUtil.showPositiveAlert(
                           'Complete', 'Your details have been updated');

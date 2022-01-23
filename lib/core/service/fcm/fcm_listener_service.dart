@@ -13,12 +13,12 @@ import 'package:felloapp/util/locator.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class FcmListener {
   final BaseUtil _baseUtil = locator<BaseUtil>();
   final DBModel _dbModel = locator<DBModel>();
-  final Logger logger = locator<Logger>();
+  final CustomLogger logger = locator<CustomLogger>();
   final FcmHandler _handler = locator<FcmHandler>();
   final UserService _userService = locator<UserService>();
 
@@ -45,84 +45,93 @@ class FcmListener {
 
   Future<FirebaseMessaging> setupFcm() async {
     _fcm = FirebaseMessaging.instance;
-    _fcm != null
-        ? logger.d("Fcm instance created")
-        : logger.d("Fcm instance not created");
+    try {
+      _fcm != null
+          ? logger.d("Fcm instance created")
+          : logger.d("Fcm instance not created");
 
-    //SaveFCM
-    String idToken = await CacheManager.readCache(key: 'token');
+      //SaveFCM
+      String idToken = await CacheManager.readCache(key: 'token');
 
-    idToken == null
-        ? logger.d("No FCM token in pref")
-        : logger.d("FCM token from pref: $idToken");
+      idToken == null
+          ? logger.d("No FCM token in pref")
+          : logger.d("FCM token from pref: $idToken");
 
-    if (idToken == null) {
-      idToken = await _fcm.getToken();
-      await CacheManager.writeCache(
-          key: 'token', value: idToken, type: CacheType.string);
-      logger.d("fcm token added to pref: $idToken");
-    }
+      if (idToken == null) {
+        idToken = await _fcm.getToken();
+        await CacheManager.writeCache(
+            key: 'token', value: idToken, type: CacheType.string);
+        logger.d("fcm token added to pref: $idToken");
+      }
 
-    if (_userService.baseUser != null) {
-      if (_userService.baseUser.client_token != idToken) {
-        _saveDeviceToken(idToken);
-        logger.d("User fcm token updated in firestore");
+      if (_userService.baseUser != null) {
+        if (_userService.baseUser.client_token != idToken) {
+          _saveDeviceToken(idToken);
+          logger.d("User fcm token updated in firestore");
+        } else {
+          logger.d("Current device fcm and firestore fcm is same");
+        }
       } else {
-        logger.d("Current device fcm and firestore fcm is same");
+        logger.d("BaseUser null in user service.");
       }
-    } else {
-      logger.d("BaseUser null in user service.");
-    }
 
-    ///update fcm user token if required
-    Stream<String> fcmStream = _fcm.onTokenRefresh;
-    fcmStream.listen((token) async {
-      logger.d("OnTokenRefresh called, updated FCM token: $token");
-      await CacheManager.writeCache(
-          key: 'token', value: token, type: CacheType.string);
-      _saveDeviceToken(idToken);
-      logger.d("FCM token added to prefs.");
-    });
+      ///update fcm user token if required
+      Stream<String> fcmStream = _fcm.onTokenRefresh;
+      fcmStream.listen((token) async {
+        logger.d("OnTokenRefresh called, updated FCM token: $token");
+        await CacheManager.writeCache(
+            key: 'token', value: token, type: CacheType.string);
+        _saveDeviceToken(idToken);
+        logger.d("FCM token added to prefs.");
+      });
 
-    _fcm.getInitialMessage().then((RemoteMessage message) {
-      if (message != null && message.data != null) {
-        logger.d("onMessage recieved: " + message.toString());
-        _handler.handleMessage(message.data);
-      }
-    });
-
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      RemoteNotification notification = message.notification;
-      Freshchat.isFreshchatNotification(message.data).then((flag) {
-        if (flag) {
-          _handleFreshchatNotif(message.data);
-        } else if (message.data != null && message.data.isNotEmpty) {
+      _fcm.getInitialMessage().then((RemoteMessage message) {
+        if (message != null && message.data != null) {
+          logger.d("onMessage recieved: " + message.toString());
           _handler.handleMessage(message.data);
-        } else if (notification != null) {
-          _handler.handleNotification(notification.title, notification.body);
         }
       });
-    });
 
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('A new onMessageOpenedApp event was published!');
-      if (message.data != null) {
-        _handler.handleMessage(message.data);
+      FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+        RemoteNotification notification = message.notification;
+        Freshchat.isFreshchatNotification(message.data).then((flag) {
+          if (flag) {
+            _handleFreshchatNotif(message.data);
+          } else if (message.data != null && message.data.isNotEmpty) {
+            _handler.handleMessage(message.data);
+          } else if (notification != null) {
+            _handler.handleNotification(notification.title, notification.body);
+          }
+        });
+      });
+
+      FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+        print('A new onMessageOpenedApp event was published!');
+        if (message.data != null) {
+          _handler.handleMessage(message.data);
+        }
+      });
+
+      _fcm.setForegroundNotificationPresentationOptions(
+          alert: true, badge: true, sound: true);
+      _fcm.requestPermission();
+
+      ///add subscriptions to relevant topics
+      await _manageInitSubscriptions();
+
+      ///setup android notification channels
+      if (Platform.isAndroid) {
+        _androidNativeSetup();
       }
-    });
-
-    _fcm.setForegroundNotificationPresentationOptions(
-        alert: true, badge: true, sound: true);
-    _fcm.requestPermission();
-
-    ///add subscriptions to relevant topics
-    await _manageInitSubscriptions();
-
-    ///setup android notification channels
-    if (Platform.isAndroid) {
-      _androidNativeSetup();
+    } catch (e) {
+      logger.e(e.toString());
+      if (_userService.isUserOnborded != null)
+        _dbModel.logFailure(
+            _userService.baseUser.uid, FailType.FcmListenerSetupFailed, {
+          "title": "FcmListener setup Failed",
+          "error": e.toString(),
+        });
     }
-
     return _fcm;
   }
 
@@ -214,8 +223,7 @@ class FcmListener {
 // TAMBOLA DRAW NOTIFICATION STATUS HANDLE CODE
 
   // TOGGLE THE SUBSCRIPTION
-  Future toggleTambolaDrawNotificationStatus(bool val) async {
-    print("Draw notification val : $val");
+  Future<bool> toggleTambolaDrawNotificationStatus(bool val) async {
     try {
       if (val) {
         await addSubscription(FcmTopic.TAMBOLAPLAYER);
@@ -224,7 +232,8 @@ class FcmListener {
         await removeSubscription(FcmTopic.TAMBOLAPLAYER);
         print("subscription removed");
       }
-      _baseUtil.toggleTambolaNotificationStatus(val);
+      //_baseUtil.toggleTambolaNotificationStatus(val);
+      return true;
     } catch (e) {
       logger.e(e.toString());
       if (_baseUtil.myUser.uid != null) {
@@ -235,6 +244,7 @@ class FcmListener {
             FailType.TambolaDrawNotificationSettingFailed, errorDetails);
       }
       BaseUtil.showNegativeAlert("Error", "Please try again");
+      return false;
     }
   }
 }

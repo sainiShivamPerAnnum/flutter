@@ -7,7 +7,6 @@ import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
-import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
@@ -38,7 +37,6 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 
 //Dart and Flutter Imports
 import 'dart:async';
-import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -46,7 +44,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:provider/provider.dart';
 
 class LoginController extends StatefulWidget {
@@ -80,7 +78,7 @@ class _LoginControllerState extends State<LoginController>
   final AugmontModel augmontProvider = locator<AugmontModel>();
   final MixpanelService _mixpanelService = locator<MixpanelService>();
   final _userService = locator<UserService>();
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
   final _apiPaths = locator<ApiPath>();
   AnimationController animationController;
 
@@ -529,7 +527,8 @@ class _LoginControllerState extends State<LoginController>
             if (email != null && email.isNotEmpty) {
               baseProvider.myUser.email = email;
             }
-
+            baseProvider.myUser.isEmailVerified =
+                _nameScreenKey.currentState.isEmailVerified;
             String dob = "${_nameScreenKey.currentState.selectedDate.toLocal()}"
                 .split(" ")[0];
 
@@ -555,7 +554,8 @@ class _LoginControllerState extends State<LoginController>
               baseProvider.isLoginNextInProgress = false;
               setState(() {});
             }).then((value) {
-              _mixpanelService.track(eventName: MixpanelEvents.profileInformationAdded,
+              _mixpanelService.track(
+                  eventName: MixpanelEvents.profileInformationAdded,
                   properties: {'userId': baseProvider?.myUser?.uid});
               _controller.animateToPage(Username.index,
                   duration: Duration(milliseconds: 500),
@@ -596,6 +596,8 @@ class _LoginControllerState extends State<LoginController>
                         "mMobile": baseProvider.myUser.mobile,
                         "mName": baseProvider.myUser.name,
                         "mEmail": baseProvider.myUser.email,
+                        "mIsEmailVerified":
+                            baseProvider.myUser.isEmailVerified ?? false,
                         "mDob": baseProvider.myUser.dob,
                         "mGender": baseProvider.myUser.gender,
                         "mUsername": baseProvider.myUser.username,
@@ -609,12 +611,15 @@ class _LoginControllerState extends State<LoginController>
                     res['flag'] ? flag = true : flag = false;
                   } catch (e) {
                     _logger.d(e);
+                    _usernameKey.currentState.enabled = true;
+
                     flag = false;
                   }
                   // bool flag = await dbProvider.updateUser(baseProvider.myUser);
 
                   if (flag) {
-                    _mixpanelService.track(eventName: MixpanelEvents.userNameAdded,
+                    _mixpanelService.track(
+                        eventName: MixpanelEvents.userNameAdded,
                         properties: {'userId': baseProvider?.myUser?.uid});
                     log.debug("User object saved successfully");
                     _onSignUpComplete();
@@ -692,7 +697,7 @@ class _LoginControllerState extends State<LoginController>
   void _onSignInSuccess() async {
     log.debug("User authenticated. Now check if details previously available.");
     baseProvider.firebaseUser = FirebaseAuth.instance.currentUser;
-    //userService.baseUser = FirebaseAuth.instance.currentUser;
+    userService.firebaseUser = FirebaseAuth.instance.currentUser;
     log.debug("User is set: " + baseProvider.firebaseUser.uid);
     BaseUser user = await dbProvider.getUser(baseProvider.firebaseUser.uid);
     //user variable is pre cast into User object
@@ -764,6 +769,14 @@ class _LoginControllerState extends State<LoginController>
     if (baseProvider.isLoginNextInProgress == true) {
       baseProvider.isLoginNextInProgress = false;
       setState(() {});
+    }
+
+    ///check if the account is blocked
+    if (userService.baseUser != null && userService.baseUser.isBlocked) {
+      AppState.isUpdateScreen = true;
+      appStateProvider.currentAction =
+          PageAction(state: PageState.replaceAll, page: BlockedUserPageConfig);
+      return;
     }
     appStateProvider.currentAction =
         PageAction(state: PageState.replaceAll, page: RootPageConfig);

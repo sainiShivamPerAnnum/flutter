@@ -1,4 +1,7 @@
 //Project Imports
+//Dart and Flutter Imports
+import 'dart:typed_data';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
@@ -9,18 +12,11 @@ import 'package:felloapp/util/augmont_state_list.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-
-//Dart and Flutter Imports
-import 'dart:typed_data';
-import 'dart:ui';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
 //Pub Imports
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
@@ -65,24 +61,22 @@ class NameInputScreenState extends State<NameInputScreen> {
 
   bool _isSigningIn = false;
   bool _isContinuedWithGoogle = false;
-  bool _emailEnabled = true;
+  bool _emailEnabled = false;
   String emailText = "Email";
-  bool isEmailEntered = true;
+  bool isEmailEntered = false;
   bool isUploaded = false;
 
   showEmailOptions() {
-    AppState.screenStack.add(ScreenItem.dialog);
     baseProvider.isGoogleSignInProgress = false;
-    showModalBottomSheet(
-        isDismissible: baseProvider.isGoogleSignInProgress ? false : true,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        context: context,
-        builder: (ctx) {
-          return SignInOptions(
-            onEmailSignIn: continueWithEmail,
-            onGoogleSignIn: continueWithGoogle,
-          );
-        });
+    BaseUtil.openModalBottomSheet(
+        isBarrierDismissable: false,
+        borderRadius: BorderRadius.circular(15),
+        content: SignInOptions(
+          onEmailSignIn: continueWithEmail,
+          onGoogleSignIn: continueWithGoogle,
+        ),
+        addToScreenStack: true,
+        hapticVibrate: true);
   }
 
   continueWithGoogle() async {
@@ -93,7 +87,6 @@ class NameInputScreenState extends State<NameInputScreen> {
         if (await httpProvider.isEmailNotRegistered(
             baseProvider.myUser.uid, googleUser.email)) {
           _nameFieldController.text = googleUser.displayName;
-          baseProvider.myUser.isEmailVerified = true;
           baseProvider.myUserDpUrl = googleUser.photoUrl;
           Uint8List bytes =
               (await NetworkAssetBundle(Uri.parse(googleUser.photoUrl))
@@ -111,11 +104,13 @@ class NameInputScreenState extends State<NameInputScreen> {
             if (url != null) {
               baseProvider.isProfilePictureUpdated = true;
               baseProvider.setDisplayPictureUrl(url);
+              baseProvider.setEmailVerified();
               setState(() {
                 isUploaded = true;
                 isEmailEntered = true;
                 _isContinuedWithGoogle = true;
                 emailText = googleUser.email;
+                baseProvider.myUser.email = googleUser.email;
                 baseProvider.isGoogleSignInProgress = false;
               });
             } else {
@@ -142,7 +137,7 @@ class NameInputScreenState extends State<NameInputScreen> {
             "No account selected", "Please choose an account from the list");
       }
     } catch (e) {
-      print(e.toString());
+      print("Google Signin failed: ${e.toString()}");
       baseProvider.isGoogleSignInProgress = false;
       BaseUtil.showNegativeAlert(
           "Unable to verify", "Please try a different method");
@@ -215,7 +210,6 @@ class NameInputScreenState extends State<NameInputScreen> {
                       prefixIcon: Icon(
                         Icons.email,
                         size: 20,
-                        color: UiConstants.primaryColor,
                       ),
                       focusColor: UiConstants.primaryColor,
                       border: OutlineInputBorder(
@@ -255,8 +249,10 @@ class NameInputScreenState extends State<NameInputScreen> {
                           Text(
                             emailText,
                             style: TextStyle(
-                              fontSize: 16,
-                            ),
+                                fontSize: 16,
+                                color: emailText != "Email"
+                                    ? Colors.black
+                                    : Colors.black54),
                           ),
                           Spacer(),
                           emailText != "Email"
@@ -283,7 +279,6 @@ class NameInputScreenState extends State<NameInputScreen> {
                 prefixIcon: Icon(
                   Icons.person,
                   size: 20,
-                  color: UiConstants.primaryColor,
                 ),
               ),
               autofocus: false,
@@ -491,78 +486,6 @@ class NameInputScreenState extends State<NameInputScreen> {
                     .toList(),
               ),
             ),
-            // Container(
-            //   width: SizeConfig.screenWidth,
-            //   height: SizeConfig.screenWidth * 0.115,
-            //   decoration: BoxDecoration(
-            //     color: UiConstants.primaryColor.withOpacity(0.1),
-            //     borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-            //   ),
-            //   padding: EdgeInsets.all(SizeConfig.padding2),
-            //   child: Stack(
-            //     children: [
-            //       AnimatedPositioned(
-            //         left: _isInvested ? 0 : SizeConfig.screenWidth * 0.45,
-            //         duration: Duration(milliseconds: 400),
-            //         child: Container(
-            //           height: SizeConfig.screenWidth * 0.106,
-            //           width: SizeConfig.screenWidth * 0.422,
-            //           decoration: BoxDecoration(
-            //             color: Colors.white,
-            //             borderRadius:
-            //                 BorderRadius.circular(SizeConfig.roundness12),
-            //           ),
-            //         ),
-            //       ),
-            //       Container(
-            //         width: SizeConfig.screenWidth,
-            //         height: SizeConfig.screenWidth * 0.115,
-            //         child: Row(
-            //           children: [
-            //             Expanded(
-            //               child: Center(
-            //                 child: TextButton(
-            //                   onPressed: () {
-            //                     setState(() {
-            //                       _isInvested = true;
-            //                     });
-            //                   },
-            //                   child: Text(
-            //                     "YES",
-            //                     style: TextStyles.body2.colour(
-            //                       _isInvested
-            //                           ? UiConstants.primaryColor
-            //                           : Colors.grey,
-            //                     ),
-            //                   ),
-            //                 ),
-            //               ),
-            //             ),
-            //             Expanded(
-            //               child: Center(
-            //                 child: TextButton(
-            //                   onPressed: () {
-            //                     setState(() {
-            //                       _isInvested = false;
-            //                     });
-            //                   },
-            //                   child: Text(
-            //                     "NO",
-            //                     style: TextStyles.body2.colour(
-            //                       !_isInvested
-            //                           ? UiConstants.primaryColor
-            //                           : Colors.grey,
-            //                     ),
-            //                   ),
-            //                 ),
-            //               ),
-            //             ),
-            //           ],
-            //         ),
-            //       )
-            //     ],
-            //   ),
-            // ),
             SizedBox(height: SizeConfig.navBarHeight),
             SizedBox(height: SizeConfig.viewInsets.bottom)
           ],
@@ -642,6 +565,8 @@ class NameInputScreenState extends State<NameInputScreen> {
   }
 
   String get name => _nameFieldController.text;
+
+  bool get isEmailVerified => _isContinuedWithGoogle && emailText != "Email";
 
   set name(String value) {
     //_name = value;
@@ -741,6 +666,7 @@ class DateField extends StatelessWidget {
           }
         },
         keyboardType: TextInputType.datetime,
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         style: TextStyle(
           letterSpacing: 2,
           fontWeight: FontWeight.w500,
@@ -793,13 +719,32 @@ class _SignInOptionsState extends State<SignInOptions> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "Choose an email option",
-                  style: TextStyle(
-                    color: Colors.black54,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 24,
-                  ),
+                Row(
+                  children: [
+                    Text(
+                      "Choose an email option",
+                      style: TextStyle(
+                        color: Colors.black54,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 24,
+                      ),
+                    ),
+                    Spacer(),
+                    CircleAvatar(
+                      backgroundColor: Colors.black,
+                      child: IconButton(
+                        onPressed: () {
+                          baseProvider.isGoogleSignInProgress = false;
+                          AppState.backButtonDispatcher.didPopRoute();
+                        },
+                        icon: Icon(
+                          Icons.close,
+                          size: SizeConfig.iconSize1,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
+                  ],
                 ),
                 Divider(
                   height: 32,

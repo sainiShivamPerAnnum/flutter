@@ -1,6 +1,5 @@
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/elements/logo/logo_container.dart';
 import 'package:felloapp/ui/elements/texts/breathing_text_widget.dart';
 import 'package:felloapp/ui/pages/splash/splash_vm.dart';
 import 'package:felloapp/util/assets.dart';

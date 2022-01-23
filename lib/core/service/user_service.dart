@@ -6,16 +6,17 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   final _dbModel = locator<DBModel>();
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
   final _userRepo = locator<UserRepository>();
 
   User _firebaseUser;
@@ -27,6 +28,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   String _idToken;
   UserFundWallet _userFundWallet;
   bool _isEmailVerified;
+  bool _isSimpleKycVerified;
 
   User get firebaseUser => _firebaseUser;
   BaseUser get baseUser => _baseUser;
@@ -36,8 +38,23 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   String get dob => _dob;
   String get gender => _gender;
   bool get isEmailVerified => _isEmailVerified ?? false;
+  bool get isSimpleKycVerified => _isSimpleKycVerified ?? false;
+  bool _hasNewNotifications = false;
+
+  bool get hasNewNotifications => _hasNewNotifications;
+
+  set hasNewNotifications(bool val) {
+    _hasNewNotifications = val;
+    notifyListeners(UserServiceProperties.myNotificationStatus);
+    _logger.d(
+        "Notification Status updated in userservice, property listeners notified");
+  }
 
   UserFundWallet get userFundWallet => _userFundWallet;
+
+  set firebaseUser(User firebaseUser) {
+    _firebaseUser = firebaseUser;
+  }
 
   setMyUserDpUrl(String url) {
     _myUserDpUrl = url;
@@ -93,6 +110,12 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     _logger.d("Email:User email verified, property listeners notified");
   }
 
+  set isSimpleKycVerified(bool val) {
+    _isSimpleKycVerified = val;
+    notifyListeners(UserServiceProperties.mySimpleKycVerified);
+    _logger.d("Email:User simple kyc verified, property listeners notified");
+  }
+
   bool get isUserOnborded {
     if (_firebaseUser != null &&
         _baseUser != null &&
@@ -105,12 +128,23 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   }
 
   Future<void> init() async {
-    _firebaseUser = FirebaseAuth.instance.currentUser;
-    await setBaseUser();
-    if (baseUser != null) {
-      isEmailVerified = baseUser.isEmailVerified ?? false;
-      await setProfilePicture();
-      await getUserFundWalletData();
+    try {
+      _firebaseUser = FirebaseAuth.instance.currentUser;
+      await setBaseUser();
+      if (baseUser != null) {
+        isEmailVerified = baseUser.isEmailVerified ?? false;
+        isSimpleKycVerified = baseUser.isSimpleKycVerified ?? false;
+        await setProfilePicture();
+        await getUserFundWalletData();
+        checkForNewNotifications();
+      }
+    } catch (e) {
+      _logger.e(e.toString());
+      if (baseUser != null)
+        _dbModel.logFailure(baseUser.uid, FailType.UserServiceInitFailed, {
+          "title": "UserService initialization Failed",
+          "error": e.toString(),
+        });
     }
   }
 
@@ -126,6 +160,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       _myUserName = null;
       _idToken = null;
       _isEmailVerified = false;
+      _isSimpleKycVerified = false;
       return true;
     } catch (e) {
       _logger.e("Failed to logout user: ${e.toString()}");
@@ -189,6 +224,13 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     userFundWallet = (_userFundWallet == null)
         ? UserFundWallet.newWallet()
         : _userFundWallet;
+  }
+
+  checkForNewNotifications() {
+    _logger.d("Looking for new notifications");
+    _dbModel.checkIfUserHasNewNotifications(baseUser.uid).then((value) {
+      if (value) hasNewNotifications = true;
+    });
   }
 
   Future<String> createDynamicLink(bool short, String source) async {

@@ -2,11 +2,11 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/service/user_coin_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class FelloCoinBarViewModel extends BaseModel {
   final _userCoinService = locator<UserCoinService>();
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
 
   bool _isLoadingFlc = true;
   get isLoadingFlc => _isLoadingFlc;

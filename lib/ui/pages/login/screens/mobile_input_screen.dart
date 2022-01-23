@@ -80,64 +80,6 @@ class MobileInputScreenState extends State<MobileInputScreen> {
               ],
             ),
             SizedBox(height: SizeConfig.padding6),
-            // Form(
-            //   key: _formKey,
-            //   child: Container(
-            //     decoration: BoxDecoration(
-            //       border:
-            //           Border.all(color: UiConstants.primaryColor, width: 0.5),
-            //       borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-            //     ),
-            //     child: Row(
-            //       children: [
-            //         CountryCodePicker(
-            //           onChanged: (val) {
-            //             code = val.toString();
-            //             FocusScope.of(context).unfocus();
-            //           },
-            //           initialSelection: '+91',
-            //           favorite: ['+91'],
-            //           showCountryOnly: false,
-            //           showOnlyCountryWhenClosed: false,
-            //           alignLeft: false,
-            //         ),
-            //         Expanded(
-            //           child: Container(
-            //             margin: EdgeInsets.only(top: SizeConfig.padding4),
-            //             child: TextFormField(
-            //               key: _phoneFieldKey,
-            //               controller: _mobileController,
-            //               keyboardType: TextInputType.phone,
-            //               //autofocus: true,
-            //               onTap: showAvailablePhoneNumbers,
-            //               validator: (value) => _validateMobile(),
-            //               onFieldSubmitted: (v) {
-            //                 FocusScope.of(context).requestFocus(FocusNode());
-            //               },
-            // onChanged: (val) {
-            //   if (val.length == 10)
-            //     FocusScope.of(context).unfocus();
-            // },
-            //               cursorColor: UiConstants.primaryColor,
-            //               cursorWidth: 1,
-            //               cursorHeight: SizeConfig.title5,
-            //               decoration: InputDecoration(
-            //                 enabledBorder:
-            //                     OutlineInputBorder(borderSide: BorderSide.none),
-            //                 focusedBorder:
-            //                     OutlineInputBorder(borderSide: BorderSide.none),
-            //                 focusedErrorBorder:
-            //                     OutlineInputBorder(borderSide: BorderSide.none),
-            //                 errorBorder:
-            //                     OutlineInputBorder(borderSide: BorderSide.none),
-            //               ),
-            //             ),
-            //           ),
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // ),
             Form(
               key: _formKey,
               child: Column(
@@ -183,6 +125,10 @@ class MobileInputScreenState extends State<MobileInputScreen> {
                             hintText: "Enter your referral code here",
                             hintStyle: TextStyles.body3.colour(Colors.grey),
                           ),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'[a-zA-Z0-9]'))
+                          ],
                           validator: (val) {
                             if (val.trim().length == 0 || val == null)
                               return null;
@@ -215,33 +161,6 @@ class MobileInputScreenState extends State<MobileInputScreen> {
               ),
             ),
             SizedBox(height: SizeConfig.blockSizeVertical * 4),
-            // Container(
-            //   width: SizeConfig.screenWidth,
-            //   padding: EdgeInsets.symmetric(
-            //       horizontal: SizeConfig.screenWidth * 0.1),
-            //   child: Column(
-            //     children: [
-            //       Text(locale.splashSecureText),
-            //       SizedBox(height: 8),
-            //       Row(
-            //         mainAxisAlignment: MainAxisAlignment.center,
-            //         children: [
-            //           Image.asset(Assets.augmontLogo,
-            //               color: Colors.grey,
-            //               width: SizeConfig.screenWidth * 0.2),
-            //           SizedBox(width: 16),
-            //           Image.asset(Assets.sebiGraphic,
-            //               color: Colors.grey,
-            //               width: SizeConfig.screenWidth * 0.04),
-            //           SizedBox(width: 16),
-            //           Image.asset(Assets.amfiGraphic,
-            //               color: Colors.grey,
-            //               width: SizeConfig.screenWidth * 0.04)
-            //         ],
-            //       )
-            //     ],
-            //   ),
-            // ),
             SizedBox(
                 height: SizeConfig.screenHeight * 0.2 +
                     MediaQuery.of(context).padding.bottom)

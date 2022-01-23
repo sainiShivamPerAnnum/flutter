@@ -1,6 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:encrypt/encrypt.dart' as encrypt;
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 
 class BaseUser {
@@ -18,6 +16,7 @@ class BaseUser {
   bool isIciciOnboarded;
   bool isAugmontOnboarded;
   bool isSimpleKycVerified;
+  bool isBlocked;
   int isKycVerified;
   String kycName;
   String pendingTxnId;
@@ -43,6 +42,7 @@ class BaseUser {
   static final String fldIsIciciOnboarded = "mIsIciciOnboarded";
   static final String fldIsAugmontOnboarded = "mIsAugmontOnboarded";
   static final String fldIsSimpleKycVerified = "mIsSimpleKycVerified";
+  static final String fldIsBlocked = "mIsBlocked";
   static final String fldIsKycVerified = "mIsKycVerified";
   static final String fldPendingTxnId = "mPendingTxnId";
   static final String fldIsIciciEnabled = "mIsIciciEnabled";
@@ -70,6 +70,7 @@ class BaseUser {
       this.isAugmontEnabled,
       this.username,
       this.isEmailVerified,
+      this.isBlocked,
       this.userPreferences,
       this.createdOn);
 
@@ -92,6 +93,7 @@ class BaseUser {
             null,
             null,
             "",
+            false,
             false,
             UserPreferences(null),
             Timestamp.now());
@@ -116,6 +118,7 @@ class BaseUser {
             data[fldIsAugmontEnabled],
             data[fldUsername],
             data[fldIsEmailVerified],
+            data[fldIsBlocked] ?? false,
             UserPreferences(data[fldUserPrefs]),
             data[fldCreatedOn]);
 
@@ -143,7 +146,7 @@ class BaseUser {
       userObj[fldIsAugmontEnabled] = isAugmontEnabled;
     if (userPreferences != null)
       userObj[fldUserPrefs] = userPreferences.toJson();
-
+    if (isBlocked != null) userObj[fldIsBlocked] = isBlocked;
     return userObj;
   }
 

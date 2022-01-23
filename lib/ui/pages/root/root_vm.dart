@@ -2,9 +2,11 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
+import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_coin_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/core/service/winners_service.dart';
@@ -14,10 +16,6 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/golden_ticket_claim.dart';
 import 'package:felloapp/ui/modals_sheets/security_modal_sheet.dart';
 import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
-import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
-import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
-import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -25,18 +23,20 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class RootViewModel extends BaseModel {
   final BaseUtil _baseUtil = locator<BaseUtil>();
   final HttpModel _httpModel = locator<HttpModel>();
   final FcmHandler _fcmListener = locator<FcmHandler>();
   final LocalDBModel _localDBModel = locator<LocalDBModel>();
+  final DBModel _dbModel = locator<DBModel>();
   final UserService _userService = locator<UserService>();
   final UserCoinService _userCoinService = locator<UserCoinService>();
   final AppState _appState = locator<AppState>();
-  final Logger _logger = locator<Logger>();
+  final CustomLogger _logger = locator<CustomLogger>();
   final winnerService = locator<WinnerService>();
+  final txnService = locator<TransactionService>();
 
   BuildContext rootContext;
   bool _isInitialized = false;
@@ -47,6 +47,8 @@ class RootViewModel extends BaseModel {
   Future<void> refresh() async {
     await _userCoinService.getUserCoinBalance();
     await _userService.getUserFundWalletData();
+    txnService.signOut();
+    await txnService.fetchTransactions(limit: 4);
   }
 
   static final GlobalKey<ScaffoldState> scaffoldKey =
@@ -89,14 +91,6 @@ class RootViewModel extends BaseModel {
 
   void onItemTapped(int index) {
     AppState.delegate.appState.setCurrentTabIndex = index;
-    // switch (index) {
-    //   case 1:
-    //     AppState.isSaveOpened = true;
-    //     break;
-    //   case 2:
-    //     winnerService.fetchWinners();
-    //     break;
-    // }
     notifyListeners();
   }
 
@@ -112,16 +106,23 @@ class RootViewModel extends BaseModel {
   }
 
   void _showSecurityBottomSheet() {
-    showModalBottomSheet(
-        context: AppState.delegate.navigatorKey.currentContext,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30.0),
-                topRight: Radius.circular(30.0))),
+    BaseUtil.openModalBottomSheet(
+        addToScreenStack: true,
+        isBarrierDismissable: false,
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
         backgroundColor: UiConstants.bottomNavBarColor,
-        builder: (context) {
-          return const SecurityModalSheet();
-        });
+        content: const SecurityModalSheet());
+    // showModalBottomSheet(
+    //     context: AppState.delegate.navigatorKey.currentContext,
+    //     shape: RoundedRectangleBorder(
+    //         borderRadius: BorderRadius.only(
+    //             topLeft: Radius.circular(30.0),
+    //             topRight: Radius.circular(30.0))),
+    //     backgroundColor: UiConstants.bottomNavBarColor,
+    //     builder: (context) {
+    //       return const SecurityModalSheet();
+    //     });
   }
 
   initialize() async {
@@ -144,6 +145,7 @@ class RootViewModel extends BaseModel {
       // show security modal
       if (_baseUtil.show_security_prompt &&
           _baseUtil.myUser.isAugmontOnboarded &&
+          _userService.userFundWallet.augGoldQuantity > 0 &&
           _baseUtil.myUser.userPreferences.getPreference(Preferences.APPLOCK) ==
               0) {
         WidgetsBinding.instance.addPostFrameCallback((_) {

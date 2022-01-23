@@ -48,14 +48,6 @@ class UsernameState extends State<Username> {
   final _formKey = GlobalKey<FormState>();
   UsernameResponse response;
 
-  // @override
-  // void initState() {
-  //   focusNode = new FocusNode();
-  //   focusNode.addListener(
-  //       () => print('focusNode updated: hasFocus: ${focusNode.hasFocus}'));
-  //   super.initState();
-  // }
-
   @override
   void dispose() {
     focusNode?.dispose();
@@ -234,7 +226,7 @@ class UsernameState extends State<Username> {
             RuleTile(rule: locale.obUsernameRule1),
             RuleTile(rule: locale.obUsernameRule2),
             RuleTile(rule: locale.obUsernameRule3),
-            RuleTile(rule: locale.obUsernameRule4),
+            // RuleTile(rule: locale.obUsernameRule4),
             SizedBox(
               height: SizeConfig.screenHeight * 0.3,
             ),

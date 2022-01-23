@@ -5,6 +5,7 @@ class AlertModel {
   Timestamp createdTime;
   String subtitle;
   String title;
+  bool isHighlighted = false;
 
   AlertModel({this.actionUri, this.createdTime, this.subtitle, this.title});
 
@@ -40,5 +41,10 @@ class AlertModel {
       subtitle: map['subtitle'],
       title: map['title'],
     );
+  }
+
+  @override
+  String toString() {
+    return 'AlertModel(actionUri: $actionUri, createdTime: $createdTime, subtitle: $subtitle, title: $title)';
   }
 }

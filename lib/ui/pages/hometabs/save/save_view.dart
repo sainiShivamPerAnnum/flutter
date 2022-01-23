@@ -1,24 +1,23 @@
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/dialogs/augmont_regn_security_dialog.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_winnings.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
-import 'package:felloapp/ui/widgets/buttons/sell_gold_button/sellGoldBtn_view.dart';
 import 'package:felloapp/ui/widgets/mini_trans_card/mini_trans_card_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class Save extends StatelessWidget {
+  final CustomLogger logger = locator<CustomLogger>();
+
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
@@ -87,7 +86,7 @@ class Save extends StatelessWidget {
                                   svg: 'images/svgs/gold.svg',
                                   title: "About digital Gold",
                                   onPressed: () {
-                                    Logger().d("Save info tile tap check");
+                                    logger.d("Save info tile tap check");
                                     model.navigateToAboutGold();
                                   },
                                 ),
@@ -255,44 +254,37 @@ class AugmontCard extends StatelessWidget {
                 child: Row(
                   children: [
                     Expanded(
-                      child: Center(
-                        child: FelloButton(
-                          onPressed: model.navigateToBuyScreen,
-                          activeButtonUI: Container(
-                            width: SizeConfig.screenWidth * 0.367, //152
-                            height: SizeConfig.screenWidth * 0.12, //50
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(100),
-                                color: UiConstants.primaryColor),
-                            alignment: Alignment.center,
-                            child: Text(
-                              locale.saveBuyButton,
-                              style:
-                                  TextStyles.title5.bold.colour(Colors.white),
-                            ),
+                      child: FelloButton(
+                        onPressed: model.navigateToBuyScreen,
+                        activeButtonUI: Container(
+                          height: SizeConfig.screenWidth * 0.12, //50
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100),
+                              color: UiConstants.primaryColor),
+                          alignment: Alignment.center,
+                          child: Text(
+                            locale.saveBuyButton,
+                            style: TextStyles.title5.bold.colour(Colors.white),
                           ),
-                          offlineButtonUI: Container(
-                            width: SizeConfig.screenWidth * 0.367, //152
-                            height: SizeConfig.screenWidth * 0.12, //50
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(100),
-                                color: Colors.grey),
-                            alignment: Alignment.center,
-                            child: Text(
-                              locale.saveBuyButton,
-                              style:
-                                  TextStyles.title5.bold.colour(Colors.white),
-                            ),
+                        ),
+                        offlineButtonUI: Container(
+                          height: SizeConfig.screenWidth * 0.12, //50
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100),
+                              color: Colors.grey),
+                          alignment: Alignment.center,
+                          child: Text(
+                            locale.saveBuyButton,
+                            style: TextStyles.title5.bold.colour(Colors.white),
                           ),
                         ),
                       ),
                     ),
-                    SizedBox(width: SizeConfig.padding20),
+                    SizedBox(width: SizeConfig.padding12),
                     Expanded(
-                        child: Center(
-                      child: SellGoldBtn(
+                      child: FelloButton(
+                        onPressed: model.navigateToSellScreen,
                         activeButtonUI: Container(
-                          width: SizeConfig.screenWidth * 0.367,
                           height: SizeConfig.screenWidth * 0.12,
                           decoration: BoxDecoration(
                             border: Border.all(
@@ -305,22 +297,7 @@ class AugmontCard extends StatelessWidget {
                             style: TextStyles.title5.bold,
                           ),
                         ),
-                        loadingButtonUI: Container(
-                          width: SizeConfig.screenWidth * 0.367,
-                          height: SizeConfig.screenWidth * 0.12,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                                color: UiConstants.tertiarySolid, width: 2),
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          alignment: Alignment.center,
-                          child: SpinKitThreeBounce(
-                            size: SizeConfig.title5,
-                            color: UiConstants.tertiarySolid,
-                          ),
-                        ),
-                        disabledButtonUI: Container(
-                          width: SizeConfig.screenWidth * 0.367,
+                        offlineButtonUI: Container(
                           height: SizeConfig.screenWidth * 0.12,
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.grey, width: 2),
@@ -333,8 +310,7 @@ class AugmontCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                      // ),
-                    )),
+                    ),
                   ],
                 ),
               ),
@@ -386,7 +362,7 @@ class AugmontCard extends StatelessWidget {
                     style: TextStyles.body3.colour(UiConstants.tertiarySolid),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),

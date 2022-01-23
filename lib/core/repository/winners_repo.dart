@@ -8,12 +8,12 @@ import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/code_from_freq.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class WinnersRepository {
   final _userService = locator<UserService>();
   final _api = locator<Api>();
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
   final _apiPaths = locator<ApiPath>();
 
   Future<String> _getBearerToken() async {
@@ -45,8 +45,8 @@ class WinnersRepository {
   Future<ApiResponse<List<String>>> getTopWinners() async {
     try {
       final String _bearer = await _getBearerToken();
-      final _apiResponse =
-          await APIService.instance.getData(_apiPaths.kTopWinners,token: _bearer);
+      final _apiResponse = await APIService.instance
+          .getData(_apiPaths.kTopWinners, token: _bearer);
       TopWinnersModel _topWinnersModel = TopWinnersModel.fromMap(_apiResponse);
 
       return ApiResponse(model: _topWinnersModel.currentTopWinners, code: 200);

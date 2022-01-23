@@ -11,7 +11,17 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class ReferralLeaderboard extends StatelessWidget {
-  const ReferralLeaderboard({Key key}) : super(key: key);
+  final int count;
+  ReferralLeaderboard({this.count});
+  getLength(int listLength) {
+    if (count != null) {
+      if (listLength < count)
+        return listLength;
+      else
+        return count;
+    } else
+      return listLength;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +35,7 @@ class ReferralLeaderboard extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.white,
                 ),
-                padding: EdgeInsets.all(SizeConfig.padding12),
+                padding: EdgeInsets.only(top: SizeConfig.padding8),
                 child: model.referralLeaderBoard == null
                     ? Container(
                         width: SizeConfig.screenWidth,
@@ -42,60 +52,85 @@ class ReferralLeaderboard extends StatelessWidget {
                             ),
                           )
                         : Column(
-                            children: List.generate(
-                                model.referralLeaderBoard.length, (i) {
-                              return Container(
-                                width: SizeConfig.screenWidth,
-                                padding: EdgeInsets.all(SizeConfig.padding12),
-                                margin: EdgeInsets.symmetric(
-                                    vertical: SizeConfig.padding8),
-                                decoration: BoxDecoration(
-                                  color:
-                                      UiConstants.primaryLight.withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(
-                                      SizeConfig.roundness16),
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: SizeConfig.pageHorizontalMargins,
                                 ),
                                 child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    CircleAvatar(
-                                      backgroundColor: UiConstants.primaryColor,
-                                      radius: SizeConfig.padding16,
-                                      child: Text(
-                                        "${i + 1}",
-                                        style: TextStyles.body4.bold
-                                            .colour(Colors.white),
+                                    Text(
+                                      'This months\'s top referrers:',
+                                      style:
+                                          TextStyles.body4.colour(Colors.grey),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Column(
+                                children: List.generate(
+                                  getLength(model.referralLeaderBoard.length),
+                                  (i) {
+                                    return Container(
+                                      width: SizeConfig.screenWidth,
+                                      padding:
+                                          EdgeInsets.all(SizeConfig.padding12),
+                                      margin: EdgeInsets.symmetric(
+                                          vertical: SizeConfig.padding8,
+                                          horizontal:
+                                              SizeConfig.pageHorizontalMargins),
+                                      decoration: BoxDecoration(
+                                        color: Color(0xfff6f6f6),
+                                        borderRadius: BorderRadius.circular(
+                                            SizeConfig.roundness16),
                                       ),
-                                    ),
-                                    SizedBox(width: SizeConfig.padding12),
-                                    Expanded(
-                                      child: Text(
-                                          model.referralLeaderBoard[i].username
-                                                  .replaceAll('@', '.') ??
-                                              "username",
-                                          style: TextStyles.body3),
-                                    ),
-                                    TextButton.icon(
-                                        icon: CircleAvatar(
-                                          radius:
-                                              SizeConfig.screenWidth * 0.029,
-                                          backgroundColor:
-                                              UiConstants.tertiaryLight,
-                                          child: SvgPicture.asset(Assets.plane,
-                                              color: UiConstants.tertiarySolid,
-                                              height: SizeConfig.iconSize3),
-                                        ),
-                                        label: Text(
-                                            model.referralLeaderBoard[i]
+                                      child: Row(
+                                        children: [
+                                          CircleAvatar(
+                                            backgroundColor:
+                                                UiConstants.primaryColor,
+                                            radius: SizeConfig.padding16,
+                                            child: Text(
+                                              "${i + 1}",
+                                              style: TextStyles.body4
+                                                  .colour(Colors.white),
+                                            ),
+                                          ),
+                                          SizedBox(width: SizeConfig.padding12),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                    model.referralLeaderBoard[i]
+                                                            .username
+                                                            .replaceAll(
+                                                                '@', '.') ??
+                                                        "username",
+                                                    style: TextStyles.body3),
+                                              ],
+                                            ),
+                                          ),
+                                          PrizeChip(
+                                            color: UiConstants.primaryColor,
+                                            png: Assets.moneyIcon,
+                                            text: model.referralLeaderBoard[i]
                                                     .refCount
                                                     .toString() ??
                                                 "00",
-                                            style: TextStyles.body3
-                                                .colour(Colors.black54)),
-                                        onPressed: () {}),
-                                  ],
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
                                 ),
-                              );
-                            }),
+                              ),
+                            ],
                           )),
               ),
               SizedBox(

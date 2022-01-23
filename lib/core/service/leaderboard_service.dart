@@ -3,17 +3,16 @@ import 'package:felloapp/core/model/leader_board_modal.dart';
 import 'package:felloapp/core/model/referral_board_modal.dart';
 import 'package:felloapp/core/repository/statistics_repo.dart';
 import 'package:felloapp/core/service/user_service.dart';
-import 'package:felloapp/ui/elements/leaderboard.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class LeaderboardService
     extends PropertyChangeNotifier<LeaderBoardServiceProperties> {
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
   final _statsRepo = locator<StatisticsRepository>();
   final _userService = locator<UserService>();
   final ScrollController ownController = ScrollController();

@@ -37,6 +37,7 @@ enum FailType {
   TambolaTicketGenerationFailed,
   RequestCallbackFailed,
   FelloRewardCardShareFailed,
+  FelloRewardTextShareFailed,
   GameVoteFailed,
   ProfilePictureUpdateFailed,
   GoldRateFetchFailed,
@@ -45,6 +46,13 @@ enum FailType {
   CompleteUserDepositApiFailed,
   WithdrawlCompleteApiFailed,
   CancleUserDepositApiFailed,
+  RSAEncryterInitFailed,
+  AESEncryptionInitFailed,
+  UserServiceInitFailed,
+  BaseUtilInitFailed,
+  FcmListenerSetupFailed,
+  MixpanelServiceInitFailed,
+  HttpModelInitFailed,
 }
 
 extension ParseToString on FailType {

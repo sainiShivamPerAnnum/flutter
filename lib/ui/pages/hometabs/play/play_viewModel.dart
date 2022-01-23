@@ -1,10 +1,8 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
-import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/model/feed_card_model.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
-import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
@@ -15,39 +13,18 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_game/cricket_game_view.dart';
-import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
-import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/util/api_response.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class PlayViewModel extends BaseModel {
-  // List<OfferCardModel> _offerList = [
-  //   OfferCardModel(
-  //     title1: "2X Multiplier",
-  //     title2: "Double your tokens",
-  //     bgColor: UiConstants.tertiarySolid,
-  //     buttonText: "Explore",
-  //     routePath: '/not/yet/defined',
-  //   ),
-  //   OfferCardModel(
-  //     title1: "WIN",
-  //     title2: "2 games, 200 tokens",
-  //     bgColor: UiConstants.primaryColor,
-  //     buttonText: "Hop in",
-  //     routePath: '/not/yet/defined',
-  //   ),
-  // ];
-
   final _fclActionRepo = locator<FlcActionsRepo>();
   final _userCoinService = locator<UserCoinService>();
   final _userService = locator<UserService>();
   final _dbProvider = locator<DBModel>();
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
   final _baseUtil = locator<BaseUtil>();
 
   String _message;

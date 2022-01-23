@@ -12,10 +12,11 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 //Flutter Imports
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   final FelloRouterDelegate _routerDelegate;
+  final CustomLogger logger = locator<CustomLogger>();
   DBModel _dbModel = locator<DBModel>();
   BaseUtil _baseUtil = locator<BaseUtil>();
   AppState _appState = locator<AppState>();
@@ -43,15 +44,8 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
   @override
   Future<bool> didPopRoute() {
-    // If the top item is anything except a scaffold
-    if (AppState.screenStack.last == ScreenItem.dialog) {
-      Navigator.pop(_routerDelegate.navigatorKey.currentContext);
-      AppState.screenStack.removeLast();
-      print("Current Stack: ${AppState.screenStack}");
-      return Future.value(true);
-    }
     // If user is in the profile page and preferences are changed
-    else if (AppState.unsavedPrefs) {
+    if (AppState.unsavedPrefs) {
       if (_baseUtil != null &&
           _baseUtil.myUser != null &&
           _baseUtil.myUser.uid != null &&
@@ -63,7 +57,13 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
           AppState.unsavedPrefs = false;
           log("Preferences updated");
         });
-      return _routerDelegate.popRoute();
+    }
+    // If the top item is anything except a scaffold
+    if (AppState.screenStack.last == ScreenItem.dialog) {
+      Navigator.pop(_routerDelegate.navigatorKey.currentContext);
+      AppState.screenStack.removeLast();
+      print("Current Stack: ${AppState.screenStack}");
+      return Future.value(true);
     }
 
     // If onboarding is in progress
@@ -89,7 +89,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
         AppState.screenStack.length == 1 &&
         (AppState.delegate.appState.rootIndex != 1 ||
             RootViewModel.scaffoldKey.currentState.isDrawerOpen)) {
-      Logger().w("Checking if app can be closed");
+      logger.w("Checking if app can be closed");
       if (RootViewModel.scaffoldKey.currentState.isDrawerOpen)
         RootViewModel.scaffoldKey.currentState.openEndDrawer();
       else if (AppState.delegate.appState.rootIndex != 1)

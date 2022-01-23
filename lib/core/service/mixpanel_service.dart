@@ -1,14 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 
 class MixpanelService {
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
 
   static const String DEV_TOKEN = "6bc0994f4244fc5b193213df643f14dc";
   static const String PROD_TOKEN = "03de57e684d04e87999e089fd605fcdd";
@@ -25,8 +26,12 @@ class MixpanelService {
       _mixpanel.getPeople().set("Email", baseUser.email ?? '');
       _mixpanel.getPeople().set("Age", _getAge(baseUser.dob) ?? 0);
       _mixpanel.getPeople().set("Gender", baseUser.gender ?? 'O');
-      _mixpanel.getPeople().set("Signed Up", _getSignupDate(baseUser.createdOn));
-      _mixpanel.getPeople().set("KYC Verified", baseUser.isSimpleKycVerified ?? false);
+      _mixpanel
+          .getPeople()
+          .set("Signed Up", _getSignupDate(baseUser.createdOn));
+      _mixpanel
+          .getPeople()
+          .set("KYC Verified", baseUser.isSimpleKycVerified ?? false);
 
       // _mixpanel.registerSuperPropertiesOnce({
       //   'userId': baseUser.uid ?? '',
@@ -49,11 +54,11 @@ class MixpanelService {
   void track({String eventName, Map<String, dynamic> properties}) {
     if (_mixpanel == null) init();
     try {
-      if(properties != null && properties.isNotEmpty) {
+      if (properties != null && properties.isNotEmpty) {
         _mixpanel.track(eventName, properties: properties);
         _logger.i(
             "Event: $eventName, Properties: ${properties.toString()}. Successfully tracked");
-      }else{
+      } else {
         _mixpanel.track(eventName);
       }
     } catch (e) {

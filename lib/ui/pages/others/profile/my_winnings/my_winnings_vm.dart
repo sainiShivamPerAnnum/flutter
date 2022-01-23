@@ -17,27 +17,24 @@ import 'package:felloapp/ui/dialogs/share-card.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fail_types.dart';
-import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_html/shims/dart_ui_real.dart';
 import 'package:flutter_share_me/flutter_share_me.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 class MyWinningsViewModel extends BaseModel {
   //LOCATORS
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
   final _httpModel = locator<HttpModel>();
   final _userService = locator<UserService>();
   final _transactionService = locator<TransactionService>();
@@ -214,7 +211,6 @@ class MyWinningsViewModel extends BaseModel {
                             claimChoice: choice,
                             prizeAmount:
                                 _userService.userFundWallet.prizeBalance,
-                            username: _userService.baseUser.name,
                           ),
                         ),
                       ),
@@ -328,7 +324,6 @@ class MyWinningsViewModel extends BaseModel {
                             dpUrl: _userService.myUserDpUrl,
                             claimChoice: choice,
                             prizeAmount: amount.abs(),
-                            username: _userService.baseUser.name,
                           ),
                         ),
                       ),
@@ -394,12 +389,34 @@ class MyWinningsViewModel extends BaseModel {
         if (image != null)
           shareCard(image, shareMessage);
         else {
-          if (Platform.isIOS) {
-            Share.share(shareMessage);
-          } else {
-            FlutterShareMe().shareToSystem(msg: shareMessage).then((flag) {
-              _logger.d(flag);
-            });
+          try {
+            if (Platform.isIOS) {
+              Share.share(shareMessage).catchError((onError) {
+                if (_userService.baseUser.uid != null) {
+                  Map<String, dynamic> errorDetails = {
+                    'error_msg': 'Share reward text in My winnings failed'
+                  };
+                  _dbModel.logFailure(_userService.baseUser.uid,
+                      FailType.FelloRewardTextShareFailed, errorDetails);
+                }
+                _logger.e(onError);
+              });
+            } else {
+              FlutterShareMe()
+                  .shareToSystem(msg: shareMessage)
+                  .catchError((onError) {
+                if (_userService.baseUser.uid != null) {
+                  Map<String, dynamic> errorDetails = {
+                    'error_msg': 'Share reward text in My winnings failed'
+                  };
+                  _dbModel.logFailure(_userService.baseUser.uid,
+                      FailType.FelloRewardTextShareFailed, errorDetails);
+                }
+                _logger.e(onError);
+              });
+            }
+          } catch (e) {
+            _logger.e(e.toString());
           }
         }
       });

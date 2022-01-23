@@ -16,12 +16,12 @@ import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class WinViewModel extends BaseModel {
   final _userService = locator<UserService>();
   final _winnersRepo = locator<WinnersRepository>();
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
   final _winnerService = locator<WinnerService>();
   final _lbService = locator<LeaderboardService>();
 
@@ -41,12 +41,7 @@ class WinViewModel extends BaseModel {
   double get getUnclaimedPrizeBalance =>
       _userService.userFundWallet.unclaimedBalance;
 
-  init() {
-    // if (!AppState.isWinOpened) {
-    //   _winnerService.fetchTopWinner();
-    //   AppState.isWinOpened = true;
-    // }
-  }
+  init() {}
 
   getWinningsButtonText() {
     if (_userService.userFundWallet.isPrizeBalanceUnclaimed())
@@ -63,20 +58,6 @@ class WinViewModel extends BaseModel {
     AppState.delegate.appState.currentAction =
         PageAction(state: PageState.addPage, page: MyWinnigsPageConfig);
   }
-
-  // fetchWinners() async {
-  //   isWinnersLoading = true;
-  //   notifyListeners();
-  //   var temp = await _winnersRepo.getWinners("GM_CRIC2020", "weekly");
-  //   if (temp != null) {
-  //     winners = temp.model;
-  //     _logger.d("Winners fetched");
-  //   } else
-  //     BaseUtil.showNegativeAlert(
-  //         "Unable to fetch winners", "try again in sometime");
-  //   isWinnersLoading = false;
-  //   notifyListeners();
-  // }
 
   openVoucherModal(
     String asset,

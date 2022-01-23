@@ -1,6 +1,5 @@
 //Project Imports
 //Flutter & Dart Imports
-import 'dart:ui';
 
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input_screen.dart';
@@ -15,7 +14,6 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -134,6 +132,38 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                             ),
                           ),
                         ),
+                        SizedBox(height: SizeConfig.padding16),
+                        Divider(),
+                        Container(
+                          margin: EdgeInsets.only(
+                            top: SizeConfig.padding8,
+                          ),
+                          child: Row(
+                            children: [
+                              Text(
+                                "User Details",
+                                style: TextStyle(
+                                    color: Colors.grey[400],
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: SizeConfig.body1),
+                              ),
+                              Spacer(),
+                              if (!model.inEditMode)
+                                TextButton.icon(
+                                  onPressed: model.enableEdit,
+                                  label: Text(
+                                    "Edit",
+                                    style: TextStyles.body2
+                                        .colour(UiConstants.primaryColor),
+                                  ),
+                                  icon: Icon(
+                                    Icons.edit,
+                                    color: UiConstants.primaryColor,
+                                  ),
+                                )
+                            ],
+                          ),
+                        ),
                         Form(
                           key: model.formKey,
                           child: Column(
@@ -141,8 +171,18 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                             children: [
                               TextFieldLabel(locale.obNameLabel),
                               TextFormField(
-                                enabled: model.inEditMode,
+                                enabled: model.isSimpleKycVerified
+                                    ? false
+                                    : model.inEditMode,
                                 controller: model.nameController,
+                                decoration: InputDecoration(
+                                  suffixIcon: model.isSimpleKycVerified
+                                      ? Icon(
+                                          Icons.verified,
+                                          color: UiConstants.primaryColor,
+                                        )
+                                      : SizedBox(),
+                                ),
                                 inputFormatters: [
                                   FilteringTextInputFormatter.allow(
                                       RegExp(r'[a-zA-Z ]'))
@@ -361,94 +401,109 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                             ],
                           ),
                         ),
-                        SizedBox(height: SizeConfig.padding24),
-                        Container(
-                          width: SizeConfig.screenWidth,
-                          child: FelloButtonLg(
-                            // color: model.inEditMode
-                            //     ? UiConstants.primaryColor
-                            //     : UiConstants.tertiarySolid,
-                            child: model.isUpdaingUserDetails
-                                ? SpinKitThreeBounce(
-                                    color: Colors.white,
-                                    size: 20,
-                                  )
-                                : Text(
-                                    model.inEditMode
-                                        ? locale.btnSave
-                                        : locale.btnEdit,
-                                    style: TextStyles.body2
-                                        .colour(Colors.white)
-                                        .bold,
-                                  ),
-                            onPressed: () {
-                              if (model.inEditMode) {
-                                FocusScope.of(context).unfocus();
-                                model.updateDetails();
-                              } else {
-                                model.enableEdit();
-                              }
-                            },
+                        if (model.inEditMode)
+                          Container(
+                            margin: EdgeInsets.only(top: SizeConfig.padding24),
+                            width: SizeConfig.screenWidth,
+                            child: FelloButtonLg(
+                              // color: model.inEditMode
+                              //     ? UiConstants.primaryColor
+                              //     : UiConstants.tertiarySolid,
+                              child: model.isUpdaingUserDetails
+                                  ? SpinKitThreeBounce(
+                                      color: Colors.white,
+                                      size: 20,
+                                    )
+                                  : Text(
+                                      locale.btnSave,
+                                      style: TextStyles.body2
+                                          .colour(Colors.white)
+                                          .bold,
+                                    ),
+                              onPressed: () {
+                                if (!model.isUpdaingUserDetails) {
+                                  FocusScope.of(context).unfocus();
+                                  model.updateDetails();
+                                }
+                              },
+                            ),
                           ),
-                        ),
                         SizedBox(height: SizeConfig.padding24),
                         Divider(),
-                        // Container(
-                        //   margin: EdgeInsets.symmetric(
-                        //       vertical: SizeConfig.padding24),
-                        //   child: Column(
-                        //     crossAxisAlignment: CrossAxisAlignment.start,
-                        //     children: [
-                        //       Text(
-                        //         "App Preferences",
-                        //         style: TextStyle(
-                        //             color: Colors.grey,
-                        //             fontWeight: FontWeight.w600,
-                        //             fontSize: SizeConfig.body1),
-                        //       ),
-                        //       SizedBox(height: SizeConfig.padding16),
-                        //       Row(children: [
-                        //         Text(
-                        //           "App Lock",
-                        //           style: TextStyle(
-                        //               color: Colors.black,
-                        //               fontSize: SizeConfig.body3),
-                        //         ),
-                        //         Spacer(),
-                        //         Switch.adaptive(
-                        //             activeColor: UiConstants.primaryColor,
-                        //             value: model.applock,
-                        //             onChanged: (val) =>
-                        //                 model.onAppLockPreferenceChanged(val)),
-                        //       ]),
-                        //       Row(children: [
-                        //         Text(
-                        //           "Tambola Draw Notifications",
-                        //           style: TextStyle(
-                        //             color: Colors.black,
-                        //             fontSize: SizeConfig.body3,
-                        //           ),
-                        //         ),
-                        //         Spacer(),
-                        //         model.isTambolaNotificationLoading
-                        //             ? Container(
-                        //                 padding:
-                        //                     EdgeInsets.all(SizeConfig.padding2),
-                        //                 height: SizeConfig.title3,
-                        //                 width: SizeConfig.title3,
-                        //                 child: CircularProgressIndicator(),
-                        //               )
-                        //             : Switch.adaptive(
-                        //                 activeColor: UiConstants.primaryColor,
-                        //                 value: model.tambolaNotification,
-                        //                 onChanged: (val) => model
-                        //                     .onTambolaNotificationPreferenceChanged(
-                        //                         val)),
-                        //       ]),
-                        //     ],
-                        //   ),
-                        // ),
-                        //Divider(),
+                        Container(
+                          margin: EdgeInsets.symmetric(
+                              vertical: SizeConfig.padding16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "App Preferences",
+                                style: TextStyle(
+                                    color: Colors.grey[400],
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: SizeConfig.body1),
+                              ),
+                              SizedBox(height: SizeConfig.padding16),
+                              Container(
+                                height: SizeConfig.padding40,
+                                child: Row(children: [
+                                  Text(
+                                    "App Lock",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: SizeConfig.body3),
+                                  ),
+                                  Spacer(),
+                                  model.isApplockLoading
+                                      ? Container(
+                                          margin: EdgeInsets.only(
+                                              right: SizeConfig.padding12),
+                                          padding: EdgeInsets.all(
+                                              SizeConfig.padding2),
+                                          height: SizeConfig.title3,
+                                          width: SizeConfig.title3,
+                                          child: CircularProgressIndicator(),
+                                        )
+                                      : Switch.adaptive(
+                                          activeColor: UiConstants.primaryColor,
+                                          value: model.applock,
+                                          onChanged: (val) => model
+                                              .onAppLockPreferenceChanged(val)),
+                                ]),
+                              ),
+                              Container(
+                                height: SizeConfig.padding40,
+                                child: Row(children: [
+                                  Text(
+                                    "Tambola Notifications",
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: SizeConfig.body3,
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  model.isTambolaNotificationLoading
+                                      ? Container(
+                                          margin: EdgeInsets.only(
+                                              right: SizeConfig.padding12),
+                                          padding: EdgeInsets.all(
+                                              SizeConfig.padding2),
+                                          height: SizeConfig.title3,
+                                          width: SizeConfig.title3,
+                                          child: CircularProgressIndicator(),
+                                        )
+                                      : Switch.adaptive(
+                                          activeColor: UiConstants.primaryColor,
+                                          value: model.tambolaNotification,
+                                          onChanged: (val) => model
+                                              .onTambolaNotificationPreferenceChanged(
+                                                  val)),
+                                ]),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Divider(),
                         SizedBox(height: SizeConfig.padding12),
                         TextButton(
                           onPressed: model.signout,

@@ -10,7 +10,6 @@ const String MfDetailsPath = '/mfDetails';
 const String AugDetailsPath = '/augDetails';
 const String TransactionPath = '/tran';
 const String ReferralPath = '/referral';
-const String TncPath = '/tnc';
 const String FaqPath = '/faq';
 const String AugOnboardingPath = '/augOnboard';
 const String AugWithdrawalPath = '/augWithdrawal';
@@ -43,6 +42,7 @@ const String AugmontGoldDetailsPath = '/augDetails';
 const String ReferralDetailsPath = '/referralDetails';
 const String ReferralHistoryPath = '/referralHistory';
 const String MyWinningsPath = '/myWinnings';
+const String blockedUserPath = '/blockeUser';
 
 enum Pages {
   Splash,
@@ -54,7 +54,6 @@ enum Pages {
   AugDetails,
   Transaction,
   Referral,
-  Tnc,
   Faq,
   AugOnboard,
   UpdateRequired,
@@ -86,7 +85,8 @@ enum Pages {
   AugGoldDetails,
   ReferralDetails,
   ReferralHistory,
-  MyWinnings
+  MyWinnings,
+  blockedUser
 }
 
 class PageConfiguration {
@@ -156,11 +156,6 @@ PageConfiguration ReferralPageConfig = PageConfiguration(
   uiPage: Pages.Referral,
 );
 
-PageConfiguration TncPageConfig = PageConfiguration(
-  key: 'Tnc',
-  path: TncPath,
-  uiPage: Pages.Tnc,
-);
 PageConfiguration FaqPageConfig = PageConfiguration(
   key: 'Faq',
   path: FaqPath,
@@ -323,4 +318,10 @@ PageConfiguration MyWinnigsPageConfig = PageConfiguration(
   key: 'myWinnings',
   path: MyWinningsPath,
   uiPage: Pages.MyWinnings,
+);
+
+PageConfiguration BlockedUserPageConfig = PageConfiguration(
+  key: 'blockedUser',
+  path: blockedUserPath,
+  uiPage: Pages.blockedUser,
 );

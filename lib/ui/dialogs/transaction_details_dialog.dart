@@ -12,10 +12,8 @@ import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:open_file/open_file.dart';
@@ -107,8 +105,10 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
       return UiConstants.primaryColor;
     if (widget._transaction.tranStatus == UserTransaction.TRAN_STATUS_CANCELLED)
       return Colors.red;
-    if (widget._transaction.tranStatus == UserTransaction.TRAN_STATUS_PENDING)
-      return Colors.orange;
+    if (widget._transaction.tranStatus == UserTransaction.TRAN_STATUS_PENDING ||
+        widget._transaction.tranStatus ==
+            UserTransaction.TRAN_STATUS_PROCESSING)
+      return UiConstants.tertiarySolid;
     if (widget._transaction.type == UserTransaction.TRAN_TYPE_PRIZE)
       return Colors.blue;
     return UiConstants.primaryColor;
@@ -584,33 +584,3 @@ class BeerTicketItem extends StatelessWidget {
         ]);
   }
 }
-
-
-// (widget._transaction.type !=
-//         UserTransaction.TRAN_TYPE_WITHDRAW)
-//     ? referralTileWide(
-//         'Tickets Added:',
-//         '${widget._transaction.ticketUpCount ?? 'Unavailable'}',
-//         UiConstants.primaryColor)
-//     : referralTileWide(
-//         'Tickets Reduced:',
-//         '${widget._transaction.ticketUpCount ?? 'Unavailable'}',
-//         Colors.redAccent.withOpacity(0.6),
-//       ),
-// (widget._transaction.subType ==
-//         UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD)
-//     ? referralTileWide(
-//         'Closing Gold Balance:',
-//         widget._transaction.augmnt[
-//                     UserTransaction.subFldAugTotalGoldGm] ==
-//                 null
-//             ? "Unavailable"
-//             : '${widget._transaction.augmnt[UserTransaction.subFldAugTotalGoldGm] ?? 'Unavailable'} grams',
-//         UiConstants.primaryColor)
-//     : Container(),
-// (widget._transaction.closingBalance > 0)
-//     ? referralTileWide(
-//         'Overall Closing Balance:',
-//         '₹${widget._transaction.closingBalance.toStringAsFixed(2) ?? 'Unavailable'}',
-//         UiConstants.primaryColor)
-//     : Container(),

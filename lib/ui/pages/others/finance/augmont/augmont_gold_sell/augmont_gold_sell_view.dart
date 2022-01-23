@@ -16,7 +16,6 @@ import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
-import 'package:felloapp/ui/widgets/simple_kyc_modalsheet/simple_kyc_modalsheet_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -26,9 +25,7 @@ import 'package:felloapp/util/styles/palette.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 //Pub Imports
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
@@ -176,42 +173,50 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                               ],
                             ),
                             SizedBox(height: SizeConfig.padding8),
-                            (model.sellNotice == null && model.nonWithdrawableQnt > 0)?Container(
-                              margin: EdgeInsets.only(top: SizeConfig.padding8),
-                              decoration: BoxDecoration(
-                                color: UiConstants.tertiaryLight,
-                                borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-                              ),
-                              padding: EdgeInsets.all(SizeConfig.padding16),
-                              child: Stack(
-                                children: [
-                                  //Image.asset("assets/images/confetti.png"),
-                                  Text(
-                                    _buildNonWithdrawString(model),
-                                    textAlign: TextAlign.center,
-                                    style: TextStyles.body3.light,
-                                  ),
-                                ],
-                              ),
-                            ):SizedBox(),
+                            (model.sellNotice == null &&
+                                    model.nonWithdrawableQnt > 0)
+                                ? Container(
+                                    margin: EdgeInsets.only(
+                                        top: SizeConfig.padding8),
+                                    decoration: BoxDecoration(
+                                      color: UiConstants.tertiaryLight,
+                                      borderRadius: BorderRadius.circular(
+                                          SizeConfig.roundness16),
+                                    ),
+                                    padding:
+                                        EdgeInsets.all(SizeConfig.padding16),
+                                    child: Stack(
+                                      children: [
+                                        //Image.asset("assets/images/confetti.png"),
+                                        Text(
+                                          _buildNonWithdrawString(model),
+                                          textAlign: TextAlign.center,
+                                          style: TextStyles.body3.light,
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : SizedBox(),
                             SizedBox(height: SizeConfig.padding8),
-                            (model.sellNotice != null && model.sellNotice.isNotEmpty)?Container(
-                              margin: EdgeInsets.only(top: SizeConfig.padding8),
-                              decoration: BoxDecoration(
-                                color: UiConstants.primaryLight,
-                                borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-                              ),
-                              padding: EdgeInsets.all(SizeConfig.padding16),
-                              child: Stack(
-                                children: [
-                                  Text(
-                                    model.sellNotice,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyles.body3.light,
-                                  ),
-                                ],
-                              ),
-                            ):SizedBox(),
+                            (model.sellNotice != null &&
+                                    model.sellNotice.isNotEmpty)
+                                ? Container(
+                                    width: SizeConfig.screenWidth,
+                                    margin: EdgeInsets.only(
+                                        top: SizeConfig.padding8),
+                                    decoration: BoxDecoration(
+                                      color: UiConstants.primaryLight,
+                                      borderRadius: BorderRadius.circular(
+                                          SizeConfig.roundness16),
+                                    ),
+                                    padding:
+                                        EdgeInsets.all(SizeConfig.padding16),
+                                    child: Text(
+                                      model.sellNotice,
+                                      style: TextStyles.body3.light,
+                                    ),
+                                  )
+                                : SizedBox(),
                             SizedBox(height: SizeConfig.padding32),
                             Row(
                               children: [
@@ -394,10 +399,10 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
   }
 
   _buildNonWithdrawString(AugmontGoldSellViewModel model) {
-    DateTime _dt = new DateTime.now().add(Duration(days: Constants.AUG_GOLD_WITHDRAW_OFFSET));
-    String _dtStr = DateFormat("dd MMMM")
-        .format(_dt);
-    int _hrs = Constants.AUG_GOLD_WITHDRAW_OFFSET*24;
+    DateTime _dt = new DateTime.now()
+        .add(Duration(days: Constants.AUG_GOLD_WITHDRAW_OFFSET));
+    String _dtStr = DateFormat("dd MMMM").format(_dt);
+    int _hrs = Constants.AUG_GOLD_WITHDRAW_OFFSET * 24;
 
     return '${model.nonWithdrawableQnt} grams is locked. Digital Gold can be withdrawn after $_hrs hours of successful deposit.';
   }
@@ -721,47 +726,3 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
     }
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-//  appBar: AppBar(
-//           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-//           elevation: 0,
-//           actions: [
-//             Padding(
-//               padding: EdgeInsets.fromLTRB(0, 5, 5, 0),
-//               child: MaterialButton(
-//                 child: !_checkBankInfoMissing
-//                     ? Consumer<BaseUtil>(
-//                         builder: (ctx, bp, child) {
-//                           return Container(
-//                             child: Padding(
-//                                 padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-//                                 child: Text('Edit Bank Info')),
-//                             decoration: BoxDecoration(
-//                               border: Border.all(
-//                                   color: FelloColorPalette.augmontFundPalette()
-//                                       .primaryColor),
-//                               borderRadius: BorderRadius.circular(10),
-//                             ),
-//                           );
-//                         },
-//                       )
-//                     : Container(),
-//                 onPressed: () {
-//                   appState.currentAction = PageAction(
-//                       state: PageState.addPage,
-//                       page: EditAugBankDetailsPageConfig);
-//                 },
-//               ),
-//             )
-//           ],
-//         ),

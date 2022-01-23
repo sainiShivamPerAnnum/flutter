@@ -4,7 +4,7 @@ import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class BaseRemoteConfig {
   static RemoteConfig remoteConfig;
@@ -28,6 +28,9 @@ class BaseRemoteConfig {
   };
   static const Map<String, String> _FORCE_MIN_BUILD_NUMBER_2 = {
     'force_min_build_number_2': '0'
+  };
+  static const Map<String, String> _AMZ_VOUCHER_REDEMPTION = {
+    'amz_voucher_redemption': '0'
   };
   static const Map<String, String> _DEPOSIT_UPI_ADDRESS = {
     'deposit_upi_address': '9769637379@okbizaxis'
@@ -158,11 +161,12 @@ class BaseRemoteConfig {
     ..._TAMBOLA_THUMBNAIL_URI,
     ..._MIN_WITHDRAWABLE_PRIZE,
     ..._GAME_TAMBOLA_ANNOUNCEMENT,
-    ..._GAME_CRICKET_ANNOUNCEMENT
+    ..._GAME_CRICKET_ANNOUNCEMENT,
+    ..._AMZ_VOUCHER_REDEMPTION
   };
 
   static Future<bool> init() async {
-    final Logger logger = locator<Logger>();
+    final CustomLogger logger = locator<CustomLogger>();
     logger.i('initializing remote config');
     remoteConfig = RemoteConfig.instance;
     try {
@@ -206,6 +210,9 @@ class BaseRemoteConfig {
 
   static String get AUGMONT_DEPOSITS_ENABLED =>
       _AUGMONT_DEPOSITS_ENABLED.keys.first;
+
+  static String get AMZ_VOUCHER_REDEMPTION =>
+      _AMZ_VOUCHER_REDEMPTION.keys.first;
 
   static String get ICICI_DEPOSIT_PERMISSION =>
       _ICICI_DEPOSIT_PERMISSION.keys.first;

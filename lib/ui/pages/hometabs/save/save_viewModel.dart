@@ -24,6 +24,11 @@ class SaveViewModel extends BaseModel {
         PageAction(state: PageState.addPage, page: AugmontGoldBuyPageConfig);
   }
 
+  navigateToSellScreen() {
+    AppState.delegate.appState.currentAction =
+        PageAction(state: PageState.addPage, page: AugmontGoldSellPageConfig);
+  }
+
   navigateToAboutGold() {
     AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addPage, page: AugmontGoldDetailsPageConfig);
