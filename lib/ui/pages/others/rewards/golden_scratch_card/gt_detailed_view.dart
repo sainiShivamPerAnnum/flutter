@@ -128,7 +128,7 @@ class GTDetailedView extends StatelessWidget {
                   ? bulletTiles(
                       "Redeemed on ${DateFormat('dd MMM, yyyy').format(ticket.redeemedTimestamp.toDate())} | ${DateFormat('h:mm a').format(ticket.redeemedTimestamp.toDate())}")
                   : bulletTiles(
-                      "Recieved on ${DateFormat('dd MMM, yyyy').format(ticket.timestamp.toDate())} | ${DateFormat('h:mm a').format(ticket.timestamp.toDate())}")
+                      "Received on ${DateFormat('dd MMM, yyyy').format(ticket.timestamp.toDate())} | ${DateFormat('h:mm a').format(ticket.timestamp.toDate())}")
             ]),
           ],
         ),
@@ -164,7 +164,7 @@ class GTDetailedView extends StatelessWidget {
                   ),
                   SizedBox(height: SizeConfig.padding12),
                   Text(
-                    "Please wait, registering your ticket",
+                    "Adding prize to your wallet",
                     style: TextStyles.body2.bold,
                   )
                 ],
@@ -185,7 +185,7 @@ class GTDetailedView extends StatelessWidget {
                         ? bulletTiles(
                             "Redeemed on ${DateFormat('dd MMM, yyyy').format(ticket.redeemedTimestamp.toDate())} | ${DateFormat('h:mm a').format(ticket.redeemedTimestamp.toDate())}")
                         : bulletTiles(
-                            "Recieved on ${DateFormat('dd MMM, yyyy').format(ticket.timestamp.toDate())} | ${DateFormat('h:mm a').format(ticket.timestamp.toDate())}")
+                            "Received on ${DateFormat('dd MMM, yyyy').format(ticket.timestamp.toDate())} | ${DateFormat('h:mm a').format(ticket.timestamp.toDate())}")
                   ]),
                 ],
               ),

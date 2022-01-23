@@ -59,6 +59,45 @@ class MyWinningsView extends StatelessWidget {
                                   PrizeClaimCard(
                                     model: model,
                                   ),
+                                  (model.userService.userFundWallet
+                                                  ?.lockedPrizeBalance !=
+                                              null &&
+                                          model.userService.userFundWallet
+                                                  .lockedPrizeBalance >
+                                              0)
+                                      ? InkWell(
+                                          onTap: () {
+                                            AppState.delegate.appState.currentAction = PageAction(
+                                                state: PageState.addPage,
+                                                page: ReferralDetailsPageConfig);
+                                          },
+                                          child: Container(
+                                            margin: EdgeInsets.only(
+                                                top: SizeConfig.padding8,
+                                                left: SizeConfig
+                                                    .pageHorizontalMargins,
+                                                right: SizeConfig
+                                                    .pageHorizontalMargins),
+                                            decoration: BoxDecoration(
+                                              color: UiConstants.tertiaryLight,
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      SizeConfig.roundness16),
+                                            ),
+                                            padding: EdgeInsets.all(
+                                                SizeConfig.padding16),
+                                            child: Stack(
+                                              children: [
+                                                Text(
+                                                  'Your Locked Balance will now be available as Golden Tickets. Click to know more',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyles.body3.light,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        )
+                                      : SizedBox()
                                 ]),
                               ),
                             ];
@@ -96,7 +135,7 @@ class MyWinningsView extends StatelessWidget {
                                               MainAxisAlignment.spaceEvenly,
                                           children: [
                                             Text(
-                                              "Earn your next\n Golden Tickets",
+                                              "Earn your next\nGolden Tickets",
                                               style: TextStyles.body1
                                                   .colour(Colors.white)
                                                   .light,
