@@ -469,7 +469,7 @@ class _LoginControllerState extends State<LoginController>
             } else {
               _otpScreenKey.currentState.pinEditingController.text = "";
               BaseUtil.showNegativeAlert(
-                  'Invalid Otp', 'Please enter a valid otp');
+                  'Incorrect OTP entered', 'Please enter a valid otp');
               baseProvider.isLoginNextInProgress = false;
               FocusScope.of(_otpScreenKey.currentContext).unfocus();
               setState(() {});

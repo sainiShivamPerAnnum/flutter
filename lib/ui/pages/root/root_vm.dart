@@ -191,7 +191,6 @@ class RootViewModel extends BaseModel {
         onSuccess: (PendingDynamicLinkData dynamicLink) async {
       final Uri deepLink = dynamicLink?.link;
       if (deepLink == null) return null;
-
       _logger.d('Received deep link. Process the referral');
       return _processDynamicLink(_baseUtil.myUser.uid, deepLink, context);
     }, onError: (OnLinkErrorException e) async {
@@ -228,18 +227,12 @@ class RootViewModel extends BaseModel {
 
   _processDynamicLink(String userId, Uri deepLink, BuildContext context) async {
     String _uri = deepLink.toString();
-    if (_uri.contains('campaign_source=')) {
-      String campaignId = _findCampaignId(_uri);
-      if (campaignId.isNotEmpty || campaignId == null) {
-        _analyticsService.trackInstall(campaignId);
-      } else {
-        _logger.d('Campaign_id is empty');
-      }
-    }
     if (_uri.startsWith(Constants.GOLDENTICKET_DYNAMICLINK_PREFIX)) {
       //Golden ticket dynamic link
       int flag = await _submitGoldenTicket(userId, _uri, context);
-    } else {
+    } else if(_uri.startsWith(Constants.APP_DOWNLOAD_LINK)) {
+      _submitTrack(_uri);
+    }else {
       BaseUtil.manualReferralCode =
           null; //make manual Code null in case user used both link and code
 
@@ -252,6 +245,24 @@ class RootViewModel extends BaseModel {
       } else {
         // _logger.d('$addUserTicketCount tickets need to be added for the user');
       }
+    }
+  }
+
+  bool _submitTrack(String deepLink) {
+    try{
+      String prefix = 'https://fello.in/campaign/';
+      if (deepLink.startsWith(prefix)) {
+        String campaignId = deepLink.replaceAll(prefix, '');
+        if (campaignId.isNotEmpty || campaignId == null) {
+          _logger.d(campaignId);
+          _analyticsService.trackInstall(campaignId);
+          return true;
+        }
+      }
+      return false;
+    }catch(e) {
+      _logger.e(e);
+      return false;
     }
   }
 

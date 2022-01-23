@@ -69,6 +69,7 @@ class AnalyticsService extends BaseAnalyticsService {
   }
 
   void trackInstall(String campaignId) async {
+    if (campaignId == null) return;
     try {
       if(campaignId != null)PreferenceHelper.setString(PreferenceHelper.CAMPAIGN_ID, campaignId);
 
@@ -80,8 +81,6 @@ class AnalyticsService extends BaseAnalyticsService {
 
       if (installationDay == null && now.day == installationDate.day) {
         PreferenceHelper.setInt(PreferenceHelper.INSTALLATION_DAY, now.day);
-
-        if (campaignId == null) return;
 
         Map<String, dynamic> body = {
           "type": Constants.INSTALL_TRACKING,

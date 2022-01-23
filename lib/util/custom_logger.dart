@@ -31,7 +31,8 @@ class CustomLogger {
     _output.init();
 
     try {
-      print('Logger AES initiated: ' + _initializeAESEncryptor().toString());
+      // print('Logger AES initiated: ' + _initializeAESEncryptor().toString());
+      print('Logger AES initiated: ');
     } catch (e) {
       print('$e');
     }
@@ -100,13 +101,14 @@ class CustomLogger {
   dynamic _processMessage(dynamic message) {
     try {
       if (isEnc) {
-        if (aesEncrypter == null) return 'REDACTED OBJ';
-
-        String _msg = _castString<String>(message);
-        if (_msg == null)
-          return 'REDACTED OBJ';
-        else
-          return _aesEncyptStr(_msg);
+        return "";
+        // if (aesEncrypter == null) return 'REDACTED OBJ';
+        //
+        // String _msg = _castString<String>(message);
+        // if (_msg == null)
+        //   return 'REDACTED OBJ';
+        // else
+        //   return _aesEncyptStr(_msg);
       } else {
         return message;
       }
