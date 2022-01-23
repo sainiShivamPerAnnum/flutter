@@ -53,7 +53,7 @@ class VerifyEmailState extends State<VerifyEmail> {
 
   @override
   void initState() {
-    email = TextEditingController(text: "1000");
+    email = TextEditingController(text: "");
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       baseProvider.isGoogleSignInProgress = false;
       focusNode = new FocusNode();
@@ -264,7 +264,7 @@ class VerifyEmailState extends State<VerifyEmail> {
                           vertical: SizeConfig.pageHorizontalMargins),
                       children: [
                         Text(
-                          "Complete verification",
+                          "Email verification",
                           style: TextStyle(
                               fontWeight: FontWeight.w700,
                               fontSize: SizeConfig.cardTitleTextSize),
@@ -273,7 +273,7 @@ class VerifyEmailState extends State<VerifyEmail> {
                           height: 24,
                         ),
                         Text(
-                            "Please enter the email where you'd like to receive all transaction related updates"),
+                            "Please enter the email where you would like to receive all transaction and support related updates"),
                         Form(
                           key: formKey,
                           child: Container(

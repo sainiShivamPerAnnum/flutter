@@ -190,7 +190,7 @@ class UserProfileVM extends BaseModel {
               isUpdaingUserDetails = false;
               notifyListeners();
               BaseUtil.showNegativeAlert(
-                  "Ahh Snap", "Please try again in some time");
+                  "Action failed", "Please try again in some time");
             }
           });
         } else {

@@ -86,6 +86,13 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         "My user gender updated in userservice, property listeners notified");
   }
 
+  setEmail(String email) {
+    _baseUser.email = email;
+    notifyListeners(UserServiceProperties.myEmail);
+    _logger.d(
+        "My user email updated in userservice, property listeners notified");
+  }
+
   set userFundWallet(UserFundWallet wallet) {
     _userFundWallet = wallet;
     notifyListeners(UserServiceProperties.myUserFund);

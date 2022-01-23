@@ -49,20 +49,20 @@ class _SupportPageState extends State<SupportPage> {
 
   void init() {
     _requestCallPhoneController.text = baseProvider.myUser.mobile;
-    enableFlashChat();
+    // enableFlashChat();
     isInit = true;
   }
-
-  void enableFlashChat() async {
-    ///Freshchat utils
-    final freshchatKeys = await dbProvider.getActiveFreshchatKey();
-    if (freshchatKeys != null && freshchatKeys.isNotEmpty) {
-      Freshchat.init(freshchatKeys['app_id'], freshchatKeys['app_key'],
-          freshchatKeys['app_domain'],
-          gallerySelectionEnabled: true, themeName: 'FreshchatCustomTheme');
-      logger.i("Flash Chat enabled");
-    }
-  }
+  //
+  // void enableFlashChat() async {
+  //   ///Freshchat utils
+  //   final freshchatKeys = await dbProvider.getActiveFreshchatKey();
+  //   if (freshchatKeys != null && freshchatKeys.isNotEmpty) {
+  //     Freshchat.init(freshchatKeys['app_id'], freshchatKeys['app_key'],
+  //         freshchatKeys['app_domain'],
+  //         gallerySelectionEnabled: true, themeName: 'FreshchatCustomTheme');
+  //     logger.i("Flash Chat enabled");
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -98,28 +98,28 @@ class _SupportPageState extends State<SupportPage> {
                     child: ListView(
                       padding: EdgeInsets.zero,
                       children: [
+                        // FelloBriefTile(
+                        //   leadingAsset: Assets.hsCustomerService,
+                        //   title: "Chat with us",
+                        //   onTap: () {
+                        //     Haptic.vibrate();
+                        //     // _mixpanelService.track(
+                        //     //     eventName: MixpanelEvents.initiateChatSupport,
+                        //     //     properties: {
+                        //     //       'userId': _userService.baseUser.uid
+                        //     //     });
+                        //
+                        //     _analyticsService
+                        //         .track(eventName: AnalyticsEvents.initiateChatSupport,properties: {'userId':_userService.baseUser.uid});
+                        //
+                        //     appState.currentAction = PageAction(
+                        //         state: PageState.addPage,
+                        //         page: ChatSupportPageConfig);
+                        //   },
+                        // ),
                         FelloBriefTile(
                           leadingAsset: Assets.hsCustomerService,
-                          title: "Chat with us",
-                          onTap: () {
-                            Haptic.vibrate();
-                            // _mixpanelService.track(
-                            //     eventName: MixpanelEvents.initiateChatSupport,
-                            //     properties: {
-                            //       'userId': _userService.baseUser.uid
-                            //     });
-
-                            _analyticsService
-                                .track(eventName: AnalyticsEvents.initiateChatSupport,properties: {'userId':_userService.baseUser.uid});
-
-                            appState.currentAction = PageAction(
-                                state: PageState.addPage,
-                                page: ChatSupportPageConfig);
-                          },
-                        ),
-                        FelloBriefTile(
-                          leadingAsset: Assets.hsCustomerService,
-                          title: "Raise a token",
+                          title: "Contact Us",
                           onTap: () {
                             Haptic.vibrate();
                             // _mixpanelService.track(
@@ -144,21 +144,21 @@ class _SupportPageState extends State<SupportPage> {
                         //       BaseUtil.showNoInternetAlert();
                         //   },
                         // ),
-                        FelloBriefTile(
-                          leadingAsset: Assets.hsMail,
-                          title: "Email us your query",
-                          onTap: () {
-                            Haptic.vibrate();
-                            try {
-                              _launchEmail();
-                            } catch (e) {
-                              BaseUtil.showNegativeAlert(
-                                'Error',
-                                'Something went wrong, could not launch email right now. Please try again later',
-                              );
-                            }
-                          },
-                        ),
+                        // FelloBriefTile(
+                        //   leadingAsset: Assets.hsMail,
+                        //   title: "Email us your query",
+                        //   onTap: () {
+                        //     Haptic.vibrate();
+                        //     try {
+                        //       _launchEmail();
+                        //     } catch (e) {
+                        //       BaseUtil.showNegativeAlert(
+                        //         'Error',
+                        //         'Something went wrong, could not launch email right now. Please try again later',
+                        //       );
+                        //     }
+                        //   },
+                        // ),
                         FelloBriefTile(
                           leadingAsset: Assets.hsFaqs,
                           title: "FAQs",

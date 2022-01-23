@@ -803,6 +803,7 @@ class BaseUtil extends ChangeNotifier {
 
   void setEmail(String email) {
     myUser.email = email;
+    notifyListeners();
   }
 
   void refreshAugmontBalance() async {
