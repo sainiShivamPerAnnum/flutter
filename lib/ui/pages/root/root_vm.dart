@@ -234,18 +234,7 @@ class RootViewModel extends BaseModel {
       if (_uri.contains('campaign_source=')) {
         String campaignId = _findCampaignId(_uri);
         if (campaignId.isNotEmpty || campaignId == null) {
-          try {
-            final String _bearer = await _getBearerToken();
-            //Make api call
-            const String _apiPath = "/userOps/api/opt-analytics";
-            Map<String, dynamic> _body = {
-              "clickId": campaignId,
-              "uid": userId,
-            };
-            final response = await APIService.instance
-                .postData(_apiPath, body: _body, token: _bearer);
-            _logger.d(response);
-          } catch (e) {}
+          _analyticsService.trackInstall(campaignId);
         } else {
           _logger.d('Campaign_id is empty');
         }

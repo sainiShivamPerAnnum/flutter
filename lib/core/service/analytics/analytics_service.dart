@@ -1,4 +1,5 @@
 import 'package:app_install_date/app_install_date_imp.dart';
+import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_events.dart';
 import 'package:felloapp/core/service/analytics/base_analytics_service.dart';
@@ -45,11 +46,29 @@ class AnalyticsService extends BaseAnalyticsService {
     _webengage.track(eventName: screen, properties: properties);
   }
 
-  void trackAcquisition(String clickId) {
-    APIService.instance.postData("${Constants.acquisitionTrackURL}$clickId");
+  void trackSignup(String userId) async {
+    try {
+      final campaignId =
+          PreferenceHelper.getString(PreferenceHelper.CAMPAIGN_ID);
+
+      if (campaignId == null) return;
+
+      Map<String, dynamic> body = {
+        "type": Constants.SIGNUP_TRACKING,
+        "uid": userId,
+        "clickId": campaignId,
+      };
+
+      await APIService.instance.postData(
+        ApiPath.acquisitionTracking,
+        body: body,
+      );
+    } catch (e) {
+      _logger.e(e.toString());
+    }
   }
 
-  void trackInstall() async {
+  void trackInstall(String campaignId) async {
     try {
       // for installation event
       DateTime now = DateTime.now();
@@ -58,8 +77,21 @@ class AnalyticsService extends BaseAnalyticsService {
           PreferenceHelper.getInt(PreferenceHelper.INSTALLATION_DAY);
 
       if (installationDay == null && now.day == installationDate.day) {
-        trackAcquisition(Constants.INSTALL_CLICK_ID);
         PreferenceHelper.setInt(PreferenceHelper.INSTALLATION_DAY, now.day);
+
+        if (campaignId == null) return;
+
+        Map<String, dynamic> body = {
+          "type": Constants.INSTALL_TRACKING,
+          "clickId": campaignId,
+        };
+
+        await APIService.instance.postData(
+          ApiPath.acquisitionTracking,
+          body: body,
+        );
+
+        PreferenceHelper.setString(PreferenceHelper.CAMPAIGN_ID, campaignId);
       }
     } catch (e) {
       _logger.e(e.toString());
