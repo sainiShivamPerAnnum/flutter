@@ -64,8 +64,7 @@ class CricketHomeView extends StatelessWidget {
                                 if (await model.openWebView())
                                   model.startGame();
                                 else
-                                  BaseUtil.showNegativeAlert(
-                                      "Something went wrong", model.message);
+                                  earnMoreTokens();
                               }
                             },
                             child: Opacity(
