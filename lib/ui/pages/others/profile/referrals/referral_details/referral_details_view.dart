@@ -58,7 +58,7 @@ class ReferralDetailsView extends StatelessWidget {
                             ),
                             SizedBox(height: SizeConfig.padding32),
                             Text(
-                              "Earn exciting rewards for every referral. The referrer of the month wins a brand new iPhone 13!",
+                              "Earn upto ₹50 and 200 tokens from every Golden Ticket. The referrer of the month wins a brand new iPhone 13!",
                               textAlign: TextAlign.center,
                               style: TextStyles.body2,
                             ),
@@ -324,9 +324,15 @@ class ReferralDetailsView extends StatelessWidget {
                               leadingAsset: Assets.tickets,
                             ),
                             SizedBox(height: SizeConfig.padding8),
+                            InfoTile(
+                              title:
+                              "Once your friend plays Cricket more than 10 times, you receive a new Golden Ticket.",
+                              leadingAsset: Assets.wmtShare,
+                            ),
+                            SizedBox(height: SizeConfig.padding8),
                             Center(
                               child: Text(
-                                "You can win upto ₹100 and 1000 Fello tokens from every Golden Ticket!",
+                                "You can win upto ₹150 and 600 Fello tokens from each referral!",
                                 style: TextStyles.body3.bold,
                                 textAlign: TextAlign.center,
                               )

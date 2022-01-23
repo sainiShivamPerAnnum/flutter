@@ -48,15 +48,6 @@ class PlayViewModel extends BaseModel {
     notifyListeners();
   }
 
-  showTicketModal(BuildContext context) {
-    AppState.screenStack.add(ScreenItem.dialog);
-    showModalBottomSheet(
-        context: context,
-        builder: (ctx) {
-          return WantMoreTicketsModalSheet();
-        });
-  }
-
   loadOfferList() async {
     isOfferListLoading = true;
     await _dbProvider.getPromoCards().then((cards) {

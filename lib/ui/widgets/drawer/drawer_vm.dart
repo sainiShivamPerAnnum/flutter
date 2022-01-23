@@ -29,7 +29,7 @@ class FDrawerVM extends BaseModel {
     ),
     DrawerModel(
       icon: Assets.gold24K,
-      title: "My Rewards",
+      title: "My Golden Tickets",
       pageConfig: MyWinnigsPageConfig,
     ),
     DrawerModel(

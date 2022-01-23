@@ -11,6 +11,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
 class WantMoreTicketsModalSheet extends StatelessWidget {
+  WantMoreTicketsModalSheet({isInsufficientBalance = false});
   final _analyticsService = locator<AnalyticsService>();
 
   final referralBonus =
@@ -68,7 +69,7 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                     leadingAsset: Assets.wmtShare,
                     title: "Refer your friends",
                     subtitle:
-                        "Get ₹$referralBonus and $referralFlcBonus tokens per referral",
+                        "Earn Golden Tickets for every referral",
                     trailingIcon: Icons.arrow_forward_ios_rounded,
                     onTap: () {
                       _analyticsService.track(
@@ -95,6 +96,7 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
       ),
     );
   }
+
 }
 
 class ModalCustomBackground extends CustomPainter {

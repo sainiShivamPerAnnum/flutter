@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
@@ -20,6 +21,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/elements/tambola-global/tambola_ticket.dart';
+import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/show_all_tickets.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_result.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -197,6 +199,11 @@ class TambolaGameViewModel extends BaseModel {
     return tambolaService.userWeeklyBoards.length;
   }
 
+  updateTicketCount() {
+    buyTicketCount = int.tryParse(ticketCountController.text)??3;
+    notifyListeners();
+  }
+
   increaseTicketCount() {
     if (buyTicketCount < 30)
       buyTicketCount += 1;
@@ -216,7 +223,7 @@ class TambolaGameViewModel extends BaseModel {
     notifyListeners();
   }
 
-  void buyTickets() async {
+  void buyTickets(BuildContext context) async {
     if (ticketBuyInProgress) return;
     if (ticketCountController.text.isEmpty)
       return BaseUtil.showNegativeAlert(
@@ -232,8 +239,9 @@ class TambolaGameViewModel extends BaseModel {
           "You can purchase upto 30 tambola tickets at once");
     }
     if (ticketPurchaseCost * ticketCount > _coinService.flcBalance) {
-      return BaseUtil.showNegativeAlert("Insufficient tokens",
-          "You do not have enough tokens to buy Tambola tickets");
+      // return BaseUtil.showNegativeAlert("Insufficient tokens",
+      //     "You do not have enough tokens to buy Tambola tickets");
+      return earnMoreTokens();
     }
 
     ticketBuyInProgress = true;
@@ -266,6 +274,17 @@ class TambolaGameViewModel extends BaseModel {
       return BaseUtil.showNegativeAlert("Operation Failed",
           "Failed to buy tickets at the moment. Please try again later");
     }
+  }
+
+  void earnMoreTokens() {
+    _analyticsService.track(eventName: AnalyticsEvents.earnMoreTokens);
+    BaseUtil.openModalBottomSheet(
+      addToScreenStack: true,
+      content: WantMoreTicketsModalSheet(isInsufficientBalance: true,),
+      hapticVibrate: true,
+      backgroundColor: Colors.transparent,
+      isBarrierDismissable: true,
+    );
   }
 
   checkIfMoreTicketNeedsToBeGenerated() async {
