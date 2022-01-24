@@ -1,4 +1,6 @@
 //Project Imports
+import 'dart:io';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -117,6 +119,7 @@ class _SupportPageState extends State<SupportPage> {
                         //         page: ChatSupportPageConfig);
                         //   },
                         // ),
+                        if(!Platform.isIOS)
                         FelloBriefTile(
                           leadingAsset: Assets.hsCustomerService,
                           title: "Contact Us",
