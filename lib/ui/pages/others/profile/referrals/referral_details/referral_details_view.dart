@@ -320,7 +320,7 @@ class ReferralDetailsView extends StatelessWidget {
                             ),
                             InfoTile(
                               title:
-                                  "Once your friend make their first investment of ₹${model.unlock_referral_bonus}, you receive a new Golden Ticket.",
+                                  "Once your friend makes their first investment of ₹${model.unlock_referral_bonus}, you receive a new Golden Ticket.",
                               leadingAsset: Assets.tickets,
                             ),
                             SizedBox(height: SizeConfig.padding8),

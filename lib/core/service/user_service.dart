@@ -132,11 +132,15 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   }
 
   bool get isUserOnborded {
-    if (_firebaseUser != null &&
-        _baseUser != null &&
-        _baseUser.uid.isNotEmpty) {
-      _logger.d("Onborded User: ${_baseUser.uid}");
-      return true;
+    try{
+      if (_firebaseUser != null &&
+          _baseUser != null &&
+          _baseUser.uid.isNotEmpty && _baseUser.mobile.isNotEmpty && _baseUser.username.isNotEmpty) {
+        _logger.d("Onborded User: ${_baseUser.uid}");
+        return true;
+      }
+    }catch(e) {
+      _logger.e(e.toString());
     }
 
     return false;

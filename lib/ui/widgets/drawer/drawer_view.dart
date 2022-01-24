@@ -68,7 +68,7 @@ class FDrawer extends StatelessWidget {
                                   SizedBox(height: 6),
                                   FittedBox(
                                     child: Text(
-                                      "@${model.username.replaceAll('@', '.')}",
+                                      "@${(model.username != null && model.username.isNotEmpty)?model.username.replaceAll('@', '.'):''}",
                                       style: TextStyles.body3
                                           .colour(UiConstants.primaryColor),
                                     ),

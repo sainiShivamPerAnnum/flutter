@@ -88,7 +88,7 @@ class _ReferralHistoryViewState extends State<ReferralHistoryView> {
                       ? Center(
                           child: NoRecordDisplayWidget(
                             assetLottie: Assets.noData,
-                            text: "No Referral History yet",
+                            text: "No Referrals yet",
                           ),
                         )
                       : Column(

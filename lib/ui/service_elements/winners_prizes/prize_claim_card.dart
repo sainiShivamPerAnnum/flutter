@@ -153,7 +153,7 @@ class PrizeClaimCard extends StatelessWidget {
                             ),
                             child: FittedBox(
                               child: Text(
-                                "You need to save a minimum of ₹$refUnlock to redeem your winnings.",
+                                "Savings of ₹$refUnlock required to redeem your winnings.",
                                 style:
                                     TextStyles.body3.colour(Colors.redAccent),
                               ),

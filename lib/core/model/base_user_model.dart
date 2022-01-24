@@ -153,7 +153,7 @@ class BaseUser {
 
   bool hasIncompleteDetails() {
     //return ((_mobile?.isEmpty??true) || (_name?.isEmpty??true) || (_email?.isEmpty??true));
-    return (((mobile?.isEmpty ?? true) || (name?.isEmpty ?? true)));
+    return (((mobile?.isEmpty ?? true) || (name?.isEmpty ?? true)) || (username?.isEmpty??true));
   }
 
   @override
