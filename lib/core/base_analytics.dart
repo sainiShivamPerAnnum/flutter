@@ -1,6 +1,5 @@
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
 
 class BaseAnalytics {
   static FirebaseAnalytics _analytics;
@@ -16,7 +15,7 @@ class BaseAnalytics {
 
 
   static init()async {
-    _analytics = FirebaseAnalytics();
+    _analytics = FirebaseAnalytics.instance;
     _observer = FirebaseAnalyticsObserver(analytics: _analytics);
 
 
@@ -25,7 +24,7 @@ class BaseAnalytics {
 
   static logUserProfile(BaseUser user) async {
     try {
-      await _analytics.setUserId(user.uid);
+      await _analytics.setUserId(id:user.uid);
     } catch (e) {
       print('User ID Analytics failed');
     }
