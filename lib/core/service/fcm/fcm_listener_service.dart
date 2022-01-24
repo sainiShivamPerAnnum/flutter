@@ -88,7 +88,7 @@ class FcmListener {
       _fcm.getInitialMessage().then((RemoteMessage message) {
         if (message != null && message.data != null) {
           logger.d("onMessage recieved: " + message.toString());
-          _handler.handleMessage(message.data);
+          _handler.handleMessage(message.data, MsgSource.Terminated);
         }
       });
 
@@ -98,8 +98,10 @@ class FcmListener {
           if (flag) {
             _handleFreshchatNotif(message.data);
           } else if (message.data != null && message.data.isNotEmpty) {
-            _handler.handleMessage(message.data);
+            _handler.handleMessage(message.data, MsgSource.Foreground);
           } else if (notification != null) {
+            logger.d(
+                "Handle Notification: ${notification.title} ${notification.body}");
             _handler.handleNotification(notification.title, notification.body);
           }
         });
@@ -108,7 +110,7 @@ class FcmListener {
       FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
         print('A new onMessageOpenedApp event was published!');
         if (message.data != null) {
-          _handler.handleMessage(message.data);
+          _handler.handleMessage(message.data, MsgSource.Background);
         }
       });
 

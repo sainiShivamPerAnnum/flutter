@@ -29,6 +29,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   UserFundWallet _userFundWallet;
   bool _isEmailVerified;
   bool _isSimpleKycVerified;
+  bool _isConfirmationDialogOpen = false;
 
   User get firebaseUser => _firebaseUser;
   BaseUser get baseUser => _baseUser;
@@ -40,6 +41,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   bool get isEmailVerified => _isEmailVerified ?? false;
   bool get isSimpleKycVerified => _isSimpleKycVerified ?? false;
   bool _hasNewNotifications = false;
+  bool get isConfirmationDialogOpen => _isConfirmationDialogOpen;
 
   bool get hasNewNotifications => _hasNewNotifications;
 
@@ -84,6 +86,13 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         "My user gender updated in userservice, property listeners notified");
   }
 
+  setEmail(String email) {
+    _baseUser.email = email;
+    notifyListeners(UserServiceProperties.myEmail);
+    _logger.d(
+        "My user email updated in userservice, property listeners notified");
+  }
+
   set userFundWallet(UserFundWallet wallet) {
     _userFundWallet = wallet;
     notifyListeners(UserServiceProperties.myUserFund);
@@ -116,12 +125,22 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     _logger.d("Email:User simple kyc verified, property listeners notified");
   }
 
+  set isConfirmationDialogOpen(value) {
+    _isConfirmationDialogOpen = value;
+    notifyListeners(UserServiceProperties.myConfirmDialogViewStatus);
+    _logger.d("Dialog view status: updated");
+  }
+
   bool get isUserOnborded {
-    if (_firebaseUser != null &&
-        _baseUser != null &&
-        _baseUser.uid.isNotEmpty) {
-      _logger.d("Onborded User: ${_baseUser.uid}");
-      return true;
+    try{
+      if (_firebaseUser != null &&
+          _baseUser != null &&
+          _baseUser.uid.isNotEmpty && _baseUser.mobile.isNotEmpty && _baseUser.username.isNotEmpty) {
+        _logger.d("Onborded User: ${_baseUser.uid}");
+        return true;
+      }
+    }catch(e) {
+      _logger.e(e.toString());
     }
 
     return false;
@@ -154,6 +173,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       await FirebaseAuth.instance.signOut();
       await CacheManager.clearCacheMemory();
       _logger.d("UserService signout called");
+      _userFundWallet = null;
       _firebaseUser = null;
       _baseUser = null;
       _myUserDpUrl = null;

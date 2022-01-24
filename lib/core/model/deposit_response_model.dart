@@ -5,8 +5,9 @@ class DepositResponseModel {
   Response response;
   AugResponse augResponse;
   Note note;
+  String gtId;
 
-  DepositResponseModel({this.response, this.augResponse, this.note});
+  DepositResponseModel({this.response, this.augResponse, this.note, this.gtId});
 
   DepositResponseModel.fromJson(Map<String, dynamic> json) {
     response = json['response'] != null
@@ -16,6 +17,7 @@ class DepositResponseModel {
         ? new AugResponse.fromJson(json['augResponse'])
         : null;
     note = json['note'] != null ? new Note.fromJson(json['note']) : null;
+    gtId = json['gtId'] != null ? json['gtId'] : false;
   }
 
   Map<String, dynamic> toJson() {
@@ -29,6 +31,9 @@ class DepositResponseModel {
     if (this.note != null) {
       data['note'] = this.note.toJson();
     }
+    if (this.gtId != null) {
+      data['gtId'] = this.gtId;
+    }
     return data;
   }
 
@@ -37,20 +42,21 @@ class DepositResponseModel {
       'response': response.toMap(),
       'augResponse': augResponse?.toMap(),
       'note': note?.toMap(),
+      'gtId': gtId
     };
   }
 
   factory DepositResponseModel.fromMap(Map<String, dynamic> map) {
     return DepositResponseModel(
-      response: Response.fromMap(map['response']),
-      augResponse: AugResponse?.fromMap(map['augResponse']),
-      note: Note?.fromMap(map['note'] ?? {}),
-    );
+        response: Response.fromMap(map['response']),
+        augResponse: AugResponse?.fromMap(map['augResponse']),
+        note: Note?.fromMap(map['note'] ?? {}),
+        gtId: map['gtId']);
   }
 
   @override
   String toString() =>
-      'DepositResponseModel(response: $response, augResponse: $augResponse, note: $note)';
+      'DepositResponseModel(response: $response, augResponse: $augResponse, note: $note, gtId: $gtId)';
 }
 
 class Response {
@@ -62,14 +68,15 @@ class Response {
   double augmontGoldQty;
   int flcBalance;
 
-  Response(
-      {this.status,
-      this.didWalletUpdate,
-      this.transactionDoc,
-      this.didFLCUpdate,
-      this.augmontGoldQty,
-      this.augmontPrinciple,
-      this.flcBalance});
+  Response({
+    this.status,
+    this.didWalletUpdate,
+    this.transactionDoc,
+    this.didFLCUpdate,
+    this.augmontGoldQty,
+    this.augmontPrinciple,
+    this.flcBalance,
+  });
 
   Response.fromJson(Map<String, dynamic> json) {
     status = json['status'];

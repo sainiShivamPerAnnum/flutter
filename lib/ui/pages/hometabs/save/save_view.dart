@@ -339,6 +339,7 @@ class AugmontCard extends StatelessWidget {
                         color: Colors.grey,
                         size: SizeConfig.body3,
                       ),
+                      onPressed: () {},
                       label: Text(
                         locale.saveSecure,
                         style: TextStyles.body3.colour(Colors.grey),

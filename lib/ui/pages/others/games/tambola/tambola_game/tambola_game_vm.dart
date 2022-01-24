@@ -1,7 +1,7 @@
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
@@ -11,7 +11,8 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/repository/ticket_generation_repo.dart';
-import 'package:felloapp/core/service/mixpanel_service.dart';
+import 'package:felloapp/core/service/golden_ticket_service.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/tambola_generation_service.dart';
 import 'package:felloapp/core/service/tambola_service.dart';
 import 'package:felloapp/core/service/user_coin_service.dart';
@@ -20,12 +21,13 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/elements/tambola-global/tambola_ticket.dart';
+import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/show_all_tickets.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_result.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/mixpanel_events.dart';
+import 'package:felloapp/core/service/analytics/analytics_events.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -42,7 +44,8 @@ class TambolaGameViewModel extends BaseModel {
   LocalDBModel _localDBModel = locator<LocalDBModel>();
   final _fclActionRepo = locator<FlcActionsRepo>();
   final _ticketGenerationRepo = locator<TicketGenerationRepo>();
-  final _mixpanelService = locator<MixpanelService>();
+  GoldenTicketService _goldenTicketService = GoldenTicketService();
+  final _analyticsService = locator<AnalyticsService>();
 
   int get dailyPicksCount => tambolaService.dailyPicksCount;
 
@@ -196,6 +199,11 @@ class TambolaGameViewModel extends BaseModel {
     return tambolaService.userWeeklyBoards.length;
   }
 
+  updateTicketCount() {
+    buyTicketCount = int.tryParse(ticketCountController.text)??3;
+    notifyListeners();
+  }
+
   increaseTicketCount() {
     if (buyTicketCount < 30)
       buyTicketCount += 1;
@@ -215,7 +223,7 @@ class TambolaGameViewModel extends BaseModel {
     notifyListeners();
   }
 
-  void buyTickets() async {
+  void buyTickets(BuildContext context) async {
     if (ticketBuyInProgress) return;
     if (ticketCountController.text.isEmpty)
       return BaseUtil.showNegativeAlert(
@@ -231,12 +239,17 @@ class TambolaGameViewModel extends BaseModel {
           "You can purchase upto 30 tambola tickets at once");
     }
     if (ticketPurchaseCost * ticketCount > _coinService.flcBalance) {
-      return BaseUtil.showNegativeAlert("Insufficient tokens",
-          "You do not have enough tokens to buy Tambola tickets");
+      // return BaseUtil.showNegativeAlert("Insufficient tokens",
+      //     "You do not have enough tokens to buy Tambola tickets");
+      return earnMoreTokens();
     }
 
     ticketBuyInProgress = true;
     notifyListeners();
+    _analyticsService.track(
+      eventName: AnalyticsEvents.buyTambolaTickets,
+      properties: {'count': ticketCount},
+    );
     ApiResponse<FlcModel> _flcResponse = await _fclActionRepo.buyTambolaTickets(
         cost: (-1 * ticketPurchaseCost),
         noOfTickets: ticketCount,
@@ -244,7 +257,6 @@ class TambolaGameViewModel extends BaseModel {
     if (_flcResponse.model != null && _flcResponse.code == 200) {
       ticketBuyInProgress = false;
       notifyListeners();
-      _mixpanelService.track(eventName: MixpanelEvents.playsTambola);
       BaseUtil.showPositiveAlert(
           "Request is now processing", "Generating your tickets, please wait");
 
@@ -262,11 +274,17 @@ class TambolaGameViewModel extends BaseModel {
       return BaseUtil.showNegativeAlert("Operation Failed",
           "Failed to buy tickets at the moment. Please try again later");
     }
+  }
 
-    // tambolaService.userTicketWallet = await _dbModel.updateInitUserTicketCount(
-    //     _userService.baseUser.uid,
-    //     tambolaService.userTicketWallet,
-    //     ticketCount);
+  void earnMoreTokens() {
+    _analyticsService.track(eventName: AnalyticsEvents.earnMoreTokens);
+    BaseUtil.openModalBottomSheet(
+      addToScreenStack: true,
+      content: WantMoreTicketsModalSheet(isInsufficientBalance: true,),
+      hapticVibrate: true,
+      backgroundColor: Colors.transparent,
+      isBarrierDismissable: true,
+    );
   }
 
   checkIfMoreTicketNeedsToBeGenerated() async {

@@ -45,6 +45,7 @@ class WinnerboardView extends StatelessWidget {
                 : (model.winners.isEmpty
                     ? Container(
                         color: Colors.white,
+                        height: SizeConfig.safeScreenHeight * 0.88,
                         alignment: Alignment.center,
                         width: SizeConfig.screenWidth,
                         child: NoRecordDisplayWidget(
@@ -143,7 +144,10 @@ class WinnerboardView extends StatelessWidget {
                             ),
                           ),
                           SizedBox(
-                            height: SizeConfig.navBarHeight * 1.5,
+                            height: model.winners.length < 10
+                                ? (10 - model.winners.length) *
+                                    SizeConfig.padding54
+                                : SizeConfig.navBarHeight * 1.5,
                           )
                         ],
                       )),

@@ -21,8 +21,9 @@ class SignzyRepository {
   }
 
   Future<ApiResponse<VerifyPanResponseModel>> verifyPan(
-      {String panName, String panNumber}) async {
+      {String uid, String panName, String panNumber}) async {
     final Map<String, dynamic> body = {
+      "uid": uid,
       "panName": panName,
       "panNumber": panNumber
     };
@@ -32,7 +33,7 @@ class SignzyRepository {
 
       final response = await APIService.instance
           .postData(_apiPaths.kVerifyPan, body: body, token: token);
-
+      _logger.d(response);
       VerifyPanResponseModel _verifyPanApiResponse =
           VerifyPanResponseModel.fromMap(response);
       if (_verifyPanApiResponse.flag) {
@@ -47,8 +48,13 @@ class SignzyRepository {
   }
 
   Future<ApiResponse<TransferAmountApiResponseModel>> transferAmount(
-      {String accountNo, String ifsc, String name, String mobile}) async {
+      {String uid,
+      String accountNo,
+      String ifsc,
+      String name,
+      String mobile}) async {
     final Map<String, dynamic> body = {
+      "uid": uid,
       "accountNo": accountNo,
       "name": name,
       "mobile": mobile,
@@ -75,8 +81,12 @@ class SignzyRepository {
   }
 
   Future<ApiResponse<VerifyAmountApiResponseModel>> verifyAmount(
-      {String signzyId}) async {
-    final Map<String, dynamic> body = {"amount": 1.01, "signzyId": signzyId};
+      {String uid, String signzyId}) async {
+    final Map<String, dynamic> body = {
+      "uid": uid,
+      "amount": 1.01,
+      "signzyId": signzyId
+    };
 
     try {
       final String token = await _getBearerToken();

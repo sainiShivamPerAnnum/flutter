@@ -194,6 +194,9 @@ class _TambolaGameViewState extends State<TambolaGameView>
                                           FilteringTextInputFormatter
                                               .digitsOnly,
                                         ],
+                                        onChanged: (String text) {
+                                          model.updateTicketCount();
+                                        },
                                         cursorColor: UiConstants.primaryColor,
                                         decoration: InputDecoration(
                                             hintText: 'Enter no of tickets'),
@@ -250,7 +253,7 @@ class _TambolaGameViewState extends State<TambolaGameView>
                                                     .colour(Colors.white)),
                                         onPressed: () {
                                           FocusScope.of(context).unfocus();
-                                          model.buyTickets();
+                                          model.buyTickets(context);
                                         },
                                       ),
                                     ),

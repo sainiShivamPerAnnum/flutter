@@ -47,6 +47,36 @@ class Api {
     return documentRef.update(data);
   }
 
+  Future<QuerySnapshot> checkForLatestGoldenTicket(String userId) {
+    Future<QuerySnapshot> snapshot;
+    Query query = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
+        .collection(Constants.SUBCOLN_USER_REWARDS);
+    try {
+      snapshot = query.orderBy('timestamp', descending: true).limit(1).get();
+    } catch (e) {
+      logger.e(e);
+    }
+    return snapshot;
+  }
+
+  Future<DocumentSnapshot> fetchGoldenTicketById(
+      String userId, String gtId) async {
+    DocumentReference docRef = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
+        .collection(Constants.SUBCOLN_USER_REWARDS)
+        .doc(gtId);
+    try {
+      DocumentSnapshot docSnap = await docRef.get();
+      return docSnap;
+    } catch (e) {
+      logger.e(e);
+    }
+    return null;
+  }
+
   Future<QuerySnapshot> checkForLatestNotification(String userId) {
     Future<QuerySnapshot> snapshot;
     Query query = _db
@@ -757,6 +787,35 @@ class Api {
     try {
       QuerySnapshot _querySnapshot = await _query.get();
       return _querySnapshot.docs?.first;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<Map<String, dynamic>> fetchUserAchievedTicketMilestonesList(
+      String uid) async {
+    DocumentReference docRef = _db
+        .collection(Constants.COLN_USERS)
+        .doc(uid)
+        .collection(Constants.SUBCOLN_USER_STATS)
+        .doc("prizes");
+    try {
+      DocumentSnapshot _docSnapShot = await docRef.get();
+
+      return _docSnapShot.data();
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<Map<String, dynamic>> fetchGoldenTicketMilestonesList() async {
+    Query _query = _db
+        .collection(Constants.COLN_PRIZES)
+        .where('category', isEqualTo: "GT_MILESTONES");
+    try {
+      QuerySnapshot _querySnapshot = await _query.get();
+
+      return _querySnapshot.docs?.first?.data();
     } catch (e) {
       throw e;
     }

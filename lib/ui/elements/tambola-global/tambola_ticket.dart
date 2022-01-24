@@ -10,8 +10,8 @@ class Ticket extends StatelessWidget {
   Ticket({
     @required this.board,
     @required this.calledDigits,
-    @required this.bestBoards,
-    @required this.dailyPicks,
+    this.bestBoards,
+    this.dailyPicks,
     this.showBestOdds = true,
   });
 

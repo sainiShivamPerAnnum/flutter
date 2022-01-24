@@ -7,7 +7,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
+// import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -98,8 +98,8 @@ class _ReferralPolicyState extends State<ReferralPolicy> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         (_isLoadComplete && !_downloadFailed)
-                            ? Html(
-                                data: htmlString ?? '',
+                            ? Text(
+                                htmlString ?? '',
                               )
                             : Container(),
                         (_isLoadComplete && _downloadFailed)

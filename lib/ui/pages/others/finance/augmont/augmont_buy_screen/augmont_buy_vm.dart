@@ -4,17 +4,22 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
+import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
+import 'package:felloapp/core/service/golden_ticket_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/augmont_disabled_dialog.dart';
 import 'package:felloapp/ui/modals_sheets/augmont_register_modal_sheet.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -25,7 +30,6 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:felloapp/util/custom_logger.dart';
 
 class AugmontGoldBuyViewModel extends BaseModel {
   static const int STATUS_UNAVAILABLE = 0;
@@ -38,6 +42,8 @@ class AugmontGoldBuyViewModel extends BaseModel {
   FcmListener _fcmListener = locator<FcmListener>();
   UserService _userService = locator<UserService>();
   TransactionService _txnService = locator<TransactionService>();
+  GoldenTicketService _gtService = GoldenTicketService();
+  final _analyticsService = locator<AnalyticsService>();
 
   int _status = 0;
 
@@ -255,6 +261,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
       return;
     }
     isGoldBuyInProgress = true;
+    _analyticsService.track(eventName: AnalyticsEvents.buyGold);
     _augmontModel.initiateGoldPurchase(goldRates, buyAmount).then((txn) {
       if (txn == null) {
         isGoldBuyInProgress = false;
@@ -438,24 +445,16 @@ class AugmontGoldBuyViewModel extends BaseModel {
         }
 
         ///check if referral bonuses need to be unlocked
-        if (_userService.userFundWallet.augGoldPrinciple >=
-            BaseUtil.toInt(BaseRemoteConfig.remoteConfig
-                .getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT))) {
-          bool _isUnlocked =
-              await _dbModel.unlockReferralTickets(_baseUtil.myUser.uid);
-          // if (_isUnlocked) {
-          //   //give it a few seconds before showing congratulatory message
-          //   Timer(const Duration(seconds: 4), () {
-          //     BaseUtil.showPositiveAlert(
-          //       'Congratulations are in order!',
-          //       'Your referral bonus has been unlocked 🎉',
-          //     );
-          //   });
-          // }
-        }
+        // if (_userService.userFundWallet.augGoldPrinciple >=
+        //     BaseUtil.toInt(BaseRemoteConfig.remoteConfig
+        //         .getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT))) {
+        //   bool _isUnlocked =
+        //       await _dbModel.unlockReferralTickets(_baseUtil.myUser.uid);
+        //   // if (_isUnlocked) {
+        // }
 
         ///update UI
-        onDepositComplete(true);
+        onDepositComplete(true, txn);
         _augmontModel.completeTransaction();
         return true;
       }
@@ -463,32 +462,29 @@ class AugmontGoldBuyViewModel extends BaseModel {
       //razorpay payment failed
       _logger.d('Payment cancelled');
       if (_baseUtil.currentAugmontTxn != null) {
-        onDepositComplete(false);
+        onDepositComplete(false, txn);
         _augmontModel.completeTransaction();
       }
     } else if (txn.tranStatus == UserTransaction.TRAN_STATUS_PENDING) {
       //razorpay completed but augmont purchase didnt go through
       _logger.d('Payment pending');
       if (_baseUtil.currentAugmontTxn != null) {
-        onDepositComplete(false);
+        onDepositComplete(false, txn);
         _augmontModel.completeTransaction();
       }
     }
   }
 
-  onDepositComplete(bool flag) {
-    // _isDepositInProgress = false;
-    // setState(() {});
+  onDepositComplete(bool flag, UserTransaction txn) async {
+    bool gtFlag = await _gtService.fetchAndVerifyGoldenTicketByID();
     isGoldBuyInProgress = false;
     if (flag) {
-      // BaseUtil.showPositiveAlert(
-      //     'SUCCESS', 'You gold deposit was confirmed!', context);
-      showSuccessGoldBuyDialog();
+      if (gtFlag)
+        _gtService.showInstantGoldenTicketView(title: '₹${txn.amount.toStringAsFixed(0)} saved!',source: GTSOURCE.deposit);
+      else
+        showSuccessGoldBuyDialog();
     } else {
       AppState.backButtonDispatcher.didPopRoute();
-      // BaseUtil.showNegativeAlert('Verifying Transaction',
-      //     'Your transaction is being verified and will be updated shortly',
-      //     seconds: 5);
     }
   }
 
@@ -520,9 +516,11 @@ class AugmontGoldBuyViewModel extends BaseModel {
           AppState.backButtonDispatcher.didPopRoute();
           AppState.backButtonDispatcher.didPopRoute();
           AppState.delegate.appState.setCurrentTabIndex = 1;
+          // _gtService.showGoldenTicketAvailableDialog();
         },
         onAccept: () {
           AppState.backButtonDispatcher.didPopRoute();
+          // _gtService.showGoldenTicketAvailableDialog();
         },
       ),
     );

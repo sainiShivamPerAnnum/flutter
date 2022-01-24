@@ -14,10 +14,10 @@ class UserWinningsSE extends StatelessWidget {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
       properties: [UserServiceProperties.myUserFund],
       builder: (context, model, property) {
-        double lockedBal = model.userFundWallet.lockedPrizeBalance ?? 0.0;
-        double unlockedBal = model.userFundWallet.prizeBalance ?? 0.0;
+        // double lockedBal = model.userFundWallet.lockedPrizeBalance ?? 0.0;
+        double unclaimedBal = model.userFundWallet.unclaimedBalance ?? 0.0;
         return Text(
-          locale.saveWinningsValue((lockedBal + unlockedBal).toInt() ?? "-"),
+          locale.saveWinningsValue((unclaimedBal).toInt() ?? "-"),
           style: style ?? TextStyles.body3.bold.colour(Colors.white),
         );
       },

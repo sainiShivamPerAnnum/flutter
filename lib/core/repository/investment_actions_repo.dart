@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/deposit_response_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
@@ -112,7 +114,7 @@ class InvestmentActionsRepository {
       final String _bearer = await _getBearerToken();
       final response = await APIService.instance
           .postData(_apiPaths.kDepositComplete, body: _body, token: _bearer);
-      _logger.d(response.toString());
+      log(response.toString());
       DepositResponseModel _investmentDepositModel =
           DepositResponseModel.fromMap(response);
 
