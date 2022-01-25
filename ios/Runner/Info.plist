@@ -65,7 +65,7 @@
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
-	<false/>
+    <string>0</string>
 	<key>FirebaseDynamicLinksCustomDomains</key>
 	<array>
 		<string>https://fello.in/download/app</string>
