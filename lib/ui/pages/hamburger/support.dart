@@ -119,22 +119,22 @@ class _SupportPageState extends State<SupportPage> {
                         //         page: ChatSupportPageConfig);
                         //   },
                         // ),
-                        if(!Platform.isIOS)
-                        FelloBriefTile(
-                          leadingAsset: Assets.hsCustomerService,
-                          title: "Contact Us",
-                          onTap: () {
-                            Haptic.vibrate();
-                            // _mixpanelService.track(
-                            //     eventName: MixpanelEvents.initiateChatSupport,
-                            //     properties: {
-                            //       'userId': _userService.baseUser.uid
-                            //     });
-                            appState.currentAction = PageAction(
-                                state: PageState.addPage,
-                                page: FreshDeskHelpPageConfig);
-                          },
-                        ),
+                        if (!Platform.isIOS)
+                          FelloBriefTile(
+                            leadingAsset: Assets.hsCustomerService,
+                            title: "Contact Us",
+                            onTap: () {
+                              Haptic.vibrate();
+                              // _mixpanelService.track(
+                              //     eventName: MixpanelEvents.initiateChatSupport,
+                              //     properties: {
+                              //       'userId': _userService.baseUser.uid
+                              //     });
+                              appState.currentAction = PageAction(
+                                  state: PageState.addPage,
+                                  page: FreshDeskHelpPageConfig);
+                            },
+                          ),
                         // FelloBriefTile(
                         //   leadingIcon: Icons.call,
                         //   title: "Request a Callback",
@@ -147,21 +147,22 @@ class _SupportPageState extends State<SupportPage> {
                         //       BaseUtil.showNoInternetAlert();
                         //   },
                         // ),
-                        // FelloBriefTile(
-                        //   leadingAsset: Assets.hsMail,
-                        //   title: "Email us your query",
-                        //   onTap: () {
-                        //     Haptic.vibrate();
-                        //     try {
-                        //       _launchEmail();
-                        //     } catch (e) {
-                        //       BaseUtil.showNegativeAlert(
-                        //         'Error',
-                        //         'Something went wrong, could not launch email right now. Please try again later',
-                        //       );
-                        //     }
-                        //   },
-                        // ),
+                        if (Platform.isIOS)
+                          FelloBriefTile(
+                            leadingAsset: Assets.hsMail,
+                            title: "Email us your query",
+                            onTap: () {
+                              Haptic.vibrate();
+                              try {
+                                _launchEmail();
+                              } catch (e) {
+                                BaseUtil.showNegativeAlert(
+                                  'Error',
+                                  'Something went wrong, could not launch email right now. Please try again later',
+                                );
+                              }
+                            },
+                          ),
                         FelloBriefTile(
                           leadingAsset: Assets.hsFaqs,
                           title: "FAQs",
@@ -479,9 +480,11 @@ class _SupportPageState extends State<SupportPage> {
                                 // _mixpanelService.track(
                                 //     eventName:
                                 //         MixpanelEvents.requestedCallback);
-                                
-                                _analyticsService.track(eventName: AnalyticsEvents.requestedCallback);
-                                
+
+                                _analyticsService.track(
+                                    eventName:
+                                        AnalyticsEvents.requestedCallback);
+
                                 BaseUtil.showPositiveAlert(
                                   'Callback Placed',
                                   'Thank you for letting us know, we will call you soon!',
