@@ -250,7 +250,7 @@ class RootViewModel extends BaseModel {
 
   bool _submitTrack(String deepLink) {
     try{
-      String prefix = 'https://fello.in/campaign/';
+      String prefix = '${Constants.APP_DOWNLOAD_LINK}/campaign/';
       if (deepLink.startsWith(prefix)) {
         String campaignId = deepLink.replaceAll(prefix, '');
         if (campaignId.isNotEmpty || campaignId == null) {

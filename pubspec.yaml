@@ -3,46 +3,46 @@ description: Game-based Investments
 
 publish_to: "none"
 
-version: 3.1.2+47
+version: 3.1.2+49
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
   cached_network_image: ^3.1.0
-  cloud_firestore: ^2.4.0
-  confetti: ^0.5.4+1
-  connectivity_plus: ^1.1.0
+  cloud_firestore: ^3.1.6
+  confetti: ^0.6.0
+  connectivity_plus: ^2.2.0
   cupertino_icons: ^1.0.0
   device_info: ^2.0.2
-  device_preview: ^0.7.4
+  device_preview: ^1.0.0
   device_unlock: ^1.1.0
   encrypt: ^5.0.0
-  firebase_analytics: ^8.2.0
+  firebase_analytics: ^9.0.5
   firebase_auth: ^3.0.1
   firebase_core: ^1.4.0
   firebase_crashlytics: ^2.1.1
-  firebase_database: ^7.1.2
+  firebase_database: ^9.0.5
   firebase_dynamic_links: ^2.0.7
-  firebase_in_app_messaging: ^0.5.0+7
-  firebase_messaging: ^10.0.4
-  firebase_performance: ^0.7.1+1
-  firebase_remote_config: ^0.10.0+3
+  firebase_in_app_messaging: ^0.6.0+6
+  firebase_messaging: ^11.2.5
+  firebase_performance: ^0.8.0+4
+  firebase_remote_config: ^1.0.4
   firebase_storage: ^10.0.2
-  fl_chart: ^0.36.3
+  fl_chart: ^0.41.0
   flushbar: ^1.10.4
   flutter:
     sdk: flutter
   flutter_facebook_sdk: ^1.0.0
   # flutter_html: ^2.1.1
-  flutter_html_to_pdf: ^0.6.1
+  flutter_html_to_pdf: ^0.7.0
   flutter_image_compress: ^1.1.0
   flutter_localizations:
     sdk: flutter
-  flutter_share_me: ^0.11.1
+  flutter_share_me: ^1.2.0
   flutter_spinkit: ^5.0.0
-  flutter_staggered_grid_view: ^0.4.0
-  flutter_svg: ^0.22.0
+  flutter_staggered_grid_view: ^0.6.0
+  flutter_svg: ^1.0.3
   freshchat_sdk: ^0.9.5
   get_it: ^7.2.0
   google_fonts: ^2.1.0
@@ -62,13 +62,13 @@ dependencies:
   pdf: ^3.1.0
   permission_handler: ^8.1.4+2
   property_change_notifier: ^0.3.0
-  provider: ^5.0.0
+  provider: ^6.0.2
   razorpay_flutter: ^1.2.7
-  rive: 0.7.28
-  share_plus: ^2.1.4
+  rive: ^0.8.1
+  share_plus: ^3.0.4
   shared_preferences: ^2.0.6
   shimmer_animation: ^2.1.0+1
-  slider_button: ^0.6.0
+  slider_button: ^2.0.0
   sms_autofill: ^2.0.0
   synchronized: ^3.0.0
   url_launcher: ^6.0.9

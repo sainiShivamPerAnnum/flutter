@@ -825,11 +825,13 @@ class Api {
 
   Future<bool> checkUserNameAvailability(String username) async {
     try {
-      rdb.DataSnapshot data = await _realtimeDatabase
-          .reference()
-          .child("usernames")
-          .child(username)
-          .once();
+      final rdb.DataSnapshot data = (await _realtimeDatabase
+              .ref()
+              .child("usernames")
+              .child(username)
+              .once())
+          .snapshot;
+
       print(data.key.toString() + "  " + data.value.toString());
       if (data.value != null) return false;
       return true;
