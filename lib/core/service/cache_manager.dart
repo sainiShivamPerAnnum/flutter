@@ -6,6 +6,8 @@ class CacheManager {
   static const CACHE_RATING_IS_RATED = "isUserRated";
   static const CACHE_RATING_HIT_COUNT = "rHitCount";
   static const CACHE_RATING_DIALOG_OPEN_COUNT = "RDShowCount";
+  static const CACHE_LATEST_NOTIFICATION_TIME = "latestNotification";
+  static const CACHE_LATEST_GOLDEN_TICKET_TIME = "latestGoldenTicket";
 
   static Future readCache({@required String key}) async {
     final SharedPreferences sharedPreferences =
@@ -52,5 +54,11 @@ class CacheManager {
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
     await sharedPreferences.clear();
+  }
+
+  static Future<bool> exits(String key) async {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    return sharedPreferences.containsKey(key);
   }
 }

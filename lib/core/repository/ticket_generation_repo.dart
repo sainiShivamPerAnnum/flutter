@@ -5,10 +5,10 @@ import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/code_from_freq.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class TicketGenerationRepo {
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
   final _apiPaths = locator<ApiPath>();
   final _userService = locator<UserService>();
 
@@ -21,7 +21,7 @@ class TicketGenerationRepo {
 
   Future<ApiResponse<TambolaTicketGenerationModel>> generateTickets(
       {String userId, int numberOfTickets}) async {
-    // try {
+    try {
       final String _bearer = await _getBearerToken();
       final code = CodeFromFreq.getYearWeekCode();
       final _body = {
@@ -41,9 +41,9 @@ class TicketGenerationRepo {
           TambolaTicketGenerationModel.fromMap(response);
 
       return ApiResponse(model: _tambolaTicketGenerationModel, code: 200);
-    // } catch (e) {
-    //   _logger.e(e.toString());
-    //   return ApiResponse.withError("Ticket Generation Failed", 400);
-    // }
+    } catch (e) {
+      _logger.e(e.toString());
+      return ApiResponse.withError("Ticket Generation Failed", 400);
+    }
   }
 }

@@ -5,6 +5,9 @@ enum UserServiceProperties {
   myUserFund,
   myDob,
   myGender,
+  myEmail,
   myEmailVerification,
-  mySimpleKycVerified
+  mySimpleKycVerified,
+  myNotificationStatus,
+  myConfirmDialogViewStatus
 }

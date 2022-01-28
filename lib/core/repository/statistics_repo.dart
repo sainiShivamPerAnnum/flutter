@@ -5,11 +5,11 @@ import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/code_from_freq.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class StatisticsRepository {
   final _api = locator<Api>();
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
 
   Future<ApiResponse<LeaderBoardModal>> getLeaderBoard(
       String gameType, String freq) async {

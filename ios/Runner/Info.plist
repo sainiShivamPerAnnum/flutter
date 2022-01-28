@@ -65,7 +65,7 @@
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
-	<false/>
+    <string>0</string>
 	<key>FirebaseDynamicLinksCustomDomains</key>
 	<array>
 		<string>https://fello.in/download/app</string>
@@ -113,5 +113,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>WEGEnvironment</key>
+	<string>IN</string>
+	<key>WEGLicenseCode</key>
+	<string>$(WEBENGAGE_LICENSE_CODE)</string>
+	<key>WEGLogLevel</key>
+	<string>VERBOSE</string>
 </dict>
 </plist>

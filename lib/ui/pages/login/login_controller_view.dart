@@ -34,16 +34,11 @@ class LoginControllerView extends StatefulWidget {
 }
 
 class _LoginControllerViewState extends State<LoginControllerView> {
-  final Log log = new Log("######## LoginController View ##########");
+  final Log log = new Log("LoginController View");
   final int initPage;
-  // double _formProgress = 0.2;
-  // bool _isSignup = false;
 
   _LoginControllerViewState(this.initPage);
 
-  // ValueNotifier<double> _pageNotifier;
-  // static List<Widget> model.pages;
-  // int model.currentPage;
 
   @override
   void initState() {

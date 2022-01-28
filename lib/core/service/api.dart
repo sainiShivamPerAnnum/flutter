@@ -8,8 +8,9 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:firebase_database/firebase_database.dart' as rdb;
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class Api {
   Log log = new Log("Api");
@@ -18,7 +19,7 @@ class Api {
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final rdb.FirebaseDatabase _realtimeDatabase = rdb.FirebaseDatabase.instance;
 
-  final logger = locator<Logger>();
+  final logger = locator<CustomLogger>();
 
   String path;
   CollectionReference ref;
@@ -46,14 +47,78 @@ class Api {
     return documentRef.update(data);
   }
 
-  Future<QuerySnapshot> getUserNotifications(String userId) async {
+  Future<QuerySnapshot> checkForLatestGoldenTicket(String userId) {
     Future<QuerySnapshot> snapshot;
-    ref = _db
+    Query query = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
+        .collection(Constants.SUBCOLN_USER_REWARDS);
+    try {
+      snapshot = query.orderBy('timestamp', descending: true).limit(1).get();
+    } catch (e) {
+      logger.e(e);
+    }
+    return snapshot;
+  }
+
+  Future<DocumentSnapshot> fetchGoldenTicketById(
+      String userId, String gtId) async {
+    DocumentReference docRef = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
+        .collection(Constants.SUBCOLN_USER_REWARDS)
+        .doc(gtId);
+    try {
+      DocumentSnapshot docSnap = await docRef.get();
+      return docSnap;
+    } catch (e) {
+      logger.e(e);
+    }
+    return null;
+  }
+
+  Future<QuerySnapshot> checkForLatestNotification(String userId) {
+    Future<QuerySnapshot> snapshot;
+    Query query = _db
         .collection(Constants.COLN_USERS)
         .doc(userId)
         .collection(Constants.SUBCOLN_USER_ALERTS);
     try {
-      snapshot = ref.orderBy('created_time', descending: true).limit(30).get();
+      snapshot = query.orderBy('created_time', descending: true).limit(1).get();
+    } catch (e) {
+      logger.e(e);
+    }
+    return snapshot;
+  }
+
+  Future<QuerySnapshot> getUserNotifications(
+      String userId, DocumentSnapshot lastDoc) async {
+    Future<QuerySnapshot> snapshot;
+    Query query = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
+        .collection(Constants.SUBCOLN_USER_ALERTS);
+    try {
+      if (lastDoc != null)
+        snapshot = query
+            .orderBy('created_time', descending: true)
+            .startAfterDocument(lastDoc)
+            .limit(20)
+            .get();
+      else
+        snapshot =
+            query.orderBy('created_time', descending: true).limit(20).get();
+    } catch (e) {
+      logger.e(e.toString());
+    }
+    return snapshot;
+  }
+
+  Future<QuerySnapshot> checkForLatestAnnouncment(String userId) {
+    Future<QuerySnapshot> snapshot;
+    ref = _db.collection(Constants.COLN_ANNOUNCEMENTS);
+    try {
+      snapshot = ref.orderBy('created_time', descending: true).limit(1).get();
     } catch (e) {
       logger.e(e);
     }
@@ -64,7 +129,7 @@ class Api {
     Future<QuerySnapshot> snapshot;
     ref = _db.collection(Constants.COLN_ANNOUNCEMENTS);
     try {
-      snapshot = ref.orderBy('created_time').limit(20).get();
+      snapshot = ref.orderBy('created_time').get();
     } catch (e) {
       logger.e(e);
     }
@@ -308,16 +373,24 @@ class Api {
     return query.get();
   }
 
-  Future<QuerySnapshot> getUserTransactionsByField(String user_id, String type,
-      String subtype, DocumentSnapshot lastDocument, int limit) {
+  Future<QuerySnapshot> getUserTransactionsByField({
+    @required String userId,
+    String type,
+    String subtype,
+    String status,
+    DocumentSnapshot lastDocument,
+    @required int limit,
+  }) {
     Query query = _db
         .collection(Constants.COLN_USERS)
-        .doc(user_id)
+        .doc(userId)
         .collection(Constants.SUBCOLN_USER_TXNS);
     if (type != null)
       query = query.where(UserTransaction.fldType, isEqualTo: type);
     if (subtype != null)
       query = query.where(UserTransaction.fldSubType, isEqualTo: subtype);
+    if (status != null)
+      query = query.where(UserTransaction.fldTranStatus, isEqualTo: status);
     if (limit != -1 && limit > 3) query = query.limit(limit);
     query = query.orderBy(UserTransaction.fldTimestamp, descending: true);
     if (lastDocument != null) query = query.startAfterDocument(lastDocument);
@@ -530,14 +603,6 @@ class Api {
         .catchError((onErr) => false);
   }
 
-  Future<QuerySnapshot> getLeaderboardDocument(String category, int weekCde) {
-    Query _query = _db
-        .collection(Constants.COLN_LEADERBOARD)
-        .where('category', isEqualTo: category)
-        .where('week_code', isEqualTo: weekCde);
-    return _query.get();
-  }
-
   Future<QuerySnapshot> getHomeCardCollection() {
     Query _query = _db.collection(Constants.COLN_HOMECARDS).orderBy('id');
     return _query.get();
@@ -727,15 +792,46 @@ class Api {
     }
   }
 
+  Future<Map<String, dynamic>> fetchUserAchievedTicketMilestonesList(
+      String uid) async {
+    DocumentReference docRef = _db
+        .collection(Constants.COLN_USERS)
+        .doc(uid)
+        .collection(Constants.SUBCOLN_USER_STATS)
+        .doc("prizes");
+    try {
+      DocumentSnapshot _docSnapShot = await docRef.get();
+
+      return _docSnapShot.data();
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<Map<String, dynamic>> fetchGoldenTicketMilestonesList() async {
+    Query _query = _db
+        .collection(Constants.COLN_PRIZES)
+        .where('category', isEqualTo: "GT_MILESTONES");
+    try {
+      QuerySnapshot _querySnapshot = await _query.get();
+
+      return _querySnapshot.docs?.first?.data();
+    } catch (e) {
+      throw e;
+    }
+  }
+
   //---------------------------------------REALTIME DATABASE-------------------------------------------//
 
   Future<bool> checkUserNameAvailability(String username) async {
     try {
-      rdb.DataSnapshot data = await _realtimeDatabase
-          .reference()
-          .child("usernames")
-          .child(username)
-          .once();
+      final rdb.DataSnapshot data = (await _realtimeDatabase
+              .ref()
+              .child("usernames")
+              .child(username)
+              .once())
+          .snapshot;
+
       print(data.key.toString() + "  " + data.value.toString());
       if (data.value != null) return false;
       return true;

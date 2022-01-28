@@ -4,7 +4,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class FAQCardViewModel extends BaseModel {
   static const String FAQ_CAT_GENERAL = 'general';
@@ -14,7 +14,7 @@ class FAQCardViewModel extends BaseModel {
   static const String FAQ_CAT_MUTUALFUNDS = 'mututalfunds';
 
   final _dbModel = locator<DBModel>();
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
   List<bool> detStatus;
   List<String> faqHeaders = [];
   List<String> faqResponses = [];

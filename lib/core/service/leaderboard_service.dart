@@ -7,12 +7,12 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class LeaderboardService
     extends PropertyChangeNotifier<LeaderBoardServiceProperties> {
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
   final _statsRepo = locator<StatisticsRepository>();
   final _userService = locator<UserService>();
   final ScrollController ownController = ScrollController();
@@ -53,7 +53,7 @@ class LeaderboardService
 
   fetchReferralLeaderBoard() async {
     ApiResponse<ReferralBoardModal> response =
-        await _statsRepo.getReferralBoard("REF", "monthly");
+        await _statsRepo.getReferralBoard("REF-ACTIVE", "monthly");
     if (response.code == 200) {
       _referralLeaderBoard.clear();
       _referralLeaderBoard = response.model.scoreboard;

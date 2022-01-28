@@ -10,9 +10,10 @@ import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/core/repository/investment_actions_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/augmont_invoice_service.dart';
-import 'package:felloapp/core/service/mixpanel_service.dart';
+import 'package:felloapp/core/service/golden_ticket_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_coin_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
@@ -23,15 +24,15 @@ import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/mixpanel_events.dart';
+import 'package:felloapp/core/service/analytics/analytics_events.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class AugmontModel extends ChangeNotifier {
   final Log log = new Log('AugmontModel');
-  final Logger _logger = locator<Logger>();
+  final CustomLogger _logger = locator<CustomLogger>();
   final _apiPaths = locator<ApiPath>();
 
   final InvestmentActionsRepository _investmentActionsRepository =
@@ -43,7 +44,7 @@ class AugmontModel extends ChangeNotifier {
   final UserService _userService = locator<UserService>();
   final _userCoinService = locator<UserCoinService>();
   final TransactionService _txnService = locator<TransactionService>();
-  final MixpanelService _mixpanelService = locator<MixpanelService>();
+  final _analyticsService = locator<AnalyticsService>();
 
   ValueChanged<UserTransaction> _augmontTxnProcessListener;
   final String defaultBaseUri =
@@ -275,7 +276,7 @@ class AugmontModel extends ChangeNotifier {
         'BlockID: ${buyRates.blockId},gPrice: ${buyRates.goldBuyPrice}';
     String _note2 =
         'UserId:${_baseProvider.myUser.uid},MerchantTxnID: ${_tranIdResponse.model}';
-    String rzpOrderId = await _rzpGateway.createOrderId(amount, _note1, _note2);
+    String rzpOrderId = await _rzpGateway.createOrderId(amount, _baseProvider.myUser.uid, _tranIdResponse.model, _note1, _note2);
     if (rzpOrderId == null) {
       _logger.e("Received null from create Order id");
       return null;
@@ -374,9 +375,9 @@ class AugmontModel extends ChangeNotifier {
     if (_baseProvider.currentAugmontTxn.rzp[UserTransaction.subFldRzpStatus] ==
         UserTransaction.RZP_TRAN_STATUS_COMPLETE) {
       //payment completed successfully
-      _mixpanelService.track(eventName: MixpanelEvents.investedInGold, properties: {
-        'goldQuantity': goldTxn.amount
-      });
+      _analyticsService.track(
+          eventName: AnalyticsEvents.investedInGold,
+          properties: {'goldQuantity': goldTxn.amount});
       _onPaymentComplete();
     } else {
       _onPaymentFailed();
@@ -466,6 +467,10 @@ class AugmontModel extends ChangeNotifier {
       _baseProvider.currentAugmontTxn = _onCompleteDepositResponse
           .model.response.transactionDoc.transactionDetail;
 
+      if (_onCompleteDepositResponse.model.gtId != null) {
+        GoldenTicketService.goldenTicketId =
+            _onCompleteDepositResponse.model.gtId;
+      }
       _txnService.updateTransactions();
 
       if (_augmontTxnProcessListener != null)
@@ -474,10 +479,26 @@ class AugmontModel extends ChangeNotifier {
       _dbModel.logFailure(
           _baseProvider.myUser.uid,
           FailType.CompleteUserDepositApiFailed,
-          {'message': _initialDepositResponse.errorMessage});
+          {'message': _initialDepositResponse?.errorMessage});
 
-      BaseUtil.showNegativeAlert(
-          'Verifying transaction', 'Your transaction is being verified and will be updated shortly');
+      if (_onCompleteDepositResponse?.model != null &&
+          _onCompleteDepositResponse?.model?.note != null &&
+          _onCompleteDepositResponse?.model?.note?.title != null &&
+          _onCompleteDepositResponse.model.note.title.isNotEmpty) {
+        final title = _onCompleteDepositResponse.model.note.title;
+        String body =
+            'Your transaction is being verified and will be updated shortly';
+
+        if (_onCompleteDepositResponse?.model?.note?.body != null &&
+            _onCompleteDepositResponse.model.note.body.isNotEmpty) {
+          body = _onCompleteDepositResponse.model.note.body;
+        }
+
+        BaseUtil.showNegativeAlert(title, body);
+      } else {
+        BaseUtil.showNegativeAlert('Verifying transaction',
+            'Your transaction is being verified and will be updated shortly');
+      }
 
       _baseProvider.currentAugmontTxn.tranStatus =
           UserTransaction.TRAN_STATUS_CANCELLED;
@@ -545,8 +566,25 @@ class AugmontModel extends ChangeNotifier {
         'message': _onCancleUserDepositResponse?.errorMessage ??
             "Cancel user deposit failed"
       });
-      BaseUtil.showNegativeAlert('Deposit failed',
-          'Your payment failed. Please try again');
+
+      if (_onCancleUserDepositResponse?.model != null &&
+          _onCancleUserDepositResponse?.model?.note != null &&
+          _onCancleUserDepositResponse?.model?.note?.title != null &&
+          _onCancleUserDepositResponse.model.note.title.isNotEmpty) {
+        final title = _onCancleUserDepositResponse.model.note.title;
+        String body = 'Your payment failed. Please try again';
+
+        if (_onCancleUserDepositResponse?.model?.note?.body != null &&
+            _onCancleUserDepositResponse.model.note.body.isNotEmpty) {
+          body = _onCancleUserDepositResponse.model.note.body;
+        }
+
+        BaseUtil.showNegativeAlert(title, body);
+      } else {
+        BaseUtil.showNegativeAlert(
+            'Deposit failed', 'Your payment failed. Please try again');
+      }
+
       _baseProvider.currentAugmontTxn.tranStatus =
           UserTransaction.TRAN_STATUS_CANCELLED;
 
@@ -619,16 +657,16 @@ class AugmontModel extends ChangeNotifier {
       try {
         _baseProvider.currentAugmontTxn.tranStatus =
             UserTransaction.TRAN_STATUS_COMPLETE;
-        _baseProvider.currentAugmontTxn.augmnt[UserTransaction
-            .subFldAugTranId] =
-            _onSellCompleteResponse.model.augResponse.data.transactionId;
         _baseProvider
-            .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId] =
-            _onSellCompleteResponse.model.augResponse.data
-                .merchantTransactionId;
+                .currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId] =
+            _onSellCompleteResponse.model.augResponse.data.transactionId;
+        _baseProvider.currentAugmontTxn
+                .augmnt[UserTransaction.subFldMerchantTranId] =
+            _onSellCompleteResponse
+                .model.augResponse.data.merchantTransactionId;
         _baseProvider.currentAugmontTxn
             .augmnt[UserTransaction.subFldAugTotalGoldGm] = double.tryParse(
-            _onSellCompleteResponse.model.augResponse.data.goldBalance) ??
+                _onSellCompleteResponse.model.augResponse.data.goldBalance) ??
             0.0;
 
         double newAugPrinciple =
@@ -650,22 +688,38 @@ class AugmontModel extends ChangeNotifier {
         _txnService.updateTransactions();
         if (_augmontTxnProcessListener != null)
           _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
-      }catch(e) {
+      } catch (e) {
         _successFlag = false;
       }
     } else {
       _successFlag = false;
     }
 
-    if(!_successFlag) {
+    if (!_successFlag) {
       _dbModel.logFailure(
           _baseProvider.myUser.uid, FailType.WithdrawlCompleteApiFailed, {
         'message':
-        _initialDepositResponse?.errorMessage ?? "Withdrawal api failed"
+            _initialDepositResponse?.errorMessage ?? "Withdrawal api failed"
       });
 
-      BaseUtil.showNegativeAlert(
-          'Verifying Withdrawal', 'Your transaction is being verified and will be updated shortly');
+      if (_onSellCompleteResponse?.model != null &&
+          _onSellCompleteResponse?.model?.note != null &&
+          _onSellCompleteResponse?.model?.note?.title != null &&
+          _onSellCompleteResponse.model.note.title.isNotEmpty) {
+        final title = _onSellCompleteResponse.model.note.title;
+        String body =
+            'Your transaction is being verified and will be updated shortly';
+
+        if (_onSellCompleteResponse?.model?.note?.body != null &&
+            _onSellCompleteResponse.model.note.body.isNotEmpty) {
+          body = _onSellCompleteResponse.model.note.body;
+        }
+
+        BaseUtil.showNegativeAlert(title, body);
+      } else {
+        BaseUtil.showNegativeAlert('Verifying transaction',
+            'Your transaction is being verified and will be updated shortly');
+      }
 
       _baseProvider.currentAugmontTxn.tranStatus =
           UserTransaction.TRAN_STATUS_CANCELLED;

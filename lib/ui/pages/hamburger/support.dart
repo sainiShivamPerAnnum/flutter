@@ -1,10 +1,12 @@
 //Project Imports
+import 'dart:io';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/service/mixpanel_service.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -17,7 +19,7 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/mixpanel_events.dart';
+import 'package:felloapp/core/service/analytics/analytics_events.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 //Flutter Imports
@@ -27,6 +29,8 @@ import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class SupportPage extends StatefulWidget {
   const SupportPage({Key key}) : super(key: key);
@@ -36,31 +40,31 @@ class SupportPage extends StatefulWidget {
 }
 
 class _SupportPageState extends State<SupportPage> {
-  final Logger logger = locator<Logger>();
+  final CustomLogger logger = locator<CustomLogger>();
   final UserService _userService = locator<UserService>();
   BaseUtil baseProvider;
   AppState appState;
   DBModel dbProvider;
   TextEditingController _requestCallPhoneController = TextEditingController();
   bool isInit = false;
-  final _mixpanelService = locator<MixpanelService>();
+  final _analyticsService = locator<AnalyticsService>();
 
   void init() {
     _requestCallPhoneController.text = baseProvider.myUser.mobile;
-    enableFlashChat();
+    // enableFlashChat();
     isInit = true;
   }
-
-  void enableFlashChat() async {
-    ///Freshchat utils
-    final freshchatKeys = await dbProvider.getActiveFreshchatKey();
-    if (freshchatKeys != null && freshchatKeys.isNotEmpty) {
-      Freshchat.init(freshchatKeys['app_id'], freshchatKeys['app_key'],
-          freshchatKeys['app_domain'],
-          gallerySelectionEnabled: true, themeName: 'FreshchatCustomTheme');
-      logger.i("Flash Chat enabled");
-    }
-  }
+  //
+  // void enableFlashChat() async {
+  //   ///Freshchat utils
+  //   final freshchatKeys = await dbProvider.getActiveFreshchatKey();
+  //   if (freshchatKeys != null && freshchatKeys.isNotEmpty) {
+  //     Freshchat.init(freshchatKeys['app_id'], freshchatKeys['app_key'],
+  //         freshchatKeys['app_domain'],
+  //         gallerySelectionEnabled: true, themeName: 'FreshchatCustomTheme');
+  //     logger.i("Flash Chat enabled");
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -96,18 +100,41 @@ class _SupportPageState extends State<SupportPage> {
                     child: ListView(
                       padding: EdgeInsets.zero,
                       children: [
-                        FelloBriefTile(
-                          leadingAsset: Assets.hsCustomerService,
-                          title: "Chat with us",
-                          onTap: () {
-                            Haptic.vibrate();
-                            _mixpanelService
-                                .track(eventName: MixpanelEvents.initiateChatSupport,properties: {'userId':_userService.baseUser.uid});
-                            appState.currentAction = PageAction(
-                                state: PageState.addPage,
-                                page: ChatSupportPageConfig);
-                          },
-                        ),
+                        // FelloBriefTile(
+                        //   leadingAsset: Assets.hsCustomerService,
+                        //   title: "Chat with us",
+                        //   onTap: () {
+                        //     Haptic.vibrate();
+                        //     // _mixpanelService.track(
+                        //     //     eventName: MixpanelEvents.initiateChatSupport,
+                        //     //     properties: {
+                        //     //       'userId': _userService.baseUser.uid
+                        //     //     });
+                        //
+                        //     _analyticsService
+                        //         .track(eventName: AnalyticsEvents.initiateChatSupport,properties: {'userId':_userService.baseUser.uid});
+                        //
+                        //     appState.currentAction = PageAction(
+                        //         state: PageState.addPage,
+                        //         page: ChatSupportPageConfig);
+                        //   },
+                        // ),
+                        if (!Platform.isIOS)
+                          FelloBriefTile(
+                            leadingAsset: Assets.hsCustomerService,
+                            title: "Contact Us",
+                            onTap: () {
+                              Haptic.vibrate();
+                              // _mixpanelService.track(
+                              //     eventName: MixpanelEvents.initiateChatSupport,
+                              //     properties: {
+                              //       'userId': _userService.baseUser.uid
+                              //     });
+                              appState.currentAction = PageAction(
+                                  state: PageState.addPage,
+                                  page: FreshDeskHelpPageConfig);
+                            },
+                          ),
                         // FelloBriefTile(
                         //   leadingIcon: Icons.call,
                         //   title: "Request a Callback",
@@ -120,21 +147,22 @@ class _SupportPageState extends State<SupportPage> {
                         //       BaseUtil.showNoInternetAlert();
                         //   },
                         // ),
-                        FelloBriefTile(
-                          leadingAsset: Assets.hsMail,
-                          title: "Email us your query",
-                          onTap: () {
-                            Haptic.vibrate();
-                            try {
-                              _launchEmail();
-                            } catch (e) {
-                              BaseUtil.showNegativeAlert(
-                                'Error',
-                                'Something went wrong, could not launch email right now. Please try again later',
-                              );
-                            }
-                          },
-                        ),
+                        if (Platform.isIOS)
+                          FelloBriefTile(
+                            leadingAsset: Assets.hsMail,
+                            title: "Email us your query",
+                            onTap: () {
+                              Haptic.vibrate();
+                              try {
+                                _launchEmail();
+                              } catch (e) {
+                                BaseUtil.showNegativeAlert(
+                                  'Error',
+                                  'Something went wrong, could not launch email right now. Please try again later',
+                                );
+                              }
+                            },
+                          ),
                         FelloBriefTile(
                           leadingAsset: Assets.hsFaqs,
                           title: "FAQs",
@@ -449,7 +477,14 @@ class _SupportPageState extends State<SupportPage> {
                                   _requestCallPhoneController.text.trim(),
                                   callTimes[_selectedTimeSlotIndex]);
                               if (res) {
-                                _mixpanelService.track(eventName: MixpanelEvents.requestedCallback);
+                                // _mixpanelService.track(
+                                //     eventName:
+                                //         MixpanelEvents.requestedCallback);
+
+                                _analyticsService.track(
+                                    eventName:
+                                        AnalyticsEvents.requestedCallback);
+
                                 BaseUtil.showPositiveAlert(
                                   'Callback Placed',
                                   'Thank you for letting us know, we will call you soon!',
@@ -494,8 +529,8 @@ class _SupportPageState extends State<SupportPage> {
   }
 
   void _launchEmail() {
-    _mixpanelService.track(eventName: MixpanelEvents.emailInitiated);
-    final Uri emailLaunchUri = Uri(scheme: 'mailto', path: 'hello@fello.in');
+    _analyticsService.track(eventName: AnalyticsEvents.emailInitiated);
+    final Uri emailLaunchUri = Uri(scheme: 'mailto', path: 'support@fello.in');
     launch(emailLaunchUri.toString());
   }
 }

@@ -138,7 +138,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                   : InkWell(
                       onTap: model.isContinuedWithGoogle
                           ? () {}
-                          : model.showEmailOptions(context),
+                          : model.showEmailOptions,
                       child: Container(
                         height: 60,
                         padding:

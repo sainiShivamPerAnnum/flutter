@@ -7,10 +7,12 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
-import 'package:felloapp/core/service/mixpanel_service.dart';
+import 'package:felloapp/core/service/golden_ticket_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -21,26 +23,22 @@ import 'package:felloapp/ui/pages/login/screens/name_input/name_input_view.dart'
 import 'package:felloapp/ui/pages/login/screens/otp_input/otp_input_view.dart';
 import 'package:felloapp/ui/pages/login/screens/username_input/username_input_view.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/mixpanel_events.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
 class LoginControllerViewModel extends BaseModel {
-  double _formProgress = 0.2;
-  bool _isSignup = false;
-
   //Locators
   final fcmListener = locator<FcmListener>();
   final augmontProvider = locator<AugmontModel>();
-  final mixpanelService = locator<MixpanelService>();
+  final _analyticsService = locator<AnalyticsService>();
   final userService = locator<UserService>();
   final _apiPaths = locator<ApiPath>();
-  final logger = locator<Logger>();
+  final logger = locator<CustomLogger>();
   final apiPaths = locator<ApiPath>();
-
   final baseProvider = locator<BaseUtil>();
   final dbProvider = locator<DBModel>();
 
@@ -51,6 +49,9 @@ class LoginControllerViewModel extends BaseModel {
   static LocalDBModel lclDbProvider = locator<LocalDBModel>();
   static AppState appStateProvider = AppState.delegate.appState;
   AnimationController animationController;
+
+  double _formProgress = 0.2;
+  bool _isSignup = false;
 
   String userMobile;
   String _verificationId;
@@ -81,6 +82,7 @@ class LoginControllerViewModel extends BaseModel {
 
   void _onSignInSuccess() async {
     logger.d("User authenticated. Now check if details previously available.");
+    //TODO: remove baseProvider firebase user.
     baseProvider.firebaseUser = FirebaseAuth.instance.currentUser;
     userService.firebaseUser = FirebaseAuth.instance.currentUser;
     logger.d("User is set: " + baseProvider.firebaseUser.uid);
@@ -117,16 +119,21 @@ class LoginControllerViewModel extends BaseModel {
   }
 
   Future _onSignUpComplete() async {
-    if (_isSignup)
+    if (_isSignup) {
       await BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
+      _analyticsService.track(eventName: AnalyticsEvents.signupComplete);
+      _analyticsService.trackSignup(baseProvider.myUser.uid);
+    }
+
     await BaseAnalytics.logUserProfile(baseProvider.myUser);
     await userService.init();
     await baseProvider.init();
     await fcmListener.setupFcm();
-    logger.i("Calling mixpanel init for new onborded user");
-    await mixpanelService.init(
-        isOnboarded: userService.isUserOnborded,
-        baseUser: userService.baseUser);
+    logger.i("Calling analytics init for new onborded user");
+    await _analyticsService.login(
+      isOnboarded: userService.isUserOnborded,
+      baseUser: userService.baseUser,
+    );
     AppState.isOnboardingInProgress = false;
     if (baseProvider.isLoginNextInProgress == true) {
       baseProvider.isLoginNextInProgress = false;
@@ -259,6 +266,9 @@ class LoginControllerViewModel extends BaseModel {
                   'Only dummy numbers are allowed in QA mode');
               break;
             }
+            _analyticsService.track(
+              eventName: AnalyticsEvents.signupEnterMobile,
+            );
             this._verificationId = '+91' + this.userMobile;
             _verifyPhone();
             baseProvider.isLoginNextInProgress = true;
@@ -277,7 +287,7 @@ class LoginControllerViewModel extends BaseModel {
             bool flag = await baseProvider.authenticateUser(baseProvider
                 .generateAuthCredential(_augmentedVerificationId, otp));
             if (flag) {
-              mixpanelService.track(eventName: MixpanelEvents.mobileOtpDone);
+              _analyticsService.track(eventName: AnalyticsEvents.mobileOtpDone);
               AppState.isOnboardingInProgress = true;
               _otpScreenKey.currentState.model.onOtpReceived();
               _onSignInSuccess();
@@ -353,7 +363,8 @@ class LoginControllerViewModel extends BaseModel {
             if (email != null && email.isNotEmpty) {
               baseProvider.myUser.email = email;
             }
-
+            baseProvider.myUser.isEmailVerified =
+                _nameScreenKey.currentState.model.isEmailVerified;
             String dob =
                 "${_nameScreenKey.currentState.model.selectedDate.toLocal()}"
                     .split(" ")[0];
@@ -380,9 +391,10 @@ class LoginControllerViewModel extends BaseModel {
               baseProvider.isLoginNextInProgress = false;
               notifyListeners();
             }).then((value) {
-              mixpanelService.track(
-                  eventName: MixpanelEvents.profileInformationAdded,
-                  properties: {'userId': baseProvider?.myUser?.uid});
+              _analyticsService.track(
+                eventName: AnalyticsEvents.profileInformationAdded,
+                properties: {'userId': baseProvider?.myUser?.uid},
+              );
               _controller.animateToPage(Username.index,
                   duration: Duration(milliseconds: 500),
                   curve: Curves.easeInToLinear);
@@ -422,6 +434,8 @@ class LoginControllerViewModel extends BaseModel {
                         "mMobile": baseProvider.myUser.mobile,
                         "mName": baseProvider.myUser.name,
                         "mEmail": baseProvider.myUser.email,
+                        "mIsEmailVerified":
+                            baseProvider.myUser.isEmailVerified ?? false,
                         "mDob": baseProvider.myUser.dob,
                         "mGender": baseProvider.myUser.gender,
                         "mUsername": baseProvider.myUser.username,
@@ -433,6 +447,10 @@ class LoginControllerViewModel extends BaseModel {
                         body: _body,
                         token: _bearer);
                     res['flag'] ? flag = true : flag = false;
+                    logger.d("Is Golden Ticket Rewarded: ${res['gtId']}");
+                    if (res['gtId'] != null &&
+                        res['gtId'].toString().isNotEmpty)
+                      GoldenTicketService.goldenTicketId = res['gtId'];
                   } catch (e) {
                     logger.d(e);
                     _usernameKey.currentState.model.enabled = false;
@@ -441,9 +459,10 @@ class LoginControllerViewModel extends BaseModel {
                   // bool flag = await dbProvider.updateUser(baseProvider.myUser);
 
                   if (flag) {
-                    mixpanelService.track(
-                        eventName: MixpanelEvents.userNameAdded,
-                        properties: {'userId': baseProvider?.myUser?.uid});
+                    _analyticsService.track(
+                      eventName: AnalyticsEvents.userNameAdded,
+                      properties: {'userId': baseProvider?.myUser?.uid},
+                    );
                     logger.d("User object saved successfully");
                     _onSignUpComplete();
                   } else {

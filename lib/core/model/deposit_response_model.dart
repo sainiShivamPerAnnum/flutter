@@ -1,12 +1,13 @@
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 
 class DepositResponseModel {
   Response response;
   AugResponse augResponse;
+  Note note;
+  String gtId;
 
-  DepositResponseModel({this.response, this.augResponse});
+  DepositResponseModel({this.response, this.augResponse, this.note, this.gtId});
 
   DepositResponseModel.fromJson(Map<String, dynamic> json) {
     response = json['response'] != null
@@ -15,6 +16,8 @@ class DepositResponseModel {
     augResponse = json['augResponse'] != null
         ? new AugResponse.fromJson(json['augResponse'])
         : null;
+    note = json['note'] != null ? new Note.fromJson(json['note']) : null;
+    gtId = json['gtId'] != null ? json['gtId'] : false;
   }
 
   Map<String, dynamic> toJson() {
@@ -25,6 +28,12 @@ class DepositResponseModel {
     if (this.augResponse != null) {
       data['augResponse'] = this.augResponse.toJson();
     }
+    if (this.note != null) {
+      data['note'] = this.note.toJson();
+    }
+    if (this.gtId != null) {
+      data['gtId'] = this.gtId;
+    }
     return data;
   }
 
@@ -32,19 +41,22 @@ class DepositResponseModel {
     return {
       'response': response.toMap(),
       'augResponse': augResponse?.toMap(),
+      'note': note?.toMap(),
+      'gtId': gtId
     };
   }
 
   factory DepositResponseModel.fromMap(Map<String, dynamic> map) {
     return DepositResponseModel(
-      response: Response.fromMap(map['response']),
-      augResponse: AugResponse?.fromMap(map['augResponse']),
-    );
+        response: Response.fromMap(map['response']),
+        augResponse: AugResponse?.fromMap(map['augResponse']),
+        note: Note?.fromMap(map['note'] ?? {}),
+        gtId: map['gtId']);
   }
 
   @override
   String toString() =>
-      'DepositResponseModel(response: $response, augResponse: $augResponse)';
+      'DepositResponseModel(response: $response, augResponse: $augResponse, note: $note, gtId: $gtId)';
 }
 
 class Response {
@@ -56,14 +68,15 @@ class Response {
   double augmontGoldQty;
   int flcBalance;
 
-  Response(
-      {this.status,
-      this.didWalletUpdate,
-      this.transactionDoc,
-      this.didFLCUpdate,
-      this.augmontGoldQty,
-      this.augmontPrinciple,
-      this.flcBalance});
+  Response({
+    this.status,
+    this.didWalletUpdate,
+    this.transactionDoc,
+    this.didFLCUpdate,
+    this.augmontGoldQty,
+    this.augmontPrinciple,
+    this.flcBalance,
+  });
 
   Response.fromJson(Map<String, dynamic> json) {
     status = json['status'];
@@ -214,6 +227,39 @@ class EnqueuedTaskDetails {
   @override
   String toString() =>
       'EnqueuedTaskDetails(name: $name, queuePath: $queuePath)';
+}
+
+class Note {
+  String title;
+  String body;
+
+  Note({this.title, this.body});
+
+  Note.fromJson(Map<String, dynamic> json) {
+    title = json['title'];
+    body = json['body'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['title'] = this.title;
+    data['body'] = this.body;
+    return data;
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'title': title,
+      'body': body,
+    };
+  }
+
+  factory Note.fromMap(Map<String, dynamic> map) {
+    return Note(
+      title: map['title'],
+      body: map['body'],
+    );
+  }
 }
 
 class AugResponse {

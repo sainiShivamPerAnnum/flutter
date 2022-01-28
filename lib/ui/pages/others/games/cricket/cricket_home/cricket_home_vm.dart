@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
@@ -6,8 +7,8 @@ import 'package:felloapp/core/model/leader_board_modal.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/repository/statistics_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/leaderboard_service.dart';
-import 'package:felloapp/core/service/mixpanel_service.dart';
 import 'package:felloapp/core/service/prize_service.dart';
 import 'package:felloapp/core/service/user_coin_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
@@ -18,19 +19,19 @@ import 'package:felloapp/ui/pages/others/games/cricket/cricket_game/cricket_game
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/mixpanel_events.dart';
+import 'package:felloapp/core/service/analytics/analytics_events.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class CricketHomeViewModel extends BaseModel {
   final _userService = locator<UserService>();
   final _fclActionRepo = locator<FlcActionsRepo>();
   final _userCoinService = locator<UserCoinService>();
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
   final _stats = locator<StatisticsRepository>();
   final _prizeService = locator<PrizeService>();
   final _lbService = locator<LeaderboardService>();
-  final _mixpanelService = locator<MixpanelService>();
+  final _analyticsService = locator<AnalyticsService>();
 
   PageController pageController = new PageController(initialPage: 0);
 
@@ -73,8 +74,7 @@ class CricketHomeViewModel extends BaseModel {
   }
 
   startGame() {
-    _mixpanelService.track(
-       eventName:  MixpanelEvents.playsCricket);
+    _analyticsService.track(eventName: AnalyticsEvents.playsCricket);
     viewpage(1);
     AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,
@@ -89,7 +89,11 @@ class CricketHomeViewModel extends BaseModel {
 
   Future<bool> openWebView() async {
     setState(ViewState.Busy);
-    ApiResponse<FlcModel> _flcResponse = await _fclActionRepo.substractFlc(-10);
+    String _cricPlayCost = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.CRICKET_PLAY_COST) ??
+        "10";
+    int _cost = -1 * int.tryParse(_cricPlayCost)??10;
+    ApiResponse<FlcModel> _flcResponse = await _fclActionRepo.substractFlc(_cost);
     _message = _flcResponse.model.message;
     if (_flcResponse.model.flcBalance != null) {
       _userCoinService.setFlcBalance(_flcResponse.model.flcBalance);

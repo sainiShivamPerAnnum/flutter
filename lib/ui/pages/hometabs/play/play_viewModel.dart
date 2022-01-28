@@ -1,11 +1,15 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
+import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/user_coin_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -17,14 +21,16 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class PlayViewModel extends BaseModel {
   final _fclActionRepo = locator<FlcActionsRepo>();
   final _userCoinService = locator<UserCoinService>();
   final _userService = locator<UserService>();
   final _dbProvider = locator<DBModel>();
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
+  final _baseUtil = locator<BaseUtil>();
+  final _analyticsService = locator<AnalyticsService>();
 
   String _message;
   String _sessionId;
@@ -43,15 +49,6 @@ class PlayViewModel extends BaseModel {
     notifyListeners();
   }
 
-  showTicketModal(BuildContext context) {
-    AppState.screenStack.add(ScreenItem.dialog);
-    showModalBottomSheet(
-        context: context,
-        builder: (ctx) {
-          return WantMoreTicketsModalSheet();
-        });
-  }
-
   loadOfferList() async {
     isOfferListLoading = true;
     await _dbProvider.getPromoCards().then((cards) {
@@ -65,26 +62,19 @@ class PlayViewModel extends BaseModel {
   // void showMessage(context) {
   //   _baseUtil.showNegativeAlert('Permission Denied', _message, context);
   // }
-  openGame(PageConfiguration pageConfig) {
+  void openGame(GameModel game) {
+    _analyticsService.track(eventName: game.analyticEvent);
     AppState.delegate.appState.currentAction =
-        PageAction(state: PageState.addPage, page: pageConfig);
-  }
-
-  void navigateToCricketView() {
-    AppState.delegate.appState.currentAction = PageAction(
-        state: PageState.addWidget,
-        page: CricketGamePageConfig,
-        widget: CricketGameView(
-          sessionId: _sessionId,
-          userId: _userService.baseUser.uid,
-          userName: _userService.baseUser.username,
-          stage: FlavorConfig.getStage(),
-        ));
+        PageAction(state: PageState.addPage, page: game.pageConfig);
   }
 
   Future<bool> openWebView() async {
     setState(ViewState.Busy);
-    ApiResponse<FlcModel> _flcResponse = await _fclActionRepo.substractFlc(-10);
+    String _cricPlayCost = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.CRICKET_PLAY_COST) ??
+        "10";
+    int _cost = -1 * int.tryParse(_cricPlayCost)??10;
+    ApiResponse<FlcModel> _flcResponse = await _fclActionRepo.substractFlc(_cost);
     _message = _flcResponse.model.message;
     if (_flcResponse.model.flcBalance != null) {
       _userCoinService.setFlcBalance(_flcResponse.model.flcBalance);

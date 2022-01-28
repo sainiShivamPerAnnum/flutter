@@ -4,21 +4,29 @@ import 'dart:developer';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/golden_ticket_service.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
+import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
+import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
+import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_vm.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog_landscape.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 //Flutter Imports
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   final FelloRouterDelegate _routerDelegate;
+  final CustomLogger logger = locator<CustomLogger>();
   DBModel _dbModel = locator<DBModel>();
   BaseUtil _baseUtil = locator<BaseUtil>();
+  final _userService = locator<UserService>();
   AppState _appState = locator<AppState>();
+  GoldenTicketService _gtService = GoldenTicketService();
 
   FelloBackButtonDispatcher(this._routerDelegate) : super();
 
@@ -41,17 +49,24 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
         ));
   }
 
+  bool isAnyDialogOpen() {
+    if (AppState.screenStack.last == ScreenItem.dialog) return true;
+    return false;
+  }
+
   @override
   Future<bool> didPopRoute() {
-    // If the top item is anything except a scaffold
-    if (AppState.screenStack.last == ScreenItem.dialog) {
-      Navigator.pop(_routerDelegate.navigatorKey.currentContext);
-      AppState.screenStack.removeLast();
-      print("Current Stack: ${AppState.screenStack}");
-      return Future.value(true);
+    if (_userService.isConfirmationDialogOpen) {
+      logger.d("Change dialog view state");
+      _userService.isConfirmationDialogOpen = false;
     }
+    // if (WinViewModel().panelController.isPanelOpen) {
+    //   WinViewModel().panelController.close();
+    //   return Future.value(true);
+    // }
     // If user is in the profile page and preferences are changed
-    else if (AppState.unsavedPrefs) {
+
+    if (AppState.unsavedPrefs) {
       if (_baseUtil != null &&
           _baseUtil.myUser != null &&
           _baseUtil.myUser.uid != null &&
@@ -63,13 +78,21 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
           AppState.unsavedPrefs = false;
           log("Preferences updated");
         });
-      return _routerDelegate.popRoute();
+    }
+    // If the top item is anything except a scaffold
+    if (AppState.screenStack.last == ScreenItem.dialog) {
+      Navigator.pop(_routerDelegate.navigatorKey.currentContext);
+      AppState.screenStack.removeLast();
+      print("Current Stack: ${AppState.screenStack}");
+      // if (GoldenTicketService.hasGoldenTicket)
+      //   _gtService.showGoldenTicketFlushbar();
+      return Future.value(true);
     }
 
     // If onboarding is in progress
     else if (AppState.isOnboardingInProgress) {
       BaseUtil.showNegativeAlert(
-          "Exit Onboarding?🕺", "Press back once more to exit");
+          "Exit Signup?", "Press back once more to exit");
       AppState.isOnboardingInProgress = false;
       return Future.value(true);
     }
@@ -89,7 +112,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
         AppState.screenStack.length == 1 &&
         (AppState.delegate.appState.rootIndex != 1 ||
             RootViewModel.scaffoldKey.currentState.isDrawerOpen)) {
-      Logger().w("Checking if app can be closed");
+      logger.w("Checking if app can be closed");
       if (RootViewModel.scaffoldKey.currentState.isDrawerOpen)
         RootViewModel.scaffoldKey.currentState.openEndDrawer();
       else if (AppState.delegate.appState.rootIndex != 1)

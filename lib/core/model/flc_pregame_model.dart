@@ -8,6 +8,7 @@ class FlcModel {
   bool canUserPlay;
   bool isWalletInitalized;
   String ticketFieldName;
+  bool isGtRewarded;
 
   FlcModel(
       {this.message,
@@ -18,7 +19,8 @@ class FlcModel {
       this.isValidUser,
       this.canUserPlay,
       this.status,
-      this.isWalletInitalized});
+      this.isWalletInitalized,
+      this.isGtRewarded});
 
   FlcModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
@@ -30,6 +32,7 @@ class FlcModel {
     ticketFieldName = json['ticketFieldName'];
     status = json['status'];
     ticketCount = json['ticketCount'];
+    isGtRewarded = json['isGtRewarded'];
   }
 
   Map<String, dynamic> toJson() {
@@ -43,7 +46,7 @@ class FlcModel {
     data['status'] = this.status;
     data['ticketFieldName'] = this.ticketFieldName;
     data['ticketCount'] = this.ticketCount;
-
+    data['isGtRewarded'] = this.isGtRewarded;
     return data;
   }
 
@@ -58,6 +61,7 @@ class FlcModel {
       'ticketFieldName': ticketFieldName,
       'status': status,
       'ticketCount': ticketCount,
+      'isGtRewarded': isGtRewarded
     };
   }
 
@@ -71,6 +75,7 @@ class FlcModel {
         isWalletInitalized: map['isWalletInitalized'],
         ticketFieldName: map['ticketFieldName'],
         status: map['status'],
-        ticketCount: map['ticketCount']);
+        ticketCount: map['ticketCount'],
+        isGtRewarded: map['isGtRewarded']);
   }
 }

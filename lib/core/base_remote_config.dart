@@ -4,7 +4,7 @@ import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class BaseRemoteConfig {
   static RemoteConfig remoteConfig;
@@ -119,10 +119,16 @@ class BaseRemoteConfig {
     'min_withdrawable_prize': '100'
   };
   static const Map<String, String> _GAME_TAMBOLA_ANNOUNCEMENT = {
-    'game_tambola_announcement': 'Stand to win big prizes every week by matching your tambola tickets! Winners are announced every Monday'
+    'game_tambola_announcement':
+        'Stand to win big prizes every week by matching your tambola tickets! Winners are announced every Monday'
   };
   static const Map<String, String> _GAME_CRICKET_ANNOUNCEMENT = {
-    'game_cricket_announcement': 'The highest scorers of the week win prizes every Sunday at midnight'
+    'game_cricket_announcement':
+        'The highest scorers of the week win prizes every Sunday at midnight'
+  };
+  static const Map<String, String> _APP_SHARE_MSG = {
+    'app_share_message':
+        'Hey I am gifting you ₹10 and 200 gaming tokens. Lets start saving and playing together ! '
   };
 
   static const Map<String, dynamic> DEFAULTS = {
@@ -162,11 +168,12 @@ class BaseRemoteConfig {
     ..._MIN_WITHDRAWABLE_PRIZE,
     ..._GAME_TAMBOLA_ANNOUNCEMENT,
     ..._GAME_CRICKET_ANNOUNCEMENT,
-    ..._AMZ_VOUCHER_REDEMPTION
+    ..._AMZ_VOUCHER_REDEMPTION,
+    ..._APP_SHARE_MSG
   };
 
   static Future<bool> init() async {
-    final Logger logger = locator<Logger>();
+    final CustomLogger logger = locator<CustomLogger>();
     logger.i('initializing remote config');
     remoteConfig = RemoteConfig.instance;
     try {
@@ -198,6 +205,7 @@ class BaseRemoteConfig {
 
   static String get FORCE_MIN_BUILD_NUMBER =>
       _FORCE_MIN_BUILD_NUMBER.keys.first;
+
   static String get FORCE_MIN_BUILD_NUMBER_2 =>
       _FORCE_MIN_BUILD_NUMBER_2.keys.first;
 
@@ -280,4 +288,6 @@ class BaseRemoteConfig {
 
   static String get GAME_CRICKET_ANNOUNCEMENT =>
       _GAME_CRICKET_ANNOUNCEMENT.keys.first;
+
+  static String get APP_SHARE_MSG => _APP_SHARE_MSG.keys.first;
 }

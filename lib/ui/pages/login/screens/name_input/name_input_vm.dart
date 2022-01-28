@@ -18,7 +18,6 @@ class NameInputScreenViewModel extends BaseModel {
 
   final _formKey = GlobalKey<FormState>();
 
-
   TextEditingController nameFieldController;
   TextEditingController emailFieldController;
   TextEditingController dateFieldController;
@@ -31,15 +30,15 @@ class NameInputScreenViewModel extends BaseModel {
   String _email;
   String _age;
 
-  bool isEmailEntered = true;
-  bool emailEnabled = true;
+  bool isEmailEntered = false;
+  bool emailEnabled = false;
+  String emailText = "Email";
 
   bool _isInvested = true;
   bool _isInitialized = false;
   bool _validate = true;
   bool _isSigningIn = false;
 
-  String emailText = "Email";
   bool isUploaded = false;
   bool isContinuedWithGoogle = false;
 
@@ -48,10 +47,24 @@ class NameInputScreenViewModel extends BaseModel {
   String dateInputError = "";
   DateTime selectedDate = null;
 
- 
   get formKey => _formKey;
 
+  String get email {
+    if (!isContinuedWithGoogle)
+      return emailFieldController.text;
+    else if (emailText == 'Email')
+      return null;
+    else
+      return emailText;
+  }
+
+  set email(String value) {
+    emailFieldController.text = value;
+  }
+
   String get name => nameFieldController.text;
+
+  bool get isEmailVerified => isContinuedWithGoogle && emailText != "Email";
 
   init() {
     if (!_isInitialized) {
@@ -70,19 +83,17 @@ class NameInputScreenViewModel extends BaseModel {
     }
   }
 
-  showEmailOptions(context) {
-    AppState.screenStack.add(ScreenItem.dialog);
+  showEmailOptions() {
     baseProvider.isGoogleSignInProgress = false;
-    showModalBottomSheet(
-        isDismissible: baseProvider.isGoogleSignInProgress ? false : true,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        context: context,
-        builder: (ctx) {
-          return SignInOptions(
-            onEmailSignIn: continueWithEmail,
-            onGoogleSignIn: continueWithGoogle,
-          );
-        });
+    BaseUtil.openModalBottomSheet(
+        isBarrierDismissable: false,
+        borderRadius: BorderRadius.circular(15),
+        content: SignInOptions(
+          onEmailSignIn: continueWithEmail,
+          onGoogleSignIn: continueWithGoogle,
+        ),
+        addToScreenStack: true,
+        hapticVibrate: true);
   }
 
   continueWithEmail() {
@@ -158,19 +169,6 @@ class NameInputScreenViewModel extends BaseModel {
   setError() {
     _validate = false;
     notifyListeners();
-  }
-
-  String get email {
-    if (!isContinuedWithGoogle)
-      return emailFieldController.text;
-    else if (emailText == 'Email')
-      return null;
-    else
-      return emailText;
-  }
-
-  set email(String value) {
-    emailFieldController.text = value;
   }
 
   set name(String value) {

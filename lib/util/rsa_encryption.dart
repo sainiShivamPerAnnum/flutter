@@ -7,7 +7,7 @@ import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/services.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:pointycastle/asymmetric/api.dart';
 
 ///
@@ -33,7 +33,7 @@ import 'package:pointycastle/asymmetric/api.dart';
 class RSAEncryption {
   final _userService = locator<UserService>();
   final _dbModel = locator<DBModel>();
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
   Encrypter rsaEncrypter, aesEncrypter;
   static const String _chars = 'abcdef1234567890';
   static const String ENCRYPT_VERSION = 'v1';
@@ -118,6 +118,11 @@ class RSAEncryption {
 
   String _aesEncypt(Map<String, dynamic> data) {
     final plainText = json.encode(data).toString();
+    final encryptedData = aesEncrypter.encrypt(plainText, iv: iv);
+    return encryptedData.base16;
+  }
+
+  String aesEncyptStr(String plainText) {
     final encryptedData = aesEncrypter.encrypt(plainText, iv: iv);
     return encryptedData.base16;
   }

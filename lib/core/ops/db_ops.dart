@@ -10,20 +10,21 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/faq_model.dart';
 import 'package:felloapp/core/model/feed_card_model.dart';
-import 'package:felloapp/core/model/prize_leader_model.dart';
+import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
-import 'package:felloapp/core/model/referral_leader_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/model/tambola_winners_details.dart';
-import 'package:felloapp/core/model/ticket_request_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/model/user_icici_detail_model.dart';
 import 'package:felloapp/core/model/user_ticket_wallet_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/api.dart';
+import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_milestones/golden_milestones_vm.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/code_from_freq.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -34,15 +35,14 @@ import 'package:felloapp/util/logger.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:synchronized/synchronized.dart';
 
 class DBModel extends ChangeNotifier {
   Api _api = locator<Api>();
   Lock _lock = new Lock();
   final Log log = new Log("DBModel");
-  final logger = locator<Logger>();
-  ValueChanged<TicketRequest> _ticketRequestListener;
+  final logger = locator<CustomLogger>();
   FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.instance;
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   bool isDeviceInfoInitiated = false;
@@ -115,32 +115,126 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<List<AlertModel>> getUserNotifications(String userId) async {
-    List<AlertModel> alerts = [];
-    List<AlertModel> announcements = [];
-    List<AlertModel> notifications = [];
-    logger.d("user id - $userId");
-
+  Future<bool> checkIfUserHasNewGoldenTicket(String userId) async {
     try {
-      QuerySnapshot querySnapshot = await _api.getUserNotifications(userId);
-      for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
-        AlertModel alert = AlertModel.fromMap(documentSnapshot.data());
-        logger.d(alert.toString());
-        alerts.add(alert);
+      QuerySnapshot gtSnapshot = await _api.checkForLatestGoldenTicket(userId);
+      if (gtSnapshot != null) {
+        if (await CacheManager.exits(
+            CacheManager.CACHE_LATEST_GOLDEN_TICKET_TIME)) {
+          int savedTimestamp = await CacheManager.readCache(
+              key: CacheManager.CACHE_LATEST_GOLDEN_TICKET_TIME);
+          int latestTimestamp = GoldenTicket.fromJson(
+                  gtSnapshot.docs.first.data(), gtSnapshot.docs.first.id)
+              .timestamp
+              .millisecondsSinceEpoch;
+          if (latestTimestamp > savedTimestamp)
+            return true;
+          else
+            return false;
+        }
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<GoldenTicket> getLatestGoldenTicket(String userId) async {
+    try {
+      QuerySnapshot gtSnapshot = await _api.checkForLatestGoldenTicket(userId);
+      if (gtSnapshot != null) {
+        GoldenTicket ticket = GoldenTicket.fromJson(
+            gtSnapshot.docs.first.data(), gtSnapshot.docs.first.id);
+        return ticket;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<GoldenTicket> getGoldenTicketById(String userId, String gtId) async {
+    GoldenTicket ticket;
+    try {
+      DocumentSnapshot goldenTicketRaw =
+          await _api.fetchGoldenTicketById(userId, gtId);
+      if (goldenTicketRaw != null) {
+        ticket =
+            GoldenTicket.fromJson(goldenTicketRaw.data(), goldenTicketRaw.id);
+      }
+      return ticket;
+    } catch (e) {
+      return ticket;
+    }
+  }
+
+  Future<bool> checkIfUserHasNewNotifications(String userId) async {
+    try {
+      QuerySnapshot notificationSnapshot =
+          await _api.checkForLatestNotification(userId);
+      QuerySnapshot announcementSnapshot =
+          await _api.checkForLatestAnnouncment(userId);
+      AlertModel lastestNotification =
+          AlertModel.fromMap(notificationSnapshot.docs.first.data());
+      AlertModel lastestAnnouncement =
+          AlertModel.fromMap(announcementSnapshot.docs.first.data());
+
+      String latestNotifTime = await CacheManager.readCache(
+          key: CacheManager.CACHE_LATEST_NOTIFICATION_TIME);
+      if (latestNotifTime != null) {
+        int latestTimeInMilliSeconds = int.tryParse(latestNotifTime);
+        AlertModel latestAlert =
+            lastestNotification.createdTime.millisecondsSinceEpoch >
+                    lastestAnnouncement.createdTime.millisecondsSinceEpoch
+                ? lastestNotification
+                : lastestAnnouncement;
+        if (latestAlert.createdTime.millisecondsSinceEpoch >
+            latestTimeInMilliSeconds)
+          return true;
+        else
+          return false;
+      } else {
+        logger.d("No past notification time found");
+        return false;
       }
     } catch (e) {
       logger.e(e);
     }
+    return false;
+  }
+
+  Future<Map<String, dynamic>> getUserNotifications(
+      String userId, DocumentSnapshot lastDoc, bool more) async {
+    List<AlertModel> alerts = [];
+    List<AlertModel> announcements = [];
+    List<AlertModel> notifications = [];
+    DocumentSnapshot lastAlertDoc;
+    logger.d("user id - $userId");
 
     try {
-      QuerySnapshot querySnapshot = await _api.getAnnoucements();
-      for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
-        AlertModel announcement = AlertModel.fromMap(documentSnapshot.data());
-        logger.d(announcement.subtitle);
-        announcements.add(announcement);
+      QuerySnapshot querySnapshot =
+          await _api.getUserNotifications(userId, lastDoc);
+      if (querySnapshot != null) {
+        lastAlertDoc = querySnapshot.docs.last;
+        for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
+          AlertModel alert = AlertModel.fromMap(documentSnapshot.data());
+          logger.d(alert.toString());
+          alerts.add(alert);
+        }
       }
     } catch (e) {
       logger.e(e);
+    }
+    if (!more) {
+      try {
+        QuerySnapshot querySnapshot = await _api.getAnnoucements();
+        for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
+          AlertModel announcement = AlertModel.fromMap(documentSnapshot.data());
+          logger.d(announcement.subtitle);
+          announcements.add(announcement);
+        }
+      } catch (e) {
+        logger.e(e);
+      }
     }
 
     notifications.addAll(alerts);
@@ -149,7 +243,11 @@ class DBModel extends ChangeNotifier {
     notifications
         .sort((a, b) => b.createdTime.seconds.compareTo(a.createdTime.seconds));
 
-    return notifications;
+    return {
+      'notifications': notifications,
+      'lastAlertDoc': lastAlertDoc,
+      'alertsLength': alerts.length
+    };
   }
 
   /// return obj:
@@ -268,17 +366,24 @@ class DBModel extends ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> getFilteredUserTransactions(
-      BaseUser user,
+      {@required BaseUser user,
       String type,
       String subtype,
+      String status,
       DocumentSnapshot lastDocument,
-      int limit) async {
+      @required int limit}) async {
     Map<String, dynamic> resultTransactionsMap = Map<String, dynamic>();
     List<UserTransaction> requestedTxns = [];
     try {
       String _id = user.uid;
       QuerySnapshot _querySnapshot = await _api.getUserTransactionsByField(
-          _id, type, subtype, lastDocument, limit);
+        userId: _id,
+        type: type,
+        subtype: subtype,
+        status: status,
+        lastDocument: lastDocument,
+        limit: limit,
+      );
       resultTransactionsMap['lastDocument'] = _querySnapshot.docs.last;
       resultTransactionsMap['length'] = _querySnapshot.docs.length;
       _querySnapshot.docs.forEach((txn) {
@@ -293,7 +398,7 @@ class DBModel extends ChangeNotifier {
       resultTransactionsMap['listOfTransactions'] = requestedTxns;
       return resultTransactionsMap;
     } catch (err) {
-      log.error('Failed to fetch user mini transactions');
+      log.error('Failed to fetch transactions:: $err');
       resultTransactionsMap['length'] = 0;
       resultTransactionsMap['listOfTransactions'] = requestedTxns;
       resultTransactionsMap['lastDocument'] = lastDocument;
@@ -302,48 +407,10 @@ class DBModel extends ChangeNotifier {
   }
 
   ///////////////////////TAMBOLA TICKETING/////////////////////////
-  Future<StreamSubscription<DocumentSnapshot>> subscribeToTicketRequest(
-      BaseUser user, int count) async {
-    try {
-      TicketRequest _request = await _pushTicketRequest(user, count);
-      if (_request.docKey != null) {
-        return _api
-            .getticketRequestDocumentEvent(_request.docKey)
-            .listen((event) {
-          TicketRequest _changedRequest =
-              TicketRequest.fromMap(event.data(), event.id);
-          if (_ticketRequestListener != null)
-            _ticketRequestListener(_changedRequest);
-        });
-      } else {
-        return null;
-      }
-    } catch (e) {
-      return null;
-    }
-  }
-
-  ///STATUS: P - PENDING, C - COMPLETE, F - FAILED
-  Future<TicketRequest> _pushTicketRequest(BaseUser user, int count) async {
-    try {
-      String _uid = user.uid;
-      TicketRequest _req = new TicketRequest(
-          count, false, Timestamp.now(), user.uid, _getWeekCode(), null, 'P');
-      DocumentReference _ref =
-          await _api.createTicketRequest(_uid, _req.toJson());
-      _req.docKey = _ref.id;
-
-      return _req;
-    } catch (e) {
-      log.error('Failed to push new request: ' + e.toString());
-      return null;
-    }
-  }
-
   Future<List<TambolaBoard>> getWeeksTambolaTickets(String userId) async {
     try {
-      QuerySnapshot _querySnapshot =
-          await _api.getValidUserTickets(userId, _getWeekCode());
+      QuerySnapshot _querySnapshot = await _api.getValidUserTickets(
+          userId, CodeFromFreq.getYearWeekCode());
       if (_querySnapshot == null || _querySnapshot.size == 0) return null;
 
       List<TambolaBoard> _requestedBoards = [];
@@ -363,8 +430,7 @@ class DBModel extends ChangeNotifier {
   Future<DailyPick> getWeeklyPicks() async {
     try {
       DateTime date = new DateTime.now();
-      int weekCde = date.year * 100 + BaseUtil.getWeekNumber();
-      // int weekCde = 202143;
+      int weekCde = CodeFromFreq.getYearWeekCode();
       QuerySnapshot querySnapshot = await _api.getWeekPickByCde(weekCde);
 
       if (querySnapshot.docs.length != 1) {
@@ -376,27 +442,6 @@ class DBModel extends ChangeNotifier {
     } catch (e) {
       log.error("Error fetch Dailypick details: " + e.toString());
       return null;
-    }
-  }
-
-  Future<TambolaWinnersDetail> getWeeklyWinners() async {
-    TambolaWinnersDetail _detail;
-    try {
-      DateTime date = new DateTime.now();
-      int weekCde = date.year * 100 + BaseUtil.getWeekNumber();
-
-      QuerySnapshot querySnapshot = await _api.getWinnersByWeekCde(weekCde);
-      //there should only be one document for a week
-      if (querySnapshot != null && querySnapshot.docs.length == 1) {
-        DocumentSnapshot snapshot = querySnapshot.docs[0];
-        if (snapshot.exists && snapshot.data() != null) {
-          _detail = TambolaWinnersDetail.fromMap(snapshot.data(), snapshot.id);
-        }
-      }
-      return _detail;
-    } catch (e) {
-      log.error("Error fetch weekly winners details: " + e.toString());
-      return _detail;
     }
   }
 
@@ -713,8 +758,7 @@ class DBModel extends ChangeNotifier {
       bool isEligible,
       Map<String, int> resMap) async {
     try {
-      DateTime date = new DateTime.now();
-      int weekCde = date.year * 100 + BaseUtil.getWeekNumber();
+      int weekCde = CodeFromFreq.getYearWeekCode();
 
       Map<String, dynamic> data = {};
       data['user_id'] = uid;
@@ -807,81 +851,6 @@ class DBModel extends ChangeNotifier {
     return -1;
   }
 
-  Future<List<ReferralLeader>> getReferralLeaderboard() async {
-    try {
-      int weekCode = _getWeekCode();
-      QuerySnapshot _querySnapshot =
-          await _api.getLeaderboardDocument('referral', weekCode);
-      if (_querySnapshot == null || _querySnapshot.size != 1) return [];
-
-      DocumentSnapshot _docSnapshot = _querySnapshot.docs[0];
-      Map<String, dynamic> _doc = _docSnapshot.data();
-      if (!_docSnapshot.exists || _doc == null || _doc['leaders'] == [])
-        return null;
-      Map<String, dynamic> leaderMap = _doc['leaders'];
-      log.debug('Referral Leader Map: $leaderMap');
-
-      List<ReferralLeader> leaderList = [];
-      leaderMap.forEach((key, value) {
-        try {
-          String uid = key;
-          Map<String, dynamic> vals = value;
-          String usrName = vals['name'];
-          int usrRefCount = vals['ref_count'];
-          log.debug('Leader details:: $uid, $usrName, $usrRefCount');
-          leaderList.add(ReferralLeader(uid, usrName, usrRefCount));
-        } catch (err) {
-          log.error('Item skipped');
-        }
-      });
-
-      return leaderList;
-    } catch (e) {
-      log.error(e);
-      return [];
-    }
-  }
-
-  Future<List<PrizeLeader>> getPrizeLeaderboard() async {
-    try {
-      int weekCode = _getWeekCode();
-      QuerySnapshot _querySnapshot =
-          await _api.getLeaderboardDocument('prize', weekCode);
-      if (_querySnapshot == null || _querySnapshot.size != 1) return [];
-
-      DocumentSnapshot _docSnapshot = _querySnapshot.docs[0];
-      Map<String, dynamic> _doc = _docSnapshot.data();
-      if (!_docSnapshot.exists || _doc == null || _doc['leaders'] == [])
-        return null;
-      Map<String, dynamic> leaderMap = _doc['leaders'];
-      log.debug('Prize Leader Map: $leaderMap');
-
-      List<PrizeLeader> leaderList = [];
-      leaderMap.forEach((key, value) {
-        try {
-          String uid = key;
-          Map<String, dynamic> vals = value;
-          String usrName = vals['name'];
-          var usrTotalWin = vals['win_total'];
-          double uTotal;
-          try {
-            uTotal = usrTotalWin;
-          } catch (e) {
-            uTotal = usrTotalWin + .0;
-          }
-          log.debug('Leader details:: $uid, $usrName, $uTotal');
-          leaderList.add(PrizeLeader(uid, usrName, uTotal));
-        } catch (err) {
-          log.error('Item skipped');
-        }
-      });
-      return leaderList;
-    } catch (e) {
-      log.error(e);
-      return [];
-    }
-  }
-
   Future<ReferralDetail> getUserReferralInfo(String uid) async {
     try {
       DocumentSnapshot snapshot = await _api.getUserReferDoc(uid);
@@ -964,35 +933,12 @@ class DBModel extends ChangeNotifier {
   }
 
   Future<bool> deleteExpiredUserTickets(String userId) async {
-    // try {
-    //   return await _lock.synchronized(() async {
-    //     if (count < 0 && currentValue < count) {
-    //       userTicketWallet.initTck = 0;
-    //     } else {
-    //       userTicketWallet.initTck = currentValue + count;
-    //     }
-    //     Map<String, dynamic> tMap = {
-    //       UserTicketWallet.fldInitTckCount: userTicketWallet.initTck
-    //     };
-    //     bool flag = await _api.updateUserTicketWalletFields(
-    //         uid, UserTicketWallet.fldInitTckCount, currentValue, tMap);
-    //     if (!flag) {
-    //       //revert value back as the op failed
-    //       userTicketWallet.initTck = currentValue;
-    //     }
-    //     return userTicketWallet;
-    //   });
-    // } catch (e) {
-    //   log.error('Failed to update the user ticket count');
-    //   userTicketWallet.initTck = currentValue;
-    //   return userTicketWallet;
-    // }
     try {
       int weekNumber = BaseUtil.getWeekNumber();
       if (weekNumber > 2) {
         return await _lock.synchronized(() async {
           ///eg: weekcode: 202105 -> delete all tickets older than 202103
-          int weekCde = _getWeekCode();
+          int weekCde = CodeFromFreq.getYearWeekCode();
           weekCde--;
           return await _api.deleteUserTicketsBeforeWeekCode(userId, weekCde);
         });
@@ -1398,16 +1344,29 @@ class DBModel extends ChangeNotifier {
     return _cards;
   }
 
-  int _getWeekCode() {
-    DateTime td = DateTime.now();
-    Timestamp today = Timestamp.fromDate(td);
-    DateTime date = new DateTime.now();
-
-    return date.year * 100 + BaseUtil.getWeekNumber();
+  Future<List<UserMilestoneModel>> getUserAchievedMilestones(String uid) async {
+    List<UserMilestoneModel> userMilestones = [];
+    Map<String, dynamic> userMilestonesData =
+        await _api.fetchUserAchievedTicketMilestonesList(uid);
+    logger.d(userMilestonesData.toString());
+    if (userMilestonesData != null) {
+      userMilestonesData['prizeArr']
+          .forEach((e) => userMilestones.add(UserMilestoneModel.fromJson(e)));
+    }
+    return userMilestones;
   }
 
-  setTicketRequestListener(ValueChanged<TicketRequest> listener) {
-    this._ticketRequestListener = listener;
+  Future<List<FelloMilestoneModel>> getMilestonesList() async {
+    List<FelloMilestoneModel> felloMilestones = [];
+    Map<String, dynamic> felloMilestonesData =
+        await _api.fetchGoldenTicketMilestonesList();
+    logger.d(felloMilestonesData.toString());
+    if (felloMilestonesData != null) {
+      felloMilestonesData['checkpoints']
+          .forEach((e) => felloMilestones.add(FelloMilestoneModel.fromJson(e)));
+    }
+
+    return felloMilestones;
   }
 
   Future<bool> checkIfUsernameIsAvailable(String username) async {

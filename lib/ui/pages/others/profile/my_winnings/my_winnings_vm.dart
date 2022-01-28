@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
@@ -9,6 +10,8 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -17,6 +20,7 @@ import 'package:felloapp/ui/dialogs/share-card.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -26,20 +30,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_html/shims/dart_ui_real.dart';
 import 'package:flutter_share_me/flutter_share_me.dart';
-import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 class MyWinningsViewModel extends BaseModel {
   //LOCATORS
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
   final _httpModel = locator<HttpModel>();
   final _userService = locator<UserService>();
   final _transactionService = locator<TransactionService>();
   final _localDBModel = locator<LocalDBModel>();
   final _dbModel = locator<DBModel>();
+  final _analyticsService = locator<AnalyticsService>();
 
   // LOCAL VARIABLES
   PrizeClaimChoice _choice;
@@ -174,7 +177,9 @@ class MyWinningsViewModel extends BaseModel {
   }
 
   showSuccessPrizeWithdrawalDialog(
-      PrizeClaimChoice choice, String subtitle) async {
+    PrizeClaimChoice choice,
+    String subtitle,
+  ) async {
     AppState.screenStack.add(ScreenItem.dialog);
     showDialog(
         context: AppState.delegate.navigatorKey.currentContext,
@@ -255,6 +260,8 @@ class MyWinningsViewModel extends BaseModel {
             choice, choice == PrizeClaimChoice.AMZ_VOUCHER ? "amazon" : "gold");
       }
     });
+
+    _analyticsService.track(eventName: AnalyticsEvents.winRedeemWinnings);
   }
 
 // SET AND GET CLAIM CHOICE

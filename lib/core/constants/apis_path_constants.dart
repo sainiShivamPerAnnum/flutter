@@ -15,7 +15,8 @@ class ApiPath {
   get kDepositPending => "/userFinanceV2Ops/$stage/api/v2/deposit/pending";
   get kDepositCancelled => "/userFinanceV2Ops/$stage/api/v2/deposit/cancelled";
   get kWithdrawlComplete => "/userFinanceV2Ops/$stage/api/v2/withdraw/complete";
-  get kWithdrawlCancelled => "/userFinanceV2Ops/$stage/api/v2/withdraw/cancelled";
+  get kWithdrawlCancelled =>
+      "/userFinanceV2Ops/$stage/api/v2/withdraw/cancelled";
   get kBuyTambola => "/felloCoins/$stage/api/tambola/buy-tambola-tickets";
   get kGenerateTambolaTickets => "/tambolaGame/$stage/api/generate";
   get kTopWinners => "/prizingOps/$stage/api/reward/current-top-winners";
@@ -28,4 +29,9 @@ class ApiPath {
   get kAmountTransfer => "/userOps/$stage/api/v2/accountTransfer";
   get kVerifyTransfer => "/userOps/$stage/api/v2/verifyTransfer";
   get kVerifyPan => "/userOps/$stage/api/v2/verifyPan";
+
+  //GT Rewards
+  get kRedeemGtReward => "/gtRewardsOps/$stage/api/redeemGtReward";
+
+  static const acquisitionTracking = "/userOps/api/opt-analytics";
 }

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -19,11 +21,12 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/shims/dart_ui_real.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
 class Root extends StatelessWidget {
+  final pages = [Save(), Play(), Win()];
+
   @override
   Widget build(BuildContext context) {
     return BaseView<RootViewModel>(
@@ -41,10 +44,8 @@ class Root extends StatelessWidget {
           drawer: FDrawer(),
           drawerEnableOpenDragGesture: false,
           body: HomeBackground(
-            whiteBackground: WhiteBackground(
-                height: model.currentTabIndex == 1
-                    ? SizeConfig.screenHeight * 0.17
-                    : SizeConfig.screenHeight * 0.2),
+            whiteBackground:
+                WhiteBackground(height: SizeConfig.safeScreenHeight * 0.16),
             child: Stack(
               children: [
                 if (FlavorConfig.isDevelopment())
@@ -73,8 +74,9 @@ class Root extends StatelessWidget {
                     margin: EdgeInsets.only(top: SizeConfig.viewInsets.top),
                     child: Consumer<AppState>(
                       builder: (ctx, m, child) => IndexedStack(
-                          children: [Save(), Play(), Win()],
-                          index: m.rootIndex),
+                        children: pages,
+                        index: m.rootIndex,
+                      ),
                     ),
                   ),
                 ),
@@ -88,7 +90,7 @@ class Root extends StatelessWidget {
                   actions: [
                     const FelloCoinBar(),
                     SizedBox(width: 16),
-                    const NotificationButton(),
+                    NotificationButton(),
                   ],
                 ),
                 Positioned(
@@ -146,12 +148,21 @@ class BottomNavBar extends StatelessWidget {
             itemTapped: (int index) => model.onItemTapped(index),
             currentIndex: m.rootIndex,
             items: [
-              NavBarItemData(locale.navBarFinance, Assets.navSave,
-                  SizeConfig.screenWidth * 0.27),
-              NavBarItemData(locale.navBarPlay, Assets.navPlay,
-                  SizeConfig.screenWidth * 0.27),
-              NavBarItemData(locale.navBarWin, Assets.navWin,
-                  SizeConfig.screenWidth * 0.27),
+              NavBarItemData(
+                locale.navBarFinance,
+                Assets.navSave,
+                SizeConfig.screenWidth * 0.27,
+              ),
+              NavBarItemData(
+                locale.navBarPlay,
+                Assets.navPlay,
+                SizeConfig.screenWidth * 0.27,
+              ),
+              NavBarItemData(
+                locale.navBarWin,
+                Assets.navWin,
+                SizeConfig.screenWidth * 0.27,
+              ),
             ],
           ),
         ),
@@ -177,13 +188,7 @@ class WantMoreTickets extends StatelessWidget {
         left: SizeConfig.pageHorizontalMargins,
         right: SizeConfig.pageHorizontalMargins,
         child: InkWell(
-          onTap: () => BaseUtil.openModalBottomSheet(
-            addToScreenStack: true,
-            content: WantMoreTicketsModalSheet(),
-            hapticVibrate: true,
-            backgroundColor: Colors.transparent,
-            isBarrierDismissable: true,
-          ),
+          onTap: model.earnMoreTokens,
           child: Shimmer(
             duration: Duration(seconds: 5),
             child: AnimatedContainer(

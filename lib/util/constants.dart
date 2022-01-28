@@ -1,5 +1,3 @@
-
-
 class Constants {
   static const String APP_NAME = "Fello";
   static const String PAN_AES_KEY = 'felloisquitefun!';
@@ -19,7 +17,6 @@ class Constants {
   static final String COLN_FAILREPORTS = "failreports";
   static final String COLN_CREDENTIALS = "credentials";
   static final String COLN_POLLS = "polls";
-  static final String COLN_LEADERBOARD = "leaderboard";
   static final String COLN_HOMECARDS = "homefeed";
   static final String COLN_PROMOS = "promos";
   static final String COLN_EMAILOTPREQUESTS = "emailotprequests";
@@ -39,7 +36,8 @@ class Constants {
   static final String SUBCOLN_USER_WALLET = "wallet";
   static final String SUBCOLN_USER_POLL_RESPONSES = "poll";
   static final String SUBCOLN_USER_ALERTS = "alerts";
-
+  static final String SUBCOLN_USER_REWARDS = "rewards";
+  static final String SUBCOLN_USER_STATS = "stats";
   //Sub-collection docs
   static final String DOC_USER_FCM_TOKEN = "client_token";
   static final String DOC_USER_ICICI_DETAIL = "detail";
@@ -60,6 +58,7 @@ class Constants {
 
   static const String GOLDENTICKET_DYNAMICLINK_PREFIX =
       "https://fello.in/goldenticket";
+  static const String APP_DOWNLOAD_LINK = "https://fello.in/download";
 
   //home feed
   static const String LEARN_FEED_CARD_TYPE = 'L';
@@ -71,7 +70,7 @@ class Constants {
   static const int REFERRAL_AMT_BONUS = 25;
 
   // static const int TOTAL_DRAWS = 35;
-  static const int NEW_USER_TICKET_COUNT = 3;
+  static const int NEW_USER_TICKET_COUNT = 0;
   static const int MAX_TICKET_GEN_PER_REQUEST = 30;
   static const int KYC_UNTESTED = 0;
   static const int KYC_INVALID = 1;
@@ -79,8 +78,10 @@ class Constants {
   static const int INVESTMENT_AMOUNT_FOR_TICKET = 100;
   static const int AUG_GOLD_WITHDRAW_OFFSET =
       2; //no of days to wait before withdrawal
-  static const int UNLOCK_REFERRAL_AMT = 100;
   static final DateTime VERSION_2_RELEASE_DATE = DateTime(2021, 4, 1);
   static final String GAME_CRICKET_URI =
-      'https://prod.freakx.in/fello/cricket-2021/';
+      'https://prod.freakx.in/fello/cricket-2021-V2/';
+
+  static const INSTALL_TRACKING = 'FELLO_INSTALL';
+  static const SIGNUP_TRACKING = 'FELLO_SIGNUP';
 }

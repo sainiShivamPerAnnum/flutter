@@ -12,6 +12,19 @@ import 'package:intl/intl.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class WinnerboardView extends StatelessWidget {
+  final int count;
+  WinnerboardView({this.count});
+
+  getLength(int listLength) {
+    if (count != null) {
+      if (listLength < count)
+        return listLength;
+      else
+        return count;
+    } else
+      return listLength;
+  }
+
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<WinnerService, WinnerServiceProperties>(
@@ -32,6 +45,7 @@ class WinnerboardView extends StatelessWidget {
                 : (model.winners.isEmpty
                     ? Container(
                         color: Colors.white,
+                        height: SizeConfig.safeScreenHeight * 0.88,
                         alignment: Alignment.center,
                         width: SizeConfig.screenWidth,
                         child: NoRecordDisplayWidget(
@@ -63,7 +77,7 @@ class WinnerboardView extends StatelessWidget {
                           ),
                           Column(
                             children: List.generate(
-                              model.winners.length,
+                              getLength(model.winners.length),
                               (i) {
                                 return Container(
                                   width: SizeConfig.screenWidth,
@@ -130,7 +144,10 @@ class WinnerboardView extends StatelessWidget {
                             ),
                           ),
                           SizedBox(
-                            height: SizeConfig.navBarHeight * 1.5,
+                            height: model.winners.length < 10
+                                ? (10 - model.winners.length) *
+                                    SizeConfig.padding54
+                                : SizeConfig.navBarHeight * 1.5,
                           )
                         ],
                       )),

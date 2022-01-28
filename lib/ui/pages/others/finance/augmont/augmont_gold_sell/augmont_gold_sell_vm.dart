@@ -5,6 +5,8 @@ import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
@@ -20,17 +22,19 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'dart:math' as math;
 
 class AugmontGoldSellViewModel extends BaseModel {
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
   BaseUtil _baseUtil = locator<BaseUtil>();
   DBModel _dbModel = locator<DBModel>();
   AugmontModel _augmontModel = locator<AugmontModel>();
   FcmListener _fcmListener = locator<FcmListener>();
   UserService _userService = locator<UserService>();
   TransactionService _txnService = locator<TransactionService>();
+  final _analyticsService = locator<AnalyticsService>();
+
   bool isGoldRateFetching = false;
   bool isQntFetching = false;
   AugmontRates goldRates;
@@ -231,6 +235,8 @@ class AugmontGoldSellViewModel extends BaseModel {
     isGoldSellInProgress = true;
     _augmontModel.initiateWithdrawal(goldRates, sellGramAmount);
     _augmontModel.setAugmontTxnProcessListener(_onSellTransactionComplete);
+
+    _analyticsService.track(eventName: AnalyticsEvents.sellGold);
   }
 
   Future<void> _onSellTransactionComplete(UserTransaction txn) async {
