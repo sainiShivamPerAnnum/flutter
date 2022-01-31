@@ -99,67 +99,6 @@ class AugmontModel extends ChangeNotifier {
     return 'fello$_randomChar$_baseUsername';
   }
 
-  Future<UserAugmontDetail> createUser(
-      String mobile,
-      String pan,
-      String stateId,
-      String bankHolderName,
-      String bankAccNo,
-      String ifsc) async {
-    if (!isInit()) await _init();
-
-    String _uid = _constructUid(mobile);
-    String _uname = _constructUsername();
-    var _params = {
-      CreateUser.fldMobile: mobile,
-      CreateUser.fldID: _uid,
-      CreateUser.fldUserName: _uname,
-      CreateUser.fldStateId: stateId,
-    };
-
-    var _request = http.Request(
-        'GET', Uri.parse(_constructRequest(CreateUser.path, _params)));
-    _request.headers.addAll(headers);
-    http.StreamedResponse _response = await _request.send();
-
-    final resMap = await _processResponse(_response);
-    if (resMap == null || !resMap[INTERNAL_FAIL_FLAG]) {
-      log.error('Query Failed');
-      return null;
-    } else {
-      log.debug(resMap[CreateUser.resStatusCode].toString());
-      resMap["flag"] = QUERY_PASSED;
-
-      ///create augmont detail object
-      _baseProvider.augmontDetail = UserAugmontDetail.newUser(
-          _uid, _uname, stateId, bankHolderName, bankAccNo, ifsc);
-      bool _p = false, _a = false;
-
-      ///add the pan number
-      if (_baseProvider.userRegdPan == null ||
-          _baseProvider.userRegdPan.isEmpty ||
-          _baseProvider.userRegdPan != pan) {
-        if (pan != null) {
-          _baseProvider.userRegdPan = pan;
-          _p = await _baseProvider.panService
-              .saveUserPan(_baseProvider.userRegdPan);
-        }
-      }
-
-      ///push the augmont detail object
-      _a = await _dbModel.updateUserAugmontDetails(
-          _baseProvider.myUser.uid, _baseProvider.augmontDetail);
-
-      ///switch augmont onboarding to true and notify listeners if everything goes in order
-      if (_p && _a) {
-        _baseProvider.updateAugmontOnboarded(true);
-        await _dbModel.updateUser(_baseProvider.myUser);
-      }
-
-      return _baseProvider.augmontDetail;
-    }
-  }
-
   Future<UserAugmontDetail> createSimpleUser(
       String mobile, String stateId) async {
     if (!isInit()) await _init();
