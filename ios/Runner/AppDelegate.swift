@@ -28,6 +28,6 @@ import webengage_flutter
           if (firebaseAuth.canHandleNotification(userInfo)){
               completionHandler(.noData)
               return
-          }  b
+          } 
       }
 }
