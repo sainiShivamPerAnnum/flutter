@@ -5,11 +5,13 @@ import 'dart:typed_data';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/augmont_state_list.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -32,6 +34,7 @@ class NameInputScreen extends StatefulWidget {
 
 class NameInputScreenState extends State<NameInputScreen> {
   Log log = new Log("NameInputScreen");
+  final _userService = locator<UserService>();
   RegExp _emailRegex = RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
   String _name;
@@ -85,7 +88,7 @@ class NameInputScreenState extends State<NameInputScreen> {
       final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
       if (googleUser != null) {
         if (await httpProvider.isEmailNotRegistered(
-            baseProvider.myUser.uid, googleUser.email)) {
+            _userService.baseUser.uid, googleUser.email)) {
           _nameFieldController.text = googleUser.displayName;
           baseProvider.myUserDpUrl = googleUser.photoUrl;
           Uint8List bytes =
@@ -96,7 +99,7 @@ class NameInputScreenState extends State<NameInputScreen> {
           FirebaseStorage storage = FirebaseStorage.instance;
 
           Reference ref =
-              storage.ref().child("dps/${baseProvider.myUser.uid}/image");
+              storage.ref().child("dps/${_userService.baseUser.uid}/image");
           UploadTask uploadTask = ref.putData(bytes);
           try {
             var res = await uploadTask;
@@ -110,7 +113,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                 isEmailEntered = true;
                 _isContinuedWithGoogle = true;
                 emailText = googleUser.email;
-                baseProvider.myUser.email = googleUser.email;
+                _userService.baseUser.email = googleUser.email;
                 baseProvider.isGoogleSignInProgress = false;
               });
             } else {

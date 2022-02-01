@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input/name_input_view.dart';
@@ -15,6 +16,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 class NameInputScreenViewModel extends BaseModel {
   final BaseUtil baseProvider = locator<BaseUtil>();
   final HttpModel httpProvider = locator<HttpModel>();
+  final UserService _userService = locator<UserService>();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -70,12 +72,12 @@ class NameInputScreenViewModel extends BaseModel {
     if (!_isInitialized) {
       _isInitialized = true;
       nameFieldController =
-          (baseProvider.myUser != null && baseProvider.myUser.name != null)
-              ? new TextEditingController(text: baseProvider.myUser.name)
+          (_userService.baseUser != null && _userService.baseUser.name != null)
+              ? new TextEditingController(text: _userService.baseUser.name)
               : new TextEditingController();
       emailFieldController =
-          (baseProvider.myUser != null && baseProvider.myUser.email != null)
-              ? new TextEditingController(text: baseProvider.myUser.email)
+          (_userService.baseUser != null && _userService.baseUser.email != null)
+              ? new TextEditingController(text: _userService.baseUser.email)
               : new TextEditingController();
       dateFieldController = new TextEditingController();
       monthFieldController = new TextEditingController();
@@ -109,9 +111,9 @@ class NameInputScreenViewModel extends BaseModel {
       final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
       if (googleUser != null) {
         if (await httpProvider.isEmailNotRegistered(
-            baseProvider.myUser.uid, googleUser.email)) {
+            _userService.baseUser.uid, googleUser.email)) {
           nameFieldController.text = googleUser.displayName;
-          baseProvider.myUser.isEmailVerified = true;
+          _userService.baseUser.isEmailVerified = true;
           baseProvider.myUserDpUrl = googleUser.photoUrl;
           Uint8List bytes =
               (await NetworkAssetBundle(Uri.parse(googleUser.photoUrl))
@@ -121,7 +123,7 @@ class NameInputScreenViewModel extends BaseModel {
           FirebaseStorage storage = FirebaseStorage.instance;
 
           Reference ref =
-              storage.ref().child("dps/${baseProvider.myUser.uid}/image");
+              storage.ref().child("dps/${_userService.baseUser.uid}/image");
           UploadTask uploadTask = ref.putData(bytes);
           try {
             var res = await uploadTask;

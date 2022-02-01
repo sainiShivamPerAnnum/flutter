@@ -38,7 +38,7 @@ class _ClaimUsernameState extends State<ClaimUsername> {
         if (regex.hasMatch(username) &&
             await dbProvider.checkIfUsernameIsAvailable(username)) {
           bool res = await dbProvider.setUsername(
-              username, baseProvider.firebaseUser.uid);
+              username, _userService.firebaseUser.uid);
           if (res) {
             baseProvider.setUsername(username);
             bool flag = await dbProvider.updateUser(_userService.baseUser);

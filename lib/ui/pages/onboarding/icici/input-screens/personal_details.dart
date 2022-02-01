@@ -1,7 +1,9 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/data_provider.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/icici_onboard_controller.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +20,7 @@ class PersonalPage extends StatefulWidget {
 }
 
 class _PersonalPageState extends State<PersonalPage> {
+  final _userService = locator<UserService>();
   BaseUtil baseProvider;
   IciciOnboardController controllerInstance = new IciciOnboardController();
   TextEditingController _dateController = new TextEditingController(
@@ -59,7 +62,7 @@ class _PersonalPageState extends State<PersonalPage> {
         ? baseProvider.iciciDetail.panName
         : '';
     IDP.email.text =
-        (baseProvider.myUser != null) ? baseProvider.myUser.email : '';
+        (_userService.baseUser != null) ? _userService.baseUser.email : '';
     return SafeArea(
       child: SingleChildScrollView(
         child: Container(
@@ -115,7 +118,7 @@ class _PersonalPageState extends State<PersonalPage> {
                     padding:
                         const EdgeInsets.only(bottom: 11, top: 11, right: 15),
                     child: Text(
-                      baseProvider.myUser.mobile,
+                      _userService.baseUser.mobile,
                       style: TextStyle(
                         color: Colors.black54,
                       ),

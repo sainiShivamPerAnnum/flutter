@@ -193,9 +193,9 @@ class _SupportPageState extends State<SupportPage> {
                                       //feedback submission allowed even if user not signed in
                                       dbProvider
                                           .submitFeedback(
-                                              (baseProvider.firebaseUser ==
+                                              (_userService.firebaseUser ==
                                                           null ||
-                                                      baseProvider.firebaseUser
+                                                      _userService.firebaseUser
                                                               .uid ==
                                                           null)
                                                   ? 'UNKNOWN'

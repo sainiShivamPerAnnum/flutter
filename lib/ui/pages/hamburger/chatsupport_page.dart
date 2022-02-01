@@ -1,3 +1,5 @@
+import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +19,7 @@ class ChatSupport extends StatefulWidget {
 }
 
 class _ChatSupportState extends State<ChatSupport> {
+  final _userService = locator<UserService>();
   BaseUtil baseProvider;
   var _userid;
   var _restoreStream;
@@ -39,7 +42,7 @@ class _ChatSupportState extends State<ChatSupport> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     if (!isInit) {
       isInit = true;
-      Freshchat.identifyUser(externalId: baseProvider.myUser.uid);
+      Freshchat.identifyUser(externalId: _userService.baseUser.uid);
     }
     if (isFreshchatLoaded == "done") {
       Freshchat.showConversations();
@@ -73,8 +76,8 @@ class _ChatSupportState extends State<ChatSupport> {
     if (_user != null &&
         _prefs != null &&
         baseProvider != null &&
-        baseProvider.myUser != null) {
-      Freshchat.setPushRegistrationToken(baseProvider.myUser.client_token);
+        _userService.baseUser != null) {
+      Freshchat.setPushRegistrationToken(_userService.baseUser.client_token);
       storeRestoreId();
       var _restore;
       if (_prefs.getString('FRESHCHAT_RESTORE_ID') == null) {
@@ -87,9 +90,9 @@ class _ChatSupportState extends State<ChatSupport> {
       Freshchat.identifyUser(externalId: _userid, restoreId: _restore);
       print('user id $_userid');
       print('restore id $_restore');
-      _user.setFirstName(baseProvider.myUser.name);
-      _user.setEmail(baseProvider.myUser.email);
-      _user.setPhone('+91', baseProvider.myUser.mobile);
+      _user.setFirstName(_userService.baseUser.name);
+      _user.setEmail(_userService.baseUser.email);
+      _user.setPhone('+91', _userService.baseUser.mobile);
       Freshchat.setUser(_user);
       return true;
     } else {
