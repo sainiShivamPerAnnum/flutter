@@ -81,13 +81,21 @@ class DBModel extends ChangeNotifier {
   }
 
   //////////////////BASE USER//////////////////////////
-  Future<BaseUser> getUser(String id) async {
+  Future<ApiResponse<BaseUser>> getUser(String id) async {
     try {
       var doc = await _api.getUserById(id);
-      return BaseUser.fromMap(doc.data(), id);
+      BaseUser user;
+
+      try {
+        user = BaseUser.fromMap(doc.data(), id);
+      } catch (e) {
+        return ApiResponse.withError("User data corrupted", 400);
+      }
+
+      return ApiResponse(model: user, code: 200);
     } catch (e) {
       log.error("Error fetch User details: " + e.toString());
-      return null;
+      return ApiResponse(model: null, code: 200);
     }
   }
 

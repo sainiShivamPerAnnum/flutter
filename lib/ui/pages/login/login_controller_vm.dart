@@ -22,6 +22,7 @@ import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_view.d
 import 'package:felloapp/ui/pages/login/screens/name_input/name_input_view.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input/otp_input_view.dart';
 import 'package:felloapp/ui/pages/login/screens/username_input/username_input_view.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -86,8 +87,13 @@ class LoginControllerViewModel extends BaseModel {
     baseProvider.firebaseUser = FirebaseAuth.instance.currentUser;
     userService.firebaseUser = FirebaseAuth.instance.currentUser;
     logger.d("User is set: " + baseProvider.firebaseUser.uid);
-    BaseUser user = await dbProvider.getUser(baseProvider.firebaseUser.uid);
-    if (user == null || (user != null && user.hasIncompleteDetails())) {
+    ApiResponse<BaseUser> user =
+        await dbProvider.getUser(baseProvider.firebaseUser.uid);
+    if (user.code == 400) {
+      BaseUtil.showNegativeAlert(
+          'Something went wrong', 'Please reachout to customer support');
+    } else if (user.model == null ||
+        (user.model != null && user.model.hasIncompleteDetails())) {
       if (baseProvider.isLoginNextInProgress == true) {
         baseProvider.isLoginNextInProgress = false;
         notifyListeners();
@@ -97,9 +103,6 @@ class LoginControllerViewModel extends BaseModel {
       _isSignup = true;
       logger.d(
           "No existing user details found or found incomplete details for user. Moving to details page");
-
-      // userService.baseUser = user ??
-      //     BaseUser.newUser(baseProvider.firebaseUser.uid, this.userMobile);
 
       //Move to name input page
       lclDbProvider.setShowHomeTutorial = true;
@@ -114,8 +117,8 @@ class LoginControllerViewModel extends BaseModel {
       await BaseAnalytics.analytics.logLogin(loginMethod: 'phonenumber');
       lclDbProvider.setShowHomeTutorial = false;
       lclDbProvider.setShowTambolaTutorial = false;
-      logger.d("User details available: Name: " + user.name);
-      baseProvider.myUser = user;
+      logger.d("User details available: Name: " + user.model.name);
+      userService.baseUser = user.model;
       _onSignUpComplete();
     }
   }
@@ -124,10 +127,10 @@ class LoginControllerViewModel extends BaseModel {
     if (_isSignup) {
       await BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
       _analyticsService.track(eventName: AnalyticsEvents.signupComplete);
-      _analyticsService.trackSignup(baseProvider.myUser.uid);
+      _analyticsService.trackSignup(userService.baseUser.uid);
     }
 
-    await BaseAnalytics.logUserProfile(baseProvider.myUser);
+    await BaseAnalytics.logUserProfile(userService.baseUser);
     await userService.init();
     await baseProvider.init();
     await fcmListener.setupFcm();
@@ -153,7 +156,7 @@ class LoginControllerViewModel extends BaseModel {
         PageAction(state: PageState.replaceAll, page: RootPageConfig);
     BaseUtil.showPositiveAlert(
       'Sign In Complete',
-      'Welcome to ${Constants.APP_NAME}, ${baseProvider.myUser.name}',
+      'Welcome to ${Constants.APP_NAME}, ${userService.baseUser.name}',
     );
     //process complete
     //TODO move to home through animation
@@ -352,39 +355,39 @@ class LoginControllerViewModel extends BaseModel {
             FocusScope.of(_nameScreenKey.currentContext).unfocus();
             baseProvider.isLoginNextInProgress = true;
             notifyListeners();
-            if (baseProvider.myUser == null) {
+            if (userService.baseUser == null) {
               //firebase user should never be null at this point
-              baseProvider.myUser = BaseUser.newUser(
+              userService.baseUser = BaseUser.newUser(
                   baseProvider.firebaseUser.uid,
                   formatMobileNumber(baseProvider.firebaseUser.phoneNumber));
             }
-            //baseProvider.myUser.name = nameInScreen.getName();
-            baseProvider.myUser.name =
+            //userService.baseUser.name = nameInScreen.getName();
+            userService.baseUser.name =
                 _nameScreenKey.currentState.model.name.trim();
             String email = _nameScreenKey.currentState.model.email.trim();
             if (email != null && email.isNotEmpty) {
-              baseProvider.myUser.email = email;
+              userService.baseUser.email = email;
             }
-            baseProvider.myUser.isEmailVerified =
+            userService.baseUser.isEmailVerified =
                 _nameScreenKey.currentState.model.isEmailVerified;
             String dob =
                 "${_nameScreenKey.currentState.model.selectedDate.toLocal()}"
                     .split(" ")[0];
 
-            baseProvider.myUser.dob = dob.trim();
+            userService.baseUser.dob = dob.trim();
 
             int gender = _nameScreenKey.currentState.gen;
             if (gender != null) {
               if (gender == 1) {
-                baseProvider.myUser.gender = "M";
+                userService.baseUser.gender = "M";
               } else if (gender == 0) {
-                baseProvider.myUser.gender = "F";
+                userService.baseUser.gender = "F";
               } else
-                baseProvider.myUser.gender = "O";
+                userService.baseUser.gender = "O";
             }
 
             bool isInv = _nameScreenKey.currentState.model.isInvested;
-            if (isInv != null) baseProvider.myUser.isInvested = isInv;
+            if (isInv != null) userService.baseUser.isInvested = isInv;
             cstate = _nameScreenKey.currentState.state;
             await CacheManager.writeCache(
                 key: "UserAugmontState", value: cstate, type: CacheType.string);
@@ -424,23 +427,23 @@ class LoginControllerViewModel extends BaseModel {
                 bool res = await dbProvider.setUsername(
                     username, baseProvider.firebaseUser.uid);
                 if (res) {
-                  baseProvider.myUser.username = username;
+                  userService.baseUser.username = username;
                   bool flag = false;
-                  logger.d(baseProvider.myUser.toJson().toString());
+                  logger.d(userService.baseUser.toJson().toString());
                   try {
                     final String _bearer = await _getBearerToken();
-                    logger.d(baseProvider.myUser.uid);
+                    logger.d(userService.baseUser.uid);
                     final _body = {
-                      'uid': baseProvider.myUser.uid,
+                      'uid': userService.baseUser.uid,
                       'data': {
-                        "mMobile": baseProvider.myUser.mobile,
-                        "mName": baseProvider.myUser.name,
-                        "mEmail": baseProvider.myUser.email,
+                        "mMobile": userService.baseUser.mobile,
+                        "mName": userService.baseUser.name,
+                        "mEmail": userService.baseUser.email,
                         "mIsEmailVerified":
-                            baseProvider.myUser.isEmailVerified ?? false,
-                        "mDob": baseProvider.myUser.dob,
-                        "mGender": baseProvider.myUser.gender,
-                        "mUsername": baseProvider.myUser.username,
+                            userService.baseUser.isEmailVerified ?? false,
+                        "mDob": userService.baseUser.dob,
+                        "mGender": userService.baseUser.gender,
+                        "mUsername": userService.baseUser.username,
                         "mUserPrefs": {"tn": 1, "al": 0}
                       }
                     };
@@ -458,7 +461,7 @@ class LoginControllerViewModel extends BaseModel {
                     _usernameKey.currentState.model.enabled = false;
                     flag = false;
                   }
-                  // bool flag = await dbProvider.updateUser(baseProvider.myUser);
+                  // bool flag = await dbProvider.updateUser(userService.baseUser);
 
                   if (flag) {
                     _analyticsService.track(

@@ -45,7 +45,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   bool get hasNewNotifications => _hasNewNotifications;
 
-  set baseUser(baseUser){
+  set baseUser(baseUser) {
     _baseUser = baseUser;
   }
 
@@ -93,8 +93,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   setEmail(String email) {
     _baseUser.email = email;
     notifyListeners(UserServiceProperties.myEmail);
-    _logger.d(
-        "My user email updated in userservice, property listeners notified");
+    _logger
+        .d("My user email updated in userservice, property listeners notified");
   }
 
   set userFundWallet(UserFundWallet wallet) {
@@ -136,14 +136,16 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   }
 
   bool get isUserOnborded {
-    try{
+    try {
       if (_firebaseUser != null &&
           _baseUser != null &&
-          _baseUser.uid.isNotEmpty && _baseUser.mobile.isNotEmpty && _baseUser.username.isNotEmpty) {
+          _baseUser.uid.isNotEmpty &&
+          _baseUser.mobile.isNotEmpty &&
+          _baseUser.username.isNotEmpty) {
         _logger.d("Onborded User: ${_baseUser.uid}");
         return true;
       }
-    }catch(e) {
+    } catch (e) {
       _logger.e(e.toString());
     }
 
@@ -194,7 +196,12 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   Future<void> setBaseUser() async {
     if (_firebaseUser != null) {
-      _baseUser = await _dbModel.getUser(_firebaseUser?.uid);
+      final response = await _dbModel.getUser(_firebaseUser?.uid);
+      if (response.code == 400) {
+        _logger.d("Unable to cast user data object.");
+        return;
+      }
+      _baseUser = response.model;
       _logger.d("Base user initialized, UID: ${_baseUser?.uid}");
 
       _idToken = await CacheManager.readCache(key: 'token');
