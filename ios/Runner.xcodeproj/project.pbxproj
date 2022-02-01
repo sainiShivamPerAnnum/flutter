@@ -25,19 +25,117 @@
 			remoteGlobalIDString = 5C900B4B89A851D427CE5B6F358B9C55;
 			remoteInfo = webengage_flutter;
 		};
+		53C8032527A85D5C00190100 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BF96B57ADE05E8909F823BDF6868B3E3;
+			remoteInfo = abseil;
+		};
+		53C8032727A85D5C00190100 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EFD816E9FBF0DEB1DA45925707CC6D48;
+			remoteInfo = app_install_date;
+		};
+		53C8032927A85D5C00190100 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 514D7742C6CBB0BDBD9984AEE97DDFDE;
+			remoteInfo = "BoringSSL-GRPC";
+		};
+		53C8032B27A85D5C00190100 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 85128AF76199890A6DD56FE81089D883;
+			remoteInfo = FBSDKShareKit;
+		};
+		53C8032D27A85D5C00190100 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 92000153CD73F7FC2DBAB4AB708269F3;
+			remoteInfo = FirebaseFirestore;
+		};
+		53C8032F27A85D5C00190100 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D0C5A85ABEF5ED03A54A449B87B69225;
+			remoteInfo = fluttertoast;
+		};
+		53C8033127A85D5C00190100 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1911113E0FBF13CFF9132E5FF7685228;
+			remoteInfo = "gRPC-C++";
+		};
+		53C8033327A85D5C00190100 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9C7C87B5D0A6752AFA2642F1BCA967A3;
+			remoteInfo = "gRPC-C++-gRPCCertificates-Cpp";
+		};
+		53C8033527A85D5C00190100 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B471867C535B02FA55D87E260F6480F8;
+			remoteInfo = "gRPC-Core";
+		};
+		53C8033727A85D5C00190100 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BEDB77D7DFDD5C9008E7D3FC4206FEC9;
+			remoteInfo = path_provider_ios;
+		};
+		53C8033927A85D5C00190100 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 21B03CA622E690725A6626C088E1D09F;
+			remoteInfo = ReachabilitySwift;
+		};
+		53C8033B27A85D5C00190100 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9DE2C5FB92889028E9DAEBC81231108D;
+			remoteInfo = shared_preferences_ios;
+		};
+		53C8033D27A85D5C00190100 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 55E0AFD333353D71ACC2207149E879D6;
+			remoteInfo = Toast;
+		};
+		53C8033F27A85D5C00190100 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 7B7C06D35B3BC2BD649AAA1A489E49DA;
+			remoteInfo = url_launcher_ios;
+		};
+		53C8034127A85D5C00190100 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 7409A9316D1EEFAC7B383BE8CEC1BE03;
+			remoteInfo = webview_flutter_wkwebview;
+		};
 		53E99BCF2770AA48000F1EEC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 3FD1B4C1246D643E9476438C28048FA8;
 			remoteInfo = AppAuth;
-		};
-		53E99BD12770AA48000F1EEC /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = B5D52D8AEEC3E774D19ED52FAC9CB363;
-			remoteInfo = camera;
 		};
 		53E99BD32770AA48000F1EEC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -403,13 +501,6 @@
 			remoteGlobalIDString = 6E45859F778E298A6DDE318300ACC4C5;
 			remoteInfo = package_info;
 		};
-		53E99C3B2770AA48000F1EEC /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = DAE35F9EEF7110C6DC7645F4C250E0F5;
-			remoteInfo = path_provider;
-		};
 		53E99C3D2770AA48000F1EEC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
@@ -438,13 +529,6 @@
 			remoteGlobalIDString = 4D68842CB2772778EFB677388B48AC94;
 			remoteInfo = razorpay_flutter;
 		};
-		53E99C452770AA48000F1EEC /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 400FF55D0451E7A8F33A3D0D3E11C1B9;
-			remoteInfo = Reachability;
-		};
 		53E99C472770AA48000F1EEC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
@@ -466,13 +550,6 @@
 			remoteGlobalIDString = 670C8E8BC3F615901CAE735C0CBBE8CA;
 			remoteInfo = share_plus;
 		};
-		53E99C4D2770AA48000F1EEC /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D2E9151FF178A177C7E4A82248E431AB;
-			remoteInfo = shared_preferences;
-		};
 		53E99C4F2770AA48000F1EEC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
@@ -487,13 +564,6 @@
 			remoteGlobalIDString = B799BFFEC5B11F90F501202080A57F37;
 			remoteInfo = sqflite;
 		};
-		53E99C532770AA48000F1EEC /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 88201E9CFC476A9A0003632CB83B1D0A;
-			remoteInfo = url_launcher;
-		};
 		53E99C552770AA48000F1EEC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
@@ -507,20 +577,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = 996BDA9D388364FDC99AF5424CDA0C23;
 			remoteInfo = video_player;
-		};
-		53E99C592770AA48000F1EEC /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 315E7D4955EFF42177E9BBC4382B527F;
-			remoteInfo = wakelock;
-		};
-		53E99C5B2770AA48000F1EEC /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 2F9E4A4DFBB3FA382E47DEEF13A9ED68;
-			remoteInfo = webview_flutter;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -592,13 +648,16 @@
 		53E99B7E2770AA47000F1EEC /* Products */ = {
 			isa = PBXGroup;
 			children = (
+				53C8032627A85D5C00190100 /* abseil */,
+				53C8032827A85D5C00190100 /* app_install_date */,
 				53E99BD02770AA48000F1EEC /* AppAuth */,
-				53E99BD22770AA48000F1EEC /* camera */,
+				53C8032A27A85D5C00190100 /* BoringSSL-GRPC */,
 				53E99BD42770AA48000F1EEC /* cloud_firestore */,
 				53E99BD62770AA48000F1EEC /* connectivity_plus */,
 				53E99BD82770AA48000F1EEC /* device_info */,
 				53E99BDA2770AA48000F1EEC /* device_unlock */,
 				53E99BDC2770AA48000F1EEC /* FBSDKCoreKit */,
+				53C8032C27A85D5C00190100 /* FBSDKShareKit */,
 				53E99BDE2770AA48000F1EEC /* firebase_analytics */,
 				53E99BE02770AA48000F1EEC /* firebase_auth */,
 				53E99BE22770AA48000F1EEC /* firebase_core */,
@@ -617,6 +676,7 @@
 				53E99BFC2770AA48000F1EEC /* FirebaseCrashlytics */,
 				53E99BFE2770AA48000F1EEC /* FirebaseDatabase */,
 				53E99C002770AA48000F1EEC /* FirebaseDynamicLinks */,
+				53C8032E27A85D5C00190100 /* FirebaseFirestore */,
 				53E99C022770AA48000F1EEC /* FirebaseInAppMessaging */,
 				53E99C042770AA48000F1EEC /* FirebaseInAppMessaging-InAppMessagingDisplayResources */,
 				53E99C062770AA48000F1EEC /* FirebaseInstallations */,
@@ -628,11 +688,15 @@
 				53E99C122770AA48000F1EEC /* flutter_html_to_pdf */,
 				53E99C142770AA48000F1EEC /* flutter_image_compress */,
 				53E99C162770AA48000F1EEC /* flutter_share_me */,
+				53C8033027A85D5C00190100 /* fluttertoast */,
 				53E99C182770AA48000F1EEC /* FMDB */,
 				53E99C1A2770AA48000F1EEC /* freshchat_sdk */,
 				53E99C1C2770AA48000F1EEC /* google_sign_in */,
 				53E99C1E2770AA48000F1EEC /* GoogleDataTransport */,
 				53E99C202770AA48000F1EEC /* GoogleUtilities */,
+				53C8033227A85D5C00190100 /* gRPC-C++ */,
+				53C8033427A85D5C00190100 /* gRPC-C++-gRPCCertificates-Cpp */,
+				53C8033627A85D5C00190100 /* gRPC-Core */,
 				53E99C222770AA48000F1EEC /* GTMAppAuth */,
 				53E99C242770AA48000F1EEC /* GTMSessionFetcher */,
 				53E99C262770AA48000F1EEC /* image_gallery_saver */,
@@ -646,24 +710,24 @@
 				53E99C362770AA48000F1EEC /* nanopb */,
 				53E99C382770AA48000F1EEC /* open_file */,
 				53E99C3A2770AA48000F1EEC /* package_info */,
-				53E99C3C2770AA48000F1EEC /* path_provider */,
+				53C8033827A85D5C00190100 /* path_provider_ios */,
 				53E99C3E2770AA48000F1EEC /* permission_handler */,
 				53E99C402770AA48000F1EEC /* Pods-Runner */,
 				53E99C422770AA48000F1EEC /* PromisesObjC */,
 				53E99C442770AA48000F1EEC /* razorpay_flutter */,
-				53E99C462770AA48000F1EEC /* Reachability */,
+				53C8033A27A85D5C00190100 /* ReachabilitySwift */,
 				53E99C482770AA48000F1EEC /* SDWebImage */,
 				53E99C4A2770AA48000F1EEC /* SDWebImageWebPCoder */,
 				53E99C4C2770AA48000F1EEC /* share_plus */,
-				53E99C4E2770AA48000F1EEC /* shared_preferences */,
+				53C8033C27A85D5C00190100 /* shared_preferences_ios */,
 				53E99C502770AA48000F1EEC /* sms_autofill */,
 				53E99C522770AA48000F1EEC /* sqflite */,
-				53E99C542770AA48000F1EEC /* url_launcher */,
+				53C8033E27A85D5C00190100 /* Toast */,
+				53C8034027A85D5C00190100 /* url_launcher_ios */,
 				53E99C562770AA48000F1EEC /* vibration */,
 				53E99C582770AA48000F1EEC /* video_player */,
-				53E99C5A2770AA48000F1EEC /* wakelock */,
 				53A33C5527994C080046F585 /* webengage_flutter */,
-				53E99C5C2770AA48000F1EEC /* webview_flutter */,
+				53C8034227A85D5C00190100 /* webview_flutter_wkwebview */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -799,20 +863,132 @@
 			remoteRef = 53A33C5427994C080046F585 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		53C8032627A85D5C00190100 /* abseil */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = abseil;
+			path = absl.framework;
+			remoteRef = 53C8032527A85D5C00190100 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		53C8032827A85D5C00190100 /* app_install_date */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = app_install_date;
+			path = app_install_date.framework;
+			remoteRef = 53C8032727A85D5C00190100 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		53C8032A27A85D5C00190100 /* BoringSSL-GRPC */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = "BoringSSL-GRPC";
+			path = openssl_grpc.framework;
+			remoteRef = 53C8032927A85D5C00190100 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		53C8032C27A85D5C00190100 /* FBSDKShareKit */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = FBSDKShareKit;
+			path = FBSDKShareKit.framework;
+			remoteRef = 53C8032B27A85D5C00190100 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		53C8032E27A85D5C00190100 /* FirebaseFirestore */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = FirebaseFirestore;
+			path = FirebaseFirestore.framework;
+			remoteRef = 53C8032D27A85D5C00190100 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		53C8033027A85D5C00190100 /* fluttertoast */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = fluttertoast;
+			path = fluttertoast.framework;
+			remoteRef = 53C8032F27A85D5C00190100 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		53C8033227A85D5C00190100 /* gRPC-C++ */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = "gRPC-C++";
+			path = grpcpp.framework;
+			remoteRef = 53C8033127A85D5C00190100 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		53C8033427A85D5C00190100 /* gRPC-C++-gRPCCertificates-Cpp */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			name = "gRPC-C++-gRPCCertificates-Cpp";
+			path = "gRPCCertificates-Cpp.bundle";
+			remoteRef = 53C8033327A85D5C00190100 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		53C8033627A85D5C00190100 /* gRPC-Core */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = "gRPC-Core";
+			path = grpc.framework;
+			remoteRef = 53C8033527A85D5C00190100 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		53C8033827A85D5C00190100 /* path_provider_ios */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = path_provider_ios;
+			path = path_provider_ios.framework;
+			remoteRef = 53C8033727A85D5C00190100 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		53C8033A27A85D5C00190100 /* ReachabilitySwift */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = ReachabilitySwift;
+			path = Reachability.framework;
+			remoteRef = 53C8033927A85D5C00190100 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		53C8033C27A85D5C00190100 /* shared_preferences_ios */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = shared_preferences_ios;
+			path = shared_preferences_ios.framework;
+			remoteRef = 53C8033B27A85D5C00190100 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		53C8033E27A85D5C00190100 /* Toast */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = Toast;
+			path = Toast.framework;
+			remoteRef = 53C8033D27A85D5C00190100 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		53C8034027A85D5C00190100 /* url_launcher_ios */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = url_launcher_ios;
+			path = url_launcher_ios.framework;
+			remoteRef = 53C8033F27A85D5C00190100 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		53C8034227A85D5C00190100 /* webview_flutter_wkwebview */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = webview_flutter_wkwebview;
+			path = webview_flutter_wkwebview.framework;
+			remoteRef = 53C8034127A85D5C00190100 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		53E99BD02770AA48000F1EEC /* AppAuth */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			name = AppAuth;
 			path = AppAuth.framework;
 			remoteRef = 53E99BCF2770AA48000F1EEC /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		53E99BD22770AA48000F1EEC /* camera */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			name = camera;
-			path = camera.framework;
-			remoteRef = 53E99BD12770AA48000F1EEC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		53E99BD42770AA48000F1EEC /* cloud_firestore */ = {
@@ -1231,14 +1407,6 @@
 			remoteRef = 53E99C392770AA48000F1EEC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		53E99C3C2770AA48000F1EEC /* path_provider */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			name = path_provider;
-			path = path_provider.framework;
-			remoteRef = 53E99C3B2770AA48000F1EEC /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		53E99C3E2770AA48000F1EEC /* permission_handler */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -1271,14 +1439,6 @@
 			remoteRef = 53E99C432770AA48000F1EEC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		53E99C462770AA48000F1EEC /* Reachability */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			name = Reachability;
-			path = Reachability.framework;
-			remoteRef = 53E99C452770AA48000F1EEC /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		53E99C482770AA48000F1EEC /* SDWebImage */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -1303,14 +1463,6 @@
 			remoteRef = 53E99C4B2770AA48000F1EEC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		53E99C4E2770AA48000F1EEC /* shared_preferences */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			name = shared_preferences;
-			path = shared_preferences.framework;
-			remoteRef = 53E99C4D2770AA48000F1EEC /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		53E99C502770AA48000F1EEC /* sms_autofill */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -1327,14 +1479,6 @@
 			remoteRef = 53E99C512770AA48000F1EEC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		53E99C542770AA48000F1EEC /* url_launcher */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			name = url_launcher;
-			path = url_launcher.framework;
-			remoteRef = 53E99C532770AA48000F1EEC /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		53E99C562770AA48000F1EEC /* vibration */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -1349,22 +1493,6 @@
 			name = video_player;
 			path = video_player.framework;
 			remoteRef = 53E99C572770AA48000F1EEC /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		53E99C5A2770AA48000F1EEC /* wakelock */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			name = wakelock;
-			path = wakelock.framework;
-			remoteRef = 53E99C592770AA48000F1EEC /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		53E99C5C2770AA48000F1EEC /* webview_flutter */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			name = webview_flutter;
-			path = webview_flutter.framework;
-			remoteRef = 53E99C5B2770AA48000F1EEC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -1598,7 +1726,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 49;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1614,7 +1742,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
+				MARKETING_VERSION = 3.1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -1687,7 +1815,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 49;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
@@ -1704,7 +1832,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
+				MARKETING_VERSION = 3.1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -1775,7 +1903,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 49;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1791,7 +1919,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
+				MARKETING_VERSION = 3.1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -1859,7 +1987,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 49;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1875,7 +2003,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
+				MARKETING_VERSION = 3.1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -2000,7 +2128,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 49;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
@@ -2017,7 +2145,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
+				MARKETING_VERSION = 3.1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -2036,7 +2164,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 49;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2052,7 +2180,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
+				MARKETING_VERSION = 3.1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
