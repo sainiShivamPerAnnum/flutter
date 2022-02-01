@@ -97,8 +97,10 @@ class LoginControllerViewModel extends BaseModel {
       _isSignup = true;
       logger.d(
           "No existing user details found or found incomplete details for user. Moving to details page");
-      baseProvider.myUser = user ??
-          BaseUser.newUser(baseProvider.firebaseUser.uid, this.userMobile);
+
+      // userService.baseUser = user ??
+      //     BaseUser.newUser(baseProvider.firebaseUser.uid, this.userMobile);
+
       //Move to name input page
       lclDbProvider.setShowHomeTutorial = true;
       lclDbProvider.setShowTambolaTutorial = true;

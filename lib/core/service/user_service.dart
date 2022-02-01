@@ -45,6 +45,10 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   bool get hasNewNotifications => _hasNewNotifications;
 
+  set baseUser(baseUser){
+    _baseUser = baseUser;
+  }
+
   set hasNewNotifications(bool val) {
     _hasNewNotifications = val;
     notifyListeners(UserServiceProperties.myNotificationStatus);
