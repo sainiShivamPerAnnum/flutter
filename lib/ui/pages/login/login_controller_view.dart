@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -211,7 +212,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                                   SizeConfig.pageHorizontalMargins * 2,
                               child: FelloButtonLg(
                                 child:
-                                    (!model.baseProvider.isLoginNextInProgress)
+                                    model.state == ViewState.Idle
                                         ? Text(
                                             model.currentPage == Username.index
                                                 ? 'FINISH'
@@ -224,7 +225,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                                             size: 18.0,
                                           ),
                                 onPressed: () {
-                                  if (!model.baseProvider.isLoginNextInProgress)
+                                  if (model.state == ViewState.Idle)
                                     model.processScreenInput(model.currentPage);
                                 },
                               ),

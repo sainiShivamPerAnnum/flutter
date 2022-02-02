@@ -3,6 +3,7 @@ import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -136,9 +137,8 @@ class LoginControllerViewModel extends BaseModel {
             );
             this._verificationId = '+91' + this.userMobile;
             _verifyPhone();
-            baseProvider.isLoginNextInProgress = true;
             FocusScope.of(_mobileScreenKey.currentContext).unfocus();
-            notifyListeners();
+            setState(ViewState.Busy);
           }
           break;
         }
@@ -147,8 +147,7 @@ class LoginControllerViewModel extends BaseModel {
           String otp =
               _otpScreenKey.currentState.model.otp; //otpInScreen.getOtp();
           if (otp != null && otp.isNotEmpty && otp.length == 6) {
-            baseProvider.isLoginNextInProgress = true;
-            notifyListeners();
+            setState(ViewState.Busy);
             bool flag = await baseProvider.authenticateUser(baseProvider
                 .generateAuthCredential(_augmentedVerificationId, otp));
             if (flag) {
@@ -160,9 +159,9 @@ class LoginControllerViewModel extends BaseModel {
               _otpScreenKey.currentState.model.pinEditingController.text = "";
               BaseUtil.showNegativeAlert(
                   'Invalid Otp', 'Please enter a valid otp');
-              baseProvider.isLoginNextInProgress = false;
+
               FocusScope.of(_otpScreenKey.currentContext).unfocus();
-              notifyListeners();
+              setState(ViewState.Idle);
             }
           } else {
             BaseUtil.showNegativeAlert(
@@ -213,8 +212,7 @@ class LoginControllerViewModel extends BaseModel {
               return false;
             }
             FocusScope.of(_nameScreenKey.currentContext).unfocus();
-            baseProvider.isLoginNextInProgress = true;
-            notifyListeners();
+            setState(ViewState.Busy);
             if (userService.baseUser == null) {
               //firebase user should never be null at this point
               userService.baseUser = BaseUser.newUser(
@@ -253,12 +251,11 @@ class LoginControllerViewModel extends BaseModel {
                 key: "UserAugmontState", value: cstate, type: CacheType.string);
 
             Future.delayed(Duration(seconds: 1), () {
-              baseProvider.isLoginNextInProgress = false;
-              notifyListeners();
+              setState(ViewState.Idle);
             }).then((value) {
               _analyticsService.track(
                 eventName: AnalyticsEvents.profileInformationAdded,
-                properties: {'userId': baseProvider?.myUser?.uid},
+                properties: {'userId': userService?.baseUser?.uid},
               );
               _controller.animateToPage(Username.index,
                   duration: Duration(milliseconds: 500),
@@ -276,8 +273,7 @@ class LoginControllerViewModel extends BaseModel {
             }
             if (!_usernameKey.currentState.model.isLoading &&
                 _usernameKey.currentState.model.isValid) {
-              baseProvider.isLoginNextInProgress = true;
-              notifyListeners();
+              setState(ViewState.Busy);
 
               String username =
                   _usernameKey.currentState.model.username.replaceAll('.', '@');
@@ -326,7 +322,7 @@ class LoginControllerViewModel extends BaseModel {
                   if (flag) {
                     _analyticsService.track(
                       eventName: AnalyticsEvents.userNameAdded,
-                      properties: {'userId': baseProvider?.myUser?.uid},
+                      properties: {'userId': userService?.baseUser?.uid},
                     );
                     logger.d("User object saved successfully");
                     _onSignUpComplete();
@@ -337,8 +333,7 @@ class LoginControllerViewModel extends BaseModel {
                     );
                     _usernameKey.currentState.model.enabled = false;
 
-                    baseProvider.isLoginNextInProgress = false;
-                    notifyListeners();
+                    setState(ViewState.Idle);
                   }
                 } else {
                   BaseUtil.showNegativeAlert(
@@ -347,8 +342,7 @@ class LoginControllerViewModel extends BaseModel {
                   );
                   _usernameKey.currentState.model.enabled = false;
 
-                  baseProvider.isLoginNextInProgress = false;
-                  notifyListeners();
+                  setState(ViewState.Idle);
                 }
               } else {
                 BaseUtil.showNegativeAlert(
@@ -357,8 +351,7 @@ class LoginControllerViewModel extends BaseModel {
                 );
                 _usernameKey.currentState.model.enabled = false;
 
-                baseProvider.isLoginNextInProgress = false;
-                notifyListeners();
+                setState(ViewState.Idle);
               }
             } else {
               BaseUtil.showNegativeAlert(
@@ -382,18 +375,13 @@ class LoginControllerViewModel extends BaseModel {
     if (user.code == 400) {
       BaseUtil.showNegativeAlert('Your account is under maintenance',
           'Please reach out to customer support');
-      if (baseProvider.isLoginNextInProgress == true) {
-        baseProvider.isLoginNextInProgress = false;
-        notifyListeners();
-      }
+      setState(ViewState.Idle);
+
       _controller.animateToPage(MobileInputScreenView.index,
           duration: Duration(milliseconds: 500), curve: Curves.easeInToLinear);
     } else if (user.model == null ||
         (user.model != null && user.model.hasIncompleteDetails())) {
-      if (baseProvider.isLoginNextInProgress == true) {
-        baseProvider.isLoginNextInProgress = false;
-        notifyListeners();
-      }
+      setState(ViewState.Idle);
 
       ///First time user!
       _isSignup = true;
@@ -436,10 +424,7 @@ class LoginControllerViewModel extends BaseModel {
       baseUser: userService.baseUser,
     );
     AppState.isOnboardingInProgress = false;
-    if (baseProvider.isLoginNextInProgress == true) {
-      baseProvider.isLoginNextInProgress = false;
-      notifyListeners();
-    }
+    setState(ViewState.Idle);
 
     ///check if the account is blocked
     if (userService.baseUser != null && userService.baseUser.isBlocked) {
@@ -472,11 +457,11 @@ class LoginControllerViewModel extends BaseModel {
       logger.d("User mobile number format verified. Sending otp and verifying");
       if (baseProvider.isOtpResendCount == 0) {
         ///this is the first time that the otp was requested
-        baseProvider.isLoginNextInProgress = false;
+
         _controller.animateToPage(OtpInputScreen.index,
             duration: Duration(milliseconds: 500),
             curve: Curves.easeInToLinear);
-        notifyListeners();
+        setState(ViewState.Idle);
       } else {
         ///the otp was requested to be resent
         _otpScreenKey.currentState.model.onOtpResendConfirmed(true);
@@ -487,10 +472,7 @@ class LoginControllerViewModel extends BaseModel {
         (AuthCredential user) async {
       logger.d('::VERIFIED_SUCCESS::INVOKED');
       logger.d("Verified automagically!");
-      if (!baseProvider.isLoginNextInProgress) {
-        baseProvider.isLoginNextInProgress = true;
-        notifyListeners();
-      }
+      setState(ViewState.Busy);
       if (_currentPage == OtpInputScreen.index) {
         _otpScreenKey.currentState.model.onOtpReceived();
       }
@@ -501,12 +483,12 @@ class LoginControllerViewModel extends BaseModel {
         _onSignInSuccess();
       } else {
         logger.e("User auto sign in didnt work");
-        baseProvider.isLoginNextInProgress = false;
+
         BaseUtil.showNegativeAlert(
           'Sign In Failed',
           'Please check your network or number and try again',
         );
-        notifyListeners();
+        setState(ViewState.Idle);
       }
     };
 
@@ -528,8 +510,7 @@ class LoginControllerViewModel extends BaseModel {
         'Sign In Failed',
         exceptionMessage,
       );
-      baseProvider.isLoginNextInProgress = false;
-      notifyListeners();
+      setState(ViewState.Idle);
     };
 
     await FirebaseAuth.instance.verifyPhoneNumber(
@@ -576,7 +557,7 @@ class LoginControllerViewModel extends BaseModel {
   }
 
   _onOtpFilled() {
-    if (!baseProvider.isLoginNextInProgress) processScreenInput(_currentPage);
+    if (this.state == ViewState.Idle) processScreenInput(_currentPage);
   }
 
   _onOtpResendRequested() {
@@ -589,7 +570,7 @@ class LoginControllerViewModel extends BaseModel {
   }
 
   _onChangeNumberRequest() {
-    if (!baseProvider.isLoginNextInProgress) {
+    if (this.state == ViewState.Idle) {
       AppState.isOnboardingInProgress = false;
       _controller.animateToPage(MobileInputScreenView.index,
           duration: Duration(milliseconds: 500), curve: Curves.easeInToLinear);
