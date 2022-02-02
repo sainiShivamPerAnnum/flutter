@@ -385,8 +385,6 @@ class LoginControllerViewModel extends BaseModel {
           "No existing user details found or found incomplete details for user. Moving to details page");
 
       //Move to name input page
-      lclDbProvider.setShowHomeTutorial = true;
-      lclDbProvider.setShowTambolaTutorial = true;
       BaseUtil.isNewUser = true;
       BaseUtil.isFirstFetchDone = false;
       _controller.animateToPage(NameInputScreen.index,
@@ -395,8 +393,6 @@ class LoginControllerViewModel extends BaseModel {
     } else {
       ///Existing user
       await BaseAnalytics.analytics.logLogin(loginMethod: 'phonenumber');
-      lclDbProvider.setShowHomeTutorial = false;
-      lclDbProvider.setShowTambolaTutorial = false;
       logger.d("User details available: Name: " + user.model.name);
       userService.baseUser = user.model;
       _onSignUpComplete();
