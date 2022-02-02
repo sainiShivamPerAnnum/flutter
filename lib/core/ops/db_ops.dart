@@ -85,7 +85,9 @@ class DBModel extends ChangeNotifier {
     try {
       var doc = await _api.getUserById(id);
       BaseUser user;
-
+      if (doc.data() == null) {
+        return ApiResponse(model: null, code: 200);
+      }
       try {
         user = BaseUser.fromMap(doc.data(), id);
       } catch (e) {
@@ -95,7 +97,7 @@ class DBModel extends ChangeNotifier {
       return ApiResponse(model: user, code: 200);
     } catch (e) {
       log.error("Error fetch User details: " + e.toString());
-      return ApiResponse(model: null, code: 200);
+      return ApiResponse(model: null, code: 400);
     }
   }
 
