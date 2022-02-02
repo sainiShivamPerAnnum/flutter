@@ -42,15 +42,21 @@ class LoginControllerViewModel extends BaseModel {
   final apiPaths = locator<ApiPath>();
   final baseProvider = locator<BaseUtil>();
   final dbProvider = locator<DBModel>();
-
-  PageController _controller;
-  get controller => _controller;
-
-  // static FcmListener fcmProvider;
   static LocalDBModel lclDbProvider = locator<LocalDBModel>();
-  static AppState appStateProvider = AppState.delegate.appState;
-  AnimationController animationController;
 
+  //Controllers
+  PageController _controller;
+
+  // static appStateProvider
+  static AppState appStateProvider = AppState.delegate.appState;
+
+  //Screen States
+  final _mobileScreenKey = new GlobalKey<MobileInputScreenViewState>();
+  final _otpScreenKey = new GlobalKey<OtpInputScreenState>();
+  final _nameScreenKey = new GlobalKey<NameInputScreenState>();
+  final _usernameKey = new GlobalKey<UsernameState>();
+
+//Private Variables
   double _formProgress = 0.2;
   bool _isSignup = false;
 
@@ -58,14 +64,12 @@ class LoginControllerViewModel extends BaseModel {
   String _verificationId;
   String _augmentedVerificationId;
   String cstate;
+  int _currentPage;
   ValueNotifier<double> _pageNotifier;
   static List<Widget> _pages;
-  int _currentPage;
-  final _mobileScreenKey = new GlobalKey<MobileInputScreenViewState>();
-  final _otpScreenKey = new GlobalKey<OtpInputScreenState>();
-  final _nameScreenKey = new GlobalKey<NameInputScreenState>();
-  final _usernameKey = new GlobalKey<UsernameState>();
 
+//Getters and Setters
+  get controller => _controller;
   get pageNotifier => _pageNotifier;
   get pages => _pages;
   get currentPage => _currentPage;
@@ -81,14 +85,300 @@ class LoginControllerViewModel extends BaseModel {
     notifyListeners();
   }
 
+  init(initPage) {
+    _currentPage = (initPage != null) ? initPage : MobileInputScreenView.index;
+    _formProgress = 0.2 * (_currentPage + 1);
+    _controller = new PageController(initialPage: _currentPage);
+    _controller.addListener(_pageListener);
+    _pageNotifier = ValueNotifier(0.0);
+    _pages = [
+      MobileInputScreenView(key: _mobileScreenKey),
+      OtpInputScreen(
+        key: _otpScreenKey,
+        otpEntered: _onOtpFilled,
+        resendOtp: _onOtpResendRequested,
+        changeNumber: _onChangeNumberRequest,
+        mobileNo: this.userMobile,
+      ),
+      NameInputScreen(key: _nameScreenKey),
+      Username(key: _usernameKey)
+    ];
+  }
+
+  processScreenInput(int currentPage) async {
+    FocusScope.of(AppState.delegate.navigatorKey.currentContext).unfocus();
+    switch (currentPage) {
+      case MobileInputScreenView.index:
+        {
+          //in mobile input screen. Get and set mobile/ set error interface if not correct
+          if (_mobileScreenKey.currentState.model.formKey.currentState
+              .validate()) {
+            logger.d(
+                'Mobile number validated: ${_mobileScreenKey.currentState.model.getMobile()}');
+            this.userMobile = _mobileScreenKey.currentState.model.getMobile();
+            String refCode =
+                _mobileScreenKey.currentState.model.getReferralCode();
+            if (refCode != null && refCode.isNotEmpty)
+              BaseUtil.manualReferralCode = refCode;
+
+            LoginControllerView.mobileno = this.userMobile;
+            notifyListeners();
+
+            ///disable regular numbers for QA
+            if (FlavorConfig.isQA() &&
+                !this.userMobile.startsWith('999990000')) {
+              BaseUtil.showNegativeAlert('Mobile number not allowed',
+                  'Only dummy numbers are allowed in QA mode');
+              break;
+            }
+            _analyticsService.track(
+              eventName: AnalyticsEvents.signupEnterMobile,
+            );
+            this._verificationId = '+91' + this.userMobile;
+            _verifyPhone();
+            baseProvider.isLoginNextInProgress = true;
+            FocusScope.of(_mobileScreenKey.currentContext).unfocus();
+            notifyListeners();
+          }
+          break;
+        }
+      case OtpInputScreen.index:
+        {
+          String otp =
+              _otpScreenKey.currentState.model.otp; //otpInScreen.getOtp();
+          if (otp != null && otp.isNotEmpty && otp.length == 6) {
+            baseProvider.isLoginNextInProgress = true;
+            notifyListeners();
+            bool flag = await baseProvider.authenticateUser(baseProvider
+                .generateAuthCredential(_augmentedVerificationId, otp));
+            if (flag) {
+              _analyticsService.track(eventName: AnalyticsEvents.mobileOtpDone);
+              AppState.isOnboardingInProgress = true;
+              _otpScreenKey.currentState.model.onOtpReceived();
+              _onSignInSuccess();
+            } else {
+              _otpScreenKey.currentState.model.pinEditingController.text = "";
+              BaseUtil.showNegativeAlert(
+                  'Invalid Otp', 'Please enter a valid otp');
+              baseProvider.isLoginNextInProgress = false;
+              FocusScope.of(_otpScreenKey.currentContext).unfocus();
+              notifyListeners();
+            }
+          } else {
+            BaseUtil.showNegativeAlert(
+                'Enter OTP', 'Please enter a valid one time password');
+          }
+          break;
+        }
+      case NameInputScreen.index:
+        {
+          //if(nameInScreen.validate()) {
+
+          if (_nameScreenKey.currentState.model.formKey.currentState
+                  .validate() &&
+              _nameScreenKey.currentState.model.isValidDate()) {
+            if (!_nameScreenKey.currentState.model.isEmailEntered) {
+              BaseUtil.showNegativeAlert(
+                  'Email field empty', 'Please enter a valid email');
+              return false;
+            }
+
+            if (_nameScreenKey.currentState.model.selectedDate == null) {
+              BaseUtil.showNegativeAlert(
+                'Invalid Date of Birth',
+                'Please enter a valid date of birth',
+              );
+              return false;
+            } else if (!_isAdult(
+                _nameScreenKey.currentState.model.selectedDate)) {
+              BaseUtil.showNegativeAlert(
+                'Ineligible',
+                'You need to be above 18 to join',
+              );
+              return false;
+            }
+            if (_nameScreenKey.currentState.gen == null ||
+                _nameScreenKey.currentState.model.isInvested == null) {
+              BaseUtil.showNegativeAlert(
+                'Invalid details',
+                'Please enter all the fields',
+              );
+              return false;
+            }
+            if (_nameScreenKey.currentState.state == null) {
+              BaseUtil.showNegativeAlert(
+                'Invalid details',
+                'Please enter your state of residence',
+              );
+              return false;
+            }
+            FocusScope.of(_nameScreenKey.currentContext).unfocus();
+            baseProvider.isLoginNextInProgress = true;
+            notifyListeners();
+            if (userService.baseUser == null) {
+              //firebase user should never be null at this point
+              userService.baseUser = BaseUser.newUser(
+                  userService.firebaseUser.uid,
+                  _formatMobileNumber(userService.firebaseUser.phoneNumber));
+            }
+            //userService.baseUser.name = nameInScreen.getName();
+            userService.baseUser.name =
+                _nameScreenKey.currentState.model.name.trim();
+            String email = _nameScreenKey.currentState.model.email.trim();
+            if (email != null && email.isNotEmpty) {
+              userService.baseUser.email = email;
+            }
+            userService.baseUser.isEmailVerified =
+                _nameScreenKey.currentState.model.isEmailVerified;
+            String dob =
+                "${_nameScreenKey.currentState.model.selectedDate.toLocal()}"
+                    .split(" ")[0];
+
+            userService.baseUser.dob = dob.trim();
+
+            int gender = _nameScreenKey.currentState.gen;
+            if (gender != null) {
+              if (gender == 1) {
+                userService.baseUser.gender = "M";
+              } else if (gender == 0) {
+                userService.baseUser.gender = "F";
+              } else
+                userService.baseUser.gender = "O";
+            }
+
+            bool isInv = _nameScreenKey.currentState.model.isInvested;
+            if (isInv != null) userService.baseUser.isInvested = isInv;
+            cstate = _nameScreenKey.currentState.state;
+            await CacheManager.writeCache(
+                key: "UserAugmontState", value: cstate, type: CacheType.string);
+
+            Future.delayed(Duration(seconds: 1), () {
+              baseProvider.isLoginNextInProgress = false;
+              notifyListeners();
+            }).then((value) {
+              _analyticsService.track(
+                eventName: AnalyticsEvents.profileInformationAdded,
+                properties: {'userId': baseProvider?.myUser?.uid},
+              );
+              _controller.animateToPage(Username.index,
+                  duration: Duration(milliseconds: 500),
+                  curve: Curves.easeInToLinear);
+            });
+          }
+          break;
+        }
+
+      case Username.index:
+        {
+          if (_usernameKey.currentState.model.formKey.currentState.validate()) {
+            if (!await _usernameKey.currentState.model.validate()) {
+              return false;
+            }
+            if (!_usernameKey.currentState.model.isLoading &&
+                _usernameKey.currentState.model.isValid) {
+              baseProvider.isLoginNextInProgress = true;
+              notifyListeners();
+
+              String username =
+                  _usernameKey.currentState.model.username.replaceAll('.', '@');
+              if (await dbProvider.checkIfUsernameIsAvailable(username)) {
+                _usernameKey.currentState.model.enabled = false;
+                notifyListeners();
+                bool res = await dbProvider.setUsername(
+                    username, userService.firebaseUser.uid);
+                if (res) {
+                  userService.baseUser.username = username;
+                  bool flag = false;
+                  logger.d(userService.baseUser.toJson().toString());
+                  try {
+                    final String _bearer = await _getBearerToken();
+                    logger.d(userService.baseUser.uid);
+                    final _body = {
+                      'uid': userService.baseUser.uid,
+                      'data': {
+                        "mMobile": userService.baseUser.mobile,
+                        "mName": userService.baseUser.name,
+                        "mEmail": userService.baseUser.email,
+                        "mIsEmailVerified":
+                            userService.baseUser.isEmailVerified ?? false,
+                        "mDob": userService.baseUser.dob,
+                        "mGender": userService.baseUser.gender,
+                        "mUsername": userService.baseUser.username,
+                        "mUserPrefs": {"tn": 1, "al": 0}
+                      }
+                    };
+                    final res = await APIService.instance.postData(
+                        _apiPaths.kAddNewUser,
+                        body: _body,
+                        token: _bearer);
+                    res['flag'] ? flag = true : flag = false;
+                    logger.d("Is Golden Ticket Rewarded: ${res['gtId']}");
+                    if (res['gtId'] != null &&
+                        res['gtId'].toString().isNotEmpty)
+                      GoldenTicketService.goldenTicketId = res['gtId'];
+                  } catch (e) {
+                    logger.d(e);
+                    _usernameKey.currentState.model.enabled = false;
+                    flag = false;
+                  }
+                  // bool flag = await dbProvider.updateUser(userService.baseUser);
+
+                  if (flag) {
+                    _analyticsService.track(
+                      eventName: AnalyticsEvents.userNameAdded,
+                      properties: {'userId': baseProvider?.myUser?.uid},
+                    );
+                    logger.d("User object saved successfully");
+                    _onSignUpComplete();
+                  } else {
+                    BaseUtil.showNegativeAlert(
+                      'Update failed',
+                      'Please try again in sometime',
+                    );
+                    _usernameKey.currentState.model.enabled = false;
+
+                    baseProvider.isLoginNextInProgress = false;
+                    notifyListeners();
+                  }
+                } else {
+                  BaseUtil.showNegativeAlert(
+                    'Username update failed',
+                    'Please try again in sometime',
+                  );
+                  _usernameKey.currentState.model.enabled = false;
+
+                  baseProvider.isLoginNextInProgress = false;
+                  notifyListeners();
+                }
+              } else {
+                BaseUtil.showNegativeAlert(
+                  'username not available',
+                  'Please choose another username',
+                );
+                _usernameKey.currentState.model.enabled = false;
+
+                baseProvider.isLoginNextInProgress = false;
+                notifyListeners();
+              }
+            } else {
+              BaseUtil.showNegativeAlert(
+                "Error",
+                "Please try again",
+              );
+            }
+          }
+
+          break;
+        }
+    }
+  }
+
   void _onSignInSuccess() async {
     logger.d("User authenticated. Now check if details previously available.");
-    //TODO: remove baseProvider firebase user.
-    baseProvider.firebaseUser = FirebaseAuth.instance.currentUser;
     userService.firebaseUser = FirebaseAuth.instance.currentUser;
-    logger.d("User is set: " + baseProvider.firebaseUser.uid);
+    logger.d("User is set: " + userService.firebaseUser.uid);
     ApiResponse<BaseUser> user =
-        await dbProvider.getUser(baseProvider.firebaseUser.uid);
+        await dbProvider.getUser(userService.firebaseUser.uid);
     if (user.code == 400) {
       BaseUtil.showNegativeAlert(
           'Something went wrong', 'Please reachout to customer support');
@@ -245,281 +535,13 @@ class LoginControllerViewModel extends BaseModel {
         verificationFailed: veriFailed);
   }
 
-  processScreenInput(int currentPage) async {
-    FocusScope.of(AppState.delegate.navigatorKey.currentContext).unfocus();
-    switch (currentPage) {
-      case MobileInputScreenView.index:
-        {
-          //in mobile input screen. Get and set mobile/ set error interface if not correct
-          if (_mobileScreenKey.currentState.model.formKey.currentState
-              .validate()) {
-            logger.d(
-                'Mobile number validated: ${_mobileScreenKey.currentState.model.getMobile()}');
-            this.userMobile = _mobileScreenKey.currentState.model.getMobile();
-            String refCode =
-                _mobileScreenKey.currentState.model.getReferralCode();
-            if (refCode != null && refCode.isNotEmpty)
-              BaseUtil.manualReferralCode = refCode;
-
-            LoginControllerView.mobileno = this.userMobile;
-            notifyListeners();
-
-            ///disable regular numbers for QA
-            if (FlavorConfig.isQA() &&
-                !this.userMobile.startsWith('999990000')) {
-              BaseUtil.showNegativeAlert('Mobile number not allowed',
-                  'Only dummy numbers are allowed in QA mode');
-              break;
-            }
-            _analyticsService.track(
-              eventName: AnalyticsEvents.signupEnterMobile,
-            );
-            this._verificationId = '+91' + this.userMobile;
-            _verifyPhone();
-            baseProvider.isLoginNextInProgress = true;
-            FocusScope.of(_mobileScreenKey.currentContext).unfocus();
-            notifyListeners();
-          }
-          break;
-        }
-      case OtpInputScreen.index:
-        {
-          String otp =
-              _otpScreenKey.currentState.model.otp; //otpInScreen.getOtp();
-          if (otp != null && otp.isNotEmpty && otp.length == 6) {
-            baseProvider.isLoginNextInProgress = true;
-            notifyListeners();
-            bool flag = await baseProvider.authenticateUser(baseProvider
-                .generateAuthCredential(_augmentedVerificationId, otp));
-            if (flag) {
-              _analyticsService.track(eventName: AnalyticsEvents.mobileOtpDone);
-              AppState.isOnboardingInProgress = true;
-              _otpScreenKey.currentState.model.onOtpReceived();
-              _onSignInSuccess();
-            } else {
-              _otpScreenKey.currentState.model.pinEditingController.text = "";
-              BaseUtil.showNegativeAlert(
-                  'Invalid Otp', 'Please enter a valid otp');
-              baseProvider.isLoginNextInProgress = false;
-              FocusScope.of(_otpScreenKey.currentContext).unfocus();
-              notifyListeners();
-            }
-          } else {
-            BaseUtil.showNegativeAlert(
-                'Enter OTP', 'Please enter a valid one time password');
-          }
-          break;
-        }
-      case NameInputScreen.index:
-        {
-          //if(nameInScreen.validate()) {
-
-          if (_nameScreenKey.currentState.model.formKey.currentState
-                  .validate() &&
-              _nameScreenKey.currentState.model.isValidDate()) {
-            if (!_nameScreenKey.currentState.model.isEmailEntered) {
-              BaseUtil.showNegativeAlert(
-                  'Email field empty', 'Please enter a valid email');
-              return false;
-            }
-
-            if (_nameScreenKey.currentState.model.selectedDate == null) {
-              BaseUtil.showNegativeAlert(
-                'Invalid Date of Birth',
-                'Please enter a valid date of birth',
-              );
-              return false;
-            } else if (!_isAdult(
-                _nameScreenKey.currentState.model.selectedDate)) {
-              BaseUtil.showNegativeAlert(
-                'Ineligible',
-                'You need to be above 18 to join',
-              );
-              return false;
-            }
-            if (_nameScreenKey.currentState.gen == null ||
-                _nameScreenKey.currentState.model.isInvested == null) {
-              BaseUtil.showNegativeAlert(
-                'Invalid details',
-                'Please enter all the fields',
-              );
-              return false;
-            }
-            if (_nameScreenKey.currentState.state == null) {
-              BaseUtil.showNegativeAlert(
-                'Invalid details',
-                'Please enter your state of residence',
-              );
-              return false;
-            }
-            FocusScope.of(_nameScreenKey.currentContext).unfocus();
-            baseProvider.isLoginNextInProgress = true;
-            notifyListeners();
-            if (userService.baseUser == null) {
-              //firebase user should never be null at this point
-              userService.baseUser = BaseUser.newUser(
-                  baseProvider.firebaseUser.uid,
-                  formatMobileNumber(baseProvider.firebaseUser.phoneNumber));
-            }
-            //userService.baseUser.name = nameInScreen.getName();
-            userService.baseUser.name =
-                _nameScreenKey.currentState.model.name.trim();
-            String email = _nameScreenKey.currentState.model.email.trim();
-            if (email != null && email.isNotEmpty) {
-              userService.baseUser.email = email;
-            }
-            userService.baseUser.isEmailVerified =
-                _nameScreenKey.currentState.model.isEmailVerified;
-            String dob =
-                "${_nameScreenKey.currentState.model.selectedDate.toLocal()}"
-                    .split(" ")[0];
-
-            userService.baseUser.dob = dob.trim();
-
-            int gender = _nameScreenKey.currentState.gen;
-            if (gender != null) {
-              if (gender == 1) {
-                userService.baseUser.gender = "M";
-              } else if (gender == 0) {
-                userService.baseUser.gender = "F";
-              } else
-                userService.baseUser.gender = "O";
-            }
-
-            bool isInv = _nameScreenKey.currentState.model.isInvested;
-            if (isInv != null) userService.baseUser.isInvested = isInv;
-            cstate = _nameScreenKey.currentState.state;
-            await CacheManager.writeCache(
-                key: "UserAugmontState", value: cstate, type: CacheType.string);
-
-            Future.delayed(Duration(seconds: 1), () {
-              baseProvider.isLoginNextInProgress = false;
-              notifyListeners();
-            }).then((value) {
-              _analyticsService.track(
-                eventName: AnalyticsEvents.profileInformationAdded,
-                properties: {'userId': baseProvider?.myUser?.uid},
-              );
-              _controller.animateToPage(Username.index,
-                  duration: Duration(milliseconds: 500),
-                  curve: Curves.easeInToLinear);
-            });
-          }
-          break;
-        }
-
-      case Username.index:
-        {
-          if (_usernameKey.currentState.model.formKey.currentState.validate()) {
-            if (!await _usernameKey.currentState.model.validate()) {
-              return false;
-            }
-            if (!_usernameKey.currentState.model.isLoading &&
-                _usernameKey.currentState.model.isValid) {
-              baseProvider.isLoginNextInProgress = true;
-              notifyListeners();
-
-              String username =
-                  _usernameKey.currentState.model.username.replaceAll('.', '@');
-              if (await dbProvider.checkIfUsernameIsAvailable(username)) {
-                _usernameKey.currentState.model.enabled = false;
-                notifyListeners();
-                bool res = await dbProvider.setUsername(
-                    username, baseProvider.firebaseUser.uid);
-                if (res) {
-                  userService.baseUser.username = username;
-                  bool flag = false;
-                  logger.d(userService.baseUser.toJson().toString());
-                  try {
-                    final String _bearer = await _getBearerToken();
-                    logger.d(userService.baseUser.uid);
-                    final _body = {
-                      'uid': userService.baseUser.uid,
-                      'data': {
-                        "mMobile": userService.baseUser.mobile,
-                        "mName": userService.baseUser.name,
-                        "mEmail": userService.baseUser.email,
-                        "mIsEmailVerified":
-                            userService.baseUser.isEmailVerified ?? false,
-                        "mDob": userService.baseUser.dob,
-                        "mGender": userService.baseUser.gender,
-                        "mUsername": userService.baseUser.username,
-                        "mUserPrefs": {"tn": 1, "al": 0}
-                      }
-                    };
-                    final res = await APIService.instance.postData(
-                        _apiPaths.kAddNewUser,
-                        body: _body,
-                        token: _bearer);
-                    res['flag'] ? flag = true : flag = false;
-                    logger.d("Is Golden Ticket Rewarded: ${res['gtId']}");
-                    if (res['gtId'] != null &&
-                        res['gtId'].toString().isNotEmpty)
-                      GoldenTicketService.goldenTicketId = res['gtId'];
-                  } catch (e) {
-                    logger.d(e);
-                    _usernameKey.currentState.model.enabled = false;
-                    flag = false;
-                  }
-                  // bool flag = await dbProvider.updateUser(userService.baseUser);
-
-                  if (flag) {
-                    _analyticsService.track(
-                      eventName: AnalyticsEvents.userNameAdded,
-                      properties: {'userId': baseProvider?.myUser?.uid},
-                    );
-                    logger.d("User object saved successfully");
-                    _onSignUpComplete();
-                  } else {
-                    BaseUtil.showNegativeAlert(
-                      'Update failed',
-                      'Please try again in sometime',
-                    );
-                    _usernameKey.currentState.model.enabled = false;
-
-                    baseProvider.isLoginNextInProgress = false;
-                    notifyListeners();
-                  }
-                } else {
-                  BaseUtil.showNegativeAlert(
-                    'Username update failed',
-                    'Please try again in sometime',
-                  );
-                  _usernameKey.currentState.model.enabled = false;
-
-                  baseProvider.isLoginNextInProgress = false;
-                  notifyListeners();
-                }
-              } else {
-                BaseUtil.showNegativeAlert(
-                  'username not available',
-                  'Please choose another username',
-                );
-                _usernameKey.currentState.model.enabled = false;
-
-                baseProvider.isLoginNextInProgress = false;
-                notifyListeners();
-              }
-            } else {
-              BaseUtil.showNegativeAlert(
-                "Error",
-                "Please try again",
-              );
-            }
-          }
-
-          break;
-        }
-    }
-  }
-
   Future<String> _getBearerToken() async {
-    String token = await baseProvider.firebaseUser.getIdToken();
+    String token = await userService.firebaseUser.getIdToken();
     logger.d("BearerToken: $token");
     return token;
   }
 
-  String formatMobileNumber(String pNumber) {
+  String _formatMobileNumber(String pNumber) {
     if (pNumber != null && pNumber.isNotEmpty) {
       if (RegExp("^[0-9+]*\$").hasMatch(pNumber)) {
         if (pNumber.length == 13 && pNumber.startsWith("+91")) {
@@ -570,27 +592,6 @@ class LoginControllerViewModel extends BaseModel {
 
   void _pageListener() {
     _pageNotifier.value = _controller.page;
-  }
-
-  init(initPage) {
-    _currentPage = (initPage != null) ? initPage : MobileInputScreenView.index;
-    _formProgress = 0.2 * (_currentPage + 1);
-    _controller = new PageController(initialPage: _currentPage);
-    _controller.addListener(_pageListener);
-    _pageNotifier = ValueNotifier(0.0);
-    _pages = [
-      MobileInputScreenView(key: _mobileScreenKey),
-      OtpInputScreen(
-        key: _otpScreenKey,
-        otpEntered: _onOtpFilled,
-        resendOtp: _onOtpResendRequested,
-        changeNumber: _onChangeNumberRequest,
-        mobileNo: this.userMobile,
-      ),
-      NameInputScreen(key: _nameScreenKey),
-      Username(key: _usernameKey)
-      // AddressInputScreen(key: _addressScreenKey),
-    ];
   }
 
   exit() {
