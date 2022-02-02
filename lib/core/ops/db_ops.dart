@@ -91,6 +91,8 @@ class DBModel extends ChangeNotifier {
       try {
         user = BaseUser.fromMap(doc.data(), id);
       } catch (e) {
+        logFailure(
+            id, FailType.UserDataCorrupted, {'message': "User data corrupted"});
         return ApiResponse.withError("User data corrupted", 400);
       }
 
@@ -1031,7 +1033,8 @@ class DBModel extends ChangeNotifier {
         log.error('Crashlytics record error fail : $e');
       }
       if (failType == FailType.UserAugmontSellFailed ||
-          failType == FailType.UserPaymentCompleteTxnFailed) {
+          failType == FailType.UserPaymentCompleteTxnFailed ||
+          failType == FailType.UserDataCorrupted) {
         await _api.addPriorityFailedReport(dMap);
       } else if (failType == FailType.TambolaTicketGenerationFailed) {
         await _api.addGameFailedReport(dMap);
