@@ -250,17 +250,14 @@ class LoginControllerViewModel extends BaseModel {
             await CacheManager.writeCache(
                 key: "UserAugmontState", value: cstate, type: CacheType.string);
 
-            Future.delayed(Duration(seconds: 1), () {
-              setState(ViewState.Idle);
-            }).then((value) {
-              _analyticsService.track(
-                eventName: AnalyticsEvents.profileInformationAdded,
-                properties: {'userId': userService?.baseUser?.uid},
-              );
-              _controller.animateToPage(Username.index,
-                  duration: Duration(milliseconds: 500),
-                  curve: Curves.easeInToLinear);
-            });
+            setState(ViewState.Idle);
+            _analyticsService.track(
+              eventName: AnalyticsEvents.profileInformationAdded,
+              properties: {'userId': userService?.baseUser?.uid},
+            );
+            _controller.animateToPage(Username.index,
+                duration: Duration(milliseconds: 500),
+                curve: Curves.easeInToLinear);
           }
           break;
         }
@@ -376,7 +373,6 @@ class LoginControllerViewModel extends BaseModel {
       BaseUtil.showNegativeAlert('Your account is under maintenance',
           'Please reach out to customer support');
       setState(ViewState.Idle);
-
       _controller.animateToPage(MobileInputScreenView.index,
           duration: Duration(milliseconds: 500), curve: Curves.easeInToLinear);
     } else if (user.model == null ||
