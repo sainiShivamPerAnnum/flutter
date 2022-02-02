@@ -380,8 +380,14 @@ class LoginControllerViewModel extends BaseModel {
     ApiResponse<BaseUser> user =
         await dbProvider.getUser(userService.firebaseUser.uid);
     if (user.code == 400) {
-      BaseUtil.showNegativeAlert(
-          'Something went wrong', 'Please reach out to customer support');
+      BaseUtil.showNegativeAlert('Your account is under maintenance',
+          'Please reach out to customer support');
+      if (baseProvider.isLoginNextInProgress == true) {
+        baseProvider.isLoginNextInProgress = false;
+        notifyListeners();
+      }
+      _controller.animateToPage(MobileInputScreenView.index,
+          duration: Duration(milliseconds: 500), curve: Curves.easeInToLinear);
     } else if (user.model == null ||
         (user.model != null && user.model.hasIncompleteDetails())) {
       if (baseProvider.isLoginNextInProgress == true) {
