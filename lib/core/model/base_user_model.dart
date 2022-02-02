@@ -118,7 +118,7 @@ class BaseUser {
             data[fldIsIciciEnabled],
             data[fldIsAugmontEnabled],
             data[fldUsername]?.toString(),
-            data[fldIsEmailVerified],
+            data[fldIsEmailVerified] ?? false,
             data[fldIsBlocked] ?? false,
             UserPreferences(data[fldUserPrefs]),
             data[fldCreatedOn]);
@@ -153,7 +153,8 @@ class BaseUser {
 
   bool hasIncompleteDetails() {
     //return ((_mobile?.isEmpty??true) || (_name?.isEmpty??true) || (_email?.isEmpty??true));
-    return (((mobile?.isEmpty ?? true) || (name?.isEmpty ?? true)) || (username?.isEmpty??true));
+    return (((mobile?.isEmpty ?? true) || (name?.isEmpty ?? true)) ||
+        (username?.isEmpty ?? true));
   }
 
   @override
