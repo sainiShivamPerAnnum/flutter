@@ -381,7 +381,7 @@ class LoginControllerViewModel extends BaseModel {
         await dbProvider.getUser(userService.firebaseUser.uid);
     if (user.code == 400) {
       BaseUtil.showNegativeAlert(
-          'Something went wrong', 'Please reachout to customer support');
+          'Something went wrong', 'Please reach out to customer support');
     } else if (user.model == null ||
         (user.model != null && user.model.hasIncompleteDetails())) {
       if (baseProvider.isLoginNextInProgress == true) {
