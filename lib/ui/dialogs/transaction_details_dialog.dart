@@ -5,6 +5,7 @@ import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/modals/octfest_info_modal.dart';
 import 'package:felloapp/util/locator.dart';
@@ -31,6 +32,7 @@ class TransactionDetailsDialog extends StatefulWidget {
 
 class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
   final Log log = new Log('TransactionDetailsDialog');
+  final _userService = locator<UserService>();
   double _width;
   AugmontModel augmontProvider;
   BaseUtil baseProvider;
@@ -356,10 +358,10 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         BeerTicketItem(
-                            label: "Name", value: baseProvider.myUser.name),
+                            label: "Name", value: _userService.baseUser.name),
                         BeerTicketItem(
                             label: "Mobile",
-                            value: "+91 ${baseProvider.myUser.mobile}"),
+                            value: "+91 ${_userService.baseUser.mobile}"),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [

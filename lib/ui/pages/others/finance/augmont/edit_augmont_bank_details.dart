@@ -71,13 +71,13 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
       baseProvider = Provider.of<BaseUtil>(context, listen: false);
       dbProvider = Provider.of<DBModel>(context, listen: false);
       iProvider = Provider.of<ICICIModel>(context, listen: false);
-      if (baseProvider.myUser.isAugmontOnboarded &&
+      if (_userService.baseUser.isAugmontOnboarded &&
           baseProvider.augmontDetail == null) {
         setState(() {
           isLoading = true;
         });
         dbProvider
-            .getUserAugmontDetails(baseProvider.myUser.uid)
+            .getUserAugmontDetails(_userService.baseUser.uid)
             .then((detail) {
           _isInitialized = false;
           isLoading = false;
@@ -583,7 +583,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                     pBankAccNo.trim(), pBankIfsc.trim());
                 dbProvider
                     .updateUserAugmontDetails(
-                        baseProvider.myUser.uid, baseProvider.augmontDetail)
+                        _userService.baseUser.uid, baseProvider.augmontDetail)
                     .then((flag) {
                   if (widget.isWithdrawFlow) {
                     baseProvider.isEditAugmontBankDetailInProgress = false;

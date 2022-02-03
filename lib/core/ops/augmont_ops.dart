@@ -90,75 +90,6 @@ class AugmontModel extends ChangeNotifier {
     return 'fello${u.toString()}$mobile';
   }
 
-  String _constructUsername() {
-    var rnd = new Random();
-    int u = rnd.nextInt(26);
-    String _randomChar = String.fromCharCode(u + 65);
-    String _baseUsername =
-        _baseProvider.myUser.uid.replaceAll(new RegExp(r"[0-9]"), "");
-    return 'fello$_randomChar$_baseUsername';
-  }
-
-  Future<UserAugmontDetail> createUser(
-      String mobile,
-      String pan,
-      String stateId,
-      String bankHolderName,
-      String bankAccNo,
-      String ifsc) async {
-    if (!isInit()) await _init();
-
-    String _uid = _constructUid(mobile);
-    String _uname = _constructUsername();
-    var _params = {
-      CreateUser.fldMobile: mobile,
-      CreateUser.fldID: _uid,
-      CreateUser.fldUserName: _uname,
-      CreateUser.fldStateId: stateId,
-    };
-
-    var _request = http.Request(
-        'GET', Uri.parse(_constructRequest(CreateUser.path, _params)));
-    _request.headers.addAll(headers);
-    http.StreamedResponse _response = await _request.send();
-
-    final resMap = await _processResponse(_response);
-    if (resMap == null || !resMap[INTERNAL_FAIL_FLAG]) {
-      log.error('Query Failed');
-      return null;
-    } else {
-      log.debug(resMap[CreateUser.resStatusCode].toString());
-      resMap["flag"] = QUERY_PASSED;
-
-      ///create augmont detail object
-      _baseProvider.augmontDetail = UserAugmontDetail.newUser(
-          _uid, _uname, stateId, bankHolderName, bankAccNo, ifsc);
-      bool _p = false, _a = false;
-
-      ///add the pan number
-      if (_baseProvider.userRegdPan == null ||
-          _baseProvider.userRegdPan.isEmpty ||
-          _baseProvider.userRegdPan != pan) {
-        if (pan != null) {
-          _baseProvider.userRegdPan = pan;
-          _p = await _baseProvider.panService
-              .saveUserPan(_baseProvider.userRegdPan);
-        }
-      }
-
-      ///push the augmont detail object
-      _a = await _dbModel.updateUserAugmontDetails(
-          _baseProvider.myUser.uid, _baseProvider.augmontDetail);
-
-      ///switch augmont onboarding to true and notify listeners if everything goes in order
-      if (_p && _a) {
-        _baseProvider.updateAugmontOnboarded(true);
-        await _dbModel.updateUser(_baseProvider.myUser);
-      }
-
-      return _baseProvider.augmontDetail;
-    }
-  }
 
   Future<UserAugmontDetail> createSimpleUser(
       String mobile, String stateId) async {
@@ -264,7 +195,7 @@ class AugmontModel extends ChangeNotifier {
     }
 
     _tranIdResponse = await _investmentActionsRepository.createTranId(
-        userUid: _baseProvider.myUser.uid);
+        userUid: _userService.baseUser.uid);
     if (_tranIdResponse.code != 200 ||
         _tranIdResponse.model == null ||
         _tranIdResponse.model.isEmpty) {
@@ -275,8 +206,8 @@ class AugmontModel extends ChangeNotifier {
     String _note1 =
         'BlockID: ${buyRates.blockId},gPrice: ${buyRates.goldBuyPrice}';
     String _note2 =
-        'UserId:${_baseProvider.myUser.uid},MerchantTxnID: ${_tranIdResponse.model}';
-    String rzpOrderId = await _rzpGateway.createOrderId(amount, _baseProvider.myUser.uid, _tranIdResponse.model, _note1, _note2);
+        'UserId:${_userService.baseUser.uid},MerchantTxnID: ${_tranIdResponse.model}';
+    String rzpOrderId = await _rzpGateway.createOrderId(amount, _userService.baseUser.uid, _tranIdResponse.model, _note1, _note2);
     if (rzpOrderId == null) {
       _logger.e("Received null from create Order id");
       return null;
@@ -300,7 +231,7 @@ class AugmontModel extends ChangeNotifier {
     _initialDepositResponse =
         await _investmentActionsRepository.initiateUserDeposit(
             tranId: _tranIdResponse.model,
-            userUid: _baseProvider.myUser.uid,
+            userUid: _userService.baseUser.uid,
             amount: amount,
             initAugMap: _initAugMap,
             initRzpMap: _initRzpMap);
@@ -311,8 +242,8 @@ class AugmontModel extends ChangeNotifier {
 
       UserTransaction tTxn = await _rzpGateway.submitAugmontTransaction(
           _baseProvider.currentAugmontTxn,
-          _baseProvider.myUser.mobile,
-          _baseProvider.myUser.email);
+          _userService.baseUser.mobile,
+          _userService.baseUser.email);
 
       if (tTxn != null) {
         _baseProvider.currentAugmontTxn = tTxn;
@@ -320,7 +251,7 @@ class AugmontModel extends ChangeNotifier {
       }
     } else {
       _dbModel.logFailure(
-          _baseProvider.myUser.uid,
+          _userService.baseUser.uid,
           FailType.InitiateUserDepositApiFailed,
           {'message': _initialDepositResponse?.errorMessage});
       return null;
@@ -388,7 +319,7 @@ class AugmontModel extends ChangeNotifier {
   ///update object
   _onPaymentComplete() async {
     Map<String, String> _params = {
-      SubmitGoldPurchase.fldMobile: _baseProvider.myUser.mobile,
+      SubmitGoldPurchase.fldMobile: _userService.baseUser.mobile,
       SubmitGoldPurchase.fldStateId: _baseProvider.augmontDetail.userStateId,
       SubmitGoldPurchase.fldAmount:
           _baseProvider.currentAugmontTxn.amount.toString(),
@@ -417,7 +348,7 @@ class AugmontModel extends ChangeNotifier {
     _logger.d(_baseProvider.currentAugmontTxn.amount);
     _logger.d(rzpUpdates);
     _logger.d(_params);
-    _logger.d(_baseProvider.myUser.uid);
+    _logger.d(_userService.baseUser.uid);
     _logger
         .d(_initialDepositResponse.model.response.transactionDoc.transactionId);
     _logger.d(_initialDepositResponse
@@ -428,7 +359,7 @@ class AugmontModel extends ChangeNotifier {
       amount: _baseProvider.currentAugmontTxn.amount,
       rzpUpdates: rzpUpdates,
       submitGoldUpdates: _params,
-      userUid: _baseProvider.myUser.uid,
+      userUid: _userService.baseUser.uid,
       txnId:
           _initialDepositResponse.model.response.transactionDoc.transactionId,
       enqueuedTaskDetails: _initialDepositResponse
@@ -477,7 +408,7 @@ class AugmontModel extends ChangeNotifier {
         _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
     } else {
       _dbModel.logFailure(
-          _baseProvider.myUser.uid,
+          _userService.baseUser.uid,
           FailType.CompleteUserDepositApiFailed,
           {'message': _initialDepositResponse?.errorMessage});
 
@@ -544,7 +475,7 @@ class AugmontModel extends ChangeNotifier {
       'txnDocId': _baseProvider.currentAugmontTxn.docKey
     };
 
-    await _dbModel.logFailure(_baseProvider.myUser.uid,
+    await _dbModel.logFailure(_userService.baseUser.uid,
         FailType.UserRazorpayPurchaseFailed, _failMap);
     _baseProvider.currentAugmontTxn.tranStatus =
         UserTransaction.TRAN_STATUS_CANCELLED;
@@ -553,7 +484,7 @@ class AugmontModel extends ChangeNotifier {
         await _investmentActionsRepository.cancelUserDeposit(
             txnId: _initialDepositResponse
                 .model.response.transactionDoc.transactionId,
-            userUid: _baseProvider.myUser.uid,
+            userUid: _userService.baseUser.uid,
             rzpMap: rzpMap,
             augMap: augMap,
             enqueuedTaskDetails: _initialDepositResponse
@@ -562,7 +493,7 @@ class AugmontModel extends ChangeNotifier {
     _txnService.updateTransactions();
     if (_onCancleUserDepositResponse.code == 400) {
       _dbModel.logFailure(
-          _baseProvider.myUser.uid, FailType.CompleteUserDepositApiFailed, {
+          _userService.baseUser.uid, FailType.CompleteUserDepositApiFailed, {
         'message': _onCancleUserDepositResponse?.errorMessage ??
             "Cancel user deposit failed"
       });
@@ -620,10 +551,10 @@ class AugmontModel extends ChangeNotifier {
         sellRates.blockId,
         sellRates.goldSellPrice,
         quantity,
-        _baseProvider.myUser.uid);
+        _userService.baseUser.uid);
 
     _tranIdResponse = await _investmentActionsRepository.createTranId(
-        userUid: _baseProvider.myUser.uid);
+        userUid: _userService.baseUser.uid);
     if (_tranIdResponse.code != 200 ||
         _tranIdResponse.model == null ||
         _tranIdResponse.model.isEmpty) {
@@ -632,7 +563,7 @@ class AugmontModel extends ChangeNotifier {
     }
 
     Map<String, String> _params = {
-      SubmitGoldSell.fldMobile: _baseProvider.myUser.mobile,
+      SubmitGoldSell.fldMobile: _userService.baseUser.mobile,
       SubmitGoldSell.fldQuantity: quantity.toString(),
       SubmitGoldSell.fldAugmontUid: _baseProvider.augmontDetail.userId,
       SubmitGoldSell.fldBlockId: sellRates.blockId,
@@ -650,7 +581,7 @@ class AugmontModel extends ChangeNotifier {
             tranDocId: _tranIdResponse.model,
             amount: -1 * _baseProvider.currentAugmontTxn.amount,
             sellGoldMap: _params,
-            userUid: _baseProvider.myUser.uid);
+            userUid: _userService.baseUser.uid);
 
     bool _successFlag = true;
     if (_onSellCompleteResponse.code == 200) {
@@ -697,7 +628,7 @@ class AugmontModel extends ChangeNotifier {
 
     if (!_successFlag) {
       _dbModel.logFailure(
-          _baseProvider.myUser.uid, FailType.WithdrawlCompleteApiFailed, {
+          _userService.baseUser.uid, FailType.WithdrawlCompleteApiFailed, {
         'message':
             _initialDepositResponse?.errorMessage ?? "Withdrawal api failed"
       });

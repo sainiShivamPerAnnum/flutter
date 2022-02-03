@@ -19,14 +19,14 @@ class PanService extends ChangeNotifier {
   ///Returns either 'null' or a valid PAN Number
   Future<String> getUserPan() async {
     ///assumption: if they were never onboarded to augmont, they havent added their pan
-    if (!baseProvider.myUser.isAugmontOnboarded) {
+    if (!_userService.baseUser.isAugmontOnboarded) {
       return null;
     }
     String pan_v1;
 
     // ///check if user added their pan in base user
-    // if (baseProvider.myUser.pan != null && baseProvider.myUser.pan.isNotEmpty) {
-    //   pan_v1 = baseProvider.myUser.pan;
+    // if (_userService.baseUser.pan != null && _userService.baseUser.pan.isNotEmpty) {
+    //   pan_v1 = _userService.baseUser.pan;
     // }
 
     ///now check if pan new version available

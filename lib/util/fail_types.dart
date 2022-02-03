@@ -24,6 +24,7 @@ enum FailType {
   UserRedemptionOTPSendFailed,
   UserAugmontPurchaseFailed,
   UserPaymentCompleteTxnFailed,
+  UserDataCorrupted,
   UserAugmontSellFailed,
   UserRazorpayPurchaseFailed,
   UserAugmontDepositUpdateDiscrepancy,

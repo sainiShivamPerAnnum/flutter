@@ -81,13 +81,25 @@ class DBModel extends ChangeNotifier {
   }
 
   //////////////////BASE USER//////////////////////////
-  Future<BaseUser> getUser(String id) async {
+  Future<ApiResponse<BaseUser>> getUser(String id) async {
     try {
       var doc = await _api.getUserById(id);
-      return BaseUser.fromMap(doc.data(), id);
+      BaseUser user;
+      if (doc.data() == null) {
+        return ApiResponse(model: null, code: 200);
+      }
+      try {
+        user = BaseUser.fromMap(doc.data(), id);
+      } catch (e) {
+        logFailure(
+            id, FailType.UserDataCorrupted, {'message': "User data corrupted"});
+        return ApiResponse.withError("User data corrupted", 400);
+      }
+
+      return ApiResponse(model: user, code: 200);
     } catch (e) {
       log.error("Error fetch User details: " + e.toString());
-      return null;
+      return ApiResponse(model: null, code: 400);
     }
   }
 
@@ -1021,7 +1033,8 @@ class DBModel extends ChangeNotifier {
         log.error('Crashlytics record error fail : $e');
       }
       if (failType == FailType.UserAugmontSellFailed ||
-          failType == FailType.UserPaymentCompleteTxnFailed) {
+          failType == FailType.UserPaymentCompleteTxnFailed ||
+          failType == FailType.UserDataCorrupted) {
         await _api.addPriorityFailedReport(dMap);
       } else if (failType == FailType.TambolaTicketGenerationFailed) {
         await _api.addGameFailedReport(dMap);

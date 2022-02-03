@@ -50,7 +50,7 @@ class _SupportPageState extends State<SupportPage> {
   final _analyticsService = locator<AnalyticsService>();
 
   void init() {
-    _requestCallPhoneController.text = baseProvider.myUser.mobile;
+    _requestCallPhoneController.text = _userService.baseUser.mobile;
     // enableFlashChat();
     isInit = true;
   }
@@ -193,9 +193,9 @@ class _SupportPageState extends State<SupportPage> {
                                       //feedback submission allowed even if user not signed in
                                       dbProvider
                                           .submitFeedback(
-                                              (baseProvider.firebaseUser ==
+                                              (_userService.firebaseUser ==
                                                           null ||
-                                                      baseProvider.firebaseUser
+                                                      _userService.firebaseUser
                                                               .uid ==
                                                           null)
                                                   ? 'UNKNOWN'
@@ -472,8 +472,8 @@ class _SupportPageState extends State<SupportPage> {
                                 return;
                               }
                               bool res = await dbProvider.addCallbackRequest(
-                                  baseProvider.myUser.uid,
-                                  baseProvider.myUser.name,
+                                  _userService.baseUser.uid,
+                                  _userService.baseUser.name,
                                   _requestCallPhoneController.text.trim(),
                                   callTimes[_selectedTimeSlotIndex]);
                               if (res) {
@@ -495,7 +495,7 @@ class _SupportPageState extends State<SupportPage> {
                                   'Error',
                                   'Something went wrong while placing a request, please try again later.',
                                 );
-                                if (baseProvider.myUser.uid != null) {
+                                if (_userService.baseUser.uid != null) {
                                   Map<String, dynamic> errorDetails = {
                                     'error_msg':
                                         'Placing a call request failed',
@@ -503,7 +503,7 @@ class _SupportPageState extends State<SupportPage> {
                                         _requestCallPhoneController.text.trim(),
                                   };
                                   dbProvider.logFailure(
-                                      baseProvider.myUser.uid,
+                                      _userService.baseUser.uid,
                                       FailType.RequestCallbackFailed,
                                       errorDetails);
                                 }

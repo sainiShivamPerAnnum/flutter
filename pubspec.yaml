@@ -48,7 +48,7 @@ dependencies:
   google_fonts: ^2.1.0
   google_sign_in: ^5.0.7
   http: ^0.13.3
-  image_gallery_saver: ^1.6.9
+  # image_gallery_saver: ^1.6.9
   image_picker: ^0.8.3
   intl: ^0.17.0
   logger: ^1.0.0

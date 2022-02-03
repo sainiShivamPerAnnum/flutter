@@ -81,7 +81,7 @@ class VerifyEmailState extends State<VerifyEmail> {
           onEmailSignIn: () {
             baseProvider.isGoogleSignInProgress = false;
             // _isContinueWithGoogle = false;
-            email.text = baseProvider.myUser.email;
+            email.text = _userService.baseUser.email;
             // _isEmailEnabled = true;
 
             Navigator.pop(context);
@@ -106,7 +106,7 @@ class VerifyEmailState extends State<VerifyEmail> {
 
   sendEmail() async {
     if (!await httpProvider.isEmailNotRegistered(
-        baseProvider.myUser.uid, email.text.trim())) {
+        _userService.baseUser.uid, email.text.trim())) {
       setState(() {
         _isProcessing = false;
       });
@@ -149,7 +149,7 @@ class VerifyEmailState extends State<VerifyEmail> {
       baseProvider.setEmail(email.text.trim());
       baseProvider.setEmailVerified();
       _userService.isEmailVerified = true;
-      bool res = await dbProvider.updateUser(baseProvider.myUser);
+      bool res = await dbProvider.updateUser(_userService.baseUser);
       setState(() {
         _isVerifying = false;
       });
@@ -184,12 +184,12 @@ class VerifyEmailState extends State<VerifyEmail> {
     final GoogleSignInAccount googleUser = await _gSignIn.signIn();
     if (googleUser != null) {
       if (await httpProvider.isEmailNotRegistered(
-          baseProvider.myUser.uid, googleUser.email)) {
+          _userService.baseUser.uid, googleUser.email)) {
         email.text = googleUser.email;
-        baseProvider.myUser.email = googleUser.email;
+        _userService.baseUser.email = googleUser.email;
         baseProvider.setEmailVerified();
         _userService.isEmailVerified = true;
-        bool res = await dbProvider.updateUser(baseProvider.myUser);
+        bool res = await dbProvider.updateUser(_userService.baseUser);
         if (res) {
           setState(() {
             baseProvider.isGoogleSignInProgress = false;
