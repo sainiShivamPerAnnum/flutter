@@ -38,99 +38,93 @@ class Save extends StatelessWidget {
                   Expanded(
                     child: ListView(
                       children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.pageHorizontalMargins),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: AspectRatio(
+                                  aspectRatio: 1 / 1,
+                                  child: InkWell(
+                                    onTap: () => model.navigateToSellScreen(),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: UiConstants.tertiaryLight,
+                                        borderRadius: BorderRadius.circular(
+                                            SizeConfig.roundness24),
+                                        border: Border.all(
+                                            width: 0.5,
+                                            color: UiConstants.tertiarySolid),
+                                      ),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text("My Gold Balance"),
+                                          Text("0.00 grms"),
+                                          Text("Tap to know more"),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 24),
+                              Expanded(
+                                child: AspectRatio(
+                                  aspectRatio: 1 / 1,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: UiConstants.primaryLight,
+                                      borderRadius: BorderRadius.circular(
+                                          SizeConfig.roundness24),
+                                      border: Border.all(
+                                          width: 0.5,
+                                          color: UiConstants.primaryColor),
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text("Current Gold Price"),
+                                        Text("₹5000/grm"),
+                                        Text("(valid only for 03:00)"),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: SizeConfig.padding20),
                         AugmontCard(model: model),
-                        // SizedBox(
-                        //   height: SizeConfig.screenWidth * 0.08,
-                        // ),
-                        // WinningsContainer(
-                        //   shadow: true,
-                        //   child: Container(
-                        //     child: Padding(
-                        //       padding: EdgeInsets.all(SizeConfig.padding16),
-                        //       child: Row(
-                        //         mainAxisAlignment: MainAxisAlignment.center,
-                        //         children: [
-                        //           SvgPicture.asset(
-                        //             Assets.giftBoxOpen,
-                        //           ),
-                        //           SizedBox(
-                        //               width: SizeConfig.screenWidth * 0.05),
-                        //           Column(
-                        //             crossAxisAlignment:
-                        //                 CrossAxisAlignment.start,
-                        //             mainAxisAlignment:
-                        //                 MainAxisAlignment.spaceEvenly,
-                        //             children: [
-                        //               Text(
-                        //                 locale.saveWinningsLabel,
-                        //                 style: TextStyles.body1
-                        //                     .colour(Colors.white)
-                        //                     .light,
-                        //               ),
-                        //               UserWinningsSE(
-                        //                 style: TextStyles.title3
-                        //                     .colour(Colors.white)
-                        //                     .bold,
-                        //               ),
-                        //             ],
-                        //           )
-                        //         ],
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
                         SizedBox(height: SizeConfig.padding32),
                         Container(
                           width: SizeConfig.screenWidth,
                           height: SizeConfig.screenWidth * 0.24,
                           child: ListView(
-                              scrollDirection: Axis.horizontal,
-                              children: [
-                                SaveInfoTile(
-                                  svg: 'images/svgs/gold.svg',
-                                  title: "About digital Gold",
-                                  onPressed: () {
-                                    logger.d("Save info tile tap check");
-                                    model.navigateToAboutGold();
-                                  },
-                                ),
-                                SaveInfoTile(
-                                  png: "images/augmont-share.png",
-                                  title: "Learn more about Augmont",
-                                  onPressed: () {
-                                    model.openAugmontWebUri();
-                                  },
-                                ),
-                                // SaveInfoTile(
-                                //   png: "images/augmont-share.png",
-                                //   title: "What is digital Gold",
-                                //   onPressed: () {},
-                                // ),
-                              ]),
+                            scrollDirection: Axis.horizontal,
+                            children: [
+                              SaveInfoTile(
+                                svg: 'images/svgs/gold.svg',
+                                title: "About digital Gold",
+                                onPressed: () {
+                                  logger.d("Save info tile tap check");
+                                  model.navigateToAboutGold();
+                                },
+                              ),
+                              SaveInfoTile(
+                                png: "images/augmont-share.png",
+                                title: "Learn more about Augmont",
+                                onPressed: () {
+                                  model.openAugmontWebUri();
+                                },
+                              ),
+                            ],
+                          ),
                         ),
-                        // SizedBox(height: SizeConfig.padding24),
-                        // Container(
-                        //   margin: EdgeInsets.symmetric(
-                        //       horizontal: SizeConfig.pageHorizontalMargins),
-                        //   decoration: BoxDecoration(
-                        //     color: Colors.white,
-                        //     borderRadius:
-                        //         BorderRadius.circular(SizeConfig.roundness32),
-                        //   ),
-                        //   child: Column(
-                        //     crossAxisAlignment: CrossAxisAlignment.start,
-                        //     children: [
-                        //       SizedBox(height: SizeConfig.padding20),
-                        //       Container(
-                        //           margin: EdgeInsets.symmetric(
-                        //               horizontal:
-                        //                   SizeConfig.pageHorizontalMargins),
-                        //           child: Text(locale.saveHistory,
-                        //               style: TextStyles.title4.bold)),
-                        //       MiniTransactionCard(),
-                        //     ],
-                        //   ),
-                        // ),
                         SizedBox(height: SizeConfig.navBarHeight * 2),
                       ],
                     ),
@@ -153,12 +147,8 @@ class Save extends StatelessWidget {
                         Timestamp.now(),
                         4,
                         1,
-                        Additionals(
-                            "Apply Coupon FREE3% and",
-                            "get ₹300 worth gold for free",
-                            "",
-                            null,
-                            "Apply Coupon"),
+                        Additionals("", "get ₹300 worth gold for free", "",
+                            null, "Apply Coupon"),
                       ),
                       onPressed: () {},
                       shimmer: true,

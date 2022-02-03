@@ -157,16 +157,6 @@ class CouponCard extends StatelessWidget {
 
   CouponCard({this.model, this.shimmer = false, this.onPressed});
 
-  // calculateWidth() {
-  //   if (model.gridX != null) {
-  //     if (model.gridX == 1)
-  //       return SizeConfig.screenWidth * 0.5;
-  //     else
-  //       return SizeConfig.screenWidth * 0.85;
-  //   } else
-  //     return SizeConfig.screenWidth * 0.5;
-  // }
-
   @override
   Widget build(BuildContext context) {
     return model.priority == 1
@@ -178,7 +168,7 @@ class CouponCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(SizeConfig.roundness24),
               child: Container(
                 width: SizeConfig.screenWidth * 0.85,
-                height: SizeConfig.screenWidth * 0.28,
+                height: SizeConfig.screenWidth * 0.2,
                 margin: EdgeInsets.only(
                   bottom: SizeConfig.screenWidth * 0.1,
                   // right: SizeConfig.pageHorizontalMargins,
@@ -235,41 +225,20 @@ class CouponCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(SizeConfig.roundness32),
                   child: Shimmer(
                     enabled: shimmer,
+                    duration: Duration(seconds: 5),
                     child: (model.additionals.bgImage == null ||
                             model.additionals.bgImage.isEmpty)
                         ? Container(
                             padding: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.screenWidth * 0.07,
-                            ),
+                                horizontal: SizeConfig.padding20),
                             child: Row(
                               children: [
                                 Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        getTitle(),
-                                        overflow: TextOverflow.clip,
-                                        maxLines: 1,
-                                        style: TextStyles.body2
-                                            .colour(Colors.white)
-                                            .bold,
-                                      ),
-                                      SizedBox(height: SizeConfig.padding4),
-                                      Text(
-                                        getSubtitle(),
-                                        overflow: TextOverflow.clip,
-                                        maxLines: 1,
-                                        style: TextStyles.body2
-                                            .colour(Colors.white)
-                                            .bold,
-                                      ),
-                                      SizedBox(
-                                        height: SizeConfig.padding8,
-                                      ),
-                                    ],
+                                  child: Text(
+                                    "Buy Gold worth ₹1000 and get 3% Gold free.",
+                                    overflow: TextOverflow.clip,
+                                    style:
+                                        TextStyles.body2.colour(Colors.white),
                                   ),
                                 ),
                                 if (model.additionals.btnText != null)

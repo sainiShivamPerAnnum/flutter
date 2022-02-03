@@ -9,6 +9,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class GoldBalanceDetailsView extends StatelessWidget {
   const GoldBalanceDetailsView({Key key}) : super(key: key);
@@ -61,6 +62,8 @@ class GoldBalanceDetailsView extends StatelessWidget {
                     Container(
                       margin: EdgeInsets.symmetric(
                           vertical: SizeConfig.pageHorizontalMargins / 2),
+                      padding: EdgeInsets.only(
+                          right: SizeConfig.pageHorizontalMargins / 2),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius:
@@ -91,27 +94,24 @@ class GoldBalanceDetailsView extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Benifits of Investing in Digital gold",
-                              style: TextStyles.body1.bold),
+                          Text("Why Digital gold",
+                              style: TextStyles.title4.bold),
                           SizedBox(height: SizeConfig.padding20),
-                          FelloTile(
-                            showTrailingIcon: false,
+                          FeatureTile(
                             leadingAsset: Assets.gold24K,
-                            title: "24K pure gold",
+                            title: "24K",
                             subtitle: "Augmont provides 99.99% pure gold",
                           ),
                           SizedBox(height: SizeConfig.padding12),
-                          FelloTile(
-                            showTrailingIcon: false,
+                          FeatureTile(
                             leadingAsset: Assets.gold24K,
-                            title: "24K pure gold",
+                            title: "99.99% pure",
                             subtitle: "Augmont provides 99.99% pure gold",
                           ),
                           SizedBox(height: SizeConfig.padding12),
-                          FelloTile(
-                            showTrailingIcon: false,
+                          FeatureTile(
                             leadingAsset: Assets.gold24K,
-                            title: "24K pure gold",
+                            title: "100% secure",
                             subtitle: "Augmont provides 99.99% pure gold",
                           )
                         ],
@@ -168,6 +168,68 @@ class GoldBalanceDetailsView extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class FeatureTile extends StatelessWidget {
+  final String leadingAsset;
+  final String title;
+  final String subtitle;
+
+  FeatureTile({
+    this.leadingAsset,
+    this.subtitle,
+    this.title,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      //height: SizeConfig.screenWidth * 0.25,
+      decoration: BoxDecoration(
+        color: Color(0xffF6F9FF),
+        borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+      ),
+      padding: EdgeInsets.symmetric(
+          vertical: SizeConfig.padding16, horizontal: SizeConfig.padding24),
+      child: Row(
+        children: [
+          CircleAvatar(
+            backgroundColor: Color(0xffE3F4F7),
+            radius: SizeConfig.padding20,
+            child: SvgPicture.asset(
+              leadingAsset ?? "assets/vectors/icons/tickets.svg",
+              height: SizeConfig.padding24,
+              width: SizeConfig.padding24,
+              color: UiConstants.primaryColor,
+            ),
+          ),
+          SizedBox(
+            width: SizeConfig.padding12,
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                FittedBox(
+                  child: Text(
+                    title ?? "title",
+                    style: TextStyles.body3.bold,
+                  ),
+                ),
+                SizedBox(height: SizeConfig.padding4),
+                FittedBox(
+                  child: Text(
+                    subtitle ?? "subtitle",
+                    style: TextStyles.body4.colour(Colors.grey),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
