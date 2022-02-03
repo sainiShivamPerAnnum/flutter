@@ -1,7 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/core/constants/apis_path_constants.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/fundbalance_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/api.dart';
+import 'package:felloapp/core/service/api_service.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -9,8 +13,41 @@ import 'package:felloapp/util/custom_logger.dart';
 class UserRepository {
   final _logger = locator<CustomLogger>();
   final _api = locator<Api>();
+  final _apiPaths = locator<ApiPath>();
 
 //Stack overflow condition when we inject _userUid from user service.
+
+
+
+  Future<ApiResponse<Map<String, dynamic>>> setNewUser(
+      BaseUser baseUser,token) async {
+    try {
+      final String _bearer = token;
+
+      final _body = {
+        'uid': baseUser.uid,
+        'data': {
+          "mMobile": baseUser.mobile,
+          "mName": baseUser.name,
+          "mEmail": baseUser.email,
+          "mIsEmailVerified": baseUser.isEmailVerified ?? false,
+          "mDob": baseUser.dob,
+          "mGender": baseUser.gender,
+          "mUsername": baseUser.username,
+          "mUserPrefs": {"tn": 1, "al": 0}
+        }
+      };
+
+      final res = await APIService.instance
+          .postData(_apiPaths.kAddNewUser, body: _body, token: _bearer);
+
+      return ApiResponse(
+          code: 200, model: {"flag": res['flag'], "gtId": res['gtId']});
+    } catch (e) {
+      ApiResponse.withError("User not added to firestore", 400);
+    }
+  }
+
   Future<ApiResponse> getFundBalance(
     String userUid,
   ) async {

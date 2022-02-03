@@ -8,6 +8,7 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_events.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/api_service.dart';
@@ -38,11 +39,11 @@ class LoginControllerViewModel extends BaseModel {
   final augmontProvider = locator<AugmontModel>();
   final _analyticsService = locator<AnalyticsService>();
   final userService = locator<UserService>();
-  final _apiPaths = locator<ApiPath>();
   final logger = locator<CustomLogger>();
   final apiPaths = locator<ApiPath>();
   final baseProvider = locator<BaseUtil>();
   final dbProvider = locator<DBModel>();
+  final _userRepo = locator<UserRepository>();
   static LocalDBModel lclDbProvider = locator<LocalDBModel>();
 
   //Controllers
@@ -171,8 +172,6 @@ class LoginControllerViewModel extends BaseModel {
         }
       case NameInputScreen.index:
         {
-          //if(nameInScreen.validate()) {
-
           if (_nameScreenKey.currentState.model.formKey.currentState
                   .validate() &&
               _nameScreenKey.currentState.model.isValidDate()) {
@@ -196,8 +195,7 @@ class LoginControllerViewModel extends BaseModel {
               );
               return false;
             }
-            if (_nameScreenKey.currentState.gen == null ||
-                _nameScreenKey.currentState.model.isInvested == null) {
+            if (_nameScreenKey.currentState.gen == null) {
               BaseUtil.showNegativeAlert(
                 'Invalid details',
                 'Please enter all the fields',
@@ -219,15 +217,19 @@ class LoginControllerViewModel extends BaseModel {
                   userService.firebaseUser.uid,
                   _formatMobileNumber(userService.firebaseUser.phoneNumber));
             }
-            //userService.baseUser.name = nameInScreen.getName();
+
             userService.baseUser.name =
                 _nameScreenKey.currentState.model.name.trim();
+
             String email = _nameScreenKey.currentState.model.email.trim();
+
             if (email != null && email.isNotEmpty) {
               userService.baseUser.email = email;
             }
+
             userService.baseUser.isEmailVerified =
                 _nameScreenKey.currentState.model.isEmailVerified;
+
             String dob =
                 "${_nameScreenKey.currentState.model.selectedDate.toLocal()}"
                     .split(" ")[0];
@@ -244,17 +246,18 @@ class LoginControllerViewModel extends BaseModel {
                 userService.baseUser.gender = "O";
             }
 
-            bool isInv = _nameScreenKey.currentState.model.isInvested;
-            if (isInv != null) userService.baseUser.isInvested = isInv;
             cstate = _nameScreenKey.currentState.state;
+
             await CacheManager.writeCache(
                 key: "UserAugmontState", value: cstate, type: CacheType.string);
 
             setState(ViewState.Idle);
+
             _analyticsService.track(
               eventName: AnalyticsEvents.profileInformationAdded,
               properties: {'userId': userService?.baseUser?.uid},
             );
+
             _controller.animateToPage(Username.index,
                 duration: Duration(milliseconds: 500),
                 curve: Curves.easeInToLinear);
@@ -268,12 +271,14 @@ class LoginControllerViewModel extends BaseModel {
             if (!await _usernameKey.currentState.model.validate()) {
               return false;
             }
+
             if (!_usernameKey.currentState.model.isLoading &&
                 _usernameKey.currentState.model.isValid) {
               setState(ViewState.Busy);
 
               String username =
                   _usernameKey.currentState.model.username.replaceAll('.', '@');
+
               if (await dbProvider.checkIfUsernameIsAvailable(username)) {
                 _usernameKey.currentState.model.enabled = false;
                 notifyListeners();
@@ -283,38 +288,23 @@ class LoginControllerViewModel extends BaseModel {
                   userService.baseUser.username = username;
                   bool flag = false;
                   logger.d(userService.baseUser.toJson().toString());
+
                   try {
-                    final String _bearer = await _getBearerToken();
-                    logger.d(userService.baseUser.uid);
-                    final _body = {
-                      'uid': userService.baseUser.uid,
-                      'data': {
-                        "mMobile": userService.baseUser.mobile,
-                        "mName": userService.baseUser.name,
-                        "mEmail": userService.baseUser.email,
-                        "mIsEmailVerified":
-                            userService.baseUser.isEmailVerified ?? false,
-                        "mDob": userService.baseUser.dob,
-                        "mGender": userService.baseUser.gender,
-                        "mUsername": userService.baseUser.username,
-                        "mUserPrefs": {"tn": 1, "al": 0}
-                      }
-                    };
-                    final res = await APIService.instance.postData(
-                        _apiPaths.kAddNewUser,
-                        body: _body,
-                        token: _bearer);
-                    res['flag'] ? flag = true : flag = false;
-                    logger.d("Is Golden Ticket Rewarded: ${res['gtId']}");
-                    if (res['gtId'] != null &&
-                        res['gtId'].toString().isNotEmpty)
-                      GoldenTicketService.goldenTicketId = res['gtId'];
+                    final token = await _getBearerToken();
+                    final ApiResponse response =
+                        await _userRepo.setNewUser(userService.baseUser, token);
+
+                    final gtId = response.model['gtId'];
+                    response.model['flag'] ? flag = true : flag = false;
+
+                    logger.d("Is Golden Ticket Rewarded: $gtId");
+                    if (gtId != null && gtId.toString().isNotEmpty)
+                      GoldenTicketService.goldenTicketId = gtId;
                   } catch (e) {
                     logger.d(e);
                     _usernameKey.currentState.model.enabled = false;
                     flag = false;
                   }
-                  // bool flag = await dbProvider.updateUser(userService.baseUser);
 
                   if (flag) {
                     _analyticsService.track(
