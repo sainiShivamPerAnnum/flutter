@@ -4,7 +4,9 @@ import 'package:felloapp/ui/elements/pin_input_custom_text_field.dart';
 import 'package:felloapp/ui/pages/login/login_controller_view.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input/otp_input_vm.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -72,6 +74,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
   Widget build(BuildContext context) {
     S locale = S.of(context);
     final baseProvider = Provider.of<BaseUtil>(context, listen: true);
+    final logger = locator<CustomLogger>();
     return BaseView<OtpInputScreenViewModel>(
       onModelReady: (model) => this.model = model,
       builder: (ctx, model, child) => Scaffold(
@@ -179,7 +182,10 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                                   if (widget.resendOtp != null)
                                     widget.resendOtp();
                                 }
+
                                 if (baseProvider.isOtpResendCount < 2) {
+                                  baseProvider.isOtpResendCount++;
+                                  logger.d(baseProvider.isOtpResendCount);
                                   BaseUtil.showPositiveAlert(
                                       "OTP resent successfully",
                                       "Please wait for the new otp");

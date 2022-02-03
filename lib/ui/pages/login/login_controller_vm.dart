@@ -544,7 +544,7 @@ class LoginControllerViewModel extends BaseModel {
 
   _onOtpResendRequested() {
     if (baseProvider.isOtpResendCount < 2) {
-      baseProvider.isOtpResendCount++;
+    
       _verifyPhone();
     } else {
       _otpScreenKey.currentState.model.onOtpResendConfirmed(false);
