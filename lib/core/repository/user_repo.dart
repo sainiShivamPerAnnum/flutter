@@ -17,24 +17,22 @@ class UserRepository {
 
 //Stack overflow condition when we inject _userUid from user service.
 
-
-
   Future<ApiResponse<Map<String, dynamic>>> setNewUser(
-      BaseUser baseUser,token) async {
+      BaseUser baseUser, token) async {
     try {
       final String _bearer = token;
 
       final _body = {
         'uid': baseUser.uid,
         'data': {
-          "mMobile": baseUser.mobile,
-          "mName": baseUser.name,
-          "mEmail": baseUser.email,
-          "mIsEmailVerified": baseUser.isEmailVerified ?? false,
-          "mDob": baseUser.dob,
-          "mGender": baseUser.gender,
-          "mUsername": baseUser.username,
-          "mUserPrefs": {"tn": 1, "al": 0}
+          BaseUser.fldMobile: baseUser.mobile,
+          BaseUser.fldName: baseUser.name,
+          BaseUser.fldEmail: baseUser.email,
+          BaseUser.fldIsEmailVerified: baseUser.isEmailVerified ?? false,
+          BaseUser.fldDob: baseUser.dob,
+          BaseUser.fldGender: baseUser.gender,
+          BaseUser.fldUsername: baseUser.username,
+          BaseUser.fldUserPrefs: {"tn": 1, "al": 0}
         }
       };
 
