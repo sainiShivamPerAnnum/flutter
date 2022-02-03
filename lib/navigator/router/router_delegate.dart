@@ -20,6 +20,7 @@ import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augm
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/edit_augmont_bank_details.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/gold_balance_details/gold_balance_details_view.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_game/cricket_game_view.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/dailyPicksDraw/dailyPicksDraw_view.dart';
@@ -51,7 +52,6 @@ import 'package:flutter/material.dart';
 
 class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
-  
   final _analytics = locator<AnalyticsService>();
 
   final List<Page> _pages = [];
@@ -268,6 +268,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.GoldenMilestonesView:
           _addPageData(GoldenMilestonesView(), GoldenMilestonesViewPageConfig);
           break;
+        case Pages.GoldBalanceDetailsView:
+          _addPageData(
+              GoldBalanceDetailsView(), GoldBalanceDetailsViewPageConfig);
+          break;
         default:
           break;
       }
@@ -461,6 +465,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.GoldenMilestonesView:
         GoldenMilestonesViewPageConfig.currentPageAction = action;
         break;
+      case Pages.GoldBalanceDetailsView:
+        GoldBalanceDetailsViewPageConfig.currentPageAction = action;
+        break;
       default:
         break;
     }
@@ -619,9 +626,11 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'blocked':
         pageConfiguration = BlockedUserPageConfig;
         break;
-      // case 'goldenTickets':
-      //   pageConfiguration = GoldenTicketsViewPageConfig;
-      //   break;
+      case 'milestones':
+        pageConfiguration = GoldenMilestonesViewPageConfig;
+        break;
+      case 'goldBalanceDetails':
+        pageConfiguration = GoldBalanceDetailsViewPageConfig;
     }
     if (pageConfiguration != null) {
       addPage(pageConfiguration);

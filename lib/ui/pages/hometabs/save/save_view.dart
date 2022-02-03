@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
+import 'package:felloapp/ui/pages/static/play_offer_card.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_winnings.dart';
@@ -31,50 +34,51 @@ class Save extends StatelessWidget {
                 children: [
                   SizedBox(
                       height: SizeConfig.screenHeight * 0.08 +
-                          SizeConfig.screenWidth * 0.5),
+                          SizeConfig.screenWidth * 0.2),
                   Expanded(
                     child: ListView(
                       children: [
-                        SizedBox(
-                          height: SizeConfig.screenWidth * 0.08,
-                        ),
-                        WinningsContainer(
-                          shadow: true,
-                          child: Container(
-                            child: Padding(
-                              padding: EdgeInsets.all(SizeConfig.padding16),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SvgPicture.asset(
-                                    Assets.giftBoxOpen,
-                                  ),
-                                  SizedBox(
-                                      width: SizeConfig.screenWidth * 0.05),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Text(
-                                        locale.saveWinningsLabel,
-                                        style: TextStyles.body1
-                                            .colour(Colors.white)
-                                            .light,
-                                      ),
-                                      UserWinningsSE(
-                                        style: TextStyles.title3
-                                            .colour(Colors.white)
-                                            .bold,
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
+                        AugmontCard(model: model),
+                        // SizedBox(
+                        //   height: SizeConfig.screenWidth * 0.08,
+                        // ),
+                        // WinningsContainer(
+                        //   shadow: true,
+                        //   child: Container(
+                        //     child: Padding(
+                        //       padding: EdgeInsets.all(SizeConfig.padding16),
+                        //       child: Row(
+                        //         mainAxisAlignment: MainAxisAlignment.center,
+                        //         children: [
+                        //           SvgPicture.asset(
+                        //             Assets.giftBoxOpen,
+                        //           ),
+                        //           SizedBox(
+                        //               width: SizeConfig.screenWidth * 0.05),
+                        //           Column(
+                        //             crossAxisAlignment:
+                        //                 CrossAxisAlignment.start,
+                        //             mainAxisAlignment:
+                        //                 MainAxisAlignment.spaceEvenly,
+                        //             children: [
+                        //               Text(
+                        //                 locale.saveWinningsLabel,
+                        //                 style: TextStyles.body1
+                        //                     .colour(Colors.white)
+                        //                     .light,
+                        //               ),
+                        //               UserWinningsSE(
+                        //                 style: TextStyles.title3
+                        //                     .colour(Colors.white)
+                        //                     .bold,
+                        //               ),
+                        //             ],
+                        //           )
+                        //         ],
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
                         SizedBox(height: SizeConfig.padding32),
                         Container(
                           width: SizeConfig.screenWidth,
@@ -104,29 +108,29 @@ class Save extends StatelessWidget {
                                 // ),
                               ]),
                         ),
-                        SizedBox(height: SizeConfig.padding24),
-                        Container(
-                          margin: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.pageHorizontalMargins),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius:
-                                BorderRadius.circular(SizeConfig.roundness32),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: SizeConfig.padding20),
-                              Container(
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal:
-                                          SizeConfig.pageHorizontalMargins),
-                                  child: Text(locale.saveHistory,
-                                      style: TextStyles.title4.bold)),
-                              MiniTransactionCard(),
-                            ],
-                          ),
-                        ),
+                        // SizedBox(height: SizeConfig.padding24),
+                        // Container(
+                        //   margin: EdgeInsets.symmetric(
+                        //       horizontal: SizeConfig.pageHorizontalMargins),
+                        //   decoration: BoxDecoration(
+                        //     color: Colors.white,
+                        //     borderRadius:
+                        //         BorderRadius.circular(SizeConfig.roundness32),
+                        //   ),
+                        //   child: Column(
+                        //     crossAxisAlignment: CrossAxisAlignment.start,
+                        //     children: [
+                        //       SizedBox(height: SizeConfig.padding20),
+                        //       Container(
+                        //           margin: EdgeInsets.symmetric(
+                        //               horizontal:
+                        //                   SizeConfig.pageHorizontalMargins),
+                        //           child: Text(locale.saveHistory,
+                        //               style: TextStyles.title4.bold)),
+                        //       MiniTransactionCard(),
+                        //     ],
+                        //   ),
+                        // ),
                         SizedBox(height: SizeConfig.navBarHeight * 2),
                       ],
                     ),
@@ -134,9 +138,35 @@ class Save extends StatelessWidget {
                 ],
               ),
             ),
-            Container(
-              margin: EdgeInsets.only(top: SizeConfig.screenHeight * 0.09),
-              child: AugmontCard(model: model),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                    margin:
+                        EdgeInsets.only(top: SizeConfig.screenHeight * 0.09),
+                    child: CouponCard(
+                      model: CouponModel(
+                        "",
+                        "FREE3%",
+                        "Buy gold worth ₹1000 and get 3% gold free.",
+                        Timestamp.now(),
+                        Timestamp.now(),
+                        4,
+                        1,
+                        Additionals(
+                            "Apply Coupon FREE3% and",
+                            "get ₹300 worth gold for free",
+                            "",
+                            null,
+                            "Apply Coupon"),
+                      ),
+                      onPressed: () {},
+                      shimmer: true,
+                    )
+
+                    //  AugmontCard(model: model),
+                    ),
+              ],
             ),
           ],
         );

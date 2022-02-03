@@ -29,9 +29,9 @@ class SaveViewModel extends BaseModel {
   }
 
   navigateToSellScreen() {
-    AppState.delegate.appState.currentAction =
-        PageAction(state: PageState.addPage, page: AugmontGoldSellPageConfig);
-    _analyticsService.track(eventName: AnalyticsEvents.saveSell);
+    AppState.delegate.appState.currentAction = PageAction(
+        state: PageState.addPage, page: GoldBalanceDetailsViewPageConfig);
+    // _analyticsService.track(eventName: AnalyticsEvents.saveSell);
   }
 
   navigateToAboutGold() {

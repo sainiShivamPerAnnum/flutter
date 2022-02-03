@@ -11,6 +11,7 @@ class FelloTile extends StatelessWidget {
   final String subtitle;
   final IconData trailingIcon;
   final Function onTap;
+  final bool showTrailingIcon;
 
   FelloTile(
       {this.leadingIcon,
@@ -18,7 +19,8 @@ class FelloTile extends StatelessWidget {
       this.subtitle,
       this.title,
       this.trailingIcon,
-      this.onTap});
+      this.onTap,
+      this.showTrailingIcon = true});
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -73,11 +75,12 @@ class FelloTile extends StatelessWidget {
               ),
             ),
             SizedBox(width: SizeConfig.padding12),
-            Icon(
-              trailingIcon ?? Icons.arrow_right_rounded,
-              size: SizeConfig.padding24,
-              color: UiConstants.primaryColor,
-            )
+            if (showTrailingIcon)
+              Icon(
+                trailingIcon ?? Icons.arrow_right_rounded,
+                size: SizeConfig.padding24,
+                color: UiConstants.primaryColor,
+              )
           ],
         ),
       ),
