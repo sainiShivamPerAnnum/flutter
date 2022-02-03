@@ -179,7 +179,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                                   if (widget.resendOtp != null)
                                     widget.resendOtp();
                                 }
-                                if (baseProvider.isOtpResendCount < 3) {
+                                if (baseProvider.isOtpResendCount < 2) {
                                   BaseUtil.showPositiveAlert(
                                       "OTP resent successfully",
                                       "Please wait for the new otp");

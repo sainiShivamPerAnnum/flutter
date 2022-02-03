@@ -558,6 +558,10 @@ class LoginControllerViewModel extends BaseModel {
       _verifyPhone();
     } else {
       _otpScreenKey.currentState.model.onOtpResendConfirmed(false);
+      BaseUtil.showNegativeAlert(
+        'Sign In Failed',
+        "You have exceeded the number of allowed OTP attempts. Please try again in sometime",
+      );
     }
   }
 
