@@ -25,6 +25,10 @@ class MobileInputScreenViewState extends State<MobileInputScreenView> {
     return BaseView<MobileInputScreenViewModel>(
       onModelReady: (model) {
         this.model = model;
+        model.init();
+      },
+      onModelDispose: (model) {
+        model.disp();
       },
       builder: (ctx, model, child) => Container(
         child: SingleChildScrollView(
@@ -128,6 +132,11 @@ class MobileInputScreenViewState extends State<MobileInputScreenView> {
                                   .colour(UiConstants.primaryColor),
                             ),
                           ),
+                    TextButton(
+                        onPressed: () {
+                          model.init();
+                        },
+                        child: Text('Truecaller test')),
                     if (model.hasReferralCode)
                       Padding(
                         padding: const EdgeInsets.all(8.0),

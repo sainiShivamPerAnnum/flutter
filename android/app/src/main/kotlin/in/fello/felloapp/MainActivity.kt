@@ -1,7 +1,7 @@
 package `in`.fello.felloapp
 
 import androidx.annotation.NonNull
-import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import android.content.Context
@@ -18,7 +18,7 @@ import io.flutter.plugins.GeneratedPluginRegistrant
 import android.content.ContentResolver;
 
 
-class MainActivity: FlutterActivity() {
+class MainActivity: FlutterFragmentActivity() {
     private val CHANNEL = "fello.in/dev/notifications/channel/tambola"
     private val CHANNEL_FRESHCHAT = "fello.in/dev/notifications/channel/support"
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
