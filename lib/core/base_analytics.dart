@@ -1,8 +1,10 @@
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
+
 class BaseAnalytics {
   static FirebaseAnalytics _analytics;
+
   static FirebaseAnalyticsObserver _observer;
 
 

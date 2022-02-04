@@ -258,9 +258,12 @@ class LoginControllerViewModel extends BaseModel {
               properties: {'userId': userService?.baseUser?.uid},
             );
 
-            _controller.animateToPage(Username.index,
-                duration: Duration(milliseconds: 500),
-                curve: Curves.easeInToLinear);
+            _controller
+                .animateToPage(Username.index,
+                    duration: Duration(milliseconds: 500),
+                    curve: Curves.easeInToLinear)
+                .then((value) =>
+                    _usernameKey.currentState.focusNode.requestFocus());
           }
           break;
         }
@@ -544,7 +547,6 @@ class LoginControllerViewModel extends BaseModel {
 
   _onOtpResendRequested() {
     if (baseProvider.isOtpResendCount < 2) {
-      baseProvider.isOtpResendCount++;
       _verifyPhone();
     } else {
       _otpScreenKey.currentState.model.onOtpResendConfirmed(false);
