@@ -7,7 +7,6 @@ import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/analytics/analytics_events.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_coin_service.dart';
@@ -69,7 +68,7 @@ class RootViewModel extends BaseModel {
   }
 
   onDispose() {
-    if (_baseUtil != null) _baseUtil.cancelIncomingNotifications();
+    // if (_baseUtil != null) _baseUtil.cancelIncomingNotifications();
     _fcmListener.addIncomingMessageListener(null);
   }
 

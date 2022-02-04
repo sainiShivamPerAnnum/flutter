@@ -451,8 +451,7 @@ class TambolaGameViewModel extends BaseModel {
     });
 
     double totalInvestedPrinciple =
-        _userService.userFundWallet.augGoldPrinciple +
-            _userService.userFundWallet.iciciPrinciple;
+        _userService.userFundWallet.augGoldPrinciple;
     bool _isEligible = (totalInvestedPrinciple >=
         BaseUtil.toInt(BaseRemoteConfig.remoteConfig
             .getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT)));

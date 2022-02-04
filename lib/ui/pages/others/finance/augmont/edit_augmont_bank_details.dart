@@ -5,7 +5,6 @@ import 'package:felloapp/core/model/transfer_amount_api_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/verify_amount_api_response_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/core/repository/signzy_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics_service.dart';
@@ -58,7 +57,6 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
   bool _isInitialized = false;
   DBModel dbProvider;
   BaseUtil baseProvider;
-  ICICIModel iProvider;
   bool isConfirm = false;
   bool inEditMode = false;
   FocusNode focusNode = FocusNode();
@@ -70,7 +68,6 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
       _isInitialized = true;
       baseProvider = Provider.of<BaseUtil>(context, listen: false);
       dbProvider = Provider.of<DBModel>(context, listen: false);
-      iProvider = Provider.of<ICICIModel>(context, listen: false);
       if (_userService.baseUser.isAugmontOnboarded &&
           baseProvider.augmontDetail == null) {
         setState(() {

@@ -152,23 +152,6 @@ class Api {
     return ref.doc(docId).update(data);
   }
 
-  Future<DocumentSnapshot> getUserIciciDetailDocument(String userId) {
-    ref = _db
-        .collection(Constants.COLN_USERS)
-        .doc(userId)
-        .collection(Constants.SUBCOLN_USER_ICICI_DETAILS);
-    return ref.doc(Constants.DOC_USER_ICICI_DETAIL).get();
-  }
-
-  Future<void> updateUserIciciDetailDocument(String userId, Map data) {
-    ref = _db
-        .collection(Constants.COLN_USERS)
-        .doc(userId)
-        .collection(Constants.SUBCOLN_USER_ICICI_DETAILS);
-    return ref
-        .doc(Constants.DOC_USER_ICICI_DETAIL)
-        .set(data, SetOptions(merge: true));
-  }
 
   Future<DocumentSnapshot> getUserPrtdDocPan(String userId) {
     ref = _db
