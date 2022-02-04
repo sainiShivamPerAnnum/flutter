@@ -234,9 +234,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.CricketGame:
           _addPageData(CricketGameView(), CricketGamePageConfig);
           break;
-        case Pages.AugGoldBuy:
-          _addPageData(AugmontGoldBuyView(), AugmontGoldBuyPageConfig);
-          break;
+        // case Pages.AugGoldBuy:
+        //   _addPageData(AugmontGoldBuyView(), AugmontGoldBuyPageConfig);
+        //   break;
         case Pages.AugGoldSell:
           _addPageData(AugmontGoldSellView(), AugmontGoldSellPageConfig);
           break;
@@ -432,9 +432,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.CricketGame:
         CricketGamePageConfig.currentPageAction = action;
         break;
-      case Pages.AugGoldBuy:
-        AugmontGoldBuyPageConfig.currentPageAction = action;
-        break;
+      // case Pages.AugGoldBuy:
+      //   AugmontGoldBuyPageConfig.currentPageAction = action;
+      //   break;
       case Pages.AugGoldSell:
         AugmontGoldSellPageConfig.currentPageAction = action;
         break;
@@ -577,9 +577,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'augDetails':
         pageConfiguration = AugmontGoldDetailsPageConfig;
         break;
-      case 'augBuy':
-        pageConfiguration = AugmontGoldBuyPageConfig;
-        break;
+      // case 'augBuy':
+      //   pageConfiguration = AugmontGoldBuyPageConfig;
+      //   break;
       case 'augSell':
         pageConfiguration = AugmontGoldSellPageConfig;
         break;

@@ -1,6 +1,10 @@
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/FelloTile.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
+import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/mini_trans_card/mini_trans_card_view.dart';
 import 'package:felloapp/util/assets.dart';
@@ -43,22 +47,32 @@ class GoldBalanceDetailsView extends StatelessWidget {
                       vertical: SizeConfig.pageHorizontalMargins / 2),
                   children: [
                     Container(
-                      margin: EdgeInsets.symmetric(
-                          vertical: SizeConfig.pageHorizontalMargins / 2),
-                      height: SizeConfig.screenWidth * 0.32,
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.circular(SizeConfig.roundness24),
-                        color: UiConstants.tertiaryLight,
-                        border: Border.all(
-                            width: 0.5, color: UiConstants.tertiarySolid),
-                      ),
-                      padding: EdgeInsets.all(SizeConfig.padding16),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [Text("My Gold Balance: 0.0000 gm")],
-                      ),
-                    ),
+                        margin: EdgeInsets.symmetric(
+                            vertical: SizeConfig.pageHorizontalMargins / 2),
+                        height: SizeConfig.screenWidth * 0.32,
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.circular(SizeConfig.roundness24),
+                          color: UiConstants.tertiaryLight,
+                          border: Border.all(
+                              width: 0.5, color: UiConstants.tertiarySolid),
+                        ),
+                        padding:
+                            EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "My Gold Balance",
+                              style: TextStyles.body3,
+                            ),
+                            SizedBox(height: SizeConfig.padding4),
+                            UserGoldQuantitySE(
+                                style: TextStyles.title1.extraBold
+                                    .colour(UiConstants.tertiarySolid)),
+                          ],
+                        )),
                     Container(
                       margin: EdgeInsets.symmetric(
                           vertical: SizeConfig.pageHorizontalMargins / 2),
@@ -121,21 +135,43 @@ class GoldBalanceDetailsView extends StatelessWidget {
                       margin: EdgeInsets.only(
                           top: SizeConfig.padding24,
                           bottom: SizeConfig.padding12),
-                      height: SizeConfig.screenWidth * 0.12,
-                      width: SizeConfig.screenWidth,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                            color: UiConstants.tertiarySolid, width: 2),
-                        borderRadius:
-                            BorderRadius.circular(SizeConfig.roundness12),
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        "Sell Gold",
-                        style: TextStyles.title5.bold
-                            .colour(UiConstants.tertiarySolid),
+                      child: FelloButtonLg(
+                        onPressed: () {
+                          AppState.delegate.appState.currentAction = PageAction(
+                              state: PageState.addPage,
+                              page: AugmontGoldSellPageConfig);
+                        },
+                        child: Text(
+                          "Sell Gold",
+                          style: TextStyles.body3.colour(Colors.white).bold,
+                        ),
                       ),
                     ),
+                    // TextButton(
+                    // onPressed: () {
+                    //   AppState.delegate.appState.currentAction = PageAction(
+                    //       state: PageState.addPage,
+                    //       page: AugmontGoldSellPageConfig);
+                    // },
+                    //   child: Container(
+                    // margin: EdgeInsets.only(
+                    //     top: SizeConfig.padding24,
+                    //     bottom: SizeConfig.padding12),
+                    //     height: SizeConfig.screenWidth * 0.12,
+                    //     width: SizeConfig.screenWidth,
+                    //     decoration: BoxDecoration(
+                    //       border: Border.all(
+                    //           color: UiConstants.tertiarySolid, width: 2),
+                    //       borderRadius:
+                    //           BorderRadius.circular(SizeConfig.roundness12),
+                    //     ),
+                    //     alignment: Alignment.center,
+                    //     child: Text(
+                    //       "Sell Gold",
+                    //       style: TextStyles.body1.bold.colour(Colors.black),
+                    //     ),
+                    //   ),
+                    // ),
                     Text(
                       "The first rule of compounding: Never interrupt it unnecessarily.",
                       textAlign: TextAlign.center,

@@ -276,6 +276,6 @@ class TransactionService
     hasMoreDepositTxns = true;
     hasMoreWithdrawalTxns = true;
     hasMoreRefundedTxns = true;
-    txnList.clear();
+    txnList?.clear();
   }
 }

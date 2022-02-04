@@ -10,8 +10,13 @@ class CurrentPriceWidget extends StatefulWidget {
   final Function fetchGoldRates;
   final double goldprice;
   final bool isFetching;
+  final bool mini;
 
-  CurrentPriceWidget({this.fetchGoldRates, this.goldprice, this.isFetching});
+  CurrentPriceWidget(
+      {this.fetchGoldRates,
+      this.goldprice,
+      this.isFetching,
+      this.mini = false});
 
   @override
   _CurrentPriceWidgetState createState() => _CurrentPriceWidgetState();
@@ -28,17 +33,17 @@ class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
         AnimationController(vsync: this, duration: Duration(minutes: 3));
     animation = Tween<Duration>(begin: Duration(minutes: 3), end: Duration.zero)
         .animate(controller)
-          ..addListener(() {
-            setState(() {});
-          })
-          ..addStatusListener((status) {
-            if (status == AnimationStatus.completed) {
-              widget.fetchGoldRates();
-              controller.repeat();
-            } else if (status == AnimationStatus.dismissed) {
-              controller.dispose();
-            }
-          });
+      ..addListener(() {
+        setState(() {});
+      })
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          widget.fetchGoldRates();
+          controller.repeat();
+        } else if (status == AnimationStatus.dismissed) {
+          controller.dispose();
+        }
+      });
 
     controller.forward();
     super.initState();
@@ -53,58 +58,96 @@ class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: SizeConfig.screenWidth * 0.246,
-      width: SizeConfig.screenWidth,
-      decoration: BoxDecoration(
-        color: UiConstants.primaryColor.withOpacity(0.1),
-        border: Border.all(width: 1, color: UiConstants.primaryColor),
-        borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-      ),
-      padding: EdgeInsets.symmetric(
-        horizontal: SizeConfig.padding24,
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+    return widget.mini
+        ? Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Current Price",
-                style: TextStyles.body1.colour(UiConstants.primaryColor),
+                "Current Gold Price",
+                style: TextStyles.body3,
               ),
-              Spacer(),
               widget.isFetching
                   ? SpinKitThreeBounce(
                       size: SizeConfig.body2,
                       color: UiConstants.primaryColor,
                     )
-                  : Text(
-                      "₹ ${widget.goldprice.toStringAsFixed(2)}",
-                      style: TextStyles.body1
-                          .colour(UiConstants.primaryColor)
-                          .bold,
-                    )
-            ],
-          ),
-          SizedBox(
-            height: SizeConfig.padding8,
-          ),
-          Row(
-            children: [
-              Text(
-                "Valid for: ",
-                style: TextStyles.body4.colour(UiConstants.primaryColor).light,
-              ),
-              Text(
-                '${animation.value.inMinutes.toString().padLeft(2, '0')}:${(animation.value.inSeconds % 60).toString().padLeft(2, '0')}',
-                style: TextStyles.body4.colour(UiConstants.primaryColor).bold,
+                  : // SizedBox(height: SizeConfig.padding4),
+                  Text("₹ ${widget.goldprice.toStringAsFixed(2)}",
+                      style: TextStyles.title4.extraBold
+                          .colour(UiConstants.primaryColor)),
+              Row(
+                children: [
+                  Text(
+                    "Valid for: ",
+                    style:
+                        TextStyles.body4.colour(UiConstants.primaryColor).light,
+                  ),
+                  Text(
+                    '${animation.value.inMinutes.toString().padLeft(2, '0')}:${(animation.value.inSeconds % 60).toString().padLeft(2, '0')}',
+                    style:
+                        TextStyles.body4.colour(UiConstants.primaryColor).bold,
+                  )
+                ],
               )
             ],
           )
-        ],
-      ),
-    );
+        : Container(
+            height: SizeConfig.screenWidth * 0.246,
+            width: SizeConfig.screenWidth,
+            decoration: BoxDecoration(
+              color: UiConstants.primaryColor.withOpacity(0.1),
+              border: Border.all(width: 1, color: UiConstants.primaryColor),
+              borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+            ),
+            padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.padding24,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      "Current Price",
+                      style: TextStyles.body1.colour(UiConstants.primaryColor),
+                    ),
+                    Spacer(),
+                    widget.isFetching
+                        ? SpinKitThreeBounce(
+                            size: SizeConfig.body2,
+                            color: UiConstants.primaryColor,
+                          )
+                        : Text(
+                            "₹ ${widget.goldprice.toStringAsFixed(2)}",
+                            style: TextStyles.body1
+                                .colour(UiConstants.primaryColor)
+                                .bold,
+                          )
+                  ],
+                ),
+                SizedBox(
+                  height: SizeConfig.padding8,
+                ),
+                Row(
+                  children: [
+                    Text(
+                      "Valid for: ",
+                      style: TextStyles.body4
+                          .colour(UiConstants.primaryColor)
+                          .light,
+                    ),
+                    Text(
+                      '${animation.value.inMinutes.toString().padLeft(2, '0')}:${(animation.value.inSeconds % 60).toString().padLeft(2, '0')}',
+                      style: TextStyles.body4
+                          .colour(UiConstants.primaryColor)
+                          .bold,
+                    )
+                  ],
+                )
+              ],
+            ),
+          );
   }
 }

@@ -48,28 +48,33 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  (isInsufficientBalance)?SizedBox(height: SizeConfig.padding16):SizedBox(),
-                  (isInsufficientBalance)?                          Container(
-                    margin: EdgeInsets.symmetric(
-                        vertical: SizeConfig.padding6),
-                    width: SizeConfig.screenWidth,
-                    height: SizeConfig.padding32,
-                    padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.padding32),
-                    decoration: BoxDecoration(
-                      borderRadius:
-                      BorderRadius.circular(SizeConfig.roundness12),
-                      color: Colors.red.withOpacity(0.05),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "You don't have enough Fello tokens",
-                        style:
-                        TextStyles.body2.colour(Colors.redAccent),
-                      ),
-                    ),
-                  ):SizedBox(),
-                  (isInsufficientBalance)?SizedBox(height: SizeConfig.padding16):SizedBox(),
+                  (isInsufficientBalance)
+                      ? SizedBox(height: SizeConfig.padding16)
+                      : SizedBox(),
+                  (isInsufficientBalance)
+                      ? Container(
+                          margin: EdgeInsets.symmetric(
+                              vertical: SizeConfig.padding6),
+                          width: SizeConfig.screenWidth,
+                          height: SizeConfig.padding32,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.padding32),
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.circular(SizeConfig.roundness12),
+                            color: Colors.red.withOpacity(0.05),
+                          ),
+                          child: Center(
+                            child: Text(
+                              "You don't have enough Fello tokens",
+                              style: TextStyles.body2.colour(Colors.redAccent),
+                            ),
+                          ),
+                        )
+                      : SizedBox(),
+                  (isInsufficientBalance)
+                      ? SizedBox(height: SizeConfig.padding16)
+                      : SizedBox(),
                   FelloTile(
                     leadingAsset: Assets.wmtsaveMoney,
                     title: "Save More Money",
@@ -80,10 +85,11 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                           eventName: AnalyticsEvents.earnMoreSaveMoney);
                       AppState.backButtonDispatcher.didPopRoute();
                       Future.delayed(Duration.zero, () {
-                        AppState.delegate.appState.currentAction = PageAction(
-                          state: PageState.addPage,
-                          page: AugmontGoldBuyPageConfig,
-                        );
+                        AppState.delegate.appState.setCurrentTabIndex = 0;
+                        // AppState.delegate.appState.currentAction = PageAction(
+                        //   state: PageState.addPage,
+                        //   page: AugmontGoldBuyPageConfig,
+                        // );
                       });
                     },
                   ),
@@ -91,8 +97,7 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                   FelloTile(
                     leadingAsset: Assets.wmtShare,
                     title: "Refer your friends",
-                    subtitle:
-                        "Earn Golden Tickets for every referral",
+                    subtitle: "Earn Golden Tickets for every referral",
                     trailingIcon: Icons.arrow_forward_ios_rounded,
                     onTap: () {
                       _analyticsService.track(
@@ -119,7 +124,6 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
       ),
     );
   }
-
 }
 
 class ModalCustomBackground extends CustomPainter {

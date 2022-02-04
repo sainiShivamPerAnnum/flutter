@@ -113,6 +113,10 @@ class Root extends StatelessWidget {
                   WantMoreTickets(
                     model: model,
                   ),
+                if (SizeConfig.screenWidth < 600)
+                  SaveBaseline(
+                    model: model,
+                  ),
                 BottomNavBar(
                   model: model,
                 ),
@@ -216,6 +220,67 @@ class WantMoreTickets extends StatelessWidget {
                     style:
                         TextStyles.body1.colour(UiConstants.primaryColor).bold,
                   ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SaveBaseline extends StatelessWidget {
+  final RootViewModel model;
+  SaveBaseline({
+    @required this.model,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    S locale = S.of(context);
+    return Consumer<AppState>(
+      builder: (ctx, m, child) => AnimatedPositioned(
+        duration: Duration(milliseconds: 300),
+        curve: Curves.decelerate,
+        bottom: SizeConfig.pageHorizontalMargins,
+        left: SizeConfig.pageHorizontalMargins,
+        right: SizeConfig.pageHorizontalMargins,
+        child: Shimmer(
+          duration: Duration(seconds: 5),
+          child: AnimatedContainer(
+            duration: Duration(milliseconds: 300),
+            curve: Curves.decelerate,
+            height: m.rootIndex == 0
+                ? SizeConfig.navBarHeight * 1.5
+                : SizeConfig.navBarHeight,
+            width: SizeConfig.navBarWidth,
+            decoration: BoxDecoration(
+              color: UiConstants.tertiaryLight,
+              borderRadius: BorderRadius.circular(
+                SizeConfig.roundness24,
+              ),
+              border: Border.all(width: 0.3, color: UiConstants.tertiarySolid),
+              // boxShadow: [
+              //   if (m.rootIndex == 0)
+              //     BoxShadow(
+              //         blurRadius: 24,
+              //         color: UiConstants.tertiarySolid.withOpacity(0.2),
+              //         offset: Offset(0, -2),
+              //         spreadRadius: 2)
+              // ],
+            ),
+            alignment: Alignment.topCenter,
+            child: Container(
+              height: SizeConfig.navBarHeight * 0.5,
+              alignment: Alignment.center,
+              child: Shimmer(
+                duration: Duration(seconds: 1),
+                interval: Duration(seconds: 4),
+                child: Text(
+                  locale.saveBaseline,
+                  style:
+                      TextStyles.body1.colour(UiConstants.tertiarySolid).bold,
                 ),
               ),
             ),
