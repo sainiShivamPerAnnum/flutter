@@ -40,6 +40,11 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
+    compileOptions{
+         sourceCompatibility JavaVersion.VERSION_1_8
+         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
 //    lintOptions {
 //        disable 'InvalidPackage'
 //    }
@@ -50,7 +55,7 @@ android {
 
     defaultConfig {
         applicationId "in.fello.felloapp"
-        minSdkVersion 21
+        minSdkVersion 22
         targetSdkVersion 31
         multiDexEnabled true
         versionCode flutterVersionCode.toInteger()
@@ -112,4 +117,5 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.0'
     implementation 'com.facebook.android:facebook-android-sdk:5.11.1'
     implementation 'com.google.firebase:firebase-messaging:20.1.6'
+    implementation "com.truecaller.android.sdk:truecaller-sdk:2.6.0"
 }
