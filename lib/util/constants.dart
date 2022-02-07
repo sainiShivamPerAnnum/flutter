@@ -59,6 +59,7 @@ class Constants {
   static const String GOLDENTICKET_DYNAMICLINK_PREFIX =
       "https://fello.in/goldenticket";
   static const String APP_DOWNLOAD_LINK = "https://fello.in/download";
+  static const String APP_NAVIGATION_LINK = "https://fello.in/path";
 
   //home feed
   static const String LEARN_FEED_CARD_TYPE = 'L';

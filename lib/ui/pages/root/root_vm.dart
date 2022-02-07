@@ -227,12 +227,16 @@ class RootViewModel extends BaseModel {
 
   _processDynamicLink(String userId, Uri deepLink, BuildContext context) async {
     String _uri = deepLink.toString();
+
     if (_uri.startsWith(Constants.GOLDENTICKET_DYNAMICLINK_PREFIX)) {
       //Golden ticket dynamic link
       int flag = await _submitGoldenTicket(userId, _uri, context);
-    } else if(_uri.startsWith(Constants.APP_DOWNLOAD_LINK)) {
+    } else if (_uri.startsWith(Constants.APP_DOWNLOAD_LINK)) {
       _submitTrack(_uri);
-    }else {
+    } else if (_uri.startsWith(Constants.APP_NAVIGATION_LINK)) {
+      final path = _uri.substring(_uri.lastIndexOf('/'), _uri.length);
+      AppState.delegate.parseRoute(Uri.parse(path));
+    } else {
       BaseUtil.manualReferralCode =
           null; //make manual Code null in case user used both link and code
 
@@ -249,7 +253,7 @@ class RootViewModel extends BaseModel {
   }
 
   bool _submitTrack(String deepLink) {
-    try{
+    try {
       String prefix = '${Constants.APP_DOWNLOAD_LINK}/campaign/';
       if (deepLink.startsWith(prefix)) {
         String campaignId = deepLink.replaceAll(prefix, '');
@@ -260,7 +264,7 @@ class RootViewModel extends BaseModel {
         }
       }
       return false;
-    }catch(e) {
+    } catch (e) {
       _logger.e(e);
       return false;
     }
