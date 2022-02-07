@@ -480,9 +480,11 @@ class AugmontGoldBuyViewModel extends BaseModel {
     isGoldBuyInProgress = false;
     if (flag) {
       if (gtFlag)
-        _gtService.showInstantGoldenTicketView(title: '₹${txn.amount.toStringAsFixed(0)} saved!',source: GTSOURCE.deposit);
+        _gtService.showInstantGoldenTicketView(
+            title: '₹${txn.amount.toStringAsFixed(0)} saved!',
+            source: GTSOURCE.deposit);
       else
-        showSuccessGoldBuyDialog();
+        showSuccessGoldBuyDialog(txn);
     } else {
       AppState.backButtonDispatcher.didPopRoute();
     }
@@ -495,7 +497,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
       return amount.toInt();
   }
 
-  showSuccessGoldBuyDialog() {
+  showSuccessGoldBuyDialog(UserTransaction txn) {
     BaseUtil.openDialog(
       addToScreenStack: true,
       hapticVibrate: true,
@@ -504,7 +506,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
         asset: Assets.goldenTicket,
         title: "Congratulations",
         subtitle:
-            "You have successfully saved ₹ ${getAmount(_baseUtil.currentAugmontTxn.amount)} and earned ${_baseUtil.currentAugmontTxn.amount.ceil()} tokens!",
+            "You have successfully saved ₹ ${getAmount(txn.amount)} and earned ${txn.amount.ceil()} tokens!",
         result: (res) {
           // if (res) ;
         },
