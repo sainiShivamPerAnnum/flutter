@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_vm.dart';
 import 'package:felloapp/util/assets.dart';
@@ -25,11 +27,8 @@ class MobileInputScreenViewState extends State<MobileInputScreenView> {
     return BaseView<MobileInputScreenViewModel>(
       onModelReady: (model) {
         this.model = model;
-        model.init();
       },
-      onModelDispose: (model) {
-        model.disp();
-      },
+      onModelDispose: (model) {},
       builder: (ctx, model, child) => Container(
         child: SingleChildScrollView(
           child: Column(
@@ -132,11 +131,6 @@ class MobileInputScreenViewState extends State<MobileInputScreenView> {
                                   .colour(UiConstants.primaryColor),
                             ),
                           ),
-                    TextButton(
-                        onPressed: () {
-                          model.init();
-                        },
-                        child: Text('Truecaller test')),
                     if (model.hasReferralCode)
                       Padding(
                         padding: const EdgeInsets.all(8.0),

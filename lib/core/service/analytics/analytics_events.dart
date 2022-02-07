@@ -57,6 +57,7 @@ class AnalyticsEvents {
   static const referralCount = "Referral Count";
   static const updatedProfilePicture = "Updated profile picture";
   static const mobileOtpDone = "Mobile-otp done";
+  static const truecallerVerified = "Truecaller verified done";
   static const initiateChatSupport = "Initiated Chat Support";
   static const requestedCallback = "Requested Callback";
   static const signOut = "User Signed Out";

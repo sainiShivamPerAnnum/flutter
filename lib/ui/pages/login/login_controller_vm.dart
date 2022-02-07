@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
@@ -11,7 +13,6 @@ import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_events.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/golden_ticket_service.dart';
@@ -31,7 +32,7 @@ import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
+import 'package:truecaller_sdk/truecaller_sdk.dart';
 
 class LoginControllerViewModel extends BaseModel {
   //Locators
@@ -68,6 +69,7 @@ class LoginControllerViewModel extends BaseModel {
   String cstate;
   int _currentPage;
   ValueNotifier<double> _pageNotifier;
+  StreamSubscription streamSubscription;
   static List<Widget> _pages;
 
 //Getters and Setters
@@ -422,7 +424,6 @@ class LoginControllerViewModel extends BaseModel {
       'Welcome to ${Constants.APP_NAME}, ${userService.baseUser.name}',
     );
     //process complete
-    //TODO move to home through animation
   }
 
   Future<void> _verifyPhone() async {
@@ -567,8 +568,44 @@ class LoginControllerViewModel extends BaseModel {
     _pageNotifier.value = _controller.page;
   }
 
+  void initTruecaller() async {
+    TruecallerSdk.initializeSDK(
+        sdkOptions: TruecallerSdkScope.SDK_OPTION_WITHOUT_OTP);
+    TruecallerSdk.isUsable.then((isUsable) {
+      isUsable ? TruecallerSdk.getProfile : print("***Not usable***");
+    });
+
+    streamSubscription =
+        TruecallerSdk.streamCallbackData.listen((truecallerSdkCallback) {
+      switch (truecallerSdkCallback.result) {
+        case TruecallerSdkCallbackResult.success:
+          String firstName = truecallerSdkCallback.profile?.firstName;
+          String lastName = truecallerSdkCallback.profile?.lastName;
+          String phNo = truecallerSdkCallback.profile?.phoneNumber;
+    
+          logger.d("Truecaller no: $phNo");
+
+          _analyticsService.track(eventName: AnalyticsEvents.truecallerVerified);
+          AppState.isOnboardingInProgress = true;
+          _onSignInSuccess();
+
+          break;
+        case TruecallerSdkCallbackResult.failure:
+          int errorCode = truecallerSdkCallback.error?.code;
+          logger.e(errorCode);
+          break;
+        case TruecallerSdkCallbackResult.verification:
+          print("Verification Required!!");
+          break;
+        default:
+          print("Invalid result");
+      }
+    });
+  }
+
   exit() {
     _controller.removeListener(_pageListener);
     _controller.dispose();
+    streamSubscription?.cancel();
   }
 }

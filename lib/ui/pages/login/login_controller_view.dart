@@ -40,7 +40,6 @@ class _LoginControllerViewState extends State<LoginControllerView> {
 
   _LoginControllerViewState(this.initPage);
 
-
   @override
   void initState() {
     super.initState();
@@ -57,7 +56,12 @@ class _LoginControllerViewState extends State<LoginControllerView> {
     bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
 
     return BaseView<LoginControllerViewModel>(
-      onModelReady: (model) => model.init(initPage),
+      onModelReady: (model) {
+        model.init(initPage);
+        if (Platform.isAndroid) {
+          model.initTruecaller();
+        }
+      },
       onModelDispose: (model) => model.exit(),
       builder: (ctx, model, child) => Scaffold(
         backgroundColor: UiConstants.primaryColor,
@@ -211,19 +215,18 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                               width: SizeConfig.screenWidth -
                                   SizeConfig.pageHorizontalMargins * 2,
                               child: FelloButtonLg(
-                                child:
-                                    model.state == ViewState.Idle
-                                        ? Text(
-                                            model.currentPage == Username.index
-                                                ? 'FINISH'
-                                                : 'NEXT',
-                                            style: TextStyles.body2
-                                                .colour(Colors.white),
-                                          )
-                                        : SpinKitThreeBounce(
-                                            color: UiConstants.spinnerColor2,
-                                            size: 18.0,
-                                          ),
+                                child: model.state == ViewState.Idle
+                                    ? Text(
+                                        model.currentPage == Username.index
+                                            ? 'FINISH'
+                                            : 'NEXT',
+                                        style: TextStyles.body2
+                                            .colour(Colors.white),
+                                      )
+                                    : SpinKitThreeBounce(
+                                        color: UiConstants.spinnerColor2,
+                                        size: 18.0,
+                                      ),
                                 onPressed: () {
                                   if (model.state == ViewState.Idle)
                                     model.processScreenInput(model.currentPage);
