@@ -1,5 +1,7 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/ui/modals_sheets/augmont_coupons_modal.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
+import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -14,7 +16,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class AugmontBuyCard extends StatelessWidget {
   final AugmontGoldBuyViewModel model;
-  AugmontBuyCard({this.model});
+  AugmontBuyCard({this.model, Key key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
@@ -140,73 +142,52 @@ class AugmontBuyCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              model.amoutChip(model.chipAmountList[0]),
-              model.amoutChip(model.chipAmountList[1]),
-              model.amoutChip(model.chipAmountList[2]),
-              model.amoutChip(model.chipAmountList[3]),
+              model.amoutChip(0),
+              model.amoutChip(1),
+              model.amoutChip(2),
+              model.amoutChip(3),
             ],
           ),
-          Container(
-            margin: EdgeInsets.symmetric(vertical: SizeConfig.padding24),
-            child: model.appliedCoupon != null
-                ? Material(
-                    color: UiConstants.tertiaryLight,
-                    borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-                    child: ListTile(
-                      contentPadding: EdgeInsets.symmetric(
-                          vertical: SizeConfig.padding6,
-                          horizontal: SizeConfig.padding12),
-                      leading: Image.asset(
-                        Assets.couponIcon,
-                        height: SizeConfig.padding32,
-                      ),
-                      title: Text(
-                        model.appliedCoupon.code,
-                        style: TextStyles.body3.bold
-                            .colour(UiConstants.tertiarySolid),
-                      ),
-                      subtitle: Text(
-                        model.appliedCoupon.description,
-                        style: TextStyles.body3.colour(Colors.grey),
-                      ),
-                      trailing: IconButton(
-                        onPressed: () => model.appliedCoupon = null,
-                        icon: Icon(
-                          Icons.cancel,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-                  )
-                : InkWell(
-                    onTap: () => model.showOfferModal(model),
-                    child: RichText(
-                      text: new TextSpan(
-                        children: [
-                          new TextSpan(
-                              text: 'Apply a',
-                              style: TextStyles.body3
-                                  .colour(UiConstants.tertiarySolid)),
-                          new TextSpan(
-                            text: ' Coupon Code',
-                            style: TextStyles.body3
-                                .colour(UiConstants.tertiarySolid)
-                                .bold,
-                          ),
-                          // new TextSpan(
-                          //     text: ' here',
-                          //     style: TextStyles.body3
-                          //         .colour(UiConstants.tertiarySolid)),
-                        ],
+          SizedBox(height: SizeConfig.padding12),
+          if (model.showCoupons)
+            Container(
+              margin: EdgeInsets.symmetric(vertical: SizeConfig.padding12),
+              child: model.appliedCoupon != null
+                  ? CouponItem(
+                      model: model,
+                      coupon: model.appliedCoupon,
+                      onTap: () {},
+                      trailingWidget: InkWell(
+                        onTap: () => model.appliedCoupon = null,
+                        child: Icon(Icons.cancel,
+                            color: Colors.grey, size: SizeConfig.iconSize1),
                       ),
                     )
-                    //  Text(
-                    //   "Apply Coupon Code here",
-                    //   style: TextStyles.body2.bold
-                    //       .colour(UiConstants.tertiarySolid),
-                    // ),
+                  : Container(
+                      // color: UiConstants.tertiaryLight,
+                      // width: SizeConfig.screenWidth,
+                      // decoration
+                      child: InkWell(
+                          onTap: () => model.showOfferModal(model),
+                          child: RichText(
+                            text: new TextSpan(
+                              children: [
+                                new TextSpan(
+                                    text: 'Apply a',
+                                    style: TextStyles.body3
+                                        .colour(UiConstants.felloBlue)),
+                                new TextSpan(
+                                  text: ' Coupon Code',
+                                  style: TextStyles.body3
+                                      .colour(UiConstants.felloBlue)
+                                      .bold,
+                                ),
+                              ],
+                            ),
+                          )),
                     ),
-          ),
+            ),
+          SizedBox(height: SizeConfig.padding12),
           if (model.augOnbRegInProgress)
             Container(
               decoration: BoxDecoration(
@@ -281,29 +262,6 @@ class AugmontBuyCard extends StatelessWidget {
                 }
               },
             ),
-          if (!model.augOnbRegInProgress && !model.augRegFailed)
-            Padding(
-                padding: EdgeInsets.only(top: SizeConfig.padding12),
-                child: RichText(
-                  text: new TextSpan(
-                    children: [
-                      new TextSpan(
-                          text: 'By continuing, you agree to our ',
-                          style: TextStyles.body4.colour(Colors.black45)),
-                      new TextSpan(
-                        text: 'Terms of Service',
-                        style: TextStyles.body4
-                            .colour(UiConstants.primaryColor)
-                            .underline,
-                        recognizer: new TapGestureRecognizer()
-                          ..onTap = () {
-                            Haptic.vibrate();
-                            BaseUtil.launchUrl('https://fello.in/policy/tnc');
-                          },
-                      ),
-                    ],
-                  ),
-                )),
           SizedBox(
             height: SizeConfig.padding16,
           )

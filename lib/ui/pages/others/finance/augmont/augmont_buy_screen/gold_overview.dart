@@ -21,14 +21,15 @@ class GoldOverview extends StatelessWidget {
               onTap: model.navigateToGoldBalanceDetailsScreen,
               child: Container(
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      UiConstants.tertiarySolid.withOpacity(0.2),
-                      UiConstants.tertiaryLight.withOpacity(0.5)
-                    ],
-                  ),
+                  color: UiConstants.tertiaryLight.withOpacity(0.5),
+                  // gradient: LinearGradient(
+                  //   begin: Alignment.topCenter,
+                  //   end: Alignment.bottomRight,
+                  //   colors: [
+                  //     UiConstants.tertiarySolid.withOpacity(0.2),
+                  //     UiConstants.tertiaryLight.withOpacity(0.5)
+                  //   ],
+                  // ),
                   borderRadius: BorderRadius.circular(SizeConfig.roundness24),
                   border:
                       Border.all(width: 0.5, color: UiConstants.tertiarySolid),
@@ -63,14 +64,15 @@ class GoldOverview extends StatelessWidget {
               onTap: model.navigateToAboutGold,
               child: Container(
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      UiConstants.primaryLight.withOpacity(0.5),
-                      UiConstants.primaryColor.withOpacity(0.2),
-                    ],
-                  ),
+                  color: UiConstants.primaryLight.withOpacity(0.5),
+                  // gradient: LinearGradient(
+                  //   begin: Alignment.topCenter,
+                  //   end: Alignment.bottomRight,
+                  //   colors: [
+                  //     UiConstants.primaryLight.withOpacity(0.5),
+                  //     UiConstants.primaryColor.withOpacity(0.2),
+                  //   ],
+                  // ),
                   borderRadius: BorderRadius.circular(SizeConfig.roundness24),
                   border:
                       Border.all(width: 0.5, color: UiConstants.primaryColor),

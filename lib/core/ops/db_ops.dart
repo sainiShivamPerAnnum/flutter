@@ -7,6 +7,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/faq_model.dart';
 import 'package:felloapp/core/model/feed_card_model.dart';
@@ -1369,6 +1370,17 @@ class DBModel extends ChangeNotifier {
     return felloMilestones;
   }
 
+  Future<List<CouponModel>> getCoupons() async {
+    List<CouponModel> couponList = [];
+    QuerySnapshot snapshot = await _api.fetchCoupons();
+    snapshot.docs.forEach((element) {
+      print(element.data());
+      couponList.add(CouponModel.fromMap(element.data()));
+    });
+    return couponList;
+  }
+
+//------------------------------------------------REALTIME----------------------------
   Future<bool> checkIfUsernameIsAvailable(String username) async {
     return await _api.checkUserNameAvailability(username);
   }

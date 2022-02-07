@@ -19,6 +19,7 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/golden_ticket_claim.dart';
 import 'package:felloapp/ui/modals_sheets/security_modal_sheet.dart';
 import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
+import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -47,6 +48,7 @@ class RootViewModel extends BaseModel {
 
   String get myUserDpUrl => _userService.myUserDpUrl;
   int get currentTabIndex => _appState.rootIndex;
+  double appbarHeight = 0.0;
 
   Future<void> refresh() async {
     if (AppState().getCurrentTabIndex == 2) return;
@@ -66,6 +68,10 @@ class RootViewModel extends BaseModel {
     AppState().setRootLoadValue = true;
     _initDynamicLinks(AppState.delegate.navigatorKey.currentContext);
     _verifyManualReferral(AppState.delegate.navigatorKey.currentContext);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      appbarHeight = felloAppBarKey?.currentContext?.size?.height;
+      notifyListeners();
+    });
   }
 
   onDispose() {
@@ -77,6 +83,10 @@ class RootViewModel extends BaseModel {
     Haptic.vibrate();
     AppState.delegate.appState.currentAction =
         PageAction(state: PageState.addPage, page: NotificationsConfig);
+  }
+
+  updateAppBarHeight(double height) {
+    appbarHeight = height;
   }
 
   showDrawer() {
@@ -230,9 +240,9 @@ class RootViewModel extends BaseModel {
     if (_uri.startsWith(Constants.GOLDENTICKET_DYNAMICLINK_PREFIX)) {
       //Golden ticket dynamic link
       int flag = await _submitGoldenTicket(userId, _uri, context);
-    } else if(_uri.startsWith(Constants.APP_DOWNLOAD_LINK)) {
+    } else if (_uri.startsWith(Constants.APP_DOWNLOAD_LINK)) {
       _submitTrack(_uri);
-    }else {
+    } else {
       BaseUtil.manualReferralCode =
           null; //make manual Code null in case user used both link and code
 
@@ -249,7 +259,7 @@ class RootViewModel extends BaseModel {
   }
 
   bool _submitTrack(String deepLink) {
-    try{
+    try {
       String prefix = '${Constants.APP_DOWNLOAD_LINK}/campaign/';
       if (deepLink.startsWith(prefix)) {
         String campaignId = deepLink.replaceAll(prefix, '');
@@ -260,7 +270,7 @@ class RootViewModel extends BaseModel {
         }
       }
       return false;
-    }catch(e) {
+    } catch (e) {
       _logger.e(e);
       return false;
     }

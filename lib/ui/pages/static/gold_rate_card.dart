@@ -59,13 +59,12 @@ class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
   @override
   Widget build(BuildContext context) {
     return widget.mini
-        ? Column(
+        ? Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Current Gold Price",
-                style: TextStyles.body3,
+                "Current Gold Price: ",
+                style: TextStyles.body3.colour(Colors.black54),
               ),
               widget.isFetching
                   ? SpinKitThreeBounce(
@@ -74,22 +73,16 @@ class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
                     )
                   : // SizedBox(height: SizeConfig.padding4),
                   Text("₹ ${widget.goldprice.toStringAsFixed(2)}",
-                      style: TextStyles.title4.extraBold
-                          .colour(UiConstants.primaryColor)),
-              Row(
-                children: [
-                  Text(
-                    "Valid for: ",
-                    style:
-                        TextStyles.body4.colour(UiConstants.primaryColor).light,
-                  ),
-                  Text(
-                    '${animation.value.inMinutes.toString().padLeft(2, '0')}:${(animation.value.inSeconds % 60).toString().padLeft(2, '0')}',
-                    style:
-                        TextStyles.body4.colour(UiConstants.primaryColor).bold,
-                  )
-                ],
-              )
+                      style: TextStyles.body3.extraBold.colour(Colors.black54)),
+              // Spacer(),
+              // Text(
+              //   "Valid for next ",
+              //   style: TextStyles.body4.colour(Colors.grey).light,
+              // ),
+              // Text(
+              //   '${animation.value.inMinutes.toString().padLeft(2, '0')}:${(animation.value.inSeconds % 60).toString().padLeft(2, '0')}',
+              //   style: TextStyles.body4.colour(UiConstants.primaryColor).bold,
+              // )
             ],
           )
         : Container(

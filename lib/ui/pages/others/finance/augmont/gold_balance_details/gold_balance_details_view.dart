@@ -1,6 +1,7 @@
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/static/FelloTile.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
@@ -33,8 +34,6 @@ class GoldBalanceDetailsView extends StatelessWidget {
             Expanded(
               child: Container(
                 width: SizeConfig.screenWidth,
-                padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.pageHorizontalMargins),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(SizeConfig.padding40),
@@ -42,163 +41,126 @@ class GoldBalanceDetailsView extends StatelessWidget {
                   ),
                   color: UiConstants.scaffoldColor,
                 ),
-                child: ListView(
-                  padding: EdgeInsets.symmetric(
-                      vertical: SizeConfig.pageHorizontalMargins / 2),
-                  children: [
-                    Container(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(SizeConfig.padding40),
+                    topRight: Radius.circular(SizeConfig.padding40),
+                  ),
+                  child: ListView(
+                    padding: EdgeInsets.symmetric(
+                        vertical: SizeConfig.pageHorizontalMargins),
+                    children: [
+                      GoldBalanceContainer(),
+                      SizedBox(height: SizeConfig.pageHorizontalMargins / 2),
+                      Container(
                         margin: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.pageHorizontalMargins,
                             vertical: SizeConfig.pageHorizontalMargins / 2),
-                        height: SizeConfig.screenWidth * 0.32,
+                        padding: EdgeInsets.only(
+                            right: SizeConfig.pageHorizontalMargins / 2),
                         decoration: BoxDecoration(
+                          color: Colors.white,
                           borderRadius:
-                              BorderRadius.circular(SizeConfig.roundness24),
-                          color: UiConstants.tertiaryLight,
-                          border: Border.all(
-                              width: 0.5, color: UiConstants.tertiarySolid),
+                              BorderRadius.circular(SizeConfig.roundness32),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: SizeConfig.padding20),
+                            Container(
+                                margin: EdgeInsets.symmetric(
+                                    horizontal:
+                                        SizeConfig.pageHorizontalMargins),
+                                child: Text(locale.saveHistory,
+                                    style: TextStyles.title4.bold)),
+                            MiniTransactionCard(),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.pageHorizontalMargins,
+                            vertical: SizeConfig.pageHorizontalMargins / 2),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius:
+                              BorderRadius.circular(SizeConfig.roundness32),
                         ),
                         padding:
                             EdgeInsets.all(SizeConfig.pageHorizontalMargins),
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              "My Gold Balance",
-                              style: TextStyles.body3,
+                            Text("Why Digital gold",
+                                style: TextStyles.title4.bold),
+                            SizedBox(height: SizeConfig.padding20),
+                            FeatureTile(
+                              leadingAsset: Assets.gold24K,
+                              title: "24K",
+                              subtitle: "Augmont provides 99.99% pure gold",
                             ),
-                            SizedBox(height: SizeConfig.padding4),
-                            UserGoldQuantitySE(
-                                style: TextStyles.title1.extraBold
-                                    .colour(UiConstants.tertiarySolid)),
+                            SizedBox(height: SizeConfig.padding12),
+                            FeatureTile(
+                              leadingAsset: Assets.gold24K,
+                              title: "99.99% pure",
+                              subtitle: "Augmont provides 99.99% pure gold",
+                            ),
+                            SizedBox(height: SizeConfig.padding12),
+                            FeatureTile(
+                              leadingAsset: Assets.gold24K,
+                              title: "100% secure",
+                              subtitle: "Augmont provides 99.99% pure gold",
+                            )
                           ],
-                        )),
-                    Container(
-                      margin: EdgeInsets.symmetric(
-                          vertical: SizeConfig.pageHorizontalMargins / 2),
-                      padding: EdgeInsets.only(
-                          right: SizeConfig.pageHorizontalMargins / 2),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius:
-                            BorderRadius.circular(SizeConfig.roundness32),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(height: SizeConfig.padding20),
-                          Container(
-                              margin: EdgeInsets.symmetric(
-                                  horizontal: SizeConfig.pageHorizontalMargins),
-                              child: Text(locale.saveHistory,
-                                  style: TextStyles.title4.bold)),
-                          MiniTransactionCard(),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(
-                          vertical: SizeConfig.pageHorizontalMargins / 2),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius:
-                            BorderRadius.circular(SizeConfig.roundness32),
-                      ),
-                      padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Why Digital gold",
-                              style: TextStyles.title4.bold),
-                          SizedBox(height: SizeConfig.padding20),
-                          FeatureTile(
-                            leadingAsset: Assets.gold24K,
-                            title: "24K",
-                            subtitle: "Augmont provides 99.99% pure gold",
-                          ),
-                          SizedBox(height: SizeConfig.padding12),
-                          FeatureTile(
-                            leadingAsset: Assets.gold24K,
-                            title: "99.99% pure",
-                            subtitle: "Augmont provides 99.99% pure gold",
-                          ),
-                          SizedBox(height: SizeConfig.padding12),
-                          FeatureTile(
-                            leadingAsset: Assets.gold24K,
-                            title: "100% secure",
-                            subtitle: "Augmont provides 99.99% pure gold",
-                          )
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(
-                          top: SizeConfig.padding24,
-                          bottom: SizeConfig.padding12),
-                      child: FelloButtonLg(
-                        onPressed: () {
-                          AppState.delegate.appState.currentAction = PageAction(
-                              state: PageState.addPage,
-                              page: AugmontGoldSellPageConfig);
-                        },
-                        child: Text(
-                          "Sell Gold",
-                          style: TextStyles.body3.colour(Colors.white).bold,
                         ),
                       ),
-                    ),
-                    // TextButton(
-                    // onPressed: () {
-                    //   AppState.delegate.appState.currentAction = PageAction(
-                    //       state: PageState.addPage,
-                    //       page: AugmontGoldSellPageConfig);
-                    // },
-                    //   child: Container(
-                    // margin: EdgeInsets.only(
-                    //     top: SizeConfig.padding24,
-                    //     bottom: SizeConfig.padding12),
-                    //     height: SizeConfig.screenWidth * 0.12,
-                    //     width: SizeConfig.screenWidth,
-                    //     decoration: BoxDecoration(
-                    //       border: Border.all(
-                    //           color: UiConstants.tertiarySolid, width: 2),
-                    //       borderRadius:
-                    //           BorderRadius.circular(SizeConfig.roundness12),
-                    //     ),
-                    //     alignment: Alignment.center,
-                    //     child: Text(
-                    //       "Sell Gold",
-                    //       style: TextStyles.body1.bold.colour(Colors.black),
-                    //     ),
-                    //   ),
-                    // ),
-                    Text(
-                      "The first rule of compounding: Never interrupt it unnecessarily.",
-                      textAlign: TextAlign.center,
-                      style: TextStyles.body3.colour(Colors.black54),
-                    ),
-                    SizedBox(height: SizeConfig.padding8),
-                    Text(
-                      "- Charlie Munger",
-                      textAlign: TextAlign.center,
-                      style: TextStyles.body3.bold.colour(Colors.black54),
-                    ),
-                    SizedBox(height: SizeConfig.screenHeight * 0.05),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(Assets.augLogo,
-                            color: Colors.grey, height: SizeConfig.padding24),
-                        SizedBox(width: SizeConfig.padding20),
-                        Image.asset(Assets.amfiGraphic,
-                            color: Colors.grey, height: SizeConfig.padding24),
-                        SizedBox(width: SizeConfig.padding20),
-                        Image.asset(Assets.sebiGraphic,
-                            color: Colors.grey, height: SizeConfig.padding20),
-                      ],
-                    ),
-                    SizedBox(height: SizeConfig.pageHorizontalMargins)
-                  ],
+                      Container(
+                        margin: EdgeInsets.only(
+                            left: SizeConfig.pageHorizontalMargins,
+                            right: SizeConfig.pageHorizontalMargins,
+                            top: SizeConfig.padding24,
+                            bottom: SizeConfig.padding12),
+                        child: FelloButtonLg(
+                          onPressed: () {
+                            AppState.delegate.appState.currentAction =
+                                PageAction(
+                                    state: PageState.addPage,
+                                    page: AugmontGoldSellPageConfig);
+                          },
+                          child: Text(
+                            "Sell Gold",
+                            style: TextStyles.body3.colour(Colors.white).bold,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        "The first rule of compounding: Never interrupt it unnecessarily.",
+                        textAlign: TextAlign.center,
+                        style: TextStyles.body3.colour(Colors.black54),
+                      ),
+                      SizedBox(height: SizeConfig.padding8),
+                      Text(
+                        "- Charlie Munger",
+                        textAlign: TextAlign.center,
+                        style: TextStyles.body3.bold.colour(Colors.black54),
+                      ),
+                      SizedBox(height: SizeConfig.screenHeight * 0.05),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(Assets.augLogo,
+                              color: Colors.grey, height: SizeConfig.padding24),
+                          SizedBox(width: SizeConfig.padding20),
+                          Image.asset(Assets.amfiGraphic,
+                              color: Colors.grey, height: SizeConfig.padding24),
+                          SizedBox(width: SizeConfig.padding20),
+                          Image.asset(Assets.sebiGraphic,
+                              color: Colors.grey, height: SizeConfig.padding20),
+                        ],
+                      ),
+                      SizedBox(height: SizeConfig.pageHorizontalMargins)
+                    ],
+                  ),
                 ),
               ),
             ),

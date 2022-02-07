@@ -52,12 +52,13 @@ class AugmontGoldBuyViewModel extends BaseModel {
   final _analyticsService = locator<AnalyticsService>();
 
   int _status = 0;
-
-  CouponModel _appliedCoupon;
+  int lastTappedChipIndex = 1;
+  CouponModel _appliedCoupon, _focusCoupon;
 
   bool _showMaxCapText = false;
   bool _isGoldRateFetching = false;
   bool _isGoldBuyInProgress = false;
+  bool _showCoupons = false;
   AugmontRates goldRates;
   String userAugmontState;
   FocusNode buyFieldNode = FocusNode();
@@ -68,7 +69,16 @@ class AugmontGoldBuyViewModel extends BaseModel {
   double goldBuyAmount = 0;
   double goldAmountInGrams = 0.0;
   TextEditingController goldAmountController;
-  List<double> chipAmountList = [101, 251, 501, 1001];
+  List<double> chipAmountList = [101, 201, 501, 1001];
+
+  List<CouponModel> _couponList;
+
+  List<CouponModel> get couponList => _couponList;
+
+  set couponList(List<CouponModel> list) {
+    _couponList = list;
+    notifyListeners();
+  }
 
   double get goldBuyPrice => goldRates != null ? goldRates.goldBuyPrice : 0.0;
 
@@ -115,6 +125,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
     notifyListeners();
   }
 
+  CouponModel get focusCoupon => this._focusCoupon;
   CouponModel get appliedCoupon => this._appliedCoupon;
 
   set appliedCoupon(CouponModel value) {
@@ -123,14 +134,27 @@ class AugmontGoldBuyViewModel extends BaseModel {
     notifyListeners();
   }
 
+  set focusCoupon(CouponModel coupon) {
+    _focusCoupon = coupon;
+    notifyListeners();
+  }
+
+  bool get showCoupons => _showCoupons;
+
+  set showCoupons(bool val) {
+    _showCoupons = val;
+    notifyListeners();
+  }
+
   init() async {
     setState(ViewState.Busy);
     goldBuyAmount = 251;
-    goldAmountController = TextEditingController(text: "251");
+    goldAmountController = TextEditingController(text: "201");
     fetchGoldRates();
     await fetchNotices();
     status = checkAugmontStatus();
-
+    //Fetch available coupons
+    getAvailableCoupons();
     //Check if user can be registered automagically
     userAugmontState = await CacheManager.readCache(key: "UserAugmontState");
     if (status == STATUS_REGISTER && userAugmontState != null) {
@@ -155,9 +179,11 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
 // UI ESSENTIALS
 
-  Widget amoutChip(double amt) {
+  Widget amoutChip(int index) {
+    double amt = chipAmountList[index];
     return GestureDetector(
       onTap: () {
+        lastTappedChipIndex = index;
         buyFieldNode.unfocus();
         if (goldBuyAmount == null)
           goldBuyAmount = amt;
@@ -167,7 +193,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
           else
             goldBuyAmount = 50000;
         }
-
+        checkIfCouponIsStillApplicable();
         goldAmountController.text = goldBuyAmount.toInt().toString();
         updateGoldAmount();
         notifyListeners();
@@ -177,7 +203,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
             vertical: SizeConfig.padding8, horizontal: SizeConfig.padding12),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-          color: amt.toInt() == 501
+          color: lastTappedChipIndex == index
               ? UiConstants.primaryColor
               : UiConstants.primaryLight.withOpacity(0.5),
         ),
@@ -185,7 +211,9 @@ class AugmontGoldBuyViewModel extends BaseModel {
         child: Text(
           "+ ₹${amt.toInt()}",
           style: TextStyles.body3.bold.colour(
-            amt.toInt() == 501 ? Colors.white : UiConstants.primaryColor,
+            lastTappedChipIndex == index
+                ? Colors.white
+                : UiConstants.primaryColor,
           ),
         ),
       ),
@@ -235,6 +263,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
     if (status == STATUS_UNAVAILABLE) return;
     if (status == STATUS_REGISTER) {
       _onboardUserManually();
+      return;
     }
     // if (_status == 1) {
     //   bool res = await _onboardUser();
@@ -322,6 +351,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
       goldBuyAmount = 0;
       updateGoldAmount();
     }
+    checkIfCouponIsStillApplicable();
   }
 
   // buyButtonAction() async {
@@ -400,7 +430,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
             topLeft: Radius.circular(SizeConfig.roundness24),
             topRight: Radius.circular(SizeConfig.roundness24),
           ),
-          addToScreenStack: false,
+          addToScreenStack: true,
           content: AugmontRegisterModalSheet(
             onSuccessfulAugReg: (val) {
               if (val) {
@@ -560,7 +590,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
             title: '₹${txn.amount.toStringAsFixed(0)} saved!',
             source: GTSOURCE.deposit);
       else
-        showSuccessGoldBuyDialog();
+        showSuccessGoldBuyDialog(txn);
     }
     // else {
     //   AppState.backButtonDispatcher.didPopRoute();
@@ -574,7 +604,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
       return amount.toInt();
   }
 
-  showSuccessGoldBuyDialog() {
+  showSuccessGoldBuyDialog(UserTransaction txn) {
     BaseUtil.openDialog(
       addToScreenStack: true,
       hapticVibrate: true,
@@ -583,7 +613,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
         asset: Assets.goldenTicket,
         title: "Congratulations",
         subtitle:
-            "You have successfully saved ₹ ${getAmount(_baseUtil.currentAugmontTxn.amount)} and earned ${_baseUtil.currentAugmontTxn.amount.ceil()} tokens!",
+            "You have successfully saved ₹ ${getAmount(txn.amount)} and earned ${txn.amount.ceil()} tokens!",
         result: (res) {
           // if (res) ;
         },
@@ -604,6 +634,8 @@ class AugmontGoldBuyViewModel extends BaseModel {
     );
   }
 
+// ----------------------------------------NAVIGATION--------------------------------------//
+
   navigateToGoldBalanceDetailsScreen() {
     AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addPage, page: GoldBalanceDetailsViewPageConfig);
@@ -623,17 +655,30 @@ class AugmontGoldBuyViewModel extends BaseModel {
           'Failed to launch URL', 'Please try again in sometime');
   }
 
-  applyCoupon(bool val) {
-    //Checks
-    // current gold amount is valid
-    // user is valid for this coupon
-    if (val) {
-      appliedCoupon = TestCoupon;
-      BaseUtil.showPositiveAlert("Coupon Applied Successfully",
-          "You 3% gold will be credited to your wallet");
-    } else {
-      BaseUtil.showNegativeAlert("Coupon cannot be applied",
-          "This coupon is not valid for this purchase");
-    }
+//----------------------------------------------- COUPON LOGIC -------------------------------
+
+  getAvailableCoupons() async {
+    couponList = await _dbModel.getCoupons();
+    if (couponList[0].priority == 1) focusCoupon = couponList[0];
+    showCoupons = true;
+  }
+
+  applyCoupon(CouponModel coupon) {
+    buyFieldNode.unfocus();
+    goldBuyAmount = coupon.minPurchase.toDouble();
+    goldAmountController.text = goldBuyAmount.toInt().toString();
+    updateGoldAmount();
+    notifyListeners();
+    appliedCoupon = coupon;
+    BaseUtil.showPositiveAlert("Coupon Applied Successfully",
+        "You 3% gold will be credited to your wallet");
+
+    // BaseUtil.showNegativeAlert("Coupon cannot be applied",
+    //     "This coupon is not valid for this purchase");
+  }
+
+  checkIfCouponIsStillApplicable() {
+    if (appliedCoupon != null && goldBuyAmount < appliedCoupon.minPurchase)
+      appliedCoupon = null;
   }
 }

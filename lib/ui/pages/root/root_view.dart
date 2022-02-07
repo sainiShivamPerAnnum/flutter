@@ -24,6 +24,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
+GlobalKey felloAppBarKey = new GlobalKey();
+
 class Root extends StatelessWidget {
   final pages = [Save(), Play(), Win()];
 
@@ -71,7 +73,10 @@ class Root extends StatelessWidget {
                   backgroundColor: Colors.black,
                   onRefresh: model.refresh,
                   child: Container(
-                    margin: EdgeInsets.only(top: SizeConfig.viewInsets.top),
+                    margin: EdgeInsets.only(
+                        top: SizeConfig.screenWidth * 0.1 +
+                            SizeConfig.viewInsets.top +
+                            SizeConfig.padding24),
                     child: Consumer<AppState>(
                       builder: (ctx, m, child) => IndexedStack(
                         children: pages,
@@ -81,6 +86,7 @@ class Root extends StatelessWidget {
                   ),
                 ),
                 FelloAppBar(
+                  key: felloAppBarKey,
                   leading: InkWell(
                     onTap: () => model.showDrawer(),
                     child: ProfileImageSE(
@@ -260,7 +266,7 @@ class SaveBaseline extends StatelessWidget {
               borderRadius: BorderRadius.circular(
                 SizeConfig.roundness24,
               ),
-              border: Border.all(width: 0.3, color: UiConstants.tertiarySolid),
+              //border: Border.all(width: 0.3, color: UiConstants.tertiarySolid),
               // boxShadow: [
               //   if (m.rootIndex == 0)
               //     BoxShadow(
