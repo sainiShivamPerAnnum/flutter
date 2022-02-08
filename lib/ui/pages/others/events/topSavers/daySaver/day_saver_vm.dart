@@ -5,8 +5,37 @@ import 'package:felloapp/util/locator.dart';
 
 class TopSaverViewModel extends BaseModel {
   final _logger = locator<CustomLogger>();
+
+  //Local variables
+
+  String appbarTitle = "Top Saver";
+  SaverType saverType;
+
   init(SaverType type) {
+    saverType = type;
     _logger.d(
         "Top Saver Viewmodel initialised with saver type : ${type.toString()}");
+    setAppbarTitle();
+  }
+
+  setAppbarTitle() {
+    switch (saverType) {
+      case SaverType.DAILY:
+        {
+          appbarTitle = "Saver of the Day";
+          break;
+        }
+      case SaverType.WEEKLY:
+        {
+          appbarTitle = "Saver of the Week";
+          break;
+        }
+      case SaverType.MONTHLY:
+        {
+          appbarTitle = "Saver of the Month";
+          break;
+        }
+    }
+    notifyListeners();
   }
 }

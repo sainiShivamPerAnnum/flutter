@@ -88,54 +88,18 @@ class Win extends StatelessWidget {
                             scrollDirection: Axis.horizontal,
                             children: [
                               SizedBox(width: SizeConfig.pageHorizontalMargins),
-                              InkWell(
-                                onTap: () {
-                                  AppState.delegate.appState.currentAction =
-                                      PageAction(
-                                          state: PageState.addWidget,
-                                          widget: TopSaverView(
-                                            type: SaverType.DAILY,
-                                          ),
-                                          page: AugmontGoldSellPageConfig);
-                                },
-                                child: Container(
-                                  width: SizeConfig.screenWidth * 0.4,
-                                  height: SizeConfig.screenWidth * 0.32,
-                                  margin: EdgeInsets.only(
-                                      right: SizeConfig.padding16),
-                                  color: Colors.black,
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    "Saver of the Day",
-                                    style:
-                                        TextStyles.body2.colour(Colors.white),
-                                  ),
-                                ),
+                              EventCard(
+                                title: "Saver of the Day",
+                                type: SaverType.DAILY,
                               ),
-                              Container(
-                                width: SizeConfig.screenWidth * 0.4,
-                                height: SizeConfig.screenWidth * 0.32,
-                                margin: EdgeInsets.only(
-                                    right: SizeConfig.padding16),
-                                color: Colors.purple,
-                                alignment: Alignment.center,
-                                child: Text(
-                                  "Saver of the Week",
-                                  style: TextStyles.body2.colour(Colors.white),
-                                ),
+                              EventCard(
+                                title: "Saver of the Week",
+                                type: SaverType.WEEKLY,
                               ),
-                              Container(
-                                width: SizeConfig.screenWidth * 0.4,
-                                height: SizeConfig.screenWidth * 0.32,
-                                margin: EdgeInsets.only(
-                                    right: SizeConfig.padding16),
-                                color: Colors.green,
-                                alignment: Alignment.center,
-                                child: Text(
-                                  "Saver of the Month",
-                                  style: TextStyles.body2.colour(Colors.white),
-                                ),
-                              )
+                              EventCard(
+                                title: "Saver of the Month",
+                                type: SaverType.MONTHLY,
+                              ),
                             ],
                           ),
                         ),
@@ -245,6 +209,38 @@ class Win extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+}
+
+class EventCard extends StatelessWidget {
+  final SaverType type;
+  final String title;
+
+  EventCard({this.type, this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        AppState.delegate.appState.currentAction = PageAction(
+            state: PageState.addWidget,
+            widget: TopSaverView(
+              type: type,
+            ),
+            page: AugmontGoldSellPageConfig);
+      },
+      child: Container(
+        width: SizeConfig.screenWidth * 0.4,
+        height: SizeConfig.screenWidth * 0.32,
+        margin: EdgeInsets.only(right: SizeConfig.padding16),
+        color: Colors.black,
+        alignment: Alignment.center,
+        child: Text(
+          title,
+          style: TextStyles.body2.colour(Colors.white),
+        ),
+      ),
     );
   }
 }
