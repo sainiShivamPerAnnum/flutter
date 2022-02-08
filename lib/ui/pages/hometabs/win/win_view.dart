@@ -7,6 +7,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/modals/octfest_info_modal.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
+import 'package:felloapp/ui/pages/others/events/topSavers/daySaver/day_saver_view.dart';
 import 'package:felloapp/ui/pages/static/leaderboard_sheet.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/winners_prizes/winners_marquee.dart';
@@ -87,16 +88,28 @@ class Win extends StatelessWidget {
                             scrollDirection: Axis.horizontal,
                             children: [
                               SizedBox(width: SizeConfig.pageHorizontalMargins),
-                              Container(
-                                width: SizeConfig.screenWidth * 0.4,
-                                height: SizeConfig.screenWidth * 0.32,
-                                margin: EdgeInsets.only(
-                                    right: SizeConfig.padding16),
-                                color: Colors.black,
-                                alignment: Alignment.center,
-                                child: Text(
-                                  "Saver of the Day",
-                                  style: TextStyles.body2.colour(Colors.white),
+                              InkWell(
+                                onTap: () {
+                                  AppState.delegate.appState.currentAction =
+                                      PageAction(
+                                          state: PageState.addWidget,
+                                          widget: TopSaverView(
+                                            type: SaverType.DAILY,
+                                          ),
+                                          page: AugmontGoldSellPageConfig);
+                                },
+                                child: Container(
+                                  width: SizeConfig.screenWidth * 0.4,
+                                  height: SizeConfig.screenWidth * 0.32,
+                                  margin: EdgeInsets.only(
+                                      right: SizeConfig.padding16),
+                                  color: Colors.black,
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "Saver of the Day",
+                                    style:
+                                        TextStyles.body2.colour(Colors.white),
+                                  ),
                                 ),
                               ),
                               Container(

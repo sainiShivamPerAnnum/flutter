@@ -48,6 +48,7 @@ const String FreshdeskHelpPath = '/freshDeskHelp';
 const String GoldenTicketViewPath = '/goldenTicketView';
 const String GoldenTicketsViewPath = '/goldenTicketsView';
 const String GoldenMilestonesViewPath = '/goldenMilestonesView';
+const String TopSaverViewPath = '/topSaverView';
 
 enum Pages {
   Splash,
@@ -96,6 +97,7 @@ enum Pages {
   GoldenTicketView,
   GoldenTicketsView,
   GoldenMilestonesView,
+  TopSaverView,
 }
 
 class PageConfiguration {
@@ -405,28 +407,28 @@ PageConfiguration BlockedUserPageConfig = PageConfiguration(
   key: 'blockedUser',
   path: BlockedUserPath,
   uiPage: Pages.BlockedUser,
-  name: 'Blocked User Page'
+  name: 'Blocked User Page',
 );
 
 PageConfiguration FreshDeskHelpPageConfig = PageConfiguration(
   key: 'freshDeskHelp',
   path: FreshdeskHelpPath,
   uiPage: Pages.FreshDeskHelp,
-  name: 'FreshDesk Help'
+  name: 'FreshDesk Help',
 );
 
 PageConfiguration GoldenTicketViewPageConfig = PageConfiguration(
   key: 'GoldenTicketView',
   path: GoldenTicketViewPath,
   uiPage: Pages.GoldenTicketView,
-  name: 'Golden Ticket Highlighted'
+  name: 'Golden Ticket Highlighted',
 );
 
 PageConfiguration GoldenTicketsViewPageConfig = PageConfiguration(
   key: 'GoldenTicketsView',
   path: GoldenTicketsViewPath,
   uiPage: Pages.GoldenTicketsView,
-  name: 'Golden Tickets Screen'
+  name: 'Golden Tickets Screen',
 );
 
 PageConfiguration GoldenMilestonesViewPageConfig = PageConfiguration(
@@ -434,4 +436,11 @@ PageConfiguration GoldenMilestonesViewPageConfig = PageConfiguration(
   path: GoldenMilestonesViewPath,
   uiPage: Pages.GoldenMilestonesView,
   name: 'Milestones screen',
+);
+
+PageConfiguration TopSaverViewPageConfig = PageConfiguration(
+  key: 'TopSaverView',
+  path: TopSaverViewPath,
+  uiPage: Pages.TopSaverView,
+  name: 'TopSaverView screen',
 );

@@ -16,6 +16,7 @@ import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_view.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_page.dart';
 import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
+import 'package:felloapp/ui/pages/others/events/topSavers/daySaver/day_saver_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_view.dart';
@@ -51,7 +52,6 @@ import 'package:flutter/material.dart';
 
 class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
-  
   final _analytics = locator<AnalyticsService>();
 
   final List<Page> _pages = [];
@@ -268,6 +268,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.GoldenMilestonesView:
           _addPageData(GoldenMilestonesView(), GoldenMilestonesViewPageConfig);
           break;
+        case Pages.TopSaverView:
+          _addPageData(TopSaverView(), GoldenMilestonesViewPageConfig);
+          break;
         default:
           break;
       }
@@ -461,6 +464,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.GoldenMilestonesView:
         GoldenMilestonesViewPageConfig.currentPageAction = action;
         break;
+      case Pages.TopSaverView:
+        TopSaverViewPageConfig.currentPageAction = action;
+        break;
       default:
         break;
     }
@@ -619,9 +625,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'blocked':
         pageConfiguration = BlockedUserPageConfig;
         break;
-      // case 'goldenTickets':
-      //   pageConfiguration = GoldenTicketsViewPageConfig;
-      //   break;
+      case 'topSaver':
+        pageConfiguration = TopSaverViewPageConfig;
+        break;
     }
     if (pageConfiguration != null) {
       addPage(pageConfiguration);
