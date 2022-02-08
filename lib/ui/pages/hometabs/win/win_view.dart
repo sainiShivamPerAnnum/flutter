@@ -81,7 +81,7 @@ class Win extends StatelessWidget {
                         ),
                         SizedBox(height: SizeConfig.padding16),
                         Container(
-                          height: SizeConfig.screenWidth * 0.32,
+                          height: SizeConfig.screenWidth * 0.3,
                           width: SizeConfig.screenWidth,
                           child: ListView(
                             padding: EdgeInsets.zero,
@@ -231,10 +231,18 @@ class EventCard extends StatelessWidget {
             page: AugmontGoldSellPageConfig);
       },
       child: Container(
-        width: SizeConfig.screenWidth * 0.4,
-        height: SizeConfig.screenWidth * 0.32,
+        width: SizeConfig.screenWidth * 0.64,
+        height: SizeConfig.screenWidth * 0.3,
         margin: EdgeInsets.only(right: SizeConfig.padding16),
-        color: Colors.black,
+        decoration: BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+          image: DecorationImage(
+            image: NetworkImage(
+                "https://image.freepik.com/free-vector/investors-earning-income_74855-2486.jpg?w=1380"),
+            fit: BoxFit.cover,
+          ),
+        ),
         alignment: Alignment.center,
         child: Text(
           title,
