@@ -169,7 +169,7 @@ class CouponItem extends StatelessWidget {
             right: SizeConfig.pageHorizontalMargins / 2),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-            color: UiConstants.felloBlue.withOpacity(0.2)),
+            color: UiConstants.felloBlue.withOpacity(0.1)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,

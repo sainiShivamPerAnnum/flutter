@@ -421,7 +421,6 @@ class AugmontGoldBuyViewModel extends BaseModel {
   }
 
   Future _onboardUserManually() async {
-    augOnbRegInProgress = true;
     // userAugmontState = await CacheManager.readCache(key: "UserAugmontState");
     // if (userAugmontState == null) {
     return Future.delayed(Duration.zero, () {
@@ -432,6 +431,9 @@ class AugmontGoldBuyViewModel extends BaseModel {
           ),
           addToScreenStack: true,
           content: AugmontRegisterModalSheet(
+            onAugRegInit: (val) {
+              augOnbRegInProgress = val;
+            },
             onSuccessfulAugReg: (val) {
               if (val) {
                 augOnbRegInProgress = false;

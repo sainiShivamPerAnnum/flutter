@@ -21,8 +21,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 class AugmontRegisterModalSheet extends StatefulWidget {
   final ValueChanged<bool> onSuccessfulAugReg;
+  final ValueChanged<bool> onAugRegInit;
 
-  AugmontRegisterModalSheet({this.onSuccessfulAugReg});
+  AugmontRegisterModalSheet({this.onSuccessfulAugReg, this.onAugRegInit});
 
   AugmontRegisterModalSheetState createState() =>
       AugmontRegisterModalSheetState();
@@ -178,6 +179,7 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
       return;
     }
     baseProvider.isAugmontRegnInProgress = true;
+    widget.onAugRegInit(true);
     setState(() {});
 
     ///now register the augmont user
@@ -187,6 +189,8 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
       BaseUtil.showNegativeAlert('Registration Failed',
           'Failed to register at the moment. Please try again.');
       baseProvider.isAugmontRegnInProgress = false;
+      widget.onAugRegInit(false);
+
       setState(() {});
       AppState.backButtonDispatcher.didPopRoute();
       return;
@@ -197,7 +201,7 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
           'Registration Successful', 'You are successfully registered!');
       baseProvider.isAugmontRegnInProgress = false;
       setState(() {});
-      Navigator.pop(context);
+      AppState.backButtonDispatcher.didPopRoute();
       // AppState.delegate.appState.currentAction =
       //     PageAction(state: PageState.addPage, page: AugmontGoldBuyPageConfig);
     }
