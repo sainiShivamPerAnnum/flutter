@@ -1,9 +1,6 @@
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/modals_sheets/augmont_coupons_modal.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
-import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';

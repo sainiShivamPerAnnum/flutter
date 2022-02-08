@@ -1,43 +1,18 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/gold_overview.dart';
-import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
-import 'package:felloapp/ui/pages/static/play_offer_card.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
-import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-// TEST COUPON [TO BE DELETED]
-// CouponModel TestCoupon = CouponModel(
-//   "",
-//   "FREE3%",
-//   "Buy gold worth ₹1000 and get 3% gold free.",
-//   Timestamp.now(),
-//   Timestamp.now(),
-//   4,
-//   1,
-//   Additionals("", "get ₹300 worth gold for free", "", null, "Apply Coupon"),
-// );
-
-GlobalKey BuyCardKey = new GlobalKey();
 
 class Save extends StatelessWidget {
   final CustomLogger logger = locator<CustomLogger>();
@@ -74,7 +49,7 @@ class Save extends StatelessWidget {
                                 ? SizeConfig.screenWidth * 0.12
                                 : 0,
                           ),
-                          AugmontBuyCard(model: model, key: BuyCardKey),
+                          AugmontBuyCard(model: model),
                         ],
                       ),
                     ],

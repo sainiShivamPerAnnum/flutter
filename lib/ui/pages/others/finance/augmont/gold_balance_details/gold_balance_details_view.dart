@@ -97,19 +97,19 @@ class GoldBalanceDetailsView extends StatelessWidget {
                             FeatureTile(
                               leadingAsset: Assets.gold24K,
                               title: "24K",
-                              subtitle: "Augmont provides 99.99% pure gold",
+                              subtitle: "Augmont provides 24K original gold",
                             ),
                             SizedBox(height: SizeConfig.padding12),
                             FeatureTile(
-                              leadingAsset: Assets.gold24K,
+                              leadingAsset: Assets.goldPure,
                               title: "99.99% pure",
                               subtitle: "Augmont provides 99.99% pure gold",
                             ),
                             SizedBox(height: SizeConfig.padding12),
                             FeatureTile(
-                              leadingAsset: Assets.gold24K,
+                              leadingAsset: Assets.goldSecure,
                               title: "100% secure",
-                              subtitle: "Augmont provides 99.99% pure gold",
+                              subtitle: "Augmont provides 100% secure gold",
                             )
                           ],
                         ),
@@ -133,17 +133,17 @@ class GoldBalanceDetailsView extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Text(
-                        "The first rule of compounding: Never interrupt it unnecessarily.",
-                        textAlign: TextAlign.center,
-                        style: TextStyles.body3.colour(Colors.black54),
-                      ),
-                      SizedBox(height: SizeConfig.padding8),
-                      Text(
-                        "- Charlie Munger",
-                        textAlign: TextAlign.center,
-                        style: TextStyles.body3.bold.colour(Colors.black54),
-                      ),
+                      // Text(
+                      //   "The first rule of compounding: Never interrupt it unnecessarily.",
+                      //   textAlign: TextAlign.center,
+                      //   style: TextStyles.body3.colour(Colors.black54),
+                      // ),
+                      // SizedBox(height: SizeConfig.padding8),
+                      // Text(
+                      //   "- Charlie Munger",
+                      //   textAlign: TextAlign.center,
+                      //   style: TextStyles.body3.bold.colour(Colors.black54),
+                      // ),
                       SizedBox(height: SizeConfig.screenHeight * 0.05),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,

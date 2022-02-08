@@ -92,17 +92,6 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
             )
           ],
         ),
-        // Center(
-        //   child: Text(
-        //     'Digital Gold Registration',
-        //     textAlign: TextAlign.center,
-        //     style: TextStyle(
-        //       fontSize: 28,
-        //       fontWeight: FontWeight.w700,
-        //       color:  FelloColorPalette.augmontFundPalette().primaryColor,
-        //     ),
-        //   ),
-        // ),
         SizedBox(
           height: 24,
         ),

@@ -6,7 +6,6 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
-import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -20,16 +19,13 @@ import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/dialogs/augmont_disabled_dialog.dart';
 import 'package:felloapp/ui/modals_sheets/augmont_coupons_modal.dart';
 import 'package:felloapp/ui/modals_sheets/augmont_register_modal_sheet.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fcm_topics.dart';
-import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -148,7 +144,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
   init() async {
     setState(ViewState.Busy);
-    goldBuyAmount = 251;
+    goldBuyAmount = 201;
     goldAmountController = TextEditingController(text: "201");
     fetchGoldRates();
     await fetchNotices();
@@ -354,13 +350,6 @@ class AugmontGoldBuyViewModel extends BaseModel {
     checkIfCouponIsStillApplicable();
   }
 
-  // buyButtonAction() async {
-  //   if (await BaseUtil.showNoInternetAlert()) return;
-  //   Haptic.vibrate();
-  //   _baseUtil.isAugDepositRouteLogicInProgress = true;
-  //   _onDepositClicked().then((value) {});
-  // }
-
   int checkAugmontStatus() {
     //check who is allowed to deposit
     String _perm = BaseRemoteConfig.remoteConfig
@@ -446,22 +435,6 @@ class AugmontGoldBuyViewModel extends BaseModel {
           ),
           isBarrierDismissable: false);
     });
-    // } else {
-    //   _baseUtil.augmontDetail = await _augmontModel.createSimpleUser(
-    //       _userService.baseUser.mobile, userAugmontState);
-    //   if (_baseUtil.augmontDetail == null) {
-    //     BaseUtil.showNegativeAlert('Registration Failed',
-    //         'Failed to register for digital gold. Please check your connection and reopen.');
-    //     augOnbRegInProgress = false;
-    //     augRegFailed = true;
-    //     return;
-    //   } else {
-    //     augOnbRegInProgress = false;
-    //     status = checkAugmontStatus();
-    //     // BaseUtil.showPositiveAlert('Registration Successful',
-    //     //     'You are successfully onboarded to Augmont Digital Gold');
-    //   }
-    // }
   }
 
   onboardUser() async {
@@ -471,53 +444,6 @@ class AugmontGoldBuyViewModel extends BaseModel {
     else
       _onboardUserManually();
   }
-
-  // Future<bool> _onDepositClicked() async {
-  //   setState(ViewState.Busy);
-  //   _baseUtil.augmontDetail = (_baseUtil.augmontDetail == null)
-  //       ? (await _dbModel.getUserAugmontDetails(_baseUtil.myUser.uid))
-  //       : _baseUtil.augmontDetail;
-  //   int _status = checkAugmontStatus();
-  //   if (_status == STATUS_UNAVAILABLE) {
-  //     _baseUtil.isAugDepositRouteLogicInProgress = false;
-  //     setState(ViewState.Idle);
-  //     BaseUtil.openDialog(
-  //         content: AugmontDisabled(),
-  //         addToScreenStack: true,
-  //         isBarrierDismissable: true);
-
-  //     return true;
-  //   } else if (_status == STATUS_REGISTER) {
-  //     BaseUtil.openModalBottomSheet(
-  //         addToScreenStack: true,
-  //         content: AugmontRegisterModalSheet(),
-  //         isBarrierDismissable: false);
-  //     isGoldBuyInProgress = false;
-  //     notifyListeners();
-
-  //     return true;
-  //   } else {
-  //     _baseUtil.augmontGoldRates =
-  //         await _augmontModel.getRates(); //refresh rates
-  //     _baseUtil.isAugDepositRouteLogicInProgress = false;
-  //     setState(ViewState.Idle);
-
-  //     if (_baseUtil.augmontGoldRates == null) {
-  //       BaseUtil.showNegativeAlert(
-  //         'Portal unavailable',
-  //         'The current rates couldn\'t be loaded. Please try again',
-  //       );
-  //       return false;
-  //     } else {
-  //       await _augmontModel.initiateGoldPurchase(_baseUtil.augmontGoldRates,
-  //           double.tryParse(goldAmountController.text));
-
-  //       await _augmontModel
-  //           .setAugmontTxnProcessListener(_onDepositTransactionComplete);
-  //     }
-  //   }
-  //   return true;
-  // }
 
   void showOfferModal(AugmontGoldBuyViewModel model) {
     BaseUtil.openModalBottomSheet(
@@ -594,9 +520,6 @@ class AugmontGoldBuyViewModel extends BaseModel {
       else
         showSuccessGoldBuyDialog(txn);
     }
-    // else {
-    //   AppState.backButtonDispatcher.didPopRoute();
-    // }
   }
 
   getAmount(double amount) {
@@ -626,11 +549,9 @@ class AugmontGoldBuyViewModel extends BaseModel {
         onReject: () {
           AppState.backButtonDispatcher.didPopRoute();
           AppState.delegate.appState.setCurrentTabIndex = 1;
-          // _gtService.showGoldenTicketAvailableDialog();
         },
         onAccept: () {
           AppState.backButtonDispatcher.didPopRoute();
-          // _gtService.showGoldenTicketAvailableDialog();
         },
       ),
     );
@@ -667,16 +588,15 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
   applyCoupon(CouponModel coupon) {
     buyFieldNode.unfocus();
-    goldBuyAmount = coupon.minPurchase.toDouble();
+    if (goldBuyAmount < coupon.minPurchase.toDouble())
+      goldBuyAmount = coupon.minPurchase.toDouble();
+
     goldAmountController.text = goldBuyAmount.toInt().toString();
     updateGoldAmount();
     notifyListeners();
     appliedCoupon = coupon;
     BaseUtil.showPositiveAlert("Coupon Applied Successfully",
         "You 3% gold will be credited to your wallet");
-
-    // BaseUtil.showNegativeAlert("Coupon cannot be applied",
-    //     "This coupon is not valid for this purchase");
   }
 
   checkIfCouponIsStillApplicable() {
