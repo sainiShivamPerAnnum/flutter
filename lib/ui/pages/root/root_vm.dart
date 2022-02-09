@@ -48,7 +48,6 @@ class RootViewModel extends BaseModel {
 
   String get myUserDpUrl => _userService.myUserDpUrl;
   int get currentTabIndex => _appState.rootIndex;
-  double appbarHeight = 0.0;
 
   Future<void> refresh() async {
     if (AppState().getCurrentTabIndex == 2) return;
@@ -68,10 +67,6 @@ class RootViewModel extends BaseModel {
     AppState().setRootLoadValue = true;
     _initDynamicLinks(AppState.delegate.navigatorKey.currentContext);
     _verifyManualReferral(AppState.delegate.navigatorKey.currentContext);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      appbarHeight = felloAppBarKey?.currentContext?.size?.height;
-      notifyListeners();
-    });
   }
 
   onDispose() {
@@ -83,10 +78,6 @@ class RootViewModel extends BaseModel {
     Haptic.vibrate();
     AppState.delegate.appState.currentAction =
         PageAction(state: PageState.addPage, page: NotificationsConfig);
-  }
-
-  updateAppBarHeight(double height) {
-    appbarHeight = height;
   }
 
   showDrawer() {

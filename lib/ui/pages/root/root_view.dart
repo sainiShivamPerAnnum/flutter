@@ -99,19 +99,42 @@ class Root extends StatelessWidget {
                     NotificationButton(),
                   ],
                 ),
+                // Positioned(
+                //   bottom: 0,
+                //   child: ClipRect(
+                //     child: BackdropFilter(
+                //       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                //       child: Container(
+                //         color: Colors.transparent,
+                //         width: SizeConfig.screenWidth,
+                //         height: SizeConfig.navBarHeight,
+                //         child: BackdropFilter(
+                //           filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ),
                 Positioned(
                   bottom: 0,
-                  child: ClipRect(
+                  child: Container(
+                    width: SizeConfig.screenWidth,
+                    height: SizeConfig.navBarHeight,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                          colors: [
+                            UiConstants.scaffoldColor.withOpacity(0.8),
+                            UiConstants.scaffoldColor.withOpacity(0.2),
+                          ],
+                          stops: [
+                            0.8,
+                            1
+                          ]),
+                    ),
                     child: BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                      child: Container(
-                        color: Colors.transparent,
-                        width: SizeConfig.screenWidth,
-                        height: SizeConfig.navBarHeight,
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                        ),
-                      ),
                     ),
                   ),
                 ),
