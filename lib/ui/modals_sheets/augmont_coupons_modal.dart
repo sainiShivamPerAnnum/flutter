@@ -112,7 +112,8 @@ class AugmontCouponsModalSheet extends StatelessWidget {
                   FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9]'))
                 ],
                 validator: (val) {
-                  if (val.trim().length == 0 || val == null) return null;
+                  if (val.trim().length == 0 || val == null)
+                    return "Please enter a code to continue";
                   if (val.trim().length < 3 || val.trim().length > 10)
                     return "Invalid Coupon code";
                   return null;
@@ -162,10 +163,10 @@ class CouponItem extends StatelessWidget {
       child: Container(
         // height: SizeConfig.padding54,
         width: SizeConfig.screenWidth,
-        margin: EdgeInsets.only(bottom: SizeConfig.padding8),
+        margin: EdgeInsets.only(bottom: SizeConfig.padding4),
         padding: EdgeInsets.only(
-            top: SizeConfig.padding8,
-            bottom: SizeConfig.padding8,
+            top: SizeConfig.padding4,
+            bottom: SizeConfig.padding4,
             right: SizeConfig.pageHorizontalMargins / 2),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(SizeConfig.roundness12),

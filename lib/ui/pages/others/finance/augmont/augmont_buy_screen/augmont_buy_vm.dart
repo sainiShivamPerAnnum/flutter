@@ -66,7 +66,6 @@ class AugmontGoldBuyViewModel extends BaseModel {
   double goldAmountInGrams = 0.0;
   TextEditingController goldAmountController;
   List<double> chipAmountList = [101, 201, 501, 1001];
-
   List<CouponModel> _couponList;
 
   List<CouponModel> get couponList => _couponList;
@@ -121,7 +120,6 @@ class AugmontGoldBuyViewModel extends BaseModel {
     notifyListeners();
   }
 
-  CouponModel get focusCoupon => this._focusCoupon;
   CouponModel get appliedCoupon => this._appliedCoupon;
 
   set appliedCoupon(CouponModel value) {
@@ -129,6 +127,8 @@ class AugmontGoldBuyViewModel extends BaseModel {
     _logger.d(_appliedCoupon.toString());
     notifyListeners();
   }
+
+  CouponModel get focusCoupon => this._focusCoupon;
 
   set focusCoupon(CouponModel coupon) {
     _focusCoupon = coupon;

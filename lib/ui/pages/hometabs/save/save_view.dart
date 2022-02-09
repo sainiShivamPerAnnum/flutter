@@ -113,8 +113,9 @@ class FocusCouponClip extends StatelessWidget {
               child: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(
-                  "Buy Gold worth ₹1000 and get 3% Gold free.",
+                  model.focusCoupon.description,
                   overflow: TextOverflow.clip,
+                  textAlign: TextAlign.start,
                   style: TextStyles.body2.colour(Colors.white),
                 ),
               ),
