@@ -157,20 +157,25 @@ class TopSaverView extends StatelessWidget {
                       SizedBox(
                         height: SizeConfig.padding16,
                       ),
-                      SaverBoards(title: "Current Leaderboard"),
-                      Container(
-                        width: SizeConfig.screenWidth,
-                        margin: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.pageHorizontalMargins),
-                        decoration: BoxDecoration(
-                          borderRadius:
-                              BorderRadius.circular(SizeConfig.roundness32),
-                          color: UiConstants.scaffoldColor,
+                      if (model.currentParticipants != null)
+                        SaverBoards(
+                          title: "Current Leaderboard",
+                          model: model,
                         ),
-                        child: Column(
-                          children: [],
-                        ),
-                      )
+                      SizedBox(height: SizeConfig.padding24),
+                      // Container(
+                      //   width: SizeConfig.screenWidth,
+                      //   margin: EdgeInsets.symmetric(
+                      //       horizontal: SizeConfig.pageHorizontalMargins),
+                      //   decoration: BoxDecoration(
+                      //     borderRadius:
+                      //         BorderRadius.circular(SizeConfig.roundness32),
+                      //     color: UiConstants.scaffoldColor,
+                      //   ),
+                      //   child: Column(
+                      //     children: [],
+                      //   ),
+                      // )
                     ],
                   ),
                 ),
@@ -185,7 +190,8 @@ class TopSaverView extends StatelessWidget {
 
 class SaverBoards extends StatelessWidget {
   final String title;
-  SaverBoards({@required this.title});
+  final TopSaverViewModel model;
+  SaverBoards({@required this.title, @required this.model});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -225,8 +231,8 @@ class SaverBoards extends StatelessWidget {
           SizedBox(height: SizeConfig.padding16),
           Column(
             children: List.generate(
-              4,
-              (index) => Container(
+              model.currentParticipants.length,
+              (i) => Container(
                 margin: EdgeInsets.only(bottom: SizeConfig.padding12),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(SizeConfig.padding12),
@@ -236,13 +242,30 @@ class SaverBoards extends StatelessWidget {
                   leading: CircleAvatar(
                     backgroundColor: UiConstants.primaryColor,
                     child: Text(
-                      index.toString(),
+                      i.toString(),
                       style: TextStyles.body2.colour(Colors.white),
                     ),
                   ),
-                  title: Text("username"),
-                  subtitle: Text("week description"),
-                  trailing: Text("Win prize"),
+                  title: Text(
+                    model.currentParticipants[i].username,
+                    style: TextStyles.body2.bold.colour(Colors.black54),
+                  ),
+                  subtitle: Text("This Week"),
+                  trailing: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        model.currentParticipants[i].score.toString(),
+                        style: TextStyles.body2.bold
+                            .colour(UiConstants.primaryColor),
+                      ),
+                      Text(
+                        "transactions",
+                        style: TextStyles.body4.light.colour(Colors.grey),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
