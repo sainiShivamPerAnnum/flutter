@@ -487,6 +487,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
         'Invalid IFSC Code',
         'Please check your ifsc code.',
       );
+      pBankIfsc = pBankIfsc.toUpperCase();
       baseProvider.isEditAugmontBankDetailInProgress = false;
       setState(() {});
       return;
