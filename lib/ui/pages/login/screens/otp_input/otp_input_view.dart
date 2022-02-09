@@ -94,7 +94,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                 ),
                 SizedBox(height: SizeConfig.padding12),
                 Text(
-                  locale.obOtpDesc(LoginControllerView.mobileno.substring(6)),
+                  locale.obOtpDesc(LoginControllerView.mobileno?.substring(6)),
                   textAlign: TextAlign.center,
                   style: TextStyles.body2,
                 ),

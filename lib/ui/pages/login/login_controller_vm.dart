@@ -218,7 +218,7 @@ class LoginControllerViewModel extends BaseModel {
               //firebase user should never be null at this point
               userService.baseUser = BaseUser.newUser(
                   userService.firebaseUser.uid,
-                  _formatMobileNumber(userService.firebaseUser.phoneNumber));
+                  _formatMobileNumber(LoginControllerView.mobileno));
             }
 
             userService.baseUser.name =
@@ -589,9 +589,7 @@ class LoginControllerViewModel extends BaseModel {
           _analyticsService.track(
               eventName: AnalyticsEvents.truecallerVerified);
           AppState.isOnboardingInProgress = true;
-
           _authenticateTrucallerUser(phNo);
-
           break;
         case TruecallerSdkCallbackResult.failure:
           int errorCode = truecallerSdkCallback.error?.code;
@@ -617,7 +615,7 @@ class LoginControllerViewModel extends BaseModel {
     }
 
     final String token = tokenRes.model;
-
+    LoginControllerView.mobileno = phno;
     //Authenticate using custom token
     FirebaseAuth.instance.signInWithCustomToken(token).then((res) {
       logger.i("New Firebase User: ${res.additionalUserInfo.isNewUser}");
