@@ -821,6 +821,11 @@ class Api {
     }
   }
 
+  Future<QuerySnapshot> fetchOngoingEvents() async {
+    Query _query = _db.collection(Constants.COLN_EVENTS).orderBy('position');
+    return _query.get();
+  }
+
   //---------------------------------------REALTIME DATABASE-------------------------------------------//
 
   Future<bool> checkUserNameAvailability(String username) async {

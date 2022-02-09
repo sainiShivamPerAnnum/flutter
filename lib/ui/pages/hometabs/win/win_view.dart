@@ -2,10 +2,11 @@ import 'dart:math' as math;
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/modals/octfest_info_modal.dart';
+import 'package:felloapp/ui/modals_sheets/octfest_info_modal.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/daySaver/day_saver_view.dart';
 import 'package:felloapp/ui/pages/static/leaderboard_sheet.dart';
@@ -71,39 +72,44 @@ class Win extends StatelessWidget {
                         SizedBox(height: SizeConfig.padding20),
                         WinnersMarqueeStrip(),
                         SizedBox(height: SizeConfig.padding24),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.pageHorizontalMargins),
-                          child: Text(
-                            "Ongoing Events",
-                            style: TextStyles.title3.bold,
-                          ),
-                        ),
-                        SizedBox(height: SizeConfig.padding16),
-                        Container(
-                          height: SizeConfig.screenWidth * 0.3,
-                          width: SizeConfig.screenWidth,
-                          child: ListView(
-                            padding: EdgeInsets.zero,
-                            scrollDirection: Axis.horizontal,
+                        if (model.ongoingEvents != null)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(width: SizeConfig.pageHorizontalMargins),
-                              EventCard(
-                                title: "Saver of the Day",
-                                type: SaverType.DAILY,
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal:
+                                        SizeConfig.pageHorizontalMargins),
+                                child: Text(
+                                  "Ongoing Events",
+                                  style: TextStyles.title3.bold,
+                                ),
                               ),
-                              EventCard(
-                                title: "Saver of the Week",
-                                type: SaverType.WEEKLY,
+                              SizedBox(height: SizeConfig.padding16),
+                              Container(
+                                height: SizeConfig.screenWidth * 0.3,
+                                width: SizeConfig.screenWidth,
+                                child: ListView(
+                                  padding: EdgeInsets.zero,
+                                  scrollDirection: Axis.horizontal,
+                                  children: List.generate(
+                                    model.ongoingEvents.length,
+                                    (i) => Container(
+                                      margin: EdgeInsets.only(
+                                          left: i == 0
+                                              ? SizeConfig.pageHorizontalMargins
+                                              : 0),
+                                      child: EventCard(
+                                        event: model.ongoingEvents[i],
+                                        model: model,
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
-                              EventCard(
-                                title: "Saver of the Month",
-                                type: SaverType.MONTHLY,
-                              ),
+                              SizedBox(height: SizeConfig.padding24),
                             ],
                           ),
-                        ),
-                        SizedBox(height: SizeConfig.padding24),
                         Padding(
                           padding: EdgeInsets.symmetric(
                               horizontal: SizeConfig.pageHorizontalMargins),
@@ -214,10 +220,10 @@ class Win extends StatelessWidget {
 }
 
 class EventCard extends StatelessWidget {
-  final SaverType type;
-  final String title;
+  final WinViewModel model;
+  final EventModel event;
 
-  EventCard({this.type, this.title});
+  EventCard({@required this.event, @required this.model});
 
   @override
   Widget build(BuildContext context) {
@@ -226,7 +232,7 @@ class EventCard extends StatelessWidget {
         AppState.delegate.appState.currentAction = PageAction(
             state: PageState.addWidget,
             widget: TopSaverView(
-              type: type,
+              event: event,
             ),
             page: AugmontGoldSellPageConfig);
       },
@@ -234,20 +240,58 @@ class EventCard extends StatelessWidget {
         width: SizeConfig.screenWidth * 0.64,
         height: SizeConfig.screenWidth * 0.3,
         margin: EdgeInsets.only(right: SizeConfig.padding16),
-        decoration: BoxDecoration(
-          color: Colors.black,
-          borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-          image: DecorationImage(
-            image: NetworkImage(
-                "https://image.freepik.com/free-vector/investors-earning-income_74855-2486.jpg?w=1380"),
-            fit: BoxFit.cover,
-          ),
-        ),
-        alignment: Alignment.center,
-        child: Text(
-          title,
-          style: TextStyles.body2.colour(Colors.white),
-        ),
+        decoration: event.thumbnail.isNotEmpty
+            ? BoxDecoration(
+                color: event.position % 2 == 0
+                    ? UiConstants.primaryColor
+                    : UiConstants.tertiarySolid,
+                borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+                image: DecorationImage(
+                  image: NetworkImage(event.thumbnail),
+                  fit: BoxFit.cover,
+                ),
+              )
+            : BoxDecoration(
+                color: event.color != 0
+                    ? Color(event.color)
+                    : UiConstants.primaryColor,
+                borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+              ),
+        padding: EdgeInsets.all(SizeConfig.padding16),
+        child: event.thumbnail.isEmpty
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    event.title,
+                    style: TextStyles.body2.bold.colour(Colors.white),
+                  ),
+                  Text(
+                    event.subtitle,
+                    style: TextStyles.body3.colour(Colors.white),
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(24),
+                            color: Colors.white.withOpacity(0.5)),
+                        padding: EdgeInsets.symmetric(
+                            vertical: SizeConfig.padding6,
+                            horizontal: SizeConfig.padding8),
+                        child: Text(
+                          "Explore",
+                          style: TextStyles.body3.bold.colour(event.color != 0
+                              ? Color(event.color)
+                              : UiConstants.primaryColor),
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              )
+            : SizedBox(),
       ),
     );
   }
