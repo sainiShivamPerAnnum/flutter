@@ -157,6 +157,7 @@ class LoginControllerViewModel extends BaseModel {
               _analyticsService.track(eventName: AnalyticsEvents.mobileOtpDone);
               AppState.isOnboardingInProgress = true;
               _otpScreenKey.currentState.model.onOtpReceived();
+
               _onSignInSuccess();
             } else {
               _otpScreenKey.currentState.model.pinEditingController.text = "";
@@ -582,12 +583,14 @@ class LoginControllerViewModel extends BaseModel {
           String firstName = truecallerSdkCallback.profile?.firstName;
           String lastName = truecallerSdkCallback.profile?.lastName;
           String phNo = truecallerSdkCallback.profile?.phoneNumber;
-    
+
           logger.d("Truecaller no: $phNo");
 
-          _analyticsService.track(eventName: AnalyticsEvents.truecallerVerified);
+          _analyticsService.track(
+              eventName: AnalyticsEvents.truecallerVerified);
           AppState.isOnboardingInProgress = true;
-          _onSignInSuccess();
+
+          _authenticateTrucallerUser(phNo);
 
           break;
         case TruecallerSdkCallbackResult.failure:
@@ -600,6 +603,30 @@ class LoginControllerViewModel extends BaseModel {
         default:
           print("Invalid result");
       }
+    });
+  }
+
+  Future<void> _authenticateTrucallerUser(String phno) async {
+    //Make api call to get custom token
+    final ApiResponse<String> tokenRes =
+        await _userRepo.getCustomUserToken(phno);
+
+    if (tokenRes.code == 400) {
+      BaseUtil.showNegativeAlert(
+          "Authentication failed", tokenRes.errorMessage);
+    }
+
+    final String token = tokenRes.model;
+
+    //Authenticate using custom token
+    FirebaseAuth.instance.signInWithCustomToken(token).then((res) {
+      logger.i("New Firebase User: ${res.additionalUserInfo.isNewUser}");
+      //on successful authentication
+      _onSignInSuccess();
+    }).catchError((e) {
+      logger.e(e);
+      BaseUtil.showNegativeAlert("Authentication failed",
+          "Please enter your mobile number to authenticate.");
     });
   }
 
