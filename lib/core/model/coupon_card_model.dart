@@ -68,11 +68,11 @@ class Additionals {
 
   Additionals.fromMap(Map<String, dynamic> cMap)
       : this(
-          cMap['title'],
+          cMap['title'] ?? "",
           // cMap['subtitle'],
-          cMap['bgColor'],
-          cMap['bgImage'],
-          cMap['btnText'],
+          cMap['bgColor'] ?? 0,
+          cMap['bgImage'] ?? "",
+          cMap['btnText'] ?? "",
         );
 
   String get title => this._title;

@@ -183,7 +183,6 @@ class CouponItem extends StatelessWidget {
                   topLeft: Radius.circular(SizeConfig.padding12),
                   bottomLeft: Radius.circular(SizeConfig.padding12),
                 ),
-                //color: UiConstants.tertiarySolid.withOpacity(0.4),
               ),
               child: Center(
                 child: Transform.rotate(
@@ -191,7 +190,7 @@ class CouponItem extends StatelessWidget {
                   child: SvgPicture.asset(
                     Assets.couponIcon,
                     color: UiConstants.felloBlue,
-                    height: SizeConfig.padding32,
+                    height: SizeConfig.padding20,
                   ),
                 ),
               ),

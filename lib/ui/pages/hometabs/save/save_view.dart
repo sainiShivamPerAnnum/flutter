@@ -35,7 +35,8 @@ class Save extends StatelessWidget {
                           SizeConfig.screenWidth * 0.12 + SizeConfig.padding32),
                   Stack(
                     children: [
-                      FocusCouponClip(model: model),
+                      if (model.focusCoupon != null)
+                        FocusCouponClip(model: model),
                       Column(
                         children: [
                           AnimatedContainer(
@@ -45,7 +46,8 @@ class Save extends StatelessWidget {
                                 horizontal: SizeConfig.pageHorizontalMargins),
                             width: SizeConfig.screenWidth / 2,
                             height: model.appliedCoupon == null &&
-                                    model.showCoupons == true
+                                    model.showCoupons == true &&
+                                    model.focusCoupon != null
                                 ? SizeConfig.screenWidth * 0.12
                                 : 0,
                           ),

@@ -1347,24 +1347,35 @@ class DBModel extends ChangeNotifier {
 
   Future<List<UserMilestoneModel>> getUserAchievedMilestones(String uid) async {
     List<UserMilestoneModel> userMilestones = [];
-    Map<String, dynamic> userMilestonesData =
-        await _api.fetchUserAchievedTicketMilestonesList(uid);
-    logger.d(userMilestonesData.toString());
-    if (userMilestonesData != null) {
-      userMilestonesData['prizeArr']
-          .forEach((e) => userMilestones.add(UserMilestoneModel.fromJson(e)));
+    try {
+      Map<String, dynamic> userMilestonesData =
+          await _api.fetchUserAchievedTicketMilestonesList(uid);
+      logger.d(userMilestonesData.toString());
+      if (userMilestonesData != null) {
+        userMilestonesData['prizeArr']
+            .forEach((e) => userMilestones.add(UserMilestoneModel.fromJson(e)));
+      }
+    } catch (e) {
+      logger.e(e.toString());
+      userMilestones = [];
     }
+
     return userMilestones;
   }
 
   Future<List<FelloMilestoneModel>> getMilestonesList() async {
     List<FelloMilestoneModel> felloMilestones = [];
-    Map<String, dynamic> felloMilestonesData =
-        await _api.fetchGoldenTicketMilestonesList();
-    logger.d(felloMilestonesData.toString());
-    if (felloMilestonesData != null) {
-      felloMilestonesData['checkpoints']
-          .forEach((e) => felloMilestones.add(FelloMilestoneModel.fromJson(e)));
+    try {
+      Map<String, dynamic> felloMilestonesData =
+          await _api.fetchGoldenTicketMilestonesList();
+      logger.d(felloMilestonesData.toString());
+      if (felloMilestonesData != null) {
+        felloMilestonesData['checkpoints'].forEach(
+            (e) => felloMilestones.add(FelloMilestoneModel.fromJson(e)));
+      }
+    } catch (e) {
+      logger.e(e.toString());
+      felloMilestones = [];
     }
 
     return felloMilestones;
@@ -1372,11 +1383,16 @@ class DBModel extends ChangeNotifier {
 
   Future<List<CouponModel>> getCoupons() async {
     List<CouponModel> couponList = [];
-    QuerySnapshot snapshot = await _api.fetchCoupons();
-    snapshot.docs.forEach((element) {
-      print(element.data());
-      couponList.add(CouponModel.fromMap(element.data()));
-    });
+    try {
+      QuerySnapshot snapshot = await _api.fetchCoupons();
+      snapshot.docs.forEach((element) {
+        couponList.add(CouponModel.fromMap(element.data()));
+      });
+    } catch (e) {
+      logger.e(e.toString());
+      couponList = [];
+    }
+
     return couponList;
   }
 
