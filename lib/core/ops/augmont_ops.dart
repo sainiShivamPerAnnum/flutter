@@ -90,7 +90,6 @@ class AugmontModel extends ChangeNotifier {
     return 'fello${u.toString()}$mobile';
   }
 
-
   Future<UserAugmontDetail> createSimpleUser(
       String mobile, String stateId) async {
     if (!isInit()) await _init();
@@ -207,7 +206,8 @@ class AugmontModel extends ChangeNotifier {
         'BlockID: ${buyRates.blockId},gPrice: ${buyRates.goldBuyPrice}';
     String _note2 =
         'UserId:${_userService.baseUser.uid},MerchantTxnID: ${_tranIdResponse.model}';
-    String rzpOrderId = await _rzpGateway.createOrderId(amount, _userService.baseUser.uid, _tranIdResponse.model, _note1, _note2);
+    String rzpOrderId = await _rzpGateway.createOrderId(amount,
+        _userService.baseUser.uid, _tranIdResponse.model, _note1, _note2);
     if (rzpOrderId == null) {
       _logger.e("Received null from create Order id");
       return null;
@@ -437,7 +437,7 @@ class AugmontModel extends ChangeNotifier {
       if (_augmontTxnProcessListener != null)
         _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
 
-      AppState.backButtonDispatcher.didPopRoute();
+      //  AppState.backButtonDispatcher.didPopRoute();
     }
   }
 
