@@ -234,10 +234,8 @@ class RootViewModel extends BaseModel {
     } else if (_uri.startsWith(Constants.APP_DOWNLOAD_LINK)) {
       _submitTrack(_uri);
     } else if (_uri.startsWith(Constants.APP_NAVIGATION_LINK)) {
-      if (_userService?.baseUser?.uid != null) {
-        final path = _uri.substring(_uri.lastIndexOf('/'), _uri.length);
-        AppState.delegate.parseRoute(Uri.parse(path));
-      }
+      final path = _uri.substring(_uri.lastIndexOf('/'), _uri.length);
+      AppState.delegate.parseRoute(Uri.parse(path));
     } else {
       BaseUtil.manualReferralCode =
           null; //make manual Code null in case user used both link and code
