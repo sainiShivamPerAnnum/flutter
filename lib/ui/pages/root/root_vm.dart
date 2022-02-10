@@ -47,7 +47,7 @@ class RootViewModel extends BaseModel {
   bool _isInitialized = false;
 
   String get myUserDpUrl => _userService.myUserDpUrl;
-  int get currentTabIndex => _appState.rootIndex;
+  //int get currentTabIndex => _appState.rootIndex;
 
   Future<void> refresh() async {
     if (AppState().getCurrentTabIndex == 2) return;
@@ -63,7 +63,7 @@ class RootViewModel extends BaseModel {
 
   onInit() {
     // pages = <Widget>[Save(), Play(), Win()];
-    AppState().setCurrentTabIndex = 1;
+    // AppState.delegate.appState.setCurrentTabIndex = 1;
     AppState().setRootLoadValue = true;
     _initDynamicLinks(AppState.delegate.navigatorKey.currentContext);
     _verifyManualReferral(AppState.delegate.navigatorKey.currentContext);
@@ -108,7 +108,7 @@ class RootViewModel extends BaseModel {
         break;
       default:
     }
-
+    _userService.buyFieldFocusNode.unfocus();
     AppState.delegate.appState.setCurrentTabIndex = index;
     notifyListeners();
   }
@@ -140,8 +140,9 @@ class RootViewModel extends BaseModel {
       _initAdhocNotifications();
 
       _localDBModel.showHomeTutorial.then((value) {
-        if (value) {
+        if (_userService.showOnboardingTutorial) {
           //show tutorial
+          _userService.showOnboardingTutorial = false;
           _localDBModel.setShowHomeTutorial = false;
           // AppState.delegate.parseRoute(Uri.parse('dashboard/walkthrough'));
           AppState.delegate.appState.currentAction =
@@ -344,6 +345,17 @@ class RootViewModel extends BaseModel {
       backgroundColor: Colors.transparent,
       isBarrierDismissable: true,
     );
+  }
+
+  void focusBuyField() {
+    if (_userService.buyFieldFocusNode.hasPrimaryFocus ||
+        _userService.buyFieldFocusNode.hasFocus) {
+      _logger.d("field has focus");
+      FocusManager.instance.primaryFocus.unfocus();
+    }
+    Future.delayed(Duration(milliseconds: 100), () {
+      _userService.buyFieldFocusNode.requestFocus();
+    });
   }
 
   Future<String> _getBearerToken() async {

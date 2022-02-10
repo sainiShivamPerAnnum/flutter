@@ -315,6 +315,7 @@ class LoginControllerViewModel extends BaseModel {
                       properties: {'userId': userService?.baseUser?.uid},
                     );
                     logger.d("User object saved successfully");
+                    userService.showOnboardingTutorial = true;
                     _onSignUpComplete();
                   } else {
                     BaseUtil.showNegativeAlert(
@@ -410,6 +411,7 @@ class LoginControllerViewModel extends BaseModel {
     );
     AppState.isOnboardingInProgress = false;
     setState(ViewState.Idle);
+    appStateProvider.rootIndex = 1;
 
     ///check if the account is blocked
     if (userService.baseUser != null && userService.baseUser.isBlocked) {

@@ -83,13 +83,17 @@ class AugmontCouponsModalSheet extends StatelessWidget {
                 physics: BouncingScrollPhysics(),
                 children: List.generate(
                     model.couponList.length,
-                    (i) => CouponItem(
-                        model: model,
-                        coupon: model.couponList[i],
-                        onTap: () {
-                          model.applyCoupon(model.couponList[i]);
-                          AppState.backButtonDispatcher.didPopRoute();
-                        })),
+                    (i) => Container(
+                          margin: EdgeInsets.symmetric(
+                              vertical: SizeConfig.padding2),
+                          child: CouponItem(
+                              model: model,
+                              coupon: model.couponList[i],
+                              onTap: () {
+                                model.applyCoupon(model.couponList[i]);
+                                AppState.backButtonDispatcher.didPopRoute();
+                              }),
+                        )),
               ),
             ),
           ),
@@ -165,8 +169,8 @@ class CouponItem extends StatelessWidget {
         width: SizeConfig.screenWidth,
         margin: EdgeInsets.only(bottom: SizeConfig.padding4),
         padding: EdgeInsets.only(
-            top: SizeConfig.padding4,
-            bottom: SizeConfig.padding4,
+            top: SizeConfig.padding2,
+            bottom: SizeConfig.padding2,
             right: SizeConfig.pageHorizontalMargins / 2),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(SizeConfig.roundness12),
