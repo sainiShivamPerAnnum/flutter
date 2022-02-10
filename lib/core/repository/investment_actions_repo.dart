@@ -22,6 +22,20 @@ class InvestmentActionsRepository {
     return token;
   }
 
+  Future<ApiResponse<Map<String, dynamic>>> getGoldRates() async {
+    _logger.d("GET_GOLD_RATES::API_CALLED");
+
+    try {
+      final String _bearer = await _getBearerToken();
+      final response = await APIService.instance
+          .getData(_apiPaths.kGetGoldRates, token: _bearer);
+      return ApiResponse(model: response, code: 200);
+    } catch (e) {
+      _logger.e(e);
+      return ApiResponse.withError("Unable to fetch rates", 400);
+    }
+  }
+
   Future<ApiResponse<String>> createTranId({String userUid}) async {
     Map<String, dynamic> _params = {
       'uid': userUid,
