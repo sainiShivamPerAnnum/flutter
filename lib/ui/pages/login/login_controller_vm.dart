@@ -34,6 +34,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:truecaller_sdk/truecaller_sdk.dart';
 
+enum LoginSource { FIREBASE, TRUECALLER }
+
 class LoginControllerViewModel extends BaseModel {
   //Locators
   final fcmListener = locator<FcmListener>();
@@ -62,6 +64,13 @@ class LoginControllerViewModel extends BaseModel {
 //Private Variables
   double _formProgress = 0.2;
   bool _isSignup = false;
+  bool _loginUsingTrueCaller = false;
+  get loginUsingTrueCaller => this._loginUsingTrueCaller;
+
+  set loginUsingTrueCaller(value) {
+    this._loginUsingTrueCaller = value;
+    notifyListeners();
+  }
 
   String userMobile;
   String _verificationId;
@@ -158,7 +167,7 @@ class LoginControllerViewModel extends BaseModel {
               AppState.isOnboardingInProgress = true;
               _otpScreenKey.currentState.model.onOtpReceived();
 
-              _onSignInSuccess();
+              _onSignInSuccess(LoginSource.FIREBASE);
             } else {
               _otpScreenKey.currentState.model.pinEditingController.text = "";
               BaseUtil.showNegativeAlert(
@@ -356,7 +365,7 @@ class LoginControllerViewModel extends BaseModel {
     }
   }
 
-  void _onSignInSuccess() async {
+  void _onSignInSuccess(LoginSource source) async {
     logger.d("User authenticated. Now check if details previously available.");
     userService.firebaseUser = FirebaseAuth.instance.currentUser;
     logger.d("User is set: " + userService.firebaseUser.uid);
@@ -380,8 +389,15 @@ class LoginControllerViewModel extends BaseModel {
       //Move to name input page
       BaseUtil.isNewUser = true;
       BaseUtil.isFirstFetchDone = false;
-      _controller.animateToPage(NameInputScreen.index,
-          duration: Duration(milliseconds: 500), curve: Curves.easeInToLinear);
+      if (source == LoginSource.FIREBASE)
+        _controller.animateToPage(NameInputScreen.index,
+            duration: Duration(milliseconds: 500),
+            curve: Curves.easeInToLinear);
+      else if (source == LoginSource.TRUECALLER)
+        _controller.jumpToPage(
+          NameInputScreen.index,
+        );
+      loginUsingTrueCaller = false;
       //_nameScreenKey.currentState.showEmailOptions();
     } else {
       ///Existing user
@@ -464,7 +480,7 @@ class LoginControllerViewModel extends BaseModel {
       bool flag = await baseProvider.authenticateUser(user); //.then((flag) {
       if (flag) {
         logger.d("User signed in successfully");
-        _onSignInSuccess();
+        _onSignInSuccess(LoginSource.FIREBASE);
       } else {
         logger.e("User auto sign in didnt work");
 
@@ -583,7 +599,7 @@ class LoginControllerViewModel extends BaseModel {
           String firstName = truecallerSdkCallback.profile?.firstName;
           String lastName = truecallerSdkCallback.profile?.lastName;
           String phNo = truecallerSdkCallback.profile?.phoneNumber;
-
+          loginUsingTrueCaller = true;
           logger.d("Truecaller no: $phNo");
 
           _analyticsService.track(
@@ -620,7 +636,7 @@ class LoginControllerViewModel extends BaseModel {
     FirebaseAuth.instance.signInWithCustomToken(token).then((res) {
       logger.i("New Firebase User: ${res.additionalUserInfo.isNewUser}");
       //on successful authentication
-      _onSignInSuccess();
+      _onSignInSuccess(LoginSource.TRUECALLER);
     }).catchError((e) {
       logger.e(e);
       BaseUtil.showNegativeAlert("Authentication failed",

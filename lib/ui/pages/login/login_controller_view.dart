@@ -204,38 +204,76 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                               ),
                             )
                           : Container(),
-                      Container(
-                        width: SizeConfig.screenWidth,
-                        padding: EdgeInsets.fromLTRB(0, 10, 0, 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: <Widget>[
-                            new Container(
-                              width: SizeConfig.screenWidth -
-                                  SizeConfig.pageHorizontalMargins * 2,
-                              child: FelloButtonLg(
-                                child: model.state == ViewState.Idle
-                                    ? Text(
-                                        model.currentPage == Username.index
-                                            ? 'FINISH'
-                                            : 'NEXT',
-                                        style: TextStyles.body2
-                                            .colour(Colors.white),
-                                      )
-                                    : SpinKitThreeBounce(
-                                        color: UiConstants.spinnerColor2,
-                                        size: 18.0,
+                      model.loginUsingTrueCaller
+                          ? SafeArea(
+                              child: Container(
+                                margin: EdgeInsets.only(
+                                    bottom: SizeConfig.padding24),
+                                width: SizeConfig.screenWidth,
+                                height: 60,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Logging using",
+                                      style: GoogleFonts.nunito(
+                                        fontSize: SizeConfig.body2,
+                                        color: Color(0xff1180FF),
+                                        fontWeight: FontWeight.w700,
                                       ),
-                                onPressed: () {
-                                  if (model.state == ViewState.Idle)
-                                    model.processScreenInput(model.currentPage);
-                                },
+                                      //  TextStyles.body2.bold
+                                      //     .colour(Color(0xff1180FF)),
+                                    ),
+                                    Image.network(
+                                      "https://upload.wikimedia.org/wikipedia/commons/1/14/TrueCaller_Logo.png",
+                                      height: SizeConfig.body1,
+                                    ),
+                                    SizedBox(
+                                      width: SizeConfig.padding4,
+                                    ),
+                                    SpinKitThreeBounce(
+                                      color: Color(0xff1180FF),
+                                      size: SizeConfig.body1,
+                                    )
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      )
+                            )
+                          : Container(
+                              width: SizeConfig.screenWidth,
+                              padding: EdgeInsets.fromLTRB(0, 10, 0, 20),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: <Widget>[
+                                  new Container(
+                                    width: SizeConfig.screenWidth -
+                                        SizeConfig.pageHorizontalMargins * 2,
+                                    child: FelloButtonLg(
+                                      child: model.state == ViewState.Idle
+                                          ? Text(
+                                              model.currentPage ==
+                                                      Username.index
+                                                  ? 'FINISH'
+                                                  : 'NEXT',
+                                              style: TextStyles.body2
+                                                  .colour(Colors.white),
+                                            )
+                                          : SpinKitThreeBounce(
+                                              color: UiConstants.spinnerColor2,
+                                              size: 18.0,
+                                            ),
+                                      onPressed: () {
+                                        if (model.state == ViewState.Idle)
+                                          model.processScreenInput(
+                                              model.currentPage);
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
                     ],
                   ),
                 ),
