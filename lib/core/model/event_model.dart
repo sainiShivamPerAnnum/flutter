@@ -10,6 +10,7 @@ class EventModel {
   int position;
   int color;
   String image;
+  List<dynamic> instructions;
   EventModel({
     @required this.title,
     @required this.subtitle,
@@ -18,6 +19,7 @@ class EventModel {
     @required this.position,
     @required this.color,
     @required this.image,
+    @required this.instructions,
   });
 
   EventModel copyWith(
@@ -27,7 +29,8 @@ class EventModel {
       String type,
       int position,
       int color,
-      String image}) {
+      String image,
+      List<dynamic> instructions}) {
     return EventModel(
         title: title ?? this.title,
         subtitle: subtitle ?? this.subtitle,
@@ -35,7 +38,8 @@ class EventModel {
         type: type ?? this.type,
         position: position ?? this.position,
         color: color ?? this.color,
-        image: image ?? this.image);
+        image: image ?? this.image,
+        instructions: instructions ?? this.instructions);
   }
 
   Map<String, dynamic> toMap() {
@@ -47,6 +51,7 @@ class EventModel {
       'position': position,
       'color': color,
       'image': image,
+      'instructions': instructions
     };
   }
 
@@ -58,7 +63,8 @@ class EventModel {
         type: map['type'] ?? '',
         position: map['position'] ?? 1,
         color: map['color'] ?? 0,
-        image: map['image'] ?? '');
+        image: map['image'] ?? '',
+        instructions: map['info'] ?? []);
   }
 
   String toJson() => json.encode(toMap());

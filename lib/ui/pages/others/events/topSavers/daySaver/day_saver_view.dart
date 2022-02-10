@@ -43,30 +43,36 @@ class TopSaverView extends StatelessWidget {
                       color: UiConstants.scaffoldColor,
                     ),
                     width: SizeConfig.screenWidth,
-                    child: NestedScrollView(
-                      headerSliverBuilder: (context, _) {
-                        return [
-                          SliverList(
-                            delegate: SliverChildListDelegate(
-                              [
-                                Thumbnail(event: event),
-                                PastWinners(model: model),
-                                SizedBox(height: SizeConfig.padding24),
-                                InstructionsTab(),
-                              ],
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(SizeConfig.padding40),
+                        topRight: Radius.circular(SizeConfig.padding40),
+                      ),
+                      child: NestedScrollView(
+                        headerSliverBuilder: (context, _) {
+                          return [
+                            SliverList(
+                              delegate: SliverChildListDelegate(
+                                [
+                                  Thumbnail(event: event),
+                                  if (model.currentParticipants != null)
+                                    EventLeaderboard(model: model),
+                                  SizedBox(height: SizeConfig.padding24),
+                                  InstructionsTab(event: event),
+                                ],
+                              ),
                             ),
-                          ),
-                        ];
-                      },
-                      body: Column(
-                        children: [
-                          SizedBox(height: SizeConfig.padding24),
-                          if (model.currentParticipants != null)
-                            SaverBoards(
-                              title: "Current Leaderboard",
-                              model: model,
-                            ),
-                        ],
+                          ];
+                        },
+                        body: Column(
+                          children: [
+                            SizedBox(height: SizeConfig.padding24),
+                            if (model.currentParticipants != null)
+                              WinnersBoard(
+                                model: model,
+                              ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -107,9 +113,8 @@ class Thumbnail extends StatelessWidget {
 }
 
 class InstructionsTab extends StatelessWidget {
-  const InstructionsTab({
-    Key key,
-  }) : super(key: key);
+  final EventModel event;
+  InstructionsTab({@required this.event});
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +130,7 @@ class InstructionsTab extends StatelessWidget {
           ),
           hapticVibrate: true,
           isBarrierDismissable: false,
-          content: EventInstructionsModal(),
+          content: EventInstructionsModal(instructions: event.instructions),
         );
       },
       child: Container(
@@ -162,10 +167,9 @@ class InstructionsTab extends StatelessWidget {
   }
 }
 
-class SaverBoards extends StatelessWidget {
-  final String title;
+class WinnersBoard extends StatelessWidget {
   final TopSaverViewModel model;
-  SaverBoards({@required this.title, @required this.model});
+  WinnersBoard({@required this.model});
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -188,75 +192,55 @@ class SaverBoards extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  title,
+                  "  Past Winners",
                   style: TextStyles.title5.bold.colour(Colors.black54),
                 ),
-                // Spacer(),
-                // Row(
-                //   children: [
-                //     Text(
-                //       "More ",
-                //       style: TextStyles.body3.bold
-                //           .colour(UiConstants.primaryColor),
-                //     ),
-                //     Icon(
-                //       Icons.arrow_forward_ios_rounded,
-                //       color: UiConstants.primaryColor,
-                //       size: SizeConfig.iconSize3,
-                //     )
-                //   ],
-                // )
               ],
             ),
-            SizedBox(height: SizeConfig.padding16),
+            //SizedBox(height: SizeConfig.padding16),
             Expanded(
               child: ListView(
                 padding: EdgeInsets.zero,
-                shrinkWrap: true,
-                children: List.generate(
-                  50,
-                  (i) => Container(
-                    margin: EdgeInsets.only(bottom: SizeConfig.padding12),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(SizeConfig.padding12),
-                      color: Colors.grey.withOpacity(0.1),
-                    ),
-                    child: ListTile(
-                      contentPadding: EdgeInsets.symmetric(
-                          vertical: SizeConfig.padding4,
-                          horizontal: SizeConfig.pageHorizontalMargins / 2),
-                      leading: CircleAvatar(
-                        backgroundColor: UiConstants.primaryColor,
-                        child: Text(
-                          i.toString(),
-                          style: TextStyles.body2.colour(Colors.white),
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      WinnerAvatar(position: 2, model: model),
+                      WinnerAvatar(position: 1, model: model),
+                      WinnerAvatar(position: 3, model: model),
+                    ],
+                  ),
+                  Column(
+                    children: List.generate(
+                      7,
+                      (index) => Container(
+                        margin: EdgeInsets.only(bottom: SizeConfig.padding12),
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.circular(SizeConfig.padding12),
+                          color: Colors.grey.withOpacity(0.1),
                         ),
-                      ),
-                      title: Text(
-                        model.currentParticipants[0].username,
-                        style: TextStyles.body3.bold.colour(Colors.black54),
-                      ),
-                      // subtitle: Text("This Week"),
-                      trailing: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            model.currentParticipants[0].score.toString(),
-                            style: TextStyles.body2.bold
-                                .colour(UiConstants.primaryColor),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor: UiConstants.primaryColor,
+                            child: Text(
+                              "${index + 4}",
+                              style: TextStyles.body2.colour(Colors.white),
+                            ),
                           ),
-                          Text(
-                            "transactions",
-                            style: TextStyles.body4.light.colour(Colors.grey),
+                          title: Text(
+                            "username",
+                            style: TextStyles.body3.bold,
                           ),
-                        ],
+                          subtitle: Text("week description"),
+                          trailing: Text("Win prize"),
+                        ),
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ),
+            )
           ],
         ),
       ),
@@ -264,123 +248,115 @@ class SaverBoards extends StatelessWidget {
   }
 }
 
-class PastWinners extends StatelessWidget {
+class EventLeaderboard extends StatelessWidget {
   final TopSaverViewModel model;
-  PastWinners({this.model});
+  EventLeaderboard({this.model});
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(SizeConfig.roundness32),
         color: Colors.white,
-        // boxShadow: [
-        //   BoxShadow(
-        //       blurRadius: 4,
-        //       offset: Offset(0, 0),
-        //       color: UiConstants.darkPrimaryColor.withOpacity(0.1),
-        //       spreadRadius: 4)
-        // ],
+        boxShadow: [
+          BoxShadow(
+              blurRadius: 4,
+              offset: Offset(0, 0),
+              color: UiConstants.darkPrimaryColor.withOpacity(0.1),
+              spreadRadius: 4)
+        ],
       ),
-      height: SizeConfig.screenWidth * 0.8,
+      //height: SizeConfig.screenWidth * 0.8,
       margin:
           EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(SizeConfig.roundness32),
-        child: Stack(
-          children: [
-            Opacity(
-              opacity: 0.1,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(SizeConfig.roundness32),
-                child: Image.asset(
-                  "assets/images/confetti.png",
-                  width: SizeConfig.screenWidth,
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
-              child: Column(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+          child: Column(
+            children: [
+              SizedBox(height: SizeConfig.padding16),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(height: SizeConfig.padding16),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "  Past Winners",
-                        style: TextStyles.title5.bold,
-                      ),
-                      Spacer(),
-                    ],
+                  Text(
+                    " Current Leaderboard",
+                    style: TextStyles.title5.bold,
                   ),
-                  // SizedBox(height: SizeConfig.padding16),
-                  Expanded(
-                    child: ListView(
-                      padding: EdgeInsets.zero,
-                      physics: BouncingScrollPhysics(),
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            WinnerAvatar(position: 2, model: model),
-                            WinnerAvatar(position: 1, model: model),
-                            WinnerAvatar(position: 3, model: model),
-                          ],
+                  Spacer(),
+                ],
+              ),
+              SizedBox(height: SizeConfig.padding16),
+              Column(
+                // padding: EdgeInsets.zero,
+                // shrinkWrap: true,
+                children: [
+                  Column(
+                    children: List.generate(
+                      // model.currentParticipants.length,
+                      5,
+                      (i) => Container(
+                        margin: EdgeInsets.only(bottom: SizeConfig.padding12),
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.circular(SizeConfig.padding12),
+                          color: Colors.grey.withOpacity(0.1),
                         ),
-                        Column(
-                          children: List.generate(
-                            4,
-                            (index) => Container(
-                              margin:
-                                  EdgeInsets.only(bottom: SizeConfig.padding12),
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.circular(SizeConfig.padding12),
-                                color: Colors.grey.withOpacity(0.1),
-                              ),
-                              child: ListTile(
-                                leading: CircleAvatar(
-                                  backgroundColor: UiConstants.primaryColor,
-                                  child: Text(
-                                    "${index + 4}",
-                                    style:
-                                        TextStyles.body2.colour(Colors.white),
-                                  ),
-                                ),
-                                title: Text(
-                                  "username",
-                                  style: TextStyles.body3.bold,
-                                ),
-                                subtitle: Text("week description"),
-                                trailing: Text("Win prize"),
-                              ),
+                        child: ListTile(
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: SizeConfig.padding4,
+                              horizontal: SizeConfig.pageHorizontalMargins / 2),
+                          leading: CircleAvatar(
+                            backgroundColor: UiConstants.primaryColor,
+                            child: Text(
+                              i.toString(),
+                              style: TextStyles.body2.colour(Colors.white),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              top: SizeConfig.padding6,
-                              bottom: SizeConfig.padding16),
-                          child: Row(
+                          title: Text(
+                            model.currentParticipants[0].username,
+                            style: TextStyles.body3.bold.colour(Colors.black54),
+                          ),
+                          // subtitle: Text("This Week"),
+                          trailing: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                "View All",
+                                model.currentParticipants[0].score.toString(),
                                 style: TextStyles.body2.bold
-                                    .colour(UiConstants.primaryColor)
-                                    .underline,
+                                    .colour(UiConstants.primaryColor),
+                              ),
+                              Text(
+                                "score",
+                                style:
+                                    TextStyles.body4.light.colour(Colors.grey),
                               ),
                             ],
                           ),
-                        )
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                        top: SizeConfig.padding6, bottom: SizeConfig.padding16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "View All",
+                          style: TextStyles.body2.bold
+                              .colour(UiConstants.primaryColor)
+                              .underline,
+                        ),
                       ],
                     ),
                   )
                 ],
-              ),
-            ),
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -398,12 +374,10 @@ class WinnerAvatar extends StatefulWidget {
 
 class _WinnerAvatarState extends State<WinnerAvatar> {
   String dpUrl;
-  bool showDp = false;
   getDP() {
     widget.model.getWinnerDP().then((url) {
       if (url != null && mounted) {
         dpUrl = url;
-        showDp = true;
         setState(() {});
       }
     });
@@ -417,13 +391,33 @@ class _WinnerAvatarState extends State<WinnerAvatar> {
     super.initState();
   }
 
+  Color getColor() {
+    if (widget.position == 1)
+      return Colors.amber;
+    else if (widget.position == 2)
+      return Colors.green;
+    else
+      return Colors.blue;
+  }
+
+  String getImage() {
+    if (widget.position == 1)
+      return "assets/images/crown.png";
+    else if (widget.position == 2)
+      return "assets/images/give-love.png";
+    else
+      return "assets/images/clapping.png";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         if (widget.position == 1)
-          Lottie.asset("assets/lotties/crown.json",
-              width: SizeConfig.screenWidth * 0.2),
+          Image.asset(getImage(),
+              width: widget.position == 1
+                  ? SizeConfig.screenWidth * 0.1
+                  : SizeConfig.screenWidth * 0.07),
         Container(
           width: widget.position == 1
               ? SizeConfig.screenWidth * 0.31
@@ -446,7 +440,7 @@ class _WinnerAvatarState extends State<WinnerAvatar> {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      UiConstants.primaryColor,
+                      getColor(),
                       Colors.white,
                     ],
                   ),
@@ -466,7 +460,7 @@ class _WinnerAvatarState extends State<WinnerAvatar> {
                       : SizeConfig.padding2),
                   child: CircleAvatar(
                     radius: SizeConfig.screenWidth * 0.25,
-                    backgroundImage: showDp
+                    backgroundImage: dpUrl != null
                         ? CachedNetworkImageProvider(
                             dpUrl,
                           )
@@ -487,7 +481,7 @@ class _WinnerAvatarState extends State<WinnerAvatar> {
                       : SizeConfig.screenWidth * 0.064,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: UiConstants.primaryColor,
+                    color: getColor(),
                     border: Border.all(
                         width: widget.position == 1
                             ? SizeConfig.padding4

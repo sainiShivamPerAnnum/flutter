@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/event_model.dart';
@@ -247,7 +248,7 @@ class EventCard extends StatelessWidget {
                     : UiConstants.tertiarySolid,
                 borderRadius: BorderRadius.circular(SizeConfig.roundness16),
                 image: DecorationImage(
-                  image: NetworkImage(event.thumbnail),
+                  image: CachedNetworkImageProvider(event.thumbnail),
                   fit: BoxFit.cover,
                 ),
               )
