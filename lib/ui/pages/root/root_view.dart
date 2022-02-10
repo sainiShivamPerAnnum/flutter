@@ -24,6 +24,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
+GlobalKey felloAppBarKey = new GlobalKey();
+
 class Root extends StatelessWidget {
   final pages = [Save(), Play(), Win()];
 
@@ -71,7 +73,10 @@ class Root extends StatelessWidget {
                   backgroundColor: Colors.black,
                   onRefresh: model.refresh,
                   child: Container(
-                    margin: EdgeInsets.only(top: SizeConfig.viewInsets.top),
+                    margin: EdgeInsets.only(
+                        top: SizeConfig.screenWidth * 0.1 +
+                            SizeConfig.viewInsets.top +
+                            SizeConfig.padding24),
                     child: Consumer<AppState>(
                       builder: (ctx, m, child) => IndexedStack(
                         children: pages,
@@ -81,6 +86,7 @@ class Root extends StatelessWidget {
                   ),
                 ),
                 FelloAppBar(
+                  key: felloAppBarKey,
                   leading: InkWell(
                     onTap: () => model.showDrawer(),
                     child: ProfileImageSE(
@@ -93,24 +99,51 @@ class Root extends StatelessWidget {
                     NotificationButton(),
                   ],
                 ),
+                // Positioned(
+                //   bottom: 0,
+                //   child: ClipRect(
+                //     child: BackdropFilter(
+                //       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                //       child: Container(
+                //         color: Colors.transparent,
+                //         width: SizeConfig.screenWidth,
+                //         height: SizeConfig.navBarHeight,
+                //         child: BackdropFilter(
+                //           filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ),
                 Positioned(
                   bottom: 0,
-                  child: ClipRect(
+                  child: Container(
+                    width: SizeConfig.screenWidth,
+                    height: SizeConfig.navBarHeight,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                          colors: [
+                            UiConstants.scaffoldColor.withOpacity(0.8),
+                            UiConstants.scaffoldColor.withOpacity(0.2),
+                          ],
+                          stops: [
+                            0.8,
+                            1
+                          ]),
+                    ),
                     child: BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                      child: Container(
-                        color: Colors.transparent,
-                        width: SizeConfig.screenWidth,
-                        height: SizeConfig.navBarHeight,
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                        ),
-                      ),
                     ),
                   ),
                 ),
                 if (SizeConfig.screenWidth < 600)
                   WantMoreTickets(
+                    model: model,
+                  ),
+                if (SizeConfig.screenWidth < 600)
+                  SaveBaseline(
                     model: model,
                   ),
                 BottomNavBar(
@@ -216,6 +249,67 @@ class WantMoreTickets extends StatelessWidget {
                     style:
                         TextStyles.body1.colour(UiConstants.primaryColor).bold,
                   ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SaveBaseline extends StatelessWidget {
+  final RootViewModel model;
+  SaveBaseline({
+    @required this.model,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    S locale = S.of(context);
+    return Consumer<AppState>(
+      builder: (ctx, m, child) => AnimatedPositioned(
+        duration: Duration(milliseconds: 300),
+        curve: Curves.decelerate,
+        bottom: SizeConfig.pageHorizontalMargins,
+        left: SizeConfig.pageHorizontalMargins,
+        right: SizeConfig.pageHorizontalMargins,
+        child: Shimmer(
+          duration: Duration(seconds: 5),
+          child: AnimatedContainer(
+            duration: Duration(milliseconds: 300),
+            curve: Curves.decelerate,
+            height: m.rootIndex == 0
+                ? SizeConfig.navBarHeight * 1.5
+                : SizeConfig.navBarHeight,
+            width: SizeConfig.navBarWidth,
+            decoration: BoxDecoration(
+              color: UiConstants.tertiaryLight,
+              borderRadius: BorderRadius.circular(
+                SizeConfig.roundness24,
+              ),
+              //border: Border.all(width: 0.3, color: UiConstants.tertiarySolid),
+              // boxShadow: [
+              //   if (m.rootIndex == 0)
+              //     BoxShadow(
+              //         blurRadius: 24,
+              //         color: UiConstants.tertiarySolid.withOpacity(0.2),
+              //         offset: Offset(0, -2),
+              //         spreadRadius: 2)
+              // ],
+            ),
+            alignment: Alignment.topCenter,
+            child: Container(
+              height: SizeConfig.navBarHeight * 0.5,
+              alignment: Alignment.center,
+              child: Shimmer(
+                duration: Duration(seconds: 1),
+                interval: Duration(seconds: 4),
+                child: Text(
+                  locale.saveBaseline,
+                  style:
+                      TextStyles.body1.colour(UiConstants.tertiarySolid).bold,
                 ),
               ),
             ),

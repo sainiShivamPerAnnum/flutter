@@ -15,13 +15,14 @@ class WinningsContainer extends StatelessWidget {
   final double height;
   final Function onTap;
   final double borderRadius;
-  
+  final Color color;
   WinningsContainer({
     this.child,
     @required this.shadow,
     this.height,
     this.onTap,
     this.borderRadius,
+    this.color,
   });
 
   @override
@@ -33,14 +34,15 @@ class WinningsContainer extends StatelessWidget {
               PageAction(state: PageState.addPage, page: MyWinnigsPageConfig),
       child: Container(
         decoration: BoxDecoration(
-          color: UiConstants.primaryColor,
+          color: color ?? UiConstants.primaryColor,
           borderRadius:
               BorderRadius.circular(borderRadius ?? SizeConfig.roundness24),
           boxShadow: [
             if (shadow)
               BoxShadow(
                 blurRadius: 30,
-                color: UiConstants.primaryColor.withOpacity(0.5),
+                color: color.withOpacity(0.5) ??
+                    UiConstants.primaryColor.withOpacity(0.5),
                 offset: Offset(
                   0,
                   SizeConfig.screenWidth * 0.1,

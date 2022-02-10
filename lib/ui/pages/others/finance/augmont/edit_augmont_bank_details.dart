@@ -480,13 +480,14 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
       setState(() {});
       return;
     }
-
-    final ifscCodeValidation = RegExp(r'^[^\s]{4}\d{7}$');
+    _logger.d(pBankIfsc);
+    final ifscCodeValidation = RegExp(r'[a-zA-Z]{4}[0]\w{6}$');
     if (!ifscCodeValidation.hasMatch(pBankIfsc)) {
       BaseUtil.showNegativeAlert(
         'Invalid IFSC Code',
         'Please check your ifsc code.',
       );
+      pBankIfsc = pBankIfsc.toUpperCase();
       baseProvider.isEditAugmontBankDetailInProgress = false;
       setState(() {});
       return;

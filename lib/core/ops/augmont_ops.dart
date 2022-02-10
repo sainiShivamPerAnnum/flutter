@@ -90,7 +90,6 @@ class AugmontModel extends ChangeNotifier {
     return 'fello${u.toString()}$mobile';
   }
 
-
   Future<UserAugmontDetail> createSimpleUser(
       String mobile, String stateId) async {
     if (!isInit()) await _init();
@@ -131,20 +130,13 @@ class AugmontModel extends ChangeNotifier {
   Future<AugmontRates> getRates() async {
     if (!isInit()) await _init();
 
-    var _request =
-        http.Request('GET', Uri.parse(_constructRequest(GetRates.path, null)));
-    _request.headers.addAll(headers);
-    http.StreamedResponse _response = await _request.send();
-
-    final resMap = await _processResponse(_response);
-    if (resMap == null || !resMap[INTERNAL_FAIL_FLAG]) {
-      log.error('Query Failed');
+    ApiResponse<Map<String, dynamic>> response =
+        await _investmentActionsRepository.getGoldRates();
+    if (response.code == 400) {
+      _logger.e(response.errorMessage);
       return null;
     } else {
-      log.debug(resMap[CreateUser.resStatusCode].toString());
-      resMap["flag"] = QUERY_PASSED;
-
-      return AugmontRates.fromMap(resMap);
+      return AugmontRates.fromMap(response.model);
     }
   }
 
@@ -207,7 +199,8 @@ class AugmontModel extends ChangeNotifier {
         'BlockID: ${buyRates.blockId},gPrice: ${buyRates.goldBuyPrice}';
     String _note2 =
         'UserId:${_userService.baseUser.uid},MerchantTxnID: ${_tranIdResponse.model}';
-    String rzpOrderId = await _rzpGateway.createOrderId(amount, _userService.baseUser.uid, _tranIdResponse.model, _note1, _note2);
+    String rzpOrderId = await _rzpGateway.createOrderId(amount,
+        _userService.baseUser.uid, _tranIdResponse.model, _note1, _note2);
     if (rzpOrderId == null) {
       _logger.e("Received null from create Order id");
       return null;
@@ -437,7 +430,7 @@ class AugmontModel extends ChangeNotifier {
       if (_augmontTxnProcessListener != null)
         _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
 
-      AppState.backButtonDispatcher.didPopRoute();
+      //  AppState.backButtonDispatcher.didPopRoute();
     }
   }
 

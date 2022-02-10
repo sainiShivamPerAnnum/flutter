@@ -155,7 +155,7 @@ class TransactionService
     hasMoreDepositTxns = true;
     hasMoreWithdrawalTxns = true;
     hasMoreRefundedTxns = true;
-    txnList.clear();
+    txnList?.clear();
     await fetchTransactions(limit: 4);
     _logger.i("Transactions got updated");
   }
@@ -276,6 +276,6 @@ class TransactionService
     hasMoreDepositTxns = true;
     hasMoreWithdrawalTxns = true;
     hasMoreRefundedTxns = true;
-    txnList.clear();
+    if (txnList != null) txnList.clear();
   }
 }

@@ -821,6 +821,14 @@ class Api {
     }
   }
 
+  Future<QuerySnapshot> fetchCoupons() async {
+    Query _query = _db
+        .collection(Constants.COLN_COUPONS)
+        // .where('expiresOn', isGreaterThan: Timestamp.now())
+        .orderBy('priority');
+    return _query.get();
+  }
+
   //---------------------------------------REALTIME DATABASE-------------------------------------------//
 
   Future<bool> checkUserNameAvailability(String username) async {

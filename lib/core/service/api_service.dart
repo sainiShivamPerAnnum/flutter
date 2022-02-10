@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/util/app_exceptions.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
@@ -25,6 +26,7 @@ class APIService implements API {
   //"https://asia-south1-fello-dev-station.cloudfunctions.net";
   String _versionString;
   final logger = locator<CustomLogger>();
+  final userService = locator<UserService>();
 
   APIService._();
   static final instance = APIService._();
@@ -54,6 +56,7 @@ class APIService implements API {
           HttpHeaders.authorizationHeader: token != null ? 'Bearer $token' : '',
           'platform': Platform.isAndroid ? 'android' : 'iOS',
           'version': await _getAppVersion(),
+          'user_id': userService?.baseUser?.uid,
         },
       );
       logger.d("response from $url");
@@ -80,8 +83,12 @@ class APIService implements API {
     var responseJson;
     try {
       Map<String, String> _headers = {
-        'Content-Type': 'application/json; charset=UTF-8'
+        'Content-Type': 'application/json; charset=UTF-8',
+        'platform': Platform.isAndroid ? 'android' : 'iOS',
+        'version': await _getAppVersion(),
+        'user_id': userService?.baseUser?.uid,
       };
+      logger.d(_headers);
       if (token != null)
         _headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
       String _url = _baseUrl + url;
@@ -124,6 +131,7 @@ class APIService implements API {
           HttpHeaders.authorizationHeader: token != null ? token : '',
           'platform': Platform.isAndroid ? 'android' : 'iOS',
           'version': await _getAppVersion(),
+          'user_id': userService?.baseUser?.uid,
         },
         body: body == null ? null : jsonEncode(body),
       );
@@ -157,6 +165,7 @@ class APIService implements API {
           HttpHeaders.authorizationHeader: token ?? '',
           'platform': Platform.isAndroid ? 'android' : 'iOS',
           'version': await _getAppVersion(),
+          'user_id': userService?.baseUser?.uid,
         },
       );
       responseJson = returnResponse(response);
@@ -188,6 +197,7 @@ class APIService implements API {
           HttpHeaders.authorizationHeader: token != null ? token : '',
           'platform': Platform.isAndroid ? 'android' : 'iOS',
           'version': await _getAppVersion(),
+          'user_id': userService?.baseUser?.uid,
         },
         body: body == null ? null : jsonEncode(body),
       );
