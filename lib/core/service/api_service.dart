@@ -239,7 +239,7 @@ class APIService implements API {
     try {
       if (_versionString == null || _versionString.isEmpty) {
         PackageInfo packageInfo = await PackageInfo.fromPlatform();
-        _versionString = '${packageInfo.version} (${packageInfo.buildNumber})';
+        _versionString = '${packageInfo.buildNumber}';
       }
     } catch (e) {
       print(e);
