@@ -12,7 +12,7 @@ class CodeFromFreq {
       response += "-$weekcode";
       if (freq == 'daily') {
         final dailyFormat = new DateFormat('dd');
-        response += "-${dailyFormat.format(_currentTime)}";
+        response += "-${dailyFormat.format(DateTime.now())}";
       }
     }
     return response;

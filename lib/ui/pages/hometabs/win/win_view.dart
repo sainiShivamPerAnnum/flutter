@@ -347,7 +347,7 @@ class BigPrizeContainer extends StatelessWidget {
                 height: SizeConfig.screenWidth * 0.24,
                 decoration: BoxDecoration(
                     color: bgColor ?? UiConstants.primaryColor,
-                    borderRadius: BorderRadius.circular(SizeConfig.roundness32),
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness24),
                     boxShadow: [
                       BoxShadow(
                         blurRadius: 30,
@@ -378,7 +378,7 @@ class BigPrizeContainer extends StatelessWidget {
                             child: ClipRRect(
                               borderRadius: BorderRadius.only(
                                 topRight:
-                                    Radius.circular(SizeConfig.roundness32),
+                                    Radius.circular(SizeConfig.roundness24),
                               ),
                               child: CustomPaint(
                                 size: Size(

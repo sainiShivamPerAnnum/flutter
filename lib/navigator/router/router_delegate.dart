@@ -16,6 +16,7 @@ import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_view.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_page.dart';
 import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
+import 'package:felloapp/ui/pages/others/events/topSavers/all_participants.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_view.dart';
@@ -271,6 +272,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.TopSaverView:
           _addPageData(TopSaverView(), GoldenMilestonesViewPageConfig);
           break;
+        case Pages.AllParticipantsView:
+          _addPageData(AllParticipantsView(), AllParticipantsViewPageConfig);
+          break;
         default:
           break;
       }
@@ -466,6 +470,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.TopSaverView:
         TopSaverViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.AllParticipantsView:
+        AllParticipantsViewPageConfig.currentPageAction = action;
         break;
       default:
         break;

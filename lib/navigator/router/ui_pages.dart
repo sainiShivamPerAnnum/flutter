@@ -49,6 +49,7 @@ const String GoldenTicketViewPath = '/goldenTicketView';
 const String GoldenTicketsViewPath = '/goldenTicketsView';
 const String GoldenMilestonesViewPath = '/goldenMilestonesView';
 const String TopSaverViewPath = '/topSaverView';
+const String AllParticipantsViewPath = '/allParticipantsView';
 
 enum Pages {
   Splash,
@@ -98,6 +99,7 @@ enum Pages {
   GoldenTicketsView,
   GoldenMilestonesView,
   TopSaverView,
+  AllParticipantsView
 }
 
 class PageConfiguration {
@@ -443,4 +445,11 @@ PageConfiguration TopSaverViewPageConfig = PageConfiguration(
   path: TopSaverViewPath,
   uiPage: Pages.TopSaverView,
   name: 'TopSaverView screen',
+);
+
+PageConfiguration AllParticipantsViewPageConfig = PageConfiguration(
+  key: 'AllParticipantsView',
+  path: AllParticipantsViewPath,
+  uiPage: Pages.AllParticipantsView,
+  name: 'AllParticipantsView screen',
 );
