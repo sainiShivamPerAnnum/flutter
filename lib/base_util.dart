@@ -538,6 +538,7 @@ class BaseUtil extends ChangeNotifier {
       bool hapticVibrate,
       Color backgroundColor,
       bool isBarrierDismissable,
+      bool isScrollControlled,
       BorderRadius borderRadius}) {
     if (addToScreenStack != null && addToScreenStack == true)
       AppState.screenStack.add(ScreenItem.dialog);
@@ -546,6 +547,7 @@ class BaseUtil extends ChangeNotifier {
         enableDrag: false,
         shape: RoundedRectangleBorder(
             borderRadius: borderRadius ?? BorderRadius.zero),
+        isScrollControlled: isScrollControlled ?? false,
         backgroundColor:
             backgroundColor != null ? backgroundColor : Colors.white,
         isDismissible: isBarrierDismissable,
@@ -582,7 +584,7 @@ class BaseUtil extends ChangeNotifier {
       _appState.setCurrentTabIndex = 0;
 
       //remove fcm token from remote
-      await _dbModel.updateClientToken(myUser, '');
+      //await _dbModel.updateClientToken(myUser, '');
 
       //TODO better fix required
       ///IMP: When a user signs out and attempts

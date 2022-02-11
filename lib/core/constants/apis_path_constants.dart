@@ -28,6 +28,7 @@ class ApiPath {
 
   //Augmont Ops
   get kCreateSimpleUser => "/augmontOps/$stage/api/v2/create-simple-user";
+  get kGetGoldRates => "/augmontOps/$stage/api/rates";
 
   //User Ops Apis
   get kAddNewUser => "/userOps/$stage/api/v2/newuser";

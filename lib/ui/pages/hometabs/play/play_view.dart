@@ -22,7 +22,7 @@ class Play extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: SizeConfig.padding80),
+              //SizedBox(height: SizeConfig.padding80),
               Container(
                 width: SizeConfig.screenWidth,
                 height: SizeConfig.screenWidth * 0.38,

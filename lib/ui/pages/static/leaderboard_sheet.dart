@@ -1,12 +1,7 @@
-import 'package:felloapp/core/service/analytics/analytics_events.dart';
-import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'dart:developer';
-
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/referral_leaderboard.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/winners_leaderboard.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -38,61 +33,68 @@ class WinnersLeaderBoardSE extends StatelessWidget {
         ],
         color: Colors.transparent,
         panelBuilder: (myscrollController) {
-          return Container(
-            color: Colors.transparent,
-            child: Column(
-              children: [
-                SvgPicture.asset(
-                  Assets.clip,
-                  width: SizeConfig.screenWidth,
-                ),
-                Row(
+          return Stack(
+            children: [
+              Transform.translate(
+                offset: Offset(0, 20),
+                child: Container(color: Colors.white),
+              ),
+              Container(
+                child: Column(
                   children: [
-                    Container(
+                    SvgPicture.asset(
+                      Assets.clip,
                       width: SizeConfig.screenWidth,
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                          width: SizeConfig.screenWidth,
+                          color: Colors.white,
+                          padding: EdgeInsets.only(
+                              bottom: SizeConfig.padding16,
+                              left: SizeConfig.pageHorizontalMargins),
+                          child: Text(
+                            "Leaderboard",
+                            style: TextStyles.title3.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
                       color: Colors.white,
                       padding: EdgeInsets.only(
-                          bottom: SizeConfig.padding16,
-                          left: SizeConfig.pageHorizontalMargins),
-                      child: Text(
-                        "Leaderboard",
-                        style: TextStyles.title3.bold,
+                        left: SizeConfig.pageHorizontalMargins,
+                        bottom: SizeConfig.padding4,
+                      ),
+                      alignment: Alignment.center,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          leaderboardChips(
+                            0,
+                            "Game Winners",
+                          ),
+                          SizedBox(width: 16),
+                          leaderboardChips(
+                            1,
+                            "Top Referrers",
+                          ),
+                        ],
                       ),
                     ),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        controller: myscrollController,
+                        child: model.getCurrentPage == 0
+                            ? WinnerboardView()
+                            : ReferralLeaderboard(),
+                      ),
+                    )
                   ],
                 ),
-                Container(
-                  color: Colors.white,
-                  padding: EdgeInsets.only(
-                    left: SizeConfig.pageHorizontalMargins,
-                    bottom: SizeConfig.padding4,
-                  ),
-                  alignment: Alignment.center,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      leaderboardChips(
-                        0,
-                        "Game Winners",
-                      ),
-                      SizedBox(width: 16),
-                      leaderboardChips(
-                        1,
-                        "Top Referrers",
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    controller: myscrollController,
-                    child: model.getCurrentPage == 0
-                        ? WinnerboardView()
-                        : ReferralLeaderboard(),
-                  ),
-                )
-              ],
-            ),
+              ),
+            ],
           );
         });
   }

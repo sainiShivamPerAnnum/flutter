@@ -1,11 +1,11 @@
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_view.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
+import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
-import 'package:felloapp/ui/service_elements/user_service/user_winnings.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
-import 'package:felloapp/ui/widgets/mini_trans_card/mini_trans_card_view.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -13,134 +13,203 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:felloapp/util/custom_logger.dart';
 
 class Save extends StatelessWidget {
   final CustomLogger logger = locator<CustomLogger>();
 
   @override
   Widget build(BuildContext context) {
+    print(
+        "Bottom padding: ${WidgetsBinding.instance.window.viewInsets.bottom}");
     S locale = S.of(context);
-    return BaseView<SaveViewModel>(
-      onModelReady: (model) {},
+    return BaseView<AugmontGoldBuyViewModel>(
+      onModelReady: (model) => model.init(),
       builder: (ctx, model, child) {
         return Stack(
           children: [
             Container(
-              child: Column(
+              margin: EdgeInsets.only(top: SizeConfig.screenWidth * 0.12),
+              child: ListView(
+                padding: EdgeInsets.zero,
                 children: [
                   SizedBox(
-                      height: SizeConfig.screenHeight * 0.08 +
-                          SizeConfig.screenWidth * 0.5),
-                  Expanded(
-                    child: ListView(
-                      children: [
-                        SizedBox(
-                          height: SizeConfig.screenWidth * 0.08,
-                        ),
-                        WinningsContainer(
-                          shadow: true,
-                          child: Container(
-                            child: Padding(
-                              padding: EdgeInsets.all(SizeConfig.padding16),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SvgPicture.asset(
-                                    Assets.giftBoxOpen,
-                                  ),
-                                  SizedBox(
-                                      width: SizeConfig.screenWidth * 0.05),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Text(
-                                        locale.saveWinningsLabel,
-                                        style: TextStyles.body1
-                                            .colour(Colors.white)
-                                            .light,
-                                      ),
-                                      UserWinningsSE(
-                                        style: TextStyles.title3
-                                            .colour(Colors.white)
-                                            .bold,
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
+                      height:
+                          SizeConfig.screenWidth * 0.12 + SizeConfig.padding32),
+                  Stack(
+                    children: [
+                      if (model.focusCoupon != null)
+                        FocusCouponClip(model: model),
+                      Column(
+                        children: [
+                          AnimatedContainer(
+                            duration: Duration(milliseconds: 300),
+                            curve: Curves.decelerate,
+                            margin: EdgeInsets.symmetric(
+                                horizontal: SizeConfig.pageHorizontalMargins),
+                            width: SizeConfig.screenWidth / 2,
+                            height: model.appliedCoupon == null &&
+                                    model.showCoupons == true &&
+                                    model.focusCoupon != null
+                                ? SizeConfig.screenWidth * 0.12
+                                : 0,
                           ),
-                        ),
-                        SizedBox(height: SizeConfig.padding32),
-                        Container(
-                          width: SizeConfig.screenWidth,
-                          height: SizeConfig.screenWidth * 0.24,
-                          child: ListView(
-                              scrollDirection: Axis.horizontal,
-                              children: [
-                                SaveInfoTile(
-                                  svg: 'images/svgs/gold.svg',
-                                  title: "About digital Gold",
-                                  onPressed: () {
-                                    logger.d("Save info tile tap check");
-                                    model.navigateToAboutGold();
-                                  },
-                                ),
-                                SaveInfoTile(
-                                  png: "images/augmont-share.png",
-                                  title: "Learn more about Augmont",
-                                  onPressed: () {
-                                    model.openAugmontWebUri();
-                                  },
-                                ),
-                                // SaveInfoTile(
-                                //   png: "images/augmont-share.png",
-                                //   title: "What is digital Gold",
-                                //   onPressed: () {},
-                                // ),
-                              ]),
-                        ),
-                        SizedBox(height: SizeConfig.padding24),
-                        Container(
-                          margin: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.pageHorizontalMargins),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius:
-                                BorderRadius.circular(SizeConfig.roundness32),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: SizeConfig.padding20),
-                              Container(
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal:
-                                          SizeConfig.pageHorizontalMargins),
-                                  child: Text(locale.saveHistory,
-                                      style: TextStyles.title4.bold)),
-                              MiniTransactionCard(),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: SizeConfig.navBarHeight * 2),
-                      ],
+                          AugmontBuyCard(model: model),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    width: SizeConfig.screenWidth,
+                    margin: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.pageHorizontalMargins * 2,
+                        vertical: SizeConfig.padding12),
+                    child: CurrentPriceWidget(
+                      fetchGoldRates: model.fetchGoldRates,
+                      goldprice: model.goldRates != null
+                          ? model.goldRates.goldBuyPrice
+                          : 0.0,
+                      isFetching: model.isGoldRateFetching,
+                      mini: true,
                     ),
                   ),
+                  SizedBox(height: SizeConfig.padding24),
+                  Goldlinks(model: model),
+                  SizedBox(height: SizeConfig.navBarHeight * 2),
                 ],
               ),
             ),
-            Container(
-              margin: EdgeInsets.only(top: SizeConfig.screenHeight * 0.09),
-              child: AugmontCard(model: model),
-            ),
+            GoldBalanceContainer(model: model),
           ],
         );
       },
+    );
+  }
+}
+
+class FocusCouponClip extends StatelessWidget {
+  final AugmontGoldBuyViewModel model;
+
+  FocusCouponClip({this.model});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin:
+          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(SizeConfig.roundness32),
+            topRight: Radius.circular(SizeConfig.roundness32)),
+        color: UiConstants.felloBlue,
+      ),
+      width: SizeConfig.screenWidth,
+      height: SizeConfig.screenWidth * 0.24,
+      alignment: Alignment.topCenter,
+      child: Container(
+        height: SizeConfig.screenWidth * 0.12,
+        padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
+        child: Row(
+          children: [
+            Expanded(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  model.focusCoupon.description,
+                  overflow: TextOverflow.clip,
+                  textAlign: TextAlign.start,
+                  style: TextStyles.body2.colour(Colors.white),
+                ),
+              ),
+            ),
+            SizedBox(width: SizeConfig.padding6),
+            InkWell(
+              onTap: () => model.applyCoupon(model.focusCoupon),
+              child: Container(
+                alignment: Alignment.center,
+                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
+                //width: SizeConfig.screenWidth * 0.171,
+                height: SizeConfig.screenWidth * 0.065,
+                margin: EdgeInsets.only(left: SizeConfig.padding4),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                child: Text(
+                  "Apply",
+                  style: TextStyles.body4.colour(Colors.white).bold,
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class GoldBalanceContainer extends StatelessWidget {
+  final AugmontGoldBuyViewModel model;
+  GoldBalanceContainer({this.model});
+
+  @override
+  Widget build(BuildContext context) {
+    return WinningsContainer(
+      onTap: model != null ? model.navigateToGoldBalanceDetailsScreen : () {},
+      shadow: true,
+      color: UiConstants.tertiarySolid,
+      child: Container(
+        width: SizeConfig.screenWidth,
+        alignment: Alignment.center,
+        padding: EdgeInsets.all(SizeConfig.padding8),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text(
+              "My Gold Balance",
+              style: TextStyles.title5.colour(Colors.white60),
+            ),
+            UserGoldQuantitySE(
+              style: TextStyles.title2
+                  .colour(Colors.white)
+                  .weight(FontWeight.w900),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class Goldlinks extends StatelessWidget {
+  AugmontGoldBuyViewModel model;
+
+  Goldlinks({this.model});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: SizeConfig.screenWidth,
+      height: SizeConfig.screenWidth * 0.24,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: [
+          SaveInfoTile(
+            svg: 'images/svgs/gold.svg',
+            title: "About digital Gold",
+            onPressed: () {
+              model.navigateToAboutGold();
+            },
+          ),
+          SaveInfoTile(
+            png: "images/augmont-share.png",
+            title: "Learn more about Augmont",
+            onPressed: () {
+              model.openAugmontWebUri();
+            },
+          ),
+        ],
+      ),
     );
   }
 }
@@ -197,177 +266,6 @@ class SaveInfoTile extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class AugmontCard extends StatelessWidget {
-  final SaveViewModel model;
-  AugmontCard({this.model});
-  @override
-  Widget build(BuildContext context) {
-    S locale = S.of(context);
-    return Wrap(
-      children: [
-        Container(
-          width: SizeConfig.screenWidth - SizeConfig.pageHorizontalMargins * 2,
-          margin: EdgeInsets.symmetric(
-              horizontal: SizeConfig.pageHorizontalMargins),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(SizeConfig.roundness32),
-            color: Colors.white,
-          ),
-          padding: EdgeInsets.symmetric(
-            horizontal: SizeConfig.padding16,
-            vertical: SizeConfig.padding20,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(locale.saveGoldBalancelabel,
-                          style: TextStyles.body1.light),
-                    ),
-                  ),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        UserGoldQuantitySE(
-                          style: TextStyles.body1.bold
-                              .colour(UiConstants.tertiarySolid),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(
-                  vertical: SizeConfig.padding16,
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: FelloButton(
-                        onPressed: model.navigateToBuyScreen,
-                        activeButtonUI: Container(
-                          height: SizeConfig.screenWidth * 0.12, //50
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                              color: UiConstants.primaryColor),
-                          alignment: Alignment.center,
-                          child: Text(
-                            locale.saveBuyButton,
-                            style: TextStyles.title5.bold.colour(Colors.white),
-                          ),
-                        ),
-                        offlineButtonUI: Container(
-                          height: SizeConfig.screenWidth * 0.12, //50
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                              color: Colors.grey),
-                          alignment: Alignment.center,
-                          child: Text(
-                            locale.saveBuyButton,
-                            style: TextStyles.title5.bold.colour(Colors.white),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: SizeConfig.padding12),
-                    Expanded(
-                      child: FelloButton(
-                        onPressed: model.navigateToSellScreen,
-                        activeButtonUI: Container(
-                          height: SizeConfig.screenWidth * 0.12,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                                color: UiConstants.tertiarySolid, width: 2),
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          alignment: Alignment.center,
-                          child: Text(
-                            locale.saveSellButton,
-                            style: TextStyles.title5.bold,
-                          ),
-                        ),
-                        offlineButtonUI: Container(
-                          height: SizeConfig.screenWidth * 0.12,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey, width: 2),
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          alignment: Alignment.center,
-                          child: Text(
-                            locale.saveSellButton,
-                            style: TextStyles.title5.bold.colour(Colors.grey),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding8),
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey, width: 0.1),
-                    borderRadius:
-                        BorderRadius.circular(SizeConfig.roundness12)),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Image.asset(
-                      Assets.augLogo,
-                      color: Colors.grey,
-                      height: SizeConfig.padding20,
-                    ),
-                    Image.asset(
-                      Assets.sebiGraphic,
-                      color: Colors.grey,
-                      height: SizeConfig.padding16,
-                    ),
-                    TextButton.icon(
-                      icon: Icon(
-                        Icons.lock,
-                        color: Colors.grey,
-                        size: SizeConfig.body3,
-                      ),
-                      onPressed: () {},
-                      label: Text(
-                        locale.saveSecure,
-                        style: TextStyles.body3.colour(Colors.grey),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(top: SizeConfig.padding16),
-                width: SizeConfig.screenWidth,
-                padding: EdgeInsets.symmetric(vertical: 12),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    color: UiConstants.tertiaryLight,
-                    borderRadius:
-                        BorderRadius.circular(SizeConfig.roundness12)),
-                child: FittedBox(
-                  child: Text(
-                    locale.saveBaseline,
-                    style: TextStyles.body3.colour(UiConstants.tertiarySolid),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 }

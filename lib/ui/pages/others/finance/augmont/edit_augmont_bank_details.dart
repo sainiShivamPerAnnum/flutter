@@ -66,6 +66,9 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
 
   @override
   Widget build(BuildContext context) {
+    bool isKeyboardOpen =
+        MediaQuery.of(context).viewInsets.bottom == 0 ? false : true;
+    print(SizeConfig.viewInsets.bottom);
     if (!_isInitialized) {
       _isInitialized = true;
       baseProvider = Provider.of<BaseUtil>(context, listen: false);
@@ -131,312 +134,277 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
           : new TextEditingController();
     }
 
-    return WillPopScope(
-      onWillPop: () async {
-        var pBankHolderName = _bankHolderNameController.text;
-        var pBankAccNo = _bankAccNoController.text;
-        var pBankIfsc = _bankIfscController.text;
-
-        var curBankHolderName = baseProvider.augmontDetail.bankHolderName;
-        var curBankAccNo = baseProvider.augmontDetail.bankAccNo;
-        var curBankIfsc = baseProvider.augmontDetail.ifsc;
-
-        bool noChanges = true;
-        if (curBankHolderName == null || pBankHolderName != curBankHolderName)
-          noChanges = false;
-        if (curBankAccNo == null || pBankAccNo != curBankAccNo)
-          noChanges = false;
-        if (curBankIfsc == null || pBankIfsc != curBankIfsc) noChanges = false;
-
-        if (!noChanges) {
-          AppState.screenStack.add(ScreenItem.dialog);
-          return (await showDialog(
-            context: context,
-            builder: (ctx) => ConfirmActionDialog(
-              title: "You changes are unsaved",
-              description: "Are you sure you want to go back?",
-              buttonText: "Yes",
-              cancelBtnText: 'Cancel',
-              confirmAction: () {
-                AppState.backButtonDispatcher.didPopRoute();
-              },
-              cancelAction: () {},
-            ),
-          ));
-        }
-        return true;
-      },
-      child: Scaffold(
-        backgroundColor: UiConstants.primaryColor,
-        resizeToAvoidBottomInset: false,
-        body: HomeBackground(
-          child: Stack(
-            children: [
-              Column(
-                children: [
-                  FelloAppBar(
-                    leading: FelloAppBarBackButton(),
-                    title: "Bank Account Details",
-                  ),
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(SizeConfig.padding40),
-                            topRight: Radius.circular(SizeConfig.padding40),
-                          ),
-                          color: Colors.white),
-                      child: isLoading
-                          ? Container(
-                              child: Center(
-                                child: SpinKitWave(
-                                  color: UiConstants.primaryColor,
-                                  size: 30,
-                                ),
-                              ),
-                            )
-                          : SingleChildScrollView(
-                              child: Padding(
-                                padding: EdgeInsets.all(
-                                    SizeConfig.pageHorizontalMargins),
-                                child: Form(
-                                    key: _formKey,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        // Padding(
-                                        //   padding: EdgeInsets.all(8),
-                                        //   child: Text(
-                                        //     (baseProvider.augmontDetail.bankAccNo == '')
-                                        //         ? 'Enter your bank account details'
-                                        //         : 'Update your bank account details',
-                                        //     style: TextStyle(
-                                        //         fontSize: SizeConfig.largeTextSize,
-                                        //         fontWeight: FontWeight.w600),
-                                        //   ),
-                                        // ),
-                                        // Padding(
-                                        //   padding: EdgeInsets.fromLTRB(8, 3, 8, 8),
-                                        //   child: Text(
-                                        //     'This is where the amount received from selling your gold shall be credited.',
-                                        //     style: TextStyle(
-                                        //         fontSize: SizeConfig.mediumTextSize,
-                                        //         fontWeight: FontWeight.w400),
-                                        //   ),
-                                        // ),
-                                        SizedBox(
-                                          height: 20,
-                                        ),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              "Bank Holder's Name",
-                                              style: TextStyles.body3,
-                                            ),
-                                            SizedBox(height: 6),
-                                            TextFormField(
-                                              autofocus: true,
-                                              enabled: inEditMode,
-                                              keyboardType: TextInputType.name,
-                                              inputFormatters: [
-                                                UpperCaseTextFormatter(),
-                                                FilteringTextInputFormatter
-                                                    .allow(RegExp(r'[A-Z ]'))
-                                              ],
-                                              textCapitalization:
-                                                  TextCapitalization.characters,
-                                              controller:
-                                                  _bankHolderNameController,
-                                              validator: (value) {
-                                                return (value == null ||
-                                                        value.isEmpty ||
-                                                        value.trim().length < 4)
-                                                    ? 'Please enter you name as per your bank'
-                                                    : null;
-                                              },
-                                              onFieldSubmitted: (v) {
-                                                FocusScope.of(context)
-                                                    .nextFocus();
-                                              },
-                                            ),
-                                          ],
-                                        ),
-
-                                        SizedBox(
-                                          height: 16,
-                                        ),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              "Bank Account Number",
-                                              style: TextStyles.body3,
-                                            ),
-                                            SizedBox(height: 6),
-                                            TextFormField(
-                                              enabled: inEditMode,
-                                              controller: _bankAccNoController,
-                                              keyboardType: TextInputType
-                                                  .numberWithOptions(
-                                                      signed: true),
-                                              inputFormatters: [
-                                                LengthLimitingTextInputFormatter(
-                                                    18),
-                                                FilteringTextInputFormatter
-                                                    .digitsOnly,
-                                              ],
-                                              validator: (value) {
-                                                print(value);
-
-                                                if (value == null &&
-                                                    value.trim().isEmpty)
-                                                  return 'Please enter a valid account number';
-                                                else if (value.trim().length <
-                                                        9 ||
-                                                    value.trim().length > 18)
-                                                  return 'Invalid Bank Account Number';
-                                                return null;
-                                              },
-                                            ),
-                                          ],
-                                        ),
-
-                                        SizedBox(
-                                          height: 16,
-                                        ),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              "Confirm Account Number",
-                                              style: TextStyles.body3,
-                                            ),
-                                            SizedBox(height: 6),
-                                            TextFormField(
-                                              enabled: inEditMode,
-                                              controller:
-                                                  _bankAccNoConfirmController,
-                                              keyboardType:
-                                                  TextInputType.visiblePassword,
-                                              obscureText: true,
-                                              inputFormatters: [
-                                                LengthLimitingTextInputFormatter(
-                                                    18),
-                                                FilteringTextInputFormatter
-                                                    .digitsOnly,
-                                              ],
-                                              validator: (value) {
-                                                print(value);
-                                                if (value == null &&
-                                                    value.trim().isEmpty)
-                                                  return 'Please enter a valid account number';
-                                                else if (value.trim() !=
-                                                    _bankAccNoController.text
-                                                        .trim())
-                                                  return "Bank account numbers did not match";
-                                                else if (value.trim().length <
-                                                        9 ||
-                                                    value.trim().length > 18)
-                                                  return 'Invalid Bank Account Number';
-
-                                                return null;
-                                              },
-                                            ),
-                                          ],
-                                        ),
-
-                                        SizedBox(height: 16),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'Bank IFSC Code',
-                                              style: TextStyles.body3,
-                                            ),
-                                            SizedBox(height: 6),
-                                            TextFormField(
-                                              enabled: inEditMode,
-                                              controller: _bankIfscController,
-                                              keyboardType:
-                                                  TextInputType.streetAddress,
-                                              textCapitalization:
-                                                  TextCapitalization.characters,
-                                              validator: (value) {
-                                                print(value);
-                                                if (value == null &&
-                                                    value.trim().isEmpty)
-                                                  return 'Please enter a valid bank IFSC';
-                                                else if (value.trim().length <
-                                                        6 ||
-                                                    value.trim().length > 25)
-                                                  return 'Please enter a valid bank IFSC';
-                                                return null;
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    )),
+    return Scaffold(
+      backgroundColor: UiConstants.primaryColor,
+      body: HomeBackground(
+        child: Stack(
+          children: [
+            Column(
+              children: [
+                FelloAppBar(
+                  leading: FelloAppBarBackButton(),
+                  title: "Bank Account Details",
+                ),
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(SizeConfig.padding40),
+                          topRight: Radius.circular(SizeConfig.padding40),
+                        ),
+                        color: Colors.white),
+                    child: isLoading
+                        ? Container(
+                            child: Center(
+                              child: SpinKitWave(
+                                color: UiConstants.primaryColor,
+                                size: 30,
                               ),
                             ),
-                    ),
-                  ),
-                ],
-              ),
-              if (!isLoading)
-                Positioned(
-                  bottom: 10,
-                  child: SafeArea(
-                    child: Container(
-                      width: SizeConfig.screenWidth,
-                      padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.pageHorizontalMargins),
-                      child: Container(
-                        width: SizeConfig.navBarWidth,
-                        child: FelloButtonLg(
-                          child:
-                              (!baseProvider.isEditAugmontBankDetailInProgress)
-                                  ? Text(
-                                      inEditMode ? 'UPDATE' : 'EDIT',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .button
-                                          .copyWith(color: Colors.white),
-                                    )
-                                  : SpinKitThreeBounce(
-                                      color: UiConstants.spinnerColor2,
-                                      size: 18.0,
-                                    ),
-                          onPressed: () {
-                            if (inEditMode) {
-                              FocusScope.of(context).unfocus();
-                              if (BaseUtil.showNoInternetAlert()) return;
+                          )
+                        : SingleChildScrollView(
+                            child: Padding(
+                              padding: EdgeInsets.all(
+                                  SizeConfig.pageHorizontalMargins),
+                              child: Form(
+                                  key: _formKey,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      // Padding(
+                                      //   padding: EdgeInsets.all(8),
+                                      //   child: Text(
+                                      //     (baseProvider.augmontDetail.bankAccNo == '')
+                                      //         ? 'Enter your bank account details'
+                                      //         : 'Update your bank account details',
+                                      //     style: TextStyle(
+                                      //         fontSize: SizeConfig.largeTextSize,
+                                      //         fontWeight: FontWeight.w600),
+                                      //   ),
+                                      // ),
+                                      // Padding(
+                                      //   padding: EdgeInsets.fromLTRB(8, 3, 8, 8),
+                                      //   child: Text(
+                                      //     'This is where the amount received from selling your gold shall be credited.',
+                                      //     style: TextStyle(
+                                      //         fontSize: SizeConfig.mediumTextSize,
+                                      //         fontWeight: FontWeight.w400),
+                                      //   ),
+                                      // ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Bank Holder's Name",
+                                            style: TextStyles.body3,
+                                          ),
+                                          SizedBox(height: 6),
+                                          TextFormField(
+                                            autofocus: true,
+                                            enabled: inEditMode,
+                                            keyboardType: TextInputType.name,
+                                            inputFormatters: [
+                                              UpperCaseTextFormatter(),
+                                              FilteringTextInputFormatter.allow(
+                                                  RegExp(r'[A-Z ]'))
+                                            ],
+                                            textCapitalization:
+                                                TextCapitalization.characters,
+                                            controller:
+                                                _bankHolderNameController,
+                                            validator: (value) {
+                                              return (value == null ||
+                                                      value.isEmpty ||
+                                                      value.trim().length < 4)
+                                                  ? 'Please enter you name as per your bank'
+                                                  : null;
+                                            },
+                                            onFieldSubmitted: (v) {
+                                              FocusScope.of(context)
+                                                  .nextFocus();
+                                            },
+                                          ),
+                                        ],
+                                      ),
 
-                              if (_formKey.currentState.validate()) {
-                                _onUpdateClicked();
-                              }
-                            } else {
-                              setState(() {
-                                inEditMode = true;
-                              });
-                              FocusScope.of(context).autofocus(focusNode);
+                                      SizedBox(
+                                        height: 16,
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Bank Account Number",
+                                            style: TextStyles.body3,
+                                          ),
+                                          SizedBox(height: 6),
+                                          TextFormField(
+                                            enabled: inEditMode,
+                                            controller: _bankAccNoController,
+                                            keyboardType:
+                                                TextInputType.numberWithOptions(
+                                                    signed: true),
+                                            inputFormatters: [
+                                              LengthLimitingTextInputFormatter(
+                                                  18),
+                                              FilteringTextInputFormatter
+                                                  .digitsOnly,
+                                            ],
+                                            validator: (value) {
+                                              print(value);
+
+                                              if (value == null &&
+                                                  value.trim().isEmpty)
+                                                return 'Please enter a valid account number';
+                                              else if (value.trim().length <
+                                                      9 ||
+                                                  value.trim().length > 18)
+                                                return 'Invalid Bank Account Number';
+                                              return null;
+                                            },
+                                          ),
+                                        ],
+                                      ),
+
+                                      SizedBox(
+                                        height: 16,
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Confirm Account Number",
+                                            style: TextStyles.body3,
+                                          ),
+                                          SizedBox(height: 6),
+                                          TextFormField(
+                                            enabled: inEditMode,
+                                            controller:
+                                                _bankAccNoConfirmController,
+                                            keyboardType:
+                                                TextInputType.visiblePassword,
+                                            obscureText: true,
+                                            inputFormatters: [
+                                              LengthLimitingTextInputFormatter(
+                                                  18),
+                                              FilteringTextInputFormatter
+                                                  .digitsOnly,
+                                            ],
+                                            validator: (value) {
+                                              print(value);
+                                              if (value == null &&
+                                                  value.trim().isEmpty)
+                                                return 'Please enter a valid account number';
+                                              else if (value.trim() !=
+                                                  _bankAccNoController.text
+                                                      .trim())
+                                                return "Bank account numbers did not match";
+                                              else if (value.trim().length <
+                                                      9 ||
+                                                  value.trim().length > 18)
+                                                return 'Invalid Bank Account Number';
+
+                                              return null;
+                                            },
+                                          ),
+                                        ],
+                                      ),
+
+                                      SizedBox(height: 16),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Bank IFSC Code',
+                                            style: TextStyles.body3,
+                                          ),
+                                          SizedBox(height: 6),
+                                          TextFormField(
+                                            enabled: inEditMode,
+                                            controller: _bankIfscController,
+                                            keyboardType:
+                                                TextInputType.streetAddress,
+                                            textCapitalization:
+                                                TextCapitalization.characters,
+                                            validator: (value) {
+                                              print(value);
+                                              if (value == null &&
+                                                  value.trim().isEmpty)
+                                                return 'Please enter a valid bank IFSC';
+                                              else if (value.trim().length <
+                                                      6 ||
+                                                  value.trim().length > 25)
+                                                return 'Please enter a valid bank IFSC';
+                                              else if (!RegExp(
+                                                      r'[a-zA-Z]{4}[0]\w{6}$')
+                                                  .hasMatch(value))
+                                                return "Please enter a valid bank IFSC";
+                                              return null;
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  )),
+                            ),
+                          ),
+                  ),
+                ),
+              ],
+            ),
+            if (!isLoading && !isKeyboardOpen)
+              Positioned(
+                bottom: 10,
+                child: SafeArea(
+                  child: Container(
+                    width: SizeConfig.screenWidth,
+                    padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.pageHorizontalMargins),
+                    child: Container(
+                      width: SizeConfig.navBarWidth,
+                      child: FelloButtonLg(
+                        child: (!baseProvider.isEditAugmontBankDetailInProgress)
+                            ? Text(
+                                inEditMode ? 'UPDATE' : 'EDIT',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .button
+                                    .copyWith(color: Colors.white),
+                              )
+                            : SpinKitThreeBounce(
+                                color: UiConstants.spinnerColor2,
+                                size: 18.0,
+                              ),
+                        onPressed: () {
+                          if (inEditMode) {
+                            FocusScope.of(context).unfocus();
+                            if (BaseUtil.showNoInternetAlert()) return;
+
+                            if (_formKey.currentState.validate()) {
+                              _onUpdateClicked();
                             }
-                          },
-                        ),
+                          } else {
+                            setState(() {
+                              inEditMode = true;
+                            });
+                            FocusScope.of(context).autofocus(focusNode);
+                          }
+                        },
                       ),
                     ),
                   ),
                 ),
-            ],
-          ),
+              ),
+          ],
         ),
       ),
     );
@@ -480,13 +448,14 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
       setState(() {});
       return;
     }
-
-    final ifscCodeValidation = RegExp(r'^[^\s]{4}\d{7}$');
+    _logger.d(pBankIfsc);
+    final ifscCodeValidation = RegExp(r'[a-zA-Z]{4}[0]\w{6}$');
     if (!ifscCodeValidation.hasMatch(pBankIfsc)) {
       BaseUtil.showNegativeAlert(
         'Invalid IFSC Code',
         'Please check your ifsc code.',
       );
+      pBankIfsc = pBankIfsc.toUpperCase();
       baseProvider.isEditAugmontBankDetailInProgress = false;
       setState(() {});
       return;
