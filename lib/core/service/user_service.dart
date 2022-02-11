@@ -12,6 +12,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class UserService extends PropertyChangeNotifier<UserServiceProperties> {
@@ -41,6 +42,10 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   bool get isEmailVerified => _isEmailVerified ?? false;
   bool get isSimpleKycVerified => _isSimpleKycVerified ?? false;
   bool _hasNewNotifications = false;
+  bool showOnboardingTutorial = false;
+
+  FocusScopeNode buyFieldFocusNode = FocusScopeNode();
+
   bool get isConfirmationDialogOpen => _isConfirmationDialogOpen;
 
   bool get hasNewNotifications => _hasNewNotifications;
