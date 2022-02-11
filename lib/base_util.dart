@@ -2,7 +2,6 @@
 //Dart & Flutter Imports
 import 'dart:async';
 import 'dart:math';
-import 'dart:developer';
 //Pub Imports
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/base_analytics.dart';
@@ -30,7 +29,6 @@ import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/analytics/analytics_events.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/pan_service.dart';
-import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -66,7 +64,6 @@ class BaseUtil extends ChangeNotifier {
   UserTicketWallet _userTicketWallet;
   User firebaseUser;
   FirebaseAnalytics baseAnalytics;
-  PaymentService _payService;
   List<FeedCard> feedCards;
   String userRegdPan;
 
@@ -297,30 +294,6 @@ class BaseUtil extends ChangeNotifier {
     ];
   }
 
-  ///related to icici - function not active
-  acceptNotificationsIfAny(BuildContext context) {
-    ///if payment completed in the background:
-    if (_payService != null && myUser.pendingTxnId != null) {
-      _payService.addPaymentStatusListener((value) {
-        if (value == PaymentService.TRANSACTION_COMPLETE) {
-          showPositiveAlert(
-              'Transaction Complete', 'Your account balance has been updated!',
-              seconds: 5);
-        } else if (value == PaymentService.TRANSACTION_REJECTED) {
-          showPositiveAlert(
-              'Transaction Closed', 'The transaction was not completed',
-              seconds: 5);
-        } else {
-          logger.d('Received notif for pending transaction: $value');
-        }
-      });
-    }
-  }
-
-  ///related to icici - function not active
-  cancelIncomingNotifications() {
-    if (_payService != null) _payService.addPaymentStatusListener(null);
-  }
 
   Future<bool> isUnreadFreshchatSupportMessages() async {
     try {
@@ -598,7 +571,6 @@ class BaseUtil extends ChangeNotifier {
       _userTicketWallet = null;
       firebaseUser = null;
       baseAnalytics = null;
-      _payService = null;
       feedCards = null;
       // _dailyPickCount = null;
       userRegdPan = null;
