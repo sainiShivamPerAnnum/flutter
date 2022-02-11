@@ -565,6 +565,7 @@ class BaseUtil extends ChangeNotifier {
 
   Future<bool> authenticateUser(AuthCredential credential) {
     logger.d("Verification credetials: " + credential.toString());
+    // FirebaseAuth.instance.signInWithCustomToken(token)
     return FirebaseAuth.instance.signInWithCredential(credential).then((res) {
       this.firebaseUser = res.user;
       logger.i("New Firebase User: ${res.additionalUserInfo.isNewUser}");
