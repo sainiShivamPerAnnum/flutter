@@ -600,8 +600,6 @@ class LoginControllerViewModel extends BaseModel {
         TruecallerSdk.streamCallbackData.listen((truecallerSdkCallback) {
       switch (truecallerSdkCallback.result) {
         case TruecallerSdkCallbackResult.success:
-          String firstName = truecallerSdkCallback.profile?.firstName;
-          String lastName = truecallerSdkCallback.profile?.lastName;
           String phNo = truecallerSdkCallback.profile?.phoneNumber;
           loginUsingTrueCaller = true;
           logger.d("Truecaller no: $phNo");
