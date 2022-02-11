@@ -63,8 +63,6 @@ class _WeeklyResultState extends State<WeeklyResult> {
             ),
             Expanded(
               child: Container(
-                padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.pageHorizontalMargins),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(SizeConfig.padding40),
