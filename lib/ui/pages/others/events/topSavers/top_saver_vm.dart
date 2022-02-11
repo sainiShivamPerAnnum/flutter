@@ -5,7 +5,6 @@ import 'package:felloapp/core/repository/statistics_repo.dart';
 import 'package:felloapp/core/service/events_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/pages/others/events/topSavers/daySaver/day_saver_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
@@ -65,8 +64,26 @@ class TopSaverViewModel extends BaseModel {
     notifyListeners();
   }
 
-  Future<String> getWinnerDP() async {
-    String dpUrl = await _dbModel.getUserDP(_userService.baseUser.uid);
+  Future<String> getWinnerDP(int pos) async {
+    //dummy code start----------------------------
+    String uid = _userService.baseUser.uid;
+    switch (pos) {
+      case 1:
+        uid = _userService.baseUser.uid;
+        break;
+      case 2:
+        uid = "bztFiwT6yXX4xVPT9qtMV1rhP2q2";
+        break;
+      case 3:
+        uid = "s10wlnUFbYN9VS8BHQeowQ8Murr1";
+        break;
+      default:
+        uid = "";
+    }
+    String dpUrl = await _dbModel.getUserDP(uid);
+    //dummy code end ------
+
+    // String dpUrl = await _dbModel.getUserDP(_userService.baseUser.uid);
     return dpUrl;
   }
 }

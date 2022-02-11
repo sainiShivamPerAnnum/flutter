@@ -1,4 +1,4 @@
-import 'package:felloapp/ui/pages/others/events/topSavers/daySaver/day_saver_view.dart';
+import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
 
 enum SaverType { MONTHLY, DAILY, WEEKLY }
 

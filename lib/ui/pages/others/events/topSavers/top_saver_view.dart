@@ -3,7 +3,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/modals_sheets/event_instructions_modal.dart';
-import 'package:felloapp/ui/pages/others/events/topSavers/daySaver/day_saver_vm.dart';
+import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
@@ -103,7 +103,7 @@ class Thumbnail extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(SizeConfig.roundness32),
         image: DecorationImage(
-          image: NetworkImage(event.image),
+          image: CachedNetworkImageProvider(event.image),
           fit: BoxFit.cover,
         ),
         color: UiConstants.tertiarySolid,
@@ -375,7 +375,7 @@ class WinnerAvatar extends StatefulWidget {
 class _WinnerAvatarState extends State<WinnerAvatar> {
   String dpUrl;
   getDP() {
-    widget.model.getWinnerDP().then((url) {
+    widget.model.getWinnerDP(widget.position).then((url) {
       if (url != null && mounted) {
         dpUrl = url;
         setState(() {});
@@ -393,11 +393,11 @@ class _WinnerAvatarState extends State<WinnerAvatar> {
 
   Color getColor() {
     if (widget.position == 1)
-      return Colors.amber;
+      return Color(0xffFFC107);
     else if (widget.position == 2)
-      return Colors.green;
+      return Color(0xff861139);
     else
-      return Colors.blue;
+      return UiConstants.darkPrimaryColor;
   }
 
   String getImage() {

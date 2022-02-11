@@ -9,7 +9,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/modals_sheets/octfest_info_modal.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
-import 'package:felloapp/ui/pages/others/events/topSavers/daySaver/day_saver_view.dart';
+import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
 import 'package:felloapp/ui/pages/static/leaderboard_sheet.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/winners_prizes/winners_marquee.dart';
@@ -253,9 +253,7 @@ class EventCard extends StatelessWidget {
                 ),
               )
             : BoxDecoration(
-                color: event.color != 0
-                    ? Color(event.color)
-                    : UiConstants.primaryColor,
+                color: Color(event.color),
                 borderRadius: BorderRadius.circular(SizeConfig.roundness16),
               ),
         padding: EdgeInsets.all(SizeConfig.padding16),
@@ -280,12 +278,11 @@ class EventCard extends StatelessWidget {
                             color: Colors.white.withOpacity(0.5)),
                         padding: EdgeInsets.symmetric(
                             vertical: SizeConfig.padding6,
-                            horizontal: SizeConfig.padding8),
+                            horizontal: SizeConfig.padding12),
                         child: Text(
                           "Explore",
-                          style: TextStyles.body3.bold.colour(event.color != 0
-                              ? Color(event.color)
-                              : UiConstants.primaryColor),
+                          style:
+                              TextStyles.body3.bold.colour(Color(event.color)),
                         ),
                       )
                     ],

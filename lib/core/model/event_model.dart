@@ -62,9 +62,9 @@ class EventModel {
         thumbnail: map['thumbnail'] ?? '',
         type: map['type'] ?? '',
         position: map['position'] ?? 1,
-        color: map['color'] ?? 0,
+        color: map['color'] ?? 4280492835,
         image: map['image'] ?? '',
-        instructions: map['info'] ?? []);
+        instructions: map['info'] ?? ["Fello Event Instructions"]);
   }
 
   String toJson() => json.encode(toMap());
