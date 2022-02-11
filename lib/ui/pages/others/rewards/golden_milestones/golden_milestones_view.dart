@@ -31,195 +31,217 @@ class GoldenMilestonesView extends StatelessWidget {
               children: [
                 FelloAppBar(
                   leading: FelloAppBarBackButton(),
-                  title: "Winnings",
+                  title: "Golden Milstones",
                 ),
                 Expanded(
-                  child: Container(
-                    width: SizeConfig.screenWidth,
-                    padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.pageHorizontalMargins),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(SizeConfig.padding40),
-                        topRight: Radius.circular(SizeConfig.padding40),
+                  child: RefreshIndicator(
+                    onRefresh: () async {
+                      await model.fetchMilestones();
+                    },
+                    child: Container(
+                      width: SizeConfig.screenWidth,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.pageHorizontalMargins),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(SizeConfig.padding40),
+                          topRight: Radius.circular(SizeConfig.padding40),
+                        ),
+                        color: Colors.white,
                       ),
-                      color: Colors.white,
-                    ),
-                    child: model.state == ViewState.Busy
-                        ? Center(
-                            child: Center(
-                              child: SpinKitWave(
-                                color: UiConstants.primaryColor,
-                                size: SizeConfig.padding32,
+                      child: model.state == ViewState.Busy
+                          ? Center(
+                              child: Center(
+                                child: SpinKitWave(
+                                  color: UiConstants.primaryColor,
+                                  size: SizeConfig.padding32,
+                                ),
                               ),
-                            ),
-                          )
-                        : Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                  height: SizeConfig.pageHorizontalMargins),
-                              Text("Your Upcoming Rewards",
-                                  style: TextStyles.title4),
-                              SizedBox(height: SizeConfig.padding2),
-                              Text(
-                                  "Keep on reaching milestones and win fun rewards!",
-                                  style: TextStyles.body3),
-                              //SizedBox(height: SizeConfig.padding12),
-                              // Container(
-                              //   decoration: BoxDecoration(
-                              //     color: Colors.white,
-                              //     shape: BoxShape.circle,
-                              //     border: Border.all(
-                              //         color: UiConstants.primaryColor,
-                              //         width: SizeConfig.padding2),
-                              //   ),
-                              //   padding:
-                              //       EdgeInsets.all(SizeConfig.padding4),
-                              //   child: ProfileImageSE(
-                              //       radius: SizeConfig.padding16),
-                              // ),
-                              model.milestones == null
-                                  ? Center(
-                                      child: SpinKitWave(
-                                      color: UiConstants.primaryColor,
-                                      size: SizeConfig.padding32,
-                                    ))
-                                  : (model.milestones.isEmpty
-                                      ? NoRecordDisplayWidget()
-                                      :
-                                      // MilestonePath(
-                                      //     data: model.milestones,
-                                      //   )
-                                      Expanded(
-                                          child: ListView.builder(
-                                              padding: EdgeInsets.only(
-                                                  bottom: SizeConfig.padding20),
-                                              itemCount:
-                                                  model.milestones.length,
-                                              itemBuilder: (ctx, index) {
-                                                var data = model.milestones;
-                                                return Card(
-                                                  elevation: 0,
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            SizeConfig
-                                                                .roundness24),
-                                                  ),
-                                                  borderOnForeground: false,
-                                                  shadowColor: data[index]
-                                                          .isCompleted
-                                                      ? UiConstants.primaryLight
-                                                      : Colors.white,
-                                                  margin: EdgeInsets.only(
-                                                      top:
-                                                          SizeConfig.padding24),
-                                                  child: Container(
-                                                      // height: SizeConfig.padding64,
-
-                                                      decoration: BoxDecoration(
-                                                        color: data[index]
-                                                                .isCompleted
-                                                            ? UiConstants
-                                                                .primaryLight
-                                                                .withOpacity(
-                                                                    0.5)
-                                                            : Colors.grey[100],
+                            )
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                    height: SizeConfig.pageHorizontalMargins),
+                                Text("Your Upcoming Rewards",
+                                    style: TextStyles.title4),
+                                SizedBox(height: SizeConfig.padding2),
+                                Text(
+                                    "Keep on reaching milestones and win fun rewards!",
+                                    style: TextStyles.body3),
+                                //SizedBox(height: SizeConfig.padding12),
+                                // Container(
+                                //   decoration: BoxDecoration(
+                                //     color: Colors.white,
+                                //     shape: BoxShape.circle,
+                                //     border: Border.all(
+                                //         color: UiConstants.primaryColor,
+                                //         width: SizeConfig.padding2),
+                                //   ),
+                                //   padding:
+                                //       EdgeInsets.all(SizeConfig.padding4),
+                                //   child: ProfileImageSE(
+                                //       radius: SizeConfig.padding16),
+                                // ),
+                                model.milestones == null
+                                    ? Center(
+                                        child: SpinKitWave(
+                                        color: UiConstants.primaryColor,
+                                        size: SizeConfig.padding32,
+                                      ))
+                                    : (model.milestones.isEmpty
+                                        ? NoRecordDisplayWidget()
+                                        :
+                                        // MilestonePath(
+                                        //     data: model.milestones,
+                                        //   )
+                                        Expanded(
+                                            child: ListView.builder(
+                                                padding: EdgeInsets.only(
+                                                    bottom:
+                                                        SizeConfig.padding20),
+                                                itemCount:
+                                                    model.milestones.length,
+                                                itemBuilder: (ctx, index) {
+                                                  var data = model.milestones;
+                                                  return InkWell(
+                                                    onTap: () => data[index]
+                                                            .isCompleted
+                                                        ? () {}
+                                                        : model
+                                                            .navigateMilestones(
+                                                                data[index]
+                                                                    .actionUri),
+                                                    child: Card(
+                                                      elevation: 0,
+                                                      shape:
+                                                          RoundedRectangleBorder(
                                                         borderRadius: BorderRadius
                                                             .circular(SizeConfig
                                                                 .roundness24),
                                                       ),
-                                                      padding: EdgeInsets.all(
-                                                          SizeConfig
-                                                              .pageHorizontalMargins),
-                                                      child: Row(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          // Icon(
-                                                          //     data[
-                                                          //                 index]
-                                                          //             .isCompleted
-                                                          //         ? (data[index]
-                                                          //                 .showPrize
-                                                          //             ? Icons
-                                                          //                 .card_giftcard_rounded
-                                                          //             : Icons
-                                                          //                 .lock_open_rounded)
-                                                          //         : Icons
-                                                          //             .lock_rounded,
-                                                          // color: data[index]
-                                                          //         .isCompleted
-                                                          //     ? UiConstants
-                                                          //         .primaryColor
-                                                          //     : Colors
-                                                          //         .grey[700]),
-                                                          SvgPicture.asset(
-                                                              Assets.gold24K,
-                                                              color: data[index]
-                                                                      .isCompleted
-                                                                  ? UiConstants
-                                                                      .primaryColor
-                                                                  : Colors.grey[
-                                                                      400]),
-                                                          SizedBox(
-                                                              width: SizeConfig
-                                                                  .padding8),
-                                                          Expanded(
-                                                            child: Text(
-                                                              data[index].title,
-                                                              style: TextStyles.body2.colour(data[
-                                                                          index]
-                                                                      .isCompleted
-                                                                  ? UiConstants
-                                                                      .primaryColor
-                                                                  : Colors.grey[
-                                                                      500]),
-                                                            ),
+                                                      borderOnForeground: false,
+                                                      shadowColor: data[index]
+                                                              .isCompleted
+                                                          ? UiConstants
+                                                              .primaryLight
+                                                          : Colors.white,
+                                                      margin: EdgeInsets.only(
+                                                          top: SizeConfig
+                                                              .padding24),
+                                                      child: Container(
+                                                          // height: SizeConfig.padding64,
+
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: data[index]
+                                                                    .isCompleted
+                                                                ? UiConstants
+                                                                    .primaryLight
+                                                                    .withOpacity(
+                                                                        0.5)
+                                                                : Colors
+                                                                    .grey[100],
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                    SizeConfig
+                                                                        .roundness24),
                                                           ),
-                                                          if (data[index]
-                                                              .showPrize)
-                                                            Row(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .center,
-                                                              children: [
-                                                                if (data[index]
-                                                                        .flc !=
-                                                                    0)
-                                                                  PrizeChip(
-                                                                    color: UiConstants
-                                                                        .tertiarySolid,
-                                                                    svg: Assets
-                                                                        .tokens,
-                                                                    text:
-                                                                        "${data[index].flc}",
-                                                                  ),
-                                                                SizedBox(
-                                                                    width: SizeConfig
-                                                                        .padding16),
-                                                                if (data[index]
-                                                                        .amt !=
-                                                                    0)
-                                                                  PrizeChip(
-                                                                    color: UiConstants
-                                                                        .primaryColor,
-                                                                    png: Assets
-                                                                        .moneyIcon,
-                                                                    text:
-                                                                        "${data[index].amt}",
-                                                                  )
-                                                              ],
-                                                            ),
-                                                        ],
-                                                      )),
-                                                );
-                                              }),
-                                        )),
-                            ],
-                          ),
+                                                          padding: EdgeInsets
+                                                              .all(SizeConfig
+                                                                  .pageHorizontalMargins),
+                                                          child: Row(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              // Icon(
+                                                              //     data[
+                                                              //                 index]
+                                                              //             .isCompleted
+                                                              //         ? (data[index]
+                                                              //                 .showPrize
+                                                              //             ? Icons
+                                                              //                 .card_giftcard_rounded
+                                                              //             : Icons
+                                                              //                 .lock_open_rounded)
+                                                              //         : Icons
+                                                              //             .lock_rounded,
+                                                              // color: data[index]
+                                                              //         .isCompleted
+                                                              //     ? UiConstants
+                                                              //         .primaryColor
+                                                              //     : Colors
+                                                              //         .grey[700]),
+                                                              SvgPicture.asset(
+                                                                  Assets
+                                                                      .gold24K,
+                                                                  color: data[
+                                                                              index]
+                                                                          .isCompleted
+                                                                      ? UiConstants
+                                                                          .primaryColor
+                                                                      : Colors.grey[
+                                                                          400]),
+                                                              SizedBox(
+                                                                  width: SizeConfig
+                                                                      .padding8),
+                                                              Expanded(
+                                                                child: Text(
+                                                                  data[index]
+                                                                      .title,
+                                                                  style: TextStyles.body2.colour(data[
+                                                                              index]
+                                                                          .isCompleted
+                                                                      ? UiConstants
+                                                                          .primaryColor
+                                                                      : Colors.grey[
+                                                                          500]),
+                                                                ),
+                                                              ),
+                                                              if (data[index]
+                                                                  .showPrize)
+                                                                Row(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .center,
+                                                                  children: [
+                                                                    if (data[index]
+                                                                            .flc !=
+                                                                        0)
+                                                                      PrizeChip(
+                                                                        color: UiConstants
+                                                                            .tertiarySolid,
+                                                                        svg: Assets
+                                                                            .tokens,
+                                                                        text:
+                                                                            "${data[index].flc}",
+                                                                      ),
+                                                                    SizedBox(
+                                                                        width: SizeConfig
+                                                                            .padding16),
+                                                                    if (data[index]
+                                                                            .amt !=
+                                                                        0)
+                                                                      PrizeChip(
+                                                                        color: UiConstants
+                                                                            .primaryColor,
+                                                                        png: Assets
+                                                                            .moneyIcon,
+                                                                        text:
+                                                                            "${data[index].amt}",
+                                                                      )
+                                                                  ],
+                                                                ),
+                                                            ],
+                                                          )),
+                                                    ),
+                                                  );
+                                                }),
+                                          )),
+                              ],
+                            ),
+                    ),
                   ),
                 ),
               ],
