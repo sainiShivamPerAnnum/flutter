@@ -577,9 +577,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'augDetails':
         pageConfiguration = AugmontGoldDetailsPageConfig;
         break;
-      // case 'augBuy':
-      //   pageConfiguration = AugmontGoldBuyPageConfig;
-      //   break;
+      case 'kycVerify':
+        pageConfiguration = KycDetailsPageConfig;
+        break;
       case 'augSell':
         pageConfiguration = AugmontGoldSellPageConfig;
         break;
@@ -631,6 +631,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case 'goldBalanceDetails':
         pageConfiguration = GoldBalanceDetailsViewPageConfig;
+        break;
+      case 'pop':
+        AppState.backButtonDispatcher.didPopRoute();
+        break;
     }
     if (pageConfiguration != null) {
       addPage(pageConfiguration);

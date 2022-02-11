@@ -78,6 +78,7 @@ dependencies:
   in_app_review: ^2.0.3
   scratcher: ^2.1.0
   timelines: ^0.1.0
+  truecaller_sdk: ^0.1.0
   sliding_up_panel: ^2.0.0+1
   app_install_date: ^0.1.1
 

@@ -19,6 +19,8 @@ class Save extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(
+        "Bottom padding: ${WidgetsBinding.instance.window.viewInsets.bottom}");
     S locale = S.of(context);
     return BaseView<AugmontGoldBuyViewModel>(
       onModelReady: (model) => model.init(),
@@ -40,7 +42,7 @@ class Save extends StatelessWidget {
                       Column(
                         children: [
                           AnimatedContainer(
-                            duration: Duration(milliseconds: 600),
+                            duration: Duration(milliseconds: 300),
                             curve: Curves.decelerate,
                             margin: EdgeInsets.symmetric(
                                 horizontal: SizeConfig.pageHorizontalMargins),
