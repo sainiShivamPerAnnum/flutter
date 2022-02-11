@@ -29,10 +29,9 @@ class MobileInputScreenViewModel extends BaseModel {
   get formKey => _formKey;
   get validate => _validate;
   get phoneFieldKey => _phoneFieldKey;
-  get mobileController => _mobileController;
+  TextEditingController get mobileController => _mobileController;
   get truecallerMobileController => _mobileController;
   get referralCodeController => _referralCodeController;
-
 
   // set validate(bool val) {
   //   _validate = val;

@@ -632,6 +632,8 @@ class LoginControllerViewModel extends BaseModel {
 
     final String token = tokenRes.model;
     LoginControllerView.mobileno = phno;
+    _mobileScreenKey.currentState.model.mobileController.text =
+        _formatMobileNumber(phno);
     //Authenticate using custom token
     FirebaseAuth.instance.signInWithCustomToken(token).then((res) {
       logger.i("New Firebase User: ${res.additionalUserInfo.isNewUser}");
@@ -641,6 +643,7 @@ class LoginControllerViewModel extends BaseModel {
       logger.e(e);
       BaseUtil.showNegativeAlert("Authentication failed",
           "Please enter your mobile number to authenticate.");
+      loginUsingTrueCaller = false;
     });
   }
 

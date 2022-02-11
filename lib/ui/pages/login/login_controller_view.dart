@@ -12,6 +12,7 @@ import 'package:felloapp/ui/pages/login/screens/username_input/username_input_vi
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/logger.dart';
@@ -205,41 +206,79 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                             )
                           : Container(),
                       model.loginUsingTrueCaller
-                          ? SafeArea(
-                              child: Container(
-                                margin: EdgeInsets.only(
-                                    bottom: SizeConfig.padding24),
-                                width: SizeConfig.screenWidth,
-                                height: 60,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "Logging using",
-                                      style: GoogleFonts.nunito(
-                                        fontSize: SizeConfig.body2,
-                                        color: Color(0xff1180FF),
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                      //  TextStyles.body2.bold
-                                      //     .colour(Color(0xff1180FF)),
-                                    ),
-                                    Image.network(
-                                      "https://upload.wikimedia.org/wikipedia/commons/1/14/TrueCaller_Logo.png",
-                                      height: SizeConfig.body1,
-                                    ),
-                                    SizedBox(
-                                      width: SizeConfig.padding4,
-                                    ),
-                                    SpinKitThreeBounce(
-                                      color: Color(0xff1180FF),
-                                      size: SizeConfig.body1,
-                                    )
-                                  ],
-                                ),
+                          ? Container(
+                              width: SizeConfig.screenWidth,
+                              padding: EdgeInsets.fromLTRB(0, 10, 0, 20),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: <Widget>[
+                                  new Container(
+                                    width: SizeConfig.screenWidth -
+                                        SizeConfig.pageHorizontalMargins * 2,
+                                    child: FelloButtonLg(
+                                        color: Colors.white,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "Logging using",
+                                              style: TextStyles.body3.bold
+                                                  .colour(Color(0xff1180FF)),
+                                            ),
+                                            Image.asset(
+                                              Assets.truecaller,
+                                              height: SizeConfig.body1,
+                                            ),
+                                            SizedBox(
+                                              width: SizeConfig.padding4,
+                                            ),
+                                            SpinKitThreeBounce(
+                                              color: Color(0xff1180FF),
+                                              size: SizeConfig.body1,
+                                            )
+                                          ],
+                                        )),
+                                  ),
+                                ],
                               ),
                             )
+                          // SafeArea(
+                          //     child: Container(
+                          //       margin: EdgeInsets.only(
+                          //           bottom: SizeConfig.padding24),
+                          //       width: SizeConfig.screenWidth,
+                          //       height: 60,
+                          //       child: Row(
+                          //         mainAxisAlignment: MainAxisAlignment.center,
+                          //         crossAxisAlignment: CrossAxisAlignment.center,
+                          //         children: [
+                          // Text(
+                          //   "Logging using",
+                          //   style: GoogleFonts.nunito(
+                          //     fontSize: SizeConfig.body2,
+                          //     color: Color(0xff1180FF),
+                          //     fontWeight: FontWeight.w700,
+                          //   ),
+                          //   //  TextStyles.body2.bold
+                          //   //     .colour(Color(0xff1180FF)),
+                          // ),
+                          // Image.asset(
+                          //   Assets.truecaller,
+                          //   height: SizeConfig.body1,
+                          // ),
+                          // SizedBox(
+                          //   width: SizeConfig.padding4,
+                          // ),
+                          // SpinKitThreeBounce(
+                          //   color: Color(0xff1180FF),
+                          //   size: SizeConfig.body1,
+                          // )
+                          //         ],
+                          //       ),
+                          //     ),
+                          //   )
                           : Container(
                               width: SizeConfig.screenWidth,
                               padding: EdgeInsets.fromLTRB(0, 10, 0, 20),

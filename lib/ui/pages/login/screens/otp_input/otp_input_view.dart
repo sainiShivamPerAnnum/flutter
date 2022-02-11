@@ -167,6 +167,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                                     .bold,
                               ),
                               onTap: () {
+                                if (BaseUtil.showNoInternetAlert()) return;
                                 log.debug("Resend action triggered");
                                 FocusScope.of(context).unfocus();
 
