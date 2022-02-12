@@ -129,10 +129,6 @@ class LoginControllerViewModel extends BaseModel {
             logger.d(
                 'Mobile number validated: ${_mobileScreenKey.currentState.model.getMobile()}');
             this.userMobile = _mobileScreenKey.currentState.model.getMobile();
-            String refCode =
-                _mobileScreenKey.currentState.model.getReferralCode();
-            if (refCode != null && refCode.isNotEmpty)
-              BaseUtil.manualReferralCode = refCode;
 
             LoginControllerView.mobileno = this.userMobile;
             notifyListeners();
@@ -286,6 +282,11 @@ class LoginControllerViewModel extends BaseModel {
             if (!await _usernameKey.currentState.model.validate()) {
               return false;
             }
+
+            String refCode =
+                _mobileScreenKey.currentState.model.getReferralCode();
+            if (refCode != null && refCode.isNotEmpty)
+              BaseUtil.manualReferralCode = refCode;
 
             if (!_usernameKey.currentState.model.isLoading &&
                 _usernameKey.currentState.model.isValid) {
