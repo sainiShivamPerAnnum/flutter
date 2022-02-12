@@ -5,6 +5,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
+import 'package:felloapp/core/repository/coupons_repo.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/repository/investment_actions_repo.dart';
 import 'package:felloapp/core/repository/prizes_repo.dart';
@@ -15,6 +16,7 @@ import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/repository/winners_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
+import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/connectivity_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
@@ -22,7 +24,6 @@ import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/golden_ticket_service.dart';
 import 'package:felloapp/core/service/lcl_db_api.dart';
 import 'package:felloapp/core/service/leaderboard_service.dart';
-import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
 import 'package:felloapp/core/service/prize_service.dart';
 import 'package:felloapp/core/service/tambola_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
@@ -55,10 +56,8 @@ import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_vm.dart
 import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_vm.dart';
 import 'package:felloapp/ui/pages/others/profile/transactions_history/transaction_history_vm.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_viewModel.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_milestones/golden_milestones_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_milestones/golden_milestones_vm.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_vm.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_vm.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_vm.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
@@ -116,6 +115,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => TicketGenerationRepo());
   locator.registerLazySingleton(() => InvestmentActionsRepository());
   locator.registerLazySingleton(() => SignzyRepository());
+  locator.registerLazySingleton(() => CouponRepository());
 
   // SPLASH
   locator.registerFactory(() => LauncherViewModel());
