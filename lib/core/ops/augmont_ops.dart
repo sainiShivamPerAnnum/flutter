@@ -130,13 +130,30 @@ class AugmontModel extends ChangeNotifier {
   Future<AugmontRates> getRates() async {
     if (!isInit()) await _init();
 
-    ApiResponse<Map<String, dynamic>> response =
-        await _investmentActionsRepository.getGoldRates();
-    if (response.code == 400) {
-      _logger.e(response.errorMessage);
+    //New rates api code, requires conformation from augmont for dev enviroment.
+    // ApiResponse<Map<String, dynamic>> response =
+    //     await _investmentActionsRepository.getGoldRates();
+    // if (response.code == 400) {
+    //   _logger.e(response.errorMessage);
+    //   return null;
+    // } else {
+    //   return AugmontRates.fromMap(response.model);
+    // }
+
+    var _request =
+        http.Request('GET', Uri.parse(_constructRequest(GetRates.path, null)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
+
+    final resMap = await _processResponse(_response);
+    if (resMap == null || !resMap[INTERNAL_FAIL_FLAG]) {
+      log.error('Query Failed');
       return null;
     } else {
-      return AugmontRates.fromMap(response.model);
+      log.debug(resMap[CreateUser.resStatusCode].toString());
+      resMap["flag"] = QUERY_PASSED;
+
+      return AugmontRates.fromMap(resMap);
     }
   }
 
