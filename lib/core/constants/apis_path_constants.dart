@@ -41,4 +41,7 @@ class ApiPath {
   //GT Rewards
   get kRedeemGtReward => "/gtRewardsOps/$stage/api/redeemGtReward";
 
+  //Fello Coupons 
+  get kFelloCoupons => "/felloCoupons/$stage/api/eligible";
+
 }

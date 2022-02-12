@@ -15,4 +15,18 @@ class EligibleCouponResponseModel {
     data['message'] = this.message;
     return data;
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'flag': flag,
+      'message': message,
+    };
+  }
+
+  factory EligibleCouponResponseModel.fromMap(Map<String, dynamic> map) {
+    return EligibleCouponResponseModel(
+      flag: map['flag'] ?? false,
+      message: map['message'] ?? '',
+    );
+  }
 }
