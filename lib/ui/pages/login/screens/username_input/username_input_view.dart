@@ -173,24 +173,6 @@ class UsernameState extends State<Username> {
                 child: showResult(model),
               ),
               //Text(responseText),
-              SizedBox(height: SizeConfig.padding40),
-              Text(
-                locale.obUsernameRulesTitle,
-                style: TextStyles.title4.bold,
-              ),
-              SizedBox(
-                height: SizeConfig.padding16,
-              ),
-              RuleTile(rule: locale.obUsernameRule1),
-              RuleTile(rule: locale.obUsernameRule2),
-              RuleTile(rule: locale.obUsernameRule3),
-              // RuleTile(rule: locale.obUsernameRule4),
-              SizedBox(
-                height: SizeConfig.screenHeight * 0.3,
-              ),
-              SizedBox(
-                height: SizeConfig.viewInsets.bottom,
-              ),
               model.hasReferralCode
                   ? TextFormField(
                       controller: model.referralCodeController,
@@ -216,10 +198,12 @@ class UsernameState extends State<Username> {
                           model.hasReferralCode = true;
                         });
                       },
-                      child: Text(
-                        "Have a referral code?",
-                        style: TextStyles.body2.bold
-                            .colour(UiConstants.primaryColor),
+                      child: Center(
+                        child: Text(
+                          "Have a referral code?",
+                          style: TextStyles.body2.bold
+                              .colour(UiConstants.primaryColor),
+                        ),
                       ),
                     ),
               if (model.hasReferralCode)
@@ -231,6 +215,25 @@ class UsernameState extends State<Username> {
                     style: TextStyles.body4.colour(Colors.black54),
                   ),
                 ),
+              SizedBox(height: SizeConfig.padding40),
+              Text(
+                locale.obUsernameRulesTitle,
+                style: TextStyles.title4.bold,
+              ),
+              SizedBox(
+                height: SizeConfig.padding16,
+              ),
+              RuleTile(rule: locale.obUsernameRule1),
+              RuleTile(rule: locale.obUsernameRule2),
+              RuleTile(rule: locale.obUsernameRule3),
+              // RuleTile(rule: locale.obUsernameRule4),
+              SizedBox(
+                height: SizeConfig.screenHeight * 0.3,
+              ),
+
+              SizedBox(
+                height: SizeConfig.viewInsets.bottom,
+              ),
             ],
           ),
         ),

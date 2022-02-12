@@ -19,7 +19,7 @@ class UsernameInputScreenViewModel extends BaseModel {
   bool isLoading = false;
   bool isUpdating = false;
   bool isUpdated = false;
-    bool hasReferralCode = false;
+  bool hasReferralCode = false;
   final _formKey = GlobalKey<FormState>();
 
   get referralCodeController => _referralCodeController;
