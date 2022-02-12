@@ -50,7 +50,8 @@ class StatisticsRepository {
 
   Future<ApiResponse<TopSaversModel>> getTopSavers(String freq) async {
     try {
-      String code = CodeFromFreq.getCodeFromFreq(freq);
+      String code =
+          CodeFromFreq.getCodeFromFreq(freq, isMondayCorrected: false);
       _logger.d("Top Savers : $freq\nCode: $code");
       final QueryDocumentSnapshot _response = await _api
           .getStatisticsByFreqGameTypeAndCode("HIGHEST_SAVER", freq, code);

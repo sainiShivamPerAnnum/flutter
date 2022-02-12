@@ -8,6 +8,7 @@ import 'package:felloapp/core/service/events_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/code_from_freq.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
@@ -45,6 +46,9 @@ class TopSaverViewModel extends BaseModel {
     setAppbarTitle();
     fetchTopSavers();
     fetchPastWinners();
+    // _logger.d(CodeFromFreq.getPastDayCode());
+    // _logger.d(CodeFromFreq.getPastWeekCode());
+    // _logger.d(CodeFromFreq.getPastMonthCode());
   }
 
   setAppbarTitle() {
@@ -79,39 +83,34 @@ class TopSaverViewModel extends BaseModel {
         await _statsRepo.getTopSavers(saverFreq);
     if (response != null &&
         response.model != null &&
-        response.model.scoreboard != null)
+        response.model.scoreboard != null) {
       currentParticipants = response.model.scoreboard;
-    freqCode = response.model.code;
+      freqCode = response.model.code;
+    } else
+      currentParticipants = [];
     notifyListeners();
   }
 
   fetchPastWinners() async {
-    ApiResponse<WinnersModel> response = await _winnersRepo.getWinners(
+    ApiResponse<WinnersModel> response = await _winnersRepo.getPastWinners(
         Constants.GAME_TYPE_HIGHEST_SAVER, saverFreq);
     if (response != null &&
         response.model != null &&
-        response.model.winners != null) pastWinners = response.model.winners;
+        response.model.winners != null)
+      pastWinners = response.model.winners;
+    else
+      currentParticipants = [];
+
+    updateWinnersTitle();
+  }
+
+  updateWinnersTitle() {
+    if (pastWinners.length == 1)
+      winnerTitle = winnerTitle.substring(0, winnerTitle.length - 1);
+    notifyListeners();
   }
 
   Future<String> getWinnerDP(int index) async {
-    //dummy code start----------------------------
-    // String uid = _userService.baseUser.uid;
-    // switch (pos) {
-    //   case 1:
-    //     uid = _userService.baseUser.uid;
-    //     break;
-    //   case 2:
-    //     uid = "bztFiwT6yXX4xVPT9qtMV1rhP2q2";
-    //     break;
-    //   case 3:
-    //     uid = "s10wlnUFbYN9VS8BHQeowQ8Murr1";
-    //     break;
-    //   default:
-    //     uid = "";
-    // }
-    // String dpUrl = await _dbModel.getUserDP(uid);
-    //dummy code end ------
-
     String dpUrl = await _dbModel.getUserDP(pastWinners[index].userid);
     return dpUrl;
   }

@@ -9,6 +9,7 @@ import 'package:felloapp/ui/modals_sheets/event_instructions_modal.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/all_participants.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_vm.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
@@ -17,7 +18,6 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 
 class TopSaverView extends StatelessWidget {
   final EventModel event;
@@ -58,11 +58,11 @@ class TopSaverView extends StatelessWidget {
                         padding: EdgeInsets.zero,
                         children: [
                           Thumbnail(event: event),
-                          if (model.currentParticipants != null)
-                            EventLeaderboard(model: model),
+                          // if (model.currentParticipants != null)
+                          EventLeaderboard(model: model),
                           InstructionsTab(event: event),
-                          if (model.pastWinners != null)
-                            WinnersBoard(model: model),
+                          // if (model.pastWinners != null)
+                          WinnersBoard(model: model),
                         ],
                       ),
                     ),
@@ -192,65 +192,87 @@ class WinnersBoard extends StatelessWidget {
             ],
           ),
           SizedBox(height: SizeConfig.padding16),
-          model.pastWinners.isNotEmpty
-              ? Column(
-                  children: [
-                    if (model.pastWinners.length >= 3)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          WinnerAvatar(position: 1, model: model),
-                          WinnerAvatar(position: 0, model: model),
-                          WinnerAvatar(position: 2, model: model),
-                        ],
-                      ),
-                    Column(
-                      children: List.generate(
-                        model.pastWinners.length >= 3
-                            ? model.pastWinners.length - 3
-                            : model.pastWinners.length,
-                        (i) {
-                          int index = model.pastWinners.length >= 3 ? i + 3 : i;
-                          return Container(
-                            margin:
-                                EdgeInsets.only(bottom: SizeConfig.padding12),
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.circular(SizeConfig.padding12),
-                              color: Colors.grey.withOpacity(0.1),
-                            ),
-                            child: ListTile(
-                              leading: CircleAvatar(
-                                backgroundColor: UiConstants.primaryColor,
-                                child: Text(
-                                  "${i + 1}",
-                                  style: TextStyles.body2.colour(Colors.white),
+          model.pastWinners != null
+              ? (model.pastWinners.isNotEmpty
+                  ? Column(
+                      children: [
+                        Column(
+                          children: List.generate(
+                            model.pastWinners.length,
+                            (i) {
+                              return Container(
+                                margin: EdgeInsets.only(
+                                    bottom: SizeConfig.padding12),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                      SizeConfig.padding12),
+                                  color: Colors.grey.withOpacity(0.1),
                                 ),
-                              ),
-                              title: Text(
-                                model.pastWinners[index].username,
-                                style: TextStyles.body3.bold,
-                              ),
-                              subtitle: Text(model.pastWinners[index].gameType),
-                              trailing: Text(
-                                  model.pastWinners[index].score.toString()),
-                            ),
-                          );
-                        },
+                                padding: EdgeInsets.symmetric(
+                                    horizontal:
+                                        SizeConfig.pageHorizontalMargins / 2,
+                                    vertical:
+                                        SizeConfig.pageHorizontalMargins / 2),
+                                child: Row(
+                                  children: [
+                                    CircleAvatar(
+                                      backgroundColor: UiConstants.primaryColor,
+                                      child: Text(
+                                        "${i + 1}",
+                                        style: TextStyles.body2
+                                            .colour(Colors.white),
+                                      ),
+                                    ),
+                                    SizedBox(width: SizeConfig.padding12),
+                                    Expanded(
+                                      child: Text(
+                                        model.pastWinners[i].username,
+                                        style: TextStyles.body3.bold,
+                                      ),
+                                    ),
+                                    SizedBox(width: SizeConfig.padding12),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        if (model.pastWinners[i]?.flc != null)
+                                          PrizeChip(
+                                            color: UiConstants.tertiarySolid,
+                                            svg: Assets.tokens,
+                                            text: "${model.pastWinners[i].flc}",
+                                          ),
+                                        if (model.pastWinners[i]?.flc != null)
+                                          SizedBox(width: SizeConfig.padding16),
+                                        if (model.pastWinners[i]?.amount !=
+                                            null)
+                                          PrizeChip(
+                                            color: UiConstants.primaryColor,
+                                            png: Assets.moneyIcon,
+                                            text:
+                                                "₹ ${model.pastWinners[i].amount}",
+                                          )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    )
+                  : Container(
+                      width: SizeConfig.screenWidth,
+                      margin: EdgeInsets.only(
+                          top: SizeConfig.padding16,
+                          bottom: SizeConfig.padding32),
+                      child: NoRecordDisplayWidget(
+                        asset: "images/leaderboard.png",
+                        text: "Winners will be upadated soon",
+                        topPadding: false,
                       ),
-                    ),
-                  ],
-                )
-              : Container(
-                  width: SizeConfig.screenWidth,
-                  margin: EdgeInsets.only(
-                      top: SizeConfig.padding16, bottom: SizeConfig.padding32),
-                  child: NoRecordDisplayWidget(
-                    asset: "images/leaderboard.png",
-                    text: "Winners will be upadated soon",
-                    topPadding: false,
-                  ),
-                ),
+                    ))
+              : ListLoader(bottomPadding: true),
           SizedBox(height: SizeConfig.navBarHeight / 2),
         ],
       ),
@@ -261,6 +283,8 @@ class WinnersBoard extends StatelessWidget {
 class EventLeaderboard extends StatelessWidget {
   final TopSaverViewModel model;
   EventLeaderboard({this.model});
+
+  bool isInteger(num value) => value is int || value == value.roundToDouble();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -290,276 +314,129 @@ class EventLeaderboard extends StatelessWidget {
                 ],
               ),
               SizedBox(height: SizeConfig.padding12),
-              model.currentParticipants.isNotEmpty
-                  ? Column(
-                      children: [
-                        Column(
-                          children: List.generate(
-                            // model.currentParticipants.length,
-                            model.currentParticipants.length > 5
-                                ? 5
-                                : model.currentParticipants.length,
-                            (i) => Container(
-                              margin:
-                                  EdgeInsets.only(bottom: SizeConfig.padding12),
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.circular(SizeConfig.padding12),
-                                color: Colors.grey.withOpacity(0.1),
-                              ),
-                              child: ListTile(
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: SizeConfig.padding4,
-                                    horizontal:
-                                        SizeConfig.pageHorizontalMargins / 2),
-                                leading: CircleAvatar(
-                                  backgroundColor: UiConstants.primaryColor,
-                                  child: Text(
-                                    "${i + 1}",
-                                    style:
-                                        TextStyles.body2.colour(Colors.white),
+              model.currentParticipants != null
+                  ? (model.currentParticipants.isNotEmpty
+                      ? Column(
+                          children: [
+                            Column(
+                              children: List.generate(
+                                // model.currentParticipants.length,
+                                model.currentParticipants.length > 5
+                                    ? 5
+                                    : model.currentParticipants.length,
+                                (i) => Container(
+                                  margin: EdgeInsets.only(
+                                      bottom: SizeConfig.padding12),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(
+                                        SizeConfig.padding12),
+                                    color: Colors.grey.withOpacity(0.1),
                                   ),
-                                ),
-                                title: Text(
-                                  model.currentParticipants[i].username,
-                                  style: TextStyles.body3.bold
-                                      .colour(Colors.black54),
-                                ),
-                                // subtitle: Text("This Week"),
-                                trailing: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      model.currentParticipants[i].score
-                                          .toString(),
-                                      style: TextStyles.body2.bold
-                                          .colour(UiConstants.primaryColor),
+                                  child: ListTile(
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: SizeConfig.padding4,
+                                        horizontal:
+                                            SizeConfig.pageHorizontalMargins /
+                                                2),
+                                    leading: CircleAvatar(
+                                      backgroundColor: UiConstants.primaryColor,
+                                      child: Text(
+                                        "${i + 1}",
+                                        style: TextStyles.body2
+                                            .colour(Colors.white),
+                                      ),
                                     ),
-                                    Text(
-                                      "score",
-                                      style: TextStyles.body4.light
-                                          .colour(Colors.grey),
+                                    title: Text(
+                                      model.currentParticipants[i].username,
+                                      style: TextStyles.body3.bold
+                                          .colour(Colors.black54),
                                     ),
-                                  ],
+                                    // subtitle: Text("This Week"),
+                                    trailing: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        RichText(
+                                          text: TextSpan(
+                                              text:
+                                                  "${isInteger(model.currentParticipants[i].score) ? model.currentParticipants[i].score.toInt() : model.currentParticipants[i].score.toStringAsFixed(2)}",
+                                              style: TextStyles.body2.bold.colour(UiConstants.primaryColor),
+                                              children: [
+                                                TextSpan(
+                                                    text: " gm",
+                                                    style: TextStyles
+                                                        .body4.light
+                                                        .colour(Colors.grey))
+                                              ]),
+                                        ),
+                                        // Text(
+                                        //   model.currentParticipants[i].score
+                                        //       .toString(),
+                                        //   style: TextStyles.body2.bold
+                                        //       .colour(UiConstants.primaryColor),
+                                        // ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ),
-                        (model.currentParticipants.length > 5)
-                            ? Padding(
-                                padding: EdgeInsets.only(
-                                    bottom: SizeConfig.padding16),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    InkWell(
-                                      onTap: () {
-                                        AppState.delegate.appState.currentAction =
-                                            PageAction(
-                                                widget: AllParticipantsView(
-                                                    participants: model
-                                                        .currentParticipants),
-                                                page:
-                                                    AllParticipantsViewPageConfig,
-                                                state: PageState.addWidget);
-                                      },
-                                      child: Text(
-                                        "View All",
-                                        style: TextStyles.body2.bold
-                                            .colour(UiConstants.primaryColor)
-                                            .underline,
-                                      ),
+                            (model.currentParticipants.length > 5)
+                                ? Padding(
+                                    padding: EdgeInsets.only(
+                                        bottom: SizeConfig.padding16),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            AppState.delegate
+                                                    .appState.currentAction =
+                                                PageAction(
+                                                    widget: AllParticipantsView(
+                                                      participants: model
+                                                          .currentParticipants,
+                                                      type: model.saverType,
+                                                    ),
+                                                    page:
+                                                        AllParticipantsViewPageConfig,
+                                                    state: PageState.addWidget);
+                                          },
+                                          child: Text(
+                                            "View All",
+                                            style: TextStyles.body2.bold
+                                                .colour(
+                                                    UiConstants.primaryColor)
+                                                .underline,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              )
-                            : SizedBox(height: SizeConfig.padding8)
-                      ],
-                    )
-                  : Container(
-                      width: SizeConfig.screenWidth,
-                      margin: EdgeInsets.only(
-                          top: SizeConfig.padding16,
-                          bottom: SizeConfig.padding32),
-                      child: NoRecordDisplayWidget(
-                        asset: "images/leaderboard.png",
-                        text: "Leaderboard will be upadated soon",
-                        topPadding: false,
-                      ),
+                                  )
+                                : SizedBox(height: SizeConfig.padding8)
+                          ],
+                        )
+                      : Container(
+                          width: SizeConfig.screenWidth,
+                          margin: EdgeInsets.only(
+                              top: SizeConfig.padding16,
+                              bottom: SizeConfig.padding32),
+                          child: NoRecordDisplayWidget(
+                            asset: "images/leaderboard.png",
+                            text: "Leaderboard will be upadated soon",
+                            topPadding: false,
+                          ),
+                        ))
+                  : ListLoader(
+                      bottomPadding: true,
                     )
             ],
           ),
         ),
       ),
-    );
-  }
-}
-
-class WinnerAvatar extends StatefulWidget {
-  final int position;
-  final TopSaverViewModel model;
-  WinnerAvatar({@required this.position, this.model});
-
-  @override
-  State<WinnerAvatar> createState() => _WinnerAvatarState();
-}
-
-class _WinnerAvatarState extends State<WinnerAvatar> {
-  String dpUrl;
-  getDP() {
-    widget.model.getWinnerDP(widget.position).then((url) {
-      if (url != null && mounted) {
-        setState(() {
-          dpUrl = url;
-        });
-      }
-    });
-  }
-
-  setDefaultUserDP() {
-    if (mounted) {
-      setState(() {
-        dpUrl = null;
-      });
-    }
-  }
-
-  @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      getDP();
-    });
-    super.initState();
-  }
-
-  Color getColor() {
-    if (widget.position == 0)
-      return Color(0xffFFC107);
-    else if (widget.position == 1)
-      return Color(0xff861139);
-    else
-      return UiConstants.darkPrimaryColor;
-  }
-
-  String getImage() {
-    if (widget.position == 0)
-      return "assets/images/crown.png";
-    else if (widget.position == 1)
-      return "assets/images/give-love.png";
-    else
-      return "assets/images/clapping.png";
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        if (widget.position == 0)
-          Image.asset(getImage(),
-              width: widget.position == 0
-                  ? SizeConfig.screenWidth * 0.1
-                  : SizeConfig.screenWidth * 0.07),
-        Container(
-          width: widget.position == 0
-              ? SizeConfig.screenWidth * 0.31
-              : SizeConfig.screenWidth * 0.2,
-          height: widget.position == 0
-              ? SizeConfig.screenWidth * 0.33
-              : SizeConfig.screenWidth * 0.22,
-          child: Stack(
-            children: [
-              Container(
-                width: widget.position == 0
-                    ? SizeConfig.screenWidth * 0.31
-                    : SizeConfig.screenWidth * 0.2,
-                height: widget.position == 0
-                    ? SizeConfig.screenWidth * 0.31
-                    : SizeConfig.screenWidth * 0.2,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      getColor(),
-                      Colors.white,
-                    ],
-                  ),
-                ),
-                padding: EdgeInsets.all(3),
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                        image: AssetImage(
-                          Assets.profilePic,
-                        ),
-                      )),
-                  padding: EdgeInsets.all(widget.position == 0
-                      ? SizeConfig.padding4
-                      : SizeConfig.padding2),
-                  child: CircleAvatar(
-                    radius: SizeConfig.screenWidth * 0.25,
-                    backgroundImage: dpUrl != null
-                        ? CachedNetworkImageProvider(dpUrl,
-                            errorListener: setDefaultUserDP)
-                        : AssetImage(
-                            Assets.profilePic,
-                          ),
-                  ),
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  height: widget.position == 0
-                      ? SizeConfig.screenWidth * 0.096
-                      : SizeConfig.screenWidth * 0.064,
-                  width: widget.position == 0
-                      ? SizeConfig.screenWidth * 0.096
-                      : SizeConfig.screenWidth * 0.064,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: getColor(),
-                    border: Border.all(
-                        width: widget.position == 0
-                            ? SizeConfig.padding4
-                            : SizeConfig.padding2,
-                        color: Colors.white),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "${widget.position + 1}",
-                      style: widget.position == 0
-                          ? TextStyles.body2.bold.colour(Colors.white)
-                          : TextStyles.body4.bold.colour(Colors.white),
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-        SizedBox(
-          height: SizeConfig.padding8,
-        ),
-        Text(
-          widget.model?.pastWinners[widget.position]?.username ?? "username",
-          style: TextStyles.body3,
-        ),
-        SizedBox(height: SizeConfig.padding4),
-        Text(
-          widget.model?.pastWinners[widget.position]?.score?.toString() ??
-              "000",
-          style: TextStyles.body1.bold.colour(UiConstants.primaryColor),
-        ),
-        SizedBox(
-          height: SizeConfig.padding16,
-        ),
-      ],
     );
   }
 }

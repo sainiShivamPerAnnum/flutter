@@ -245,7 +245,7 @@ class NoRecordDisplayWidget extends StatelessWidget {
       this.text,
       this.assetSvg,
       this.assetLottie,
-      this.topPadding});
+      this.topPadding = true});
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -417,8 +417,16 @@ class PrizesView extends StatelessWidget {
 class PrizeChip extends StatelessWidget {
   final String svg, png, text;
   final Color color;
+  final double opacity;
+  final bool svgPaint;
 
-  PrizeChip({this.color, this.png, this.svg, this.text});
+  PrizeChip(
+      {this.color,
+      this.png,
+      this.svg,
+      this.text,
+      this.opacity = 0.2,
+      this.svgPaint = true});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -426,13 +434,18 @@ class PrizeChip extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: SizeConfig.iconSize3,
-            backgroundColor: color.withOpacity(0.2),
+            backgroundColor: color.withOpacity(opacity),
             child: svg != null
-                ? SvgPicture.asset(
-                    svg,
-                    height: SizeConfig.iconSize3,
-                    color: color,
-                  )
+                ? (svgPaint
+                    ? SvgPicture.asset(
+                        svg,
+                        height: SizeConfig.iconSize3,
+                        color: color,
+                      )
+                    : SvgPicture.asset(
+                        svg,
+                        height: SizeConfig.iconSize3,
+                      ))
                 : Image.asset(
                     png,
                     height: SizeConfig.iconSize3,

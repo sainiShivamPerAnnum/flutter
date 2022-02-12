@@ -63,14 +63,14 @@ class TopSaversModel {
 }
 
 class TopSavers {
-  int score;
+  double score;
   String userid;
   String username;
 
   TopSavers({this.score, this.userid, this.username});
 
   TopSavers.fromJson(Map<String, dynamic> json) {
-    score = json['score'];
+    score = json['score'].toDouble();
     userid = json['userid'];
     username = json['username'];
   }
@@ -93,7 +93,7 @@ class TopSavers {
 
   factory TopSavers.fromMap(Map<String, dynamic> map) {
     return TopSavers(
-      score: map['score'],
+      score: map['score'].toDouble(),
       userid: map['userid'],
       username: map['username'],
     );

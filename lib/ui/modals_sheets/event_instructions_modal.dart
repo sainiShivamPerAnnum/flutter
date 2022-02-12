@@ -47,9 +47,13 @@ class EventInstructionsModal extends StatelessWidget {
               Column(
                 children: List.generate(
                   instructions.length,
-                  (i) => InfoTile(
-                    leadingIcon: Icons.info,
-                    title: instructions[i],
+                  (i) => Container(
+                    margin: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
+                    child: InfoTile(
+                      leadingIcon: Icons.info,
+                      title: instructions[i],
+                      leadSize: SizeConfig.padding20,
+                    ),
                   ),
                 ),
               )
