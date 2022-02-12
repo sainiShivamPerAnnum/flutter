@@ -75,6 +75,7 @@ class AugmontBuyCard extends StatelessWidget {
                     focusNode: model.buyFieldNode,
                     enableInteractiveSelection: false,
                     controller: model.goldAmountController,
+                    cursorWidth: 1,
                     keyboardType: TextInputType.numberWithOptions(
                         signed: true, decimal: true),
                     style: TextStyles.body2.bold,
@@ -137,7 +138,7 @@ class AugmontBuyCard extends StatelessWidget {
             height: SizeConfig.padding12,
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               model.amoutChip(0),
               model.amoutChip(1),

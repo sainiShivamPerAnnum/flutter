@@ -5,7 +5,6 @@ import 'package:felloapp/core/model/fundbalance_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/api_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -16,6 +15,20 @@ class UserRepository {
   final _apiPaths = locator<ApiPath>();
 
 //Stack overflow condition when we inject _userUid from user service.
+
+  Future<ApiResponse<String>> getCustomUserToken(String mobileNo) async {
+    try {
+      final _body = {
+        "mobileNumber": mobileNo,
+      };
+      final res = await APIService.instance
+          .postData(_apiPaths.kCustomAuthToken, body: _body);
+      return ApiResponse(model: res['token'], code: 200);
+    } catch (e) {
+      return ApiResponse.withError(
+          "Unable to register user using truecaller", 400);
+    }
+  }
 
   Future<ApiResponse<Map<String, dynamic>>> setNewUser(
       BaseUser baseUser, token) async {

@@ -26,6 +26,7 @@ import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fcm_topics.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -57,7 +58,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   bool _showCoupons = false;
   AugmontRates goldRates;
   String userAugmontState;
-  FocusNode buyFieldNode = FocusNode();
+  FocusNode buyFieldNode;
   bool _augOnbRegInProgress = false;
   bool _augRegFailed = false;
   String buyNotice;
@@ -144,8 +145,10 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
   init() async {
     setState(ViewState.Busy);
-    goldBuyAmount = 201;
-    goldAmountController = TextEditingController(text: "201");
+    buyFieldNode = _userService.buyFieldFocusNode;
+    goldBuyAmount = chipAmountList[1];
+    goldAmountController =
+        TextEditingController(text: chipAmountList[1].toInt().toString());
     fetchGoldRates();
     await fetchNotices();
     status = checkAugmontStatus();
@@ -173,22 +176,31 @@ class AugmontGoldBuyViewModel extends BaseModel {
     buyNotice = await _dbModel.showAugmontBuyNotice();
   }
 
+  resetBuyOptions() {
+    goldBuyAmount = chipAmountList[1];
+    goldAmountController.text = chipAmountList[1].toInt().toString();
+    appliedCoupon = null;
+    lastTappedChipIndex = 1;
+    notifyListeners();
+  }
+
 // UI ESSENTIALS
 
   Widget amoutChip(int index) {
     double amt = chipAmountList[index];
     return GestureDetector(
       onTap: () {
+        Haptic.vibrate();
         lastTappedChipIndex = index;
         buyFieldNode.unfocus();
-        if (goldBuyAmount == null)
-          goldBuyAmount = amt;
-        else {
-          if (goldBuyAmount + amt <= 50000)
-            goldBuyAmount += amt;
-          else
-            goldBuyAmount = 50000;
-        }
+        //if (goldBuyAmount == null)
+        goldBuyAmount = amt;
+        // else {
+        //   if (goldBuyAmount + amt <= 50000)
+        //     goldBuyAmount += amt;
+        //   else
+        //     goldBuyAmount = 50000;
+        // }
         checkIfCouponIsStillApplicable();
         goldAmountController.text = goldBuyAmount.toInt().toString();
         updateGoldAmount();
@@ -205,7 +217,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
         ),
         alignment: Alignment.center,
         child: Text(
-          "+ ₹${amt.toInt()}",
+          " ₹ ${amt.toInt()} ",
           style: TextStyles.body3.bold.colour(
             lastTappedChipIndex == index
                 ? Colors.white
@@ -335,7 +347,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
       if (double.tryParse(val.trim()) != null &&
           double.tryParse(val.trim()) > 50000) {
         goldBuyAmount = 50000;
-        goldAmountController.text = goldBuyAmount.toString();
+        goldAmountController.text = goldBuyAmount.toInt().toString();
         updateGoldAmount();
         showMaxCapText = true;
         buyFieldNode.unfocus();
@@ -461,6 +473,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   }
 
   Future<void> _onDepositTransactionComplete(UserTransaction txn) async {
+    resetBuyOptions();
     if (txn.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE) {
       if (_baseUtil.currentAugmontTxn != null) {
         ///if this was the user's first investment

@@ -76,12 +76,10 @@ class Root extends StatelessWidget {
                     margin: EdgeInsets.only(
                         top: SizeConfig.screenWidth * 0.1 +
                             SizeConfig.viewInsets.top +
-                            SizeConfig.padding24),
-                    child: Consumer<AppState>(
-                      builder: (ctx, m, child) => IndexedStack(
-                        children: pages,
-                        index: m.rootIndex,
-                      ),
+                            SizeConfig.padding32),
+                    child: IndexedStack(
+                      children: pages,
+                      index: AppState.delegate.appState.getCurrentTabIndex,
                     ),
                   ),
                 ),
@@ -99,22 +97,6 @@ class Root extends StatelessWidget {
                     NotificationButton(),
                   ],
                 ),
-                // Positioned(
-                //   bottom: 0,
-                //   child: ClipRect(
-                //     child: BackdropFilter(
-                //       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                //       child: Container(
-                //         color: Colors.transparent,
-                //         width: SizeConfig.screenWidth,
-                //         height: SizeConfig.navBarHeight,
-                //         child: BackdropFilter(
-                //           filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                //         ),
-                //       ),
-                //     ),
-                //   ),
-                // ),
                 Positioned(
                   bottom: 0,
                   child: Container(
@@ -179,7 +161,7 @@ class BottomNavBar extends StatelessWidget {
           ),
           child: NavBar(
             itemTapped: (int index) => model.onItemTapped(index),
-            currentIndex: m.rootIndex,
+            currentIndex: AppState.delegate.appState.getCurrentTabIndex,
             items: [
               NavBarItemData(
                 locale.navBarFinance,
@@ -213,42 +195,39 @@ class WantMoreTickets extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    return Consumer<AppState>(
-      builder: (ctx, m, child) => AnimatedPositioned(
-        duration: Duration(milliseconds: 300),
-        curve: Curves.decelerate,
-        bottom: SizeConfig.pageHorizontalMargins,
-        left: SizeConfig.pageHorizontalMargins,
-        right: SizeConfig.pageHorizontalMargins,
-        child: InkWell(
-          onTap: model.earnMoreTokens,
-          child: Shimmer(
-            duration: Duration(seconds: 5),
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 300),
-              curve: Curves.decelerate,
-              height: m.rootIndex == 1
-                  ? SizeConfig.navBarHeight * 1.5
-                  : SizeConfig.navBarHeight,
-              width: SizeConfig.navBarWidth,
-              decoration: BoxDecoration(
-                color: UiConstants.primaryLight,
-                borderRadius: BorderRadius.circular(
-                  SizeConfig.roundness24,
-                ),
+    return AnimatedPositioned(
+      duration: Duration(milliseconds: 300),
+      curve: Curves.decelerate,
+      bottom: SizeConfig.pageHorizontalMargins,
+      left: SizeConfig.pageHorizontalMargins,
+      right: SizeConfig.pageHorizontalMargins,
+      child: InkWell(
+        onTap: model.earnMoreTokens,
+        child: Shimmer(
+          duration: Duration(seconds: 5),
+          child: AnimatedContainer(
+            duration: Duration(milliseconds: 300),
+            curve: Curves.decelerate,
+            height: AppState.delegate.appState.getCurrentTabIndex == 1
+                ? SizeConfig.navBarHeight * 1.5
+                : SizeConfig.navBarHeight,
+            width: SizeConfig.navBarWidth,
+            decoration: BoxDecoration(
+              color: UiConstants.primaryLight,
+              borderRadius: BorderRadius.circular(
+                SizeConfig.roundness24,
               ),
-              alignment: Alignment.topCenter,
-              child: Container(
-                height: SizeConfig.navBarHeight * 0.5,
-                alignment: Alignment.center,
-                child: Shimmer(
-                  duration: Duration(seconds: 1),
-                  interval: Duration(seconds: 4),
-                  child: Text(
-                    locale.navWMT,
-                    style:
-                        TextStyles.body1.colour(UiConstants.primaryColor).bold,
-                  ),
+            ),
+            alignment: Alignment.topCenter,
+            child: Container(
+              height: SizeConfig.navBarHeight * 0.5,
+              alignment: Alignment.center,
+              child: Shimmer(
+                duration: Duration(seconds: 1),
+                interval: Duration(seconds: 4),
+                child: Text(
+                  locale.navWMT,
+                  style: TextStyles.body1.colour(UiConstants.primaryColor).bold,
                 ),
               ),
             ),
@@ -268,19 +247,20 @@ class SaveBaseline extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    return Consumer<AppState>(
-      builder: (ctx, m, child) => AnimatedPositioned(
-        duration: Duration(milliseconds: 300),
-        curve: Curves.decelerate,
-        bottom: SizeConfig.pageHorizontalMargins,
-        left: SizeConfig.pageHorizontalMargins,
-        right: SizeConfig.pageHorizontalMargins,
+    return AnimatedPositioned(
+      duration: Duration(milliseconds: 300),
+      curve: Curves.decelerate,
+      bottom: SizeConfig.pageHorizontalMargins,
+      left: SizeConfig.pageHorizontalMargins,
+      right: SizeConfig.pageHorizontalMargins,
+      child: InkWell(
+        onTap: model.focusBuyField,
         child: Shimmer(
           duration: Duration(seconds: 5),
           child: AnimatedContainer(
             duration: Duration(milliseconds: 300),
             curve: Curves.decelerate,
-            height: m.rootIndex == 0
+            height: AppState.delegate.appState.getCurrentTabIndex == 0
                 ? SizeConfig.navBarHeight * 1.5
                 : SizeConfig.navBarHeight,
             width: SizeConfig.navBarWidth,
@@ -289,15 +269,6 @@ class SaveBaseline extends StatelessWidget {
               borderRadius: BorderRadius.circular(
                 SizeConfig.roundness24,
               ),
-              //border: Border.all(width: 0.3, color: UiConstants.tertiarySolid),
-              // boxShadow: [
-              //   if (m.rootIndex == 0)
-              //     BoxShadow(
-              //         blurRadius: 24,
-              //         color: UiConstants.tertiarySolid.withOpacity(0.2),
-              //         offset: Offset(0, -2),
-              //         spreadRadius: 2)
-              // ],
             ),
             alignment: Alignment.topCenter,
             child: Container(
