@@ -223,7 +223,9 @@ class CricketHomeView extends StatelessWidget {
     _analyticsService.track(eventName: AnalyticsEvents.earnMoreTokens);
     BaseUtil.openModalBottomSheet(
       addToScreenStack: true,
-      content: WantMoreTicketsModalSheet(isInsufficientBalance: true,),
+      content: WantMoreTicketsModalSheet(
+        isInsufficientBalance: true,
+      ),
       hapticVibrate: true,
       backgroundColor: Colors.transparent,
       isBarrierDismissable: true,
@@ -236,15 +238,20 @@ class NoRecordDisplayWidget extends StatelessWidget {
   final String assetSvg;
   final String assetLottie;
   final String text;
+  final bool topPadding;
 
   NoRecordDisplayWidget(
-      {this.asset, this.text, this.assetSvg, this.assetLottie});
+      {this.asset,
+      this.text,
+      this.assetSvg,
+      this.assetLottie,
+      this.topPadding});
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SizedBox(height: SizeConfig.screenHeight * 0.1),
+        if (topPadding) SizedBox(height: SizeConfig.screenHeight * 0.1),
         if (asset != null)
           Image.asset(
             asset,

@@ -538,7 +538,8 @@ class BaseUtil extends ChangeNotifier {
       bool hapticVibrate,
       Color backgroundColor,
       bool isBarrierDismissable,
-      BorderRadius borderRadius}) {
+      BorderRadius borderRadius,
+      bool isScrollControlled = false}) {
     if (addToScreenStack != null && addToScreenStack == true)
       AppState.screenStack.add(ScreenItem.dialog);
     if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
@@ -546,6 +547,7 @@ class BaseUtil extends ChangeNotifier {
         enableDrag: false,
         shape: RoundedRectangleBorder(
             borderRadius: borderRadius ?? BorderRadius.zero),
+        isScrollControlled: isScrollControlled,
         backgroundColor:
             backgroundColor != null ? backgroundColor : Colors.white,
         isDismissible: isBarrierDismissable,

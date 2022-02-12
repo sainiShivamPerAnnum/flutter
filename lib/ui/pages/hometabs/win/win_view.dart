@@ -414,7 +414,7 @@ class BigPrizeContainer extends StatelessWidget {
                                   Text(
                                     smallText ?? "Play and Win",
                                     style:
-                                        TextStyles.body4.colour(Colors.white),
+                                        TextStyles.body3.colour(Colors.white),
                                   ),
                                   Text(
                                     bigText ?? "₹ 1 Lakh every week",

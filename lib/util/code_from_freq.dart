@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:intl/intl.dart';
 
@@ -12,7 +14,7 @@ class CodeFromFreq {
       response += "-$weekcode";
       if (freq == 'daily') {
         final dailyFormat = new DateFormat('dd');
-        response += "-${dailyFormat.format(DateTime.now())}";
+        response += "-${dailyFormat.format(_currentTime)}";
       }
     }
     return response;

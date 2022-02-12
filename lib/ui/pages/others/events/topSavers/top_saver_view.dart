@@ -8,6 +8,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/modals_sheets/event_instructions_modal.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/all_participants.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_vm.dart';
+import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
@@ -57,12 +58,10 @@ class TopSaverView extends StatelessWidget {
                         padding: EdgeInsets.zero,
                         children: [
                           Thumbnail(event: event),
-                          if (model.currentParticipants != null &&
-                              model.currentParticipants.isNotEmpty)
+                          if (model.currentParticipants != null)
                             EventLeaderboard(model: model),
                           InstructionsTab(event: event),
-                          if (model.pastWinners != null &&
-                              model.pastWinners.isNotEmpty)
+                          if (model.pastWinners != null)
                             WinnersBoard(model: model),
                         ],
                       ),
@@ -122,6 +121,7 @@ class InstructionsTab extends StatelessWidget {
               topLeft: Radius.circular(SizeConfig.roundness32),
               topRight: Radius.circular(SizeConfig.roundness32),
             ),
+            isScrollControlled: true,
             hapticVibrate: true,
             isBarrierDismissable: false,
             content: EventInstructionsModal(instructions: event.instructions),
@@ -192,47 +192,65 @@ class WinnersBoard extends StatelessWidget {
             ],
           ),
           SizedBox(height: SizeConfig.padding16),
-          if (model.pastWinners.length >= 3)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                WinnerAvatar(position: 1, model: model),
-                WinnerAvatar(position: 0, model: model),
-                WinnerAvatar(position: 2, model: model),
-              ],
-            ),
-          Column(
-            children: List.generate(
-              model.pastWinners.length >= 3
-                  ? model.pastWinners.length - 3
-                  : model.pastWinners.length,
-              (i) {
-                int index = model.pastWinners.length >= 3 ? i + 3 : i;
-                return Container(
-                  margin: EdgeInsets.only(bottom: SizeConfig.padding12),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(SizeConfig.padding12),
-                    color: Colors.grey.withOpacity(0.1),
-                  ),
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      backgroundColor: UiConstants.primaryColor,
-                      child: Text(
-                        "${index + 4}",
-                        style: TextStyles.body2.colour(Colors.white),
+          model.pastWinners.isNotEmpty
+              ? Column(
+                  children: [
+                    if (model.pastWinners.length >= 3)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          WinnerAvatar(position: 1, model: model),
+                          WinnerAvatar(position: 0, model: model),
+                          WinnerAvatar(position: 2, model: model),
+                        ],
+                      ),
+                    Column(
+                      children: List.generate(
+                        model.pastWinners.length >= 3
+                            ? model.pastWinners.length - 3
+                            : model.pastWinners.length,
+                        (i) {
+                          int index = model.pastWinners.length >= 3 ? i + 3 : i;
+                          return Container(
+                            margin:
+                                EdgeInsets.only(bottom: SizeConfig.padding12),
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.circular(SizeConfig.padding12),
+                              color: Colors.grey.withOpacity(0.1),
+                            ),
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                backgroundColor: UiConstants.primaryColor,
+                                child: Text(
+                                  "${i + 1}",
+                                  style: TextStyles.body2.colour(Colors.white),
+                                ),
+                              ),
+                              title: Text(
+                                model.pastWinners[index].username,
+                                style: TextStyles.body3.bold,
+                              ),
+                              subtitle: Text(model.pastWinners[index].gameType),
+                              trailing: Text(
+                                  model.pastWinners[index].score.toString()),
+                            ),
+                          );
+                        },
                       ),
                     ),
-                    title: Text(
-                      model.pastWinners[index].username,
-                      style: TextStyles.body3.bold,
-                    ),
-                    subtitle: Text(model.pastWinners[index].gameType),
-                    trailing: Text(model.pastWinners[index].score.toString()),
+                  ],
+                )
+              : Container(
+                  width: SizeConfig.screenWidth,
+                  margin: EdgeInsets.only(
+                      top: SizeConfig.padding16, bottom: SizeConfig.padding32),
+                  child: NoRecordDisplayWidget(
+                    asset: "images/leaderboard.png",
+                    text: "Winners will be upadated soon",
+                    topPadding: false,
                   ),
-                );
-              },
-            ),
-          ),
+                ),
           SizedBox(height: SizeConfig.navBarHeight / 2),
         ],
       ),
@@ -249,15 +267,7 @@ class EventLeaderboard extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(SizeConfig.roundness32),
         color: Colors.white,
-        // boxShadow: [
-        //   BoxShadow(
-        //       blurRadius: 4,
-        //       offset: Offset(0, 0),
-        //       color: UiConstants.darkPrimaryColor.withOpacity(0.1),
-        //       spreadRadius: 4)
-        // ],
       ),
-      //height: SizeConfig.screenWidth * 0.8,
       margin:
           EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
       child: ClipRRect(
@@ -280,89 +290,105 @@ class EventLeaderboard extends StatelessWidget {
                 ],
               ),
               SizedBox(height: SizeConfig.padding12),
-              Column(
-                // padding: EdgeInsets.zero,
-                // shrinkWrap: true,
-                children: [
-                  Column(
-                    children: List.generate(
-                      // model.currentParticipants.length,
-                      model.currentParticipants.length > 5
-                          ? 5
-                          : model.currentParticipants.length,
-                      (i) => Container(
-                        margin: EdgeInsets.only(bottom: SizeConfig.padding12),
-                        decoration: BoxDecoration(
-                          borderRadius:
-                              BorderRadius.circular(SizeConfig.padding12),
-                          color: Colors.grey.withOpacity(0.1),
-                        ),
-                        child: ListTile(
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: SizeConfig.padding4,
-                              horizontal: SizeConfig.pageHorizontalMargins / 2),
-                          leading: CircleAvatar(
-                            backgroundColor: UiConstants.primaryColor,
-                            child: Text(
-                              "${i + 1}",
-                              style: TextStyles.body2.colour(Colors.white),
-                            ),
-                          ),
-                          title: Text(
-                            model.currentParticipants[i].username,
-                            style: TextStyles.body3.bold.colour(Colors.black54),
-                          ),
-                          // subtitle: Text("This Week"),
-                          trailing: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                model.currentParticipants[i].score.toString(),
-                                style: TextStyles.body2.bold
-                                    .colour(UiConstants.primaryColor),
+              model.currentParticipants.isNotEmpty
+                  ? Column(
+                      children: [
+                        Column(
+                          children: List.generate(
+                            // model.currentParticipants.length,
+                            model.currentParticipants.length > 5
+                                ? 5
+                                : model.currentParticipants.length,
+                            (i) => Container(
+                              margin:
+                                  EdgeInsets.only(bottom: SizeConfig.padding12),
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.circular(SizeConfig.padding12),
+                                color: Colors.grey.withOpacity(0.1),
                               ),
-                              Text(
-                                "score",
-                                style:
-                                    TextStyles.body4.light.colour(Colors.grey),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  (model.currentParticipants.length > 5)
-                      ? Padding(
-                          padding:
-                              EdgeInsets.only(bottom: SizeConfig.padding16),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  AppState.delegate.appState.currentAction =
-                                      PageAction(
-                                          widget: AllParticipantsView(
-                                              participants:
-                                                  model.currentParticipants),
-                                          page: AllParticipantsViewPageConfig,
-                                          state: PageState.addWidget);
-                                },
-                                child: Text(
-                                  "View All",
-                                  style: TextStyles.body2.bold
-                                      .colour(UiConstants.primaryColor)
-                                      .underline,
+                              child: ListTile(
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: SizeConfig.padding4,
+                                    horizontal:
+                                        SizeConfig.pageHorizontalMargins / 2),
+                                leading: CircleAvatar(
+                                  backgroundColor: UiConstants.primaryColor,
+                                  child: Text(
+                                    "${i + 1}",
+                                    style:
+                                        TextStyles.body2.colour(Colors.white),
+                                  ),
+                                ),
+                                title: Text(
+                                  model.currentParticipants[i].username,
+                                  style: TextStyles.body3.bold
+                                      .colour(Colors.black54),
+                                ),
+                                // subtitle: Text("This Week"),
+                                trailing: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      model.currentParticipants[i].score
+                                          .toString(),
+                                      style: TextStyles.body2.bold
+                                          .colour(UiConstants.primaryColor),
+                                    ),
+                                    Text(
+                                      "score",
+                                      style: TextStyles.body4.light
+                                          .colour(Colors.grey),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
+                            ),
                           ),
-                        )
-                      : SizedBox(height: SizeConfig.padding8)
-                ],
-              )
+                        ),
+                        (model.currentParticipants.length > 5)
+                            ? Padding(
+                                padding: EdgeInsets.only(
+                                    bottom: SizeConfig.padding16),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        AppState.delegate.appState.currentAction =
+                                            PageAction(
+                                                widget: AllParticipantsView(
+                                                    participants: model
+                                                        .currentParticipants),
+                                                page:
+                                                    AllParticipantsViewPageConfig,
+                                                state: PageState.addWidget);
+                                      },
+                                      child: Text(
+                                        "View All",
+                                        style: TextStyles.body2.bold
+                                            .colour(UiConstants.primaryColor)
+                                            .underline,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : SizedBox(height: SizeConfig.padding8)
+                      ],
+                    )
+                  : Container(
+                      width: SizeConfig.screenWidth,
+                      margin: EdgeInsets.only(
+                          top: SizeConfig.padding16,
+                          bottom: SizeConfig.padding32),
+                      child: NoRecordDisplayWidget(
+                        asset: "images/leaderboard.png",
+                        text: "Leaderboard will be upadated soon",
+                        topPadding: false,
+                      ),
+                    )
             ],
           ),
         ),
