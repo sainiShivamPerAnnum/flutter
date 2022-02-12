@@ -5,6 +5,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
+import 'package:felloapp/core/repository/coupons_repo.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/repository/investment_actions_repo.dart';
 import 'package:felloapp/core/repository/prizes_repo.dart';
@@ -116,6 +117,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => TicketGenerationRepo());
   locator.registerLazySingleton(() => InvestmentActionsRepository());
   locator.registerLazySingleton(() => SignzyRepository());
+  locator.registerLazySingleton(() => CouponRepository());
 
   // SPLASH
   locator.registerFactory(() => LauncherViewModel());
