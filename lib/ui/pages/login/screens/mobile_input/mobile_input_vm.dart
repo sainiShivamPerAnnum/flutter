@@ -24,7 +24,7 @@ class MobileInputScreenViewModel extends BaseModel {
   static final GlobalKey<FormFieldState<String>> _phoneFieldKey =
       GlobalKey<FormFieldState<String>>();
   String code = "+91";
-  bool hasReferralCode = false;
+  // bool hasReferralCode = false;
 
   get formKey => _formKey;
   get validate => _validate;

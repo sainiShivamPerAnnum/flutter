@@ -21,8 +21,8 @@ class UserRepository {
       final _body = {
         "mobileNumber": mobileNo,
       };
-      final res = await APIService.instance
-          .postData(_apiPaths.kCustomAuthToken, body: _body);
+      final res = await APIService.instance.postData(_apiPaths.kCustomAuthToken,
+          body: _body, isAuthTokenAvailable: false);
       return ApiResponse(model: res['token'], code: 200);
     } catch (e) {
       return ApiResponse.withError(
