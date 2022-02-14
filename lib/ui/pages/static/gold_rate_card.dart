@@ -74,7 +74,7 @@ class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
                       color: UiConstants.primaryColor,
                     )
                   : // SizedBox(height: SizeConfig.padding4),
-                  Text("₹ ${widget.goldprice.toStringAsFixed(2)}",
+                  Text("₹ ${widget.goldprice.toStringAsFixed(2)}/gm",
                       style: TextStyles.body3.extraBold.colour(Colors.black54)),
               Spacer(),
               RichText(
@@ -122,7 +122,7 @@ class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
                             color: UiConstants.primaryColor,
                           )
                         : Text(
-                            "₹ ${widget.goldprice.toStringAsFixed(2)}",
+                            "₹ ${widget.goldprice.toStringAsFixed(2)}/gm",
                             style: TextStyles.body1
                                 .colour(UiConstants.primaryColor)
                                 .bold,
