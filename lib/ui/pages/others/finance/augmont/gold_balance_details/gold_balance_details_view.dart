@@ -29,7 +29,7 @@ class GoldBalanceDetailsView extends StatelessWidget {
           children: [
             FelloAppBar(
               leading: FelloAppBarBackButton(),
-              title: "My Gold Info",
+              title: "My Gold Account",
             ),
             Expanded(
               child: Container(
@@ -91,25 +91,25 @@ class GoldBalanceDetailsView extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Why Digital gold",
+                            Text("Your Digital Gold",
                                 style: TextStyles.title4.bold),
                             SizedBox(height: SizeConfig.padding20),
                             FeatureTile(
                               leadingAsset: Assets.gold24K,
-                              title: "24K",
-                              subtitle: "Augmont provides 24K original gold",
+                              title: "99.95% Pure",
+                              subtitle: "You hold 24K pure Digital Gold",
                             ),
                             SizedBox(height: SizeConfig.padding12),
                             FeatureTile(
                               leadingAsset: Assets.goldPure,
-                              title: "99.99% pure",
-                              subtitle: "Augmont provides 99.99% pure gold",
+                              title: "100% Secure",
+                              subtitle: "Your Gold is safely stored and insured by Augmont",
                             ),
                             SizedBox(height: SizeConfig.padding12),
                             FeatureTile(
                               leadingAsset: Assets.goldSecure,
-                              title: "100% secure",
-                              subtitle: "Augmont provides 100% secure gold",
+                              title: "Highly Valuable",
+                              subtitle: "Gold provides high returns as a long term investment",
                             )
                           ],
                         ),
