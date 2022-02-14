@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:app_install_date/app_install_date_imp.dart';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
@@ -107,7 +109,9 @@ class AnalyticsService extends BaseAnalyticsService {
     try {
       AppsFlyerOptions appsFlyerOptions = new AppsFlyerOptions(
         afDevKey: AnalyticsService.appFlierKey,
+        appId: Platform.isIOS ? '1558445254' : 'in.fello.felloapp',
         showDebug: FlavorConfig.isDevelopment(),
+        disableAdvertisingIdentifier: true,
       );
 
       AppsflyerSdk appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
