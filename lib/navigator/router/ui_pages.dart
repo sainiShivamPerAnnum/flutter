@@ -100,7 +100,7 @@ enum Pages {
   GoldenTicketsView,
   GoldenMilestonesView,
   TopSaverView,
-  AllParticipantsView
+  AllParticipantsView,
   GoldBalanceDetailsView
 }
 
@@ -450,7 +450,7 @@ PageConfiguration AllParticipantsViewPageConfig = PageConfiguration(
   path: AllParticipantsViewPath,
   uiPage: Pages.AllParticipantsView,
   name: 'AllParticipantsView screen',
-
+);
 PageConfiguration GoldBalanceDetailsViewPageConfig = PageConfiguration(
   key: 'GoldBalanceDetailsView',
   path: GoldBalanceDetailsViewPath,
