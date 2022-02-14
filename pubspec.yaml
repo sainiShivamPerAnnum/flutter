@@ -3,7 +3,7 @@ description: Game-based Investments
 
 publish_to: "none"
 
-version: 3.1.2+49
+version: 3.1.2+51
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -29,7 +29,7 @@ dependencies:
   firebase_performance: ^0.8.0+4
   firebase_remote_config: ^1.0.4
   firebase_storage: ^10.0.2
-  fl_chart: ^0.41.0
+  fl_chart: ^0.36.3
   flushbar: ^1.10.4
   flutter:
     sdk: flutter
@@ -45,7 +45,7 @@ dependencies:
   flutter_svg: ^1.0.3
   freshchat_sdk: ^0.9.5
   get_it: ^7.2.0
-  google_fonts: ^2.1.0
+  google_fonts: 2.1.0
   google_sign_in: ^5.0.7
   http: ^0.13.3
   # image_gallery_saver: ^1.6.9
@@ -78,9 +78,10 @@ dependencies:
   in_app_review: ^2.0.3
   scratcher: ^2.1.0
   timelines: ^0.1.0
+  truecaller_sdk: ^0.1.0
   sliding_up_panel: ^2.0.0+1
   app_install_date: ^0.1.1
-
+  appsflyer_sdk: ^6.5.2
 
 dev_dependencies:
   flutter_test:

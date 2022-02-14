@@ -34,12 +34,11 @@ class Win extends StatelessWidget {
             Container(
               child: Column(
                 children: [
-                  SizedBox(
-                      height: SizeConfig.screenHeight * 0.08 +
-                          SizeConfig.screenWidth * 0.24),
                   Expanded(
                     child: ListView(
-                      padding: EdgeInsets.only(top: SizeConfig.padding20),
+                      padding: EdgeInsets.only(
+                          top: SizeConfig.padding20 +
+                              SizeConfig.screenWidth * 0.24),
                       children: [
                         Container(
                           child: Row(
@@ -201,7 +200,7 @@ class Win extends StatelessWidget {
               ),
             ),
             Container(
-              margin: EdgeInsets.only(top: SizeConfig.screenHeight * 0.09),
+              //margin: EdgeInsets.only(top: SizeConfig.screenHeight * 0.09),
               child: Hero(
                 tag: "myWinnigs",
                 child: WinningsContainer(

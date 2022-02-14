@@ -22,6 +22,7 @@ import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augm
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/edit_augmont_bank_details.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/gold_balance_details/gold_balance_details_view.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_game/cricket_game_view.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/dailyPicksDraw/dailyPicksDraw_view.dart';
@@ -235,9 +236,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.CricketGame:
           _addPageData(CricketGameView(), CricketGamePageConfig);
           break;
-        case Pages.AugGoldBuy:
-          _addPageData(AugmontGoldBuyView(), AugmontGoldBuyPageConfig);
-          break;
+        // case Pages.AugGoldBuy:
+        //   _addPageData(AugmontGoldBuyView(), AugmontGoldBuyPageConfig);
+        //   break;
         case Pages.AugGoldSell:
           _addPageData(AugmontGoldSellView(), AugmontGoldSellPageConfig);
           break;
@@ -256,7 +257,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.BlockedUser:
           _addPageData(BlockedUserView(), BlockedUserPageConfig);
           break;
-
         case Pages.FreshDeskHelp:
           _addPageData(FreshDeskHelp(), FreshDeskHelpPageConfig);
           break;
@@ -270,10 +270,14 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(GoldenMilestonesView(), GoldenMilestonesViewPageConfig);
           break;
         case Pages.TopSaverView:
-          _addPageData(TopSaverView(), GoldenMilestonesViewPageConfig);
+          _addPageData(TopSaverView(), TopSaverViewPageConfig);
           break;
         case Pages.AllParticipantsView:
           _addPageData(AllParticipantsView(), AllParticipantsViewPageConfig);
+          break;
+        case Pages.GoldBalanceDetailsView:
+          _addPageData(
+              GoldBalanceDetailsView(), GoldBalanceDetailsViewPageConfig);
           break;
         default:
           break;
@@ -435,9 +439,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.CricketGame:
         CricketGamePageConfig.currentPageAction = action;
         break;
-      case Pages.AugGoldBuy:
-        AugmontGoldBuyPageConfig.currentPageAction = action;
-        break;
+      // case Pages.AugGoldBuy:
+      //   AugmontGoldBuyPageConfig.currentPageAction = action;
+      //   break;
       case Pages.AugGoldSell:
         AugmontGoldSellPageConfig.currentPageAction = action;
         break;
@@ -473,6 +477,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.AllParticipantsView:
         AllParticipantsViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.GoldBalanceDetailsView:
+        GoldBalanceDetailsViewPageConfig.currentPageAction = action;
         break;
       default:
         break;
@@ -583,8 +590,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'augDetails':
         pageConfiguration = AugmontGoldDetailsPageConfig;
         break;
-      case 'augBuy':
-        pageConfiguration = AugmontGoldBuyPageConfig;
+      case 'kycVerify':
+        pageConfiguration = KycDetailsPageConfig;
         break;
       case 'augSell':
         pageConfiguration = AugmontGoldSellPageConfig;
@@ -634,6 +641,15 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case 'topSaver':
         pageConfiguration = TopSaverViewPageConfig;
+        break;
+      case 'milestones':
+        pageConfiguration = GoldenMilestonesViewPageConfig;
+        break;
+      case 'goldBalanceDetails':
+        pageConfiguration = GoldBalanceDetailsViewPageConfig;
+        break;
+      case 'pop':
+        AppState.backButtonDispatcher.didPopRoute();
         break;
     }
     if (pageConfiguration != null) {

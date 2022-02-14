@@ -7,6 +7,7 @@ import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/golden_ticket_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
@@ -52,6 +53,7 @@ class GoldenMilestonesViewModel extends BaseModel {
             amt: _ums.netAmt,
             type: _ums.type,
             showPrize: true,
+            actionUri: _fms.actionUri,
             flc: _ums.netFlc));
       } else {
         _milestones.add(MilestoneRecord(
@@ -60,6 +62,7 @@ class GoldenMilestonesViewModel extends BaseModel {
             isCompleted: false,
             type: fe.prizeSubtype,
             amt: 0,
+            actionUri: fe.actionUri,
             showPrize: false,
             flc: 0));
       }
@@ -112,6 +115,11 @@ class GoldenMilestonesViewModel extends BaseModel {
         await _dbModel.getUserAchievedMilestones(_userService.baseUser.uid);
     formatData();
   }
+
+  navigateMilestones(String url) {
+    if (url != null && url.isNotEmpty)
+      AppState.delegate.parseRoute(Uri.parse(url));
+  }
 }
 
 class MilestoneRecord {
@@ -122,29 +130,32 @@ class MilestoneRecord {
   int flc;
   String type;
   bool showPrize;
+  String actionUri;
 
-  MilestoneRecord({
-    @required this.title,
-    @required this.subtilte,
-    @required this.isCompleted,
-    @required this.amt,
-    @required this.flc,
-    @required this.type,
-    this.showPrize,
-  });
+  MilestoneRecord(
+      {@required this.title,
+      @required this.subtilte,
+      @required this.isCompleted,
+      @required this.amt,
+      @required this.flc,
+      @required this.type,
+      this.showPrize,
+      @required this.actionUri});
 }
 
 class FelloMilestoneModel {
   String id;
   String prizeSubtype;
   String title;
+  String actionUri;
 
-  FelloMilestoneModel({this.id, this.prizeSubtype, this.title});
+  FelloMilestoneModel({this.id, this.prizeSubtype, this.title, this.actionUri});
 
   FelloMilestoneModel.fromJson(Map<String, dynamic> data) {
     id = data['id'] ?? "";
     prizeSubtype = data['prizeSubtype'] ?? "";
     title = data['title'] ?? "";
+    actionUri = data['actionUri'] ?? "";
   }
 }
 

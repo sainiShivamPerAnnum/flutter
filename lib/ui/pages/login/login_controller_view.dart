@@ -12,6 +12,7 @@ import 'package:felloapp/ui/pages/login/screens/username_input/username_input_vi
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -57,7 +58,12 @@ class _LoginControllerViewState extends State<LoginControllerView> {
     bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
 
     return BaseView<LoginControllerViewModel>(
-      onModelReady: (model) => model.init(initPage),
+      onModelReady: (model) {
+        model.init(initPage);
+        if (Platform.isAndroid) {
+          model.initTruecaller();
+        }
+      },
       onModelDispose: (model) => model.exit(),
       builder: (ctx, model, child) => Scaffold(
         backgroundColor: UiConstants.primaryColor,
@@ -200,38 +206,79 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                               ),
                             )
                           : Container(),
-                      Container(
-                        width: SizeConfig.screenWidth,
-                        padding: EdgeInsets.fromLTRB(0, 10, 0, 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: <Widget>[
-                            new Container(
-                              width: SizeConfig.screenWidth -
-                                  SizeConfig.pageHorizontalMargins * 2,
-                              child: FelloButtonLg(
-                                child: model.state == ViewState.Idle
-                                    ? Text(
-                                        model.currentPage == Username.index
-                                            ? 'FINISH'
-                                            : 'NEXT',
-                                        style: TextStyles.body2
-                                            .colour(Colors.white),
-                                      )
-                                    : SpinKitThreeBounce(
-                                        color: UiConstants.spinnerColor2,
-                                        size: 18.0,
-                                      ),
-                                onPressed: () {
-                                  if (model.state == ViewState.Idle)
-                                    model.processScreenInput(model.currentPage);
-                                },
+                      model.loginUsingTrueCaller
+                          ? Container(
+                              width: SizeConfig.screenWidth,
+                              padding: EdgeInsets.fromLTRB(0, 10, 0, 20),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: <Widget>[
+                                  new Container(
+                                    width: SizeConfig.screenWidth -
+                                        SizeConfig.pageHorizontalMargins * 2,
+                                    child: FelloButtonLg(
+                                        color: Colors.white,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "Logging using",
+                                              style: TextStyles.body3.bold
+                                                  .colour(Color(0xff1180FF)),
+                                            ),
+                                            Image.asset(
+                                              Assets.truecaller,
+                                              height: SizeConfig.body1,
+                                            ),
+                                            SizedBox(
+                                              width: SizeConfig.padding4,
+                                            ),
+                                            SpinKitThreeBounce(
+                                              color: Color(0xff1180FF),
+                                              size: SizeConfig.body1,
+                                            )
+                                          ],
+                                        )),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                      )
+                            )
+                          : Container(
+                              width: SizeConfig.screenWidth,
+                              padding: EdgeInsets.fromLTRB(0, 10, 0, 20),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: <Widget>[
+                                  new Container(
+                                    width: SizeConfig.screenWidth -
+                                        SizeConfig.pageHorizontalMargins * 2,
+                                    child: FelloButtonLg(
+                                      child: model.state == ViewState.Idle
+                                          ? Text(
+                                              model.currentPage ==
+                                                      Username.index
+                                                  ? 'FINISH'
+                                                  : 'NEXT',
+                                              style: TextStyles.body2
+                                                  .colour(Colors.white),
+                                            )
+                                          : SpinKitThreeBounce(
+                                              color: UiConstants.spinnerColor2,
+                                              size: 18.0,
+                                            ),
+                                      onPressed: () {
+                                        if (model.state == ViewState.Idle)
+                                          model.processScreenInput(
+                                              model.currentPage);
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
                     ],
                   ),
                 ),

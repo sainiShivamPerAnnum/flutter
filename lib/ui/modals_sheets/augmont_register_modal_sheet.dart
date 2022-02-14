@@ -6,7 +6,7 @@ import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
+import 'package:felloapp/ui/pages/onboarding/input_field.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/augmont_state_list.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -23,8 +23,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 class AugmontRegisterModalSheet extends StatefulWidget {
   final ValueChanged<bool> onSuccessfulAugReg;
+  final ValueChanged<bool> onAugRegInit;
 
-  AugmontRegisterModalSheet({this.onSuccessfulAugReg});
+  AugmontRegisterModalSheet({this.onSuccessfulAugReg, this.onAugRegInit});
 
   AugmontRegisterModalSheetState createState() =>
       AugmontRegisterModalSheetState();
@@ -94,17 +95,6 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
             )
           ],
         ),
-        // Center(
-        //   child: Text(
-        //     'Digital Gold Registration',
-        //     textAlign: TextAlign.center,
-        //     style: TextStyle(
-        //       fontSize: 28,
-        //       fontWeight: FontWeight.w700,
-        //       color:  FelloColorPalette.augmontFundPalette().primaryColor,
-        //     ),
-        //   ),
-        // ),
         SizedBox(
           height: 24,
         ),
@@ -181,6 +171,7 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
       return;
     }
     baseProvider.isAugmontRegnInProgress = true;
+    widget.onAugRegInit(true);
     setState(() {});
 
     ///now register the augmont user
@@ -190,6 +181,8 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
       BaseUtil.showNegativeAlert('Registration Failed',
           'Failed to register at the moment. Please try again.');
       baseProvider.isAugmontRegnInProgress = false;
+      widget.onAugRegInit(false);
+
       setState(() {});
       AppState.backButtonDispatcher.didPopRoute();
       return;
@@ -200,7 +193,7 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
           'Registration Successful', 'You are successfully registered!');
       baseProvider.isAugmontRegnInProgress = false;
       setState(() {});
-      Navigator.pop(context);
+      AppState.backButtonDispatcher.didPopRoute();
       // AppState.delegate.appState.currentAction =
       //     PageAction(state: PageState.addPage, page: AugmontGoldBuyPageConfig);
     }

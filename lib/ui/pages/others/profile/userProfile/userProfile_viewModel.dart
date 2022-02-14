@@ -273,12 +273,11 @@ class UserProfileVM extends BaseModel {
             _analyticsService.track(eventName: AnalyticsEvents.signOut);
             _analyticsService.signOut();
 
-            _userService.signout().then((flag) {
+            _userService.signout().then((flag) async {
               if (flag) {
                 //log.debug('Sign out process complete');
-                _baseUtil.signOut();
+                await _baseUtil.signOut();
                 _txnService.signOut();
-                _baseUtil.signOut();
                 _tambolaService.signOut();
                 _analyticsService.signOut();
                 AppState.backButtonDispatcher.didPopRoute();

@@ -55,6 +55,14 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
   @override
   Future<bool> didPopRoute() {
+    Future.delayed(Duration(milliseconds: 20), () {
+      if (_userService.buyFieldFocusNode.hasPrimaryFocus ||
+          _userService.buyFieldFocusNode.hasFocus) {
+        logger.d("field has focus");
+        FocusManager.instance.primaryFocus.unfocus();
+      }
+    });
+
     if (_userService.isConfirmationDialogOpen) {
       logger.d("Change dialog view state");
       _userService.isConfirmationDialogOpen = false;

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_vm.dart';
 import 'package:felloapp/util/assets.dart';
@@ -26,6 +28,7 @@ class MobileInputScreenViewState extends State<MobileInputScreenView> {
       onModelReady: (model) {
         this.model = model;
       },
+      onModelDispose: (model) {},
       builder: (ctx, model, child) => Container(
         child: SingleChildScrollView(
           child: Column(

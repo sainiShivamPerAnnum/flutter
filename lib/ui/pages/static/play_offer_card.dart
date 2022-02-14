@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/assets.dart';
