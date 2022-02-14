@@ -36,7 +36,8 @@ class _PrizePWinState extends State<PrizePWin> {
     S locale = S.of(context);
     return SafeArea(
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 20),
+        padding:
+            EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
         child: Column(
           children: [
             Spacer(

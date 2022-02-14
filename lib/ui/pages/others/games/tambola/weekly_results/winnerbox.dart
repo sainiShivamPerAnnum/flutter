@@ -18,10 +18,10 @@ class WinnerBox extends StatelessWidget {
         return "Top Row";
         break;
       case 2:
-        return "Bottom Row";
+        return "Middle Row";
         break;
       case 3:
-        return "Middle Row";
+        return "Bottom Row";
         break;
       case 4:
         return "Full House";
