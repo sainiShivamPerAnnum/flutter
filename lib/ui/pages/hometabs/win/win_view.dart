@@ -1,10 +1,15 @@
+import 'dart:math' as math;
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/modals/octfest_info_modal.dart';
+import 'package:felloapp/ui/modals_sheets/octfest_info_modal.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
+import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
 import 'package:felloapp/ui/pages/static/leaderboard_sheet.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/winners_prizes/winners_marquee.dart';
@@ -67,6 +72,44 @@ class Win extends StatelessWidget {
                         SizedBox(height: SizeConfig.padding20),
                         WinnersMarqueeStrip(),
                         SizedBox(height: SizeConfig.padding24),
+                        if (model.ongoingEvents != null)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal:
+                                        SizeConfig.pageHorizontalMargins),
+                                child: Text(
+                                  "Ongoing Events",
+                                  style: TextStyles.title3.bold,
+                                ),
+                              ),
+                              SizedBox(height: SizeConfig.padding16),
+                              Container(
+                                height: SizeConfig.screenWidth * 0.3,
+                                width: SizeConfig.screenWidth,
+                                child: ListView(
+                                  padding: EdgeInsets.zero,
+                                  scrollDirection: Axis.horizontal,
+                                  children: List.generate(
+                                    model.ongoingEvents.length,
+                                    (i) => Container(
+                                      margin: EdgeInsets.only(
+                                          left: i == 0
+                                              ? SizeConfig.pageHorizontalMargins
+                                              : 0),
+                                      child: EventCard(
+                                        event: model.ongoingEvents[i],
+                                        model: model,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: SizeConfig.padding24),
+                            ],
+                          ),
                         Padding(
                           padding: EdgeInsets.symmetric(
                               horizontal: SizeConfig.pageHorizontalMargins),
@@ -77,7 +120,7 @@ class Win extends StatelessWidget {
                         ),
                         SizedBox(height: SizeConfig.padding16),
                         Container(
-                          height: SizeConfig.screenWidth * 0.309,
+                          height: SizeConfig.screenWidth * 0.24,
                           width: SizeConfig.screenWidth,
                           child: ListView(
                             padding: EdgeInsets.zero,
@@ -93,17 +136,9 @@ class Win extends StatelessWidget {
                                     false, [
                                   "Redeem your game and referral winnings as an Amazon voucher sent directly to your email and mobile!"
                                 ]),
-                                child: Container(
-                                  width: SizeConfig.screenWidth * 0.410,
-                                  margin: EdgeInsets.only(
-                                      right: SizeConfig.padding12),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(
-                                        SizeConfig.roundness32),
-                                    image: DecorationImage(
-                                        image: AssetImage(Assets.amazonCoupon),
-                                        fit: BoxFit.cover),
-                                  ),
+                                child: RewardsAvatar(
+                                  color: Color(0xff242F41),
+                                  asset: Assets.amazonCoupon,
                                 ),
                               ),
                               InkWell(
@@ -120,18 +155,9 @@ class Win extends StatelessWidget {
                                             SizeConfig.padding24)),
                                   );
                                 },
-                                child: Container(
-                                  width: SizeConfig.screenWidth * 0.410,
-                                  margin: EdgeInsets.only(
-                                      right: SizeConfig.padding12),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(
-                                        SizeConfig.roundness32),
-                                    image: DecorationImage(
-                                      image: AssetImage(Assets.bdubsCoupon),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
+                                child: RewardsAvatar(
+                                  color: Color(0xffFFC50C),
+                                  asset: Assets.bdubsCoupon,
                                 ),
                               ),
                               InkWell(
@@ -143,18 +169,9 @@ class Win extends StatelessWidget {
                                   true,
                                   [],
                                 ),
-                                child: Container(
-                                  width: SizeConfig.screenWidth * 0.410,
-                                  margin: EdgeInsets.only(
-                                      right: SizeConfig.padding12),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(
-                                        SizeConfig.roundness32),
-                                    image: DecorationImage(
-                                      image: AssetImage(Assets.gplayCoupon),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
+                                child: RewardsAvatar(
+                                  color: Colors.black,
+                                  asset: Assets.gplayCoupon,
                                 ),
                               ),
                               InkWell(
@@ -164,18 +181,9 @@ class Win extends StatelessWidget {
                                     "Coming soon",
                                     Color(0xff611919),
                                     true, []),
-                                child: Container(
-                                  width: SizeConfig.screenWidth * 0.410,
-                                  margin: EdgeInsets.only(
-                                      right: SizeConfig.padding12),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(
-                                        SizeConfig.roundness32),
-                                    image: DecorationImage(
-                                      image: AssetImage(Assets.myntraCoupon),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
+                                child: RewardsAvatar(
+                                  color: Color(0xffFFDBF6),
+                                  asset: Assets.myntraCoupon,
                                 ),
                               ),
                             ],
@@ -211,6 +219,101 @@ class Win extends StatelessWidget {
   }
 }
 
+class EventCard extends StatelessWidget {
+  final WinViewModel model;
+  final EventModel event;
+
+  EventCard({@required this.event, @required this.model});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        AppState.delegate.appState.currentAction = PageAction(
+            state: PageState.addWidget,
+            widget: TopSaverView(
+              event: event,
+            ),
+            page: AugmontGoldSellPageConfig);
+      },
+      child: Container(
+        width: SizeConfig.screenWidth * 0.64,
+        height: SizeConfig.screenWidth * 0.3,
+        margin: EdgeInsets.only(right: SizeConfig.padding16),
+        decoration: event.thumbnail.isNotEmpty
+            ? BoxDecoration(
+                color: event.position % 2 == 0
+                    ? UiConstants.primaryColor
+                    : UiConstants.tertiarySolid,
+                borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+                image: DecorationImage(
+                  image: CachedNetworkImageProvider(event.thumbnail),
+                  fit: BoxFit.cover,
+                ),
+              )
+            : BoxDecoration(
+                color: Color(event.color),
+                borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+              ),
+        padding: EdgeInsets.all(SizeConfig.padding16),
+        child: event.thumbnail.isEmpty
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    event.title,
+                    style: TextStyles.body2.bold.colour(Colors.white),
+                  ),
+                  Text(
+                    event.subtitle,
+                    style: TextStyles.body3.colour(Colors.white),
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(24),
+                            color: Colors.white.withOpacity(0.5)),
+                        padding: EdgeInsets.symmetric(
+                            vertical: SizeConfig.padding6,
+                            horizontal: SizeConfig.padding12),
+                        child: Text(
+                          "Explore",
+                          style:
+                              TextStyles.body3.bold.colour(Color(event.color)),
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              )
+            : SizedBox(),
+      ),
+    );
+  }
+}
+
+class RewardsAvatar extends StatelessWidget {
+  final Color color;
+  final String asset;
+
+  RewardsAvatar({this.asset, this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: SizeConfig.screenWidth * 0.24,
+      margin: EdgeInsets.only(right: SizeConfig.padding16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(SizeConfig.roundness56),
+        color: color,
+        image: DecorationImage(image: AssetImage(asset), fit: BoxFit.fitWidth),
+      ),
+    );
+  }
+}
+
 class BigPrizeContainer extends StatelessWidget {
   final Color bgColor;
   final String image;
@@ -233,46 +336,48 @@ class BigPrizeContainer extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         width: SizeConfig.screenWidth * 0.422,
-        height: SizeConfig.screenWidth * 0.520,
+        height: SizeConfig.screenWidth * 0.28,
         child: Stack(
           children: [
             Positioned(
               bottom: 0,
               child: Container(
-                  width: SizeConfig.screenWidth * 0.422,
-                  height: SizeConfig.screenWidth * 0.422,
-                  decoration: BoxDecoration(
-                      color: bgColor ?? UiConstants.primaryColor,
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness32),
-                      boxShadow: [
-                        BoxShadow(
-                          blurRadius: 30,
-                          color: bgColor != null
-                              ? bgColor.withOpacity(0.16)
-                              : UiConstants.primaryColor.withOpacity(0.16),
-                          offset: Offset(
-                            0,
-                            SizeConfig.screenWidth * 0.1,
-                          ),
-                          spreadRadius: 10,
-                        )
-                      ]),
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        top: 0,
-                        right: 0,
+                width: SizeConfig.screenWidth * 0.422,
+                height: SizeConfig.screenWidth * 0.24,
+                decoration: BoxDecoration(
+                    color: bgColor ?? UiConstants.primaryColor,
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness24),
+                    boxShadow: [
+                      BoxShadow(
+                        blurRadius: 30,
+                        color: bgColor != null
+                            ? bgColor.withOpacity(0.16)
+                            : UiConstants.primaryColor.withOpacity(0.16),
+                        offset: Offset(
+                          0,
+                          SizeConfig.screenWidth * 0.1,
+                        ),
+                        spreadRadius: 10,
+                      )
+                    ]),
+                child: Stack(
+                  children: [
+                    Positioned(
+                      top: 0,
+                      left: 0,
+                      child: Transform(
+                        alignment: Alignment.center,
+                        transform: Matrix4.rotationY(math.pi),
                         child: Container(
-                          width: SizeConfig.screenWidth * 0.3,
-                          height: SizeConfig.screenWidth * 0.2,
+                          width: SizeConfig.screenWidth * 0.22,
+                          height: SizeConfig.screenWidth * 0.18,
                           decoration: BoxDecoration(),
                           child: Opacity(
                             opacity: 0.2,
                             child: ClipRRect(
                               borderRadius: BorderRadius.only(
                                 topRight:
-                                    Radius.circular(SizeConfig.roundness32),
+                                    Radius.circular(SizeConfig.roundness24),
                               ),
                               child: CustomPaint(
                                 size: Size(
@@ -287,38 +392,53 @@ class BigPrizeContainer extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Positioned(
-                        bottom: 0,
-                        child: Container(
-                          width: SizeConfig.screenWidth * 0.422,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.padding16,
-                              vertical: SizeConfig.padding24),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                smallText ?? "Play and Win",
-                                style: TextStyles.body4.colour(Colors.white),
-                              ),
-                              Text(
-                                bigText ?? "₹ 1 Lakh every week",
-                                style:
-                                    TextStyles.body1.colour(Colors.white).bold,
-                              )
-                            ],
-                          ),
+                    ),
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: Container(
+                        width: SizeConfig.screenWidth * 0.422,
+                        height: SizeConfig.screenWidth * 0.24,
+                        padding: EdgeInsets.only(
+                          right: SizeConfig.padding16,
                         ),
-                      )
-                    ],
-                  )),
+                        child: Row(
+                          children: [
+                            SizedBox(width: SizeConfig.screenWidth * 0.19),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    smallText ?? "Play and Win",
+                                    style:
+                                        TextStyles.body3.colour(Colors.white),
+                                  ),
+                                  Text(
+                                    bigText ?? "₹ 1 Lakh every week",
+                                    maxLines: 3,
+                                    style: TextStyles.body3
+                                        .colour(Colors.white)
+                                        .bold,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ),
             Positioned(
-              right: 0,
+              left: 0,
               top: 0,
               child: Image.asset(
                 image ?? Assets.moneyBag,
-                width: SizeConfig.screenWidth * 0.28,
+                width: SizeConfig.screenWidth * 0.2,
               ),
             )
           ],

@@ -8,6 +8,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.1"
+  appsflyer_sdk:
+    dependency: "direct main"
+    description:
+      name: appsflyer_sdk
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.5.2"
   archive:
     dependency: transitive
     description:
