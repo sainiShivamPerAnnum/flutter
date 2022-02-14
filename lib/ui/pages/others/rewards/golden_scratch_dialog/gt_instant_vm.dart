@@ -95,13 +95,13 @@ class GTInstantViewModel extends BaseModel {
       "uid": _userService.baseUser.uid,
       "gtId": goldenTicket.gtId
     };
-    // _logger.d("initiateUserDeposit:: Pre encryption: $_body");
-    // if (await _rsaEncryption.init()) {
-    //   _body = _rsaEncryption.encryptRequestBody(_body);
-    //   _logger.d("initiateUserDeposit:: Post encryption: ${_body.toString()}");
-    // } else {
-    //   _logger.e("Encrypter initialization failed!! exiting method");
-    // }
+    _logger.d("initiateUserDeposit:: Pre encryption: $_body");
+    if (await _rsaEncryption.init()) {
+      _body = _rsaEncryption.encryptRequestBody(_body);
+      _logger.d("initiateUserDeposit:: Post encryption: ${_body.toString()}");
+    } else {
+      _logger.e("Encrypter initialization failed!! exiting method");
+    }
     try {
       _getBearerToken().then((String token) => APIService.instance
               .postData(_apiPaths.kRedeemGtReward, token: token, body: _body)

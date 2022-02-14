@@ -21,9 +21,7 @@ class AugmontCouponsModalSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
     return Container(
-      height: keyboardIsOpen
-          ? SizeConfig.screenHeight * 0.88
-          : SizeConfig.screenHeight * 0.7,
+      height: SizeConfig.screenHeight * 0.54,
       decoration: BoxDecoration(),
       padding: EdgeInsets.all(
         SizeConfig.blockSizeHorizontal * 5,
@@ -36,7 +34,7 @@ class AugmontCouponsModalSheet extends StatelessWidget {
           Row(
             children: [
               Text(
-                "Choose a Coupon",
+                "Apply a Coupon",
                 style: TextStyle(
                   color: Colors.black54,
                   fontWeight: FontWeight.w700,
@@ -62,30 +60,71 @@ class AugmontCouponsModalSheet extends StatelessWidget {
           Divider(
             height: SizeConfig.padding24,
             thickness: 2,
-            endIndent: SizeConfig.screenWidth / 4,
+            // endIndent: SizeConfig.screenWidth / 4,
           ),
+
           SizedBox(height: SizeConfig.padding16),
+          Row(
+            children: [
+              Expanded(
+                child: Form(
+                  key: _formKey,
+                  child: TextFormField(
+                      // controller: _referralCodeController,
+                      //maxLength: 10,
+                      decoration: InputDecoration(
+                        hintText: "Enter a Coupon Code here",
+                        hintStyle: TextStyles.body3.colour(Colors.grey),
+                        suffix: InkWell(
+                          child: Text(
+                            "Apply",
+                            style: TextStyles.body3.bold
+                                .colour(UiConstants.primaryColor),
+                          ),
+                          onTap: () {
+                            if (_formKey.currentState.validate()) {
+                              BaseUtil.showNegativeAlert("Invalid Coupon",
+                                  "Please recheck the Coupon code");
+                              AppState.backButtonDispatcher.didPopRoute();
+                            }
+                          },
+                        ),
+                      ),
+                      textCapitalization: TextCapitalization.characters,
+                      validator: (val) {
+                        if (val.trim().length == 0 || val == null)
+                          return "Please enter a code to continue";
+                        if (val.trim().length < 3 || val.trim().length > 10)
+                          return "Invalid Coupon code";
+                        return null;
+                      }),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: SizeConfig.padding24),
+
           Text(
-            "Choose from available Coupon codes",
-            style: TextStyles.body2.light.colour(Colors.black45),
+            "Active Coupons",
+            style: TextStyles.body2.light,
           ),
-          SizedBox(height: SizeConfig.padding16),
+
           Expanded(
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-                border: Border.all(width: 0.5, color: UiConstants.felloBlue),
-              ),
+              // padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
+              // decoration: BoxDecoration(
+              //   borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+              //   border: Border.all(width: 0.5, color: UiConstants.felloBlue),
+              // ),
               child: ListView(
                 shrinkWrap: true,
-                padding: EdgeInsets.symmetric(vertical: SizeConfig.padding12),
+                padding: EdgeInsets.symmetric(vertical: SizeConfig.padding8),
                 physics: BouncingScrollPhysics(),
                 children: List.generate(
                     model.couponList.length,
                     (i) => Container(
                           margin: EdgeInsets.symmetric(
-                              vertical: SizeConfig.padding2),
+                              vertical: SizeConfig.padding4),
                           child: CouponItem(
                               model: model,
                               coupon: model.couponList[i],
@@ -97,49 +136,10 @@ class AugmontCouponsModalSheet extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: SizeConfig.padding16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [Text("OR")],
-          ),
-          SizedBox(height: SizeConfig.padding16),
-          Form(
-            key: _formKey,
-            child: TextFormField(
-                // controller: _referralCodeController,
-                //maxLength: 10,
-                decoration: InputDecoration(
-                  hintText: "Enter your Coupon Code here",
-                  hintStyle: TextStyles.body3.colour(Colors.grey),
-                ),
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9]'))
-                ],
-                validator: (val) {
-                  if (val.trim().length == 0 || val == null)
-                    return "Please enter a code to continue";
-                  if (val.trim().length < 3 || val.trim().length > 10)
-                    return "Invalid Coupon code";
-                  return null;
-                }),
-          ),
-          SizedBox(height: SizeConfig.padding16),
-          FelloButtonLg(
-            child: Text(
-              "Apply Coupon",
-              style: TextStyles.body2.bold.colour(Colors.white),
-            ),
-            onPressed: () {
-              if (_formKey.currentState.validate()) {
-                BaseUtil.showNegativeAlert(
-                    "Invalid Coupon", "Please recheck the Coupon code");
-                AppState.backButtonDispatcher.didPopRoute();
-              }
-            },
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).viewInsets.bottom,
-          )
+          // SizedBox(height: SizeConfig.padding16),
+          // SizedBox(
+          //   height: MediaQuery.of(context).viewInsets.bottom,
+          // )
         ],
       ),
     );

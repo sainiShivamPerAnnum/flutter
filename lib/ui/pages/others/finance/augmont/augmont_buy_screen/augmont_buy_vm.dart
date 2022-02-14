@@ -205,17 +205,10 @@ class AugmontGoldBuyViewModel extends BaseModel {
         Haptic.vibrate();
         lastTappedChipIndex = index;
         buyFieldNode.unfocus();
-        //if (goldBuyAmount == null)
         goldBuyAmount = amt;
-        // else {
-        //   if (goldBuyAmount + amt <= 50000)
-        //     goldBuyAmount += amt;
-        //   else
-        //     goldBuyAmount = 50000;
-        // }
-        checkIfCouponIsStillApplicable();
         goldAmountController.text = goldBuyAmount.toInt().toString();
         updateGoldAmount();
+        checkIfCouponIsStillApplicable();
         notifyListeners();
       },
       child: Container(
@@ -293,6 +286,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
     // }
     if (couponApplyInProgress) return;
     double buyAmount = double.tryParse(goldAmountController.text);
+    checkIfCouponIsStillApplicable();
     if (goldRates == null) {
       BaseUtil.showNegativeAlert(
         'Gold Rates Unavailable',
@@ -635,20 +629,16 @@ class AugmontGoldBuyViewModel extends BaseModel {
       BaseUtil.showPositiveAlert(
           "Coupon Applied Successfully", response.model.message);
     } else if (response.code == 400) {
-      BaseUtil.showNegativeAlert("Copuon not applied", response.errorMessage);
+      BaseUtil.showNegativeAlert(
+          "Copuon not applied", response?.model?.message);
     } else {
       if (response.model != null)
         BaseUtil.showNegativeAlert(
             "Coupon not applied", response?.model?.message);
       else
         BaseUtil.showNegativeAlert(
-            "Coupon not applied", "Please another coupon");
+            "Coupon not applied", "Please try another coupon");
     }
-    // if (goldBuyAmount < coupon.minPurchase.toDouble())
-    //   goldBuyAmount = coupon.minPurchase.toDouble();
-    // goldAmountController.text = goldBuyAmount.toInt().toString();
-    // updateGoldAmount();
-    // notifyListeners();
   }
 
   checkIfCouponIsStillApplicable() {

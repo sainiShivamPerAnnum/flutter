@@ -167,9 +167,6 @@ class AugmontBuyCard extends StatelessWidget {
                           ),
                         )
                       : Container(
-                          // color: UiConstants.tertiaryLight,
-                          // width: SizeConfig.screenWidth,
-                          // decoration
                           child: InkWell(
                               onTap: () => model.showOfferModal(model),
                               child: RichText(
@@ -180,7 +177,7 @@ class AugmontBuyCard extends StatelessWidget {
                                         style: TextStyles.body3
                                             .colour(UiConstants.felloBlue)),
                                     new TextSpan(
-                                      text: ' Coupon Code',
+                                      text: ' Coupon',
                                       style: TextStyles.body3
                                           .colour(UiConstants.felloBlue)
                                           .bold,
@@ -201,10 +198,10 @@ class AugmontBuyCard extends StatelessWidget {
                   horizontal: SizeConfig.padding16,
                   vertical: SizeConfig.padding12),
               child: FittedBox(
+                fit: BoxFit.scaleDown,
                 child: Text(
-                  "Please wait, we are onboarding you to Augmont",
-                  style:
-                      TextStyles.title3.bold.colour(UiConstants.primaryColor),
+                  "Registration in progress..",
+                  style: TextStyles.body2.bold.colour(UiConstants.primaryColor),
                 ),
               ),
             ),

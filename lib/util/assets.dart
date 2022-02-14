@@ -25,6 +25,7 @@ class Assets {
   static final String dummyCancelledCheque = 'images/Cancelled_cheque.png';
   static final String kycUnavailableAsset = 'images/kyc_unavailable.png';
   static final String noTransaction = "images/no-transactions.png";
+  static final String augmontShare = "images/augmont-share.png";
 
   //APPBAR
 

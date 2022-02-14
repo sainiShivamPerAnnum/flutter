@@ -83,13 +83,13 @@ class GoldenTicketsViewModel extends BaseModel {
       "uid": _userService.baseUser.uid,
       "gtId": ticket.gtId
     };
-    // _logger.d("initiateUserDeposit:: Pre encryption: $_body");
-    // if (await _rsaEncryption.init()) {
-    //   _body = _rsaEncryption.encryptRequestBody(_body);
-    //   _logger.d("initiateUserDeposit:: Post encryption: ${_body.toString()}");
-    // } else {
-    //   _logger.e("Encrypter initialization failed!! exiting method");
-    // }
+    _logger.d("initiateUserDeposit:: Pre encryption: $_body");
+    if (await _rsaEncryption.init()) {
+      _body = _rsaEncryption.encryptRequestBody(_body);
+      _logger.d("initiateUserDeposit:: Post encryption: ${_body.toString()}");
+    } else {
+      _logger.e("Encrypter initialization failed!! exiting method");
+    }
     try {
       final String _bearer = await _getBearerToken();
       final _apiResponse = await APIService.instance

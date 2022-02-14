@@ -185,15 +185,10 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                                     ),
                                     padding:
                                         EdgeInsets.all(SizeConfig.padding16),
-                                    child: Stack(
-                                      children: [
-                                        //Image.asset("assets/images/confetti.png"),
-                                        Text(
-                                          _buildNonWithdrawString(model),
-                                          textAlign: TextAlign.center,
-                                          style: TextStyles.body3.light,
-                                        ),
-                                      ],
+                                    child: Text(
+                                      _buildNonWithdrawString(model),
+                                      textAlign: TextAlign.center,
+                                      style: TextStyles.body3.light,
                                     ),
                                   )
                                 : SizedBox(),
@@ -217,7 +212,7 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                                     ),
                                   )
                                 : SizedBox(),
-                            SizedBox(height: SizeConfig.padding32),
+                            SizedBox(height: SizeConfig.padding8),
                             Row(
                               children: [
                                 Text(
@@ -318,7 +313,7 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                                 // model.amoutChip(model.chipAmountList[3]),
                               ],
                             ),
-                            SizedBox(height: SizeConfig.padding54),
+                            SizedBox(height: SizeConfig.padding32),
                             Container(
                               margin:
                                   EdgeInsets.only(bottom: SizeConfig.padding24),
