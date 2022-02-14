@@ -16,6 +16,8 @@ import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_view.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_page.dart';
 import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
+import 'package:felloapp/ui/pages/others/events/topSavers/all_participants.dart';
+import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_view.dart';
@@ -255,7 +257,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.BlockedUser:
           _addPageData(BlockedUserView(), BlockedUserPageConfig);
           break;
-
         case Pages.FreshDeskHelp:
           _addPageData(FreshDeskHelp(), FreshDeskHelpPageConfig);
           break;
@@ -267,6 +268,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
         case Pages.GoldenMilestonesView:
           _addPageData(GoldenMilestonesView(), GoldenMilestonesViewPageConfig);
+          break;
+        case Pages.TopSaverView:
+          _addPageData(TopSaverView(), TopSaverViewPageConfig);
+          break;
+        case Pages.AllParticipantsView:
+          _addPageData(AllParticipantsView(), AllParticipantsViewPageConfig);
           break;
         case Pages.GoldBalanceDetailsView:
           _addPageData(
@@ -465,6 +472,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.GoldenMilestonesView:
         GoldenMilestonesViewPageConfig.currentPageAction = action;
         break;
+      case Pages.TopSaverView:
+        TopSaverViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.AllParticipantsView:
+        AllParticipantsViewPageConfig.currentPageAction = action;
+        break;
       case Pages.GoldBalanceDetailsView:
         GoldBalanceDetailsViewPageConfig.currentPageAction = action;
         break;
@@ -625,6 +638,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case 'blocked':
         pageConfiguration = BlockedUserPageConfig;
+        break;
+      case 'topSaver':
+        pageConfiguration = TopSaverViewPageConfig;
         break;
       case 'milestones':
         pageConfiguration = GoldenMilestonesViewPageConfig;

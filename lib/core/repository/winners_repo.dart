@@ -55,4 +55,24 @@ class WinnersRepository {
       return ApiResponse.withError(e.toString(), 400);
     }
   }
+
+  Future<ApiResponse<WinnersModel>> getPastWinners(
+      String gameType, String freq) async {
+    try {
+      String code = CodeFromFreq.getPastEventCodeFromFreq(freq);
+      _logger.d(
+          "Past Winners :: Game Type : $gameType \n Frequency: $freq \n Code: $code");
+      final QueryDocumentSnapshot _response =
+          await _api.getWinnersByGameTypeFreqAndCode(gameType, freq, code);
+
+      WinnersModel _responseModel =
+          WinnersModel.fromMap(_response.data(), gameType);
+
+      _logger.d(_response.data().toString());
+      return ApiResponse(model: _responseModel, code: 200);
+    } catch (e) {
+      _logger.e(e);
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
 }

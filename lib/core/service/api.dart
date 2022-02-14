@@ -804,6 +804,12 @@ class Api {
     }
   }
 
+  Future<QuerySnapshot> fetchOngoingEvents() async {
+    Query _query =
+        _db.collection(Constants.COLN_APPCAMPAIGNS).orderBy('position');
+    return _query.get();
+  }
+  
   Future<QuerySnapshot> fetchCoupons() async {
     Query _query = _db
         .collection(Constants.COLN_COUPONS)

@@ -48,6 +48,8 @@ const String FreshdeskHelpPath = '/freshDeskHelp';
 const String GoldenTicketViewPath = '/goldenTicketView';
 const String GoldenTicketsViewPath = '/goldenTicketsView';
 const String GoldenMilestonesViewPath = '/goldenMilestonesView';
+const String TopSaverViewPath = '/topSaverView';
+const String AllParticipantsViewPath = '/allParticipantsView';
 const String GoldBalanceDetailsViewPath = '/goldBalanceDetailsView';
 
 enum Pages {
@@ -97,6 +99,8 @@ enum Pages {
   GoldenTicketView,
   GoldenTicketsView,
   GoldenMilestonesView,
+  TopSaverView,
+  AllParticipantsView
   GoldBalanceDetailsView
 }
 
@@ -433,6 +437,19 @@ PageConfiguration GoldenMilestonesViewPageConfig = PageConfiguration(
   uiPage: Pages.GoldenMilestonesView,
   name: 'Milestones screen',
 );
+
+PageConfiguration TopSaverViewPageConfig = PageConfiguration(
+  key: 'TopSaverView',
+  path: TopSaverViewPath,
+  uiPage: Pages.TopSaverView,
+  name: 'TopSaverView screen',
+);
+
+PageConfiguration AllParticipantsViewPageConfig = PageConfiguration(
+  key: 'AllParticipantsView',
+  path: AllParticipantsViewPath,
+  uiPage: Pages.AllParticipantsView,
+  name: 'AllParticipantsView screen',
 
 PageConfiguration GoldBalanceDetailsViewPageConfig = PageConfiguration(
   key: 'GoldBalanceDetailsView',
