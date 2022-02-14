@@ -1,6 +1,7 @@
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_milestones/golden_milestones_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
@@ -50,14 +51,7 @@ class GoldenMilestonesView extends StatelessWidget {
                         color: Colors.white,
                       ),
                       child: model.state == ViewState.Busy
-                          ? Center(
-                              child: Center(
-                                child: SpinKitWave(
-                                  color: UiConstants.primaryColor,
-                                  size: SizeConfig.padding32,
-                                ),
-                              ),
-                            )
+                          ? ListLoader()
                           : Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -84,11 +78,7 @@ class GoldenMilestonesView extends StatelessWidget {
                                 //       radius: SizeConfig.padding16),
                                 // ),
                                 model.milestones == null
-                                    ? Center(
-                                        child: SpinKitWave(
-                                        color: UiConstants.primaryColor,
-                                        size: SizeConfig.padding32,
-                                      ))
+                                    ? ListLoader()
                                     : (model.milestones.isEmpty
                                         ? NoRecordDisplayWidget()
                                         :

@@ -12,6 +12,7 @@ import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/rsa_encryption.dart';
 import 'package:flutter/services.dart';
 
 class GTInstantViewModel extends BaseModel {
@@ -21,6 +22,8 @@ class GTInstantViewModel extends BaseModel {
   final _apiPaths = locator<ApiPath>();
   final _gtService = locator<GoldenTicketService>();
   final _dbModel = locator<DBModel>();
+  final _rsaEncryption = new RSAEncryption();
+
   bool _isShimmerEnabled = false;
   GoldenTicket _goldenTicket;
   double _buttonOpacity = 0;
@@ -73,9 +76,6 @@ class GTInstantViewModel extends BaseModel {
   }
 
   init() async {
-    //setState(ViewState.Busy);
-    // await fetchGoldenTicketByID();
-    // GoldenTicketService.goldenTicketId = null;
     Haptic.vibrate();
     goldenTicket = GoldenTicketService.currentGT;
     GoldenTicketService.currentGT = null;
@@ -84,17 +84,7 @@ class GTInstantViewModel extends BaseModel {
         showScratchGuide = true;
       }
     });
-    // GoldenTicketService.hasGoldenTicket = false;
-    //setState(ViewState.Idle);
   }
-
-  // fetchGoldenTicketByID() async {
-  //   goldenTicket = await _dbModel.getGoldenTicketById(
-  //       _userService.baseUser.uid, GoldenTicketService.goldenTicketId);
-  //   //   goldenTicket =
-  //   //       await _dbModel.getLatestGoldenTicket(_userService.baseUser.uid);
-  //   // }
-  // }
 
   Future<void> redeemTicket() async {
     scratchKey.currentState.reveal();
@@ -105,6 +95,13 @@ class GTInstantViewModel extends BaseModel {
       "uid": _userService.baseUser.uid,
       "gtId": goldenTicket.gtId
     };
+    _logger.d("initiateUserDeposit:: Pre encryption: $_body");
+    if (await _rsaEncryption.init()) {
+      _body = _rsaEncryption.encryptRequestBody(_body);
+      _logger.d("initiateUserDeposit:: Post encryption: ${_body.toString()}");
+    } else {
+      _logger.e("Encrypter initialization failed!! exiting method");
+    }
     try {
       _getBearerToken().then((String token) => APIService.instance
               .postData(_apiPaths.kRedeemGtReward, token: token, body: _body)

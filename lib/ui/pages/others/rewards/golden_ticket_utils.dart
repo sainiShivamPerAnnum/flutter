@@ -112,12 +112,12 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(
-                ticket.isRewarding ? Assets.gtWon : Assets.gtLose,
-                height: width == SizeConfig.screenWidth * 0.6
-                    ? width * 0.5
-                    : width * 0.6,
-              ),
+              Container(
+                  height: width == SizeConfig.screenWidth * 0.6
+                      ? width * 0.5
+                      : width * 0.6,
+                  alignment: Alignment.center,
+                  child: getImageAsset(ticket)),
               SizedBox(
                   height: width == SizeConfig.screenWidth * 0.6
                       ? width * 0.04
@@ -134,6 +134,31 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
         ),
       );
     });
+  }
+
+  Image getImageAsset(GoldenTicket ticket) {
+    if (ticket.isRewarding) {
+      Reward gold = ticket.rewardArr
+          .firstWhere((e) => e.type == 'gold', orElse: () => null);
+      if (gold != null) {
+        // return ;
+        return Image.asset(
+          Assets.augmontShare,
+          height:
+              width == SizeConfig.screenWidth * 0.6 ? width * 0.4 : width * 0.5,
+        );
+      } else
+        return Image.asset(
+          Assets.gtWon,
+          height:
+              width == SizeConfig.screenWidth * 0.6 ? width * 0.5 : width * 0.6,
+        );
+    } else
+      return Image.asset(
+        Assets.gtLose,
+        height:
+            width == SizeConfig.screenWidth * 0.6 ? width * 0.5 : width * 0.6,
+      );
   }
 
   Widget getGTContent(GoldenTicket ticket, TextStyle titleStyle,
@@ -206,6 +231,21 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
             TextSpan(text: "${reward.value} ", style: textStyle.bold),
             TextSpan(
               text: reward.value > 1 ? "Tokens" : "Token",
+            )
+          ],
+        ),
+      );
+    } else if (reward.type == 'gold') {
+      return RichText(
+        text: TextSpan(
+          style: titleStyle2.colour(Colors.black),
+          children: [
+            TextSpan(
+              text: "₹ ",
+            ),
+            TextSpan(text: "${reward.value} ", style: textStyle.bold),
+            TextSpan(
+              text: "worth of Gold",
             )
           ],
         ),

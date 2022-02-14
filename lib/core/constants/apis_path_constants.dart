@@ -39,9 +39,8 @@ class ApiPath {
   static const acquisitionTracking = "/userOps/api/opt-analytics";
 
   //GT Rewards
-  get kRedeemGtReward => "/gtRewardsOps/$stage/api/redeemGtReward";
+  get kRedeemGtReward => "/gtRewardsOps/$stage/v2/api/redeemGtReward";
 
-  //Fello Coupons 
+  //Fello Coupons
   get kFelloCoupons => "/felloCoupons/$stage/api/eligible";
-
 }

@@ -37,11 +37,13 @@ class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
         setState(() {});
       })
       ..addStatusListener((status) {
+        print(status.toString());
         if (status == AnimationStatus.completed) {
           widget.fetchGoldRates();
-          controller.repeat();
+          controller.reset();
+          controller.forward();
         } else if (status == AnimationStatus.dismissed) {
-          controller.dispose();
+          controller.forward();
         }
       });
 
@@ -77,7 +79,7 @@ class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
               Spacer(),
               RichText(
                 text: TextSpan(
-                  text: "( Valid for next ",
+                  text: "Valid for next ",
                   style: TextStyles.body4.colour(Colors.grey).light,
                   children: [
                     TextSpan(
@@ -87,7 +89,6 @@ class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
                           .colour(UiConstants.primaryColor)
                           .bold,
                     ),
-                    TextSpan(text: " )"),
                   ],
                 ),
               ),

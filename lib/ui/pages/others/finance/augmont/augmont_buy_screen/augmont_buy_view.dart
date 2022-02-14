@@ -150,40 +150,42 @@ class AugmontBuyCard extends StatelessWidget {
           if (model.showCoupons)
             Container(
               margin: EdgeInsets.symmetric(vertical: SizeConfig.padding12),
-              child: model.appliedCoupon != null
-                  ? CouponItem(
-                      model: model,
-                      coupon: model.appliedCoupon,
-                      onTap: () {},
-                      trailingWidget: InkWell(
-                        onTap: () => model.appliedCoupon = null,
-                        child: Icon(Icons.cancel,
-                            color: Colors.grey, size: SizeConfig.iconSize1),
-                      ),
+              child: model.couponApplyInProgress
+                  ? SpinKitThreeBounce(
+                      size: SizeConfig.body2,
+                      color: UiConstants.felloBlue,
                     )
-                  : Container(
-                      // color: UiConstants.tertiaryLight,
-                      // width: SizeConfig.screenWidth,
-                      // decoration
-                      child: InkWell(
-                          onTap: () => model.showOfferModal(model),
-                          child: RichText(
-                            text: new TextSpan(
-                              children: [
-                                new TextSpan(
-                                    text: 'Apply a',
-                                    style: TextStyles.body3
-                                        .colour(UiConstants.felloBlue)),
-                                new TextSpan(
-                                  text: ' Coupon Code',
-                                  style: TextStyles.body3
-                                      .colour(UiConstants.felloBlue)
-                                      .bold,
+                  : (model.appliedCoupon != null
+                      ? CouponItem(
+                          model: model,
+                          coupon: model.appliedCoupon,
+                          onTap: () {},
+                          trailingWidget: InkWell(
+                            onTap: () => model.appliedCoupon = null,
+                            child: Icon(Icons.cancel,
+                                color: Colors.grey, size: SizeConfig.iconSize1),
+                          ),
+                        )
+                      : Container(
+                          child: InkWell(
+                              onTap: () => model.showOfferModal(model),
+                              child: RichText(
+                                text: new TextSpan(
+                                  children: [
+                                    new TextSpan(
+                                        text: 'Apply a',
+                                        style: TextStyles.body3
+                                            .colour(UiConstants.felloBlue)),
+                                    new TextSpan(
+                                      text: ' Coupon',
+                                      style: TextStyles.body3
+                                          .colour(UiConstants.felloBlue)
+                                          .bold,
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          )),
-                    ),
+                              )),
+                        )),
             ),
           SizedBox(height: SizeConfig.padding12),
           if (model.augOnbRegInProgress)
@@ -196,10 +198,10 @@ class AugmontBuyCard extends StatelessWidget {
                   horizontal: SizeConfig.padding16,
                   vertical: SizeConfig.padding12),
               child: FittedBox(
+                fit: BoxFit.scaleDown,
                 child: Text(
-                  "Please wait, we are onboarding you to Augmont",
-                  style:
-                      TextStyles.title3.bold.colour(UiConstants.primaryColor),
+                  "Registration in progress..",
+                  style: TextStyles.body2.bold.colour(UiConstants.primaryColor),
                 ),
               ),
             ),

@@ -303,13 +303,13 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                               OpenFile.open(generatedPdfFilePath);
                             } else {
                               BaseUtil.showNegativeAlert(
-                                  'Invoice could\'nt be loaded',
+                                  'Invoice could not be loaded',
                                   'Please try again in some time');
                             }
                           });
                         } else {
                           BaseUtil.showNegativeAlert(
-                              'Invoice could\'nt be loaded',
+                              'Invoice could not be loaded',
                               'Please try again in some time');
                         }
                       },
