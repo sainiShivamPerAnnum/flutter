@@ -139,7 +139,6 @@ class AugmontModel extends ChangeNotifier {
     } else {
       return AugmontRates.fromMap(response.model);
     }
-
   }
 
   Future<double> getGoldBalance() async {
@@ -176,7 +175,8 @@ class AugmontModel extends ChangeNotifier {
   ///wait for callback from razorpay payment completion
   ///update db object
   Future<UserTransaction> initiateGoldPurchase(
-      AugmontRates buyRates, double amount) async {
+      AugmontRates buyRates, double amount,
+      {String couponCode = ""}) async {
     if (!isInit()) await _init();
 
     if (_baseProvider.augmontDetail == null ||
@@ -228,6 +228,7 @@ class AugmontModel extends ChangeNotifier {
             tranId: _tranIdResponse.model,
             userUid: _userService.baseUser.uid,
             amount: amount,
+            couponCode: couponCode,
             initAugMap: _initAugMap,
             initRzpMap: _initRzpMap);
 

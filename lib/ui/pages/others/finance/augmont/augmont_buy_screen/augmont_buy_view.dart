@@ -150,40 +150,45 @@ class AugmontBuyCard extends StatelessWidget {
           if (model.showCoupons)
             Container(
               margin: EdgeInsets.symmetric(vertical: SizeConfig.padding12),
-              child: model.appliedCoupon != null
-                  ? CouponItem(
-                      model: model,
-                      coupon: model.appliedCoupon,
-                      onTap: () {},
-                      trailingWidget: InkWell(
-                        onTap: () => model.appliedCoupon = null,
-                        child: Icon(Icons.cancel,
-                            color: Colors.grey, size: SizeConfig.iconSize1),
-                      ),
+              child: model.couponApplyInProgress
+                  ? SpinKitThreeBounce(
+                      size: SizeConfig.body2,
+                      color: UiConstants.felloBlue,
                     )
-                  : Container(
-                      // color: UiConstants.tertiaryLight,
-                      // width: SizeConfig.screenWidth,
-                      // decoration
-                      child: InkWell(
-                          onTap: () => model.showOfferModal(model),
-                          child: RichText(
-                            text: new TextSpan(
-                              children: [
-                                new TextSpan(
-                                    text: 'Apply a',
-                                    style: TextStyles.body3
-                                        .colour(UiConstants.felloBlue)),
-                                new TextSpan(
-                                  text: ' Coupon Code',
-                                  style: TextStyles.body3
-                                      .colour(UiConstants.felloBlue)
-                                      .bold,
+                  : (model.appliedCoupon != null
+                      ? CouponItem(
+                          model: model,
+                          coupon: model.appliedCoupon,
+                          onTap: () {},
+                          trailingWidget: InkWell(
+                            onTap: () => model.appliedCoupon = null,
+                            child: Icon(Icons.cancel,
+                                color: Colors.grey, size: SizeConfig.iconSize1),
+                          ),
+                        )
+                      : Container(
+                          // color: UiConstants.tertiaryLight,
+                          // width: SizeConfig.screenWidth,
+                          // decoration
+                          child: InkWell(
+                              onTap: () => model.showOfferModal(model),
+                              child: RichText(
+                                text: new TextSpan(
+                                  children: [
+                                    new TextSpan(
+                                        text: 'Apply a',
+                                        style: TextStyles.body3
+                                            .colour(UiConstants.felloBlue)),
+                                    new TextSpan(
+                                      text: ' Coupon Code',
+                                      style: TextStyles.body3
+                                          .colour(UiConstants.felloBlue)
+                                          .bold,
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          )),
-                    ),
+                              )),
+                        )),
             ),
           SizedBox(height: SizeConfig.padding12),
           if (model.augOnbRegInProgress)

@@ -210,6 +210,21 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
           ],
         ),
       );
+    } else if (reward.type == 'gold') {
+      return RichText(
+        text: TextSpan(
+          style: titleStyle2.colour(Colors.black),
+          children: [
+            TextSpan(
+              text: "₹ ",
+            ),
+            TextSpan(text: "${reward.value} ", style: textStyle.bold),
+            TextSpan(
+              text: "worth of Gold",
+            )
+          ],
+        ),
+      );
     } else
       return RichText(
           text: TextSpan(style: textStyle, children: [

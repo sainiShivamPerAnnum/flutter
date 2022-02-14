@@ -6,9 +6,11 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
+import 'package:felloapp/core/model/eligible_coupon_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/repository/coupons_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_events.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
@@ -23,6 +25,7 @@ import 'package:felloapp/ui/modals_sheets/augmont_coupons_modal.dart';
 import 'package:felloapp/ui/modals_sheets/augmont_register_modal_sheet.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fcm_topics.dart';
@@ -47,6 +50,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   TransactionService _txnService = locator<TransactionService>();
   GoldenTicketService _gtService = GoldenTicketService();
   final _analyticsService = locator<AnalyticsService>();
+  final _couponRepo = locator<CouponRepository>();
 
   int _status = 0;
   int lastTappedChipIndex = 1;
@@ -55,6 +59,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   bool _showMaxCapText = false;
   bool _isGoldRateFetching = false;
   bool _isGoldBuyInProgress = false;
+  bool _couponApplyInProgress = false;
   bool _showCoupons = false;
   AugmontRates goldRates;
   String userAugmontState;
@@ -68,6 +73,13 @@ class AugmontGoldBuyViewModel extends BaseModel {
   TextEditingController goldAmountController;
   List<double> chipAmountList = [101, 201, 501, 1001];
   List<CouponModel> _couponList;
+
+  bool get couponApplyInProgress => _couponApplyInProgress;
+
+  set couponApplyInProgress(bool val) {
+    _couponApplyInProgress = val;
+    notifyListeners();
+  }
 
   List<CouponModel> get couponList => _couponList;
 
@@ -279,6 +291,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
     //   status = checkAugmontStatus();
     //   return;
     // }
+    if (couponApplyInProgress) return;
     double buyAmount = double.tryParse(goldAmountController.text);
     if (goldRates == null) {
       BaseUtil.showNegativeAlert(
@@ -328,7 +341,10 @@ class AugmontGoldBuyViewModel extends BaseModel {
     }
     isGoldBuyInProgress = true;
     _analyticsService.track(eventName: AnalyticsEvents.buyGold);
-    _augmontModel.initiateGoldPurchase(goldRates, buyAmount).then((txn) {
+    _augmontModel
+        .initiateGoldPurchase(goldRates, buyAmount,
+            couponCode: appliedCoupon?.code ?? "")
+        .then((txn) {
       if (txn == null) {
         isGoldBuyInProgress = false;
         BaseUtil.showNegativeAlert(
@@ -599,17 +615,40 @@ class AugmontGoldBuyViewModel extends BaseModel {
     showCoupons = true;
   }
 
-  applyCoupon(CouponModel coupon) {
+  applyCoupon(CouponModel coupon) async {
+    if (couponApplyInProgress) return;
+    if (goldBuyAmount < coupon.minPurchase.toDouble()) {
+      BaseUtil.showNegativeAlert("Coupon cannot be applied!",
+          "Coupon can only be applied on a minimum purchase of ₹ ${coupon.minPurchase}");
+      return;
+    }
     buyFieldNode.unfocus();
-    if (goldBuyAmount < coupon.minPurchase.toDouble())
-      goldBuyAmount = coupon.minPurchase.toDouble();
-
-    goldAmountController.text = goldBuyAmount.toInt().toString();
-    updateGoldAmount();
-    notifyListeners();
-    appliedCoupon = coupon;
-    BaseUtil.showPositiveAlert("Coupon Applied Successfully",
-        "You 3% gold will be credited to your wallet");
+    couponApplyInProgress = true;
+    ApiResponse<EligibleCouponResponseModel> response =
+        await _couponRepo.getEligibleCoupon(
+            uid: _userService.baseUser.uid,
+            amount: goldBuyAmount.toInt(),
+            couponcode: coupon.code);
+    couponApplyInProgress = false;
+    if (response.code == 200 && response.model.flag == true) {
+      appliedCoupon = coupon;
+      BaseUtil.showPositiveAlert(
+          "Coupon Applied Successfully", response.model.message);
+    } else if (response.code == 400) {
+      BaseUtil.showNegativeAlert("Copuon not applied", response.errorMessage);
+    } else {
+      if (response.model != null)
+        BaseUtil.showNegativeAlert(
+            "Coupon not applied", response?.model?.message);
+      else
+        BaseUtil.showNegativeAlert(
+            "Coupon not applied", "Please another coupon");
+    }
+    // if (goldBuyAmount < coupon.minPurchase.toDouble())
+    //   goldBuyAmount = coupon.minPurchase.toDouble();
+    // goldAmountController.text = goldBuyAmount.toInt().toString();
+    // updateGoldAmount();
+    // notifyListeners();
   }
 
   checkIfCouponIsStillApplicable() {

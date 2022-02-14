@@ -64,6 +64,7 @@ class InvestmentActionsRepository {
       Map<String, dynamic> initAugMap,
       Map<String, dynamic> initRzpMap,
       double amount,
+      String couponCode,
       String userUid}) async {
     Map<String, dynamic> _body = {
       'tran_doc_id': tranId,
@@ -72,6 +73,9 @@ class InvestmentActionsRepository {
       "aug_map": initAugMap,
       "rzp_map": initRzpMap
     };
+    if (couponCode != null && couponCode.isNotEmpty)
+      _body['couponCode'] = couponCode;
+
     _logger.d("initiateUserDeposit:: Pre encryption: $_body");
     if (await _rsaEncryption.init()) {
       _body = _rsaEncryption.encryptRequestBody(_body);
