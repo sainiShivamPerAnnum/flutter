@@ -49,7 +49,6 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     augmontProvider = Provider.of<AugmontModel>(context, listen: false);
-    iProvider = Provider.of<ICICIModel>(context, listen: false);
     httpProvider = Provider.of<HttpModel>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     return new Wrap(
@@ -176,7 +175,7 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
 
     ///now register the augmont user
     UserAugmontDetail detail = await augmontProvider.createSimpleUser(
-       _userService.baseUser.mobile, stateChosenValue);
+        _userService.baseUser.mobile, stateChosenValue);
     if (detail == null) {
       BaseUtil.showNegativeAlert('Registration Failed',
           'Failed to register at the moment. Please try again.');

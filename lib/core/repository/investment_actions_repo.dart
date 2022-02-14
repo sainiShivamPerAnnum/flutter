@@ -74,7 +74,7 @@ class InvestmentActionsRepository {
       "rzp_map": initRzpMap
     };
     if (couponCode != null && couponCode.isNotEmpty)
-      _body['couponCode'] = couponCode;
+      _body['couponcode'] = couponCode;
 
     _logger.d("initiateUserDeposit:: Pre encryption: $_body");
     if (await _rsaEncryption.init()) {

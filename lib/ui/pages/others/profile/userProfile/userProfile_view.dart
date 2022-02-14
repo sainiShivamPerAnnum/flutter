@@ -54,6 +54,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                     right: SizeConfig.pageHorizontalMargins,
                   ),
                   child: SingleChildScrollView(
+                    physics: BouncingScrollPhysics(),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [

@@ -72,14 +72,10 @@ class WinnersLeaderBoardSE extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           leaderboardChips(
-                            0,
-                            "Game Winners",
-                          ),
+                              0, "Game Winners", myscrollController),
                           SizedBox(width: 16),
                           leaderboardChips(
-                            1,
-                            "Top Referrers",
-                          ),
+                              1, "Top Referrers", myscrollController),
                         ],
                       ),
                     ),
@@ -99,9 +95,12 @@ class WinnersLeaderBoardSE extends StatelessWidget {
         });
   }
 
-  leaderboardChips(int page, String text) {
+  leaderboardChips(int page, String text, ScrollController controller) {
     return GestureDetector(
-      onTap: () => switchPage(page),
+      onTap: () {
+        controller.jumpTo(0);
+        switchPage(page);
+      },
       child: Container(
         padding: EdgeInsets.symmetric(
             horizontal: SizeConfig.padding24, vertical: SizeConfig.padding12),

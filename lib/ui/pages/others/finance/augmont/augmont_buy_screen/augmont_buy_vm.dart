@@ -201,6 +201,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
     double amt = chipAmountList[index];
     return GestureDetector(
       onTap: () {
+        showMaxCapText = false;
         Haptic.vibrate();
         lastTappedChipIndex = index;
         buyFieldNode.unfocus();
@@ -615,7 +616,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   }
 
   applyCoupon(CouponModel coupon) async {
-    if (couponApplyInProgress) return;
+    if (couponApplyInProgress || isGoldBuyInProgress) return;
     if (goldBuyAmount < coupon.minPurchase.toDouble()) {
       BaseUtil.showNegativeAlert("Coupon cannot be applied!",
           "Coupon can only be applied on a minimum purchase of ₹ ${coupon.minPurchase}");
