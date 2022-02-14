@@ -326,18 +326,17 @@ class ReferralDetailsView extends StatelessWidget {
                             SizedBox(height: SizeConfig.padding8),
                             InfoTile(
                               title:
-                              "Once your friend plays Cricket more than 10 times, you receive a new Golden Ticket.",
+                                  "Once your friend plays Cricket more than 10 times, you receive a new Golden Ticket.",
                               leadingAsset: Assets.wmtShare,
                             ),
                             SizedBox(height: SizeConfig.padding8),
                             Center(
-                              child: Text(
-                                "You can win upto ₹150 and 600 Fello tokens from each referral!",
-                                style: TextStyles.body3.bold,
-                                textAlign: TextAlign.center,
-                              )
-                            ),
-                            SizedBox(height: SizeConfig.navBarHeight*1.2),
+                                child: Text(
+                              "You can win upto ₹150 and 600 Fello tokens from each referral!",
+                              style: TextStyles.body3.bold,
+                              textAlign: TextAlign.center,
+                            )),
+                            SizedBox(height: SizeConfig.navBarHeight * 1.2),
                           ],
                         ),
                       ),
@@ -380,12 +379,9 @@ class InfoTile extends StatelessWidget {
   final String leadingAsset;
   final IconData leadingIcon;
   final String title;
+  final double leadSize;
 
-  InfoTile({
-    this.leadingIcon,
-    this.leadingAsset,
-    this.title,
-  });
+  InfoTile({this.leadingIcon, this.leadingAsset, this.title, this.leadSize});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -394,17 +390,17 @@ class InfoTile extends StatelessWidget {
         children: [
           CircleAvatar(
             backgroundColor: UiConstants.tertiarySolid.withOpacity(0.1),
-            radius: SizeConfig.screenWidth * 0.067,
+            radius: leadSize ?? SizeConfig.padding24,
             child: leadingIcon != null
                 ? Icon(
                     leadingIcon,
-                    size: SizeConfig.padding32,
+                    size: SizeConfig.padding20,
                     color: UiConstants.tertiarySolid,
                   )
                 : SvgPicture.asset(
                     leadingAsset ?? "assets/vectors/icons/tickets.svg",
-                    height: SizeConfig.padding32,
-                    width: SizeConfig.padding32,
+                    height: SizeConfig.padding20,
+                    width: SizeConfig.padding20,
                     color: UiConstants.tertiarySolid,
                   ),
           ),

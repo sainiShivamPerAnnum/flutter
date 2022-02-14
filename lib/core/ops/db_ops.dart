@@ -9,6 +9,7 @@ import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
+import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/faq_model.dart';
 import 'package:felloapp/core/model/feed_card_model.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
@@ -1373,6 +1374,23 @@ class DBModel extends ChangeNotifier {
     return felloMilestones;
   }
 
+  Future<List<EventModel>> getOngoingEvents() async {
+    List<EventModel> events = [];
+    try {
+      QuerySnapshot snapshot = await _api.fetchOngoingEvents();
+      if (snapshot.docs != null && snapshot.docs.isNotEmpty) {
+        snapshot.docs.forEach((element) {
+          print(element.data());
+          events.add(EventModel.fromMap(element.data()));
+        });
+      }
+    } catch (e) {
+      logger.e(e.toString());
+      events = [];
+    }
+    return events;
+  }
+
   Future<List<CouponModel>> getCoupons() async {
     List<CouponModel> couponList = [];
     try {
@@ -1389,6 +1407,7 @@ class DBModel extends ChangeNotifier {
   }
 
 //------------------------------------------------REALTIME----------------------------
+
   Future<bool> checkIfUsernameIsAvailable(String username) async {
     return await _api.checkUserNameAvailability(username);
   }

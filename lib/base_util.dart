@@ -511,8 +511,8 @@ class BaseUtil extends ChangeNotifier {
       bool hapticVibrate,
       Color backgroundColor,
       bool isBarrierDismissable,
-      bool isScrollControlled,
-      BorderRadius borderRadius}) {
+      BorderRadius borderRadius,
+      bool isScrollControlled = false}) {
     if (addToScreenStack != null && addToScreenStack == true)
       AppState.screenStack.add(ScreenItem.dialog);
     if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
