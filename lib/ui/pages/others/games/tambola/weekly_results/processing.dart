@@ -13,6 +13,8 @@ class PrizeProcessing extends StatelessWidget {
     S locale = S.of(context);
     return SafeArea(
       child: Container(
+        padding:
+            EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
         margin: EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

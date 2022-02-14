@@ -9,6 +9,7 @@ class UsernameInputScreenViewModel extends BaseModel {
   final BaseUtil baseProvider = locator<BaseUtil>();
   final DBModel dbProvider = locator<DBModel>();
 
+  final _referralCodeController = TextEditingController();
   TextEditingController usernameController = TextEditingController();
   String username = "";
 
@@ -18,7 +19,10 @@ class UsernameInputScreenViewModel extends BaseModel {
   bool isLoading = false;
   bool isUpdating = false;
   bool isUpdated = false;
+  bool hasReferralCode = false;
   final _formKey = GlobalKey<FormState>();
+
+  get referralCodeController => _referralCodeController;
 
   get formKey => _formKey;
   UsernameResponse response;

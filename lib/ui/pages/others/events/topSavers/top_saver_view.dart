@@ -410,7 +410,7 @@ class EventLeaderboard extends StatelessWidget {
                                             style: TextStyles.body2.bold
                                                 .colour(
                                                     UiConstants.primaryColor)
-                                                .underline,
+                                                ,
                                           ),
                                         ),
                                       ],

@@ -60,16 +60,19 @@ class _PrizeWinState extends State<PrizeWin> {
             ),
           ),
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 20),
+            padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.pageHorizontalMargins),
             child: Column(
               children: [
                 Spacer(
                   flex: 1,
                 ),
-                FittedBox(child: Text(
-                  locale.tWinTitle,
-                  style: TextStyles.title1.bold,
-                ),),
+                FittedBox(
+                  child: Text(
+                    locale.tWinTitle,
+                    style: TextStyles.title1.bold,
+                  ),
+                ),
                 WinnerBox(
                   winningsmap: widget.winningsMap,
                 ),
@@ -83,8 +86,7 @@ class _PrizeWinState extends State<PrizeWin> {
                 Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Text(locale.tWinSubtitle2,
-                      textAlign: TextAlign.center,
-                      style: TextStyles.body3),
+                      textAlign: TextAlign.center, style: TextStyles.body3),
                 ),
                 SizedBox(height: SizeConfig.padding12),
                 Container(
