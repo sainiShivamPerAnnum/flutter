@@ -99,7 +99,7 @@ class TopSaverViewModel extends BaseModel {
         response.model.winners != null)
       pastWinners = response.model.winners;
     else
-      currentParticipants = [];
+      pastWinners = [];
 
     updateWinnersTitle();
   }

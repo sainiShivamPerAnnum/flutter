@@ -202,17 +202,17 @@ class WinnersBoard extends StatelessWidget {
                             (i) {
                               return Container(
                                 margin: EdgeInsets.only(
-                                    bottom: SizeConfig.padding12),
+                                    bottom: SizeConfig.padding16),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(
                                       SizeConfig.padding12),
-                                  color: Colors.grey.withOpacity(0.1),
+                                  color:
+                                      UiConstants.primaryLight.withOpacity(0.2),
                                 ),
                                 padding: EdgeInsets.symmetric(
                                     horizontal:
                                         SizeConfig.pageHorizontalMargins / 2,
-                                    vertical:
-                                        SizeConfig.pageHorizontalMargins / 2),
+                                    vertical: SizeConfig.padding16),
                                 child: Row(
                                   children: [
                                     CircleAvatar(
@@ -227,7 +227,7 @@ class WinnersBoard extends StatelessWidget {
                                     Expanded(
                                       child: Text(
                                         model.pastWinners[i].username,
-                                        style: TextStyles.body3.bold,
+                                        style: TextStyles.body3,
                                       ),
                                     ),
                                     SizedBox(width: SizeConfig.padding12),
@@ -266,10 +266,13 @@ class WinnersBoard extends StatelessWidget {
                       margin: EdgeInsets.only(
                           top: SizeConfig.padding16,
                           bottom: SizeConfig.padding32),
-                      child: NoRecordDisplayWidget(
-                        asset: "images/leaderboard.png",
-                        text: "Winners will be upadated soon",
-                        topPadding: false,
+                      child: Opacity(
+                        opacity: 0.3,
+                        child: NoRecordDisplayWidget(
+                          asset: "images/leaderboard.png",
+                          text: "Winners will be upadated soon",
+                          topPadding: false,
+                        ),
                       ),
                     ))
               : ListLoader(bottomPadding: true),
@@ -321,8 +324,8 @@ class EventLeaderboard extends StatelessWidget {
                             Column(
                               children: List.generate(
                                 // model.currentParticipants.length,
-                                model.currentParticipants.length > 5
-                                    ? 5
+                                model.currentParticipants.length > 4
+                                    ? 4
                                     : model.currentParticipants.length,
                                 (i) => Container(
                                   margin: EdgeInsets.only(
@@ -330,14 +333,11 @@ class EventLeaderboard extends StatelessWidget {
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(
                                         SizeConfig.padding12),
-                                    color: Colors.grey.withOpacity(0.1),
+                                    color: Colors.grey.withOpacity(0.05),
                                   ),
                                   child: ListTile(
-                                    contentPadding: EdgeInsets.symmetric(
-                                        vertical: SizeConfig.padding4,
-                                        horizontal:
-                                            SizeConfig.pageHorizontalMargins /
-                                                2),
+                                    contentPadding: EdgeInsets.all(
+                                        SizeConfig.pageHorizontalMargins / 2),
                                     leading: CircleAvatar(
                                       backgroundColor: UiConstants.primaryColor,
                                       child: Text(
@@ -424,10 +424,14 @@ class EventLeaderboard extends StatelessWidget {
                           margin: EdgeInsets.only(
                               top: SizeConfig.padding16,
                               bottom: SizeConfig.padding32),
-                          child: NoRecordDisplayWidget(
-                            asset: "images/leaderboard.png",
-                            text: "Leaderboard will be upadated soon",
-                            topPadding: false,
+                          child: Opacity(
+                            opacity: 0.3,
+                            child: NoRecordDisplayWidget(
+                              asset: "images/leaderboard.png",
+                              text: "Leaderboard will be upadated soon",
+                              topPadding: false,
+                              bottomPadding: true,
+                            ),
                           ),
                         ))
                   : ListLoader(

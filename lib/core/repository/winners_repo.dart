@@ -60,7 +60,8 @@ class WinnersRepository {
       String gameType, String freq) async {
     try {
       String code = CodeFromFreq.getPastEventCodeFromFreq(freq);
-      _logger.d("Game Type : $gameType \n Frequency: $freq \n Code: $code");
+      _logger.d(
+          "Past Winners :: Game Type : $gameType \n Frequency: $freq \n Code: $code");
       final QueryDocumentSnapshot _response =
           await _api.getWinnersByGameTypeFreqAndCode(gameType, freq, code);
 

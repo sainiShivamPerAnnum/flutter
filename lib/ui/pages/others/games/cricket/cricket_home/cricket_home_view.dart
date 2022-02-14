@@ -239,13 +239,16 @@ class NoRecordDisplayWidget extends StatelessWidget {
   final String assetLottie;
   final String text;
   final bool topPadding;
+  final bool bottomPadding;
 
-  NoRecordDisplayWidget(
-      {this.asset,
-      this.text,
-      this.assetSvg,
-      this.assetLottie,
-      this.topPadding = true});
+  NoRecordDisplayWidget({
+    this.asset,
+    this.text,
+    this.assetSvg,
+    this.assetLottie,
+    this.topPadding = true,
+    this.bottomPadding = false,
+  });
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -275,7 +278,8 @@ class NoRecordDisplayWidget extends StatelessWidget {
           text,
           textAlign: TextAlign.center,
           style: TextStyles.body2.bold,
-        )
+        ),
+        if (bottomPadding) SizedBox(height: SizeConfig.padding16),
       ],
     );
   }
