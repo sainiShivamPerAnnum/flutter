@@ -137,7 +137,6 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
   set appliedCoupon(CouponModel value) {
     this._appliedCoupon = value;
-    _logger.d(_appliedCoupon.toString());
     notifyListeners();
   }
 

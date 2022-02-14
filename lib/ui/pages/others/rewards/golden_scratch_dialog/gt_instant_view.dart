@@ -266,10 +266,10 @@ class _GTInstantViewState extends State<GTInstantView>
     } else {
       onPressed = () {
         if (!model.isCardScratched) return;
-        AppState.backButtonDispatcher.didPopRoute();
-        Future.delayed(Duration(milliseconds: 100), () {
-          AppState.delegate.appState.setCurrentTabIndex = 1;
-        });
+        AppState.delegate.appState.setCurrentTabIndex = 1;
+        while (AppState.screenStack.length > 1) {
+          AppState.backButtonDispatcher.didPopRoute();
+        }
       };
     }
     return onPressed;

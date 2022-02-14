@@ -32,13 +32,13 @@ class CouponRepository {
         "couponcode": couponcode,
         "amt": amount
       };
-      _logger.d("initiateUserDeposit:: Pre encryption: $_body");
-      if (await _rsaEncryption.init()) {
-        _body = _rsaEncryption.encryptRequestBody(_body);
-        _logger.d("initiateUserDeposit:: Post encryption: ${_body.toString()}");
-      } else {
-        _logger.e("Encrypter initialization failed!! exiting method");
-      }
+      // _logger.d("initiateUserDeposit:: Pre encryption: $_body");
+      // if (await _rsaEncryption.init()) {
+      //   _body = _rsaEncryption.encryptRequestBody(_body);
+      //   _logger.d("initiateUserDeposit:: Post encryption: ${_body.toString()}");
+      // } else {
+      //   _logger.e("Encrypter initialization failed!! exiting method");
+      // }
       final res = await APIService.instance
           .postData(_apiPaths.kFelloCoupons, body: _body, token: _bearer);
 
