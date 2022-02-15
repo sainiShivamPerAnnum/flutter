@@ -131,39 +131,30 @@ class InstructionsTab extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: SizeConfig.padding24),
       child: WinningsContainer(
         shadow: false,
+        borderRadius: SizeConfig.roundness16,
         onTap: () {
           AppState.delegate.appState.setCurrentTabIndex = 0;
           AppState.backButtonDispatcher.didPopRoute();
         },
+        height: SizeConfig.screenWidth * 0.16,
         child: Container(
-          child: Padding(
-            padding: EdgeInsets.all(SizeConfig.padding16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SvgPicture.asset(
-                  'images/svgs/gold.svg',
-                  height: SizeConfig.padding54,
-                ),
-                SizedBox(width: SizeConfig.screenWidth * 0.05),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Join the Event",
-                      style: TextStyles.title3.colour(Colors.white).bold,
-                    ),
-                    SizedBox(height: SizeConfig.padding4),
-                    Text(
-                      "Buy Digital Gold",
-                      style: TextStyles.body2.colour(Colors.white).light,
-                    ),
-                  ],
-                ),
-                Lottie.asset("assets/lotties/golden-arrow.json"),
-              ],
-            ),
+          padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.pageHorizontalMargins),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SvgPicture.asset(
+                'images/svgs/gold.svg',
+                height: SizeConfig.padding40,
+              ),
+              SizedBox(width: SizeConfig.padding16),
+              Text(
+                "Buy Digital Gold",
+                style: TextStyles.title5.colour(Colors.white).bold.setHeight(1),
+              ),
+              Spacer(),
+              Lottie.asset("assets/lotties/golden-arrow.json"),
+            ],
           ),
         ),
       ),
