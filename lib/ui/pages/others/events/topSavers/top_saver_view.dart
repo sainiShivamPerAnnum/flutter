@@ -270,7 +270,7 @@ class WinnersBoard extends StatelessWidget {
                         opacity: 0.3,
                         child: NoRecordDisplayWidget(
                           asset: "images/leaderboard.png",
-                          text: "Winners will be upadated soon",
+                          text: "Winners will be updated soon",
                           topPadding: false,
                         ),
                       ),
