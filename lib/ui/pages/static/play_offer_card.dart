@@ -16,15 +16,15 @@ class OfferCard extends StatelessWidget {
 
   OfferCard({this.model, this.shimmer = false});
 
-  calculateWidth() {
-    if (model.gridX != null) {
-      if (model.gridX == 1)
-        return SizeConfig.screenWidth * 0.5;
-      else
-        return SizeConfig.screenWidth * 0.85;
-    } else
-      return SizeConfig.screenWidth * 0.5;
-  }
+  // calculateWidth() {
+  //   if (model.gridX != null) {
+  //     if (model.gridX == 1)
+  //       return SizeConfig.screenWidth * 0.5;
+  //     else
+  //       return SizeConfig.screenWidth * 0.85;
+  //   } else
+  //     return SizeConfig.screenWidth * 0.5;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +44,7 @@ class OfferCard extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(SizeConfig.roundness24),
         child: Container(
-          width: calculateWidth(),
+          width: SizeConfig.screenWidth,
           height: SizeConfig.screenWidth * 0.28,
           margin: EdgeInsets.only(
             bottom: SizeConfig.screenWidth * 0.1,
