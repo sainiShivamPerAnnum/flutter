@@ -243,9 +243,16 @@ class _GTInstantViewState extends State<GTInstantView>
                 if (model.showScratchGuide && !model.isCardScratchStarted)
                   Align(
                     alignment: Alignment.center,
-                    child: BreathingText(
-                      alertText: "Scratch Here",
-                      textStyle: TextStyles.body2.colour(Colors.black54),
+                    child: Container(
+                      color: UiConstants.tertiaryLight,
+                      width: SizeConfig.screenWidth * 0.62,
+                      height: SizeConfig.padding40,
+                      padding: EdgeInsets.all(10),
+                      alignment: Alignment.center,
+                      child: BreathingText(
+                        alertText: "Scratch Here",
+                        textStyle: TextStyles.body2.colour(Colors.black54),
+                      ),
                     ),
                   )
               ],

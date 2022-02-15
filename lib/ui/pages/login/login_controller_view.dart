@@ -224,7 +224,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                                               MainAxisAlignment.center,
                                           children: [
                                             Text(
-                                              "Logging using",
+                                              "Logging in with",
                                               style: TextStyles.body3.bold
                                                   .colour(Color(0xff1180FF)),
                                             ),
