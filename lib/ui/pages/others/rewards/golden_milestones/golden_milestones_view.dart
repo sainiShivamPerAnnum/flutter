@@ -32,7 +32,7 @@ class GoldenMilestonesView extends StatelessWidget {
               children: [
                 FelloAppBar(
                   leading: FelloAppBarBackButton(),
-                  title: "Golden Milstones",
+                  title: "Milestones",
                 ),
                 Expanded(
                   child: RefreshIndicator(

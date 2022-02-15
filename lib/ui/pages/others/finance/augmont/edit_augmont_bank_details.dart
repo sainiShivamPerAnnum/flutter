@@ -61,6 +61,15 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
   bool inEditMode = false;
   FocusNode focusNode = FocusNode();
   bool isLoading = false;
+  bool _isEditAugmontBankDetailInProgress = false;
+  get isEditAugmontBankDetailInProgress =>
+      this._isEditAugmontBankDetailInProgress;
+
+  set isEditAugmontBankDetailInProgress(bool value) {
+    setState(() {
+      this._isEditAugmontBankDetailInProgress = value;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -369,7 +378,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                     child: Container(
                       width: SizeConfig.navBarWidth,
                       child: FelloButtonLg(
-                        child: (!baseProvider.isEditAugmontBankDetailInProgress)
+                        child: (!isEditAugmontBankDetailInProgress)
                             ? Text(
                                 inEditMode ? 'UPDATE' : 'EDIT',
                                 style: Theme.of(context)
@@ -408,8 +417,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
   }
 
   _onUpdateClicked() async {
-    baseProvider.isEditAugmontBankDetailInProgress = true;
-    setState(() {});
+    isEditAugmontBankDetailInProgress = true;
 
     ///CHECK FOR CHANGES
     var pBankHolderName = _bankHolderNameController.text;
@@ -431,8 +439,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
         'No Update',
         'No changes were made',
       );
-      baseProvider.isEditAugmontBankDetailInProgress = false;
-      setState(() {});
+      isEditAugmontBankDetailInProgress = false;
       return;
     }
 
@@ -441,8 +448,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
         'Fields mismatch',
         'Bank account numbers do not match',
       );
-      baseProvider.isEditAugmontBankDetailInProgress = false;
-      setState(() {});
+      isEditAugmontBankDetailInProgress = false;
       return;
     }
     _logger.d(pBankIfsc);
@@ -453,8 +459,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
         'Please check your ifsc code.',
       );
       pBankIfsc = pBankIfsc.toUpperCase();
-      baseProvider.isEditAugmontBankDetailInProgress = false;
-      setState(() {});
+      isEditAugmontBankDetailInProgress = false;
       return;
     }
 
@@ -464,8 +469,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
         'Invalid Account Number',
         'Please check your account number.',
       );
-      baseProvider.isEditAugmontBankDetailInProgress = false;
-      setState(() {});
+      isEditAugmontBankDetailInProgress = false;
       return;
     }
 
@@ -489,8 +493,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
           'Account Verification Failed',
           'Please recheck your entered account number and name',
         );
-        baseProvider.isEditAugmontBankDetailInProgress = false;
-        setState(() {});
+        isEditAugmontBankDetailInProgress = false;
         return;
       }
 
@@ -506,8 +509,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
           'Account Verification Failed',
           'Please verify your account details and try again',
         );
-        baseProvider.isEditAugmontBankDetailInProgress = false;
-        setState(() {});
+        isEditAugmontBankDetailInProgress = false;
         return;
       }
 
@@ -520,12 +522,12 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
         'Account could not be verified',
         'Please verify your account details and try again',
       );
-      baseProvider.isEditAugmontBankDetailInProgress = false;
-      setState(() {});
+      isEditAugmontBankDetailInProgress = false;
       return;
     }
 
     ///NOW SHOW CONFIRMATION DIALOG TO USER
+    isEditAugmontBankDetailInProgress = false;
     AppState.screenStack.add(ScreenItem.dialog);
     showDialog(
         context: context,
@@ -541,6 +543,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                   : '',
               onAccept: () async {
                 ///FINALLY NOW UPDATE THE BANK DETAILS
+                isEditAugmontBankDetailInProgress = true;
                 baseProvider.augmontDetail.bankHolderName =
                     pBankHolderName.trim();
                 baseProvider.augmontDetail.bankAccNo = pBankAccNo.trim();
@@ -552,10 +555,10 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                         _userService.baseUser.uid, baseProvider.augmontDetail)
                     .then((flag) {
                   if (widget.isWithdrawFlow) {
-                    baseProvider.isEditAugmontBankDetailInProgress = false;
+                    isEditAugmontBankDetailInProgress = false;
                     widget.addBankComplete();
                   } else {
-                    baseProvider.isEditAugmontBankDetailInProgress = false;
+                    isEditAugmontBankDetailInProgress = false;
                     setState(() {});
                     if (flag) {
                       _analyticsService.track(
@@ -577,8 +580,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                   'Update Cancelled',
                   'Please try again',
                 );
-                baseProvider.isEditAugmontBankDetailInProgress = false;
-                setState(() {});
+                isEditAugmontBankDetailInProgress = false;
                 return;
               },
             ));
