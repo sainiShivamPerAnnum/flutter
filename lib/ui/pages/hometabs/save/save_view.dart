@@ -124,7 +124,7 @@ class FocusCouponClip extends StatelessWidget {
             ),
             SizedBox(width: SizeConfig.padding6),
             InkWell(
-              onTap: () => model.applyCoupon(model.focusCoupon),
+              onTap: () => model.applyCoupon(model.focusCoupon.code),
               child: Container(
                 alignment: Alignment.center,
                 padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),

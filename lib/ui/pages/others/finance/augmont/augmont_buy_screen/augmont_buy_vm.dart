@@ -54,8 +54,8 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
   int _status = 0;
   int lastTappedChipIndex = 1;
-  CouponModel _appliedCoupon, _focusCoupon;
-
+  CouponModel _focusCoupon;
+  EligibleCouponResponseModel _appliedCoupon;
   bool _showMaxCapText = false;
   bool _isGoldRateFetching = false;
   bool _isGoldBuyInProgress = false;
@@ -133,9 +133,9 @@ class AugmontGoldBuyViewModel extends BaseModel {
     notifyListeners();
   }
 
-  CouponModel get appliedCoupon => this._appliedCoupon;
+  EligibleCouponResponseModel get appliedCoupon => this._appliedCoupon;
 
-  set appliedCoupon(CouponModel value) {
+  set appliedCoupon(EligibleCouponResponseModel value) {
     this._appliedCoupon = value;
     notifyListeners();
   }
@@ -208,7 +208,8 @@ class AugmontGoldBuyViewModel extends BaseModel {
         goldBuyAmount = amt;
         goldAmountController.text = goldBuyAmount.toInt().toString();
         updateGoldAmount();
-        checkIfCouponIsStillApplicable();
+        //checkIfCouponIsStillApplicable();
+        appliedCoupon = null;
         notifyListeners();
       },
       child: Container(
@@ -286,7 +287,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
     // }
     if (couponApplyInProgress) return;
     double buyAmount = double.tryParse(goldAmountController.text);
-    checkIfCouponIsStillApplicable();
+    // checkIfCouponIsStillApplicable();
     if (goldRates == null) {
       BaseUtil.showNegativeAlert(
         'Gold Rates Unavailable',
@@ -369,7 +370,8 @@ class AugmontGoldBuyViewModel extends BaseModel {
       goldBuyAmount = 0;
       updateGoldAmount();
     }
-    checkIfCouponIsStillApplicable();
+    // checkIfCouponIsStillApplicable();
+    appliedCoupon = null;
   }
 
   int checkAugmontStatus() {
@@ -609,40 +611,35 @@ class AugmontGoldBuyViewModel extends BaseModel {
     showCoupons = true;
   }
 
-  applyCoupon(CouponModel coupon) async {
+  applyCoupon(String couponCode) async {
     if (couponApplyInProgress || isGoldBuyInProgress) return;
-    if (goldBuyAmount < coupon.minPurchase.toDouble()) {
-      BaseUtil.showNegativeAlert("Coupon cannot be applied!",
-          "Coupon can only be applied on a minimum purchase of ₹ ${coupon.minPurchase}");
-      return;
-    }
+
     buyFieldNode.unfocus();
+
     couponApplyInProgress = true;
+
     ApiResponse<EligibleCouponResponseModel> response =
         await _couponRepo.getEligibleCoupon(
             uid: _userService.baseUser.uid,
             amount: goldBuyAmount.toInt(),
-            couponcode: coupon.code);
-    couponApplyInProgress = false;
-    if (response.code == 200 && response.model.flag == true) {
-      appliedCoupon = coupon;
-      BaseUtil.showPositiveAlert(
-          "Coupon Applied Successfully", response.model.message);
-    } else if (response.code == 400) {
-      BaseUtil.showNegativeAlert(
-          "Copuon not applied", response?.model?.message);
-    } else {
-      if (response.model != null)
-        BaseUtil.showNegativeAlert(
-            "Coupon not applied", response?.model?.message);
-      else
-        BaseUtil.showNegativeAlert(
-            "Coupon not applied", "Please try another coupon");
-    }
-  }
+            couponcode: couponCode);
 
-  checkIfCouponIsStillApplicable() {
-    if (appliedCoupon != null && goldBuyAmount < appliedCoupon.minPurchase)
-      appliedCoupon = null;
+    couponApplyInProgress = false;
+
+    if (response.code == 200) {
+      if (response.model.flag == true) {
+        appliedCoupon = response.model;
+        BaseUtil.showPositiveAlert(
+            "Coupon Applied Successfully", response?.model?.message);
+      } else {
+        BaseUtil.showNegativeAlert(
+            "Coupon cannot be applied", response?.model?.message);
+      }
+    } else if (response.code == 400) {
+      BaseUtil.showNegativeAlert("Coupon not applied", response?.errorMessage);
+    } else {
+      BaseUtil.showNegativeAlert(
+          "Coupon not applied", "Please try another coupon");
+    }
   }
 }

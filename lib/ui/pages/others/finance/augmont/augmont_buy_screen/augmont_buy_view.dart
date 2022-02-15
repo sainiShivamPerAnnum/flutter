@@ -158,7 +158,8 @@ class AugmontBuyCard extends StatelessWidget {
                   : (model.appliedCoupon != null
                       ? CouponItem(
                           model: model,
-                          coupon: model.appliedCoupon,
+                          couponCode: model.appliedCoupon.code,
+                          desc: model.appliedCoupon.desc,
                           onTap: () {},
                           trailingWidget: InkWell(
                             onTap: () => model.appliedCoupon = null,
