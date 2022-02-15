@@ -223,7 +223,7 @@ class LoginControllerViewModel extends BaseModel {
               //firebase user should never be null at this point
               userService.baseUser = BaseUser.newUser(
                   userService.firebaseUser.uid,
-              _formatMobileNumber(LoginControllerView.mobileno));
+                  _formatMobileNumber(LoginControllerView.mobileno));
             }
 
             userService.baseUser.name =
@@ -272,6 +272,8 @@ class LoginControllerViewModel extends BaseModel {
                     curve: Curves.easeInToLinear)
                 .then((value) =>
                     _usernameKey.currentState.focusNode.requestFocus());
+
+            _nameScreenKey.currentState.setClearStateValue();
           }
           break;
         }

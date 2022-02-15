@@ -36,6 +36,8 @@ class NameInputScreenState extends State<NameInputScreen> {
   static String stateChosenValue;
   String get state => stateChosenValue;
 
+  setClearStateValue() => stateChosenValue = null;
+
   String dateInputError = "";
 
   DateTime initialDate = DateTime(1997, 1, 1, 0, 0);
