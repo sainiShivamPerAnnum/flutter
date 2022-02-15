@@ -383,6 +383,11 @@ class LoginControllerViewModel extends BaseModel {
           duration: Duration(milliseconds: 500), curve: Curves.easeInToLinear);
     } else if (user.model == null ||
         (user.model != null && user.model.hasIncompleteDetails())) {
+      if (user.model == null) {
+        logger.d("New User, initializing BaseUser");
+        userService.baseUser =
+            BaseUser.newUser(userService.firebaseUser.uid, userMobile);
+      }
       setState(ViewState.Idle);
 
       ///First time user!
