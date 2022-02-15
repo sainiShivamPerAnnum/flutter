@@ -5,6 +5,7 @@ import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/ui/pages/login/screens/name_input/name_input_vm.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -188,6 +189,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       _firebaseUser = null;
       _baseUser = null;
       _myUserDpUrl = null;
+      // NameInputScreenViewModel.stateChosenValue = "";
       _myUserName = null;
       _idToken = null;
       _isEmailVerified = false;

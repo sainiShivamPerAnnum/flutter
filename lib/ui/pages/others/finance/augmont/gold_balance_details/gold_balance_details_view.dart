@@ -77,6 +77,27 @@ class GoldBalanceDetailsView extends StatelessWidget {
                           ],
                         ),
                       ),
+
+                      Container(
+                        margin: EdgeInsets.only(
+                            left: SizeConfig.pageHorizontalMargins,
+                            right: SizeConfig.pageHorizontalMargins,
+                            top: SizeConfig.padding24,
+                            bottom: SizeConfig.padding12),
+                        child: FelloButtonLg(
+                          onPressed: () {
+                            AppState.delegate.appState.currentAction =
+                                PageAction(
+                                    state: PageState.addPage,
+                                    page: AugmontGoldSellPageConfig);
+                          },
+                          child: Text(
+                            "Sell Gold",
+                            style: TextStyles.body3.colour(Colors.white).bold,
+                          ),
+                        ),
+                      ),
+
                       Container(
                         margin: EdgeInsets.symmetric(
                             horizontal: SizeConfig.pageHorizontalMargins,
@@ -103,37 +124,19 @@ class GoldBalanceDetailsView extends StatelessWidget {
                             FeatureTile(
                               leadingAsset: Assets.goldPure,
                               title: "100% Secure",
-                              subtitle: "Your Gold is safely stored and insured by Augmont",
+                              subtitle:
+                                  "Your Gold is safely stored and insured by Augmont",
                             ),
                             SizedBox(height: SizeConfig.padding12),
                             FeatureTile(
                               leadingAsset: Assets.goldSecure,
                               title: "Highly Valuable",
-                              subtitle: "Gold provides high returns as a long term investment",
+                              subtitle:
+                                  "Gold provides high returns as a long term investment",
                             )
                           ],
                         ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(
-                            left: SizeConfig.pageHorizontalMargins,
-                            right: SizeConfig.pageHorizontalMargins,
-                            top: SizeConfig.padding24,
-                            bottom: SizeConfig.padding12),
-                        child: FelloButtonLg(
-                          onPressed: () {
-                            AppState.delegate.appState.currentAction =
-                                PageAction(
-                                    state: PageState.addPage,
-                                    page: AugmontGoldSellPageConfig);
-                          },
-                          child: Text(
-                            "Sell Gold",
-                            style: TextStyles.body3.colour(Colors.white).bold,
-                          ),
-                        ),
-                      ),
-                      // Text(
+                      ), // Text(
                       //   "The first rule of compounding: Never interrupt it unnecessarily.",
                       //   textAlign: TextAlign.center,
                       //   style: TextStyles.body3.colour(Colors.black54),
