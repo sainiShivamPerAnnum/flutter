@@ -75,7 +75,8 @@ class WinningsContainer extends StatelessWidget {
                       children: [
                         Text(
                           locale.saveWinningsLabel,
-                          style: TextStyles.title5.colour(Colors.white60),
+                          style: TextStyles.title5
+                              .colour(Colors.white.withOpacity(0.8)),
                         ),
                         UserWinningsSE(
                           style: TextStyles.title2
