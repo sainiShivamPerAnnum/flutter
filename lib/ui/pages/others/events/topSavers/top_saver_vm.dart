@@ -8,7 +8,6 @@ import 'package:felloapp/core/service/events_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
-import 'package:felloapp/util/code_from_freq.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
@@ -27,6 +26,7 @@ class TopSaverViewModel extends BaseModel {
   SaverType saverType = SaverType.DAILY;
   String saverFreq = "daily";
   String freqCode;
+  int _userRank = 0;
   String winnerTitle = "Past Winners";
 
   List<TopSavers> currentParticipants;
@@ -36,6 +36,13 @@ class TopSaverViewModel extends BaseModel {
 
   set pastWinners(List<Winners> value) {
     _pastWinners = value;
+    notifyListeners();
+  }
+
+  get userRank => this._userRank;
+
+  set userRank(value) {
+    this._userRank = value;
     notifyListeners();
   }
 
@@ -86,6 +93,7 @@ class TopSaverViewModel extends BaseModel {
         response.model.scoreboard != null) {
       currentParticipants = response.model.scoreboard;
       freqCode = response.model.code;
+      getUserRankIfAny();
     } else
       currentParticipants = [];
     notifyListeners();
@@ -113,5 +121,18 @@ class TopSaverViewModel extends BaseModel {
   Future<String> getWinnerDP(int index) async {
     String dpUrl = await _dbModel.getUserDP(pastWinners[index].userid);
     return dpUrl;
+  }
+
+  getUserRankIfAny() {
+    if (currentParticipants != null && currentParticipants.isNotEmpty) {
+      if (currentParticipants.firstWhere(
+              (e) => e.userid == _userService.baseUser.uid,
+              orElse: () => null) !=
+          null) {
+        int rank = currentParticipants
+            .indexWhere((e) => e.userid == _userService.baseUser.uid);
+        userRank = rank + 1;
+      }
+    }
   }
 }

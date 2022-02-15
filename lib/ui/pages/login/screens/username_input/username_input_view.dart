@@ -45,7 +45,7 @@ class UsernameState extends State<Username> {
   }
 
   Widget showResult(model) {
-    print(model.response);
+    print("Response " + model.response.toString());
     if (model.isLoading) {
       return Container(
         height: 16,
@@ -59,21 +59,23 @@ class UsernameState extends State<Username> {
         child: Text("username cannot be empty",
             style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w500)),
       );
-    else if (model.response == UsernameResponse.AVAILABLE)
-      return FittedBox(
-        child: Text("@${model.usernameController.text.trim()} is available",
-            style: TextStyle(
-                color: UiConstants.primaryColor, fontWeight: FontWeight.w500)),
-      );
     else if (model.response == UsernameResponse.UNAVAILABLE)
       return FittedBox(
         child: Text("@${model.usernameController.text.trim()} is not available",
             style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500)),
       );
-    else if (model.response == UsernameResponse.INVALID) {
-      if (model.usernameController.text.trim().length < 5)
+    else if (model.response == UsernameResponse.AVAILABLE) {
+      return FittedBox(
+        child: Text(
+          "@${model.usernameController.text.trim()} is available",
+          style: TextStyle(
+              color: UiConstants.primaryColor, fontWeight: FontWeight.w500),
+        ),
+      );
+    } else if (model.response == UsernameResponse.INVALID) {
+      if (model.usernameController.text.trim().length < 4)
         return FittedBox(
-          child: Text("please enter a username with more than 4 characters.",
+          child: Text("please enter a username with more than 3 characters.",
               maxLines: 2,
               style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500)),
         );
@@ -166,12 +168,13 @@ class UsernameState extends State<Username> {
               Container(
                 margin: EdgeInsets.only(top: 16),
                 padding: EdgeInsets.only(
-                  bottom: 24,
+                  bottom: 22,
                   left: 8,
                 ),
                 height: 40,
                 child: showResult(model),
               ),
+
               //Text(responseText),
               model.hasReferralCode
                   ? TextFormField(

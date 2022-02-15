@@ -7,6 +7,7 @@ import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input/name_input_view.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class NameInputScreenViewModel extends BaseModel {
   final BaseUtil baseProvider = locator<BaseUtil>();
   final HttpModel httpProvider = locator<HttpModel>();
   final UserService _userService = locator<UserService>();
+  final CustomLogger _logger = locator<CustomLogger>();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -111,7 +113,7 @@ class NameInputScreenViewModel extends BaseModel {
       final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
       if (googleUser != null) {
         if (await httpProvider.isEmailNotRegistered(
-            _userService.baseUser.uid, googleUser.email)) {
+            _userService.firebaseUser.uid, googleUser.email)) {
           nameFieldController.text = googleUser.displayName;
           _userService.baseUser.isEmailVerified = true;
           baseProvider.myUserDpUrl = googleUser.photoUrl;
@@ -161,7 +163,7 @@ class NameInputScreenViewModel extends BaseModel {
             "No account selected", "Please choose an account from the list");
       }
     } catch (e) {
-      print(e.toString());
+      _logger.d(e.toString());
       baseProvider.isGoogleSignInProgress = false;
       BaseUtil.showNegativeAlert(
           "Unable to verify", "Please try a different method");
