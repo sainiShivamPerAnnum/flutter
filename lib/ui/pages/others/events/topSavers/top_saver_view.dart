@@ -444,7 +444,7 @@ class EventLeaderboard extends StatelessWidget {
                             opacity: 0.3,
                             child: NoRecordDisplayWidget(
                               asset: "images/leaderboard.png",
-                              text: "Leaderboard will be upadated soon",
+                              text: "Leaderboard will be updated soon",
                               topPadding: false,
                               bottomPadding: true,
                             ),

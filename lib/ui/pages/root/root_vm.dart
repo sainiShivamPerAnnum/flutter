@@ -347,6 +347,7 @@ class RootViewModel extends BaseModel {
   }
 
   void focusBuyField() {
+    Haptic.vibrate();
     if (_userService.buyFieldFocusNode.hasPrimaryFocus ||
         _userService.buyFieldFocusNode.hasFocus) {
       _logger.d("field has focus");
