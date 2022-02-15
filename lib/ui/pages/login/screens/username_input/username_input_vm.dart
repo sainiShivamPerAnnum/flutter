@@ -23,6 +23,7 @@ class UsernameInputScreenViewModel extends BaseModel {
   final _formKey = GlobalKey<FormState>();
 
   get referralCodeController => _referralCodeController;
+  String getReferralCode() => _referralCodeController.text;
 
   get formKey => _formKey;
   UsernameResponse response;

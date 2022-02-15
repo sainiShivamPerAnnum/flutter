@@ -283,8 +283,7 @@ class LoginControllerViewModel extends BaseModel {
               return false;
             }
 
-            String refCode =
-                _mobileScreenKey.currentState.model.getReferralCode();
+            String refCode = _usernameKey.currentState.model.getReferralCode();
             if (refCode != null && refCode.isNotEmpty)
               BaseUtil.manualReferralCode = refCode;
 
