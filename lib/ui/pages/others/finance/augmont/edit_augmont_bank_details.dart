@@ -418,7 +418,6 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
 
   _onUpdateClicked() async {
     isEditAugmontBankDetailInProgress = true;
-    setState(() {});
 
     ///CHECK FOR CHANGES
     var pBankHolderName = _bankHolderNameController.text;
@@ -441,7 +440,6 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
         'No changes were made',
       );
       isEditAugmontBankDetailInProgress = false;
-      setState(() {});
       return;
     }
 
@@ -451,7 +449,6 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
         'Bank account numbers do not match',
       );
       isEditAugmontBankDetailInProgress = false;
-      setState(() {});
       return;
     }
     _logger.d(pBankIfsc);
@@ -463,7 +460,6 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
       );
       pBankIfsc = pBankIfsc.toUpperCase();
       isEditAugmontBankDetailInProgress = false;
-      setState(() {});
       return;
     }
 
@@ -474,7 +470,6 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
         'Please check your account number.',
       );
       isEditAugmontBankDetailInProgress = false;
-      setState(() {});
       return;
     }
 
@@ -499,7 +494,6 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
           'Please recheck your entered account number and name',
         );
         isEditAugmontBankDetailInProgress = false;
-        setState(() {});
         return;
       }
 
@@ -516,7 +510,6 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
           'Please verify your account details and try again',
         );
         isEditAugmontBankDetailInProgress = false;
-        setState(() {});
         return;
       }
 
@@ -530,7 +523,6 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
         'Please verify your account details and try again',
       );
       isEditAugmontBankDetailInProgress = false;
-      setState(() {});
       return;
     }
 
@@ -589,7 +581,6 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                   'Please try again',
                 );
                 isEditAugmontBankDetailInProgress = false;
-                setState(() {});
                 return;
               },
             ));
