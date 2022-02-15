@@ -28,6 +28,8 @@ class UsernameInputScreenViewModel extends BaseModel {
   get formKey => _formKey;
   UsernameResponse response;
 
+
+
   Future<bool> validate() async {
     username = usernameController.text.trim();
 
