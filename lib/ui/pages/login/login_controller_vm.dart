@@ -223,7 +223,7 @@ class LoginControllerViewModel extends BaseModel {
               //firebase user should never be null at this point
               userService.baseUser = BaseUser.newUser(
                   userService.firebaseUser.uid,
-                  _formatMobileNumber(LoginControllerView.mobileno));
+              _formatMobileNumber(LoginControllerView.mobileno));
             }
 
             userService.baseUser.name =
@@ -306,6 +306,7 @@ class LoginControllerViewModel extends BaseModel {
 
                   try {
                     final token = await _getBearerToken();
+                    userService.baseUser.mobile = userMobile;
                     final ApiResponse response =
                         await _userRepo.setNewUser(userService.baseUser, token);
 
@@ -639,6 +640,7 @@ class LoginControllerViewModel extends BaseModel {
 
     final String token = tokenRes.model;
     LoginControllerView.mobileno = phno;
+    userMobile = phno;
     _mobileScreenKey.currentState.model.mobileController.text =
         _formatMobileNumber(phno);
     //Authenticate using custom token
