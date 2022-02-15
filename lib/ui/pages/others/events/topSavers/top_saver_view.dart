@@ -18,6 +18,8 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 
 class TopSaverView extends StatelessWidget {
   final EventModel event;
@@ -87,17 +89,33 @@ class Thumbnail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: SizeConfig.screenWidth,
-      height: SizeConfig.screenWidth * 0.4,
-      margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(SizeConfig.roundness32),
-        image: DecorationImage(
-          image: CachedNetworkImageProvider(event.image),
-          fit: BoxFit.cover,
+    return InkWell(
+      onTap: () {
+        BaseUtil.openModalBottomSheet(
+          addToScreenStack: true,
+          backgroundColor: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(SizeConfig.roundness32),
+            topRight: Radius.circular(SizeConfig.roundness32),
+          ),
+          isScrollControlled: true,
+          hapticVibrate: true,
+          isBarrierDismissable: false,
+          content: EventInstructionsModal(instructions: event.instructions),
+        );
+      },
+      child: Container(
+        width: SizeConfig.screenWidth,
+        height: SizeConfig.screenWidth * 0.4,
+        margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(SizeConfig.roundness32),
+          image: DecorationImage(
+            image: CachedNetworkImageProvider(event.image),
+            fit: BoxFit.cover,
+          ),
+          color: UiConstants.tertiarySolid,
         ),
-        color: UiConstants.tertiarySolid,
       ),
     );
   }
@@ -114,18 +132,8 @@ class InstructionsTab extends StatelessWidget {
       child: WinningsContainer(
         shadow: false,
         onTap: () {
-          BaseUtil.openModalBottomSheet(
-            addToScreenStack: true,
-            backgroundColor: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(SizeConfig.roundness32),
-              topRight: Radius.circular(SizeConfig.roundness32),
-            ),
-            isScrollControlled: true,
-            hapticVibrate: true,
-            isBarrierDismissable: false,
-            content: EventInstructionsModal(instructions: event.instructions),
-          );
+          AppState.delegate.appState.setCurrentTabIndex = 0;
+          AppState.backButtonDispatcher.didPopRoute();
         },
         child: Container(
           child: Padding(
@@ -133,26 +141,27 @@ class InstructionsTab extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(
-                  "assets/images/icons/info.png",
+                SvgPicture.asset(
+                  'images/svgs/gold.svg',
+                  height: SizeConfig.padding54,
                 ),
                 SizedBox(width: SizeConfig.screenWidth * 0.05),
                 Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
-                      "How to participate in\nthe event",
-                      style: TextStyles.body1.colour(Colors.white).light,
+                      "Join the Event",
+                      style: TextStyles.title3.colour(Colors.white).bold,
                     ),
-                    // Text(
-                    //   "2 gm of gold",
-                    //   style: TextStyles.title3
-                    //       .colour(Colors.white)
-                    //       .bold,
-                    // ),
+                    SizedBox(height: SizeConfig.padding4),
+                    Text(
+                      "Buy Digital Gold",
+                      style: TextStyles.body2.colour(Colors.white).light,
+                    ),
                   ],
-                )
+                ),
+                Lottie.asset("assets/lotties/golden-arrow.json"),
               ],
             ),
           ),
@@ -306,14 +315,18 @@ class EventLeaderboard extends StatelessWidget {
             children: [
               SizedBox(height: SizeConfig.padding16),
               Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Current Leaderboard",
+                    "Current Standings",
                     style: TextStyles.title5.bold,
                   ),
                   Spacer(),
+                  Text(
+                    "Your rank: ${model.userRank == 0 ? '-' : model.userRank.toString().padLeft(2, '0')} ",
+                    style: TextStyles.body3,
+                  )
                 ],
               ),
               SizedBox(height: SizeConfig.padding12),
@@ -336,8 +349,13 @@ class EventLeaderboard extends StatelessWidget {
                                     color: Colors.grey.withOpacity(0.05),
                                   ),
                                   child: ListTile(
-                                    contentPadding: EdgeInsets.all(
-                                        SizeConfig.pageHorizontalMargins / 2),
+                                    contentPadding: EdgeInsets.symmetric(
+                                        horizontal:
+                                            SizeConfig.pageHorizontalMargins /
+                                                2,
+                                        vertical:
+                                            SizeConfig.pageHorizontalMargins /
+                                                4),
                                     leading: CircleAvatar(
                                       backgroundColor: UiConstants.primaryColor,
                                       child: Text(
@@ -407,10 +425,8 @@ class EventLeaderboard extends StatelessWidget {
                                           },
                                           child: Text(
                                             "View All",
-                                            style: TextStyles.body2.bold
-                                                .colour(
-                                                    UiConstants.primaryColor)
-                                                ,
+                                            style: TextStyles.body2.bold.colour(
+                                                UiConstants.primaryColor),
                                           ),
                                         ),
                                       ],

@@ -73,8 +73,8 @@ class Save extends StatelessWidget {
                       mini: true,
                     ),
                   ),
-                  SizedBox(height: SizeConfig.padding24),
-                  Goldlinks(model: model),
+                  SizedBox(height: SizeConfig.padding32),
+                  // Goldlinks(model: model),
                   SizedBox(height: SizeConfig.navBarHeight * 2),
                 ],
               ),
@@ -167,7 +167,7 @@ class GoldBalanceContainer extends StatelessWidget {
           children: [
             Text(
               "My Gold Balance",
-              style: TextStyles.title5.colour(Colors.white60),
+              style: TextStyles.title5.colour(Colors.white.withOpacity(0.8)),
             ),
             UserGoldQuantitySE(
               style: TextStyles.title2
