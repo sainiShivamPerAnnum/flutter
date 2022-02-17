@@ -3,6 +3,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
@@ -30,6 +31,7 @@ class _ReferralHistoryViewState extends State<ReferralHistoryView> {
   BaseUtil baseProvider;
   DBModel dbProvider;
   final _analyticsService = locator<AnalyticsService>();
+  final _userService = locator<UserService>();
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +39,7 @@ class _ReferralHistoryViewState extends State<ReferralHistoryView> {
     dbProvider = Provider.of<DBModel>(context, listen: false);
 
     if (!baseProvider.referralsFetched) {
-      dbProvider.getUserReferrals(baseProvider.myUser.uid).then((refList) {
+      dbProvider.getUserReferrals(_userService.baseUser.uid).then((refList) {
         baseProvider.referralsFetched = true;
         baseProvider.userReferralsList = refList ?? [];
 
@@ -58,7 +60,7 @@ class _ReferralHistoryViewState extends State<ReferralHistoryView> {
               _analyticsService.track(
                   eventName: AnalyticsEvents.referralCount,
                   properties: {"count": _n});
-            dbProvider.updateUserReferralCount(baseProvider.myUser.uid,
+            dbProvider.updateUserReferralCount(_userService.baseUser.uid,
                 baseProvider.myReferralInfo); //await not required
           }
         }

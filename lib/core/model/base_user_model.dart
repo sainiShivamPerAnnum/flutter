@@ -102,12 +102,12 @@ class BaseUser {
   BaseUser.fromMap(Map<String, dynamic> data, String id, [String client_token])
       : this(
             id,
-            data[fldMobile],
-            data[fldEmail],
-            data[fldName],
-            data[fldDob],
-            data[fldGender],
-            client_token,
+            data[fldMobile]?.toString(),
+            data[fldEmail]?.toString(),
+            data[fldName]?.toString(),
+            data[fldDob]?.toString(),
+            data[fldGender]?.toString()?.toUpperCase(),
+            client_token?.toString(),
             data[fldIsInvested] ?? false,
             data[fldIsIciciOnboarded],
             data[fldIsAugmontOnboarded] ?? false,
@@ -117,8 +117,8 @@ class BaseUser {
             data[fldPendingTxnId],
             data[fldIsIciciEnabled],
             data[fldIsAugmontEnabled],
-            data[fldUsername],
-            data[fldIsEmailVerified],
+            data[fldUsername]?.toString(),
+            data[fldIsEmailVerified] ?? false,
             data[fldIsBlocked] ?? false,
             UserPreferences(data[fldUserPrefs]),
             data[fldCreatedOn]);
@@ -153,7 +153,8 @@ class BaseUser {
 
   bool hasIncompleteDetails() {
     //return ((_mobile?.isEmpty??true) || (_name?.isEmpty??true) || (_email?.isEmpty??true));
-    return (((mobile?.isEmpty ?? true) || (name?.isEmpty ?? true)) || (username?.isEmpty??true));
+    return (((mobile?.isEmpty ?? true) || (name?.isEmpty ?? true)) ||
+        (username?.isEmpty ?? true));
   }
 
   @override

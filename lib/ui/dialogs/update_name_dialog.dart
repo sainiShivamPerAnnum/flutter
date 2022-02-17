@@ -30,7 +30,7 @@ class _UpdateNameDialogState extends State<UpdateNameDialog> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     if (_nameController.text == "") {
-      _nameController.text = baseProvider.myUser.name;
+      _nameController.text = userService.baseUser.name;
     }
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
@@ -103,7 +103,7 @@ class _UpdateNameDialogState extends State<UpdateNameDialog> {
                                 setState(() {
                                   isUploading = !isUploading;
                                 });
-                                // baseProvider.myUser.name = _nameController.text.trim();
+                                // userService.baseUser.name = _nameController.text.trim();
                                 //Todo: update user service.
                                 userService
                                     .setMyUserName(_nameController.text.trim());
@@ -111,7 +111,7 @@ class _UpdateNameDialogState extends State<UpdateNameDialog> {
                                 baseProvider
                                     .setName(_nameController.text.trim());
                                 dbProvider
-                                    .updateUser(baseProvider.myUser)
+                                    .updateUser(userService.baseUser)
                                     .then((flag) {
                                   setState(() {
                                     isUploading = false;

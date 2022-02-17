@@ -8,16 +8,15 @@ import 'package:felloapp/core/service/golden_ticket_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
-import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
-import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
-import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_vm.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog_landscape.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:flushbar/flushbar.dart';
 //Flutter Imports
 import 'package:flutter/material.dart';
-import 'package:felloapp/util/custom_logger.dart';
 
 class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   final FelloRouterDelegate _routerDelegate;
@@ -56,6 +55,14 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
   @override
   Future<bool> didPopRoute() {
+    Future.delayed(Duration(milliseconds: 20), () {
+      if (_userService.buyFieldFocusNode.hasPrimaryFocus ||
+          _userService.buyFieldFocusNode.hasFocus) {
+        logger.d("field has focus");
+        FocusManager.instance.primaryFocus.unfocus();
+      }
+    });
+
     if (_userService.isConfirmationDialogOpen) {
       logger.d("Change dialog view state");
       _userService.isConfirmationDialogOpen = false;
@@ -91,8 +98,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
     // If onboarding is in progress
     else if (AppState.isOnboardingInProgress) {
-      BaseUtil.showNegativeAlert(
-          "Exit Signup?", "Press back once more to exit");
+      showNegativeAlert("Exit Signup?", "Press back once more to exit");
       AppState.isOnboardingInProgress = false;
       return Future.value(true);
     }
@@ -121,5 +127,30 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     }
 
     return _routerDelegate.popRoute();
+  }
+
+  showNegativeAlert(String title, String message, {int seconds}) {
+    Flushbar(
+      flushbarPosition: FlushbarPosition.BOTTOM,
+      flushbarStyle: FlushbarStyle.FLOATING,
+      icon: Icon(
+        Icons.assignment_late,
+        size: 28.0,
+        color: Colors.white,
+      ),
+      margin: EdgeInsets.all(10),
+      borderRadius: 8,
+      title: title,
+      message: message,
+      duration: Duration(seconds: seconds ?? 3),
+      backgroundColor: UiConstants.negativeAlertColor,
+      boxShadows: [
+        BoxShadow(
+          color: UiConstants.negativeAlertColor,
+          offset: Offset(0.0, 2.0),
+          blurRadius: 3.0,
+        )
+      ],
+    )..show(AppState.delegate.navigatorKey.currentContext);
   }
 }

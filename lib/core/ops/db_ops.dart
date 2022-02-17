@@ -7,7 +7,9 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
+import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/faq_model.dart';
 import 'package:felloapp/core/model/feed_card_model.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
@@ -81,13 +83,25 @@ class DBModel extends ChangeNotifier {
   }
 
   //////////////////BASE USER//////////////////////////
-  Future<BaseUser> getUser(String id) async {
+  Future<ApiResponse<BaseUser>> getUser(String id) async {
     try {
       var doc = await _api.getUserById(id);
-      return BaseUser.fromMap(doc.data(), id);
+      BaseUser user;
+      if (doc.data() == null) {
+        return ApiResponse(model: null, code: 200);
+      }
+      try {
+        user = BaseUser.fromMap(doc.data(), id);
+      } catch (e) {
+        logFailure(
+            id, FailType.UserDataCorrupted, {'message': "User data corrupted"});
+        return ApiResponse.withError("User data corrupted", 400);
+      }
+
+      return ApiResponse(model: user, code: 200);
     } catch (e) {
       log.error("Error fetch User details: " + e.toString());
-      return null;
+      return ApiResponse(model: null, code: 400);
     }
   }
 
@@ -287,27 +301,6 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  //////////////////ICICI////////////////////////////////
-  Future<UserIciciDetail> getUserIciciDetails(String id) async {
-    try {
-      var doc = await _api.getUserIciciDetailDocument(id);
-      return UserIciciDetail.fromMap(doc.data());
-    } catch (e) {
-      log.error('Failed to fetch user icici details: $e');
-      return null;
-    }
-  }
-
-  Future<bool> updateUserIciciDetails(
-      String userId, UserIciciDetail iciciDetail) async {
-    try {
-      await _api.updateUserIciciDetailDocument(userId, iciciDetail.toJson());
-      return true;
-    } catch (e) {
-      log.error("Failed to update user icici detail object: " + e.toString());
-      return false;
-    }
-  }
 
   ///////////////////////AUGMONT/////////////////////////////
   Future<UserAugmontDetail> getUserAugmontDetails(String id) async {
@@ -1021,7 +1014,8 @@ class DBModel extends ChangeNotifier {
         log.error('Crashlytics record error fail : $e');
       }
       if (failType == FailType.UserAugmontSellFailed ||
-          failType == FailType.UserPaymentCompleteTxnFailed) {
+          failType == FailType.UserPaymentCompleteTxnFailed ||
+          failType == FailType.UserDataCorrupted) {
         await _api.addPriorityFailedReport(dMap);
       } else if (failType == FailType.TambolaTicketGenerationFailed) {
         await _api.addGameFailedReport(dMap);
@@ -1346,28 +1340,73 @@ class DBModel extends ChangeNotifier {
 
   Future<List<UserMilestoneModel>> getUserAchievedMilestones(String uid) async {
     List<UserMilestoneModel> userMilestones = [];
-    Map<String, dynamic> userMilestonesData =
-        await _api.fetchUserAchievedTicketMilestonesList(uid);
-    logger.d(userMilestonesData.toString());
-    if (userMilestonesData != null) {
-      userMilestonesData['prizeArr']
-          .forEach((e) => userMilestones.add(UserMilestoneModel.fromJson(e)));
+    try {
+      Map<String, dynamic> userMilestonesData =
+          await _api.fetchUserAchievedTicketMilestonesList(uid);
+      logger.d(userMilestonesData.toString());
+      if (userMilestonesData != null) {
+        userMilestonesData['prizeArr']
+            .forEach((e) => userMilestones.add(UserMilestoneModel.fromJson(e)));
+      }
+    } catch (e) {
+      logger.e(e.toString());
+      userMilestones = [];
     }
+
     return userMilestones;
   }
 
   Future<List<FelloMilestoneModel>> getMilestonesList() async {
     List<FelloMilestoneModel> felloMilestones = [];
-    Map<String, dynamic> felloMilestonesData =
-        await _api.fetchGoldenTicketMilestonesList();
-    logger.d(felloMilestonesData.toString());
-    if (felloMilestonesData != null) {
-      felloMilestonesData['checkpoints']
-          .forEach((e) => felloMilestones.add(FelloMilestoneModel.fromJson(e)));
+    try {
+      Map<String, dynamic> felloMilestonesData =
+          await _api.fetchGoldenTicketMilestonesList();
+      logger.d(felloMilestonesData.toString());
+      if (felloMilestonesData != null) {
+        felloMilestonesData['checkpoints'].forEach(
+            (e) => felloMilestones.add(FelloMilestoneModel.fromJson(e)));
+      }
+    } catch (e) {
+      logger.e(e.toString());
+      felloMilestones = [];
     }
 
     return felloMilestones;
   }
+
+  Future<List<EventModel>> getOngoingEvents() async {
+    List<EventModel> events = [];
+    try {
+      QuerySnapshot snapshot = await _api.fetchOngoingEvents();
+      if (snapshot.docs != null && snapshot.docs.isNotEmpty) {
+        snapshot.docs.forEach((element) {
+          print(element.data());
+          events.add(EventModel.fromMap(element.data()));
+        });
+      }
+    } catch (e) {
+      logger.e(e.toString());
+      events = [];
+    }
+    return events;
+  }
+
+  Future<List<CouponModel>> getCoupons() async {
+    List<CouponModel> couponList = [];
+    try {
+      QuerySnapshot snapshot = await _api.fetchCoupons();
+      snapshot.docs.forEach((element) {
+        couponList.add(CouponModel.fromMap(element.data()));
+      });
+    } catch (e) {
+      logger.e(e.toString());
+      couponList = [];
+    }
+
+    return couponList;
+  }
+
+//------------------------------------------------REALTIME----------------------------
 
   Future<bool> checkIfUsernameIsAvailable(String username) async {
     return await _api.checkUserNameAvailability(username);

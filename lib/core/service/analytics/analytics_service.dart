@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:app_install_date/app_install_date_imp.dart';
+import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_events.dart';
@@ -8,10 +11,13 @@ import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 
 class AnalyticsService extends BaseAnalyticsService {
+  static const appFlierKey = 'fyD5pxiiDw5DrwynP52oT9';
+
   final _mixpanel = locator<MixpanelAnalytics>();
   final _webengage = locator<WebEngageAnalytics>();
   final _logger = locator<CustomLogger>();
@@ -19,6 +25,7 @@ class AnalyticsService extends BaseAnalyticsService {
   Future<void> login({bool isOnboarded, BaseUser baseUser}) async {
     await _mixpanel.login(isOnboarded: isOnboarded, baseUser: baseUser);
     _webengage.login(isOnboarded: isOnboarded, baseUser: baseUser);
+    _initAppFLyer();
 
     // for daily session event
     DateTime now = DateTime.now();
@@ -71,7 +78,8 @@ class AnalyticsService extends BaseAnalyticsService {
   void trackInstall(String campaignId) async {
     if (campaignId == null) return;
     try {
-      if(campaignId != null)PreferenceHelper.setString(PreferenceHelper.CAMPAIGN_ID, campaignId);
+      if (campaignId != null)
+        PreferenceHelper.setString(PreferenceHelper.CAMPAIGN_ID, campaignId);
 
       // for installation event
       DateTime now = DateTime.now();
@@ -92,6 +100,22 @@ class AnalyticsService extends BaseAnalyticsService {
           body: body,
         );
       }
+    } catch (e) {
+      _logger.e(e.toString());
+    }
+  }
+
+  void _initAppFLyer() async {
+    try {
+      AppsFlyerOptions appsFlyerOptions = new AppsFlyerOptions(
+        afDevKey: AnalyticsService.appFlierKey,
+        appId: Platform.isIOS ? '1558445254' : 'in.fello.felloapp',
+        showDebug: FlavorConfig.isDevelopment(),
+        disableAdvertisingIdentifier: true,
+      );
+
+      AppsflyerSdk appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
+      await appsflyerSdk.initSdk();
     } catch (e) {
       _logger.e(e.toString());
     }

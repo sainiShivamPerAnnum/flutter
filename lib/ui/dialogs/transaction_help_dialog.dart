@@ -1,14 +1,17 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/help_types.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class TransactionHelpDialog extends StatelessWidget {
   final Log log = new Log('TransactionHelpDialog');
+  final _userService = locator<UserService>();
   BaseUtil baseProvider;
   DBModel dbProvider;
   double _width, _height;
@@ -95,8 +98,8 @@ class TransactionHelpDialog extends StatelessWidget {
         onTap: () {
           Haptic.vibrate();
           dbProvider
-              .addHelpRequest(baseProvider.myUser.uid, baseProvider.myUser.name,
-                  baseProvider.myUser.mobile, option.key)
+              .addHelpRequest(_userService.baseUser.uid, _userService.baseUser.name,
+                  _userService.baseUser.mobile, option.key)
               .then((flag) {
             if (flag) {
               Navigator.of(_context).pop();

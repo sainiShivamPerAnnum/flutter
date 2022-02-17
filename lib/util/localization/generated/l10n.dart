@@ -493,10 +493,10 @@ class S {
     );
   }
 
-  /// `My Total Winnings`
+  /// `My Active Winnings`
   String get saveWinningsLabel {
     return Intl.message(
-      'My Total Winnings',
+      'My Active Winnings',
       name: 'saveWinningsLabel',
       desc: '',
       args: [],
@@ -585,20 +585,20 @@ class S {
     );
   }
 
-  /// `Refer`
+  /// `Refer friends`
   String get winIphoneSmallText {
     return Intl.message(
-      'Refer',
+      'Refer friends',
       name: 'winIphoneSmallText',
       desc: '',
       args: [],
     );
   }
 
-  /// `friends and win iphone 13`
+  /// `and win iphone 13`
   String get winIphoneBigText {
     return Intl.message(
-      'friends and win iphone 13',
+      'and win iphone 13',
       name: 'winIphoneBigText',
       desc: '',
       args: [],
@@ -753,10 +753,10 @@ class S {
     );
   }
 
-  /// `How it works?`
+  /// `How do you earn?`
   String get refHIW {
     return Intl.message(
-      'How it works?',
+      'How do you earn?',
       name: 'refHIW',
       desc: '',
       args: [],

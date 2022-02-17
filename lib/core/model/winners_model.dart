@@ -63,7 +63,7 @@ class WinnersModel {
 }
 
 class Winners {
-  int score;
+  double score;
   int amount;
   bool isMockUser;
   int flc;
@@ -81,7 +81,7 @@ class Winners {
       this.flc});
 
   Winners.fromJson(Map<String, dynamic> json) {
-    score = json['score'];
+    score = json['score'].toDouble();
     userid = json['userid'];
     username = json['username'];
     isMockUser = json['isMockUser'];
@@ -112,7 +112,7 @@ class Winners {
 
   factory Winners.fromMap(Map<String, dynamic> map, String gameType) {
     return Winners(
-      score: map['score'],
+      score: map['score'].toDouble(),
       userid: map['userid'],
       username: map['username'],
       gameType: gameType,

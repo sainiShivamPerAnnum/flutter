@@ -81,7 +81,7 @@ class AppState extends ChangeNotifier {
 
 // GETTERS AND SETTERS
 
-  int get getCurrentTabIndex => _rootIndex ?? 0;
+  int get getCurrentTabIndex => _rootIndex ?? 1;
 
   set setCurrentTabIndex(int index) {
     _rootIndex = index;
@@ -89,7 +89,6 @@ class AppState extends ChangeNotifier {
       _winnerService.fetchWinners();
       _winnerService.fetchTopWinner();
       _lbService.fetchReferralLeaderBoard();
-
       isWinOpened = true;
     }
     print(_rootIndex);
@@ -97,7 +96,9 @@ class AppState extends ChangeNotifier {
   }
 
   returnHome() {
-    _rootIndex = 0;
+    _rootIndex = 1;
+    print(_rootIndex);
+
     notifyListeners();
   }
 

@@ -15,6 +15,8 @@ class Loser extends StatelessWidget {
     S locale = S.of(context);
     return SafeArea(
       child: Container(
+        padding:
+            EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
         margin: EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           children: [
@@ -42,8 +44,7 @@ class Loser extends StatelessWidget {
                   vertical: 20.0,
                   horizontal: SizeConfig.blockSizeHorizontal * 5),
               child: Text(locale.tLossSubtitle2,
-                  textAlign: TextAlign.center,
-                  style: TextStyles.body3),
+                  textAlign: TextAlign.center, style: TextStyles.body3),
             ),
             Column(
               children: [

@@ -1,7 +1,9 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/login/screens/username.dart';
+import 'package:felloapp/ui/pages/login/screens/username_input/username_input_view.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -15,30 +17,31 @@ class ClaimUsername extends StatefulWidget {
 
 class _ClaimUsernameState extends State<ClaimUsername> {
   final _usernameKey = new GlobalKey<UsernameState>();
+  final _userService = locator<UserService>();
   BaseUtil baseProvider;
   DBModel dbProvider;
   bool _isUpdating = false;
   final regex = RegExp(r"^(?!\.)(?!.*\.$)(?!.*?\.\.)[a-z0-9.]{4,20}$");
 
   setUsername() async {
-    if (_usernameKey.currentState.formKey.currentState.validate()) {
-      if (!await _usernameKey.currentState.validate()) {
+    if (_usernameKey.currentState.model.formKey.currentState.validate()) {
+      if (!await _usernameKey.currentState.model.validate()) {
         return false;
       }
-      if (!_usernameKey.currentState.isLoading &&
-          _usernameKey.currentState.isValid) {
+      if (!_usernameKey.currentState.model.isLoading &&
+          _usernameKey.currentState.model.isValid) {
         setState(() {
           _isUpdating = true;
         });
         String username =
-            _usernameKey.currentState.username.trim().replaceAll('.', '@');
+            _usernameKey.currentState.model.username.trim().replaceAll('.', '@');
         if (regex.hasMatch(username) &&
             await dbProvider.checkIfUsernameIsAvailable(username)) {
           bool res = await dbProvider.setUsername(
-              username, baseProvider.firebaseUser.uid);
+              username, _userService.firebaseUser.uid);
           if (res) {
             baseProvider.setUsername(username);
-            bool flag = await dbProvider.updateUser(baseProvider.myUser);
+            bool flag = await dbProvider.updateUser(_userService.baseUser);
             if (flag) {
               setState(() {
                 _isUpdating = false;

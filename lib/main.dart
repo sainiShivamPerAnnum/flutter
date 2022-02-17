@@ -18,7 +18,6 @@ import 'package:felloapp/core/service/connectivity_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/leaderboard_service.dart';
-import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/core/service/winners_service.dart';
@@ -118,7 +117,6 @@ class _MyAppState extends State<MyApp> {
           ChangeNotifierProvider(create: (_) => locator<AugmontModel>()),
           ChangeNotifierProvider(create: (_) => locator<BaseUtil>()),
           ChangeNotifierProvider(create: (_) => locator<FcmHandler>()),
-          ChangeNotifierProvider(create: (_) => locator<PaymentService>()),
           ChangeNotifierProvider(create: (_) => locator<TransactionService>()),
           StreamProvider<ConnectivityStatus>(
             create: (_) {

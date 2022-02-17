@@ -5,6 +5,7 @@ class Constants {
   //Game Type
   static const String GAME_TYPE_CRICKET = "GM_CRIC2020";
   static const String GAME_TYPE_TAMBOLA = "GM_TAMBOLA2020";
+  static const String GAME_TYPE_HIGHEST_SAVER = "HIGHEST_SAVER";
 
   //Collections
   static final String COLN_USERS = "users";
@@ -24,11 +25,12 @@ class Constants {
   static final String WINNERS = "winners";
   static final String COLN_PRIZES = "prizes";
   static final String COLN_FAQS = "faqs";
+  static final String COLN_APPCAMPAIGNS = "appcampaigns";
+  static final String COLN_COUPONS = 'coupons';
 
   //Sub-collections
   static final String SUBCOLN_USER_FCM = "fcm";
   static final String SUBCOLN_USER_TICKETS = "tickets";
-  static final String SUBCOLN_USER_ICICI_DETAILS = "icici";
   static final String SUBCOLN_USER_AUGMONT_DETAILS = "augmont";
   static final String SUBCOLN_USER_KYC_DETAILS = "kyc";
   static final String SUBCOLN_USER_PRTD = "prtd";

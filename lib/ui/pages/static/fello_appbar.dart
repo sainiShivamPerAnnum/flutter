@@ -17,37 +17,38 @@ class FelloAppBar extends StatelessWidget {
   final List<Widget> actions;
   final String title;
 
-  FelloAppBar({this.leading, this.actions, this.title});
+  FelloAppBar({this.leading, this.actions, this.title, Key key})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Container(
-        width: SizeConfig.screenWidth,
-        // height: SizeConfig.padding40,
-        margin: EdgeInsets.symmetric(
-          vertical: SizeConfig.padding12,
-          horizontal: SizeConfig.pageHorizontalMargins,
-        ),
-        child: Row(
-          children: [
-            if (leading != null) leading,
-            SizedBox(width: 16),
-            if (title != null)
-              FittedBox(
-                child: Text(
-                  title,
-                  maxLines: 1,
-                  overflow: TextOverflow.clip,
-                  style: TextStyles.title4.bold.colour(Colors.white),
-                ),
+    return Container(
+      width: SizeConfig.screenWidth,
+      // height: SizeConfig.padding40,
+      margin: EdgeInsets.only(
+        top: SizeConfig.viewInsets.top + SizeConfig.padding12,
+        bottom: SizeConfig.padding12,
+        left: SizeConfig.pageHorizontalMargins,
+        right: SizeConfig.pageHorizontalMargins,
+      ),
+      child: Row(
+        children: [
+          if (leading != null) leading,
+          SizedBox(width: 16),
+          if (title != null)
+            FittedBox(
+              child: Text(
+                title,
+                maxLines: 1,
+                overflow: TextOverflow.clip,
+                style: TextStyles.title4.bold.colour(Colors.white),
               ),
-            Spacer(),
-            if (actions != null)
-              Row(
-                children: actions,
-              )
-          ],
-        ),
+            ),
+          Spacer(),
+          if (actions != null)
+            Row(
+              children: actions,
+            )
+        ],
       ),
     );
   }

@@ -261,7 +261,7 @@ class _GoldenTicketClaimDialogState extends State<GoldenTicketClaimDialog> {
                           AppState.backButtonDispatcher.didPopRoute();
                           userService.getUserFundWalletData();
                           return dbProvider
-                              .getUserTicketWallet(baseProvider.myUser.uid)
+                              .getUserTicketWallet(userService.baseUser.uid)
                               .then((value) {
                             if (value != null)
                               baseProvider.userTicketWallet = value;

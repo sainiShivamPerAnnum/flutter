@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/assets.dart';
@@ -15,15 +16,15 @@ class OfferCard extends StatelessWidget {
 
   OfferCard({this.model, this.shimmer = false});
 
-  calculateWidth() {
-    if (model.gridX != null) {
-      if (model.gridX == 1)
-        return SizeConfig.screenWidth * 0.5;
-      else
-        return SizeConfig.screenWidth * 0.85;
-    } else
-      return SizeConfig.screenWidth * 0.5;
-  }
+  // calculateWidth() {
+  //   if (model.gridX != null) {
+  //     if (model.gridX == 1)
+  //       return SizeConfig.screenWidth * 0.5;
+  //     else
+  //       return SizeConfig.screenWidth * 0.85;
+  //   } else
+  //     return SizeConfig.screenWidth * 0.5;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +44,7 @@ class OfferCard extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(SizeConfig.roundness24),
         child: Container(
-          width: calculateWidth(),
+          width: SizeConfig.screenWidth,
           height: SizeConfig.screenWidth * 0.28,
           margin: EdgeInsets.only(
             bottom: SizeConfig.screenWidth * 0.1,

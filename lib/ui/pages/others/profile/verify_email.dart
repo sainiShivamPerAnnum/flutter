@@ -7,7 +7,7 @@ import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/pin_input_custom_text_field.dart';
-import 'package:felloapp/ui/pages/login/screens/name_input_screen.dart';
+import 'package:felloapp/ui/pages/login/screens/name_input/name_input_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/util/locator.dart';
@@ -81,7 +81,7 @@ class VerifyEmailState extends State<VerifyEmail> {
           onEmailSignIn: () {
             baseProvider.isGoogleSignInProgress = false;
             // _isContinueWithGoogle = false;
-            email.text = baseProvider.myUser.email;
+            email.text = _userService.baseUser.email;
             // _isEmailEnabled = true;
 
             Navigator.pop(context);
@@ -106,7 +106,7 @@ class VerifyEmailState extends State<VerifyEmail> {
 
   sendEmail() async {
     if (!await httpProvider.isEmailNotRegistered(
-        baseProvider.myUser.uid, email.text.trim())) {
+        _userService.baseUser.uid, email.text.trim())) {
       setState(() {
         _isProcessing = false;
       });
@@ -149,7 +149,7 @@ class VerifyEmailState extends State<VerifyEmail> {
       baseProvider.setEmail(email.text.trim());
       baseProvider.setEmailVerified();
       _userService.isEmailVerified = true;
-      bool res = await dbProvider.updateUser(baseProvider.myUser);
+      bool res = await dbProvider.updateUser(_userService.baseUser);
       setState(() {
         _isVerifying = false;
       });
@@ -184,12 +184,12 @@ class VerifyEmailState extends State<VerifyEmail> {
     final GoogleSignInAccount googleUser = await _gSignIn.signIn();
     if (googleUser != null) {
       if (await httpProvider.isEmailNotRegistered(
-          baseProvider.myUser.uid, googleUser.email)) {
+          _userService.baseUser.uid, googleUser.email)) {
         email.text = googleUser.email;
-        baseProvider.myUser.email = googleUser.email;
+        _userService.baseUser.email = googleUser.email;
         baseProvider.setEmailVerified();
         _userService.isEmailVerified = true;
-        bool res = await dbProvider.updateUser(baseProvider.myUser);
+        bool res = await dbProvider.updateUser(_userService.baseUser);
         if (res) {
           setState(() {
             baseProvider.isGoogleSignInProgress = false;

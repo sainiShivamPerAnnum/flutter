@@ -24,6 +24,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
+GlobalKey felloAppBarKey = new GlobalKey();
+
 class Root extends StatelessWidget {
   final pages = [Save(), Play(), Win()];
 
@@ -71,16 +73,20 @@ class Root extends StatelessWidget {
                   backgroundColor: Colors.black,
                   onRefresh: model.refresh,
                   child: Container(
-                    margin: EdgeInsets.only(top: SizeConfig.viewInsets.top),
+                    margin: EdgeInsets.only(
+                        top: SizeConfig.screenWidth * 0.1 +
+                            SizeConfig.viewInsets.top +
+                            SizeConfig.padding32),
                     child: Consumer<AppState>(
                       builder: (ctx, m, child) => IndexedStack(
                         children: pages,
-                        index: m.rootIndex,
+                        index: AppState.delegate.appState.getCurrentTabIndex,
                       ),
                     ),
                   ),
                 ),
                 FelloAppBar(
+                  key: felloAppBarKey,
                   leading: InkWell(
                     onTap: () => model.showDrawer(),
                     child: ProfileImageSE(
@@ -95,22 +101,33 @@ class Root extends StatelessWidget {
                 ),
                 Positioned(
                   bottom: 0,
-                  child: ClipRect(
+                  child: Container(
+                    width: SizeConfig.screenWidth,
+                    height: SizeConfig.navBarHeight,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                          colors: [
+                            UiConstants.scaffoldColor.withOpacity(0.8),
+                            UiConstants.scaffoldColor.withOpacity(0.2),
+                          ],
+                          stops: [
+                            0.8,
+                            1
+                          ]),
+                    ),
                     child: BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                      child: Container(
-                        color: Colors.transparent,
-                        width: SizeConfig.screenWidth,
-                        height: SizeConfig.navBarHeight,
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                        ),
-                      ),
                     ),
                   ),
                 ),
                 if (SizeConfig.screenWidth < 600)
                   WantMoreTickets(
+                    model: model,
+                  ),
+                if (SizeConfig.screenWidth < 600)
+                  SaveBaseline(
                     model: model,
                   ),
                 BottomNavBar(
@@ -146,7 +163,7 @@ class BottomNavBar extends StatelessWidget {
           ),
           child: NavBar(
             itemTapped: (int index) => model.onItemTapped(index),
-            currentIndex: m.rootIndex,
+            currentIndex: AppState.delegate.appState.getCurrentTabIndex,
             items: [
               NavBarItemData(
                 locale.navBarFinance,
@@ -181,25 +198,80 @@ class WantMoreTickets extends StatelessWidget {
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return Consumer<AppState>(
-      builder: (ctx, m, child) => AnimatedPositioned(
+        builder: (ctx, m, c) => AnimatedPositioned(
+              duration: Duration(milliseconds: 300),
+              curve: Curves.decelerate,
+              bottom: SizeConfig.pageHorizontalMargins,
+              left: SizeConfig.pageHorizontalMargins,
+              right: SizeConfig.pageHorizontalMargins,
+              child: InkWell(
+                onTap: model.earnMoreTokens,
+                child: Shimmer(
+                  duration: Duration(seconds: 5),
+                  child: AnimatedContainer(
+                    duration: Duration(milliseconds: 300),
+                    curve: Curves.decelerate,
+                    height: AppState.delegate.appState.getCurrentTabIndex == 1
+                        ? SizeConfig.navBarHeight * 1.5
+                        : SizeConfig.navBarHeight,
+                    width: SizeConfig.navBarWidth,
+                    decoration: BoxDecoration(
+                      color: UiConstants.primaryLight,
+                      borderRadius: BorderRadius.circular(
+                        SizeConfig.roundness24,
+                      ),
+                    ),
+                    alignment: Alignment.topCenter,
+                    child: Container(
+                      height: SizeConfig.navBarHeight * 0.5,
+                      alignment: Alignment.center,
+                      child: Shimmer(
+                        duration: Duration(seconds: 1),
+                        interval: Duration(seconds: 4),
+                        child: Text(
+                          locale.navWMT,
+                          style: TextStyles.body1
+                              .colour(UiConstants.primaryColor)
+                              .bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ));
+  }
+}
+
+class SaveBaseline extends StatelessWidget {
+  final RootViewModel model;
+  SaveBaseline({
+    @required this.model,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    S locale = S.of(context);
+    return Consumer<AppState>(
+      builder: (ctx, m, c) => AnimatedPositioned(
         duration: Duration(milliseconds: 300),
         curve: Curves.decelerate,
         bottom: SizeConfig.pageHorizontalMargins,
         left: SizeConfig.pageHorizontalMargins,
         right: SizeConfig.pageHorizontalMargins,
         child: InkWell(
-          onTap: model.earnMoreTokens,
+          onTap: model.focusBuyField,
           child: Shimmer(
             duration: Duration(seconds: 5),
             child: AnimatedContainer(
               duration: Duration(milliseconds: 300),
               curve: Curves.decelerate,
-              height: m.rootIndex == 1
+              height: AppState.delegate.appState.getCurrentTabIndex == 0
                   ? SizeConfig.navBarHeight * 1.5
                   : SizeConfig.navBarHeight,
               width: SizeConfig.navBarWidth,
               decoration: BoxDecoration(
-                color: UiConstants.primaryLight,
+                color: UiConstants.tertiaryLight,
                 borderRadius: BorderRadius.circular(
                   SizeConfig.roundness24,
                 ),
@@ -212,9 +284,9 @@ class WantMoreTickets extends StatelessWidget {
                   duration: Duration(seconds: 1),
                   interval: Duration(seconds: 4),
                   child: Text(
-                    locale.navWMT,
+                    locale.saveBaseline,
                     style:
-                        TextStyles.body1.colour(UiConstants.primaryColor).bold,
+                        TextStyles.body1.colour(UiConstants.tertiarySolid).bold,
                   ),
                 ),
               ),

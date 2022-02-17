@@ -223,7 +223,9 @@ class CricketHomeView extends StatelessWidget {
     _analyticsService.track(eventName: AnalyticsEvents.earnMoreTokens);
     BaseUtil.openModalBottomSheet(
       addToScreenStack: true,
-      content: WantMoreTicketsModalSheet(isInsufficientBalance: true,),
+      content: WantMoreTicketsModalSheet(
+        isInsufficientBalance: true,
+      ),
       hapticVibrate: true,
       backgroundColor: Colors.transparent,
       isBarrierDismissable: true,
@@ -236,15 +238,23 @@ class NoRecordDisplayWidget extends StatelessWidget {
   final String assetSvg;
   final String assetLottie;
   final String text;
+  final bool topPadding;
+  final bool bottomPadding;
 
-  NoRecordDisplayWidget(
-      {this.asset, this.text, this.assetSvg, this.assetLottie});
+  NoRecordDisplayWidget({
+    this.asset,
+    this.text,
+    this.assetSvg,
+    this.assetLottie,
+    this.topPadding = true,
+    this.bottomPadding = false,
+  });
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SizedBox(height: SizeConfig.screenHeight * 0.1),
+        if (topPadding) SizedBox(height: SizeConfig.screenHeight * 0.1),
         if (asset != null)
           Image.asset(
             asset,
@@ -268,7 +278,8 @@ class NoRecordDisplayWidget extends StatelessWidget {
           text,
           textAlign: TextAlign.center,
           style: TextStyles.body2.bold,
-        )
+        ),
+        if (bottomPadding) SizedBox(height: SizeConfig.padding16),
       ],
     );
   }
@@ -410,8 +421,16 @@ class PrizesView extends StatelessWidget {
 class PrizeChip extends StatelessWidget {
   final String svg, png, text;
   final Color color;
+  final double opacity;
+  final bool svgPaint;
 
-  PrizeChip({this.color, this.png, this.svg, this.text});
+  PrizeChip(
+      {this.color,
+      this.png,
+      this.svg,
+      this.text,
+      this.opacity = 0.2,
+      this.svgPaint = true});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -419,13 +438,18 @@ class PrizeChip extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: SizeConfig.iconSize3,
-            backgroundColor: color.withOpacity(0.2),
+            backgroundColor: color.withOpacity(opacity),
             child: svg != null
-                ? SvgPicture.asset(
-                    svg,
-                    height: SizeConfig.iconSize3,
-                    color: color,
-                  )
+                ? (svgPaint
+                    ? SvgPicture.asset(
+                        svg,
+                        height: SizeConfig.iconSize3,
+                        color: color,
+                      )
+                    : SvgPicture.asset(
+                        svg,
+                        height: SizeConfig.iconSize3,
+                      ))
                 : Image.asset(
                     png,
                     height: SizeConfig.iconSize3,

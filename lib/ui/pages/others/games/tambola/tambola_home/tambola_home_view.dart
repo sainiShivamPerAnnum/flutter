@@ -110,8 +110,12 @@ class TambolaHomeView extends StatelessWidget {
                                                     model: model.tPrizes,
                                                     controller:
                                                         model.scrollController,
-                                                    subtitle:
-                                                        BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.GAME_TAMBOLA_ANNOUNCEMENT)??"Stand to win big prizes every week by matching your tambola tickets! Winners are announced every Monday",
+                                                    subtitle: BaseRemoteConfig
+                                                            .remoteConfig
+                                                            .getString(
+                                                                BaseRemoteConfig
+                                                                    .GAME_TAMBOLA_ANNOUNCEMENT) ??
+                                                        "Stand to win big prizes every week by matching your tambola tickets! Winners are announced every Monday",
                                                     leading: [
                                                       Icons.apps,
                                                       Icons.border_top,
@@ -186,9 +190,8 @@ class TambolaHomeView extends StatelessWidget {
 }
 
 class ListLoader extends StatelessWidget {
-  const ListLoader({
-    Key key,
-  }) : super(key: key);
+  final bool bottomPadding;
+  const ListLoader({Key key, this.bottomPadding = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -198,6 +201,7 @@ class ListLoader extends StatelessWidget {
         SpinKitWave(
           color: UiConstants.primaryColor,
         ),
+        if (bottomPadding) SizedBox(height: SizeConfig.screenHeight * 0.1),
       ],
     );
   }
