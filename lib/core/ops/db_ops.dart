@@ -19,7 +19,6 @@ import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/model/tambola_winners_details.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
-import 'package:felloapp/core/model/user_icici_detail_model.dart';
 import 'package:felloapp/core/model/user_ticket_wallet_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/api.dart';
@@ -300,7 +299,6 @@ class DBModel extends ChangeNotifier {
       return false;
     }
   }
-
 
   ///////////////////////AUGMONT/////////////////////////////
   Future<UserAugmontDetail> getUserAugmontDetails(String id) async {
