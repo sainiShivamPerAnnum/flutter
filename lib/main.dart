@@ -11,7 +11,6 @@ import 'package:felloapp/core/enums/winner_service_enum.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
-import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/core/service/connectivity_service.dart';
@@ -112,7 +111,6 @@ class _MyAppState extends State<MyApp> {
           ChangeNotifierProvider(create: (_) => locator<DBModel>()),
           ChangeNotifierProvider(create: (_) => locator<LocalDBModel>()),
           ChangeNotifierProvider(create: (_) => locator<HttpModel>()),
-          ChangeNotifierProvider(create: (_) => locator<ICICIModel>()),
           ChangeNotifierProvider(create: (_) => locator<RazorpayModel>()),
           ChangeNotifierProvider(create: (_) => locator<AugmontModel>()),
           ChangeNotifierProvider(create: (_) => locator<BaseUtil>()),
