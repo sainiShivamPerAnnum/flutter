@@ -7,8 +7,8 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
-import 'package:felloapp/core/service/tambola_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -123,7 +123,8 @@ class LauncherViewModel extends BaseModel {
     bool _res = false;
     try {
       _res = await deviceUnlock.request(
-          localizedReason: 'Confirm your phone screen lock pattern,PIN or password');
+          localizedReason:
+              'Confirm your phone screen lock pattern,PIN or password');
     } on DeviceUnlockUnavailable {
       BaseUtil.showPositiveAlert('No Device Authentication Found',
           'Logging in, please enable device security to add lock');
@@ -133,8 +134,8 @@ class LauncherViewModel extends BaseModel {
       print('Request in progress');
     } catch (e) {
       _logger.e("error", [e]);
-      BaseUtil.showNegativeAlert('Authentication Failed',
-          'Please restart and try again');
+      BaseUtil.showNegativeAlert(
+          'Authentication Failed', 'Please restart and try again');
     }
     return _res;
   }

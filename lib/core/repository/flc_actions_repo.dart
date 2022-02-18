@@ -1,22 +1,20 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/api_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/custom_logger.dart';
 
 class FlcActionsRepo {
   final _userService = locator<UserService>();
-    final _logger = locator<CustomLogger>();
+  final _logger = locator<CustomLogger>();
   final _apiPaths = locator<ApiPath>();
   final _api = locator<Api>();
 
-
-  Future<String> _getBearerToken() async{
+  Future<String> _getBearerToken() async {
     String token = await _userService.firebaseUser.getIdToken();
     _logger.d(token);
 
@@ -45,8 +43,10 @@ class FlcActionsRepo {
     _logger.d("Substract FLC : $_body");
     try {
       final String _bearer = await _getBearerToken();
-      final response = await APIService.instance
-          .postData(_apiPaths.kSubstractFlcPreGameApi, body: _body, token: _bearer);
+      final response = await APIService.instance.postData(
+          _apiPaths.kSubstractFlcPreGameApi,
+          body: _body,
+          token: _bearer);
       _logger.d(response.toString());
       FlcModel _flcModel = FlcModel.fromMap(response);
       return ApiResponse(model: _flcModel, code: 200);

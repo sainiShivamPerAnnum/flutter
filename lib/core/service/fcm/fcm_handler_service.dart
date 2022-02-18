@@ -1,9 +1,9 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
-import 'package:felloapp/core/service/golden_ticket_service.dart';
-import 'package:felloapp/core/service/leaderboard_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
@@ -79,8 +79,9 @@ class FcmHandler extends ChangeNotifier {
                     content: FelloInfoDialog(
                       showCrossIcon: false,
                       title: "Game Over",
-                      subtitle:
-                      (data['game_score'] != null)?"You scored ${data['game_score']} runs":"Game Over",
+                      subtitle: (data['game_score'] != null)
+                          ? "You scored ${data['game_score']} runs"
+                          : "Game Over",
                       action: Container(
                         width: SizeConfig.screenWidth,
                         child: FelloButtonLg(
