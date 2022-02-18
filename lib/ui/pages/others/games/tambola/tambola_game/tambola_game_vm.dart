@@ -27,7 +27,7 @@ import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_res
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -200,7 +200,7 @@ class TambolaGameViewModel extends BaseModel {
   }
 
   updateTicketCount() {
-    buyTicketCount = int.tryParse(ticketCountController.text)??3;
+    buyTicketCount = int.tryParse(ticketCountController.text) ?? 3;
     notifyListeners();
   }
 
@@ -280,7 +280,9 @@ class TambolaGameViewModel extends BaseModel {
     _analyticsService.track(eventName: AnalyticsEvents.earnMoreTokens);
     BaseUtil.openModalBottomSheet(
       addToScreenStack: true,
-      content: WantMoreTicketsModalSheet(isInsufficientBalance: true,),
+      content: WantMoreTicketsModalSheet(
+        isInsufficientBalance: true,
+      ),
       hapticVibrate: true,
       backgroundColor: Colors.transparent,
       isBarrierDismissable: true,

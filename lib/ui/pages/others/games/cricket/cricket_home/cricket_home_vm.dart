@@ -19,7 +19,7 @@ import 'package:felloapp/ui/pages/others/games/cricket/cricket_game/cricket_game
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:felloapp/util/custom_logger.dart';
 
@@ -90,10 +90,11 @@ class CricketHomeViewModel extends BaseModel {
   Future<bool> openWebView() async {
     setState(ViewState.Busy);
     String _cricPlayCost = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.CRICKET_PLAY_COST) ??
+            .getString(BaseRemoteConfig.CRICKET_PLAY_COST) ??
         "10";
-    int _cost = -1 * int.tryParse(_cricPlayCost)??10;
-    ApiResponse<FlcModel> _flcResponse = await _fclActionRepo.substractFlc(_cost);
+    int _cost = -1 * int.tryParse(_cricPlayCost) ?? 10;
+    ApiResponse<FlcModel> _flcResponse =
+        await _fclActionRepo.substractFlc(_cost);
     _message = _flcResponse.model.message;
     if (_flcResponse.model.flcBalance != null) {
       _userCoinService.setFlcBalance(_flcResponse.model.flcBalance);

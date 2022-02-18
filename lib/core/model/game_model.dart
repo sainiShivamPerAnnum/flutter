@@ -1,4 +1,4 @@
-import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:flutter/foundation.dart';
 

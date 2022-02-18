@@ -2,7 +2,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/leader_board_modal.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/repository/statistics_repo.dart';
-import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/prize_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';

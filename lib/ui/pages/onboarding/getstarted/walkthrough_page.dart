@@ -1,4 +1,4 @@
-import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/golden_ticket_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -251,8 +251,7 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                   _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
                     if (res)
                       _gtService.showInstantGoldenTicketView(
-                          title: 'Welcome to Fello',
-                          source: GTSOURCE.newuser);
+                          title: 'Welcome to Fello', source: GTSOURCE.newuser);
                   });
                 },
                 child: Text(

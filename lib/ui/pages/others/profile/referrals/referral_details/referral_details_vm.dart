@@ -11,7 +11,7 @@ import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:felloapp/util/custom_logger.dart';
