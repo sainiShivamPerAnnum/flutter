@@ -1,5 +1,3 @@
-import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
-
 enum SaverType { MONTHLY, DAILY, WEEKLY }
 
 class EventService {
