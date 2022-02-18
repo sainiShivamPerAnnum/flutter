@@ -4,7 +4,7 @@ import 'dart:async';
 import 'dart:math';
 //Pub Imports
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:felloapp/core/base_analytics.dart';
+import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
@@ -293,7 +293,6 @@ class BaseUtil extends ChangeNotifier {
       ),
     ];
   }
-
 
   Future<bool> isUnreadFreshchatSupportMessages() async {
     try {

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_analytics.dart';
+import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
@@ -46,7 +46,9 @@ class ReferralDetailsViewModel extends BaseModel {
 
   init() {
     generateLink();
-    _shareMsg = (app_share_message != null && app_share_message.isNotEmpty)?app_share_message:'Hey I am gifting you ₹10 and 200 gaming tokens. Lets start saving and playing together! ';
+    _shareMsg = (app_share_message != null && app_share_message.isNotEmpty)
+        ? app_share_message
+        : 'Hey I am gifting you ₹10 and 200 gaming tokens. Lets start saving and playing together! ';
   }
 
   Future<void> generateLink() async {
@@ -80,11 +82,11 @@ class ReferralDetailsViewModel extends BaseModel {
       itemId: _userService.baseUser.uid,
       method: 'message',
     );
-    
+
     _analyticsService.track(eventName: AnalyticsEvents.linkShared);
     shareLinkInProgress = true;
     refresh();
-    
+
     _userService.createDynamicLink(true, 'Other').then((url) async {
       _logger.d(url);
       shareLinkInProgress = false;
