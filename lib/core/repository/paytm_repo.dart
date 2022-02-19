@@ -16,7 +16,8 @@ class PaytmRepository {
     return token;
   }
 
-  Future<ApiResponse> createPaytmTransaction(String amount) async {
+  Future<ApiResponse<CreatePaytmTransactionModel>> createPaytmTransaction(
+      String amount) async {
     try {
       final String _uid = _userService.baseUser.uid;
       final Map<String, dynamic> _body = {
@@ -32,7 +33,8 @@ class PaytmRepository {
       CreatePaytmTransactionModel _responseModel =
           CreatePaytmTransactionModel.fromMap(response);
 
-      return ApiResponse(model: _responseModel, code: 200);
+      return ApiResponse<CreatePaytmTransactionModel>(
+          model: _responseModel, code: 200);
     } catch (e) {
       _logger.e(e.toString());
       return ApiResponse.withError("Unable create transaction", 400);

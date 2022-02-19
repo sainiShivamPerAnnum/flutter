@@ -1,9 +1,17 @@
+import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
+import 'package:felloapp/core/repository/paytm_repo.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/credentials_stage.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:flutter/services.dart';
 import 'package:paytm_allinonesdk/paytm_allinonesdk.dart';
 
 class PaytmService {
+  final _logger = locator<CustomLogger>();
+  final _paytmRepo = locator<PaytmRepository>();
+
   final String devMid = "qpHRfp13374268724583";
   final String prodMid = "CMTNKX90967647249644";
   String mid;
@@ -21,16 +29,28 @@ class PaytmService {
   }
 
   Future initiateTransactions(
-      {String id,
-      String orderId,
-      String amount,
-      String txnToken,
-      bool restrictAppInvoke}) async {
+      {String amount, bool restrictAppInvoke = false}) async {
     var result;
+
+    final ApiResponse<CreatePaytmTransactionModel> paytmTransactionApiResponse =
+        await _paytmRepo.createPaytmTransaction(amount);
+
+    if (paytmTransactionApiResponse.code == 400) {
+      _logger.e(paytmTransactionApiResponse.errorMessage);
+      return;
+    }
+
+    final paytmTransactionModel = paytmTransactionApiResponse.model;
 
     try {
       final response = await AllInOneSdk.startTransaction(
-          mid, orderId, amount, txnToken, null, isStaging, restrictAppInvoke);
+          mid,
+          paytmTransactionModel.data.orderId,
+          amount,
+          paytmTransactionModel.data.temptoken,
+          null,
+          isStaging,
+          restrictAppInvoke);
       print(response);
       result = response.toString();
     } catch (onError) {
