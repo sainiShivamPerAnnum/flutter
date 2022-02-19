@@ -14,17 +14,26 @@ class PaytmService {
 
   final String devMid = "qpHRfp13374268724583";
   final String prodMid = "CMTNKX90967647249644";
+
+  final String devCallbackUrl =
+      "https://securegw-stage.paytm.in/theia/paytmCallback?ORDER_ID=";
+  final String prodCallbackUrl =
+      "https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=";
+
   String mid;
   bool isStaging;
+  String callbackUrl;
 
   PaytmService() {
     final stage = FlavorConfig.instance.values.paytmStage;
     if (stage == PaytmStage.DEV) {
       mid = devMid;
       isStaging = true;
+      callbackUrl = devCallbackUrl;
     } else {
       mid = prodMid;
       isStaging = false;
+      callbackUrl = prodCallbackUrl;
     }
   }
 
@@ -41,6 +50,8 @@ class PaytmService {
     }
 
     final paytmTransactionModel = paytmTransactionApiResponse.model;
+    final orderId = paytmTransactionModel.data.orderId;
+    final _callbackUrl = callbackUrl + orderId;
 
     try {
       final response = await AllInOneSdk.startTransaction(
@@ -48,7 +59,7 @@ class PaytmService {
           paytmTransactionModel.data.orderId,
           amount,
           paytmTransactionModel.data.temptoken,
-          null,
+          _callbackUrl,
           isStaging,
           restrictAppInvoke);
       _logger.d("Paytm Response:${response.toString()}");
