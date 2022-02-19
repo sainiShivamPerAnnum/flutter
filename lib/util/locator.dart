@@ -30,6 +30,7 @@ import 'package:felloapp/core/service/notifier_services/transaction_service.dart
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
+import 'package:felloapp/core/service/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
@@ -40,7 +41,6 @@ import 'package:felloapp/ui/pages/login/screens/name_input/name_input_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input/otp_input_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/username_input/username_input_vm.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_vm.dart';
-import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_vm.dart';
@@ -85,6 +85,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => LocalApi());
   locator.registerLazySingleton(() => FcmListener());
   locator.registerLazySingleton(() => FcmHandler());
+  locator.registerLazySingleton(() => PaytmService());
 
   locator.registerLazySingleton(() => AnalyticsService());
   locator.registerLazySingleton(() => MixpanelAnalytics());
@@ -158,11 +159,8 @@ void setupLocator() {
   locator.registerFactory(() => TopSaverViewModel());
 
   //WIDGETS
-  // locator.registerFactory(() => SellGoldBtnVM());
   locator.registerFactory(() => FDrawerVM());
   locator.registerFactory(() => MiniTransactionCardViewModel());
   locator.registerFactory(() => FelloCoinBarViewModel());
   locator.registerFactory(() => FAQCardViewModel());
-
-  //....
 }
