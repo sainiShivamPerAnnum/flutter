@@ -1,8 +1,10 @@
+import 'package:felloapp/core/service/paytm_service.dart';
 import 'package:felloapp/ui/modals_sheets/augmont_coupons_modal.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -13,6 +15,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class AugmontBuyCard extends StatelessWidget {
   final AugmontGoldBuyViewModel model;
+  final _paytmService = locator<PaytmService>();
+
   AugmontBuyCard({this.model, Key key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -256,11 +260,14 @@ class AugmontBuyCard extends StatelessWidget {
                           : (model.status == 0 ? "UNAVAILABLE" : "REGISTER"),
                       style: TextStyles.body2.colour(Colors.white).bold,
                     ),
-              onPressed: () {
-                if (!model.isGoldBuyInProgress) {
-                  FocusScope.of(context).unfocus();
-                  model.initiateBuy();
-                }
+              onPressed: () async {
+                // if (!model.isGoldBuyInProgress) {
+                //   FocusScope.of(context).unfocus();
+                //   model.initiateBuy();
+                // }
+                final value =
+                    await _paytmService.initiateTransactions(amount: "100.00");
+                print(value);
               },
             ),
           SizedBox(

@@ -25,6 +25,7 @@ class PaytmRepository {
         "txnAmount": {"value": amount, "currency": "INR"}
       };
       final _token = await _getBearerToken();
+      _logger.d("This is body: $_body");
       final response = await APIService.instance.postData(
           ApiPath.kCreatePaytmTransaction,
           body: _body,

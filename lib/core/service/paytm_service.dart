@@ -51,7 +51,7 @@ class PaytmService {
           null,
           isStaging,
           restrictAppInvoke);
-      print(response);
+      _logger.d("Paytm Response:${response.toString()}");
       result = response.toString();
     } catch (onError) {
       if (onError is PlatformException) {
