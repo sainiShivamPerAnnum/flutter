@@ -1,0 +1,41 @@
+import 'package:felloapp/core/constants/apis_path_constants.dart';
+import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
+import 'package:felloapp/core/service/api_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/locator.dart';
+
+class PaytmRepository {
+  final _logger = locator<CustomLogger>();
+  final _userService = locator<UserService>();
+
+  Future<String> _getBearerToken() async {
+    String token = await _userService.firebaseUser.getIdToken();
+    _logger.d(token);
+    return token;
+  }
+
+  Future<ApiResponse> createPaytmTransaction(String amount) async {
+    try {
+      final String _uid = _userService.baseUser.uid;
+      final Map<String, dynamic> _body = {
+        "uid": _uid,
+        "txnAmount": {"value": amount, "currency": "INR"}
+      };
+      final _token = await _getBearerToken();
+      final response = await APIService.instance.postData(
+          ApiPath.kCreatePaytmTransaction,
+          body: _body,
+          token: _token);
+
+      CreatePaytmTransactionModel _responseModel =
+          CreatePaytmTransactionModel.fromMap(response);
+
+      return ApiResponse(model: _responseModel, code: 200);
+    } catch (e) {
+      _logger.e(e.toString());
+      return ApiResponse.withError("Unable create transaction", 400);
+    }
+  }
+}
