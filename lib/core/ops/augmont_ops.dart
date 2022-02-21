@@ -188,6 +188,7 @@ class AugmontModel extends ChangeNotifier {
       return null;
     }
 
+    //Will be removed in paytm flow.
     _tranIdResponse = await _investmentActionsRepository.createTranId(
         userUid: _userService.baseUser.uid);
     if (_tranIdResponse.code != 200 ||
@@ -201,6 +202,8 @@ class AugmontModel extends ChangeNotifier {
         'BlockID: ${buyRates.blockId},gPrice: ${buyRates.goldBuyPrice}';
     String _note2 =
         'UserId:${_userService.baseUser.uid},MerchantTxnID: ${_tranIdResponse.model}';
+
+    //Will be removed in paytm flow.
     String rzpOrderId = await _rzpGateway.createOrderId(amount,
         _userService.baseUser.uid, _tranIdResponse.model, _note1, _note2);
     if (rzpOrderId == null) {
