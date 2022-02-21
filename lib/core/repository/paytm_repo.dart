@@ -20,10 +20,7 @@ class PaytmRepository {
       String amount) async {
     try {
       final String _uid = _userService.baseUser.uid;
-      final Map<String, dynamic> _body = {
-        "uid": _uid,
-        "txnAmount": {"value": amount, "currency": "INR"}
-      };
+      final Map<String, dynamic> _body = {"uid": _uid, "txnAmount": amount};
       final _token = await _getBearerToken();
       _logger.d("This is body: $_body");
       final response = await APIService.instance.postData(
