@@ -1,18 +1,11 @@
 import 'dart:developer';
 
-import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
-import 'package:felloapp/core/service/api.dart';
-import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/golden_ticket_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_vm.dart';
-import 'package:felloapp/util/api_response.dart';
-import 'package:felloapp/util/custom_logger.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 
 class GTDetailedViewModel extends BaseModel {
@@ -21,6 +14,7 @@ class GTDetailedViewModel extends BaseModel {
   bool _bottompadding = true;
   bool _viewScratchedCard = false;
   bool isCardScratched = false;
+  GoldenTicketService _gtService = new GoldenTicketService();
   // bool _isTicketRedeemedSuccessfully = true;
 
   // get isTicketRedeemedSuccessfully => this._isTicketRedeemedSuccessfully;
@@ -88,5 +82,9 @@ class GTDetailedViewModel extends BaseModel {
       _viewScratcher = true;
       notifyListeners();
     });
+  }
+
+  share(GoldenTicket ticket) async {
+    _gtService.shareGoldenTicket(ticket);
   }
 }

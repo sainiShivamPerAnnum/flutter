@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
+import 'package:felloapp/core/service/golden_ticket_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_vm.dart';
@@ -40,12 +41,15 @@ class GTDetailedView extends StatelessWidget {
               ),
               Spacer(),
               model.viewScratchedCard
-                  ? GoldenTicketGridItemCard(
-                      ticket: ticket,
-                      titleStyle: TextStyles.title2,
-                      titleStyle2: TextStyles.title4,
-                      subtitleStyle: TextStyles.body1,
-                      width: SizeConfig.screenWidth * 0.6,
+                  ? RepaintBoundary(
+                      key: ticketImageKey,
+                      child: GoldenTicketGridItemCard(
+                        ticket: ticket,
+                        titleStyle: TextStyles.title2,
+                        titleStyle2: TextStyles.title4,
+                        subtitleStyle: TextStyles.body1,
+                        width: SizeConfig.screenWidth * 0.6,
+                      ),
                     )
                   : (model.viewScratcher
                       ? Hero(
@@ -70,12 +74,15 @@ class GTDetailedView extends StatelessWidget {
                                 height: SizeConfig.screenWidth * 0.6,
                                 width: SizeConfig.screenWidth * 0.6,
                               ),
-                              child: RedeemedGoldenScratchCard(
-                                ticket: ticket,
-                                subtitleStyle: TextStyles.body1,
-                                titleStyle: TextStyles.title2,
-                                titleStyle2: TextStyles.title4,
-                                width: SizeConfig.screenWidth * 0.6,
+                              child: RepaintBoundary(
+                                key: ticketImageKey,
+                                child: RedeemedGoldenScratchCard(
+                                  ticket: ticket,
+                                  subtitleStyle: TextStyles.body1,
+                                  titleStyle: TextStyles.title2,
+                                  titleStyle2: TextStyles.title4,
+                                  width: SizeConfig.screenWidth * 0.6,
+                                ),
                               ),
                             ),
                           ),
@@ -87,6 +94,18 @@ class GTDetailedView extends StatelessWidget {
                           subtitleStyle: TextStyles.body1,
                           width: SizeConfig.screenWidth * 0.6,
                         )),
+              if (model.isCardScratched)
+                TextButton.icon(
+                  onPressed: () => model.share(ticket),
+                  icon: Icon(
+                    Icons.share,
+                    color: Colors.white,
+                  ),
+                  label: Text(
+                    "Share",
+                    style: TextStyles.body3.colour(Colors.white),
+                  ),
+                ),
               Spacer(),
               if (model.bottompadding) FelloAppBar(),
               AnimatedContainer(
