@@ -15,7 +15,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class AugmontBuyCard extends StatelessWidget {
   final AugmontGoldBuyViewModel model;
-  final _paytmService = locator<PaytmService>();
 
   AugmontBuyCard({this.model, Key key}) : super(key: key);
   @override
@@ -261,13 +260,10 @@ class AugmontBuyCard extends StatelessWidget {
                       style: TextStyles.body2.colour(Colors.white).bold,
                     ),
               onPressed: () async {
-                // if (!model.isGoldBuyInProgress) {
-                //   FocusScope.of(context).unfocus();
-                //   model.initiateBuy();
-                // }
-                final value =
-                    await _paytmService.initiateTransactions(amount: 100.00);
-                print(value);
+                if (!model.isGoldBuyInProgress) {
+                  FocusScope.of(context).unfocus();
+                  model.initiateBuy();
+                }
               },
             ),
           SizedBox(

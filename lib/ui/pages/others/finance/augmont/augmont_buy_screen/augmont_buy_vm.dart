@@ -18,6 +18,7 @@ import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -41,16 +42,18 @@ class AugmontGoldBuyViewModel extends BaseModel {
   static const int STATUS_UNAVAILABLE = 0;
   static const int STATUS_REGISTER = 1;
   static const int STATUS_OPEN = 2;
+
   final _logger = locator<CustomLogger>();
-  BaseUtil _baseUtil = locator<BaseUtil>();
-  DBModel _dbModel = locator<DBModel>();
-  AugmontModel _augmontModel = locator<AugmontModel>();
-  FcmListener _fcmListener = locator<FcmListener>();
-  UserService _userService = locator<UserService>();
-  TransactionService _txnService = locator<TransactionService>();
-  GoldenTicketService _gtService = GoldenTicketService();
+  final BaseUtil _baseUtil = locator<BaseUtil>();
+  final DBModel _dbModel = locator<DBModel>();
+  final AugmontModel _augmontModel = locator<AugmontModel>();
+  final FcmListener _fcmListener = locator<FcmListener>();
+  final UserService _userService = locator<UserService>();
+  final TransactionService _txnService = locator<TransactionService>();
+  final GoldenTicketService _gtService = GoldenTicketService();
   final _analyticsService = locator<AnalyticsService>();
   final _couponRepo = locator<CouponRepository>();
+  final _paytmService = locator<PaytmService>();
 
   int _status = 0;
   int lastTappedChipIndex = 1;
@@ -336,19 +339,24 @@ class AugmontGoldBuyViewModel extends BaseModel {
     }
     isGoldBuyInProgress = true;
     _analyticsService.track(eventName: AnalyticsEvents.buyGold);
-    _augmontModel
-        .initiateGoldPurchase(goldRates, buyAmount,
-            couponCode: appliedCoupon?.code ?? "")
-        .then((txn) {
-      if (txn == null) {
-        isGoldBuyInProgress = false;
-        BaseUtil.showNegativeAlert(
-          'Transaction failed',
-          'Please try again in sometime or contact us for further assistance.',
-        );
-      }
-    });
-    _augmontModel.setAugmontTxnProcessListener(_onDepositTransactionComplete);
+
+    final value = await _paytmService.initiateTransactions(amount: buyAmount);
+    _logger.d(value);
+
+    //Old Buy Flow
+    // _augmontModel
+    //     .initiateGoldPurchase(goldRates, buyAmount,
+    //         couponCode: appliedCoupon?.code ?? "")
+    //     .then((txn) {
+    //   if (txn == null) {
+    //     isGoldBuyInProgress = false;
+    //     BaseUtil.showNegativeAlert(
+    //       'Transaction failed',
+    //       'Please try again in sometime or contact us for further assistance.',
+    //     );
+    //   }
+    // });
+    // _augmontModel.setAugmontTxnProcessListener(_onDepositTransactionComplete);
   }
 
   onBuyValueChanged(String val) {
