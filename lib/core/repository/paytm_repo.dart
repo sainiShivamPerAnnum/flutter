@@ -17,10 +17,20 @@ class PaytmRepository {
   }
 
   Future<ApiResponse<CreatePaytmTransactionModel>> createPaytmTransaction(
-      String amount) async {
+      double amount) async {
     try {
       final String _uid = _userService.baseUser.uid;
-      final Map<String, dynamic> _body = {"uid": _uid, "txnAmount": amount};
+      final Map<String, dynamic> _body = {
+        "uid": _uid,
+        "txnAmount": amount,
+        "augMap": {
+          "aBlockId": "a7z6rR37",
+          "aLockPrice": 4961.18,
+          "aPaymode": "PYTM",
+          "aGoldInTxn": 0.0019,
+          "aTaxedGoldBalance": 9.71
+        }
+      };
       final _token = await _getBearerToken();
       _logger.d("This is body: $_body");
       final response = await APIService.instance.postData(

@@ -266,7 +266,7 @@ class AugmontBuyCard extends StatelessWidget {
                 //   model.initiateBuy();
                 // }
                 final value =
-                    await _paytmService.initiateTransactions(amount: "100.00");
+                    await _paytmService.initiateTransactions(amount: 100.00);
                 print(value);
               },
             ),

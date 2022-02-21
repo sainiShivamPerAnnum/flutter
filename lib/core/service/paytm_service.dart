@@ -38,7 +38,7 @@ class PaytmService {
   }
 
   Future initiateTransactions(
-      {String amount, bool restrictAppInvoke = false}) async {
+      {double amount, bool restrictAppInvoke = false}) async {
     var result;
 
     final ApiResponse<CreatePaytmTransactionModel> paytmTransactionApiResponse =
@@ -57,9 +57,9 @@ class PaytmService {
       final response = await AllInOneSdk.startTransaction(
           mid,
           paytmTransactionModel.data.orderId,
-          amount,
+          amount.toString(),
           paytmTransactionModel.data.temptoken,
-          _callbackUrl,
+          paytmTransactionModel.data.callbackUrl,
           isStaging,
           restrictAppInvoke);
       _logger.d("Paytm Response:${response.toString()}");

@@ -49,18 +49,21 @@ class CreatePaytmTransactionModel {
 class Data {
   String temptoken;
   String orderId;
+  String callbackUrl;
 
-  Data({this.temptoken, this.orderId});
+  Data({this.temptoken, this.orderId, this.callbackUrl});
 
   Data.fromJson(Map<String, dynamic> json) {
     temptoken = json['temptoken'];
     orderId = json['orderId'];
+    callbackUrl = json['callbackUrl'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['temptoken'] = this.temptoken;
     data['orderId'] = this.orderId;
+    data['callbackUrl'] = this.callbackUrl;
     return data;
   }
 
@@ -68,6 +71,7 @@ class Data {
     return {
       'temptoken': temptoken,
       'orderId': orderId,
+      'callbackUrl': callbackUrl,
     };
   }
 
@@ -75,19 +79,23 @@ class Data {
     return Data(
       temptoken: map['temptoken'] ?? '',
       orderId: map['orderId'] ?? '',
+      callbackUrl: map['callbackUrl'] ?? '',
     );
   }
 
   @override
-  String toString() => 'Data(temptoken: $temptoken, orderId: $orderId)';
+  String toString() =>
+      'Data(temptoken: $temptoken, orderId: $orderId, callbackUrl: $callbackUrl)';
 
   Data copyWith({
     String temptoken,
     String orderId,
+    String callbackUrl,
   }) {
     return Data(
       temptoken: temptoken ?? this.temptoken,
       orderId: orderId ?? this.orderId,
+      callbackUrl: callbackUrl ?? this.callbackUrl,
     );
   }
 }
