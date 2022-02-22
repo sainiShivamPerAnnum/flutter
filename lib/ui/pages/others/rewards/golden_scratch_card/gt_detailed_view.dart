@@ -14,6 +14,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:scratcher/scratcher.dart';
 
@@ -38,6 +39,35 @@ class GTDetailedView extends StatelessWidget {
                 leading: FelloAppBarBackButton(
                   color: Colors.black,
                 ),
+                actions: [
+                  if (model.isCardScratched &&
+                      ticket.rewardArr != null &&
+                      ticket.rewardArr.isNotEmpty)
+                    InkWell(
+                      onTap: () => model.share(ticket),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(width: 0.5, color: Colors.white),
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.pageHorizontalMargins),
+                        height: SizeConfig.avatarRadius * 2,
+                        child: model.isShareLoading
+                            ? SpinKitThreeBounce(
+                                color: Colors.white, size: SizeConfig.padding16)
+                            : Row(children: [
+                                Text("Share",
+                                    style:
+                                        TextStyles.body2.colour(Colors.white)),
+                                SizedBox(width: SizeConfig.padding6),
+                                SvgPicture.asset(Assets.plane,
+                                    width: SizeConfig.avatarRadius * 0.8,
+                                    color: Colors.white)
+                              ]),
+                      ),
+                    )
+                ],
               ),
               Spacer(),
               model.viewScratchedCard
@@ -94,18 +124,6 @@ class GTDetailedView extends StatelessWidget {
                           subtitleStyle: TextStyles.body1,
                           width: SizeConfig.screenWidth * 0.6,
                         )),
-              if (model.isCardScratched)
-                TextButton.icon(
-                  onPressed: () => model.share(ticket),
-                  icon: Icon(
-                    Icons.share,
-                    color: Colors.white,
-                  ),
-                  label: Text(
-                    "Share",
-                    style: TextStyles.body3.colour(Colors.white),
-                  ),
-                ),
               Spacer(),
               if (model.bottompadding) FelloAppBar(),
               AnimatedContainer(

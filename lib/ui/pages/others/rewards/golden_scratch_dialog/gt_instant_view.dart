@@ -9,11 +9,13 @@ import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instan
 import 'package:felloapp/ui/pages/others/rewards/golden_ticket_utils.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:scratcher/scratcher.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
@@ -23,7 +25,8 @@ enum GTSOURCE { newuser, deposit, cricket, panVerify }
 class GTInstantView extends StatefulWidget {
   final String title;
   final GTSOURCE source;
-  GTInstantView({this.title, @required this.source});
+  final double amount;
+  GTInstantView({this.title, @required this.source, this.amount});
   @override
   State<GTInstantView> createState() => _GTInstantViewState();
 }
@@ -59,6 +62,8 @@ class _GTInstantViewState extends State<GTInstantView>
     return BaseView<GTInstantViewModel>(
       onModelReady: (model) {
         model.init();
+        if (widget.source == GTSOURCE.deposit)
+          model.initCoinAnimation(widget.amount);
       },
       builder: (ctx, model, child) {
         return Scaffold(
@@ -88,34 +93,79 @@ class _GTInstantViewState extends State<GTInstantView>
                   children: [
                     FelloAppBar(
                       leading: FelloAppBarBackButton(),
+                      actions: [
+                        Container(
+                          height: SizeConfig.avatarRadius * 2,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.pageHorizontalMargins),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            color: Colors.white,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              SvgPicture.asset(
+                                Assets.tokens,
+                                height: SizeConfig.iconSize1,
+                              ),
+                              // CoinBalanceTextSE(),
+                              SizedBox(width: SizeConfig.padding6),
+                              AnimatedCount(
+                                  count: model.coinsCount,
+                                  duration: Duration(seconds: 2)),
+                              // Text("200", style: TextStyles.body2.bold),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                     Expanded(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          AnimatedOpacity(
+                            opacity: model.showMainContent ? 1 : 0,
+                            duration: Duration(seconds: 1),
+                            curve: Curves.decelerate,
+                            child: Column(
+                              children: [
+                                (widget.source == GTSOURCE.deposit &&
+                                        !model.isCardScratched)
+                                    ? Lottie.asset(
+                                        "assets/lotties/success.json",
+                                        repeat: model.isCardScratchStarted
+                                            ? false
+                                            : true,
+                                        height: SizeConfig.padding64)
+                                    : SizedBox(height: SizeConfig.padding64),
+                                Text(
+                                  widget.title ?? "Hurray!",
+                                  style: TextStyles.title2.bold
+                                      .colour(Colors.white),
+                                  textAlign: TextAlign.center,
+                                ),
+                                Container(
+                                  width: SizeConfig.screenWidth,
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal:
+                                        SizeConfig.pageHorizontalMargins,
+                                    vertical: SizeConfig.padding8,
+                                  ),
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      "You've earned a new golden ticket",
+                                      style: TextStyles.title5.bold
+                                          .colour(Colors.white),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                           Spacer(flex: 1),
-                          Text(
-                            widget.title ?? "Hurray!",
-                            style: TextStyles.title2.bold.colour(Colors.white),
-                            textAlign: TextAlign.center,
-                          ),
-                          Container(
-                            width: SizeConfig.screenWidth,
-                            padding: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.pageHorizontalMargins,
-                              vertical: SizeConfig.padding8,
-                            ),
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                "You've earned a new golden ticket",
-                                style:
-                                    TextStyles.title3.bold.colour(Colors.white),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ),
-                          Spacer(flex: 2),
                           Transform.scale(
                             scale: 1 - _controller.value,
                             child: ClipRRect(
@@ -234,6 +284,41 @@ class _GTInstantViewState extends State<GTInstantView>
                     )
                   ],
                 ),
+                if (model.isCoinAnimationInProgress)
+                  AnimatedPositioned(
+                    top: model.coinsPositionY,
+                    left: model.coinsPositionX,
+                    duration: Duration(seconds: 1),
+                    curve: Curves.decelerate,
+                    child: AnimatedScale(
+                      scale: model.coinScale,
+                      duration: Duration(seconds: 1),
+                      curve: Curves.decelerate,
+                      child: Lottie.asset("assets/lotties/coin-stack.json",
+                          repeat: false, width: SizeConfig.screenWidth / 4),
+                    ),
+                  ),
+                if (model.isCoinAnimationInProgress)
+                  Positioned(
+                    top: SizeConfig.viewInsets.top +
+                        SizeConfig.padding20 +
+                        SizeConfig.avatarRadius * 3 +
+                        SizeConfig.screenWidth / 4,
+                    child: Container(
+                      width: SizeConfig.screenWidth,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.pageHorizontalMargins,
+                      ),
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          "500 Tokens Credited!",
+                          style: TextStyles.title4.bold.colour(Colors.white),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ),
                 if (model.isCardScratched && model.isShimmerEnabled)
                   Align(
                     alignment: Alignment.center,

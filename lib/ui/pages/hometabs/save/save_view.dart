@@ -4,6 +4,7 @@ import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augm
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -75,6 +76,12 @@ class Save extends StatelessWidget {
                   ),
                   SizedBox(height: SizeConfig.padding32),
                   // Goldlinks(model: model),
+                  TextButton(
+                    onPressed: () {
+                      model.showInstantTestGT();
+                    },
+                    child: Text("Show instant gt"),
+                  ),
                   SizedBox(height: SizeConfig.navBarHeight * 2),
                 ],
               ),

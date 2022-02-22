@@ -14,7 +14,9 @@ class GTDetailedViewModel extends BaseModel {
   bool _bottompadding = true;
   bool _viewScratchedCard = false;
   bool isCardScratched = false;
+  bool _isShareLoading = false;
   GoldenTicketService _gtService = new GoldenTicketService();
+
   // bool _isTicketRedeemedSuccessfully = true;
 
   // get isTicketRedeemedSuccessfully => this._isTicketRedeemedSuccessfully;
@@ -39,6 +41,13 @@ class GTDetailedViewModel extends BaseModel {
   get bottompadding => this._bottompadding;
 
   set bottompadding(value) => this._bottompadding = value;
+
+  bool get isShareLoading => _isShareLoading;
+
+  set isShareLoading(bool val) {
+    _isShareLoading = val;
+    notifyListeners();
+  }
 
   // showDetailsModal(bool isRewarding) {
   //   _bottompadding = false;
@@ -85,6 +94,10 @@ class GTDetailedViewModel extends BaseModel {
   }
 
   share(GoldenTicket ticket) async {
+    isShareLoading = true;
     _gtService.shareGoldenTicket(ticket);
+    Future.delayed(Duration(seconds: 2), () {
+      isShareLoading = false;
+    });
   }
 }

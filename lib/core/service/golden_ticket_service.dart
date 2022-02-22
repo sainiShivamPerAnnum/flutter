@@ -52,7 +52,8 @@ class GoldenTicketService extends ChangeNotifier {
     return false;
   }
 
-  showInstantGoldenTicketView({@required GTSOURCE source, String title}) {
+  showInstantGoldenTicketView(
+      {@required GTSOURCE source, String title, double amount = 0}) {
     if (currentGT != null) {
       Future.delayed(Duration(milliseconds: 200), () {
         // if (source != GTSOURCE.deposit)
@@ -64,6 +65,7 @@ class GoldenTicketService extends ChangeNotifier {
                 pageBuilder: (BuildContext context, _, __) => GTInstantView(
                       source: source,
                       title: title,
+                      amount: amount,
                     )));
       });
     }
@@ -80,12 +82,12 @@ class GoldenTicketService extends ChangeNotifier {
     return false;
   }
 
-  shareGoldenTicket(GoldenTicket ticket) async {
+  Future shareGoldenTicket(GoldenTicket ticket) async {
     {
       try {
         String url = await _userService.createDynamicLink(true, 'Other');
         caputure(
-            'Hey, I won ₹${_userService.userFundWallet.prizeBalance.toInt()} on Fello! \nLet\'s save and play together: $url');
+            'Hey, I won ${ticket.rewardArr.length > 1 ? "these prizes" : "this prize"} on Fello! \nLet\'s save and play together: $url');
       } catch (e) {
         _logger.e(e.toString());
         BaseUtil.showNegativeAlert("An error occured!", "Please try again");
@@ -96,7 +98,6 @@ class GoldenTicketService extends ChangeNotifier {
   caputure(String shareMessage) {
     Future.delayed(Duration(seconds: 1), () {
       captureCard().then((image) {
-        AppState.backButtonDispatcher.didPopRoute();
         if (image != null)
           shareCard(image, shareMessage);
         else {
