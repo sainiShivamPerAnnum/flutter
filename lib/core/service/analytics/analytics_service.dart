@@ -50,6 +50,7 @@ class AnalyticsService extends BaseAnalyticsService {
   }
 
   void track({String eventName, Map<String, dynamic> properties}) {
+    _logger.d(eventName);
     _mixpanel.track(eventName: eventName, properties: properties);
     _webengage.track(eventName: eventName, properties: properties);
 

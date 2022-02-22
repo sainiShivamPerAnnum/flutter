@@ -10,11 +10,13 @@ class AnalyticsEvents {
   // save section
   static const saveSection = "Save Section";
   static const saveBuy = "Select Buy Digital Gold";
+  static const saveBuyCoupon = "User selecting coupons";
   static const buyGold = "Buy gold initiated";
   static const buyGoldSuccess = "Buy gold successful";
   static const buyGoldFailed = "Buy gold fail";
   static const buyGoldInvestMore = "Investing more through pop up";
   static const buyGoldPlay = "Selecting Play through pop up";
+  static const saveBalance = "Selecting Gold Balance";
   static const saveSell = "Selling Gold";
   static const sellGold = "Selling Gold Succcessful";
 

@@ -586,7 +586,11 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
   navigateToGoldBalanceDetailsScreen() {
     AppState.delegate.appState.currentAction = PageAction(
-        state: PageState.addPage, page: GoldBalanceDetailsViewPageConfig);
+      state: PageState.addPage,
+      page: GoldBalanceDetailsViewPageConfig,
+    );
+
+    _analyticsService.track(eventName: AnalyticsEvents.saveBalance);
   }
 
   navigateToAboutGold() {
@@ -611,8 +615,10 @@ class AugmontGoldBuyViewModel extends BaseModel {
     showCoupons = true;
   }
 
-  applyCoupon(String couponCode) async {
+  Future applyCoupon(String couponCode) async {
     if (couponApplyInProgress || isGoldBuyInProgress) return;
+
+    _analyticsService.track(eventName: AnalyticsEvents.saveBuyCoupon);
 
     buyFieldNode.unfocus();
 
@@ -620,9 +626,10 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
     ApiResponse<EligibleCouponResponseModel> response =
         await _couponRepo.getEligibleCoupon(
-            uid: _userService.baseUser.uid,
-            amount: goldBuyAmount.toInt(),
-            couponcode: couponCode);
+      uid: _userService.baseUser.uid,
+      amount: goldBuyAmount.toInt(),
+      couponcode: couponCode,
+    );
 
     couponApplyInProgress = false;
 
