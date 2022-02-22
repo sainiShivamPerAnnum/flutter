@@ -3,6 +3,7 @@ import Flutter
 import Firebase
 import WebEngage
 import webengage_flutter
+import AppTrackingTransparency
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
@@ -30,4 +31,12 @@ import webengage_flutter
               return
           } 
       }
+
+    override func applicationDidBecomeActive(_ application: UIApplication) {
+        if #available(iOS 14, *) {
+            ATTrackingManager.requestTrackingAuthorization(completionHandler: { status in
+                // native code here
+            })
+        }
+    }
 }
