@@ -387,10 +387,11 @@ class AugmontGoldBuyViewModel extends BaseModel {
         _isGeneralUserAllowed = 1;
       }
     }
+    //TODO: looks like dead code
     if (_isGeneralUserAllowed == 0) {
       //General permission is denied. Check if specific user permission granted
-      if (_baseUtil.myUser.isAugmontEnabled != null &&
-          _baseUtil.myUser.isAugmontEnabled) {
+      if (_userService.baseUser.isAugmontEnabled != null &&
+          _userService.baseUser.isAugmontEnabled) {
         //this specific user is allowed to use Augmont
         _isAllowed = true;
       } else {
@@ -402,8 +403,8 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
     if (!_isAllowed)
       return STATUS_UNAVAILABLE;
-    else if (_baseUtil.myUser.isAugmontOnboarded == null ||
-        _baseUtil.myUser.isAugmontOnboarded == false)
+    else if (_userService.baseUser.isAugmontOnboarded == null ||
+        _userService.baseUser.isAugmontOnboarded == false)
       return STATUS_REGISTER;
     else
       return STATUS_OPEN;

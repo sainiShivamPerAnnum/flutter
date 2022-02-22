@@ -312,8 +312,6 @@ class LoginControllerViewModel extends BaseModel {
                     final ApiResponse response = await _userRepo.setNewUser(
                         userService.baseUser, token, cstate);
 
-                    final isUserOnboarded = response.model['isUserOnboarded'];
-
                     final gtId = response.model['gtId'];
                     response.model['flag'] ? flag = true : flag = false;
 
