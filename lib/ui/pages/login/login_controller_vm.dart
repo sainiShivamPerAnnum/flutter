@@ -309,8 +309,10 @@ class LoginControllerViewModel extends BaseModel {
                   try {
                     final token = await _getBearerToken();
                     userService.baseUser.mobile = userMobile;
-                    final ApiResponse response =
-                        await _userRepo.setNewUser(userService.baseUser, token);
+                    final ApiResponse response = await _userRepo.setNewUser(
+                        userService.baseUser, token, cstate);
+
+                    final isUserOnboarded = response.model['isUserOnboarded'];
 
                     final gtId = response.model['gtId'];
                     response.model['flag'] ? flag = true : flag = false;

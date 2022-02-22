@@ -31,7 +31,7 @@ class UserRepository {
   }
 
   Future<ApiResponse<Map<String, dynamic>>> setNewUser(
-      BaseUser baseUser, token) async {
+      BaseUser baseUser, token, String state) async {
     try {
       final String _bearer = token;
 
@@ -45,7 +45,8 @@ class UserRepository {
           BaseUser.fldDob: baseUser.dob,
           BaseUser.fldGender: baseUser.gender,
           BaseUser.fldUsername: baseUser.username,
-          BaseUser.fldUserPrefs: {"tn": 1, "al": 0}
+          BaseUser.fldUserPrefs: {"tn": 1, "al": 0},
+          BaseUser.fldStateId: state
         }
       };
 
