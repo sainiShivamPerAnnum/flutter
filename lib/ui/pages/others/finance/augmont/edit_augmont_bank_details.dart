@@ -550,9 +550,15 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                 baseProvider.augmontDetail.ifsc = pBankIfsc.trim();
                 baseProvider.updateAugmontDetails(pBankHolderName.trim(),
                     pBankAccNo.trim(), pBankIfsc.trim());
+                // dbProvider
+                //     .updateUserAugmontDetails(
+                //         _userService.baseUser.uid, baseProvider.augmontDetail)
                 dbProvider
-                    .updateUserAugmontDetails(
-                        _userService.baseUser.uid, baseProvider.augmontDetail)
+                    .updateAugmontBankDetails(
+                        _userService.baseUser.uid,
+                        baseProvider.augmontDetail.bankAccNo,
+                        baseProvider.augmontDetail.ifsc,
+                        baseProvider.augmontDetail.bankHolderName)
                     .then((flag) {
                   if (widget.isWithdrawFlow) {
                     isEditAugmontBankDetailInProgress = false;

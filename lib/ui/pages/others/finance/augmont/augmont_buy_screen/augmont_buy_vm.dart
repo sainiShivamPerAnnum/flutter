@@ -493,16 +493,17 @@ class AugmontGoldBuyViewModel extends BaseModel {
         ///- update AugmontDetail obj
         ///- add notification subscription
 
-        if (!_baseUtil.augmontDetail.firstInvMade) {
-          _baseUtil.augmontDetail.firstInvMade = true;
+        //Not to be done on the client side
+        // if (!_baseUtil.augmontDetail.firstInvMade) {
+        //   _baseUtil.augmontDetail.firstInvMade = true;
 
-          bool _aflag = await _dbModel.updateUserAugmontDetails(
-              _baseUtil.myUser.uid, _baseUtil.augmontDetail);
-          if (_aflag) {
-            _fcmListener.removeSubscription(FcmTopic.MISSEDCONNECTION);
-            _fcmListener.addSubscription(FcmTopic.GOLDINVESTOR);
-          }
-        }
+        //   bool _aflag = await _dbModel.updateUserAugmontDetails(
+        //       _baseUtil.myUser.uid, _baseUtil.augmontDetail);
+        //   if (_aflag) {
+        //     _fcmListener.removeSubscription(FcmTopic.MISSEDCONNECTION);
+        //     _fcmListener.addSubscription(FcmTopic.GOLDINVESTOR);
+        //   }
+        // }
 
         ///check if referral bonuses need to be unlocked
         // if (_userService.userFundWallet.augGoldPrinciple >=
