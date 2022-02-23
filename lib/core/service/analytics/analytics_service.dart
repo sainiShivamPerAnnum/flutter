@@ -54,7 +54,9 @@ class AnalyticsService extends BaseAnalyticsService {
     _mixpanel.track(eventName: eventName, properties: properties);
     _webengage.track(eventName: eventName, properties: properties);
 
-    if (eventName == AnalyticsEvents.signupComplete) {
+    if (eventName == AnalyticsEvents.signupComplete ||
+        eventName == AnalyticsEvents.kycVerificationSuccessful ||
+        eventName == AnalyticsEvents.buyGoldSuccess) {
       _appsflyerSdk.logEvent(eventName, properties);
     }
   }
