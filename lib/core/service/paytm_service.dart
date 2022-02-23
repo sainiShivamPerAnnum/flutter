@@ -31,11 +31,14 @@ class PaytmService {
   }
 
   Future initiateTransactions(
-      {double amount, bool restrictAppInvoke = false}) async {
+      {double amount,
+      Map<String, dynamic> augMap,
+      String couponCode,
+      bool restrictAppInvoke = false}) async {
     var result;
 
     final ApiResponse<CreatePaytmTransactionModel> paytmTransactionApiResponse =
-        await _paytmRepo.createPaytmTransaction(amount);
+        await _paytmRepo.createPaytmTransaction(amount, augMap, couponCode);
 
     if (paytmTransactionApiResponse.code == 400) {
       _logger.e(paytmTransactionApiResponse.errorMessage);
