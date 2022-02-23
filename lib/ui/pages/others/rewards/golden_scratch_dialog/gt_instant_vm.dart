@@ -26,13 +26,15 @@ class GTInstantViewModel extends BaseModel {
   final _dbModel = locator<DBModel>();
   final _rsaEncryption = new RSAEncryption();
   final _coinService = locator<UserCoinService>();
-  double coinsPositionY = SizeConfig.viewInsets.top +
-      SizeConfig.padding12 +
-      SizeConfig.avatarRadius * 3;
+  // double coinsPositionY = SizeConfig.viewInsets.top +
+  //     SizeConfig.padding12 +
+  //     SizeConfig.avatarRadius * 3;
 
-  double coinsPositionX =
-      SizeConfig.screenWidth / 2 - SizeConfig.screenWidth / 8;
+  // double coinsPositionX =
+  //     SizeConfig.screenWidth / 2 - SizeConfig.screenWidth / 8;
+  double coinContentOpacity = 1;
   bool isCoinAnimationInProgress = false;
+  bool isInvestmentAnimationInProgress = false;
   bool showMainContent = false;
   int coinsCount = 200;
   double coinScale = 1;
@@ -139,26 +141,36 @@ class GTInstantViewModel extends BaseModel {
     return token;
   }
 
-  initDepositSuccessAnimation() async {}
+  initDepositSuccessAnimation(double amount) async {
+    isInvestmentAnimationInProgress = true;
+    notifyListeners();
+    await Future.delayed(Duration(seconds: 3), () {
+      isInvestmentAnimationInProgress = false;
+      notifyListeners();
+    });
+    initCoinAnimation(amount);
+  }
 
   initCoinAnimation(double amount) async {
     coinsCount = _coinService.flcBalance - amount.toInt();
     await Future.delayed(Duration(seconds: 1), () {
       isCoinAnimationInProgress = true;
+      coinsCount = _coinService.flcBalance;
+
+      notifyListeners();
+    });
+    await Future.delayed(Duration(seconds: 2), () {
+      coinContentOpacity = 0;
       notifyListeners();
     });
     await Future.delayed(Duration(seconds: 1), () {
-      coinScale = 0;
-      coinsPositionX =
-          SizeConfig.screenWidth - SizeConfig.pageHorizontalMargins * 4;
-      coinsPositionY = SizeConfig.viewInsets.top;
+      isCoinAnimationInProgress = false;
       notifyListeners();
     });
-    await Future.delayed(Duration(seconds: 1));
-    coinsCount = _coinService.flcBalance;
-    isCoinAnimationInProgress = false;
-    notifyListeners();
-    await Future.delayed(Duration(seconds: 2));
+    initNormalFlow();
+  }
+
+  initNormalFlow() {
     showMainContent = true;
     notifyListeners();
   }
