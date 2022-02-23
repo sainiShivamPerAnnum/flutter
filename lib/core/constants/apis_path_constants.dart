@@ -31,7 +31,7 @@ class ApiPath {
   get kGetGoldRates => "/augmontOps/$stage/api/rates";
 
   //User Ops Apis
-  get kAddNewUser => "/userOps/$stage/api/v2/new-user";
+  get kAddNewUser => "/userOps/$stage/api/v2/newuser";
   get kAmountTransfer => "/userOps/$stage/api/v2/accountTransfer";
   get kVerifyTransfer => "/userOps/$stage/api/v2/verifyTransfer";
   get kVerifyPan => "/userOps/$stage/api/v2/verifyPan";
