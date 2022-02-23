@@ -39,35 +39,6 @@ class GTDetailedView extends StatelessWidget {
                 leading: FelloAppBarBackButton(
                   color: Colors.black,
                 ),
-                actions: [
-                  if (model.isCardScratched &&
-                      ticket.rewardArr != null &&
-                      ticket.rewardArr.isNotEmpty)
-                    InkWell(
-                      onTap: () => model.share(ticket),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(width: 0.5, color: Colors.white),
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                        padding: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.pageHorizontalMargins),
-                        height: SizeConfig.avatarRadius * 2,
-                        child: model.isShareLoading
-                            ? SpinKitThreeBounce(
-                                color: Colors.white, size: SizeConfig.padding16)
-                            : Row(children: [
-                                Text("Share",
-                                    style:
-                                        TextStyles.body2.colour(Colors.white)),
-                                SizedBox(width: SizeConfig.padding6),
-                                SvgPicture.asset(Assets.plane,
-                                    width: SizeConfig.avatarRadius * 0.8,
-                                    color: Colors.white)
-                              ]),
-                      ),
-                    )
-                ],
               ),
               Spacer(),
               model.viewScratchedCard
@@ -156,7 +127,41 @@ class GTDetailedView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Congratulations!", style: TextStyles.title2.bold),
+            Row(
+              children: [
+                Text("Congratulations!", style: TextStyles.title3.bold),
+                Spacer(),
+                if (model.isCardScratched &&
+                    ticket.rewardArr != null &&
+                    ticket.rewardArr.isNotEmpty)
+                  InkWell(
+                    onTap: () => model.share(ticket),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            width: 0.5, color: UiConstants.primaryColor),
+                        borderRadius: BorderRadius.circular(100),
+                      ),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.pageHorizontalMargins),
+                      height: SizeConfig.avatarRadius * 2,
+                      child: model.isShareLoading
+                          ? SpinKitThreeBounce(
+                              color: UiConstants.primaryColor,
+                              size: SizeConfig.padding16)
+                          : Row(children: [
+                              Text("Share",
+                                  style: TextStyles.body2
+                                      .colour(UiConstants.primaryColor)),
+                              SizedBox(width: SizeConfig.padding6),
+                              SvgPicture.asset(Assets.plane,
+                                  width: SizeConfig.body2,
+                                  color: UiConstants.primaryColor)
+                            ]),
+                    ),
+                  )
+              ],
+            ),
             SizedBox(height: SizeConfig.padding16),
             Column(children: [
               bulletTiles("${ticket.note}"),
