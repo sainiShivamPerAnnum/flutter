@@ -19,6 +19,7 @@ import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
 import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/connectivity_service.dart';
+import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/golden_ticket_service.dart';
@@ -83,6 +84,7 @@ void setupLocator() {
   //Services
   locator.registerLazySingleton(() => Api());
   locator.registerLazySingleton(() => LocalApi());
+  locator.registerLazySingleton(() => FcmHandlerDataPayloads());
   locator.registerLazySingleton(() => FcmListener());
   locator.registerLazySingleton(() => FcmHandler());
 
