@@ -12,11 +12,12 @@ class WebEngageAnalytics extends BaseAnalyticsService {
       _logger.d(baseUser);
 
       final nameParts = baseUser.name.split(' ');
+      final len = nameParts.length;
 
       WebEngagePlugin.userLogin(baseUser.uid);
       WebEngagePlugin.setUserPhone(baseUser.mobile ?? '');
-      WebEngagePlugin.setUserFirstName(nameParts[0] ?? '');
-      WebEngagePlugin.setUserLastName(nameParts[1] ?? '');
+      WebEngagePlugin.setUserFirstName(len > 0 ? nameParts[0] : '');
+      WebEngagePlugin.setUserLastName(len > 1 ? nameParts[1] : '');
       WebEngagePlugin.setUserEmail(baseUser.email ?? '');
       WebEngagePlugin.setUserBirthDate(baseUser.dob ?? '0');
       WebEngagePlugin.setUserGender(_getGender(baseUser.gender));
