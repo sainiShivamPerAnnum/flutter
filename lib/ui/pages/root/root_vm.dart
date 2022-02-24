@@ -234,7 +234,7 @@ class RootViewModel extends BaseModel {
     } else if (_uri.startsWith(Constants.APP_DOWNLOAD_LINK)) {
       _submitTrack(_uri);
     } else if (_uri.startsWith(Constants.APP_NAVIGATION_LINK)) {
-      final path = _uri.substring(_uri.lastIndexOf('/'), _uri.length);
+      final path = _uri.substring(Constants.APP_NAVIGATION_LINK.length, _uri.length);
       AppState.delegate.parseRoute(Uri.parse(path));
     } else {
       BaseUtil.manualReferralCode =
