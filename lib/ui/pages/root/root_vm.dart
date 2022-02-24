@@ -234,8 +234,13 @@ class RootViewModel extends BaseModel {
     } else if (_uri.startsWith(Constants.APP_DOWNLOAD_LINK)) {
       _submitTrack(_uri);
     } else if (_uri.startsWith(Constants.APP_NAVIGATION_LINK)) {
-      final path = _uri.substring(Constants.APP_NAVIGATION_LINK.length, _uri.length);
-      AppState.delegate.parseRoute(Uri.parse(path));
+      try {
+        final path =
+            _uri.substring(Constants.APP_NAVIGATION_LINK.length, _uri.length);
+        AppState.delegate.parseRoute(Uri.parse(path));
+      } catch (error) {
+        _logger.e(error);
+      }
     } else {
       BaseUtil.manualReferralCode =
           null; //make manual Code null in case user used both link and code
