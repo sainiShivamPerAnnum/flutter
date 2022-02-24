@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:app_install_date/app_install_date_imp.dart';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
+import 'package:webengage_flutter/webengage_flutter.dart';
+
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_events.dart';
@@ -14,7 +16,6 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
-import 'package:webengage_flutter/webengage_flutter.dart';
 
 class AnalyticsService extends BaseAnalyticsService {
   static const appFlierKey = 'fyD5pxiiDw5DrwynP52oT9';
@@ -23,6 +24,10 @@ class AnalyticsService extends BaseAnalyticsService {
   final _webengage = locator<WebEngageAnalytics>();
   final _logger = locator<CustomLogger>();
   AppsflyerSdk _appsflyerSdk;
+
+  AnalyticsService() {
+    init();
+  }
 
   Future<void> login({bool isOnBoarded, BaseUser baseUser}) async {
     await _mixpanel.login(isOnBoarded: isOnBoarded, baseUser: baseUser);

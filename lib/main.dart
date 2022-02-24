@@ -89,7 +89,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    locator<AnalyticsService>().init();
   }
 
   _MyAppState() {
