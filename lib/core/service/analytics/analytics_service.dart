@@ -50,14 +50,19 @@ class AnalyticsService extends BaseAnalyticsService {
   }
 
   void track({String eventName, Map<String, dynamic> properties}) {
-    _logger.d(eventName);
-    _mixpanel.track(eventName: eventName, properties: properties);
-    _webengage.track(eventName: eventName, properties: properties);
+    try {
+      _logger.d(eventName);
+      _mixpanel.track(eventName: eventName, properties: properties);
+      _webengage.track(eventName: eventName, properties: properties);
 
-    if (eventName == AnalyticsEvents.signupComplete ||
-        eventName == AnalyticsEvents.kycVerificationSuccessful ||
-        eventName == AnalyticsEvents.buyGoldSuccess) {
-      _appsflyerSdk.logEvent(eventName, properties);
+      if (eventName == AnalyticsEvents.signupComplete ||
+          eventName == AnalyticsEvents.kycVerificationSuccessful ||
+          eventName == AnalyticsEvents.buyGoldSuccess) {
+        _appsflyerSdk.logEvent(eventName, properties);
+      }
+    } catch (e) {
+      String error = e ?? "Unable to track event: $eventName";
+      _logger.e(error);
     }
   }
 
