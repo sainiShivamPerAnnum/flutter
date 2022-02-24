@@ -119,7 +119,5 @@
 	<string>$(WEBENGAGE_LICENSE_CODE)</string>
 	<key>WEGLogLevel</key>
 	<string>VERBOSE</string>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>We need this permission to track app was installed and make application better for you.</string>
 </dict>
 </plist>

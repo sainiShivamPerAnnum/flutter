@@ -130,7 +130,7 @@ class AnalyticsService extends BaseAnalyticsService {
         appId: Platform.isIOS ? '1558445254' : 'in.fello.felloapp',
         showDebug: FlavorConfig.isDevelopment(),
         disableAdvertisingIdentifier: false,
-        timeToWaitForATTUserAuthorization: Platform.isIOS ? 30 : 0,
+        timeToWaitForATTUserAuthorization: 0,
       );
 
       _appsflyerSdk = AppsflyerSdk(appsFlyerOptions);

@@ -31,12 +31,4 @@ import AppTrackingTransparency
               return
           } 
       }
-
-    override func applicationDidBecomeActive(_ application: UIApplication) {
-        if #available(iOS 14, *) {
-            ATTrackingManager.requestTrackingAuthorization(completionHandler: { status in
-                // native code here
-            })
-        }
-    }
 }
