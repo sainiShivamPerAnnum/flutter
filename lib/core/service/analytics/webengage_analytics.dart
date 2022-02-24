@@ -11,7 +11,7 @@ class WebEngageAnalytics extends BaseAnalyticsService {
     if (isOnBoarded != null && isOnBoarded && baseUser != null) {
       _logger.d(baseUser);
 
-      final nameParts = baseUser.name.split(' ');
+      final nameParts = (baseUser.name ?? '').split(' ');
       final len = nameParts.length;
 
       WebEngagePlugin.userLogin(baseUser.uid);
