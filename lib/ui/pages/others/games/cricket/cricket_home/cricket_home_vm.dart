@@ -74,7 +74,7 @@ class CricketHomeViewModel extends BaseModel {
   }
 
   startGame() {
-    _analyticsService.track(eventName: AnalyticsEvents.playsCricket);
+    _analyticsService.track(eventName: AnalyticsEvents.startPlayingCricket);
     viewpage(1);
     AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,
@@ -90,10 +90,11 @@ class CricketHomeViewModel extends BaseModel {
   Future<bool> openWebView() async {
     setState(ViewState.Busy);
     String _cricPlayCost = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.CRICKET_PLAY_COST) ??
+            .getString(BaseRemoteConfig.CRICKET_PLAY_COST) ??
         "10";
-    int _cost = -1 * int.tryParse(_cricPlayCost)??10;
-    ApiResponse<FlcModel> _flcResponse = await _fclActionRepo.substractFlc(_cost);
+    int _cost = -1 * int.tryParse(_cricPlayCost) ?? 10;
+    ApiResponse<FlcModel> _flcResponse =
+        await _fclActionRepo.substractFlc(_cost);
     _message = _flcResponse.model.message;
     if (_flcResponse.model.flcBalance != null) {
       _userCoinService.setFlcBalance(_flcResponse.model.flcBalance);

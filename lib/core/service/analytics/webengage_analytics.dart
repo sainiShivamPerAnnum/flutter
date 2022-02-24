@@ -7,13 +7,19 @@ import 'package:webengage_flutter/webengage_flutter.dart';
 class WebEngageAnalytics extends BaseAnalyticsService {
   final _logger = locator<CustomLogger>();
 
-  Future<void> login({bool isOnboarded, BaseUser baseUser}) async {
-    if (isOnboarded != null && isOnboarded && baseUser != null) {
+  Future<void> login({bool isOnBoarded, BaseUser baseUser}) async {
+    if (isOnBoarded != null && isOnBoarded && baseUser != null) {
       _logger.d(baseUser);
+
+      final nameParts = (baseUser.name ?? '').split(' ');
+      final len = nameParts.length;
 
       WebEngagePlugin.userLogin(baseUser.uid);
       WebEngagePlugin.setUserPhone(baseUser.mobile ?? '');
-      WebEngagePlugin.setUserFirstName(baseUser.name ?? '');
+
+      if (len > 0) WebEngagePlugin.setUserFirstName(nameParts[0] ?? '');
+      if (len > 1) WebEngagePlugin.setUserLastName(nameParts[len - 1] ?? '');
+
       WebEngagePlugin.setUserEmail(baseUser.email ?? '');
       WebEngagePlugin.setUserBirthDate(baseUser.dob ?? '0');
       WebEngagePlugin.setUserGender(_getGender(baseUser.gender));
@@ -36,7 +42,7 @@ class WebEngageAnalytics extends BaseAnalyticsService {
   void signOut() {
     try {
       WebEngagePlugin.userLogout();
-    }catch(e) {
+    } catch (e) {
       _logger.e(e);
     }
   }
