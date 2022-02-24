@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
@@ -11,7 +13,6 @@ import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_events.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/golden_ticket_service.dart';
@@ -31,7 +32,9 @@ import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
+import 'package:truecaller_sdk/truecaller_sdk.dart';
+
+enum LoginSource { FIREBASE, TRUECALLER }
 
 class LoginControllerViewModel extends BaseModel {
   //Locators
@@ -61,6 +64,13 @@ class LoginControllerViewModel extends BaseModel {
 //Private Variables
   double _formProgress = 0.2;
   bool _isSignup = false;
+  bool _loginUsingTrueCaller = false;
+  get loginUsingTrueCaller => this._loginUsingTrueCaller;
+
+  set loginUsingTrueCaller(value) {
+    this._loginUsingTrueCaller = value;
+    notifyListeners();
+  }
 
   String userMobile;
   String _verificationId;
@@ -68,6 +78,7 @@ class LoginControllerViewModel extends BaseModel {
   String cstate;
   int _currentPage;
   ValueNotifier<double> _pageNotifier;
+  StreamSubscription streamSubscription;
   static List<Widget> _pages;
 
 //Getters and Setters
@@ -118,10 +129,6 @@ class LoginControllerViewModel extends BaseModel {
             logger.d(
                 'Mobile number validated: ${_mobileScreenKey.currentState.model.getMobile()}');
             this.userMobile = _mobileScreenKey.currentState.model.getMobile();
-            String refCode =
-                _mobileScreenKey.currentState.model.getReferralCode();
-            if (refCode != null && refCode.isNotEmpty)
-              BaseUtil.manualReferralCode = refCode;
 
             LoginControllerView.mobileno = this.userMobile;
             notifyListeners();
@@ -155,7 +162,8 @@ class LoginControllerViewModel extends BaseModel {
               _analyticsService.track(eventName: AnalyticsEvents.mobileOtpDone);
               AppState.isOnboardingInProgress = true;
               _otpScreenKey.currentState.model.onOtpReceived();
-              _onSignInSuccess();
+
+              _onSignInSuccess(LoginSource.FIREBASE);
             } else {
               _otpScreenKey.currentState.model.pinEditingController.text = "";
               BaseUtil.showNegativeAlert(
@@ -215,7 +223,7 @@ class LoginControllerViewModel extends BaseModel {
               //firebase user should never be null at this point
               userService.baseUser = BaseUser.newUser(
                   userService.firebaseUser.uid,
-                  _formatMobileNumber(userService.firebaseUser.phoneNumber));
+                  _formatMobileNumber(LoginControllerView.mobileno));
             }
 
             userService.baseUser.name =
@@ -264,6 +272,8 @@ class LoginControllerViewModel extends BaseModel {
                     curve: Curves.easeInToLinear)
                 .then((value) =>
                     _usernameKey.currentState.focusNode.requestFocus());
+
+            _nameScreenKey.currentState.setClearStateValue();
           }
           break;
         }
@@ -274,6 +284,10 @@ class LoginControllerViewModel extends BaseModel {
             if (!await _usernameKey.currentState.model.validate()) {
               return false;
             }
+
+            String refCode = _usernameKey.currentState.model.getReferralCode();
+            if (refCode != null && refCode.isNotEmpty)
+              BaseUtil.manualReferralCode = refCode;
 
             if (!_usernameKey.currentState.model.isLoading &&
                 _usernameKey.currentState.model.isValid) {
@@ -294,6 +308,7 @@ class LoginControllerViewModel extends BaseModel {
 
                   try {
                     final token = await _getBearerToken();
+                    userService.baseUser.mobile = userMobile;
                     final ApiResponse response =
                         await _userRepo.setNewUser(userService.baseUser, token);
 
@@ -311,10 +326,11 @@ class LoginControllerViewModel extends BaseModel {
 
                   if (flag) {
                     _analyticsService.track(
-                      eventName: AnalyticsEvents.userNameAdded,
+                      eventName: AnalyticsEvents.signupName,
                       properties: {'userId': userService?.baseUser?.uid},
                     );
                     logger.d("User object saved successfully");
+                    userService.showOnboardingTutorial = true;
                     _onSignUpComplete();
                   } else {
                     BaseUtil.showNegativeAlert(
@@ -356,7 +372,7 @@ class LoginControllerViewModel extends BaseModel {
     }
   }
 
-  void _onSignInSuccess() async {
+  void _onSignInSuccess(LoginSource source) async {
     logger.d("User authenticated. Now check if details previously available.");
     userService.firebaseUser = FirebaseAuth.instance.currentUser;
     logger.d("User is set: " + userService.firebaseUser.uid);
@@ -370,6 +386,11 @@ class LoginControllerViewModel extends BaseModel {
           duration: Duration(milliseconds: 500), curve: Curves.easeInToLinear);
     } else if (user.model == null ||
         (user.model != null && user.model.hasIncompleteDetails())) {
+      if (user.model == null) {
+        logger.d("New User, initializing BaseUser");
+        userService.baseUser =
+            BaseUser.newUser(userService.firebaseUser.uid, userMobile);
+      }
       setState(ViewState.Idle);
 
       ///First time user!
@@ -380,8 +401,15 @@ class LoginControllerViewModel extends BaseModel {
       //Move to name input page
       BaseUtil.isNewUser = true;
       BaseUtil.isFirstFetchDone = false;
-      _controller.animateToPage(NameInputScreen.index,
-          duration: Duration(milliseconds: 500), curve: Curves.easeInToLinear);
+      if (source == LoginSource.FIREBASE)
+        _controller.animateToPage(NameInputScreen.index,
+            duration: Duration(milliseconds: 500),
+            curve: Curves.easeInToLinear);
+      else if (source == LoginSource.TRUECALLER)
+        _controller.jumpToPage(
+          NameInputScreen.index,
+        );
+      loginUsingTrueCaller = false;
       //_nameScreenKey.currentState.showEmailOptions();
     } else {
       ///Existing user
@@ -395,7 +423,10 @@ class LoginControllerViewModel extends BaseModel {
   Future _onSignUpComplete() async {
     if (_isSignup) {
       await BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
-      _analyticsService.track(eventName: AnalyticsEvents.signupComplete);
+      _analyticsService.track(
+        eventName: AnalyticsEvents.signupComplete,
+        properties: {'uid': userService.baseUser.uid},
+      );
       _analyticsService.trackSignup(userService.baseUser.uid);
     }
 
@@ -405,11 +436,12 @@ class LoginControllerViewModel extends BaseModel {
     await fcmListener.setupFcm();
     logger.i("Calling analytics init for new onborded user");
     await _analyticsService.login(
-      isOnboarded: userService.isUserOnborded,
+      isOnBoarded: userService.isUserOnborded,
       baseUser: userService.baseUser,
     );
     AppState.isOnboardingInProgress = false;
     setState(ViewState.Idle);
+    appStateProvider.rootIndex = 1;
 
     ///check if the account is blocked
     if (userService.baseUser != null && userService.baseUser.isBlocked) {
@@ -425,7 +457,6 @@ class LoginControllerViewModel extends BaseModel {
       'Welcome to ${Constants.APP_NAME}, ${userService.baseUser.name}',
     );
     //process complete
-    //TODO move to home through animation
   }
 
   Future<void> _verifyPhone() async {
@@ -465,7 +496,7 @@ class LoginControllerViewModel extends BaseModel {
       bool flag = await baseProvider.authenticateUser(user); //.then((flag) {
       if (flag) {
         logger.d("User signed in successfully");
-        _onSignInSuccess();
+        _onSignInSuccess(LoginSource.FIREBASE);
       } else {
         logger.e("User auto sign in didnt work");
 
@@ -569,8 +600,70 @@ class LoginControllerViewModel extends BaseModel {
     _pageNotifier.value = _controller.page;
   }
 
+  void initTruecaller() async {
+    TruecallerSdk.initializeSDK(
+        sdkOptions: TruecallerSdkScope.SDK_OPTION_WITHOUT_OTP);
+    TruecallerSdk.isUsable.then((isUsable) {
+      isUsable ? TruecallerSdk.getProfile : print("***Not usable***");
+    });
+
+    streamSubscription =
+        TruecallerSdk.streamCallbackData.listen((truecallerSdkCallback) {
+      switch (truecallerSdkCallback.result) {
+        case TruecallerSdkCallbackResult.success:
+          String phNo = truecallerSdkCallback.profile?.phoneNumber;
+          loginUsingTrueCaller = true;
+          logger.d("Truecaller no: $phNo");
+
+          _analyticsService.track(
+              eventName: AnalyticsEvents.truecallerVerified);
+          AppState.isOnboardingInProgress = true;
+          _authenticateTrucallerUser(phNo);
+          break;
+        case TruecallerSdkCallbackResult.failure:
+          int errorCode = truecallerSdkCallback.error?.code;
+          logger.e(errorCode);
+          break;
+        case TruecallerSdkCallbackResult.verification:
+          print("Verification Required!!");
+          break;
+        default:
+          print("Invalid result");
+      }
+    });
+  }
+
+  Future<void> _authenticateTrucallerUser(String phno) async {
+    //Make api call to get custom token
+    final ApiResponse<String> tokenRes =
+        await _userRepo.getCustomUserToken(phno);
+
+    if (tokenRes.code == 400) {
+      BaseUtil.showNegativeAlert(
+          "Authentication failed", tokenRes.errorMessage);
+    }
+
+    final String token = tokenRes.model;
+    LoginControllerView.mobileno = phno;
+    userMobile = phno;
+    _mobileScreenKey.currentState.model.mobileController.text =
+        _formatMobileNumber(phno);
+    //Authenticate using custom token
+    FirebaseAuth.instance.signInWithCustomToken(token).then((res) {
+      logger.i("New Firebase User: ${res.additionalUserInfo.isNewUser}");
+      //on successful authentication
+      _onSignInSuccess(LoginSource.TRUECALLER);
+    }).catchError((e) {
+      logger.e(e);
+      BaseUtil.showNegativeAlert("Authentication failed",
+          "Please enter your mobile number to authenticate.");
+      loginUsingTrueCaller = false;
+    });
+  }
+
   exit() {
     _controller.removeListener(_pageListener);
     _controller.dispose();
+    streamSubscription?.cancel();
   }
 }

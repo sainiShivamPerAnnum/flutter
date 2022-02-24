@@ -37,7 +37,7 @@ const String CricketGamePath = 'cricketGame';
 const String TransactionsHistoryPath = 'transHistory';
 const String KycDetailsPath = 'kycDetails';
 const String BankDetailsPath = 'bankDetails';
-const String AugmontGoldBuyPath = '/augBuy';
+// const String AugmontGoldBuyPath = '/augBuy';
 const String AugmontGoldSellPath = '/augSell';
 const String AugmontGoldDetailsPath = '/augDetails';
 const String ReferralDetailsPath = '/referralDetails';
@@ -48,6 +48,9 @@ const String FreshdeskHelpPath = '/freshDeskHelp';
 const String GoldenTicketViewPath = '/goldenTicketView';
 const String GoldenTicketsViewPath = '/goldenTicketsView';
 const String GoldenMilestonesViewPath = '/goldenMilestonesView';
+const String TopSaverViewPath = '/topSaverView';
+const String AllParticipantsViewPath = '/allParticipantsView';
+const String GoldBalanceDetailsViewPath = '/goldBalanceDetailsView';
 
 enum Pages {
   Splash,
@@ -85,7 +88,7 @@ enum Pages {
   TxnHistory,
   KycDetails,
   BankDetails,
-  AugGoldBuy,
+  // AugGoldBuy,
   AugGoldSell,
   AugGoldDetails,
   ReferralDetails,
@@ -96,6 +99,9 @@ enum Pages {
   GoldenTicketView,
   GoldenTicketsView,
   GoldenMilestonesView,
+  TopSaverView,
+  AllParticipantsView,
+  GoldBalanceDetailsView
 }
 
 class PageConfiguration {
@@ -359,12 +365,12 @@ PageConfiguration BankDetailsPageConfig = PageConfiguration(
   name: 'Bank Details Screen',
 );
 
-PageConfiguration AugmontGoldBuyPageConfig = PageConfiguration(
-  key: 'augGoldBuy',
-  path: AugmontGoldBuyPath,
-  uiPage: Pages.AugGoldBuy,
-  name: 'Gold Buy Screen',
-);
+// PageConfiguration AugmontGoldBuyPageConfig = PageConfiguration(
+//   key: 'augGoldBuy',
+//   path: AugmontGoldBuyPath,
+//   uiPage: Pages.AugGoldBuy,
+//   name: 'Gold Buy Screen',
+// );
 
 PageConfiguration AugmontGoldSellPageConfig = PageConfiguration(
   key: 'augGoldSell',
@@ -402,36 +408,52 @@ PageConfiguration MyWinnigsPageConfig = PageConfiguration(
 );
 
 PageConfiguration BlockedUserPageConfig = PageConfiguration(
-  key: 'blockedUser',
-  path: BlockedUserPath,
-  uiPage: Pages.BlockedUser,
-  name: 'Blocked User Page'
-);
+    key: 'blockedUser',
+    path: BlockedUserPath,
+    uiPage: Pages.BlockedUser,
+    name: 'Blocked User Page');
 
 PageConfiguration FreshDeskHelpPageConfig = PageConfiguration(
-  key: 'freshDeskHelp',
-  path: FreshdeskHelpPath,
-  uiPage: Pages.FreshDeskHelp,
-  name: 'FreshDesk Help'
-);
+    key: 'freshDeskHelp',
+    path: FreshdeskHelpPath,
+    uiPage: Pages.FreshDeskHelp,
+    name: 'FreshDesk Help');
 
 PageConfiguration GoldenTicketViewPageConfig = PageConfiguration(
-  key: 'GoldenTicketView',
-  path: GoldenTicketViewPath,
-  uiPage: Pages.GoldenTicketView,
-  name: 'Golden Ticket Highlighted'
-);
+    key: 'GoldenTicketView',
+    path: GoldenTicketViewPath,
+    uiPage: Pages.GoldenTicketView,
+    name: 'Golden Ticket Highlighted');
 
 PageConfiguration GoldenTicketsViewPageConfig = PageConfiguration(
-  key: 'GoldenTicketsView',
-  path: GoldenTicketsViewPath,
-  uiPage: Pages.GoldenTicketsView,
-  name: 'Golden Tickets Screen'
-);
+    key: 'GoldenTicketsView',
+    path: GoldenTicketsViewPath,
+    uiPage: Pages.GoldenTicketsView,
+    name: 'Golden Tickets Screen');
 
 PageConfiguration GoldenMilestonesViewPageConfig = PageConfiguration(
   key: 'GoldenMilestonesView',
   path: GoldenMilestonesViewPath,
   uiPage: Pages.GoldenMilestonesView,
   name: 'Milestones screen',
+);
+
+PageConfiguration TopSaverViewPageConfig = PageConfiguration(
+  key: 'TopSaverView',
+  path: TopSaverViewPath,
+  uiPage: Pages.TopSaverView,
+  name: 'TopSaverView screen',
+);
+
+PageConfiguration AllParticipantsViewPageConfig = PageConfiguration(
+  key: 'AllParticipantsView',
+  path: AllParticipantsViewPath,
+  uiPage: Pages.AllParticipantsView,
+  name: 'AllParticipantsView screen',
+);
+PageConfiguration GoldBalanceDetailsViewPageConfig = PageConfiguration(
+  key: 'GoldBalanceDetailsView',
+  path: GoldBalanceDetailsViewPath,
+  uiPage: Pages.GoldBalanceDetailsView,
+  name: 'Gold Balance Details Screen',
 );

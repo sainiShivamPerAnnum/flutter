@@ -36,6 +36,8 @@ class NameInputScreenState extends State<NameInputScreen> {
   static String stateChosenValue;
   String get state => stateChosenValue;
 
+  setClearStateValue() => stateChosenValue = null;
+
   String dateInputError = "";
 
   DateTime initialDate = DateTime(1997, 1, 1, 0, 0);
@@ -534,13 +536,6 @@ class _SignInOptionsState extends State<SignInOptions> {
                       color: UiConstants.primaryColor,
                     ),
                     title: Text("Use another email"),
-                    subtitle: Text(
-                      "this option requires an extra step",
-                      style: TextStyle(
-                        fontSize: SizeConfig.smallTextSize * 1.3,
-                        color: Colors.red[300],
-                      ),
-                    ),
                     onTap: () {
                       if (!baseProvider.isGoogleSignInProgress) {
                         widget.onEmailSignIn();

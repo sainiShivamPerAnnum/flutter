@@ -25,6 +25,7 @@ class Assets {
   static final String dummyCancelledCheque = 'images/Cancelled_cheque.png';
   static final String kycUnavailableAsset = 'images/kyc_unavailable.png';
   static final String noTransaction = "images/no-transactions.png";
+  static final String augmontShare = "images/augmont-share.png";
 
   //APPBAR
 
@@ -49,6 +50,7 @@ class Assets {
   static final String indFlag = "assets/images/indflag.jpg";
   static final String blocked = "assets/images/blocked.png";
   static final String signout = "assets/vectors/signout.svg";
+  static final String truecaller = "assets/images/truecaller.png";
   // WANT MORE MODAL
   static final String wmtsaveMoney = "assets/vectors/icons/wmt_save_money.svg";
   static final String wmtShare = "assets/vectors/icons/wmt_share.svg";
@@ -76,6 +78,7 @@ class Assets {
   static final String gold24K = "assets/vectors/icons/gold24k.svg";
   static final String goldPure = "assets/vectors/icons/goldPure.svg";
   static final String goldSecure = "assets/vectors/icons/goldSecure.svg";
+  static final String couponIcon = "assets/vectors/coupon.svg";
 
   // WIN
 

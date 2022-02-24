@@ -46,7 +46,9 @@ class ReferralDetailsViewModel extends BaseModel {
 
   init() {
     generateLink();
-    _shareMsg = (app_share_message != null && app_share_message.isNotEmpty)?app_share_message:'Hey I am gifting you ₹10 and 200 gaming tokens. Lets start saving and playing together! ';
+    _shareMsg = (app_share_message != null && app_share_message.isNotEmpty)
+        ? app_share_message
+        : 'Hey I am gifting you ₹10 and 200 gaming tokens. Lets start saving and playing together! ';
   }
 
   Future<void> generateLink() async {
@@ -80,11 +82,11 @@ class ReferralDetailsViewModel extends BaseModel {
       itemId: _userService.baseUser.uid,
       method: 'message',
     );
-    
-    _analyticsService.track(eventName: AnalyticsEvents.linkShared);
+
+    _analyticsService.track(eventName: AnalyticsEvents.shareReferralLink);
     shareLinkInProgress = true;
     refresh();
-    
+
     _userService.createDynamicLink(true, 'Other').then((url) async {
       _logger.d(url);
       shareLinkInProgress = false;

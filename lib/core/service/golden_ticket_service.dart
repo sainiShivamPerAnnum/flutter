@@ -44,8 +44,8 @@ class GoldenTicketService extends ChangeNotifier {
   showInstantGoldenTicketView({@required GTSOURCE source, String title}) {
     if (currentGT != null) {
       Future.delayed(Duration(milliseconds: 200), () {
-        if (source != GTSOURCE.deposit)
-          AppState.screenStack.add(ScreenItem.dialog);
+        // if (source != GTSOURCE.deposit)
+        AppState.screenStack.add(ScreenItem.dialog);
 
         Navigator.of(AppState.delegate.navigatorKey.currentContext)
             .push(PageRouteBuilder(

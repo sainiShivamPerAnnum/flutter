@@ -17,12 +17,15 @@ class Play extends StatelessWidget {
       onModelReady: (model) {
         model.loadOfferList();
       },
+      onModelDispose: (model) {
+        model.clear();
+      },
       builder: (ctx, model, child) {
         return Container(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: SizeConfig.padding80),
+              //SizedBox(height: SizeConfig.padding80),
               Container(
                 width: SizeConfig.screenWidth,
                 height: SizeConfig.screenWidth * 0.38,
@@ -60,10 +63,11 @@ class Play extends StatelessWidget {
                           ),
                         ],
                       )
-                    : ListView.builder(
+                    : PageView.builder(
                         scrollDirection: Axis.horizontal,
-                        padding: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.pageHorizontalMargins),
+                        // padding: EdgeInsets.symmetric(
+                        //     horizontal: SizeConfig.pageHorizontalMargins),
+                        controller: model.promoPageController,
                         itemCount: model.offerList.length,
                         itemBuilder: (ctx, i) {
                           return OfferCard(

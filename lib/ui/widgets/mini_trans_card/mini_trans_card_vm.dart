@@ -20,7 +20,7 @@ class MiniTransactionCardViewModel extends BaseModel {
   getMiniTransactions() async {
     _logger.d("Getting mini transactions");
     setState(ViewState.Busy);
-    await _txnService.fetchTransactions(limit: 4);
+    await _txnService.updateTransactions();
     setState(ViewState.Idle);
   }
 

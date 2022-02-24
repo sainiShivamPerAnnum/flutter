@@ -7,7 +7,6 @@ import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/analytics/analytics_events.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_coin_service.dart';
@@ -19,6 +18,7 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/golden_ticket_claim.dart';
 import 'package:felloapp/ui/modals_sheets/security_modal_sheet.dart';
 import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
+import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -46,7 +46,7 @@ class RootViewModel extends BaseModel {
   bool _isInitialized = false;
 
   String get myUserDpUrl => _userService.myUserDpUrl;
-  int get currentTabIndex => _appState.rootIndex;
+  //int get currentTabIndex => _appState.rootIndex;
 
   Future<void> refresh() async {
     if (AppState().getCurrentTabIndex == 2) return;
@@ -62,14 +62,14 @@ class RootViewModel extends BaseModel {
 
   onInit() {
     // pages = <Widget>[Save(), Play(), Win()];
-    AppState().setCurrentTabIndex = 1;
+    // AppState.delegate.appState.setCurrentTabIndex = 1;
     AppState().setRootLoadValue = true;
     _initDynamicLinks(AppState.delegate.navigatorKey.currentContext);
     _verifyManualReferral(AppState.delegate.navigatorKey.currentContext);
   }
 
   onDispose() {
-    if (_baseUtil != null) _baseUtil.cancelIncomingNotifications();
+    // if (_baseUtil != null) _baseUtil.cancelIncomingNotifications();
     _fcmListener.addIncomingMessageListener(null);
   }
 
@@ -107,7 +107,7 @@ class RootViewModel extends BaseModel {
         break;
       default:
     }
-
+    _userService.buyFieldFocusNode.unfocus();
     AppState.delegate.appState.setCurrentTabIndex = index;
     notifyListeners();
   }
@@ -139,8 +139,9 @@ class RootViewModel extends BaseModel {
       _initAdhocNotifications();
 
       _localDBModel.showHomeTutorial.then((value) {
-        if (value) {
+        if (_userService.showOnboardingTutorial) {
           //show tutorial
+          _userService.showOnboardingTutorial = false;
           _localDBModel.setShowHomeTutorial = false;
           // AppState.delegate.parseRoute(Uri.parse('dashboard/walkthrough'));
           AppState.delegate.appState.currentAction =
@@ -352,6 +353,18 @@ class RootViewModel extends BaseModel {
       backgroundColor: Colors.transparent,
       isBarrierDismissable: true,
     );
+  }
+
+  void focusBuyField() {
+    Haptic.vibrate();
+    if (_userService.buyFieldFocusNode.hasPrimaryFocus ||
+        _userService.buyFieldFocusNode.hasFocus) {
+      _logger.d("field has focus");
+      FocusManager.instance.primaryFocus.unfocus();
+    }
+    Future.delayed(Duration(milliseconds: 100), () {
+      _userService.buyFieldFocusNode.requestFocus();
+    });
   }
 
   Future<String> _getBearerToken() async {

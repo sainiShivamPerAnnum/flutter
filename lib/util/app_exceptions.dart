@@ -15,7 +15,7 @@ class FetchDataException extends AppException {
 }
 
 class BadRequestException extends AppException {
-  BadRequestException([message]) : super(message, "Invalid Request: ");
+  BadRequestException([message]) : super(message, "");
 }
 
 class UnauthorisedException extends AppException {

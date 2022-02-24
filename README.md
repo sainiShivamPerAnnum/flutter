@@ -5,7 +5,7 @@ Client App for Fello
 
 Run commands:
 ```
-flutter run -t lib/main_dev.dart --debug –-flavor dev //Run dev instance
-flutter run -t lib/main_prod.dart --debug –-flavor prod //Run prod instance in debug mode
+flutter run -t lib/main_dev.dart –-flavor dev --debug //Run dev instance
+flutter run -t lib/main_prod.dart –-flavor prod --debug  //Run prod instance in debug mode
 ```
 > Happy building!

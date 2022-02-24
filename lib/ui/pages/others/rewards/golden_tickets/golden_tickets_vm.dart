@@ -13,6 +13,7 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/rsa_encryption.dart';
 
 class GoldenTicketsViewModel extends BaseModel {
   //Dependencies
@@ -21,6 +22,7 @@ class GoldenTicketsViewModel extends BaseModel {
   final _logger = locator<CustomLogger>();
   final _apiPaths = locator<ApiPath>();
   final _gtService = locator<GoldenTicketService>();
+  final _rsaEncryption = new RSAEncryption();
 
   //Local Variables
   List<GoldenTicket> _goldenTicketList;
@@ -81,6 +83,13 @@ class GoldenTicketsViewModel extends BaseModel {
       "uid": _userService.baseUser.uid,
       "gtId": ticket.gtId
     };
+    _logger.d("initiateUserDeposit:: Pre encryption: $_body");
+    if (await _rsaEncryption.init()) {
+      _body = _rsaEncryption.encryptRequestBody(_body);
+      _logger.d("initiateUserDeposit:: Post encryption: ${_body.toString()}");
+    } else {
+      _logger.e("Encrypter initialization failed!! exiting method");
+    }
     try {
       final String _bearer = await _getBearerToken();
       final _apiResponse = await APIService.instance

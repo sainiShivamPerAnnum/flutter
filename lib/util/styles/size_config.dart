@@ -101,6 +101,11 @@ class SizeConfig {
   static double get roundness40 => screenWidth * 0.096; //40
   static double get roundness56 => screenWidth * 0.135; //56
 
+  static BorderRadius get scaffoldRoundness => BorderRadius.only(
+        topLeft: Radius.circular(SizeConfig.padding40),
+        topRight: Radius.circular(SizeConfig.padding40),
+      );
+
   //SPECIFIC
 
   static double get navBarWidth =>

@@ -4,7 +4,7 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:intl/intl.dart';
 
 abstract class BaseAnalyticsService {
-  Future<void> login({bool isOnboarded, BaseUser baseUser});
+  Future<void> login({bool isOnBoarded, BaseUser baseUser});
 
   void signOut();
 

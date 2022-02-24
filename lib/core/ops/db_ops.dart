@@ -7,7 +7,9 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
+import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/faq_model.dart';
 import 'package:felloapp/core/model/feed_card_model.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
@@ -299,27 +301,6 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  //////////////////ICICI////////////////////////////////
-  Future<UserIciciDetail> getUserIciciDetails(String id) async {
-    try {
-      var doc = await _api.getUserIciciDetailDocument(id);
-      return UserIciciDetail.fromMap(doc.data());
-    } catch (e) {
-      log.error('Failed to fetch user icici details: $e');
-      return null;
-    }
-  }
-
-  Future<bool> updateUserIciciDetails(
-      String userId, UserIciciDetail iciciDetail) async {
-    try {
-      await _api.updateUserIciciDetailDocument(userId, iciciDetail.toJson());
-      return true;
-    } catch (e) {
-      log.error("Failed to update user icici detail object: " + e.toString());
-      return false;
-    }
-  }
 
   ///////////////////////AUGMONT/////////////////////////////
   Future<UserAugmontDetail> getUserAugmontDetails(String id) async {
@@ -1359,28 +1340,73 @@ class DBModel extends ChangeNotifier {
 
   Future<List<UserMilestoneModel>> getUserAchievedMilestones(String uid) async {
     List<UserMilestoneModel> userMilestones = [];
-    Map<String, dynamic> userMilestonesData =
-        await _api.fetchUserAchievedTicketMilestonesList(uid);
-    logger.d(userMilestonesData.toString());
-    if (userMilestonesData != null) {
-      userMilestonesData['prizeArr']
-          .forEach((e) => userMilestones.add(UserMilestoneModel.fromJson(e)));
+    try {
+      Map<String, dynamic> userMilestonesData =
+          await _api.fetchUserAchievedTicketMilestonesList(uid);
+      logger.d(userMilestonesData.toString());
+      if (userMilestonesData != null) {
+        userMilestonesData['prizeArr']
+            .forEach((e) => userMilestones.add(UserMilestoneModel.fromJson(e)));
+      }
+    } catch (e) {
+      logger.e(e.toString());
+      userMilestones = [];
     }
+
     return userMilestones;
   }
 
   Future<List<FelloMilestoneModel>> getMilestonesList() async {
     List<FelloMilestoneModel> felloMilestones = [];
-    Map<String, dynamic> felloMilestonesData =
-        await _api.fetchGoldenTicketMilestonesList();
-    logger.d(felloMilestonesData.toString());
-    if (felloMilestonesData != null) {
-      felloMilestonesData['checkpoints']
-          .forEach((e) => felloMilestones.add(FelloMilestoneModel.fromJson(e)));
+    try {
+      Map<String, dynamic> felloMilestonesData =
+          await _api.fetchGoldenTicketMilestonesList();
+      logger.d(felloMilestonesData.toString());
+      if (felloMilestonesData != null) {
+        felloMilestonesData['checkpoints'].forEach(
+            (e) => felloMilestones.add(FelloMilestoneModel.fromJson(e)));
+      }
+    } catch (e) {
+      logger.e(e.toString());
+      felloMilestones = [];
     }
 
     return felloMilestones;
   }
+
+  Future<List<EventModel>> getOngoingEvents() async {
+    List<EventModel> events = [];
+    try {
+      QuerySnapshot snapshot = await _api.fetchOngoingEvents();
+      if (snapshot.docs != null && snapshot.docs.isNotEmpty) {
+        snapshot.docs.forEach((element) {
+          print(element.data());
+          events.add(EventModel.fromMap(element.data()));
+        });
+      }
+    } catch (e) {
+      logger.e(e.toString());
+      events = [];
+    }
+    return events;
+  }
+
+  Future<List<CouponModel>> getCoupons() async {
+    List<CouponModel> couponList = [];
+    try {
+      QuerySnapshot snapshot = await _api.fetchCoupons();
+      snapshot.docs.forEach((element) {
+        couponList.add(CouponModel.fromMap(element.data()));
+      });
+    } catch (e) {
+      logger.e(e.toString());
+      couponList = [];
+    }
+
+    return couponList;
+  }
+
+//------------------------------------------------REALTIME----------------------------
 
   Future<bool> checkIfUsernameIsAvailable(String username) async {
     return await _api.checkUserNameAvailability(username);
