@@ -1,3 +1,5 @@
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -30,12 +32,35 @@ class PaytmService {
     }
   }
 
+  double _getGoldQuantityFromTaxedAmount(double amount, double rate) {
+    return BaseUtil.digitPrecision((amount / rate), 4, false);
+  }
+
+  double _getTaxOnAmount(double amount, double taxRate) {
+    return BaseUtil.digitPrecision((amount * taxRate) / (100 + taxRate));
+  }
+
   Future initiateTransactions(
       {double amount,
-      Map<String, dynamic> augMap,
+      AugmontRates augmontRates,
       String couponCode,
       bool restrictAppInvoke = false}) async {
     var result;
+
+    if (augmontRates == null) return;
+
+    double netTax = augmontRates.cgstPercent + augmontRates.sgstPercent;
+
+    final augMap = {
+      "aBlockId": augmontRates.blockId.toString(),
+      "aLockPrice": augmontRates.goldBuyPrice,
+      "aPaymode": "PYTM",
+      "aGoldInTxn": _getGoldQuantityFromTaxedAmount(
+          BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax)),
+          augmontRates.goldBuyPrice),
+      "aTaxedGoldBalance":
+          BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax))
+    };
 
     final ApiResponse<CreatePaytmTransactionModel> paytmTransactionApiResponse =
         await _paytmRepo.createPaytmTransaction(amount, augMap, couponCode);
