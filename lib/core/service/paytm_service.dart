@@ -81,6 +81,7 @@ class PaytmService {
     final paytmTransactionModel = paytmTransactionApiResponse.model;
 
     try {
+      _logger.d("Paytm order id: ${paytmTransactionModel.data.orderId}");
       final response = await AllInOneSdk.startTransaction(
           mid,
           paytmTransactionModel.data.orderId,

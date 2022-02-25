@@ -5,6 +5,7 @@ import 'package:felloapp/core/service/notifier_services/golden_ticket_service.da
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
@@ -28,13 +29,16 @@ class FcmHandler extends ChangeNotifier {
   final _lbService = locator<LeaderboardService>();
   GoldenTicketService _gtService = GoldenTicketService();
   final _userservice = locator<UserService>();
+
+  final _augmontGoldBuyViewModel = locator<AugmontGoldBuyViewModel>();
+
   Log log = new Log("FcmHandler");
   ValueChanged<Map> notifListener;
   String url;
   int tab, dailogShowCount;
 
   Future<bool> handleMessage(Map data, MsgSource source) async {
-    logger.d(data);
+    logger.d("Fcm handler receives - $data");
     bool showSnackbar = true;
     String title = data['dialog_title'];
     String body = data['dialog_body'];
@@ -54,6 +58,12 @@ class FcmHandler extends ChangeNotifier {
     if (data['command'] != null) {
       showSnackbar = false;
       switch (command) {
+        case 'modelDataResponse':
+          {
+            logger.i("Transaction response received.:\n $data");
+            _augmontGoldBuyViewModel.fcmTransactionResponseUpdate(data);
+          }
+          break;
         case COMMAND_CRIC_GAME_END:
           {
             logger.i("FCM Command received to end Cricket game");
