@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class TransactionResponseModel {
   bool success;
   Data data;
@@ -33,6 +31,10 @@ class TransactionResponseModel {
       data: Data.fromMap(map['data']),
     );
   }
+
+  @override
+  String toString() =>
+      'TransactionResponseModel(success: $success, data: $data)';
 }
 
 class Data {
@@ -93,6 +95,11 @@ class Data {
       tNote: map['tNote'] ?? '',
       tUpdatedOn: TxnDate.fromMap(map['tUpdatedOn']),
     );
+  }
+
+  @override
+  String toString() {
+    return 'Data(paytmMap: $paytmMap, tAmount: $tAmount, tTranStatus: $tTranStatus, tNote: $tNote, tUpdatedOn: $tUpdatedOn)';
   }
 }
 
@@ -174,6 +181,11 @@ class PaytmMap {
       txnDate: TxnDate.fromMap(map['txnDate']),
     );
   }
+
+  @override
+  String toString() {
+    return 'PaytmMap(txnId: $txnId, status: $status, bankTxnId: $bankTxnId, txnType: $txnType, txnAmount: $txnAmount, gatewayName: $gatewayName, paymentMode: $paymentMode, bankName: $bankName, txnDate: $txnDate)';
+  }
 }
 
 class TxnDate {
@@ -207,4 +219,8 @@ class TxnDate {
       iNanoseconds: map['iNanoseconds']?.toInt() ?? 0,
     );
   }
+
+  @override
+  String toString() =>
+      'TxnDate(iSeconds: $iSeconds, iNanoseconds: $iNanoseconds)';
 }

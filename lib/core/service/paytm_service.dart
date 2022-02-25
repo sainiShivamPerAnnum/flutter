@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
+import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/credentials_stage.dart';
@@ -38,6 +39,15 @@ class PaytmService {
 
   double _getTaxOnAmount(double amount, double taxRate) {
     return BaseUtil.digitPrecision((amount * taxRate) / (100 + taxRate));
+  }
+
+  Future<void> validateTransaction(String orderId) async {
+    final ApiResponse<TransactionResponseModel> transactionResponseModel =
+        await _paytmRepo.getTransactionStatus(orderId);
+
+    if (transactionResponseModel.code == 200) {
+      _logger.d(transactionResponseModel.model.toString());
+    }
   }
 
   Future initiateTransactions(
@@ -83,6 +93,8 @@ class PaytmService {
           restrictAppInvoke);
       _logger.d("Paytm Response:${response.toString()}");
       result = response.toString();
+
+      validateTransaction(paytmTransactionModel.data.orderId);
     } catch (onError) {
       if (onError is PlatformException) {
         result = onError.message + " \n  " + onError.details.toString();

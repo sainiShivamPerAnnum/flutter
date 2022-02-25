@@ -46,11 +46,11 @@ class PaytmRepository {
   }
 
   Future<ApiResponse<TransactionResponseModel>> getTransactionStatus(
-      String orderId, String uid) async {
+      String orderId) async {
     try {
       final String _uid = _userService.baseUser.uid;
       final _token = await _getBearerToken();
-      final _queryParams = {"orderId": orderId, "uid": uid};
+      final _queryParams = {"orderId": orderId, "uid": _uid};
       final response = await APIService.instance.getData(
           ApiPath.kCreatePaytmTransaction,
           token: _token,
