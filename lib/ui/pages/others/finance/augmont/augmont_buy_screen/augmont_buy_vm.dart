@@ -340,17 +340,24 @@ class AugmontGoldBuyViewModel extends BaseModel {
     isGoldBuyInProgress = true;
     _analyticsService.track(eventName: AnalyticsEvents.buyGold);
 
-    final value = await _paytmService.initiateTransactions(
+    final _status = await _paytmService.initiateTransactions(
         amount: buyAmount,
         augmontRates: goldRates,
         couponCode: appliedCoupon?.code ?? "");
 
-    _logger.d(value);
     isGoldBuyInProgress = false;
-    BaseUtil.showPositiveAlert(
-      'Transaction successful',
-      'Thank you for investing in digital gold.',
-    );
+
+    if (_status) {
+      BaseUtil.showPositiveAlert(
+        'Transaction successful',
+        'Thank you for investing in digital gold.',
+      );
+    } else {
+      BaseUtil.showNegativeAlert(
+        'Transaction failed',
+        'Please try again in sometime or contact us for further assistance.',
+      );
+    }
 
     //Old Buy Flow
     // _augmontModel

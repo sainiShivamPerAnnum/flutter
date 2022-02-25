@@ -50,14 +50,14 @@ class PaytmService {
     }
   }
 
-  Future initiateTransactions(
+  Future<bool> initiateTransactions(
       {double amount,
       AugmontRates augmontRates,
       String couponCode,
       bool restrictAppInvoke = false}) async {
     var result;
 
-    if (augmontRates == null) return;
+    if (augmontRates == null) return false;
 
     double netTax = augmontRates.cgstPercent + augmontRates.sgstPercent;
 
@@ -77,7 +77,7 @@ class PaytmService {
 
     if (paytmTransactionApiResponse.code == 400) {
       _logger.e(paytmTransactionApiResponse.errorMessage);
-      return;
+      return false;
     }
 
     final paytmTransactionModel = paytmTransactionApiResponse.model;
@@ -92,17 +92,16 @@ class PaytmService {
           isStaging,
           restrictAppInvoke);
       _logger.d("Paytm Response:${response.toString()}");
-      result = response.toString();
 
       validateTransaction(paytmTransactionModel.data.orderId);
+      return true;
     } catch (onError) {
       if (onError is PlatformException) {
         result = onError.message + " \n  " + onError.details.toString();
       } else {
         result = onError.toString();
       }
+      return false;
     }
-
-    return result;
   }
 }
