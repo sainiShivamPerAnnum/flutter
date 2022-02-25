@@ -343,7 +343,8 @@ class AugmontGoldBuyViewModel extends BaseModel {
     final _status = await _paytmService.initiateTransactions(
         amount: buyAmount,
         augmontRates: goldRates,
-        couponCode: appliedCoupon?.code ?? "");
+        couponCode: appliedCoupon?.code ?? "",
+        restrictAppInvoke: true);
 
     isGoldBuyInProgress = false;
 

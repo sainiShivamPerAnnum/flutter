@@ -55,8 +55,6 @@ class PaytmService {
       AugmontRates augmontRates,
       String couponCode,
       bool restrictAppInvoke = false}) async {
-    var result;
-
     if (augmontRates == null) return false;
 
     double netTax = augmontRates.cgstPercent + augmontRates.sgstPercent;
@@ -97,9 +95,9 @@ class PaytmService {
       return true;
     } catch (onError) {
       if (onError is PlatformException) {
-        result = onError.message + " \n  " + onError.details.toString();
+        _logger.e(onError.message + " \n  " + onError.details.toString());
       } else {
-        result = onError.toString();
+        _logger.e(onError.toString());
       }
       return false;
     }
