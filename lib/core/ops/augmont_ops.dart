@@ -383,24 +383,28 @@ class AugmontModel extends ChangeNotifier {
       double newAugPrinciple =
           _onCompleteDepositResponse.model.response.augmontPrinciple;
       if (newAugPrinciple != null && newAugPrinciple > 0) {
+        //add this to augmontBuyVM
         _userService.augGoldPrinciple = newAugPrinciple;
       }
       double newAugQuantity =
           _onCompleteDepositResponse.model.response.augmontGoldQty;
       if (newAugQuantity != null && newAugQuantity > 0) {
+        //add this to augmontBuyVM
         _userService.augGoldQuantity = newAugQuantity;
       }
+      //add this to augmontBuyVM
       int newFlcBalance = _onCompleteDepositResponse.model.response.flcBalance;
       if (newFlcBalance > 0) {
         _userCoinService.setFlcBalance(newFlcBalance);
       }
       _baseProvider.currentAugmontTxn = _onCompleteDepositResponse
           .model.response.transactionDoc.transactionDetail;
-
+      //add this to augmontBuyVM
       if (_onCompleteDepositResponse.model.gtId != null) {
         GoldenTicketService.goldenTicketId =
             _onCompleteDepositResponse.model.gtId;
       }
+      //add this to augmontBuyVM
       _txnService.updateTransactions();
 
       if (_augmontTxnProcessListener != null)
