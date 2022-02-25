@@ -100,6 +100,8 @@ class Assets {
 
   static final String bankDetails = "assets/vectors/icons/bankDetails.svg";
   static final String txnHistory = "assets/vectors/icons/txnHistory.svg";
+  static final String bank = "assets/vectors/icons/bank.svg";
+  static final String repeat = "assets/vectors/icons/repeat.svg";
 
   //DRAWER
   static final String dAboutDigitalGold =

@@ -38,7 +38,7 @@ class Transactions extends StatelessWidget {
                   children: [
                     SizedBox(height: SizeConfig.scaffoldMargin),
                     FelloBriefTile(
-                      leadingAsset: Assets.bankDetails,
+                      leadingAsset: Assets.bank,
                       title: "Bank Account Details",
                       trailingIcon: Icons.arrow_forward_ios_rounded,
                       onTap: () {
@@ -56,6 +56,17 @@ class Transactions extends StatelessWidget {
                         AppState.delegate.appState.currentAction = PageAction(
                           state: PageState.addPage,
                           page: TransactionsHistoryPageConfig,
+                        );
+                      },
+                    ),
+                    FelloBriefTile(
+                      leadingAsset: Assets.repeat,
+                      title: "AutoPay UPI Details",
+                      trailingIcon: Icons.arrow_forward_ios_rounded,
+                      onTap: () {
+                        AppState.delegate.appState.currentAction = PageAction(
+                          state: PageState.addPage,
+                          page: UserAutoPayDetailsViewPageConfig,
                         );
                       },
                     ),

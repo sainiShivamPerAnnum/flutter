@@ -53,6 +53,7 @@ const String AllParticipantsViewPath = '/allParticipantsView';
 const String GoldBalanceDetailsViewPath = '/goldBalanceDetailsView';
 const String AutoPayDetailsViewPath = '/autoPayDetailsView';
 const String AutoPayAmountSetViewPath = '/autoPayAmountSetView';
+const String UserAutoPayDetailsViewPath = '/userAutopayDetailsView';
 
 enum Pages {
   Splash,
@@ -105,7 +106,8 @@ enum Pages {
   AllParticipantsView,
   GoldBalanceDetailsView,
   AutoPayDetailsView,
-  AutoPayAmountSetView
+  AutoPayAmountSetView,
+  UserAutoPayDetailsView
 }
 
 class PageConfiguration {
@@ -474,3 +476,9 @@ PageConfiguration AutoPayAmountSetViewPageConfig = PageConfiguration(
     path: AutoPayAmountSetViewPath,
     uiPage: Pages.AutoPayAmountSetView,
     name: "AutoPay Amount Set Screen");
+
+PageConfiguration UserAutoPayDetailsViewPageConfig = PageConfiguration(
+    key: 'UserAutoPayDetailsView',
+    path: UserAutoPayDetailsViewPath,
+    uiPage: Pages.UserAutoPayDetailsView,
+    name: "User AutoPay DetailsScreen");

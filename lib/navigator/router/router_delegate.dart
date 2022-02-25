@@ -25,6 +25,7 @@ import 'package:felloapp/ui/pages/others/finance/augmont/edit_augmont_bank_detai
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_balance_details/gold_balance_details_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_amount_set_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_details_view.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_view.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_game/cricket_game_view.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/dailyPicksDraw/dailyPicksDraw_view.dart';
@@ -287,6 +288,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.AutoPayAmountSetView:
           _addPageData(AutoPayAmountSetView(), AutoPayAmountSetViewPageConfig);
           break;
+        case Pages.UserAutoPayDetailsView:
+          _addPageData(
+              UserAutoPayDetailsView(), UserAutoPayDetailsViewPageConfig);
+          break;
         default:
           break;
       }
@@ -495,6 +500,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.AutoPayAmountSetView:
         AutoPayAmountSetViewPageConfig.currentPageAction = action;
         break;
+      case Pages.UserAutoPayDetailsView:
+        UserAutoPayDetailsViewPageConfig.currentPageAction = action;
+        break;
       default:
         break;
     }
@@ -670,6 +678,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case 'autopayAmount':
         pageConfiguration = AutoPayAmountSetViewPageConfig;
+        break;
+      case 'UserAutoPayDetails':
+        pageConfiguration = UserAutoPayDetailsViewPageConfig;
         break;
     }
     if (pageConfiguration != null) {

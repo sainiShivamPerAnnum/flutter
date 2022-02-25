@@ -13,8 +13,21 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
-class AutoPayAmountSetView extends StatelessWidget {
+class AutoPayAmountSetView extends StatefulWidget {
   const AutoPayAmountSetView({Key key}) : super(key: key);
+
+  @override
+  State<AutoPayAmountSetView> createState() => _AutoPayAmountSetViewState();
+}
+
+class _AutoPayAmountSetViewState extends State<AutoPayAmountSetView> {
+  double sliderValue = 500;
+
+  updateSliderValue(val) {
+    setState(() {
+      sliderValue = val;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +40,7 @@ class AutoPayAmountSetView extends StatelessWidget {
               children: [
                 FelloAppBar(
                   leading: FelloAppBarBackButton(),
-                  title: "Set Amount",
+                  title: "Set up AutoPay",
                 ),
                 Expanded(
                   child: Container(
@@ -57,7 +70,7 @@ class AutoPayAmountSetView extends StatelessWidget {
                             children: [
                               Lottie.asset(
                                 "assets/lotties/completed.json",
-                                height: SizeConfig.screenWidth / 2.4,
+                                height: SizeConfig.screenWidth / 4.8,
                               ),
                               Text(
                                 "Yayy!",
@@ -79,20 +92,18 @@ class AutoPayAmountSetView extends StatelessWidget {
                           style: TextStyles.body2
                               .colour(Colors.black26)
                               .letterSpace(3),
-                          textAlign: TextAlign.center,
                         ),
                         SizedBox(height: SizeConfig.padding8),
                         Text(
-                          "How much would you like to save each day ?",
+                          "How much would you like to save\neach day ?",
                           style: TextStyles.title5.bold,
-                          textAlign: TextAlign.center,
                         ),
                         SizedBox(height: SizeConfig.padding32),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              "₹5000",
+                              "₹${sliderValue.toInt()}",
                               style: GoogleFonts.sourceSansPro(
                                   fontWeight: FontWeight.bold,
                                   fontSize: SizeConfig.screenWidth / 4.8,
@@ -109,11 +120,27 @@ class AutoPayAmountSetView extends StatelessWidget {
                           ],
                         ),
                         Slider(
-                          value: 2000,
-                          divisions: 10,
-                          onChanged: (val) {},
+                          value: sliderValue,
+                          onChanged: (val) {
+                            updateSliderValue(val);
+                          },
+                          inactiveColor: UiConstants.scaffoldColor,
+                          thumbColor: UiConstants.primaryColor,
+                          activeColor:
+                              UiConstants.primaryColor.withOpacity(0.5),
                           min: 10,
                           max: 5000,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.pageHorizontalMargins),
+                          child: Row(
+                            children: [
+                              Text("₹10"),
+                              Spacer(),
+                              Text("₹5000"),
+                            ],
+                          ),
                         )
                       ],
                     ),
