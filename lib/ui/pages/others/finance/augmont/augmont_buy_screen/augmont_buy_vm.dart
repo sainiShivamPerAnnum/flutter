@@ -281,6 +281,8 @@ class AugmontGoldBuyViewModel extends BaseModel {
   fcmTransactionResponseUpdate(
       DepositFcmResponseModel depositFcmResponseModel) async {
     _logger.i("Updating response value.");
+
+    //Handle failed condition here.
     if (!depositFcmResponseModel.status) return;
 
     double newAugPrinciple = depositFcmResponseModel.augmontPrinciple;
@@ -386,8 +388,8 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
     if (_status) {
       BaseUtil.showPositiveAlert(
-        'Transaction successful',
-        'Thank you for investing in digital gold.',
+        'Processing transaction',
+        'It can take upto 15 minutes.',
       );
     } else {
       BaseUtil.showNegativeAlert(
