@@ -7,6 +7,7 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/eligible_coupon_model.dart';
+import 'package:felloapp/core/model/paytm_models/deposit_fcm_response_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -278,25 +279,28 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
   // BUY LOGIC
 
-  fcmTransactionResponseUpdate(Map<String, dynamic> data) {
-    double newAugPrinciple = data['augmontPrinciple'];
+  fcmTransactionResponseUpdate(
+      DepositFcmResponseModel depositFcmResponseModel) {
+    _logger.i("Updating response value.");
+    if (!depositFcmResponseModel.status) return;
+
+    double newAugPrinciple = depositFcmResponseModel.augmontPrinciple;
     if (newAugPrinciple != null && newAugPrinciple > 0) {
       _userService.augGoldPrinciple = newAugPrinciple;
     }
-    double newAugQuantity = data['augmontGoldQty'];
+    double newAugQuantity = depositFcmResponseModel.augmontGoldQty;
     if (newAugQuantity != null && newAugQuantity > 0) {
       _userService.augGoldQuantity = newAugQuantity;
     }
     //add this to augmontBuyVM
-    int newFlcBalance = data['flcBalance'];
+    int newFlcBalance = depositFcmResponseModel.flcBalance;
     if (newFlcBalance > 0) {
       _userCoinService.setFlcBalance(newFlcBalance);
     }
 
-    // if (_onCompleteDepositResponse.model.gtId != null) {
-    //   GoldenTicketService.goldenTicketId =
-    //       _onCompleteDepositResponse.model.gtId;
-    // }
+    if (depositFcmResponseModel.gtId != null) {
+      GoldenTicketService.goldenTicketId = depositFcmResponseModel.gtId;
+    }
 
     _txnService.updateTransactions();
   }

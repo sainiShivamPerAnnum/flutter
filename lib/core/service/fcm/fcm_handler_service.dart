@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
+import 'package:felloapp/core/model/paytm_models/deposit_fcm_response_model.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
@@ -63,8 +66,10 @@ class FcmHandler extends ChangeNotifier {
             logger.i("Transaction response received.:\n $data");
             BaseUtil.showPositiveAlert(
                 "Deposit response received", data.toString(),
-                seconds: 10);
-            _augmontGoldBuyViewModel.fcmTransactionResponseUpdate(data);
+                seconds: 3);
+            final DepositFcmResponseModel dataMap =
+                DepositFcmResponseModel.fromJson(json.decode(data['payload']));
+            _augmontGoldBuyViewModel.fcmTransactionResponseUpdate(dataMap);
           }
           break;
         case COMMAND_CRIC_GAME_END:
