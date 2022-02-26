@@ -303,10 +303,10 @@ class AugmontGoldBuyViewModel extends BaseModel {
       GoldenTicketService.goldenTicketId = depositFcmResponseModel.gtId;
       if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
         _gtService.showInstantGoldenTicketView(
-            title: '₹${depositFcmResponseModel.augmontPrinciple} saved.',
+            title: '₹${depositFcmResponseModel.amount} saved.',
             source: GTSOURCE.deposit);
       } else {
-        showSuccessGoldBuyDialog(depositFcmResponseModel.augmontPrinciple);
+        showSuccessGoldBuyDialog(depositFcmResponseModel.amount);
       }
     }
 

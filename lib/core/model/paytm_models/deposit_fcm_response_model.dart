@@ -5,6 +5,7 @@ class DepositFcmResponseModel {
   bool didFLCUpdate;
   double augmontPrinciple;
   double augmontGoldQty;
+  double amount;
   int flcBalance;
   String gtId;
   bool status;
@@ -16,6 +17,7 @@ class DepositFcmResponseModel {
       this.didFLCUpdate,
       this.augmontPrinciple,
       this.augmontGoldQty,
+      this.amount,
       this.flcBalance,
       this.gtId,
       this.status});
@@ -26,6 +28,7 @@ class DepositFcmResponseModel {
     isWalletCreated = json['isWalletCreated'];
     didFLCUpdate = json['didFLCUpdate'];
     augmontPrinciple = json['augmontPrinciple'].toDouble();
+    amount = json['amount'].toDouble();
     augmontGoldQty = json['augmontGoldQty'];
     flcBalance = json['flcBalance'];
     gtId = json['gtId'];
@@ -40,6 +43,7 @@ class DepositFcmResponseModel {
     data['didFLCUpdate'] = this.didFLCUpdate;
     data['augmontPrinciple'] = this.augmontPrinciple;
     data['augmontGoldQty'] = this.augmontGoldQty;
+    data['amount'] = this.amount;
     data['flcBalance'] = this.flcBalance;
     data['gtId'] = this.gtId;
     data['status'] = this.status;
