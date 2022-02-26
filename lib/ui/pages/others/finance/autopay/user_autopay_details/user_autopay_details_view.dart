@@ -17,6 +17,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class UserAutoPayDetailsView extends StatelessWidget {
@@ -383,15 +384,9 @@ class _AutoPayAmountUpdateDialogState extends State<AutoPayAmountUpdateDialog> {
     return FelloConfirmationDialog(
       content: Column(
         children: [
-          SizedBox(height: SizeConfig.padding16),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
-            child: Text(
-              "How much would you like to save each day ?",
-              style: TextStyles.title5.light,
-              textAlign: TextAlign.center,
-            ),
-          ),
+          SizedBox(height: SizeConfig.padding24),
+          SvgPicture.asset("assets/vectors/addmoney.svg",
+              height: SizeConfig.screenHeight * 0.16),
           SizedBox(height: SizeConfig.padding24),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

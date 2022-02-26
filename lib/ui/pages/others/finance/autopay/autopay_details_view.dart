@@ -410,7 +410,7 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView> {
                     onPressed: () {
                       AppState.delegate.appState.currentAction = PageAction(
                           state: PageState.addPage,
-                          page: AutoPayAmountSetViewPageConfig);
+                          page: AutoPayProcessViewPageConfig);
                     },
                   ),
                 ),
