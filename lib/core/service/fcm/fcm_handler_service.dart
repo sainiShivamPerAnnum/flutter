@@ -58,9 +58,12 @@ class FcmHandler extends ChangeNotifier {
     if (data['command'] != null) {
       showSnackbar = false;
       switch (command) {
-        case 'modelDataResponse':
+        case 'depositTransactionResponse':
           {
             logger.i("Transaction response received.:\n $data");
+            BaseUtil.showPositiveAlert(
+                "Deposit response received", data.toString(),
+                seconds: 10);
             _augmontGoldBuyViewModel.fcmTransactionResponseUpdate(data);
           }
           break;

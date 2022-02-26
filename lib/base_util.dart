@@ -361,7 +361,7 @@ class BaseUtil extends ChangeNotifier {
     return (!skFlag && !augFlag);
   }
 
-  static showPositiveAlert(String title, String message, {int seconds}) {
+  static showPositiveAlert(String title, String message, {int seconds = 3}) {
     // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Flushbar(
@@ -376,7 +376,7 @@ class BaseUtil extends ChangeNotifier {
         borderRadius: 8,
         title: title,
         message: message,
-        duration: Duration(seconds: 3),
+        duration: Duration(seconds: seconds),
         backgroundGradient: LinearGradient(
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,
