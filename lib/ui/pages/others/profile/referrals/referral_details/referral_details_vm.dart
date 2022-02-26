@@ -83,7 +83,7 @@ class ReferralDetailsViewModel extends BaseModel {
       method: 'message',
     );
 
-    _analyticsService.track(eventName: AnalyticsEvents.linkShared);
+    _analyticsService.track(eventName: AnalyticsEvents.shareReferralLink);
     shareLinkInProgress = true;
     refresh();
 

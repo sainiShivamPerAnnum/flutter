@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:app_install_date/app_install_date_imp.dart';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
+import 'package:webengage_flutter/webengage_flutter.dart';
+
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -21,11 +23,15 @@ class AnalyticsService extends BaseAnalyticsService {
   final _mixpanel = locator<MixpanelAnalytics>();
   final _webengage = locator<WebEngageAnalytics>();
   final _logger = locator<CustomLogger>();
+  AppsflyerSdk _appsflyerSdk;
 
-  Future<void> login({bool isOnboarded, BaseUser baseUser}) async {
-    await _mixpanel.login(isOnboarded: isOnboarded, baseUser: baseUser);
-    _webengage.login(isOnboarded: isOnboarded, baseUser: baseUser);
-    _initAppFLyer();
+  AnalyticsService() {
+    init();
+  }
+
+  Future<void> login({bool isOnBoarded, BaseUser baseUser}) async {
+    await _mixpanel.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
+    _webengage.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
 
     // for daily session event
     DateTime now = DateTime.now();
@@ -38,14 +44,31 @@ class AnalyticsService extends BaseAnalyticsService {
     }
   }
 
+  void init() {
+    new WebEngagePlugin();
+    _initAppFLyer();
+  }
+
   void signOut() {
     _mixpanel.signOut();
     _webengage.signOut();
   }
 
   void track({String eventName, Map<String, dynamic> properties}) {
-    _mixpanel.track(eventName: eventName, properties: properties);
-    _webengage.track(eventName: eventName, properties: properties);
+    try {
+      _logger.d(eventName);
+      _mixpanel.track(eventName: eventName, properties: properties);
+      _webengage.track(eventName: eventName, properties: properties);
+
+      if (eventName == AnalyticsEvents.signupComplete ||
+          eventName == AnalyticsEvents.kycVerificationSuccessful ||
+          eventName == AnalyticsEvents.buyGoldSuccess) {
+        _appsflyerSdk.logEvent(eventName, properties);
+      }
+    } catch (e) {
+      String error = e ?? "Unable to track event: $eventName";
+      _logger.e(error);
+    }
   }
 
   void trackScreen({String screen, Map<String, dynamic> properties}) {
@@ -111,11 +134,14 @@ class AnalyticsService extends BaseAnalyticsService {
         afDevKey: AnalyticsService.appFlierKey,
         appId: Platform.isIOS ? '1558445254' : 'in.fello.felloapp',
         showDebug: FlavorConfig.isDevelopment(),
-        disableAdvertisingIdentifier: true,
+        disableAdvertisingIdentifier: false,
+        timeToWaitForATTUserAuthorization: 0,
       );
 
-      AppsflyerSdk appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
-      await appsflyerSdk.initSdk();
+      _appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
+      await _appsflyerSdk.initSdk();
+
+      _logger.d('appflyer initialized');
     } catch (e) {
       _logger.e(e.toString());
     }

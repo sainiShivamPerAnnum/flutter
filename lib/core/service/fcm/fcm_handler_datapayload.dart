@@ -1,7 +1,7 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/fcm_commands_constants.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
-import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -15,8 +15,6 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 
 class FcmHandlerDataPayloads extends ChangeNotifier {
-  final _lbService = locator<LeaderboardService>();
-  final _gtService = locator<GoldenTicketService>();
   final _logger = locator<CustomLogger>();
 
   ValueChanged<Map> notifListener;
@@ -67,7 +65,7 @@ class FcmHandlerDataPayloads extends ChangeNotifier {
   }
 
   userPrizeWinPrompt() async {
-    if (await reviewDialogCanAppear(FcmHandler.COMMAND_USER_PRIZE_WIN_2)) {
+    if (await reviewDialogCanAppear(FcmCommands.COMMAND_USER_PRIZE_WIN_2)) {
       AppState.delegate.appState.setCurrentTabIndex = 2;
       notifyListeners();
       Future.delayed(Duration(seconds: 4), () {

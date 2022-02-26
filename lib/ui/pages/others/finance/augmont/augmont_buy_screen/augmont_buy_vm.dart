@@ -31,7 +31,6 @@ import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
-import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -280,7 +279,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   // BUY LOGIC
 
   fcmTransactionResponseUpdate(
-      DepositFcmResponseModel depositFcmResponseModel) {
+      DepositFcmResponseModel depositFcmResponseModel) async {
     _logger.i("Updating response value.");
     if (!depositFcmResponseModel.status) return;
 
@@ -300,6 +299,13 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
     if (depositFcmResponseModel.gtId != null) {
       GoldenTicketService.goldenTicketId = depositFcmResponseModel.gtId;
+      if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
+        _gtService.showInstantGoldenTicketView(
+            title: '₹${depositFcmResponseModel.augmontPrinciple} saved.',
+            source: GTSOURCE.deposit);
+      } else {
+        showSuccessGoldBuyDialog(depositFcmResponseModel.augmontPrinciple);
+      }
     }
 
     _txnService.updateTransactions();
@@ -609,7 +615,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
       return amount.toInt();
   }
 
-  showSuccessGoldBuyDialog(UserTransaction txn) {
+  showSuccessGoldBuyDialog(amount) {
     BaseUtil.openDialog(
       addToScreenStack: true,
       hapticVibrate: true,
@@ -618,7 +624,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
         asset: Assets.goldenTicket,
         title: "Congratulations",
         subtitle:
-            "You have successfully saved ₹ ${getAmount(txn.amount)} and earned ${txn.amount.ceil()} tokens!",
+            "You have successfully saved ₹ ${getAmount(amount)} and earned ${amount.ceil()} tokens!",
         result: (res) {
           // if (res) ;
         },
@@ -641,7 +647,11 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
   navigateToGoldBalanceDetailsScreen() {
     AppState.delegate.appState.currentAction = PageAction(
-        state: PageState.addPage, page: GoldBalanceDetailsViewPageConfig);
+      state: PageState.addPage,
+      page: GoldBalanceDetailsViewPageConfig,
+    );
+
+    _analyticsService.track(eventName: AnalyticsEvents.saveBalance);
   }
 
   navigateToAboutGold() {
@@ -666,8 +676,10 @@ class AugmontGoldBuyViewModel extends BaseModel {
     showCoupons = true;
   }
 
-  applyCoupon(String couponCode) async {
+  Future applyCoupon(String couponCode) async {
     if (couponApplyInProgress || isGoldBuyInProgress) return;
+
+    _analyticsService.track(eventName: AnalyticsEvents.saveBuyCoupon);
 
     buyFieldNode.unfocus();
 
@@ -675,9 +687,10 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
     ApiResponse<EligibleCouponResponseModel> response =
         await _couponRepo.getEligibleCoupon(
-            uid: _userService.baseUser.uid,
-            amount: goldBuyAmount.toInt(),
-            couponcode: couponCode);
+      uid: _userService.baseUser.uid,
+      amount: goldBuyAmount.toInt(),
+      couponcode: couponCode,
+    );
 
     couponApplyInProgress = false;
 

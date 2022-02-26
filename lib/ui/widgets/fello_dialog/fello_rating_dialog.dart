@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/fcm_commands_constants.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
-import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_dialog.dart';
@@ -131,7 +131,7 @@ class _FelloRatingDialogState extends State<FelloRatingDialog> {
                           try {
                             await CacheManager.writeCache(
                                 key: CacheManager.CACHE_RATING_IS_RATED,
-                                value: FcmHandler.COMMAND_USER_PRIZE_WIN,
+                                value: FcmCommands.COMMAND_USER_PRIZE_WIN,
                                 type: CacheType.string);
                           } catch (e) {
                             showLoading(false);

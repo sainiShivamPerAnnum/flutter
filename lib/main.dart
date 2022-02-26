@@ -39,9 +39,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
-import 'package:webengage_flutter/webengage_flutter.dart';
 
 import 'core/service/notifier_services/user_coin_service.dart';
+import 'core/service/analytics/analytics_service.dart';
 
 // void main() async {
 //   FlavorConfig(
@@ -88,7 +88,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    new WebEngagePlugin();
   }
 
   _MyAppState() {

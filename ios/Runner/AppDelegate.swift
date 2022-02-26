@@ -3,6 +3,7 @@ import Flutter
 import Firebase
 import WebEngage
 import webengage_flutter
+import AppTrackingTransparency
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {

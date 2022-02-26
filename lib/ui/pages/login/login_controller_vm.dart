@@ -326,7 +326,7 @@ class LoginControllerViewModel extends BaseModel {
 
                   if (flag) {
                     _analyticsService.track(
-                      eventName: AnalyticsEvents.userNameAdded,
+                      eventName: AnalyticsEvents.signupName,
                       properties: {'userId': userService?.baseUser?.uid},
                     );
                     logger.d("User object saved successfully");
@@ -423,7 +423,10 @@ class LoginControllerViewModel extends BaseModel {
   Future _onSignUpComplete() async {
     if (_isSignup) {
       await BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
-      _analyticsService.track(eventName: AnalyticsEvents.signupComplete);
+      _analyticsService.track(
+        eventName: AnalyticsEvents.signupComplete,
+        properties: {'uid': userService.baseUser.uid},
+      );
       _analyticsService.trackSignup(userService.baseUser.uid);
     }
 
@@ -433,7 +436,7 @@ class LoginControllerViewModel extends BaseModel {
     await fcmListener.setupFcm();
     logger.i("Calling analytics init for new onborded user");
     await _analyticsService.login(
-      isOnboarded: userService.isUserOnborded,
+      isOnBoarded: userService.isUserOnborded,
       baseUser: userService.baseUser,
     );
     AppState.isOnboardingInProgress = false;

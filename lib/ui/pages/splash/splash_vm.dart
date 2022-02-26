@@ -58,7 +58,7 @@ class LauncherViewModel extends BaseModel {
     _tambolaService.init();
     await _fcmListener.setupFcm();
     await _analyticsService.login(
-        isOnboarded: userService.isUserOnborded,
+        isOnBoarded: userService.isUserOnborded,
         baseUser: userService.baseUser);
     _httpModel.init();
     _timer3.cancel();
