@@ -322,6 +322,23 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  Future<bool> updateAugmontBankDetails(
+      String userId, String accNo, String ifsc, String bankHolderName) async {
+    try {
+      Map<String, dynamic> updatePayload = {};
+      updatePayload[UserAugmontDetail.fldBankAccNo] = accNo;
+      updatePayload[UserAugmontDetail.fldBankHolderName] = bankHolderName;
+      updatePayload[UserAugmontDetail.fldIfsc] = ifsc;
+      updatePayload[UserAugmontDetail.fldUpdatedTime] = Timestamp.now();
+
+      await _api.updateUserAugmontDetailDocument(userId, updatePayload);
+      return true;
+    } catch (e) {
+      log.error("Failed to update user augmont detail object: " + e.toString());
+      return false;
+    }
+  }
+
   /////////////////////////USER TRANSACTION/////////////////////
   //returns document key
   Future<String> addUserTransaction(String userId, UserTransaction txn) async {
