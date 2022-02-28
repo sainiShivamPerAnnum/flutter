@@ -268,6 +268,23 @@ class AugmontBuyCard extends StatelessWidget {
             ),
           SizedBox(
             height: SizeConfig.padding16,
+          ),
+          FelloButtonLg(
+            child: model.isSubscriptionInProgress
+                ? SpinKitThreeBounce(
+                    color: Colors.white,
+                    size: 20,
+                  )
+                : Text(
+                    "SUBSCRIBE",
+                    style: TextStyles.body2.colour(Colors.white).bold,
+                  ),
+            onPressed: () async {
+              model.initiateSubscription();
+            },
+          ),
+          SizedBox(
+            height: SizeConfig.padding16,
           )
         ],
       ),

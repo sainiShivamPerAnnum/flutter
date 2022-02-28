@@ -62,6 +62,7 @@ class APIService implements API {
         },
       );
       logger.d("response from $url");
+      logger.d("Full url: $finalPath");
       responseJson = returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');

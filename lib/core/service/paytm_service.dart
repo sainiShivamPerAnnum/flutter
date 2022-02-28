@@ -1,6 +1,8 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
+import 'package:felloapp/core/model/paytm_models/create_paytm_subscription_response_model.dart';
+import 'package:felloapp/core/model/paytm_models/paytm_subscription_response_model.dart';
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -50,6 +52,15 @@ class PaytmService {
     }
   }
 
+  Future<void> validateSubscription(String subId) async {
+    final ApiResponse<SubscriptionResponseModel> transactionResponseModel =
+        await _paytmRepo.getSubscriptionStatus(subId);
+
+    if (transactionResponseModel.code == 200) {
+      _logger.d(transactionResponseModel.model.toString());
+    }
+  }
+
   Future<bool> initiateTransactions(
       {double amount,
       AugmontRates augmontRates,
@@ -70,29 +81,66 @@ class PaytmService {
           BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax))
     };
 
-    final ApiResponse<CreatePaytmTransactionModel> paytmTransactionApiResponse =
+    final ApiResponse<CreatePaytmTransactionModel>
+        paytmSubscriptionApiResponse =
         await _paytmRepo.createPaytmTransaction(amount, augMap, couponCode);
 
-    if (paytmTransactionApiResponse.code == 400) {
-      _logger.e(paytmTransactionApiResponse.errorMessage);
+    if (paytmSubscriptionApiResponse.code == 400) {
+      _logger.e(paytmSubscriptionApiResponse.errorMessage);
       return false;
     }
 
-    final paytmTransactionModel = paytmTransactionApiResponse.model;
+    final paytmSubscriptionModel = paytmSubscriptionApiResponse.model;
 
     try {
-      _logger.d("Paytm order id: ${paytmTransactionModel.data.orderId}");
+      _logger.d("Paytm order id: ${paytmSubscriptionModel.data.orderId}");
       final response = await AllInOneSdk.startTransaction(
           mid,
-          paytmTransactionModel.data.orderId,
+          paytmSubscriptionModel.data.orderId,
           amount.toString(),
-          paytmTransactionModel.data.temptoken,
-          paytmTransactionModel.data.callbackUrl,
+          paytmSubscriptionModel.data.temptoken,
+          paytmSubscriptionModel.data.callbackUrl,
           isStaging,
           restrictAppInvoke);
       _logger.d("Paytm Response:${response.toString()}");
 
-      validateTransaction(paytmTransactionModel.data.orderId);
+      validateTransaction(paytmSubscriptionModel.data.orderId);
+      return true;
+    } catch (onError) {
+      if (onError is PlatformException) {
+        _logger.e(onError.message + " \n  " + onError.details.toString());
+      } else {
+        _logger.e(onError.toString());
+      }
+      return false;
+    }
+  }
+
+  Future<bool> initiateSubscription() async {
+    final ApiResponse<CreateSubscriptionResponseModel>
+        paytmSubscriptionApiResponse =
+        await _paytmRepo.createPaytmSubscription();
+
+    if (paytmSubscriptionApiResponse.code == 400) {
+      _logger.e(paytmSubscriptionApiResponse.errorMessage);
+      return false;
+    }
+
+    final paytmSubscriptionModel = paytmSubscriptionApiResponse.model;
+
+    try {
+      _logger.d("Paytm order id: ${paytmSubscriptionModel.data.orderId}");
+      final response = await AllInOneSdk.startTransaction(
+          mid,
+          paytmSubscriptionModel.data.orderId,
+          '200',
+          paytmSubscriptionModel.data.temptoken,
+          paytmSubscriptionModel.data.callbackUrl,
+          isStaging,
+          true);
+      _logger.d("Paytm Response:${response.toString()}");
+
+      validateSubscription(paytmSubscriptionModel.data.subscriptionId);
       return true;
     } catch (onError) {
       if (onError is PlatformException) {

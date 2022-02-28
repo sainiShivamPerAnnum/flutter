@@ -65,6 +65,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   bool _showMaxCapText = false;
   bool _isGoldRateFetching = false;
   bool _isGoldBuyInProgress = false;
+  bool _isSubscriptionInProgress = false;
   bool _couponApplyInProgress = false;
   bool _showCoupons = false;
   AugmontRates goldRates;
@@ -157,6 +158,13 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
   set showCoupons(bool val) {
     _showCoupons = val;
+    notifyListeners();
+  }
+
+  get isSubscriptionInProgress => this._isSubscriptionInProgress;
+
+  set isSubscriptionInProgress(value) {
+    this._isSubscriptionInProgress = value;
     notifyListeners();
   }
 
@@ -311,6 +319,21 @@ class AugmontGoldBuyViewModel extends BaseModel {
     }
 
     _txnService.updateTransactions();
+  }
+
+  initiateSubscription() async {
+    isSubscriptionInProgress = true;
+    bool _status = await _paytmService.initiateSubscription();
+    isSubscriptionInProgress = false;
+    if (_status) {
+      showSuccessGoldBuyDialog(1.0,
+          subtitle: "Your subscription was successfull!!");
+    } else {
+      BaseUtil.showNegativeAlert(
+        'Subscription failed',
+        'Please try again in sometime or contact us for further assistance.',
+      );
+    }
   }
 
   initiateBuy() async {
@@ -606,7 +629,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
             title: '₹${txn.amount.toStringAsFixed(0)} saved!',
             source: GTSOURCE.deposit);
       else
-        showSuccessGoldBuyDialog(txn);
+        showSuccessGoldBuyDialog(txn.amount);
     }
   }
 
@@ -617,7 +640,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
       return amount.toInt();
   }
 
-  showSuccessGoldBuyDialog(amount) {
+  showSuccessGoldBuyDialog(double amount, {String subtitle}) {
     BaseUtil.openDialog(
       addToScreenStack: true,
       hapticVibrate: true,
@@ -625,7 +648,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
       content: FelloConfirmationDialog(
         asset: Assets.goldenTicket,
         title: "Congratulations",
-        subtitle:
+        subtitle: subtitle ??
             "You have successfully saved ₹ ${getAmount(amount)} and earned ${amount.ceil()} tokens!",
         result: (res) {
           // if (res) ;
