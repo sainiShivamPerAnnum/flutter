@@ -87,22 +87,17 @@ class Win extends StatelessWidget {
                               ),
                               SizedBox(height: SizeConfig.padding16),
                               Container(
-                                height: SizeConfig.screenWidth * 0.3,
+                                // height: SizeConfig.screenWidth * 0.3,
                                 width: SizeConfig.screenWidth,
-                                child: ListView(
-                                  padding: EdgeInsets.zero,
-                                  scrollDirection: Axis.horizontal,
+                                child: Column(
+                                  //padding: EdgeInsets.zero,
+                                  // scrollDirection: Axis.horizontal,
+                                  // shrinkWrap: true,
                                   children: List.generate(
                                     model.ongoingEvents.length,
-                                    (i) => Container(
-                                      margin: EdgeInsets.only(
-                                          left: i == 0
-                                              ? SizeConfig.pageHorizontalMargins
-                                              : 0),
-                                      child: EventCard(
-                                        event: model.ongoingEvents[i],
-                                        model: model,
-                                      ),
+                                    (i) => EventCard(
+                                      event: model.ongoingEvents[i],
+                                      model: model,
                                     ),
                                   ),
                                 ),
@@ -237,9 +232,12 @@ class EventCard extends StatelessWidget {
             page: AugmontGoldSellPageConfig);
       },
       child: Container(
-        width: SizeConfig.screenWidth * 0.64,
-        height: SizeConfig.screenWidth * 0.3,
-        margin: EdgeInsets.only(right: SizeConfig.padding16),
+        width: SizeConfig.screenWidth,
+        height: SizeConfig.screenWidth * 0.4,
+        margin: EdgeInsets.symmetric(
+          horizontal: SizeConfig.pageHorizontalMargins,
+          vertical: SizeConfig.padding16,
+        ),
         decoration: event.thumbnail.isNotEmpty
             ? BoxDecoration(
                 color: event.position % 2 == 0
