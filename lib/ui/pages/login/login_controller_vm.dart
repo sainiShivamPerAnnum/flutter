@@ -299,57 +299,52 @@ class LoginControllerViewModel extends BaseModel {
               if (await dbProvider.checkIfUsernameIsAvailable(username)) {
                 _usernameKey.currentState.model.enabled = false;
                 notifyListeners();
-                bool res = await dbProvider.setUsername(
-                    username, userService.firebaseUser.uid);
-                if (res) {
-                  userService.baseUser.username = username;
-                  bool flag = false;
-                  logger.d(userService.baseUser.toJson().toString());
+                // bool res = await dbProvider.setUsername(
+                //     username, userService.firebaseUser.uid);
+                // if (res) {
+                userService.baseUser.username = username;
+                bool flag = false;
+                String message = "Please try again in sometime";
+                logger.d(userService.baseUser.toJson().toString());
 
-                  try {
-                    final token = await _getBearerToken();
-                    userService.baseUser.mobile = userMobile;
-                    final ApiResponse response = await _userRepo.setNewUser(
-                        userService.baseUser, token, cstate);
+                try {
+                  final token = await _getBearerToken();
+                  userService.baseUser.mobile = userMobile;
+                  final ApiResponse response = await _userRepo.setNewUser(
+                      userService.baseUser, token, cstate);
 
-                    if (response.code == 400) {
-                      _usernameKey.currentState.model.enabled = false;
-                      flag = false;
-                    }
-
-                    final gtId = response.model['gtId'];
-                    response.model['flag'] ? flag = true : flag = false;
-
-                    logger.d("Is Golden Ticket Rewarded: $gtId");
-                    if (gtId != null && gtId.toString().isNotEmpty)
-                      GoldenTicketService.goldenTicketId = gtId;
-                  } catch (e) {
-                    logger.d(e);
+                  if (response.code == 400) {
                     _usernameKey.currentState.model.enabled = false;
                     flag = false;
                   }
 
-                  if (flag) {
-                    _analyticsService.track(
-                      eventName: AnalyticsEvents.signupName,
-                      properties: {'userId': userService?.baseUser?.uid},
-                    );
-                    logger.d("User object saved successfully");
-                    userService.showOnboardingTutorial = true;
-                    _onSignUpComplete();
-                  } else {
-                    BaseUtil.showNegativeAlert(
-                      'Update failed',
-                      'Please try again in sometime',
-                    );
-                    _usernameKey.currentState.model.enabled = false;
+                  final gtId = response.model['gtId'];
+                  response.model['flag'] ? flag = true : flag = false;
+                  message = response?.model['message'] != null
+                      ? response.model['message']
+                      : message;
 
-                    setState(ViewState.Idle);
-                  }
+                  logger.d("Is Golden Ticket Rewarded: $gtId");
+                  if (gtId != null && gtId.toString().isNotEmpty)
+                    GoldenTicketService.goldenTicketId = gtId;
+                } catch (e) {
+                  logger.d(e);
+                  _usernameKey.currentState.model.enabled = false;
+                  flag = false;
+                }
+
+                if (flag) {
+                  _analyticsService.track(
+                    eventName: AnalyticsEvents.signupName,
+                    properties: {'userId': userService?.baseUser?.uid},
+                  );
+                  logger.d("User object saved successfully");
+                  userService.showOnboardingTutorial = true;
+                  _onSignUpComplete();
                 } else {
                   BaseUtil.showNegativeAlert(
-                    'Username update failed',
-                    'Please try again in sometime',
+                    'Update failed',
+                    message,
                   );
                   _usernameKey.currentState.model.enabled = false;
 
