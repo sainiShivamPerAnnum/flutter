@@ -78,6 +78,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   double goldBuyAmount = 0;
   double goldAmountInGrams = 0.0;
   TextEditingController goldAmountController;
+  TextEditingController vpaController;
   List<double> chipAmountList = [101, 201, 501, 1001];
   List<CouponModel> _couponList;
 
@@ -172,6 +173,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
     setState(ViewState.Busy);
     buyFieldNode = _userService.buyFieldFocusNode;
     goldBuyAmount = chipAmountList[1];
+    vpaController = TextEditingController(text: "7777777777@paytm");
     goldAmountController =
         TextEditingController(text: chipAmountList[1].toInt().toString());
     fetchGoldRates();
@@ -334,6 +336,30 @@ class AugmontGoldBuyViewModel extends BaseModel {
         'Please try again in sometime or contact us for further assistance.',
       );
     }
+  }
+
+  initiateCustomSubscription() async {
+    isSubscriptionInProgress = true;
+    PaytmResponse response =
+        await _paytmService.initiateCustomSubscription(vpaController.text);
+    isSubscriptionInProgress = false;
+    if (response.status)
+      showSuccessGoldBuyDialog(1.0, subtitle: response.reason);
+    else
+      switch (response.errorCode) {
+        case INVALID_VPA_DETECTED:
+          BaseUtil.showNegativeAlert(
+            response.reason,
+            'Please enter a valid vpa address',
+          );
+          break;
+        default:
+          BaseUtil.showNegativeAlert(
+            response.reason,
+            'Please try again',
+          );
+          break;
+      }
   }
 
   initiateBuy() async {

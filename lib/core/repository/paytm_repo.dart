@@ -3,6 +3,7 @@ import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.
 import 'package:felloapp/core/model/paytm_models/create_paytm_subscription_response_model.dart';
 import 'package:felloapp/core/model/paytm_models/paytm_subscription_response_model.dart';
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
+import 'package:felloapp/core/model/paytm_models/validate_vpa_response_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -118,6 +119,31 @@ class PaytmRepository {
     } catch (e) {
       _logger.e(e.toString());
       return ApiResponse.withError("Unable create subscription", 400);
+    }
+  }
+
+  Future<ApiResponse<ValidateVpaResponseModel>> validateVPA(
+      CreateSubscriptionResponseModel subscriptionResponseModel,
+      String vpa) async {
+    try {
+      final String _uid = _userService.baseUser.uid;
+      final _token = await _getBearerToken();
+      final _queryParams = {
+        "uid": _uid,
+        "vpa": vpa,
+        "subId": subscriptionResponseModel.data.subscriptionId,
+        "token": subscriptionResponseModel.data.temptoken,
+        "orderId": subscriptionResponseModel.data.orderId
+      };
+      final response = await APIService.instance.getData(ApiPath().kValidateVpa,
+          token: _token, queryParams: _queryParams);
+
+      final _responseModel = ValidateVpaResponseModel.fromJson(response);
+      return ApiResponse<ValidateVpaResponseModel>(
+          model: _responseModel, code: 200);
+    } catch (e) {
+      _logger.e(e.toString());
+      return ApiResponse.withError("Unable create transaction", 400);
     }
   }
 }

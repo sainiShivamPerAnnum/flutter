@@ -47,4 +47,5 @@ class ApiPath {
   //PaytmApis
   static const kCreatePaytmTransaction = "/paytmTxn/transaction";
   get kCreatePaytmSubscription => "/paytm/$stage/paytm/subscription";
+  get kValidateVpa => "/vpa";
 }

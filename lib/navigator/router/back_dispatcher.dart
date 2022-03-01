@@ -55,6 +55,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
   @override
   Future<bool> didPopRoute() {
+    if (AppState.screenStack.last == ScreenItem.loader) return null;
     Future.delayed(Duration(milliseconds: 20), () {
       if (_userService.buyFieldFocusNode.hasPrimaryFocus ||
           _userService.buyFieldFocusNode.hasFocus) {
