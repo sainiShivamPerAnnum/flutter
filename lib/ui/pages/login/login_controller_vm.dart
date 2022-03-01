@@ -299,9 +299,7 @@ class LoginControllerViewModel extends BaseModel {
               if (await dbProvider.checkIfUsernameIsAvailable(username)) {
                 _usernameKey.currentState.model.enabled = false;
                 notifyListeners();
-                // bool res = await dbProvider.setUsername(
-                //     username, userService.firebaseUser.uid);
-                // if (res) {
+
                 userService.baseUser.username = username;
                 bool flag = false;
                 String message = "Please try again in sometime";
