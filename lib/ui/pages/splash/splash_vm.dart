@@ -58,7 +58,7 @@ class LauncherViewModel extends BaseModel {
     _tambolaService.init();
     await _fcmListener.setupFcm();
     await _analyticsService.login(
-        isOnboarded: userService.isUserOnborded,
+        isOnBoarded: userService.isUserOnborded,
         baseUser: userService.baseUser);
     _httpModel.init();
     _timer3.cancel();
@@ -123,7 +123,8 @@ class LauncherViewModel extends BaseModel {
     bool _res = false;
     try {
       _res = await deviceUnlock.request(
-          localizedReason: 'Confirm your phone screen lock pattern,PIN or password');
+          localizedReason:
+              'Confirm your phone screen lock pattern,PIN or password');
     } on DeviceUnlockUnavailable {
       BaseUtil.showPositiveAlert('No Device Authentication Found',
           'Logging in, please enable device security to add lock');
@@ -133,8 +134,8 @@ class LauncherViewModel extends BaseModel {
       print('Request in progress');
     } catch (e) {
       _logger.e("error", [e]);
-      BaseUtil.showNegativeAlert('Authentication Failed',
-          'Please restart and try again');
+      BaseUtil.showNegativeAlert(
+          'Authentication Failed', 'Please restart and try again');
     }
     return _res;
   }

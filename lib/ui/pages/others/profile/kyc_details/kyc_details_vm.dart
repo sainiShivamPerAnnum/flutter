@@ -141,7 +141,6 @@ class KYCDetailsViewModel extends BaseModel {
     FocusScope.of(context).unfocus();
 
     isKycInProgress = true;
-    _userService.isConfirmationDialogOpen = true;
     _analyticsService.track(eventName: AnalyticsEvents.openKYCSection);
 
     ///next get all details required for registration
@@ -150,7 +149,7 @@ class KYCDetailsViewModel extends BaseModel {
     if (veriDetails != null &&
         veriDetails['flag'] != null &&
         veriDetails['flag']) {
-      AppState.screenStack.add(ScreenItem.dialog);
+      //AppState.screenStack.add(ScreenItem.dialog);
       //UPDATE DIRECTLY IN DATABASE
       bool _p = true;
       bool _q = true;
@@ -204,7 +203,6 @@ class KYCDetailsViewModel extends BaseModel {
     } else {
       print('inside failed name');
       if (veriDetails['fail_code'] == 0) {
-        _userService.isConfirmationDialogOpen = true;
         BaseUtil.openDialog(
           addToScreenStack: true,
           content: MoreInfoDialog(

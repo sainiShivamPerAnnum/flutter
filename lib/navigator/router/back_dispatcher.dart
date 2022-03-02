@@ -62,11 +62,6 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
         FocusManager.instance.primaryFocus.unfocus();
       }
     });
-
-    if (_userService.isConfirmationDialogOpen) {
-      logger.d("Change dialog view state");
-      _userService.isConfirmationDialogOpen = false;
-    }
     // if (WinViewModel().panelController.isPanelOpen) {
     //   WinViewModel().panelController.close();
     //   return Future.value(true);

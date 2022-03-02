@@ -950,7 +950,7 @@ SPEC CHECKSUMS:
   FirebaseRemoteConfig: a6a1ce9dabf404817ae2a44e8421d276660d9091
   FirebaseStorage: 4d05cb1112ff8822a0f9f5090da8bd6d550602ec
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
-  flutter_facebook_sdk: 82c8d10c6226b66de5459d6115ab02d1ecd66cd9
+  flutter_facebook_sdk: 77f8319d640582a6064cf83cd0ca92ad8ae114d1
   flutter_html_to_pdf: 0fd9f8d04f335d68b06a7c4ab5fc85d22e1ef91b
   flutter_image_compress: fd2b476345226e1a10ea352fa306af95704642c1
   flutter_share_me: 53e12ba3f220060893dbf242d29ec95cb2a4fb18
@@ -973,7 +973,7 @@ SPEC CHECKSUMS:
   libwebp: 98a37e597e40bfdb4c911fc98f2c53d0b12d05fc
   Mantle: c5aa8794a29a022dfbbfc9799af95f477a69b62d
   Mixpanel-swift: 3ce40d07c05e437bf9258fc0dee9f214c4d5ed8d
-  mixpanel_flutter: 98a17cc746ec60947b71f92a7cd70a8a036d2df6
+  mixpanel_flutter: 141f456306fdca81407d89bd09c1f9e88bf5fb10
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   open_file: 02eb5cb6b21264bd3a696876f5afbfb7ca4f4b7d
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
@@ -995,7 +995,7 @@ SPEC CHECKSUMS:
   video_player: 7e9dad9437c238a97648819f6dd443c8854cf0c7
   WebEngage: b01cac28253f3b08b9609c424067d1f9601b2bd1
   webengage_flutter: 679f135786c9817822b44ba6cb3788168cad3f64
-  webview_flutter_wkwebview: ac2c438bdf97e95847151240cc9d0db0e89fdca2
+  webview_flutter_wkwebview: 005fbd90c888a42c5690919a1527ecc6649e1162
 
 PODFILE CHECKSUM: 2f8c08cf59a98620b811d07223b54d4ae97e8de9
 
