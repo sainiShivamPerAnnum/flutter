@@ -1,21 +1,8 @@
-import 'dart:convert';
-
-import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/cache_type_enum.dart';
-import 'package:felloapp/core/model/paytm_models/deposit_fcm_response_model.dart';
-import 'package:felloapp/core/service/cache_manager.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
-import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
+import 'package:felloapp/core/constants/fcm_commands_constants.dart';
+import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
-import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
-import 'package:felloapp/ui/widgets/fello_dialog/fello_rating_dialog.dart';
-import 'package:felloapp/core/constants/fcm_commands_constants.dart';
-import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_game/cricket_game_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
