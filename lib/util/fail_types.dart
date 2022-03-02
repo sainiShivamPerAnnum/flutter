@@ -32,6 +32,7 @@ enum FailType {
   UserAugmontRegnFailed,
   DailyPickParseFailed,
   FreshchatFail,
+  DepositPayloadError,
   RemoteConfigFailed,
   UserAugmontBalanceUpdateFailed,
   TambolaDrawNotificationSettingFailed,

@@ -56,10 +56,8 @@ class FcmHandler extends ChangeNotifier {
       switch (command) {
         case FcmCommands.DEPOSIT_TRANSACTION_RESPONSE:
           {
-            _logger.i("Transaction response received.:\n $data");
-            final DepositFcmResponseModel dataMap =
-                DepositFcmResponseModel.fromJson(json.decode(data['payload']));
-            _augmontGoldBuyViewModel.fcmTransactionResponseUpdate(dataMap);
+            _augmontGoldBuyViewModel
+                .fcmTransactionResponseUpdate(data['payload']);
           }
           break;
         case FcmCommands.COMMAND_CRIC_GAME_END:

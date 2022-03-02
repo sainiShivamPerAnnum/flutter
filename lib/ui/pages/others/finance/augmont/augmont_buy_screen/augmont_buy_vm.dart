@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
@@ -31,6 +32,7 @@ import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -278,39 +280,51 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
   // BUY LOGIC
 
-  fcmTransactionResponseUpdate(
-      DepositFcmResponseModel depositFcmResponseModel) async {
+  fcmTransactionResponseUpdate(fcmDataPayload) async {
     _logger.i("Updating response value.");
 
-    //Handle failed condition here.
-    if (!depositFcmResponseModel.status) return;
+    try {
+      final DepositFcmResponseModel depositFcmResponseModel =
+          DepositFcmResponseModel.fromJson(json.decode(fcmDataPayload));
 
-    double newAugPrinciple = depositFcmResponseModel.augmontPrinciple;
-    if (newAugPrinciple != null && newAugPrinciple > 0) {
-      _userService.augGoldPrinciple = newAugPrinciple;
-    }
-    double newAugQuantity = depositFcmResponseModel.augmontGoldQty;
-    if (newAugQuantity != null && newAugQuantity > 0) {
-      _userService.augGoldQuantity = newAugQuantity;
-    }
-    //add this to augmontBuyVM
-    int newFlcBalance = depositFcmResponseModel.flcBalance;
-    if (newFlcBalance > 0) {
-      _userCoinService.setFlcBalance(newFlcBalance);
-    }
-
-    if (depositFcmResponseModel.gtId != null) {
-      GoldenTicketService.goldenTicketId = depositFcmResponseModel.gtId;
-      if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
-        _gtService.showInstantGoldenTicketView(
-            title: '₹${depositFcmResponseModel.amount} saved.',
-            source: GTSOURCE.deposit);
-      } else {
-        showSuccessGoldBuyDialog(depositFcmResponseModel.amount);
+      //Handle failed condition here.
+      if (!depositFcmResponseModel.status) {
+        BaseUtil.showNegativeAlert("Transaction Failed",
+            "Gold purchase failed, you amount will be refunded");
+        return;
       }
-    }
 
-    _txnService.updateTransactions();
+      double newAugPrinciple = depositFcmResponseModel.augmontPrinciple;
+      if (newAugPrinciple != null && newAugPrinciple > 0) {
+        _userService.augGoldPrinciple = newAugPrinciple;
+      }
+      double newAugQuantity = depositFcmResponseModel.augmontGoldQty;
+      if (newAugQuantity != null && newAugQuantity > 0) {
+        _userService.augGoldQuantity = newAugQuantity;
+      }
+      //add this to augmontBuyVM
+      int newFlcBalance = depositFcmResponseModel.flcBalance;
+      if (newFlcBalance > 0) {
+        _userCoinService.setFlcBalance(newFlcBalance);
+      }
+
+      if (depositFcmResponseModel.gtId != null) {
+        GoldenTicketService.goldenTicketId = depositFcmResponseModel.gtId;
+        if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
+          _gtService.showInstantGoldenTicketView(
+              title: '₹${depositFcmResponseModel.amount} saved.',
+              source: GTSOURCE.deposit);
+        } else {
+          showSuccessGoldBuyDialog(depositFcmResponseModel.amount);
+        }
+      }
+
+      _txnService.updateTransactions();
+    } catch (e) {
+      _logger.e(e);
+      _dbModel.logFailure(
+          _userService.baseUser.uid, FailType.DepositPayloadError, e);
+    }
   }
 
   initiateBuy() async {
@@ -343,13 +357,13 @@ class AugmontGoldBuyViewModel extends BaseModel {
       );
       return;
     }
-    if (buyAmount < 10) {
-      BaseUtil.showNegativeAlert(
-        'Minimum amount should be ₹ 10',
-        'Please enter a minimum purchase amount of ₹ 10',
-      );
-      return;
-    }
+    // if (buyAmount < 10) {
+    //   BaseUtil.showNegativeAlert(
+    //     'Minimum amount should be ₹ 10',
+    //     'Please enter a minimum purchase amount of ₹ 10',
+    //   );
+    //   return;
+    // }
 
     if (_baseUtil.augmontDetail == null) {
       BaseUtil.showNegativeAlert(
