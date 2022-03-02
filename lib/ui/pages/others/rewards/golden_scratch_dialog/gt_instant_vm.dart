@@ -118,14 +118,21 @@ class GTInstantViewModel extends BaseModel {
       _logger.e("Encrypter initialization failed!! exiting method");
     }
     try {
-      _getBearerToken().then((String token) => APIService.instance
-              .postData(_apiPaths.kRedeemGtReward, token: token, body: _body)
-              .then((value) {
+      _getBearerToken().then(
+        (String token) => APIService.instance
+            .postData(_apiPaths.kRedeemGtReward, token: token, body: _body)
+            .then(
+          (_) {
             _userService.getUserFundWalletData();
-            _userCoinService.getUserCoinBalance();
-            coinsCount = _userCoinService.flcBalance;
-            notifyListeners();
-          }));
+            _userCoinService.getUserCoinBalance().then(
+              (_) {
+                coinsCount = _userCoinService.flcBalance;
+                notifyListeners();
+              },
+            );
+          },
+        ),
+      );
     } catch (e) {
       _logger.e(e);
       BaseUtil.showNegativeAlert(

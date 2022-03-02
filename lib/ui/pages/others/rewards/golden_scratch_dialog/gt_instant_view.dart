@@ -186,7 +186,7 @@ class _GTInstantViewState extends State<GTInstantView>
                               Column(
                                 children: [
                                   Text(
-                                    widget.title ?? "Hurray!",
+                                    "Hurray!",
                                     style: TextStyles.title2.bold
                                         .colour(Colors.white),
                                     textAlign: TextAlign.center,
