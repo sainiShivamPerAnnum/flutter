@@ -61,6 +61,8 @@ class UserAutoPayDetailsView extends StatelessWidget {
                                 ),
                               )
                             : ListView(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: SizeConfig.pageHorizontalMargins),
                                 children: [
                                   TextFieldLabel("Subscription Id"),
                                   TextFormField(

@@ -145,8 +145,8 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
         SafeArea(
           child: Container(
             margin: EdgeInsets.symmetric(
-              vertical: Platform.isIOS
-                  ? SizeConfig.padding8
+              vertical: SizeConfig.viewInsets.bottom != 0
+                  ? 0
                   : SizeConfig.pageHorizontalMargins,
             ),
             child: FelloButtonLg(
@@ -190,8 +190,8 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
         SafeArea(
           child: Container(
             margin: EdgeInsets.symmetric(
-              vertical: Platform.isIOS
-                  ? SizeConfig.padding8
+              vertical: SizeConfig.viewInsets.bottom != 0
+                  ? 0
                   : SizeConfig.pageHorizontalMargins,
             ),
             child: FelloButtonLg(
@@ -275,8 +275,8 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
         SafeArea(
           child: Container(
             margin: EdgeInsets.symmetric(
-              vertical: Platform.isIOS
-                  ? SizeConfig.padding8
+              vertical: SizeConfig.viewInsets.bottom != 0
+                  ? 0
                   : SizeConfig.pageHorizontalMargins,
             ),
             child: FelloButtonLg(

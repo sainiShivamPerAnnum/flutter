@@ -39,7 +39,7 @@ class AutoPayProcessViewModel extends BaseModel {
       //r.nextDouble() <= 0.7;
       processStatus =
           // result ? STATUS.Complete :
-          STATUS.Cancel;
+          STATUS.Complete;
       gradColor = Colors.white;
       // result ? UiConstants.primaryLight : Colors.white;
     });

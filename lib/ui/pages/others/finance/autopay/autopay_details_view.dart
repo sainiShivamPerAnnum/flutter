@@ -398,8 +398,8 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView> {
               child: SafeArea(
                 child: Container(
                   margin: EdgeInsets.symmetric(
-                      vertical: Platform.isIOS
-                          ? SizeConfig.padding8
+                      vertical: SizeConfig.viewInsets.bottom != 0
+                          ? 0
                           : SizeConfig.pageHorizontalMargins,
                       horizontal: SizeConfig.pageHorizontalMargins),
                   child: FelloButtonLg(
