@@ -87,22 +87,17 @@ class Win extends StatelessWidget {
                               ),
                               SizedBox(height: SizeConfig.padding16),
                               Container(
-                                height: SizeConfig.screenWidth * 0.3,
+                                // height: SizeConfig.screenWidth * 0.3,
                                 width: SizeConfig.screenWidth,
-                                child: ListView(
-                                  padding: EdgeInsets.zero,
-                                  scrollDirection: Axis.horizontal,
+                                child: Column(
+                                  //padding: EdgeInsets.zero,
+                                  // scrollDirection: Axis.horizontal,
+                                  // shrinkWrap: true,
                                   children: List.generate(
                                     model.ongoingEvents.length,
-                                    (i) => Container(
-                                      margin: EdgeInsets.only(
-                                          left: i == 0
-                                              ? SizeConfig.pageHorizontalMargins
-                                              : 0),
-                                      child: EventCard(
-                                        event: model.ongoingEvents[i],
-                                        model: model,
-                                      ),
+                                    (i) => EventCard(
+                                      event: model.ongoingEvents[i],
+                                      model: model,
                                     ),
                                   ),
                                 ),
@@ -110,85 +105,85 @@ class Win extends StatelessWidget {
                               SizedBox(height: SizeConfig.padding24),
                             ],
                           ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.pageHorizontalMargins),
-                          child: Text(
-                            "Rewards and Coupons",
-                            style: TextStyles.title3.bold,
-                          ),
-                        ),
-                        SizedBox(height: SizeConfig.padding16),
-                        Container(
-                          height: SizeConfig.screenWidth * 0.24,
-                          width: SizeConfig.screenWidth,
-                          child: ListView(
-                            padding: EdgeInsets.zero,
-                            scrollDirection: Axis.horizontal,
-                            children: [
-                              SizedBox(width: SizeConfig.pageHorizontalMargins),
-                              InkWell(
-                                onTap: () => model.openVoucherModal(
-                                    Assets.amazonCoupon,
-                                    "Amazon Pay Gift Voucher",
-                                    "",
-                                    UiConstants.tertiarySolid,
-                                    false, [
-                                  "Redeem your game and referral winnings as an Amazon voucher sent directly to your email and mobile!"
-                                ]),
-                                child: RewardsAvatar(
-                                  color: Color(0xff242F41),
-                                  asset: Assets.amazonCoupon,
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  BaseUtil.openModalBottomSheet(
-                                    addToScreenStack: true,
-                                    content: OctFestInfoModal(),
-                                    isBarrierDismissable: false,
-                                    hapticVibrate: true,
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(
-                                            SizeConfig.padding24),
-                                        topRight: Radius.circular(
-                                            SizeConfig.padding24)),
-                                  );
-                                },
-                                child: RewardsAvatar(
-                                  color: Color(0xffFFC50C),
-                                  asset: Assets.bdubsCoupon,
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () => model.openVoucherModal(
-                                  Assets.gplayCoupon,
-                                  "Google Play Credits",
-                                  "Coming soon",
-                                  Colors.blue,
-                                  true,
-                                  [],
-                                ),
-                                child: RewardsAvatar(
-                                  color: Colors.black,
-                                  asset: Assets.gplayCoupon,
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () => model.openVoucherModal(
-                                    Assets.myntraCoupon,
-                                    "Myntra Shopping Voucher",
-                                    "Coming soon",
-                                    Color(0xff611919),
-                                    true, []),
-                                child: RewardsAvatar(
-                                  color: Color(0xffFFDBF6),
-                                  asset: Assets.myntraCoupon,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        // Padding(
+                        //   padding: EdgeInsets.symmetric(
+                        //       horizontal: SizeConfig.pageHorizontalMargins),
+                        //   child: Text(
+                        //     "Rewards and Coupons",
+                        //     style: TextStyles.title3.bold,
+                        //   ),
+                        // ),
+                        //SizedBox(height: SizeConfig.padding16),
+                        // Container(
+                        //   height: SizeConfig.screenWidth * 0.24,
+                        //   width: SizeConfig.screenWidth,
+                        //   child: ListView(
+                        //     padding: EdgeInsets.zero,
+                        //     scrollDirection: Axis.horizontal,
+                        //     children: [
+                        //       SizedBox(width: SizeConfig.pageHorizontalMargins),
+                        //       InkWell(
+                        //         onTap: () => model.openVoucherModal(
+                        //             Assets.amazonCoupon,
+                        //             "Amazon Pay Gift Voucher",
+                        //             "",
+                        //             UiConstants.tertiarySolid,
+                        //             false, [
+                        //           "Redeem your game and referral winnings as an Amazon voucher sent directly to your email and mobile!"
+                        //         ]),
+                        //         child: RewardsAvatar(
+                        //           color: Color(0xff242F41),
+                        //           asset: Assets.amazonCoupon,
+                        //         ),
+                        //       ),
+                        //       InkWell(
+                        //         onTap: () {
+                        //           BaseUtil.openModalBottomSheet(
+                        //             addToScreenStack: true,
+                        //             content: OctFestInfoModal(),
+                        //             isBarrierDismissable: false,
+                        //             hapticVibrate: true,
+                        //             borderRadius: BorderRadius.only(
+                        //                 topLeft: Radius.circular(
+                        //                     SizeConfig.padding24),
+                        //                 topRight: Radius.circular(
+                        //                     SizeConfig.padding24)),
+                        //           );
+                        //         },
+                        //         child: RewardsAvatar(
+                        //           color: Color(0xffFFC50C),
+                        //           asset: Assets.bdubsCoupon,
+                        //         ),
+                        //       ),
+                        //       InkWell(
+                        //         onTap: () => model.openVoucherModal(
+                        //           Assets.gplayCoupon,
+                        //           "Google Play Credits",
+                        //           "Coming soon",
+                        //           Colors.blue,
+                        //           true,
+                        //           [],
+                        //         ),
+                        //         child: RewardsAvatar(
+                        //           color: Colors.black,
+                        //           asset: Assets.gplayCoupon,
+                        //         ),
+                        //       ),
+                        //       InkWell(
+                        //         onTap: () => model.openVoucherModal(
+                        //             Assets.myntraCoupon,
+                        //             "Myntra Shopping Voucher",
+                        //             "Coming soon",
+                        //             Color(0xff611919),
+                        //             true, []),
+                        //         child: RewardsAvatar(
+                        //           color: Color(0xffFFDBF6),
+                        //           asset: Assets.myntraCoupon,
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
                         //ReferralLeaderboard(),
                         SizedBox(
                           height: SizeConfig.screenHeight * 0.24,
@@ -237,9 +232,12 @@ class EventCard extends StatelessWidget {
             page: AugmontGoldSellPageConfig);
       },
       child: Container(
-        width: SizeConfig.screenWidth * 0.64,
-        height: SizeConfig.screenWidth * 0.3,
-        margin: EdgeInsets.only(right: SizeConfig.padding16),
+        width: SizeConfig.screenWidth,
+        height: SizeConfig.screenWidth * 0.4,
+        margin: EdgeInsets.symmetric(
+          horizontal: SizeConfig.pageHorizontalMargins,
+          vertical: SizeConfig.padding16,
+        ),
         decoration: event.thumbnail.isNotEmpty
             ? BoxDecoration(
                 color: event.position % 2 == 0
