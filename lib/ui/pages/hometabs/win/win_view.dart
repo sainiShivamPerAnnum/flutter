@@ -32,166 +32,74 @@ class Win extends StatelessWidget {
         return Stack(
           children: [
             Container(
-              child: Column(
-                children: [
-                  Expanded(
-                    child: ListView(
-                      padding: EdgeInsets.only(
-                          top: SizeConfig.padding20 +
-                              SizeConfig.screenWidth * 0.24),
-                      children: [
-                        Container(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              BigPrizeContainer(
-                                bgColor: Color(0xff26A6F4),
-                                bigText: locale.winMoneyBigText,
-                                smallText: locale.winMoneySmallText,
-                                image: Assets.moneyBag,
-                                painter: LakhCustomPaint(),
-                                onPressed: () => AppState
-                                    .delegate.appState.setCurrentTabIndex = 1,
-                              ),
-                              SizedBox(width: SizeConfig.padding16),
-                              BigPrizeContainer(
-                                bgColor: UiConstants.tertiarySolid,
-                                bigText: locale.winIphoneBigText,
-                                smallText: locale.winIphoneSmallText,
-                                image: Assets.iphone,
-                                painter: IphoneCustomPaint(),
-                                onPressed: () {
-                                  model.panelController
-                                      .animatePanelToPosition(1);
-                                  model.setCurrentPage = 1;
-                                },
-                              ),
-                            ],
+              margin: EdgeInsets.only(top: SizeConfig.padding20),
+              child: Expanded(
+                child: ListView(
+                  padding: EdgeInsets.only(top: SizeConfig.screenWidth * 0.24),
+                  children: [
+                    Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          BigPrizeContainer(
+                            bgColor: Color(0xff26A6F4),
+                            bigText: locale.winMoneyBigText,
+                            smallText: locale.winMoneySmallText,
+                            image: Assets.moneyBag,
+                            painter: LakhCustomPaint(),
+                            onPressed: () => AppState
+                                .delegate.appState.setCurrentTabIndex = 1,
                           ),
-                        ),
-                        SizedBox(height: SizeConfig.padding20),
-                        WinnersMarqueeStrip(),
-                        SizedBox(height: SizeConfig.padding24),
-                        if (model.ongoingEvents != null)
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal:
-                                        SizeConfig.pageHorizontalMargins),
-                                child: Text(
-                                  "Ongoing Events",
-                                  style: TextStyles.title3.bold,
-                                ),
-                              ),
-                              SizedBox(height: SizeConfig.padding16),
-                              Container(
-                                // height: SizeConfig.screenWidth * 0.3,
-                                width: SizeConfig.screenWidth,
-                                child: Column(
-                                  //padding: EdgeInsets.zero,
-                                  // scrollDirection: Axis.horizontal,
-                                  // shrinkWrap: true,
-                                  children: List.generate(
-                                    model.ongoingEvents.length,
-                                    (i) => EventCard(
-                                      event: model.ongoingEvents[i],
-                                      model: model,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: SizeConfig.padding24),
-                            ],
+                          SizedBox(width: SizeConfig.padding16),
+                          BigPrizeContainer(
+                            bgColor: UiConstants.tertiarySolid,
+                            bigText: locale.winIphoneBigText,
+                            smallText: locale.winIphoneSmallText,
+                            image: Assets.iphone,
+                            painter: IphoneCustomPaint(),
+                            onPressed: () {
+                              model.panelController.animatePanelToPosition(1);
+                              model.setCurrentPage = 1;
+                            },
                           ),
-                        // Padding(
-                        //   padding: EdgeInsets.symmetric(
-                        //       horizontal: SizeConfig.pageHorizontalMargins),
-                        //   child: Text(
-                        //     "Rewards and Coupons",
-                        //     style: TextStyles.title3.bold,
-                        //   ),
-                        // ),
-                        //SizedBox(height: SizeConfig.padding16),
-                        // Container(
-                        //   height: SizeConfig.screenWidth * 0.24,
-                        //   width: SizeConfig.screenWidth,
-                        //   child: ListView(
-                        //     padding: EdgeInsets.zero,
-                        //     scrollDirection: Axis.horizontal,
-                        //     children: [
-                        //       SizedBox(width: SizeConfig.pageHorizontalMargins),
-                        //       InkWell(
-                        //         onTap: () => model.openVoucherModal(
-                        //             Assets.amazonCoupon,
-                        //             "Amazon Pay Gift Voucher",
-                        //             "",
-                        //             UiConstants.tertiarySolid,
-                        //             false, [
-                        //           "Redeem your game and referral winnings as an Amazon voucher sent directly to your email and mobile!"
-                        //         ]),
-                        //         child: RewardsAvatar(
-                        //           color: Color(0xff242F41),
-                        //           asset: Assets.amazonCoupon,
-                        //         ),
-                        //       ),
-                        //       InkWell(
-                        //         onTap: () {
-                        //           BaseUtil.openModalBottomSheet(
-                        //             addToScreenStack: true,
-                        //             content: OctFestInfoModal(),
-                        //             isBarrierDismissable: false,
-                        //             hapticVibrate: true,
-                        //             borderRadius: BorderRadius.only(
-                        //                 topLeft: Radius.circular(
-                        //                     SizeConfig.padding24),
-                        //                 topRight: Radius.circular(
-                        //                     SizeConfig.padding24)),
-                        //           );
-                        //         },
-                        //         child: RewardsAvatar(
-                        //           color: Color(0xffFFC50C),
-                        //           asset: Assets.bdubsCoupon,
-                        //         ),
-                        //       ),
-                        //       InkWell(
-                        //         onTap: () => model.openVoucherModal(
-                        //           Assets.gplayCoupon,
-                        //           "Google Play Credits",
-                        //           "Coming soon",
-                        //           Colors.blue,
-                        //           true,
-                        //           [],
-                        //         ),
-                        //         child: RewardsAvatar(
-                        //           color: Colors.black,
-                        //           asset: Assets.gplayCoupon,
-                        //         ),
-                        //       ),
-                        //       InkWell(
-                        //         onTap: () => model.openVoucherModal(
-                        //             Assets.myntraCoupon,
-                        //             "Myntra Shopping Voucher",
-                        //             "Coming soon",
-                        //             Color(0xff611919),
-                        //             true, []),
-                        //         child: RewardsAvatar(
-                        //           color: Color(0xffFFDBF6),
-                        //           asset: Assets.myntraCoupon,
-                        //         ),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
-                        //ReferralLeaderboard(),
-                        SizedBox(
-                          height: SizeConfig.screenHeight * 0.24,
-                        )
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                    SizedBox(height: SizeConfig.padding32),
+                    WinnersMarqueeStrip(),
+                    SizedBox(height: SizeConfig.padding20),
+                    if (model.ongoingEvents != null)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: SizeConfig.pageHorizontalMargins),
+                            child: Text(
+                              "Ongoing Events",
+                              style: TextStyles.title3.bold,
+                            ),
+                          ),
+                          Container(
+                            width: SizeConfig.screenWidth,
+                            child: Column(
+                              children: List.generate(
+                                model.ongoingEvents.length,
+                                (i) => EventCard(
+                                  event: model.ongoingEvents[i],
+                                  model: model,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: SizeConfig.padding24),
+                        ],
+                      ),
+                    SizedBox(
+                      height: SizeConfig.screenHeight * 0.24,
+                    )
+                  ],
+                ),
               ),
             ),
             Container(

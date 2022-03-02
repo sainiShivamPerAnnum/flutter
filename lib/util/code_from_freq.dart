@@ -1,11 +1,10 @@
-import 'dart:developer';
-
 import 'package:felloapp/base_util.dart';
 import 'package:intl/intl.dart';
 
 class CodeFromFreq {
   static String getCodeFromFreq(String freq, {isMondayCorrected = true}) {
-    final DateTime _currentTime = getCorrectedMondayDate();
+    final DateTime _currentTime =
+        isMondayCorrected ? getCorrectedMondayDate() : DateTime.now();
     final monthlyFormat = new DateFormat('yyyy-MM');
     String response = monthlyFormat.format(_currentTime);
 
