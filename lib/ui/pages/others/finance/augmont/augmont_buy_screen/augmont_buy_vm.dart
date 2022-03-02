@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
@@ -28,6 +29,7 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/modals_sheets/augmont_coupons_modal.dart';
 import 'package:felloapp/ui/modals_sheets/augmont_register_modal_sheet.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
+import 'package:felloapp/ui/pages/static/transaction_loader.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
@@ -281,11 +283,17 @@ class AugmontGoldBuyViewModel extends BaseModel {
   // BUY LOGIC
 
   fcmTransactionResponseUpdate(fcmDataPayload) async {
+    //Stop loader if loading.
     _logger.i("Updating response value.");
 
     try {
       final DepositFcmResponseModel depositFcmResponseModel =
           DepositFcmResponseModel.fromJson(json.decode(fcmDataPayload));
+
+      if (AppState.screenStack.last == ScreenItem.loader) {
+        AppState.screenStack.removeLast();
+        Navigator.pop(AppState.delegate.navigatorKey.currentContext);
+      }
 
       //Handle failed condition here.
       if (!depositFcmResponseModel.status) {
@@ -392,6 +400,14 @@ class AugmontGoldBuyViewModel extends BaseModel {
     isGoldBuyInProgress = true;
     _analyticsService.track(eventName: AnalyticsEvents.buyGold);
 
+    //Initiate loader here
+    AppState.screenStack.add(ScreenItem.loader);
+
+    Navigator.of(AppState.delegate.navigatorKey.currentContext).push(
+        PageRouteBuilder(
+            opaque: false,
+            pageBuilder: (BuildContext context, _, __) => TransactionLoader()));
+
     final _status = await _paytmService.initiateTransactions(
         amount: buyAmount,
         augmontRates: goldRates,
@@ -401,31 +417,26 @@ class AugmontGoldBuyViewModel extends BaseModel {
     isGoldBuyInProgress = false;
 
     if (_status) {
-      BaseUtil.showPositiveAlert(
-        'Processing transaction',
-        'It can take upto 15 minutes.',
-      );
+      Future.delayed(Duration(seconds: 30), () async {
+        if (AppState.screenStack.last == ScreenItem.loader) {
+          AppState.screenStack.removeLast();
+          Navigator.pop(AppState.delegate.navigatorKey.currentContext);
+          BaseUtil.showPositiveAlert(
+            'Processing transaction',
+            'It can take upto 15 minutes.',
+          );
+        }
+      });
     } else {
+      if (AppState.screenStack.last == ScreenItem.loader) {
+        AppState.screenStack.removeLast();
+        Navigator.pop(AppState.delegate.navigatorKey.currentContext);
+      }
       BaseUtil.showNegativeAlert(
         'Transaction failed',
         'Please try again in sometime or contact us for further assistance.',
       );
     }
-
-    //Old Buy Flow
-    // _augmontModel
-    //     .initiateGoldPurchase(goldRates, buyAmount,
-    //         couponCode: appliedCoupon?.code ?? "")
-    //     .then((txn) {
-    //   if (txn == null) {
-    //     isGoldBuyInProgress = false;
-    //     BaseUtil.showNegativeAlert(
-    //       'Transaction failed',
-    //       'Please try again in sometime or contact us for further assistance.',
-    //     );
-    //   }
-    // });
-    // _augmontModel.setAugmontTxnProcessListener(_onDepositTransactionComplete);
   }
 
   onBuyValueChanged(String val) {

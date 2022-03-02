@@ -8,6 +8,7 @@ class DepositFcmResponseModel {
   double amount;
   int flcBalance;
   String gtId;
+  String error;
   bool status;
 
   DepositFcmResponseModel(
@@ -20,6 +21,7 @@ class DepositFcmResponseModel {
       this.amount,
       this.flcBalance,
       this.gtId,
+      this.error,
       this.status});
 
   DepositFcmResponseModel.fromJson(Map<String, dynamic> json) {
@@ -27,11 +29,12 @@ class DepositFcmResponseModel {
     didWalletUpdate = json['didWalletUpdate'];
     isWalletCreated = json['isWalletCreated'];
     didFLCUpdate = json['didFLCUpdate'];
-    augmontPrinciple = json['augmontPrinciple'].toDouble();
-    amount = json['amount'].toDouble();
+    augmontPrinciple = json['augmontPrinciple']?.toDouble();
+    amount = json['amount']?.toDouble();
     augmontGoldQty = json['augmontGoldQty'];
     flcBalance = json['flcBalance'];
     gtId = json['gtId'];
+    error = json['error'];
     status = json['status'];
   }
 
@@ -46,6 +49,7 @@ class DepositFcmResponseModel {
     data['amount'] = this.amount;
     data['flcBalance'] = this.flcBalance;
     data['gtId'] = this.gtId;
+    data['error'] = this.error;
     data['status'] = this.status;
     return data;
   }
