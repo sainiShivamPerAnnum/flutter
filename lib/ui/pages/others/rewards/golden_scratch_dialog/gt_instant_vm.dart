@@ -94,7 +94,7 @@ class GTInstantViewModel extends BaseModel {
     goldenTicket = GoldenTicketService.currentGT;
     GoldenTicketService.currentGT = null;
 
-    Future.delayed(Duration(seconds: 15), () {
+    Future.delayed(Duration(seconds: 18), () {
       if (!isCardScratchStarted) {
         showScratchGuide = true;
       }
