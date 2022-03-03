@@ -541,6 +541,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
       if (gtFlag)
         _gtService.showInstantGoldenTicketView(
             title: '₹${txn.amount.toStringAsFixed(0)} saved!',
+            amount: txn.amount,
             source: GTSOURCE.deposit);
       else
         showSuccessGoldBuyDialog(txn);
@@ -648,5 +649,17 @@ class AugmontGoldBuyViewModel extends BaseModel {
       BaseUtil.showNegativeAlert(
           "Coupon not applied", "Please try another coupon");
     }
+  }
+
+  //------------------------------- TEST -------------------------------- //
+
+  showInstantTestGT() async {
+    GoldenTicketService.goldenTicketId =
+        (await _dbModel.getLatestGoldenTicket(_userService.baseUser.uid)).gtId;
+    await _gtService.fetchAndVerifyGoldenTicketByID();
+    _gtService.showInstantGoldenTicketView(
+        title: 'You successfully saved ₹500.',
+        source: GTSOURCE.deposit,
+        amount: 500);
   }
 }

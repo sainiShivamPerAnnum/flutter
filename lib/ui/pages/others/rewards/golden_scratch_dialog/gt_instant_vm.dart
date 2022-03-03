@@ -13,7 +13,9 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/rsa_encryption.dart';
-import 'package:flutter/services.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:flutter/material.dart';
 
 class GTInstantViewModel extends BaseModel {
   final _userService = locator<UserService>();
@@ -23,7 +25,19 @@ class GTInstantViewModel extends BaseModel {
   final _gtService = locator<GoldenTicketService>();
   final _dbModel = locator<DBModel>();
   final _rsaEncryption = new RSAEncryption();
+  final _coinService = locator<UserCoinService>();
+  // double coinsPositionY = SizeConfig.viewInsets.top +
+  //     SizeConfig.padding12 +
+  //     SizeConfig.avatarRadius * 3;
 
+  // double coinsPositionX =
+  //     SizeConfig.screenWidth / 2 - SizeConfig.screenWidth / 8;
+  double coinContentOpacity = 1;
+  bool isCoinAnimationInProgress = false;
+  bool isInvestmentAnimationInProgress = false;
+  bool showMainContent = false;
+  int coinsCount = 200;
+  double coinScale = 1;
   bool _isShimmerEnabled = false;
   GoldenTicket _goldenTicket;
   double _buttonOpacity = 0;
@@ -79,7 +93,8 @@ class GTInstantViewModel extends BaseModel {
     Haptic.vibrate();
     goldenTicket = GoldenTicketService.currentGT;
     GoldenTicketService.currentGT = null;
-    Future.delayed(Duration(seconds: 6), () {
+
+    Future.delayed(Duration(seconds: 18), () {
       if (!isCardScratchStarted) {
         showScratchGuide = true;
       }
@@ -103,12 +118,21 @@ class GTInstantViewModel extends BaseModel {
       _logger.e("Encrypter initialization failed!! exiting method");
     }
     try {
-      _getBearerToken().then((String token) => APIService.instance
-              .postData(_apiPaths.kRedeemGtReward, token: token, body: _body)
-              .then((value) {
+      _getBearerToken().then(
+        (String token) => APIService.instance
+            .postData(_apiPaths.kRedeemGtReward, token: token, body: _body)
+            .then(
+          (_) {
             _userService.getUserFundWalletData();
-            _userCoinService.getUserCoinBalance();
-          }));
+            _userCoinService.getUserCoinBalance().then(
+              (_) {
+                coinsCount = _userCoinService.flcBalance;
+                notifyListeners();
+              },
+            );
+          },
+        ),
+      );
     } catch (e) {
       _logger.e(e);
       BaseUtil.showNegativeAlert(
@@ -122,5 +146,87 @@ class GTInstantViewModel extends BaseModel {
     _logger.d(token);
 
     return token;
+  }
+
+  initDepositSuccessAnimation(double amount) async {
+    isInvestmentAnimationInProgress = true;
+    notifyListeners();
+    await Future.delayed(Duration(seconds: 3), () {
+      isInvestmentAnimationInProgress = false;
+      notifyListeners();
+    });
+    initCoinAnimation(amount);
+  }
+
+  initCoinAnimation(double amount) async {
+    coinsCount = _coinService.flcBalance - amount.toInt();
+    await Future.delayed(Duration(seconds: 1), () {
+      isCoinAnimationInProgress = true;
+      coinsCount = _coinService.flcBalance;
+
+      notifyListeners();
+    });
+    await Future.delayed(Duration(seconds: 2), () {
+      coinContentOpacity = 0;
+      notifyListeners();
+    });
+    await Future.delayed(Duration(seconds: 1), () {
+      isCoinAnimationInProgress = false;
+      notifyListeners();
+    });
+    initNormalFlow();
+  }
+
+  initNormalFlow() {
+    showMainContent = true;
+    notifyListeners();
+  }
+}
+
+class AnimatedCount extends ImplicitlyAnimatedWidget {
+  AnimatedCount({
+    Key key,
+    @required this.count,
+    @required Duration duration,
+    Curve curve = Curves.linear,
+  }) : super(duration: duration, curve: curve, key: key);
+
+  final num count;
+
+  @override
+  ImplicitlyAnimatedWidgetState<ImplicitlyAnimatedWidget> createState() {
+    return _AnimatedCountState();
+  }
+}
+
+class _AnimatedCountState extends AnimatedWidgetBaseState<AnimatedCount> {
+  IntTween _intCount;
+  Tween<double> _doubleCount;
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.count is int
+        ? Text(
+            _intCount.evaluate(animation).toString(),
+            style: TextStyles.body1.bold,
+          )
+        : Text(_doubleCount.evaluate(animation).toStringAsFixed(1));
+  }
+
+  @override
+  void forEachTween(TweenVisitor visitor) {
+    if (widget.count is int) {
+      _intCount = visitor(
+        _intCount,
+        widget.count,
+        (dynamic value) => IntTween(begin: value),
+      );
+    } else {
+      _doubleCount = visitor(
+        _doubleCount,
+        widget.count,
+        (dynamic value) => Tween<double>(begin: value),
+      );
+    }
   }
 }

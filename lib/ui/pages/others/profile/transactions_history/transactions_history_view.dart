@@ -4,6 +4,7 @@ import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/dialogs/transaction_details_dialog.dart';
+import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
 import 'package:felloapp/ui/pages/others/profile/transactions_history/transaction_history_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
@@ -52,30 +53,67 @@ class TransactionsHistory extends StatelessWidget {
                             ),
                           )
                         : Container(
-                            padding: EdgeInsets.only(
-                                right: SizeConfig.blockSizeHorizontal * 3),
+                            // padding: EdgeInsets.only(
+                            //     right: SizeConfig.blockSizeHorizontal * 3),
                             child: Column(
                               children: [
                                 Container(
-                                  padding: EdgeInsets.only(
-                                      top: SizeConfig.blockSizeVertical * 2),
-                                  height: SizeConfig.screenHeight * 0.08,
+                                  margin: EdgeInsets.only(
+                                    top: SizeConfig.pageHorizontalMargins,
+                                  ),
+                                  height: SizeConfig.padding40,
+                                  width: SizeConfig.screenWidth,
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      FilterOption(
-                                        filterItems: model.tranTypeFilterItems,
-                                        type: TranFilterType.Type,
+                                      AnimatedContainer(
+                                        curve: Curves.decelerate,
+                                        duration: Duration(milliseconds: 600),
+                                        width: model.tranAnimWidth,
+                                      ),
+                                      Expanded(
+                                        child: ListView(
+                                          scrollDirection: Axis.horizontal,
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: SizeConfig
+                                                .pageHorizontalMargins,
+                                          ),
+                                          children: List.generate(
+                                            model.tranTypeFilterItems.length,
+                                            (i) => TranChip(
+                                              chipId: i + 1,
+                                              title:
+                                                  model.tranTypeFilterItems[i],
+                                              model: model,
+                                            ),
+                                          )
+                                          // FilterOption(
+                                          //   filterItems: model.tranTypeFilterItems,
+                                          //   type: TranFilterType.Type,
+                                          // ),
+                                          ,
+                                        ),
                                       ),
                                     ],
                                   ),
                                 ),
+                                SizedBox(
+                                    height:
+                                        SizeConfig.pageHorizontalMargins / 2),
+                                Divider(),
                                 Expanded(
                                   child: (model.filteredList.length == 0
                                       ? child
                                       : ListView(
                                           physics: BouncingScrollPhysics(),
-                                          padding: EdgeInsets.all(10),
+                                          padding: EdgeInsets.only(
+                                              top: SizeConfig
+                                                      .pageHorizontalMargins /
+                                                  2,
+                                              left: SizeConfig
+                                                      .pageHorizontalMargins /
+                                                  2,
+                                              right: SizeConfig
+                                                  .pageHorizontalMargins),
                                           controller: model.tranListController,
                                           children: List.generate(
                                             model.filteredList.length,
@@ -122,6 +160,43 @@ class TransactionsHistory extends StatelessWidget {
   }
 }
 
+class TranChip extends StatelessWidget {
+  final TransactionsHistoryViewModel model;
+  final int chipId;
+  final String title;
+
+  TranChip({this.model, this.chipId, this.title});
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        model.filter = chipId;
+        model.filterTransactions(update: true);
+      },
+      child: Container(
+        margin: EdgeInsets.only(right: SizeConfig.padding12),
+        padding: EdgeInsets.symmetric(
+            horizontal: SizeConfig.padding24, vertical: SizeConfig.padding12),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          border: Border.all(width: 0.5, color: UiConstants.primaryColor),
+          color:
+              model.filter == chipId ? UiConstants.primaryColor : Colors.white,
+          borderRadius: BorderRadius.circular(100),
+        ),
+        child: Text(
+          title,
+          style: model.filter == chipId
+              ? TextStyles.body3.bold.colour(Colors.white)
+              : TextStyles.body3.colour(
+                  UiConstants.primaryColor,
+                ),
+        ),
+      ),
+    );
+  }
+}
+
 class NoTransactionsContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -150,49 +225,49 @@ class NoTransactionsContent extends StatelessWidget {
   }
 }
 
-class FilterOption extends StatelessWidget {
-  final Map<String, int> filterItems;
-  final TranFilterType type;
-  FilterOption({this.filterItems, this.type});
+// class FilterOption extends StatelessWidget {
+//   final Map<String, int> filterItems;
+//   final TranFilterType type;
+//   FilterOption({this.filterItems, this.type});
 
-  @override
-  Widget build(BuildContext context) {
-    List<DropdownMenuItem> items = [];
+//   @override
+//   Widget build(BuildContext context) {
+//     List<DropdownMenuItem> items = [];
 
-    filterItems.forEach((key, value) {
-      items.add(
-        DropdownMenuItem(
-          child: Text(
-            key,
-            style: TextStyle(fontSize: SizeConfig.mediumTextSize),
-          ),
-          value: value,
-        ),
-      );
-    });
+//     filterItems.forEach((key, value) {
+//       items.add(
+//         DropdownMenuItem(
+//           child: Text(
+//             key,
+//             style: TextStyle(fontSize: SizeConfig.mediumTextSize),
+//           ),
+//           value: value,
+//         ),
+//       );
+//     });
 
-    return Consumer<TransactionsHistoryViewModel>(builder: (ctx, model, child) {
-      return Container(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        margin:
-            EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
-        decoration: BoxDecoration(
-          border: Border.all(width: 2, color: UiConstants.primaryColor),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: DropdownButtonHideUnderline(
-          child: DropdownButton(
-              value: model.filter,
-              items: items,
-              onChanged: (value) {
-                model.filter = value;
-                model.filterTransactions(update: true);
-              }),
-        ),
-      );
-    });
-  }
-}
+//     return Consumer<TransactionsHistoryViewModel>(builder: (ctx, model, child) {
+//       return Container(
+//         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+//         margin:
+//             EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+//         decoration: BoxDecoration(
+//           border: Border.all(width: 2, color: UiConstants.primaryColor),
+//           borderRadius: BorderRadius.circular(8),
+//         ),
+//         child: DropdownButtonHideUnderline(
+//           child: DropdownButton(
+//               value: model.filter,
+//               items: items,
+//               onChanged: (value) {
+//                 model.filter = value;
+//                 model.filterTransactions(update: true);
+//               }),
+//         ),
+//       );
+//     });
+//   }
+// }
 
 class TransactionTile extends StatelessWidget {
   final TransactionsHistoryViewModel model;

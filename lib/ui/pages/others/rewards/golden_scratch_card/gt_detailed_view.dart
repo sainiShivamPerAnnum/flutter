@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
+import 'package:felloapp/core/service/golden_ticket_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_vm.dart';
@@ -13,6 +14,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:scratcher/scratcher.dart';
 
@@ -40,12 +42,15 @@ class GTDetailedView extends StatelessWidget {
               ),
               Spacer(),
               model.viewScratchedCard
-                  ? GoldenTicketGridItemCard(
-                      ticket: ticket,
-                      titleStyle: TextStyles.title2,
-                      titleStyle2: TextStyles.title4,
-                      subtitleStyle: TextStyles.body1,
-                      width: SizeConfig.screenWidth * 0.6,
+                  ? RepaintBoundary(
+                      key: ticketImageKey,
+                      child: GoldenTicketGridItemCard(
+                        ticket: ticket,
+                        titleStyle: TextStyles.title2,
+                        titleStyle2: TextStyles.title4,
+                        subtitleStyle: TextStyles.body1,
+                        width: SizeConfig.screenWidth * 0.6,
+                      ),
                     )
                   : (model.viewScratcher
                       ? Hero(
@@ -70,12 +75,15 @@ class GTDetailedView extends StatelessWidget {
                                 height: SizeConfig.screenWidth * 0.6,
                                 width: SizeConfig.screenWidth * 0.6,
                               ),
-                              child: RedeemedGoldenScratchCard(
-                                ticket: ticket,
-                                subtitleStyle: TextStyles.body1,
-                                titleStyle: TextStyles.title2,
-                                titleStyle2: TextStyles.title4,
-                                width: SizeConfig.screenWidth * 0.6,
+                              child: RepaintBoundary(
+                                key: ticketImageKey,
+                                child: RedeemedGoldenScratchCard(
+                                  ticket: ticket,
+                                  subtitleStyle: TextStyles.body1,
+                                  titleStyle: TextStyles.title2,
+                                  titleStyle2: TextStyles.title4,
+                                  width: SizeConfig.screenWidth * 0.6,
+                                ),
                               ),
                             ),
                           ),
@@ -119,7 +127,41 @@ class GTDetailedView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Congratulations!", style: TextStyles.title2.bold),
+            Row(
+              children: [
+                Text("Congratulations!", style: TextStyles.title3.bold),
+                Spacer(),
+                if (model.isCardScratched &&
+                    ticket.rewardArr != null &&
+                    ticket.rewardArr.isNotEmpty)
+                  InkWell(
+                    onTap: () => model.share(ticket),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            width: 0.5, color: UiConstants.primaryColor),
+                        borderRadius: BorderRadius.circular(100),
+                      ),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.pageHorizontalMargins),
+                      height: SizeConfig.avatarRadius * 2,
+                      child: model.isShareLoading
+                          ? SpinKitThreeBounce(
+                              color: UiConstants.primaryColor,
+                              size: SizeConfig.padding16)
+                          : Row(children: [
+                              Text("Share",
+                                  style: TextStyles.body2
+                                      .colour(UiConstants.primaryColor)),
+                              SizedBox(width: SizeConfig.padding6),
+                              SvgPicture.asset(Assets.plane,
+                                  width: SizeConfig.body2,
+                                  color: UiConstants.primaryColor)
+                            ]),
+                    ),
+                  )
+              ],
+            ),
             SizedBox(height: SizeConfig.padding16),
             Column(children: [
               bulletTiles("${ticket.note}"),

@@ -67,9 +67,12 @@ class MyWinningsView extends StatelessWidget {
                                               0)
                                       ? InkWell(
                                           onTap: () {
-                                            AppState.delegate.appState.currentAction = PageAction(
-                                                state: PageState.addPage,
-                                                page: ReferralDetailsPageConfig);
+                                            AppState.delegate.appState
+                                                    .currentAction =
+                                                PageAction(
+                                                    state: PageState.addPage,
+                                                    page:
+                                                        ReferralDetailsPageConfig);
                                           },
                                           child: Container(
                                             margin: EdgeInsets.only(
@@ -97,7 +100,7 @@ class MyWinningsView extends StatelessWidget {
                                             ),
                                           ),
                                         )
-                                      : SizedBox()
+                                      : SizedBox(height: SizeConfig.padding2),
                                 ]),
                               ),
                             ];
@@ -150,6 +153,7 @@ class MyWinningsView extends StatelessWidget {
                               Padding(
                                 padding: EdgeInsets.only(
                                     top: SizeConfig.padding16,
+                                    bottom: SizeConfig.padding8,
                                     left: SizeConfig.pageHorizontalMargins),
                                 child: Text(
                                   "My Rewards",
