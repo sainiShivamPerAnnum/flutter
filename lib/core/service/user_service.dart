@@ -263,6 +263,10 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     });
   }
 
+  diplayUsername(String username) {
+    return username.replaceAll('@', '.');
+  }
+
   Future<String> createDynamicLink(bool short, String source) async {
     final DynamicLinkParameters parameters = DynamicLinkParameters(
       uriPrefix:
