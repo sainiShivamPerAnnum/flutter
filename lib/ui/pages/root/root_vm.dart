@@ -228,11 +228,20 @@ class RootViewModel extends BaseModel {
 
   _processDynamicLink(String userId, Uri deepLink, BuildContext context) async {
     String _uri = deepLink.toString();
+
     if (_uri.startsWith(Constants.GOLDENTICKET_DYNAMICLINK_PREFIX)) {
       //Golden ticket dynamic link
       int flag = await _submitGoldenTicket(userId, _uri, context);
     } else if (_uri.startsWith(Constants.APP_DOWNLOAD_LINK)) {
       _submitTrack(_uri);
+    } else if (_uri.startsWith(Constants.APP_NAVIGATION_LINK)) {
+      try {
+        final path =
+            _uri.substring(Constants.APP_NAVIGATION_LINK.length, _uri.length);
+        AppState.delegate.parseRoute(Uri.parse(path));
+      } catch (error) {
+        _logger.e(error);
+      }
     } else {
       BaseUtil.manualReferralCode =
           null; //make manual Code null in case user used both link and code

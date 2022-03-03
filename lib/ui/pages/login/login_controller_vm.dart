@@ -326,7 +326,7 @@ class LoginControllerViewModel extends BaseModel {
 
                   if (flag) {
                     _analyticsService.track(
-                      eventName: AnalyticsEvents.userNameAdded,
+                      eventName: AnalyticsEvents.signupName,
                       properties: {'userId': userService?.baseUser?.uid},
                     );
                     logger.d("User object saved successfully");
