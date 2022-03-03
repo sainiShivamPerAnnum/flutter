@@ -63,37 +63,26 @@ class TransactionsHistory extends StatelessWidget {
                                   ),
                                   height: SizeConfig.padding40,
                                   width: SizeConfig.screenWidth,
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal:
+                                        SizeConfig.pageHorizontalMargins,
+                                  ),
                                   child: Row(
-                                    children: [
-                                      AnimatedContainer(
-                                        curve: Curves.decelerate,
-                                        duration: Duration(milliseconds: 600),
-                                        width: model.tranAnimWidth,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: List.generate(
+                                      model.tranTypeFilterItems.length,
+                                      (i) => TranChip(
+                                        chipId: i + 1,
+                                        title: model.tranTypeFilterItems[i],
+                                        model: model,
                                       ),
-                                      Expanded(
-                                        child: ListView(
-                                          scrollDirection: Axis.horizontal,
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: SizeConfig
-                                                .pageHorizontalMargins,
-                                          ),
-                                          children: List.generate(
-                                            model.tranTypeFilterItems.length,
-                                            (i) => TranChip(
-                                              chipId: i + 1,
-                                              title:
-                                                  model.tranTypeFilterItems[i],
-                                              model: model,
-                                            ),
-                                          )
-                                          // FilterOption(
-                                          //   filterItems: model.tranTypeFilterItems,
-                                          //   type: TranFilterType.Type,
-                                          // ),
-                                          ,
-                                        ),
-                                      ),
-                                    ],
+                                    )
+                                    // FilterOption(
+                                    //   filterItems: model.tranTypeFilterItems,
+                                    //   type: TranFilterType.Type,
+                                    // ),
+                                    ,
                                   ),
                                 ),
                                 SizedBox(
@@ -106,9 +95,6 @@ class TransactionsHistory extends StatelessWidget {
                                       : ListView(
                                           physics: BouncingScrollPhysics(),
                                           padding: EdgeInsets.only(
-                                              top: SizeConfig
-                                                      .pageHorizontalMargins /
-                                                  2,
                                               left: SizeConfig
                                                       .pageHorizontalMargins /
                                                   2,
@@ -174,9 +160,8 @@ class TranChip extends StatelessWidget {
         model.filterTransactions(update: true);
       },
       child: Container(
-        margin: EdgeInsets.only(right: SizeConfig.padding12),
         padding: EdgeInsets.symmetric(
-            horizontal: SizeConfig.padding24, vertical: SizeConfig.padding12),
+            horizontal: SizeConfig.padding16, vertical: SizeConfig.padding12),
         alignment: Alignment.center,
         decoration: BoxDecoration(
           border: Border.all(width: 0.5, color: UiConstants.primaryColor),

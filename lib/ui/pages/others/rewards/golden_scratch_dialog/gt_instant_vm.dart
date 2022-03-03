@@ -1,3 +1,4 @@
+import 'package:confetti/confetti.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
@@ -26,6 +27,8 @@ class GTInstantViewModel extends BaseModel {
   final _dbModel = locator<DBModel>();
   final _rsaEncryption = new RSAEncryption();
   final _coinService = locator<UserCoinService>();
+  ConfettiController confettiController;
+
   // double coinsPositionY = SizeConfig.viewInsets.top +
   //     SizeConfig.padding12 +
   //     SizeConfig.avatarRadius * 3;
@@ -93,6 +96,9 @@ class GTInstantViewModel extends BaseModel {
     Haptic.vibrate();
     goldenTicket = GoldenTicketService.currentGT;
     GoldenTicketService.currentGT = null;
+    confettiController = new ConfettiController(
+      duration: new Duration(seconds: 2),
+    );
 
     Future.delayed(Duration(seconds: 18), () {
       if (!isCardScratchStarted) {
@@ -149,28 +155,28 @@ class GTInstantViewModel extends BaseModel {
   }
 
   initDepositSuccessAnimation(double amount) async {
+    coinsCount = _coinService.flcBalance - amount.toInt();
     isInvestmentAnimationInProgress = true;
     notifyListeners();
-    await Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(Duration(milliseconds: 1500), () {
       isInvestmentAnimationInProgress = false;
       notifyListeners();
+      initCoinAnimation(amount);
     });
-    initCoinAnimation(amount);
   }
 
   initCoinAnimation(double amount) async {
-    coinsCount = _coinService.flcBalance - amount.toInt();
-    await Future.delayed(Duration(seconds: 1), () {
+    notifyListeners();
+    await Future.delayed(Duration(milliseconds: 300), () {
       isCoinAnimationInProgress = true;
       coinsCount = _coinService.flcBalance;
-
       notifyListeners();
     });
     await Future.delayed(Duration(seconds: 2), () {
       coinContentOpacity = 0;
       notifyListeners();
     });
-    await Future.delayed(Duration(seconds: 1), () {
+    await Future.delayed(Duration(milliseconds: 300), () {
       isCoinAnimationInProgress = false;
       notifyListeners();
     });

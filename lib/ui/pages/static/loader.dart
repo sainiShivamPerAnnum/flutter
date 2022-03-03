@@ -46,20 +46,6 @@ class _LoaderState extends State<Loader> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
-  double bottomPos = -(SizeConfig.screenHeight * 0.5);
-
-  @override
-  void didChangeDependencies() {
-    if (mounted) {
-      Future.delayed(Duration(milliseconds: 100), () {
-        setState(() {
-          bottomPos = 0;
-        });
-      });
-    }
-    super.didChangeDependencies();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,7 +53,7 @@ class _LoaderState extends State<Loader> with SingleTickerProviderStateMixin {
       body: Stack(
         children: [
           AnimatedPositioned(
-            bottom: bottomPos,
+            bottom: 0,
             duration: Duration(seconds: 1),
             curve: Curves.decelerate,
             child: Container(
@@ -77,9 +63,7 @@ class _LoaderState extends State<Loader> with SingleTickerProviderStateMixin {
                 ),
                 color: Colors.white,
               ),
-              width:
-                  SizeConfig.screenWidth - SizeConfig.pageHorizontalMargins * 2,
-              margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+              width: SizeConfig.screenWidth,
               padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
               child: Column(
                 mainAxisSize: MainAxisSize.min,

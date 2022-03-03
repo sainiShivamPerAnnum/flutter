@@ -23,8 +23,8 @@ class TransactionsHistoryViewModel extends BaseModel {
   List<String> _tranTypeFilterItems = [
     "All",
     "Deposits",
-    "Withdrawal",
-    "Prize"
+    "Withdrawals",
+    "Prizes"
   ];
   // Map<String, int> _tranTypeFilterItems = {
   //   "All": 1,
