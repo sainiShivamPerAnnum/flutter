@@ -226,7 +226,8 @@ class WinnersBoard extends StatelessWidget {
                                     SizedBox(width: SizeConfig.padding12),
                                     Expanded(
                                       child: Text(
-                                        model.pastWinners[i].username,
+                                        model.displayUsername(
+                                            model.pastWinners[i].username),
                                         style: TextStyles.body3,
                                       ),
                                     ),
@@ -356,7 +357,8 @@ class EventLeaderboard extends StatelessWidget {
                                       ),
                                     ),
                                     title: Text(
-                                      model.currentParticipants[i].username,
+                                      model.displayUsername(model
+                                          .currentParticipants[i].username),
                                       style: TextStyles.body3.bold
                                           .colour(Colors.black54),
                                     ),

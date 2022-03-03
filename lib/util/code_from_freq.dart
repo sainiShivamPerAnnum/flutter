@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 class CodeFromFreq {
   static String getCodeFromFreq(String freq, {isMondayCorrected = true}) {
     final DateTime _currentTime =
-        isMondayCorrected ? getCorrectedMondayDate() : DateTime.now();
+        (freq == 'weekly') ? getCorrectedMondayDate() : DateTime.now();
     final monthlyFormat = new DateFormat('yyyy-MM');
     String response = monthlyFormat.format(_currentTime);
 
@@ -71,7 +71,8 @@ class CodeFromFreq {
   }
 
   static getPastWeekCode() {
-    DateTime _currentTime = DateTime.now().subtract(Duration(days: 7));
+    DateTime _currentTime =
+        getCorrectedMondayDate().subtract(Duration(days: 7));
 
     final yearFormat = new DateFormat('yyyy');
     final monthFormat = new DateFormat('MM');

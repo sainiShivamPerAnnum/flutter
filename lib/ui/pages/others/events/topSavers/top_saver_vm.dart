@@ -34,6 +34,8 @@ class TopSaverViewModel extends BaseModel {
 
   List<Winners> get pastWinners => _pastWinners;
 
+  displayUsername(username) => _userService.diplayUsername(username);
+
   set pastWinners(List<Winners> value) {
     _pastWinners = value;
     notifyListeners();
