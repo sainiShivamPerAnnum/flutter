@@ -33,73 +33,71 @@ class Win extends StatelessWidget {
           children: [
             Container(
               margin: EdgeInsets.only(top: SizeConfig.padding20),
-              child: Expanded(
-                child: ListView(
-                  padding: EdgeInsets.only(top: SizeConfig.screenWidth * 0.24),
-                  children: [
-                    Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          BigPrizeContainer(
-                            bgColor: Color(0xff26A6F4),
-                            bigText: locale.winMoneyBigText,
-                            smallText: locale.winMoneySmallText,
-                            image: Assets.moneyBag,
-                            painter: LakhCustomPaint(),
-                            onPressed: () => AppState
-                                .delegate.appState.setCurrentTabIndex = 1,
-                          ),
-                          SizedBox(width: SizeConfig.padding16),
-                          BigPrizeContainer(
-                            bgColor: UiConstants.tertiarySolid,
-                            bigText: locale.winIphoneBigText,
-                            smallText: locale.winIphoneSmallText,
-                            image: Assets.iphone,
-                            painter: IphoneCustomPaint(),
-                            onPressed: () {
-                              model.panelController.animatePanelToPosition(1);
-                              model.setCurrentPage = 1;
-                            },
-                          ),
-                        ],
-                      ),
+              child: ListView(
+                padding: EdgeInsets.only(top: SizeConfig.screenWidth * 0.24),
+                children: [
+                  Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        BigPrizeContainer(
+                          bgColor: Color(0xff26A6F4),
+                          bigText: locale.winMoneyBigText,
+                          smallText: locale.winMoneySmallText,
+                          image: Assets.moneyBag,
+                          painter: LakhCustomPaint(),
+                          onPressed: () =>
+                              AppState.delegate.appState.setCurrentTabIndex = 1,
+                        ),
+                        SizedBox(width: SizeConfig.padding16),
+                        BigPrizeContainer(
+                          bgColor: UiConstants.tertiarySolid,
+                          bigText: locale.winIphoneBigText,
+                          smallText: locale.winIphoneSmallText,
+                          image: Assets.iphone,
+                          painter: IphoneCustomPaint(),
+                          onPressed: () {
+                            model.panelController.animatePanelToPosition(1);
+                            model.setCurrentPage = 1;
+                          },
+                        ),
+                      ],
                     ),
-                    SizedBox(height: SizeConfig.padding32),
-                    WinnersMarqueeStrip(),
-                    SizedBox(height: SizeConfig.padding20),
-                    if (model.ongoingEvents != null)
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: SizeConfig.pageHorizontalMargins),
-                            child: Text(
-                              "Ongoing Events",
-                              style: TextStyles.title3.bold,
-                            ),
+                  ),
+                  SizedBox(height: SizeConfig.padding32),
+                  WinnersMarqueeStrip(),
+                  SizedBox(height: SizeConfig.padding20),
+                  if (model.ongoingEvents != null)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.pageHorizontalMargins),
+                          child: Text(
+                            "Ongoing Events",
+                            style: TextStyles.title3.bold,
                           ),
-                          Container(
-                            width: SizeConfig.screenWidth,
-                            child: Column(
-                              children: List.generate(
-                                model.ongoingEvents.length,
-                                (i) => EventCard(
-                                  event: model.ongoingEvents[i],
-                                  model: model,
-                                ),
+                        ),
+                        Container(
+                          width: SizeConfig.screenWidth,
+                          child: Column(
+                            children: List.generate(
+                              model.ongoingEvents.length,
+                              (i) => EventCard(
+                                event: model.ongoingEvents[i],
+                                model: model,
                               ),
                             ),
                           ),
-                          SizedBox(height: SizeConfig.padding24),
-                        ],
-                      ),
-                    SizedBox(
-                      height: SizeConfig.screenHeight * 0.24,
-                    )
-                  ],
-                ),
+                        ),
+                        SizedBox(height: SizeConfig.padding24),
+                      ],
+                    ),
+                  SizedBox(
+                    height: SizeConfig.screenHeight * 0.24,
+                  )
+                ],
               ),
             ),
             Container(

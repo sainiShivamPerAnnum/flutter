@@ -51,16 +51,20 @@ class _LoaderState extends State<Loader> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  SizedBox(height: SizeConfig.padding24),
-                  Lottie.asset(
-                    "assets/lotties/tick-clock.json",
-                    height: SizeConfig.padding40,
-                    frameRate: FrameRate(30),
+                  Container(
+                    height: SizeConfig.padding80,
+                    width: SizeConfig.screenWidth * 0.6,
+                    child: Lottie.asset("assets/lotties/txnloader.json",
+                        fit: BoxFit.fitWidth),
                   ),
+
                   // SpinKitWave(
                   //     size: SizeConfig.padding40,
                   //     color: UiConstants.primaryColor),
-                  SizedBox(height: SizeConfig.padding16),
+                  SizedBox(height: SizeConfig.padding20),
+                  SizedBox(height: SizeConfig.padding6),
+                  Text("Relax back", style: TextStyles.title4.bold),
+                  SizedBox(height: SizeConfig.padding6),
                   Text(
                     "Please do not close the app. You transaction is in progress..",
                     style: TextStyles.body2.colour(Colors.black45),
