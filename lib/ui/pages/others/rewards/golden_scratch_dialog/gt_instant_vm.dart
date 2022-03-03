@@ -158,7 +158,7 @@ class GTInstantViewModel extends BaseModel {
     coinsCount = _coinService.flcBalance - amount.toInt();
     isInvestmentAnimationInProgress = true;
     notifyListeners();
-    Future.delayed(Duration(milliseconds: 1500), () {
+    Future.delayed(Duration(milliseconds: 2800), () {
       isInvestmentAnimationInProgress = false;
       notifyListeners();
       initCoinAnimation(amount);
@@ -166,21 +166,22 @@ class GTInstantViewModel extends BaseModel {
   }
 
   initCoinAnimation(double amount) async {
-    notifyListeners();
-    await Future.delayed(Duration(milliseconds: 300), () {
+    await Future.delayed(Duration(milliseconds: 100), () {
       isCoinAnimationInProgress = true;
       coinsCount = _coinService.flcBalance;
       notifyListeners();
     });
-    await Future.delayed(Duration(seconds: 2), () {
-      coinContentOpacity = 0;
-      notifyListeners();
-    });
-    await Future.delayed(Duration(milliseconds: 300), () {
+    // await Future.delayed(Duration(seconds: 2), () {
+    //   coinContentOpacity = 0;
+    //   notifyListeners();
+    // });
+    await Future.delayed(Duration(milliseconds: 2500), () {
       isCoinAnimationInProgress = false;
       notifyListeners();
     });
-    initNormalFlow();
+    await Future.delayed(Duration(milliseconds: 100), () {
+      initNormalFlow();
+    });
   }
 
   initNormalFlow() {

@@ -93,32 +93,32 @@ class _GTInstantViewState extends State<GTInstantView>
                     child: Lottie.asset("assets/lotties/glitter.json",
                         repeat: false),
                   ),
-                if (model.isCoinAnimationInProgress)
-                  AnimatedOpacity(
-                    opacity: model.coinContentOpacity,
-                    duration: Duration(milliseconds: 300),
-                    curve: Curves.decelerate,
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Lottie.asset(
-                            "assets/lotties/coin-stack.json",
-                            width: SizeConfig.screenWidth / 2,
-                          ),
-                          SizedBox(height: SizeConfig.padding16),
-                          Text(
-                            "${widget.amount.toInt()} Tokens Credited!",
-                            style: TextStyles.title3.bold.colour(Colors.white),
-                            textAlign: TextAlign.center,
-                          ),
-                          SizedBox(height: SizeConfig.screenWidth / 4)
-                        ],
-                      ),
+                // if (model.isCoinAnimationInProgress)
+                AnimatedOpacity(
+                  opacity: model.isCoinAnimationInProgress ? 1 : 0,
+                  duration: Duration(milliseconds: 100),
+                  curve: Curves.decelerate,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Lottie.asset(
+                          "assets/lotties/coin-stack.json",
+                          width: SizeConfig.screenWidth / 2,
+                        ),
+                        SizedBox(height: SizeConfig.padding16),
+                        Text(
+                          "${widget.amount.toInt()} Tokens Credited!",
+                          style: TextStyles.title3.bold.colour(Colors.white),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: SizeConfig.screenWidth / 4)
+                      ],
                     ),
                   ),
+                ),
                 AnimatedOpacity(
                   duration: Duration(milliseconds: 300),
                   opacity: model.isInvestmentAnimationInProgress ? 1 : 0,
@@ -342,33 +342,32 @@ class _GTInstantViewState extends State<GTInstantView>
                       )
                   ],
                 ),
-                // if (model.isCardScratched && model.isShimmerEnabled)
-                //   Align(
-                //     alignment: Alignment.center,
-                //     child: Lottie.asset("assets/lotties/confetti.json",
-                //         height: SizeConfig.screenHeight),
-                //   ),
-                // if (model.isCardScratched && model.isShimmerEnabled)
-                Container(
-                  height: 100,
-                  width: 100,
-                  child: ConfettiWidget(
-                    blastDirectionality: BlastDirectionality.explosive,
-                    confettiController: model.confettiController,
-                    particleDrag: 0.05,
-                    emissionFrequency: 0.05,
-                    numberOfParticles: 25,
-                    gravity: 0.05,
-                    shouldLoop: false,
-                    colors: [
-                      Color(0xffa864fd),
-                      Color(0xff29cdff),
-                      Color(0xff78ff44),
-                      Color(0xffff718d),
-                      Color(0xfffdff6a),
-                    ],
+                if (model.isCardScratched && model.isShimmerEnabled)
+                  Align(
+                    alignment: Alignment.center,
+                    child: Lottie.asset("assets/lotties/confetti.json",
+                        height: SizeConfig.screenWidth * 0.8),
                   ),
-                ),
+                // if (model.isCardScratched && model.isShimmerEnabled)
+                // Container(
+                //   height: 100,
+                //   width: 100,
+                //   child: ConfettiWidget(
+                //     blastDirectionality: BlastDirectionality.directional,
+                //     blastDirection: 90,
+                //     confettiController: model.confettiController,
+                //     emissionFrequency: 0.05,
+                //     numberOfParticles: 25,
+                //     shouldLoop: false,
+                //     colors: [
+                //       Color(0xffa864fd),
+                //       Color(0xff29cdff),
+                //       Color(0xff78ff44),
+                //       Color(0xffff718d),
+                //       Color(0xfffdff6a),
+                //     ],
+                //   ),
+                // ),
                 if (model.showScratchGuide && !model.isCardScratchStarted)
                   Align(
                     alignment: Alignment.center,
