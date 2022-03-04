@@ -4,7 +4,6 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -21,7 +20,6 @@ class ReferralDetailsViewModel extends BaseModel {
   final CustomLogger _logger = locator<CustomLogger>();
   final _baseUtil = locator<BaseUtil>();
   final _dbModel = locator<DBModel>();
-  final _razorpayModel = locator<RazorpayModel>();
   final _fcmListener = locator<FcmListener>();
   final _userService = locator<UserService>();
   final _analyticsService = locator<AnalyticsService>();

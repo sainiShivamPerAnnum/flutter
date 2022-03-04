@@ -8,7 +8,6 @@ import 'package:felloapp/core/model/deposit_response_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/core/repository/investment_actions_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/api_service.dart';
@@ -39,7 +38,6 @@ class AugmontModel extends ChangeNotifier {
       locator<InvestmentActionsRepository>();
 
   final DBModel _dbModel = locator<DBModel>();
-  final RazorpayModel _rzpGateway = locator<RazorpayModel>();
   final BaseUtil _baseProvider = locator<BaseUtil>();
   final UserService _userService = locator<UserService>();
   final _userCoinService = locator<UserCoinService>();
@@ -169,95 +167,7 @@ class AugmontModel extends ChangeNotifier {
       }
     }
   }
-
-  ///create a new transaction object and set all fields
-  ///call razorpay to initiate purchase for given amount
-  ///wait for callback from razorpay payment completion
-  ///update db object
-  Future<UserTransaction> initiateGoldPurchase(
-      AugmontRates buyRates, double amount,
-      {String couponCode = ""}) async {
-    if (!isInit()) await _init();
-
-    if (_baseProvider.augmontDetail == null ||
-        _baseProvider.augmontDetail.userId == null ||
-        _baseProvider.augmontDetail.userName == null ||
-        buyRates == null ||
-        amount == null ||
-        amount <= 0) {
-      return null;
-    }
-
-    //Will be removed in paytm flow.
-    _tranIdResponse = await _investmentActionsRepository.createTranId(
-        userUid: _userService.baseUser.uid);
-    if (_tranIdResponse.code != 200 ||
-        _tranIdResponse.model == null ||
-        _tranIdResponse.model.isEmpty) {
-      _logger.e('Failed to create a transaction id');
-      return null;
-    }
-
-    String _note1 =
-        'BlockID: ${buyRates.blockId},gPrice: ${buyRates.goldBuyPrice}';
-    String _note2 =
-        'UserId:${_userService.baseUser.uid},MerchantTxnID: ${_tranIdResponse.model}';
-
-    //Will be removed in paytm flow.
-    String rzpOrderId = await _rzpGateway.createOrderId(amount,
-        _userService.baseUser.uid, _tranIdResponse.model, _note1, _note2);
-    if (rzpOrderId == null) {
-      _logger.e("Received null from create Order id");
-      return null;
-    }
-
-    double netTax = buyRates.cgstPercent + buyRates.sgstPercent;
-
-    Map<String, dynamic> _initAugMap = {
-      "aBlockId": buyRates.blockId.toString(),
-      "aLockPrice": buyRates.goldBuyPrice,
-      "aPaymode": "RZP",
-      "aGoldInTxn": getGoldQuantityFromTaxedAmount(
-          BaseUtil.digitPrecision(amount - getTaxOnAmount(amount, netTax)),
-          buyRates.goldBuyPrice),
-      "aTaxedGoldBalance":
-          BaseUtil.digitPrecision(amount - getTaxOnAmount(amount, netTax))
-    };
-
-    Map<String, dynamic> _initRzpMap = {"rOrderId": rzpOrderId};
-
-    _initialDepositResponse =
-        await _investmentActionsRepository.initiateUserDeposit(
-            tranId: _tranIdResponse.model,
-            userUid: _userService.baseUser.uid,
-            amount: amount,
-            couponCode: couponCode,
-            initAugMap: _initAugMap,
-            initRzpMap: _initRzpMap);
-
-    if (_initialDepositResponse.code == 200) {
-      _baseProvider.currentAugmontTxn = _initialDepositResponse
-          .model.response.transactionDoc.transactionDetail;
-
-      UserTransaction tTxn = await _rzpGateway.submitAugmontTransaction(
-          _baseProvider.currentAugmontTxn,
-          _userService.baseUser.mobile,
-          _userService.baseUser.email);
-
-      if (tTxn != null) {
-        _baseProvider.currentAugmontTxn = tTxn;
-        _rzpGateway.setTransactionListener(_onRazorpayPaymentProcessed);
-      }
-    } else {
-      _dbModel.logFailure(
-          _userService.baseUser.uid,
-          FailType.InitiateUserDepositApiFailed,
-          {'message': _initialDepositResponse?.errorMessage});
-      return null;
-    }
-
-    return _baseProvider.currentAugmontTxn;
-  }
+  
 
   Future<List<GoldGraphPoint>> getGoldRateChart(
       DateTime fromTime, DateTime toTime) async {
@@ -754,8 +664,7 @@ class AugmontModel extends ChangeNotifier {
     _augmontTxnProcessListener = listener;
   }
 
-  completeTransaction() {
-    _rzpGateway.cleanListeners();
+completeTransaction() {
     _baseProvider.currentAugmontTxn = null;
     _augmontTxnProcessListener = null;
 

@@ -575,68 +575,6 @@ class AugmontGoldBuyViewModel extends BaseModel {
     );
   }
 
-  // Future<void> _onDepositTransactionComplete(UserTransaction txn) async {
-  //   resetBuyOptions();
-  //   if (txn.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE) {
-  //     if (_baseUtil.currentAugmontTxn != null) {
-  //       ///if this was the user's first investment
-  //       ///- update AugmontDetail obj
-  //       ///- add notification subscription
-
-  //       if (!_baseUtil.augmontDetail.firstInvMade) {
-  //         _baseUtil.augmontDetail.firstInvMade = true;
-
-  //         bool _aflag = await _dbModel.updateUserAugmontDetails(
-  //             _baseUtil.myUser.uid, _baseUtil.augmontDetail);
-  //         if (_aflag) {
-  //           _fcmListener.removeSubscription(FcmTopic.MISSEDCONNECTION);
-  //           _fcmListener.addSubscription(FcmTopic.GOLDINVESTOR);
-  //         }
-  //       }
-
-  //       ///check if referral bonuses need to be unlocked
-  //       // if (_userService.userFundWallet.augGoldPrinciple >=
-  //       //     BaseUtil.toInt(BaseRemoteConfig.remoteConfig
-  //       //         .getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT))) {
-  //       //   bool _isUnlocked =
-  //       //       await _dbModel.unlockReferralTickets(_baseUtil.myUser.uid);
-  //       //   // if (_isUnlocked) {
-  //       // }
-
-  //       ///update UI
-  //       onDepositComplete(true, txn);
-  //       _augmontModel.completeTransaction();
-  //       return true;
-  //     }
-  //   } else if (txn.tranStatus == UserTransaction.TRAN_STATUS_CANCELLED) {
-  //     //razorpay payment failed
-  //     _logger.d('Payment cancelled');
-  //     if (_baseUtil.currentAugmontTxn != null) {
-  //       onDepositComplete(false, txn);
-  //       _augmontModel.completeTransaction();
-  //     }
-  //   } else if (txn.tranStatus == UserTransaction.TRAN_STATUS_PENDING) {
-  //     //razorpay completed but augmont purchase didnt go through
-  //     _logger.d('Payment pending');
-  //     if (_baseUtil.currentAugmontTxn != null) {
-  //       onDepositComplete(false, txn);
-  //       _augmontModel.completeTransaction();
-  //     }
-  //   }
-  // }
-
-  onDepositComplete(bool flag, UserTransaction txn) async {
-    bool gtFlag = await _gtService.fetchAndVerifyGoldenTicketByID();
-    isGoldBuyInProgress = false;
-    if (flag) {
-      if (gtFlag)
-        _gtService.showInstantGoldenTicketView(
-            title: '₹${txn.amount.toStringAsFixed(0)} saved!',
-            source: GTSOURCE.deposit);
-      else
-        showSuccessGoldBuyDialog(txn);
-    }
-  }
 
   getAmount(double amount) {
     if (amount > amount.toInt())
