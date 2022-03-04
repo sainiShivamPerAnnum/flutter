@@ -287,13 +287,14 @@ class AugmontGoldBuyViewModel extends BaseModel {
     _logger.i("Updating response value.");
 
     try {
-      final DepositFcmResponseModel depositFcmResponseModel =
-          DepositFcmResponseModel.fromJson(json.decode(fcmDataPayload));
-
       if (AppState.screenStack.last == ScreenItem.loader) {
         AppState.screenStack.removeLast();
         Navigator.pop(AppState.delegate.navigatorKey.currentContext);
+        await Future.delayed(Duration(seconds: 1));
       }
+
+      final DepositFcmResponseModel depositFcmResponseModel =
+          DepositFcmResponseModel.fromJson(json.decode(fcmDataPayload));
 
       //Handle failed condition here.
       if (!depositFcmResponseModel.status) {
