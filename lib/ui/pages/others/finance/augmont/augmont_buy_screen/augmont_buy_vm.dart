@@ -366,13 +366,13 @@ class AugmontGoldBuyViewModel extends BaseModel {
       );
       return;
     }
-    // if (buyAmount < 10) {
-    //   BaseUtil.showNegativeAlert(
-    //     'Minimum amount should be ₹ 10',
-    //     'Please enter a minimum purchase amount of ₹ 10',
-    //   );
-    //   return;
-    // }
+    if (buyAmount < 10) {
+      BaseUtil.showNegativeAlert(
+        'Minimum amount should be ₹ 10',
+        'Please enter a minimum purchase amount of ₹ 10',
+      );
+      return;
+    }
 
     if (_baseUtil.augmontDetail == null) {
       BaseUtil.showNegativeAlert(
