@@ -416,6 +416,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
         restrictAppInvoke: true);
 
     isGoldBuyInProgress = false;
+    resetBuyOptions();
 
     if (_status) {
       Future.delayed(Duration(seconds: 30), () async {
