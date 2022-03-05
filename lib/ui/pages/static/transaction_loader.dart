@@ -4,14 +4,15 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
-class Loader extends StatefulWidget {
-  const Loader({Key key}) : super(key: key);
+class TransactionLoader extends StatefulWidget {
+  const TransactionLoader({Key key}) : super(key: key);
 
   @override
-  State<Loader> createState() => _LoaderState();
+  State<TransactionLoader> createState() => _TransactionLoaderState();
 }
 
-class _LoaderState extends State<Loader> with SingleTickerProviderStateMixin {
+class _TransactionLoaderState extends State<TransactionLoader>
+    with SingleTickerProviderStateMixin {
   Animation<Duration> animation;
   AnimationController controller;
 

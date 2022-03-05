@@ -1,17 +1,16 @@
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_analytics.dart';
+import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -21,7 +20,6 @@ class ReferralDetailsViewModel extends BaseModel {
   final CustomLogger _logger = locator<CustomLogger>();
   final _baseUtil = locator<BaseUtil>();
   final _dbModel = locator<DBModel>();
-  final _razorpayModel = locator<RazorpayModel>();
   final _fcmListener = locator<FcmListener>();
   final _userService = locator<UserService>();
   final _analyticsService = locator<AnalyticsService>();

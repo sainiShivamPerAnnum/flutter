@@ -22,33 +22,36 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   User _firebaseUser;
   BaseUser _baseUser;
+
   String _myUserDpUrl;
   String _myUserName;
   String _dob;
   String _gender;
   String _idToken;
+
   UserFundWallet _userFundWallet;
+
   bool _isEmailVerified;
   bool _isSimpleKycVerified;
   bool _isConfirmationDialogOpen = false;
+  bool _hasNewNotifications = false;
+  bool showOnboardingTutorial = false;
 
   User get firebaseUser => _firebaseUser;
   BaseUser get baseUser => _baseUser;
+
   String get myUserDpUrl => _myUserDpUrl;
   String get myUserName => _myUserName;
   String get idToken => _idToken;
   String get dob => _dob;
   String get gender => _gender;
+
   bool get isEmailVerified => _isEmailVerified ?? false;
   bool get isSimpleKycVerified => _isSimpleKycVerified ?? false;
-  bool _hasNewNotifications = false;
-  bool showOnboardingTutorial = false;
+  bool get isConfirmationDialogOpen => _isConfirmationDialogOpen;
+  bool get hasNewNotifications => _hasNewNotifications;
 
   FocusScopeNode buyFieldFocusNode = FocusScopeNode();
-
-  bool get isConfirmationDialogOpen => _isConfirmationDialogOpen;
-
-  bool get hasNewNotifications => _hasNewNotifications;
 
   set baseUser(baseUser) {
     _baseUser = baseUser;
@@ -63,9 +66,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   UserFundWallet get userFundWallet => _userFundWallet;
 
-  set firebaseUser(User firebaseUser) {
-    _firebaseUser = firebaseUser;
-  }
+  set firebaseUser(User firebaseUser) => _firebaseUser = firebaseUser;
 
   setMyUserDpUrl(String url) {
     _myUserDpUrl = url;

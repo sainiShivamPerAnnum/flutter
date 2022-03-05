@@ -9,26 +9,6 @@ class LocalDBModel extends ChangeNotifier {
   LocalApi _api = locator<LocalApi>();
   final Log log = new Log("LocalDBModel");
 
-  // Future<BaseUser> getUser() async {
-  //   try{
-  //     List<String> contents = await _api.readUserFile();
-  //     return BaseUser.parseFile(contents);
-  //   }catch(e) {
-  //     log.error("Unable to fetch user from local store." + e.toString());
-  //     return null;
-  //   }
-  // }
-  //
-  // Future<bool> saveUser(BaseUser user) async{
-  //   try {
-  //     await _api.writeUserFile(user.toFileString());
-  //     return true;
-  //   }catch(e) {
-  //     log.error("Failed to store user details in local db: " + e.toString());
-  //     return false;
-  //   }
-  // }
-
   Future<int> isTambolaResultProcessingDone() async {
     try {
       final file = await _api.tambolaResultFile;

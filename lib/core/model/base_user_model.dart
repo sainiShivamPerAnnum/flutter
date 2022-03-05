@@ -51,6 +51,7 @@ class BaseUser {
   static final String fldUserPrefs = "mUserPrefs";
   static final String fldCreatedOn = "mCreatedOn";
   static final String fldKycName = "mKycName";
+  static final String fldStateId = "stateId";
 
   BaseUser(
       this.uid,

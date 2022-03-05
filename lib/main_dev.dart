@@ -15,6 +15,7 @@ void main() async {
       razorpayStage: RazorpayStage.DEV,
       signzyStage: SignzyStage.PROD,
       signzyPanStage: SignzyPanStage.DEV,
+      paytmStage: PaytmStage.DEV,
       baseUriUS: 'us-central1-fello-dev-station.cloudfunctions.net',
       baseUriAsia: 'asia-south1-fello-dev-station.cloudfunctions.net',
       mixpanelToken: MixpanelAnalytics.DEV_TOKEN,

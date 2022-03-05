@@ -1,13 +1,9 @@
-import 'package:felloapp/core/enums/screen_item_enum.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
-import 'package:felloapp/ui/pages/static/loader.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -84,23 +80,6 @@ class Save extends StatelessWidget {
                       model.showInstantTestGT();
                     },
                     child: Text("Show instant gt"),
-                  ),
-
-                  TextButton(
-                    onPressed: () {
-                      AppState.screenStack.add(ScreenItem.dialog);
-
-                      Navigator.of(
-                              AppState.delegate.navigatorKey.currentContext)
-                          .push(
-                        PageRouteBuilder(
-                          opaque: false,
-                          pageBuilder: (BuildContext context, _, __) =>
-                              Loader(),
-                        ),
-                      );
-                    },
-                    child: Text("Show loader screen"),
                   ),
 
                   SizedBox(height: SizeConfig.navBarHeight * 2),

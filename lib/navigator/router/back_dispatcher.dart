@@ -4,8 +4,8 @@ import 'dart:developer';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/service/golden_ticket_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
@@ -55,6 +55,8 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
   @override
   Future<bool> didPopRoute() {
+    if (AppState.screenStack.last == ScreenItem.loader) return null;
+
     Future.delayed(Duration(milliseconds: 20), () {
       if (_userService.buyFieldFocusNode.hasPrimaryFocus ||
           _userService.buyFieldFocusNode.hasFocus) {

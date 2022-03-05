@@ -4,7 +4,7 @@ import 'dart:async';
 import 'dart:math';
 //Pub Imports
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:felloapp/core/base_analytics.dart';
+import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
@@ -26,10 +26,10 @@ import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
-import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
-import 'package:felloapp/core/service/pan_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/pan_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/constants.dart';
@@ -294,7 +294,6 @@ class BaseUtil extends ChangeNotifier {
     ];
   }
 
-
   Future<bool> isUnreadFreshchatSupportMessages() async {
     try {
       var unreadCount = await Freshchat.getUnreadCountAsync;
@@ -362,7 +361,7 @@ class BaseUtil extends ChangeNotifier {
     return (!skFlag && !augFlag);
   }
 
-  static showPositiveAlert(String title, String message, {int seconds}) {
+  static showPositiveAlert(String title, String message, {int seconds = 3}) {
     // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Flushbar(
@@ -377,7 +376,7 @@ class BaseUtil extends ChangeNotifier {
         borderRadius: 8,
         title: title,
         message: message,
-        duration: Duration(seconds: 3),
+        duration: Duration(seconds: seconds),
         backgroundGradient: LinearGradient(
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,

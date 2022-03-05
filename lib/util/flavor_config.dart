@@ -11,6 +11,7 @@ class FlavorValues {
     @required this.signzyStage,
     @required this.signzyPanStage,
     @required this.razorpayStage,
+    @required this.paytmStage,
     @required this.baseUriAsia,
     @required this.baseUriUS,
     @required this.dynamicLinkPrefix,
@@ -23,6 +24,7 @@ class FlavorValues {
   final SignzyStage signzyStage;
   final SignzyPanStage signzyPanStage;
   final RazorpayStage razorpayStage;
+  final PaytmStage paytmStage;
   final String baseUriAsia;
   final String baseUriUS;
   final String dynamicLinkPrefix;
