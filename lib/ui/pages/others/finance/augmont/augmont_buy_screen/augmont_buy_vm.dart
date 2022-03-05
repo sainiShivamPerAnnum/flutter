@@ -285,9 +285,11 @@ class AugmontGoldBuyViewModel extends BaseModel {
   fcmTransactionResponseUpdate(fcmDataPayload) async {
     //Stop loader if loading.
     _logger.i("Updating response value.");
+    bool isLoaderOnScreen = false;
 
     try {
       if (AppState.screenStack.last == ScreenItem.loader) {
+        isLoaderOnScreen = true;
         AppState.screenStack.removeLast();
         Navigator.pop(AppState.delegate.navigatorKey.currentContext);
         await Future.delayed(Duration(seconds: 1));
@@ -317,14 +319,16 @@ class AugmontGoldBuyViewModel extends BaseModel {
         _userCoinService.setFlcBalance(newFlcBalance);
       }
 
-      if (depositFcmResponseModel.gtId != null) {
-        GoldenTicketService.goldenTicketId = depositFcmResponseModel.gtId;
-        if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
-          _gtService.showInstantGoldenTicketView(
-              title: '₹${depositFcmResponseModel.amount} saved.',
-              source: GTSOURCE.deposit);
-        } else {
-          showSuccessGoldBuyDialog(depositFcmResponseModel.amount);
+      if (isLoaderOnScreen) {
+        if (depositFcmResponseModel.gtId != null) {
+          GoldenTicketService.goldenTicketId = depositFcmResponseModel.gtId;
+          if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
+            _gtService.showInstantGoldenTicketView(
+                title: '₹${depositFcmResponseModel.amount} saved.',
+                source: GTSOURCE.deposit);
+          } else {
+            showSuccessGoldBuyDialog(depositFcmResponseModel.amount);
+          }
         }
       }
 
@@ -574,7 +578,6 @@ class AugmontGoldBuyViewModel extends BaseModel {
       content: AugmontCouponsModalSheet(model: model),
     );
   }
-
 
   getAmount(double amount) {
     if (amount > amount.toInt())
