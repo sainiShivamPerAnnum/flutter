@@ -93,11 +93,11 @@ class GTDetailedViewModel extends BaseModel {
     });
   }
 
-  share(GoldenTicket ticket) async {
-    isShareLoading = true;
-    _gtService.shareGoldenTicket(ticket);
-    Future.delayed(Duration(seconds: 2), () {
-      isShareLoading = false;
-    });
-  }
+  // share(GoldenTicket ticket) async {
+  //   isShareLoading = true;
+  //   _gtService.shareGoldenTicket(ticket);
+  //   Future.delayed(Duration(seconds: 2), () {
+  //     isShareLoading = false;
+  //   });
+  // }
 }
