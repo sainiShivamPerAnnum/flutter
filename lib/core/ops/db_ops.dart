@@ -301,7 +301,6 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-
   ///////////////////////AUGMONT/////////////////////////////
   Future<UserAugmontDetail> getUserAugmontDetails(String id) async {
     try {
@@ -1389,6 +1388,20 @@ class DBModel extends ChangeNotifier {
       events = [];
     }
     return events;
+  }
+
+  Future<EventModel> getSingleEventDetails(String eventType) async {
+    EventModel event;
+    try {
+      Map<String, dynamic> response = await _api.fetchSingleEvent(eventType);
+      if (response != null && response.isNotEmpty) {
+        event = EventModel.fromMap(response);
+      }
+    } catch (e) {
+      logger.e(e.toString());
+    }
+
+    return event;
   }
 
   Future<List<CouponModel>> getCoupons() async {

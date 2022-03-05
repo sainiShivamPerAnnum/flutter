@@ -639,8 +639,14 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'blocked':
         pageConfiguration = BlockedUserPageConfig;
         break;
-      case 'topSaver':
-        pageConfiguration = TopSaverViewPageConfig;
+      case 'dailySaver':
+        openTopSaverScreen("SAVER_DAILY");
+        break;
+      case 'weeklySaver':
+        openTopSaverScreen("SAVER_WEEKLY");
+        break;
+      case 'monthlySaver':
+        openTopSaverScreen("SAVER_MONTHLY");
         break;
       case 'milestones':
         pageConfiguration = GoldenMilestonesViewPageConfig;
@@ -656,5 +662,14 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       addPage(pageConfiguration);
       notifyListeners();
     }
+  }
+
+  openTopSaverScreen(String eventType) {
+    AppState.delegate.appState.currentAction = PageAction(
+        state: PageState.addWidget,
+        widget: TopSaverView(
+          eventType: eventType,
+        ),
+        page: TopSaverViewPageConfig);
   }
 }

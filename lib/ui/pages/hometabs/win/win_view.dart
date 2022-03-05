@@ -131,7 +131,7 @@ class EventCard extends StatelessWidget {
         AppState.delegate.appState.currentAction = PageAction(
             state: PageState.addWidget,
             widget: TopSaverView(
-              event: event,
+              eventType: event.type,
             ),
             page: AugmontGoldSellPageConfig);
       },
