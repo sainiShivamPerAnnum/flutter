@@ -56,7 +56,7 @@ class UserRepository {
       return ApiResponse(
           code: 200, model: {"flag": res['flag'], "gtId": res['gtId']});
     } catch (e) {
-      ApiResponse.withError("User not added to firestore", 400);
+      ApiResponse.withError(e.toString(), 400);
     }
   }
 

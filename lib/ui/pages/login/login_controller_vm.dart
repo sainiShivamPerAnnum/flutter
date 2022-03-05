@@ -302,6 +302,7 @@ class LoginControllerViewModel extends BaseModel {
 
                 userService.baseUser.username = username;
                 bool flag = false;
+                String message = "Please try again in sometime";
                 logger.d(userService.baseUser.toJson().toString());
 
                 try {
@@ -310,12 +311,19 @@ class LoginControllerViewModel extends BaseModel {
                   final ApiResponse response = await _userRepo.setNewUser(
                       userService.baseUser, token, cstate);
 
-                  final gtId = response.model['gtId'];
-                  response.model['flag'] ? flag = true : flag = false;
+                  if (response.code == 400) {
+                    message = response.errorMessage ??
+                        "Unable to create account, please try again later.";
+                    _usernameKey.currentState.model.enabled = true;
+                    flag = false;
+                  } else {
+                    final gtId = response.model['gtId'];
+                    response.model['flag'] ? flag = true : flag = false;
 
-                  logger.d("Is Golden Ticket Rewarded: $gtId");
-                  if (gtId != null && gtId.toString().isNotEmpty)
-                    GoldenTicketService.goldenTicketId = gtId;
+                    logger.d("Is Golden Ticket Rewarded: $gtId");
+                    if (gtId != null && gtId.toString().isNotEmpty)
+                      GoldenTicketService.goldenTicketId = gtId;
+                  }
                 } catch (e) {
                   logger.d(e);
                   _usernameKey.currentState.model.enabled = false;
@@ -333,9 +341,9 @@ class LoginControllerViewModel extends BaseModel {
                 } else {
                   BaseUtil.showNegativeAlert(
                     'Update failed',
-                    'Please try again in sometime',
+                    message,
                   );
-                  _usernameKey.currentState.model.enabled = false;
+                  _usernameKey.currentState.model.enabled = true;
 
                   setState(ViewState.Idle);
                 }
