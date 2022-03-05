@@ -31,12 +31,12 @@ class ApiPath {
   get kGetGoldRates => "/augmontOps/$stage/api/rates";
 
   //User Ops Apis
-  get kAddNewUser => "/userOps/$stage/api/v2/newuser";
-  get kAmountTransfer => "/userOps/$stage/api/v2/accountTransfer";
-  get kVerifyTransfer => "/userOps/$stage/api/v2/verifyTransfer";
-  get kVerifyPan => "/userOps/$stage/api/v2/verifyPan";
-  get kCustomAuthToken => "/userOps/$stage/api/v2/trucallerAuthToken";
-  static const acquisitionTracking = "/userOps/api/opt-analytics";
+  get kAddNewUser => "/userOps/$stage/api/v3/newuser";
+  get kAmountTransfer => "/userOps/$stage/api/v3/accountTransfer";
+  get kVerifyTransfer => "/userOps/$stage/api/v3/verifyTransfer";
+  get kVerifyPan => "/userOps/$stage/api/v3/verifyPan";
+  get kCustomAuthToken => "/userOps/$stage/api/v3/trucallerAuthToken";
+  static const acquisitionTracking = "/userOps/api/v3/opt-analytics";
 
   //GT Rewards
   get kRedeemGtReward => "/gtRewardsOps/$stage/v2/api/redeemGtReward";
