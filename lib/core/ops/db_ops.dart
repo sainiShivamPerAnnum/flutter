@@ -19,7 +19,6 @@ import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/model/tambola_winners_details.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
-import 'package:felloapp/core/model/user_icici_detail_model.dart';
 import 'package:felloapp/core/model/user_ticket_wallet_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/api.dart';
@@ -301,7 +300,6 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-
   ///////////////////////AUGMONT/////////////////////////////
   Future<UserAugmontDetail> getUserAugmontDetails(String id) async {
     try {
@@ -317,6 +315,23 @@ class DBModel extends ChangeNotifier {
       String userId, UserAugmontDetail augDetail) async {
     try {
       await _api.updateUserAugmontDetailDocument(userId, augDetail.toJson());
+      return true;
+    } catch (e) {
+      log.error("Failed to update user augmont detail object: " + e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> updateAugmontBankDetails(
+      String userId, String accNo, String ifsc, String bankHolderName) async {
+    try {
+      Map<String, dynamic> updatePayload = {};
+      updatePayload[UserAugmontDetail.fldBankAccNo] = accNo;
+      updatePayload[UserAugmontDetail.fldBankHolderName] = bankHolderName;
+      updatePayload[UserAugmontDetail.fldIfsc] = ifsc;
+      updatePayload[UserAugmontDetail.fldUpdatedTime] = Timestamp.now();
+
+      await _api.updateUserAugmontDetailDocument(userId, updatePayload);
       return true;
     } catch (e) {
       log.error("Failed to update user augmont detail object: " + e.toString());

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_analytics.dart';
+import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -11,12 +11,12 @@ import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
-import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
-import 'package:felloapp/core/service/golden_ticket_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -299,52 +299,50 @@ class LoginControllerViewModel extends BaseModel {
               if (await dbProvider.checkIfUsernameIsAvailable(username)) {
                 _usernameKey.currentState.model.enabled = false;
                 notifyListeners();
-                bool res = await dbProvider.setUsername(
-                    username, userService.firebaseUser.uid);
-                if (res) {
-                  userService.baseUser.username = username;
-                  bool flag = false;
-                  logger.d(userService.baseUser.toJson().toString());
 
-                  try {
-                    final token = await _getBearerToken();
-                    userService.baseUser.mobile = userMobile;
-                    final ApiResponse response =
-                        await _userRepo.setNewUser(userService.baseUser, token);
+                userService.baseUser.username = username;
+                bool flag = false;
+                String message = "Please try again in sometime";
+                logger.d(userService.baseUser.toJson().toString());
 
-                    final gtId = response.model['gtId'];
-                    response.model['flag'] ? flag = true : flag = false;
+                try {
+                  final token = await _getBearerToken();
+                  userService.baseUser.mobile = userMobile;
+                  final ApiResponse response = await _userRepo.setNewUser(
+                      userService.baseUser, token, cstate);
 
-                    logger.d("Is Golden Ticket Rewarded: $gtId");
-                    if (gtId != null && gtId.toString().isNotEmpty)
-                      GoldenTicketService.goldenTicketId = gtId;
-                  } catch (e) {
-                    logger.d(e);
+                  if (response.code == 400) {
                     _usernameKey.currentState.model.enabled = false;
                     flag = false;
                   }
 
-                  if (flag) {
-                    _analyticsService.track(
-                      eventName: AnalyticsEvents.signupName,
-                      properties: {'userId': userService?.baseUser?.uid},
-                    );
-                    logger.d("User object saved successfully");
-                    userService.showOnboardingTutorial = true;
-                    _onSignUpComplete();
-                  } else {
-                    BaseUtil.showNegativeAlert(
-                      'Update failed',
-                      'Please try again in sometime',
-                    );
-                    _usernameKey.currentState.model.enabled = false;
+                  final gtId = response.model['gtId'];
+                  response.model['flag'] ? flag = true : flag = false;
+                  message = response?.model['message'] != null
+                      ? response.model['message']
+                      : message;
 
-                    setState(ViewState.Idle);
-                  }
+                  logger.d("Is Golden Ticket Rewarded: $gtId");
+                  if (gtId != null && gtId.toString().isNotEmpty)
+                    GoldenTicketService.goldenTicketId = gtId;
+                } catch (e) {
+                  logger.d(e);
+                  _usernameKey.currentState.model.enabled = false;
+                  flag = false;
+                }
+
+                if (flag) {
+                  _analyticsService.track(
+                    eventName: AnalyticsEvents.signupName,
+                    properties: {'userId': userService?.baseUser?.uid},
+                  );
+                  logger.d("User object saved successfully");
+                  userService.showOnboardingTutorial = true;
+                  _onSignUpComplete();
                 } else {
                   BaseUtil.showNegativeAlert(
-                    'Username update failed',
-                    'Please try again in sometime',
+                    'Update failed',
+                    message,
                   );
                   _usernameKey.currentState.model.enabled = false;
 

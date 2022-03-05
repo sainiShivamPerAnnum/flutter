@@ -1,6 +1,6 @@
 import 'package:felloapp/core/enums/leaderboard_service_enum.dart';
 import 'package:felloapp/core/model/leader_board_modal.dart';
-import 'package:felloapp/core/service/leaderboard_service.dart';
+import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';

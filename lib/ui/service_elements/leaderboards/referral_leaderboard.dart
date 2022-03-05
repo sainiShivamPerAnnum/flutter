@@ -1,5 +1,5 @@
 import 'package:felloapp/core/enums/leaderboard_service_enum.dart';
-import 'package:felloapp/core/service/leaderboard_service.dart';
+import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/util/assets.dart';

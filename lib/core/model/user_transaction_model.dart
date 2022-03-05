@@ -17,10 +17,12 @@ class UserTransaction {
   Map<String, dynamic> _icici;
   Map<String, dynamic> _rzp;
   Map<String, dynamic> _augmnt;
+  Map<String, dynamic> _paytmMap;
   Timestamp _timestamp;
   Timestamp _updatedTime;
 
   static final String fldAmount = 'tAmount';
+  static final String fldPaytmMap = 'paytmMap';
   static final String fldClosingBalance = 'tClosingBalance';
   static final String fldNote = 'tNote';
   static final String fldSubType = 'tSubtype';
@@ -34,6 +36,16 @@ class UserTransaction {
   static final String fldUserId = 'tUserId';
   static final String fldTimestamp = 'timestamp';
   static final String fldUpdatedTime = 'tUpdateTime';
+
+  ///paytm submap feilds
+  static final String subFldPaytmBankName = 'bankName';
+  static final String subFldPaytmBankTranId = 'bankTxnId';
+  static final String subFldPaytmGatewayName = 'gatewayName';
+  static final String subFldPaytmPaymentMode = 'paymentMode';
+  static final String subFldPaytmStatus = 'status';
+  static final String subFldPaytmTxnAmount = 'txnAmount';
+  static final String subFldPaytmTxnDate = 'txnDate';
+  static final String subFldPaytmTxnId = 'txnId';
 
   ///razorpay submap fields
   static final String subFldRzpOrderId = 'rOrderId';
@@ -65,7 +77,6 @@ class UserTransaction {
   static const String TRAN_STATUS_CANCELLED = 'CANCELLED';
   static const String TRAN_STATUS_REFUNDED = 'REFUNDED';
   static const String TRAN_STATUS_PROCESSING = 'PROCESSING';
-
 
   ///Razorpay payment status
   static const String RZP_TRAN_STATUS_NEW = 'NEW';
@@ -105,6 +116,7 @@ class UserTransaction {
       this._rzp,
       this._augmnt,
       this._timestamp,
+      this._paytmMap,
       this._updatedTime);
 
   UserTransaction.fromMap(Map<String, dynamic> data, String documentID)
@@ -123,6 +135,7 @@ class UserTransaction {
             data[fldRzpMap],
             data[fldAugmontMap],
             data[fldTimestamp],
+            data[fldPaytmMap],
             data[fldUpdatedTime]);
 
   UserTransaction.fromJSON(Map<String, dynamic> data, String documentID)
@@ -141,79 +154,81 @@ class UserTransaction {
             data[fldRzpMap],
             data[fldAugmontMap],
             null,
+            data[fldPaytmMap],
             null);
   //TODO JSON response received as HashMap for Timestamps
 
-  //ICICI investment initiated by new investor
-  UserTransaction.mfDeposit(String tranId, String multipleId,
-      String upiTimestamp, double amount, String userId)
-      : this(
-            null,
-            amount,
-            0,
-            'NA',
-            TRAN_SUBTYPE_ICICI,
-            TRAN_TYPE_DEPOSIT,
-            null,
-            0,
-            userId,
-            TRAN_STATUS_PENDING,
-            {
-              subFldIciciTranId: tranId,
-              subFldIciciMultipleId: multipleId,
-              subFldIciciUpiTime: upiTimestamp
-            },
-            null,
-            null,
-            Timestamp.now(),
-            Timestamp.now());
+  // //ICICI investment initiated by new investor
+  // UserTransaction.mfDeposit(String tranId, String multipleId,
+  //     String upiTimestamp, double amount, String userId)
+  //     : this(
+  //           null,
+  //           amount,
+  //           0,
+  //           'NA',
+  //           TRAN_SUBTYPE_ICICI,
+  //           TRAN_TYPE_DEPOSIT,
+  //           null,
+  //           0,
+  //           userId,
+  //           TRAN_STATUS_PENDING,
+  //           {
+  //             subFldIciciTranId: tranId,
+  //             subFldIciciMultipleId: multipleId,
+  //             subFldIciciUpiTime: upiTimestamp
+  //           },
+  //           null,
+  //           null,
+  //           Timestamp.now(),
+  //           data[fldPaytmMap],
+  //           Timestamp.now());
 
   //ICICI withdrawal initiated and completed by active investor
-  UserTransaction.mfWithdrawal(String tranId, String bankRnn, String note,
-      String upiTimestamp, double amount, String userId)
-      : this(
-            null,
-            amount,
-            0,
-            note ?? 'NA',
-            TRAN_SUBTYPE_ICICI,
-            TRAN_TYPE_WITHDRAW,
-            null,
-            0,
-            userId,
-            TRAN_STATUS_COMPLETE,
-            {
-              subFldIciciTranId: tranId,
-              subFldIciciBankRnn: bankRnn,
-              subFldIciciUpiTime: upiTimestamp
-            },
-            null,
-            null,
-            Timestamp.now(),
-            Timestamp.now());
+  // UserTransaction.mfWithdrawal(String tranId, String bankRnn, String note,
+  //     String upiTimestamp, double amount, String userId)
+  //     : this(
+  //           null,
+  //           amount,
+  //           0,
+  //           note ?? 'NA',
+  //           TRAN_SUBTYPE_ICICI,
+  //           TRAN_TYPE_WITHDRAW,
+  //           null,
+  //           0,
+  //           userId,
+  //           TRAN_STATUS_COMPLETE,
+  //           {
+  //             subFldIciciTranId: tranId,
+  //             subFldIciciBankRnn: bankRnn,
+  //             subFldIciciUpiTime: upiTimestamp
+  //           },
+  //           null,
+  //           null,
+  //           Timestamp.now(),
+  //           Timestamp.now());
 
-  UserTransaction.mfNonInstantWithdrawal(String tranId, String note,
-      String upiTimestamp, double amount, String userId)
-      : this(
-            null,
-            amount,
-            0,
-            note ?? 'NA',
-            TRAN_SUBTYPE_ICICI,
-            TRAN_TYPE_WITHDRAW,
-            null,
-            0,
-            userId,
-            TRAN_STATUS_COMPLETE,
-            {
-              subFldIciciTranId: tranId,
-              subFldIciciWithdrawType: 'NONINSTANT',
-              subFldIciciUpiTime: upiTimestamp
-            },
-            null,
-            null,
-            Timestamp.now(),
-            Timestamp.now());
+  // UserTransaction.mfNonInstantWithdrawal(String tranId, String note,
+  //     String upiTimestamp, double amount, String userId)
+  //     : this(
+  //           null,
+  //           amount,
+  //           0,
+  //           note ?? 'NA',
+  //           TRAN_SUBTYPE_ICICI,
+  //           TRAN_TYPE_WITHDRAW,
+  //           null,
+  //           0,
+  //           userId,
+  //           TRAN_STATUS_COMPLETE,
+  //           {
+  //             subFldIciciTranId: tranId,
+  //             subFldIciciWithdrawType: 'NONINSTANT',
+  //             subFldIciciUpiTime: upiTimestamp
+  //           },
+  //           null,
+  //           null,
+  //           Timestamp.now(),
+  //           Timestamp.now());
 
   //Augmont gold investment initiated by investor
   UserTransaction.newGoldDeposit(double amount, double postTax, String blockId,
@@ -239,6 +254,7 @@ class UserTransaction {
               subFldAugPostTaxTotal: postTax
             },
             Timestamp.now(),
+            null,
             Timestamp.now());
 
   //Augmont gold investment initiated by investor
@@ -263,6 +279,7 @@ class UserTransaction {
               subFldAugCurrentGoldGm: quantity
             },
             Timestamp.now(),
+            null,
             Timestamp.now());
 
   toJson() {
@@ -279,6 +296,7 @@ class UserTransaction {
       fldRzpMap: _rzp,
       fldAugmontMap: _augmnt,
       fldTimestamp: _timestamp,
+      fldPaytmMap: _paytmMap,
       fldUpdatedTime: Timestamp.now(),
     };
   }
@@ -358,6 +376,7 @@ class UserTransaction {
   }
 
   Map<String, dynamic> get augmnt => _augmnt;
+  Map<String, dynamic> get paytmMap => _paytmMap;
 
   set augmnt(Map<String, dynamic> value) {
     _augmnt = value;
