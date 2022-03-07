@@ -152,7 +152,6 @@ class Api {
     return ref.doc(docId).update(data);
   }
 
-
   Future<DocumentSnapshot> getUserPrtdDocPan(String userId) {
     ref = _db
         .collection(Constants.COLN_USERS)
@@ -809,7 +808,19 @@ class Api {
         _db.collection(Constants.COLN_APPCAMPAIGNS).orderBy('position');
     return _query.get();
   }
-  
+
+  Future<Map<String, dynamic>> fetchSingleEvent(String eventType) async {
+    Query _query = _db
+        .collection(Constants.COLN_APPCAMPAIGNS)
+        .where('type', isEqualTo: eventType);
+    try {
+      QuerySnapshot _querySnapshot = await _query.get();
+      return _querySnapshot.docs?.first?.data();
+    } catch (e) {
+      throw e;
+    }
+  }
+
   Future<QuerySnapshot> fetchCoupons() async {
     Query _query = _db
         .collection(Constants.COLN_COUPONS)

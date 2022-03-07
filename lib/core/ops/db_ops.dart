@@ -1406,6 +1406,20 @@ class DBModel extends ChangeNotifier {
     return events;
   }
 
+  Future<EventModel> getSingleEventDetails(String eventType) async {
+    EventModel event;
+    try {
+      Map<String, dynamic> response = await _api.fetchSingleEvent(eventType);
+      if (response != null && response.isNotEmpty) {
+        event = EventModel.fromMap(response);
+      }
+    } catch (e) {
+      logger.e(e.toString());
+    }
+
+    return event;
+  }
+
   Future<List<CouponModel>> getCoupons() async {
     List<CouponModel> couponList = [];
     try {

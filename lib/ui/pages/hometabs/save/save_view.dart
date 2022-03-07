@@ -75,6 +75,13 @@ class Save extends StatelessWidget {
                   ),
                   SizedBox(height: SizeConfig.padding32),
                   // Goldlinks(model: model),
+                  TextButton(
+                    onPressed: () {
+                      model.showInstantTestGT();
+                    },
+                    child: Text("Show instant gt"),
+                  ),
+
                   SizedBox(height: SizeConfig.navBarHeight * 2),
                 ],
               ),
