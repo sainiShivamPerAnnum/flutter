@@ -70,7 +70,7 @@ class AugmontGoldSellViewModel extends BaseModel {
 
     if (_baseUtil.augmontDetail == null) {
       _baseUtil.augmontDetail =
-          await _dbModel.getUserAugmontDetails(_baseUtil.myUser.uid);
+          await _dbModel.getUserAugmontDetails(_userService.baseUser.uid);
     }
     // Check if sell is locked the this particular user
     if (_baseUtil.augmontDetail != null &&
@@ -133,8 +133,8 @@ class AugmontGoldSellViewModel extends BaseModel {
     isQntFetching = true;
     refresh();
     await _userService.getUserFundWalletData();
-    nonWithdrawableQnt =
-        await _dbModel.getNonWithdrawableAugGoldQuantity(_baseUtil.myUser.uid);
+    nonWithdrawableQnt = await _dbModel
+        .getNonWithdrawableAugGoldQuantity(_userService.baseUser.uid);
 
     if (nonWithdrawableQnt == null || nonWithdrawableQnt < 0)
       nonWithdrawableQnt = 0.0;
@@ -171,7 +171,7 @@ class AugmontGoldSellViewModel extends BaseModel {
           "No Amount Entered", "Please enter some amount");
       return;
     }
-    if (!_baseUtil.myUser.isAugmontOnboarded) {
+    if (!_userService.baseUser.isAugmontOnboarded) {
       BaseUtil.showNegativeAlert(
         'Not registered',
         'You have not registered for digital gold yet',
@@ -196,7 +196,7 @@ class AugmontGoldSellViewModel extends BaseModel {
 
     if (_baseUtil.augmontDetail == null) {
       _baseUtil.augmontDetail =
-          await _dbModel.getUserAugmontDetails(_baseUtil.myUser.uid);
+          await _dbModel.getUserAugmontDetails(_userService.baseUser.uid);
     }
     if (_baseUtil.augmontDetail == null) {
       BaseUtil.showNegativeAlert(

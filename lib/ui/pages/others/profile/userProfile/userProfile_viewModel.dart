@@ -434,11 +434,11 @@ class UserProfileVM extends BaseModel {
       } else
         return false;
     } catch (e) {
-      if (_baseUtil.myUser.uid != null) {
+      if (_userService.baseUser.uid != null) {
         Map<String, dynamic> errorDetails = {
           'error_msg': 'Method call to upload picture failed',
         };
-        _dbModel.logFailure(_baseUtil.myUser.uid,
+        _dbModel.logFailure(_userService.baseUser.uid,
             FailType.ProfilePictureUpdateFailed, errorDetails);
       }
       print('$e');
@@ -468,7 +468,7 @@ class UserProfileVM extends BaseModel {
         .setPreference(Preferences.APPLOCK, (val) ? 1 : 0);
     await _dbModel
         .updateUserPreferences(
-            _baseUtil.myUser.uid, _baseUtil.myUser.userPreferences)
+            _userService.baseUser.uid, _userService.baseUser.userPreferences)
         .then((value) {
       Log("Preferences updated");
     });
@@ -484,7 +484,7 @@ class UserProfileVM extends BaseModel {
           .setPreference(Preferences.TAMBOLANOTIFICATIONS, (val) ? 1 : 0);
       await _dbModel
           .updateUserPreferences(
-              _baseUtil.myUser.uid, _baseUtil.myUser.userPreferences)
+              _userService.baseUser.uid, _userService.baseUser.userPreferences)
           .then((value) {
         if (val)
           Log("Preferences updated");

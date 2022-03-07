@@ -153,9 +153,10 @@ class RootViewModel extends BaseModel {
       _baseUtil.getProfilePicture();
       // show security modal
       if (_baseUtil.show_security_prompt &&
-          _baseUtil.myUser.isAugmontOnboarded &&
+          _userService.baseUser.isAugmontOnboarded &&
           _userService.userFundWallet.augGoldQuantity > 0 &&
-          _baseUtil.myUser.userPreferences.getPreference(Preferences.APPLOCK) ==
+          _userService.baseUser.userPreferences
+                  .getPreference(Preferences.APPLOCK) ==
               0) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _showSecurityBottomSheet();
@@ -181,7 +182,8 @@ class RootViewModel extends BaseModel {
       Uri deepLink = dynamicLinkData?.link;
       _logger.d(deepLink.toString());
       if (deepLink != null)
-        return _processDynamicLink(_baseUtil.myUser.uid, deepLink, context);
+        return _processDynamicLink(
+            _userService.baseUser.uid, deepLink, context);
     } catch (e) {
       _logger.e(e.toString());
     }
@@ -193,7 +195,7 @@ class RootViewModel extends BaseModel {
       final Uri deepLink = dynamicLink?.link;
       if (deepLink == null) return null;
       _logger.d('Received deep link. Process the referral');
-      return _processDynamicLink(_baseUtil.myUser.uid, deepLink, context);
+      return _processDynamicLink(_userService.baseUser.uid, deepLink, context);
     }, onError: (OnLinkErrorException e) async {
       _logger.e('Error in fetching deeplink');
       _logger.e(e);
@@ -205,7 +207,7 @@ class RootViewModel extends BaseModel {
     final Uri deepLink = data?.link;
     if (deepLink != null) {
       _logger.d('Received deep link. Process the referral');
-      return _processDynamicLink(_baseUtil.myUser.uid, deepLink, context);
+      return _processDynamicLink(_userService.baseUser.uid, deepLink, context);
     }
   }
 
@@ -248,7 +250,7 @@ class RootViewModel extends BaseModel {
 
       //Referral dynamic link
       bool _flag = await _submitReferral(
-          _baseUtil.myUser.uid, _userService.myUserName, _uri);
+          _userService.baseUser.uid, _userService.myUserName, _uri);
       if (_flag) {
         _logger.d('Rewards added');
         refresh();

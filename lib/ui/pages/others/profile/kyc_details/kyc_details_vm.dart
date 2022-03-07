@@ -101,10 +101,10 @@ class KYCDetailsViewModel extends BaseModel {
   checkForKycExistence() async {
     setState(ViewState.Busy);
     String pan = await _baseUtil.panService.getUserPan();
-    if (_baseUtil.myUser.isSimpleKycVerified != null &&
+    if (_userService.baseUser.isSimpleKycVerified != null &&
         pan != null &&
         pan.isNotEmpty) {
-      if (_baseUtil.myUser.isSimpleKycVerified) {
+      if (_userService.baseUser.isSimpleKycVerified) {
         panController.text = pan;
         nameController.text = _userService.baseUser.kycName;
         inEditMode = false;
@@ -160,13 +160,13 @@ class KYCDetailsViewModel extends BaseModel {
         _baseUtil.userRegdPan = panController.text;
         _p = await _baseUtil.panService.saveUserPan(_baseUtil.userRegdPan);
       }
-      if (_baseUtil.myUser.isSimpleKycVerified == null ||
-          !_baseUtil.myUser.isSimpleKycVerified) {
-        _baseUtil.myUser.isSimpleKycVerified = true;
+      if (_userService.baseUser.isSimpleKycVerified == null ||
+          !_userService.baseUser.isSimpleKycVerified) {
+        _userService.baseUser.isSimpleKycVerified = true;
         if (veriDetails['upstreamName'] != null &&
             veriDetails['upstreamName'] != '') {
-          _baseUtil.myUser.kycName = veriDetails['upstreamName'];
-          _baseUtil.myUser.name = veriDetails['upstreamName'];
+          _userService.baseUser.kycName = veriDetails['upstreamName'];
+          _userService.baseUser.name = veriDetails['upstreamName'];
         }
         _baseUtil.setKycVerified(true);
         _userService.isSimpleKycVerified = true;

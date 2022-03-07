@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/invoice_model.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/pdf_invoice_api.dart';
 import 'package:felloapp/util/augmont_api_util.dart';
 import 'package:felloapp/util/locator.dart';
@@ -13,6 +14,7 @@ import 'package:path_provider/path_provider.dart';
 class AugmontInvoiceService {
   Log log = new Log('AugmontInvoiceService');
   BaseUtil _baseUtil = locator<BaseUtil>();
+  final _userService = locator<UserService>();
 
   AugmontInvoiceService();
 
@@ -43,8 +45,8 @@ class AugmontInvoiceService {
           GSTIN: "GSTIN: 27AATCA3030A1Z3",
         ),
         customer: Customer(
-          name: _baseUtil.myUser.name ?? "N/A",
-          address: _baseUtil.myUser.email ?? "N/A",
+          name: _userService.baseUser.name ?? "N/A",
+          address: _userService.baseUser.email ?? "N/A",
         ),
         info: InvoiceInfo(
           date: data[GetInvoice.resDate] != null

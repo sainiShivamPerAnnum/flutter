@@ -72,12 +72,12 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
     if (AppState.unsavedPrefs) {
       if (_baseUtil != null &&
-          _baseUtil.myUser != null &&
-          _baseUtil.myUser.uid != null &&
-          _baseUtil.myUser.userPreferences != null)
+          _userService.baseUser != null &&
+          _userService.baseUser.uid != null &&
+          _userService.baseUser.userPreferences != null)
         _dbModel
-            .updateUserPreferences(
-                _baseUtil.myUser.uid, _baseUtil.myUser.userPreferences)
+            .updateUserPreferences(_userService.baseUser.uid,
+                _userService.baseUser.userPreferences)
             .then((value) {
           AppState.unsavedPrefs = false;
           log("Preferences updated");

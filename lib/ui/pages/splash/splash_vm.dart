@@ -104,7 +104,8 @@ class LauncherViewModel extends BaseModel {
 
     ///Ceck if app needs to be open securely
     bool _unlocked = true;
-    if (_baseUtil.myUser.userPreferences.getPreference(Preferences.APPLOCK) ==
+    if (userService.baseUser.userPreferences
+                .getPreference(Preferences.APPLOCK) ==
             1 &&
         deviceUnlock != null) {
       _unlocked = await authenticateDevice();

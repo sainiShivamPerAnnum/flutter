@@ -153,17 +153,18 @@ class FcmListener {
       addSubscription(FcmTopic.OLDCUSTOMER);
     }
 
-    if (_baseUtil.myUser != null &&
-        _baseUtil.myUser.isInvested != null &&
-        !_baseUtil.myUser.isInvested) {
+    if (_userService.baseUser != null &&
+        _userService.baseUser.isInvested != null &&
+        !_userService.baseUser.isInvested) {
       addSubscription(FcmTopic.NEVERINVESTEDBEFORE);
     }
 
-    if (_baseUtil.myUser != null && !_baseUtil.myUser.isAugmontOnboarded)
+    if (_userService.baseUser != null &&
+        !_userService.baseUser.isAugmontOnboarded)
       addSubscription(FcmTopic.MISSEDCONNECTION);
 
-    if (_baseUtil.myUser != null &&
-        _baseUtil.myUser.isAugmontOnboarded &&
+    if (_userService.baseUser != null &&
+        _userService.baseUser.isAugmontOnboarded &&
         _baseUtil.userFundWallet != null &&
         _baseUtil.userFundWallet.augGoldBalance != null &&
         _baseUtil.userFundWallet.augGoldBalance > 300)
@@ -172,7 +173,7 @@ class FcmListener {
 
     if (_baseUtil.userTicketWallet != null &&
         _baseUtil.userTicketWallet.getActiveTickets() > 0 &&
-        _baseUtil.myUser.userPreferences
+        _userService.baseUser.userPreferences
                 .getPreference(Preferences.TAMBOLANOTIFICATIONS) ==
             1) {
       // if (_tambolaDrawNotifications) {
@@ -209,15 +210,15 @@ class FcmListener {
   _saveDeviceToken(String fcmToken) async {
     bool flag = true;
     if (fcmToken != null &&
-        _baseUtil.myUser != null &&
-        _baseUtil.myUser.mobile != null &&
-        (_baseUtil.myUser.client_token == null ||
-            (_baseUtil.myUser.client_token != null &&
-                _baseUtil.myUser.client_token != fcmToken))) {
+        _userService.baseUser != null &&
+        _userService.baseUser.mobile != null &&
+        (_userService.baseUser.client_token == null ||
+            (_userService.baseUser.client_token != null &&
+                _userService.baseUser.client_token != fcmToken))) {
       logger.d("Updating FCM token to local and server db");
-      _baseUtil.myUser.client_token = fcmToken;
+      _userService.baseUser.client_token = fcmToken;
       Freshchat.setPushRegistrationToken(fcmToken);
-      flag = await _dbModel.updateClientToken(_baseUtil.myUser, fcmToken);
+      flag = await _dbModel.updateClientToken(_userService.baseUser, fcmToken);
     }
     return flag;
   }
@@ -238,11 +239,11 @@ class FcmListener {
       return true;
     } catch (e) {
       logger.e(e.toString());
-      if (_baseUtil.myUser.uid != null) {
+      if (_userService.baseUser.uid != null) {
         Map<String, dynamic> errorDetails = {
           'error_msg': 'Changing Tambola Notification Status failed'
         };
-        _dbModel.logFailure(_baseUtil.myUser.uid,
+        _dbModel.logFailure(_userService.baseUser.uid,
             FailType.TambolaDrawNotificationSettingFailed, errorDetails);
       }
       BaseUtil.showNegativeAlert("Error", "Please try again");
