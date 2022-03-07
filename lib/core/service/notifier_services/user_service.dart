@@ -135,12 +135,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     _logger.d("Email:User simple kyc verified, property listeners notified");
   }
 
-  set isConfirmationDialogOpen(value) {
-    _isConfirmationDialogOpen = value;
-    notifyListeners(UserServiceProperties.myConfirmDialogViewStatus);
-    _logger.d("Dialog view status: updated");
-  }
-
   bool get isUserOnborded {
     try {
       if (_firebaseUser != null &&
@@ -268,6 +262,10 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     _dbModel.checkIfUserHasNewNotifications(baseUser.uid).then((value) {
       if (value) hasNewNotifications = true;
     });
+  }
+
+  diplayUsername(String username) {
+    return username.replaceAll('@', '.');
   }
 
   Future<String> createDynamicLink(bool short, String source) async {

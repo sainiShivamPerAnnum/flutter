@@ -100,7 +100,7 @@ class MyWinningsView extends StatelessWidget {
                                             ),
                                           ),
                                         )
-                                      : SizedBox()
+                                      : SizedBox(height: SizeConfig.padding2),
                                 ]),
                               ),
                             ];
@@ -153,6 +153,7 @@ class MyWinningsView extends StatelessWidget {
                               Padding(
                                 padding: EdgeInsets.only(
                                     top: SizeConfig.padding16,
+                                    bottom: SizeConfig.padding8,
                                     left: SizeConfig.pageHorizontalMargins),
                                 child: Text(
                                   "My Rewards",

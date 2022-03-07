@@ -85,7 +85,8 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                   onTap: () {
                     _analyticsService.track(
                         eventName: AnalyticsEvents.earnMoreSaveMoney);
-                    AppState.backButtonDispatcher.didPopRoute();
+                    while (AppState.screenStack.length > 1)
+                      AppState.backButtonDispatcher.didPopRoute();
                     Future.delayed(Duration.zero, () {
                       AppState.delegate.appState.setCurrentTabIndex = 0;
                     });
