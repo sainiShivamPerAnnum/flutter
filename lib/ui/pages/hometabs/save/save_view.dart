@@ -110,7 +110,7 @@ class Save extends StatelessWidget {
                                       .bold,
                                 ),
                           onPressed: () async {
-                            model.initiateCustomSubscription();
+                            model.initiateSubscription();
                           },
                         ),
                       ],

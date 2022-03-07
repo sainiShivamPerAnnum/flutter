@@ -64,12 +64,12 @@ class PaytmService {
   }
 
   Future<void> validateSubscription(String subId) async {
-    final ApiResponse<SubscriptionResponseModel> transactionResponseModel =
+    final ApiResponse<SubscriptionResponseModel> subscriptionResponseModel =
         await _paytmRepo.getSubscriptionStatus(subId);
-
-    if (transactionResponseModel.code == 200) {
-      _logger.d(transactionResponseModel.model.toString());
+    if (subscriptionResponseModel.code == 200) {
+      _logger.d(subscriptionResponseModel.model.toString());
     }
+    return subscriptionResponseModel;
   }
 
   Future<bool> initiateTransactions(
@@ -138,20 +138,43 @@ class PaytmService {
     }
 
     final paytmSubscriptionModel = paytmSubscriptionApiResponse.model;
+    // final sresponse = {
+    //   "success": true,
+    //   "data": {
+    //     "temptoken": "9c66abe52da541c383e8177b4024c8201646477278128",
+    //     "subscriptionId": "100433743164",
+    //     "orderId": "7oSXBAfmKF4psLMaP0PM",
+    //     "callbackUrl":
+    //         "https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=7oSXBAfmKF4psLMaP0PM",
+    //     "authenticateUrl":
+    //         "https://securegw.paytm.in/order/pay?mid=CMTNKX90967647249644&orderId=7oSXBAfmKF4psLMaP0PM"
+    //   }
+    // };
+
+    // final paytmSubscriptionModel =
+    //     CreateSubscriptionResponseModel.fromMap(sresponse);
 
     try {
       _logger.d("Paytm order id: ${paytmSubscriptionModel.data.orderId}");
       final response = await AllInOneSdk.startTransaction(
           mid,
           paytmSubscriptionModel.data.orderId,
-          '200',
+          '1',
           paytmSubscriptionModel.data.temptoken,
           paytmSubscriptionModel.data.callbackUrl,
           isStaging,
           true);
+      // final response = await AllInOneSdk.startTransaction(
+      //     prodMid,
+      //     paytmSubscriptionModel.data.orderId,
+      //     "0",
+      //     paytmSubscriptionModel.data.temptoken,
+      //     paytmSubscriptionModel.data.callbackUrl,
+      //     false,
+      //     true);
       _logger.d("Paytm Response:${response.toString()}");
 
-      validateSubscription(paytmSubscriptionModel.data.subscriptionId);
+      // validateSubscription(paytmSubscriptionModel.data.subscriptionId);
       return true;
     } catch (onError) {
       if (onError is PlatformException) {
@@ -177,6 +200,22 @@ class PaytmService {
     }
 
     final paytmSubscriptionModel = paytmSubscriptionApiResponse.model;
+
+    // final response = {
+    //   "success": true,
+    //   "data": {
+    //     "temptoken": "78a05f432a13487b894073eaa5c4c1d91646471852981",
+    //     "subscriptionId": "283638",
+    //     "orderId": "g0w7RYbDctbG4NKUJxqU",
+    //     "callbackUrl":
+    //         "https://securegw-stage.paytm.in/theia/paytmCallback?ORDER_ID=g0w7RYbDctbG4NKUJxqU",
+    //     "authenticateUrl":
+    //         "https://securegw-stage.paytm.in/order/pay?mid=qpHRfp13374268724583&orderId=g0w7RYbDctbG4NKUJxqU"
+    //   }
+    // };
+
+    // final paytmSubscriptionModel =
+    //     CreateSubscriptionResponseModel.fromMap(response);
 
     final ApiResponse<ValidateVpaResponseModel> isVpaValidResponse =
         await _paytmRepo.validateVPA(paytmSubscriptionModel, vpa);

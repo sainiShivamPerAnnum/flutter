@@ -42,14 +42,21 @@ class Data {
   String subscriptionId;
   String orderId;
   String callbackUrl;
+  String authenticationUrl;
 
-  Data({this.temptoken, this.subscriptionId, this.orderId, this.callbackUrl});
+  Data(
+      {this.temptoken,
+      this.subscriptionId,
+      this.orderId,
+      this.callbackUrl,
+      this.authenticationUrl});
 
   Data.fromJson(Map<String, dynamic> json) {
     temptoken = json['temptoken'];
     subscriptionId = json['subscriptionId'];
     orderId = json['orderId'];
     callbackUrl = json['callbackUrl'];
+    authenticationUrl = json['authenticationUrl'];
   }
 
   Map<String, dynamic> toJson() {
@@ -59,6 +66,7 @@ class Data {
     data['subscriptionId'] = this.subscriptionId;
     data['orderId'] = this.orderId;
     data['callbackUrl'] = this.callbackUrl;
+    data['authenticationUrl'] = this.authenticationUrl;
 
     return data;
   }
@@ -69,6 +77,7 @@ class Data {
       'orderId': orderId,
       'subscriptionId': subscriptionId,
       'callbackUrl': callbackUrl,
+      'authenticationUrl': authenticationUrl
     };
   }
 
@@ -77,11 +86,12 @@ class Data {
         temptoken: map['temptoken'] ?? '',
         subscriptionId: map['subscriptionId'] ?? '',
         orderId: map['orderId'] ?? '',
-        callbackUrl: map['callbackUrl'] ?? '');
+        callbackUrl: map['callbackUrl'] ?? '',
+        authenticationUrl: map['authenticationUrl'] ?? '');
   }
 
   @override
   String toString() {
-    return 'Data(tempToken: $temptoken, subscriptionId: $subscriptionId, orderId: $orderId, callbackUrl: $callbackUrl)';
+    return 'Data(tempToken: $temptoken, subscriptionId: $subscriptionId, orderId: $orderId, callbackUrl: $callbackUrl authenticationUrl: $authenticationUrl)';
   }
 }

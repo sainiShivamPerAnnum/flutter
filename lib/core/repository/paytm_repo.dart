@@ -143,7 +143,7 @@ class PaytmRepository {
           model: _responseModel, code: 200);
     } catch (e) {
       _logger.e(e.toString());
-      return ApiResponse.withError("Unable create transaction", 400);
+      return ApiResponse.withError("Unable to validate VPA", 400);
     }
   }
 }
