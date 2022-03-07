@@ -1,7 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/service/tambola_service.dart';
+import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';

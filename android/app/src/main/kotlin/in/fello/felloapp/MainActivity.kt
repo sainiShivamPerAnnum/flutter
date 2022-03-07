@@ -52,9 +52,9 @@ class MainActivity: FlutterFragmentActivity() {
         // }
     }
 
-    override fun getBackgroundMode(): FlutterActivityLaunchConfigs.BackgroundMode {
-    return BackgroundMode.transparent 
-    }
+    // override fun getBackgroundMode(): FlutterActivityLaunchConfigs.BackgroundMode {
+    // return BackgroundMode.transparent 
+    // }
  
 
     private fun createNotificationChannel(mapData: HashMap<String,String>): Boolean {

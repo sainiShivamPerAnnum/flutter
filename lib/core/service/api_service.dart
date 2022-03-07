@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/app_exceptions.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
@@ -96,9 +96,8 @@ class APIService implements API {
       if (token != null)
         _headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
 
-      if(!isAuthTokenAvailable)
-        _headers['x-api-key'] = 'QTp93rVNrUJ9nv7rXDDh';
-        
+      if (!isAuthTokenAvailable) _headers['x-api-key'] = 'QTp93rVNrUJ9nv7rXDDh';
+
       String _url = _baseUrl + url;
       logger.d("response from $url");
 

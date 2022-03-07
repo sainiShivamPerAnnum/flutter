@@ -11,12 +11,12 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/repository/ticket_generation_repo.dart';
-import 'package:felloapp/core/service/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/tambola_generation_service.dart';
-import 'package:felloapp/core/service/tambola_service.dart';
-import 'package:felloapp/core/service/user_coin_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/tambola_generation_service.dart';
+import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -27,7 +27,7 @@ import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_res
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -200,7 +200,7 @@ class TambolaGameViewModel extends BaseModel {
   }
 
   updateTicketCount() {
-    buyTicketCount = int.tryParse(ticketCountController.text)??3;
+    buyTicketCount = int.tryParse(ticketCountController.text) ?? 3;
     notifyListeners();
   }
 
@@ -280,7 +280,9 @@ class TambolaGameViewModel extends BaseModel {
     _analyticsService.track(eventName: AnalyticsEvents.earnMoreTokens);
     BaseUtil.openModalBottomSheet(
       addToScreenStack: true,
-      content: WantMoreTicketsModalSheet(isInsufficientBalance: true,),
+      content: WantMoreTicketsModalSheet(
+        isInsufficientBalance: true,
+      ),
       hapticVibrate: true,
       backgroundColor: Colors.transparent,
       isBarrierDismissable: true,

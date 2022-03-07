@@ -1,6 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/login/screens/username_input/username_input_view.dart';
 import 'package:felloapp/util/locator.dart';
@@ -33,8 +33,9 @@ class _ClaimUsernameState extends State<ClaimUsername> {
         setState(() {
           _isUpdating = true;
         });
-        String username =
-            _usernameKey.currentState.model.username.trim().replaceAll('.', '@');
+        String username = _usernameKey.currentState.model.username
+            .trim()
+            .replaceAll('.', '@');
         if (regex.hasMatch(username) &&
             await dbProvider.checkIfUsernameIsAvailable(username)) {
           bool res = await dbProvider.setUsername(

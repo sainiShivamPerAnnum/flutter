@@ -3,7 +3,7 @@ import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/model/user_ticket_wallet_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';

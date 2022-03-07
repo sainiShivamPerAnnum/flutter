@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_analytics.dart';
+import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -11,12 +11,12 @@ import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
-import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
-import 'package:felloapp/core/service/golden_ticket_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';

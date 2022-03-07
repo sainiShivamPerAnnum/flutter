@@ -7,7 +7,7 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/feedback_dialog.dart';
@@ -19,7 +19,7 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 //Flutter Imports

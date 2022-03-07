@@ -46,7 +46,7 @@ class UserRepository {
           BaseUser.fldGender: baseUser.gender,
           BaseUser.fldUsername: baseUser.username,
           BaseUser.fldUserPrefs: {"tn": 1, "al": 0},
-          BaseUser.fldStateId: state,
+          BaseUser.fldStateId: state
         }
       };
 
@@ -56,7 +56,8 @@ class UserRepository {
       return ApiResponse(
           code: 200, model: {"flag": res['flag'], "gtId": res['gtId']});
     } catch (e) {
-      ApiResponse.withError(e.toString(), 400);
+      _logger.d(e);
+      ApiResponse.withError("User not added to firestore", 400);
     }
   }
 

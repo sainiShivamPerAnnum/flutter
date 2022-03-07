@@ -1,0 +1,3 @@
+const String DAILYSAVER = 'DAILY_SAVER';
+const String WEEKLYSAVER = 'WEEKLY_SAVER';
+const String MONTHLYSAVER = 'MONTHLY_SAVER';

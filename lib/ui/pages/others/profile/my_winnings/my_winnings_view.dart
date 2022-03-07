@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/service/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -67,9 +67,12 @@ class MyWinningsView extends StatelessWidget {
                                               0)
                                       ? InkWell(
                                           onTap: () {
-                                            AppState.delegate.appState.currentAction = PageAction(
-                                                state: PageState.addPage,
-                                                page: ReferralDetailsPageConfig);
+                                            AppState.delegate.appState
+                                                    .currentAction =
+                                                PageAction(
+                                                    state: PageState.addPage,
+                                                    page:
+                                                        ReferralDetailsPageConfig);
                                           },
                                           child: Container(
                                             margin: EdgeInsets.only(
@@ -97,7 +100,7 @@ class MyWinningsView extends StatelessWidget {
                                             ),
                                           ),
                                         )
-                                      : SizedBox()
+                                      : SizedBox(height: SizeConfig.padding2),
                                 ]),
                               ),
                             ];
@@ -150,6 +153,7 @@ class MyWinningsView extends StatelessWidget {
                               Padding(
                                 padding: EdgeInsets.only(
                                     top: SizeConfig.padding16,
+                                    bottom: SizeConfig.padding8,
                                     left: SizeConfig.pageHorizontalMargins),
                                 child: Text(
                                   "My Rewards",

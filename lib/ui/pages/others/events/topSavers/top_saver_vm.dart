@@ -1,3 +1,4 @@
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/top_saver_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
@@ -5,7 +6,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/statistics_repo.dart';
 import 'package:felloapp/core/repository/winners_repo.dart';
 import 'package:felloapp/core/service/events_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
@@ -28,11 +29,14 @@ class TopSaverViewModel extends BaseModel {
   String freqCode;
   int _userRank = 0;
   String winnerTitle = "Past Winners";
+  EventModel event;
 
   List<TopSavers> currentParticipants;
   List<Winners> _pastWinners;
 
   List<Winners> get pastWinners => _pastWinners;
+
+  displayUsername(username) => _userService.diplayUsername(username);
 
   set pastWinners(List<Winners> value) {
     _pastWinners = value;
@@ -46,7 +50,10 @@ class TopSaverViewModel extends BaseModel {
     notifyListeners();
   }
 
-  init(EventModel event) {
+  init(String eventType) async {
+    setState(ViewState.Busy);
+    event = await _dbModel.getSingleEventDetails(eventType);
+    setState(ViewState.Idle);
     saverType = eventService.getEventType(event.type);
     _logger
         .d("Top Saver Viewmodel initialised with saver type : ${event.type}");

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -22,13 +23,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 
 class TopSaverView extends StatelessWidget {
-  final EventModel event;
-  TopSaverView({this.event});
+  final String eventType;
+  TopSaverView({this.eventType});
   @override
   Widget build(BuildContext context) {
     return BaseView<TopSaverViewModel>(
       onModelReady: (model) {
-        model.init(event);
+        model.init(eventType);
       },
       builder: (context, model, child) {
         return Scaffold(
@@ -55,18 +56,22 @@ class TopSaverView extends StatelessWidget {
                         topLeft: Radius.circular(SizeConfig.padding40),
                         topRight: Radius.circular(SizeConfig.padding40),
                       ),
-                      child: ListView(
-                        physics: ClampingScrollPhysics(),
-                        padding: EdgeInsets.zero,
-                        children: [
-                          Thumbnail(event: event),
-                          // if (model.currentParticipants != null)
-                          EventLeaderboard(model: model),
-                          InstructionsTab(event: event),
-                          // if (model.pastWinners != null)
-                          WinnersBoard(model: model),
-                        ],
-                      ),
+                      child: model.state == ViewState.Busy
+                          ? Center(
+                              child: ListLoader(),
+                            )
+                          : ListView(
+                              physics: ClampingScrollPhysics(),
+                              padding: EdgeInsets.zero,
+                              children: [
+                                Thumbnail(event: model.event),
+                                // if (model.currentParticipants != null)
+                                EventLeaderboard(model: model),
+                                InstructionsTab(event: model.event),
+                                // if (model.pastWinners != null)
+                                WinnersBoard(model: model),
+                              ],
+                            ),
                     ),
                   ),
                 ),
@@ -226,7 +231,8 @@ class WinnersBoard extends StatelessWidget {
                                     SizedBox(width: SizeConfig.padding12),
                                     Expanded(
                                       child: Text(
-                                        model.pastWinners[i].username,
+                                        model.displayUsername(
+                                            model.pastWinners[i].username),
                                         style: TextStyles.body3,
                                       ),
                                     ),
@@ -356,7 +362,8 @@ class EventLeaderboard extends StatelessWidget {
                                       ),
                                     ),
                                     title: Text(
-                                      model.currentParticipants[i].username,
+                                      model.displayUsername(model
+                                          .currentParticipants[i].username),
                                       style: TextStyles.body3.bold
                                           .colour(Colors.black54),
                                     ),

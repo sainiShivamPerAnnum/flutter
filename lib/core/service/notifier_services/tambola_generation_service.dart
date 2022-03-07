@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/service/tambola_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/cupertino.dart';
@@ -28,7 +28,6 @@ class TambolaGenerationService extends ChangeNotifier {
 
   static const int DELETION_COMPLETE = 1;
   static const int DELETION_FAILED = 0;
-
 
   Future<bool> processTicketDeletionRequirement(
       int currentTambolaBoardCount) async {
@@ -64,9 +63,9 @@ class TambolaGenerationService extends ChangeNotifier {
           _tambolaService.userWeeklyBoards.isEmpty ||
           _tambolaService.atomicTicketDeletionLeftCount == 0)
         return _onTicketDeletionRequestFailed();
-      _tambolaService.userWeeklyBoards.sort((TambolaBoard a,TambolaBoard b) => a
-          .assigned_time.millisecondsSinceEpoch
-          .compareTo(b.assigned_time.millisecondsSinceEpoch));
+      _tambolaService.userWeeklyBoards.sort((TambolaBoard a, TambolaBoard b) =>
+          a.assigned_time.millisecondsSinceEpoch
+              .compareTo(b.assigned_time.millisecondsSinceEpoch));
       print('post sort');
 
       List<TambolaBoard> _tList = [];
@@ -95,7 +94,6 @@ class TambolaGenerationService extends ChangeNotifier {
       return _onTicketDeletionRequestFailed();
     });
   }
-
 
   bool _onTicketDeletionRequestFailed() {
     _tambolaService.atomicTicketDeletionLeftCount =

@@ -4,7 +4,7 @@ import 'package:felloapp/core/model/top_winners_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/api_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/code_from_freq.dart';
 import 'package:felloapp/util/locator.dart';

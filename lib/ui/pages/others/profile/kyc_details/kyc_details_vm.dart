@@ -9,8 +9,8 @@ import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/repository/signzy_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/golden_ticket_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/augmont_confirm_register_dialog.dart';
@@ -20,7 +20,7 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -141,7 +141,6 @@ class KYCDetailsViewModel extends BaseModel {
     FocusScope.of(context).unfocus();
 
     isKycInProgress = true;
-    _userService.isConfirmationDialogOpen = true;
     _analyticsService.track(eventName: AnalyticsEvents.openKYCSection);
 
     ///next get all details required for registration
@@ -150,7 +149,7 @@ class KYCDetailsViewModel extends BaseModel {
     if (veriDetails != null &&
         veriDetails['flag'] != null &&
         veriDetails['flag']) {
-      AppState.screenStack.add(ScreenItem.dialog);
+      //AppState.screenStack.add(ScreenItem.dialog);
       //UPDATE DIRECTLY IN DATABASE
       bool _p = true;
       bool _q = true;
@@ -204,7 +203,6 @@ class KYCDetailsViewModel extends BaseModel {
     } else {
       print('inside failed name');
       if (veriDetails['fail_code'] == 0) {
-        _userService.isConfirmationDialogOpen = true;
         BaseUtil.openDialog(
           addToScreenStack: true,
           content: MoreInfoDialog(

@@ -1,6 +1,6 @@
 //Project imports
-import 'package:felloapp/core/service/leaderboard_service.dart';
-import 'package:felloapp/core/service/winners_service.dart';
+import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
+import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/navigator/router/back_dispatcher.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';

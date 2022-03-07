@@ -2,7 +2,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/tambola_winners_details.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_vm.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
 import 'package:felloapp/util/assets.dart';
@@ -87,7 +87,8 @@ class PrizeClaimCard extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: SizeConfig.padding8),
-                        if (m.userFundWallet.unclaimedBalance >= minWithdrawPrizeAmt &&
+                        if (m.userFundWallet.unclaimedBalance >=
+                                minWithdrawPrizeAmt &&
                             m.userFundWallet.augGoldPrinciple >= refUnlockAmt)
                           Container(
                             margin: EdgeInsets.symmetric(
@@ -116,7 +117,8 @@ class PrizeClaimCard extends StatelessWidget {
                               ],
                             ),
                           ),
-                        if (m.userFundWallet.unclaimedBalance < minWithdrawPrizeAmt)
+                        if (m.userFundWallet.unclaimedBalance <
+                            minWithdrawPrizeAmt)
                           Container(
                             margin: EdgeInsets.symmetric(
                                 vertical: SizeConfig.padding6),

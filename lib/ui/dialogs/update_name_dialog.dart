@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
