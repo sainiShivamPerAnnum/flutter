@@ -152,7 +152,6 @@ class KYCDetailsViewModel extends BaseModel {
       //AppState.screenStack.add(ScreenItem.dialog);
       //UPDATE DIRECTLY IN DATABASE
       bool _p = true;
-      bool _q = true;
 
       ///add the pan number
       if (_baseUtil.userRegdPan == null ||
@@ -170,9 +169,9 @@ class KYCDetailsViewModel extends BaseModel {
           _baseUtil.myUser.name = veriDetails['upstreamName'];
         }
         _baseUtil.setKycVerified(true);
-        _q = await _dbModel.updateUser(_userService.baseUser);
+        _userService.isSimpleKycVerified = true;
       }
-      if (!_p || !_q) {
+      if (!_p) {
         _analyticsService.track(
           eventName: AnalyticsEvents.kycVerificationFailed,
           properties: {'userId': _userService.baseUser.uid},
