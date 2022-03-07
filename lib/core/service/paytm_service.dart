@@ -92,7 +92,8 @@ class PaytmService {
           restrictAppInvoke);
       _logger.d("Paytm Response:${response.toString()}");
 
-      validateTransaction(paytmTransactionModel.data.orderId);
+      //For debug mode to check transaction status from paytm.
+      // validateTransaction(paytmTransactionModel.data.orderId);
       return true;
     } catch (onError) {
       if (onError is PlatformException) {

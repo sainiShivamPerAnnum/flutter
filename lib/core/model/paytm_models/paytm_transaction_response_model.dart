@@ -42,14 +42,8 @@ class Data {
   double tAmount;
   String tTranStatus;
   String tNote;
-  TxnDate tUpdatedOn;
 
-  Data(
-      {this.paytmMap,
-      this.tAmount,
-      this.tTranStatus,
-      this.tNote,
-      this.tUpdatedOn});
+  Data({this.paytmMap, this.tAmount, this.tTranStatus, this.tNote});
 
   Data.fromJson(Map<String, dynamic> json) {
     paytmMap = json['paytmMap'] != null
@@ -58,9 +52,6 @@ class Data {
     tAmount = json['tAmount'];
     tTranStatus = json['tTranStatus'];
     tNote = json['tNote'];
-    tUpdatedOn = json['tUpdatedOn'] != null
-        ? new TxnDate.fromJson(json['tUpdatedOn'])
-        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -71,9 +62,6 @@ class Data {
     data['tAmount'] = this.tAmount;
     data['tTranStatus'] = this.tTranStatus;
     data['tNote'] = this.tNote;
-    if (this.tUpdatedOn != null) {
-      data['tUpdatedOn'] = this.tUpdatedOn.toJson();
-    }
     return data;
   }
 
@@ -83,23 +71,20 @@ class Data {
       'tAmount': tAmount,
       'tTranStatus': tTranStatus,
       'tNote': tNote,
-      'tUpdatedOn': tUpdatedOn.toMap(),
     };
   }
 
   factory Data.fromMap(Map<String, dynamic> map) {
     return Data(
-      paytmMap: PaytmMap.fromMap(map['paytmMap']),
-      tAmount: map['tAmount']?.toDouble() ?? 0.0,
-      tTranStatus: map['tTranStatus'] ?? '',
-      tNote: map['tNote'] ?? '',
-      tUpdatedOn: TxnDate.fromMap(map['tUpdatedOn']),
-    );
+        paytmMap: PaytmMap.fromMap(map['paytmMap']),
+        tAmount: map['tAmount']?.toDouble() ?? 0.0,
+        tTranStatus: map['tTranStatus'] ?? '',
+        tNote: map['tNote'] ?? '');
   }
 
   @override
   String toString() {
-    return 'Data(paytmMap: $paytmMap, tAmount: $tAmount, tTranStatus: $tTranStatus, tNote: $tNote, tUpdatedOn: $tUpdatedOn)';
+    return 'Data(paytmMap: $paytmMap, tAmount: $tAmount, tTranStatus: $tTranStatus, tNote: $tNote)';
   }
 }
 
@@ -112,7 +97,6 @@ class PaytmMap {
   String gatewayName;
   String paymentMode;
   String bankName;
-  TxnDate txnDate;
 
   PaytmMap(
       {this.txnId,
@@ -122,8 +106,7 @@ class PaytmMap {
       this.txnAmount,
       this.gatewayName,
       this.paymentMode,
-      this.bankName,
-      this.txnDate});
+      this.bankName});
 
   PaytmMap.fromJson(Map<String, dynamic> json) {
     txnId = json['txnId'];
@@ -134,8 +117,6 @@ class PaytmMap {
     gatewayName = json['gatewayName'];
     paymentMode = json['paymentMode'];
     bankName = json['bankName'];
-    txnDate =
-        json['txnDate'] != null ? new TxnDate.fromJson(json['txnDate']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -148,9 +129,6 @@ class PaytmMap {
     data['gatewayName'] = this.gatewayName;
     data['paymentMode'] = this.paymentMode;
     data['bankName'] = this.bankName;
-    if (this.txnDate != null) {
-      data['txnDate'] = this.txnDate.toJson();
-    }
     return data;
   }
 
@@ -163,8 +141,7 @@ class PaytmMap {
       'txnAmount': txnAmount,
       'gatewayName': gatewayName,
       'paymentMode': paymentMode,
-      'bankName': bankName,
-      'txnDate': txnDate.toMap(),
+      'bankName': bankName
     };
   }
 
@@ -178,49 +155,11 @@ class PaytmMap {
       gatewayName: map['gatewayName'] ?? '',
       paymentMode: map['paymentMode'] ?? '',
       bankName: map['bankName'] ?? '',
-      txnDate: TxnDate.fromMap(map['txnDate']),
     );
   }
 
   @override
   String toString() {
-    return 'PaytmMap(txnId: $txnId, status: $status, bankTxnId: $bankTxnId, txnType: $txnType, txnAmount: $txnAmount, gatewayName: $gatewayName, paymentMode: $paymentMode, bankName: $bankName, txnDate: $txnDate)';
+    return 'PaytmMap(txnId: $txnId, status: $status, bankTxnId: $bankTxnId, txnType: $txnType, txnAmount: $txnAmount, gatewayName: $gatewayName, paymentMode: $paymentMode, bankName: $bankName)';
   }
-}
-
-class TxnDate {
-  int iSeconds;
-  int iNanoseconds;
-
-  TxnDate({this.iSeconds, this.iNanoseconds});
-
-  TxnDate.fromJson(Map<String, dynamic> json) {
-    iSeconds = json['_seconds'];
-    iNanoseconds = json['_nanoseconds'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_seconds'] = this.iSeconds;
-    data['_nanoseconds'] = this.iNanoseconds;
-    return data;
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'iSeconds': iSeconds,
-      'iNanoseconds': iNanoseconds,
-    };
-  }
-
-  factory TxnDate.fromMap(Map<String, dynamic> map) {
-    return TxnDate(
-      iSeconds: map['iSeconds']?.toInt() ?? 0,
-      iNanoseconds: map['iNanoseconds']?.toInt() ?? 0,
-    );
-  }
-
-  @override
-  String toString() =>
-      'TxnDate(iSeconds: $iSeconds, iNanoseconds: $iNanoseconds)';
 }
