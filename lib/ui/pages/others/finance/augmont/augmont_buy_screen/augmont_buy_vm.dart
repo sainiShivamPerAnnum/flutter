@@ -179,7 +179,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
     }
     if (_baseUtil.augmontDetail == null) {
       _baseUtil.augmontDetail =
-          await _dbModel.getUserAugmontDetails(_baseUtil.myUser.uid);
+          await _dbModel.getUserAugmontDetails(_userService.baseUser.uid);
     }
     // Check if deposit is locked the this particular user
     if (_baseUtil.augmontDetail != null &&
@@ -321,6 +321,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
           GoldenTicketService.goldenTicketId = depositFcmResponseModel.gtId;
           if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
             _gtService.showInstantGoldenTicketView(
+                amount: depositFcmResponseModel.amount,
                 title: '₹${depositFcmResponseModel.amount} saved.',
                 source: GTSOURCE.deposit);
           } else {
