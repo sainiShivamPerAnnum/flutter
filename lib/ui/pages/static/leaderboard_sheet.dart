@@ -17,8 +17,8 @@ class WinnersLeaderBoardSE extends StatelessWidget {
   }
 
   final double maxScrollExtent = 0.88;
-  final double minScrollExtent = 0.2;
-  final double initialScrollExtent = 0.2;
+  final double minScrollExtent = 0.25;
+  final double initialScrollExtent = 0.3;
 
   build(BuildContext context) {
     return SlidingUpPanel(

@@ -4,7 +4,6 @@ import 'package:felloapp/core/service/notifier_services/transaction_service.dart
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/dialogs/transaction_details_dialog.dart';
-import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
 import 'package:felloapp/ui/pages/others/profile/transactions_history/transaction_history_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
@@ -17,7 +16,6 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:provider/provider.dart';
 
 class TransactionsHistory extends StatelessWidget {
   @override
@@ -209,50 +207,6 @@ class NoTransactionsContent extends StatelessWidget {
     );
   }
 }
-
-// class FilterOption extends StatelessWidget {
-//   final Map<String, int> filterItems;
-//   final TranFilterType type;
-//   FilterOption({this.filterItems, this.type});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     List<DropdownMenuItem> items = [];
-
-//     filterItems.forEach((key, value) {
-//       items.add(
-//         DropdownMenuItem(
-//           child: Text(
-//             key,
-//             style: TextStyle(fontSize: SizeConfig.mediumTextSize),
-//           ),
-//           value: value,
-//         ),
-//       );
-//     });
-
-//     return Consumer<TransactionsHistoryViewModel>(builder: (ctx, model, child) {
-//       return Container(
-//         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-//         margin:
-//             EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
-//         decoration: BoxDecoration(
-//           border: Border.all(width: 2, color: UiConstants.primaryColor),
-//           borderRadius: BorderRadius.circular(8),
-//         ),
-//         child: DropdownButtonHideUnderline(
-//           child: DropdownButton(
-//               value: model.filter,
-//               items: items,
-//               onChanged: (value) {
-//                 model.filter = value;
-//                 model.filterTransactions(update: true);
-//               }),
-//         ),
-//       );
-//     });
-//   }
-// }
 
 class TransactionTile extends StatelessWidget {
   final TransactionsHistoryViewModel model;

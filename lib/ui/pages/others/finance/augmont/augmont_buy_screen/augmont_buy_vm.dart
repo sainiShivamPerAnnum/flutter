@@ -28,7 +28,10 @@ import 'package:felloapp/ui/modals_sheets/augmont_coupons_modal.dart';
 import 'package:felloapp/ui/modals_sheets/augmont_register_modal_sheet.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/ui/pages/static/transaction_loader.dart';
+import 'package:felloapp/ui/pages/static/txn_completed_ui/txn_completed_view.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -39,6 +42,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AugmontGoldBuyViewModel extends BaseModel {
@@ -282,16 +286,8 @@ class AugmontGoldBuyViewModel extends BaseModel {
   fcmTransactionResponseUpdate(fcmDataPayload) async {
     //Stop loader if loading.
     _logger.i("Updating response value.");
-    bool isLoaderOnScreen = false;
 
     try {
-      if (AppState.screenStack.last == ScreenItem.loader) {
-        isLoaderOnScreen = true;
-        AppState.screenStack.removeLast();
-        Navigator.pop(AppState.delegate.navigatorKey.currentContext);
-        await Future.delayed(Duration(seconds: 1));
-      }
-
       final DepositFcmResponseModel depositFcmResponseModel =
           DepositFcmResponseModel.fromJson(json.decode(fcmDataPayload));
 
@@ -315,19 +311,25 @@ class AugmontGoldBuyViewModel extends BaseModel {
       if (newFlcBalance > 0) {
         _userCoinService.setFlcBalance(newFlcBalance);
       }
-
-      if (isLoaderOnScreen) {
+      if (AppState.delegate.appState.isTxnLoaderInView == true) {
         if (depositFcmResponseModel.gtId != null) {
           GoldenTicketService.goldenTicketId = depositFcmResponseModel.gtId;
           if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
+            Future.delayed(Duration(milliseconds: 220), () {
+              AppState.delegate.appState.isTxnLoaderInView = false;
+            });
             _gtService.showInstantGoldenTicketView(
                 amount: depositFcmResponseModel.amount,
                 title: '₹${depositFcmResponseModel.amount} saved.',
                 source: GTSOURCE.deposit);
           } else {
-            showSuccessGoldBuyDialog(depositFcmResponseModel.amount);
+            AppState.delegate.appState.isTxnLoaderInView = false;
+            // showSuccessGoldBuyDialog(depositFcmResponseModel.amount);
+            showTxnSuccessScreen(depositFcmResponseModel.amount,
+                "Your investment of ₹${depositFcmResponseModel.amount} was successful");
           }
-        }
+        } else
+          AppState.delegate.appState.isTxnLoaderInView = false;
       }
 
       _txnService.updateTransactions();
@@ -403,14 +405,6 @@ class AugmontGoldBuyViewModel extends BaseModel {
     isGoldBuyInProgress = true;
     _analyticsService.track(eventName: AnalyticsEvents.buyGold);
 
-    //Initiate loader here
-    AppState.screenStack.add(ScreenItem.loader);
-
-    Navigator.of(AppState.delegate.navigatorKey.currentContext).push(
-        PageRouteBuilder(
-            opaque: false,
-            pageBuilder: (BuildContext context, _, __) => TransactionLoader()));
-
     final _status = await _paytmService.initiateTransactions(
         amount: buyAmount,
         augmontRates: goldRates,
@@ -421,20 +415,17 @@ class AugmontGoldBuyViewModel extends BaseModel {
     resetBuyOptions();
 
     if (_status) {
+      AppState.delegate.appState.isTxnLoaderInView = true;
       Future.delayed(Duration(seconds: 30), () async {
-        if (AppState.screenStack.last == ScreenItem.loader) {
-          AppState.screenStack.removeLast();
-          Navigator.pop(AppState.delegate.navigatorKey.currentContext);
-          BaseUtil.showPositiveAlert(
-            'Processing transaction',
-            'It can take upto 15 minutes.',
-          );
+        if (AppState.delegate.appState.isTxnLoaderInView == true) {
+          AppState.delegate.appState.isTxnLoaderInView = false;
+          //Show a dialog here
+          showTransactionWaitingDialog();
         }
       });
     } else {
-      if (AppState.screenStack.last == ScreenItem.loader) {
-        AppState.screenStack.removeLast();
-        Navigator.pop(AppState.delegate.navigatorKey.currentContext);
+      if (AppState.delegate.appState.isTxnLoaderInView == true) {
+        AppState.delegate.appState.isTxnLoaderInView = false;
       }
       BaseUtil.showNegativeAlert(
         'Transaction failed',
@@ -612,6 +603,62 @@ class AugmontGoldBuyViewModel extends BaseModel {
     );
   }
 
+  showTransactionWaitingDialog() {
+    BaseUtil.openDialog(
+      addToScreenStack: true,
+      hapticVibrate: true,
+      isBarrierDismissable: false,
+      content: FelloInfoDialog(
+        customContent: Column(
+          children: [
+            SizedBox(height: SizeConfig.screenHeight * 0.04),
+            SvgPicture.asset(
+              "assets/vectors/processing.svg",
+              height: SizeConfig.screenHeight * 0.16,
+            ),
+            SizedBox(
+              height: SizeConfig.screenHeight * 0.04,
+            ),
+            Text(
+              "We're still processing!",
+              style: TextStyles.title3.bold,
+            ),
+            SizedBox(height: SizeConfig.padding16),
+            RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                text:
+                    "Your transaction is taking longer than usual. We'll get back to you ",
+                style: TextStyles.body3.colour(Colors.black54),
+                children: [
+                  TextSpan(
+                    text: "15 minutes",
+                    style:
+                        TextStyles.body3.bold.colour(UiConstants.tertiarySolid),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(height: SizeConfig.screenHeight * 0.02),
+            Container(
+              width: SizeConfig.screenWidth,
+              child: FelloButtonLg(
+                child: Text(
+                  "OK",
+                  style: TextStyles.body3.colour(Colors.white),
+                ),
+                color: UiConstants.primaryColor,
+                onPressed: () {
+                  AppState.backButtonDispatcher.didPopRoute();
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
 // ----------------------------------------NAVIGATION--------------------------------------//
 
   navigateToGoldBalanceDetailsScreen() {
@@ -690,5 +737,19 @@ class AugmontGoldBuyViewModel extends BaseModel {
         title: 'You successfully saved ₹500.',
         source: GTSOURCE.deposit,
         amount: 500);
+  }
+
+  showTxnSuccessScreen(double amount, String title) {
+    AppState.screenStack.add(ScreenItem.dialog);
+    Navigator.of(AppState.delegate.navigatorKey.currentContext).push(
+      PageRouteBuilder(
+        opaque: false,
+        pageBuilder: (BuildContext context, _, __) =>
+            TxnCompletedConfirmationScreenView(
+          amount: amount ?? 400.4,
+          title: title ?? "Hurray, we saved ₹400.4",
+        ),
+      ),
+    );
   }
 }

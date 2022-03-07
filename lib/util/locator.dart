@@ -65,6 +65,7 @@ import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instan
 import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_vm.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/splash/splash_vm.dart';
+import 'package:felloapp/ui/pages/static/txn_completed_ui/txn_completed_vm.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_vm.dart';
 import 'package:felloapp/ui/widgets/drawer/drawer_vm.dart';
 import 'package:felloapp/ui/widgets/faq_card/faq_card_vm.dart';
@@ -159,6 +160,8 @@ void setupLocator() {
   locator.registerFactory(() => GoldenMilestonesViewModel());
   locator.registerFactory(() => GTInstantViewModel());
   locator.registerFactory(() => TopSaverViewModel());
+  locator
+      .registerFactory(() => TransactionCompletedConfirmationScreenViewModel());
 
   //WIDGETS
   locator.registerFactory(() => FDrawerVM());

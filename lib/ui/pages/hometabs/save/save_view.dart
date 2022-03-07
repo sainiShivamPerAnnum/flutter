@@ -1,3 +1,4 @@
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
@@ -80,6 +81,18 @@ class Save extends StatelessWidget {
                       model.showInstantTestGT();
                     },
                     child: Text("Show instant gt"),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      model.showTxnSuccessScreen(null, null);
+                    },
+                    child: Text("Show txn complete UI"),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      model.showTransactionWaitingDialog();
+                    },
+                    child: Text("Show txn waiting dialog"),
                   ),
 
                   SizedBox(height: SizeConfig.navBarHeight * 2),
