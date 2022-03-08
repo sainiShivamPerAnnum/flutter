@@ -320,13 +320,13 @@ class AugmontGoldBuyViewModel extends BaseModel {
             });
             _gtService.showInstantGoldenTicketView(
                 amount: depositFcmResponseModel.amount,
-                title: '₹${depositFcmResponseModel.amount} saved.',
+                title:
+                    "You successfully saved ₹${getAmount(depositFcmResponseModel.amount)}",
                 source: GTSOURCE.deposit);
           } else {
             AppState.delegate.appState.isTxnLoaderInView = false;
-            // showSuccessGoldBuyDialog(depositFcmResponseModel.amount);
             showTxnSuccessScreen(depositFcmResponseModel.amount,
-                "Your investment of ₹${depositFcmResponseModel.amount} was successful");
+                "You successfully saved ₹${getAmount(depositFcmResponseModel.amount)}");
           }
         } else
           AppState.delegate.appState.isTxnLoaderInView = false;
@@ -419,8 +419,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
       Future.delayed(Duration(seconds: 30), () async {
         if (AppState.delegate.appState.isTxnLoaderInView == true) {
           AppState.delegate.appState.isTxnLoaderInView = false;
-          //Show a dialog here
-          showTransactionWaitingDialog();
+          showTransactionPendingDialog();
         }
       });
     } else {
@@ -603,7 +602,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
     );
   }
 
-  showTransactionWaitingDialog() {
+  showTransactionPendingDialog() {
     BaseUtil.openDialog(
       addToScreenStack: true,
       hapticVibrate: true,

@@ -81,7 +81,7 @@ class _GTInstantViewState extends State<GTInstantView>
                   child: Opacity(
                     opacity: 0.04,
                     child: Image.asset(
-                      "assets/images/gtdbg.png",
+                      Assets.gtBackground,
                       height: SizeConfig.screenHeight,
                       fit: BoxFit.cover,
                     ),
@@ -90,8 +90,7 @@ class _GTInstantViewState extends State<GTInstantView>
                 if (model.showMainContent)
                   Align(
                     alignment: Alignment.center,
-                    child: Lottie.asset("assets/lotties/glitter.json",
-                        repeat: false),
+                    child: Lottie.asset(Assets.glitter, repeat: false),
                   ),
                 AnimatedOpacity(
                   duration: Duration(milliseconds: 300),
@@ -103,7 +102,7 @@ class _GTInstantViewState extends State<GTInstantView>
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Lottie.asset("assets/lotties/finish.json",
+                        Lottie.asset(Assets.txnFinish,
                             repeat: false,
                             height: SizeConfig.screenWidth * 0.8),
                         FittedBox(
@@ -130,7 +129,7 @@ class _GTInstantViewState extends State<GTInstantView>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(height: SizeConfig.padding32),
-                        Lottie.asset("assets/lotties/coin-stack.json",
+                        Lottie.asset(Assets.coinStack,
                             height: SizeConfig.screenWidth,
                             width: SizeConfig.screenWidth * 0.6),
                         SizedBox(height: SizeConfig.padding64),
@@ -371,7 +370,7 @@ class _GTInstantViewState extends State<GTInstantView>
                 if (model.isCardScratched && model.isShimmerEnabled)
                   Align(
                     alignment: Alignment.center,
-                    child: Lottie.asset("assets/lotties/confetti.json",
+                    child: Lottie.asset(Assets.gtConfetti,
                         height: SizeConfig.screenWidth * 0.8),
                   ),
                 if (model.showScratchGuide && !model.isCardScratchStarted)

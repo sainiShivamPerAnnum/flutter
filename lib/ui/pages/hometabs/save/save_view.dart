@@ -90,7 +90,7 @@ class Save extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      model.showTransactionWaitingDialog();
+                      model.showTransactionPendingDialog();
                     },
                     child: Text("Show txn waiting dialog"),
                   ),

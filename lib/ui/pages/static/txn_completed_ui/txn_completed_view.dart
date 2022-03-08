@@ -36,7 +36,7 @@ class TxnCompletedConfirmationScreenView extends StatelessWidget {
                   child: Opacity(
                     opacity: 0.04,
                     child: Image.asset(
-                      "assets/images/gtdbg.png",
+                      Assets.gtBackground,
                       height: SizeConfig.screenHeight,
                       fit: BoxFit.cover,
                     ),
@@ -81,7 +81,7 @@ class TxnCompletedConfirmationScreenView extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Lottie.asset("assets/lotties/finish.json",
+                        Lottie.asset(Assets.txnFinish,
                             repeat: false,
                             height: SizeConfig.screenWidth * 0.8),
                         FittedBox(
@@ -107,7 +107,7 @@ class TxnCompletedConfirmationScreenView extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Lottie.asset("assets/lotties/coin-stack.json",
+                        Lottie.asset(Assets.coinStack,
                             height: SizeConfig.screenWidth,
                             width: SizeConfig.screenWidth * 0.6),
                         SizedBox(height: SizeConfig.padding40),
