@@ -612,7 +612,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
           children: [
             SizedBox(height: SizeConfig.screenHeight * 0.04),
             SvgPicture.asset(
-              "assets/vectors/processing.svg",
+              Assets.processing,
               height: SizeConfig.screenHeight * 0.16,
             ),
             SizedBox(
@@ -627,7 +627,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
               textAlign: TextAlign.center,
               text: TextSpan(
                 text:
-                    "Your transaction is taking longer than usual. We'll get back to you ",
+                    "Your transaction is taking longer than usual. We'll get back to you in",
                 style: TextStyles.body3.colour(Colors.black54),
                 children: [
                   TextSpan(

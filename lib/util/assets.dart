@@ -79,6 +79,7 @@ class Assets {
   static final String goldPure = "assets/vectors/icons/goldPure.svg";
   static final String goldSecure = "assets/vectors/icons/goldSecure.svg";
   static final String couponIcon = "assets/vectors/coupon.svg";
+  static final String processing = "assets/vectors/processing.svg";
 
   // WIN
 
