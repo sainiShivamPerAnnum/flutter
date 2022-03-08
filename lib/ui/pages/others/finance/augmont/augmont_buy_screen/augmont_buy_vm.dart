@@ -293,6 +293,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
       //Handle failed condition here.
       if (!depositFcmResponseModel.status) {
+        AppState.delegate.appState.isTxnLoaderInView = false;
         BaseUtil.showNegativeAlert("Transaction Failed",
             "Gold purchase failed, you amount will be refunded");
         return;
@@ -627,7 +628,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
               textAlign: TextAlign.center,
               text: TextSpan(
                 text:
-                    "Your transaction is taking longer than usual. We'll get back to you in",
+                    "Your transaction is taking longer than usual. We'll get back to you in ",
                 style: TextStyles.body3.colour(Colors.black54),
                 children: [
                   TextSpan(
