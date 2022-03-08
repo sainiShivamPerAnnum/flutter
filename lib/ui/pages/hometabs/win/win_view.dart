@@ -26,6 +26,9 @@ class Win extends StatelessWidget {
       onModelReady: (model) {
         model.init();
       },
+      onModelDispose: (model) {
+        model.clear();
+      },
       builder: (ctx, model, child) {
         return Stack(
           children: [
@@ -77,14 +80,24 @@ class Win extends StatelessWidget {
                             style: TextStyles.title3.bold,
                           ),
                         ),
+                        SizedBox(height: SizeConfig.padding16),
                         Container(
+                          height: SizeConfig.screenWidth * 0.3,
                           width: SizeConfig.screenWidth,
-                          child: Column(
+                          child: ListView(
+                            padding: EdgeInsets.zero,
+                            scrollDirection: Axis.horizontal,
+                            controller: model.eventScrollController,
                             children: List.generate(
                               model.ongoingEvents.length,
-                              (i) => EventCard(
-                                event: model.ongoingEvents[i],
-                                model: model,
+                              (i) => Container(
+                                margin: EdgeInsets.only(
+                                    left: i == 0
+                                        ? SizeConfig.pageHorizontalMargins
+                                        : 0),
+                                child: EventCard(
+                                  event: model.ongoingEvents[i],
+                                ),
                               ),
                             ),
                           ),
@@ -119,10 +132,9 @@ class Win extends StatelessWidget {
 }
 
 class EventCard extends StatelessWidget {
-  final WinViewModel model;
   final EventModel event;
 
-  EventCard({@required this.event, @required this.model});
+  EventCard({@required this.event});
 
   @override
   Widget build(BuildContext context) {
@@ -136,17 +148,12 @@ class EventCard extends StatelessWidget {
             page: AugmontGoldSellPageConfig);
       },
       child: Container(
-        width: SizeConfig.screenWidth,
-        height: SizeConfig.screenWidth * 0.4,
-        margin: EdgeInsets.symmetric(
-          horizontal: SizeConfig.pageHorizontalMargins,
-          vertical: SizeConfig.padding16,
-        ),
+        width: SizeConfig.screenWidth * 0.64,
+        height: SizeConfig.screenWidth * 0.3,
+        margin: EdgeInsets.only(right: SizeConfig.padding16),
         decoration: event.thumbnail.isNotEmpty
             ? BoxDecoration(
-                color: event.position % 2 == 0
-                    ? UiConstants.primaryColor
-                    : UiConstants.tertiarySolid,
+                color: UiConstants.scaffoldColor,
                 borderRadius: BorderRadius.circular(SizeConfig.roundness16),
                 image: DecorationImage(
                   image: CachedNetworkImageProvider(event.thumbnail),

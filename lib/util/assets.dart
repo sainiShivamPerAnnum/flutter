@@ -79,6 +79,7 @@ class Assets {
   static final String goldPure = "assets/vectors/icons/goldPure.svg";
   static final String goldSecure = "assets/vectors/icons/goldSecure.svg";
   static final String couponIcon = "assets/vectors/coupon.svg";
+  static final String processing = "assets/vectors/processing.svg";
 
   // WIN
 
@@ -145,6 +146,11 @@ class Assets {
   static final String gtWon = "assets/images/gtWon.png";
   static final String gtLose = "assets/images/gtlose.png";
   static final String gtCover = "assets/images/gtCover.png";
+  static final String txnFinish = "assets/lotties/finish.json";
+  static final String coinStack = "assets/lotties/coin-stack.json";
+  static final String glitter = "assets/lotties/glitter.json";
+  static final String gtBackground = "assets/images/gtdbg.png";
+  static final String gtConfetti = "assets/lotties/confetti.json";
 
   static final List<String> onboardingHeader = [
     'Save',

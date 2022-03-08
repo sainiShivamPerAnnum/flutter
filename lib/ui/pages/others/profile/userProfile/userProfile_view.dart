@@ -261,7 +261,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                               } else if (int.tryParse(val) !=
                                                       null &&
                                                   (int.tryParse(val) > 13 ||
-                                                      int.tryParse(val) < 0)) {
+                                                      int.tryParse(val) < 1)) {
                                                 setState(() {
                                                   model.dateInputError =
                                                       "Invalid date";

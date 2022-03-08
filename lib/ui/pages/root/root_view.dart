@@ -1,16 +1,15 @@
 import 'dart:ui';
 
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
-import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
+import 'package:felloapp/ui/pages/static/transaction_loader.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/ui/widgets/drawer/drawer_view.dart';
@@ -133,6 +132,11 @@ class Root extends StatelessWidget {
                 BottomNavBar(
                   model: model,
                 ),
+                Consumer<AppState>(
+                    builder: (ctx, m, child) =>
+                        AppState.delegate.appState.isTxnLoaderInView
+                            ? TransactionLoader()
+                            : SizedBox()),
               ],
             ),
           ),

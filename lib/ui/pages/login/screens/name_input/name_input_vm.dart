@@ -33,6 +33,8 @@ class NameInputScreenViewModel extends BaseModel {
   String _name;
   String _email;
   String _age;
+  int _gen;
+  String _stateChosenValue;
 
   bool isEmailEntered = false;
   bool emailEnabled = false;
@@ -48,7 +50,28 @@ class NameInputScreenViewModel extends BaseModel {
 
   bool isPlayer = false;
 
-  String dateInputError = "";
+  String _dateInputError = "";
+  String get dateInputError => this._dateInputError;
+
+  int get gen => _gen;
+
+  get stateChosenValue => this._stateChosenValue;
+
+  set stateChosenValue(String value) {
+    this._stateChosenValue = value;
+    notifyListeners();
+  }
+
+  set gen(int val) {
+    _gen = val;
+    notifyListeners();
+  }
+
+  set dateInputError(String value) {
+    this._dateInputError = value;
+    notifyListeners();
+  }
+
   DateTime selectedDate = null;
 
   get formKey => _formKey;
@@ -101,7 +124,6 @@ class NameInputScreenViewModel extends BaseModel {
   }
 
   continueWithEmail() {
-    isEmailEntered = true;
     emailEnabled = true;
     notifyListeners();
     AppState.backButtonDispatcher.didPopRoute();
@@ -196,11 +218,35 @@ class NameInputScreenViewModel extends BaseModel {
 
   bool isValidDate() {
     dateInputError = "";
-    notifyListeners();
+    // Check if any field is not empty
+
+    if (yearFieldController.text.isEmpty ||
+        monthFieldController.text.isEmpty ||
+        dateFieldController.text.isEmpty) {
+      dateInputError = "Date field cannot be empty, please enter a valid date";
+      return false;
+    }
+    // Check if the filed values are within range
+    if (int.tryParse(yearFieldController.text) > DateTime.now().year ||
+        int.tryParse(yearFieldController.text) < 1950) {
+      dateInputError = "Entered year is invalid";
+      return false;
+    }
+    if (int.tryParse(monthFieldController.text) > 12 ||
+        int.tryParse(monthFieldController.text) < 1) {
+      dateInputError = "Entered month is invalid";
+      return false;
+    }
+    if (int.tryParse(dateFieldController.text) > 31 ||
+        int.tryParse(dateFieldController.text) < 1) {
+      dateInputError = "Entered date is invalid";
+      return false;
+    }
+
     String inputDate = yearFieldController.text +
         monthFieldController.text +
         dateFieldController.text;
-    print("Input date : " + inputDate);
+    _logger.d("Input date : " + inputDate);
     if (inputDate == null || inputDate.isEmpty) {
       dateInputError = "Invalid date";
       notifyListeners();
@@ -245,5 +291,29 @@ class NameInputScreenViewModel extends BaseModel {
     monthFieldController.text = res.month.toString().padLeft(2, '0');
     yearFieldController.text = res.year.toString();
     notifyListeners();
+  }
+
+  validateFields() {
+    if (_formKey.currentState.validate()) {
+      if (!isEmailEntered &&
+          (emailFieldController == null || emailFieldController.text.isEmpty)) {
+        BaseUtil.showNegativeAlert(
+            'Email field empty', 'Please enter a valid email');
+        return false;
+      }
+      if (gen == null) {
+        BaseUtil.showNegativeAlert(
+            'Gender field empty', 'Please enter a valid gender');
+        return false;
+      }
+      if (!isValidDate()) return false;
+      if (stateChosenValue == null) {
+        BaseUtil.showNegativeAlert(
+            'State field empty', 'Please enter a valid State');
+        return false;
+      }
+      return true;
+    }
+    return false;
   }
 }

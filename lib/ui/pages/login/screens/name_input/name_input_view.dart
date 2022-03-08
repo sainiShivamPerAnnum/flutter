@@ -30,69 +30,7 @@ class NameInputScreenState extends State<NameInputScreen> {
   RegExp _emailRegex = RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
 
-  int gen;
-  int get gender => gen;
-
-  static String stateChosenValue;
-  String get state => stateChosenValue;
-
-  setClearStateValue() => stateChosenValue = null;
-
-  String dateInputError = "";
-
   DateTime initialDate = DateTime(1997, 1, 1, 0, 0);
-  List<bool> _selections = [false, true];
-
-  Row abc(isInvested) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        ElevatedButton(
-          // color: (_isInvested ?? false)
-          //     ? UiConstants.primaryColor
-          //     : Color(0xffe9e9ea),
-          style: ElevatedButton.styleFrom(
-            primary: (isInvested ?? false)
-                ? UiConstants.primaryColor
-                : Color(0xffe9e9ea),
-            shadowColor: UiConstants.primaryColor.withOpacity(0.3),
-          ),
-          onPressed: () {
-            setState(() {
-              isInvested = true;
-            });
-          },
-          child: Text(
-            " YES ",
-            style: TextStyle(
-                color: (isInvested ?? false) ? Colors.white : Colors.grey),
-          ),
-        ),
-        SizedBox(
-          width: 20,
-        ),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            primary: (isInvested ?? true)
-                ? Color(0xffe9e9ea)
-                : UiConstants.primaryColor,
-            shadowColor: UiConstants.primaryColor.withOpacity(0.3),
-          ),
-          onPressed: () {
-            setState(() {
-              isInvested = false;
-            });
-          },
-          child: Text(
-            " NO ",
-            style: TextStyle(
-                color: (isInvested ?? true) ? Colors.grey : Colors.white),
-          ),
-        ),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
@@ -220,8 +158,9 @@ class NameInputScreenState extends State<NameInputScreen> {
                     SvgPicture.asset(
                       Assets.gender,
                       height: 20,
-                      color:
-                          gen == null ? Colors.grey : UiConstants.primaryColor,
+                      color: model.gen == null
+                          ? Colors.grey
+                          : UiConstants.primaryColor,
                     ),
                     SizedBox(
                       width: 10,
@@ -230,7 +169,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton(
                             iconEnabledColor: UiConstants.primaryColor,
-                            value: gen,
+                            value: model.gen,
                             hint: Text(locale.obGenderHint),
                             items: [
                               DropdownMenuItem(
@@ -253,10 +192,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                                   value: -1),
                             ],
                             onChanged: (value) {
-                              gen = value;
-                              //   isLoading = true;
-                              setState(() {});
-                              //   filterTransactions();
+                              model.gen = value;
                             }),
                       ),
                     ),
@@ -269,7 +205,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: dateInputError != ""
+                    color: model.dateInputError != ""
                         ? Colors.red
                         : UiConstants.primaryColor.withOpacity(0.3),
                   ),
@@ -285,19 +221,6 @@ class NameInputScreenState extends State<NameInputScreen> {
                       fieldWidth: SizeConfig.screenWidth * 0.12,
                       labelText: "dd",
                       maxlength: 2,
-                      validate: (String val) {
-                        if (val.isEmpty || val == null) {
-                          setState(() {
-                            dateInputError = "Date field cannot be empty";
-                          });
-                        } else if (int.tryParse(val) > 31 ||
-                            int.tryParse(val) < 1) {
-                          setState(() {
-                            dateInputError = "Invalid date";
-                          });
-                        }
-                        return null;
-                      },
                     ),
                     Expanded(child: Center(child: Text("/"))),
                     DateField(
@@ -305,19 +228,6 @@ class NameInputScreenState extends State<NameInputScreen> {
                       fieldWidth: SizeConfig.screenWidth * 0.12,
                       labelText: "mm",
                       maxlength: 2,
-                      validate: (String val) {
-                        if (val.isEmpty || val == null) {
-                          setState(() {
-                            dateInputError = "Date field cannot be empty";
-                          });
-                        } else if (int.tryParse(val) != null &&
-                            (int.tryParse(val) > 13 || int.tryParse(val) < 0)) {
-                          setState(() {
-                            dateInputError = "Invalid date";
-                          });
-                        }
-                        return null;
-                      },
                     ),
                     Expanded(child: Center(child: Text("/"))),
                     DateField(
@@ -325,19 +235,6 @@ class NameInputScreenState extends State<NameInputScreen> {
                       fieldWidth: SizeConfig.screenWidth * 0.16,
                       labelText: "yyyy",
                       maxlength: 4,
-                      validate: (String val) {
-                        if (val.isEmpty || val == null) {
-                          setState(() {
-                            dateInputError = "Date field cannot be empty";
-                          });
-                        } else if (int.tryParse(val) > DateTime.now().year ||
-                            int.tryParse(val) < 1950) {
-                          setState(() {
-                            dateInputError = "Invalid date";
-                          });
-                        }
-                        return null;
-                      },
                     ),
                     SizedBox(
                       width: 16,
@@ -353,13 +250,13 @@ class NameInputScreenState extends State<NameInputScreen> {
                   ],
                 ),
               ),
-              if (dateInputError != "")
+              if (model.dateInputError != "")
                 Row(
                   children: [
                     Container(
                       padding: const EdgeInsets.all(8),
                       child: Text(
-                        dateInputError,
+                        model.dateInputError,
                         textAlign: TextAlign.start,
                         style: TextStyle(color: Colors.red),
                       ),
@@ -383,12 +280,9 @@ class NameInputScreenState extends State<NameInputScreen> {
                       enabledBorder: InputBorder.none),
                   iconEnabledColor: UiConstants.primaryColor,
                   hint: Text("Which state do you live in?"),
-                  value: stateChosenValue,
-                  onChanged: (String newVal) {
-                    setState(() {
-                      stateChosenValue = newVal;
-                      print(newVal);
-                    });
+                  value: model.stateChosenValue,
+                  onChanged: (newVal) {
+                    model.stateChosenValue = newVal;
                   },
                   items: AugmontResources.augmontStateList
                       .map(
@@ -435,7 +329,6 @@ class DateField extends StatelessWidget {
         maxLength: maxlength,
         cursorColor: UiConstants.primaryColor,
         cursorWidth: 1,
-        validator: (val) => validate(val),
         onChanged: (val) {
           if (val.length == maxlength && maxlength == 2) {
             FocusScope.of(context).nextFocus();
@@ -443,6 +336,9 @@ class DateField extends StatelessWidget {
             FocusScope.of(context).unfocus();
           }
         },
+        inputFormatters: [
+          FilteringTextInputFormatter.digitsOnly,
+        ],
         keyboardType: TextInputType.datetime,
         style: TextStyle(
           letterSpacing: 2,

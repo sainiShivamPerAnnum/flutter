@@ -181,13 +181,17 @@ class LoginControllerViewModel extends BaseModel {
       case NameInputScreen.index:
         {
           if (_nameScreenKey.currentState.model.formKey.currentState
-                  .validate() &&
-              _nameScreenKey.currentState.model.isValidDate()) {
-            if (!_nameScreenKey.currentState.model.isEmailEntered) {
-              BaseUtil.showNegativeAlert(
-                  'Email field empty', 'Please enter a valid email');
-              return false;
-            }
+              .validate()) {
+            if (!_nameScreenKey.currentState.model.validateFields()) return;
+            // if (!_nameScreenKey.currentState.model.isEmailEntered ||
+            //     _nameScreenKey.currentState.model.emailFieldController ==
+            //         null ||
+            //     _nameScreenKey
+            //         .currentState.model.emailFieldController.text.isEmpty) {
+            //   BaseUtil.showNegativeAlert(
+            //       'Email field empty', 'Please enter a valid email');
+            //   return false;
+            // }
 
             if (_nameScreenKey.currentState.model.selectedDate == null) {
               BaseUtil.showNegativeAlert(
@@ -203,14 +207,14 @@ class LoginControllerViewModel extends BaseModel {
               );
               return false;
             }
-            if (_nameScreenKey.currentState.gen == null) {
+            if (_nameScreenKey.currentState.model.gen == null) {
               BaseUtil.showNegativeAlert(
                 'Invalid details',
                 'Please enter all the fields',
               );
               return false;
             }
-            if (_nameScreenKey.currentState.state == null) {
+            if (_nameScreenKey.currentState.model.stateChosenValue == null) {
               BaseUtil.showNegativeAlert(
                 'Invalid details',
                 'Please enter your state of residence',
@@ -244,7 +248,7 @@ class LoginControllerViewModel extends BaseModel {
 
             userService.baseUser.dob = dob.trim();
 
-            int gender = _nameScreenKey.currentState.gen;
+            int gender = _nameScreenKey.currentState.model.gen;
             if (gender != null) {
               if (gender == 1) {
                 userService.baseUser.gender = "M";
@@ -254,7 +258,7 @@ class LoginControllerViewModel extends BaseModel {
                 userService.baseUser.gender = "O";
             }
 
-            cstate = _nameScreenKey.currentState.state;
+            cstate = _nameScreenKey.currentState.model.stateChosenValue;
 
             await CacheManager.writeCache(
                 key: "UserAugmontState", value: cstate, type: CacheType.string);
@@ -272,8 +276,6 @@ class LoginControllerViewModel extends BaseModel {
                     curve: Curves.easeInToLinear)
                 .then((value) =>
                     _usernameKey.currentState.focusNode.requestFocus());
-
-            _nameScreenKey.currentState.setClearStateValue();
           }
           break;
         }

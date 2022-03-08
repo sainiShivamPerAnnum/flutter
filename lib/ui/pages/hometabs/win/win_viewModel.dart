@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
@@ -34,12 +35,14 @@ class WinViewModel extends BaseModel {
   final _dbModel = locator<DBModel>();
   final _analyticsService = locator<AnalyticsService>();
   final eventService = EventService();
+  Timer _timer;
 
   LocalDBModel _localDBModel = locator<LocalDBModel>();
   bool isWinnersLoading = false;
   WinnersModel _winners;
   int _currentPage = 0;
   int get getCurrentPage => this._currentPage;
+  final ScrollController eventScrollController = new ScrollController();
 
   List<EventModel> _ongoingEvents;
 
@@ -77,7 +80,28 @@ class WinViewModel extends BaseModel {
       _userService.userFundWallet.unclaimedBalance;
 
   init() {
+    setupAutoEventScroll();
     getOngoingEvents();
+  }
+
+  setupAutoEventScroll() {
+    _timer = Timer.periodic(Duration(seconds: 6), (Timer timer) {
+      if (eventScrollController.position.pixels <
+          eventScrollController.position.maxScrollExtent) {
+        eventScrollController.animateTo(
+            eventScrollController.position.pixels +
+                SizeConfig.screenWidth * 0.64,
+            duration: Duration(seconds: 1),
+            curve: Curves.decelerate);
+      } else {
+        eventScrollController.animateTo(0,
+            duration: Duration(seconds: 2), curve: Curves.decelerate);
+      }
+    });
+  }
+
+  void clear() {
+    _timer?.cancel();
   }
 
   String getWinningsButtonText() {

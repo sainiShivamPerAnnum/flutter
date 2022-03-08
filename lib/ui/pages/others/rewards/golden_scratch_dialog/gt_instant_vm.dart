@@ -158,7 +158,7 @@ class GTInstantViewModel extends BaseModel {
     coinsCount = _coinService.flcBalance - amount.toInt();
     isInvestmentAnimationInProgress = true;
     notifyListeners();
-    Future.delayed(Duration(milliseconds: 2800), () {
+    Future.delayed(Duration(milliseconds: 2700), () {
       isInvestmentAnimationInProgress = false;
       notifyListeners();
       initCoinAnimation(amount);

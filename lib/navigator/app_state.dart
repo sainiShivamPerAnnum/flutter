@@ -28,6 +28,7 @@ class AppState extends ChangeNotifier {
   final _winnerService = locator<WinnerService>();
   final _lbService = locator<LeaderboardService>();
   int _rootIndex = 1;
+  bool _isTxnLoaderInView = false;
   static ScrollController homeCardListController = ScrollController();
   static String _fcmData;
   static bool isFirstTime = true;
@@ -51,8 +52,15 @@ class AppState extends ChangeNotifier {
 
   get rootIndex => this._rootIndex;
 
+  get isTxnLoaderInView => this._isTxnLoaderInView;
+
   set rootIndex(value) {
     this._rootIndex = value;
+    notifyListeners();
+  }
+
+  set isTxnLoaderInView(bool val) {
+    this._isTxnLoaderInView = val;
     notifyListeners();
   }
 
