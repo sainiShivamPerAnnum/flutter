@@ -371,7 +371,7 @@ class _GTInstantViewState extends State<GTInstantView>
                   Align(
                     alignment: Alignment.center,
                     child: Lottie.asset(Assets.gtConfetti,
-                        height: SizeConfig.screenWidth * 0.8),
+                        height: SizeConfig.screenWidth * 0.7),
                   ),
                 if (model.showScratchGuide && !model.isCardScratchStarted)
                   Align(

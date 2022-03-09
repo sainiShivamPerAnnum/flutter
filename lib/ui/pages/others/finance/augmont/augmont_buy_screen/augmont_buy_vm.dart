@@ -330,8 +330,11 @@ class AugmontGoldBuyViewModel extends BaseModel {
             showTxnSuccessScreen(depositFcmResponseModel.amount,
                 "You successfully saved ₹${getAmount(depositFcmResponseModel.amount)}");
           }
-        } else
+        } else {
           AppState.delegate.appState.isTxnLoaderInView = false;
+          showTxnSuccessScreen(depositFcmResponseModel.amount,
+              "You successfully saved ₹${getAmount(depositFcmResponseModel.amount)}");
+        }
       }
 
       _txnService.updateTransactions();

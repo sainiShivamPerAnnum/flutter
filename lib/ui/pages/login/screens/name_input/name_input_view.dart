@@ -277,6 +277,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                 child: DropdownButtonFormField(
                   decoration: InputDecoration(
                       border: InputBorder.none,
+                      focusedBorder: InputBorder.none,
                       enabledBorder: InputBorder.none),
                   iconEnabledColor: UiConstants.primaryColor,
                   hint: Text("Which state do you live in?"),
