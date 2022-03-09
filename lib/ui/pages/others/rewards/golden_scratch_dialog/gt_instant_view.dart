@@ -187,7 +187,7 @@ class _GTInstantViewState extends State<GTInstantView>
                             Column(
                               children: [
                                 Text(
-                                  "Hurray!",
+                                  getGTTitle(),
                                   style: TextStyles.title2.bold
                                       .colour(Colors.white),
                                   textAlign: TextAlign.center,
@@ -394,6 +394,17 @@ class _GTInstantViewState extends State<GTInstantView>
         );
       },
     );
+  }
+
+  getGTTitle() {
+    if (widget.source == GTSOURCE.deposit)
+      return "Hurray!";
+    else {
+      if (widget.title != null && widget.title.isNotEmpty)
+        return widget.title;
+      else
+        return "Hurray!";
+    }
   }
 
   Function getButtonAction(GTInstantViewModel model, GTSOURCE source) {

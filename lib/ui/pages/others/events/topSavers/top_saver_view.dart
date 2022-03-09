@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -22,9 +24,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 
+extension TruncateDoubles on double {
+  double truncateToDecimalPlaces(int fractionalDigits) =>
+      (this * pow(10, fractionalDigits)).truncate() / pow(10, fractionalDigits);
+}
+
 class TopSaverView extends StatelessWidget {
   final String eventType;
   TopSaverView({this.eventType});
+
   @override
   Widget build(BuildContext context) {
     return BaseView<TopSaverViewModel>(
@@ -377,7 +385,7 @@ class EventLeaderboard extends StatelessWidget {
                                         RichText(
                                           text: TextSpan(
                                               text:
-                                                  "${isInteger(model.currentParticipants[i].score) ? model.currentParticipants[i].score.toInt() : model.currentParticipants[i].score.toStringAsFixed(2)}",
+                                                  "${isInteger(model.currentParticipants[i].score) ? model.currentParticipants[i].score.toInt() : model.currentParticipants[i].score.truncateToDecimalPlaces(3)}",
                                               style: TextStyles.body2.bold.colour(UiConstants.primaryColor),
                                               children: [
                                                 TextSpan(

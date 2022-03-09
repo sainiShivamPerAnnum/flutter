@@ -1,5 +1,6 @@
 import 'package:felloapp/core/model/top_saver_model.dart';
 import 'package:felloapp/core/service/events_service.dart';
+import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -88,7 +89,7 @@ class AllParticipantsView extends StatelessWidget {
                           trailing: RichText(
                             text: TextSpan(
                                 text:
-                                    "${isInteger(participants[i].score) ? participants[i].score.toInt() : participants[i].score.toStringAsFixed(2)}",
+                                    "${isInteger(participants[i].score) ? participants[i].score.toInt() : participants[i].score.truncateToDecimalPlaces(3)}",
                                 style: TextStyles.body2.bold.colour(UiConstants.primaryColor),
                                 children: [
                                   TextSpan(
