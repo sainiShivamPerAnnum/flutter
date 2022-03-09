@@ -45,5 +45,5 @@ class ApiPath {
   get kFelloCoupons => "/felloCoupons/$stage/api/eligible";
 
   //PaytmApis
-  static const kCreatePaytmTransaction = "/paytmTxn/transaction";
+  static const kCreatePaytmTransaction = "/paymentOps/transaction";
 }
