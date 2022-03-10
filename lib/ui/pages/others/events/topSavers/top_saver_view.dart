@@ -238,10 +238,24 @@ class WinnersBoard extends StatelessWidget {
                                     ),
                                     SizedBox(width: SizeConfig.padding12),
                                     Expanded(
-                                      child: Text(
-                                        model.displayUsername(
-                                            model.pastWinners[i].username),
-                                        style: TextStyles.body3,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            model.displayUsername(
+                                                model.pastWinners[i].username),
+                                            style: TextStyles.body3,
+                                          ),
+                                          SizedBox(height: SizeConfig.padding4),
+                                          Text(
+                                            model.getFormattedDate(model
+                                                    .pastWinners[i].code) ??
+                                                "",
+                                            style: TextStyles.body4
+                                                .colour(Colors.black54),
+                                          )
+                                        ],
                                       ),
                                     ),
                                     SizedBox(width: SizeConfig.padding12),
@@ -249,16 +263,20 @@ class WinnersBoard extends StatelessWidget {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        if (model.pastWinners[i]?.flc != null)
+                                        if (model.pastWinners[i]?.flc != null &&
+                                            model.pastWinners[i]?.flc != 0)
                                           PrizeChip(
                                             color: UiConstants.tertiarySolid,
                                             svg: Assets.tokens,
                                             text: "${model.pastWinners[i].flc}",
                                           ),
-                                        if (model.pastWinners[i]?.flc != null)
+                                        if (model.pastWinners[i]?.amount !=
+                                                null &&
+                                            model.pastWinners[i]?.amount != 0)
                                           SizedBox(width: SizeConfig.padding16),
                                         if (model.pastWinners[i]?.amount !=
-                                            null)
+                                                null &&
+                                            model.pastWinners[i]?.amount != 0)
                                           PrizeChip(
                                             color: UiConstants.primaryColor,
                                             png: Assets.moneyIcon,

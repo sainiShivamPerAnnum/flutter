@@ -56,20 +56,23 @@ class WinnersRepository {
     }
   }
 
-  Future<ApiResponse<WinnersModel>> getPastWinners(
+  Future<ApiResponse<List<WinnersModel>>> getPastWinners(
       String gameType, String freq) async {
     try {
-      String code = CodeFromFreq.getPastEventCodeFromFreq(freq);
-      _logger.d(
-          "Past Winners :: Game Type : $gameType \n Frequency: $freq \n Code: $code");
-      final QueryDocumentSnapshot _response =
-          await _api.getWinnersByGameTypeFreqAndCode(gameType, freq, code);
+      // String code = CodeFromFreq.getPastEventCodeFromFreq(freq);
+      List<WinnersModel> pastWinnersList = [];
+      _logger.d("Past Winners :: Game Type : $gameType \n Frequency: $freq");
+      final List<QueryDocumentSnapshot> _response =
+          await _api.getPastHighestSaverWinners(gameType, freq);
+      if (_response != null && _response.isNotEmpty) {
+        for (int i = 0; i < _response.length; i++) {
+          pastWinnersList
+              .add(WinnersModel.fromMap(_response[i].data(), gameType));
+        }
+      }
 
-      WinnersModel _responseModel =
-          WinnersModel.fromMap(_response.data(), gameType);
-
-      _logger.d(_response.data().toString());
-      return ApiResponse(model: _responseModel, code: 200);
+      // _logger.d(past.data().toString());
+      return ApiResponse(model: pastWinnersList, code: 200);
     } catch (e) {
       _logger.e(e);
       return ApiResponse.withError(e.toString(), 400);

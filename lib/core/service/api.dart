@@ -744,6 +744,23 @@ class Api {
     }
   }
 
+  Future<List<QueryDocumentSnapshot>> getPastHighestSaverWinners(
+      String gameType, String freq) async {
+    Query _query = _db
+        .collection(Constants.WINNERS)
+        .where('freq', isEqualTo: freq)
+        .where('gametype', isEqualTo: gameType);
+
+    try {
+      QuerySnapshot _querySnapshot =
+          await _query.orderBy('timestamp', descending: true).limit(5).get();
+      return _querySnapshot.docs;
+    } catch (e) {
+      logger.e(e.toString());
+      throw e;
+    }
+  }
+
   //Prizes
   Future<QueryDocumentSnapshot> getPrizesPerGamePerFreq(
       String gameCode, String freq) async {
