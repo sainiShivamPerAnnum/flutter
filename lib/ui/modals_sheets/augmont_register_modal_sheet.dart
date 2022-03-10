@@ -112,7 +112,9 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
           ),
           child: DropdownButtonFormField(
             decoration: InputDecoration(
-                border: InputBorder.none, enabledBorder: InputBorder.none),
+                focusedBorder: InputBorder.none,
+                border: InputBorder.none,
+                enabledBorder: InputBorder.none),
             iconEnabledColor: UiConstants.primaryColor,
             hint: Text("Which state do you live in?"),
             value: stateChosenValue,
@@ -172,9 +174,9 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
     setState(() {});
 
     ///now register the augmont user
-    UserAugmontDetail detail = await augmontProvider.createSimpleUser(
+    baseProvider.augmontDetail = await augmontProvider.createSimpleUser(
         _userService.baseUser.mobile, stateChosenValue);
-    if (detail == null) {
+    if (baseProvider.augmontDetail == null) {
       BaseUtil.showNegativeAlert('Registration Failed',
           'Failed to register at the moment. Please try again.');
       baseProvider.isAugmontRegnInProgress = false;

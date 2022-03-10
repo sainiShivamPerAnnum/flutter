@@ -67,7 +67,9 @@ class CricketHomeView extends StatelessWidget {
                                   earnMoreTokens();
                               }
                             },
-                            child: Opacity(
+                            child: AnimatedOpacity(
+                              duration: Duration(milliseconds: 10),
+                              curve: Curves.decelerate,
                               opacity: model.cardOpacity ?? 1,
                               child: GameCard(
                                 gameData: BaseUtil.gamesList[0],

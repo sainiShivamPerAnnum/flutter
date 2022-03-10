@@ -36,6 +36,7 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -329,8 +330,11 @@ class AugmontGoldBuyViewModel extends BaseModel {
             showTxnSuccessScreen(depositFcmResponseModel.amount,
                 "You successfully saved ₹${getAmount(depositFcmResponseModel.amount)}");
           }
-        } else
+        } else {
           AppState.delegate.appState.isTxnLoaderInView = false;
+          showTxnSuccessScreen(depositFcmResponseModel.amount,
+              "You successfully saved ₹${getAmount(depositFcmResponseModel.amount)}");
+        }
       }
 
       _txnService.updateTransactions();
@@ -410,7 +414,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
         amount: buyAmount,
         augmontRates: goldRates,
         couponCode: appliedCoupon?.code ?? "",
-        restrictAppInvoke: true);
+        restrictAppInvoke: FlavorConfig.isDevelopment());
 
     isGoldBuyInProgress = false;
     resetBuyOptions();

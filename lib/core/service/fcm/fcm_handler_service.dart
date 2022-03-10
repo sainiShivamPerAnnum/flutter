@@ -7,6 +7,7 @@ import 'package:felloapp/ui/pages/others/games/cricket/cricket_game/cricket_game
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 enum MsgSource { Foreground, Background, Terminated }
 
@@ -21,7 +22,8 @@ class FcmHandler extends ChangeNotifier {
   ValueChanged<Map> notifListener;
 
   Future<bool> handleMessage(Map data, MsgSource source) async {
-    _logger.d("Fcm handler receives - $data");
+    _logger.d(
+        "Fcm handler receives on ${DateFormat('yyyy-MM-dd – hh:mm a').format(DateTime.now())} - $data");
     bool showSnackbar = true;
     String title = data['dialog_title'];
     String body = data['dialog_body'];
