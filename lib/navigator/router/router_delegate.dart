@@ -45,6 +45,7 @@ import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed
 import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_view.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/pages/splash/splash_view.dart';
+import 'package:felloapp/ui/pages/static/poolview.dart';
 import 'package:felloapp/ui/pages/static/transactions_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
@@ -279,6 +280,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(
               GoldBalanceDetailsView(), GoldBalanceDetailsViewPageConfig);
           break;
+        case Pages.PoolView:
+          _addPageData(PoolView(), PoolViewPageConfig);
+          break;
         default:
           break;
       }
@@ -480,6 +484,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.GoldBalanceDetailsView:
         GoldBalanceDetailsViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.PoolView:
+        PoolViewPageConfig.currentPageAction = action;
         break;
       default:
         break;
