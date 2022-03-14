@@ -265,7 +265,7 @@ class BaseUtil extends ChangeNotifier {
     gamesList = [
       GameModel(
         gameName: "Cricket",
-        pageConfig: CricketHomePageConfig,
+        pageConfig: THomePageConfig,
         tag: 'cricket',
         thumbnailUri: BaseRemoteConfig.remoteConfig
             .getString(BaseRemoteConfig.CRICKET_THUMBNAIL_URI),
@@ -275,6 +275,20 @@ class BaseUtil extends ChangeNotifier {
         prizeAmount: BaseRemoteConfig.remoteConfig
                 .getString(BaseRemoteConfig.CRICKET_PLAY_PRIZE) ??
             "50000",
+        analyticEvent: AnalyticsEvents.selectPlayCricket,
+      ),
+      GameModel(
+        gameName: "Pool Club",
+        pageConfig: THomePageConfig,
+        tag: 'poolclub',
+        thumbnailUri:
+            "https://firebasestorage.googleapis.com/v0/b/fello-dev-station.appspot.com/o/test%2Fpoolclub.png?alt=media&token=23403ec7-1c55-4ce7-827e-045ad6d059de",
+        playCost: BaseRemoteConfig.remoteConfig
+                .getString(BaseRemoteConfig.TAMBOLA_PLAY_COST) ??
+            "10",
+        prizeAmount: BaseRemoteConfig.remoteConfig
+                .getString(BaseRemoteConfig.TAMBOLA_PLAY_PRIZE) ??
+            "10,000",
         analyticEvent: AnalyticsEvents.selectPlayCricket,
       ),
       GameModel(

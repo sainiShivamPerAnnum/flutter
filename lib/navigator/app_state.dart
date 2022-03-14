@@ -35,7 +35,7 @@ class AppState extends ChangeNotifier {
   static bool isRootLoaded = false;
   static bool unsavedChanges = false;
   static bool unsavedPrefs = false;
-  static bool circGameInProgress = false;
+  static bool webGameInProgress = false;
   static bool isOnboardingInProgress = false;
   static bool isUpdateScreen = false;
   static bool isDrawerOpened = false;

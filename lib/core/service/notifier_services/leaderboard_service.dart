@@ -18,37 +18,25 @@ class LeaderboardService
   final ScrollController ownController = ScrollController();
   final ScrollController parentController = ScrollController();
 
-  int _cricketLBLength = 0;
   int _referralLBLength = 0;
 
-  LeaderBoardModal _crickLeaderboard;
   List<ReferralBoard> _referralLeaderBoard = [];
 
-  LeaderBoardModal get cricketLeaderBoard => this._crickLeaderboard;
+  LeaderBoardModal _webGameLeaderBoard;
+  LeaderBoardModal get webGameLeaderBoard => this._webGameLeaderBoard;
+
   List<ReferralBoard> get referralLeaderBoard => this._referralLeaderBoard;
 
-  get cricketLBLength => this._cricketLBLength;
-
   get referralLBLength => this._referralLBLength;
-
-  setCricketLeaderBoard() {
-    notifyListeners(LeaderBoardServiceProperties.CricketLeaderboard);
-    _logger.d("Cricket leaderboard updated, property listeners notified");
-  }
 
   setReferralLeaderBoard() {
     notifyListeners(LeaderBoardServiceProperties.ReferralLeaderboard);
     _logger.d("Referral Leaderboard updated, property listeners notified");
   }
 
-  Future fetchCricketLeaderBoard() async {
-    ApiResponse<LeaderBoardModal> response =
-        await _statsRepo.getLeaderBoard("GM_CRIC2020", "weekly");
-    if (response.code == 200) {
-      _crickLeaderboard = response.model;
-      setCricketLeaderBoard();
-      _logger.d("Cricket Leaderboard successfully fetched");
-    }
+  setWebGameLeaderBoard() {
+    notifyListeners(LeaderBoardServiceProperties.WebGameLeaderBOard);
+    _logger.d("Web Game leaderboard updated, property listeners notified");
   }
 
   fetchReferralLeaderBoard() async {
@@ -62,11 +50,23 @@ class LeaderboardService
     }
   }
 
+  fetchWebGameLeaderBoard({@required String game}) async {
+    ApiResponse<LeaderBoardModal> response =
+        await _statsRepo.getLeaderBoard(game, "weekly");
+    if (response.code == 200) {
+      _webGameLeaderBoard = response.model;
+      setWebGameLeaderBoard();
+      _logger.d("$game Leaderboard successfully fetched");
+    } else {
+      _webGameLeaderBoard = null;
+    }
+  }
+
   scrollToUserIndexIfAvaiable() {
     _logger.d("Checking if user is in scoreboard or not");
     int index;
-    for (int i = 0; i < _crickLeaderboard.scoreboard.length; i++) {
-      if (_crickLeaderboard.scoreboard[i].username ==
+    for (int i = 0; i < _webGameLeaderBoard.scoreboard.length; i++) {
+      if (_webGameLeaderBoard.scoreboard[i].username ==
           _userService.baseUser.username) index = i;
     }
     if (index != null) {

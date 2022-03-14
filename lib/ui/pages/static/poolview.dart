@@ -1,4 +1,6 @@
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -11,15 +13,16 @@ class PoolView extends StatefulWidget {
 }
 
 class _PoolViewState extends State<PoolView> {
+  final _userService = locator<UserService>();
   @override
   void initState() {
     super.initState();
-    AppState.circGameInProgress = true;
+    AppState.webGameInProgress = true;
   }
 
   @override
   dispose() {
-    AppState.circGameInProgress = false;
+    AppState.webGameInProgress = false;
     super.dispose();
   }
 
@@ -30,7 +33,7 @@ class _PoolViewState extends State<PoolView> {
       body: SafeArea(
         child: WebView(
           initialUrl:
-              "https://fello-pool.surge.sh?user=w7H9jWJKECOGsqI1H3BjNav7dm13",
+              "https://d2qfyj2eqvh06a.cloudfront.net/pool-club/index.html?user=${_userService.baseUser.uid}&name=${_userService.baseUser.username}",
           javascriptMode: JavascriptMode.unrestricted,
         ),
       ),

@@ -6,16 +6,48 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 
-class CricketGameViewModel extends BaseModel {
+class WebGameViewModel extends BaseModel {
   final _gtService = locator<GoldenTicketService>();
   final _logger = locator<CustomLogger>();
   final _lbService = locator<LeaderboardService>();
+  String _currentGame;
+
+  get currentGame => this._currentGame;
+
+  set currentGame(value) => this._currentGame = value;
+  init(String game) {
+    currentGame = game;
+    // setUpWebGameView(game);
+  }
+
+  // setUpWebGameView(String game) {
+  //   switch (game) {
+  //     case Constants.GAME_TYPE_POOLCLUB:
+  //       break;
+  //     case Constants.GAME_TYPE_CRICKET:
+  //       break;
+  //     default:
+  //       return;
+  //   }
+  // }
+
+  // cleanUpWebGameView(String game) {
+  //   switch (game) {
+  //     case Constants.GAME_TYPE_POOLCLUB:
+  //       break;
+  //     case Constants.GAME_TYPE_CRICKET:
+  //       break;
+  //     default:
+  //       return;
+  //   }
+  // }
 
   endCricketGame(data) {
     _logger.i("FCM Command received to end Cricket game");
@@ -25,8 +57,8 @@ class CricketGameViewModel extends BaseModel {
       GoldenTicketService.goldenTicketId = data['gt_id'];
     }
     //Navigate back to CricketView
-    if (AppState.circGameInProgress) {
-      AppState.circGameInProgress = false;
+    if (AppState.webGameInProgress) {
+      AppState.webGameInProgress = false;
       AppState.backButtonDispatcher.didPopRoute();
       Future.delayed(Duration(milliseconds: 100), () async {
         if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
@@ -41,7 +73,7 @@ class CricketGameViewModel extends BaseModel {
               showCrossIcon: false,
               title: "Game Over",
               subtitle: (data['game_score'] != null)
-                  ? "You scored ${data['game_score']} runs"
+                  ? "You score was ${data['game_score']}"
                   : "Game Over",
               action: Container(
                 width: SizeConfig.screenWidth,
@@ -62,7 +94,7 @@ class CricketGameViewModel extends BaseModel {
     // update cricket scoreboard
     Future.delayed(Duration(milliseconds: 2500), () {
       _lbService
-          .fetchCricketLeaderBoard()
+          .fetchWebGameLeaderBoard(game: data['game_type'])
           .then((value) => _lbService.scrollToUserIndexIfAvaiable());
     });
   }

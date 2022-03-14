@@ -1,8 +1,10 @@
 import 'package:felloapp/core/enums/leaderboard_service_enum.dart';
 import 'package:felloapp/core/model/leader_board_modal.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
-import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -11,20 +13,24 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
-class CricketLeaderboardView extends StatelessWidget {
+class WebGameLeaderboardView extends StatelessWidget {
+  final String game;
+
+  WebGameLeaderboardView({this.game});
+
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<LeaderboardService,
             LeaderBoardServiceProperties>(
-        properties: [LeaderBoardServiceProperties.CricketLeaderboard],
+        properties: [LeaderBoardServiceProperties.WebGameLeaderBOard],
         builder: (context, m, properties) {
-          return m.cricketLeaderBoard == null
+          return m.webGameLeaderBoard == null
               ? NoRecordDisplayWidget(
                   asset: "images/leaderboard.png",
                   text: "Leaderboard will be updated soon",
                 )
               : LeaderBoardView(
-                  model: m.cricketLeaderBoard,
+                  model: m.webGameLeaderBoard,
                   controller: m.parentController,
                   ownController: m.ownController,
                 );
@@ -35,6 +41,7 @@ class CricketLeaderboardView extends StatelessWidget {
 class LeaderBoardView extends StatelessWidget {
   final LeaderBoardModal model;
   final ScrollController controller, ownController;
+  final _userService = locator<UserService>();
 
   LeaderBoardView({this.model, this.controller, this.ownController});
   @override
@@ -86,7 +93,10 @@ class LeaderBoardView extends StatelessWidget {
                   padding: EdgeInsets.all(SizeConfig.padding12),
                   margin: EdgeInsets.symmetric(vertical: SizeConfig.padding8),
                   decoration: BoxDecoration(
-                    color: UiConstants.primaryLight.withOpacity(0.1),
+                    color:
+                        model.scoreboard[i].userid == _userService.baseUser.uid
+                            ? UiConstants.tertiaryLight
+                            : UiConstants.primaryLight.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(SizeConfig.roundness16),
                   ),
                   child: Row(

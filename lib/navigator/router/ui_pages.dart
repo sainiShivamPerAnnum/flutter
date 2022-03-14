@@ -32,12 +32,9 @@ const String TShowAllTickets = 'tShowAllTickets';
 const String TPickDraw = 'tPickDraw';
 const String TWeeklyResult = 'tWeeklyResult';
 const String TSummaryDetails = 'tSummaryDetails';
-const String CricketHomePath = 'cricketHome';
-const String CricketGamePath = 'cricketGame';
 const String TransactionsHistoryPath = 'transHistory';
 const String KycDetailsPath = 'kycDetails';
 const String BankDetailsPath = 'bankDetails';
-// const String AugmontGoldBuyPath = '/augBuy';
 const String AugmontGoldSellPath = '/augSell';
 const String AugmontGoldDetailsPath = '/augDetails';
 const String ReferralDetailsPath = '/referralDetails';
@@ -52,6 +49,8 @@ const String TopSaverViewPath = '/topSaverView';
 const String AllParticipantsViewPath = '/allParticipantsView';
 const String GoldBalanceDetailsViewPath = '/goldBalanceDetailsView';
 const String PoolViewPath = "/poolView";
+const String WebHomeViewPath = "/webHomeView";
+const String WebGameViewPath = "/webGameView";
 
 enum Pages {
   Splash,
@@ -84,12 +83,10 @@ enum Pages {
   TShowAllTickets,
   TSummaryDetails,
   Notifications,
-  CricketHome,
-  CricketGame,
+
   TxnHistory,
   KycDetails,
   BankDetails,
-  // AugGoldBuy,
   AugGoldSell,
   AugGoldDetails,
   ReferralDetails,
@@ -103,7 +100,9 @@ enum Pages {
   TopSaverView,
   AllParticipantsView,
   GoldBalanceDetailsView,
-  PoolView
+  PoolView,
+  WebHomeView,
+  WebGameView,
 }
 
 class PageConfiguration {
@@ -332,20 +331,6 @@ PageConfiguration TSummaryDetailsPageConfig = PageConfiguration(
   name: 'Tambola Summary Screen',
 );
 
-PageConfiguration CricketHomePageConfig = PageConfiguration(
-  key: 'CricketHome',
-  path: CricketHomePath,
-  uiPage: Pages.CricketHome,
-  name: 'Cricket Home Screen',
-);
-
-PageConfiguration CricketGamePageConfig = PageConfiguration(
-  key: 'CricketGame',
-  path: CricketGamePath,
-  uiPage: Pages.CricketGame,
-  name: 'Cricket Game Screen',
-);
-
 PageConfiguration TransactionsHistoryPageConfig = PageConfiguration(
   key: 'TxnHistory',
   path: TransactionsHistoryPath,
@@ -458,6 +443,18 @@ PageConfiguration GoldBalanceDetailsViewPageConfig = PageConfiguration(
   path: GoldBalanceDetailsViewPath,
   uiPage: Pages.GoldBalanceDetailsView,
   name: 'Gold Balance Details Screen',
+);
+PageConfiguration WebHomeViewPageConfig = PageConfiguration(
+  key: 'WebHomeView',
+  path: WebHomeViewPath,
+  uiPage: Pages.WebHomeView,
+  name: 'Web Games Home Screen',
+);
+PageConfiguration WebGameViewPageConfig = PageConfiguration(
+  key: 'WebGameView',
+  path: WebGameViewPath,
+  uiPage: Pages.WebGameView,
+  name: 'Web games Screen',
 );
 PageConfiguration PoolViewPageConfig = PageConfiguration(
   key: 'PoolView',
