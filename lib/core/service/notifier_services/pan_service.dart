@@ -49,20 +49,20 @@ class PanService extends ChangeNotifier {
     }
   }
 
-  Future<bool> saveUserPan(String pan) async {
-    if (pan == null || pan.isEmpty || !panCheck.hasMatch(pan)) {
-      return false;
-    }
+  // Future<bool> saveUserPan(String pan) async {
+  //   if (pan == null || pan.isEmpty || !panCheck.hasMatch(pan)) {
+  //     return false;
+  //   }
 
-    ///encrypt pan
-    String encPan = await httpProvider.encryptText(pan, ENC_VERSION);
-    if (encPan == null || encPan.isEmpty) {
-      log.error('Encryption failed');
-      return false;
-    }
+  //   ///encrypt pan
+  //   String encPan = await httpProvider.encryptText(pan, ENC_VERSION);
+  //   if (encPan == null || encPan.isEmpty) {
+  //     log.error('Encryption failed');
+  //     return false;
+  //   }
 
-    ///save to remote
-    return await dbProvider.saveEncodedUserPan(
-        _userService.baseUser.uid, encPan, ENC_VERSION);
-  }
+  //   ///save to remote
+  //   return await dbProvider.saveEncodedUserPan(
+  //       _userService.baseUser.uid, encPan, ENC_VERSION);
+  // }
 }
