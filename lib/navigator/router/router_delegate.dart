@@ -23,6 +23,9 @@ import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/au
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/edit_augmont_bank_details.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_balance_details/gold_balance_details_view.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_view.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/autopay_details_view.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_view.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_game/cricket_game_view.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/dailyPicksDraw/dailyPicksDraw_view.dart';
@@ -279,6 +282,16 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(
               GoldBalanceDetailsView(), GoldBalanceDetailsViewPageConfig);
           break;
+        case Pages.AutoPayDetailsView:
+          _addPageData(AutoPayDetailsView(), AutoPayDetailsViewPageConfig);
+          break;
+        case Pages.AutoPayProcessView:
+          _addPageData(AutoPayProcessView(), AutoPayProcessViewPageConfig);
+          break;
+        case Pages.UserAutoPayDetailsView:
+          _addPageData(
+              UserAutoPayDetailsView(), UserAutoPayDetailsViewPageConfig);
+          break;
         default:
           break;
       }
@@ -481,6 +494,15 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.GoldBalanceDetailsView:
         GoldBalanceDetailsViewPageConfig.currentPageAction = action;
         break;
+      case Pages.AutoPayDetailsView:
+        AutoPayDetailsViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.AutoPayProcessView:
+        AutoPayProcessViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.UserAutoPayDetailsView:
+        UserAutoPayDetailsViewPageConfig.currentPageAction = action;
+        break;
       default:
         break;
     }
@@ -656,6 +678,15 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case 'pop':
         AppState.backButtonDispatcher.didPopRoute();
+        break;
+      case 'autoPayDetails':
+        pageConfiguration = AutoPayDetailsViewPageConfig;
+        break;
+      case 'autoPayProcess':
+        pageConfiguration = AutoPayProcessViewPageConfig;
+        break;
+      case 'UserAutoPayDetails':
+        pageConfiguration = UserAutoPayDetailsViewPageConfig;
         break;
     }
     if (pageConfiguration != null) {

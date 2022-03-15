@@ -1,3 +1,6 @@
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
@@ -13,6 +16,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 
 class Save extends StatelessWidget {
   final CustomLogger logger = locator<CustomLogger>();
@@ -59,11 +63,20 @@ class Save extends StatelessWidget {
                     ],
                   ),
                   Container(
+                    decoration: BoxDecoration(
+                      color: UiConstants.primaryLight.withOpacity(0.3),
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness12),
+                    ),
                     alignment: Alignment.center,
                     width: SizeConfig.screenWidth,
-                    margin: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.pageHorizontalMargins * 2,
-                        vertical: SizeConfig.padding12),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.pageHorizontalMargins / 2,
+                      vertical: SizeConfig.padding16,
+                    ),
+                    margin: EdgeInsets.all(
+                      SizeConfig.pageHorizontalMargins,
+                    ),
                     child: CurrentPriceWidget(
                       fetchGoldRates: model.fetchGoldRates,
                       goldprice: model.goldRates != null
@@ -103,6 +116,7 @@ class Save extends StatelessWidget {
                   //   child: Text("Show pool game"),
                   // ),
 
+                  AutoPayCard(),
                   SizedBox(height: SizeConfig.navBarHeight * 2),
                 ],
               ),
@@ -150,25 +164,31 @@ class FocusCouponClip extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(width: SizeConfig.padding6),
+            SizedBox(width: SizeConfig.padding12),
             InkWell(
               onTap: () => model.applyCoupon(model.focusCoupon.code),
-              child: Container(
-                alignment: Alignment.center,
-                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
-                //width: SizeConfig.screenWidth * 0.171,
-                height: SizeConfig.screenWidth * 0.065,
-                margin: EdgeInsets.only(left: SizeConfig.padding4),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(100),
-                ),
-                child: Text(
-                  "Apply",
-                  style: TextStyles.body4.colour(Colors.white).bold,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(100),
+                child: Shimmer(
+                  child: Container(
+                    alignment: Alignment.center,
+                    padding:
+                        EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
+                    //width: SizeConfig.screenWidth * 0.171,
+                    height: SizeConfig.screenWidth * 0.065,
+                    // margin: EdgeInsets.only(left: SizeConfig.padding4),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.3),
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: Text(
+                      "Apply",
+                      style: TextStyles.body4.colour(Colors.white).bold,
+                    ),
+                  ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -293,6 +313,123 @@ class SaveInfoTile extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class AutoPayCard extends StatelessWidget {
+  const AutoPayCard({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: SizeConfig.screenWidth,
+      margin:
+          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+      decoration: BoxDecoration(
+        // color: Color(0xfff3c5c5),
+        color: Color(0xff6b7AA1),
+
+        //color: Colors.white,
+        borderRadius: BorderRadius.circular(SizeConfig.roundness24),
+      ),
+      padding: EdgeInsets.only(left: SizeConfig.pageHorizontalMargins),
+      child: Stack(
+        children: [
+          Positioned(
+            bottom: 0,
+            right: SizeConfig.padding16,
+            child: Image.asset(
+              "assets/images/autopay.png",
+              width: SizeConfig.screenWidth / 2.4,
+            ),
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: SizeConfig.pageHorizontalMargins * 2),
+                    FittedBox(
+                      child: Text(
+                        "Savings made easy with",
+                        style: TextStyles.body2.light.colour(Colors.white),
+                      ),
+                    ),
+                    SizedBox(height: SizeConfig.padding2),
+                    Text(
+                      "UPI AutoPay",
+                      style: TextStyles.title3.bold.colour(Colors.white),
+                    ),
+                    SizedBox(height: SizeConfig.padding16),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                vertical: SizeConfig.padding8),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: Color(0xff8f97b3),
+                              borderRadius: BorderRadius.circular(100),
+                              boxShadow: [
+                                BoxShadow(
+                                  color:
+                                      UiConstants.primaryColor.withOpacity(0.2),
+                                  offset: Offset(0, 2),
+                                  blurRadius: 5,
+                                  spreadRadius: 5,
+                                )
+                              ],
+                            ),
+                            child: Text(
+                              "Set Up",
+                              style: TextStyles.body2.colour(Colors.white),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: SizeConfig.padding8),
+                        Expanded(
+                          child: InkWell(
+                            onTap: () {
+                              AppState.delegate.appState.currentAction =
+                                  PageAction(
+                                      state: PageState.addPage,
+                                      page: AutoPayDetailsViewPageConfig);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: SizeConfig.padding8),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                border: Border.all(
+                                  width: 0.5,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              child: Text(
+                                "Details",
+                                style: TextStyles.body2.colour(Colors.white),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: SizeConfig.pageHorizontalMargins * 2)
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Container(),
+              )
+            ],
+          ),
+        ],
       ),
     );
   }
