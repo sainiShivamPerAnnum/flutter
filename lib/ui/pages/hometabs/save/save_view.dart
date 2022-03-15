@@ -7,6 +7,7 @@ import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augm
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -15,6 +16,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
@@ -117,6 +119,47 @@ class Save extends StatelessWidget {
                   // ),
 
                   AutoPayCard(),
+                  SizedBox(height: SizeConfig.padding32),
+                  // Goldlinks(model: model),
+                  Container(
+                    width: SizeConfig.screenWidth,
+                    margin: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.pageHorizontalMargins),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness32),
+                    ),
+                    padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                    child: Column(
+                      children: [
+                        TextField(
+                          controller: model.vpaController,
+                          decoration: InputDecoration(
+                              hintText: "Enter your upi address"),
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding16,
+                        ),
+                        FelloButtonLg(
+                          child: model.isSubscriptionInProgress
+                              ? SpinKitThreeBounce(
+                                  color: Colors.white,
+                                  size: 20,
+                                )
+                              : Text(
+                                  "SUBSCRIBE",
+                                  style: TextStyles.body2
+                                      .colour(Colors.white)
+                                      .bold,
+                                ),
+                          onPressed: () async {
+                            model.initiateSubscription();
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
                   SizedBox(height: SizeConfig.navBarHeight * 2),
                 ],
               ),

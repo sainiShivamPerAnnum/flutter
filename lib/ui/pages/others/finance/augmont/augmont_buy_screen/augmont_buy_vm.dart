@@ -71,6 +71,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   bool _showMaxCapText = false;
   bool _isGoldRateFetching = false;
   bool _isGoldBuyInProgress = false;
+  bool _isSubscriptionInProgress = false;
   bool _couponApplyInProgress = false;
   bool _showCoupons = false;
   AugmontRates goldRates;
@@ -83,6 +84,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   double goldBuyAmount = 0;
   double goldAmountInGrams = 0.0;
   TextEditingController goldAmountController;
+  TextEditingController vpaController;
   List<double> chipAmountList = [101, 201, 501, 1001];
   List<CouponModel> _couponList;
 
@@ -166,10 +168,18 @@ class AugmontGoldBuyViewModel extends BaseModel {
     notifyListeners();
   }
 
+  get isSubscriptionInProgress => this._isSubscriptionInProgress;
+
+  set isSubscriptionInProgress(value) {
+    this._isSubscriptionInProgress = value;
+    notifyListeners();
+  }
+
   init() async {
     setState(ViewState.Busy);
     buyFieldNode = _userService.buyFieldFocusNode;
     goldBuyAmount = chipAmountList[1];
+    vpaController = TextEditingController(text: "7777777777@paytm");
     goldAmountController =
         TextEditingController(text: chipAmountList[1].toInt().toString());
     fetchGoldRates();
@@ -343,6 +353,45 @@ class AugmontGoldBuyViewModel extends BaseModel {
       _dbModel.logFailure(
           _userService.baseUser.uid, FailType.DepositPayloadError, e);
     }
+  }
+
+  initiateSubscription() async {
+    isSubscriptionInProgress = true;
+    bool _status = await _paytmService.initiateSubscription();
+    isSubscriptionInProgress = false;
+    if (_status) {
+      showSuccessGoldBuyDialog(1.0,
+          subtitle: "Your subscription was successfull!!");
+    } else {
+      BaseUtil.showNegativeAlert(
+        'Subscription failed',
+        'Please try again in sometime or contact us for further assistance.',
+      );
+    }
+  }
+
+  initiateCustomSubscription() async {
+    isSubscriptionInProgress = true;
+    PaytmResponse response =
+        await _paytmService.initiateCustomSubscription(vpaController.text);
+    isSubscriptionInProgress = false;
+    if (response.status)
+      showSuccessGoldBuyDialog(1.0, subtitle: response.reason);
+    else
+      switch (response.errorCode) {
+        case INVALID_VPA_DETECTED:
+          BaseUtil.showNegativeAlert(
+            response.reason,
+            'Please enter a valid vpa address',
+          );
+          break;
+        default:
+          BaseUtil.showNegativeAlert(
+            response.reason,
+            'Please try again',
+          );
+          break;
+      }
   }
 
   initiateBuy() async {
@@ -579,7 +628,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
       return amount.toInt();
   }
 
-  showSuccessGoldBuyDialog(amount) {
+  showSuccessGoldBuyDialog(double amount, {String subtitle}) {
     BaseUtil.openDialog(
       addToScreenStack: true,
       hapticVibrate: true,
@@ -587,7 +636,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
       content: FelloConfirmationDialog(
         asset: Assets.goldenTicket,
         title: "Congratulations",
-        subtitle:
+        subtitle: subtitle ??
             "You have successfully saved ₹ ${getAmount(amount)} and earned ${amount.ceil()} tokens!",
         result: (res) {
           // if (res) ;
