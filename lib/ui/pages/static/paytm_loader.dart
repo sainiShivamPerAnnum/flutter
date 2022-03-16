@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:felloapp/core/model/paytm_models/create_paytm_subscription_response_model.dart';
@@ -51,13 +52,9 @@ class _PaytmLoaderState extends State<PaytmLoader> {
             _webViewController = controller;
             _loadHtmlContent();
           },
-          navigationDelegate: (NavigationRequest request) {
-            log(request.url);
-            if (request.url.contains('paytmCallback')) {
+          onPageFinished: (url) {
+            if (url.contains('paytmCallback'))
               AppState.backButtonDispatcher.didPopRoute();
-              return NavigationDecision.prevent;
-            }
-            return NavigationDecision.navigate;
           },
         ),
       ),
