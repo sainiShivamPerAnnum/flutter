@@ -96,13 +96,9 @@ class PaytmRepository {
       final String _uid = _userService.baseUser.uid;
       final Map<String, dynamic> _body = {
         "uid": _uid,
-        "subscriptionAmountType": "VARIABLE",
-        "subscriptionFrequencyUnit": "DAY",
-        // "subscriptionStartDate": DateFormat('dd-MM-YYY').format(DateTime.now()),
-        "subscriptionGraceDays": 0,
-        "subscriptionExpiryDate": "2030-12-31",
-        "subscriptionMaxAmount": 2000,
-        "txnAmount": {"value": 1, "currency": "INR"}
+        "maxAmount": 3000,
+        "expiryDate": "2030-03-20",
+        "amount": 1
       };
       final _token = await _getBearerToken();
       _logger.d("This is body: $_body");

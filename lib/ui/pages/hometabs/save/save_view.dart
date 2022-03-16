@@ -1,7 +1,9 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/modals_sheets/custom_subscription_modal.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
@@ -121,45 +123,7 @@ class Save extends StatelessWidget {
                   AutoPayCard(),
                   SizedBox(height: SizeConfig.padding32),
                   // Goldlinks(model: model),
-                  Container(
-                    width: SizeConfig.screenWidth,
-                    margin: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.pageHorizontalMargins),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness32),
-                    ),
-                    padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                    child: Column(
-                      children: [
-                        TextField(
-                          controller: model.vpaController,
-                          decoration: InputDecoration(
-                              hintText: "Enter your upi address"),
-                        ),
-                        SizedBox(
-                          height: SizeConfig.padding16,
-                        ),
-                        FelloButtonLg(
-                          child: model.isSubscriptionInProgress
-                              ? SpinKitThreeBounce(
-                                  color: Colors.white,
-                                  size: 20,
-                                )
-                              : Text(
-                                  "SUBSCRIBE",
-                                  style: TextStyles.body2
-                                      .colour(Colors.white)
-                                      .bold,
-                                ),
-                          onPressed: () async {
-                            model.initiateSubscription();
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
+                  //CustomSubscriptionContainer(),
                   SizedBox(height: SizeConfig.navBarHeight * 2),
                 ],
               ),
@@ -411,26 +375,44 @@ class AutoPayCard extends StatelessWidget {
                     Row(
                       children: [
                         Expanded(
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                                vertical: SizeConfig.padding8),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Color(0xff8f97b3),
-                              borderRadius: BorderRadius.circular(100),
-                              boxShadow: [
-                                BoxShadow(
-                                  color:
-                                      UiConstants.primaryColor.withOpacity(0.2),
-                                  offset: Offset(0, 2),
-                                  blurRadius: 5,
-                                  spreadRadius: 5,
-                                )
-                              ],
-                            ),
-                            child: Text(
-                              "Set Up",
-                              style: TextStyles.body2.colour(Colors.white),
+                          child: InkWell(
+                            onTap: () {
+                              BaseUtil.openModalBottomSheet(
+                                addToScreenStack: true,
+                                backgroundColor: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                  topLeft:
+                                      Radius.circular(SizeConfig.roundness32),
+                                  topRight:
+                                      Radius.circular(SizeConfig.roundness32),
+                                ),
+                                content: CustomSubscriptionModal(),
+                                hapticVibrate: true,
+                                isBarrierDismissable: false,
+                                isScrollControlled: true,
+                              );
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: SizeConfig.padding8),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: Color(0xff8f97b3),
+                                borderRadius: BorderRadius.circular(100),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: UiConstants.primaryColor
+                                        .withOpacity(0.2),
+                                    offset: Offset(0, 2),
+                                    blurRadius: 5,
+                                    spreadRadius: 5,
+                                  )
+                                ],
+                              ),
+                              child: Text(
+                                "Set Up",
+                                style: TextStyles.body2.colour(Colors.white),
+                              ),
                             ),
                           ),
                         ),

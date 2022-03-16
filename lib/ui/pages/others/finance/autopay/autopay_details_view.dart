@@ -1,9 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/modals_sheets/custom_subscription_modal.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_balance_details/gold_balance_details_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
@@ -268,16 +271,10 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView> {
                                 ),
                                 SizedBox(height: SizeConfig.padding12),
                                 InfoTile(
-                                  svg: Assets.wmtsaveMoney,
-                                  title: "Set an amount you want to invest",
-                                  subtitle: "You can change it anytime",
-                                ),
-                                InfoTile(
                                   png: "assets/images/icons/bank.png",
-                                  title:
-                                      "Select a bank account or enter your UPI id",
+                                  title: "Enter your UPI Id",
                                   subtitle:
-                                      "Make sure your bank supports autopay, check here",
+                                      "Make sure your bank supports autopay",
                                 ),
                                 InfoTile(
                                   svg: "assets/vectors/check.svg",
@@ -285,6 +282,11 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView> {
                                       "Open the UPI app and approve the request",
                                   subtitle:
                                       "Check you PENDING upi transactions for this request",
+                                ),
+                                InfoTile(
+                                  svg: Assets.wmtsaveMoney,
+                                  title: "Set a daily saving amount",
+                                  subtitle: "You can change it anytime",
                                 ),
 
                                 Container(
@@ -415,9 +417,18 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView> {
                       style: TextStyles.body2.bold.colour(Colors.white),
                     ),
                     onPressed: () {
-                      AppState.delegate.appState.currentAction = PageAction(
-                          state: PageState.addPage,
-                          page: AutoPayProcessViewPageConfig);
+                      BaseUtil.openModalBottomSheet(
+                        addToScreenStack: true,
+                        backgroundColor: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(SizeConfig.roundness32),
+                          topRight: Radius.circular(SizeConfig.roundness32),
+                        ),
+                        content: CustomSubscriptionModal(),
+                        hapticVibrate: true,
+                        isBarrierDismissable: false,
+                        isScrollControlled: true,
+                      );
                     },
                   ),
                 ),

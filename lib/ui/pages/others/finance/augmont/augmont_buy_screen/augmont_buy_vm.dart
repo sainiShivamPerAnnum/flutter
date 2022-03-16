@@ -179,7 +179,6 @@ class AugmontGoldBuyViewModel extends BaseModel {
     setState(ViewState.Busy);
     buyFieldNode = _userService.buyFieldFocusNode;
     goldBuyAmount = chipAmountList[1];
-    vpaController = TextEditingController(text: "7777777777@paytm");
     goldAmountController =
         TextEditingController(text: chipAmountList[1].toInt().toString());
     fetchGoldRates();
@@ -372,8 +371,8 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
   initiateCustomSubscription() async {
     isSubscriptionInProgress = true;
-    PaytmResponse response =
-        await _paytmService.initiateCustomSubscription(vpaController.text);
+    PaytmResponse response = await _paytmService
+        .initiateCustomSubscription(vpaController.text + "@paytm");
     isSubscriptionInProgress = false;
     if (response.status)
       showSuccessGoldBuyDialog(1.0, subtitle: response.reason);

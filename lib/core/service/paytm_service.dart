@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_subscription_response_model.dart';
@@ -8,6 +9,7 @@ import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_mode
 import 'package:felloapp/core/model/paytm_models/validate_vpa_response_model.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/paytm_loader.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/credentials_stage.dart';
@@ -240,24 +242,15 @@ class PaytmService {
 
     try {
       _logger.d("Paytm order id: ${paytmSubscriptionModel.data.orderId}");
-      String htmlCode = """
-      <form name="paytm_form" method="POST" action="https://securegw-stage.paytm.in/order/pay?mid=$mid&orderId=${paytmSubscriptionModel.data.orderId}">
-         <input type="hidden" name="txnToken" value="${paytmSubscriptionModel.data.temptoken}" />
-         <input type="hidden" name="SUBSCRIPTION_ID" value="${paytmSubscriptionModel.data.subscriptionId}" />
-         <input type="hidden" name="paymentMode" value="UPI" />
-         <input type="hidden" name="AUTH_MODE" value="USRPWD" />
-         <input type="hidden" name="payerAccount" value="$vpa" />
-      </form>
-      <script type="text/javascript">
-         document.paytm_form.submit();
-      </script>
-      """;
+      AppState.backButtonDispatcher.didPopRoute();
       AppState.screenStack.add(ScreenItem.dialog);
       Navigator.of(AppState.delegate.navigatorKey.currentContext).push(
         PageRouteBuilder(
           opaque: false,
           pageBuilder: (BuildContext context, _, __) => PaytmLoader(
-            htmlCode: htmlCode,
+            mid: mid,
+            paytmSubscriptionModel: paytmSubscriptionModel,
+            vpa: vpa,
           ),
         ),
       );

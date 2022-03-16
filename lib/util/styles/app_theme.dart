@@ -15,7 +15,9 @@ class FelloTheme {
       visualDensity: VisualDensity.adaptivePlatformDensity,
       colorScheme: ColorScheme.light(primary: UiConstants.primaryColor),
       textTheme: GoogleFonts.sourceSansProTextTheme(),
-
+      chipTheme: ChipThemeData(
+        backgroundColor: UiConstants.primaryLight.withOpacity(0.4),
+      ),
       inputDecorationTheme: InputDecorationTheme(
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
