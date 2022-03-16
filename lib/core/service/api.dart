@@ -829,6 +829,14 @@ class Api {
     return _query.get();
   }
 
+  Future<QuerySnapshot> fetchActiveSubscriptionDetails(String userid) async {
+    Query _query = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userid)
+        .collection(Constants.SUBCOLN_USER_SUBSCRIPTION)
+        .where('status', isEqualTo: "ACTIVE");
+    return _query.get();
+  }
   //---------------------------------------REALTIME DATABASE-------------------------------------------//
 
   Future<bool> checkUserNameAvailability(String username) async {

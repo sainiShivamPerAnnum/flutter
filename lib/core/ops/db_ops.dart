@@ -15,6 +15,7 @@ import 'package:felloapp/core/model/feed_card_model.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
+import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/model/tambola_winners_details.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
@@ -1433,6 +1434,23 @@ class DBModel extends ChangeNotifier {
     }
 
     return couponList;
+  }
+
+  Future<ActiveSubscriptionModel> getActiveSubscriptionDetails(
+      String uid) async {
+    ActiveSubscriptionModel activeSubscription;
+    try {
+      QuerySnapshot response = await _api.fetchActiveSubscriptionDetails(uid);
+      if (response.docs.first.data() != null) {
+        logger.d(response.docs.first.data());
+        activeSubscription = ActiveSubscriptionModel.fromJson(
+            response.docs.first.data(), response.docs.first.id);
+      }
+    } catch (e) {
+      logger.e(e.toString());
+      activeSubscription = null;
+    }
+    return activeSubscription;
   }
 
 //------------------------------------------------REALTIME----------------------------

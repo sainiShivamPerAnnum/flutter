@@ -5,6 +5,7 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_vm.dart';
+import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
 import 'package:felloapp/ui/pages/others/profile/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/static/blinker.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
@@ -60,77 +61,86 @@ class UserAutoPayDetailsView extends StatelessWidget {
                                   size: SizeConfig.padding32,
                                 ),
                               )
-                            : ListView(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: SizeConfig.pageHorizontalMargins),
-                                children: [
-                                  TextFieldLabel("Subscription Id"),
-                                  TextFormField(
-                                    enabled: false,
-                                    controller: model.subIdController,
-                                  ),
-                                  TextFieldLabel("Primary UPI"),
-                                  TextFormField(
-                                    enabled: false,
-                                    controller: model.pUpiController,
-                                    decoration: InputDecoration(
-                                      suffixIcon: model.isVerified
-                                          ? Icon(
-                                              Icons.verified,
-                                              color: UiConstants.primaryColor,
-                                            )
-                                          : SizedBox(),
-                                    ),
-                                  ),
-                                  TextFieldLabel("Subscribed Amount"),
-                                  InkWell(
-                                    onTap: () {
-                                      BaseUtil.openDialog(
-                                          addToScreenStack: true,
-                                          isBarrierDismissable: false,
-                                          hapticVibrate: true,
-                                          content: AutoPayAmountUpdateDialog());
-                                    },
-                                    child: TextFormField(
-                                      controller: model.subAmountController,
-                                      //maxLength: 10,
-                                      enabled: false,
-                                      decoration: InputDecoration(
-                                        prefix: Text(
-                                          "₹ ",
-                                          style: TextStyles.body3.bold,
-                                        ),
-                                        suffix: Text(
-                                          "CHANGE",
-                                          style: TextStyles.body3.bold
-                                              .colour(UiConstants.primaryColor)
-                                              .letterSpace(2),
+                            : (model.activeSubscription != null
+                                ? ListView(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical:
+                                            SizeConfig.pageHorizontalMargins),
+                                    children: [
+                                      TextFieldLabel("Subscription Id"),
+                                      TextFormField(
+                                        enabled: false,
+                                        controller: model.subIdController,
+                                      ),
+                                      TextFieldLabel("Primary UPI"),
+                                      TextFormField(
+                                        enabled: false,
+                                        controller: model.pUpiController,
+                                        decoration: InputDecoration(
+                                          suffixIcon: model.isVerified
+                                              ? Icon(
+                                                  Icons.verified,
+                                                  color:
+                                                      UiConstants.primaryColor,
+                                                )
+                                              : SizedBox(),
                                         ),
                                       ),
-                                      textCapitalization:
-                                          TextCapitalization.characters,
-                                    ),
-                                  ),
-                                  TextFieldLabel("Subscription Status"),
-                                  TextFormField(
-                                    controller: model.subStatusController,
-                                    enabled: false,
-                                    decoration: InputDecoration(
-                                      prefix: Padding(
-                                        padding:
-                                            const EdgeInsets.only(right: 8.0),
-                                        child: Blinker(
-                                          child: CircleAvatar(
-                                            backgroundColor:
-                                                UiConstants.primaryColor,
-                                            radius: 5,
+                                      TextFieldLabel("Subscribed Amount"),
+                                      InkWell(
+                                        onTap: () {
+                                          BaseUtil.openDialog(
+                                              addToScreenStack: true,
+                                              isBarrierDismissable: false,
+                                              hapticVibrate: true,
+                                              content:
+                                                  AutoPayAmountUpdateDialog());
+                                        },
+                                        child: TextFormField(
+                                          controller: model.subAmountController,
+                                          //maxLength: 10,
+                                          enabled: false,
+                                          decoration: InputDecoration(
+                                            prefix: Text(
+                                              "₹ ",
+                                              style: TextStyles.body3.bold,
+                                            ),
+                                            suffix: Text(
+                                              "CHANGE",
+                                              style: TextStyles.body3.bold
+                                                  .colour(
+                                                      UiConstants.primaryColor)
+                                                  .letterSpace(2),
+                                            ),
+                                          ),
+                                          textCapitalization:
+                                              TextCapitalization.characters,
+                                        ),
+                                      ),
+                                      TextFieldLabel("Subscription Status"),
+                                      TextFormField(
+                                        controller: model.subStatusController,
+                                        enabled: false,
+                                        decoration: InputDecoration(
+                                          prefix: Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 8.0),
+                                            child: Blinker(
+                                              child: CircleAvatar(
+                                                backgroundColor:
+                                                    UiConstants.primaryColor,
+                                                radius: 5,
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                    ],
+                                  )
+                                : NoRecordDisplayWidget(
+                                    text:
+                                        "No Subscription Details at the moment.. Setup Autopay now->",
+                                  )),
                       ),
                     )
                   ],
@@ -151,83 +161,87 @@ class UserAutoPayDetailsView extends StatelessWidget {
                     ),
                   ),
                 ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: SafeArea(
-                    child: Container(
-                      margin: EdgeInsets.symmetric(
-                          vertical: Platform.isIOS
-                              ? SizeConfig.padding8
-                              : SizeConfig.pageHorizontalMargins / 2,
-                          horizontal: SizeConfig.pageHorizontalMargins),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          FelloButtonLg(
-                            child: Text(
-                              "Pause AutoPay",
-                              style: TextStyles.body2.bold.colour(Colors.white),
+                if (model.state == ViewState.Idle &&
+                    model.activeSubscription != null)
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: SafeArea(
+                      child: Container(
+                        margin: EdgeInsets.symmetric(
+                            vertical: Platform.isIOS
+                                ? SizeConfig.padding8
+                                : SizeConfig.pageHorizontalMargins / 2,
+                            horizontal: SizeConfig.pageHorizontalMargins),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            FelloButtonLg(
+                              child: Text(
+                                "Pause AutoPay",
+                                style:
+                                    TextStyles.body2.bold.colour(Colors.white),
+                              ),
+                              onPressed: () {
+                                BaseUtil.openModalBottomSheet(
+                                  addToScreenStack: true,
+                                  hapticVibrate: true,
+                                  backgroundColor: Colors.white,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft:
+                                        Radius.circular(SizeConfig.roundness32),
+                                    topRight:
+                                        Radius.circular(SizeConfig.roundness32),
+                                  ),
+                                  isBarrierDismissable: false,
+                                  content: PauseAutoPayModal(),
+                                );
+                              },
                             ),
-                            onPressed: () {
-                              BaseUtil.openModalBottomSheet(
-                                addToScreenStack: true,
-                                hapticVibrate: true,
-                                backgroundColor: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                  topLeft:
-                                      Radius.circular(SizeConfig.roundness32),
-                                  topRight:
-                                      Radius.circular(SizeConfig.roundness32),
-                                ),
-                                isBarrierDismissable: false,
-                                content: PauseAutoPayModal(),
-                              );
-                            },
-                          ),
-                          SizedBox(height: SizeConfig.padding8),
-                          TextButton(
-                            onPressed: () {
-                              BaseUtil.openDialog(
-                                addToScreenStack: true,
-                                hapticVibrate: true,
-                                isBarrierDismissable: false,
-                                content: FelloConfirmationDialog(
-                                  asset: Assets.signout,
-                                  title: 'Are you sure ?',
-                                  subtitle:
-                                      "You are making great profits. Try pausing it for some days instead.",
-                                  accept: "Cancle Subscription",
-                                  result: (res) {
-                                    Future.delayed(Duration(seconds: 3), () {
+                            SizedBox(height: SizeConfig.padding8),
+                            TextButton(
+                              onPressed: () {
+                                BaseUtil.openDialog(
+                                  addToScreenStack: true,
+                                  hapticVibrate: true,
+                                  isBarrierDismissable: false,
+                                  content: FelloConfirmationDialog(
+                                    asset: Assets.signout,
+                                    title: 'Are you sure ?',
+                                    subtitle:
+                                        "You are making great profits. Try pausing it for some days instead.",
+                                    accept: "Cancle Subscription",
+                                    result: (res) {
+                                      Future.delayed(Duration(seconds: 3), () {
+                                        AppState.backButtonDispatcher
+                                            .didPopRoute();
+                                        BaseUtil.showPositiveAlert(
+                                            "Subscription cancelled successfully",
+                                            "Hope you setup autopay again soon");
+                                      });
+                                    },
+                                    onAccept: () {},
+                                    onReject: () {
                                       AppState.backButtonDispatcher
                                           .didPopRoute();
-                                      BaseUtil.showPositiveAlert(
-                                          "Subscription cancelled successfully",
-                                          "Hope you setup autopay again soon");
-                                    });
-                                  },
-                                  onAccept: () {},
-                                  onReject: () {
-                                    AppState.backButtonDispatcher.didPopRoute();
-                                  },
-                                  reject: "Keep Investing",
-                                  rejectColor: Colors.grey.withOpacity(0.5),
-                                ),
-                              );
-                            },
-                            child: Text(
-                              "CANCEL SUBSCRIPTION",
-                              style: TextStyles.body2
-                                  .colour(Colors.red)
-                                  .light
-                                  .letterSpace(2),
+                                    },
+                                    reject: "Keep Investing",
+                                    rejectColor: Colors.grey.withOpacity(0.5),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                "CANCEL SUBSCRIPTION",
+                                style: TextStyles.body2
+                                    .colour(Colors.red)
+                                    .light
+                                    .letterSpace(2),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                )
+                  )
               ],
             ),
           ),
