@@ -57,28 +57,45 @@ class WebGameView extends StatelessWidget {
                   javascriptMode: JavascriptMode.unrestricted,
                 ),
               ),
-              Positioned(
-                top: SizeConfig.padding16,
-                right: SizeConfig.padding16,
-                child: SafeArea(
-                  child: CircleAvatar(
-                    backgroundImage: CachedNetworkImageProvider(
-                        "https://firebasestorage.googleapis.com/v0/b/fello-dev-station.appspot.com/o/test%2Fgame-close-icon.png?alt=media&token=1d52f5d5-edca-4e0c-9b06-3e97aa8001ac"),
-                    backgroundColor: Colors.red.withOpacity(0.5),
-                    child: IconButton(
-                      onPressed: AppState.backButtonDispatcher.didPopRoute,
-                      icon: Icon(
-                        Icons.close,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              )
+              inLandscapeMode
+                  ? Positioned(
+                      top: SizeConfig.padding16,
+                      right: SizeConfig.padding16,
+                      child: Close(),
+                    )
+                  : Positioned(
+                      bottom: SizeConfig.padding16,
+                      right: SizeConfig.padding16,
+                      child: Close(),
+                    )
             ],
           ),
         );
       },
+    );
+  }
+}
+
+class Close extends StatelessWidget {
+  const Close({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: CircleAvatar(
+        backgroundImage: CachedNetworkImageProvider(
+            "https://firebasestorage.googleapis.com/v0/b/fello-dev-station.appspot.com/o/test%2Fgame-close-icon.png?alt=media&token=1d52f5d5-edca-4e0c-9b06-3e97aa8001ac"),
+        backgroundColor: Colors.red.withOpacity(0.5),
+        child: IconButton(
+          onPressed: AppState.backButtonDispatcher.didPopRoute,
+          icon: Icon(
+            Icons.close,
+            color: Colors.white,
+          ),
+        ),
+      ),
     );
   }
 }
