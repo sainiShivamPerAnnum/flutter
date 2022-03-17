@@ -228,7 +228,19 @@ class WebHomeViewModel extends BaseModel {
 
   //PoolClub Methods --------------------------------START--------------------//
   Future<bool> _setupPoolClubGame() async {
-    return true;
+    setState(ViewState.Busy);
+    String _poolPlayCost = BaseRemoteConfig.remoteConfig
+            .getString(BaseRemoteConfig.POOLCLUB_PLAY_COST) ??
+        "10";
+    int _cost = int.tryParse(_poolPlayCost) ?? 10;
+    ApiResponse<FlcModel> _flcResponse = await _fclActionRepo.getCoinBalance();
+    setState(ViewState.Idle);
+    if (_flcResponse.model.flcBalance != null &&
+        _flcResponse.model.flcBalance >= _cost)
+      return true;
+    else {
+      return false;
+    }
   }
 
   String _generatePoolClubGameUrl() {

@@ -52,8 +52,11 @@ class FcmHandler extends ChangeNotifier {
           _webGameViewModel.endWebGame(data, Constants.GAME_TYPE_CRICKET);
           break;
         case FcmCommands.COMMAND_POOL_CLUB_GAME_END:
-          _webGameViewModel.handlePoolSessionEnd(
+          _webGameViewModel.handlePoolClubRoundEnd(
               data, Constants.GAME_TYPE_POOLCLUB);
+          break;
+        case FcmCommands.COMMAND_LOW_BALANCE_ALERT:
+          _webGameViewModel.handleLowBalanceAlert();
           break;
         case FcmCommands.COMMAND_SHOW_DIALOG:
           _fcmHandlerDataPayloads.showDialog(title, body);

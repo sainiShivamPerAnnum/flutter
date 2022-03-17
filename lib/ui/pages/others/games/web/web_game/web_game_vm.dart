@@ -1,11 +1,16 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/flc_pregame_model.dart';
+import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
@@ -17,6 +22,9 @@ class WebGameViewModel extends BaseModel {
   final _gtService = locator<GoldenTicketService>();
   final _logger = locator<CustomLogger>();
   final _lbService = locator<LeaderboardService>();
+  final _fclActionRepo = locator<FlcActionsRepo>();
+  final _userCoinService = locator<UserCoinService>();
+
   String _currentGame;
 
   get currentGame => this._currentGame;
@@ -100,11 +108,52 @@ class WebGameViewModel extends BaseModel {
     });
   }
 
-  handlePoolSessionEnd(Map<String, dynamic> data, String game) {
+  handlePoolClubRoundEnd(Map<String, dynamic> data, String game) async {
     if (data['gt_id'] != null && data['gt_id'].toString().isNotEmpty) {
-      _logger.d(data.toString());
+      _logger.d("Recived a Golden ticket with id: ${data['gt_id']}");
       GoldenTicketService.goldenTicketId = data['gt_id'];
     }
+    updateFlcBalance();
     _lbService.fetchWebGameLeaderBoard(game: game);
+  }
+
+  handlePoolClubSessionEnd() {
+    updateFlcBalance();
+    Future.delayed(Duration(seconds: 2500), () {
+      _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
+        if (res)
+          _gtService.showInstantGoldenTicketView(
+              title: 'Pool Club Milestone reached', source: GTSOURCE.poolClub);
+      });
+    });
+  }
+
+  handleLowBalanceAlert() {
+    if (AppState.isWebGameLInProgress || AppState.isWebGamePInProgress) {
+      AppState.isWebGameLInProgress = false;
+      AppState.isWebGamePInProgress = false;
+      AppState.backButtonDispatcher.didPopRoute();
+      Future.delayed(Duration(milliseconds: 700), () async {
+        BaseUtil.openModalBottomSheet(
+          addToScreenStack: true,
+          content: WantMoreTicketsModalSheet(
+            isInsufficientBalance: true,
+          ),
+          hapticVibrate: true,
+          backgroundColor: Colors.transparent,
+          isBarrierDismissable: true,
+        );
+      });
+    }
+  }
+
+  //helper
+  updateFlcBalance() async {
+    ApiResponse<FlcModel> _flcResponse = await _fclActionRepo.getCoinBalance();
+    if (_flcResponse.model.flcBalance != null) {
+      _userCoinService.setFlcBalance(_flcResponse.model.flcBalance);
+    } else {
+      _logger.d("Flc balance is null");
+    }
   }
 }
