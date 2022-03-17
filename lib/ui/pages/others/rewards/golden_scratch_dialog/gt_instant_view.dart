@@ -20,7 +20,7 @@ import 'package:lottie/lottie.dart';
 import 'package:scratcher/scratcher.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
-enum GTSOURCE { newuser, deposit, cricket, panVerify }
+enum GTSOURCE { newuser, deposit, cricket, poolClub, panVerify }
 
 class GTInstantView extends StatefulWidget {
   final String title;

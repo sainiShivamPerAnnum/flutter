@@ -8,6 +8,7 @@ import 'package:felloapp/core/service/notifier_services/golden_ticket_service.da
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog_landscape.dart';
@@ -110,9 +111,18 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
         "Exit Game",
         "Are you sure you want to leave?",
         () {
+          logger.d("Closing landscape mode game view");
           AppState.isWebGameLInProgress = false;
           didPopRoute();
-          return didPopRoute();
+          didPopRoute();
+          Future.delayed(Duration(seconds: 2500), () {
+            _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
+              if (res)
+                _gtService.showInstantGoldenTicketView(
+                    title: 'Pool Club Milestone reached',
+                    source: GTSOURCE.poolClub);
+            });
+          });
         },
         true,
       );
@@ -123,7 +133,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
         () {
           AppState.isWebGamePInProgress = false;
           didPopRoute();
-          return didPopRoute();
+          didPopRoute();
         },
         false,
       );

@@ -99,4 +99,12 @@ class WebGameViewModel extends BaseModel {
           .then((value) => _lbService.scrollToUserIndexIfAvaiable());
     });
   }
+
+  handlePoolSessionEnd(Map<String, dynamic> data, String game) {
+    if (data['gt_id'] != null && data['gt_id'].toString().isNotEmpty) {
+      _logger.d(data.toString());
+      GoldenTicketService.goldenTicketId = data['gt_id'];
+    }
+    _lbService.fetchWebGameLeaderBoard(game: game);
+  }
 }
