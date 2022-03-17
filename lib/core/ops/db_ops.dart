@@ -1441,9 +1441,6 @@ class DBModel extends ChangeNotifier {
     return await _api.checkUserNameAvailability(username);
   }
 
-  Future<bool> setUsername(String username, String userId) async {
-    return await _api.setUserName(username, userId);
-  }
 
   Future<bool> sendEmailToVerifyEmail(String email, String otp) async {
     return await _api.createEmailVerificationDocument(email, otp);

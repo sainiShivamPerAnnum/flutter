@@ -848,16 +848,4 @@ class Api {
     }
   }
 
-  Future<bool> setUserName(String username, String userId) async {
-    try {
-      await _realtimeDatabase
-          .reference()
-          .child("usernames")
-          .child(username)
-          .set(userId);
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
 }
