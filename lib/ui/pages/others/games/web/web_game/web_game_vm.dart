@@ -49,7 +49,7 @@ class WebGameViewModel extends BaseModel {
   //   }
   // }
 
-  endCricketGame(data) {
+  endWebGame(data, game) {
     _logger.i("FCM Command received to end Cricket game");
     //  check if payload has a golden ticket
     if (data['gt_id'] != null && data['gt_id'].toString().isNotEmpty) {
@@ -95,7 +95,7 @@ class WebGameViewModel extends BaseModel {
     // update cricket scoreboard
     Future.delayed(Duration(milliseconds: 2500), () {
       _lbService
-          .fetchWebGameLeaderBoard(game: data['game_type'])
+          .fetchWebGameLeaderBoard(game: game)
           .then((value) => _lbService.scrollToUserIndexIfAvaiable());
     });
   }
