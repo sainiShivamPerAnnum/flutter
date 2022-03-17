@@ -13,24 +13,24 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
-class WebGameLeaderboardView extends StatelessWidget {
+class WebGameLeaderBoardView extends StatelessWidget {
   final String game;
 
-  WebGameLeaderboardView({this.game});
+  WebGameLeaderBoardView({this.game});
 
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<LeaderboardService,
             LeaderBoardServiceProperties>(
-        properties: [LeaderBoardServiceProperties.WebGameLeaderBOard],
+        properties: [LeaderBoardServiceProperties.WebGameLeaderBoard],
         builder: (context, m, properties) {
-          return m.webGameLeaderBoard == null
+          return m.WebGameLeaderBoard == null
               ? NoRecordDisplayWidget(
                   asset: "images/leaderboard.png",
                   text: "Leaderboard will be updated soon",
                 )
               : LeaderBoardView(
-                  model: m.webGameLeaderBoard,
+                  model: m.WebGameLeaderBoard,
                   controller: m.parentController,
                   ownController: m.ownController,
                 );

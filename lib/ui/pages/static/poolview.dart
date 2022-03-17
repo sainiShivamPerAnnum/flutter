@@ -17,12 +17,12 @@ class _PoolViewState extends State<PoolView> {
   @override
   void initState() {
     super.initState();
-    AppState.webGameInProgress = true;
+    AppState.isWebGameLInProgress = true;
   }
 
   @override
   dispose() {
-    AppState.webGameInProgress = false;
+    AppState.isWebGameLInProgress = false;
     super.dispose();
   }
 

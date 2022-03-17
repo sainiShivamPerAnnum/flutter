@@ -57,8 +57,9 @@ class WebGameViewModel extends BaseModel {
       GoldenTicketService.goldenTicketId = data['gt_id'];
     }
     //Navigate back to CricketView
-    if (AppState.webGameInProgress) {
-      AppState.webGameInProgress = false;
+    if (AppState.isWebGameLInProgress || AppState.isWebGamePInProgress) {
+      AppState.isWebGameLInProgress = false;
+      AppState.isWebGamePInProgress = false;
       AppState.backButtonDispatcher.didPopRoute();
       Future.delayed(Duration(milliseconds: 100), () async {
         if (await _gtService.fetchAndVerifyGoldenTicketByID()) {

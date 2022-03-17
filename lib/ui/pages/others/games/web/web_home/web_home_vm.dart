@@ -183,6 +183,8 @@ class WebHomeViewModel extends BaseModel {
       widget: WebGameView(
         initialUrl: initialUrl,
         game: currentGame,
+        inLandscapeMode:
+            currentGame == Constants.GAME_TYPE_POOLCLUB ? true : false,
       ),
     );
   }
@@ -230,7 +232,7 @@ class WebHomeViewModel extends BaseModel {
   }
 
   String _generatePoolClubGameUrl() {
-    return "https://d2qfyj2eqvh06a.cloudfront.net/pool-club/index.html?user=${_userService.baseUser.uid}&name=${_userService.baseUser.username}";
+    return "https://d2qfyj2eqvh06a.cloudfront.net/pool-club/index.html?user=${_userService.baseUser.uid}";
   }
 
   //PoolClub Methods -----------------------------------END-------------------//

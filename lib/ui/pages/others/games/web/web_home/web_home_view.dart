@@ -144,7 +144,7 @@ class WebHomeView extends StatelessWidget {
                                                                       .primaryColor),
                                                             )),
                                                   )),
-                                        WebGameLeaderboardView()
+                                        WebGameLeaderBoardView()
                                       ]),
                                 ),
                               ],

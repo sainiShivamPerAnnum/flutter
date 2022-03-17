@@ -22,8 +22,8 @@ class LeaderboardService
 
   List<ReferralBoard> _referralLeaderBoard = [];
 
-  LeaderBoardModal _webGameLeaderBoard;
-  LeaderBoardModal get webGameLeaderBoard => this._webGameLeaderBoard;
+  LeaderBoardModal _WebGameLeaderBoard;
+  LeaderBoardModal get WebGameLeaderBoard => this._WebGameLeaderBoard;
 
   List<ReferralBoard> get referralLeaderBoard => this._referralLeaderBoard;
 
@@ -35,7 +35,7 @@ class LeaderboardService
   }
 
   setWebGameLeaderBoard() {
-    notifyListeners(LeaderBoardServiceProperties.WebGameLeaderBOard);
+    notifyListeners(LeaderBoardServiceProperties.WebGameLeaderBoard);
     _logger.d("Web Game leaderboard updated, property listeners notified");
   }
 
@@ -54,19 +54,19 @@ class LeaderboardService
     ApiResponse<LeaderBoardModal> response =
         await _statsRepo.getLeaderBoard(game, "weekly");
     if (response.code == 200) {
-      _webGameLeaderBoard = response.model;
+      _WebGameLeaderBoard = response.model;
       setWebGameLeaderBoard();
       _logger.d("$game Leaderboard successfully fetched");
     } else {
-      _webGameLeaderBoard = null;
+      _WebGameLeaderBoard = null;
     }
   }
 
   scrollToUserIndexIfAvaiable() {
     _logger.d("Checking if user is in scoreboard or not");
     int index;
-    for (int i = 0; i < _webGameLeaderBoard.scoreboard.length; i++) {
-      if (_webGameLeaderBoard.scoreboard[i].username ==
+    for (int i = 0; i < _WebGameLeaderBoard.scoreboard.length; i++) {
+      if (_WebGameLeaderBoard.scoreboard[i].username ==
           _userService.baseUser.username) index = i;
     }
     if (index != null) {
