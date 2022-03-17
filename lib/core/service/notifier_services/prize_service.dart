@@ -43,6 +43,6 @@ class PrizeService extends ChangeNotifier {
 
   fetchPoolClubPrizes() async {
     poolClubPrizes = await _prizeRepo.getPrizesPerGamePerFreq(
-        Constants.GAME_TYPE_CRICKET, "weekly");
+        Constants.GAME_TYPE_POOLCLUB, "weekly");
   }
 }

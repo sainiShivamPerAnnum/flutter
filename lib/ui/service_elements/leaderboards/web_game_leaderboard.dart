@@ -91,11 +91,18 @@ class LeaderBoardView extends StatelessWidget {
                 return Container(
                   width: SizeConfig.screenWidth,
                   padding: EdgeInsets.all(SizeConfig.padding12),
-                  margin: EdgeInsets.symmetric(vertical: SizeConfig.padding8),
+                  margin: EdgeInsets.symmetric(
+                      vertical: SizeConfig.padding8, horizontal: 1),
                   decoration: BoxDecoration(
+                    border: Border.all(
+                      color: model.scoreboard[i].userid ==
+                              _userService.baseUser.uid
+                          ? UiConstants.primaryColor
+                          : Colors.white,
+                    ),
                     color:
                         model.scoreboard[i].userid == _userService.baseUser.uid
-                            ? UiConstants.tertiaryLight
+                            ? UiConstants.primaryLight.withOpacity(0.4)
                             : UiConstants.primaryLight.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(SizeConfig.roundness16),
                   ),

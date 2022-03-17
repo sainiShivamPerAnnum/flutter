@@ -281,15 +281,15 @@ class BaseUtil extends ChangeNotifier {
         gameName: "Pool Club",
         pageConfig: THomePageConfig,
         tag: 'poolclub',
-        thumbnailUri:
-            "https://firebasestorage.googleapis.com/v0/b/fello-dev-station.appspot.com/o/test%2Fpoolclub.png?alt=media&token=23403ec7-1c55-4ce7-827e-045ad6d059de",
+        thumbnailUri: BaseRemoteConfig.remoteConfig
+            .getString(BaseRemoteConfig.POOLCLUB_THUMBNAIL_URI),
         playCost: BaseRemoteConfig.remoteConfig
-                .getString(BaseRemoteConfig.TAMBOLA_PLAY_COST) ??
+                .getString(BaseRemoteConfig.POOLCLUB_PLAY_COST) ??
             "10",
         prizeAmount: BaseRemoteConfig.remoteConfig
-                .getString(BaseRemoteConfig.TAMBOLA_PLAY_PRIZE) ??
+                .getString(BaseRemoteConfig.POOLCLUB_PLAY_PRIZE) ??
             "10,000",
-        analyticEvent: AnalyticsEvents.selectPlayCricket,
+        analyticEvent: AnalyticsEvents.selectPlayPoolClub,
       ),
       GameModel(
         gameName: "Tambola",

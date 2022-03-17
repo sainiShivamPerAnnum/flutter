@@ -99,13 +99,13 @@ class Save extends StatelessWidget {
                   //   child: Text("Show txn waiting dialog"),
                   // ),
 
-                  TextButton(
-                    onPressed: () {
-                      AppState.delegate.appState.currentAction = PageAction(
-                          state: PageState.addPage, page: PoolViewPageConfig);
-                    },
-                    child: Text("Show pool game"),
-                  ),
+                  // TextButton(
+                  //   onPressed: () {
+                  //     AppState.delegate.appState.currentAction = PageAction(
+                  //         state: PageState.addPage, page: PoolViewPageConfig);
+                  //   },
+                  //   child: Text("Show pool game"),
+                  // ),
 
                   SizedBox(height: SizeConfig.navBarHeight * 2),
                 ],

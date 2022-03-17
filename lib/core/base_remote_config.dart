@@ -107,6 +107,13 @@ class BaseRemoteConfig {
   static const Map<String, String> _CRICKET_PLAY_PRIZE = {
     'cricket_play_prize': '25,000'
   };
+
+  static const Map<String, String> _POOLCLUB_PLAY_COST = {
+    'poolclub_play_cost': '10'
+  };
+  static const Map<String, String> _POOLCLUB_PLAY_PRIZE = {
+    'poolclub_play_prize': '25,000'
+  };
   static const Map<String, String> _CRICKET_THUMBNAIL_URI = {
     'cricket_thumbnail':
         'https://fello-assets.s3.ap-south-1.amazonaws.com/fello_cricket.png'
@@ -114,6 +121,11 @@ class BaseRemoteConfig {
   static const Map<String, String> _TAMBOLA_THUMBNAIL_URI = {
     'tambola_thumbnail':
         'https://fello-assets.s3.ap-south-1.amazonaws.com/fello_tambola.png'
+  };
+
+  static const Map<String, String> _POOLCLUB_THUMBNAIL_URI = {
+    'poolclub_thumbnail':
+        'https://firebasestorage.googleapis.com/v0/b/fello-dev-station.appspot.com/o/test%2Fpoolclub.png?alt=media&token=23403ec7-1c55-4ce7-827e-045ad6d059de'
   };
   static const Map<String, String> _MIN_WITHDRAWABLE_PRIZE = {
     'min_withdrawable_prize': '100'
@@ -163,8 +175,11 @@ class BaseRemoteConfig {
     ..._TAMBOLA_PLAY_PRIZE,
     ..._CRICKET_PLAY_COST,
     ..._CRICKET_PLAY_PRIZE,
+    ..._POOLCLUB_PLAY_COST,
+    ..._POOLCLUB_PLAY_PRIZE,
     ..._CRICKET_THUMBNAIL_URI,
     ..._TAMBOLA_THUMBNAIL_URI,
+    ..._POOLCLUB_THUMBNAIL_URI,
     ..._MIN_WITHDRAWABLE_PRIZE,
     ..._GAME_TAMBOLA_ANNOUNCEMENT,
     ..._GAME_CRICKET_ANNOUNCEMENT,
@@ -182,7 +197,7 @@ class BaseRemoteConfig {
 
       await remoteConfig.setConfigSettings(RemoteConfigSettings(
         fetchTimeout: const Duration(milliseconds: 30000),
-        minimumFetchInterval: const Duration(hours: 6),
+        minimumFetchInterval: const Duration(seconds: 6),
       ));
       await remoteConfig.setDefaults(DEFAULTS);
       //RemoteConfigValue(null, ValueSource.valueStatic);
@@ -274,9 +289,16 @@ class BaseRemoteConfig {
 
   static String get CRICKET_PLAY_PRIZE => _CRICKET_PLAY_PRIZE.keys.first;
 
+  static String get POOLCLUB_PLAY_COST => _POOLCLUB_PLAY_COST.keys.first;
+
+  static String get POOLCLUB_PLAY_PRIZE => _POOLCLUB_PLAY_PRIZE.keys.first;
+
   static String get CRICKET_THUMBNAIL_URI => _CRICKET_THUMBNAIL_URI.keys.first;
 
   static String get TAMBOLA_THUMBNAIL_URI => _TAMBOLA_THUMBNAIL_URI.keys.first;
+
+  static String get POOLCLUB_THUMBNAIL_URI =>
+      _POOLCLUB_THUMBNAIL_URI.keys.first;
 
   static String get UNLOCK_REFERRAL_AMT => _UNLOCK_REFERRAL_AMT.keys.first;
 

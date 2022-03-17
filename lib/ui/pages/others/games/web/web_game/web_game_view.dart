@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_game/web_game_vm.dart';
@@ -36,8 +37,6 @@ class WebGameView extends StatelessWidget {
       onModelDispose: (model) {
         if (inLandscapeMode) {
           SystemChrome.setPreferredOrientations([
-            DeviceOrientation.landscapeRight,
-            DeviceOrientation.landscapeLeft,
             DeviceOrientation.portraitUp,
             DeviceOrientation.portraitDown,
           ]);
@@ -49,22 +48,34 @@ class WebGameView extends StatelessWidget {
       builder: (ctx, model, child) {
         return Scaffold(
           backgroundColor: Colors.black,
-          floatingActionButton: CircleAvatar(
-            backgroundColor: Colors.red.withOpacity(0.5),
-            child: IconButton(
-              onPressed: AppState.backButtonDispatcher.didPopRoute,
-              icon: Icon(
-                Icons.close,
-                color: Colors.white,
+          body: Stack(
+            children: [
+              Container(
+                margin: EdgeInsets.only(top: SizeConfig.viewInsets.top),
+                child: WebView(
+                  initialUrl: initialUrl,
+                  javascriptMode: JavascriptMode.unrestricted,
+                ),
               ),
-            ),
-          ),
-          body: Container(
-            margin: EdgeInsets.only(top: SizeConfig.viewInsets.top),
-            child: WebView(
-              initialUrl: initialUrl,
-              javascriptMode: JavascriptMode.unrestricted,
-            ),
+              Positioned(
+                top: SizeConfig.padding16,
+                right: SizeConfig.padding16,
+                child: SafeArea(
+                  child: CircleAvatar(
+                    backgroundImage: CachedNetworkImageProvider(
+                        "https://firebasestorage.googleapis.com/v0/b/fello-dev-station.appspot.com/o/test%2Fgame-close-icon.png?alt=media&token=1d52f5d5-edca-4e0c-9b06-3e97aa8001ac"),
+                    backgroundColor: Colors.red.withOpacity(0.5),
+                    child: IconButton(
+                      onPressed: AppState.backButtonDispatcher.didPopRoute,
+                      icon: Icon(
+                        Icons.close,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            ],
           ),
         );
       },

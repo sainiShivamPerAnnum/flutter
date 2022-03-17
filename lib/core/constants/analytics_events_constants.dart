@@ -28,6 +28,7 @@ class AnalyticsEvents {
   static const selectPlayCricket = "Select Cricket";
   static const startPlayingCricket = "Play Cricket";
   static const selectPlayTambola = "Select Tambola";
+  static const selectPlayPoolClub = "Select PoolClub";
   static const startPlayingTambola = "Enter Tambola";
   static const buyTambolaTickets = "Play Tambola";
 
