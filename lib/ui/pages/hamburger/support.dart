@@ -100,69 +100,17 @@ class _SupportPageState extends State<SupportPage> {
                     child: ListView(
                       padding: EdgeInsets.zero,
                       children: [
-                        // FelloBriefTile(
-                        //   leadingAsset: Assets.hsCustomerService,
-                        //   title: "Chat with us",
-                        //   onTap: () {
-                        //     Haptic.vibrate();
-                        //     // _mixpanelService.track(
-                        //     //     eventName: MixpanelEvents.initiateChatSupport,
-                        //     //     properties: {
-                        //     //       'userId': _userService.baseUser.uid
-                        //     //     });
-                        //
-                        //     _analyticsService
-                        //         .track(eventName: AnalyticsEvents.initiateChatSupport,properties: {'userId':_userService.baseUser.uid});
-                        //
-                        //     appState.currentAction = PageAction(
-                        //         state: PageState.addPage,
-                        //         page: ChatSupportPageConfig);
-                        //   },
-                        // ),
-                        if (!Platform.isIOS)
-                          FelloBriefTile(
-                            leadingAsset: Assets.hsCustomerService,
-                            title: "Contact Us",
-                            onTap: () {
-                              Haptic.vibrate();
-                              // _mixpanelService.track(
-                              //     eventName: MixpanelEvents.initiateChatSupport,
-                              //     properties: {
-                              //       'userId': _userService.baseUser.uid
-                              //     });
-                              appState.currentAction = PageAction(
-                                  state: PageState.addPage,
-                                  page: FreshDeskHelpPageConfig);
-                            },
-                          ),
-                        // FelloBriefTile(
-                        //   leadingIcon: Icons.call,
-                        //   title: "Request a Callback",
-                        //   onTap: () {
-                        //     Haptic.vibrate();
-                        //     if (connectivityStatus !=
-                        //         ConnectivityStatus.Offline)
-                        //       _showRequestCallSheet();
-                        //     else
-                        //       BaseUtil.showNoInternetAlert();
-                        //   },
-                        // ),
-                        if (Platform.isIOS)
-                          FelloBriefTile(
-                            leadingAsset: Assets.hsMail,
-                            title: "Email us your query",
-                            onTap: () {
-                              Haptic.vibrate();
-                              try {
-                                _launchEmail();
-                              } catch (e) {
-                                BaseUtil.showNegativeAlert(
-                                  'Error',
-                                  'Something went wrong, could not launch email right now. Please try again later',
-                                );
-                              }
-                            },
-                          ),
+                        FelloBriefTile(
+                          leadingAsset: Assets.hsCustomerService,
+                          title: "Contact Us",
+                          onTap: () {
+                            Haptic.vibrate();
+
+                            appState.currentAction = PageAction(
+                                state: PageState.addPage,
+                                page: FreshDeskHelpPageConfig);
+                          },
+                        ),
                         FelloBriefTile(
                           leadingAsset: Assets.hsFaqs,
                           title: "FAQs",
