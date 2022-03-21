@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_game/web_game_vm.dart';
+import 'package:felloapp/ui/pages/static/fello_appbar.dart';
+import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +24,8 @@ class WebGameView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseView<WebGameViewModel>(
       onModelReady: (model) {
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+            overlays: [SystemUiOverlay.bottom]);
         if (inLandscapeMode) {
           SystemChrome.setPreferredOrientations([
             DeviceOrientation.landscapeRight,
@@ -36,6 +40,9 @@ class WebGameView extends StatelessWidget {
       },
       onModelDispose: (model) {
         if (inLandscapeMode) {
+          SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+              overlays: SystemUiOverlay.values); // to re-show bars
+
           SystemChrome.setPreferredOrientations([
             DeviceOrientation.portraitUp,
             DeviceOrientation.portraitDown,
@@ -51,7 +58,6 @@ class WebGameView extends StatelessWidget {
           body: Stack(
             children: [
               Container(
-                margin: EdgeInsets.only(top: SizeConfig.viewInsets.top),
                 child: WebView(
                   initialUrl: initialUrl,
                   javascriptMode: JavascriptMode.unrestricted,
@@ -85,6 +91,7 @@ class Close extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: CircleAvatar(
+        radius: SizeConfig.padding16,
         backgroundImage: CachedNetworkImageProvider(
             "https://firebasestorage.googleapis.com/v0/b/fello-dev-station.appspot.com/o/test%2Fgame-close-icon.png?alt=media&token=1d52f5d5-edca-4e0c-9b06-3e97aa8001ac"),
         backgroundColor: Colors.red.withOpacity(0.5),
