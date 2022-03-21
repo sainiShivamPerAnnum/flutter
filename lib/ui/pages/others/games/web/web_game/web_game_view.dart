@@ -24,9 +24,9 @@ class WebGameView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseView<WebGameViewModel>(
       onModelReady: (model) {
-        SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-            overlays: [SystemUiOverlay.bottom]);
         if (inLandscapeMode) {
+          SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+              overlays: [SystemUiOverlay.bottom]);
           SystemChrome.setPreferredOrientations([
             DeviceOrientation.landscapeRight,
             DeviceOrientation.landscapeLeft,
@@ -95,11 +95,14 @@ class Close extends StatelessWidget {
         backgroundImage: CachedNetworkImageProvider(
             "https://firebasestorage.googleapis.com/v0/b/fello-dev-station.appspot.com/o/test%2Fgame-close-icon.png?alt=media&token=1d52f5d5-edca-4e0c-9b06-3e97aa8001ac"),
         backgroundColor: Colors.red.withOpacity(0.5),
-        child: IconButton(
-          onPressed: AppState.backButtonDispatcher.didPopRoute,
-          icon: Icon(
-            Icons.close,
-            color: Colors.white,
+        child: Opacity(
+          opacity: 0,
+          child: IconButton(
+            onPressed: AppState.backButtonDispatcher.didPopRoute,
+            icon: Icon(
+              Icons.close,
+              color: Colors.white,
+            ),
           ),
         ),
       ),
