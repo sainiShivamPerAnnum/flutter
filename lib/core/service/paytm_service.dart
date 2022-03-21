@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
@@ -18,6 +20,7 @@ import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
 import 'package:paytm_allinonesdk/paytm_allinonesdk.dart';
 
 //ERROR CODE
@@ -25,6 +28,7 @@ const int CREATE_SUBSCRIPTION_FAILED = 0;
 const int INITIATE_SUBSCRIPTION_FAILED = 1;
 const int VALIDATE_VPA_FAILED = 2;
 const int INVALID_VPA_DETECTED = 3;
+const int PAYTM_POST_CALL_FAILED = 4;
 
 class PaytmService {
   final _logger = locator<CustomLogger>();
@@ -242,21 +246,31 @@ class PaytmService {
 
     try {
       _logger.d("Paytm order id: ${paytmSubscriptionModel.data.orderId}");
-      AppState.backButtonDispatcher.didPopRoute();
-      AppState.screenStack.add(ScreenItem.dialog);
-      Navigator.of(AppState.delegate.navigatorKey.currentContext).push(
-        PageRouteBuilder(
-          opaque: false,
-          pageBuilder: (BuildContext context, _, __) => PaytmLoader(
-            mid: mid,
-            paytmSubscriptionModel: paytmSubscriptionModel,
-            vpa: vpa,
-          ),
-        ),
-      );
-
+      // AppState.backButtonDispatcher.didPopRoute();
+      // AppState.screenStack.add(ScreenItem.dialog);
+      // Navigator.of(AppState.delegate.navigatorKey.currentContext).push(
+      //   PageRouteBuilder(
+      //     opaque: false,
+      //     pageBuilder: (BuildContext context, _, __) => PaytmLoader(
+      //       mid: mid,
+      //       paytmSubscriptionModel: paytmSubscriptionModel,
+      //       vpa: vpa,
+      //     ),
+      //   ),
+      // );
+      ApiResponse<bool> postResponse = await makePostRequest(
+          paytmSubscriptionModel.data.orderId,
+          vpa,
+          paytmSubscriptionModel.data.temptoken,
+          paytmSubscriptionModel.data.subscriptionId);
+      if (postResponse.model)
+        return PaytmResponse(reason: "Everything seems good!", status: true);
+      else
+        PaytmResponse(
+            reason: "Unable to connect to Paytm Servers",
+            errorCode: 4,
+            status: false);
       //validateSubscription(paytmSubscriptionModel.data.subscriptionId);
-      return PaytmResponse(reason: "Everything seems good!", status: true);
     } catch (onError) {
       if (onError is PlatformException) {
         _logger.e(onError.message + " \n  " + onError.details.toString());
@@ -268,6 +282,41 @@ class PaytmService {
           errorCode: CREATE_SUBSCRIPTION_FAILED,
           status: false);
     }
+  }
+
+  Future<ApiResponse<bool>> makePostRequest(
+      String orderId, String vpa, String txnToken, String subId) async {
+    try {
+      String responseString = "";
+      var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+      var request = http.Request(
+          'POST',
+          Uri.parse(
+              'https://securegw-stage.paytm.in/order/pay?mid=$mid&orderId=$orderId'));
+      request.bodyFields = {
+        'txnToken': '$txnToken',
+        'SUBSCRIPTION_ID': '$subId',
+        'paymentMode': 'UPI',
+        'AUTH_MODE': 'USRPWD',
+        'payerAccount': '$vpa'
+      };
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        responseString = await response.stream.bytesToString();
+        log(responseString);
+        if (responseString.contains("SHOURYA"))
+          return ApiResponse(model: true, code: 200);
+      } else {
+        log(response.reasonPhrase);
+        return ApiResponse(model: false, code: 400);
+      }
+    } catch (e) {
+      return ApiResponse(model: false, code: 400);
+    }
+    return ApiResponse(model: false, code: 400);
   }
 }
 

@@ -198,45 +198,45 @@ class UserAutoPayDetailsView extends StatelessWidget {
                               },
                             ),
                             SizedBox(height: SizeConfig.padding8),
-                            TextButton(
-                              onPressed: () {
-                                BaseUtil.openDialog(
-                                  addToScreenStack: true,
-                                  hapticVibrate: true,
-                                  isBarrierDismissable: false,
-                                  content: FelloConfirmationDialog(
-                                    asset: Assets.signout,
-                                    title: 'Are you sure ?',
-                                    subtitle:
-                                        "You are making great profits. Try pausing it for some days instead.",
-                                    accept: "Cancle Subscription",
-                                    result: (res) {
-                                      Future.delayed(Duration(seconds: 3), () {
-                                        AppState.backButtonDispatcher
-                                            .didPopRoute();
-                                        BaseUtil.showPositiveAlert(
-                                            "Subscription cancelled successfully",
-                                            "Hope you setup autopay again soon");
-                                      });
-                                    },
-                                    onAccept: () {},
-                                    onReject: () {
-                                      AppState.backButtonDispatcher
-                                          .didPopRoute();
-                                    },
-                                    reject: "Keep Investing",
-                                    rejectColor: Colors.grey.withOpacity(0.5),
-                                  ),
-                                );
-                              },
-                              child: Text(
-                                "CANCEL SUBSCRIPTION",
-                                style: TextStyles.body2
-                                    .colour(Colors.red)
-                                    .light
-                                    .letterSpace(2),
-                              ),
-                            ),
+                            // TextButton(
+                            //   onPressed: () {
+                            //     BaseUtil.openDialog(
+                            //       addToScreenStack: true,
+                            //       hapticVibrate: true,
+                            //       isBarrierDismissable: false,
+                            //       content: FelloConfirmationDialog(
+                            //         asset: Assets.signout,
+                            //         title: 'Are you sure ?',
+                            //         subtitle:
+                            //             "You are making great profits. Try pausing it for some days instead.",
+                            //         accept: "Cancle Subscription",
+                            //         result: (res) {
+                            //           Future.delayed(Duration(seconds: 3), () {
+                            //             AppState.backButtonDispatcher
+                            //                 .didPopRoute();
+                            //             BaseUtil.showPositiveAlert(
+                            //                 "Subscription cancelled successfully",
+                            //                 "Hope you setup autopay again soon");
+                            //           });
+                            //         },
+                            //         onAccept: () {},
+                            //         onReject: () {
+                            //           AppState.backButtonDispatcher
+                            //               .didPopRoute();
+                            //         },
+                            //         reject: "Keep Investing",
+                            //         rejectColor: Colors.grey.withOpacity(0.5),
+                            //       ),
+                            //     );
+                            //   },
+                            //   child: Text(
+                            //     "CANCEL SUBSCRIPTION",
+                            //     style: TextStyles.body2
+                            //         .colour(Colors.red)
+                            //         .light
+                            //         .letterSpace(2),
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),
