@@ -1,14 +1,18 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:felloapp/core/service/paytm_service.dart';
 
 class UserAutoPayDetailsViewModel extends BaseModel {
   final _dbModel = locator<DBModel>();
   final _userService = locator<UserService>();
+  final _paytmService = locator<PaytmService>();
 
   ActiveSubscriptionModel _activeSubscription;
 
@@ -24,6 +28,15 @@ class UserAutoPayDetailsViewModel extends BaseModel {
       subAmountController,
       subStatusController;
   bool isVerified = true;
+
+  bool _isPausingInProgress = false;
+
+  bool get isPausingInProgress => _isPausingInProgress;
+
+  set isPausingInProgress(bool val) {
+    this._isPausingInProgress = val;
+    notifyListeners();
+  }
 
   init() async {
     subIdController = new TextEditingController();
@@ -41,5 +54,19 @@ class UserAutoPayDetailsViewModel extends BaseModel {
     pUpiController.text = activeSubscription.vpa;
     subAmountController.text = activeSubscription.dailyAmount.toString();
     setState(ViewState.Idle);
+  }
+
+  pauseSubscription() async {
+    isPausingInProgress = true;
+    bool response =
+        await _paytmService.pauseDailySubscription(activeSubscription.subId, 2);
+    if (response) {
+      AppState.backButtonDispatcher.didPopRoute();
+      BaseUtil.showPositiveAlert("Subscription paused for 2 days",
+          "Remember it will automatically after 2 days");
+    } else
+      BaseUtil.showNegativeAlert(
+          "Failed to pause Subscription", "Please try again");
+    isPausingInProgress = false;
   }
 }
