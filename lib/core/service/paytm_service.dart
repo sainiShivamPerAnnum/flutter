@@ -318,6 +318,23 @@ class PaytmService {
     }
     return ApiResponse(model: false, code: 400);
   }
+
+  Future<bool> updateDailySubscriptionAmount(
+      String subId, double amount) async {
+    ApiResponse response = await _paytmRepo.updateDailyAmount(subId, amount);
+    if (response.code == 200)
+      return response.model;
+    else
+      return false;
+  }
+
+  Future<bool> pauseDailySubscription(String subId, int days) async {
+    ApiResponse response = await _paytmRepo.pauseSubscription(subId);
+    if (response.code == 200)
+      return response.model;
+    else
+      return false;
+  }
 }
 
 class PaytmResponse {

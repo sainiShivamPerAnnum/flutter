@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
+import 'package:felloapp/core/service/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_vm.dart';
@@ -13,6 +15,7 @@ import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -94,7 +97,8 @@ class UserAutoPayDetailsView extends StatelessWidget {
                                               isBarrierDismissable: false,
                                               hapticVibrate: true,
                                               content:
-                                                  AutoPayAmountUpdateDialog());
+                                                  AutoPayAmountUpdateDialog(
+                                                      model: model));
                                         },
                                         child: TextFormField(
                                           controller: model.subAmountController,
@@ -193,7 +197,9 @@ class UserAutoPayDetailsView extends StatelessWidget {
                                         Radius.circular(SizeConfig.roundness32),
                                   ),
                                   isBarrierDismissable: false,
-                                  content: PauseAutoPayModal(),
+                                  content: PauseAutoPayModal(
+                                    model: model,
+                                  ),
                                 );
                               },
                             ),
@@ -327,12 +333,17 @@ class _PauseAutoPayModalState extends State<PauseAutoPayModal> {
           ),
           SizedBox(height: SizeConfig.padding16),
           FelloButtonLg(
-            child: Text(
-              "PAUSE",
-              style: TextStyles.body2.bold.colour(Colors.white),
-            ),
-            onPressed: () {
-              AppState.backButtonDispatcher.didPopRoute();
+            child: widget.model.isPausingInProgress
+                ? SpinKitThreeBounce(
+                    color: Colors.white,
+                    size: SizeConfig.padding16,
+                  )
+                : Text(
+                    "PAUSE",
+                    style: TextStyles.body2.bold.colour(Colors.white),
+                  ),
+            onPressed: () async {
+              await widget.model.pauseSubscription();
             },
           ),
           SizedBox(height: SizeConfig.pageHorizontalMargins / 2),
@@ -384,12 +395,15 @@ class _PauseAutoPayModalState extends State<PauseAutoPayModal> {
 }
 
 class AutoPayAmountUpdateDialog extends StatefulWidget {
+  final UserAutoPayDetailsViewModel model;
+  AutoPayAmountUpdateDialog({@required this.model});
   @override
   State<AutoPayAmountUpdateDialog> createState() =>
       _AutoPayAmountUpdateDialogState();
 }
 
 class _AutoPayAmountUpdateDialogState extends State<AutoPayAmountUpdateDialog> {
+  final _paytmService = locator<PaytmService>();
   double sliderValue = 2000;
   updateSliderValue(value) {
     setState(() {});
@@ -448,10 +462,20 @@ class _AutoPayAmountUpdateDialogState extends State<AutoPayAmountUpdateDialog> {
       ),
       accept: "Update",
       result: (res) {
-        Future.delayed(Duration(seconds: 3), () {
-          AppState.backButtonDispatcher.didPopRoute();
-          BaseUtil.showPositiveAlert(
-              "Amount Update successfully", "Effective from next payment");
+        _paytmService
+            .updateDailySubscriptionAmount(
+                widget.model.activeSubscription.subId,
+                double.tryParse(sliderValue.toStringAsFixed(2)))
+            .then((value) {
+          widget.model.findActiveSubscription();
+          if (value) {
+            AppState.backButtonDispatcher.didPopRoute();
+            BaseUtil.showPositiveAlert(
+                "Amount Update successfully", "Effective from next payment");
+          } else {
+            BaseUtil.showNegativeAlert(
+                "Amount Update failed", "Please try again in sometime");
+          }
         });
       },
       onReject: () {
