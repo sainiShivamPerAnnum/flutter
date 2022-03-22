@@ -34,6 +34,7 @@ class RootViewModel extends BaseModel {
   final UserService _userService = locator<UserService>();
   final UserCoinService _userCoinService = locator<UserCoinService>();
   final CustomLogger _logger = locator<CustomLogger>();
+  final LocalDBModel _lModel = locator<LocalDBModel>();
 
   final winnerService = locator<WinnerService>();
   final txnService = locator<TransactionService>();
@@ -132,6 +133,12 @@ class RootViewModel extends BaseModel {
 
   initialize() async {
     if (!_isInitialized) {
+      bool showSecurityPrompt = false;
+      if (_userService.showSecurityPrompt == null) {
+        showSecurityPrompt = await _lModel.showSecurityPrompt();
+        _userService.showSecurityPrompt = showSecurityPrompt;
+      }
+
       _isInitialized = true;
       _initAdhocNotifications();
 
@@ -149,7 +156,7 @@ class RootViewModel extends BaseModel {
 
       _baseUtil.getProfilePicture();
       // show security modal
-      if (_baseUtil.show_security_prompt &&
+      if (showSecurityPrompt &&
           _userService.baseUser.isAugmontOnboarded &&
           _userService.userFundWallet.augGoldQuantity > 0 &&
           _userService.baseUser.userPreferences
@@ -160,6 +167,7 @@ class RootViewModel extends BaseModel {
           _localDBModel.updateSecurityPrompt(false);
         });
       }
+
       _baseUtil.isUnreadFreshchatSupportMessages().then((flag) {
         if (flag) {
           BaseUtil.showPositiveAlert('You have unread support messages',

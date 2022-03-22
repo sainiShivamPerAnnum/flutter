@@ -104,7 +104,6 @@ class BaseUtil extends ChangeNotifier {
 
   DateTime _userCreationTimestamp;
   int isOtpResendCount = 0;
-  bool show_security_prompt = false;
   String zeroBalanceAssetUri;
   static List<GameModel> gamesList;
   static String manualReferralCode;
@@ -185,7 +184,7 @@ class BaseUtil extends ChangeNotifier {
     playScreenFirst = true;
     // _atomicTicketGenerationLeftCount = 0;
     // atomicTicketDeletionLeftCount = 0;
-    show_security_prompt = false;
+
     firstAugmontTransaction = null;
   }
 
@@ -195,7 +194,7 @@ class BaseUtil extends ChangeNotifier {
       _setRuntimeDefaults();
 
       //Analytics logs app open state.
-      await BaseAnalytics.init();
+      BaseAnalytics.init();
       BaseAnalytics.analytics.logAppOpen();
 
       //remote config for various remote variables
@@ -209,9 +208,6 @@ class BaseUtil extends ChangeNotifier {
       firebaseUser = _userService.firebaseUser;
       isUserOnboarded = _userService.isUserOnborded;
 
-      // isUserOnboarded =
-      //     (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
-
       if (isUserOnboarded) {
         //set current user
         myUser = _userService.baseUser;
@@ -224,18 +220,11 @@ class BaseUtil extends ChangeNotifier {
         zeroBalanceAssetUri = 'zerobal/zerobal_${rnd.nextInt(4) + 1}';
 
         ///see if security needs to be shown -> Move to save tab
-        show_security_prompt = await _lModel.showSecurityPrompt();
 
         await setUserDefaults();
       }
     } catch (e) {
       logger.e(e.toString());
-      // if (_userService.isUserOnborded != null)
-      //   _dbModel.logFailure(
-      //       _userService.baseUser.uid, FailType.BaseUtilInitFailed, {
-      //     "title": "BaseUtil initialization Failed",
-      //     "error": e.toString(),
-      //   });
     }
   }
 
@@ -595,7 +584,7 @@ class BaseUtil extends ChangeNotifier {
       lastTransactionListDocument = null;
       hasMoreTransactionListDocuments = true;
       isOtpResendCount = 0;
-      show_security_prompt = false;
+
       AppState.delegate.appState.setCurrentTabIndex = 0;
       manualReferralCode = null;
       _setRuntimeDefaults();

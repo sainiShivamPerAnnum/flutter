@@ -36,6 +36,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   bool _isConfirmationDialogOpen = false;
   bool _hasNewNotifications = false;
   bool showOnboardingTutorial = false;
+  bool showSecurityPrompt;
 
   User get firebaseUser => _firebaseUser;
   BaseUser get baseUser => _baseUser;
@@ -187,6 +188,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       _idToken = null;
       _isEmailVerified = false;
       _isSimpleKycVerified = false;
+      showSecurityPrompt = null;
       return true;
     } catch (e) {
       _logger.e("Failed to logout user: ${e.toString()}");
