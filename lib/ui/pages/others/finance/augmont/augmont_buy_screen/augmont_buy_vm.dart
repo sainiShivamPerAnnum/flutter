@@ -69,6 +69,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   CouponModel _focusCoupon;
   EligibleCouponResponseModel _appliedCoupon;
   bool _showMaxCapText = false;
+  bool _showMinCapText = false;
   bool _isGoldRateFetching = false;
   bool _isGoldBuyInProgress = false;
   bool _couponApplyInProgress = false;
@@ -134,6 +135,13 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
   set showMaxCapText(value) {
     this._showMaxCapText = value;
+    notifyListeners();
+  }
+
+  get showMinCapText => this._showMinCapText;
+
+  set showMinCapText(value) {
+    this._showMinCapText = value;
     notifyListeners();
   }
 
@@ -214,6 +222,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
     return GestureDetector(
       onTap: () {
         showMaxCapText = false;
+        showMinCapText = false;
         Haptic.vibrate();
         lastTappedChipIndex = index;
         buyFieldNode.unfocus();
@@ -328,12 +337,12 @@ class AugmontGoldBuyViewModel extends BaseModel {
           } else {
             AppState.delegate.appState.isTxnLoaderInView = false;
             showTxnSuccessScreen(depositFcmResponseModel.amount,
-                "You successfully saved ₹${getAmount(depositFcmResponseModel.amount)}");
+                "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}");
           }
         } else {
           AppState.delegate.appState.isTxnLoaderInView = false;
           showTxnSuccessScreen(depositFcmResponseModel.amount,
-              "You successfully saved ₹${getAmount(depositFcmResponseModel.amount)}");
+              "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}");
         }
       }
 
@@ -376,10 +385,11 @@ class AugmontGoldBuyViewModel extends BaseModel {
       return;
     }
     if (buyAmount < 10) {
-      BaseUtil.showNegativeAlert(
-        'Minimum amount should be ₹ 10',
-        'Please enter a minimum purchase amount of ₹ 10',
-      );
+      showMinCapText = true;
+      // BaseUtil.showNegativeAlert(
+      //   'Minimum amount should be ₹ 10',
+      //   'Please enter a minimum purchase amount of ₹ 10',
+      // );
       return;
     }
 
@@ -441,6 +451,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   onBuyValueChanged(String val) {
     _logger.d("Value: $val");
     if (showMaxCapText) showMaxCapText = false;
+    if (showMinCapText) showMinCapText = false;
     if (val != null && val.isNotEmpty) {
       if (double.tryParse(val.trim()) != null &&
           double.tryParse(val.trim()) > 50000) {
@@ -738,7 +749,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
         (await _dbModel.getLatestGoldenTicket(_userService.baseUser.uid)).gtId;
     await _gtService.fetchAndVerifyGoldenTicketByID();
     _gtService.showInstantGoldenTicketView(
-        title: 'You successfully saved ₹500.',
+        title: 'You have successfully saved ₹500.',
         source: GTSOURCE.deposit,
         amount: 500);
   }

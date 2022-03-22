@@ -105,12 +105,18 @@ class _GTInstantViewState extends State<GTInstantView>
                         Lottie.asset(Assets.txnFinish,
                             repeat: false,
                             height: SizeConfig.screenWidth * 0.8),
-                        FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text(
-                            widget.title ?? "Hurray!",
-                            style: TextStyles.title3.bold.colour(Colors.white),
-                            textAlign: TextAlign.center,
+                        Container(
+                          width: SizeConfig.screenWidth,
+                          margin: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.pageHorizontalMargins),
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              widget.title ?? "Hurray!",
+                              style:
+                                  TextStyles.title3.bold.colour(Colors.white),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
                         //SizedBox(height: SizeConfig.screenWidth / 4)
@@ -133,10 +139,15 @@ class _GTInstantViewState extends State<GTInstantView>
                             height: SizeConfig.screenWidth,
                             width: SizeConfig.screenWidth * 0.6),
                         SizedBox(height: SizeConfig.padding64),
-                        Text(
-                          "${widget.amount.toInt()} Fello Tokens have been credited to your wallet!",
-                          style: TextStyles.title3.bold.colour(Colors.white),
-                          textAlign: TextAlign.center,
+                        Container(
+                          width: SizeConfig.screenWidth,
+                          margin: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.pageHorizontalMargins),
+                          child: Text(
+                            "${widget.amount.toInt()} Fello Tokens have been credited to your wallet!",
+                            style: TextStyles.title3.bold.colour(Colors.white),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                         SizedBox(height: SizeConfig.screenWidth / 4)
                       ],
@@ -186,12 +197,6 @@ class _GTInstantViewState extends State<GTInstantView>
                             Spacer(flex: 1),
                             Column(
                               children: [
-                                Text(
-                                  getGTTitle(),
-                                  style: TextStyles.title2.bold
-                                      .colour(Colors.white),
-                                  textAlign: TextAlign.center,
-                                ),
                                 Container(
                                   width: SizeConfig.screenWidth,
                                   padding: EdgeInsets.symmetric(
@@ -199,14 +204,28 @@ class _GTInstantViewState extends State<GTInstantView>
                                         SizeConfig.pageHorizontalMargins,
                                     vertical: SizeConfig.padding8,
                                   ),
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: Text(
-                                      "You've earned a new golden ticket",
-                                      style: TextStyles.title5.bold
-                                          .colour(Colors.white),
-                                      textAlign: TextAlign.center,
-                                    ),
+                                  child: Column(
+                                    children: [
+                                      FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Text(
+                                          getGTTitle(),
+                                          style: TextStyles.title2.bold
+                                              .colour(Colors.white),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                      SizedBox(height: SizeConfig.padding8),
+                                      FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Text(
+                                          "You've earned a new golden ticket",
+                                          style: TextStyles.title5.bold
+                                              .colour(Colors.white),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
