@@ -36,6 +36,8 @@ class PaytmService {
 
   final String devMid = "qpHRfp13374268724583";
   final String prodMid = "CMTNKX90967647249644";
+  final PageController subscriptionFlowPageController = new PageController();
+  String currentSubscriptionId;
 
   String mid;
   bool isStaging;
@@ -50,6 +52,10 @@ class PaytmService {
       mid = prodMid;
       isStaging = false;
     }
+  }
+
+  jumpToSubPage(int index) {
+    subscriptionFlowPageController.jumpToPage(index);
   }
 
   double _getGoldQuantityFromTaxedAmount(double amount, double rate) {

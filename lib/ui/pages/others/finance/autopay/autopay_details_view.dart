@@ -72,6 +72,7 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         color: Color(0xffe7f5e8),
         child: Stack(
@@ -417,18 +418,21 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView> {
                       style: TextStyles.body2.bold.colour(Colors.white),
                     ),
                     onPressed: () {
-                      BaseUtil.openModalBottomSheet(
-                        addToScreenStack: true,
-                        backgroundColor: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(SizeConfig.roundness32),
-                          topRight: Radius.circular(SizeConfig.roundness32),
-                        ),
-                        content: CustomSubscriptionModal(),
-                        hapticVibrate: true,
-                        isBarrierDismissable: false,
-                        isScrollControlled: true,
-                      );
+                      // BaseUtil.openModalBottomSheet(
+                      //   addToScreenStack: true,
+                      //   backgroundColor: Colors.white,
+                      //   borderRadius: BorderRadius.only(
+                      //     topLeft: Radius.circular(SizeConfig.roundness32),
+                      //     topRight: Radius.circular(SizeConfig.roundness32),
+                      //   ),
+                      //   content: CustomSubscriptionModal(),
+                      //   hapticVibrate: true,
+                      //   isBarrierDismissable: false,
+                      //   isScrollControlled: true,
+                      // );
+                      AppState.delegate.appState.currentAction = PageAction(
+                          page: AutoPayProcessViewPageConfig,
+                          state: PageState.addPage);
                     },
                   ),
                 ),

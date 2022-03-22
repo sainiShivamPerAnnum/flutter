@@ -377,20 +377,24 @@ class AutoPayCard extends StatelessWidget {
                         Expanded(
                           child: InkWell(
                             onTap: () {
-                              BaseUtil.openModalBottomSheet(
-                                addToScreenStack: true,
-                                backgroundColor: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                  topLeft:
-                                      Radius.circular(SizeConfig.roundness32),
-                                  topRight:
-                                      Radius.circular(SizeConfig.roundness32),
-                                ),
-                                content: CustomSubscriptionModal(),
-                                hapticVibrate: true,
-                                isBarrierDismissable: false,
-                                isScrollControlled: true,
-                              );
+                              // BaseUtil.openModalBottomSheet(
+                              //   addToScreenStack: true,
+                              //   backgroundColor: Colors.white,
+                              //   borderRadius: BorderRadius.only(
+                              //     topLeft:
+                              //         Radius.circular(SizeConfig.roundness32),
+                              //     topRight:
+                              //         Radius.circular(SizeConfig.roundness32),
+                              //   ),
+                              //   content: CustomSubscriptionModal(),
+                              //   hapticVibrate: true,
+                              //   isBarrierDismissable: false,
+                              //   isScrollControlled: true,
+                              // );
+                              AppState.delegate.appState.currentAction =
+                                  PageAction(
+                                      page: AutoPayProcessViewPageConfig,
+                                      state: PageState.addPage);
                             },
                             child: Container(
                               padding: EdgeInsets.symmetric(

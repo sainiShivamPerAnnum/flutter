@@ -3,6 +3,7 @@ import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_vm.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_game/cricket_game_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
@@ -18,6 +19,7 @@ class FcmHandler extends ChangeNotifier {
   final _augmontGoldBuyViewModel = locator<AugmontGoldBuyViewModel>();
   final _fcmHandlerDataPayloads = locator<FcmHandlerDataPayloads>();
   final _cricketGameViewModel = locator<CricketGameViewModel>();
+  final _autopayProcessViewModel = locator<AutoPayProcessViewModel>();
 
   ValueChanged<Map> notifListener;
 
@@ -59,7 +61,7 @@ class FcmHandler extends ChangeNotifier {
           await _fcmHandlerDataPayloads.userPrizeWinPrompt();
           break;
         case FcmCommands.COMMAND_SUBSCRIPTION_RESPONSE:
-          await _fcmHandlerDataPayloads.updateSubscriptionStatus(data);
+          await _autopayProcessViewModel.handleSubscriptionPayload(data);
           break;
         default:
       }

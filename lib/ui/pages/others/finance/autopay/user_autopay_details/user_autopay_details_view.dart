@@ -141,9 +141,11 @@ class UserAutoPayDetailsView extends StatelessWidget {
                                       ),
                                     ],
                                   )
-                                : NoRecordDisplayWidget(
-                                    text:
-                                        "No Subscription Details at the moment.. Setup Autopay now->",
+                                : Center(
+                                    child: NoRecordDisplayWidget(
+                                      assetLottie: Assets.noData,
+                                      text: "No UPI Autopay Details available",
+                                    ),
                                   )),
                       ),
                     )
@@ -412,12 +414,14 @@ class _AutoPayAmountUpdateDialogState extends State<AutoPayAmountUpdateDialog> {
   @override
   Widget build(BuildContext context) {
     return FelloConfirmationDialog(
+      bottomPadding: SizeConfig.padding32,
       content: Column(
         children: [
+          // SizedBox(height: SizeConfig.padding24),
+          // SvgPicture.asset("assets/vectors/addmoney.svg",
+          //     height: SizeConfig.screenHeight * 0.16),
           SizedBox(height: SizeConfig.padding24),
-          SvgPicture.asset("assets/vectors/addmoney.svg",
-              height: SizeConfig.screenHeight * 0.16),
-          SizedBox(height: SizeConfig.padding24),
+
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -465,7 +469,7 @@ class _AutoPayAmountUpdateDialogState extends State<AutoPayAmountUpdateDialog> {
         _paytmService
             .updateDailySubscriptionAmount(
                 widget.model.activeSubscription.subId,
-                double.tryParse(sliderValue.toStringAsFixed(2)))
+                sliderValue.toInt().toDouble())
             .then((value) {
           widget.model.findActiveSubscription();
           if (value) {

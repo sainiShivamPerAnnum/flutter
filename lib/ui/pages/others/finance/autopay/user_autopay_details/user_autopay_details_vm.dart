@@ -50,9 +50,11 @@ class UserAutoPayDetailsViewModel extends BaseModel {
     setState(ViewState.Busy);
     activeSubscription =
         await _dbModel.getActiveSubscriptionDetails(_userService.baseUser.uid);
-    subIdController.text = activeSubscription.subId;
-    pUpiController.text = activeSubscription.vpa;
-    subAmountController.text = activeSubscription.dailyAmount.toString();
+    if (activeSubscription != null) {
+      subIdController.text = activeSubscription.subId;
+      pUpiController.text = activeSubscription.vpa;
+      subAmountController.text = activeSubscription.dailyAmount.toString();
+    }
     setState(ViewState.Idle);
   }
 

@@ -20,6 +20,7 @@ class FelloConfirmationDialog extends StatefulWidget {
   final String subtitle;
   final String accept;
   final String reject;
+  final double bottomPadding;
 
   FelloConfirmationDialog({
     this.result,
@@ -35,6 +36,7 @@ class FelloConfirmationDialog extends StatefulWidget {
     this.acceptColor,
     this.rejectColor,
     this.reject,
+    this.bottomPadding,
   });
 
   @override
@@ -133,6 +135,8 @@ class _FelloConfirmationDialogState extends State<FelloConfirmationDialog> {
                     ),
                   ],
                 ),
+          if (widget.bottomPadding != null)
+            SizedBox(height: widget.bottomPadding)
         ],
       ),
       showCrossIcon: false,
