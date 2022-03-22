@@ -160,8 +160,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       if (baseUser != null) {
         isEmailVerified = baseUser.isEmailVerified ?? false;
         isSimpleKycVerified = baseUser.isSimpleKycVerified ?? false;
-        await setProfilePicture();
-        await getUserFundWalletData();
+        await Future.wait([setProfilePicture(), getUserFundWalletData()]);
         checkForNewNotifications();
       }
     } catch (e) {
