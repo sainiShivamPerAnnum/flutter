@@ -73,6 +73,7 @@ class DBModel extends ChangeNotifier {
       //String id = user.mobile;
       String id = user.uid;
       var dMap = {'token': token, 'timestamp': Timestamp.now()};
+      logger.i("CALLING: updateUserClientToken");
       await _api.updateUserClientToken(id, dMap);
       return true;
     } catch (e) {
@@ -84,6 +85,7 @@ class DBModel extends ChangeNotifier {
   //////////////////BASE USER//////////////////////////
   Future<ApiResponse<BaseUser>> getUser(String id) async {
     try {
+      logger.i("CALLING: getUserById");
       var doc = await _api.getUserById(id);
       BaseUser user;
       if (doc.data() == null) {
@@ -108,6 +110,7 @@ class DBModel extends ChangeNotifier {
     try {
       //String id = user.mobile;
       String id = user.uid;
+      logger.i("CALLING: updateUserDocument");
       await _api.updateUserDocument(id, user.toJson());
       return true;
     } catch (e) {
@@ -119,6 +122,7 @@ class DBModel extends ChangeNotifier {
   Future<bool> updateUserPreferences(
       String uid, UserPreferences userPreferences) async {
     try {
+      logger.i("CALLING: updateUserDocumentPreferenceField");
       await _api.updateUserDocumentPreferenceField(
           uid, {BaseUser.fldUserPrefs: userPreferences.toJson()});
       return true;
@@ -130,6 +134,7 @@ class DBModel extends ChangeNotifier {
 
   Future<bool> checkIfUserHasNewGoldenTicket(String userId) async {
     try {
+      logger.i("CALLING: checkForLatestGoldenTicket");
       QuerySnapshot gtSnapshot = await _api.checkForLatestGoldenTicket(userId);
       if (gtSnapshot != null) {
         if (await CacheManager.exits(
@@ -154,6 +159,7 @@ class DBModel extends ChangeNotifier {
 
   Future<GoldenTicket> getLatestGoldenTicket(String userId) async {
     try {
+      logger.i("CALLING: checkForLatestGoldenTicket");
       QuerySnapshot gtSnapshot = await _api.checkForLatestGoldenTicket(userId);
       if (gtSnapshot != null) {
         GoldenTicket ticket = GoldenTicket.fromJson(
@@ -168,6 +174,7 @@ class DBModel extends ChangeNotifier {
   Future<GoldenTicket> getGoldenTicketById(String userId, String gtId) async {
     GoldenTicket ticket;
     try {
+      logger.i("CALLING: fetchGoldenTicketById");
       DocumentSnapshot goldenTicketRaw =
           await _api.fetchGoldenTicketById(userId, gtId);
       if (goldenTicketRaw != null) {
@@ -182,8 +189,11 @@ class DBModel extends ChangeNotifier {
 
   Future<bool> checkIfUserHasNewNotifications(String userId) async {
     try {
+      logger.i("CALLING: checkForLatestNotification");
       QuerySnapshot notificationSnapshot =
           await _api.checkForLatestNotification(userId);
+
+      logger.i("CALLING: checkForLatestAnnouncment");
       QuerySnapshot announcementSnapshot =
           await _api.checkForLatestAnnouncment(userId);
       AlertModel lastestNotification =
@@ -224,6 +234,7 @@ class DBModel extends ChangeNotifier {
     logger.d("user id - $userId");
 
     try {
+      logger.i("CALLING: getUserNotifications");
       QuerySnapshot querySnapshot =
           await _api.getUserNotifications(userId, lastDoc);
       if (querySnapshot != null) {
@@ -239,6 +250,7 @@ class DBModel extends ChangeNotifier {
     }
     if (!more) {
       try {
+        logger.i("CALLING: getAnnoucements");
         QuerySnapshot querySnapshot = await _api.getAnnoucements();
         for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
           AlertModel announcement = AlertModel.fromMap(documentSnapshot.data());
@@ -267,6 +279,7 @@ class DBModel extends ChangeNotifier {
   /// {value: GHexqwio123==, enid:2}
   Future<Map<String, dynamic>> getEncodedUserPan(String uid) async {
     try {
+      logger.i("CALLING: getUserPrtdDocPan");
       var doc = await _api.getUserPrtdDocPan(uid);
       if (doc.exists && doc.data() != null) {
         Map<String, dynamic> _snapshotData = doc.data();
@@ -292,6 +305,7 @@ class DBModel extends ChangeNotifier {
         'type': 'pan',
         'timestamp': Timestamp.now()
       };
+      logger.i("CALLING: addUserPrtdDocPan");
       await _api.addUserPrtdDocPan(uid, pObj);
       return true;
     } catch (e) {
@@ -303,6 +317,7 @@ class DBModel extends ChangeNotifier {
   ///////////////////////AUGMONT/////////////////////////////
   Future<UserAugmontDetail> getUserAugmontDetails(String id) async {
     try {
+      logger.i("CALLING: getUserAugmontDetailDocument");
       var doc = await _api.getUserAugmontDetailDocument(id);
       return UserAugmontDetail.fromMap(doc.data());
     } catch (e) {
@@ -314,6 +329,7 @@ class DBModel extends ChangeNotifier {
   Future<bool> updateUserAugmontDetails(
       String userId, UserAugmontDetail augDetail) async {
     try {
+      logger.i("CALLING: updateUserAugmontDetailDocument");
       await _api.updateUserAugmontDetailDocument(userId, augDetail.toJson());
       return true;
     } catch (e) {
@@ -330,7 +346,7 @@ class DBModel extends ChangeNotifier {
       updatePayload[UserAugmontDetail.fldBankHolderName] = bankHolderName;
       updatePayload[UserAugmontDetail.fldIfsc] = ifsc;
       updatePayload[UserAugmontDetail.fldUpdatedTime] = Timestamp.now();
-
+      logger.i("CALLING: updateUserAugmontDetailDocument");
       await _api.updateUserAugmontDetailDocument(userId, updatePayload);
       return true;
     } catch (e) {
@@ -343,6 +359,7 @@ class DBModel extends ChangeNotifier {
   //returns document key
   Future<String> addUserTransaction(String userId, UserTransaction txn) async {
     try {
+      logger.i("CALLING: addUserTransactionDocument");
       var ref = await _api.addUserTransactionDocument(userId, txn.toJson());
       return ref.id;
     } catch (e) {
@@ -354,6 +371,7 @@ class DBModel extends ChangeNotifier {
   Future<UserTransaction> getUserTransaction(
       String userId, String docId) async {
     try {
+      logger.i("CALLING: getUserTransactionDocument");
       var doc = await _api.getUserTransactionDocument(userId, docId);
       return UserTransaction.fromMap(doc.data(), doc.id);
     } catch (e) {
@@ -364,6 +382,7 @@ class DBModel extends ChangeNotifier {
 
   Future<bool> updateUserTransaction(String userId, UserTransaction txn) async {
     try {
+      logger.i("CALLING: updateUserTransactionDocument");
       await _api.updateUserTransactionDocument(
           userId, txn.docKey, txn.toJson());
       return true;
@@ -384,6 +403,7 @@ class DBModel extends ChangeNotifier {
     List<UserTransaction> requestedTxns = [];
     try {
       String _id = user.uid;
+      logger.i("CALLING: getUserTransactionsByField");
       QuerySnapshot _querySnapshot = await _api.getUserTransactionsByField(
         userId: _id,
         type: type,
@@ -417,6 +437,7 @@ class DBModel extends ChangeNotifier {
   ///////////////////////TAMBOLA TICKETING/////////////////////////
   Future<List<TambolaBoard>> getWeeksTambolaTickets(String userId) async {
     try {
+      logger.i("CALLING: getValidUserTickets");
       QuerySnapshot _querySnapshot = await _api.getValidUserTickets(
           userId, CodeFromFreq.getYearWeekCode());
       if (_querySnapshot == null || _querySnapshot.size == 0) return null;
@@ -439,6 +460,7 @@ class DBModel extends ChangeNotifier {
     try {
       DateTime date = new DateTime.now();
       int weekCde = CodeFromFreq.getYearWeekCode();
+      logger.i("CALLING: getWeekPickByCde");
       QuerySnapshot querySnapshot = await _api.getWeekPickByCde(weekCde);
 
       if (querySnapshot.docs.length != 1) {
@@ -458,6 +480,7 @@ class DBModel extends ChangeNotifier {
     try {
       String key = 'winners.$uid.claim_data';
       Map<String, dynamic> updateMap = {key: choice.value()};
+      logger.i("CALLING: updateWeeklyWinnerDocument");
       await _api.updateWeeklyWinnerDocument(detail.winnerDocumentId, updateMap);
 
       return true;
@@ -471,6 +494,7 @@ class DBModel extends ChangeNotifier {
     try {
       Map<String, dynamic> _map = {};
       _map[ReferralDetail.fldUserReferralCount] = detail.refCount;
+      logger.i("CALLING: updateReferralDocument");
       await _api.updateReferralDocument(userId, _map);
       return true;
     } catch (e) {
@@ -481,6 +505,7 @@ class DBModel extends ChangeNotifier {
 
   Future<bool> unlockReferralTickets(String userId) async {
     try {
+      logger.i("CALLING: setReferralDocBonusField");
       return await _api.setReferralDocBonusField(userId);
     } catch (e) {
       log.error('Failed to unlock referral tickets');
@@ -500,6 +525,7 @@ class DBModel extends ChangeNotifier {
       log.error('Aws Index key parsing failed: ' + e.toString());
       keyIndex = 1;
     }
+    logger.i("CALLING: getCredentialsByTypeAndStage");
     QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
         'aws-icici',
         FlavorConfig.instance.values.awsIciciStage.value(),
@@ -527,6 +553,7 @@ class DBModel extends ChangeNotifier {
       log.error('Aws Index key parsing failed: ' + e.toString());
       keyIndex = 1;
     }
+    logger.i("CALLING: getCredentialsByTypeAndStage");
     QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
         'aws-augmont',
         FlavorConfig.instance.values.awsAugmontStage.value(),
@@ -555,6 +582,7 @@ class DBModel extends ChangeNotifier {
         log.error('Aws Index key parsing failed: ' + e.toString());
         keyIndex = 1;
       }
+      logger.i("CALLING: getCredentialsByTypeAndStage");
       QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
           'aws-augmont',
           FlavorConfig.instance.values.awsAugmontStage.value(),
@@ -588,6 +616,7 @@ class DBModel extends ChangeNotifier {
         log.error('Aws Index key parsing failed: ' + e.toString());
         keyIndex = 1;
       }
+      logger.i("CALLING: getCredentialsByTypeAndStage");
       QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
           'aws-augmont',
           FlavorConfig.instance.values.awsAugmontStage.value(),
@@ -620,6 +649,7 @@ class DBModel extends ChangeNotifier {
         log.error('Aws Index key parsing failed: ' + e.toString());
         keyIndex = 1;
       }
+      logger.i("CALLING: getCredentialsByTypeAndStage");
       QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
           'aws-augmont',
           FlavorConfig.instance.values.awsAugmontStage.value(),
@@ -653,6 +683,7 @@ class DBModel extends ChangeNotifier {
         log.error('Aws Index key parsing failed: ' + e.toString());
         keyIndex = 1;
       }
+      logger.i("CALLING: getCredentialsByTypeAndStage");
       QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
           'aws-augmont',
           FlavorConfig.instance.values.awsAugmontStage.value(),
@@ -676,6 +707,7 @@ class DBModel extends ChangeNotifier {
 
   Future<Map<String, String>> getActiveSignzyApiKey() async {
     int keyIndex = 1;
+    logger.i("CALLING: getCredentialsByTypeAndStage");
     QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
         'signzy', FlavorConfig.instance.values.signzyStage.value(), keyIndex);
     if (querySnapshot != null && querySnapshot.docs.length == 1) {
@@ -691,6 +723,7 @@ class DBModel extends ChangeNotifier {
 
   Future<Map<String, String>> getActiveFreshchatKey() async {
     int keyIndex = 1;
+    logger.i("CALLING: getCredentialsByTypeAndStage");
     QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
         'freshchat',
         FlavorConfig.instance.values.freshchatStage.value(),
@@ -726,7 +759,7 @@ class DBModel extends ChangeNotifier {
       data['timestamp'] = Timestamp.now();
       data['call_time'] = callTime;
       data['call_window'] = callWindow;
-
+      logger.i("CALLING: addCallbackDocument");
       await _api.addCallbackDocument(year, monthCde, data);
       return true;
     } catch (e) {
@@ -748,7 +781,7 @@ class DBModel extends ChangeNotifier {
       data['name'] = name;
       data['issue_type'] = helpType.value();
       data['timestamp'] = Timestamp.now();
-
+      logger.i("CALLING: addCallbackDocument");
       await _api.addCallbackDocument(year, monthCde, data);
       return true;
     } catch (e) {
@@ -778,7 +811,7 @@ class DBModel extends ChangeNotifier {
       data['ticket_cat_map'] = resMap;
       data['is_eligible'] = isEligible;
       data['timestamp'] = Timestamp.now();
-
+      logger.i("CALLING: addClaimDocument");
       await _api.addClaimDocument(data);
       return true;
     } catch (e) {
@@ -796,6 +829,7 @@ class DBModel extends ChangeNotifier {
   Future<Map<String, dynamic>> getPollCount(
       [String pollId = Constants.POLL_FOLLOWUPGAME_ID]) async {
     try {
+      logger.i("CALLING: getPollDocument");
       DocumentSnapshot snapshot = await _api.getPollDocument(pollId);
       Map<String, dynamic> _doc = snapshot.data();
       if (snapshot.exists && _doc.length > 0) {
@@ -812,6 +846,7 @@ class DBModel extends ChangeNotifier {
       [String pollId = Constants.POLL_FOLLOWUPGAME_ID]) async {
     bool incrementFlag = true;
     try {
+      logger.i("CALLING: incrementPollDocument");
       await _api.incrementPollDocument(pollId, 'op_$response');
       incrementFlag = true;
     } catch (e) {
@@ -827,6 +862,7 @@ class DBModel extends ChangeNotifier {
           'pUserId': uid,
           'timestamp': Timestamp.now()
         };
+        logger.i("CALLING: addUserPollResponseDocument");
         await _api.addUserPollResponseDocument(uid, pollId, pRes);
         return true;
       } catch (e) {
@@ -843,6 +879,7 @@ class DBModel extends ChangeNotifier {
   Future<int> getUserPollResponse(String uid,
       [String pollId = Constants.POLL_FOLLOWUPGAME_ID]) async {
     try {
+      logger.i("CALLING: getUserPollResponseDocument");
       DocumentSnapshot docSnapshot =
           await _api.getUserPollResponseDocument(uid, pollId);
       if (docSnapshot.exists) {
@@ -861,6 +898,7 @@ class DBModel extends ChangeNotifier {
 
   Future<ReferralDetail> getUserReferralInfo(String uid) async {
     try {
+      logger.i("CALLING: getUserReferDoc");
       DocumentSnapshot snapshot = await _api.getUserReferDoc(uid);
       // .getReferralDocs(uid);
       Map<String, dynamic> _doc = snapshot.data();
@@ -875,6 +913,7 @@ class DBModel extends ChangeNotifier {
 
   Future<List<ReferralDetail>> getUserReferrals(String uid) async {
     try {
+      logger.i("CALLING: getReferralDocs");
       QuerySnapshot querySnapshot = await _api.getReferralDocs(uid);
       List<ReferralDetail> _refDetail = [];
       if (querySnapshot.size > 0) {
@@ -908,7 +947,7 @@ class DBModel extends ChangeNotifier {
       data['raw_response'] = rawResponse;
       data['status'] = status;
       data['timestamp'] = Timestamp.now();
-
+      logger.i("CALLING: addDepositDocument");
       await _api.addDepositDocument(year, monthCde, data);
       return true;
     } catch (e) {
@@ -931,7 +970,7 @@ class DBModel extends ChangeNotifier {
       data['amount'] = amount;
       data['rec_upi_address'] = upiAddress;
       data['timestamp'] = Timestamp.now();
-
+      logger.i("CALLING: addWithdrawalDocument");
       await _api.addWithdrawalDocument(year, monthCde, data);
       return true;
     } catch (e) {
@@ -948,6 +987,7 @@ class DBModel extends ChangeNotifier {
           ///eg: weekcode: 202105 -> delete all tickets older than 202103
           int weekCde = CodeFromFreq.getYearWeekCode();
           weekCde--;
+          logger.i("CALLING: deleteUserTicketsBeforeWeekCode");
           return await _api.deleteUserTicketsBeforeWeekCode(userId, weekCde);
         });
       } else {
@@ -962,6 +1002,7 @@ class DBModel extends ChangeNotifier {
   Future<bool> deleteSelectUserTickets(
       String userId, List<String> ticketRef) async {
     try {
+      logger.i("CALLING: deleteUserTicketDocuments");
       return await _api.deleteUserTicketDocuments(userId, ticketRef);
     } catch (e) {
       log.error('$e');
@@ -971,6 +1012,7 @@ class DBModel extends ChangeNotifier {
 
   Future<String> getUserDP(String uid) async {
     try {
+      logger.i("CALLING: getFileFromDPBucketURL");
       return await _api.getFileFromDPBucketURL(uid, 'image');
     } catch (e) {
       log.error('Failed to fetch dp url');
@@ -980,6 +1022,7 @@ class DBModel extends ChangeNotifier {
 
   Future<List<String>> getWalkthroughUrls() async {
     try {
+      logger.i("CALLING: getWalkthroughFiles");
       return await _api.getWalkthroughFiles();
     } catch (e) {
       log.error('Failed to fetch walkthrough files');
@@ -994,6 +1037,7 @@ class DBModel extends ChangeNotifier {
         'timestamp': Timestamp.now(),
         'fdbk': fdbk
       };
+      logger.i("CALLING: addFeedbackDocument");
       await _api.addFeedbackDocument(fdbkMap);
       return true;
     } catch (e) {
@@ -1031,10 +1075,13 @@ class DBModel extends ChangeNotifier {
       if (failType == FailType.UserAugmontSellFailed ||
           failType == FailType.UserPaymentCompleteTxnFailed ||
           failType == FailType.UserDataCorrupted) {
+        logger.i("CALLING: addPriorityFailedReport");
         await _api.addPriorityFailedReport(dMap);
       } else if (failType == FailType.TambolaTicketGenerationFailed) {
+        logger.i("CALLING: addGameFailedReport");
         await _api.addGameFailedReport(dMap);
       } else {
+        logger.i("CALLING: addFailedReportDocument");
         await _api.addFailedReportDocument(dMap);
       }
       return true;
@@ -1047,6 +1094,7 @@ class DBModel extends ChangeNotifier {
   //////////////////////USER FUNDS BALANCING////////////////////////////////////////
   Future<bool> isTicketGenerationInProcess(String id) async {
     try {
+      logger.i("CALLING: getUserFundWalletDocById");
       var doc = await _api.getUserFundWalletDocById(id);
       Map<String, dynamic> resMap = doc.data();
       return (resMap != null &&
@@ -1060,6 +1108,7 @@ class DBModel extends ChangeNotifier {
 
   Future<UserFundWallet> getUserFundWallet(String id) async {
     try {
+      logger.i("CALLING: getUserFundWalletDocById");
       var doc = await _api.getUserFundWalletDocById(id);
       return UserFundWallet.fromMap(doc.data());
     } catch (e) {
@@ -1097,6 +1146,7 @@ class DBModel extends ChangeNotifier {
         UserFundWallet.fldIciciPrinciple: newWalletBalance.iciciPrinciple,
         UserFundWallet.fldIciciBalance: newWalletBalance.iciciBalance
       };
+      logger.i("CALLING: updateUserFundWalletFields");
       bool _flag = await _api.updateUserFundWalletFields(
           id,
           UserFundWallet.fldIciciPrinciple,
@@ -1113,6 +1163,7 @@ class DBModel extends ChangeNotifier {
   }
 
   String getMerchantTxnId(String uid) {
+    logger.i("CALLING: getUserTransactionDocumentKey");
     return _api.getUserTransactionDocumentKey(uid).id;
   }
 
@@ -1150,6 +1201,7 @@ class DBModel extends ChangeNotifier {
         UserFundWallet.fldAugmontGoldBalance: newWalletBalance.augGoldBalance,
         UserFundWallet.fldAugmontGoldQuantity: newWalletBalance.augGoldQuantity,
       };
+      logger.i("CALLING: updateUserFundWalletFields");
       bool _flag = await _api.updateUserFundWalletFields(
           id,
           UserFundWallet.fldAugmontGoldPrinciple,
@@ -1172,7 +1224,7 @@ class DBModel extends ChangeNotifier {
       DateTime _dt = DateTime.now();
       DateTime _reqDate = DateTime(_dt.year, _dt.month, _dt.day - dayOffset,
           _dt.hour, _dt.minute, _dt.second);
-
+      logger.i("CALLING: getRecentAugmontDepositTxn");
       QuerySnapshot querySnapshot = await _api.getRecentAugmontDepositTxn(
           userId, Timestamp.fromDate(_reqDate));
       if (querySnapshot.size == 0)
@@ -1206,6 +1258,7 @@ class DBModel extends ChangeNotifier {
   ///////////////////USER TICKET BALANCING///////////////////////////////////
   Future<UserTicketWallet> getUserTicketWallet(String id) async {
     try {
+      logger.i("CALLING: getUserTicketWalletDocById");
       var doc = await _api.getUserTicketWalletDocById(id);
       return UserTicketWallet.fromMap(doc.data());
     } catch (e) {
@@ -1228,6 +1281,7 @@ class DBModel extends ChangeNotifier {
         Map<String, dynamic> tMap = {
           UserTicketWallet.fldInitTckCount: userTicketWallet.initTck
         };
+        logger.i("CALLING: updateUserTicketWalletFields");
         bool flag = await _api.updateUserTicketWalletFields(
             uid, UserTicketWallet.fldInitTckCount, currentValue, tMap);
         if (!flag) {
@@ -1257,6 +1311,7 @@ class DBModel extends ChangeNotifier {
         Map<String, dynamic> tMap = {
           UserTicketWallet.fldAugmontGoldTckCount: userTicketWallet.augGold99Tck
         };
+        logger.i("CALLING: updateUserTicketWalletFields");
         bool flag = await _api.updateUserTicketWalletFields(
             uid, UserTicketWallet.fldAugmontGoldTckCount, currentValue, tMap);
         if (!flag) {
@@ -1286,6 +1341,7 @@ class DBModel extends ChangeNotifier {
         Map<String, dynamic> tMap = {
           UserTicketWallet.fldICICI1565TckCount: userTicketWallet.icici1565Tck
         };
+        logger.i("CALLING: updateUserTicketWalletFields");
         bool flag = await _api.updateUserTicketWalletFields(
             uid, UserTicketWallet.fldICICI1565TckCount, currentValue, tMap);
         if (!flag) {
@@ -1305,6 +1361,7 @@ class DBModel extends ChangeNotifier {
   Future<List<FeedCard>> getHomeCards() async {
     List<FeedCard> _cards = [];
     try {
+      logger.i("CALLING: getHomeCardCollection");
       QuerySnapshot querySnapshot = await _api.getHomeCardCollection();
       if (querySnapshot != null && querySnapshot.docs.length > 0) {
         for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
@@ -1332,6 +1389,7 @@ class DBModel extends ChangeNotifier {
   Future<List<PromoCardModel>> getPromoCards() async {
     List<PromoCardModel> _cards = [];
     try {
+      logger.i("CALLING: getPromoCardCollection");
       QuerySnapshot querySnapshot = await _api.getPromoCardCollection();
       if (querySnapshot != null && querySnapshot.docs.length > 0) {
         for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
@@ -1356,6 +1414,7 @@ class DBModel extends ChangeNotifier {
   Future<List<UserMilestoneModel>> getUserAchievedMilestones(String uid) async {
     List<UserMilestoneModel> userMilestones = [];
     try {
+      logger.i("CALLING: fetchUserAchievedTicketMilestonesList");
       Map<String, dynamic> userMilestonesData =
           await _api.fetchUserAchievedTicketMilestonesList(uid);
       logger.d(userMilestonesData.toString());
@@ -1374,6 +1433,7 @@ class DBModel extends ChangeNotifier {
   Future<List<FelloMilestoneModel>> getMilestonesList() async {
     List<FelloMilestoneModel> felloMilestones = [];
     try {
+      logger.i("CALLING: fetchGoldenTicketMilestonesList");
       Map<String, dynamic> felloMilestonesData =
           await _api.fetchGoldenTicketMilestonesList();
       logger.d(felloMilestonesData.toString());
@@ -1392,6 +1452,7 @@ class DBModel extends ChangeNotifier {
   Future<List<EventModel>> getOngoingEvents() async {
     List<EventModel> events = [];
     try {
+      logger.i("CALLING: fetchOngoingEvents");
       QuerySnapshot snapshot = await _api.fetchOngoingEvents();
       if (snapshot.docs != null && snapshot.docs.isNotEmpty) {
         snapshot.docs.forEach((element) {
@@ -1409,6 +1470,7 @@ class DBModel extends ChangeNotifier {
   Future<EventModel> getSingleEventDetails(String eventType) async {
     EventModel event;
     try {
+      logger.i("CALLING: fetchSingleEvent");
       Map<String, dynamic> response = await _api.fetchSingleEvent(eventType);
       if (response != null && response.isNotEmpty) {
         event = EventModel.fromMap(response);
@@ -1423,6 +1485,7 @@ class DBModel extends ChangeNotifier {
   Future<List<CouponModel>> getCoupons() async {
     List<CouponModel> couponList = [];
     try {
+      logger.i("CALLING: fetchCoupons");
       QuerySnapshot snapshot = await _api.fetchCoupons();
       snapshot.docs.forEach((element) {
         couponList.add(CouponModel.fromMap(element.data()));
@@ -1438,19 +1501,23 @@ class DBModel extends ChangeNotifier {
 //------------------------------------------------REALTIME----------------------------
 
   Future<bool> checkIfUsernameIsAvailable(String username) async {
+    logger.i("CALLING: checkUserNameAvailability");
     return await _api.checkUserNameAvailability(username);
   }
 
   Future<bool> setUsername(String username, String userId) async {
+    logger.i("CALLING: setUserName");
     return await _api.setUserName(username, userId);
   }
 
   Future<bool> sendEmailToVerifyEmail(String email, String otp) async {
+    logger.i("CALLING: createEmailVerificationDocument");
     return await _api.createEmailVerificationDocument(email, otp);
   }
 
   Future fetchCategorySpecificFAQ(String category) async {
     try {
+      logger.i("CALLING: fetchFaqs");
       final DocumentSnapshot response = await _api.fetchFaqs(category);
       logger.d(response.data().toString());
       return ApiResponse(model: FAQModel.fromMap(response.data()), code: 200);
