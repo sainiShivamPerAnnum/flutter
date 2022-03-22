@@ -323,7 +323,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
             _gtService.showInstantGoldenTicketView(
                 amount: depositFcmResponseModel.amount,
                 title:
-                    "You successfully saved ₹${getAmount(depositFcmResponseModel.amount)}",
+                    "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}",
                 source: GTSOURCE.deposit);
           } else {
             AppState.delegate.appState.isTxnLoaderInView = false;
@@ -750,8 +750,8 @@ class AugmontGoldBuyViewModel extends BaseModel {
         opaque: false,
         pageBuilder: (BuildContext context, _, __) =>
             TxnCompletedConfirmationScreenView(
-          amount: amount ?? 400.4,
-          title: title ?? "Hurray, we saved ₹400.4",
+          amount: amount ?? 0,
+          title: title ?? "Hurray, we saved ₹NA",
         ),
       ),
     );

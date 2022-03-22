@@ -112,7 +112,7 @@ class TxnCompletedConfirmationScreenView extends StatelessWidget {
                             width: SizeConfig.screenWidth * 0.6),
                         SizedBox(height: SizeConfig.padding40),
                         Text(
-                          "${amount.toInt()} Tokens Credited!",
+                          "${amount.toInt()} Fello Tokens have been credited to your wallet!",
                           style: TextStyles.title3.bold.colour(Colors.white),
                           textAlign: TextAlign.center,
                         ),

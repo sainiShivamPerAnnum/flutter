@@ -134,7 +134,7 @@ class _GTInstantViewState extends State<GTInstantView>
                             width: SizeConfig.screenWidth * 0.6),
                         SizedBox(height: SizeConfig.padding64),
                         Text(
-                          "${widget.amount.toInt()} Tokens Credited!",
+                          "${widget.amount.toInt()} Fello Tokens have been credited to your wallet!",
                           style: TextStyles.title3.bold.colour(Colors.white),
                           textAlign: TextAlign.center,
                         ),
