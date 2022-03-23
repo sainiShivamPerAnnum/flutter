@@ -5,7 +5,7 @@ class ActiveSubscriptionModel {
   String amountType;
   Timestamp expiryDate;
   String frequencyUnit;
-  double dailyAmount;
+  double autoAmount;
   double upfrontTxnAmount;
   String vpa;
   Timestamp updatedOn;
@@ -14,13 +14,14 @@ class ActiveSubscriptionModel {
   Timestamp startDate;
   int frequency;
   String status;
+  String autoFrequency;
 
   ActiveSubscriptionModel(
       {this.subId,
       this.amountType,
       this.expiryDate,
       this.frequencyUnit,
-      this.dailyAmount,
+      this.autoAmount,
       this.upfrontTxnAmount,
       this.vpa,
       this.updatedOn,
@@ -28,14 +29,15 @@ class ActiveSubscriptionModel {
       this.createdOn,
       this.startDate,
       this.frequency,
-      this.status});
+      this.status,
+      this.autoFrequency});
 
   ActiveSubscriptionModel.fromJson(Map<String, dynamic> json, String sid) {
     subId = sid;
     amountType = json['amountType'];
     expiryDate = json['expiryDate'];
     frequencyUnit = json['frequencyUnit'];
-    dailyAmount = (json['dailyAmount'] ?? 0).toDouble();
+    autoAmount = (json['autoAmount'] ?? 0).toDouble();
     upfrontTxnAmount = (json['upfrontTxnAmount'] ?? 0).toDouble();
     vpa = json['vpa'];
     updatedOn = json['updatedOn'];
@@ -44,6 +46,7 @@ class ActiveSubscriptionModel {
     startDate = json['startDate'];
     frequency = json['frequency'];
     status = json['status'];
+    autoFrequency = json['autoFrequency'];
   }
 
   Map<String, dynamic> toJson() {
@@ -51,7 +54,7 @@ class ActiveSubscriptionModel {
     data['amountType'] = this.amountType;
     data['expiryDate'] = this.expiryDate;
     data['frequencyUnit'] = this.frequencyUnit;
-    data['dailyAmount'] = this.dailyAmount;
+    data['autoAmount'] = this.autoAmount;
     data['upfrontTxnAmount'] = this.upfrontTxnAmount;
     data['vpa'] = this.vpa;
     data['updatedOn'] = this.updatedOn;
@@ -60,6 +63,7 @@ class ActiveSubscriptionModel {
     data['startDate'] = this.startDate;
     data['frequency'] = this.frequency;
     data['status'] = this.status;
+    data['autoFrequency'] = this.autoFrequency;
     return data;
   }
 }

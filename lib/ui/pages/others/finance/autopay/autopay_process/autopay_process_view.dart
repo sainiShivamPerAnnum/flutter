@@ -6,6 +6,7 @@ import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -57,13 +58,14 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
                         ),
                         color: Colors.white,
                       ),
-                      child: PageView(controller: model.pageController,
-                          // physics: NeverScrollableScrollPhysics(),
+                      child: PageView(
+                          controller: model.pageController,
+                          physics: NeverScrollableScrollPhysics(),
                           children: [
-                            // addUpiIdUI(model),
-                            // pendingUI(model),
-                            // completedUI(model),
-                            // cancelledUI(model),
+                            addUpiIdUI(model),
+                            pendingUI(model),
+                            completedUI(model),
+                            cancelledUI(model),
                             amountSetUI(model),
                           ]),
                     ),
@@ -81,7 +83,7 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SizedBox(height: SizeConfig.screenHeight * 0.1),
+        SizedBox(height: SizeConfig.pageHorizontalMargins),
         Text(
           "STEP 2/3",
           style: TextStyles.body2.colour(Colors.black26).letterSpace(3),
@@ -89,8 +91,9 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
         Spacer(),
         Lottie.asset(
           "assets/lotties/pending.json",
-          height: SizeConfig.screenWidth / 2,
+          height: SizeConfig.screenWidth / 3,
         ),
+        SizedBox(height: SizeConfig.padding24),
         Text(
           "Processing, please wait",
           style: TextStyles.title3.bold,
@@ -110,27 +113,47 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
   }
 
   completedUI(AutoPayProcessViewModel model) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Stack(
       children: [
-        Spacer(),
-        Lottie.asset(
-          "assets/lotties/complete.json",
-          height: SizeConfig.screenWidth / 2,
+        Container(
+          width: SizeConfig.screenWidth,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Spacer(),
+              Lottie.asset(
+                "assets/lotties/complete.json",
+                height: SizeConfig.screenWidth / 2,
+              ),
+              Text(
+                "Yayy!",
+                style: TextStyles.title3.bold,
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: SizeConfig.padding8),
+              Text(
+                "Your UPI AutoPay Setup was successful!",
+                style: TextStyles.body2,
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: SizeConfig.padding24),
+              Spacer(),
+            ],
+          ),
         ),
-        Text(
-          "Yayy!",
-          style: TextStyles.title3.bold,
-          textAlign: TextAlign.center,
-        ),
-        SizedBox(height: SizeConfig.padding8),
-        Text(
-          "Your UPI AutoPay Setup was successful!",
-          style: TextStyles.body2,
-          textAlign: TextAlign.center,
-        ),
-        SizedBox(height: SizeConfig.padding24),
-        Spacer(),
+        Align(
+            alignment: Alignment.topCenter,
+            child: Container(
+              alignment: Alignment.center,
+              height: SizeConfig.screenHeight,
+              width: SizeConfig.screenWidth,
+              child: Transform.scale(
+                scale: 2,
+                child: Lottie.asset(
+                  Assets.gtConfetti,
+                ),
+              ),
+            )),
       ],
     );
   }
@@ -146,36 +169,30 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
           height: SizeConfig.screenWidth / 3,
         ),
         Text(
-          "Oh no!",
+          "Snap!",
           style: TextStyles.title3.bold,
           textAlign: TextAlign.center,
         ),
-        SizedBox(height: SizeConfig.padding8),
+        SizedBox(height: SizeConfig.padding12),
         Text(
-          "Your UPI AutoPay Setup was not successful!",
+          "Your UPI AutoPay Setup was not successful!. Don't worry you can still try",
           style: TextStyles.body2,
           textAlign: TextAlign.center,
         ),
         SizedBox(height: SizeConfig.padding24),
-        Spacer(),
-        SafeArea(
-          child: Container(
-            margin: EdgeInsets.symmetric(
-              vertical: SizeConfig.viewInsets.bottom != 0
-                  ? 0
-                  : SizeConfig.pageHorizontalMargins,
+        Container(
+          width: SizeConfig.screenWidth * 0.6,
+          child: FelloButtonLg(
+            child: Text(
+              "Try Again",
+              style: TextStyles.body2.bold.colour(Colors.white),
             ),
-            child: FelloButtonLg(
-              child: Text(
-                "Try Again",
-                style: TextStyles.body2.bold.colour(Colors.white),
-              ),
-              onPressed: () {
-                model.tryAgain();
-              },
-            ),
+            onPressed: () {
+              model.tryAgain();
+            },
           ),
         ),
+        Spacer()
       ],
     );
   }
@@ -183,7 +200,7 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
   addUpiIdUI(AutoPayProcessViewModel model) {
     return Column(
       children: [
-        SizedBox(height: SizeConfig.screenHeight * 0.1),
+        SizedBox(height: SizeConfig.pageHorizontalMargins),
         Text(
           "STEP 1/3",
           style: TextStyles.body2.colour(Colors.black26).letterSpace(3),
@@ -271,7 +288,10 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
             ],
           ),
         ),
-        Spacer(),
+        SizedBox(
+          height:
+              SizeConfig.pageHorizontalMargins + SizeConfig.viewInsets.bottom,
+        )
       ],
     );
   }

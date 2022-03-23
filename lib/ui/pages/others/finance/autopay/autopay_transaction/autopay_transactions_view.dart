@@ -46,8 +46,7 @@ class AutoPayTransactionsView extends StatelessWidget {
                         topRight: Radius.circular(40),
                       ),
                     ),
-                    child: model.state == ViewState.Busy ||
-                            model.filteredList == null
+                    child: model.state == ViewState.Busy
                         ? Center(
                             child: SpinKitWave(
                               color: UiConstants.primaryColor,
@@ -55,10 +54,12 @@ class AutoPayTransactionsView extends StatelessWidget {
                             ),
                           )
                         : Container(
+                            width: SizeConfig.screenWidth,
                             child: Column(
                               children: [
                                 Expanded(
-                                  child: (model.filteredList?.length == 0
+                                  child: (model.filteredList == null ||
+                                          model.filteredList?.length == 0
                                       ? child
                                       : ListView(
                                           physics: BouncingScrollPhysics(),

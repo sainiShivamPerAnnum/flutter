@@ -70,11 +70,11 @@ class UserAutoPayDetailsView extends StatelessWidget {
                                         vertical:
                                             SizeConfig.pageHorizontalMargins),
                                     children: [
-                                      TextFieldLabel("Subscription Id"),
-                                      TextFormField(
-                                        enabled: false,
-                                        controller: model.subIdController,
-                                      ),
+                                      // TextFieldLabel("Subscription Id"),
+                                      // TextFormField(
+                                      //   enabled: false,
+                                      //   controller: model.subIdController,
+                                      // ),
                                       TextFieldLabel("Primary UPI"),
                                       TextFormField(
                                         enabled: false,
@@ -89,16 +89,32 @@ class UserAutoPayDetailsView extends StatelessWidget {
                                               : SizedBox(),
                                         ),
                                       ),
+                                      TextFieldLabel("Subscription Status"),
+                                      TextFormField(
+                                        controller: model.subStatusController,
+                                        enabled: false,
+                                        decoration: InputDecoration(
+                                          prefix: Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 8.0),
+                                            child: Blinker(
+                                              child: CircleAvatar(
+                                                backgroundColor: model
+                                                            .activeSubscription
+                                                            .status ==
+                                                        "ACTIVE"
+                                                    ? UiConstants.primaryColor
+                                                    : UiConstants.tertiarySolid,
+                                                radius: 5,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                                       TextFieldLabel("Subscribed Amount"),
                                       InkWell(
                                         onTap: () {
-                                          BaseUtil.openDialog(
-                                              addToScreenStack: true,
-                                              isBarrierDismissable: false,
-                                              hapticVibrate: true,
-                                              content:
-                                                  AutoPayAmountUpdateDialog(
-                                                      model: model));
+                                          //open update amount freq screen
                                         },
                                         child: TextFormField(
                                           controller: model.subAmountController,
@@ -119,24 +135,6 @@ class UserAutoPayDetailsView extends StatelessWidget {
                                           ),
                                           textCapitalization:
                                               TextCapitalization.characters,
-                                        ),
-                                      ),
-                                      TextFieldLabel("Subscription Status"),
-                                      TextFormField(
-                                        controller: model.subStatusController,
-                                        enabled: false,
-                                        decoration: InputDecoration(
-                                          prefix: Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 8.0),
-                                            child: Blinker(
-                                              child: CircleAvatar(
-                                                backgroundColor:
-                                                    UiConstants.primaryColor,
-                                                radius: 5,
-                                              ),
-                                            ),
-                                          ),
                                         ),
                                       ),
                                     ],
@@ -396,97 +394,97 @@ class _PauseAutoPayModalState extends State<PauseAutoPayModal> {
   }
 }
 
-class AutoPayAmountUpdateDialog extends StatefulWidget {
-  final UserAutoPayDetailsViewModel model;
-  AutoPayAmountUpdateDialog({@required this.model});
-  @override
-  State<AutoPayAmountUpdateDialog> createState() =>
-      _AutoPayAmountUpdateDialogState();
-}
+// class AutoPayAmountUpdateDialog extends StatefulWidget {
+//   final UserAutoPayDetailsViewModel model;
+//   AutoPayAmountUpdateDialog({@required this.model});
+//   @override
+//   State<AutoPayAmountUpdateDialog> createState() =>
+//       _AutoPayAmountUpdateDialogState();
+// }
 
-class _AutoPayAmountUpdateDialogState extends State<AutoPayAmountUpdateDialog> {
-  final _paytmService = locator<PaytmService>();
-  double sliderValue = 2000;
-  updateSliderValue(value) {
-    setState(() {});
-  }
+// class _AutoPayAmountUpdateDialogState extends State<AutoPayAmountUpdateDialog> {
+//   final _paytmService = locator<PaytmService>();
+//   double sliderValue = 2000;
+//   updateSliderValue(value) {
+//     setState(() {});
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    return FelloConfirmationDialog(
-      bottomPadding: SizeConfig.padding32,
-      content: Column(
-        children: [
-          // SizedBox(height: SizeConfig.padding24),
-          // SvgPicture.asset("assets/vectors/addmoney.svg",
-          //     height: SizeConfig.screenHeight * 0.16),
-          SizedBox(height: SizeConfig.padding24),
+//   @override
+//   Widget build(BuildContext context) {
+//     return FelloConfirmationDialog(
+//       bottomPadding: SizeConfig.padding32,
+//       content: Column(
+//         children: [
+//           // SizedBox(height: SizeConfig.padding24),
+//           // SvgPicture.asset("assets/vectors/addmoney.svg",
+//           //     height: SizeConfig.screenHeight * 0.16),
+//           SizedBox(height: SizeConfig.padding24),
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "₹${sliderValue.toInt()}",
-                style: GoogleFonts.sourceSansPro(
-                    fontWeight: FontWeight.bold,
-                    fontSize: SizeConfig.screenWidth * 0.16,
-                    color: Colors.black),
-              ),
-              Text(
-                '/day',
-                style: TextStyles.title2
-                    .colour(Colors.black38)
-                    .light
-                    .setHeight(2.4),
-              )
-            ],
-          ),
-          Slider(
-            value: sliderValue,
-            onChanged: (val) {
-              setState(() {
-                sliderValue = val;
-              });
-            },
-            min: 10,
-            max: 5000,
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
-            child: Row(
-              children: [
-                Text("₹10"),
-                Spacer(),
-                Text("₹5000"),
-              ],
-            ),
-          ),
-          SizedBox(height: SizeConfig.padding40),
-        ],
-      ),
-      accept: "Update",
-      result: (res) {
-        _paytmService
-            .updateDailySubscriptionAmount(
-                widget.model.activeSubscription.subId,
-                sliderValue.toInt().toDouble())
-            .then((value) {
-          widget.model.findActiveSubscription();
-          if (value) {
-            AppState.backButtonDispatcher.didPopRoute();
-            BaseUtil.showPositiveAlert(
-                "Amount Update successfully", "Effective from next payment");
-          } else {
-            BaseUtil.showNegativeAlert(
-                "Amount Update failed", "Please try again in sometime");
-          }
-        });
-      },
-      onReject: () {
-        AppState.backButtonDispatcher.didPopRoute();
-      },
-      reject: "Cancel",
-      rejectColor: UiConstants.tertiarySolid,
-    );
-  }
-}
+//           Row(
+//             mainAxisAlignment: MainAxisAlignment.center,
+//             children: [
+//               Text(
+//                 "₹${sliderValue.toInt()}",
+//                 style: GoogleFonts.sourceSansPro(
+//                     fontWeight: FontWeight.bold,
+//                     fontSize: SizeConfig.screenWidth * 0.16,
+//                     color: Colors.black),
+//               ),
+//               Text(
+//                 '/day',
+//                 style: TextStyles.title2
+//                     .colour(Colors.black38)
+//                     .light
+//                     .setHeight(2.4),
+//               )
+//             ],
+//           ),
+//           Slider(
+//             value: sliderValue,
+//             onChanged: (val) {
+//               setState(() {
+//                 sliderValue = val;
+//               });
+//             },
+//             min: 10,
+//             max: 5000,
+//           ),
+//           Padding(
+//             padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
+//             child: Row(
+//               children: [
+//                 Text("₹10"),
+//                 Spacer(),
+//                 Text("₹5000"),
+//               ],
+//             ),
+//           ),
+//           SizedBox(height: SizeConfig.padding40),
+//         ],
+//       ),
+//       accept: "Update",
+//       result: (res) {
+//         _paytmService
+//             .updateDailySubscriptionAmount(
+//                 widget.model.activeSubscription.subId,
+//                 sliderValue.toInt().toDouble())
+//             .then((value) {
+//           widget.model.findActiveSubscription();
+//           if (value) {
+//             AppState.backButtonDispatcher.didPopRoute();
+//             BaseUtil.showPositiveAlert(
+//                 "Amount Update successfully", "Effective from next payment");
+//           } else {
+//             BaseUtil.showNegativeAlert(
+//                 "Amount Update failed", "Please try again in sometime");
+//           }
+//         });
+//       },
+//       onReject: () {
+//         AppState.backButtonDispatcher.didPopRoute();
+//       },
+//       reject: "Cancel",
+//       rejectColor: UiConstants.tertiarySolid,
+//     );
+//   }
+// }

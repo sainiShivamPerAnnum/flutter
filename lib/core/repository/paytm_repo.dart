@@ -9,6 +9,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class PaytmRepository {
@@ -69,25 +70,25 @@ class PaytmRepository {
     }
   }
 
-  Future<ApiResponse<SubscriptionResponseModel>> getSubscriptionStatus(
-      String subId) async {
-    try {
-      final String _uid = _userService.baseUser.uid;
-      final _token = await _getBearerToken();
-      final _queryParams = {"subId": subId, "uid": _uid};
-      final response = await APIService.instance.getData(
-          ApiPath().kCreatePaytmSubscription,
-          token: _token,
-          queryParams: _queryParams);
+  // Future<ApiResponse<SubscriptionResponseModel>> getSubscriptionStatus(
+  //     String subId) async {
+  //   try {
+  //     final String _uid = _userService.baseUser.uid;
+  //     final _token = await _getBearerToken();
+  //     final _queryParams = {"subId": subId, "uid": _uid};
+  //     final response = await APIService.instance.getData(
+  //         ApiPath().kCreatePaytmSubscription,
+  //         token: _token,
+  //         queryParams: _queryParams);
 
-      final _responseModel = SubscriptionResponseModel.fromJson(response);
-      return ApiResponse<SubscriptionResponseModel>(
-          model: _responseModel, code: 200);
-    } catch (e) {
-      _logger.e(e.toString());
-      return ApiResponse.withError("Unable create transaction", 400);
-    }
-  }
+  //     final _responseModel = SubscriptionResponseModel.fromJson(response);
+  //     return ApiResponse<SubscriptionResponseModel>(
+  //         model: _responseModel, code: 200);
+  //   } catch (e) {
+  //     _logger.e(e.toString());
+  //     return ApiResponse.withError("Unable create transaction", 400);
+  //   }
+  // }
 
   Future<ApiResponse<CreateSubscriptionResponseModel>>
       createPaytmSubscription() async {
@@ -97,7 +98,7 @@ class PaytmRepository {
       final Map<String, dynamic> _body = {
         "uid": _uid,
         "maxAmount": 3000,
-        "expiryDate": "2030-03-20",
+        "expiryDate": "2030-03-10",
         "amount": 1
       };
       final _token = await _getBearerToken();
@@ -144,14 +145,17 @@ class PaytmRepository {
   }
 
   Future<ApiResponse<bool>> updateDailyAmount(
-      String subId, double amount) async {
+      {@required String subId,
+      @required double amount,
+      @required String freq}) async {
     try {
       final _token = await _getBearerToken();
 
       final _body = {
         'uid': _userService.baseUser.uid,
         'subId': subId,
-        'amount': amount
+        'amount': amount,
+        'freq': freq
       };
       final response = await APIService.instance.patchData(
           ApiPath().kCreatePaytmSubscription,

@@ -75,14 +75,14 @@ class PaytmService {
     }
   }
 
-  Future<void> validateSubscription(String subId) async {
-    final ApiResponse<SubscriptionResponseModel> subscriptionResponseModel =
-        await _paytmRepo.getSubscriptionStatus(subId);
-    if (subscriptionResponseModel.code == 200) {
-      _logger.d(subscriptionResponseModel.model.toString());
-    }
-    return subscriptionResponseModel;
-  }
+  // Future<void> validateSubscription(String subId) async {
+  //   final ApiResponse<SubscriptionResponseModel> subscriptionResponseModel =
+  //       await _paytmRepo.getSubscriptionStatus(subId);
+  //   if (subscriptionResponseModel.code == 200) {
+  //     _logger.d(subscriptionResponseModel.model.toString());
+  //   }
+  //   return subscriptionResponseModel;
+  // }
 
   Future<bool> initiateTransactions(
       {double amount,
@@ -236,6 +236,7 @@ class PaytmService {
 
     if (isVpaValidResponse.code == 400) {
       _logger.e(isVpaValidResponse.errorMessage);
+
       return PaytmResponse(
           errorCode: VALIDATE_VPA_FAILED,
           reason: "Unable to verify vpa",
@@ -313,7 +314,9 @@ class PaytmService {
       if (response.statusCode == 200) {
         responseString = await response.stream.bytesToString();
         log(responseString);
-        if (responseString.contains("SHOURYA"))
+        String identifierString =
+            "Check pending requests and approve payment by entering UPI PIN";
+        if (responseString.contains(identifierString))
           return ApiResponse(model: true, code: 200);
       } else {
         log(response.reasonPhrase);
@@ -326,8 +329,11 @@ class PaytmService {
   }
 
   Future<bool> updateDailySubscriptionAmount(
-      String subId, double amount) async {
-    ApiResponse response = await _paytmRepo.updateDailyAmount(subId, amount);
+      {@required String subId,
+      @required double amount,
+      @required String freq}) async {
+    ApiResponse response = await _paytmRepo.updateDailyAmount(
+        subId: subId, amount: amount, freq: freq);
     if (response.code == 200)
       return response.model;
     else

@@ -1,12 +1,8 @@
 import 'dart:async';
-import 'dart:io';
 
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/modals_sheets/custom_subscription_modal.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_balance_details/gold_balance_details_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
@@ -418,18 +414,6 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView> {
                       style: TextStyles.body2.bold.colour(Colors.white),
                     ),
                     onPressed: () {
-                      // BaseUtil.openModalBottomSheet(
-                      //   addToScreenStack: true,
-                      //   backgroundColor: Colors.white,
-                      //   borderRadius: BorderRadius.only(
-                      //     topLeft: Radius.circular(SizeConfig.roundness32),
-                      //     topRight: Radius.circular(SizeConfig.roundness32),
-                      //   ),
-                      //   content: CustomSubscriptionModal(),
-                      //   hapticVibrate: true,
-                      //   isBarrierDismissable: false,
-                      //   isScrollControlled: true,
-                      // );
                       AppState.delegate.appState.currentAction = PageAction(
                           page: AutoPayProcessViewPageConfig,
                           state: PageState.addPage);

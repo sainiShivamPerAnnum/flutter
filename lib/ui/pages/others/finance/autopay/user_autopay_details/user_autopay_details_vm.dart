@@ -53,7 +53,9 @@ class UserAutoPayDetailsViewModel extends BaseModel {
     if (activeSubscription != null) {
       subIdController.text = activeSubscription.subId;
       pUpiController.text = activeSubscription.vpa;
-      subAmountController.text = activeSubscription.dailyAmount.toString();
+      subAmountController.text =
+          "${activeSubscription.autoAmount.toString()}/${activeSubscription.autoFrequency}";
+      subStatusController.text = activeSubscription.status;
     }
     setState(ViewState.Idle);
   }

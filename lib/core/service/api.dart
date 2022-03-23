@@ -834,7 +834,7 @@ class Api {
         .collection(Constants.COLN_USERS)
         .doc(userid)
         .collection(Constants.SUBCOLN_USER_SUBSCRIPTION)
-        .where('status', isEqualTo: "ACTIVE");
+        .where('isActive', isEqualTo: true);
     return _query.get();
   }
 

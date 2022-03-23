@@ -69,6 +69,10 @@ class AutopayTransactionsViewModel extends BaseModel {
   }
 
   getMoreTransactions() async {
+    if (activeSubscription == null) {
+      // filteredList = [];
+      return;
+    }
     final result = await _dBModel.getAutopayTransactions(
         uid: _userService.baseUser.uid,
         subId: activeSubscription.subId,
@@ -91,10 +95,8 @@ class AutopayTransactionsViewModel extends BaseModel {
   }
 
   findActiveSubscription() async {
-    setState(ViewState.Busy);
     activeSubscription =
         await _dBModel.getActiveSubscriptionDetails(_userService.baseUser.uid);
     if (activeSubscription != null) {}
-    setState(ViewState.Idle);
   }
 }

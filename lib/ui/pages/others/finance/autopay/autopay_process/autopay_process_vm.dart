@@ -87,6 +87,7 @@ class AutoPayProcessViewModel extends BaseModel {
       _paytmService.jumpToSubPage(0);
       getTitle();
     });
+    onAmountValueChanged(amountFieldController.text);
   }
 
   onAmountValueChanged(String val) {
@@ -136,7 +137,9 @@ class AutoPayProcessViewModel extends BaseModel {
       Future.delayed(Duration(seconds: 30), () {
         if (AppState.screenStack.last == ScreenItem.loader) {
           AppState.screenStack.removeLast();
-          _paytmService.jumpToSubPage(3);
+          AppState.backButtonDispatcher.didPopRoute();
+          BaseUtil.showNegativeAlert(
+              "Its taking too long", "We'll inform you in 15 mins");
         }
       });
     } else
@@ -159,13 +162,16 @@ class AutoPayProcessViewModel extends BaseModel {
   setSubscriptionAmount(double amount) async {
     if (subId != null && subId.isNotEmpty) {
       isSubscriptionAmountUpdateInProgress = true;
-      final res =
-          await _paytmService.updateDailySubscriptionAmount(subId, amount);
+      final res = await _paytmService.updateDailySubscriptionAmount(
+          subId: subId, amount: amount, freq: isDaily ? "DAILY" : "WEEKLY");
       isSubscriptionAmountUpdateInProgress = false;
       if (res) {
-        while (AppState.screenStack.length > 1)
-          AppState.backButtonDispatcher.didPopRoute();
-        _paytmService.currentSubscriptionId = null;
+        _paytmService.jumpToSubPage(2);
+        Future.delayed(Duration(seconds: 2), () {
+          while (AppState.screenStack.length > 1)
+            AppState.backButtonDispatcher.didPopRoute();
+          _paytmService.currentSubscriptionId = null;
+        });
         BaseUtil.showPositiveAlert(
             "Subscription Successful", "Check transactions for more details");
       } else {
@@ -183,11 +189,9 @@ class AutoPayProcessViewModel extends BaseModel {
     print(res['status']);
     if (res != null && res['status'] != null && res['status'] == true) {
       subId = res['subId'] ?? "";
-      _paytmService.jumpToSubPage(2);
-      onAmountValueChanged(amountFieldController.text);
-      Future.delayed(Duration(seconds: 3), () {
-        _paytmService.jumpToSubPage(4);
-      });
+      _paytmService.jumpToSubPage(4);
+      // onAmountValueChanged(amountFieldController.text);
+
     } else {
       _paytmService.jumpToSubPage(3);
     }
