@@ -415,15 +415,6 @@ class Api {
     return ref.doc(id).update(upObj);
   }
 
-  Future<DocumentSnapshot> getUserPollResponseDocument(
-      String id, String pollId) {
-    ref = _db
-        .collection(Constants.COLN_USERS)
-        .doc(id)
-        .collection(Constants.SUBCOLN_USER_POLL_RESPONSES);
-    return ref.doc(pollId).get();
-  }
-
   Future<DocumentSnapshot> getUserFundWalletDocById(String id) {
     ref = _db
         .collection(Constants.COLN_USERS)

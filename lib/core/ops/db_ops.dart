@@ -791,27 +791,6 @@ class DBModel extends ChangeNotifier {
     return null;
   }
 
-  ///If response = -1, user has not added a poll response yet
-  ///else response is option index, 1,2,3,4,5
-  Future<int> getUserPollResponse(String uid,
-      [String pollId = Constants.POLL_FOLLOWUPGAME_ID]) async {
-    try {
-      DocumentSnapshot docSnapshot =
-          await _api.getUserPollResponseDocument(uid, pollId);
-      if (docSnapshot.exists) {
-        Map<String, dynamic> docData = docSnapshot.data();
-        if (docData != null && docData['pResponse'] != null) {
-          log.debug(
-              'Found existing response from user: ${docData['pResponse']}');
-          return docData['pResponse'];
-        }
-      }
-    } catch (e) {
-      log.error(e);
-    }
-    return -1;
-  }
-
   Future<ReferralDetail> getUserReferralInfo(String uid) async {
     try {
       DocumentSnapshot snapshot = await _api.getUserReferDoc(uid);
