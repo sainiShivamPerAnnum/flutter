@@ -1052,50 +1052,6 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<UserFundWallet> updateUserIciciBalance(
-    String id,
-    UserFundWallet originalWalletBalance,
-    double changeAmount,
-  ) async {
-    ///make a copy of the wallet object
-    UserFundWallet newWalletBalance =
-        UserFundWallet.fromMap(originalWalletBalance.cloneMap());
-
-    ///first update icici balance
-    if (changeAmount < 0 &&
-        (newWalletBalance.iciciBalance + changeAmount) < 0) {
-      log.error(
-          'ICICI Balance: Attempted to subtract amount more than available balance');
-      return originalWalletBalance;
-    } else {
-      newWalletBalance.iciciBalance =
-          BaseUtil.digitPrecision(newWalletBalance.iciciBalance + changeAmount);
-      newWalletBalance.iciciPrinciple = BaseUtil.digitPrecision(
-          newWalletBalance.iciciPrinciple + changeAmount);
-    }
-
-    ///make the wallet transaction
-    try {
-      //only add the relevant fields to the map
-      Map<String, dynamic> rMap = {
-        UserFundWallet.fldIciciPrinciple: newWalletBalance.iciciPrinciple,
-        UserFundWallet.fldIciciBalance: newWalletBalance.iciciBalance
-      };
-      bool _flag = await _api.updateUserFundWalletFields(
-          id,
-          UserFundWallet.fldIciciPrinciple,
-          originalWalletBalance.iciciPrinciple,
-          rMap);
-      log.debug('User ICICI Balance update transaction successful: $_flag');
-
-      //if transaction fails, return the old wallet summary
-      return (_flag) ? newWalletBalance : originalWalletBalance;
-    } catch (e) {
-      log.error('Failed to update ICICI balance: $e');
-      return originalWalletBalance;
-    }
-  }
-
   String getMerchantTxnId(String uid) {
     return _api.getUserTransactionDocumentKey(uid).id;
   }
@@ -1103,52 +1059,6 @@ class DBModel extends ChangeNotifier {
   ///Total Gold Balance = (current total grams owned * current selling rate)
   ///Total Gold Principle = old principle + changeAmount
   ///it shouldnt matter if its a deposit or a sell, all based on selling rate
-  Future<UserFundWallet> updateUserAugmontGoldBalance(
-      String id,
-      UserFundWallet originalWalletBalance,
-      double sellingRate,
-      double totalQuantity,
-      double changeAmt) async {
-    ///make a copy of the wallet object
-    UserFundWallet newWalletBalance;
-    if (originalWalletBalance == null) {
-      newWalletBalance = UserFundWallet.newWallet();
-    } else {
-      newWalletBalance =
-          UserFundWallet.fromMap(originalWalletBalance.cloneMap());
-    }
-
-    ///first update augmont balance
-    newWalletBalance.augGoldBalance =
-        BaseUtil.digitPrecision(totalQuantity * sellingRate);
-    newWalletBalance.augGoldPrinciple =
-        BaseUtil.digitPrecision(newWalletBalance.augGoldPrinciple + changeAmt);
-    newWalletBalance.augGoldQuantity = totalQuantity; //precision already added
-
-    ///make the wallet transaction
-    try {
-      //only add the relevant fields to the map
-      Map<String, dynamic> rMap = {
-        UserFundWallet.fldAugmontGoldPrinciple:
-            newWalletBalance.augGoldPrinciple,
-        UserFundWallet.fldAugmontGoldBalance: newWalletBalance.augGoldBalance,
-        UserFundWallet.fldAugmontGoldQuantity: newWalletBalance.augGoldQuantity,
-      };
-      bool _flag = await _api.updateUserFundWalletFields(
-          id,
-          UserFundWallet.fldAugmontGoldPrinciple,
-          originalWalletBalance.augGoldPrinciple,
-          rMap);
-      log.debug(
-          'User Augmont Gold Balance update transaction successful: $_flag');
-
-      //if transaction fails, return the old wallet summary
-      return (_flag) ? newWalletBalance : originalWalletBalance;
-    } catch (e) {
-      log.error('Failed to update Augmont Gold balance: $e');
-      return originalWalletBalance;
-    }
-  }
 
   Future<double> getNonWithdrawableAugGoldQuantity(String userId,
       [int dayOffset = Constants.AUG_GOLD_WITHDRAW_OFFSET]) async {

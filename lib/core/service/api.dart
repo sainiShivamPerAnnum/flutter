@@ -440,38 +440,6 @@ class Api {
     return ref.doc(Constants.DOC_USER_WALLET_FUND_BALANCE).get();
   }
 
-  Future<bool> updateUserFundWalletFields(
-      String userId, String verifyFld, double verifyValue, Map data) {
-    DocumentReference _docRef = _db
-        .collection(Constants.COLN_USERS)
-        .doc(userId)
-        .collection(Constants.SUBCOLN_USER_WALLET)
-        .doc(Constants.DOC_USER_WALLET_FUND_BALANCE);
-    return _db
-        .runTransaction((transaction) async {
-          DocumentSnapshot snapshot = await transaction.get(_docRef);
-          if (!snapshot.exists) {
-            //wallet didnt exist?
-            transaction.set(_docRef, data, SetOptions(merge: true));
-          } else {
-            Map<String, dynamic> _map = snapshot.data();
-            if (_map[verifyFld] == null) {
-              ///field doesnt exist. add the field
-              transaction.set(_docRef, data, SetOptions(merge: true));
-            } else if (_map[verifyFld] != null &&
-                _map[verifyFld] == verifyValue) {
-              ///field exists and the condition is satisfied
-              transaction.set(_docRef, data, SetOptions(merge: true));
-            } else {
-              ///field exists but there is a data discrepancy
-              throw Exception('Condition not satisfied');
-            }
-          }
-        })
-        .then((value) => true)
-        .catchError((onErr) => false);
-  }
-
   DocumentReference getUserTransactionDocumentKey(String userId) {
     return _db
         .collection(Constants.COLN_USERS)
