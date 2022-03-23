@@ -160,14 +160,6 @@ class Api {
     return ref.doc('pan').get();
   }
 
-  Future<void> addUserPrtdDocPan(String userId, Map data) {
-    ref = _db
-        .collection(Constants.COLN_USERS)
-        .doc(userId)
-        .collection(Constants.SUBCOLN_USER_PRTD);
-    return ref.doc('pan').set(data, SetOptions(merge: false));
-  }
-
   Future<DocumentSnapshot> getUserAugmontDetailDocument(String userId) {
     ref = _db
         .collection(Constants.COLN_USERS)
@@ -192,16 +184,6 @@ class Api {
         .doc(userId)
         .collection(Constants.SUBCOLN_USER_KYC_DETAILS);
     return ref.doc(Constants.DOC_USER_KYC_DETAIL).get();
-  }
-
-  Future<void> updateUserKycDetailDocument(String userId, Map data) {
-    ref = _db
-        .collection(Constants.COLN_USERS)
-        .doc(userId)
-        .collection(Constants.SUBCOLN_USER_KYC_DETAILS);
-    return ref
-        .doc(Constants.DOC_USER_KYC_DETAIL)
-        .set(data, SetOptions(merge: true));
   }
 
   Future<DocumentReference> addUserTransactionDocument(
