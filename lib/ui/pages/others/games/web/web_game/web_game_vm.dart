@@ -1,6 +1,8 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -11,7 +13,6 @@ import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instan
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -24,6 +25,7 @@ class WebGameViewModel extends BaseModel {
   final _lbService = locator<LeaderboardService>();
   final _fclActionRepo = locator<FlcActionsRepo>();
   final _userCoinService = locator<UserCoinService>();
+  final _analyticsService = locator<AnalyticsService>();
 
   String _currentGame;
 
@@ -109,6 +111,7 @@ class WebGameViewModel extends BaseModel {
   }
 
   handlePoolClubRoundEnd(Map<String, dynamic> data, String game) async {
+    _analyticsService.track(eventName: AnalyticsEvents.poolClubEnds);
     if (data['gt_id'] != null && data['gt_id'].toString().isNotEmpty) {
       _logger.d("Recived a Golden ticket with id: ${data['gt_id']}");
       GoldenTicketService.goldenTicketId = data['gt_id'];

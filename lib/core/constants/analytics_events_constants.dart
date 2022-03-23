@@ -31,6 +31,8 @@ class AnalyticsEvents {
   static const selectPlayPoolClub = "Select PoolClub";
   static const startPlayingTambola = "Enter Tambola";
   static const buyTambolaTickets = "Play Tambola";
+  static const poolClubStarts = "Pool Club starts";
+  static const poolClubEnds = "Pool Club ends";
 
   static const openAppFirstTimeInADay = "App Open";
 

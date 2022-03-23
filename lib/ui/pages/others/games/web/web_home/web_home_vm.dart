@@ -166,14 +166,15 @@ class WebHomeViewModel extends BaseModel {
   }
 
   launchGame() async {
-    _analyticsService.track(eventName: AnalyticsEvents.startPlayingCricket);
     String initialUrl;
     viewpage(1);
     switch (currentGame) {
       case Constants.GAME_TYPE_POOLCLUB:
+        _analyticsService.track(eventName: AnalyticsEvents.poolClubStarts);
         initialUrl = _generatePoolClubGameUrl();
         break;
       case Constants.GAME_TYPE_CRICKET:
+        _analyticsService.track(eventName: AnalyticsEvents.startPlayingCricket);
         initialUrl = _generateCricketGameUrl();
         break;
     }
