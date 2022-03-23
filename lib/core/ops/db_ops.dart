@@ -771,26 +771,6 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  ///Sample response:
-  ///{ op_1: 52
-  /// op_2: 65
-  /// op_3: 37
-  /// op_4: 75
-  /// op_5: 99}
-  Future<Map<String, dynamic>> getPollCount(
-      [String pollId = Constants.POLL_FOLLOWUPGAME_ID]) async {
-    try {
-      DocumentSnapshot snapshot = await _api.getPollDocument(pollId);
-      Map<String, dynamic> _doc = snapshot.data();
-      if (snapshot.exists && _doc.length > 0) {
-        return snapshot.data();
-      }
-    } catch (e) {
-      log.error("Error fetch poll details: " + e.toString());
-    }
-    return null;
-  }
-
   Future<ReferralDetail> getUserReferralInfo(String uid) async {
     try {
       DocumentSnapshot snapshot = await _api.getUserReferDoc(uid);
