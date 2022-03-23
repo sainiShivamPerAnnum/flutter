@@ -11,35 +11,35 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
-enum STATUS { Pending, Complete, Cancel }
+// enum STATUS { Pending, Complete, Cancel }
 
 class AutoPayProcessViewModel extends BaseModel {
   final _paytmService = locator<PaytmService>();
   final _logger = locator<CustomLogger>();
 
   bool _showSetAmountView = false;
+  bool _isDaily = true;
+
   String _title = "Set up Autopay";
   String get title => this._title;
-  double sliderValue = 500;
+  // double sliderValue = 500;
   double saveAmount = 500;
   RegExp reg = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
   String Function(Match) mathFunc = (Match match) => '${match[1]},';
 
-  updateSliderValue(val) {
-    sliderValue = val;
-    saveAmount = calculateSaveAmount();
-    notifyListeners();
-  }
-
-  double calculateSaveAmount() {
-    return sliderValue * 365 + 0.06 * sliderValue;
-  }
+  // updateSliderValue(val) {
+  //   sliderValue = val;
+  //   saveAmount = calculateSaveAmount();
+  //   notifyListeners();
+  // }
 
   bool _isSubscriptionInProgress = false;
   bool _isSubscriptionAmountUpdateInProgress = false;
 
   TextEditingController vpaController =
       new TextEditingController(text: "7777777777@paytm");
+  TextEditingController amountFieldController =
+      new TextEditingController(text: '500');
 
   get pageController => _paytmService.subscriptionFlowPageController;
   get subId => _paytmService.currentSubscriptionId;
@@ -75,11 +75,27 @@ class AutoPayProcessViewModel extends BaseModel {
     notifyListeners();
   }
 
+  get isDaily => this._isDaily;
+
+  set isDaily(value) {
+    this._isDaily = value;
+    notifyListeners();
+  }
+
   init() async {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _paytmService.jumpToSubPage(0);
       getTitle();
     });
+  }
+
+  onAmountValueChanged(String val) {
+    saveAmount = calculateSaveAmount(int.tryParse(val ?? '0'));
+    notifyListeners();
+  }
+
+  double calculateSaveAmount(int amount) {
+    return amount * 365 + 0.06 * amount;
   }
 
   getTitle() {
@@ -168,7 +184,7 @@ class AutoPayProcessViewModel extends BaseModel {
     if (res != null && res['status'] != null && res['status'] == true) {
       subId = res['subId'] ?? "";
       _paytmService.jumpToSubPage(2);
-      updateSliderValue(100.0);
+      onAmountValueChanged(amountFieldController.text);
       Future.delayed(Duration(seconds: 3), () {
         _paytmService.jumpToSubPage(4);
       });

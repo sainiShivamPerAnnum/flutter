@@ -266,29 +266,29 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView> {
                                 //   ],
                                 // ),
                                 //SizedBox(height: SizeConfig.padding32),
-                                Text(
-                                  "Set up UPI Autopay in 3 easy Steps:",
-                                  style: TextStyles.title4.bold,
-                                ),
-                                SizedBox(height: SizeConfig.padding12),
-                                InfoTile(
-                                  png: "assets/images/icons/bank.png",
-                                  title: "Enter your UPI Id",
-                                  subtitle:
-                                      "Make sure your bank supports autopay",
-                                ),
-                                InfoTile(
-                                  svg: "assets/vectors/check.svg",
-                                  title:
-                                      "Open the UPI app and approve the request",
-                                  subtitle:
-                                      "Check you PENDING upi transactions for this request",
-                                ),
-                                InfoTile(
-                                  svg: Assets.wmtsaveMoney,
-                                  title: "Set a daily saving amount",
-                                  subtitle: "You can change it anytime",
-                                ),
+                                // Text(
+                                //   "Set up UPI Autopay in 3 easy Steps:",
+                                //   style: TextStyles.title4.bold,
+                                // ),
+                                // SizedBox(height: SizeConfig.padding12),
+                                // InfoTile(
+                                //   png: "assets/images/icons/bank.png",
+                                //   title: "Enter your UPI Id",
+                                //   subtitle:
+                                //       "Make sure your bank supports autopay",
+                                // ),
+                                // InfoTile(
+                                //   svg: "assets/vectors/check.svg",
+                                //   title:
+                                //       "Open the UPI app and approve the request",
+                                //   subtitle:
+                                //       "Check you PENDING upi transactions for this request",
+                                // ),
+                                // InfoTile(
+                                //   svg: Assets.wmtsaveMoney,
+                                //   title: "Set a daily saving amount",
+                                //   subtitle: "You can change it anytime",
+                                // ),
 
                                 Container(
                                   alignment: Alignment.center,
@@ -315,7 +315,7 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView> {
                                                 page: WalkThroughConfig);
                                       },
                                       child: Text(
-                                        "See an Example",
+                                        "How to setup UPI Autopay",
                                         style: TextStyles.body1
                                             .colour(UiConstants.primaryColor),
                                       ),

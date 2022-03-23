@@ -12,6 +12,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -59,10 +60,10 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
                       child: PageView(controller: model.pageController,
                           // physics: NeverScrollableScrollPhysics(),
                           children: [
-                            addUpiIdUI(model),
-                            pendingUI(model),
-                            completedUI(model),
-                            cancelledUI(model),
+                            // addUpiIdUI(model),
+                            // pendingUI(model),
+                            // completedUI(model),
+                            // cancelledUI(model),
                             amountSetUI(model),
                           ]),
                     ),
@@ -276,109 +277,172 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
   }
 
   amountSetUI(AutoPayProcessViewModel model) {
-    return Column(
+    return Stack(
       children: [
-        SizedBox(height: SizeConfig.screenHeight * 0.1),
-        Text(
-          "STEP 3/3",
-          style: TextStyles.body2.colour(Colors.black26).letterSpace(3),
-        ),
-        SizedBox(height: SizeConfig.padding24),
-        SvgPicture.asset("assets/vectors/addmoney.svg",
-            height: SizeConfig.screenHeight * 0.16),
-        SizedBox(height: SizeConfig.padding24),
-        Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.pageHorizontalMargins),
-          child: Text(
-            "How much would you like to save each day ?",
-            style: TextStyles.title5.bold,
-            textAlign: TextAlign.center,
-          ),
-        ),
-        SizedBox(height: SizeConfig.padding32),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "₹${model.sliderValue.toInt()}",
-              style: GoogleFonts.sourceSansPro(
-                  fontWeight: FontWeight.bold,
-                  fontSize: SizeConfig.screenWidth / 4.8,
-                  color: Colors.black),
-            ),
-            Text(
-              '/day',
-              style: TextStyles.title2
-                  .colour(Colors.black38)
-                  .light
-                  .setHeight(5)
-                  .setHeight(4),
-            )
-          ],
-        ),
-        Text(
-          "You'll be saving ₹${model.saveAmount.toInt().toString().replaceAllMapped(model.reg, model.mathFunc)} every year",
-          style: TextStyles.body2.bold.colour(Colors.black45),
-        ),
-        SizedBox(height: SizeConfig.padding16),
-        Slider(
-          value: model.sliderValue,
-          onChanged: (val) {
-            model.updateSliderValue(val);
-          },
-          inactiveColor: UiConstants.scaffoldColor,
-          thumbColor: UiConstants.primaryColor,
-          activeColor: UiConstants.primaryColor.withOpacity(0.5),
-          min: 10,
-          max: 5000,
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.pageHorizontalMargins),
-          child: Row(
-            children: [
-              Text("₹10"),
-              Spacer(),
-              Text("₹5000"),
-            ],
-          ),
-        ),
-        Spacer(),
-        SafeArea(
+        SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
           child: Column(
             children: [
-              FelloButtonLg(
-                child: model.isSubscriptionAmountUpdateInProgress
-                    ? SpinKitThreeBounce(
-                        color: Colors.white,
-                        size: 20,
-                      )
-                    : Text(
-                        "Finish",
-                        style: TextStyles.body2.bold.colour(Colors.white),
-                      ),
-                onPressed: () {
-                  model.setSubscriptionAmount(
-                      model.sliderValue.toInt().toDouble());
-                },
+              SizedBox(height: SizeConfig.pageHorizontalMargins),
+              Text(
+                "STEP 3/3",
+                style: TextStyles.body2.colour(Colors.black26).letterSpace(3),
               ),
-              SizedBox(height: SizeConfig.padding6),
-              TextButton(
-                onPressed: () => AppState.backButtonDispatcher.didPopRoute(),
+              SizedBox(height: SizeConfig.padding24),
+              SvgPicture.asset("assets/vectors/addmoney.svg",
+                  height: SizeConfig.screenHeight * 0.16),
+              SizedBox(height: SizeConfig.padding24),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.pageHorizontalMargins),
                 child: Text(
-                  "Skip",
-                  style: TextStyles.body1.colour(Colors.grey).light,
+                  "How much would you like to save?",
+                  style: TextStyles.title5.bold,
+                  textAlign: TextAlign.center,
                 ),
               ),
+              SizedBox(height: SizeConfig.padding24),
+              Row(
+                children: [
+                  Expanded(
+                    child: SegmentChips(
+                      model: model,
+                      text: "Daily",
+                    ),
+                  ),
+                  SizedBox(width: SizeConfig.padding16),
+                  Expanded(
+                    child: SegmentChips(
+                      model: model,
+                      text: "Weekly",
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                width: SizeConfig.screenWidth,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Container(
+                      width: SizeConfig.screenWidth / 2 +
+                          SizeConfig.padding16 -
+                          (model.isDaily ? 0 : SizeConfig.padding12),
+                      child: TextField(
+                        controller: model.amountFieldController,
+                        decoration: InputDecoration(
+                            contentPadding: EdgeInsets.zero,
+                            isDense: true,
+                            isCollapsed: true,
+                            border: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: InputBorder.none),
+                        // autofocus: true,
+                        // cursorHeight: SizeConfig.screenWidth / 6,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        enableInteractiveSelection: false,
+                        keyboardType: TextInputType.number,
+                        cursorWidth: 0.5,
+                        onChanged: (value) {
+                          model.onAmountValueChanged(value);
+                        },
+                        textAlign: TextAlign.end,
+                        style: GoogleFonts.sourceSansPro(
+                            fontWeight: FontWeight.bold,
+                            fontSize: SizeConfig.screenWidth / 4.8,
+                            color: Colors.black),
+                      ),
+                    ),
+                    Container(
+                      width: SizeConfig.screenWidth / 2 -
+                          SizeConfig.pageHorizontalMargins * 2 -
+                          SizeConfig.padding16 +
+                          (model.isDaily ? 0 : SizeConfig.padding12),
+                      // height: SizeConfig.padding24,
+                      child: Text(model.isDaily ? '/day' : '/week',
+                          style: GoogleFonts.sourceSansPro(
+                              fontSize: SizeConfig.title2,
+                              fontWeight: FontWeight.w300,
+                              height: SizeConfig.padding4,
+                              color: Colors.black38)),
+                    )
+                  ],
+                ),
+              ),
+              Text(
+                "You'll be saving ₹${model.saveAmount.toInt().toString().replaceAllMapped(model.reg, model.mathFunc)} every year",
+                style: TextStyles.body2.bold.colour(Colors.black45),
+              ),
               SizedBox(
-                height: SizeConfig.viewInsets.bottom != 0
-                    ? 0
-                    : SizeConfig.pageHorizontalMargins,
+                height: SizeConfig.padding24,
+              ),
+              Container(
+                width: SizeConfig.screenWidth,
+                child: Wrap(
+                  runSpacing: SizeConfig.padding8,
+                  spacing: SizeConfig.padding12,
+                  children: [
+                    amountchips(10, model),
+                    amountchips(50, model),
+                    amountchips(100, model),
+                    amountchips(250, model),
+                    amountchips(500, model),
+                    amountchips(750, model),
+                    amountchips(1000, model),
+                  ],
+                ),
               ),
             ],
           ),
-        )
+        ),
+        Positioned(
+            bottom: 0,
+            child: SafeArea(
+              child: Container(
+                color: Colors.white,
+                child: Column(
+                  children: [
+                    Container(
+                      width: SizeConfig.screenWidth -
+                          SizeConfig.pageHorizontalMargins * 2,
+                      child: FelloButtonLg(
+                        child: model.isSubscriptionAmountUpdateInProgress
+                            ? SpinKitThreeBounce(
+                                color: Colors.white,
+                                size: 20,
+                              )
+                            : Text(
+                                "Finish",
+                                style:
+                                    TextStyles.body2.bold.colour(Colors.white),
+                              ),
+                        onPressed: () {
+                          model.setSubscriptionAmount(
+                              int.tryParse(model.amountFieldController.text)
+                                  .toDouble());
+                        },
+                      ),
+                    ),
+                    // SizedBox(height: SizeConfig.padding6),
+                    // TextButton(
+                    //   onPressed: () => AppState.backButtonDispatcher.didPopRoute(),
+                    //   child: Text(
+                    //     "Skip",
+                    //     style: TextStyles.body1.colour(Colors.grey).light,
+                    //   ),
+                    // ),
+                    SizedBox(
+                      height: SizeConfig.viewInsets.bottom != 0
+                          ? 0
+                          : SizeConfig.pageHorizontalMargins,
+                    ),
+                  ],
+                ),
+              ),
+            ))
       ],
     );
   }
@@ -395,5 +459,69 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
       },
       child: Chip(label: Text(suffix)),
     );
+  }
+
+  amountchips(int amount, AutoPayProcessViewModel model) {
+    return InkWell(
+      onTap: () {
+        model.amountFieldController.text = amount.toString();
+        model.onAmountValueChanged(amount.toString());
+      },
+      child: Chip(label: Text("₹ ${amount.toString()}")),
+    );
+  }
+}
+
+class SegmentChips extends StatelessWidget {
+  final AutoPayProcessViewModel model;
+  final String text;
+
+  SegmentChips({this.model, this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => model.isDaily = !model.isDaily,
+      child: Container(
+          margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding2),
+          padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.padding24, vertical: SizeConfig.padding12),
+          alignment: Alignment.center,
+          height: SizeConfig.screenWidth * 0.12,
+          decoration: BoxDecoration(
+            color: getColor(),
+            borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+            border: Border.all(width: 0.5, color: getBorder()),
+          ),
+          child: Text(text, style: TextStyles.body3.bold.colour(getBorder()))),
+    );
+  }
+
+  getColor() {
+    if (model.isDaily) {
+      if (text == "Daily")
+        return UiConstants.primaryColor;
+      else
+        return Colors.white;
+    } else {
+      if (text == "Daily")
+        return Colors.white;
+      else
+        return UiConstants.primaryColor;
+    }
+  }
+
+  getBorder() {
+    if (model.isDaily) {
+      if (text == "Daily")
+        return Colors.white;
+      else
+        return UiConstants.primaryColor;
+    } else {
+      if (text == "Daily")
+        return UiConstants.primaryColor;
+      else
+        return Colors.white;
+    }
   }
 }
