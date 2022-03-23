@@ -267,6 +267,7 @@ class BaseUtil extends ChangeNotifier {
         gameName: "Cricket",
         pageConfig: THomePageConfig,
         tag: 'cricket',
+        shadowColor: Color(0xff4B489E),
         thumbnailUri: BaseRemoteConfig.remoteConfig
             .getString(BaseRemoteConfig.CRICKET_THUMBNAIL_URI),
         playCost: BaseRemoteConfig.remoteConfig
@@ -281,6 +282,7 @@ class BaseUtil extends ChangeNotifier {
         gameName: "Pool Club",
         pageConfig: THomePageConfig,
         tag: 'poolclub',
+        shadowColor: Color(0xff00982B),
         thumbnailUri: BaseRemoteConfig.remoteConfig
             .getString(BaseRemoteConfig.POOLCLUB_THUMBNAIL_URI),
         playCost: BaseRemoteConfig.remoteConfig
@@ -295,6 +297,7 @@ class BaseUtil extends ChangeNotifier {
         gameName: "Tambola",
         pageConfig: THomePageConfig,
         tag: 'tambola',
+        shadowColor: Color(0xff1D173D),
         thumbnailUri: BaseRemoteConfig.remoteConfig
             .getString(BaseRemoteConfig.TAMBOLA_THUMBNAIL_URI),
         playCost: BaseRemoteConfig.remoteConfig
