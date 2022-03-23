@@ -284,22 +284,6 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> saveEncodedUserPan(String uid, String encPan, int enid) async {
-    try {
-      Map<String, dynamic> pObj = {
-        'enid': enid,
-        'value': encPan,
-        'type': 'pan',
-        'timestamp': Timestamp.now()
-      };
-      await _api.addUserPrtdDocPan(uid, pObj);
-      return true;
-    } catch (e) {
-      log.error(e.toString());
-      return false;
-    }
-  }
-
   ///////////////////////AUGMONT/////////////////////////////
   Future<UserAugmontDetail> getUserAugmontDetails(String id) async {
     try {
