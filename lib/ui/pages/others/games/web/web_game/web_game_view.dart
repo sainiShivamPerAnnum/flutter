@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -58,6 +60,10 @@ class WebGameView extends StatelessWidget {
           body: Stack(
             children: [
               Container(
+                margin: EdgeInsets.symmetric(
+                    horizontal: Platform.isIOS
+                        ? MediaQuery.of(context).padding.right
+                        : 0),
                 child: WebView(
                   initialUrl: initialUrl,
                   javascriptMode: JavascriptMode.unrestricted,
