@@ -304,9 +304,12 @@ class AugmontGoldBuyViewModel extends BaseModel {
       //Handle failed condition here.
       if (!depositFcmResponseModel.status) {
         AppState.delegate.appState.isTxnLoaderInView = false;
+        _analyticsService.track(eventName: AnalyticsEvents.buyGoldFailed);
         BaseUtil.showNegativeAlert("Transaction Failed",
             "Gold purchase failed, you amount will be refunded");
         return;
+      } else {
+        _analyticsService.track(eventName: AnalyticsEvents.buyGoldSuccess);
       }
 
       double newAugPrinciple = depositFcmResponseModel.augmontPrinciple;
