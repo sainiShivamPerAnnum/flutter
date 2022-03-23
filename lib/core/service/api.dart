@@ -370,15 +370,6 @@ class Api {
         .set(data, SetOptions(merge: false));
   }
 
-  Future<void> addDepositDocument(String year, String monthCde, Map data) {
-    return _db
-        .collection('deposits')
-        .doc(year)
-        .collection(monthCde)
-        .doc()
-        .set(data, SetOptions(merge: false));
-  }
-
   Future<void> addClaimDocument(Map data) {
     return _db.collection('claims').doc().set(data, SetOptions(merge: false));
   }

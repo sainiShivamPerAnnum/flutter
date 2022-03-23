@@ -805,30 +805,6 @@ class DBModel extends ChangeNotifier {
     return null;
   }
 
-  Future<bool> addFundDeposit(
-      String uid, String amount, String rawResponse, String status) async {
-    try {
-      DateTime today = DateTime.now();
-      String year = today.year.toString();
-      String monthCde =
-          BaseUtil.getMonthName(monthNum: today.month).toUpperCase();
-      int date = today.day;
-      Map<String, dynamic> data = {};
-      data['date'] = date;
-      data['user_id'] = uid;
-      data['amount'] = amount;
-      data['raw_response'] = rawResponse;
-      data['status'] = status;
-      data['timestamp'] = Timestamp.now();
-
-      await _api.addDepositDocument(year, monthCde, data);
-      return true;
-    } catch (e) {
-      log.error("Error adding callback doc: " + e.toString());
-      return false;
-    }
-  }
-
   Future<bool> deleteExpiredUserTickets(String userId) async {
     try {
       int weekNumber = BaseUtil.getWeekNumber();
