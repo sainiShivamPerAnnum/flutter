@@ -615,6 +615,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
           AppState.delegate.appState.setCurrentTabIndex = 1;
         },
         onAccept: () {
+          _analyticsService.track(eventName: AnalyticsEvents.buyGoldInvestMore);
           AppState.backButtonDispatcher.didPopRoute();
         },
       ),

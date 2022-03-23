@@ -193,6 +193,10 @@ class LoginControllerViewModel extends BaseModel {
             //   return false;
             // }
 
+            _analyticsService.track(
+              eventName: AnalyticsEvents.signupProfile,
+            );
+
             if (_nameScreenKey.currentState.model.selectedDate == null) {
               BaseUtil.showNegativeAlert(
                 'Invalid Date of Birth',
