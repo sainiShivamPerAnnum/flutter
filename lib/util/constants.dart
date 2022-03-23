@@ -50,6 +50,9 @@ class Constants {
   static final String DOC_USER_WALLET_TICKET_BALANCE = "tckbalance";
   static final String DOC_USER_WALLET_COIN_BALANCE = "coinbalance";
 
+  //Sub-Collection docs Collection docs
+  static final String DOC_USER_SUBSCRIPTIONS_ORDERS = 'orders';
+
   static const int CORNERS_COMPLETED = 0;
   static const int ROW_ONE_COMPLETED = 1;
   static const int ROW_TWO_COMPLETED = 2;

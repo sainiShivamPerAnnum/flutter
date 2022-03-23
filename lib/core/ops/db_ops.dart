@@ -16,6 +16,7 @@ import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
+import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/model/tambola_winners_details.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
@@ -1451,6 +1452,43 @@ class DBModel extends ChangeNotifier {
       activeSubscription = null;
     }
     return activeSubscription;
+  }
+
+  Future<Map<String, dynamic>> getAutopayTransactions(
+      {@required String uid,
+      @required String subId,
+      DocumentSnapshot lastDocument,
+      @required int limit}) async {
+    Map<String, dynamic> resultAutopayTransactionsMap = Map<String, dynamic>();
+    List<AutopayTransactionModel> requestedTxns = [];
+    try {
+      QuerySnapshot _querySnapshot = await _api.getAutopayTransactions(
+        userId: uid,
+        subId: subId,
+        lastDocument: lastDocument,
+        limit: limit,
+      );
+      resultAutopayTransactionsMap['lastDocument'] = _querySnapshot.docs.last;
+      resultAutopayTransactionsMap['length'] = _querySnapshot.docs.length;
+      _querySnapshot.docs.forEach((txn) {
+        try {
+          if (txn.exists)
+            requestedTxns.add(AutopayTransactionModel.fromMap(txn.data()));
+        } catch (e) {
+          log.error('Failed to parse user transaction $txn');
+        }
+      });
+      logger.d("No of autopay transactions fetched: ${requestedTxns.length}");
+      resultAutopayTransactionsMap['listOfTransactions'] = requestedTxns;
+      return resultAutopayTransactionsMap;
+    } catch (err) {
+      requestedTxns = [];
+      log.error('Failed to fetch transactions:: $err');
+      resultAutopayTransactionsMap['length'] = 0;
+      resultAutopayTransactionsMap['listOfTransactions'] = requestedTxns;
+      resultAutopayTransactionsMap['lastDocument'] = lastDocument;
+      return resultAutopayTransactionsMap;
+    }
   }
 
 //------------------------------------------------REALTIME----------------------------

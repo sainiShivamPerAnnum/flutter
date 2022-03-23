@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
-class SubscriptionTransactionModel {
-  String amount;
+class AutopayTransactionModel {
+  double amount;
   String status;
   String txnId;
   String txnDateTime;
@@ -17,7 +17,7 @@ class SubscriptionTransactionModel {
   AugmontDataModel augmontMap;
   double closingBalance;
   Timestamp createdOn;
-  SubscriptionTransactionModel({
+  AutopayTransactionModel({
     @required this.amount,
     @required this.status,
     @required this.txnId,
@@ -33,8 +33,8 @@ class SubscriptionTransactionModel {
     @required this.createdOn,
   });
 
-  SubscriptionTransactionModel copyWith({
-    String amount,
+  AutopayTransactionModel copyWith({
+    double amount,
     String status,
     String txnId,
     String txnDateTime,
@@ -48,7 +48,7 @@ class SubscriptionTransactionModel {
     double closingBalance,
     Timestamp createdOn,
   }) {
-    return SubscriptionTransactionModel(
+    return AutopayTransactionModel(
       amount: amount ?? this.amount,
       status: status ?? this.status,
       txnId: txnId ?? this.txnId,
@@ -83,9 +83,9 @@ class SubscriptionTransactionModel {
     };
   }
 
-  factory SubscriptionTransactionModel.fromMap(Map<String, dynamic> map) {
-    return SubscriptionTransactionModel(
-      amount: map['amount'] ?? '',
+  factory AutopayTransactionModel.fromMap(Map<String, dynamic> map) {
+    return AutopayTransactionModel(
+      amount: map['amount']?.toDouble() ?? 0.0,
       status: map['status'] ?? '',
       txnId: map['txnId'] ?? '',
       txnDateTime: map['txnDateTime'] ?? '',
@@ -103,19 +103,19 @@ class SubscriptionTransactionModel {
 
   String toJson() => json.encode(toMap());
 
-  factory SubscriptionTransactionModel.fromJson(String source) =>
-      SubscriptionTransactionModel.fromMap(json.decode(source));
+  factory AutopayTransactionModel.fromJson(String source) =>
+      AutopayTransactionModel.fromMap(json.decode(source));
 
   @override
   String toString() {
-    return 'SubscriptionTransactionModel(amount: $amount, status: $status, txnId: $txnId, txnDateTime: $txnDateTime, currency: $currency, paymentMode: $paymentMode, bankTxnId: $bankTxnId, gatewayName: $gatewayName, bankName: $bankName, note: $note, augmontMap: $augmontMap, closingBalance: $closingBalance, createdOn: $createdOn)';
+    return 'AutopayTransactionModel(amount: $amount, status: $status, txnId: $txnId, txnDateTime: $txnDateTime, currency: $currency, paymentMode: $paymentMode, bankTxnId: $bankTxnId, gatewayName: $gatewayName, bankName: $bankName, note: $note, augmontMap: $augmontMap, closingBalance: $closingBalance, createdOn: $createdOn)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is SubscriptionTransactionModel &&
+    return other is AutopayTransactionModel &&
         other.amount == amount &&
         other.status == status &&
         other.txnId == txnId &&

@@ -25,6 +25,8 @@ import 'package:felloapp/ui/pages/others/finance/augmont/edit_augmont_bank_detai
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_balance_details/gold_balance_details_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_details_view.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/autopay_transaction/autopay_transactions_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/autopay_transaction/autopay_transactions_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_view.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_game/cricket_game_view.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
@@ -292,6 +294,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(
               UserAutoPayDetailsView(), UserAutoPayDetailsViewPageConfig);
           break;
+        case Pages.AutopayTransactionsView:
+          _addPageData(
+              AutoPayTransactionsView(), AutopayTransactionsViewPageConfig);
+          break;
         default:
           break;
       }
@@ -503,6 +509,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.UserAutoPayDetailsView:
         UserAutoPayDetailsViewPageConfig.currentPageAction = action;
         break;
+      case Pages.AutopayTransactionsView:
+        AutopayTransactionsViewPageConfig.currentPageAction = action;
+        break;
       default:
         break;
     }
@@ -688,6 +697,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'UserAutoPayDetails':
         pageConfiguration = UserAutoPayDetailsViewPageConfig;
         break;
+      case 'AutopayTxns':
+        pageConfiguration = AutopayTransactionsViewPageConfig;
     }
     if (pageConfiguration != null) {
       addPage(pageConfiguration);

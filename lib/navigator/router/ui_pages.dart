@@ -54,6 +54,7 @@ const String GoldBalanceDetailsViewPath = '/goldBalanceDetailsView';
 const String AutoPayDetailsViewPath = '/autoPayDetailsView';
 const String AutoPayProcessViewPath = '/autoPayProcessView';
 const String UserAutoPayDetailsViewPath = '/userAutopayDetailsView';
+const String AutopayTransactionsViewPath = '/autopayTransactionsViewPath';
 
 enum Pages {
   Splash,
@@ -107,7 +108,8 @@ enum Pages {
   GoldBalanceDetailsView,
   AutoPayDetailsView,
   AutoPayProcessView,
-  UserAutoPayDetailsView
+  UserAutoPayDetailsView,
+  AutopayTransactionsView,
 }
 
 class PageConfiguration {
@@ -482,3 +484,9 @@ PageConfiguration UserAutoPayDetailsViewPageConfig = PageConfiguration(
     path: UserAutoPayDetailsViewPath,
     uiPage: Pages.UserAutoPayDetailsView,
     name: "User AutoPay DetailsScreen");
+
+PageConfiguration AutopayTransactionsViewPageConfig = PageConfiguration(
+    key: 'AutopayTransactionsView',
+    path: AutopayTransactionsViewPath,
+    uiPage: Pages.AutopayTransactionsView,
+    name: "Autopay transaction Screen");

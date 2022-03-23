@@ -48,6 +48,7 @@ import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/au
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_balance_details/gold_balance-details_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/autopay_transaction/autopay_transactions_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_vm.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_game/cricket_game_vm.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_vm.dart';
@@ -166,6 +167,7 @@ void setupLocator() {
       .registerFactory(() => TransactionCompletedConfirmationScreenViewModel());
   locator.registerFactory(() => AutoPayProcessViewModel());
   locator.registerFactory(() => UserAutoPayDetailsViewModel());
+  locator.registerFactory(() => AutopayTransactionsViewModel());
 
   //WIDGETS
   locator.registerFactory(() => FDrawerVM());

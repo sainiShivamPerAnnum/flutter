@@ -837,6 +837,24 @@ class Api {
         .where('status', isEqualTo: "ACTIVE");
     return _query.get();
   }
+
+  Future<QuerySnapshot> getAutopayTransactions({
+    @required String userId,
+    @required String subId,
+    DocumentSnapshot lastDocument,
+    @required int limit,
+  }) {
+    Query query = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
+        .collection(Constants.SUBCOLN_USER_SUBSCRIPTION)
+        .doc(subId)
+        .collection(Constants.DOC_USER_SUBSCRIPTIONS_ORDERS);
+    if (limit != -1 && limit > 3) query = query.limit(limit);
+    query = query.orderBy('createdOn', descending: true);
+    if (lastDocument != null) query = query.startAfterDocument(lastDocument);
+    return query.get();
+  }
   //---------------------------------------REALTIME DATABASE-------------------------------------------//
 
   Future<bool> checkUserNameAvailability(String username) async {
