@@ -791,37 +791,6 @@ class DBModel extends ChangeNotifier {
     return null;
   }
 
-  ///response parameter should be the index of the poll option = 1,2,3,4,5
-  Future<bool> addUserPollResponse(String uid, int response,
-      [String pollId = Constants.POLL_FOLLOWUPGAME_ID]) async {
-    bool incrementFlag = true;
-    try {
-      await _api.incrementPollDocument(pollId, 'op_$response');
-      incrementFlag = true;
-    } catch (e) {
-      print("Error incremeting poll");
-      log.error(e);
-      incrementFlag = false;
-    }
-    if (incrementFlag) {
-      //poll incremented, now update user subcoln response
-      try {
-        Map<String, dynamic> pRes = {
-          'pResponse': response,
-          'pUserId': uid,
-          'timestamp': Timestamp.now()
-        };
-        await _api.addUserPollResponseDocument(uid, pollId, pRes);
-        return true;
-      } catch (e) {
-        log.error('$e');
-        return false;
-      }
-    } else {
-      return false;
-    }
-  }
-
   ///If response = -1, user has not added a poll response yet
   ///else response is option index, 1,2,3,4,5
   Future<int> getUserPollResponse(String uid,

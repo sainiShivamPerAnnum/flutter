@@ -415,14 +415,6 @@ class Api {
     return ref.doc(id).update(upObj);
   }
 
-  Future<void> addUserPollResponseDocument(String id, String pollId, Map data) {
-    ref = _db
-        .collection(Constants.COLN_USERS)
-        .doc(id)
-        .collection(Constants.SUBCOLN_USER_POLL_RESPONSES);
-    return ref.doc(pollId).set(data, SetOptions(merge: false));
-  }
-
   Future<DocumentSnapshot> getUserPollResponseDocument(
       String id, String pollId) {
     ref = _db
