@@ -346,17 +346,6 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> updateUserTransaction(String userId, UserTransaction txn) async {
-    try {
-      await _api.updateUserTransactionDocument(
-          userId, txn.docKey, txn.toJson());
-      return true;
-    } catch (e) {
-      log.error("Failed to update user transaction object: " + e.toString());
-      return false;
-    }
-  }
-
   Future<Map<String, dynamic>> getFilteredUserTransactions(
       {@required BaseUser user,
       String type,

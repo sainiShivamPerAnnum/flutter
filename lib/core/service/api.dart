@@ -213,15 +213,6 @@ class Api {
     return query.get();
   }
 
-  Future<void> updateUserTransactionDocument(
-      String userId, String txnId, Map data) {
-    ref = _db
-        .collection(Constants.COLN_USERS)
-        .doc(userId)
-        .collection(Constants.SUBCOLN_USER_TXNS);
-    return ref.doc(txnId).set(data, SetOptions(merge: true));
-  }
-
   Future<DocumentReference> createTicketRequest(String userId, Map data) {
     return _db.collection(Constants.COLN_TICKETREQUEST).add(data);
   }
