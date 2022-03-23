@@ -491,33 +491,6 @@ class Api {
         .catchError((onErr) => false);
   }
 
-  //sets the 'gGEN_COUNT_LEFT' field in the user ticket wallet object
-  Future<bool> setUserTicketWalletGenerationField(
-      String userId, String actionFld, int count) {
-    DocumentReference _docRef = _db
-        .collection(Constants.COLN_USERS)
-        .doc(userId)
-        .collection(Constants.SUBCOLN_USER_WALLET)
-        .doc(Constants.DOC_USER_WALLET_TICKET_BALANCE);
-    return _db
-        .runTransaction((transaction) async {
-          DocumentSnapshot snapshot = await transaction.get(_docRef);
-          if (!snapshot.exists) {
-            return false;
-          } else {
-            Map<String, dynamic> _map = snapshot.data();
-            if (_map[actionFld] != null && _map[actionFld] > 0) {
-              ///generation field already presesnt
-              throw Exception('Field already present');
-            } else {
-              transaction.update(_docRef, {'$actionFld': count});
-            }
-          }
-        })
-        .then((value) => true)
-        .catchError((onErr) => false);
-  }
-
   Future<QuerySnapshot> getHomeCardCollection() {
     Query _query = _db.collection(Constants.COLN_HOMECARDS).orderBy('id');
     return _query.get();
