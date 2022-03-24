@@ -116,6 +116,22 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  Future<bool> updateUserProfile(
+      String uid, String name, String dob, String gender) async {
+    try {
+      String id = uid;
+      await _api.updateUserDocumentPreferenceField(id, {
+        BaseUser.fldName: name,
+        BaseUser.fldDob: dob,
+        BaseUser.fldGender: gender
+      });
+      return true;
+    } catch (e) {
+      log.error("Failed to update user profile: " + e.toString());
+      return false;
+    }
+  }
+
   Future<bool> updateUserPreferences(
       String uid, UserPreferences userPreferences) async {
     try {
