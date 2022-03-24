@@ -42,28 +42,6 @@ class _ReferralHistoryViewState extends State<ReferralHistoryView> {
       dbProvider.getUserReferrals(_userService.baseUser.uid).then((refList) {
         baseProvider.referralsFetched = true;
         baseProvider.userReferralsList = refList ?? [];
-
-        ///check if user referral count is correct in the user object
-        ///if not, update it
-        if (baseProvider.userReferralsList != null &&
-            baseProvider.userReferralsList.length > 0) {
-          int _n = baseProvider.userReferralsList.length;
-          int _t = 0;
-          if (baseProvider.myReferralInfo != null &&
-              baseProvider.myReferralInfo.refCount != null &&
-              baseProvider.myReferralInfo.refCount > 0) {
-            _t = baseProvider.myReferralInfo.refCount;
-          }
-          if (baseProvider.myReferralInfo != null && _t < _n) {
-            baseProvider.myReferralInfo.refCount = _n;
-            if (_n != null && _n > 0)
-              _analyticsService.track(
-                  eventName: AnalyticsEvents.referralCount,
-                  properties: {"count": _n});
-            dbProvider.updateUserReferralCount(_userService.baseUser.uid,
-                baseProvider.myReferralInfo); //await not required
-          }
-        }
         setState(() {});
       });
     }
