@@ -26,7 +26,14 @@ class GameCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(
-              SizeConfig.roundness40 + SizeConfig.padding8),
+              SizeConfig.roundness32 + SizeConfig.padding8),
+          boxShadow: [
+            BoxShadow(
+                color: gameData.shadowColor.withOpacity(0.1),
+                offset: Offset(0, 0),
+                spreadRadius: SizeConfig.padding4,
+                blurRadius: SizeConfig.padding6)
+          ],
         ),
         padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding8),
         child: Stack(
@@ -40,7 +47,7 @@ class GameCard extends StatelessWidget {
                 height: SizeConfig.screenWidth * 0.35,
                 decoration: BoxDecoration(
                   color: UiConstants.primaryColor,
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness40),
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness32),
                   image: DecorationImage(
                       image: CachedNetworkImageProvider(gameData.thumbnailUri),
                       fit: BoxFit.cover),
@@ -97,12 +104,9 @@ class GameCard extends StatelessWidget {
                       radius: SizeConfig.screenWidth * 0.029,
                       backgroundColor:
                           UiConstants.primaryColor.withOpacity(0.2),
-                      child: RotatedBox(
-                        quarterTurns: 1,
-                        child: Image.asset(
-                          Assets.moneyIcon,
-                          height: SizeConfig.iconSize3,
-                        ),
+                      child: Image.asset(
+                        Assets.moneyIcon,
+                        height: SizeConfig.iconSize3,
                       ),
                     ),
                   ],

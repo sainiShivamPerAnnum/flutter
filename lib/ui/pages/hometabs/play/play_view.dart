@@ -41,16 +41,8 @@ class Play extends StatelessWidget {
                                 BorderRadius.circular(SizeConfig.roundness32),
                             child: OfferCard(
                               shimmer: true,
-                              model: PromoCardModel(
-                                1,
-                                null,
-                                null,
-                                null,
-                                null,
-                                4281648039,
-                                null,
-                                1,
-                              ),
+                              model: PromoCardModel(1, null, null, null, null,
+                                  4281648039, null, 1),
                             ),
                           ),
                           ClipRRect(
@@ -78,7 +70,7 @@ class Play extends StatelessWidget {
                       ),
               ),
               Transform.translate(
-                offset: Offset(0, -SizeConfig.padding16),
+                offset: Offset(0, -SizeConfig.padding12),
                 child: Padding(
                   padding: EdgeInsets.only(
                     left: SizeConfig.pageHorizontalMargins,
@@ -90,39 +82,40 @@ class Play extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.only(
-                      // topLeft: Radius.circular(100),
-                      // topRight: Radius.circular(100),
+                child: ListView(
+                    shrinkWrap: true,
+                    physics: BouncingScrollPhysics(),
+                    padding:
+                        EdgeInsets.symmetric(vertical: SizeConfig.padding12),
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          AppState.delegate.parseRoute(Uri.parse('/cricket'));
+                        },
+                        child: GameCard(
+                          gameData: BaseUtil.gamesList[0],
+                        ),
                       ),
-                  child: ListView(padding: EdgeInsets.zero, children: [
-                    GestureDetector(
-                      onTap: () {
-                        AppState.delegate.parseRoute(Uri.parse('/cricket'));
-                      },
-                      child: GameCard(
-                        gameData: BaseUtil.gamesList[0],
+                      SizedBox(height: SizeConfig.padding6),
+                      GestureDetector(
+                        onTap: () {
+                          AppState.delegate.parseRoute(Uri.parse('/pool'));
+                        },
+                        child: GameCard(
+                          gameData: BaseUtil.gamesList[1],
+                        ),
                       ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        AppState.delegate.parseRoute(Uri.parse('/pool'));
-                      },
-                      child: GameCard(
-                        gameData: BaseUtil.gamesList[1],
+                      SizedBox(height: SizeConfig.padding6),
+                      GestureDetector(
+                        onTap: () => model.openGame(BaseUtil.gamesList[2]),
+                        child: GameCard(
+                          gameData: BaseUtil.gamesList[2],
+                        ),
                       ),
-                    ),
-                    GestureDetector(
-                      onTap: () => model.openGame(BaseUtil.gamesList[2]),
-                      child: GameCard(
-                        gameData: BaseUtil.gamesList[2],
-                      ),
-                    ),
-                    SizedBox(
-                      height: SizeConfig.navBarHeight * 2.4,
-                    )
-                  ]),
-                ),
+                      SizedBox(
+                        height: SizeConfig.navBarHeight * 2.4,
+                      )
+                    ]),
               ),
             ],
           ),

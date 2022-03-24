@@ -153,7 +153,7 @@ class EventCard extends StatelessWidget {
         margin: EdgeInsets.only(right: SizeConfig.padding16),
         decoration: event.thumbnail.isNotEmpty
             ? BoxDecoration(
-                color: UiConstants.scaffoldColor,
+                color: Colors.grey.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(SizeConfig.roundness16),
                 image: DecorationImage(
                   image: CachedNetworkImageProvider(event.thumbnail),
