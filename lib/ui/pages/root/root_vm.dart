@@ -144,8 +144,7 @@ class RootViewModel extends BaseModel {
           _userService.showOnboardingTutorial = false;
           _localDBModel.setShowHomeTutorial = false;
           // AppState.delegate.parseRoute(Uri.parse('dashboard/walkthrough'));
-          AppState.delegate.appState.currentAction =
-              PageAction(state: PageState.addPage, page: WalkThroughConfig);
+          AppState.delegate.parseRoute(Uri.parse('/AppWalkthrough'));
           notifyListeners();
         }
       });

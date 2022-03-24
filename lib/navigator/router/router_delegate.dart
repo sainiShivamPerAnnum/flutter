@@ -211,9 +211,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.Support:
           _addPageData(SupportPage(), SupportPageConfig);
           break;
-        case Pages.WalkThrough:
-          _addPageData(WalkThroughPage(), WalkThroughConfig);
-          break;
+
         case Pages.THome:
           _addPageData(TambolaHomeView(), THomePageConfig);
           break;
@@ -226,9 +224,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.TShowAllTickets:
           _addPageData(ShowAllTickets(), TShowAllTicketsPageConfig);
           break;
-        case Pages.TWalkthrough:
-          _addPageData(Walkthrough(), TWalkthroughPageConfig);
-          break;
+
         case Pages.TWeeklyResult:
           _addPageData(WeeklyResult(), TWeeklyResultPageConfig);
           break;
@@ -422,8 +418,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.Support:
         SupportPageConfig.currentPageAction = action;
         break;
-      case Pages.WalkThrough:
-        WalkThroughConfig.currentPageAction = action;
+
         break;
       case Pages.YourFunds:
         YourFundsConfig.currentPageAction = action;
@@ -664,9 +659,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'verifyEmail':
         pageConfiguration = VerifyEmailPageConfig;
         break;
-      case 'walkthrough':
-        pageConfiguration = WalkThroughConfig;
-        break;
       case 'blocked':
         pageConfiguration = BlockedUserPageConfig;
         break;
@@ -699,6 +691,13 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case 'AutopayTxns':
         pageConfiguration = AutopayTransactionsViewPageConfig;
+        break;
+      case 'AppWalkthrough':
+        openAppWalkthrough();
+        break;
+      case 'AutopayWalkthrough':
+        openAutoPayWalkthrough();
+        break;
     }
     if (pageConfiguration != null) {
       addPage(pageConfiguration);
@@ -713,5 +712,35 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           eventType: eventType,
         ),
         page: TopSaverViewPageConfig);
+  }
+
+  openAppWalkthrough() {
+    AppState.delegate.appState.currentAction = PageAction(
+        state: PageState.addWidget,
+        widget: WalkThroughPage(
+          lottieList: [Assets.onb1, Assets.onb2, Assets.onb3],
+          titleList: ["SAVE", "PLAY", "WIN"],
+          descList: [
+            "Save and invest in strong assets and earn tokens 🪙",
+            "Use these tokens to play fun and exciting games 🎮",
+            "Stand to win exclusive prizes and fun rewards 🎉"
+          ],
+        ),
+        page: WalkThroughConfig);
+  }
+
+  openAutoPayWalkthrough() {
+    AppState.delegate.appState.currentAction = PageAction(
+        state: PageState.addWidget,
+        widget: WalkThroughPage(
+          lottieList: [Assets.onb1, Assets.onb2, Assets.onb3],
+          titleList: ["SAVE", "PLAY", "WIN"],
+          descList: [
+            "Save and invest in strong assets and earn tokens 🪙",
+            "Use these tokens to play fun and exciting games 🎮",
+            "Stand to win exclusive prizes and fun rewards 🎉"
+          ],
+        ),
+        page: WalkThroughConfig);
   }
 }

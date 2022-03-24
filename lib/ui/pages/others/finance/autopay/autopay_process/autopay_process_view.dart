@@ -1,9 +1,7 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
-import 'package:felloapp/ui/pages/static/FelloTile.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
@@ -59,8 +57,9 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
                         ),
                         color: Colors.white,
                       ),
-                      child: PageView(controller: model.pageController,
-                          // physics: NeverScrollableScrollPhysics(),
+                      child: PageView(
+                          controller: model.pageController,
+                          physics: NeverScrollableScrollPhysics(),
                           children: [
                             addUpiIdUI(model),
                             pendingUI(model),
@@ -91,7 +90,7 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
         SizedBox(height: SizeConfig.padding24),
         Lottie.asset(
           "assets/lotties/pending.json",
-          height: SizeConfig.screenWidth * 0.3,
+          height: SizeConfig.screenWidth * 0.2,
         ),
         SizedBox(height: SizeConfig.padding24),
         Text(
@@ -157,22 +156,56 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
             ],
           ),
         ),
-        ListTile(
-          title: Text("Step 1"),
-          subtitle: Text("Go to your ${getUpiAppName(model)} mobile app"),
-          trailing: CircleAvatar(
-            backgroundColor: UiConstants.tertiaryLight,
-            radius: SizeConfig.padding20,
-          ),
+        Row(
+          children: [
+            Container(
+              width: 2,
+              height: SizeConfig.padding54,
+              color: UiConstants.primaryColor,
+            ),
+            Expanded(
+              child: ListTile(
+                title: Text(
+                  "Step 1",
+                  style: TextStyles.body1.bold,
+                ),
+                subtitle: Text(
+                  "Go to your ${getUpiAppName(model)} mobile app",
+                  style: TextStyles.body2,
+                ),
+                trailing: CircleAvatar(
+                  backgroundColor: UiConstants.tertiaryLight,
+                  radius: SizeConfig.padding20,
+                ),
+              ),
+            ),
+          ],
         ),
-        ListTile(
-          title: Text("Step 2"),
-          subtitle: Text(
-              "Check pending requests and approve payment by entering UPI PIN"),
-          trailing: CircleAvatar(
-            backgroundColor: UiConstants.tertiaryLight,
-            radius: SizeConfig.padding20,
-          ),
+        SizedBox(height: SizeConfig.padding16),
+        Row(
+          children: [
+            Container(
+              width: 2,
+              height: SizeConfig.padding64,
+              color: UiConstants.primaryColor,
+            ),
+            Expanded(
+              child: ListTile(
+                title: Text(
+                  "Step 2",
+                  style: TextStyles.body1.bold,
+                ),
+                subtitle: Text(
+                  "Check pending requests and approve payment by entering UPI PIN",
+                  style: TextStyles.body2,
+                ),
+                trailing: CircleAvatar(
+                  backgroundColor: UiConstants.tertiaryLight,
+                  radius: SizeConfig.padding20,
+                ),
+              ),
+            ),
+          ],
         ),
         Spacer(),
         FittedBox(
@@ -189,7 +222,7 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
           children: [
             Text(
               "This page will expire in ",
-              style: TextStyles.body4.colour(Colors.grey).light,
+              style: TextStyles.body3.colour(Colors.grey).light,
             ),
             TweenAnimationBuilder<Duration>(
                 duration: Duration(minutes: 8),
@@ -202,9 +235,7 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
                   final seconds = value.inSeconds % 60;
                   return Text(
                     '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyles.body3.bold,
                   );
                 }),
           ],
@@ -323,7 +354,7 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
           enabled: !model.isSubscriptionInProgress,
           controller: model.vpaController,
           autofocus: true,
-          decoration: InputDecoration(hintText: "Enter your upi address"),
+          decoration: InputDecoration(hintText: "Your upi address"),
         ),
         SizedBox(
           height: SizeConfig.padding12,
@@ -334,19 +365,17 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
             runSpacing: SizeConfig.padding8,
             spacing: SizeConfig.padding12,
             children: [
-              upichips('@paytm', model),
               upichips('@upi', model),
               upichips('@apl', model),
               upichips('@fbl', model),
               upichips('@ybl', model),
+              upichips('@paytm', model),
               upichips('@okhdfcbank', model),
               upichips('@okaksis', model),
             ],
           ),
         ),
-        SizedBox(
-          height: SizeConfig.padding24,
-        ),
+        Spacer(),
         FelloButtonLg(
           child: model.isSubscriptionInProgress
               ? SpinKitThreeBounce(
@@ -362,7 +391,9 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
             FocusScope.of(context).unfocus();
           },
         ),
-        Spacer(),
+        SizedBox(
+          height: SizeConfig.padding24,
+        ),
         Text(
           "Banks that supports UPI Autopay",
           style: TextStyles.body3.colour(Colors.grey),
@@ -394,8 +425,9 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
           ),
         ),
         SizedBox(
-          height:
-              SizeConfig.pageHorizontalMargins + SizeConfig.viewInsets.bottom,
+          height: SizeConfig.viewInsets.bottom != 0
+              ? SizeConfig.viewInsets.bottom
+              : SizeConfig.pageHorizontalMargins,
         )
       ],
     );
@@ -585,7 +617,7 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
       child: Chip(
         labelPadding: EdgeInsets.symmetric(
           horizontal: SizeConfig.padding12,
-          vertical: SizeConfig.padding4,
+          vertical: SizeConfig.padding2,
         ),
         label: Text(
           suffix,

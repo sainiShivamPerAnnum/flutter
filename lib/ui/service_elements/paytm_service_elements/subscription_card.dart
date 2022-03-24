@@ -112,7 +112,11 @@ class AutoPayCard extends StatelessWidget {
                                       ),
                                       child: Text(
                                         model.activeSubscription != null
-                                            ? "Details"
+                                            ? (model.activeSubscription
+                                                        .status ==
+                                                    "ACTIVE"
+                                                ? "Details"
+                                                : "Check")
                                             : "Set Up",
                                         style: TextStyles.body2
                                             .colour(Colors.white),

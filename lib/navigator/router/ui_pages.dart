@@ -22,7 +22,6 @@ const String VerifyEmailPath = '/verifyEmail';
 const String SupportPath = '/support';
 const String UpdateRequiredPath = '/updateRequired';
 const String WalkThroughPath = '/walkThrough';
-const String WalkThroughCompletedPath = '/walkThroughCompleted';
 const String YourFundsPath = '/yourFunds';
 const String NotificationsPath = '/notifications';
 const String THome = '/tHome';
@@ -77,7 +76,6 @@ enum Pages {
   VerifyEmail,
   Support,
   WalkThrough,
-  WalkThroughCompleted,
   YourFunds,
   THome,
   TGame,

@@ -304,11 +304,8 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView> {
                                     ),
                                     child: TextButton(
                                       onPressed: () {
-                                        AppState.delegate.appState
-                                                .currentAction =
-                                            PageAction(
-                                                state: PageState.addPage,
-                                                page: WalkThroughConfig);
+                                        AppState.delegate.parseRoute(
+                                            Uri.parse('/AppWalkthrough'));
                                       },
                                       child: Text(
                                         "How to setup UPI Autopay",
@@ -334,6 +331,7 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
+                                      SizedBox(height: SizeConfig.padding6),
                                       Text(" Why UPI AutoPay",
                                           style: TextStyles.title4.bold),
                                       SizedBox(height: SizeConfig.padding20),

@@ -13,8 +13,8 @@ class DrawerModel {
   String title;
   String icon;
   PageConfiguration pageConfig;
-
-  DrawerModel({this.icon, this.pageConfig, this.title});
+  Function onTap;
+  DrawerModel({this.icon, this.pageConfig, this.title, this.onTap});
 }
 
 class FDrawerVM extends BaseModel {
@@ -51,6 +51,9 @@ class FDrawerVM extends BaseModel {
       icon: Assets.dHowItWorks,
       title: "How it works",
       pageConfig: WalkThroughConfig,
+      onTap: () => AppState.delegate.parseRoute(
+        Uri.parse('/AppWalkthrough'),
+      ),
     ),
     DrawerModel(
       icon: Assets.dAboutDigitalGold,
@@ -65,7 +68,10 @@ class FDrawerVM extends BaseModel {
   void onItemSelected(int i) {
     if (RootViewModel.scaffoldKey.currentState.isDrawerOpen)
       RootViewModel.scaffoldKey.currentState.openEndDrawer();
-
+    if (drawerList[i].onTap != null) {
+      drawerList[i].onTap();
+      return;
+    }
     AppState.delegate.appState.currentAction = PageAction(
       state: PageState.addPage,
       page: drawerList[i].pageConfig,
