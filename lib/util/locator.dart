@@ -31,7 +31,7 @@ import 'package:felloapp/core/service/notifier_services/transaction_service.dart
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
-import 'package:felloapp/core/service/paytm_service.dart';
+import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';

@@ -1437,23 +1437,6 @@ class DBModel extends ChangeNotifier {
     return couponList;
   }
 
-  Future<ActiveSubscriptionModel> getActiveSubscriptionDetails(
-      String uid) async {
-    ActiveSubscriptionModel activeSubscription;
-    try {
-      QuerySnapshot response = await _api.fetchActiveSubscriptionDetails(uid);
-      if (response.docs.first.data() != null) {
-        logger.d(response.docs.first.data());
-        activeSubscription = ActiveSubscriptionModel.fromJson(
-            response.docs.first.data(), response.docs.first.id);
-      }
-    } catch (e) {
-      logger.e(e.toString());
-      activeSubscription = null;
-    }
-    return activeSubscription;
-  }
-
   Future<Map<String, dynamic>> getAutopayTransactions(
       {@required String uid,
       @required String subId,

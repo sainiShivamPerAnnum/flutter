@@ -7,7 +7,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:felloapp/core/service/paytm_service.dart';
+import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 
 class UserAutoPayDetailsViewModel extends BaseModel {
   final _dbModel = locator<DBModel>();
@@ -48,8 +48,8 @@ class UserAutoPayDetailsViewModel extends BaseModel {
 
   findActiveSubscription() async {
     setState(ViewState.Busy);
-    activeSubscription =
-        await _dbModel.getActiveSubscriptionDetails(_userService.baseUser.uid);
+    activeSubscription = _paytmService.activeSubscription;
+    // await _dbModel.getActiveSubscriptionDetails(_userService.baseUser.uid);
     if (activeSubscription != null) {
       subIdController.text = activeSubscription.subId;
       pUpiController.text = activeSubscription.vpa;

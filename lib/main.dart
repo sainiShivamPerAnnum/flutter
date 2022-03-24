@@ -4,6 +4,7 @@ import 'package:device_preview/device_preview.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/leaderboard_service_enum.dart';
+import 'package:felloapp/core/enums/paytm_service_enums.dart';
 import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/enums/user_coin_service_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
@@ -16,6 +17,7 @@ import 'package:felloapp/core/service/notifier_services/connectivity_service.dar
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
+import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
@@ -138,23 +140,27 @@ class _MyAppState extends State<MyApp> {
                 child: PropertyChangeProvider<WinnerService,
                     WinnerServiceProperties>(
                   value: locator<WinnerService>(),
-                  child: MaterialApp.router(
-                    locale: DevicePreview.locale(context),
-                    // Add the locale here
-                    builder: DevicePreview.appBuilder,
-                    title: Constants.APP_NAME,
-                    theme: FelloTheme.lightMode(),
-                    debugShowCheckedModeBanner: false,
-                    backButtonDispatcher: backButtonDispatcher,
-                    routerDelegate: delegate,
-                    routeInformationParser: parser,
-                    localizationsDelegates: [
-                      S.delegate,
-                      GlobalMaterialLocalizations.delegate,
-                      GlobalWidgetsLocalizations.delegate,
-                      GlobalCupertinoLocalizations.delegate,
-                    ],
-                    supportedLocales: S.delegate.supportedLocales,
+                  child: PropertyChangeProvider<PaytmService,
+                      PaytmServiceProperties>(
+                    value: locator<PaytmService>(),
+                    child: MaterialApp.router(
+                      locale: DevicePreview.locale(context),
+                      // Add the locale here
+                      builder: DevicePreview.appBuilder,
+                      title: Constants.APP_NAME,
+                      theme: FelloTheme.lightMode(),
+                      debugShowCheckedModeBanner: false,
+                      backButtonDispatcher: backButtonDispatcher,
+                      routerDelegate: delegate,
+                      routeInformationParser: parser,
+                      localizationsDelegates: [
+                        S.delegate,
+                        GlobalMaterialLocalizations.delegate,
+                        GlobalWidgetsLocalizations.delegate,
+                        GlobalCupertinoLocalizations.delegate,
+                      ],
+                      supportedLocales: S.delegate.supportedLocales,
+                    ),
                   ),
                 ),
               ),

@@ -3,6 +3,7 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -13,6 +14,7 @@ class AutopayTransactionsViewModel extends BaseModel {
   final _dBModel = locator<DBModel>();
   final _userService = locator<UserService>();
   final _logger = locator<CustomLogger>();
+  final _paytmService = locator<PaytmService>();
 
   DocumentSnapshot lastDoc;
   bool _isMoreTxnsBeingFetched = false;
@@ -95,8 +97,7 @@ class AutopayTransactionsViewModel extends BaseModel {
   }
 
   findActiveSubscription() async {
-    activeSubscription =
-        await _dBModel.getActiveSubscriptionDetails(_userService.baseUser.uid);
+    activeSubscription = _paytmService.activeSubscription;
     if (activeSubscription != null) {}
   }
 }

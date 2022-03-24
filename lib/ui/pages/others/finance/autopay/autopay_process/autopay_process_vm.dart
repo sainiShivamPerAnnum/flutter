@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
-import 'package:felloapp/core/service/paytm_service.dart';
+import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -166,6 +166,7 @@ class AutoPayProcessViewModel extends BaseModel {
           subId: subId, amount: amount, freq: isDaily ? "DAILY" : "WEEKLY");
       isSubscriptionAmountUpdateInProgress = false;
       if (res) {
+        _paytmService.getActiveSubscriptionDetails();
         _paytmService.jumpToSubPage(2);
         Future.delayed(Duration(seconds: 2), () {
           while (AppState.screenStack.length > 1)
@@ -189,6 +190,7 @@ class AutoPayProcessViewModel extends BaseModel {
     print(res['status']);
     if (res != null && res['status'] != null && res['status'] == true) {
       subId = res['subId'] ?? "";
+      _paytmService.getActiveSubscriptionDetails();
       _paytmService.jumpToSubPage(4);
       // onAmountValueChanged(amountFieldController.text);
 

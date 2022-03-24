@@ -1,18 +1,17 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/enums/paytm_service_enums.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_subscription_response_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
-import 'package:felloapp/core/model/paytm_models/paytm_subscription_response_model.dart';
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
 import 'package:felloapp/core/model/paytm_models/validate_vpa_response_model.dart';
+import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
-import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/static/paytm_loader.dart';
+import 'package:felloapp/core/service/api.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -22,6 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:paytm_allinonesdk/paytm_allinonesdk.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
 
 //ERROR CODE
 const int CREATE_SUBSCRIPTION_FAILED = 0;
@@ -30,18 +30,28 @@ const int VALIDATE_VPA_FAILED = 2;
 const int INVALID_VPA_DETECTED = 3;
 const int PAYTM_POST_CALL_FAILED = 4;
 
-class PaytmService {
+class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   final _logger = locator<CustomLogger>();
   final _paytmRepo = locator<PaytmRepository>();
+  final _userService = locator<UserService>();
+  final _api = locator<Api>();
 
   final String devMid = "qpHRfp13374268724583";
   final String prodMid = "CMTNKX90967647249644";
   final PageController subscriptionFlowPageController = new PageController();
   String currentSubscriptionId;
-
+  ActiveSubscriptionModel _activeSubscription;
   String mid;
   bool isStaging;
   String callbackUrl;
+
+  ActiveSubscriptionModel get activeSubscription => this._activeSubscription;
+
+  set activeSubscription(value) {
+    this._activeSubscription = value;
+    notifyListeners(PaytmServiceProperties.ActiveSubscription);
+    _logger.d("Paytm Service:Active Subscription Properties notified");
+  }
 
   PaytmService() {
     final stage = FlavorConfig.instance.values.paytmStage;
@@ -52,6 +62,10 @@ class PaytmService {
       mid = prodMid;
       isStaging = false;
     }
+  }
+
+  Future init() async {
+    await getActiveSubscriptionDetails();
   }
 
   jumpToSubPage(int index) {
@@ -197,6 +211,21 @@ class PaytmService {
         _logger.e(onError.toString());
       }
       return false;
+    }
+  }
+
+  Future<void> getActiveSubscriptionDetails() async {
+    try {
+      QuerySnapshot response =
+          await _api.fetchActiveSubscriptionDetails(_userService.baseUser.uid);
+      if (response.docs.first.data() != null) {
+        _logger.d(response.docs.first.data());
+        activeSubscription = ActiveSubscriptionModel.fromJson(
+            response.docs.first.data(), response.docs.first.id);
+      }
+    } catch (e) {
+      _logger.e(e.toString());
+      activeSubscription = null;
     }
   }
 
