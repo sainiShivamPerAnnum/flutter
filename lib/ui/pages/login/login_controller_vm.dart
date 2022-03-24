@@ -425,6 +425,10 @@ class LoginControllerViewModel extends BaseModel {
 
   Future _onSignUpComplete() async {
     if (_isSignup) {
+      await _analyticsService.login(
+          isOnBoarded: userService.isUserOnborded,
+          baseUser: userService.baseUser);
+
       await BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
       _analyticsService.track(
         eventName: AnalyticsEvents.signupComplete,

@@ -2,7 +2,6 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -18,7 +17,6 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/golden_ticket_claim.dart';
 import 'package:felloapp/ui/modals_sheets/security_modal_sheet.dart';
 import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
-import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -33,11 +31,11 @@ class RootViewModel extends BaseModel {
   final HttpModel _httpModel = locator<HttpModel>();
   final FcmHandler _fcmListener = locator<FcmHandler>();
   final LocalDBModel _localDBModel = locator<LocalDBModel>();
-  final DBModel _dbModel = locator<DBModel>();
   final UserService _userService = locator<UserService>();
   final UserCoinService _userCoinService = locator<UserCoinService>();
-  final AppState _appState = locator<AppState>();
   final CustomLogger _logger = locator<CustomLogger>();
+  final LocalDBModel _lModel = locator<LocalDBModel>();
+
   final winnerService = locator<WinnerService>();
   final txnService = locator<TransactionService>();
   final _analyticsService = locator<AnalyticsService>();
@@ -135,6 +133,12 @@ class RootViewModel extends BaseModel {
 
   initialize() async {
     if (!_isInitialized) {
+      bool showSecurityPrompt = false;
+      if (_userService.showSecurityPrompt == null) {
+        showSecurityPrompt = await _lModel.showSecurityPrompt();
+        _userService.showSecurityPrompt = showSecurityPrompt;
+      }
+
       _isInitialized = true;
       _initAdhocNotifications();
 
@@ -152,7 +156,7 @@ class RootViewModel extends BaseModel {
 
       _baseUtil.getProfilePicture();
       // show security modal
-      if (_baseUtil.show_security_prompt &&
+      if (showSecurityPrompt &&
           _userService.baseUser.isAugmontOnboarded &&
           _userService.userFundWallet.augGoldQuantity > 0 &&
           _userService.baseUser.userPreferences
@@ -163,6 +167,7 @@ class RootViewModel extends BaseModel {
           _localDBModel.updateSecurityPrompt(false);
         });
       }
+
       _baseUtil.isUnreadFreshchatSupportMessages().then((flag) {
         if (flag) {
           BaseUtil.showPositiveAlert('You have unread support messages',
