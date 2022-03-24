@@ -26,6 +26,9 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (isInsufficientBalance)
+      _analyticsService.track(eventName: AnalyticsEvents.flcTokensExhasuted);
+
     return WillPopScope(
       onWillPop: () {
         AppState.backButtonDispatcher.didPopRoute();

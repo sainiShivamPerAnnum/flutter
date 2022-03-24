@@ -65,4 +65,6 @@ class AnalyticsEvents {
   static const goldWithdrawal = "Augmont withdrawal";
   static const prizeGold = "Prize claim choice gold";
   static const prizeAWS = "Prize claim choice AWS gift card";
+
+  static const flcTokensExhasuted = 'Fello Tokens Exhausted';
 }
