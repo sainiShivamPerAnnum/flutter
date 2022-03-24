@@ -246,7 +246,10 @@ class WebHomeViewModel extends BaseModel {
   }
 
   String _generatePoolClubGameUrl() {
-    return "https://d2qfyj2eqvh06a.cloudfront.net/pool-club/index.html?user=${_userService.baseUser.uid}&name=${_userService.baseUser.username}";
+    String _poolClubUri = "https://d2qfyj2eqvh06a.cloudfront.net/pool-club/index.html";
+    String _loadUri = "$_poolClubUri?user=${_userService.baseUser.uid}&name=${_userService.baseUser.username}";
+    if(FlavorConfig.isDevelopment())_loadUri = "$_loadUri&dev=true";
+    return _loadUri;
   }
 
   //PoolClub Methods -----------------------------------END-------------------//

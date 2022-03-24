@@ -1,5 +1,6 @@
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,12 +29,14 @@ class _PoolViewState extends State<PoolView> {
 
   @override
   Widget build(BuildContext context) {
+    String _poolClubUri = "https://d2qfyj2eqvh06a.cloudfront.net/pool-club/index.html";
+    String _loadUri = "$_poolClubUri?user=${_userService.baseUser.uid}&name=${_userService.baseUser.username}";
+    if(FlavorConfig.isDevelopment())_loadUri = "$_loadUri&dev=true";
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
         child: WebView(
-          initialUrl:
-              "https://d2qfyj2eqvh06a.cloudfront.net/pool-club/index.html?user=${_userService.baseUser.uid}&name=${_userService.baseUser.username}",
+          initialUrl: _loadUri,
           javascriptMode: JavascriptMode.unrestricted,
         ),
       ),
