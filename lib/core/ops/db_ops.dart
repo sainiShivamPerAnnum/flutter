@@ -104,14 +104,14 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> updateUser(BaseUser user) async {
+  Future<bool> updateUserEmail(String uid, String email, bool emailFlag) async {
     try {
-      //String id = user.mobile;
-      String id = user.uid;
-      await _api.updateUserDocument(id, user.toJson());
+      String id = uid;
+      await _api.updateUserDocumentPreferenceField(id,
+          {BaseUser.fldEmail: email, BaseUser.fldIsEmailVerified: emailFlag});
       return true;
     } catch (e) {
-      log.error("Failed to update user object: " + e.toString());
+      log.error("Failed to update user email and flag: " + e.toString());
       return false;
     }
   }

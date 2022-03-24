@@ -141,11 +141,6 @@ class Api {
     return ref.doc(id).get();
   }
 
-  Future<void> updateUserDocument(String docId, Map data) {
-    ref = _db.collection(Constants.COLN_USERS);
-    return ref.doc(docId).set(data, SetOptions(merge: true));
-  }
-
   Future<void> updateUserDocumentPreferenceField(
       String docId, Map<String, dynamic> data) {
     ref = _db.collection(Constants.COLN_USERS);
