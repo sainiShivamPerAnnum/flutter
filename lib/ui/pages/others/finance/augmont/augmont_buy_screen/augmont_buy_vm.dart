@@ -215,7 +215,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   }
 
   delayedAugmontCall() async {
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(Duration(seconds: 2));
     _baseUtil.augmontDetail =
         await _dbModel.getUserAugmontDetails(_userService.baseUser.uid);
     _augmontSecondFetchDone = true;
