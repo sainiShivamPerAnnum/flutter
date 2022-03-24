@@ -1,5 +1,3 @@
-//Flutter imports
-//Project imports
 import 'package:device_preview/device_preview.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';

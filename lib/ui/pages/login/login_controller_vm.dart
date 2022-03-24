@@ -193,6 +193,10 @@ class LoginControllerViewModel extends BaseModel {
             //   return false;
             // }
 
+            _analyticsService.track(
+              eventName: AnalyticsEvents.signupProfile,
+            );
+
             if (_nameScreenKey.currentState.model.selectedDate == null) {
               BaseUtil.showNegativeAlert(
                 'Invalid Date of Birth',
@@ -421,6 +425,10 @@ class LoginControllerViewModel extends BaseModel {
 
   Future _onSignUpComplete() async {
     if (_isSignup) {
+      await _analyticsService.login(
+          isOnBoarded: userService.isUserOnborded,
+          baseUser: userService.baseUser);
+
       await BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
       _analyticsService.track(
         eventName: AnalyticsEvents.signupComplete,

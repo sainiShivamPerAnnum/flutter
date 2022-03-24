@@ -305,9 +305,12 @@ class AugmontGoldBuyViewModel extends BaseModel {
       //Handle failed condition here.
       if (!depositFcmResponseModel.status) {
         AppState.delegate.appState.isTxnLoaderInView = false;
+        _analyticsService.track(eventName: AnalyticsEvents.buyGoldFailed);
         BaseUtil.showNegativeAlert("Transaction Failed",
             "Gold purchase failed, you amount will be refunded");
         return;
+      } else {
+        _analyticsService.track(eventName: AnalyticsEvents.buyGoldSuccess);
       }
       //handle multiple fcm command for same transaction
       if (depositFcmResponseModel.gtId != null) {
@@ -629,6 +632,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
           AppState.delegate.appState.setCurrentTabIndex = 1;
         },
         onAccept: () {
+          _analyticsService.track(eventName: AnalyticsEvents.buyGoldInvestMore);
           AppState.backButtonDispatcher.didPopRoute();
         },
       ),

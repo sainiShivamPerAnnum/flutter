@@ -63,6 +63,7 @@ class AugmontGoldSellViewModel extends BaseModel {
 
   init() async {
     setState(ViewState.Busy);
+    _analyticsService.track(eventName: AnalyticsEvents.saveSell);
     goldAmountController = TextEditingController();
     await fetchNotices();
     fetchGoldRates();

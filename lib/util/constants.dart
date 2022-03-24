@@ -5,7 +5,13 @@ class Constants {
   //Game Type
   static const String GAME_TYPE_CRICKET = "GM_CRIC2020";
   static const String GAME_TYPE_TAMBOLA = "GM_TAMBOLA2020";
+  static const String GAME_TYPE_POOLCLUB = "GM_POOL_CLUB";
   static const String GAME_TYPE_HIGHEST_SAVER = "HIGHEST_SAVER";
+
+  //HIGHEST SAVER
+  static const String HS_DAILY_SAVER = "SAVER_DAILY";
+  static const String HS_WEEKLY_SAVER = "SAVER_WEEKLY";
+  static const String HS_MONTHLY_SAVER = "SAVER_MONTHLY";
 
   //Collections
   static final String COLN_USERS = "users";

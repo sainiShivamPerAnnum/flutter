@@ -21,6 +21,7 @@ class LauncherViewModel extends BaseModel {
   bool _isSlowConnection = false;
   Timer _timer3;
   DeviceUnlock deviceUnlock;
+
   final navigator = AppState.delegate.appState;
 
   // LOCATORS
@@ -53,15 +54,22 @@ class LauncherViewModel extends BaseModel {
   }
 
   initLogic() async {
-    await userService.init(); // PROCEED IF firebase != null
-    await _baseUtil.init();
-    _tambolaService.init();
-    await _fcmListener.setupFcm();
-    await _analyticsService.login(
-        isOnBoarded: userService.isUserOnborded,
-        baseUser: userService.baseUser);
+    try {
+      await userService.init();
+      await Future.wait([_baseUtil.init(), _fcmListener.setupFcm()]);
+
+      if (userService.baseUser != null) {
+        await _analyticsService.login(
+            isOnBoarded: userService.isUserOnborded,
+            baseUser: userService.baseUser);
+      }
+    } catch (e) {
+      _logger.e("Splash Screen init : " + e);
+    }
     _httpModel.init();
+    _tambolaService.init();
     _timer3.cancel();
+
     try {
       deviceUnlock = DeviceUnlock();
     } catch (e) {
@@ -80,14 +88,6 @@ class LauncherViewModel extends BaseModel {
 
     ///check for breaking update (TESTING)
     if (await checkBreakingUpdateTest()) {
-      AppState.isUpdateScreen = true;
-      navigator.currentAction =
-          PageAction(state: PageState.replaceAll, page: UpdateRequiredConfig);
-      return;
-    }
-
-    ///check for breaking update
-    if (await checkBreakingUpdate()) {
       AppState.isUpdateScreen = true;
       navigator.currentAction =
           PageAction(state: PageState.replaceAll, page: UpdateRequiredConfig);
