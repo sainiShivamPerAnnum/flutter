@@ -9,6 +9,7 @@ import 'package:felloapp/core/service/events_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/code_from_freq.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
@@ -32,13 +33,13 @@ class TopSaverViewModel extends BaseModel {
   EventModel event;
 
   List<TopSavers> currentParticipants;
-  List<Winners> _pastWinners;
+  List<PastHighestSaver> _pastWinners;
 
-  List<Winners> get pastWinners => _pastWinners;
+  List<PastHighestSaver> get pastWinners => _pastWinners;
 
   displayUsername(username) => _userService.diplayUsername(username);
 
-  set pastWinners(List<Winners> value) {
+  set pastWinners(List<PastHighestSaver> value) {
     _pastWinners = value;
     notifyListeners();
   }
@@ -71,21 +72,21 @@ class TopSaverViewModel extends BaseModel {
         {
           appbarTitle = "Saver of the Day";
           saverFreq = "daily";
-          winnerTitle = "Yesterday's Winners";
+          // winnerTitle = "Yesterday's Winners";
           break;
         }
       case SaverType.WEEKLY:
         {
           appbarTitle = "Saver of the Week";
           saverFreq = "weekly";
-          winnerTitle = "Last Week's Winners";
+          // winnerTitle = "Last Week's Winners";
           break;
         }
       case SaverType.MONTHLY:
         {
           appbarTitle = "Saver of the Month";
           saverFreq = "monthly";
-          winnerTitle = "Last Month's Winners";
+          // winnerTitle = "Last Month's Winners";
           break;
         }
     }
@@ -107,13 +108,19 @@ class TopSaverViewModel extends BaseModel {
   }
 
   fetchPastWinners() async {
-    ApiResponse<WinnersModel> response = await _winnersRepo.getPastWinners(
-        Constants.GAME_TYPE_HIGHEST_SAVER, saverFreq);
+    ApiResponse<List<WinnersModel>> response = await _winnersRepo
+        .getPastWinners(Constants.GAME_TYPE_HIGHEST_SAVER, saverFreq);
     if (response != null &&
         response.model != null &&
-        response.model.winners != null)
-      pastWinners = response.model.winners;
-    else
+        response.model.isNotEmpty) {
+      pastWinners = [];
+      for (int i = 0; i < response.model.length; i++) {
+        for (int j = 0; j < response.model[i].winners.length; j++) {
+          pastWinners.add(PastHighestSaver.fromMap(response.model[i].winners[j],
+              response.model[i].gametype, response.model[i].code));
+        }
+      }
+    } else
       pastWinners = [];
 
     updateWinnersTitle();
@@ -142,4 +149,58 @@ class TopSaverViewModel extends BaseModel {
       }
     }
   }
+
+  getFormattedDate(String code) {
+    switch (saverType) {
+      case SaverType.DAILY:
+        {
+          return CodeFromFreq.getDayFromCode(code);
+        }
+      case SaverType.WEEKLY:
+        {
+          return CodeFromFreq.getWeekFromCode(code);
+        }
+      case SaverType.MONTHLY:
+        {
+          return CodeFromFreq.getMonthFromCode(code);
+        }
+    }
+  }
+}
+
+class PastHighestSaver {
+  double score;
+  int amount;
+  bool isMockUser;
+  int flc;
+  String userid;
+  String username;
+  String gameType;
+  String code;
+
+  PastHighestSaver(
+      {this.score,
+      this.userid,
+      this.username,
+      this.gameType,
+      this.isMockUser,
+      this.amount,
+      this.flc,
+      this.code});
+
+  factory PastHighestSaver.fromMap(Winners map, String gameType, String code) {
+    return PastHighestSaver(
+        score: map.score.toDouble(),
+        userid: map.userid,
+        username: map.username,
+        gameType: gameType,
+        amount: map.amount,
+        flc: map.flc,
+        isMockUser: map.isMockUser,
+        code: code);
+  }
+
+  @override
+  String toString() =>
+      'Winners(score: $score, userid: $userid, username: $username, gameType: $gameType, amount: $amount, isMockUser: $isMockUser, code: $code)';
 }

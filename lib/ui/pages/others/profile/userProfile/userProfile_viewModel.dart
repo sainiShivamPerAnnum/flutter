@@ -174,7 +174,13 @@ class UserProfileVM extends BaseModel {
           _userService.baseUser.dob =
               "${yearFieldController.text}-${monthFieldController.text}-${dateFieldController.text}";
           _userService.baseUser.gender = getGender();
-          await _dbModel.updateUser(_userService.baseUser).then((res) {
+          await _dbModel
+              .updateUserProfile(
+                  _userService.baseUser.uid,
+                  _userService.baseUser.name,
+                  _userService.baseUser.dob,
+                  _userService.baseUser.gender)
+              .then((res) {
             if (res) {
               _userService.setMyUserName(_userService.baseUser.name);
               _userService.setDateOfBirth(_userService.baseUser.dob);

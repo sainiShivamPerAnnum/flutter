@@ -84,12 +84,18 @@ class TxnCompletedConfirmationScreenView extends StatelessWidget {
                         Lottie.asset(Assets.txnFinish,
                             repeat: false,
                             height: SizeConfig.screenWidth * 0.8),
-                        FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text(
-                            title ?? "Hurray!",
-                            style: TextStyles.title3.bold.colour(Colors.white),
-                            textAlign: TextAlign.center,
+                        Container(
+                          width: SizeConfig.screenWidth,
+                          margin: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.pageHorizontalMargins),
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              title ?? "Hurray!",
+                              style:
+                                  TextStyles.title3.bold.colour(Colors.white),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
                         //SizedBox(height: SizeConfig.screenWidth / 4)
@@ -111,10 +117,15 @@ class TxnCompletedConfirmationScreenView extends StatelessWidget {
                             height: SizeConfig.screenWidth,
                             width: SizeConfig.screenWidth * 0.6),
                         SizedBox(height: SizeConfig.padding40),
-                        Text(
-                          "${amount.toInt()} Tokens Credited!",
-                          style: TextStyles.title3.bold.colour(Colors.white),
-                          textAlign: TextAlign.center,
+                        Container(
+                          width: SizeConfig.screenWidth,
+                          margin: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.pageHorizontalMargins),
+                          child: Text(
+                            "${amount.toInt()} Fello Tokens have been credited to your wallet!",
+                            style: TextStyles.title3.bold.colour(Colors.white),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                         SizedBox(height: SizeConfig.screenWidth / 4)
                       ],

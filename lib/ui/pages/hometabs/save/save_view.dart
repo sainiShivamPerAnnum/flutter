@@ -1,7 +1,12 @@
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
+import 'package:felloapp/ui/pages/static/poolview.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
 import 'package:felloapp/util/assets.dart';
@@ -96,9 +101,8 @@ class Save extends StatelessWidget {
 
                   // TextButton(
                   //   onPressed: () {
-                  //     AppState.screenStack.add(ScreenItem.dialog);
-                  //     Navigator.push(context,
-                  //         MaterialPageRoute(builder: (ctx) => PoolView()));
+                  //     AppState.delegate.appState.currentAction = PageAction(
+                  //         state: PageState.addPage, page: PoolViewPageConfig);
                   //   },
                   //   child: Text("Show pool game"),
                   // ),

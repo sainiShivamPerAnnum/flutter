@@ -148,8 +148,14 @@ class VerifyEmailState extends State<VerifyEmail> {
     if (generatedOTP == otp.text) {
       baseProvider.setEmail(email.text.trim());
       baseProvider.setEmailVerified();
+
+      _userService.setEmail(email.text.trim());
       _userService.isEmailVerified = true;
-      bool res = await dbProvider.updateUser(_userService.baseUser);
+      _userService.baseUser.isEmailVerified = true;
+
+      bool res = await dbProvider.updateUserEmail(_userService.baseUser.uid,
+          _userService.baseUser.email, _userService.baseUser.isEmailVerified);
+
       setState(() {
         _isVerifying = false;
       });
@@ -189,7 +195,9 @@ class VerifyEmailState extends State<VerifyEmail> {
         _userService.baseUser.email = googleUser.email;
         baseProvider.setEmailVerified();
         _userService.isEmailVerified = true;
-        bool res = await dbProvider.updateUser(_userService.baseUser);
+        _userService.baseUser.isEmailVerified = true;
+        bool res = await dbProvider.updateUserEmail(_userService.baseUser.uid,
+            _userService.baseUser.email, _userService.baseUser.isEmailVerified);
         if (res) {
           setState(() {
             baseProvider.isGoogleSignInProgress = false;

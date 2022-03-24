@@ -137,6 +137,14 @@ class AugmontBuyCard extends StatelessWidget {
                 style: TextStyles.body4.bold.colour(UiConstants.primaryColor),
               ),
             ),
+          if (model.showMinCapText)
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
+              child: Text(
+                "Minimum purchase amount is ₹ 10",
+                style: TextStyles.body4.bold.colour(Colors.red[400]),
+              ),
+            ),
           SizedBox(
             height: SizeConfig.padding12,
           ),

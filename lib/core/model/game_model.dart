@@ -1,6 +1,5 @@
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 class GameModel {
   final String gameName;
@@ -10,6 +9,7 @@ class GameModel {
   final String playCost;
   final String prizeAmount;
   final String analyticEvent;
+  final Color shadowColor;
 
   GameModel({
     this.gameName,
@@ -18,6 +18,7 @@ class GameModel {
     this.thumbnailUri,
     this.playCost,
     this.prizeAmount,
+    this.shadowColor,
     @required this.analyticEvent,
   });
 }

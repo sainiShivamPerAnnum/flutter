@@ -11,10 +11,11 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/modals_sheets/event_instructions_modal.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/all_participants.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_vm.dart';
-import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
+import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
+import 'package:felloapp/ui/pages/static/web_game_prize_view.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -238,10 +239,24 @@ class WinnersBoard extends StatelessWidget {
                                     ),
                                     SizedBox(width: SizeConfig.padding12),
                                     Expanded(
-                                      child: Text(
-                                        model.displayUsername(
-                                            model.pastWinners[i].username),
-                                        style: TextStyles.body3,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            model.displayUsername(
+                                                model.pastWinners[i].username),
+                                            style: TextStyles.body3,
+                                          ),
+                                          SizedBox(height: SizeConfig.padding4),
+                                          Text(
+                                            model.getFormattedDate(model
+                                                    .pastWinners[i].code) ??
+                                                "",
+                                            style: TextStyles.body4
+                                                .colour(Colors.black54),
+                                          )
+                                        ],
                                       ),
                                     ),
                                     SizedBox(width: SizeConfig.padding12),
@@ -249,16 +264,20 @@ class WinnersBoard extends StatelessWidget {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        if (model.pastWinners[i]?.flc != null)
+                                        if (model.pastWinners[i]?.flc != null &&
+                                            model.pastWinners[i]?.flc != 0)
                                           PrizeChip(
                                             color: UiConstants.tertiarySolid,
                                             svg: Assets.tokens,
                                             text: "${model.pastWinners[i].flc}",
                                           ),
-                                        if (model.pastWinners[i]?.flc != null)
+                                        if (model.pastWinners[i]?.amount !=
+                                                null &&
+                                            model.pastWinners[i]?.amount != 0)
                                           SizedBox(width: SizeConfig.padding16),
                                         if (model.pastWinners[i]?.amount !=
-                                            null)
+                                                null &&
+                                            model.pastWinners[i]?.amount != 0)
                                           PrizeChip(
                                             color: UiConstants.primaryColor,
                                             png: Assets.moneyIcon,
