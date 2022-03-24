@@ -3,6 +3,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
+import 'package:felloapp/ui/pages/static/FelloTile.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
@@ -58,9 +59,8 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
                         ),
                         color: Colors.white,
                       ),
-                      child: PageView(
-                          controller: model.pageController,
-                          physics: NeverScrollableScrollPhysics(),
+                      child: PageView(controller: model.pageController,
+                          // physics: NeverScrollableScrollPhysics(),
                           children: [
                             addUpiIdUI(model),
                             pendingUI(model),
@@ -88,25 +88,130 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
           "STEP 2/3",
           style: TextStyles.body2.colour(Colors.black26).letterSpace(3),
         ),
-        Spacer(),
+        SizedBox(height: SizeConfig.padding24),
         Lottie.asset(
           "assets/lotties/pending.json",
-          height: SizeConfig.screenWidth / 3,
+          height: SizeConfig.screenWidth * 0.3,
         ),
         SizedBox(height: SizeConfig.padding24),
         Text(
-          "Processing, please wait",
+          "Complete Payment",
           style: TextStyles.title3.bold,
           textAlign: TextAlign.center,
         ),
         SizedBox(height: SizeConfig.padding8),
-        Text(
-          "Open your UPI app and check and approve the subscription mandate",
-          style: TextStyles.body2,
-          textAlign: TextAlign.center,
+        Container(
+          height: SizeConfig.screenWidth * 0.25,
+          decoration: BoxDecoration(
+            color: UiConstants.tertiaryLight,
+            borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+          ),
+          margin:
+              EdgeInsets.symmetric(vertical: SizeConfig.pageHorizontalMargins),
+          padding: EdgeInsets.all(SizeConfig.padding24),
+          child: Row(
+            children: [
+              CircleAvatar(
+                backgroundColor: UiConstants.tertiarySolid.withOpacity(0.2),
+                radius: SizeConfig.screenWidth * 0.067,
+                child: SvgPicture.asset(
+                  "assets/vectors/icons/upi.svg",
+                  height: SizeConfig.screenWidth * 0.067,
+                  // width: SizeConfig.padding64,
+                ),
+              ),
+              SizedBox(
+                width: SizeConfig.padding12,
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FittedBox(
+                      child: Row(
+                        children: [
+                          Text(
+                            model.vpaController.text.trim(),
+                            style: TextStyles.body1.bold,
+                          ),
+                          SizedBox(width: SizeConfig.padding4),
+                          SvgPicture.asset(
+                            "assets/vectors/check.svg",
+                            height: SizeConfig.iconSize1,
+                            // width: SizeConfig.padding64,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: SizeConfig.padding4),
+                    FittedBox(
+                      child: Text(
+                        "Entered UPI Address",
+                        style: TextStyles.body3.colour(Colors.grey),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
-        Spacer(
-          flex: 2,
+        ListTile(
+          title: Text("Step 1"),
+          subtitle: Text("Go to your ${getUpiAppName(model)} mobile app"),
+          trailing: CircleAvatar(
+            backgroundColor: UiConstants.tertiaryLight,
+            radius: SizeConfig.padding20,
+          ),
+        ),
+        ListTile(
+          title: Text("Step 2"),
+          subtitle: Text(
+              "Check pending requests and approve payment by entering UPI PIN"),
+          trailing: CircleAvatar(
+            backgroundColor: UiConstants.tertiaryLight,
+            radius: SizeConfig.padding20,
+          ),
+        ),
+        Spacer(),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            "Please do not press back until the payment is completed",
+            style: TextStyles.body2.colour(Colors.red[400]).light,
+            textAlign: TextAlign.center,
+          ),
+        ),
+        SizedBox(height: SizeConfig.padding8),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "This page will expire in ",
+              style: TextStyles.body4.colour(Colors.grey).light,
+            ),
+            TweenAnimationBuilder<Duration>(
+                duration: Duration(minutes: 8),
+                tween: Tween(begin: Duration(minutes: 8), end: Duration.zero),
+                onEnd: () {
+                  print('Timer ended');
+                },
+                builder: (BuildContext context, Duration value, Widget child) {
+                  final minutes = value.inMinutes;
+                  final seconds = value.inSeconds % 60;
+                  return Text(
+                    '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  );
+                }),
+          ],
+        ),
+        SizedBox(
+          height:
+              SizeConfig.viewInsets.bottom + SizeConfig.pageHorizontalMargins,
         )
       ],
     );
@@ -126,17 +231,17 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
                 height: SizeConfig.screenWidth / 2,
               ),
               Text(
-                "Yayy!",
+                "Setup Successful",
                 style: TextStyles.title3.bold,
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: SizeConfig.padding8),
               Text(
-                "Your UPI AutoPay Setup was successful!",
+                "Your UPI AutoPay Setup is successfully completed!",
                 style: TextStyles.body2,
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: SizeConfig.padding24),
+              SizedBox(height: SizeConfig.screenWidth / 3),
               Spacer(),
             ],
           ),
@@ -477,7 +582,16 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
         model.vpaController.text =
             model.vpaController.text.trim().split('@').first + suffix;
       },
-      child: Chip(label: Text(suffix)),
+      child: Chip(
+        labelPadding: EdgeInsets.symmetric(
+          horizontal: SizeConfig.padding12,
+          vertical: SizeConfig.padding4,
+        ),
+        label: Text(
+          suffix,
+          style: TextStyles.body3,
+        ),
+      ),
     );
   }
 
@@ -487,13 +601,51 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
         model.amountFieldController.text = amount.toString();
         model.onAmountValueChanged(amount.toString());
       },
-      child: Chip(label: Text("₹ ${amount.toString()}")),
+      child: Chip(
+          labelPadding: EdgeInsets.symmetric(
+            horizontal: SizeConfig.padding12,
+            vertical: SizeConfig.padding4,
+          ),
+          label: Text(
+            "₹ ${amount.toString()}",
+            style: TextStyles.body3,
+          )),
     );
+  }
+
+  String getUpiAppName(AutoPayProcessViewModel model) {
+    final String upi = model.vpaController.text.split('@').last;
+    switch (upi) {
+      case 'upi':
+        return 'BHIM';
+      case 'paytm':
+        return "Paytm";
+      case 'ybl':
+        return "PhonePe";
+      case 'ibl':
+        return "PhonePe";
+      case 'axl':
+        return "PhonePe";
+      case 'okhdfcbank':
+        return "Google Pay";
+      case 'okaksix':
+        return "Google Pay";
+      case 'apl':
+        return "Amazon Pay";
+      case 'indus':
+        return "BHIM Indus Pay";
+      case 'boi':
+        return "BHIM BOI UPI";
+      case 'cnrb':
+        return "BHIM Canara";
+      default:
+        return "preferred UPI";
+    }
   }
 }
 
 class SegmentChips extends StatelessWidget {
-  final AutoPayProcessViewModel model;
+  final model;
   final String text;
 
   SegmentChips({this.model, this.text});
@@ -501,7 +653,10 @@ class SegmentChips extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => model.isDaily = !model.isDaily,
+      onTap: () {
+        model.isDaily = !model.isDaily;
+        model.onAmountValueChanged(model.amountFieldController.text);
+      },
       child: Container(
           margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding2),
           padding: EdgeInsets.symmetric(

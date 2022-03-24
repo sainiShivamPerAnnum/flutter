@@ -22,7 +22,7 @@ class AutoPayCard extends StatelessWidget {
                   horizontal: SizeConfig.pageHorizontalMargins),
               decoration: BoxDecoration(
                 // color: Color(0xfff3c5c5),
-                color: Color(0xff6b7AA1),
+                color: UiConstants.autopayColor,
 
                 //color: Colors.white,
                 borderRadius: BorderRadius.circular(SizeConfig.roundness24),
@@ -86,8 +86,10 @@ class AutoPayCard extends StatelessWidget {
                                       // );
                                       AppState.delegate.appState.currentAction =
                                           PageAction(
-                                              page:
-                                                  AutoPayProcessViewPageConfig,
+                                              page: model.activeSubscription !=
+                                                      null
+                                                  ? UserAutoPayDetailsViewPageConfig
+                                                  : AutoPayProcessViewPageConfig,
                                               state: PageState.addPage);
                                     },
                                     child: Container(
@@ -109,7 +111,9 @@ class AutoPayCard extends StatelessWidget {
                                         ],
                                       ),
                                       child: Text(
-                                        "Set Up",
+                                        model.activeSubscription != null
+                                            ? "Details"
+                                            : "Set Up",
                                         style: TextStyles.body2
                                             .colour(Colors.white),
                                       ),
@@ -126,24 +130,26 @@ class AutoPayCard extends StatelessWidget {
                                               page:
                                                   AutoPayDetailsViewPageConfig);
                                     },
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: SizeConfig.padding8),
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                        border: Border.all(
-                                          width: 0.5,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      child: Text(
-                                        "Details",
-                                        style: TextStyles.body2
-                                            .colour(Colors.white),
-                                      ),
-                                    ),
+                                    child: model.activeSubscription != null
+                                        ? SizedBox()
+                                        : Container(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: SizeConfig.padding8),
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(100),
+                                              border: Border.all(
+                                                width: 0.5,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            child: Text(
+                                              "Details",
+                                              style: TextStyles.body2
+                                                  .colour(Colors.white),
+                                            ),
+                                          ),
                                   ),
                                 ),
                               ],

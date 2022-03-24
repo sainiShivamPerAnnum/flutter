@@ -96,7 +96,11 @@ class AutoPayProcessViewModel extends BaseModel {
   }
 
   double calculateSaveAmount(int amount) {
-    return amount * 365 + 0.06 * amount;
+    final double p = amount * (isDaily ? 365.0 : 52.0);
+    final double r = 6;
+    final double t = 1;
+    final double ci = p * (pow(1 + r / 100, t) - 1);
+    return p + ci;
   }
 
   getTitle() {

@@ -68,6 +68,11 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     await getActiveSubscriptionDetails();
   }
 
+  Future signout() async {
+    activeSubscription = null;
+    currentSubscriptionId = null;
+  }
+
   jumpToSubPage(int index) {
     subscriptionFlowPageController.jumpToPage(index);
   }

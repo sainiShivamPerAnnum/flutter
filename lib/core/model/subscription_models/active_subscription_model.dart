@@ -6,7 +6,6 @@ class ActiveSubscriptionModel {
   Timestamp expiryDate;
   String frequencyUnit;
   double autoAmount;
-  double upfrontTxnAmount;
   String vpa;
   Timestamp updatedOn;
   double maxAmount;
@@ -22,7 +21,6 @@ class ActiveSubscriptionModel {
       this.expiryDate,
       this.frequencyUnit,
       this.autoAmount,
-      this.upfrontTxnAmount,
       this.vpa,
       this.updatedOn,
       this.maxAmount,
@@ -38,7 +36,6 @@ class ActiveSubscriptionModel {
     expiryDate = json['expiryDate'];
     frequencyUnit = json['frequencyUnit'];
     autoAmount = (json['autoAmount'] ?? 0).toDouble();
-    upfrontTxnAmount = (json['upfrontTxnAmount'] ?? 0).toDouble();
     vpa = json['vpa'];
     updatedOn = json['updatedOn'];
     maxAmount = (json['maxAmount'] ?? 0).toDouble();
@@ -55,7 +52,6 @@ class ActiveSubscriptionModel {
     data['expiryDate'] = this.expiryDate;
     data['frequencyUnit'] = this.frequencyUnit;
     data['autoAmount'] = this.autoAmount;
-    data['upfrontTxnAmount'] = this.upfrontTxnAmount;
     data['vpa'] = this.vpa;
     data['updatedOn'] = this.updatedOn;
     data['maxAmount'] = this.maxAmount;

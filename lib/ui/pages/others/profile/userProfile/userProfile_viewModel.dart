@@ -10,6 +10,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
+import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -46,6 +47,7 @@ class UserProfileVM extends BaseModel {
   final _txnService = locator<TransactionService>();
   final _tambolaService = locator<TambolaService>();
   final _analyticsService = locator<AnalyticsService>();
+  final _paytmService = locator<PaytmService>();
   final S _locale = locator<S>();
   final BaseUtil baseProvider = locator<BaseUtil>();
   double picSize;
@@ -280,6 +282,7 @@ class UserProfileVM extends BaseModel {
                 _txnService.signOut();
                 _tambolaService.signOut();
                 _analyticsService.signOut();
+                _paytmService.signout();
                 AppState.backButtonDispatcher.didPopRoute();
                 AppState.delegate.appState.currentAction = PageAction(
                     state: PageState.replaceAll, page: SplashPageConfig);

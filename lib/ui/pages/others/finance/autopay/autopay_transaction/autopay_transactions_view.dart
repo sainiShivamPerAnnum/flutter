@@ -76,7 +76,7 @@ class AutoPayTransactionsView extends StatelessWidget {
                                             model.filteredList?.length,
                                             (index) =>
                                                 SubscriptionTransactionTile(
-                                              model: model,
+                                              // model: model,
                                               txn: model.filteredList[index],
                                             ),
                                           ),
@@ -119,11 +119,11 @@ class AutoPayTransactionsView extends StatelessWidget {
 }
 
 class SubscriptionTransactionTile extends StatelessWidget {
-  final AutopayTransactionsViewModel model;
+  // final AutopayTransactionsViewModel model;
   final AutopayTransactionModel txn;
   final _txnService = locator<TransactionService>();
   SubscriptionTransactionTile({
-    @required this.model,
+    // @required this.model,
     this.txn,
   });
   @override

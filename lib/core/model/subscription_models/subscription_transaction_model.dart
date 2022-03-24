@@ -95,7 +95,7 @@ class AutopayTransactionModel {
       gatewayName: map['gatewayName'] ?? '',
       bankName: map['bankName'] ?? '',
       note: map['note'] ?? '',
-      augmontMap: AugmontDataModel.fromMap(map['augmontMap']),
+      augmontMap: AugmontDataModel.fromMap(map['augmontMap'] ?? {}),
       closingBalance: map['closingBalance']?.toDouble() ?? 0.0,
       createdOn: map['createdOn'],
     );
