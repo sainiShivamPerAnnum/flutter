@@ -74,6 +74,8 @@ class AugmontGoldBuyViewModel extends BaseModel {
   bool _isGoldBuyInProgress = false;
   bool _couponApplyInProgress = false;
   bool _showCoupons = false;
+  bool _augmontSecondFetchDone = false;
+
   AugmontRates goldRates;
   String userAugmontState;
   FocusNode buyFieldNode;
@@ -104,6 +106,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   double get goldBuyPrice => goldRates != null ? goldRates.goldBuyPrice : 0.0;
 
   get isGoldBuyInProgress => this._isGoldBuyInProgress;
+  get augmontObjectSecondFetchDone => _augmontSecondFetchDone;
 
   set isGoldBuyInProgress(value) {
     this._isGoldBuyInProgress = value;
@@ -149,7 +152,6 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
   set isGoldRateFetching(value) {
     this._isGoldRateFetching = value;
-
     notifyListeners();
   }
 
@@ -190,10 +192,19 @@ class AugmontGoldBuyViewModel extends BaseModel {
     if (status == STATUS_REGISTER && userAugmontState != null) {
       _onboardUserAutomatically(userAugmontState);
     }
+
+    if (!_userService.showOnboardingTutorial) {
+      _augmontSecondFetchDone = true;
+    }
+
     if (_baseUtil.augmontDetail == null) {
       _baseUtil.augmontDetail =
           await _dbModel.getUserAugmontDetails(_userService.baseUser.uid);
     }
+
+    if (_baseUtil.augmontDetail == null && !_augmontSecondFetchDone)
+      delayedAugmontCall();
+
     // Check if deposit is locked the this particular user
     if (_baseUtil.augmontDetail != null &&
         _baseUtil.augmontDetail.depNotice != null &&
@@ -201,6 +212,14 @@ class AugmontGoldBuyViewModel extends BaseModel {
       buyNotice = _baseUtil.augmontDetail.depNotice;
 
     setState(ViewState.Idle);
+  }
+
+  delayedAugmontCall() async {
+    await Future.delayed(Duration(seconds: 3));
+    _baseUtil.augmontDetail =
+        await _dbModel.getUserAugmontDetails(_userService.baseUser.uid);
+    _augmontSecondFetchDone = true;
+    notifyListeners();
   }
 
   fetchNotices() async {
