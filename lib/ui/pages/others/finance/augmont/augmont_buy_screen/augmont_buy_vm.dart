@@ -221,6 +221,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
     double amt = chipAmountList[index];
     return GestureDetector(
       onTap: () {
+        if (couponApplyInProgress || isGoldBuyInProgress) return;
         showMaxCapText = false;
         showMinCapText = false;
         Haptic.vibrate();
@@ -307,6 +308,22 @@ class AugmontGoldBuyViewModel extends BaseModel {
         BaseUtil.showNegativeAlert("Transaction Failed",
             "Gold purchase failed, you amount will be refunded");
         return;
+      }
+      //handle multiple fcm command for same transaction
+      if (depositFcmResponseModel.gtId != null) {
+        print(
+            "Hey a new fcm recived with gtId: ${depositFcmResponseModel.gtId}");
+        if (GoldenTicketService.lastGoldenTicketId != null) {
+          if (GoldenTicketService.lastGoldenTicketId ==
+              depositFcmResponseModel.gtId) {
+            return;
+          } else {
+            GoldenTicketService.lastGoldenTicketId =
+                depositFcmResponseModel.gtId;
+          }
+        } else {
+          GoldenTicketService.lastGoldenTicketId = depositFcmResponseModel.gtId;
+        }
       }
 
       double newAugPrinciple = depositFcmResponseModel.augmontPrinciple;
