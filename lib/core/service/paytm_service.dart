@@ -98,7 +98,9 @@ class PaytmService {
     } catch (onError) {
       if (onError is PlatformException) {
         //Paytm ALL IN ONE SDK Issue Hack-fix
-        if(onError != null && onError.message != null && onError.message.toUpperCase().contains('UNTERMINATED OBJECT')) {
+        if (onError != null &&
+            onError.message != null &&
+            onError.message.toUpperCase().contains('UNTERMINATED OBJECT')) {
           return true;
         }
         _logger.e(onError.message + " \n  " + onError.details.toString());

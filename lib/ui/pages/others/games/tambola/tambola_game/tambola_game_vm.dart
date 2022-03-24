@@ -246,6 +246,7 @@ class TambolaGameViewModel extends BaseModel {
 
     ticketBuyInProgress = true;
     notifyListeners();
+    _analyticsService.track(eventName: AnalyticsEvents.gamePlayStarted);
     _analyticsService.track(
       eventName: AnalyticsEvents.buyTambolaTickets,
       properties: {'count': ticketCount},

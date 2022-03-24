@@ -168,6 +168,7 @@ class WebHomeViewModel extends BaseModel {
   launchGame() async {
     String initialUrl;
     viewpage(1);
+    _analyticsService.track(eventName: AnalyticsEvents.gamePlayStarted);
     switch (currentGame) {
       case Constants.GAME_TYPE_POOLCLUB:
         _analyticsService.track(eventName: AnalyticsEvents.poolClubStarts);
