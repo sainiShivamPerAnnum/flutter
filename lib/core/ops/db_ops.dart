@@ -104,14 +104,30 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> updateUser(BaseUser user) async {
+  Future<bool> updateUserEmail(String uid, String email, bool emailFlag) async {
     try {
-      //String id = user.mobile;
-      String id = user.uid;
-      await _api.updateUserDocument(id, user.toJson());
+      String id = uid;
+      await _api.updateUserDocumentPreferenceField(id,
+          {BaseUser.fldEmail: email, BaseUser.fldIsEmailVerified: emailFlag});
       return true;
     } catch (e) {
-      log.error("Failed to update user object: " + e.toString());
+      log.error("Failed to update user email and flag: " + e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> updateUserProfile(
+      String uid, String name, String dob, String gender) async {
+    try {
+      String id = uid;
+      await _api.updateUserDocumentPreferenceField(id, {
+        BaseUser.fldName: name,
+        BaseUser.fldDob: dob,
+        BaseUser.fldGender: gender
+      });
+      return true;
+    } catch (e) {
+      log.error("Failed to update user profile: " + e.toString());
       return false;
     }
   }
@@ -284,22 +300,6 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> saveEncodedUserPan(String uid, String encPan, int enid) async {
-    try {
-      Map<String, dynamic> pObj = {
-        'enid': enid,
-        'value': encPan,
-        'type': 'pan',
-        'timestamp': Timestamp.now()
-      };
-      await _api.addUserPrtdDocPan(uid, pObj);
-      return true;
-    } catch (e) {
-      log.error(e.toString());
-      return false;
-    }
-  }
-
   ///////////////////////AUGMONT/////////////////////////////
   Future<UserAugmontDetail> getUserAugmontDetails(String id) async {
     try {
@@ -359,17 +359,6 @@ class DBModel extends ChangeNotifier {
     } catch (e) {
       log.error('Failed to fetch user transaction details: $e');
       return null;
-    }
-  }
-
-  Future<bool> updateUserTransaction(String userId, UserTransaction txn) async {
-    try {
-      await _api.updateUserTransactionDocument(
-          userId, txn.docKey, txn.toJson());
-      return true;
-    } catch (e) {
-      log.error("Failed to update user transaction object: " + e.toString());
-      return false;
     }
   }
 
@@ -787,78 +776,6 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  ///Sample response:
-  ///{ op_1: 52
-  /// op_2: 65
-  /// op_3: 37
-  /// op_4: 75
-  /// op_5: 99}
-  Future<Map<String, dynamic>> getPollCount(
-      [String pollId = Constants.POLL_FOLLOWUPGAME_ID]) async {
-    try {
-      DocumentSnapshot snapshot = await _api.getPollDocument(pollId);
-      Map<String, dynamic> _doc = snapshot.data();
-      if (snapshot.exists && _doc.length > 0) {
-        return snapshot.data();
-      }
-    } catch (e) {
-      log.error("Error fetch poll details: " + e.toString());
-    }
-    return null;
-  }
-
-  ///response parameter should be the index of the poll option = 1,2,3,4,5
-  Future<bool> addUserPollResponse(String uid, int response,
-      [String pollId = Constants.POLL_FOLLOWUPGAME_ID]) async {
-    bool incrementFlag = true;
-    try {
-      await _api.incrementPollDocument(pollId, 'op_$response');
-      incrementFlag = true;
-    } catch (e) {
-      print("Error incremeting poll");
-      log.error(e);
-      incrementFlag = false;
-    }
-    if (incrementFlag) {
-      //poll incremented, now update user subcoln response
-      try {
-        Map<String, dynamic> pRes = {
-          'pResponse': response,
-          'pUserId': uid,
-          'timestamp': Timestamp.now()
-        };
-        await _api.addUserPollResponseDocument(uid, pollId, pRes);
-        return true;
-      } catch (e) {
-        log.error('$e');
-        return false;
-      }
-    } else {
-      return false;
-    }
-  }
-
-  ///If response = -1, user has not added a poll response yet
-  ///else response is option index, 1,2,3,4,5
-  Future<int> getUserPollResponse(String uid,
-      [String pollId = Constants.POLL_FOLLOWUPGAME_ID]) async {
-    try {
-      DocumentSnapshot docSnapshot =
-          await _api.getUserPollResponseDocument(uid, pollId);
-      if (docSnapshot.exists) {
-        Map<String, dynamic> docData = docSnapshot.data();
-        if (docData != null && docData['pResponse'] != null) {
-          log.debug(
-              'Found existing response from user: ${docData['pResponse']}');
-          return docData['pResponse'];
-        }
-      }
-    } catch (e) {
-      log.error(e);
-    }
-    return -1;
-  }
-
   Future<ReferralDetail> getUserReferralInfo(String uid) async {
     try {
       DocumentSnapshot snapshot = await _api.getUserReferDoc(uid);
@@ -891,53 +808,6 @@ class DBModel extends ChangeNotifier {
       log.error("Error fetch referrals details: " + e.toString());
     }
     return null;
-  }
-
-  Future<bool> addFundDeposit(
-      String uid, String amount, String rawResponse, String status) async {
-    try {
-      DateTime today = DateTime.now();
-      String year = today.year.toString();
-      String monthCde =
-          BaseUtil.getMonthName(monthNum: today.month).toUpperCase();
-      int date = today.day;
-      Map<String, dynamic> data = {};
-      data['date'] = date;
-      data['user_id'] = uid;
-      data['amount'] = amount;
-      data['raw_response'] = rawResponse;
-      data['status'] = status;
-      data['timestamp'] = Timestamp.now();
-
-      await _api.addDepositDocument(year, monthCde, data);
-      return true;
-    } catch (e) {
-      log.error("Error adding callback doc: " + e.toString());
-      return false;
-    }
-  }
-
-  Future<bool> addFundWithdrawal(
-      String uid, String amount, String upiAddress) async {
-    try {
-      DateTime today = DateTime.now();
-      String year = today.year.toString();
-      String monthCde =
-          BaseUtil.getMonthName(monthNum: today.month).toUpperCase();
-      int date = today.day;
-      Map<String, dynamic> data = {};
-      data['date'] = date;
-      data['user_id'] = uid;
-      data['amount'] = amount;
-      data['rec_upi_address'] = upiAddress;
-      data['timestamp'] = Timestamp.now();
-
-      await _api.addWithdrawalDocument(year, monthCde, data);
-      return true;
-    } catch (e) {
-      log.error("Error adding callback doc: " + e.toString());
-      return false;
-    }
   }
 
   Future<bool> deleteExpiredUserTickets(String userId) async {
@@ -1068,50 +938,6 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<UserFundWallet> updateUserIciciBalance(
-    String id,
-    UserFundWallet originalWalletBalance,
-    double changeAmount,
-  ) async {
-    ///make a copy of the wallet object
-    UserFundWallet newWalletBalance =
-        UserFundWallet.fromMap(originalWalletBalance.cloneMap());
-
-    ///first update icici balance
-    if (changeAmount < 0 &&
-        (newWalletBalance.iciciBalance + changeAmount) < 0) {
-      log.error(
-          'ICICI Balance: Attempted to subtract amount more than available balance');
-      return originalWalletBalance;
-    } else {
-      newWalletBalance.iciciBalance =
-          BaseUtil.digitPrecision(newWalletBalance.iciciBalance + changeAmount);
-      newWalletBalance.iciciPrinciple = BaseUtil.digitPrecision(
-          newWalletBalance.iciciPrinciple + changeAmount);
-    }
-
-    ///make the wallet transaction
-    try {
-      //only add the relevant fields to the map
-      Map<String, dynamic> rMap = {
-        UserFundWallet.fldIciciPrinciple: newWalletBalance.iciciPrinciple,
-        UserFundWallet.fldIciciBalance: newWalletBalance.iciciBalance
-      };
-      bool _flag = await _api.updateUserFundWalletFields(
-          id,
-          UserFundWallet.fldIciciPrinciple,
-          originalWalletBalance.iciciPrinciple,
-          rMap);
-      log.debug('User ICICI Balance update transaction successful: $_flag');
-
-      //if transaction fails, return the old wallet summary
-      return (_flag) ? newWalletBalance : originalWalletBalance;
-    } catch (e) {
-      log.error('Failed to update ICICI balance: $e');
-      return originalWalletBalance;
-    }
-  }
-
   String getMerchantTxnId(String uid) {
     return _api.getUserTransactionDocumentKey(uid).id;
   }
@@ -1119,52 +945,6 @@ class DBModel extends ChangeNotifier {
   ///Total Gold Balance = (current total grams owned * current selling rate)
   ///Total Gold Principle = old principle + changeAmount
   ///it shouldnt matter if its a deposit or a sell, all based on selling rate
-  Future<UserFundWallet> updateUserAugmontGoldBalance(
-      String id,
-      UserFundWallet originalWalletBalance,
-      double sellingRate,
-      double totalQuantity,
-      double changeAmt) async {
-    ///make a copy of the wallet object
-    UserFundWallet newWalletBalance;
-    if (originalWalletBalance == null) {
-      newWalletBalance = UserFundWallet.newWallet();
-    } else {
-      newWalletBalance =
-          UserFundWallet.fromMap(originalWalletBalance.cloneMap());
-    }
-
-    ///first update augmont balance
-    newWalletBalance.augGoldBalance =
-        BaseUtil.digitPrecision(totalQuantity * sellingRate);
-    newWalletBalance.augGoldPrinciple =
-        BaseUtil.digitPrecision(newWalletBalance.augGoldPrinciple + changeAmt);
-    newWalletBalance.augGoldQuantity = totalQuantity; //precision already added
-
-    ///make the wallet transaction
-    try {
-      //only add the relevant fields to the map
-      Map<String, dynamic> rMap = {
-        UserFundWallet.fldAugmontGoldPrinciple:
-            newWalletBalance.augGoldPrinciple,
-        UserFundWallet.fldAugmontGoldBalance: newWalletBalance.augGoldBalance,
-        UserFundWallet.fldAugmontGoldQuantity: newWalletBalance.augGoldQuantity,
-      };
-      bool _flag = await _api.updateUserFundWalletFields(
-          id,
-          UserFundWallet.fldAugmontGoldPrinciple,
-          originalWalletBalance.augGoldPrinciple,
-          rMap);
-      log.debug(
-          'User Augmont Gold Balance update transaction successful: $_flag');
-
-      //if transaction fails, return the old wallet summary
-      return (_flag) ? newWalletBalance : originalWalletBalance;
-    } catch (e) {
-      log.error('Failed to update Augmont Gold balance: $e');
-      return originalWalletBalance;
-    }
-  }
 
   Future<double> getNonWithdrawableAugGoldQuantity(String userId,
       [int dayOffset = Constants.AUG_GOLD_WITHDRAW_OFFSET]) async {
@@ -1439,10 +1219,6 @@ class DBModel extends ChangeNotifier {
 
   Future<bool> checkIfUsernameIsAvailable(String username) async {
     return await _api.checkUserNameAvailability(username);
-  }
-
-  Future<bool> setUsername(String username, String userId) async {
-    return await _api.setUserName(username, userId);
   }
 
   Future<bool> sendEmailToVerifyEmail(String email, String otp) async {
