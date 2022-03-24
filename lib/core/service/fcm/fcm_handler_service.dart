@@ -3,7 +3,8 @@ import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
-import 'package:felloapp/ui/pages/others/games/cricket/cricket_game/cricket_game_vm.dart';
+import 'package:felloapp/ui/pages/others/games/web/web_game/web_game_vm.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
@@ -17,8 +18,7 @@ class FcmHandler extends ChangeNotifier {
 
   final _augmontGoldBuyViewModel = locator<AugmontGoldBuyViewModel>();
   final _fcmHandlerDataPayloads = locator<FcmHandlerDataPayloads>();
-  final _cricketGameViewModel = locator<CricketGameViewModel>();
-
+  final _webGameViewModel = locator<WebGameViewModel>();
   ValueChanged<Map> notifListener;
 
   Future<bool> handleMessage(Map data, MsgSource source) async {
@@ -44,13 +44,19 @@ class FcmHandler extends ChangeNotifier {
       showSnackbar = false;
       switch (command) {
         case FcmCommands.DEPOSIT_TRANSACTION_RESPONSE:
-          {
-            _augmontGoldBuyViewModel
-                .fcmTransactionResponseUpdate(data['payload']);
-          }
+          _augmontGoldBuyViewModel
+              .fcmTransactionResponseUpdate(data['payload']);
+
           break;
         case FcmCommands.COMMAND_CRIC_GAME_END:
-          _cricketGameViewModel.endCricketGame(data);
+          _webGameViewModel.endWebGame(data, Constants.GAME_TYPE_CRICKET);
+          break;
+        case FcmCommands.COMMAND_POOL_CLUB_GAME_END:
+          _webGameViewModel.handlePoolClubRoundEnd(
+              data, Constants.GAME_TYPE_POOLCLUB);
+          break;
+        case FcmCommands.COMMAND_LOW_BALANCE_ALERT:
+          _webGameViewModel.handleLowBalanceAlert();
           break;
         case FcmCommands.COMMAND_SHOW_DIALOG:
           _fcmHandlerDataPayloads.showDialog(title, body);

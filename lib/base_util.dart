@@ -265,8 +265,9 @@ class BaseUtil extends ChangeNotifier {
     gamesList = [
       GameModel(
         gameName: "Cricket",
-        pageConfig: CricketHomePageConfig,
+        pageConfig: THomePageConfig,
         tag: 'cricket',
+        shadowColor: Color(0xff4B489E),
         thumbnailUri: BaseRemoteConfig.remoteConfig
             .getString(BaseRemoteConfig.CRICKET_THUMBNAIL_URI),
         playCost: BaseRemoteConfig.remoteConfig
@@ -278,9 +279,25 @@ class BaseUtil extends ChangeNotifier {
         analyticEvent: AnalyticsEvents.selectPlayCricket,
       ),
       GameModel(
+        gameName: "Pool Club",
+        pageConfig: THomePageConfig,
+        tag: 'poolclub',
+        shadowColor: Color(0xff00982B),
+        thumbnailUri: BaseRemoteConfig.remoteConfig
+            .getString(BaseRemoteConfig.POOLCLUB_THUMBNAIL_URI),
+        playCost: BaseRemoteConfig.remoteConfig
+                .getString(BaseRemoteConfig.POOLCLUB_PLAY_COST) ??
+            "10",
+        prizeAmount: BaseRemoteConfig.remoteConfig
+                .getString(BaseRemoteConfig.POOLCLUB_PLAY_PRIZE) ??
+            "10,000",
+        analyticEvent: AnalyticsEvents.selectPlayPoolClub,
+      ),
+      GameModel(
         gameName: "Tambola",
         pageConfig: THomePageConfig,
         tag: 'tambola',
+        shadowColor: Color(0xff1D173D),
         thumbnailUri: BaseRemoteConfig.remoteConfig
             .getString(BaseRemoteConfig.TAMBOLA_THUMBNAIL_URI),
         playCost: BaseRemoteConfig.remoteConfig

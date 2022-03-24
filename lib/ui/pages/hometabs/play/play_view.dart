@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
@@ -96,15 +97,25 @@ class Play extends StatelessWidget {
                       ),
                   child: ListView(padding: EdgeInsets.zero, children: [
                     GestureDetector(
-                      onTap: () => model.openGame(BaseUtil.gamesList[0]),
+                      onTap: () {
+                        AppState.delegate.parseRoute(Uri.parse('/cricket'));
+                      },
                       child: GameCard(
                         gameData: BaseUtil.gamesList[0],
                       ),
                     ),
                     GestureDetector(
-                      onTap: () => model.openGame(BaseUtil.gamesList[1]),
+                      onTap: () {
+                        AppState.delegate.parseRoute(Uri.parse('/pool'));
+                      },
                       child: GameCard(
                         gameData: BaseUtil.gamesList[1],
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => model.openGame(BaseUtil.gamesList[2]),
+                      child: GameCard(
+                        gameData: BaseUtil.gamesList[2],
                       ),
                     ),
                     SizedBox(

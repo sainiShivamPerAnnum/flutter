@@ -15,6 +15,7 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
 
   int _cricketWinnersLength = 0;
   int _tambolaWinnersLength = 0;
+  int _poolClubWinnersLength = 0;
   Timestamp _timestamp;
 
   List<Winners> _winners = [];
@@ -26,6 +27,8 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
   get cricketWinnersLength => this._cricketWinnersLength;
 
   get tambolaWinnersLength => this._tambolaWinnersLength;
+
+  get poolClubWinnersLength => this._poolClubWinnersLength;
 
   get timeStamp => _timestamp;
 
@@ -57,6 +60,9 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
     ApiResponse<WinnersModel> _tambolaWinners =
         await _winnersRepo.getWinners(Constants.GAME_TYPE_TAMBOLA, "weekly");
 
+    ApiResponse<WinnersModel> _poolClubWinners =
+        await _winnersRepo.getWinners(Constants.GAME_TYPE_POOLCLUB, "weekly");
+
     _winners.clear();
 
     if (_cricketWinners != null &&
@@ -84,8 +90,22 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
       _logger.i("Tambola Winners not added to leaderboard");
     }
 
+    if (_poolClubWinners != null &&
+        _poolClubWinners.model != null &&
+        _poolClubWinners.model.winners != null &&
+        _poolClubWinners.model?.winners?.length != 0) {
+      _timestamp = _poolClubWinners.model?.timestamp;
+      _poolClubWinnersLength = _poolClubWinners.model?.winners?.length;
+      _winners.addAll(_poolClubWinners.model.winners);
+      _logger.d(_poolClubWinners.model.winners.toString());
+      _logger.d("PoolClub Winners added to leaderboard");
+    } else {
+      _logger.i("PoolClub Winners not added to leaderboard");
+    }
+
     if (_tambolaWinners.model?.winners?.length == 0 &&
-        _cricketWinners.model?.winners?.length == 0) {
+        _cricketWinners.model?.winners?.length == 0 &&
+        _poolClubWinners.model?.winners?.length == 0) {
       BaseUtil.showNegativeAlert(
           "Unable to fetch winners", "try again in sometime");
     }
