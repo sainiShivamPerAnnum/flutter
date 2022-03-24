@@ -217,7 +217,9 @@ class AugmontBuyCard extends StatelessWidget {
                 ),
               ),
             ),
-          if (model.augRegFailed && !model.augOnbRegInProgress)
+          if (model.augRegFailed &&
+              !model.augOnbRegInProgress &&
+              model.augmontObjectSecondFetchDone)
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(SizeConfig.roundness12),
