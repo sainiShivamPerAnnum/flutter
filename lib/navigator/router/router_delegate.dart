@@ -641,10 +641,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'monthlySaver':
         openTopSaverScreen(Constants.HS_MONTHLY_SAVER);
         break;
-      case 'cricket':
+      case 'cricketHome':
         openWebGame(Constants.GAME_TYPE_CRICKET);
         break;
-      case 'pool':
+      case 'poolHome':
         openWebGame(Constants.GAME_TYPE_POOLCLUB);
         break;
       case 'milestones':

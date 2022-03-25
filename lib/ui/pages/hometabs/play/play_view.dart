@@ -90,7 +90,8 @@ class Play extends StatelessWidget {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          AppState.delegate.parseRoute(Uri.parse('/cricket'));
+                          AppState.delegate
+                              .parseRoute(Uri.parse('/cricketHome'));
                         },
                         child: GameCard(
                           gameData: BaseUtil.gamesList[0],
@@ -99,7 +100,7 @@ class Play extends StatelessWidget {
                       SizedBox(height: SizeConfig.padding6),
                       GestureDetector(
                         onTap: () {
-                          AppState.delegate.parseRoute(Uri.parse('/pool'));
+                          AppState.delegate.parseRoute(Uri.parse('/poolHome'));
                         },
                         child: GameCard(
                           gameData: BaseUtil.gamesList[1],
