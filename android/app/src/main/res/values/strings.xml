@@ -4,6 +4,9 @@
     <string name="facebook_app_id">523292952050769</string>
     <string name="fb_login_protocol_scheme">fb523292952050769</string>
     <string name="webengage_code">in~76aa370</string>
-    <string name="partnerKey">LRkqB4c376b2baf7e432d843213631da47b8a</string>
+    <!-- ProdTrucaller Playstore key -->
+    <!-- <string name="partnerKey">LRkqB4c376b2baf7e432d843213631da47b8a</string> -->
+     <!-- ProdTrucaller Internal sharing Playstore key -->
+    <string name="partnerKey">c0260334500567855dd0f506dd8ad275dd8e1116</string>
 </resources>
 
