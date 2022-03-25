@@ -26,10 +26,10 @@ class GameCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(
-              SizeConfig.roundness32 + SizeConfig.padding8),
+              SizeConfig.roundness32 + SizeConfig.padding6),
           boxShadow: [
             BoxShadow(
-                color: gameData.shadowColor.withOpacity(0.1),
+                color: Colors.black.withOpacity(0.06),
                 offset: Offset(0, 0),
                 spreadRadius: SizeConfig.padding4,
                 blurRadius: SizeConfig.padding6)
@@ -38,8 +38,8 @@ class GameCard extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding8),
         child: Stack(
           children: [
-            Positioned(
-              bottom: SizeConfig.padding4,
+            Align(
+              alignment: Alignment.center,
               child: Container(
                 width: SizeConfig.screenWidth -
                     SizeConfig.pageHorizontalMargins * 2 -

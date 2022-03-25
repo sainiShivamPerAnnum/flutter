@@ -10,6 +10,14 @@ class TransactionCompletedConfirmationScreenViewModel extends BaseModel {
 
   bool _isInvestmentAnimationInProgress = false;
   bool _isCoinAnimationInProgress = false;
+  bool _showPlayButton = false;
+  bool get showPlayButton => this._showPlayButton;
+
+  set showPlayButton(bool showPlayButton) {
+    this._showPlayButton = showPlayButton;
+    notifyListeners();
+  }
+
   int coinsCount = 200;
 
   get isInvestmentAnimationInProgress => this._isInvestmentAnimationInProgress;
@@ -42,7 +50,7 @@ class TransactionCompletedConfirmationScreenViewModel extends BaseModel {
     isAnimationInProgress = true;
     isInvestmentAnimationInProgress = true;
     notifyListeners();
-    Future.delayed(Duration(milliseconds: 2800), () {
+    Future.delayed(Duration(milliseconds: 2700), () {
       isInvestmentAnimationInProgress = false;
       notifyListeners();
       initCoinAnimation(amount);
@@ -59,13 +67,9 @@ class TransactionCompletedConfirmationScreenViewModel extends BaseModel {
     //   coinContentOpacity = 0;
     //   notifyListeners();
     // });
-    await Future.delayed(Duration(milliseconds: 2000), () {
-      isCoinAnimationInProgress = false;
-      notifyListeners();
-    });
-    Future.delayed(Duration(milliseconds: 00), () {
-      if (isAnimationInProgress) AppState.backButtonDispatcher.didPopRoute();
-      isAnimationInProgress = false;
+    await Future.delayed(Duration(milliseconds: 2500), () {
+      if (isAnimationInProgress) isAnimationInProgress = false;
+      showPlayButton = true;
     });
   }
 }

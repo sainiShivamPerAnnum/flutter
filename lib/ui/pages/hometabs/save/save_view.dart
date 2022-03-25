@@ -86,12 +86,12 @@ class Save extends StatelessWidget {
                   //   },
                   //   child: Text("Show instant gt"),
                   // ),
-                  // TextButton(
-                  //   onPressed: () {
-                  //     model.showTxnSuccessScreen(null, null);
-                  //   },
-                  //   child: Text("Show txn complete UI"),
-                  // ),
+                  TextButton(
+                    onPressed: () {
+                      model.showTxnSuccessScreen(null, null);
+                    },
+                    child: Text("Show txn complete UI"),
+                  ),
                   // TextButton(
                   //   onPressed: () {
                   //     model.showTransactionPendingDialog();

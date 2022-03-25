@@ -122,12 +122,13 @@ class WebGameViewModel extends BaseModel {
 
   handlePoolClubSessionEnd() {
     updateFlcBalance();
-    Future.delayed(Duration(seconds: 2500), () {
-      _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
-        if (res)
+    _logger.d("Checking for golden tickets");
+    _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
+      if (res)
+        Future.delayed(Duration(seconds: 1), () {
           _gtService.showInstantGoldenTicketView(
               title: 'Pool Club Milestone reached', source: GTSOURCE.poolClub);
-      });
+        });
     });
   }
 

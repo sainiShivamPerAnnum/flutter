@@ -30,7 +30,7 @@ class WebGameView extends StatelessWidget {
           SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
               overlays: [SystemUiOverlay.bottom]);
           SystemChrome.setPreferredOrientations([
-            DeviceOrientation.landscapeRight,
+            // DeviceOrientation.landscapeRight,
             DeviceOrientation.landscapeLeft,
           ]);
           AppState.isWebGameLInProgress = true;
