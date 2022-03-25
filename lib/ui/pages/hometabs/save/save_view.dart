@@ -24,8 +24,6 @@ class Save extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(
-        "Bottom padding: ${WidgetsBinding.instance.window.viewInsets.bottom}");
     S locale = S.of(context);
     return BaseView<AugmontGoldBuyViewModel>(
       onModelReady: (model) => model.init(),
@@ -86,12 +84,12 @@ class Save extends StatelessWidget {
                   //   },
                   //   child: Text("Show instant gt"),
                   // ),
-                  TextButton(
-                    onPressed: () {
-                      model.showTxnSuccessScreen(null, null);
-                    },
-                    child: Text("Show txn complete UI"),
-                  ),
+                  // TextButton(
+                  //   onPressed: () {
+                  //     model.showTxnSuccessScreen(null, null);
+                  //   },
+                  //   child: Text("Show txn complete UI"),
+                  // ),
                   // TextButton(
                   //   onPressed: () {
                   //     model.showTransactionPendingDialog();

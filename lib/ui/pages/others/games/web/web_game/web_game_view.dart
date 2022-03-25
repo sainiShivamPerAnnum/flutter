@@ -73,7 +73,7 @@ class WebGameView extends StatelessWidget {
                   ? Positioned(
                       top: SizeConfig.padding16,
                       right: SizeConfig.padding16,
-                      child: Close(),
+                      child: Close(inLandScape: inLandscapeMode),
                     )
                   : Positioned(
                       bottom: SizeConfig.padding16,
@@ -89,12 +89,16 @@ class WebGameView extends StatelessWidget {
 }
 
 class Close extends StatelessWidget {
-  const Close({
-    Key key,
-  }) : super(key: key);
-
+  final bool inLandScape;
+  Close({this.inLandScape = false});
   @override
   Widget build(BuildContext context) {
+    if (MediaQuery.of(context).padding.top != 0 && inLandScape) {
+      Future.delayed(Duration(seconds: 2), () {
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+            overlays: [SystemUiOverlay.bottom]);
+      });
+    }
     return SafeArea(
       child: CircleAvatar(
         radius: SizeConfig.padding16,
