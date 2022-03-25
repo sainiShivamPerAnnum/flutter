@@ -74,7 +74,8 @@ class AugmontBuyCard extends StatelessWidget {
                 SizedBox(width: SizeConfig.padding24),
                 Expanded(
                   child: TextField(
-                    enabled: !model.isGoldBuyInProgress,
+                    enabled: !model.isGoldBuyInProgress &&
+                        !model.couponApplyInProgress,
                     focusNode: model.buyFieldNode,
                     enableInteractiveSelection: false,
                     controller: model.goldAmountController,

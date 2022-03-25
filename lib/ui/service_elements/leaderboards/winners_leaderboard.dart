@@ -26,6 +26,17 @@ class WinnerboardView extends StatelessWidget {
       return listLength;
   }
 
+  getGameName(String gamename) {
+    switch (gamename) {
+      case Constants.GAME_TYPE_TAMBOLA:
+        return "Tambola";
+      case Constants.GAME_TYPE_CRICKET:
+        return "Cricket";
+      case Constants.GAME_TYPE_POOLCLUB:
+        return "Pool Club";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<WinnerService, WinnerServiceProperties>(
@@ -121,11 +132,8 @@ class WinnerboardView extends StatelessWidget {
                                             SizedBox(
                                                 height: SizeConfig.padding4),
                                             Text(
-                                              model.winners[i].gameType ==
-                                                      Constants
-                                                          .GAME_TYPE_CRICKET
-                                                  ? "Cricket"
-                                                  : "Tambola",
+                                              getGameName(
+                                                  model.winners[i].gameType),
                                               style: TextStyles.body4.colour(
                                                   UiConstants.primaryColor),
                                             )
