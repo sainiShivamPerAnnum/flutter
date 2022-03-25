@@ -447,16 +447,17 @@ class AugmontGoldBuyViewModel extends BaseModel {
       );
       return;
     }
+    isGoldBuyInProgress = true;
 
     bool _disabled = await _dbModel.isAugmontBuyDisabled();
     if (_disabled != null && _disabled) {
+      isGoldBuyInProgress = false;
       BaseUtil.showNegativeAlert(
         'Purchase Failed',
         'Gold buying is currently on hold. Please try again after sometime.',
       );
       return;
     }
-    isGoldBuyInProgress = true;
     _analyticsService.track(eventName: AnalyticsEvents.buyGold);
 
     final _status = await _paytmService.initiateTransactions(
