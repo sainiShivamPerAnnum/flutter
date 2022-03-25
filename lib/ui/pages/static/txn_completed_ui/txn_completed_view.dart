@@ -1,10 +1,13 @@
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/txn_completed_ui/txn_completed_vm.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
@@ -115,6 +118,7 @@ class TxnCompletedConfirmationScreenView extends StatelessWidget {
                       children: [
                         Lottie.asset(Assets.coinStack,
                             height: SizeConfig.screenWidth,
+                            repeat: !model.showPlayButton,
                             width: SizeConfig.screenWidth * 0.6),
                         SizedBox(height: SizeConfig.padding40),
                         Container(
@@ -132,6 +136,33 @@ class TxnCompletedConfirmationScreenView extends StatelessWidget {
                     ),
                   ),
                 ),
+                Positioned(
+                  bottom: SizeConfig.screenHeight * 0.16,
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: SizeConfig.screenWidth,
+                    child: AnimatedOpacity(
+                      duration: Duration(seconds: 1),
+                      opacity: model.showPlayButton ? 1 : 0,
+                      child: Container(
+                        width: SizeConfig.screenWidth / 2,
+                        child: FelloButtonLg(
+                          color: UiConstants.primaryColor,
+                          child: Text(
+                            "Start Playing",
+                            style: TextStyles.body2.bold.colour(Colors.white),
+                          ),
+                          onPressed: () {
+                            AppState.delegate.appState.setCurrentTabIndex = 1;
+                            while (AppState.screenStack.length > 1) {
+                              AppState.backButtonDispatcher.didPopRoute();
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                )
               ],
             ),
           ),
