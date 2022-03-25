@@ -218,9 +218,17 @@ class BaseUtil extends ChangeNotifier {
         ///pick zerobalance asset
         Random rnd = new Random();
         zeroBalanceAssetUri = 'zerobal/zerobal_${rnd.nextInt(4) + 1}';
+        setUserDefaults();
       }
     } catch (e) {
       logger.e(e.toString());
+    }
+  }
+
+  Future<void> setUserDefaults() async {
+    panService = new PanService();
+    if (!checkKycMissing) {
+      userRegdPan = await panService.getUserPan();
     }
   }
 
