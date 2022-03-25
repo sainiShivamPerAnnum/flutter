@@ -642,6 +642,7 @@ class LoginControllerViewModel extends BaseModel {
 
   Future<void> _authenticateTrucallerUser(String phno) async {
     //Make api call to get custom token
+
     final ApiResponse<String> tokenRes =
         await _userRepo.getCustomUserToken(phno);
 
