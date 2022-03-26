@@ -1010,7 +1010,7 @@ class DBModel extends ChangeNotifier {
             if (_txn != null &&
                 _txn.augmnt != null &&
                 _txn.augmnt[UserTransaction.subFldAugCurrentGoldGm] != null &&
-                _txn.rzp != null) {
+                (_txn.rzp != null || _txn.paytmMap != null)) {
               double _qnt = BaseUtil.toDouble(
                   _txn.augmnt[UserTransaction.subFldAugCurrentGoldGm]);
               _netQuantity += _qnt;

@@ -482,7 +482,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
       }
       BaseUtil.showNegativeAlert(
         'Transaction failed',
-        'Please try again in sometime or contact us for further assistance.',
+        'Your transaction was unsuccessful. Please try again',
       );
     }
   }
