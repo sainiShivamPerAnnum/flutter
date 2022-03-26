@@ -29,6 +29,7 @@ class AppState extends ChangeNotifier {
   final _lbService = locator<LeaderboardService>();
   int _rootIndex = 1;
   bool _isTxnLoaderInView = false;
+  static Map<String, dynamic> startupNotifMessage;
   static ScrollController homeCardListController = ScrollController();
   static String _fcmData;
   static bool isFirstTime = true;

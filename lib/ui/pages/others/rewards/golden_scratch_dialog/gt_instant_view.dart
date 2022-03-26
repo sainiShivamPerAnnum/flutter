@@ -434,7 +434,9 @@ class _GTInstantViewState extends State<GTInstantView>
 
   Function getButtonAction(GTInstantViewModel model, GTSOURCE source) {
     Function onPressed;
-    if (source == GTSOURCE.cricket || source == GTSOURCE.panVerify) {
+    if (source == GTSOURCE.cricket ||
+        source == GTSOURCE.panVerify ||
+        source == GTSOURCE.poolClub) {
       onPressed = () {
         if (!model.isCardScratched) return;
         AppState.backButtonDispatcher.didPopRoute();

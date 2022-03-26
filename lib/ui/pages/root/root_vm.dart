@@ -132,6 +132,7 @@ class RootViewModel extends BaseModel {
   }
 
   initialize() async {
+    bool canExecuteStartupNotification = true;
     if (!_isInitialized) {
       bool showSecurityPrompt = false;
       if (_userService.showSecurityPrompt == null) {
@@ -145,6 +146,7 @@ class RootViewModel extends BaseModel {
       _localDBModel.showHomeTutorial.then((value) {
         if (_userService.showOnboardingTutorial) {
           //show tutorial
+          canExecuteStartupNotification = false;
           _userService.showOnboardingTutorial = false;
           _localDBModel.setShowHomeTutorial = false;
           // AppState.delegate.parseRoute(Uri.parse('dashboard/walkthrough'));
@@ -162,6 +164,7 @@ class RootViewModel extends BaseModel {
           _userService.baseUser.userPreferences
                   .getPreference(Preferences.APPLOCK) ==
               0) {
+        canExecuteStartupNotification = false;
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _showSecurityBottomSheet();
           _localDBModel.updateSecurityPrompt(false);
@@ -175,6 +178,13 @@ class RootViewModel extends BaseModel {
               seconds: 4);
         }
       });
+      if (canExecuteStartupNotification &&
+          AppState.startupNotifMessage != null) {
+        _logger
+            .d("terminated startup message: ${AppState.startupNotifMessage}");
+        _fcmListener.handleMessage(
+            AppState.startupNotifMessage, MsgSource.Terminated);
+      }
     }
   }
 

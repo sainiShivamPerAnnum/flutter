@@ -5,6 +5,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/play_offer_card.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -90,6 +91,7 @@ class Play extends StatelessWidget {
                     children: [
                       GestureDetector(
                         onTap: () {
+                          Haptic.vibrate();
                           AppState.delegate
                               .parseRoute(Uri.parse('/cricketHome'));
                         },
@@ -100,6 +102,8 @@ class Play extends StatelessWidget {
                       SizedBox(height: SizeConfig.padding6),
                       GestureDetector(
                         onTap: () {
+                          Haptic.vibrate();
+
                           AppState.delegate.parseRoute(Uri.parse('/poolHome'));
                         },
                         child: GameCard(
@@ -108,7 +112,10 @@ class Play extends StatelessWidget {
                       ),
                       SizedBox(height: SizeConfig.padding6),
                       GestureDetector(
-                        onTap: () => model.openGame(BaseUtil.gamesList[2]),
+                        onTap: () {
+                          Haptic.vibrate();
+                          model.openGame(BaseUtil.gamesList[2]);
+                        },
                         child: GameCard(
                           gameData: BaseUtil.gamesList[2],
                         ),
