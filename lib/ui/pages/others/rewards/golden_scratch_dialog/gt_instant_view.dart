@@ -61,6 +61,7 @@ class _GTInstantViewState extends State<GTInstantView>
   Widget build(BuildContext context) {
     return BaseView<GTInstantViewModel>(
       onModelReady: (model) {
+        model.lottieAnimationController = AnimationController(vsync: this);
         model.init();
 
         if (widget.source == GTSOURCE.deposit)
@@ -136,6 +137,11 @@ class _GTInstantViewState extends State<GTInstantView>
                       children: [
                         SizedBox(height: SizeConfig.padding32),
                         Lottie.asset(Assets.coinStack,
+                            controller: model.lottieAnimationController,
+                            onLoaded: (composition) {
+                          model.lottieAnimationController
+                            ..duration = composition.duration;
+                        },
                             height: SizeConfig.screenWidth,
                             width: SizeConfig.screenWidth * 0.6),
                         SizedBox(height: SizeConfig.padding64),

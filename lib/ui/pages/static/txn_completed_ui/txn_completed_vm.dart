@@ -12,6 +12,7 @@ class TransactionCompletedConfirmationScreenViewModel extends BaseModel {
   bool _isCoinAnimationInProgress = false;
   bool _showPlayButton = false;
   bool get showPlayButton => this._showPlayButton;
+  AnimationController lottieAnimationController;
 
   set showPlayButton(bool showPlayButton) {
     this._showPlayButton = showPlayButton;
@@ -50,7 +51,7 @@ class TransactionCompletedConfirmationScreenViewModel extends BaseModel {
     isAnimationInProgress = true;
     isInvestmentAnimationInProgress = true;
     notifyListeners();
-    Future.delayed(Duration(milliseconds: 2700), () {
+    Future.delayed(Duration(milliseconds: 2500), () {
       isInvestmentAnimationInProgress = false;
       notifyListeners();
       initCoinAnimation(amount);
@@ -60,6 +61,8 @@ class TransactionCompletedConfirmationScreenViewModel extends BaseModel {
   initCoinAnimation(double amount) async {
     await Future.delayed(Duration(milliseconds: 100), () {
       isCoinAnimationInProgress = true;
+      lottieAnimationController.forward();
+
       coinsCount = _coinService.flcBalance;
       notifyListeners();
     });

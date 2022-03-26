@@ -28,6 +28,7 @@ class GTInstantViewModel extends BaseModel {
   final _rsaEncryption = new RSAEncryption();
   final _coinService = locator<UserCoinService>();
   ConfettiController confettiController;
+  AnimationController lottieAnimationController;
 
   // double coinsPositionY = SizeConfig.viewInsets.top +
   //     SizeConfig.padding12 +
@@ -158,7 +159,7 @@ class GTInstantViewModel extends BaseModel {
     coinsCount = _coinService.flcBalance - amount.toInt();
     isInvestmentAnimationInProgress = true;
     notifyListeners();
-    Future.delayed(Duration(milliseconds: 2700), () {
+    Future.delayed(Duration(milliseconds: 2500), () {
       isInvestmentAnimationInProgress = false;
       notifyListeners();
       initCoinAnimation(amount);
@@ -168,6 +169,7 @@ class GTInstantViewModel extends BaseModel {
   initCoinAnimation(double amount) async {
     await Future.delayed(Duration(milliseconds: 100), () {
       isCoinAnimationInProgress = true;
+      lottieAnimationController.forward();
       coinsCount = _coinService.flcBalance;
       notifyListeners();
     });

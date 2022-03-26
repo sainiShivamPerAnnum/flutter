@@ -12,16 +12,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 
-class TxnCompletedConfirmationScreenView extends StatelessWidget {
+class TxnCompletedConfirmationScreenView extends StatefulWidget {
   final String title;
   final double amount;
 
   TxnCompletedConfirmationScreenView({@required this.amount, this.title});
+
+  @override
+  State<TxnCompletedConfirmationScreenView> createState() =>
+      _TxnCompletedConfirmationScreenViewState();
+}
+
+class _TxnCompletedConfirmationScreenViewState
+    extends State<TxnCompletedConfirmationScreenView>
+    with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return BaseView<TransactionCompletedConfirmationScreenViewModel>(
       onModelReady: (model) {
-        model.init(amount);
+        model.lottieAnimationController = AnimationController(vsync: this);
+        model.init(widget.amount);
       },
       onModelDispose: (model) {
         model.isAnimationInProgress = false;
@@ -94,7 +104,7 @@ class TxnCompletedConfirmationScreenView extends StatelessWidget {
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(
-                              title ?? "Hurray!",
+                              widget.title ?? "Hurray!",
                               style:
                                   TextStyles.title3.bold.colour(Colors.white),
                               textAlign: TextAlign.center,
@@ -117,6 +127,11 @@ class TxnCompletedConfirmationScreenView extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Lottie.asset(Assets.coinStack,
+                            controller: model.lottieAnimationController,
+                            onLoaded: (composition) {
+                          model.lottieAnimationController
+                            ..duration = composition.duration;
+                        },
                             height: SizeConfig.screenWidth,
                             repeat: !model.showPlayButton,
                             width: SizeConfig.screenWidth * 0.6),
@@ -126,7 +141,7 @@ class TxnCompletedConfirmationScreenView extends StatelessWidget {
                           margin: EdgeInsets.symmetric(
                               horizontal: SizeConfig.pageHorizontalMargins),
                           child: Text(
-                            "${amount.toInt()} Fello Tokens have been credited to your wallet!",
+                            "${widget.amount.toInt()} Fello Tokens have been credited to your wallet!",
                             style: TextStyles.title3.bold.colour(Colors.white),
                             textAlign: TextAlign.center,
                           ),
