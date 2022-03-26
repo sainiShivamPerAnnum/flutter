@@ -44,6 +44,7 @@ class FcmHandler extends ChangeNotifier {
       showSnackbar = false;
       switch (command) {
         case FcmCommands.DEPOSIT_TRANSACTION_RESPONSE:
+          if(AppState.delegate.appState.isTxnLoaderInView == false)showSnackbar = true;
           _augmontGoldBuyViewModel
               .fcmTransactionResponseUpdate(data['payload']);
 

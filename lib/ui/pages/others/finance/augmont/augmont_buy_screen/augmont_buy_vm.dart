@@ -312,7 +312,6 @@ class AugmontGoldBuyViewModel extends BaseModel {
   }
 
   // BUY LOGIC
-
   fcmTransactionResponseUpdate(fcmDataPayload) async {
     //Stop loader if loading.
     _logger.i("Updating response value.");
@@ -325,8 +324,8 @@ class AugmontGoldBuyViewModel extends BaseModel {
       if (!depositFcmResponseModel.status) {
         AppState.delegate.appState.isTxnLoaderInView = false;
         _analyticsService.track(eventName: AnalyticsEvents.buyGoldFailed);
-        BaseUtil.showNegativeAlert("Transaction Failed",
-            "Gold purchase failed, you amount will be refunded");
+        BaseUtil.showNegativeAlert("Transaction failed",
+            "Your gold purchase did not complete successfully");
         return;
       } else {
         _analyticsService.track(eventName: AnalyticsEvents.buyGoldSuccess);

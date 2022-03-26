@@ -456,14 +456,13 @@ class UserProfileVM extends BaseModel {
     if (flag) {
       BaseAnalytics.logProfilePictureAdded();
       BaseUtil.showPositiveAlert(
-          'Complete', 'Your profile Picture has been updated');
+          'Complete', 'Your profile picture has been updated');
     } else {
       BaseUtil.showNegativeAlert(
         'Failed',
         'Your Profile Picture could not be updated at the moment',
       );
     }
-    //upload(false);
     AppState.backButtonDispatcher.didPopRoute();
   }
 

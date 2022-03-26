@@ -13,10 +13,7 @@ class CodeFromFreq {
       response += "-$weekcode";
       if (freq == 'daily') {
         final dailyFormat = new DateFormat('dd');
-        if (isMondayCorrected)
-          response += "-${dailyFormat.format(_currentTime)}";
-        else
-          response += "-${dailyFormat.format(DateTime.now())}";
+        response += "-${dailyFormat.format(DateTime.now())}";
       }
     }
     return response;

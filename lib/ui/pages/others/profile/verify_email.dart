@@ -208,8 +208,8 @@ class VerifyEmailState extends State<VerifyEmail> {
         } else {
           baseProvider.isGoogleSignInProgress = false;
           BaseUtil.showNegativeAlert(
-            "Oops! we ran into problem",
-            "Email cannot be verified at the moment",
+            "Email verification failed",
+            "Your email could not be verified at the moment",
           );
         }
       } else {
