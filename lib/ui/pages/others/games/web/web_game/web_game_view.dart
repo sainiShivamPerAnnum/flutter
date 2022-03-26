@@ -30,8 +30,9 @@ class WebGameView extends StatelessWidget {
           SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
               overlays: [SystemUiOverlay.bottom]);
           SystemChrome.setPreferredOrientations([
-            // DeviceOrientation.landscapeRight,
-            DeviceOrientation.landscapeLeft,
+            Platform.isIOS
+                ? DeviceOrientation.landscapeRight
+                : DeviceOrientation.landscapeLeft,
           ]);
           AppState.isWebGameLInProgress = true;
         } else {
@@ -55,32 +56,35 @@ class WebGameView extends StatelessWidget {
         }
       },
       builder: (ctx, model, child) {
-        return Scaffold(
-          backgroundColor: Colors.black,
-          body: Stack(
-            children: [
-              Container(
-                margin: EdgeInsets.symmetric(
-                    horizontal: Platform.isIOS
-                        ? MediaQuery.of(context).padding.right
-                        : 0),
-                child: WebView(
-                  initialUrl: initialUrl,
-                  javascriptMode: JavascriptMode.unrestricted,
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: Scaffold(
+            backgroundColor: Colors.black,
+            body: Stack(
+              children: [
+                Container(
+                  margin: EdgeInsets.symmetric(
+                      horizontal: Platform.isIOS
+                          ? MediaQuery.of(context).padding.right
+                          : 0),
+                  child: WebView(
+                    initialUrl: initialUrl,
+                    javascriptMode: JavascriptMode.unrestricted,
+                  ),
                 ),
-              ),
-              inLandscapeMode
-                  ? Positioned(
-                      top: SizeConfig.padding16,
-                      right: SizeConfig.padding16,
-                      child: Close(inLandScape: inLandscapeMode),
-                    )
-                  : Positioned(
-                      bottom: SizeConfig.padding16,
-                      right: SizeConfig.padding16,
-                      child: Close(),
-                    )
-            ],
+                inLandscapeMode
+                    ? Positioned(
+                        top: SizeConfig.padding16,
+                        right: SizeConfig.padding16,
+                        child: Close(inLandScape: inLandscapeMode),
+                      )
+                    : Positioned(
+                        bottom: SizeConfig.padding16,
+                        right: SizeConfig.padding16,
+                        child: Close(),
+                      )
+              ],
+            ),
           ),
         );
       },
