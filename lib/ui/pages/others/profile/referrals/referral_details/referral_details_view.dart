@@ -326,7 +326,7 @@ class ReferralDetailsView extends StatelessWidget {
                             SizedBox(height: SizeConfig.padding8),
                             InfoTile(
                               title:
-                                  "Once your friend plays Cricket more than 10 times, you receive a new Golden Ticket.",
+                                  "Once your friend plays Cricket or Pool Club more than 10 times, you receive a new Golden Ticket.",
                               leadingAsset: Assets.wmtShare,
                             ),
                             SizedBox(height: SizeConfig.padding8),
