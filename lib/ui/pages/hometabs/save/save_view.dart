@@ -145,7 +145,7 @@ class FocusCouponClip extends StatelessWidget {
               child: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(
-                  model.focusCoupon.description,
+                  (model.focusCoupon.highlight != null)?model.focusCoupon.highlight:model.focusCoupon.description,
                   overflow: TextOverflow.clip,
                   textAlign: TextAlign.start,
                   style: TextStyles.body2.colour(Colors.white),
