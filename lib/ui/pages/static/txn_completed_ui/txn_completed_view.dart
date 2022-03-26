@@ -157,7 +157,7 @@ class _TxnCompletedConfirmationScreenViewState
                     alignment: Alignment.center,
                     width: SizeConfig.screenWidth,
                     child: AnimatedOpacity(
-                      duration: Duration(seconds: 1),
+                      duration: Duration(milliseconds: 100),
                       opacity: model.showPlayButton ? 1 : 0,
                       child: Container(
                         width: SizeConfig.screenWidth / 2,
