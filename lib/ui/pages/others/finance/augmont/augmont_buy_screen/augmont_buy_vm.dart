@@ -328,7 +328,9 @@ class AugmontGoldBuyViewModel extends BaseModel {
             "Your gold purchase did not complete successfully");
         return;
       } else {
-        _analyticsService.track(eventName: AnalyticsEvents.buyGoldSuccess);
+        _analyticsService.track(
+            eventName: AnalyticsEvents.buyGoldSuccess,
+            properties: {"amount": depositFcmResponseModel.amount});
       }
       //handle multiple fcm command for same transaction
       if (depositFcmResponseModel.gtId != null) {
