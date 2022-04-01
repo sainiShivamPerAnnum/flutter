@@ -32,6 +32,7 @@ class AnalyticsService extends BaseAnalyticsService {
   Future<void> login({bool isOnBoarded, BaseUser baseUser}) async {
     await _mixpanel.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
     _webengage.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
+    _appsflyerSdk.setCustomerUserId(baseUser.uid);
 
     // for daily session event
     DateTime now = DateTime.now();
