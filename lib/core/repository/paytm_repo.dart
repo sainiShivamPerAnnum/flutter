@@ -77,7 +77,7 @@ class PaytmRepository {
   //     final _token = await _getBearerToken();
   //     final _queryParams = {"subId": subId, "uid": _uid};
   //     final response = await APIService.instance.getData(
-  //         ApiPath().kCreatePaytmSubscription,
+  //         ApiPath().kCreateSubscription,
   //         token: _token,
   //         queryParams: _queryParams);
 
@@ -103,10 +103,8 @@ class PaytmRepository {
       };
       final _token = await _getBearerToken();
       _logger.d("This is body: $_body");
-      final response = await APIService.instance.postData(
-          ApiPath().kCreatePaytmSubscription,
-          body: _body,
-          token: _token);
+      final response = await APIService.instance
+          .postData(ApiPath().kCreateSubscription, body: _body, token: _token);
 
       CreateSubscriptionResponseModel _responseModel =
           CreateSubscriptionResponseModel.fromMap(response);
@@ -157,10 +155,8 @@ class PaytmRepository {
         'amount': amount,
         'freq': freq
       };
-      final response = await APIService.instance.patchData(
-          ApiPath().kCreatePaytmSubscription,
-          body: _body,
-          token: _token);
+      final response = await APIService.instance
+          .patchData(ApiPath().kCreateSubscription, body: _body, token: _token);
 
       if (response['success'])
         return ApiResponse(model: true, code: 200);
@@ -180,10 +176,8 @@ class PaytmRepository {
         'uid': _userService.baseUser.uid,
         'subId': subId,
       };
-      final response = await APIService.instance.postData(
-          ApiPath().kPausePaytmSubscription,
-          body: _body,
-          token: _token);
+      final response = await APIService.instance
+          .postData(ApiPath().kPauseSubscription, body: _body, token: _token);
 
       if (response['success'])
         return ApiResponse(model: true, code: 200);
@@ -192,6 +186,27 @@ class PaytmRepository {
     } catch (e) {
       _logger.e(e.toString());
       return ApiResponse.withError("Unable to pause subscription", 400);
+    }
+  }
+
+  Future<ApiResponse<bool>> resumeSubscription(String subId) async {
+    try {
+      final _token = await _getBearerToken();
+
+      final _body = {
+        'uid': _userService.baseUser.uid,
+        'subId': subId,
+      };
+      final response = await APIService.instance
+          .postData(ApiPath().kResumeSubscription, body: _body, token: _token);
+
+      if (response['success'])
+        return ApiResponse(model: true, code: 200);
+      else
+        return ApiResponse(model: false, code: 400);
+    } catch (e) {
+      _logger.e(e.toString());
+      return ApiResponse.withError("Unable to resume subscription", 400);
     }
   }
 }

@@ -91,4 +91,8 @@ class Constants {
 
   static const INSTALL_TRACKING = 'FELLO_INSTALL';
   static const SIGNUP_TRACKING = 'FELLO_SIGNUP';
+
+  //Subscription Status
+  static const SUBSCRIPTION_ACTIVE = "ACTIVE";
+  static const SUBSCRIPTION_PAUSED = "SUSPENDED";
 }

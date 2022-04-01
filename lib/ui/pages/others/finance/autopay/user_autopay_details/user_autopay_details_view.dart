@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/paytm_service_enums.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -28,6 +30,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
 
 class UserAutoPayDetailsView extends StatelessWidget {
   const UserAutoPayDetailsView({Key key}) : super(key: key);
@@ -227,7 +230,7 @@ class UpdateDetailsView extends StatelessWidget {
                                 size: 20,
                               )
                             : Text(
-                                "Finish",
+                                "Update",
                                 style:
                                     TextStyles.body2.bold.colour(Colors.white),
                               ),
@@ -238,20 +241,33 @@ class UpdateDetailsView extends StatelessWidget {
                         },
                       ),
                     ),
-                    SizedBox(height: SizeConfig.padding6),
+                    //SizedBox(height: SizeConfig.padding6),
                     TextButton(
                       onPressed: () {
-                        model.isInEditMode = false;
+                        BaseUtil.openModalBottomSheet(
+                          addToScreenStack: true,
+                          hapticVibrate: true,
+                          backgroundColor: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(SizeConfig.roundness32),
+                            topRight: Radius.circular(SizeConfig.roundness32),
+                          ),
+                          isBarrierDismissable: false,
+                          isScrollControlled: true,
+                          content: PauseAutoPayModal(
+                            model: model,
+                          ),
+                        );
                       },
                       child: Text(
-                        "CANCEL",
+                        "PAUSE SUBSCRIPTION",
                         style: TextStyles.body1.colour(Colors.grey).light,
                       ),
                     ),
                     SizedBox(
                       height: SizeConfig.viewInsets.bottom != 0
                           ? 0
-                          : SizeConfig.pageHorizontalMargins,
+                          : SizeConfig.padding6,
                     ),
                   ],
                 ),
@@ -308,63 +324,70 @@ class DetailsView extends StatelessWidget {
                     padding: EdgeInsets.symmetric(
                         vertical: SizeConfig.pageHorizontalMargins),
                     children: [
-                      WinningsContainer(
-                        shadow: false,
-                        color: UiConstants.autopayColor,
-                        child: Container(
-                          width: SizeConfig.screenWidth,
-                          alignment: Alignment.center,
-                          padding: EdgeInsets.all(SizeConfig.padding8),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Blinker(
-                                    child: CircleAvatar(
-                                      backgroundColor:
-                                          model.activeSubscription.status ==
-                                                  "ACTIVE"
-                                              ? UiConstants.primaryColor
-                                              : UiConstants.tertiarySolid,
-                                      radius: SizeConfig.padding4,
-                                    ),
-                                  ),
-                                  SizedBox(width: SizeConfig.padding4),
-                                  Text(
-                                    "Active Subscription",
-                                    style:
-                                        TextStyles.body1.colour(Colors.white),
-                                  ),
-                                ],
-                              ),
-                              RichText(
-                                text: TextSpan(
-                                  text:
-                                      "₹${model.activeSubscription.autoAmount.toInt() ?? 0.0}",
-                                  style: GoogleFonts.sourceSansPro(
-                                      fontSize: SizeConfig.title2,
-                                      fontWeight: FontWeight.w800,
-                                      letterSpacing: 2,
-                                      color: Colors.white),
+                      PropertyChangeConsumer<PaytmService,
+                          PaytmServiceProperties>(
+                        properties: [PaytmServiceProperties.ActiveSubscription],
+                        builder: (context, model, property) =>
+                            WinningsContainer(
+                          shadow: false,
+                          color: UiConstants.autopayColor,
+                          child: Container(
+                            width: SizeConfig.screenWidth,
+                            alignment: Alignment.center,
+                            padding: EdgeInsets.all(SizeConfig.padding8),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    TextSpan(
-                                      text: getFreq(model
-                                          .activeSubscription.autoFrequency),
-                                      style: GoogleFonts.sourceSansPro(
-                                          fontSize: SizeConfig.title3,
-                                          fontWeight: FontWeight.w300,
-                                          color: Colors.white),
-                                    )
+                                    Blinker(
+                                      child: CircleAvatar(
+                                        backgroundColor:
+                                            model.activeSubscription.status ==
+                                                    "ACTIVE"
+                                                ? UiConstants.primaryColor
+                                                : UiConstants.tertiarySolid,
+                                        radius: SizeConfig.padding4,
+                                      ),
+                                    ),
+                                    SizedBox(width: SizeConfig.padding4),
+                                    Text(
+                                      model.activeSubscription.status ==
+                                              "ACTIVE"
+                                          ? "Active Subscription"
+                                          : "Subscription Paused",
+                                      style:
+                                          TextStyles.body1.colour(Colors.white),
+                                    ),
                                   ],
                                 ),
-                              )
-                            ],
+                                RichText(
+                                  text: TextSpan(
+                                    text:
+                                        "₹${model.activeSubscription.autoAmount.toInt() ?? 0.0}",
+                                    style: GoogleFonts.sourceSansPro(
+                                        fontSize: SizeConfig.title2,
+                                        fontWeight: FontWeight.w800,
+                                        letterSpacing: 2,
+                                        color: Colors.white),
+                                    children: [
+                                      TextSpan(
+                                        text: getFreq(model
+                                            .activeSubscription.autoFrequency),
+                                        style: GoogleFonts.sourceSansPro(
+                                            fontSize: SizeConfig.title4,
+                                            fontWeight: FontWeight.w300,
+                                            color: Colors.white),
+                                      )
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       ),
-
                       Container(
                         margin:
                             EdgeInsets.all(SizeConfig.pageHorizontalMargins),
@@ -541,67 +564,6 @@ class DetailsView extends StatelessWidget {
                           ],
                         ),
                       ),
-                      // TextFieldLabel("Subscription Id"),
-                      // TextFormField(
-                      //   enabled: false,
-                      //   controller: model.subIdController,
-                      // ),
-                      // TextFieldLabel("Primary UPI"),
-                      // TextFormField(
-                      //   enabled: false,
-                      //   controller: model.pUpiController,
-                      //   decoration: InputDecoration(
-                      //     suffixIcon: model.isVerified
-                      //         ? Icon(
-                      //             Icons.verified,
-                      //             color: UiConstants.primaryColor,
-                      //           )
-                      //         : SizedBox(),
-                      //   ),
-                      // ),
-                      // TextFieldLabel("Subscription Status"),
-                      // TextFormField(
-                      //   controller: model.subStatusController,
-                      //   enabled: false,
-                      //   decoration: InputDecoration(
-                      //     prefix: Padding(
-                      //       padding: const EdgeInsets.only(right: 8.0),
-                      //       child: Blinker(
-                      //         child: CircleAvatar(
-                      //           backgroundColor:
-                      //               model.activeSubscription.status == "ACTIVE"
-                      //                   ? UiConstants.primaryColor
-                      //                   : UiConstants.tertiarySolid,
-                      //           radius: 5,
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
-                      // TextFieldLabel("Subscribed Amount"),
-                      // InkWell(
-                      //   onTap: () {
-                      //     //open update amount freq screen
-                      //   },
-                      //   child: TextFormField(
-                      //     controller: model.subAmountController,
-                      //     //maxLength: 10,
-                      //     enabled: false,
-                      //     decoration: InputDecoration(
-                      //       prefix: Text(
-                      //         "₹ ",
-                      //         style: TextStyles.body3.bold,
-                      //       ),
-                      //       suffix: Text(
-                      //         "CHANGE",
-                      //         style: TextStyles.body3.bold
-                      //             .colour(UiConstants.primaryColor)
-                      //             .letterSpace(2),
-                      //       ),
-                      //     ),
-                      //     textCapitalization: TextCapitalization.characters,
-                      //   ),
-                      // ),
                     ],
                   )
                 : Center(
@@ -645,28 +607,28 @@ class DetailsView extends StatelessWidget {
                       },
                     ),
                   ),
-                  SizedBox(height: SizeConfig.padding6),
-                  TextButton(
-                    onPressed: () {
-                      BaseUtil.openModalBottomSheet(
-                        addToScreenStack: true,
-                        hapticVibrate: true,
-                        backgroundColor: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(SizeConfig.roundness32),
-                          topRight: Radius.circular(SizeConfig.roundness32),
-                        ),
-                        isBarrierDismissable: false,
-                        content: PauseAutoPayModal(
-                          model: model,
-                        ),
-                      );
-                    },
-                    child: Text(
-                      "PAUSE",
-                      style: TextStyles.body1.colour(Colors.grey).light,
-                    ),
-                  ),
+                  // SizedBox(height: SizeConfig.padding6),
+                  // TextButton(
+                  //   onPressed: () {
+                  //     BaseUtil.openModalBottomSheet(
+                  //       addToScreenStack: true,
+                  //       hapticVibrate: true,
+                  //       backgroundColor: Colors.white,
+                  //       borderRadius: BorderRadius.only(
+                  //         topLeft: Radius.circular(SizeConfig.roundness32),
+                  //         topRight: Radius.circular(SizeConfig.roundness32),
+                  //       ),
+                  //       isBarrierDismissable: false,
+                  //       content: PauseAutoPayModal(
+                  //         model: model,
+                  //       ),
+                  //     );
+                  //   },
+                  //   child: Text(
+                  //     "PAUSE",
+                  //     style: TextStyles.body1.colour(Colors.grey).light,
+                  //   ),
+                  // ),
                   SizedBox(
                     height: SizeConfig.viewInsets.bottom != 0
                         ? 0
@@ -698,14 +660,16 @@ class _PauseAutoPayModalState extends State<PauseAutoPayModal> {
     });
   }
 
+  bool isPausing = false;
+
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-      child: Column(
+      child: Wrap(
         //shrinkWrap: true,
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        // mainAxisSize: MainAxisSize.min,
+        // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
@@ -757,7 +721,7 @@ class _PauseAutoPayModalState extends State<PauseAutoPayModal> {
           ),
           SizedBox(height: SizeConfig.padding16),
           FelloButtonLg(
-            child: widget.model.isPausingInProgress
+            child: isPausing
                 ? SpinKitThreeBounce(
                     color: Colors.white,
                     size: SizeConfig.padding16,
@@ -767,7 +731,13 @@ class _PauseAutoPayModalState extends State<PauseAutoPayModal> {
                     style: TextStyles.body2.bold.colour(Colors.white),
                   ),
             onPressed: () async {
+              setState(() {
+                isPausing = true;
+              });
               await widget.model.pauseSubscription();
+              setState(() {
+                isPausing = false;
+              });
             },
           ),
           SizedBox(height: SizeConfig.pageHorizontalMargins / 2),
@@ -817,98 +787,3 @@ class _PauseAutoPayModalState extends State<PauseAutoPayModal> {
     );
   }
 }
-
-// class AutoPayAmountUpdateDialog extends StatefulWidget {
-//   final UserAutoPayDetailsViewModel model;
-//   AutoPayAmountUpdateDialog({@required this.model});
-//   @override
-//   State<AutoPayAmountUpdateDialog> createState() =>
-//       _AutoPayAmountUpdateDialogState();
-// }
-
-// class _AutoPayAmountUpdateDialogState extends State<AutoPayAmountUpdateDialog> {
-//   final _paytmService = locator<PaytmService>();
-//   double sliderValue = 2000;
-//   updateSliderValue(value) {
-//     setState(() {});
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return FelloConfirmationDialog(
-//       bottomPadding: SizeConfig.padding32,
-//       content: Column(
-//         children: [
-//           // SizedBox(height: SizeConfig.padding24),
-//           // SvgPicture.asset("assets/vectors/addmoney.svg",
-//           //     height: SizeConfig.screenHeight * 0.16),
-//           SizedBox(height: SizeConfig.padding24),
-
-//           Row(
-//             mainAxisAlignment: MainAxisAlignment.center,
-//             children: [
-//               Text(
-//                 "₹${sliderValue.toInt()}",
-//                 style: GoogleFonts.sourceSansPro(
-//                     fontWeight: FontWeight.bold,
-//                     fontSize: SizeConfig.screenWidth * 0.16,
-//                     color: Colors.black),
-//               ),
-//               Text(
-//                 '/day',
-//                 style: TextStyles.title2
-//                     .colour(Colors.black38)
-//                     .light
-//                     .setHeight(2.4),
-//               )
-//             ],
-//           ),
-//           Slider(
-//             value: sliderValue,
-//             onChanged: (val) {
-//               setState(() {
-//                 sliderValue = val;
-//               });
-//             },
-//             min: 10,
-//             max: 5000,
-//           ),
-//           Padding(
-//             padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
-//             child: Row(
-//               children: [
-//                 Text("₹10"),
-//                 Spacer(),
-//                 Text("₹5000"),
-//               ],
-//             ),
-//           ),
-//           SizedBox(height: SizeConfig.padding40),
-//         ],
-//       ),
-//       accept: "Update",
-//       result: (res) {
-//         _paytmService
-//             .updateDailySubscriptionAmount(
-//                 widget.model.activeSubscription.subId,
-//                 sliderValue.toInt().toDouble())
-//             .then((value) {
-//           widget.model.findActiveSubscription();
-//           if (value) {
-//             AppState.backButtonDispatcher.didPopRoute();
-//             BaseUtil.showPositiveAlert(
-//                 "Amount Update successfully", "Effective from next payment");
-//           } else {
-//             BaseUtil.showNegativeAlert(
-//                 "Amount Update failed", "Please try again in sometime");
-//           }
-//         });
-//       },
-//       onReject: () {
-//         AppState.backButtonDispatcher.didPopRoute();
-//       },
-//       reject: "Cancel",
-//       rejectColor: UiConstants.tertiarySolid,
-//     );
-//   }
-// }

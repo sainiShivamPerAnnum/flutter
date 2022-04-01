@@ -1,17 +1,29 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
+import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
-class AutoPayCard extends StatelessWidget {
-  const AutoPayCard({Key key}) : super(key: key);
+class AutoPayCard extends StatefulWidget {
+  AutoPayCard({Key key}) : super(key: key);
 
+  @override
+  State<AutoPayCard> createState() => _AutoPayCardState();
+}
+
+class _AutoPayCardState extends State<AutoPayCard> {
+  final _paytmService = locator<PaytmService>();
+  bool isResumingInProgress = false;
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<PaytmService, PaytmServiceProperties>(
@@ -49,18 +61,14 @@ class AutoPayCard extends StatelessWidget {
                                 height: SizeConfig.pageHorizontalMargins * 2),
                             FittedBox(
                               child: Text(
-                                model.activeSubscription != null
-                                    ? "Your Subscription is Active for"
-                                    : "Savings made easy with",
+                                getActiveTitle(model.activeSubscription),
                                 style:
                                     TextStyles.body2.light.colour(Colors.white),
                               ),
                             ),
                             SizedBox(height: SizeConfig.padding2),
                             Text(
-                              model.activeSubscription != null
-                                  ? "${model.activeSubscription.autoAmount}/day"
-                                  : "UPI AutoPay",
+                              getactiveSubtitle(model.activeSubscription),
                               style:
                                   TextStyles.title3.bold.colour(Colors.white),
                             ),
@@ -84,13 +92,15 @@ class AutoPayCard extends StatelessWidget {
                                       //   isBarrierDismissable: false,
                                       //   isScrollControlled: true,
                                       // );
-                                      AppState.delegate.appState.currentAction =
-                                          PageAction(
-                                              page: model.activeSubscription !=
-                                                      null
-                                                  ? UserAutoPayDetailsViewPageConfig
-                                                  : AutoPayProcessViewPageConfig,
-                                              state: PageState.addPage);
+                                      // AppState.delegate.appState.currentAction =
+                                      //     PageAction(
+                                      //         page: model.activeSubscription !=
+                                      //                 null
+                                      //             ? UserAutoPayDetailsViewPageConfig
+                                      //             : AutoPayProcessViewPageConfig,
+                                      //         state: PageState.addPage);
+                                      getActiveButtonAction(
+                                          model.activeSubscription);
                                     },
                                     child: Container(
                                       padding: EdgeInsets.symmetric(
@@ -102,7 +112,8 @@ class AutoPayCard extends StatelessWidget {
                                             BorderRadius.circular(100),
                                         boxShadow: [
                                           BoxShadow(
-                                            color: UiConstants.primaryColor
+                                            color: getShadow(
+                                                    model.activeSubscription)
                                                 .withOpacity(0.2),
                                             offset: Offset(0, 2),
                                             blurRadius: 5,
@@ -110,17 +121,17 @@ class AutoPayCard extends StatelessWidget {
                                           )
                                         ],
                                       ),
-                                      child: Text(
-                                        model.activeSubscription != null
-                                            ? (model.activeSubscription
-                                                        .status ==
-                                                    "ACTIVE"
-                                                ? "Details"
-                                                : "Check")
-                                            : "Set Up",
-                                        style: TextStyles.body2
-                                            .colour(Colors.white),
-                                      ),
+                                      child: isResumingInProgress
+                                          ? SpinKitThreeBounce(
+                                              color: Colors.white,
+                                              size: SizeConfig.padding12,
+                                            )
+                                          : Text(
+                                              getActiveButtonText(
+                                                  model.activeSubscription),
+                                              style: TextStyles.body2
+                                                  .colour(Colors.white),
+                                            ),
                                     ),
                                   ),
                                 ),
@@ -171,5 +182,94 @@ class AutoPayCard extends StatelessWidget {
                 ],
               ),
             ));
+  }
+
+  String getActiveTitle(ActiveSubscriptionModel subscription) {
+    if (subscription == null) {
+      return "Savings made easy for you with";
+    } else {
+      if (subscription.status == Constants.SUBSCRIPTION_ACTIVE) {
+        return "Your Subscription is Active for";
+      }
+      if (subscription.status == Constants.SUBSCRIPTION_PAUSED) {
+        return "Your Subscription is Paused for";
+      }
+      return "Your Subscription";
+    }
+  }
+
+  String getactiveSubtitle(ActiveSubscriptionModel subscription) {
+    if (subscription == null) {
+      return "UPI Autopay";
+    } else {
+      if (subscription.status == Constants.SUBSCRIPTION_ACTIVE) {
+        return "${subscription.autoAmount}/day";
+      }
+      if (subscription.status == Constants.SUBSCRIPTION_PAUSED) {
+        return "${subscription.autoAmount}/day";
+      }
+      return "0.0/day";
+    }
+  }
+
+  String getActiveButtonText(ActiveSubscriptionModel subscription) {
+    if (subscription == null) {
+      return "Set up";
+    } else {
+      if (subscription.status == Constants.SUBSCRIPTION_ACTIVE) {
+        return "More..";
+      }
+      if (subscription.status == Constants.SUBSCRIPTION_PAUSED) {
+        return "Resume";
+      }
+      return "Details";
+    }
+  }
+
+  getActiveButtonAction(ActiveSubscriptionModel subscription) async {
+    if (subscription == null) {
+      AppState.delegate.appState.currentAction = PageAction(
+          page: AutoPayProcessViewPageConfig, state: PageState.addPage);
+    } else {
+      if (subscription.status == Constants.SUBSCRIPTION_ACTIVE) {
+        {
+          AppState.delegate.appState.currentAction = PageAction(
+              page: UserAutoPayDetailsViewPageConfig, state: PageState.addPage);
+        }
+      }
+      if (subscription.status == Constants.SUBSCRIPTION_PAUSED) {
+        {
+          setState(() {
+            isResumingInProgress = true;
+          });
+          bool response =
+              await _paytmService.resumeDailySubscription(subscription.subId);
+          if (response) {
+            await _paytmService.getActiveSubscriptionDetails();
+            BaseUtil.showPositiveAlert("Subscription resumed",
+                "Now you are back to your savings journey");
+          } else
+            BaseUtil.showNegativeAlert(
+                "Failed to resume Subscription", "Please try again");
+          setState(() {
+            isResumingInProgress = false;
+          });
+        }
+      }
+    }
+  }
+
+  Color getShadow(ActiveSubscriptionModel subscription) {
+    if (subscription == null) {
+      return UiConstants.primaryColor;
+    } else {
+      if (subscription.status == Constants.SUBSCRIPTION_ACTIVE) {
+        return UiConstants.primaryColor;
+      }
+      if (subscription.status == Constants.SUBSCRIPTION_PAUSED) {
+        return Colors.amber;
+      }
+      return UiConstants.scaffoldColor;
+    }
   }
 }

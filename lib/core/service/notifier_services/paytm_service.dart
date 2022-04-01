@@ -374,8 +374,16 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       return false;
   }
 
-  Future<bool> pauseDailySubscription(String subId, int days) async {
+  Future<bool> pauseSubscription(String subId, int days) async {
     ApiResponse response = await _paytmRepo.pauseSubscription(subId);
+    if (response.code == 200)
+      return response.model;
+    else
+      return false;
+  }
+
+  Future<bool> resumeDailySubscription(String subId) async {
+    ApiResponse response = await _paytmRepo.resumeSubscription(subId);
     if (response.code == 200)
       return response.model;
     else

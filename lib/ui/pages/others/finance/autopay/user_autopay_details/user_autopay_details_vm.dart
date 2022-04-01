@@ -96,9 +96,12 @@ class UserAutoPayDetailsViewModel extends BaseModel {
   pauseSubscription() async {
     isPausingInProgress = true;
     bool response =
-        await _paytmService.pauseDailySubscription(activeSubscription.subId, 2);
+        await _paytmService.pauseSubscription(activeSubscription.subId, 2);
     if (response) {
       AppState.backButtonDispatcher.didPopRoute();
+      isInEditMode = false;
+      _paytmService.getActiveSubscriptionDetails();
+
       BaseUtil.showPositiveAlert("Subscription paused for 2 days",
           "Remember it will automatically after 2 days");
     } else
@@ -168,7 +171,8 @@ class UserAutoPayDetailsViewModel extends BaseModel {
     isSubscriptionAmountUpdateInProgress = false;
     if (res) {
       _paytmService.getActiveSubscriptionDetails();
-
+      isInEditMode = false;
+      // init();
       BaseUtil.showPositiveAlert(
           "Subscription Successful", "Check transactions for more details");
     } else {
