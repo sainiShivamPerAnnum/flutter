@@ -93,7 +93,7 @@ class Root extends StatelessWidget {
                     ),
                   ),
                   actions: [
-                    const FelloCoinBar(),
+                    FelloCoinBar(),
                     SizedBox(width: 16),
                     NotificationButton(),
                   ],

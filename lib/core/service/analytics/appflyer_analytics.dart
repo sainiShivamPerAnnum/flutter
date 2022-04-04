@@ -15,6 +15,7 @@ class AppFlyerAnalytics extends BaseAnalyticsService {
   final _logger = locator<CustomLogger>();
 
   Future<void> login({bool isOnBoarded, BaseUser baseUser}) async {
+    final id = _appsflyerSdk.getAppsFlyerUID();
     _appsflyerSdk.setCustomerUserId(baseUser.uid);
   }
 
