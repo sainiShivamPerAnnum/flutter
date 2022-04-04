@@ -74,6 +74,8 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:get_it/get_it.dart';
 
+import '../core/service/analytics/appflyer_analytics.dart';
+
 GetIt locator = GetIt.instance;
 
 void setupLocator() {
@@ -93,6 +95,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => AnalyticsService());
   locator.registerLazySingleton(() => MixpanelAnalytics());
   locator.registerLazySingleton(() => WebEngageAnalytics());
+  locator.registerLazySingleton(() => AppFlyerAnalytics());
 
   //Model Services
   locator.registerLazySingleton(() => BaseUtil());
