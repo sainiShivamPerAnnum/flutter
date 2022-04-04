@@ -12,8 +12,6 @@ class AnalyticsEvents {
   static const saveBuy = "Select Buy Digital Gold";
   static const saveBuyCoupon = "User selecting coupons";
   static const buyGold = "Buy gold initiated";
-  static const buyGoldSuccess = "Buy gold successful";
-  static const buyGoldFailed = "Buy gold fail";
   static const buyGoldInvestMore = "Investing more through pop up";
   static const saveBalance = "Selecting Gold Balance";
   static const saveSell = "Selling Gold";
@@ -34,7 +32,18 @@ class AnalyticsEvents {
   static const poolClubEnds = "Pool Club ends";
   static const gamePlayStarted = "Game started";
 
+  // profile section
+  static const profileClicked = "Profile Clicked";
+  static const myGoldenTickets = 'My Golden Tickets';
+  static const selectKYC = 'Select KYC';
+  static const transactions = "Transactions";
+  static const helpAndSupport = 'Help and Support';
+  static const howItWorks = 'How it Works';
+  static const aboutDigitalGold = 'About Digital Gold';
+
   static const openAppFirstTimeInADay = "App Open";
+  static const addFLCTokensTopRight = 'Add FLC tokens top-right';
+  static const notifications = 'Notifications';
 
   // win section
   static const winSection = "Win Section";

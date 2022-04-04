@@ -323,14 +323,9 @@ class AugmontGoldBuyViewModel extends BaseModel {
       //Handle failed condition here.
       if (!depositFcmResponseModel.status) {
         AppState.delegate.appState.isTxnLoaderInView = false;
-        _analyticsService.track(eventName: AnalyticsEvents.buyGoldFailed);
         BaseUtil.showNegativeAlert("Transaction failed",
             "Your gold purchase did not complete successfully");
         return;
-      } else {
-        _analyticsService.track(
-            eventName: AnalyticsEvents.buyGoldSuccess,
-            properties: {"amount": depositFcmResponseModel.amount});
       }
       //handle multiple fcm command for same transaction
       if (depositFcmResponseModel.gtId != null) {

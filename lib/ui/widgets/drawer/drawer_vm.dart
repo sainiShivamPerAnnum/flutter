@@ -13,8 +13,9 @@ class DrawerModel {
   String title;
   String icon;
   PageConfiguration pageConfig;
+  String analyticEvent;
 
-  DrawerModel({this.icon, this.pageConfig, this.title});
+  DrawerModel({this.icon, this.pageConfig, this.title, this.analyticEvent});
 }
 
 class FDrawerVM extends BaseModel {
@@ -26,36 +27,43 @@ class FDrawerVM extends BaseModel {
       icon: Assets.dReferNEarn,
       title: "Refer and Earn",
       pageConfig: ReferralDetailsPageConfig,
+      analyticEvent: AnalyticsEvents.referralSection,
     ),
     DrawerModel(
       icon: Assets.gold24K,
       title: "My Golden Tickets",
       pageConfig: MyWinnigsPageConfig,
+      analyticEvent: AnalyticsEvents.myGoldenTickets,
     ),
     DrawerModel(
       icon: Assets.dPanKyc,
       title: "PAN & KYC",
       pageConfig: KycDetailsPageConfig,
+      analyticEvent: AnalyticsEvents.selectKYC,
     ),
     DrawerModel(
       icon: Assets.dTransactions,
       title: "Transactions",
       pageConfig: TransactionPageConfig,
+      analyticEvent: AnalyticsEvents.transactions,
     ),
     DrawerModel(
       icon: Assets.dHelpNSupport,
       title: "Help & Support",
       pageConfig: SupportPageConfig,
+      analyticEvent: AnalyticsEvents.helpAndSupport,
     ),
     DrawerModel(
       icon: Assets.dHowItWorks,
       title: "How it works",
       pageConfig: WalkThroughConfig,
+      analyticEvent: AnalyticsEvents.howItWorks,
     ),
     DrawerModel(
       icon: Assets.dAboutDigitalGold,
       title: "About Digital Gold",
       pageConfig: AugmontGoldDetailsPageConfig,
+      analyticEvent: AnalyticsEvents.aboutDigitalGold,
     ),
   ];
 
@@ -71,8 +79,8 @@ class FDrawerVM extends BaseModel {
       page: drawerList[i].pageConfig,
     );
 
-    if (i == 0)
-      _analyticsService.track(eventName: AnalyticsEvents.referralSection);
+    if (drawerList[i].analyticEvent != '')
+      _analyticsService.track(eventName: drawerList[i].analyticEvent);
   }
 
   refreshDrawer() {

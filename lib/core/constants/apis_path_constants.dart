@@ -32,6 +32,7 @@ class ApiPath {
 
   //User Ops Apis
   get kAddNewUser => "/userOps/api/v3/newuser";
+  get kUpdateUserAppflyer => "/userOps/api/v3/user/appflyer";
   get kAmountTransfer => "/userOps/api/v3/accountTransfer";
   get kVerifyTransfer => "/userOps/api/v3/verifyTransfer";
   get kVerifyPan => "/userOps/api/v3/verifyPan";

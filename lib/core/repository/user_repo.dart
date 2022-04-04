@@ -3,6 +3,7 @@ import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/fundbalance_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
+import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -11,6 +12,7 @@ import 'package:felloapp/util/custom_logger.dart';
 
 class UserRepository {
   final _logger = locator<CustomLogger>();
+  final _appflyerService = locator<AppFlyerAnalytics>();
   final _api = locator<Api>();
   final _apiPaths = locator<ApiPath>();
 
@@ -46,7 +48,8 @@ class UserRepository {
           BaseUser.fldGender: baseUser.gender,
           BaseUser.fldUsername: baseUser.username,
           BaseUser.fldUserPrefs: {"tn": 1, "al": 0},
-          BaseUser.fldStateId: state
+          BaseUser.fldStateId: state,
+          BaseUser.fldAppFlyerId: await _appflyerService.appFlyerId,
         }
       };
 
@@ -57,7 +60,31 @@ class UserRepository {
           code: 200, model: {"flag": res['flag'], "gtId": res['gtId']});
     } catch (e) {
       _logger.d(e);
-      ApiResponse.withError("User not added to firestore", 400);
+      return ApiResponse.withError("User not added to firestore", 400);
+    }
+  }
+
+  Future<ApiResponse> updateUserAppFlyer(BaseUser user) async {
+    try {
+      final id = await _appflyerService.appFlyerId;
+
+      if (user.appFlyerId == id) {
+        return ApiResponse(code: 200);
+      }
+
+      final body = {
+        'uid': user.uid,
+        'appFlyerId': id,
+      };
+      await APIService.instance.putData(
+        _apiPaths.kUpdateUserAppflyer,
+        body: body,
+      );
+
+      return ApiResponse(code: 200);
+    } catch (e) {
+      _logger.d(e);
+      return ApiResponse.withError("User not added to firestore", 400);
     }
   }
 
