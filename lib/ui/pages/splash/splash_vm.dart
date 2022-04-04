@@ -17,6 +17,8 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:package_info/package_info.dart';
 
+import '../../../core/repository/user_repo.dart';
+
 class LauncherViewModel extends BaseModel {
   bool _isSlowConnection = false;
   Timer _timer3;
@@ -32,6 +34,7 @@ class LauncherViewModel extends BaseModel {
   final _logger = locator<CustomLogger>();
   final _tambolaService = locator<TambolaService>();
   final _analyticsService = locator<AnalyticsService>();
+  final _userRepo = locator<UserRepository>();
 
   //GETTERS
   bool get isSlowConnection => _isSlowConnection;
@@ -56,6 +59,10 @@ class LauncherViewModel extends BaseModel {
   initLogic() async {
     try {
       await userService.init();
+      if (userService.baseUser.appFlyerId == null) {
+        _userRepo.updateUserAppFlyer(userService.baseUser.uid);
+      }
+
       await Future.wait([_baseUtil.init(), _fcmListener.setupFcm()]);
 
       if (userService.baseUser != null) {

@@ -26,6 +26,7 @@ class BaseUser {
   bool isEmailVerified;
   UserPreferences userPreferences;
   Timestamp createdOn;
+  String appFlyerId;
 
   static final String fldId = "mID";
   static final String fldMobile = "mMobile";
@@ -52,6 +53,7 @@ class BaseUser {
   static final String fldCreatedOn = "mCreatedOn";
   static final String fldKycName = "mKycName";
   static final String fldStateId = "stateId";
+  static final String fldAppFlyerId = "mAppFlyerId";
 
   BaseUser(
       this.uid,
@@ -74,7 +76,8 @@ class BaseUser {
       this.isEmailVerified,
       this.isBlocked,
       this.userPreferences,
-      this.createdOn);
+      this.createdOn,
+      this.appFlyerId);
 
   BaseUser.newUser(String id, String mobile)
       : this(
@@ -98,7 +101,8 @@ class BaseUser {
             false,
             false,
             UserPreferences(null),
-            Timestamp.now());
+            Timestamp.now(),
+            null);
 
   BaseUser.fromMap(Map<String, dynamic> data, String id, [String client_token])
       : this(
@@ -122,7 +126,8 @@ class BaseUser {
             data[fldIsEmailVerified] ?? false,
             data[fldIsBlocked] ?? false,
             UserPreferences(data[fldUserPrefs]),
-            data[fldCreatedOn]);
+            data[fldCreatedOn],
+            data[fldAppFlyerId]);
 
   //to send user object to server
   toJson() {
@@ -149,6 +154,7 @@ class BaseUser {
     if (userPreferences != null)
       userObj[fldUserPrefs] = userPreferences.toJson();
     if (isBlocked != null) userObj[fldIsBlocked] = isBlocked;
+    if (appFlyerId != null) userObj[fldAppFlyerId] = appFlyerId;
     return userObj;
   }
 

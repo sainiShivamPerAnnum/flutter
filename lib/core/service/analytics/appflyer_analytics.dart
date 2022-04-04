@@ -13,14 +13,16 @@ import 'package:webengage_flutter/webengage_flutter.dart';
 class AppFlyerAnalytics extends BaseAnalyticsService {
   AppsflyerSdk _appsflyerSdk;
   final _logger = locator<CustomLogger>();
+  Future<String> _appFlyerId;
+
+  Future<String> get appFlyerId => _appFlyerId;
 
   Future<void> login({bool isOnBoarded, BaseUser baseUser}) async {
-    final id = _appsflyerSdk.getAppsFlyerUID();
     _appsflyerSdk.setCustomerUserId(baseUser.uid);
   }
 
   AppFlyerAnalytics() {
-    init();
+    _appFlyerId = init();
   }
 
   void signOut() {}
@@ -44,7 +46,9 @@ class AppFlyerAnalytics extends BaseAnalyticsService {
     }
   }
 
-  void init() async {
+  Future<String> init() async {
+    String id = '';
+
     try {
       AppsFlyerOptions appsFlyerOptions = new AppsFlyerOptions(
         afDevKey: AnalyticsService.appFlierKey,
@@ -56,10 +60,13 @@ class AppFlyerAnalytics extends BaseAnalyticsService {
 
       _appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
       await _appsflyerSdk.initSdk();
+      id = await _appsflyerSdk.getAppsFlyerUID();
 
       _logger.d('appflyer initialized');
     } catch (e) {
       _logger.e(e.toString());
     }
+
+    return id;
   }
 }
