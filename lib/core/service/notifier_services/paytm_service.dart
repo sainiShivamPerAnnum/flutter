@@ -38,10 +38,13 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
 
   final String devMid = "qpHRfp13374268724583";
   final String prodMid = "CMTNKX90967647249644";
+  final String devPostPrefix = "https://securegw-stage.paytm.in/order/pay?";
+  final String prodPostPrefix = "https://securegw.paytm.in/order/pay?";
   final PageController subscriptionFlowPageController = new PageController();
   String currentSubscriptionId;
   ActiveSubscriptionModel _activeSubscription;
   String mid;
+  String postPrefix;
   bool isStaging;
   String callbackUrl;
 
@@ -58,9 +61,11 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     if (stage == PaytmStage.DEV) {
       mid = devMid;
       isStaging = true;
+      postPrefix = devPostPrefix;
     } else {
       mid = prodMid;
       isStaging = false;
+      postPrefix = prodPostPrefix;
     }
   }
 
@@ -240,7 +245,8 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
         await _paytmRepo.createPaytmSubscription();
 
     if (paytmSubscriptionApiResponse.code == 400) {
-      _logger.e(paytmSubscriptionApiResponse.errorMessage);
+      _logger.e(
+          "Subscription Message: ${paytmSubscriptionApiResponse.errorMessage}");
       return PaytmResponse(
           errorCode: INITIATE_SUBSCRIPTION_FAILED,
           reason: "Unable to create subscription",
@@ -252,13 +258,13 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     // final response = {
     //   "success": true,
     //   "data": {
-    //     "temptoken": "78a05f432a13487b894073eaa5c4c1d91646471852981",
-    //     "subscriptionId": "283638",
-    //     "orderId": "g0w7RYbDctbG4NKUJxqU",
+    //     "temptoken": "e1e7b951539b4ae48d72953bbc749c841648805868020",
+    //     "subscriptionId": "100456947236",
+    //     "orderId": "IoGzmreSnQRAxOzwSE7L",
     //     "callbackUrl":
-    //         "https://securegw-stage.paytm.in/theia/paytmCallback?ORDER_ID=g0w7RYbDctbG4NKUJxqU",
+    //         "https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=IoGzmreSnQRAxOzwSE7L",
     //     "authenticateUrl":
-    //         "https://securegw-stage.paytm.in/order/pay?mid=qpHRfp13374268724583&orderId=g0w7RYbDctbG4NKUJxqU"
+    //         "https://securegw.paytm.in/order/pay?mid=CMTNKX90967647249644&orderId=IoGzmreSnQRAxOzwSE7L"
     //   }
     // };
 
@@ -267,7 +273,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
 
     final ApiResponse<ValidateVpaResponseModel> isVpaValidResponse =
         await _paytmRepo.validateVPA(paytmSubscriptionModel, vpa);
-
+    _logger.d("Validate vpa response: $isVpaValidResponse");
     if (isVpaValidResponse.code == 400) {
       _logger.e(isVpaValidResponse.errorMessage);
 
@@ -307,7 +313,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       if (postResponse.model)
         return PaytmResponse(reason: "Everything seems good!", status: true);
       else
-        PaytmResponse(
+        return PaytmResponse(
             reason: "Unable to connect to Paytm Servers",
             errorCode: 4,
             status: false);
@@ -331,9 +337,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       String responseString = "";
       var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
       var request = http.Request(
-          'POST',
-          Uri.parse(
-              'https://securegw-stage.paytm.in/order/pay?mid=$mid&orderId=$orderId'));
+          'POST', Uri.parse('${postPrefix}mid=$mid&orderId=$orderId'));
       request.bodyFields = {
         'txnToken': '$txnToken',
         'SUBSCRIPTION_ID': '$subId',
@@ -376,6 +380,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
 
   Future<bool> pauseSubscription(String subId, int days) async {
     ApiResponse response = await _paytmRepo.pauseSubscription(subId);
+    await getActiveSubscriptionDetails();
     if (response.code == 200)
       return response.model;
     else
@@ -384,6 +389,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
 
   Future<bool> resumeDailySubscription(String subId) async {
     ApiResponse response = await _paytmRepo.resumeSubscription(subId);
+    await getActiveSubscriptionDetails();
     if (response.code == 200)
       return response.model;
     else

@@ -193,17 +193,21 @@ class UpdateDetailsView extends StatelessWidget {
                 ),
                 Container(
                   width: SizeConfig.screenWidth,
-                  child: Wrap(
-                    runSpacing: SizeConfig.padding8,
-                    spacing: SizeConfig.padding12,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      amountchips(10, model),
-                      amountchips(50, model),
-                      amountchips(100, model),
-                      amountchips(250, model),
-                      amountchips(500, model),
-                      amountchips(750, model),
-                      amountchips(1000, model),
+                      AmountChips(amount: 100, model: model),
+                      AmountChips(
+                          amount: 250,
+                          model: model,
+                          isBestSeller: model.isDaily ? true : false),
+                      AmountChips(
+                          amount: 500,
+                          model: model,
+                          isBestSeller: !model.isDaily ? true : false),
+                      AmountChips(amount: 1000, model: model),
+                      AmountChips(amount: 5000, model: model),
                     ],
                   ),
                 ),
@@ -241,7 +245,7 @@ class UpdateDetailsView extends StatelessWidget {
                         },
                       ),
                     ),
-                    //SizedBox(height: SizeConfig.padding6),
+                    SizedBox(height: SizeConfig.padding6),
                     TextButton(
                       onPressed: () {
                         BaseUtil.openModalBottomSheet(
@@ -261,13 +265,15 @@ class UpdateDetailsView extends StatelessWidget {
                       },
                       child: Text(
                         "PAUSE SUBSCRIPTION",
-                        style: TextStyles.body1.colour(Colors.grey).light,
+                        style: TextStyles.body2
+                            .colour(UiConstants.tertiarySolid)
+                            .light,
                       ),
                     ),
                     SizedBox(
                       height: SizeConfig.viewInsets.bottom != 0
                           ? 0
-                          : SizeConfig.padding6,
+                          : SizeConfig.padding12,
                     ),
                   ],
                 ),
@@ -277,22 +283,67 @@ class UpdateDetailsView extends StatelessWidget {
       ],
     );
   }
+}
 
-  amountchips(int amount, UserAutoPayDetailsViewModel model) {
+class AmountChips extends StatelessWidget {
+  final model;
+  final int amount;
+  final bool isBestSeller;
+  AmountChips({
+    this.model,
+    this.amount,
+    this.isBestSeller = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
         model.amountFieldController.text = amount.toString();
         model.onAmountValueChanged(amount.toString());
       },
-      child: Chip(
-          labelPadding: EdgeInsets.symmetric(
-            horizontal: SizeConfig.padding12,
-            vertical: SizeConfig.padding4,
+      child: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(
+                vertical: SizeConfig.padding8,
+                horizontal: SizeConfig.padding12),
+            decoration: BoxDecoration(
+              border: Border.all(
+                  color: isBestSeller
+                      ? UiConstants.primaryColor
+                      : UiConstants.primaryLight.withOpacity(0.5),
+                  width: 0.5),
+              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+              color: UiConstants.primaryLight.withOpacity(0.5),
+            ),
+            alignment: Alignment.center,
+            child: Text(
+              " ₹ ${amount.toInt()} ",
+              style: TextStyles.body3.bold,
+            ),
           ),
-          label: Text(
-            "₹ ${amount.toString()}",
-            style: TextStyles.body3,
-          )),
+          if (isBestSeller)
+            Transform.translate(
+              offset: Offset(0, -SizeConfig.padding8),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: UiConstants.primaryColor,
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+                ),
+                padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.padding6,
+                    vertical: SizeConfig.padding4),
+                child: Text(
+                  'BEST',
+                  style: TextStyles.body5.bold
+                      .colour(Colors.white)
+                      .letterSpace(SizeConfig.padding2),
+                ),
+              ),
+            )
+        ],
+      ),
     );
   }
 }
@@ -436,7 +487,8 @@ class DetailsView extends StatelessWidget {
                                           child: Row(
                                             children: [
                                               Text(
-                                                model.activeSubscription.vpa,
+                                                model.activeSubscription.vpa ??
+                                                    "Ille",
                                                 style: TextStyles.body1.bold,
                                               ),
                                               SizedBox(
@@ -708,16 +760,20 @@ class _PauseAutoPayModalState extends State<PauseAutoPayModal> {
           ),
           SizedBox(height: SizeConfig.padding8),
           pauseOptionTile(
-            text: "Today",
+            text: "1 Week",
             radioValue: 1,
           ),
           pauseOptionTile(
-            text: "2 Days",
+            text: "2 Week",
             radioValue: 2,
           ),
           pauseOptionTile(
-            text: "5 Days",
+            text: "1 Month",
             radioValue: 3,
+          ),
+          pauseOptionTile(
+            text: "Forever",
+            radioValue: 4,
           ),
           SizedBox(height: SizeConfig.padding16),
           FelloButtonLg(

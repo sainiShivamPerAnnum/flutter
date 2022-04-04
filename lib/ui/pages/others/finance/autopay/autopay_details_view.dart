@@ -20,47 +20,87 @@ class AutoPayDetailsView extends StatefulWidget {
   State<AutoPayDetailsView> createState() => _AutoPayDetailsViewState();
 }
 
-class _AutoPayDetailsViewState extends State<AutoPayDetailsView> {
-  final PageController autopayPageController =
-      new PageController(viewportFraction: 0.9, initialPage: 0);
+class _AutoPayDetailsViewState extends State<AutoPayDetailsView>
+    with SingleTickerProviderStateMixin {
+  PageController autopayPageController;
+  double usedHeight = (SizeConfig.screenHeight -
+      SizeConfig.viewInsets.top +
+      SizeConfig.padding24 +
+      SizeConfig.avatarRadius * 2);
   int _currentPage = 0;
   Timer _timer;
-
+  ValueNotifier<double> _pageNotifier;
   double bgOpacity = 0;
   double fgOpacity = 1;
-  double initialPos = 0.7;
-  double maxPos = 1;
-  updateUI(double position) {
-    double completePath = position - initialPos;
-    double totalLength = maxPos - initialPos;
-    double pcntComplete = (completePath / totalLength);
-    setState(() {
-      bgOpacity = pcntComplete;
-      fgOpacity = 1 - bgOpacity;
-      print(bgOpacity);
-    });
-  }
+  // double initialPos = SizeConfig.screenHeight - SizeConfig.viewInsets.top;
+  // double maxPos = 1;
+  double animValue = 0;
+
+  AnimationController controller;
+  Animation benifitAnimation;
+  // updateUI(double position) {
+  //   double completePath = position - initialPos;
+  //   double totalLength = maxPos - initialPos;
+  //   double pcntComplete = (completePath / totalLength);
+  //   setState(() {
+  //     bgOpacity = pcntComplete;
+  //     fgOpacity = 1 - bgOpacity;
+  //     print(bgOpacity);
+  //   });
+  // }
+
+  List<String> benifits = [
+    "Savings on autopilot (Your money gets saved into digital gold automatically)",
+    "Highly safe and secure( Your money is contantly being monitored by government)",
+    "Gaming never stops (Never run out of Fello tokens while playing)"
+  ];
+
+  List<String> assets = [
+    "https://firebasestorage.googleapis.com/v0/b/fello-dev-station.appspot.com/o/test%2Fautopay%20benifits%2Fpoc.png?alt=media&token=7aeded8a-2013-497a-8669-d53527620047",
+    "https://firebasestorage.googleapis.com/v0/b/fello-dev-station.appspot.com/o/test%2Fautopay%20benifits%2FMask%20group.png?alt=media&token=e24c660f-0efd-4c0c-9fca-2df2d09fe1da",
+    "https://firebasestorage.googleapis.com/v0/b/fello-dev-station.appspot.com/o/test%2Fautopay%20benifits%2Fnphc.png?alt=media&token=f5d08fdc-4027-4ab7-a1b2-a5e74edbb92a"
+  ];
 
   @override
   void initState() {
+    autopayPageController = new PageController(initialPage: 0);
+    autopayPageController.addListener(_pageListener);
+    _pageNotifier = ValueNotifier(0.0);
     _timer = Timer.periodic(Duration(seconds: 4), (Timer timer) {
       if (_currentPage < 2) {
         _currentPage++;
       } else {
         _currentPage = 0;
       }
-
+      setState(() {
+        animValue = animValue == 0 ? 1 : 0;
+      });
+      print("Anim value: $animValue");
       autopayPageController.animateToPage(
         _currentPage,
         duration: Duration(milliseconds: 600),
         curve: Curves.easeIn,
       );
     });
+    controller =
+        AnimationController(vsync: this, duration: Duration(seconds: 1));
+    benifitAnimation = Tween<double>(begin: 0, end: 1).animate(controller);
+    controller.forward().whenComplete(() {
+      controller.reverse();
+    });
     super.initState();
+  }
+
+  void _pageListener() {
+    _pageNotifier.value = autopayPageController.page;
   }
 
   @override
   void dispose() {
+    autopayPageController.removeListener(_pageListener);
+    autopayPageController.dispose();
+    controller.dispose();
+
     _timer?.cancel();
     super.dispose();
   }
@@ -73,15 +113,15 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView> {
         color: Color(0xffe7f5e8),
         child: Stack(
           children: [
-            AnimatedOpacity(
-              opacity: bgOpacity,
-              duration: Duration(seconds: 0),
-              child: Container(
-                height: SizeConfig.screenHeight,
-                width: SizeConfig.screenWidth,
-                color: UiConstants.primaryColor,
-              ),
-            ),
+            // AnimatedOpacity(
+            //   opacity: bgOpacity,
+            //   duration: Duration(seconds: 0),
+            //   child: Container(
+            //     height: SizeConfig.screenHeight,
+            //     width: SizeConfig.screenWidth,
+            //     color: UiConstants.primaryColor,
+            //   ),
+            // ),
             Positioned(
               top: 0,
               child: Image.asset(
@@ -103,285 +143,339 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView> {
               ),
             ),
             Positioned(
-              top: SizeConfig.viewInsets.top +
-                  SizeConfig.avatarRadius * 2 +
-                  SizeConfig.padding64,
-              child: SvgPicture.asset(
-                "assets/vectors/moneyplant.svg",
-                width: SizeConfig.screenWidth,
+              bottom: usedHeight * 0.48,
+              child: AnimatedOpacity(
+                curve: Curves.decelerate,
+                duration: Duration(milliseconds: 600),
+                opacity: animValue,
+                child: AnimatedContainer(
+                  margin: EdgeInsets.symmetric(vertical: SizeConfig.padding24),
+                  alignment: Alignment.topCenter,
+                  curve: Curves.decelerate,
+                  duration: Duration(milliseconds: 600),
+                  height: (SizeConfig.screenHeight -
+                          SizeConfig.viewInsets.top +
+                          SizeConfig.padding24 +
+                          SizeConfig.avatarRadius * 2) *
+                      0.32 *
+                      animValue,
+                  width: SizeConfig.screenWidth,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: NetworkImage(assets[2]), fit: BoxFit.contain),
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: usedHeight * 0.5,
+              child: AnimatedOpacity(
+                curve: Curves.decelerate,
+                duration: Duration(milliseconds: 600),
+                opacity: (animValue - 1).abs(),
+                child: AnimatedContainer(
+                  margin: EdgeInsets.symmetric(vertical: SizeConfig.padding24),
+                  alignment: Alignment.topCenter,
+                  curve: Curves.decelerate,
+                  duration: Duration(milliseconds: 600),
+                  height: (SizeConfig.screenHeight -
+                          SizeConfig.viewInsets.top +
+                          SizeConfig.padding24 +
+                          SizeConfig.avatarRadius * 2) *
+                      0.32 *
+                      (animValue - 1).abs(),
+                  width: SizeConfig.screenWidth,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: NetworkImage(assets[1]), fit: BoxFit.contain),
+                  ),
+                ),
               ),
             ),
             Positioned(
               top: SizeConfig.viewInsets.top +
                   SizeConfig.padding12 +
                   SizeConfig.avatarRadius,
-              child: AnimatedOpacity(
-                opacity: fgOpacity,
-                duration: Duration(milliseconds: 0),
-                curve: Curves.easeIn,
-                child: Container(
-                  width: SizeConfig.screenWidth,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "INTRODUCING",
-                        style: TextStyles.body3.colour(Colors.black45),
-                      ),
-                      SizedBox(
-                        height: SizeConfig.padding8,
-                      ),
-                      Text(
-                        "UPI AUTOPAY",
-                        style: TextStyles.title1.bold,
-                      )
-                    ],
-                  ),
+              child: Container(
+                width: SizeConfig.screenWidth,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "INTRODUCING",
+                      style: TextStyles.body3.colour(Colors.black45),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding8,
+                    ),
+                    Text(
+                      "UPI AUTOPAY",
+                      style: TextStyles.title1.bold,
+                    )
+                  ],
                 ),
               ),
             ),
             FelloAppBar(leading: FelloAppBarBackButton()),
-            NotificationListener<DraggableScrollableNotification>(
-              onNotification: (notification) {
-                //  print("${notification.extent}");
-                updateUI(notification.extent);
-                return true;
-              },
-              child: DraggableScrollableSheet(
-                initialChildSize: initialPos,
-                minChildSize: initialPos,
-                maxChildSize: maxPos,
-                builder: (BuildContext context,
-                    ScrollController myScrollController) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(SizeConfig.roundness32),
-                        topRight: Radius.circular(SizeConfig.roundness32),
-                      ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                height: usedHeight * 0.54,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(SizeConfig.roundness32),
+                      topRight: Radius.circular(SizeConfig.roundness32),
                     ),
-                    margin: EdgeInsets.only(
-                        top: SizeConfig.viewInsets.top +
-                            SizeConfig.padding24 +
-                            SizeConfig.avatarRadius * 2),
-                    padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.pageHorizontalMargins),
-                    child: Column(
-                      children: [
-                        Transform.translate(
-                          offset: Offset(0, 5),
-                          child: Container(
-                            child: Column(
-                              children: [
-                                SizedBox(height: 10),
-                                ScrollHandle(),
-                              ],
+                  ),
+                  padding: EdgeInsets.symmetric(
+                      vertical: SizeConfig.padding16,
+                      horizontal: SizeConfig.pageHorizontalMargins),
+                  child: Column(
+                    children: [
+                      // Transform.translate(
+                      //   offset: Offset(0, 5),
+                      //   child: Container(
+                      //     child: Column(
+                      //       children: [
+                      //         SizedBox(height: 10),
+                      //         ScrollHandle(),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Container(
+                              width: SizeConfig.screenWidth -
+                                  SizeConfig.pageHorizontalMargins * 2,
+                              height: SizeConfig.padding64,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: SizeConfig.pageHorizontalMargins),
+                              child: PageView.builder(
+                                physics: NeverScrollableScrollPhysics(),
+                                controller: autopayPageController,
+                                scrollDirection: Axis.vertical,
+                                itemCount: 3,
+                                itemBuilder: (ctx, i) {
+                                  return Container(
+                                    alignment: Alignment.center,
+                                    height: SizeConfig.padding64,
+                                    child: Text(
+                                      benifits[i],
+                                      style: TextStyles.body2,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
-                          ),
-                        ),
-                        Expanded(
-                          child: NotificationListener<
-                              OverscrollIndicatorNotification>(
-                            onNotification: (notification) {
-                              notification.disallowGlow();
-                              return;
-                            },
-                            child: ListView(
-                              controller: myScrollController,
-                              physics: ClampingScrollPhysics(),
-                              children: [
-                                Text(
-                                  "Setup UPI AutoPay and we'll automagically save for you. You just grab a beer and chill!!",
-                                  style: TextStyles.body3.light.italic,
-                                  textAlign: TextAlign.center,
-                                ),
-                                Container(
-                                  height: SizeConfig.screenWidth * 0.6,
-                                  margin: EdgeInsets.symmetric(
-                                      vertical: SizeConfig.padding24),
-                                  child: PageView.builder(
-                                    controller: autopayPageController,
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: 4,
-                                    itemBuilder: (ctx, i) {
-                                      return Column(
-                                        children: [
-                                          Container(
-                                            height: SizeConfig.screenWidth / 2,
-                                            width: SizeConfig.screenWidth / 2,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: UiConstants.primaryLight,
-                                            ),
-                                          ),
-                                          Spacer(),
-                                          Text("$i asset. lorem ipsum")
-                                        ],
-                                      );
-                                    },
+                            ValueListenableBuilder(
+                                valueListenable: _pageNotifier,
+                                builder: (context, double value, child) {
+                                  return Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      TabPageSelectorIndicator(
+                                        backgroundColor: value == 0.0
+                                            ? UiConstants.primaryColor
+                                            : Colors.grey[400],
+                                        borderColor: Colors.white,
+                                        size: SizeConfig.padding8,
+                                      ),
+                                      TabPageSelectorIndicator(
+                                        backgroundColor: value == 1.0
+                                            ? UiConstants.primaryColor
+                                            : Colors.grey[400],
+                                        borderColor: Colors.white,
+                                        size: SizeConfig.padding8,
+                                      ),
+                                      TabPageSelectorIndicator(
+                                        backgroundColor: value == 2.0
+                                            ? UiConstants.primaryColor
+                                            : Colors.grey[400],
+                                        borderColor: Colors.white,
+                                        size: SizeConfig.padding8,
+                                      ),
+                                    ],
+                                  );
+                                }),
+                            Divider(),
+                            // Text(
+                            //   "Setup UPI AutoPay and we'll automagically save for you. You just grab a beer and chill!!",
+                            //   style: TextStyles.body3.light.italic,
+                            //   textAlign: TextAlign.center,
+                            // ),
+                            // Row(
+                            //   children: [
+                            //     Expanded(
+                            //       child: Container(
+                            //         width: SizeConfig.screenWidth * 0.422,
+                            //         height: SizeConfig.screenWidth * 0.144,
+                            //         decoration: BoxDecoration(
+                            //           borderRadius: BorderRadius.circular(
+                            //               SizeConfig.roundness12),
+                            //           color: UiConstants.scaffoldColor,
+                            //         ),
+                            //         alignment: Alignment.center,
+                            //         child: Text(
+                            //           "How to set it up",
+                            //           style: TextStyles.body2
+                            //               .colour(Colors.grey),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //     SizedBox(width: SizeConfig.padding12),
+                            //     Expanded(
+                            //       child: Container(
+                            //         width: SizeConfig.screenWidth * 0.422,
+                            //         height: SizeConfig.screenWidth * 0.144,
+                            //         decoration: BoxDecoration(
+                            //           borderRadius: BorderRadius.circular(
+                            //               SizeConfig.roundness12),
+                            //           color: UiConstants.primaryColor,
+                            //         ),
+                            //         alignment: Alignment.center,
+                            //         child: Text(
+                            //           "Benefits you get",
+                            //           style: TextStyles.body2
+                            //               .colour(Colors.white),
+                            //         ),
+                            //       ),
+                            //     )
+                            //   ],
+                            // ),
+                            // SizedBox(height: SizeConfig.padding32),
+                            Expanded(
+                              child: ListView(
+                                padding: EdgeInsets.zero,
+                                children: [
+                                  Text(
+                                    "Set up UPI Autopay in 3 easy Steps:",
+                                    style: TextStyles.title4.bold,
                                   ),
-                                ),
-                                // Row(
-                                //   children: [
-                                //     Expanded(
-                                //       child: Container(
-                                //         width: SizeConfig.screenWidth * 0.422,
-                                //         height: SizeConfig.screenWidth * 0.144,
-                                //         decoration: BoxDecoration(
-                                //           borderRadius: BorderRadius.circular(
-                                //               SizeConfig.roundness12),
-                                //           color: UiConstants.scaffoldColor,
-                                //         ),
-                                //         alignment: Alignment.center,
-                                //         child: Text(
-                                //           "How to set it up",
-                                //           style: TextStyles.body2
-                                //               .colour(Colors.grey),
-                                //         ),
-                                //       ),
-                                //     ),
-                                //     SizedBox(width: SizeConfig.padding12),
-                                //     Expanded(
-                                //       child: Container(
-                                //         width: SizeConfig.screenWidth * 0.422,
-                                //         height: SizeConfig.screenWidth * 0.144,
-                                //         decoration: BoxDecoration(
-                                //           borderRadius: BorderRadius.circular(
-                                //               SizeConfig.roundness12),
-                                //           color: UiConstants.primaryColor,
-                                //         ),
-                                //         alignment: Alignment.center,
-                                //         child: Text(
-                                //           "Benefits you get",
-                                //           style: TextStyles.body2
-                                //               .colour(Colors.white),
-                                //         ),
-                                //       ),
-                                //     )
-                                //   ],
-                                // ),
-                                //SizedBox(height: SizeConfig.padding32),
-                                // Text(
-                                //   "Set up UPI Autopay in 3 easy Steps:",
-                                //   style: TextStyles.title4.bold,
-                                // ),
-                                // SizedBox(height: SizeConfig.padding12),
-                                // InfoTile(
-                                //   png: "assets/images/icons/bank.png",
-                                //   title: "Enter your UPI Id",
-                                //   subtitle:
-                                //       "Make sure your bank supports autopay",
-                                // ),
-                                // InfoTile(
-                                //   svg: "assets/vectors/check.svg",
-                                //   title:
-                                //       "Open the UPI app and approve the request",
-                                //   subtitle:
-                                //       "Check you PENDING upi transactions for this request",
-                                // ),
-                                // InfoTile(
-                                //   svg: Assets.wmtsaveMoney,
-                                //   title: "Set a daily saving amount",
-                                //   subtitle: "You can change it anytime",
-                                // ),
-
-                                Container(
-                                  alignment: Alignment.center,
-                                  margin: EdgeInsets.symmetric(
-                                      vertical: SizeConfig.padding16),
-                                  child: Container(
+                                  SizedBox(height: SizeConfig.padding12),
+                                  InfoTile(
+                                    png: "assets/images/icons/bank.png",
+                                    title: "Enter your UPI Id",
+                                    subtitle:
+                                        "Make sure your bank supports autopay",
+                                  ),
+                                  InfoTile(
+                                    svg: "assets/vectors/check.svg",
+                                    title:
+                                        "Open the UPI app and approve the request",
+                                    subtitle:
+                                        "Check you PENDING upi transactions for this request",
+                                  ),
+                                  InfoTile(
+                                    svg: Assets.wmtsaveMoney,
+                                    title: "Set a daily saving amount",
+                                    subtitle: "You can change it anytime",
+                                  ),
+                                  Container(
+                                    alignment: Alignment.center,
+                                    margin: EdgeInsets.symmetric(
+                                        vertical: SizeConfig.padding16),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                            width: 0.8,
+                                            color: UiConstants.primaryColor),
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                      ),
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal:
+                                            SizeConfig.pageHorizontalMargins,
+                                        vertical: SizeConfig.padding4,
+                                      ),
+                                      child: TextButton(
+                                        onPressed: () {
+                                          AppState.delegate.parseRoute(
+                                              Uri.parse('/AppWalkthrough'));
+                                        },
+                                        child: Text(
+                                          "See example",
+                                          style: TextStyles.body1
+                                              .colour(UiConstants.primaryColor),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.symmetric(
+                                        vertical:
+                                            SizeConfig.pageHorizontalMargins /
+                                                2),
                                     decoration: BoxDecoration(
-                                      border: Border.all(
-                                          width: 0.8,
-                                          color: UiConstants.primaryColor),
-                                      borderRadius: BorderRadius.circular(100),
+                                      color: UiConstants.scaffoldColor,
+                                      borderRadius: BorderRadius.circular(
+                                          SizeConfig.roundness32),
                                     ),
                                     padding: EdgeInsets.symmetric(
-                                      horizontal:
-                                          SizeConfig.pageHorizontalMargins,
-                                      vertical: SizeConfig.padding4,
+                                        vertical: SizeConfig.padding20,
+                                        horizontal: SizeConfig.padding16),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(height: SizeConfig.padding6),
+                                        Text(" Why UPI AutoPay",
+                                            style: TextStyles.title4.bold),
+                                        SizedBox(height: SizeConfig.padding20),
+                                        FeatureTile(
+                                          leadingAsset:
+                                              "assets/vectors/ontime.svg",
+                                          title: "Always on time",
+                                          subtitle:
+                                              "No worries about making timely investments",
+                                          color: Colors.white,
+                                        ),
+                                        SizedBox(height: SizeConfig.padding12),
+                                        FeatureTile(
+                                          leadingAsset:
+                                              "assets/vectors/moneys.svg",
+                                          title: "Get tokens on the go",
+                                          subtitle:
+                                              "Get free tokens everyday with the investment",
+                                          color: Colors.white,
+                                        ),
+                                        SizedBox(height: SizeConfig.padding12),
+                                        FeatureTile(
+                                          leadingAsset:
+                                              "assets/vectors/easy.svg",
+                                          title: "Easy Set up",
+                                          subtitle:
+                                              "Takes less than 1 minute with no paperwork",
+                                          color: Colors.white,
+                                        ),
+                                        SizedBox(height: SizeConfig.padding12),
+                                        FeatureTile(
+                                          leadingAsset:
+                                              "assets/vectors/gear.svg",
+                                          title: "Customised Options",
+                                          subtitle:
+                                              "You can Update or Cancel UPI Autopay anytime ",
+                                          color: Colors.white,
+                                        )
+                                      ],
                                     ),
-                                    child: TextButton(
-                                      onPressed: () {
-                                        AppState.delegate.parseRoute(
-                                            Uri.parse('/AppWalkthrough'));
-                                      },
-                                      child: Text(
-                                        "How to setup UPI Autopay",
-                                        style: TextStyles.body1
-                                            .colour(UiConstants.primaryColor),
-                                      ),
-                                    ),
                                   ),
-                                ),
-                                Container(
-                                  margin: EdgeInsets.symmetric(
-                                      vertical:
-                                          SizeConfig.pageHorizontalMargins / 2),
-                                  decoration: BoxDecoration(
-                                    color: UiConstants.scaffoldColor,
-                                    borderRadius: BorderRadius.circular(
-                                        SizeConfig.roundness32),
-                                  ),
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: SizeConfig.padding20,
-                                      horizontal: SizeConfig.padding16),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(height: SizeConfig.padding6),
-                                      Text(" Why UPI AutoPay",
-                                          style: TextStyles.title4.bold),
-                                      SizedBox(height: SizeConfig.padding20),
-                                      FeatureTile(
-                                        leadingAsset:
-                                            "assets/vectors/ontime.svg",
-                                        title: "Always on time",
-                                        subtitle:
-                                            "No worries about making timely investments",
-                                        color: Colors.white,
-                                      ),
-                                      SizedBox(height: SizeConfig.padding12),
-                                      FeatureTile(
-                                        leadingAsset:
-                                            "assets/vectors/moneys.svg",
-                                        title: "Get tokens on the go",
-                                        subtitle:
-                                            "Get free tokens everyday with the investment",
-                                        color: Colors.white,
-                                      ),
-                                      SizedBox(height: SizeConfig.padding12),
-                                      FeatureTile(
-                                        leadingAsset: "assets/vectors/easy.svg",
-                                        title: "Easy Set up",
-                                        subtitle:
-                                            "Takes less than 1 minute with no paperwork",
-                                        color: Colors.white,
-                                      ),
-                                      SizedBox(height: SizeConfig.padding12),
-                                      FeatureTile(
-                                        leadingAsset: "assets/vectors/gear.svg",
-                                        title: "Customised Options",
-                                        subtitle:
-                                            "You can Update or Cancel UPI Autopay anytime ",
-                                        color: Colors.white,
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: SizeConfig.navBarHeight * 1.6,
-                                )
-                              ],
+                                  SizedBox(
+                                    height: SizeConfig.navBarHeight * 1.6,
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
+                          ],
                         ),
-                      ],
-                    ),
-                  );
-                },
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
             Align(
@@ -427,25 +521,25 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView> {
   }
 }
 
-class ScrollHandle extends StatelessWidget {
-  const ScrollHandle({
-    Key key,
-  }) : super(key: key);
+// class ScrollHandle extends StatelessWidget {
+//   const ScrollHandle({
+//     Key key,
+//   }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        height: 5,
-        width: 40,
-        decoration: BoxDecoration(
-          color: Colors.grey[300],
-          borderRadius: BorderRadius.circular(16),
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Center(
+//       child: Container(
+//         height: 5,
+//         width: 40,
+//         decoration: BoxDecoration(
+//           color: Colors.grey[300],
+//           borderRadius: BorderRadius.circular(16),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class MyCustomClipper extends CustomClipper<Path> {
   @override

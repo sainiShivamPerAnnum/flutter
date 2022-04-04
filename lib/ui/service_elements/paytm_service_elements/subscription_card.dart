@@ -5,6 +5,7 @@ import 'package:felloapp/core/model/subscription_models/active_subscription_mode
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -39,9 +40,17 @@ class _AutoPayCardState extends State<AutoPayCard> {
                 //color: Colors.white,
                 borderRadius: BorderRadius.circular(SizeConfig.roundness24),
               ),
-              padding: EdgeInsets.only(left: SizeConfig.pageHorizontalMargins),
               child: Stack(
                 children: [
+                  Opacity(
+                    opacity: 0.06,
+                    child: Image.asset(
+                      Assets.whiteRays,
+                      fit: BoxFit.cover,
+                      width: SizeConfig.screenWidth -
+                          SizeConfig.pageHorizontalMargins * 2,
+                    ),
+                  ),
                   Positioned(
                     bottom: 0,
                     right: SizeConfig.padding16,
@@ -52,6 +61,7 @@ class _AutoPayCardState extends State<AutoPayCard> {
                   ),
                   Row(
                     children: [
+                      SizedBox(width: SizeConfig.pageHorizontalMargins),
                       Expanded(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -230,6 +240,7 @@ class _AutoPayCardState extends State<AutoPayCard> {
     if (subscription == null) {
       AppState.delegate.appState.currentAction = PageAction(
           page: AutoPayProcessViewPageConfig, state: PageState.addPage);
+      // _paytmService.initiateSubscription();
     } else {
       if (subscription.status == Constants.SUBSCRIPTION_ACTIVE) {
         {
@@ -245,7 +256,6 @@ class _AutoPayCardState extends State<AutoPayCard> {
           bool response =
               await _paytmService.resumeDailySubscription(subscription.subId);
           if (response) {
-            await _paytmService.getActiveSubscriptionDetails();
             BaseUtil.showPositiveAlert("Subscription resumed",
                 "Now you are back to your savings journey");
           } else

@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
@@ -17,6 +18,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 
 class AutoPayProcessView extends StatefulWidget {
   const AutoPayProcessView({Key key}) : super(key: key);
@@ -88,10 +90,8 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
           style: TextStyles.body2.colour(Colors.black26).letterSpace(3),
         ),
         SizedBox(height: SizeConfig.padding24),
-        Lottie.asset(
-          "assets/lotties/pending.json",
-          height: SizeConfig.screenWidth * 0.2,
-        ),
+        Lottie.asset("assets/lotties/pending.json",
+            height: SizeConfig.screenWidth * 0.2, repeat: false),
         SizedBox(height: SizeConfig.padding24),
         Text(
           "Complete Payment",
@@ -100,60 +100,72 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
         ),
         SizedBox(height: SizeConfig.padding8),
         Container(
-          height: SizeConfig.screenWidth * 0.25,
-          decoration: BoxDecoration(
-            color: UiConstants.tertiaryLight,
-            borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-          ),
           margin:
               EdgeInsets.symmetric(vertical: SizeConfig.pageHorizontalMargins),
-          padding: EdgeInsets.all(SizeConfig.padding24),
-          child: Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: UiConstants.tertiarySolid.withOpacity(0.2),
-                radius: SizeConfig.screenWidth * 0.067,
-                child: SvgPicture.asset(
-                  "assets/vectors/icons/upi.svg",
-                  height: SizeConfig.screenWidth * 0.067,
-                  // width: SizeConfig.padding64,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+            child: Shimmer(
+              color: UiConstants.tertiarySolid,
+              colorOpacity: 0.2,
+              enabled: true,
+              interval: Duration(seconds: 2),
+              child: Container(
+                height: SizeConfig.screenWidth * 0.25,
+                decoration: BoxDecoration(
+                  color: UiConstants.tertiaryLight,
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness16),
                 ),
-              ),
-              SizedBox(
-                width: SizeConfig.padding12,
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
+                padding: EdgeInsets.all(SizeConfig.padding24),
+                child: Row(
                   children: [
-                    FittedBox(
-                      child: Row(
+                    CircleAvatar(
+                      backgroundColor:
+                          UiConstants.tertiarySolid.withOpacity(0.2),
+                      radius: SizeConfig.screenWidth * 0.067,
+                      child: SvgPicture.asset(
+                        "assets/vectors/icons/upi.svg",
+                        height: SizeConfig.screenWidth * 0.067,
+                        // width: SizeConfig.padding64,
+                      ),
+                    ),
+                    SizedBox(
+                      width: SizeConfig.padding12,
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
-                            model.vpaController.text.trim(),
-                            style: TextStyles.body1.bold,
+                          FittedBox(
+                            child: Row(
+                              children: [
+                                Text(
+                                  model.vpaController.text.trim(),
+                                  style: TextStyles.body1.bold,
+                                ),
+                                SizedBox(width: SizeConfig.padding4),
+                                SvgPicture.asset(
+                                  "assets/vectors/check.svg",
+                                  height: SizeConfig.iconSize1,
+                                  // width: SizeConfig.padding64,
+                                ),
+                              ],
+                            ),
                           ),
-                          SizedBox(width: SizeConfig.padding4),
-                          SvgPicture.asset(
-                            "assets/vectors/check.svg",
-                            height: SizeConfig.iconSize1,
-                            // width: SizeConfig.padding64,
-                          ),
+                          SizedBox(height: SizeConfig.padding4),
+                          FittedBox(
+                            child: Text(
+                              "Entered UPI Address",
+                              style: TextStyles.body3.colour(Colors.grey),
+                            ),
+                          )
                         ],
                       ),
                     ),
-                    SizedBox(height: SizeConfig.padding4),
-                    FittedBox(
-                      child: Text(
-                        "Entered UPI Address",
-                        style: TextStyles.body3.colour(Colors.grey),
-                      ),
-                    )
                   ],
                 ),
               ),
-            ],
+            ),
           ),
         ),
         Row(
@@ -538,17 +550,21 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
               ),
               Container(
                 width: SizeConfig.screenWidth,
-                child: Wrap(
-                  runSpacing: SizeConfig.padding8,
-                  spacing: SizeConfig.padding12,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    amountchips(10, model),
-                    amountchips(50, model),
-                    amountchips(100, model),
-                    amountchips(250, model),
-                    amountchips(500, model),
-                    amountchips(750, model),
-                    amountchips(1000, model),
+                    AmountChips(amount: 100, model: model),
+                    AmountChips(
+                        amount: 250,
+                        model: model,
+                        isBestSeller: model.isDaily ? true : false),
+                    AmountChips(
+                        amount: 500,
+                        model: model,
+                        isBestSeller: !model.isDaily ? true : false),
+                    AmountChips(amount: 1000, model: model),
+                    AmountChips(amount: 5000, model: model),
                   ],
                 ),
               ),
