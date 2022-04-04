@@ -64,13 +64,19 @@ class UserRepository {
     }
   }
 
-  Future<ApiResponse> updateUserAppFlyer(String uid) async {
+  Future<ApiResponse> updateUserAppFlyer(BaseUser user) async {
     try {
+      final id = await _appflyerService.appFlyerId;
+
+      if (user.appFlyerId == id) {
+        return ApiResponse(code: 200);
+      }
+
       final body = {
-        'uid': uid,
-        'appFlyerId': await _appflyerService.appFlyerId,
+        'uid': user.uid,
+        'appFlyerId': id,
       };
-      await APIService.instance.patchData(
+      await APIService.instance.putData(
         _apiPaths.kUpdateUserAppflyer,
         body: body,
       );

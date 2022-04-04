@@ -419,10 +419,7 @@ class LoginControllerViewModel extends BaseModel {
       await BaseAnalytics.analytics.logLogin(loginMethod: 'phonenumber');
       logger.d("User details available: Name: " + user.model.name);
       userService.baseUser = user.model;
-
-      if (user.model.appFlyerId == null) {
-        _userRepo.updateUserAppFlyer(user.model.uid);
-      }
+      _userRepo.updateUserAppFlyer(user.model);
 
       _onSignUpComplete();
     }

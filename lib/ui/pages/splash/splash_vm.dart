@@ -59,9 +59,7 @@ class LauncherViewModel extends BaseModel {
   initLogic() async {
     try {
       await userService.init();
-      if (userService.baseUser.appFlyerId == null) {
-        _userRepo.updateUserAppFlyer(userService.baseUser.uid);
-      }
+      _userRepo.updateUserAppFlyer(userService.baseUser);
 
       await Future.wait([_baseUtil.init(), _fcmListener.setupFcm()]);
 
