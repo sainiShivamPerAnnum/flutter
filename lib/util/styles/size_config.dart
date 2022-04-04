@@ -7,6 +7,7 @@ class SizeConfig {
   // dimens
   static double screenWidth;
   static double screenHeight;
+  static double safeScreenHeight;
 
   static double pixelRatio;
   static double textScaleFactor;
@@ -32,6 +33,9 @@ class SizeConfig {
     _mediaQueryData = MediaQuery.of(context);
     screenWidth = _mediaQueryData.size.width;
     screenHeight = _mediaQueryData.size.height;
+    safeScreenHeight = _mediaQueryData.size.height -
+        _mediaQueryData.padding.top -
+        _mediaQueryData.padding.bottom;
     pixelRatio = _mediaQueryData.devicePixelRatio;
     textScaleFactor = _mediaQueryData.textScaleFactor;
     viewInsets = _mediaQueryData.padding;
@@ -96,6 +100,11 @@ class SizeConfig {
   static double get roundness32 => screenWidth * 0.077; //32
   static double get roundness40 => screenWidth * 0.096; //40
   static double get roundness56 => screenWidth * 0.135; //56
+
+  static BorderRadius get scaffoldRoundness => BorderRadius.only(
+        topLeft: Radius.circular(SizeConfig.padding40),
+        topRight: Radius.circular(SizeConfig.padding40),
+      );
 
   //SPECIFIC
 

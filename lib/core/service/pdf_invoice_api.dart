@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:felloapp/core/model/invoice_model.dart';
 import 'package:felloapp/core/service/pdf_api.dart';
-import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 // import 'package:flutter/material.dart' as mt show NetworkImage;

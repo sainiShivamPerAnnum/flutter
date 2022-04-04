@@ -1,17 +1,21 @@
-import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/dialogs/transaction_details_dialog.dart';
 import 'package:felloapp/ui/pages/others/profile/transactions_history/transaction_history_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-
-import 'package:provider/provider.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class TransactionsHistory extends StatelessWidget {
   @override
@@ -23,66 +27,155 @@ class TransactionsHistory extends StatelessWidget {
       child: NoTransactionsContent(),
       builder: (ctx, model, child) {
         return Scaffold(
-            body: HomeBackground(
-          child: Column(
-            children: [
-              FelloAppBar(
-                leading: FelloAppBarBackButton(),
-                title: "Transactions History",
-              ),
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(40),
-                      topRight: Radius.circular(40),
-                    ),
-                  ),
-                  child: model.state == ViewState.Busy
-                      ? Center(child: CircularProgressIndicator())
-                      : Container(
-                          padding: EdgeInsets.only(
-                              right: SizeConfig.blockSizeHorizontal * 3),
-                          child: Column(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.only(
-                                    top: SizeConfig.blockSizeVertical * 2),
-                                height: SizeConfig.screenHeight * 0.08,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    FilterOption(
-                                      filterItems: model.tranTypeFilterItems,
-                                      type: TranFilterType.Type,
-                                    ),
-                                    // FilterOption(
-                                    //   filterItems: model.tranSubTypeFilterItems,
-                                    //   type: TranFilterType.Subtype,
-                                    // )
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                child: (model.filteredList.length == 0
-                                    ? child
-                                    : ListView(
-                                        physics: BouncingScrollPhysics(),
-                                        padding: EdgeInsets.all(10),
-                                        controller: model.tranListController,
-                                        children: model.getTxns(),
-                                      )),
-                              ),
-                            ],
-                          ),
-                        ),
+          body: HomeBackground(
+            child: Column(
+              children: [
+                FelloAppBar(
+                  leading: FelloAppBarBackButton(),
+                  title: "Transaction History",
                 ),
-              ),
-            ],
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(40),
+                        topRight: Radius.circular(40),
+                      ),
+                    ),
+                    child: model.state == ViewState.Busy
+                        ? Center(
+                            child: SpinKitWave(
+                              color: UiConstants.primaryColor,
+                              size: SizeConfig.padding32,
+                            ),
+                          )
+                        : Container(
+                            // padding: EdgeInsets.only(
+                            //     right: SizeConfig.blockSizeHorizontal * 3),
+                            child: Column(
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.only(
+                                    top: SizeConfig.pageHorizontalMargins,
+                                  ),
+                                  height: SizeConfig.padding40,
+                                  width: SizeConfig.screenWidth,
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal:
+                                        SizeConfig.pageHorizontalMargins,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: List.generate(
+                                      model.tranTypeFilterItems.length,
+                                      (i) => TranChip(
+                                        chipId: i + 1,
+                                        title: model.tranTypeFilterItems[i],
+                                        model: model,
+                                      ),
+                                    )
+                                    // FilterOption(
+                                    //   filterItems: model.tranTypeFilterItems,
+                                    //   type: TranFilterType.Type,
+                                    // ),
+                                    ,
+                                  ),
+                                ),
+                                SizedBox(
+                                    height:
+                                        SizeConfig.pageHorizontalMargins / 2),
+                                Divider(),
+                                Expanded(
+                                  child: (model.filteredList.length == 0
+                                      ? child
+                                      : ListView(
+                                          physics: BouncingScrollPhysics(),
+                                          padding: EdgeInsets.only(
+                                              left: SizeConfig
+                                                      .pageHorizontalMargins /
+                                                  2,
+                                              right: SizeConfig
+                                                  .pageHorizontalMargins),
+                                          controller: model.tranListController,
+                                          children: List.generate(
+                                            model.filteredList.length,
+                                            (index) => TransactionTile(
+                                              model: model,
+                                              txn: model.filteredList[index],
+                                            ),
+                                          ),
+                                        )),
+                                ),
+                                if (model.isMoreTxnsBeingFetched)
+                                  Container(
+                                    width: SizeConfig.screenWidth,
+                                    padding:
+                                        EdgeInsets.all(SizeConfig.padding12),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        SpinKitWave(
+                                          color: UiConstants.primaryColor,
+                                          size: SizeConfig.padding16,
+                                        ),
+                                        SizedBox(height: SizeConfig.padding4),
+                                        Text(
+                                          "Looking for more transactions, please wait ...",
+                                          style: TextStyles.body4
+                                              .colour(Colors.grey),
+                                        )
+                                      ],
+                                    ),
+                                  )
+                              ],
+                            ),
+                          ),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ));
+        );
       },
+    );
+  }
+}
+
+class TranChip extends StatelessWidget {
+  final TransactionsHistoryViewModel model;
+  final int chipId;
+  final String title;
+
+  TranChip({this.model, this.chipId, this.title});
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        model.filter = chipId;
+        model.filterTransactions(update: true);
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(
+            horizontal: SizeConfig.padding16, vertical: SizeConfig.padding12),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          border: Border.all(width: 0.5, color: UiConstants.primaryColor),
+          color:
+              model.filter == chipId ? UiConstants.primaryColor : Colors.white,
+          borderRadius: BorderRadius.circular(100),
+        ),
+        child: Text(
+          title,
+          style: model.filter == chipId
+              ? TextStyles.body3.bold.colour(Colors.white)
+              : TextStyles.body3.colour(
+                  UiConstants.primaryColor,
+                ),
+        ),
+      ),
     );
   }
 }
@@ -115,50 +208,70 @@ class NoTransactionsContent extends StatelessWidget {
   }
 }
 
-class FilterOption extends StatelessWidget {
-  final Map<String, int> filterItems;
-  final TranFilterType type;
-  FilterOption({this.filterItems, this.type});
-
+class TransactionTile extends StatelessWidget {
+  final TransactionsHistoryViewModel model;
+  final txn;
+  final _txnService = locator<TransactionService>();
+  TransactionTile({
+    @required this.model,
+    this.txn,
+  });
   @override
   Widget build(BuildContext context) {
-    List<DropdownMenuItem> items = [];
-
-    filterItems.forEach((key, value) {
-      items.add(
-        DropdownMenuItem(
-          child: Text(
-            key,
-            style: TextStyle(fontSize: SizeConfig.mediumTextSize),
+    return ListTile(
+      onTap: () {
+        Haptic.vibrate();
+        bool freeBeerStatus = _txnService.getBeerTicketStatus(txn);
+        showDialog(
+            context: AppState.delegate.navigatorKey.currentContext,
+            builder: (BuildContext context) {
+              AppState.screenStack.add(ScreenItem.dialog);
+              return TransactionDetailsDialog(txn, freeBeerStatus);
+            });
+      },
+      dense: true,
+      leading: Container(
+        padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
+        height: SizeConfig.blockSizeVertical * 5,
+        width: SizeConfig.blockSizeVertical * 5,
+        child: _txnService.getTileLead(txn.tranStatus),
+      ),
+      title: Text(
+        _txnService.getTileTitle(
+          txn.subType.toString(),
+        ),
+        style: TextStyle(
+          fontSize: SizeConfig.mediumTextSize,
+        ),
+      ),
+      subtitle: Text(
+        _txnService.getTileSubtitle(txn.type),
+        style: TextStyle(
+          color: _txnService.getTileColor(txn.tranStatus),
+          fontSize: SizeConfig.smallTextSize,
+        ),
+      ),
+      trailing: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Text(
+            _txnService.getFormattedTxnAmount(txn.amount),
+            style: TextStyle(
+              // color: _txnService.getTileColor(txn.tranStatus),
+              fontSize: SizeConfig.mediumTextSize,
+            ),
           ),
-          value: value,
-        ),
-      );
-    });
-
-    return Consumer<TransactionsHistoryViewModel>(builder: (ctx, model, child) {
-      return Container(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        margin:
-            EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
-        decoration: BoxDecoration(
-          border: Border.all(width: 2, color: UiConstants.primaryColor),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: DropdownButtonHideUnderline(
-          child: DropdownButton(
-              value:
-                  type == TranFilterType.Type ? model.filter : model.subFilter,
-              items: items,
-              onChanged: (value) {
-                if (type == TranFilterType.Type)
-                  model.filter = value;
-                else
-                  model.subFilter = value;
-                model.filterTransactions();
-              }),
-        ),
-      );
-    });
+          SizedBox(height: 4),
+          Text(
+            _txnService.getFormattedTime(txn.timestamp),
+            style: TextStyle(
+                // color: _txnService.getTileColor(txn.tranStatus),
+                color: Colors.black45,
+                fontSize: SizeConfig.smallTextSize),
+          )
+        ],
+      ),
+    );
   }
 }

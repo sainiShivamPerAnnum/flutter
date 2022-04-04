@@ -1,0 +1,1 @@
+enum LeaderBoardServiceProperties { CricketLeaderboard, ReferralLeaderboard }

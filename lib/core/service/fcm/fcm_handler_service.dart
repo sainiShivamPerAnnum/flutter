@@ -1,95 +1,80 @@
-import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/fcm_commands_constants.dart';
+import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
-import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
-import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
+import 'package:felloapp/ui/pages/others/games/cricket/cricket_game/cricket_game_vm.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
+import 'package:intl/intl.dart';
+
+enum MsgSource { Foreground, Background, Terminated }
 
 class FcmHandler extends ChangeNotifier {
-  final Logger logger = locator<Logger>();
-  Log log = new Log("FcmHandler");
+  final _logger = locator<CustomLogger>();
+  final _userservice = locator<UserService>();
+
+  final _augmontGoldBuyViewModel = locator<AugmontGoldBuyViewModel>();
+  final _fcmHandlerDataPayloads = locator<FcmHandlerDataPayloads>();
+  final _cricketGameViewModel = locator<CricketGameViewModel>();
+
   ValueChanged<Map> notifListener;
-  String url;
-  int tab;
 
-  Future<bool> handleMessage(Map data) async {
-    logger.d(data.toString());
-    if (data['command'] != null) {
-      String title = data['dialog_title'];
-      String body = data['dialog_body'];
-      String command = data['command'];
+  Future<bool> handleMessage(Map data, MsgSource source) async {
+    _logger.d(
+        "Fcm handler receives on ${DateFormat('yyyy-MM-dd – hh:mm a').format(DateTime.now())} - $data");
+    bool showSnackbar = true;
+    String title = data['dialog_title'];
+    String body = data['dialog_body'];
+    String command = data['command'];
+    String url = data['deep_uri'];
 
-      if (title != null &&
-          title.isNotEmpty &&
-          body != null &&
-          body.isNotEmpty) {
-        logger.d('Recevied message from server: $title $body');
-        Map<String, String> _map = {'title': title, 'body': body};
-        if (this.notifListener != null) this.notifListener(_map);
+    // If notifications contains an url for navigation
+    if (url != null && url.isNotEmpty) {
+      if (source == MsgSource.Background || source == MsgSource.Terminated) {
+        showSnackbar = false;
+        AppState.delegate.parseRoute(Uri.parse(url));
+        return true;
       }
+    }
 
+    // If message has a command payload
+    if (data['command'] != null) {
+      showSnackbar = false;
       switch (command) {
-        case 'cric2020GameEnd':
+        case FcmCommands.DEPOSIT_TRANSACTION_RESPONSE:
           {
-            logger.i("FCM Command received to end Cricket game");
-            //Navigate back to CricketView
-            if (AppState.circGameInProgress) {
-              AppState.circGameInProgress = false;
-              AppState.backButtonDispatcher.didPopRoute();
-              Future.delayed(Duration(milliseconds: 100), () {
-                BaseUtil.openDialog(
-                  addToScreenStack: true,
-                  isBarrierDismissable: true,
-                  hapticVibrate: false,
-                  content: FelloInfoDialog(
-                    showCrossIcon: false,
-                    title: "Game Over",
-                    subtitle:
-                        "Your score is: ${data['game_score']??'Unavailable'}.",
-                    action: Container(
-                      width: SizeConfig.screenWidth,
-                      child: FelloButtonLg(
-                        child: Text(
-                          "OK",
-                          style: TextStyles.body2.bold.colour(Colors.white),
-                        ),
-                        onPressed: () =>
-                            AppState.backButtonDispatcher.didPopRoute(),
-                      ),
-                    ),
-                  ),
-                );
-              });
-            }
+            _augmontGoldBuyViewModel
+                .fcmTransactionResponseUpdate(data['payload']);
           }
+          break;
+        case FcmCommands.COMMAND_CRIC_GAME_END:
+          _cricketGameViewModel.endCricketGame(data);
+          break;
+        case FcmCommands.COMMAND_SHOW_DIALOG:
+          _fcmHandlerDataPayloads.showDialog(title, body);
+          break;
+        case FcmCommands.COMMAND_USER_PRIZE_WIN_2:
+          await _fcmHandlerDataPayloads.userPrizeWinPrompt();
           break;
         default:
       }
     }
 
-    // try {
-    //   url = data["deep_uri"] ?? '';
-    //   print("------------------->" + url);
-    //   if (url.isNotEmpty) {
-    //     AppState().setFcmData = url;
-    //   }
-    //   tab = int.tryParse(data["misc_data"]) ?? 0;
-    // } catch (e) {
-    //   log.error('$e');
-    // }
-
+    // If app is in foreground and needs to show a snackbar
+    if (source == MsgSource.Foreground && showSnackbar == true) {
+      handleNotification(title, body);
+    }
+    _userservice.checkForNewNotifications();
     return true;
   }
 
   Future<bool> handleNotification(String title, String body) async {
-    Map<String, String> _map = {'title': title, 'body': body};
-    if (this.notifListener != null) this.notifListener(_map);
-
+    if (title != null && title.isNotEmpty && body != null && body.isNotEmpty) {
+      Map<String, String> _map = {'title': title, 'body': body};
+      if (this.notifListener != null) this.notifListener(_map);
+    }
     return true;
   }
 

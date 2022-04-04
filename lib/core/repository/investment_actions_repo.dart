@@ -1,35 +1,93 @@
+import 'dart:developer';
+
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/deposit_response_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/rsa_encryption.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class InvestmentActionsRepository {
   final _userService = locator<UserService>();
   final _apiPaths = locator<ApiPath>();
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
+  final _rsaEncryption = new RSAEncryption();
 
-  Future<String> _getBearerToken() async{
+  Future<String> _getBearerToken() async {
     String token = await _userService.firebaseUser.getIdToken();
     _logger.d(token);
 
     return token;
   }
 
+  Future<ApiResponse<Map<String, dynamic>>> getGoldRates() async {
+    _logger.d("GET_GOLD_RATES::API_CALLED");
+
+    try {
+      final String _bearer = await _getBearerToken();
+      final response = await APIService.instance
+          .getData(_apiPaths.kGetGoldRates, token: _bearer);
+      return ApiResponse(model: response, code: 200);
+    } catch (e) {
+      _logger.e(e);
+      return ApiResponse.withError("Unable to fetch rates", 400);
+    }
+  }
+
+  Future<ApiResponse<String>> createTranId({String userUid}) async {
+    Map<String, dynamic> _params = {
+      'uid': userUid,
+    };
+    _logger.d("CreateTranID : $_params");
+
+    try {
+      final String _bearer = await _getBearerToken();
+      final response = await APIService.instance.getData(
+          _apiPaths.kCreateTranId,
+          queryParams: _params,
+          token: _bearer);
+
+      _logger.d(response.toString());
+      String _tranId = response['txnDocRefId'];
+
+      return ApiResponse(model: _tranId, code: 200);
+    } catch (e) {
+      _logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
   Future<ApiResponse<DepositResponseModel>> initiateUserDeposit(
-      {Map<String, dynamic> initAugMap, Map<String, dynamic> initRzpMap, double amount, String userUid}) async {
+      {String tranId,
+      Map<String, dynamic> initAugMap,
+      Map<String, dynamic> initRzpMap,
+      double amount,
+      String couponCode,
+      String userUid}) async {
     Map<String, dynamic> _body = {
+      'tran_doc_id': tranId,
       'user_id': userUid,
       'amount': amount,
       "aug_map": initAugMap,
       "rzp_map": initRzpMap
     };
-    _logger.d("completeUserDeposit : $_body");
+    if (couponCode != null && couponCode.isNotEmpty)
+      _body['couponcode'] = couponCode;
+
+    _logger.d("initiateUserDeposit:: Pre encryption: $_body");
+    if (await _rsaEncryption.init()) {
+      _body = _rsaEncryption.encryptRequestBody(_body);
+      _logger.d("initiateUserDeposit:: Post encryption: ${_body.toString()}");
+    } else {
+      _logger.e("Encrypter initialization failed!! exiting method");
+    }
 
     try {
+      ///Add the authorisation bearer token
       final String _bearer = await _getBearerToken();
+
       final response = await APIService.instance
           .postData(_apiPaths.kDepositPending, body: _body, token: _bearer);
 
@@ -47,27 +105,45 @@ class InvestmentActionsRepository {
     }
   }
 
-  Future<ApiResponse<DepositResponseModel>> completeUserDeposit(
-      {String txnId,
-      double amount,
-      Map<String, dynamic> rzpUpdates,
-      Map<String, dynamic> augUpdates,
-      String userUid}) async {
+  Future<ApiResponse<DepositResponseModel>> completeUserDeposit({
+    String txnId,
+    double amount,
+    Map<String, dynamic> rzpUpdates,
+    Map<String, dynamic> submitGoldUpdates,
+    String userUid,
+    EnqueuedTaskDetails enqueuedTaskDetails,
+  }) async {
     Map<String, dynamic> _body = {
       "user_id": userUid,
       "amount": amount,
       "rzp_map": rzpUpdates,
-      "aug_map": augUpdates,
-      "tran_id": txnId
+      "submit_gold_map": submitGoldUpdates,
+      "tran_id": txnId,
+      "enqueuedTaskDetails": enqueuedTaskDetails.toMap()
     };
-    _logger.d("completeUserDeposit : $_body");
+    _logger.d("completeUserDeposit:: Pre encryption: $_body");
+    if (await _rsaEncryption.init()) {
+      _body = _rsaEncryption.encryptRequestBody(_body);
+      _logger.d("completeUserDeposit:: Post encryption: ${_body.toString()}");
+    } else {
+      _logger.e("Encrypter initialization failed.");
+    }
     try {
       final String _bearer = await _getBearerToken();
       final response = await APIService.instance
           .postData(_apiPaths.kDepositComplete, body: _body, token: _bearer);
-      _logger.d(response.toString());
+      log(response.toString());
       DepositResponseModel _investmentDepositModel =
           DepositResponseModel.fromMap(response);
+
+      if (_investmentDepositModel?.note != null &&
+          _investmentDepositModel?.note?.title != null &&
+          _investmentDepositModel.note.title.isNotEmpty)
+        return ApiResponse(
+            model: _investmentDepositModel,
+            code: 400,
+            errorMessage: "Complete user deposits failed");
+
       return ApiResponse(model: _investmentDepositModel, code: 200);
     } catch (e) {
       _logger.e(e);
@@ -75,19 +151,28 @@ class InvestmentActionsRepository {
     }
   }
 
-  Future<ApiResponse<DepositResponseModel>> cancelUserDeposit(
-      {String txnId,
-      String userUid,
-      Map<String, dynamic> rzpMap,
-      Map<String, dynamic> augMap}) async {
+  Future<ApiResponse<DepositResponseModel>> cancelUserDeposit({
+    String txnId,
+    String userUid,
+    Map<String, dynamic> rzpMap,
+    Map<String, dynamic> augMap,
+    EnqueuedTaskDetails enqueuedTaskDetails,
+  }) async {
     Map<String, dynamic> _body = {
       "user_id": userUid,
       "rzp_map": rzpMap,
       "aug_map": augMap,
       "tran_id": txnId,
+      "enqueuedTaskDetails": enqueuedTaskDetails.toMap()
     };
 
-    _logger.d("completeUserDeposit : $_body");
+    _logger.d("cancelUserDeposit:: Pre encryption: $_body");
+    if (await _rsaEncryption.init()) {
+      _body = _rsaEncryption.encryptRequestBody(_body);
+      _logger.d("cancelUserDeposit:: Post encryption: ${_body.toString()}");
+    } else {
+      _logger.e("Encryption initialization failed.");
+    }
     try {
       final String _bearer = await _getBearerToken();
       final response = await APIService.instance
@@ -97,6 +182,13 @@ class InvestmentActionsRepository {
           DepositResponseModel.fromMap(response);
 
       _logger.d(_investmentDepositModel.toString());
+      if (_investmentDepositModel?.note != null &&
+          _investmentDepositModel?.note?.title != null &&
+          _investmentDepositModel.note.title.isNotEmpty)
+        return ApiResponse(
+            model: _investmentDepositModel,
+            code: 400,
+            errorMessage: "Cancel user deposits failed");
 
       return ApiResponse(model: _investmentDepositModel, code: 200);
     } catch (e) {
@@ -106,14 +198,24 @@ class InvestmentActionsRepository {
   }
 
   Future<ApiResponse<DepositResponseModel>> withdrawlComplete(
-      {double amount, String userUid, Map<String, dynamic> augMap}) async {
+      {String tranDocId,
+      double amount,
+      String userUid,
+      Map<String, dynamic> sellGoldMap}) async {
     Map<String, dynamic> _body = {
+      "tran_doc_id": tranDocId,
       "user_id": userUid,
       "amount": amount,
-      "aug_map": augMap,
+      "sell_gold_map": sellGoldMap,
     };
 
-    _logger.d("withdrawlComplete : $_body");
+    _logger.d("withdrawComplete:: Pre encryption: $_body");
+    if (await _rsaEncryption.init()) {
+      _body = _rsaEncryption.encryptRequestBody(_body);
+      _logger.d("withdrawComplete:: Post encryption: ${_body.toString()}");
+    } else {
+      _logger.e("Encryption initialization failed.");
+    }
     try {
       final String _bearer = await _getBearerToken();
       final response = await APIService.instance
@@ -124,6 +226,14 @@ class InvestmentActionsRepository {
 
       _logger.d(_investmentDepositModel.toString());
 
+      if (_investmentDepositModel?.note != null &&
+          _investmentDepositModel?.note?.title != null &&
+          _investmentDepositModel.note.title.isNotEmpty)
+        return ApiResponse(
+            model: _investmentDepositModel,
+            code: 400,
+            errorMessage: "Complete user withdrawal failed");
+
       return ApiResponse(model: _investmentDepositModel, code: 200);
     } catch (e) {
       _logger.e(e);
@@ -132,14 +242,24 @@ class InvestmentActionsRepository {
   }
 
   Future<ApiResponse<DepositResponseModel>> withdrawlCancelled(
-      {double amount, String userUid, Map<String, dynamic> augMap}) async {
+      {String tranDocId,
+      double amount,
+      String userUid,
+      Map<String, dynamic> augMap}) async {
     Map<String, dynamic> _body = {
+      "tran_doc_id": tranDocId,
       "user_id": userUid,
       "amount": amount,
       "aug_map": augMap,
     };
 
-    _logger.d("withdrawlComplete : $_body");
+    _logger.d("withdrawCancelled:: Pre encryption: $_body");
+    if (await _rsaEncryption.init()) {
+      _body = _rsaEncryption.encryptRequestBody(_body);
+      _logger.d("withdrawCancelled:: Post encryption: ${_body.toString()}");
+    } else {
+      _logger.e("Encryption initialization failed.");
+    }
     try {
       final String _bearer = await _getBearerToken();
       final response = await APIService.instance

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/util/code_from_freq.dart';
 import 'package:felloapp/util/logger.dart';
 
 class UserTicketWallet {
@@ -110,7 +111,7 @@ class UserTicketWallet {
   /// DAYCODE = the day of the week from when the ticket is valid
   _buildNonRecurringTicketBalance(Map<String, dynamic> tMap) {
     _activeNRTck = [];
-    int _weekCde = _getWeekCode();
+    int _weekCde = CodeFromFreq.getYearWeekCode();
     for (String key in tMap.keys) {
       if (key.startsWith(fldReferralNonRecurringPrefix) ||
           key.startsWith(fldPrizeNonRecurringPrefix)) {
@@ -164,14 +165,6 @@ class UserTicketWallet {
         (_isValidField(tMap[fldPrizeLocked])) ? tMap[fldPrizeLocked] : 0;
     if (_prizeLockedTck > 0)
       _lockedTck.add(LockedTicket("PRIZE", _prizeLockedTck));
-  }
-
-  int _getWeekCode() {
-    DateTime td = DateTime.now();
-    Timestamp today = Timestamp.fromDate(td);
-    DateTime date = new DateTime.now();
-
-    return date.year * 100 + BaseUtil.getWeekNumber();
   }
 
   bool _isValidField(dynamic fld) {

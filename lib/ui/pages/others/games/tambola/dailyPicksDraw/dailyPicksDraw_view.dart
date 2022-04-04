@@ -41,7 +41,7 @@ class PicksDraw extends StatelessWidget {
                       topLeft: Radius.circular(SizeConfig.padding40),
                       topRight: Radius.circular(SizeConfig.padding40),
                     ),
-                    color: UiConstants.tertiaryLight,
+                    color: Colors.white,
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -231,7 +231,7 @@ class PicksDraw extends StatelessWidget {
                           ),
                         )
                       else
-                        SizedBox(),
+                        SizedBox(height: SizeConfig.padding20),
                       if (model.state == ViewState.Idle)
                         Padding(
                           padding: EdgeInsets.symmetric(
@@ -242,7 +242,7 @@ class PicksDraw extends StatelessWidget {
                             style: TextStyles.body2.light,
                           ),
                         ),
-                      SizedBox(height: SizeConfig.padding12),
+                      SizedBox(height: SizeConfig.padding20),
                       model.showNext
                           ? FloatingActionButton(
                               backgroundColor: UiConstants.primaryColor,

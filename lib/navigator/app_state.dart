@@ -1,5 +1,6 @@
 //Project imports
-import 'package:felloapp/core/service/winners_service.dart';
+import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
+import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/navigator/router/back_dispatcher.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -25,7 +26,9 @@ class PageAction {
 
 class AppState extends ChangeNotifier {
   final _winnerService = locator<WinnerService>();
+  final _lbService = locator<LeaderboardService>();
   int _rootIndex = 1;
+  bool _isTxnLoaderInView = false;
   static ScrollController homeCardListController = ScrollController();
   static String _fcmData;
   static bool isFirstTime = true;
@@ -34,6 +37,7 @@ class AppState extends ChangeNotifier {
   static bool unsavedPrefs = false;
   static bool circGameInProgress = false;
   static bool isOnboardingInProgress = false;
+  static bool isUpdateScreen = false;
   static bool isDrawerOpened = false;
 
   static bool isSaveOpened = false;
@@ -48,8 +52,15 @@ class AppState extends ChangeNotifier {
 
   get rootIndex => this._rootIndex;
 
+  get isTxnLoaderInView => this._isTxnLoaderInView;
+
   set rootIndex(value) {
     this._rootIndex = value;
+    notifyListeners();
+  }
+
+  set isTxnLoaderInView(bool val) {
+    this._isTxnLoaderInView = val;
     notifyListeners();
   }
 
@@ -78,12 +89,14 @@ class AppState extends ChangeNotifier {
 
 // GETTERS AND SETTERS
 
-  int get getCurrentTabIndex => _rootIndex ?? 0;
+  int get getCurrentTabIndex => _rootIndex ?? 1;
 
   set setCurrentTabIndex(int index) {
     _rootIndex = index;
     if (index == 2 && isWinOpened == false) {
       _winnerService.fetchWinners();
+      _winnerService.fetchTopWinner();
+      _lbService.fetchReferralLeaderBoard();
       isWinOpened = true;
     }
     print(_rootIndex);
@@ -91,7 +104,9 @@ class AppState extends ChangeNotifier {
   }
 
   returnHome() {
-    _rootIndex = 0;
+    _rootIndex = 1;
+    print(_rootIndex);
+
     notifyListeners();
   }
 

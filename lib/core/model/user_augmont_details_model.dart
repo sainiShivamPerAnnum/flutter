@@ -11,6 +11,10 @@ class UserAugmontDetail {
   String _userStateId;
   String _ifsc;
   bool _firstInvMade;
+  bool _isDepLocked;
+  bool _isSellLocked;
+  String _sellNotice;
+  String _depNotice;
   Timestamp _createdTime;
   Timestamp _updatedTime;
 
@@ -24,36 +28,50 @@ class UserAugmontDetail {
   static final String fldHasIssue = 'aHasIssue';
   static final String fldCreatedTime = 'aCreatedTime';
   static final String fldUpdatedTime = 'aUpdatedTime';
+  static final String fldIsSellLocked = 'aIsSellLocked';
+  static final String fldIsDepLocked = 'aIsDepLocked';
+  static final String fldSellNotice = 'aSellNotice';
+  static final String fldDepNotice = 'aDepNotice';
 
   UserAugmontDetail(
-      this._userId,
-      this._userName,
-      this._bankAccNo,
-      this._bankHolderName,
-      this._ifsc,
-      this._userStateId,
-      this._firstInvMade,
-      this._hasIssue,
-      this._createdTime,
-      this._updatedTime);
+    this._userId,
+    this._userName,
+    this._bankAccNo,
+    this._bankHolderName,
+    this._ifsc,
+    this._userStateId,
+    this._firstInvMade,
+    this._hasIssue,
+    this._createdTime,
+    this._updatedTime,
+    this._isSellLocked,
+    this._isDepLocked,
+    this._sellNotice,
+    this._depNotice,
+  );
 
   UserAugmontDetail.newUser(String uid, String uname, String stateId,
       String bankHolderName, String bankAccNo, String ifsc)
       : this(uid, uname, bankAccNo, bankHolderName, ifsc, stateId, false, null,
-            Timestamp.now(), Timestamp.now());
+            Timestamp.now(), Timestamp.now(), false, false, null, null);
 
   UserAugmontDetail.fromMap(Map<String, dynamic> data)
       : this(
-            data[fldUserId],
-            data[fldUserName],
-            data[fldBankAccNo],
-            data[fldBankHolderName],
-            data[fldIfsc],
-            data[fldStateId],
-            data[fldFirstInvMade] ?? false,
-            data[fldHasIssue],
-            data[fldCreatedTime],
-            data[fldUpdatedTime]);
+          data[fldUserId],
+          data[fldUserName],
+          data[fldBankAccNo],
+          data[fldBankHolderName],
+          data[fldIfsc],
+          data[fldStateId],
+          data[fldFirstInvMade] ?? false,
+          data[fldHasIssue],
+          data[fldCreatedTime],
+          data[fldUpdatedTime],
+          data[fldIsSellLocked] ?? false,
+          data[fldIsDepLocked] ?? false,
+          data[fldSellNotice],
+          data[fldDepNotice],
+        );
 
   toJson() {
     return {
@@ -122,4 +140,12 @@ class UserAugmontDetail {
   set ifsc(String value) {
     _ifsc = value;
   }
+
+  bool get isDepLocked => _isDepLocked;
+
+  bool get isSellLocked => _isSellLocked;
+
+  String get sellNotice => _sellNotice;
+
+  String get depNotice => _depNotice;
 }

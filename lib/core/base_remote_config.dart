@@ -1,10 +1,10 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class BaseRemoteConfig {
   static RemoteConfig remoteConfig;
@@ -25,6 +25,12 @@ class BaseRemoteConfig {
   };
   static const Map<String, String> _FORCE_MIN_BUILD_NUMBER = {
     'force_min_build_number': '0'
+  };
+  static const Map<String, String> _FORCE_MIN_BUILD_NUMBER_2 = {
+    'force_min_build_number_2': '0'
+  };
+  static const Map<String, String> _AMZ_VOUCHER_REDEMPTION = {
+    'amz_voucher_redemption': '0'
   };
   static const Map<String, String> _DEPOSIT_UPI_ADDRESS = {
     'deposit_upi_address': '9769637379@okbizaxis'
@@ -52,7 +58,7 @@ class BaseRemoteConfig {
     'referral_ticket_bonus': '10'
   };
   static const Map<String, String> _REFERRAL_FLC_BONUS = {
-    'referral_flc_bonus': '200'
+    'referral_flc_bonus': '100'
   };
   static const Map<String, String> _AWS_ICICI_KEY_INDEX = {
     'aws_icici_key_index': '1'
@@ -102,10 +108,27 @@ class BaseRemoteConfig {
     'cricket_play_prize': '25,000'
   };
   static const Map<String, String> _CRICKET_THUMBNAIL_URI = {
-    'cricket_thumbnail': 'https://fello-assets.s3.ap-south-1.amazonaws.com/fello_cricket.png'
+    'cricket_thumbnail':
+        'https://fello-assets.s3.ap-south-1.amazonaws.com/fello_cricket.png'
   };
   static const Map<String, String> _TAMBOLA_THUMBNAIL_URI = {
-    'tambola_thumbnail': 'https://fello-assets.s3.ap-south-1.amazonaws.com/fello_tambola.png'
+    'tambola_thumbnail':
+        'https://fello-assets.s3.ap-south-1.amazonaws.com/fello_tambola.png'
+  };
+  static const Map<String, String> _MIN_WITHDRAWABLE_PRIZE = {
+    'min_withdrawable_prize': '100'
+  };
+  static const Map<String, String> _GAME_TAMBOLA_ANNOUNCEMENT = {
+    'game_tambola_announcement':
+        'Stand to win big prizes every week by matching your tambola tickets! Winners are announced every Monday'
+  };
+  static const Map<String, String> _GAME_CRICKET_ANNOUNCEMENT = {
+    'game_cricket_announcement':
+        'The highest scorers of the week win prizes every Sunday at midnight'
+  };
+  static const Map<String, String> _APP_SHARE_MSG = {
+    'app_share_message':
+        'Hey I am gifting you ₹10 and 200 gaming tokens. Lets start saving and playing together ! '
   };
 
   static const Map<String, dynamic> DEFAULTS = {
@@ -114,6 +137,7 @@ class BaseRemoteConfig {
     ..._TAMBOLA_HEADER_SECOND,
     ..._TAMBOLA_DAILY_PICK_COUNT,
     ..._FORCE_MIN_BUILD_NUMBER,
+    ..._FORCE_MIN_BUILD_NUMBER_2,
     ..._DEPOSIT_UPI_ADDRESS,
     ..._PLAY_SCREEN_FIRST,
     ..._TAMBOLA_WIN_CORNER,
@@ -140,11 +164,16 @@ class BaseRemoteConfig {
     ..._CRICKET_PLAY_COST,
     ..._CRICKET_PLAY_PRIZE,
     ..._CRICKET_THUMBNAIL_URI,
-    ..._TAMBOLA_THUMBNAIL_URI
+    ..._TAMBOLA_THUMBNAIL_URI,
+    ..._MIN_WITHDRAWABLE_PRIZE,
+    ..._GAME_TAMBOLA_ANNOUNCEMENT,
+    ..._GAME_CRICKET_ANNOUNCEMENT,
+    ..._AMZ_VOUCHER_REDEMPTION,
+    ..._APP_SHARE_MSG
   };
 
   static Future<bool> init() async {
-    final Logger logger = locator<Logger>();
+    final CustomLogger logger = locator<CustomLogger>();
     logger.i('initializing remote config');
     remoteConfig = RemoteConfig.instance;
     try {
@@ -177,6 +206,9 @@ class BaseRemoteConfig {
   static String get FORCE_MIN_BUILD_NUMBER =>
       _FORCE_MIN_BUILD_NUMBER.keys.first;
 
+  static String get FORCE_MIN_BUILD_NUMBER_2 =>
+      _FORCE_MIN_BUILD_NUMBER_2.keys.first;
+
   static String get DRAW_PICK_TIME => _DRAW_PICK_TIME.keys.first;
 
   static String get KYC_COMPLETION_PRIZE => _KYC_COMPLETION_PRIZE.keys.first;
@@ -186,6 +218,9 @@ class BaseRemoteConfig {
 
   static String get AUGMONT_DEPOSITS_ENABLED =>
       _AUGMONT_DEPOSITS_ENABLED.keys.first;
+
+  static String get AMZ_VOUCHER_REDEMPTION =>
+      _AMZ_VOUCHER_REDEMPTION.keys.first;
 
   static String get ICICI_DEPOSIT_PERMISSION =>
       _ICICI_DEPOSIT_PERMISSION.keys.first;
@@ -243,12 +278,16 @@ class BaseRemoteConfig {
 
   static String get TAMBOLA_THUMBNAIL_URI => _TAMBOLA_THUMBNAIL_URI.keys.first;
 
-  static int get UNLOCK_REFERRAL_AMT {
-    String _val = _UNLOCK_REFERRAL_AMT.keys.first;
-    if (_val != null || _val.isNotEmpty) {
-      int iVal = BaseUtil.toInt(_val);
-      return (iVal > 0) ? iVal : 100;
-    }
-    return 100;
-  }
+  static String get UNLOCK_REFERRAL_AMT => _UNLOCK_REFERRAL_AMT.keys.first;
+
+  static String get MIN_WITHDRAWABLE_PRIZE =>
+      _MIN_WITHDRAWABLE_PRIZE.keys.first;
+
+  static String get GAME_TAMBOLA_ANNOUNCEMENT =>
+      _GAME_TAMBOLA_ANNOUNCEMENT.keys.first;
+
+  static String get GAME_CRICKET_ANNOUNCEMENT =>
+      _GAME_CRICKET_ANNOUNCEMENT.keys.first;
+
+  static String get APP_SHARE_MSG => _APP_SHARE_MSG.keys.first;
 }

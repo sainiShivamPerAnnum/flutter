@@ -2,24 +2,30 @@
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_analytics.dart';
+import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/change_profile_picture_dialog.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -37,12 +43,17 @@ class UserProfileVM extends BaseModel {
   final BaseUtil _baseUtil = locator<BaseUtil>();
   final DBModel _dbModel = locator<DBModel>();
   final fcmlistener = locator<FcmListener>();
+  final _txnService = locator<TransactionService>();
+  final _tambolaService = locator<TambolaService>();
+  final _analyticsService = locator<AnalyticsService>();
   final S _locale = locator<S>();
+  final BaseUtil baseProvider = locator<BaseUtil>();
   double picSize;
   XFile selectedProfilePicture;
   ValueChanged<bool> upload;
   bool isUpdaingUserDetails = false;
-  bool isTambolaNotificationLoading = false;
+  bool _isTambolaNotificationLoading = false;
+  bool _isApplockLoading = false;
   int gen;
   String gender;
   DateTime selectedDate;
@@ -58,6 +69,9 @@ class UserProfileVM extends BaseModel {
   String get myGender => _userService.baseUser.gender ?? "";
   String get myMobile => _userService.baseUser.mobile ?? "";
   bool get isEmailVerified => _userService.baseUser.isEmailVerified;
+  bool get isSimpleKycVerified => _userService.isSimpleKycVerified;
+  bool get isTambolaNotificationLoading => _isTambolaNotificationLoading;
+  bool get isApplockLoading => _isApplockLoading;
 
   bool get applock =>
       _userService.baseUser.userPreferences
@@ -67,8 +81,19 @@ class UserProfileVM extends BaseModel {
       _userService.baseUser.userPreferences
           .getPreference(Preferences.TAMBOLANOTIFICATIONS) ==
       1;
-  //controllers
 
+  // Setters
+  set isTambolaNotificationLoading(bool val) {
+    _isTambolaNotificationLoading = val;
+    notifyListeners();
+  }
+
+  set isApplockLoading(bool val) {
+    _isApplockLoading = val;
+    notifyListeners();
+  }
+
+  //controllers
   TextEditingController nameController,
       dobController,
       genderController,
@@ -165,7 +190,7 @@ class UserProfileVM extends BaseModel {
               isUpdaingUserDetails = false;
               notifyListeners();
               BaseUtil.showNegativeAlert(
-                  "Ahh Snap", "Please try again in some time");
+                  "Action failed", "Please try again in some time");
             }
           });
         } else {
@@ -227,43 +252,35 @@ class UserProfileVM extends BaseModel {
 
     return adultDate.isBefore(today);
   }
-  // showUnsavedChanges() {
-  //   if (_checkForChanges()) {
-  //     AppState.unsavedChanges = true;
-  //     BaseUtil.openDialog(
-  //         addToScreenStack: true,
-  //         isBarrierDismissable: false,
-  //         content: ConfirmActionDialog(
-  //             title: "You have unsaved changes",
-  //             description:
-  //                 "Are you sure want to exit. All changes will be discarded",
-  //             buttonText: "Yes",
-  //             confirmAction: () {
-  //               AppState.backButtonDispatcher.didPopRoute();
-  //             },
-  //             cancelAction: () {}));
-  //   }
-  // }
 
   signout() async {
     if (await BaseUtil.showNoInternetAlert()) return;
     BaseUtil.openDialog(
       isBarrierDismissable: false,
       addToScreenStack: true,
-      content: WillPopScope(
-        onWillPop: () {
-          AppState.backButtonDispatcher.didPopRoute();
-          return Future.value(true);
-        },
-        child: ConfirmActionDialog(
+      content: FelloConfirmationDialog(
           title: 'Confirm',
-          description: 'Are you sure you want to sign out?',
-          buttonText: 'Yes',
-          confirmAction: () {
+          subtitle: 'Are you sure you want to sign out?',
+          accept: 'Yes',
+          acceptColor: UiConstants.primaryColor,
+          // asset: Assets.signout,
+          reject: "No",
+          rejectColor: UiConstants.tertiarySolid,
+          showCrossIcon: false,
+          onAccept: () {
             Haptic.vibrate();
-            _userService.signout().then((flag) {
+
+            _analyticsService.track(eventName: AnalyticsEvents.signOut);
+            _analyticsService.signOut();
+
+            _userService.signout().then((flag) async {
               if (flag) {
                 //log.debug('Sign out process complete');
+                await _baseUtil.signOut();
+                _txnService.signOut();
+                _tambolaService.signOut();
+                _analyticsService.signOut();
+                AppState.backButtonDispatcher.didPopRoute();
                 AppState.delegate.appState.currentAction = PageAction(
                     state: PageState.replaceAll, page: SplashPageConfig);
                 BaseUtil.showPositiveAlert(
@@ -277,9 +294,9 @@ class UserProfileVM extends BaseModel {
               }
             });
           },
-          cancelAction: () {},
-        ),
-      ),
+          onReject: () {
+            AppState.backButtonDispatcher.didPopRoute();
+          }),
     );
   }
 
@@ -341,10 +358,10 @@ class UserProfileVM extends BaseModel {
               confirmAction: () {
                 _chooseprofilePicture();
               },
-              cancelAction: (){}));
+              cancelAction: () {}));
     } else if (_status.isGranted) {
       await _chooseprofilePicture();
-      // needsRefresh(true);
+      _analyticsService.track(eventName: AnalyticsEvents.updatedProfilePicture);
     } else {
       BaseUtil.showNegativeAlert('Permission Unavailable',
           'Please enable permission from settings to continue');
@@ -417,11 +434,11 @@ class UserProfileVM extends BaseModel {
       } else
         return false;
     } catch (e) {
-      if (_baseUtil.myUser.uid != null) {
+      if (_userService.baseUser.uid != null) {
         Map<String, dynamic> errorDetails = {
           'error_msg': 'Method call to upload picture failed',
         };
-        _dbModel.logFailure(_baseUtil.myUser.uid,
+        _dbModel.logFailure(_userService.baseUser.uid,
             FailType.ProfilePictureUpdateFailed, errorDetails);
       }
       print('$e');
@@ -446,16 +463,35 @@ class UserProfileVM extends BaseModel {
 
   onAppLockPreferenceChanged(val) async {
     if (await BaseUtil.showNoInternetAlert()) return;
-    _baseUtil.flipSecurityValue(val);
-    notifyListeners();
+    isApplockLoading = true;
+    _userService.baseUser.userPreferences
+        .setPreference(Preferences.APPLOCK, (val) ? 1 : 0);
+    await _dbModel
+        .updateUserPreferences(
+            _userService.baseUser.uid, _userService.baseUser.userPreferences)
+        .then((value) {
+      Log("Preferences updated");
+    });
+    isApplockLoading = false;
   }
 
   onTambolaNotificationPreferenceChanged(val) async {
     if (await BaseUtil.showNoInternetAlert()) return;
     isTambolaNotificationLoading = true;
-    notifyListeners();
-    await fcmlistener.toggleTambolaDrawNotificationStatus(val);
+    bool res = await fcmlistener.toggleTambolaDrawNotificationStatus(val);
+    if (res) {
+      _userService.baseUser.userPreferences
+          .setPreference(Preferences.TAMBOLANOTIFICATIONS, (val) ? 1 : 0);
+      await _dbModel
+          .updateUserPreferences(
+              _userService.baseUser.uid, _userService.baseUser.userPreferences)
+          .then((value) {
+        if (val)
+          Log("Preferences updated");
+        else
+          Log("Preference update error");
+      });
+    }
     isTambolaNotificationLoading = false;
-    notifyListeners();
   }
 }

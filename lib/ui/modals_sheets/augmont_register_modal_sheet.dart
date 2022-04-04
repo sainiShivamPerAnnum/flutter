@@ -3,18 +3,18 @@ import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
-import 'package:felloapp/core/ops/icici_ops.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
+import 'package:felloapp/ui/pages/onboarding/input_field.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/augmont_state_list.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/palette.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
@@ -22,8 +22,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 class AugmontRegisterModalSheet extends StatefulWidget {
   final ValueChanged<bool> onSuccessfulAugReg;
+  final ValueChanged<bool> onAugRegInit;
 
-  AugmontRegisterModalSheet({this.onSuccessfulAugReg});
+  AugmontRegisterModalSheet({this.onSuccessfulAugReg, this.onAugRegInit});
 
   AugmontRegisterModalSheetState createState() =>
       AugmontRegisterModalSheetState();
@@ -33,12 +34,12 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
   AugmontRegisterModalSheetState();
 
   Log log = new Log('AugmontRegisterModalSheet');
+  final _userService = locator<UserService>();
   var heightOfModalBottomSheet = 100.0;
   BaseUtil baseProvider;
   final depositformKey3 = GlobalKey<FormState>();
   bool _isInitialized = false;
   AugmontModel augmontProvider;
-  ICICIModel iProvider;
   HttpModel httpProvider;
   DBModel dbProvider;
   static String stateChosenValue;
@@ -46,7 +47,6 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     augmontProvider = Provider.of<AugmontModel>(context, listen: false);
-    iProvider = Provider.of<ICICIModel>(context, listen: false);
     httpProvider = Provider.of<HttpModel>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     return new Wrap(
@@ -92,23 +92,12 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
             )
           ],
         ),
-        // Center(
-        //   child: Text(
-        //     'Digital Gold Registration',
-        //     textAlign: TextAlign.center,
-        //     style: TextStyle(
-        //       fontSize: 28,
-        //       fontWeight: FontWeight.w700,
-        //       color:  FelloColorPalette.augmontFundPalette().primaryColor,
-        //     ),
-        //   ),
-        // ),
         SizedBox(
           height: 24,
         ),
         TextFormField(
           decoration: augmontFieldInputDecoration(
-              baseProvider.myUser.mobile, Icons.phone),
+              _userService.baseUser.mobile, Icons.phone),
           enabled: false,
         ),
         SizedBox(height: 16),
@@ -123,7 +112,9 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
           ),
           child: DropdownButtonFormField(
             decoration: InputDecoration(
-                border: InputBorder.none, enabledBorder: InputBorder.none),
+                focusedBorder: InputBorder.none,
+                border: InputBorder.none,
+                enabledBorder: InputBorder.none),
             iconEnabledColor: UiConstants.primaryColor,
             hint: Text("Which state do you live in?"),
             value: stateChosenValue,
@@ -179,15 +170,18 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
       return;
     }
     baseProvider.isAugmontRegnInProgress = true;
+    widget.onAugRegInit(true);
     setState(() {});
 
     ///now register the augmont user
-    UserAugmontDetail detail = await augmontProvider.createSimpleUser(
-        baseProvider.myUser.mobile, stateChosenValue);
-    if (detail == null) {
+    baseProvider.augmontDetail = await augmontProvider.createSimpleUser(
+        _userService.baseUser.mobile, stateChosenValue);
+    if (baseProvider.augmontDetail == null) {
       BaseUtil.showNegativeAlert('Registration Failed',
-          'Failed to regsiter at the moment. Please try again.');
+          'Failed to register at the moment. Please try again.');
       baseProvider.isAugmontRegnInProgress = false;
+      widget.onAugRegInit(false);
+
       setState(() {});
       AppState.backButtonDispatcher.didPopRoute();
       return;
@@ -198,7 +192,7 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
           'Registration Successful', 'You are successfully registered!');
       baseProvider.isAugmontRegnInProgress = false;
       setState(() {});
-      Navigator.pop(context);
+      AppState.backButtonDispatcher.didPopRoute();
       // AppState.delegate.appState.currentAction =
       //     PageAction(state: PageState.addPage, page: AugmontGoldBuyPageConfig);
     }

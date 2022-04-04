@@ -1,11 +1,13 @@
-import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/pages/others/profile/transactions_history/transactions_history_view.dart';
+import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:flutter/material.dart';
 
 class DrawerModel {
   String title;
@@ -17,11 +19,18 @@ class DrawerModel {
 
 class FDrawerVM extends BaseModel {
   final userService = locator<UserService>();
+  final _analyticsService = locator<AnalyticsService>();
+
   List<DrawerModel> _drawerItems = [
     DrawerModel(
       icon: Assets.dReferNEarn,
       title: "Refer and Earn",
       pageConfig: ReferralDetailsPageConfig,
+    ),
+    DrawerModel(
+      icon: Assets.gold24K,
+      title: "My Golden Tickets",
+      pageConfig: MyWinnigsPageConfig,
     ),
     DrawerModel(
       icon: Assets.dPanKyc,
@@ -52,6 +61,19 @@ class FDrawerVM extends BaseModel {
 
   List<DrawerModel> get drawerList => _drawerItems;
   String get username => userService.baseUser.username;
+
+  void onItemSelected(int i) {
+    if (RootViewModel.scaffoldKey.currentState.isDrawerOpen)
+      RootViewModel.scaffoldKey.currentState.openEndDrawer();
+
+    AppState.delegate.appState.currentAction = PageAction(
+      state: PageState.addPage,
+      page: drawerList[i].pageConfig,
+    );
+
+    if (i == 0)
+      _analyticsService.track(eventName: AnalyticsEvents.referralSection);
+  }
 
   refreshDrawer() {
     notifyListeners();

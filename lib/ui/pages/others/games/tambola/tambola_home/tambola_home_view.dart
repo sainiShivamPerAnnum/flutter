@@ -1,5 +1,5 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/model/game_model.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_vm.dart';
@@ -47,7 +47,9 @@ class TambolaHomeView extends StatelessWidget {
                           SizedBox(height: SizeConfig.screenHeight * 0.1),
                           InkWell(
                             onTap: model.openGame,
-                            child: Opacity(
+                            child: AnimatedOpacity(
+                              duration: Duration(milliseconds: 10),
+                              curve: Curves.decelerate,
                               opacity: model.cardOpacity ?? 1,
                               child: GameCard(
                                 gameData: BaseUtil.gamesList[1],
@@ -110,6 +112,12 @@ class TambolaHomeView extends StatelessWidget {
                                                     model: model.tPrizes,
                                                     controller:
                                                         model.scrollController,
+                                                    subtitle: BaseRemoteConfig
+                                                            .remoteConfig
+                                                            .getString(
+                                                                BaseRemoteConfig
+                                                                    .GAME_TAMBOLA_ANNOUNCEMENT) ??
+                                                        "Stand to win big prizes every week by matching your tambola tickets! Winners are announced every Monday",
                                                     leading: [
                                                       Icons.apps,
                                                       Icons.border_top,
@@ -124,22 +132,22 @@ class TambolaHomeView extends StatelessWidget {
                                                             ))
                                                         .toList(),
                                                   )),
-                                        model.isLeaderboardLoading
-                                            ? ListLoader()
-                                            : (model.tlboard == null ||
-                                                    model.tlboard.scoreboard
-                                                        .isEmpty
-                                                ? NoRecordDisplayWidget(
-                                                    asset:
-                                                        "images/leaderboard.png",
-                                                    text:
-                                                        "Leaderboard will be updated soon",
-                                                  )
-                                                : LeaderBoardView(
-                                                    controller:
-                                                        model.scrollController,
-                                                    model: model.tlboard,
-                                                  ))
+                                        // model.isLeaderboardLoading
+                                        //     ? ListLoader()
+                                        //     : (model.tlboard == null ||
+                                        //             model.tlboard.scoreboard
+                                        //                 .isEmpty
+                                        //         ? NoRecordDisplayWidget(
+                                        //             asset:
+                                        //                 "images/leaderboard.png",
+                                        //             text:
+                                        //                 "Leaderboard will be updated soon",
+                                        //           )
+                                        //         : LeaderBoardView(
+                                        //             controller:
+                                        //                 model.scrollController,
+                                        //             model: model.tlboard,
+                                        //           ))
                                       ]),
                                 ),
                                 SizedBox(height: SizeConfig.padding64)
@@ -184,9 +192,8 @@ class TambolaHomeView extends StatelessWidget {
 }
 
 class ListLoader extends StatelessWidget {
-  const ListLoader({
-    Key key,
-  }) : super(key: key);
+  final bool bottomPadding;
+  const ListLoader({Key key, this.bottomPadding = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -196,6 +203,7 @@ class ListLoader extends StatelessWidget {
         SpinKitWave(
           color: UiConstants.primaryColor,
         ),
+        if (bottomPadding) SizedBox(height: SizeConfig.screenHeight * 0.1),
       ],
     );
   }

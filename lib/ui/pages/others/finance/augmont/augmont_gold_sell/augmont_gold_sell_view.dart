@@ -4,7 +4,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -16,7 +16,6 @@ import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
-import 'package:felloapp/ui/widgets/simple_kyc_modalsheet/simple_kyc_modalsheet_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -26,11 +25,10 @@ import 'package:felloapp/util/styles/palette.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 //Pub Imports
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:intl/intl.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
 
@@ -161,6 +159,9 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                                     style: TextStyles.title5.light),
                                 PropertyChangeConsumer<UserService,
                                     UserServiceProperties>(
+                                  properties: [
+                                    UserServiceProperties.myUserFund
+                                  ],
                                   builder: (ctx, model, child) => Text(
                                     locale.saveGoldBalanceValue(
                                         model.userFundWallet.augGoldQuantity ??
@@ -171,7 +172,47 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                                 ),
                               ],
                             ),
-                            SizedBox(height: SizeConfig.padding32),
+                            SizedBox(height: SizeConfig.padding8),
+                            (model.sellNotice == null &&
+                                    model.nonWithdrawableQnt > 0)
+                                ? Container(
+                                    margin: EdgeInsets.only(
+                                        top: SizeConfig.padding8),
+                                    decoration: BoxDecoration(
+                                      color: UiConstants.tertiaryLight,
+                                      borderRadius: BorderRadius.circular(
+                                          SizeConfig.roundness16),
+                                    ),
+                                    padding:
+                                        EdgeInsets.all(SizeConfig.padding16),
+                                    child: Text(
+                                      _buildNonWithdrawString(model),
+                                      textAlign: TextAlign.center,
+                                      style: TextStyles.body3.light,
+                                    ),
+                                  )
+                                : SizedBox(),
+                            SizedBox(height: SizeConfig.padding8),
+                            (model.sellNotice != null &&
+                                    model.sellNotice.isNotEmpty)
+                                ? Container(
+                                    width: SizeConfig.screenWidth,
+                                    margin: EdgeInsets.only(
+                                        top: SizeConfig.padding8),
+                                    decoration: BoxDecoration(
+                                      color: UiConstants.primaryLight,
+                                      borderRadius: BorderRadius.circular(
+                                          SizeConfig.roundness16),
+                                    ),
+                                    padding:
+                                        EdgeInsets.all(SizeConfig.padding16),
+                                    child: Text(
+                                      model.sellNotice,
+                                      style: TextStyles.body3.light,
+                                    ),
+                                  )
+                                : SizedBox(),
+                            SizedBox(height: SizeConfig.padding8),
                             Row(
                               children: [
                                 Text(
@@ -272,7 +313,7 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                                 // model.amoutChip(model.chipAmountList[3]),
                               ],
                             ),
-                            SizedBox(height: SizeConfig.padding54),
+                            SizedBox(height: SizeConfig.padding32),
                             Container(
                               margin:
                                   EdgeInsets.only(bottom: SizeConfig.padding24),
@@ -319,169 +360,27 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                             SizedBox(
                               height: SizeConfig.padding20,
                             ),
-                            Text(
-                              "You will receive the amount within 24-48 hours",
+                            RichText(
                               textAlign: TextAlign.center,
-                              style: TextStyles.body3.colour(Colors.grey),
+                              text: TextSpan(
+                                text:
+                                    "Your balance will be credited to your registered bank account within ",
+                                style: TextStyles.body3.colour(Colors.grey),
+                                children: [
+                                  TextSpan(
+                                    text: "1-2 business working days",
+                                    style: TextStyles.body3.bold
+                                        .colour(UiConstants.tertiarySolid),
+                                  )
+                                ],
+                              ),
                             ),
-                            SizedBox(height: SizeConfig.padding80),
-
-                            // SizedBox(
-                            //   child: Image(
-                            //     image: AssetImage(Assets.onboardingSlide[1]),
-                            //     fit: BoxFit.contain,
-                            //   ),
-                            //   width: SizeConfig.screenWidth * 0.3,
-                            //   height: SizeConfig.screenWidth * 0.3,
-                            // ),
                             // Text(
-                            //   'WITHDRAW',
+                            //   "You will receive the amount within 24-48 hours",
                             //   textAlign: TextAlign.center,
-                            //   style: TextStyle(
-                            //       fontSize: 28,
-                            //       fontWeight: FontWeight.w700,
-                            //       color: FelloColorPalette.augmontFundPalette()
-                            //           .primaryColor),
+                            //   style: TextStyles.body3.colour(Colors.grey),
                             // ),
-                            // (_isLoading)
-                            //     ? Padding(
-                            //         padding: EdgeInsets.all(30),
-                            //         child: SpinKitWave(
-                            //           color: UiConstants.primaryColor,
-                            //         ))
-                            //     : Container(),
-                            // (_errorMessage != null && !_isLoading)
-                            //     ? Row(
-                            //         mainAxisAlignment: MainAxisAlignment.center,
-                            //         children: [
-                            //           Container(
-                            //             width: _width * 0.7,
-                            //             child: Text('Error: $_errorMessage',
-                            //                 textAlign: TextAlign.center,
-                            //                 style: TextStyle(
-                            //                     color: Colors.redAccent,
-                            //                     fontSize: 16)),
-                            //           )
-                            //         ],
-                            //       )
-                            //     : Container(),
-                            // SizedBox(
-                            //   height: 10,
-                            // ),
-                            // (!_isLoading)
-                            //     ? _buildRow('Current Gold Selling Rate',
-                            //         '₹${widget.sellRate} per gram')
-                            //     : Container(),
-                            // (!_isLoading)
-                            //     ? SizedBox(
-                            //         height: 5,
-                            //       )
-                            //     : Container(),
-                            // (!_isLoading)
-                            //     ? _buildRow('Total Gold Owned',
-                            //         '${model.userFundWallet.augGoldQuantity.toStringAsFixed(4)} grams')
-                            //     : Container(),
-                            // (!_isLoading &&
-                            //         widget.withdrawableGoldQnty !=
-                            //             model.userFundWallet.augGoldQuantity)
-                            //     ? _buildLockedGoldRow(
-                            //         'Total Gold available for withdrawal',
-                            //         '${widget.withdrawableGoldQnty.toStringAsFixed(4)} grams',
-                            //         model)
-                            //     : Container(),
-                            // (!_isLoading)
-                            //     ? SizedBox(
-                            //         height: 5,
-                            //       )
-                            //     : Container(),
-                            // (!_isLoading)
-                            //     ? _buildRow('Total withdrawable balance',
-                            //         '${widget.withdrawableGoldQnty.toStringAsFixed(4)} * ${widget.sellRate} = ₹${_getTotalGoldAvailable().toStringAsFixed(3)}')
-                            //     : Container(),
-                            // (!_isLoading)
-                            //     ? SizedBox(
-                            //         height: 30,
-                            //       )
-                            //     : Container(),
-                            // (!_isLoading)
-                            //     ? Container(
-                            //         margin: EdgeInsets.only(top: 12),
-                            //         child: Row(
-                            //           children: <Widget>[
-                            //             Expanded(
-                            //               child: Theme(
-                            //                 data: ThemeData.light().copyWith(
-                            //                     textTheme: GoogleFonts
-                            //                         .montserratTextTheme(),
-                            //                     colorScheme: ColorScheme.light(
-                            //                         primary: FelloColorPalette
-                            //                                 .augmontFundPalette()
-                            //                             .primaryColor)),
-                            //                 child: TextField(
-                            //                   controller: _quantityController,
-                            //                   keyboardType: (Platform.isAndroid)
-                            //                       ? TextInputType.number
-                            //                       : TextInputType
-                            //                           .numberWithOptions(
-                            //                               decimal: true),
-                            //                   readOnly: false,
-                            //                   enabled: true,
-                            //                   autofocus: false,
-                            //                   decoration:
-                            //                       augmontFieldInputDecoration(
-                            //                           'Quantity (in grams)',
-                            //                           null),
-                            //                   onChanged: (value) {
-                            //                     setState(() {});
-                            //                   },
-                            //                 ),
-                            //               ),
-                            //             ),
-                            //           ],
-                            //         ),
-                            //       )
-                            //     : Container(),
-                            // (!_isLoading)
-                            //     ? Padding(
-                            //         padding: EdgeInsets.only(top: 10),
-                            //         child: _getGoldAmount(
-                            //             _quantityController.text),
-                            //       )
-                            //     : Container(),
-                            // (!_isLoading && _amountError != null)
-                            //     ? Container(
-                            //         margin: EdgeInsets.only(top: 4, left: 12),
-                            //         child: Text(
-                            //           _amountError,
-                            //           style: TextStyle(color: Colors.red),
-                            //         ),
-                            //       )
-                            //     : Container(),
-                            // SizedBox(
-                            //   height: 25,
-                            // ),
-
-                            // (!_isLoading)
-                            //     ? _buildSubmitButton(context)
-                            //     : Container(),
-                            // // (!_isLoading)
-                            // //     ? Padding(
-                            // //         padding: EdgeInsets.only(
-                            // //           top: 10,
-                            // //         ),
-                            // //         child: Text(
-                            // //           'All withdrawals are processed within 2 business working days.',
-                            // //           textAlign: TextAlign.center,
-                            // //           style: TextStyle(
-                            // //               color: Colors.blueGrey[600],
-                            // //               fontSize: SizeConfig.mediumTextSize,
-                            // //               fontWeight: FontWeight.w400),
-                            // //         ),
-                            // //       )
-                            // //     : Container(),
-                            // SizedBox(
-                            //   height: 10,
-                            // ),
+                            SizedBox(height: SizeConfig.padding80),
                           ],
                         )),
                   ),
@@ -492,6 +391,15 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
         ),
       ),
     );
+  }
+
+  _buildNonWithdrawString(AugmontGoldSellViewModel model) {
+    DateTime _dt = new DateTime.now()
+        .add(Duration(days: Constants.AUG_GOLD_WITHDRAW_OFFSET));
+    String _dtStr = DateFormat("dd MMMM").format(_dt);
+    int _hrs = Constants.AUG_GOLD_WITHDRAW_OFFSET * 24;
+
+    return '${model.nonWithdrawableQnt} grams is locked. Digital Gold can be withdrawn after $_hrs hours of successful deposit.';
   }
 
   dialogContent(BuildContext context) {
@@ -813,47 +721,3 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
     }
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-//  appBar: AppBar(
-//           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-//           elevation: 0,
-//           actions: [
-//             Padding(
-//               padding: EdgeInsets.fromLTRB(0, 5, 5, 0),
-//               child: MaterialButton(
-//                 child: !_checkBankInfoMissing
-//                     ? Consumer<BaseUtil>(
-//                         builder: (ctx, bp, child) {
-//                           return Container(
-//                             child: Padding(
-//                                 padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-//                                 child: Text('Edit Bank Info')),
-//                             decoration: BoxDecoration(
-//                               border: Border.all(
-//                                   color: FelloColorPalette.augmontFundPalette()
-//                                       .primaryColor),
-//                               borderRadius: BorderRadius.circular(10),
-//                             ),
-//                           );
-//                         },
-//                       )
-//                     : Container(),
-//                 onPressed: () {
-//                   appState.currentAction = PageAction(
-//                       state: PageState.addPage,
-//                       page: EditAugBankDetailsPageConfig);
-//                 },
-//               ),
-//             )
-//           ],
-//         ),

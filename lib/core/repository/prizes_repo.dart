@@ -3,27 +3,28 @@ import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class PrizesRepository {
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
   final _api = locator<Api>();
 
   Future<ApiResponse<PrizesModel>> getPrizesPerGamePerFreq(
       String gameCode, String freq) async {
-    //try {
-    QueryDocumentSnapshot _queryDocumentSanpshot =
-        await _api.getPrizesPerGamePerFreq(gameCode, freq);
+    try {
+      _logger.i("Fetching prizes, game code - $gameCode, freq - $freq");
+      QueryDocumentSnapshot _queryDocumentSanpshot =
+          await _api.getPrizesPerGamePerFreq(gameCode, freq);
 
-    _logger.i("getPrizesPerGamePerFreq, successfully called");
-    _logger.d(_queryDocumentSanpshot.data());
+      _logger.i("getPrizesPerGamePerFreq, successfully called");
+      _logger.d(_queryDocumentSanpshot.data());
 
-    PrizesModel _prizesModel =
-        PrizesModel.fromMap(_queryDocumentSanpshot.data());
-    return ApiResponse(model: _prizesModel, code: 200);
-    // } catch (e) {
-    //   _logger.e(e);
-    //   throw e.toString();
-    // }
+      PrizesModel _prizesModel =
+          PrizesModel.fromMap(_queryDocumentSanpshot.data());
+      return ApiResponse(model: _prizesModel, code: 200);
+    } catch (e) {
+      _logger.e(e);
+      throw e.toString();
+    }
   }
 }

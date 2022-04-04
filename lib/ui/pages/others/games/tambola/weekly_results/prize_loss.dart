@@ -1,4 +1,3 @@
-import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -7,7 +6,6 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class Loser extends StatelessWidget {
   const Loser({Key key}) : super(key: key);
@@ -17,6 +15,8 @@ class Loser extends StatelessWidget {
     S locale = S.of(context);
     return SafeArea(
       child: Container(
+        padding:
+            EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
         margin: EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           children: [
@@ -44,8 +44,7 @@ class Loser extends StatelessWidget {
                   vertical: 20.0,
                   horizontal: SizeConfig.blockSizeHorizontal * 5),
               child: Text(locale.tLossSubtitle2,
-                  textAlign: TextAlign.center,
-                  style: TextStyles.body3.letterSpace(2)),
+                  textAlign: TextAlign.center, style: TextStyles.body3),
             ),
             Column(
               children: [
@@ -67,7 +66,7 @@ class Loser extends StatelessWidget {
                   child: FelloButtonLg(
                       color: UiConstants.tertiarySolid,
                       child: Text(
-                        "Save",
+                        "Save More Money",
                         style: TextStyles.body3.bold.colour(Colors.white),
                       ),
                       onPressed: () {

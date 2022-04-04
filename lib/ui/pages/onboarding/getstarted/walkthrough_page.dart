@@ -1,9 +1,12 @@
-import 'dart:ui';
-
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -18,6 +21,9 @@ class WalkThroughPage extends StatefulWidget {
 class _WalkThroughPageState extends State<WalkThroughPage> {
   PageController _pageController;
   ValueNotifier<double> _pageNotifier;
+  bool showLotties = false;
+  GoldenTicketService _gtService = GoldenTicketService();
+  final _analyticsService = locator<AnalyticsService>();
 
   List<String> lottieList = [Assets.onb1, Assets.onb2, Assets.onb3];
   List<String> titleList = ["SAVE", "PLAY", "WIN"];
@@ -26,11 +32,18 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
     "Use these tokens to play fun and exciting games 🎮",
     "Stand to win exclusive prizes and fun rewards 🎉"
   ];
+
   @override
   void initState() {
     _pageController = PageController();
     _pageController.addListener(_pageListener);
     _pageNotifier = ValueNotifier(0.0);
+    Future.delayed(Duration(milliseconds: 800), () {
+      setState(() {
+        showLotties = true;
+      });
+    });
+    _analyticsService.track(eventName: AnalyticsEvents.signupDemo);
     super.initState();
   }
 
@@ -88,38 +101,67 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                                 .toDouble()),
                       ),
                     ),
-                    Positioned(
-                      child: Container(
-                        height: SizeConfig.screenWidth,
-                        width: SizeConfig.screenWidth,
-                        child: PageView(
-                          controller: _pageController,
-                          children: [
-                            Transform.scale(
-                              scale: 1.2,
-                              child: Lottie.asset(
-                                Assets.onb1,
-                                height: SizeConfig.screenWidth,
-                                width: SizeConfig.screenWidth,
-                              ),
-                            ),
-                            Transform.scale(
-                              scale: 1.1,
-                              child: Lottie.asset(
-                                Assets.onb2,
-                                height: SizeConfig.screenWidth,
-                                width: SizeConfig.screenWidth,
-                              ),
-                            ),
-                            Lottie.asset(
-                              Assets.onb3,
+                    showLotties
+                        ? ValueListenableBuilder(
+                            valueListenable: _pageNotifier,
+                            builder: (ctx, value, _) {
+                              return Positioned(
+                                child: Container(
+                                  height: SizeConfig.screenWidth,
+                                  width: SizeConfig.screenWidth,
+                                  child: PageView(
+                                    controller: _pageController,
+                                    children: [
+                                      Transform.scale(
+                                        scale: 1.2,
+                                        child: Lottie.asset(
+                                          Assets.onb1,
+                                          animate: value != 0.0 ? false : true,
+                                          height: SizeConfig.screenWidth,
+                                          width: SizeConfig.screenWidth,
+                                        ),
+                                      ),
+                                      Transform.scale(
+                                        scale: 1.1,
+                                        child: Lottie.asset(
+                                          Assets.onb2,
+                                          animate: value != 1.0 ? false : true,
+                                          height: SizeConfig.screenWidth,
+                                          width: SizeConfig.screenWidth,
+                                        ),
+                                      ),
+                                      Lottie.asset(
+                                        Assets.onb3,
+                                        animate: value != 2.0 ? false : true,
+                                        height: SizeConfig.screenWidth,
+                                        width: SizeConfig.screenWidth,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+                        : Positioned(
+                            child: Container(
                               height: SizeConfig.screenWidth,
                               width: SizeConfig.screenWidth,
+                              child: PageView(
+                                controller: _pageController,
+                                children: [
+                                  Transform.scale(
+                                    scale: 1.2,
+                                    child: Lottie.asset(
+                                      Assets.onb1,
+                                      height: SizeConfig.screenWidth,
+                                      animate: false,
+                                      width: SizeConfig.screenWidth,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
+                          ),
                   ],
                 ),
               ),
@@ -183,11 +225,21 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                         style: TextStyles.body2.bold.colour(Colors.white),
                       ),
                       onPressed: () {
-                        value.toInt() == 2
-                            ? AppState.backButtonDispatcher.didPopRoute()
-                            : _pageController.nextPage(
-                                duration: Duration(milliseconds: 400),
-                                curve: Curves.easeIn);
+                        if (value.toInt() == 2) {
+                          AppState.backButtonDispatcher.didPopRoute();
+                          _gtService
+                              .fetchAndVerifyGoldenTicketByID()
+                              .then((bool res) {
+                            if (res)
+                              _gtService.showInstantGoldenTicketView(
+                                  title: 'Welcome to Fello',
+                                  source: GTSOURCE.newuser);
+                          });
+                        } else
+                          _pageController.nextPage(
+                            duration: Duration(milliseconds: 400),
+                            curve: Curves.easeIn,
+                          );
                       },
                     );
                   },
@@ -196,6 +248,11 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
               TextButton(
                 onPressed: () {
                   AppState.backButtonDispatcher.didPopRoute();
+                  _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
+                    if (res)
+                      _gtService.showInstantGoldenTicketView(
+                          title: 'Welcome to Fello', source: GTSOURCE.newuser);
+                  });
                 },
                 child: Text(
                   "Skip",
@@ -204,7 +261,7 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
               ),
               SizedBox(
                 height: kToolbarHeight / 2,
-              )
+              ),
             ],
           ),
         ),

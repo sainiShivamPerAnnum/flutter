@@ -1,7 +1,5 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/service_elements/user_coin_service/coin_balance_text.dart';
@@ -14,6 +12,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 
 class FelloCoinBar extends StatelessWidget {
+  const FelloCoinBar();
   @override
   Widget build(BuildContext context) {
     return BaseView<FelloCoinBarViewModel>(

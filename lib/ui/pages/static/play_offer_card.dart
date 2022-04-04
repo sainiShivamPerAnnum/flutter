@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/assets.dart';
@@ -7,6 +8,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OfferCard extends StatelessWidget {
   final PromoCardModel model;
@@ -14,19 +16,35 @@ class OfferCard extends StatelessWidget {
 
   OfferCard({this.model, this.shimmer = false});
 
+  // calculateWidth() {
+  //   if (model.gridX != null) {
+  //     if (model.gridX == 1)
+  //       return SizeConfig.screenWidth * 0.5;
+  //     else
+  //       return SizeConfig.screenWidth * 0.85;
+  //   } else
+  //     return SizeConfig.screenWidth * 0.5;
+  // }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
+      onTap: () async {
         if (model.actionUri != null) {
           print(model.actionUri.toString());
-          AppState.delegate.parseRoute(Uri.parse(model.actionUri));
+          if (model.actionUri.startsWith("http")) {
+            if (await canLaunch(model.actionUri)) {
+              launch(model.actionUri);
+            }
+          } else {
+            AppState.delegate.parseRoute(Uri.parse(model.actionUri));
+          }
         }
       },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(SizeConfig.roundness24),
         child: Container(
-          width: SizeConfig.screenWidth * 0.5,
+          width: SizeConfig.screenWidth,
           height: SizeConfig.screenWidth * 0.28,
           margin: EdgeInsets.only(
             bottom: SizeConfig.screenWidth * 0.1,
@@ -55,7 +73,25 @@ class OfferCard extends StatelessWidget {
                     )
                   ],
                 )
-              : BoxDecoration(),
+              : BoxDecoration(
+                  image: DecorationImage(
+                      image: CachedNetworkImageProvider(model.bgImage),
+                      fit: BoxFit.cover),
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness24),
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: 30,
+                      color: model.bgColor != null
+                          ? Color(model.bgColor).withOpacity(0.3)
+                          : UiConstants.tertiarySolid.withOpacity(0.3),
+                      offset: Offset(
+                        0,
+                        SizeConfig.screenWidth * 0.14,
+                      ),
+                      spreadRadius: -44,
+                    )
+                  ],
+                ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(SizeConfig.roundness32),
             child: Shimmer(
@@ -105,7 +141,7 @@ class OfferCard extends StatelessWidget {
                         ],
                       ),
                     )
-                  : CachedNetworkImage(imageUrl: model.bgImage),
+                  : Container(),
             ),
           ),
         ),

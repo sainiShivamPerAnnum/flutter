@@ -1,7 +1,5 @@
-import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_dialog.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -18,6 +16,7 @@ class FelloConfirmationDialog extends StatefulWidget {
   final bool showCrossIcon;
   final String title;
   final String asset;
+  final String assetpng;
   final String subtitle;
   final String accept;
   final String reject;
@@ -32,6 +31,7 @@ class FelloConfirmationDialog extends StatefulWidget {
     this.subtitle,
     this.title,
     this.accept,
+    this.assetpng,
     this.acceptColor,
     this.rejectColor,
     this.reject,
@@ -55,10 +55,16 @@ class _FelloConfirmationDialogState extends State<FelloConfirmationDialog> {
               : Column(
                   children: [
                     SizedBox(height: SizeConfig.screenHeight * 0.04),
-                    SvgPicture.asset(
-                      widget.asset,
-                      height: SizeConfig.screenHeight * 0.16,
-                    ),
+                    if (widget.asset != null)
+                      SvgPicture.asset(
+                        widget.asset,
+                        height: SizeConfig.screenHeight * 0.16,
+                      ),
+                    if (widget.assetpng != null)
+                      Image.asset(
+                        widget.assetpng,
+                        height: SizeConfig.screenHeight * 0.16,
+                      ),
                     SizedBox(
                       height: SizeConfig.screenHeight * 0.04,
                     ),

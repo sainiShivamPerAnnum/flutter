@@ -1,20 +1,21 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/leader_board_modal.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/repository/statistics_repo.dart';
-import 'package:felloapp/core/service/prize_service.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/prize_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class TambolaHomeViewModel extends BaseModel {
   final _stats = locator<StatisticsRepository>();
   final _prizeService = locator<PrizeService>();
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
+  final _analyticsService = locator<AnalyticsService>();
 
   bool isLeaderboardLoading = false;
   bool isPrizesLoading = false;
@@ -80,7 +81,8 @@ class TambolaHomeViewModel extends BaseModel {
     notifyListeners();
   }
 
-  openGame() {
+  void openGame() {
+    _analyticsService.track(eventName: AnalyticsEvents.startPlayingTambola);
     BaseUtil().openTambolaHome();
   }
 }

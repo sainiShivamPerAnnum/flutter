@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/util/logger.dart';
+import 'dart:math' as math;
 
 class UserFundWallet {
   static Log log = new Log('UserFundWallet');
@@ -135,6 +136,6 @@ class UserFundWallet {
   double get unclaimedBalance {
     double _a = _prizeBalance ?? 0.0;
     double _b = _processingRedemptionBalance ?? 0.0;
-    return (_a - _b);
+    return math.max(_a-_b, 0);
   }
 }

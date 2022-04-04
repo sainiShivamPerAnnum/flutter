@@ -36,6 +36,7 @@ class TextStyles {
 
 extension TextStyleHelpers on TextStyle {
   TextStyle get bold => copyWith(fontWeight: FontWeight.bold);
+  TextStyle get extraBold => copyWith(fontWeight: FontWeight.w900);
   TextStyle get light => copyWith(fontWeight: FontWeight.w300);
   TextStyle get underline => copyWith(decoration: TextDecoration.underline);
   TextStyle get overline => copyWith(decoration: TextDecoration.overline);
@@ -44,4 +45,5 @@ extension TextStyleHelpers on TextStyle {
   TextStyle letterSpace(double value) => copyWith(letterSpacing: value);
   TextStyle weight(FontWeight weight) => copyWith(fontWeight: weight);
   TextStyle colour(Color color) => copyWith(color: color);
+  TextStyle setHeight(double height) => copyWith(height: height);
 }

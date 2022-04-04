@@ -4,24 +4,28 @@ import 'dart:developer';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
-import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
-import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
-import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog_landscape.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
-
+import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:flushbar/flushbar.dart';
 //Flutter Imports
 import 'package:flutter/material.dart';
 
 class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   final FelloRouterDelegate _routerDelegate;
+  final CustomLogger logger = locator<CustomLogger>();
   DBModel _dbModel = locator<DBModel>();
   BaseUtil _baseUtil = locator<BaseUtil>();
+  final _userService = locator<UserService>();
   AppState _appState = locator<AppState>();
+  GoldenTicketService _gtService = GoldenTicketService();
 
   FelloBackButtonDispatcher(this._routerDelegate) : super();
 
@@ -44,68 +48,106 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
         ));
   }
 
+  bool isAnyDialogOpen() {
+    if (AppState.screenStack.last == ScreenItem.dialog) return true;
+    return false;
+  }
+
   @override
   Future<bool> didPopRoute() {
+    if (AppState.screenStack.last == ScreenItem.loader) return null;
+
+    Future.delayed(Duration(milliseconds: 20), () {
+      if (_userService.buyFieldFocusNode.hasPrimaryFocus ||
+          _userService.buyFieldFocusNode.hasFocus) {
+        logger.d("field has focus");
+        FocusManager.instance.primaryFocus.unfocus();
+      }
+    });
+    // if (WinViewModel().panelController.isPanelOpen) {
+    //   WinViewModel().panelController.close();
+    //   return Future.value(true);
+    // }
+    // If user is in the profile page and preferences are changed
+
+    if (AppState.unsavedPrefs) {
+      if (_baseUtil != null &&
+          _userService.baseUser != null &&
+          _userService.baseUser.uid != null &&
+          _userService.baseUser.userPreferences != null)
+        _dbModel
+            .updateUserPreferences(_userService.baseUser.uid,
+                _userService.baseUser.userPreferences)
+            .then((value) {
+          AppState.unsavedPrefs = false;
+          log("Preferences updated");
+        });
+    }
     // If the top item is anything except a scaffold
     if (AppState.screenStack.last == ScreenItem.dialog) {
       Navigator.pop(_routerDelegate.navigatorKey.currentContext);
       AppState.screenStack.removeLast();
       print("Current Stack: ${AppState.screenStack}");
+      // if (GoldenTicketService.hasGoldenTicket)
+      //   _gtService.showGoldenTicketFlushbar();
       return Future.value(true);
-    }
-    // If user is in the profile page and preferences are changed
-    else if (AppState.unsavedPrefs) {
-      if (_baseUtil != null &&
-          _baseUtil.myUser != null &&
-          _baseUtil.myUser.uid != null &&
-          _baseUtil.myUser.userPreferences != null)
-        _dbModel
-            .updateUserPreferences(
-                _baseUtil.myUser.uid, _baseUtil.myUser.userPreferences)
-            .then((value) {
-          AppState.unsavedPrefs = false;
-          log("Preferences updated");
-        });
-      return _routerDelegate.popRoute();
     }
 
     // If onboarding is in progress
     else if (AppState.isOnboardingInProgress) {
-      BaseUtil.showNegativeAlert(
-          "Exit Onboarding?🕺", "Press back once more to exit");
+      showNegativeAlert("Exit Signup?", "Press back once more to exit");
       AppState.isOnboardingInProgress = false;
       return Future.value(true);
     }
     //If the cricket game is in progress
     else if (AppState.circGameInProgress)
-      return _confirmExit(
-          "Exit Game", "Are you sure you want to leave?", () {
+      return _confirmExit("Exit Game", "Are you sure you want to leave?", () {
         AppState.circGameInProgress = false;
         didPopRoute();
         return didPopRoute();
       });
-
+    else if (AppState.isUpdateScreen) {
+      AppState.isUpdateScreen = false;
+      return _routerDelegate.popRoute();
+    }
     // If the root tab is not 0 at the time of exit
-    else if (AppState.screenStack.length == 1 &&
-        AppState.delegate.appState.rootIndex != 1 &&
-        _baseUtil.isUserOnboarded) {
-      print("Press back once more to exit");
+    else if (_baseUtil.isUserOnboarded &&
+        AppState.screenStack.length == 1 &&
+        (AppState.delegate.appState.rootIndex != 1 ||
+            RootViewModel.scaffoldKey.currentState.isDrawerOpen)) {
+      logger.w("Checking if app can be closed");
       if (RootViewModel.scaffoldKey.currentState.isDrawerOpen)
         RootViewModel.scaffoldKey.currentState.openEndDrawer();
-      else
+      else if (AppState.delegate.appState.rootIndex != 1)
         AppState.delegate.appState.setCurrentTabIndex = 1;
-      //_routerDelegate.appState.returnHome();
       return Future.value(true);
     }
-    // else if (AppState.unsavedChanges)
-    //   return _confirmExit(
-    //       "You have unsaved changes", "Are you sure you want to exit", () {
-    //     print(AppState.screenStack);
-    //     AppState.unsavedChanges = false;
-    //     didPopRoute();
-    //     return didPopRoute();
-    //   });
-    // else
+
     return _routerDelegate.popRoute();
+  }
+
+  showNegativeAlert(String title, String message, {int seconds}) {
+    Flushbar(
+      flushbarPosition: FlushbarPosition.BOTTOM,
+      flushbarStyle: FlushbarStyle.FLOATING,
+      icon: Icon(
+        Icons.assignment_late,
+        size: 28.0,
+        color: Colors.white,
+      ),
+      margin: EdgeInsets.all(10),
+      borderRadius: 8,
+      title: title,
+      message: message,
+      duration: Duration(seconds: seconds ?? 3),
+      backgroundColor: UiConstants.negativeAlertColor,
+      boxShadows: [
+        BoxShadow(
+          color: UiConstants.negativeAlertColor,
+          offset: Offset(0.0, 2.0),
+          blurRadius: 3.0,
+        )
+      ],
+    )..show(AppState.delegate.navigatorKey.currentContext);
   }
 }

@@ -2,24 +2,19 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/model/signzy_pan/pan_verification_res_model.dart';
-import 'package:felloapp/core/model/signzy_pan/signzy_identities.dart';
 import 'package:felloapp/core/model/tambola_winners_details.dart';
-import 'package:felloapp/core/service/cache_manager.dart';
-import 'package:felloapp/core/service/user_service.dart';
-import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class HttpModel extends ChangeNotifier {
   final _userService = locator<UserService>();
-  final logger = locator<Logger>();
+  final logger = locator<CustomLogger>();
 
   final Log log = new Log('HttpModel');
   static final String ASIA_BASE_URI = FlavorConfig.instance.values.baseUriAsia;
@@ -34,7 +29,7 @@ class HttpModel extends ChangeNotifier {
     logger.d("Https Ops initialized");
   }
 
-  Future<String> getBearerToken() async{
+  Future<String> getBearerToken() async {
     String token = await _userService.firebaseUser.getIdToken();
     logger.d(token);
 
@@ -54,8 +49,9 @@ class HttpModel extends ChangeNotifier {
 
       String _bearer = await getBearerToken();
       Uri _uri = Uri.https(
-          ASIA_BASE_URI, '/referralOps/$_stage/api/validate', _params);
-      http.Response _response = await http.post(_uri, headers: {HttpHeaders.authorizationHeader: 'Bearer $_bearer'});
+          ASIA_BASE_URI, '/referralOps/$_stage/api/v2/validate', _params);
+      http.Response _response = await http.post(_uri,
+          headers: {HttpHeaders.authorizationHeader: 'Bearer $_bearer'});
       logger.d(_response.body);
       if (_response.statusCode == 200) {
         try {
@@ -84,12 +80,18 @@ class HttpModel extends ChangeNotifier {
 
   //amount must be integer
   //sample url: https://us-central1-fello-d3a9c.cloudfunctions.net/razorpayops/dev/api/orderid?amount=121&notes=hellp
-  Future<Map<String, dynamic>> generateRzpOrderId(
-      double amount, String notes) async {
+  Future<Map<String, dynamic>> generateRzpOrderId(double amount, String userId,
+      String txnId, String notes, String noteDetails) async {
     String amx = (amount * 100).round().toString();
     String _stage = FlavorConfig.instance.values.razorpayStage.value();
     Map<String, dynamic> queryMap = {'amount': amx};
+    if (userId != null && userId.isNotEmpty)
+      queryMap['uid'] = Uri.encodeComponent(userId);
+    if (txnId != null && txnId.isNotEmpty)
+      queryMap['txnid'] = Uri.encodeComponent(txnId);
     if (notes != null) queryMap['notes'] = Uri.encodeComponent(notes);
+    if (noteDetails != null)
+      queryMap['notes_detail'] = Uri.encodeComponent(noteDetails);
 
     final Uri _uri =
         Uri.https(US_BASE_URI, '/razorpayops/$_stage/api/orderid', queryMap);
@@ -132,13 +134,14 @@ class HttpModel extends ChangeNotifier {
     }
   }
 
-  Future<Map<String, dynamic>> registerPrizeClaim(
-      String userId, double amount, PrizeClaimChoice claimChoice) async {
+  Future<Map<String, dynamic>> registerPrizeClaim(String userId,
+      String userName, double amount, PrizeClaimChoice claimChoice) async {
     if (userId == null || amount == null || claimChoice == null) return null;
 
-    final Uri _uri = Uri.https(
-        US_BASE_URI, '/userTxnOps/$_stage/api/prize/claim', {
+    final Uri _uri =
+        Uri.https(US_BASE_URI, '/userTxnOps/$_stage/api/prize/claim', {
       'userId': userId,
+      'userName': userName,
       'amount': '$amount',
       'redeemType': claimChoice.value()
     });
@@ -155,14 +158,12 @@ class HttpModel extends ChangeNotifier {
           parsed['flag'] != null &&
           parsed['flag'] == true) {
         logger.d('Action successful');
-        return {
-          'status': true
-        };
-      }
-      else {
+        return {'status': true};
+      } else {
         return {
           'status': false,
-          'message': parsed['message']??'Operation failed. Please try again in sometime'
+          'message': parsed['message'] ??
+              'Operation failed. Please try again in sometime'
         };
       }
     } catch (e) {
@@ -375,80 +376,5 @@ class HttpModel extends ChangeNotifier {
       logger.e('Http post failed: ' + e.toString());
     }
     return {'flag': false, 'fail_msg': 'Your ticket could not be redeemed'};
-  }
-
-  Future<ApiResponse<PanVerificationResModel>> verifyPanSignzy(
-      {String baseUrl,
-      String panNumber,
-      String panName,
-      String authToken,
-      String patronId}) async {
-    SignzyIdentities _signzyIdentities;
-
-    //add base url for signzy apis
-    // String baseUrl = 'https://preproduction.signzy.tech/api/v2/';
-    //testing pan with signy verification API
-
-    //Hit identities api to get accessToken and ID
-    var headers = {
-      'Authorization': authToken,
-      'Content-Type': 'application/json'
-    };
-
-    var identityBody = jsonEncode({
-      "type": "individualPan",
-      "email": "admin@signzy.com",
-      "callbackUrl": "https://fello.in/"
-    });
-
-    String _identitiesUri = baseUrl + '/patrons/$patronId/identities';
-
-    try {
-      final response = await http
-          .post(Uri.parse(_identitiesUri), headers: headers, body: identityBody)
-          .catchError((message) {
-        logger.e(message);
-      });
-      logger.d(response.body);
-
-      if (response.statusCode == 200) {
-        _signzyIdentities =
-            SignzyIdentities.fromJson(jsonDecode(response.body));
-
-        //Use Access token and id to hit PAN Verification Prod API
-        String panVerificationUrl = '$baseUrl/snoops';
-
-        var panVerificationBody = jsonEncode({
-          "service": "Identity",
-          "itemId": _signzyIdentities.id,
-          "task": "verification",
-          "accessToken": _signzyIdentities.accessToken,
-          "essentials": {"number": panNumber, "name": panName, "fuzzy": "true"}
-        });
-
-        final res = await http.post(Uri.parse(panVerificationUrl),
-            headers: headers, body: panVerificationBody);
-
-        logger.d("Hitting verification api");
-        logger.d(res.body);
-
-        if (res.statusCode == 200) {
-          PanVerificationResModel _panVerificationResModel =
-              PanVerificationResModel.fromJson(json.decode(res.body));
-          if (_panVerificationResModel.response.result.verified) {
-            return ApiResponse(model: _panVerificationResModel, code: 200);
-          }
-        } else if (res.statusCode == 404) {
-          throw Exception('PAN not found');
-        } else {
-          throw Exception('Failed to get response from Signz Verification Api');
-        }
-      }
-      return ApiResponse.withError(
-          "Failed to get response from Signzy Identity Api", 400);
-    } catch (e) {
-      logger.e(e);
-      throw Exception('Failed to get response from Signzy Identity Api');
-    }
   }
 }

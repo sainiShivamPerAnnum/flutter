@@ -3,6 +3,15 @@
     // Hover to view descriptions of existing attributes.
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
+
+    "[dart]":{
+        "editor.formatOnSave":true,
+        "editor.formatOnType":true,
+        "editor.codeActionsOnSave":{
+            "source.organizeImports":true, 
+            "source.fixAll":true
+        }
+    },
     "configurations": [
 
         {
@@ -49,12 +58,5 @@
                 "--profile"
               ]
         },
-        {
-            "name": "felloapp-release-ios",
-            "request": "launch",
-            "type": "dart",
-            "program": "lib/main.dart",
-        },
-  
     ]
 }

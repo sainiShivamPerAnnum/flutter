@@ -1,8 +1,5 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
@@ -11,8 +8,6 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:shimmer_animation/shimmer_animation.dart';
 
 class Play extends StatelessWidget {
   @override
@@ -22,12 +17,15 @@ class Play extends StatelessWidget {
       onModelReady: (model) {
         model.loadOfferList();
       },
+      onModelDispose: (model) {
+        model.clear();
+      },
       builder: (ctx, model, child) {
         return Container(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: SizeConfig.padding80),
+              //SizedBox(height: SizeConfig.padding80),
               Container(
                 width: SizeConfig.screenWidth,
                 height: SizeConfig.screenWidth * 0.38,
@@ -43,7 +41,15 @@ class Play extends StatelessWidget {
                             child: OfferCard(
                               shimmer: true,
                               model: PromoCardModel(
-                                  1, null, null, null, null, 4281648039, null),
+                                1,
+                                null,
+                                null,
+                                null,
+                                null,
+                                4281648039,
+                                null,
+                                1,
+                              ),
                             ),
                           ),
                           ClipRRect(
@@ -51,16 +57,17 @@ class Play extends StatelessWidget {
                                 BorderRadius.circular(SizeConfig.roundness32),
                             child: OfferCard(
                               shimmer: true,
-                              model: PromoCardModel(
-                                  1, null, null, null, null, 4294942219, null),
+                              model: PromoCardModel(1, null, null, null, null,
+                                  4294942219, null, 1),
                             ),
                           ),
                         ],
                       )
-                    : ListView.builder(
+                    : PageView.builder(
                         scrollDirection: Axis.horizontal,
-                        padding: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.pageHorizontalMargins),
+                        // padding: EdgeInsets.symmetric(
+                        //     horizontal: SizeConfig.pageHorizontalMargins),
+                        controller: model.promoPageController,
                         itemCount: model.offerList.length,
                         itemBuilder: (ctx, i) {
                           return OfferCard(
@@ -89,15 +96,13 @@ class Play extends StatelessWidget {
                       ),
                   child: ListView(padding: EdgeInsets.zero, children: [
                     GestureDetector(
-                      onTap: () =>
-                          model.openGame(BaseUtil.gamesList[0].pageConfig),
+                      onTap: () => model.openGame(BaseUtil.gamesList[0]),
                       child: GameCard(
                         gameData: BaseUtil.gamesList[0],
                       ),
                     ),
                     GestureDetector(
-                      onTap: () =>
-                          model.openGame(BaseUtil.gamesList[1].pageConfig),
+                      onTap: () => model.openGame(BaseUtil.gamesList[1]),
                       child: GameCard(
                         gameData: BaseUtil.gamesList[1],
                       ),

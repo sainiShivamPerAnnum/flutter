@@ -1,5 +1,4 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/util/logger.dart';
 
 class TambolaWinnersDetail {
@@ -100,7 +99,7 @@ class WeekWinner {
   String get uid => _uid;
 }
 
-enum PrizeClaimChoice { NA, AMZ_VOUCHER, GOLD_CREDIT }
+enum PrizeClaimChoice { NA, AMZ_VOUCHER, GOLD_CREDIT, FELLO_PRIZE }
 
 extension ParseToString on PrizeClaimChoice {
   String value() {

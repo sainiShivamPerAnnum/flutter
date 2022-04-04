@@ -1,13 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/app_exceptions.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:firebase_performance/firebase_performance.dart';
 import 'package:http/http.dart' as http;
 import 'package:package_info/package_info.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 abstract class API {
   void setBaseUrl(String url);
@@ -21,10 +22,12 @@ abstract class API {
 }
 
 class APIService implements API {
+  // String _baseUrl = 'http://028b-103-108-4-230.ngrok.io/fello-dev-station/asia-south1';
   String _baseUrl = 'https://' + FlavorConfig.instance.values.baseUriAsia;
   //"https://asia-south1-fello-dev-station.cloudfunctions.net";
-  String _versionString;
-  final logger = locator<Logger>();
+  final logger = locator<CustomLogger>();
+  final userService = locator<UserService>();
+  String _versionString = "";
 
   APIService._();
   static final instance = APIService._();
@@ -51,9 +54,11 @@ class APIService implements API {
       final response = await http.get(
         Uri.parse(finalPath),
         headers: {
-          HttpHeaders.authorizationHeader: token != null ? token : '',
+          HttpHeaders.authorizationHeader: token != null ? 'Bearer $token' : '',
           'platform': Platform.isAndroid ? 'android' : 'iOS',
-          'version': await _getAppVersion(),
+          'version':
+              _versionString.isEmpty ? await _getAppVersion() : _versionString,
+          'uid': userService?.baseUser?.uid,
         },
       );
       logger.d("response from $url");
@@ -73,14 +78,26 @@ class APIService implements API {
     String url, {
     Map<String, dynamic> body,
     String token,
+    bool isAuthTokenAvailable = true,
   }) async {
     final HttpMetric metric =
         FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Post);
     await metric.start();
     var responseJson;
     try {
-      Map<String, String> _headers = {'Content-Type': 'application/json; charset=UTF-8'};
-      if(token != null) _headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
+      Map<String, String> _headers = {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'platform': Platform.isAndroid ? 'android' : 'iOS',
+        'version':
+            _versionString.isEmpty ? await _getAppVersion() : _versionString,
+        'uid': userService?.baseUser?.uid,
+      };
+      logger.d(_headers);
+      if (token != null)
+        _headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
+
+      if (!isAuthTokenAvailable) _headers['x-api-key'] = 'QTp93rVNrUJ9nv7rXDDh';
+
       String _url = _baseUrl + url;
       logger.d("response from $url");
 
@@ -120,7 +137,9 @@ class APIService implements API {
           'Content-Type': 'application/json; charset=UTF-8',
           HttpHeaders.authorizationHeader: token != null ? token : '',
           'platform': Platform.isAndroid ? 'android' : 'iOS',
-          'version': await _getAppVersion(),
+          'version':
+              _versionString.isEmpty ? await _getAppVersion() : _versionString,
+          'uid': userService?.baseUser?.uid,
         },
         body: body == null ? null : jsonEncode(body),
       );
@@ -153,7 +172,9 @@ class APIService implements API {
           'Content-Type': 'application/json; charset=UTF-8',
           HttpHeaders.authorizationHeader: token ?? '',
           'platform': Platform.isAndroid ? 'android' : 'iOS',
-          'version': await _getAppVersion(),
+          'version':
+              _versionString.isEmpty ? await _getAppVersion() : _versionString,
+          'uid': userService?.baseUser?.uid,
         },
       );
       responseJson = returnResponse(response);
@@ -184,7 +205,9 @@ class APIService implements API {
           'Content-Type': 'application/json; charset=UTF-8',
           HttpHeaders.authorizationHeader: token != null ? token : '',
           'platform': Platform.isAndroid ? 'android' : 'iOS',
-          'version': await _getAppVersion(),
+          'version':
+              _versionString.isEmpty ? await _getAppVersion() : _versionString,
+          'uid': userService?.baseUser?.uid,
         },
         body: body == null ? null : jsonEncode(body),
       );
@@ -200,7 +223,6 @@ class APIService implements API {
   @override
   dynamic returnResponse(http.Response response) {
     var responseJson = json.decode(response.body);
-    logger.d("response $response");
     switch (response.statusCode) {
       case 200:
         return responseJson;
@@ -219,11 +241,15 @@ class APIService implements API {
   }
 
   Future<String> _getAppVersion() async {
-    if (_versionString == null || _versionString.isEmpty) {
-      PackageInfo packageInfo = await PackageInfo.fromPlatform();
-      _versionString = '${packageInfo.version} (${packageInfo.buildNumber})';
+    try {
+      if (_versionString == null || _versionString.isEmpty) {
+        PackageInfo packageInfo = await PackageInfo.fromPlatform();
+        _versionString = '${packageInfo.buildNumber}';
+      }
+    } catch (e) {
+      print(e);
     }
-
+    _versionString = _versionString;
     return _versionString;
   }
 

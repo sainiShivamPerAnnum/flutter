@@ -1,25 +1,33 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
-import 'package:felloapp/core/model/leader_board_modal.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
+import 'package:felloapp/ui/service_elements/leaderboards/cric_leaderboard.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 
 class CricketHomeView extends StatelessWidget {
+  final _analyticsService = locator<AnalyticsService>();
   @override
   Widget build(BuildContext context) {
     return BaseView<CricketHomeViewModel>(
@@ -31,7 +39,7 @@ class CricketHomeView extends StatelessWidget {
       },
       builder: (ctx, model, child) {
         return RefreshIndicator(
-          onRefresh: model.getLeaderboard,
+          onRefresh: () => model.refreshLeaderboard(),
           child: Scaffold(
             backgroundColor: UiConstants.primaryColor,
             body: HomeBackground(
@@ -51,15 +59,17 @@ class CricketHomeView extends StatelessWidget {
                           SizedBox(height: SizeConfig.screenHeight * 0.1),
                           InkWell(
                             onTap: () async {
+                              if (await BaseUtil.showNoInternetAlert()) return;
                               if (model.state == ViewState.Idle) {
                                 if (await model.openWebView())
                                   model.startGame();
                                 else
-                                  BaseUtil.showNegativeAlert(
-                                      "Something went wrong", model.message);
+                                  earnMoreTokens();
                               }
                             },
-                            child: Opacity(
+                            child: AnimatedOpacity(
+                              duration: Duration(milliseconds: 10),
+                              curve: Curves.decelerate,
                               opacity: model.cardOpacity ?? 1,
                               child: GameCard(
                                 gameData: BaseUtil.gamesList[0],
@@ -122,6 +132,12 @@ class CricketHomeView extends StatelessWidget {
                                                     model: model.cPrizes,
                                                     controller:
                                                         model.scrollController,
+                                                    subtitle: BaseRemoteConfig
+                                                            .remoteConfig
+                                                            .getString(
+                                                                BaseRemoteConfig
+                                                                    .GAME_CRICKET_ANNOUNCEMENT) ??
+                                                        'The highest scorers of the week win prizes every Sunday at midnight',
                                                     leading: List.generate(
                                                         model.cPrizes.prizesA
                                                             .length,
@@ -133,20 +149,7 @@ class CricketHomeView extends StatelessWidget {
                                                                       .primaryColor),
                                                             )),
                                                   )),
-                                        model.isLeaderboardLoading
-                                            ? ListLoader()
-                                            : (model.clboard == null
-                                                ? NoRecordDisplayWidget(
-                                                    asset:
-                                                        "images/leaderboard.png",
-                                                    text:
-                                                        "Leaderboard will be updated soon",
-                                                  )
-                                                : LeaderBoardView(
-                                                    model: model.clboard,
-                                                    controller:
-                                                        model.scrollController,
-                                                  ))
+                                        CricketLeaderboardView()
                                       ]),
                                 ),
                               ],
@@ -184,8 +187,7 @@ class CricketHomeView extends StatelessWidget {
                                 if (await model.openWebView())
                                   model.startGame();
                                 else
-                                  BaseUtil.showNegativeAlert(
-                                      "Something went wrong", model.message);
+                                  earnMoreTokens();
                               }
                             }),
                       ),
@@ -218,29 +220,59 @@ class CricketHomeView extends StatelessWidget {
       },
     );
   }
+
+  void earnMoreTokens() {
+    _analyticsService.track(eventName: AnalyticsEvents.earnMoreTokens);
+    BaseUtil.openModalBottomSheet(
+      addToScreenStack: true,
+      content: WantMoreTicketsModalSheet(
+        isInsufficientBalance: true,
+      ),
+      hapticVibrate: true,
+      backgroundColor: Colors.transparent,
+      isBarrierDismissable: true,
+    );
+  }
 }
 
 class NoRecordDisplayWidget extends StatelessWidget {
   final String asset;
   final String assetSvg;
+  final String assetLottie;
   final String text;
+  final bool topPadding;
+  final bool bottomPadding;
 
-  NoRecordDisplayWidget({this.asset, this.text, this.assetSvg});
+  NoRecordDisplayWidget({
+    this.asset,
+    this.text,
+    this.assetSvg,
+    this.assetLottie,
+    this.topPadding = true,
+    this.bottomPadding = false,
+  });
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SizedBox(height: SizeConfig.screenHeight * 0.1),
-        asset != null
-            ? Image.asset(
-                asset,
-                height: SizeConfig.screenHeight * 0.16,
-              )
-            : SvgPicture.asset(
-                assetSvg,
-                height: SizeConfig.screenHeight * 0.16,
-              ),
+        if (topPadding) SizedBox(height: SizeConfig.screenHeight * 0.1),
+        if (asset != null)
+          Image.asset(
+            asset,
+            height: SizeConfig.screenHeight * 0.16,
+          ),
+        if (assetSvg != null)
+          SvgPicture.asset(
+            assetSvg,
+            height: SizeConfig.screenHeight * 0.16,
+          ),
+        if (assetLottie != null)
+          Lottie.asset(
+            assetLottie,
+            repeat: false,
+            height: SizeConfig.screenHeight * 0.26,
+          ),
         SizedBox(
           height: SizeConfig.padding16,
         ),
@@ -248,7 +280,8 @@ class NoRecordDisplayWidget extends StatelessWidget {
           text,
           textAlign: TextAlign.center,
           style: TextStyles.body2.bold,
-        )
+        ),
+        if (bottomPadding) SizedBox(height: SizeConfig.padding16),
       ],
     );
   }
@@ -287,8 +320,9 @@ class PrizesView extends StatelessWidget {
   final PrizesModel model;
   final ScrollController controller;
   final List<Widget> leading;
+  final String subtitle;
 
-  PrizesView({this.model, this.leading, this.controller});
+  PrizesView({this.model, this.leading, this.controller, this.subtitle});
   @override
   Widget build(BuildContext context) {
     return NotificationListener<OverscrollNotification>(
@@ -307,51 +341,79 @@ class PrizesView extends StatelessWidget {
         return true;
       },
       child: ListView.builder(
-        itemCount: model.prizesA.length,
-        shrinkWrap: true,
-        physics: BouncingScrollPhysics(),
+        itemCount: model.prizesA.length + 1,
         padding: EdgeInsets.only(bottom: SizeConfig.navBarHeight),
         itemBuilder: (ctx, i) {
-          return Container(
-            width: SizeConfig.screenWidth,
-            padding: EdgeInsets.all(SizeConfig.padding12),
-            margin: EdgeInsets.symmetric(vertical: SizeConfig.padding8),
-            decoration: BoxDecoration(
-              color: UiConstants.primaryLight.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-            ),
-            child: Row(
-              children: [
-                CircleAvatar(
-                    radius: SizeConfig.padding24,
-                    backgroundColor: UiConstants.primaryColor.withOpacity(0.3),
-                    child: leading[i]),
-                SizedBox(width: SizeConfig.padding12),
-                Expanded(
-                  child: Text(
-                    model.prizesA[i].displayName ?? "Prize ${i + 1}",
-                    style: TextStyles.body3.bold,
+          if (i == 0)
+            return Container(
+              margin: EdgeInsets.only(top: SizeConfig.padding8),
+              decoration: BoxDecoration(
+                color: UiConstants.tertiaryLight,
+                // image: DecorationImage(
+                //   image: AssetImage("assets/images/confetti.png"),
+                //   fit: BoxFit.cover,
+                //   colorFilter: new ColorFilter.mode(
+                //       UiConstants.tertiaryLight.withOpacity(0.1),
+                //       BlendMode.dstATop),
+                // ),
+                borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+              ),
+              padding: EdgeInsets.all(SizeConfig.padding16),
+              child: Stack(
+                children: [
+                  //Image.asset("assets/images/confetti.png"),
+                  Text(
+                    subtitle,
+                    textAlign: TextAlign.center,
+                    style: TextStyles.body3.light,
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    PrizeChip(
-                      color: UiConstants.tertiarySolid,
-                      svg: Assets.tokens,
-                      text: "${model.prizesA[i].flc}",
+                ],
+              ),
+            );
+          else {
+            i--;
+            return Container(
+              width: SizeConfig.screenWidth,
+              padding: EdgeInsets.all(SizeConfig.padding12),
+              margin: EdgeInsets.symmetric(vertical: SizeConfig.padding8),
+              decoration: BoxDecoration(
+                color: UiConstants.primaryLight.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+              ),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                      radius: SizeConfig.padding24,
+                      backgroundColor:
+                          UiConstants.primaryColor.withOpacity(0.3),
+                      child: leading[i]),
+                  SizedBox(width: SizeConfig.padding12),
+                  Expanded(
+                    child: Text(
+                      model.prizesA[i].displayName ?? "Prize ${i + 1}",
+                      style: TextStyles.body3.bold,
                     ),
-                    SizedBox(width: SizeConfig.padding16),
-                    PrizeChip(
-                      color: UiConstants.primaryColor,
-                      png: Assets.moneyIcon,
-                      text: "Rs ${model.prizesA[i].amt}",
-                    )
-                  ],
-                ),
-              ],
-            ),
-          );
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      PrizeChip(
+                        color: UiConstants.tertiarySolid,
+                        svg: Assets.tokens,
+                        text: "${model.prizesA[i].flc}",
+                      ),
+                      SizedBox(width: SizeConfig.padding16),
+                      PrizeChip(
+                        color: UiConstants.primaryColor,
+                        png: Assets.moneyIcon,
+                        text: "₹ ${model.prizesA[i].amt}",
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            );
+          }
         },
       ),
     );
@@ -361,8 +423,16 @@ class PrizesView extends StatelessWidget {
 class PrizeChip extends StatelessWidget {
   final String svg, png, text;
   final Color color;
+  final double opacity;
+  final bool svgPaint;
 
-  PrizeChip({this.color, this.png, this.svg, this.text});
+  PrizeChip(
+      {this.color,
+      this.png,
+      this.svg,
+      this.text,
+      this.opacity = 0.2,
+      this.svgPaint = true});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -370,12 +440,18 @@ class PrizeChip extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: SizeConfig.iconSize3,
-            backgroundColor: color.withOpacity(0.2),
+            backgroundColor: color.withOpacity(opacity),
             child: svg != null
-                ? SvgPicture.asset(
-                    svg,
-                    height: SizeConfig.iconSize3,
-                  )
+                ? (svgPaint
+                    ? SvgPicture.asset(
+                        svg,
+                        height: SizeConfig.iconSize3,
+                        color: color,
+                      )
+                    : SvgPicture.asset(
+                        svg,
+                        height: SizeConfig.iconSize3,
+                      ))
                 : Image.asset(
                     png,
                     height: SizeConfig.iconSize3,
@@ -385,100 +461,6 @@ class PrizeChip extends StatelessWidget {
           Text(text, style: TextStyles.body3)
         ],
       ),
-    );
-  }
-}
-
-class LeaderBoardView extends StatelessWidget {
-  final LeaderBoardModal model;
-  final ScrollController controller;
-
-  LeaderBoardView({this.model, this.controller});
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(height: SizeConfig.padding8),
-        Padding(
-          padding: EdgeInsets.all(SizeConfig.padding8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('This week\'s top scorers:',
-                style: TextStyles.body4.colour(Colors.grey),
-              ),
-              Text(
-                "Updated on: ${DateFormat('dd-MMM-yyyy | hh:mm:ss').format(model.lastupdated.toDate())}",
-                style: TextStyles.body4.colour(Colors.grey),
-              )
-            ],
-          ),
-        ),
-        Expanded(
-          child: NotificationListener<OverscrollNotification>(
-            onNotification: (OverscrollNotification value) {
-              if (value.overscroll < 0 &&
-                  controller.offset + value.overscroll <= 0) {
-                if (controller.offset != 0) controller.jumpTo(0);
-                return true;
-              }
-              if (controller.offset + value.overscroll >=
-                  controller.position.maxScrollExtent) {
-                if (controller.offset != controller.position.maxScrollExtent)
-                  controller.jumpTo(controller.position.maxScrollExtent);
-                return true;
-              }
-              controller.jumpTo(controller.offset + value.overscroll);
-              return true;
-            },
-            child: ListView.builder(
-              // physics: ClampingScrollPhysics(),
-              padding: EdgeInsets.only(bottom: SizeConfig.navBarHeight),
-              itemCount: model.scoreboard.length,
-              itemBuilder: (ctx, i) {
-                return Container(
-                  width: SizeConfig.screenWidth,
-                  padding: EdgeInsets.all(SizeConfig.padding12),
-                  margin: EdgeInsets.symmetric(vertical: SizeConfig.padding8),
-                  decoration: BoxDecoration(
-                    color: UiConstants.primaryLight.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-                  ),
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        backgroundColor: UiConstants.primaryColor,
-                        radius: SizeConfig.padding16,
-                        child: Text(
-                          "${i + 1}",
-                          style: TextStyles.body4.bold.colour(Colors.white),
-                        ),
-                      ),
-                      SizedBox(width: SizeConfig.padding12),
-                      Expanded(
-                        child: Text(model.scoreboard[i].username ?? "Username",
-                            style: TextStyles.body3),
-                      ),
-                      TextButton.icon(
-                          icon: CircleAvatar(
-                            radius: SizeConfig.screenWidth * 0.029,
-                            backgroundColor: Colors.blue[900].withOpacity(0.2),
-                            child: SvgPicture.asset(Assets.scoreIcon,
-                                color: Colors.blue[900],
-                                height: SizeConfig.iconSize3),
-                          ),
-                          label: Text(
-                              model.scoreboard[i].score.toString() ?? "00",
-                              style: TextStyles.body3.colour(Colors.black54)),
-                          onPressed: () {}),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

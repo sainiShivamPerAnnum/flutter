@@ -1,7 +1,14 @@
 //Project Imports
-import 'package:felloapp/core/base_analytics.dart';
+//Dart & Flutter Imports
+import 'dart:async';
+import 'dart:math';
+//Pub Imports
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/core/service/analytics/base_analytics.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
@@ -9,55 +16,44 @@ import 'package:felloapp/core/model/feed_card_model.dart';
 import 'package:felloapp/core/model/prize_leader_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/referral_leader_model.dart';
+import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/model/tambola_winners_details.dart';
+import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/model/user_icici_detail_model.dart';
 import 'package:felloapp/core/model/user_ticket_wallet_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
+import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
-import 'package:felloapp/core/service/pan_service.dart';
-import 'package:felloapp/core/service/payment_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/pan_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:felloapp/core/base_remote_config.dart';
-import 'package:felloapp/core/model/tambola_board_model.dart';
-import 'package:felloapp/core/model/user_augmont_details_model.dart';
-import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-
-//Dart & Flutter Imports
-import 'dart:async';
-import 'dart:math';
-import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:flutter/material.dart';
-
-//Pub Imports
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flushbar/flushbar.dart';
+import 'package:flutter/material.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:logger/logger.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:logger/logger.dart';
 
 import 'core/model/game_model.dart';
 
 class BaseUtil extends ChangeNotifier {
-  final Log log = new Log("BaseUtil");
-  final Logger logger = locator<Logger>();
+  final CustomLogger logger = locator<CustomLogger>();
   final DBModel _dbModel = locator<DBModel>();
   final LocalDBModel _lModel = locator<LocalDBModel>();
   final AppState _appState = locator<AppState>();
@@ -68,7 +64,6 @@ class BaseUtil extends ChangeNotifier {
   UserTicketWallet _userTicketWallet;
   User firebaseUser;
   FirebaseAnalytics baseAnalytics;
-  PaymentService _payService;
   List<FeedCard> feedCards;
   String userRegdPan;
 
@@ -195,42 +190,52 @@ class BaseUtil extends ChangeNotifier {
   }
 
   Future init() async {
-    logger.i('inside init base util');
-    _setRuntimeDefaults();
+    try {
+      logger.i('inside init base util');
+      _setRuntimeDefaults();
 
-    //Analytics logs app open state.
-    BaseAnalytics.init();
-    BaseAnalytics.analytics.logAppOpen();
+      //Analytics logs app open state.
+      await BaseAnalytics.init();
+      BaseAnalytics.analytics.logAppOpen();
 
-    //remote config for various remote variables
-    logger.i('base util remote config');
-    await BaseRemoteConfig.init();
+      //remote config for various remote variables
+      logger.i('base util remote config');
+      await BaseRemoteConfig.init();
 
-    setPackageInfo();
-    setGameDefaults();
+      setPackageInfo();
+      setGameDefaults();
 
-    ///fetch on-boarding status and User details
-    firebaseUser = _userService.firebaseUser;
-    isUserOnboarded = _userService.isUserOnborded;
+      ///fetch on-boarding status and User details
+      firebaseUser = _userService.firebaseUser;
+      isUserOnboarded = _userService.isUserOnborded;
 
-    // isUserOnboarded =
-    //     (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
+      // isUserOnboarded =
+      //     (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
 
-    if (isUserOnboarded) {
-      //set current user
-      myUser = _userService.baseUser;
+      if (isUserOnboarded) {
+        //set current user
+        myUser = _userService.baseUser;
 
-      ///get user creation time
-      _userCreationTimestamp = firebaseUser.metadata.creationTime;
+        ///get user creation time
+        _userCreationTimestamp = firebaseUser.metadata.creationTime;
 
-      ///pick zerobalance asset
-      Random rnd = new Random();
-      zeroBalanceAssetUri = 'zerobal/zerobal_${rnd.nextInt(4) + 1}';
+        ///pick zerobalance asset
+        Random rnd = new Random();
+        zeroBalanceAssetUri = 'zerobal/zerobal_${rnd.nextInt(4) + 1}';
 
-      ///see if security needs to be shown -> Move to save tab
-      // show_security_prompt = await _lModel.showSecurityPrompt();
+        ///see if security needs to be shown -> Move to save tab
+        show_security_prompt = await _lModel.showSecurityPrompt();
 
-      await setUserDefaults();
+        await setUserDefaults();
+      }
+    } catch (e) {
+      logger.e(e.toString());
+      // if (_userService.isUserOnborded != null)
+      //   _dbModel.logFailure(
+      //       _userService.baseUser.uid, FailType.BaseUtilInitFailed, {
+      //     "title": "BaseUtil initialization Failed",
+      //     "error": e.toString(),
+      //   });
     }
   }
 
@@ -238,12 +243,6 @@ class BaseUtil extends ChangeNotifier {
     ///get user wallet -> Try moving it to view and viewmodel for finance
     // _userFundWallet = await _dbModel.getUserFundWallet(firebaseUser.uid);
     // if (_userFundWallet == null) _compileUserWallet();
-
-    ///get user ticket balance --> Try moving it to view and viewmodel for game
-    // _userTicketWallet = await _dbModel.getUserTicketWallet(firebaseUser.uid);
-    // if (_userTicketWallet == null) {
-    //   await _initiateNewTicketWallet();
-    // }
 
     ///prefill pan details if available --> Profile Section (Show pan number eye)
     panService = new PanService();
@@ -276,6 +275,7 @@ class BaseUtil extends ChangeNotifier {
         prizeAmount: BaseRemoteConfig.remoteConfig
                 .getString(BaseRemoteConfig.CRICKET_PLAY_PRIZE) ??
             "50000",
+        analyticEvent: AnalyticsEvents.selectPlayCricket,
       ),
       GameModel(
         gameName: "Tambola",
@@ -289,33 +289,9 @@ class BaseUtil extends ChangeNotifier {
         prizeAmount: BaseRemoteConfig.remoteConfig
                 .getString(BaseRemoteConfig.TAMBOLA_PLAY_PRIZE) ??
             "10,000",
+        analyticEvent: AnalyticsEvents.selectPlayTambola,
       ),
     ];
-  }
-
-  ///related to icici - function not active
-  acceptNotificationsIfAny(BuildContext context) {
-    ///if payment completed in the background:
-    if (_payService != null && myUser.pendingTxnId != null) {
-      _payService.addPaymentStatusListener((value) {
-        if (value == PaymentService.TRANSACTION_COMPLETE) {
-          showPositiveAlert(
-              'Transaction Complete', 'Your account balance has been updated!',
-              seconds: 5);
-        } else if (value == PaymentService.TRANSACTION_REJECTED) {
-          showPositiveAlert(
-              'Transaction Closed', 'The transaction was not completed',
-              seconds: 5);
-        } else {
-          log.debug('Received notif for pending transaction: $value');
-        }
-      });
-    }
-  }
-
-  ///related to icici - function not active
-  cancelIncomingNotifications() {
-    if (_payService != null) _payService.addPaymentStatusListener(null);
   }
 
   Future<bool> isUnreadFreshchatSupportMessages() async {
@@ -323,7 +299,7 @@ class BaseUtil extends ChangeNotifier {
       var unreadCount = await Freshchat.getUnreadCountAsync;
       return (unreadCount['count'] > 0);
     } catch (e) {
-      log.error('Error reading unread count variable: $e');
+      logger.e('Error reading unread count variable: $e');
       Map<String, dynamic> errorDetails = {
         'User number': _myUser.mobile,
         'Error Type': 'Unread message count failed'
@@ -385,7 +361,8 @@ class BaseUtil extends ChangeNotifier {
     return (!skFlag && !augFlag);
   }
 
-  static showPositiveAlert(String title, String message, {int seconds}) {
+  static showPositiveAlert(String title, String message, {int seconds = 3}) {
+    // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Flushbar(
         flushbarPosition: FlushbarPosition.BOTTOM,
@@ -399,12 +376,11 @@ class BaseUtil extends ChangeNotifier {
         borderRadius: 8,
         title: title,
         message: message,
-        duration: Duration(seconds: 3),
+        duration: Duration(seconds: seconds),
         backgroundGradient: LinearGradient(
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,
             colors: [Colors.lightBlueAccent, UiConstants.primaryColor]),
-//      backgroundColor: Colors.lightBlueAccent,
         boxShadows: [
           BoxShadow(
             color: UiConstants.positiveAlertColor,
@@ -417,6 +393,7 @@ class BaseUtil extends ChangeNotifier {
   }
 
   static showNegativeAlert(String title, String message, {int seconds}) {
+    // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Flushbar(
         flushbarPosition: FlushbarPosition.BOTTOM,
@@ -517,6 +494,7 @@ class BaseUtil extends ChangeNotifier {
       ValueChanged<dynamic> callback}) async {
     if (addToScreenStack != null && addToScreenStack == true)
       AppState.screenStack.add(ScreenItem.dialog);
+    CustomLogger().d("Added a dialog");
     if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
     await showDialog(
       context: AppState.delegate.navigatorKey.currentContext,
@@ -532,13 +510,16 @@ class BaseUtil extends ChangeNotifier {
       bool hapticVibrate,
       Color backgroundColor,
       bool isBarrierDismissable,
-      BorderRadius borderRadius}) {
+      BorderRadius borderRadius,
+      bool isScrollControlled = false}) {
     if (addToScreenStack != null && addToScreenStack == true)
       AppState.screenStack.add(ScreenItem.dialog);
     if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
     return showModalBottomSheet(
+        enableDrag: false,
         shape: RoundedRectangleBorder(
             borderRadius: borderRadius ?? BorderRadius.zero),
+        isScrollControlled: isScrollControlled ?? false,
         backgroundColor:
             backgroundColor != null ? backgroundColor : Colors.white,
         isDismissible: isBarrierDismissable,
@@ -556,6 +537,7 @@ class BaseUtil extends ChangeNotifier {
 
   Future<bool> authenticateUser(AuthCredential credential) {
     logger.d("Verification credetials: " + credential.toString());
+    // FirebaseAuth.instance.signInWithCustomToken(token)
     return FirebaseAuth.instance.signInWithCredential(credential).then((res) {
       this.firebaseUser = res.user;
       logger.i("New Firebase User: ${res.additionalUserInfo.isNewUser}");
@@ -570,11 +552,11 @@ class BaseUtil extends ChangeNotifier {
   Future<bool> signOut() async {
     try {
       await _lModel.deleteLocalAppData();
-      log.debug('Cleared local cache');
+      logger.d('Cleared local cache');
       _appState.setCurrentTabIndex = 0;
 
       //remove fcm token from remote
-      await _dbModel.updateClientToken(myUser, '');
+      //await _dbModel.updateClientToken(myUser, '');
 
       //TODO better fix required
       ///IMP: When a user signs out and attempts
@@ -588,7 +570,6 @@ class BaseUtil extends ChangeNotifier {
       _userTicketWallet = null;
       firebaseUser = null;
       baseAnalytics = null;
-      _payService = null;
       feedCards = null;
       // _dailyPickCount = null;
       userRegdPan = null;
@@ -621,7 +602,7 @@ class BaseUtil extends ChangeNotifier {
 
       return true;
     } catch (e) {
-      log.error('Failed to clear data/sign out user: ' + e.toString());
+      logger.e('Failed to clear data/sign out user: ' + e.toString());
       return false;
     }
   }
@@ -629,7 +610,7 @@ class BaseUtil extends ChangeNotifier {
   int checkTicketCountValidity(List<TambolaBoard> requestedBoards) {
     if (requestedBoards != null && _userTicketWallet.getActiveTickets() > 0) {
       if (requestedBoards.length < _userTicketWallet.getActiveTickets()) {
-        log.debug('Requested board count is less than needed tickets');
+        logger.d('Requested board count is less than needed tickets');
         int ticketCountRequired =
             _userTicketWallet.getActiveTickets() - requestedBoards.length;
 
@@ -641,7 +622,7 @@ class BaseUtil extends ChangeNotifier {
       }
       if (BaseUtil.ticketRequestSent) {
         if (requestedBoards.length > BaseUtil.ticketCountBeforeRequest) {
-          log.debug(
+          logger.d(
               'Previous request had completed and now the ticket count has increased');
           //BaseUtil.ticketRequestSent = false; //not really needed i think
         }
@@ -658,10 +639,10 @@ class BaseUtil extends ChangeNotifier {
           await CacheManager.writeCache(
               key: 'dpUrl', value: myUserDpUrl, type: CacheType.string);
           setDisplayPictureUrl(myUserDpUrl);
-          log.debug("No profile picture found in cache, fetched from server");
+          logger.d("No profile picture found in cache, fetched from server");
         }
       } catch (e) {
-        log.error(e.toString());
+        logger.e(e.toString());
       }
     } else
       setDisplayPictureUrl(await CacheManager.readCache(key: 'dpUrl'));
@@ -694,8 +675,8 @@ class BaseUtil extends ChangeNotifier {
     return (userCreationTimestamp.isBefore(Constants.VERSION_2_RELEASE_DATE));
   }
 
-  static int getWeekNumber() {
-    DateTime tdt = new DateTime.now();
+  static int getWeekNumber({DateTime currentDate}) {
+    DateTime tdt = (currentDate != null) ? currentDate : new DateTime.now();
     int dayn = tdt.weekday;
     //tdt = new DateTime(tdt.year, tdt.month, tdt.day-dayn+3);
     //tdt.setDate(tdt.getDate() - dayn + 3);
@@ -712,7 +693,6 @@ class BaseUtil extends ChangeNotifier {
         ((firstThursday.millisecondsSinceEpoch - tdt.millisecondsSinceEpoch) /
                 604800000)
             .ceil();
-    //log.debug("Current week number: " + n.toString());
     return n;
   }
 
@@ -770,32 +750,6 @@ class BaseUtil extends ChangeNotifier {
   int getTicketCountForTransaction(double investment) =>
       (investment / Constants.INVESTMENT_AMOUNT_FOR_TICKET).floor();
 
-  //the new wallet logic will be empty for old user.
-  //this method will copy the old values to the new wallet
-  _compileUserWallet() {
-    _userFundWallet = (_userFundWallet == null)
-        ? UserFundWallet.newWallet()
-        : _userFundWallet;
-  }
-
-  Future<bool> _initiateNewTicketWallet() async {
-    _userTicketWallet = UserTicketWallet.newTicketWallet();
-    int _t = userTicketWallet.initTck;
-    _userTicketWallet = await _dbModel.updateInitUserTicketCount(
-        myUser.uid, _userTicketWallet, Constants.NEW_USER_TICKET_COUNT);
-    //updateInitUserTicketCount method returns no change if operations fails
-    return (_userTicketWallet.initTck != _t);
-  }
-
-  Future<bool> _initiateNewFLCWallet() async {
-    _userTicketWallet = UserTicketWallet.newTicketWallet();
-    int _t = userTicketWallet.initTck;
-    _userTicketWallet = await _dbModel.updateInitUserTicketCount(
-        myUser.uid, _userTicketWallet, Constants.NEW_USER_TICKET_COUNT);
-    //updateInitUserTicketCount method returns no change if operations fails
-    return (_userTicketWallet.initTck != _t);
-  }
-
   void setDisplayPictureUrl(String url) {
     myUserDpUrl = url;
     notifyListeners();
@@ -823,6 +777,7 @@ class BaseUtil extends ChangeNotifier {
 
   void setEmail(String email) {
     myUser.email = email;
+    notifyListeners();
   }
 
   void refreshAugmontBalance() async {
@@ -877,41 +832,6 @@ class BaseUtil extends ChangeNotifier {
     AppState.unsavedPrefs = true;
     notifyListeners();
   }
-
-  void toggleTambolaNotificationStatus(bool value) {
-    _myUser.userPreferences
-        .setPreference(Preferences.TAMBOLANOTIFICATIONS, (value) ? 1 : 0);
-    AppState.unsavedPrefs = true;
-    notifyListeners();
-  }
-
-  //Saving and fetching app lock user preference
-  // void saveSecurityValue(bool newValue) async {
-  //   try {
-  //     SharedPreferences _prefs = await SharedPreferences.getInstance();
-  //     _prefs.setBool("securityEnabled", newValue);
-  //   } catch(e) {
-  //     log.debug("Error while saving security enabled value");
-  //   }
-  // }
-  //
-  // Future<bool> getSecurityValue() async {
-  //   try {
-  //     SharedPreferences _prefs = await SharedPreferences.getInstance();
-  //     if(_prefs.containsKey("securityEnabled")) {
-  //       bool _savedSecurityValue = _prefs.getBool("securityEnabled");
-  //       if(_savedSecurityValue!=null) {
-  //         return _savedSecurityValue;
-  //       }
-  //       else {
-  //         return false;
-  //       }
-  //     }
-  //   } catch(e) {
-  //     log.debug("Error while retrieving security enabled value");
-  //   }
-  //   return false;
-  // }
 
   static String getMonthName({@required int monthNum, bool trim = true}) {
     String res = "January";
@@ -1021,31 +941,5 @@ class BaseUtil extends ChangeNotifier {
   set isGoogleSignInProgress(value) {
     this._isGoogleSignInProgress = value;
     notifyListeners();
-  }
-
-  // int get atomicTicketGenerationLeftCount => _atomicTicketGenerationLeftCount;
-
-  // set atomicTicketGenerationLeftCount(int value) {
-  //   _atomicTicketGenerationLeftCount = value;
-  //   notifyListeners();
-  // }
-
-  // int get dailyPicksCount => _dailyPickCount;
-
-  // set dailyPicksCount(int count) {
-  //   _dailyPickCount = count;
-  //   notifyListeners();
-  // }
-
-  Future<bool> isOfflineSnackBar(BuildContext context) async {
-    ConnectivityStatus connectivityStatus =
-        Provider.of<ConnectivityStatus>(context, listen: false);
-
-    if (connectivityStatus == ConnectivityStatus.Offline) {
-      await showNegativeAlert('Offline', 'Please connect to internet',
-          seconds: 3);
-      return true;
-    }
-    return false;
   }
 }

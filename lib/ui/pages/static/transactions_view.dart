@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/picks_card/picks_card_view.dart';
 import 'package:felloapp/ui/pages/static/FelloTile.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
@@ -15,18 +14,7 @@ import 'package:flutter/material.dart';
 class Transactions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
     return Scaffold(
-      floatingActionButton: keyboardIsOpen && Platform.isIOS
-          ? FloatingActionButton(
-              child: Icon(
-                Icons.done,
-                color: Colors.white,
-              ),
-              backgroundColor: UiConstants.tertiarySolid,
-              onPressed: () => FocusScope.of(context).unfocus(),
-            )
-          : SizedBox(),
       backgroundColor: UiConstants.primaryColor,
       body: HomeBackground(
         child: Column(

@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -16,7 +16,6 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -55,11 +54,11 @@ class ReferralDetailsView extends StatelessWidget {
                           children: [
                             SvgPicture.asset(
                               Assets.rAeMain,
-                              height: SizeConfig.screenHeight * 0.2,
+                              height: SizeConfig.screenHeight * 0.15,
                             ),
                             SizedBox(height: SizeConfig.padding32),
                             Text(
-                              "Earn ₹${model.referral_bonus} and ${model.referral_flc_bonus} Fello tokens for every referral. The referrer of the month wins a brand new iPhone 13!",
+                              "Earn upto ₹50 and 200 tokens from every Golden Ticket. The referrer of the month wins a brand new iPhone 13!",
                               textAlign: TextAlign.center,
                               style: TextStyles.body2,
                             ),
@@ -99,15 +98,7 @@ class ReferralDetailsView extends StatelessWidget {
                                           style: TextStyles.body3,
                                         ),
                                         InkWell(
-                                          onTap: () {
-                                            Clipboard.setData(ClipboardData(
-                                                    text: model.userUrlCode))
-                                                .then((_) {
-                                              BaseUtil.showPositiveAlert(
-                                                  "Code: ${model.userUrlCode}",
-                                                  "Copied to Clipboard");
-                                            });
-                                          },
+                                          onTap: model.copyReferCode,
                                           child: Container(
                                             padding: EdgeInsets.symmetric(
                                               horizontal: SizeConfig.padding8,
@@ -313,7 +304,7 @@ class ReferralDetailsView extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            SizedBox(height: SizeConfig.padding40),
+                            SizedBox(height: SizeConfig.padding32),
                             Text(
                               locale.refHIW,
                               style: TextStyles.title4.bold,
@@ -323,15 +314,29 @@ class ReferralDetailsView extends StatelessWidget {
                               leadingAsset: Assets.paperClip,
                             ),
                             InfoTile(
-                              title: locale.refStep2,
+                              title:
+                                  "Once your friend completes their KYC verification, you receive a new Golden Ticket.",
                               leadingAsset: Assets.wmtsaveMoney,
                             ),
                             InfoTile(
                               title:
-                                  "You and your friend gets ₹${model.referral_bonus} and ${model.referral_flc_bonus} Fello tokens in your account",
+                                  "Once your friend makes their first investment of ₹${model.unlock_referral_bonus}, you receive a new Golden Ticket.",
                               leadingAsset: Assets.tickets,
                             ),
-                            SizedBox(height: SizeConfig.navBarHeight),
+                            SizedBox(height: SizeConfig.padding8),
+                            InfoTile(
+                              title:
+                                  "Once your friend plays Cricket more than 10 times, you receive a new Golden Ticket.",
+                              leadingAsset: Assets.wmtShare,
+                            ),
+                            SizedBox(height: SizeConfig.padding8),
+                            Center(
+                                child: Text(
+                              "You can win upto ₹150 and 600 Fello tokens from each referral!",
+                              style: TextStyles.body3.bold,
+                              textAlign: TextAlign.center,
+                            )),
+                            SizedBox(height: SizeConfig.navBarHeight * 1.2),
                           ],
                         ),
                       ),
@@ -374,12 +379,9 @@ class InfoTile extends StatelessWidget {
   final String leadingAsset;
   final IconData leadingIcon;
   final String title;
+  final double leadSize;
 
-  InfoTile({
-    this.leadingIcon,
-    this.leadingAsset,
-    this.title,
-  });
+  InfoTile({this.leadingIcon, this.leadingAsset, this.title, this.leadSize});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -388,17 +390,17 @@ class InfoTile extends StatelessWidget {
         children: [
           CircleAvatar(
             backgroundColor: UiConstants.tertiarySolid.withOpacity(0.1),
-            radius: SizeConfig.screenWidth * 0.067,
+            radius: leadSize ?? SizeConfig.padding24,
             child: leadingIcon != null
                 ? Icon(
                     leadingIcon,
-                    size: SizeConfig.padding32,
+                    size: SizeConfig.padding20,
                     color: UiConstants.tertiarySolid,
                   )
                 : SvgPicture.asset(
                     leadingAsset ?? "assets/vectors/icons/tickets.svg",
-                    height: SizeConfig.padding32,
-                    width: SizeConfig.padding32,
+                    height: SizeConfig.padding20,
+                    width: SizeConfig.padding20,
                     color: UiConstants.tertiarySolid,
                   ),
           ),

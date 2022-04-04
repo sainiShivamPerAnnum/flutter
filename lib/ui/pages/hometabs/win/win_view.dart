@@ -1,17 +1,21 @@
+import 'dart:math' as math;
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
+import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
+import 'package:felloapp/ui/pages/static/leaderboard_sheet.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
-import 'package:felloapp/ui/service_elements/winners_prizes/win_leaderboard.dart';
 import 'package:felloapp/ui/service_elements/winners_prizes/winners_marquee.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Win extends StatelessWidget {
@@ -22,133 +26,199 @@ class Win extends StatelessWidget {
       onModelReady: (model) {
         model.init();
       },
+      onModelDispose: (model) {
+        model.clear();
+      },
       builder: (ctx, model, child) {
         return Stack(
           children: [
             Container(
-              child: Column(
+              margin: EdgeInsets.only(top: SizeConfig.padding20),
+              child: ListView(
+                padding: EdgeInsets.only(top: SizeConfig.screenWidth * 0.24),
                 children: [
-                  SizedBox(
-                      height: SizeConfig.screenHeight * 0.08 +
-                          SizeConfig.screenWidth * 0.24),
-                  Expanded(
-                    child: ListView(
-                      padding: EdgeInsets.only(top: SizeConfig.padding20),
+                  Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Container(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              BigPrizeContainer(
-                                bgColor: Color(0xff26A6F4),
-                                bigText: locale.winMoneyBigText,
-                                smallText: locale.winMoneySmallText,
-                                image: Assets.moneyBag,
-                                painter: LakhCustomPaint(),
-                                onPressed: () => AppState
-                                    .delegate.appState.setCurrentTabIndex = 1,
-                              ),
-                              SizedBox(width: SizeConfig.padding16),
-                              BigPrizeContainer(
-                                bgColor: UiConstants.tertiarySolid,
-                                bigText: locale.winIphoneBigText,
-                                smallText: locale.winIphoneSmallText,
-                                image: Assets.iphone,
-                                painter: IphoneCustomPaint(),
-                                onPressed: () {
-                                  AppState.delegate.appState.currentAction =
-                                      PageAction(
-                                          state: PageState.addPage,
-                                          page: ReferralDetailsPageConfig);
-                                },
-                              ),
-                            ],
-                          ),
+                        BigPrizeContainer(
+                          bgColor: Color(0xff26A6F4),
+                          bigText: locale.winMoneyBigText,
+                          smallText: locale.winMoneySmallText,
+                          image: Assets.moneyBag,
+                          painter: LakhCustomPaint(),
+                          onPressed: () =>
+                              AppState.delegate.appState.setCurrentTabIndex = 1,
                         ),
-                        SizedBox(height: SizeConfig.padding20),
-                        WinnersMarqueeStrip(),
-                        SizedBox(height: SizeConfig.padding24),
+                        SizedBox(width: SizeConfig.padding16),
+                        BigPrizeContainer(
+                          bgColor: UiConstants.tertiarySolid,
+                          bigText: locale.winIphoneBigText,
+                          smallText: locale.winIphoneSmallText,
+                          image: Assets.iphone,
+                          painter: IphoneCustomPaint(),
+                          onPressed: () {
+                            model.panelController.animatePanelToPosition(1);
+                            model.setCurrentPage = 1;
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: SizeConfig.padding32),
+                  WinnersMarqueeStrip(),
+                  SizedBox(height: SizeConfig.padding20),
+                  if (model.ongoingEvents != null)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         Padding(
                           padding: EdgeInsets.symmetric(
                               horizontal: SizeConfig.pageHorizontalMargins),
                           child: Text(
-                            "Rewards and Coupons",
+                            "Ongoing Events",
                             style: TextStyles.title3.bold,
                           ),
                         ),
                         SizedBox(height: SizeConfig.padding16),
                         Container(
-                          height: SizeConfig.screenWidth * 0.309,
+                          height: SizeConfig.screenWidth * 0.3,
                           width: SizeConfig.screenWidth,
                           child: ListView(
                             padding: EdgeInsets.zero,
                             scrollDirection: Axis.horizontal,
-                            children: [
-                              SizedBox(width: SizeConfig.pageHorizontalMargins),
-                              Container(
-                                height: SizeConfig.screenWidth * 0.309,
-                                width: SizeConfig.screenWidth * 0.405,
+                            controller: model.eventScrollController,
+                            children: List.generate(
+                              model.ongoingEvents.length,
+                              (i) => Container(
                                 margin: EdgeInsets.only(
-                                    right: SizeConfig.padding12),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(
-                                      SizeConfig.roundness32),
-                                  image: DecorationImage(
-                                      image: AssetImage(Assets.amazonCoupon),
-                                      fit: BoxFit.cover),
+                                    left: i == 0
+                                        ? SizeConfig.pageHorizontalMargins
+                                        : 0),
+                                child: EventCard(
+                                  event: model.ongoingEvents[i],
                                 ),
                               ),
-                              Container(
-                                height: SizeConfig.screenWidth * 0.309,
-                                width: SizeConfig.screenWidth * 0.405,
-                                margin: EdgeInsets.only(
-                                    right: SizeConfig.padding12),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(
-                                      SizeConfig.roundness32),
-                                  image: DecorationImage(
-                                      image: AssetImage(Assets.myntraCoupon),
-                                      fit: BoxFit.cover),
-                                ),
-                              ),
-                              Container(
-                                height: SizeConfig.screenWidth * 0.309,
-                                width: SizeConfig.screenWidth * 0.405,
-                                margin: EdgeInsets.only(
-                                    right: SizeConfig.padding12),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(
-                                      SizeConfig.roundness32),
-                                  image: DecorationImage(
-                                      image: AssetImage(Assets.gplayCoupon),
-                                      fit: BoxFit.cover),
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
                         ),
-                        SizedBox(
-                          height: SizeConfig.screenHeight * 0.24,
-                        )
+                        SizedBox(height: SizeConfig.padding24),
                       ],
                     ),
-                  ),
+                  SizedBox(
+                    height: SizeConfig.screenHeight * 0.24,
+                  )
                 ],
               ),
             ),
             Container(
-              margin: EdgeInsets.only(top: SizeConfig.screenHeight * 0.09),
+              //margin: EdgeInsets.only(top: SizeConfig.screenHeight * 0.09),
               child: Hero(
                 tag: "myWinnigs",
                 child: WinningsContainer(
                   shadow: false,
+                  onTap: () => model.navigateToMyWinnings(),
                 ),
               ),
             ),
-            WinnersLeaderBoardSE()
+            WinnersLeaderBoardSE(
+              model: model,
+            )
           ],
         );
       },
+    );
+  }
+}
+
+class EventCard extends StatelessWidget {
+  final EventModel event;
+
+  EventCard({@required this.event});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        AppState.delegate.appState.currentAction = PageAction(
+            state: PageState.addWidget,
+            widget: TopSaverView(
+              eventType: event.type,
+            ),
+            page: AugmontGoldSellPageConfig);
+      },
+      child: Container(
+        width: SizeConfig.screenWidth * 0.64,
+        height: SizeConfig.screenWidth * 0.3,
+        margin: EdgeInsets.only(right: SizeConfig.padding16),
+        decoration: event.thumbnail.isNotEmpty
+            ? BoxDecoration(
+                color: UiConstants.scaffoldColor,
+                borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+                image: DecorationImage(
+                  image: CachedNetworkImageProvider(event.thumbnail),
+                  fit: BoxFit.cover,
+                ),
+              )
+            : BoxDecoration(
+                color: Color(event.color),
+                borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+              ),
+        padding: EdgeInsets.all(SizeConfig.padding16),
+        child: event.thumbnail.isEmpty
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    event.title,
+                    style: TextStyles.body2.bold.colour(Colors.white),
+                  ),
+                  Text(
+                    event.subtitle,
+                    style: TextStyles.body3.colour(Colors.white),
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(24),
+                            color: Colors.white.withOpacity(0.5)),
+                        padding: EdgeInsets.symmetric(
+                            vertical: SizeConfig.padding6,
+                            horizontal: SizeConfig.padding12),
+                        child: Text(
+                          "Explore",
+                          style:
+                              TextStyles.body3.bold.colour(Color(event.color)),
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              )
+            : SizedBox(),
+      ),
+    );
+  }
+}
+
+class RewardsAvatar extends StatelessWidget {
+  final Color color;
+  final String asset;
+
+  RewardsAvatar({this.asset, this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: SizeConfig.screenWidth * 0.24,
+      margin: EdgeInsets.only(right: SizeConfig.padding16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(SizeConfig.roundness56),
+        color: color,
+        image: DecorationImage(image: AssetImage(asset), fit: BoxFit.fitWidth),
+      ),
     );
   }
 }
@@ -175,46 +245,48 @@ class BigPrizeContainer extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         width: SizeConfig.screenWidth * 0.422,
-        height: SizeConfig.screenWidth * 0.520,
+        height: SizeConfig.screenWidth * 0.28,
         child: Stack(
           children: [
             Positioned(
               bottom: 0,
               child: Container(
-                  width: SizeConfig.screenWidth * 0.422,
-                  height: SizeConfig.screenWidth * 0.422,
-                  decoration: BoxDecoration(
-                      color: bgColor ?? UiConstants.primaryColor,
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness32),
-                      boxShadow: [
-                        BoxShadow(
-                          blurRadius: 30,
-                          color: bgColor != null
-                              ? bgColor.withOpacity(0.16)
-                              : UiConstants.primaryColor.withOpacity(0.16),
-                          offset: Offset(
-                            0,
-                            SizeConfig.screenWidth * 0.1,
-                          ),
-                          spreadRadius: 10,
-                        )
-                      ]),
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        top: 0,
-                        right: 0,
+                width: SizeConfig.screenWidth * 0.422,
+                height: SizeConfig.screenWidth * 0.24,
+                decoration: BoxDecoration(
+                    color: bgColor ?? UiConstants.primaryColor,
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness24),
+                    boxShadow: [
+                      BoxShadow(
+                        blurRadius: 30,
+                        color: bgColor != null
+                            ? bgColor.withOpacity(0.16)
+                            : UiConstants.primaryColor.withOpacity(0.16),
+                        offset: Offset(
+                          0,
+                          SizeConfig.screenWidth * 0.1,
+                        ),
+                        spreadRadius: 10,
+                      )
+                    ]),
+                child: Stack(
+                  children: [
+                    Positioned(
+                      top: 0,
+                      left: 0,
+                      child: Transform(
+                        alignment: Alignment.center,
+                        transform: Matrix4.rotationY(math.pi),
                         child: Container(
-                          width: SizeConfig.screenWidth * 0.3,
-                          height: SizeConfig.screenWidth * 0.2,
+                          width: SizeConfig.screenWidth * 0.22,
+                          height: SizeConfig.screenWidth * 0.18,
                           decoration: BoxDecoration(),
                           child: Opacity(
                             opacity: 0.2,
                             child: ClipRRect(
                               borderRadius: BorderRadius.only(
                                 topRight:
-                                    Radius.circular(SizeConfig.roundness32),
+                                    Radius.circular(SizeConfig.roundness24),
                               ),
                               child: CustomPaint(
                                 size: Size(
@@ -229,42 +301,196 @@ class BigPrizeContainer extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Positioned(
-                        bottom: 0,
-                        child: Container(
-                          width: SizeConfig.screenWidth * 0.422,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.padding16,
-                              vertical: SizeConfig.padding24),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                smallText ?? "Play and Win",
-                                style: TextStyles.body4.colour(Colors.white),
-                              ),
-                              Text(
-                                bigText ?? "Rs. 1 Lakh every week",
-                                style:
-                                    TextStyles.body1.colour(Colors.white).bold,
-                              )
-                            ],
-                          ),
+                    ),
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: Container(
+                        width: SizeConfig.screenWidth * 0.422,
+                        height: SizeConfig.screenWidth * 0.24,
+                        padding: EdgeInsets.only(
+                          right: SizeConfig.padding16,
                         ),
-                      )
-                    ],
-                  )),
+                        child: Row(
+                          children: [
+                            SizedBox(width: SizeConfig.screenWidth * 0.19),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    smallText ?? "Play and Win",
+                                    style:
+                                        TextStyles.body3.colour(Colors.white),
+                                  ),
+                                  Text(
+                                    bigText ?? "₹ 1 Lakh every week",
+                                    maxLines: 3,
+                                    style: TextStyles.body3
+                                        .colour(Colors.white)
+                                        .bold,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ),
             Positioned(
-              right: 0,
+              left: 0,
               top: 0,
               child: Image.asset(
                 image ?? Assets.moneyBag,
-                width: SizeConfig.screenWidth * 0.28,
+                width: SizeConfig.screenWidth * 0.2,
               ),
             )
           ],
         ),
+      ),
+    );
+  }
+}
+
+class VoucherModal extends StatelessWidget {
+  final String asset, title, subtitle;
+  final bool commingSoon;
+  final Color color;
+  final List<String> instructions;
+  const VoucherModal(
+      {this.asset,
+      this.commingSoon,
+      this.subtitle,
+      this.title,
+      this.color,
+      this.instructions});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(SizeConfig.padding24),
+          topRight: Radius.circular(SizeConfig.padding24),
+        ),
+        image: DecorationImage(
+          image: AssetImage(
+            Assets.voucherBg,
+          ),
+          fit: BoxFit.cover,
+        ),
+      ),
+      height: SizeConfig.screenHeight * 0.4,
+      child: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(SizeConfig.padding24),
+                topRight: Radius.circular(SizeConfig.padding24),
+              ),
+              color: Colors.white.withOpacity(0.9),
+            ),
+          ),
+          Column(
+            children: [
+              Container(
+                padding: EdgeInsets.only(
+                    left: SizeConfig.pageHorizontalMargins,
+                    right: SizeConfig.pageHorizontalMargins / 2,
+                    top: SizeConfig.padding16,
+                    bottom: 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      title ?? "title",
+                      textAlign: TextAlign.center,
+                      style: TextStyles.title3.bold
+                          .colour(UiConstants.primaryColor),
+                    ),
+                    CircleAvatar(
+                      backgroundColor: Colors.black,
+                      child: IconButton(
+                        onPressed: () {
+                          AppState.backButtonDispatcher.didPopRoute();
+                        },
+                        icon: Icon(
+                          Icons.close,
+                          size: SizeConfig.iconSize1,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Divider(),
+              Spacer(),
+              Container(
+                  decoration: BoxDecoration(
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness24),
+                      boxShadow: [
+                        BoxShadow(
+                            color: color.withOpacity(0.16),
+                            offset: Offset(20, 10),
+                            blurRadius: 50,
+                            spreadRadius: 10)
+                      ]),
+                  child:
+                      Image.asset(asset, width: SizeConfig.screenWidth * 0.4)),
+              SizedBox(
+                  height: commingSoon
+                      ? SizeConfig.padding12
+                      : SizeConfig.padding20),
+              commingSoon
+                  ? Text(subtitle ?? "subtitle", style: TextStyles.body1)
+                  : Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.pageHorizontalMargins),
+                      child: Column(
+                        children: List.generate(
+                          instructions.length,
+                          (i) => referralTile(
+                            instructions[i],
+                          ),
+                        ),
+                      ),
+                    ),
+              Spacer(),
+              SizedBox(
+                height: SizeConfig.padding24,
+              )
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget referralTile(String title) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 20.0),
+      child: Row(
+        children: [
+          Icon(
+            Icons.brightness_1,
+            size: 12,
+            color: UiConstants.primaryColor,
+          ),
+          SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              title,
+              style: TextStyles.body3,
+            ),
+          ),
+        ],
       ),
     );
   }

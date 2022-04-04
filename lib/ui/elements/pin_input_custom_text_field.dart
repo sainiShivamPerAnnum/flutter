@@ -335,7 +335,7 @@ class PinInputTextField extends StatefulWidget {
                     (decoration.gapSpaces?.length ?? (pinLength - 1)))),
         inputFormatters = inputFormatter == null
             ? <TextInputFormatter>[
-                WhitelistingTextInputFormatter.digitsOnly,
+                FilteringTextInputFormatter.digitsOnly,
                 LengthLimitingTextInputFormatter(pinLength)
               ]
             : inputFormatter
@@ -536,11 +536,12 @@ class _PinPaint extends CustomPainter {
     this.type: PinEntryType.boxTight,
     this.themeData,
   }) : this.decoration = decoration.copyWith(
-          textStyle: decoration.textStyle ?? themeData.textTheme.headline,
+          textStyle: decoration.textStyle ?? themeData.textTheme.headline5,
           errorTextStyle: decoration.errorTextStyle ??
               themeData.textTheme.caption.copyWith(color: themeData.errorColor),
           hintTextStyle: decoration.hintTextStyle ??
-              themeData.textTheme.headline.copyWith(color: themeData.hintColor),
+              themeData.textTheme.headline5
+                  .copyWith(color: themeData.hintColor),
         );
 
   @override
@@ -1011,7 +1012,7 @@ class PinInputTextFormField extends FormField<String> {
               }
               return result;
             },
-            autovalidate: autovalidate,
+            autovalidateMode: autovalidate ? AutovalidateMode.always : AutovalidateMode.disabled,
             enabled: enabled,
             builder: (FormFieldState<String> field) {
               final _PinInputTextFormFieldState state = field;

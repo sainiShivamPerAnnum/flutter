@@ -4,16 +4,19 @@ import 'package:flutter/material.dart';
 enum Flavor { DEV, QA, PROD }
 
 class FlavorValues {
-  FlavorValues(
-      {@required this.awsIciciStage,
-      @required this.awsAugmontStage,
-      @required this.freshchatStage,
-      @required this.signzyStage,
-      @required this.signzyPanStage,
-      @required this.razorpayStage,
-      @required this.baseUriAsia,
-      @required this.baseUriUS,
-      @required this.dynamicLinkPrefix});
+  FlavorValues({
+    @required this.awsIciciStage,
+    @required this.awsAugmontStage,
+    @required this.freshchatStage,
+    @required this.signzyStage,
+    @required this.signzyPanStage,
+    @required this.razorpayStage,
+    @required this.paytmStage,
+    @required this.baseUriAsia,
+    @required this.baseUriUS,
+    @required this.dynamicLinkPrefix,
+    @required this.mixpanelToken,
+  });
 
   final AWSIciciStage awsIciciStage;
   final FreshchatStage freshchatStage;
@@ -21,9 +24,11 @@ class FlavorValues {
   final SignzyStage signzyStage;
   final SignzyPanStage signzyPanStage;
   final RazorpayStage razorpayStage;
+  final PaytmStage paytmStage;
   final String baseUriAsia;
   final String baseUriUS;
   final String dynamicLinkPrefix;
+  final String mixpanelToken;
 //Add other flavor specific values, e.g database name
 }
 

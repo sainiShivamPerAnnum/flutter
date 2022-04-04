@@ -1,11 +1,12 @@
+import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
-import 'package:felloapp/util/augmont_state_list.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -13,11 +14,14 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
 
 class UpperCaseTextFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
     return TextEditingValue(
       text: newValue.text.toUpperCase(),
       selection: newValue.selection,
@@ -122,22 +126,30 @@ class KYCDetailsView extends StatelessWidget {
                             if (model.inEditMode)
                               Container(
                                 width: SizeConfig.screenWidth,
-                                child: FelloButtonLg(
-                                    child: model.isKycInProgress
-                                        ? SpinKitThreeBounce(
-                                            color: Colors.white,
-                                            size: 20,
-                                          )
-                                        : Text(
-                                            locale.btnSumbit,
-                                            style: TextStyles.body2
-                                                .colour(Colors.white)
-                                                .bold,
-                                          ),
-                                    onPressed: () {
-                                      model.panFocusNode.unfocus();
-                                      model.onSubmit(context);
-                                    }),
+                                child: PropertyChangeConsumer<UserService,
+                                        UserServiceProperties>(
+                                    properties: [
+                                      UserServiceProperties
+                                          .myConfirmDialogViewStatus
+                                    ],
+                                    builder: (context, m, property) =>
+                                        FelloButtonLg(
+                                            child: model.isKycInProgress ||
+                                                    m.isConfirmationDialogOpen
+                                                ? SpinKitThreeBounce(
+                                                    color: Colors.white,
+                                                    size: 20,
+                                                  )
+                                                : Text(
+                                                    locale.btnSumbit,
+                                                    style: TextStyles.body2
+                                                        .colour(Colors.white)
+                                                        .bold,
+                                                  ),
+                                            onPressed: () {
+                                              model.panFocusNode.unfocus();
+                                              model.onSubmit(context);
+                                            })),
                               ),
                             SizedBox(height: 24),
                           ],

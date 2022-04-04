@@ -2,7 +2,7 @@ import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/service/tambola_service.dart';
+import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 
@@ -176,18 +176,7 @@ class TambolaBoard {
     return fullHouseLeftCount;
   }
 
-  String getTicketNumber() {
-    try {
-      if (id != null && id.startsWith('pg')) {
-        String x = id.replaceAll('pg', '');
-        List<String> y = x.split('sh');
-        int a = int.parse(y[0]);
-        int b = int.parse(y[1]);
-        return (a * 100 + b).toString();
-      }
-    } catch (e) {}
-    return 'NA';
-  }
+  String getTicketNumber() => id ?? 'NA';
 
   int get generatedDayCode {
     //TODO disabling this logic of crossing numbers based on date of generation

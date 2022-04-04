@@ -2,33 +2,31 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
-import 'package:felloapp/core/model/referral_details_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/dialogs/aboutus_dialog.dart';
-import 'package:felloapp/ui/dialogs/game-poll-dialog.dart';
-import 'package:felloapp/ui/dialogs/guide_dialog.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/hamburger/chatsupport_page.dart';
 import 'package:felloapp/ui/pages/hamburger/faq_page.dart';
+import 'package:felloapp/ui/pages/hamburger/freshdesk_help.dart';
 import 'package:felloapp/ui/pages/hamburger/referral_policy_page.dart';
 import 'package:felloapp/ui/pages/hamburger/support.dart';
-import 'package:felloapp/ui/pages/hamburger/tnc_page.dart';
-import 'package:felloapp/ui/pages/login/login_controller.dart';
-import 'package:felloapp/ui/pages/notifications/notifications.dart';
-import 'package:felloapp/ui/pages/onboarding/getstarted/get_started_page.dart';
+import 'package:felloapp/ui/pages/login/login_controller_view.dart';
+import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
+import 'package:felloapp/ui/pages/notifications/notifications_view.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_page.dart';
 import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
+import 'package:felloapp/ui/pages/others/events/topSavers/all_participants.dart';
+import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_view.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/edit_augmont_bank_details.dart';
-import 'package:felloapp/ui/pages/others/finance/finance_report.dart';
-import 'package:felloapp/ui/pages/others/finance/icici/mf_details_page.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/gold_balance_details/gold_balance_details_view.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_game/cricket_game_view.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/dailyPicksDraw/dailyPicksDraw_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/show_all_tickets.dart';
-import 'package:felloapp/ui/pages/others/games/tambola/summary_tickets_display.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_game/tambola_game_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_walkthrough.dart';
@@ -37,25 +35,27 @@ import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_view.
 import 'package:felloapp/ui/pages/others/profile/claim_username.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
-import 'package:felloapp/ui/pages/others/profile/referrals/referral_history/referrals_page.dart';
-import 'package:felloapp/ui/pages/others/profile/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_view.dart';
+import 'package:felloapp/ui/pages/others/profile/referrals/referral_history/referral_history_view.dart';
+import 'package:felloapp/ui/pages/others/profile/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_view.dart';
 import 'package:felloapp/ui/pages/others/profile/verify_email.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_milestones/golden_milestones_view.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_view.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_view.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/pages/splash/splash_view.dart';
 import 'package:felloapp/ui/pages/static/transactions_view.dart';
-import 'package:felloapp/util/locator.dart';
-
 import 'package:felloapp/util/assets.dart';
-
+import 'package:felloapp/util/locator.dart';
 //Flutter Imports
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
+  final _analytics = locator<AnalyticsService>();
+
   final List<Page> _pages = [];
 
   @override
@@ -132,15 +132,17 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
   MaterialPage _createPage(Widget child, PageConfiguration pageConfig) {
     return MaterialPage(
-        child: child,
-        key: Key(pageConfig.key),
-        name: pageConfig.path,
-        arguments: pageConfig);
+      child: child,
+      key: Key(pageConfig.key),
+      name: pageConfig.path,
+      arguments: pageConfig,
+    );
   }
 
   void _addPageData(Widget child, PageConfiguration pageConfig) {
     AppState.screenStack.add(ScreenItem.page);
     print("Added a page ${pageConfig.key}");
+    _analytics.trackScreen(screen: pageConfig.name);
     _pages.add(
       _createPage(child, pageConfig),
     );
@@ -158,23 +160,15 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(LauncherView(), SplashPageConfig);
           break;
         case Pages.Login:
-          _addPageData(LoginController(), LoginPageConfig);
+          _addPageData(LoginControllerView(), LoginPageConfig);
           break;
         case Pages.Root:
           _addPageData(Root(), RootPageConfig);
           break;
-        case Pages.Onboard:
-          _addPageData(GetStartedPage(), OnboardPageConfig);
-          break;
         case Pages.UserProfileDetails:
           _addPageData(UserProfileDetails(), UserProfileDetailsConfig);
           break;
-        // case Pages.MfDetails:
-        //   _addPageData(MFDetailsPage(), MfDetailsPageConfig);
-        //   break;
-        // case Pages.AugDetails:
-        //   _addPageData(AugmontDetailsPage(), AugDetailsPageConfig);
-        //   break;
+
         case Pages.Transaction:
           _addPageData(Transactions(), TransactionPageConfig);
           break;
@@ -186,10 +180,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
         case Pages.BankDetails:
           _addPageData(BankDetailsView(), BankDetailsPageConfig);
-          break;
-
-        case Pages.Tnc:
-          _addPageData(TnC(), TncPageConfig);
           break;
         case Pages.Faq:
           _addPageData(FAQPage(), FaqPageConfig);
@@ -219,10 +209,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.WalkThrough:
           _addPageData(WalkThroughPage(), WalkThroughConfig);
           break;
-
-        case Pages.YourFunds:
-          _addPageData(YourFunds(), YourFundsConfig);
-          break;
         case Pages.THome:
           _addPageData(TambolaHomeView(), THomePageConfig);
           break;
@@ -241,9 +227,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.TWeeklyResult:
           _addPageData(WeeklyResult(), TWeeklyResultPageConfig);
           break;
-        // case Pages.TSummaryDetails:
-        //   _addPageData(SummaryTicketsDisplay(), TSummaryDetailsPageConfig);
-        //   break;
         case Pages.Notifications:
           _addPageData(NotficationsPage(), NotificationsConfig);
           break;
@@ -253,8 +236,11 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.CricketGame:
           _addPageData(CricketGameView(), CricketGamePageConfig);
           break;
-        case Pages.AugGoldBuy:
-          _addPageData(AugmontGoldBuyView(), CricketHomePageConfig);
+        // case Pages.AugGoldBuy:
+        //   _addPageData(AugmontGoldBuyView(), AugmontGoldBuyPageConfig);
+        //   break;
+        case Pages.AugGoldSell:
+          _addPageData(AugmontGoldSellView(), AugmontGoldSellPageConfig);
           break;
         case Pages.AugGoldDetails:
           _addPageData(AugmontGoldDetailsView(), AugmontGoldDetailsPageConfig);
@@ -267,6 +253,31 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
         case Pages.MyWinnings:
           _addPageData(MyWinningsView(), MyWinnigsPageConfig);
+          break;
+        case Pages.BlockedUser:
+          _addPageData(BlockedUserView(), BlockedUserPageConfig);
+          break;
+        case Pages.FreshDeskHelp:
+          _addPageData(FreshDeskHelp(), FreshDeskHelpPageConfig);
+          break;
+        case Pages.GoldenTicketView:
+          _addPageData(GTDetailedView(), GoldenTicketViewPageConfig);
+          break;
+        case Pages.GoldenTicketsView:
+          _addPageData(GoldenTicketsView(), GoldenTicketsViewPageConfig);
+          break;
+        case Pages.GoldenMilestonesView:
+          _addPageData(GoldenMilestonesView(), GoldenMilestonesViewPageConfig);
+          break;
+        case Pages.TopSaverView:
+          _addPageData(TopSaverView(), TopSaverViewPageConfig);
+          break;
+        case Pages.AllParticipantsView:
+          _addPageData(AllParticipantsView(), AllParticipantsViewPageConfig);
+          break;
+        case Pages.GoldBalanceDetailsView:
+          _addPageData(
+              GoldBalanceDetailsView(), GoldBalanceDetailsViewPageConfig);
           break;
         default:
           break;
@@ -364,10 +375,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.Referral:
         ReferralPageConfig.currentPageAction = action;
         break;
-
-      case Pages.Tnc:
-        TncPageConfig.currentPageAction = action;
-        break;
       case Pages.Faq:
         FaqPageConfig.currentPageAction = action;
         break;
@@ -399,9 +406,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.WalkThrough:
         WalkThroughConfig.currentPageAction = action;
         break;
-      // case Pages.WalkThroughCompleted:
-      //   WalkThroughCompletedConfig.currentPageAction = action;
-      //   break;
       case Pages.YourFunds:
         YourFundsConfig.currentPageAction = action;
         break;
@@ -435,8 +439,11 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.CricketGame:
         CricketGamePageConfig.currentPageAction = action;
         break;
-      case Pages.AugGoldBuy:
-        AugmontGoldBuyPageConfig.currentPageAction = action;
+      // case Pages.AugGoldBuy:
+      //   AugmontGoldBuyPageConfig.currentPageAction = action;
+      //   break;
+      case Pages.AugGoldSell:
+        AugmontGoldSellPageConfig.currentPageAction = action;
         break;
       case Pages.AugGoldDetails:
         AugmontGoldDetailsPageConfig.currentPageAction = action;
@@ -449,6 +456,30 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.MyWinnings:
         MyWinnigsPageConfig.currentPageAction = action;
+        break;
+      case Pages.BlockedUser:
+        BlockedUserPageConfig.currentPageAction = action;
+        break;
+      case Pages.FreshDeskHelp:
+        FreshDeskHelpPageConfig.currentPageAction = action;
+        break;
+      case Pages.GoldenTicketView:
+        GoldenTicketViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.GoldenTicketsView:
+        GoldenTicketsViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.GoldenMilestonesView:
+        GoldenMilestonesViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.TopSaverView:
+        TopSaverViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.AllParticipantsView:
+        AllParticipantsViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.GoldBalanceDetailsView:
+        GoldBalanceDetailsViewPageConfig.currentPageAction = action;
         break;
       default:
         break;
@@ -517,15 +548,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     Widget dialogWidget;
     bool barrierDismissable = true;
     switch (dialogKey) {
-      case 'guide':
-        dialogWidget = GuideDialog();
-        break;
-      case 'gamePoll':
-        dialogWidget = GamePoll();
-        break;
-      case "aboutUs":
-        dialogWidget = const AboutUsDialog();
-        break;
       case "panInfo":
         dialogWidget = MoreInfoDialog(
           text: Assets.infoWhyPan,
@@ -568,11 +590,20 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'augDetails':
         pageConfiguration = AugmontGoldDetailsPageConfig;
         break;
-      case 'augBuy':
-        pageConfiguration = AugmontGoldBuyPageConfig;
+      case 'kycVerify':
+        pageConfiguration = KycDetailsPageConfig;
+        break;
+      case 'augSell':
+        pageConfiguration = AugmontGoldSellPageConfig;
         break;
 
-      case 'tran':
+      case 'transactions':
+        pageConfiguration = TransactionsHistoryPageConfig;
+        break;
+      case 'txns':
+        pageConfiguration = TransactionsHistoryPageConfig;
+        break;
+      case 'trans':
         pageConfiguration = TransactionsHistoryPageConfig;
         break;
       case 'referral':
@@ -580,6 +611,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case 'tambolaHome':
         _baseUtil.openTambolaHome();
+        break;
+      case 'cricketHome':
+        pageConfiguration = CricketHomePageConfig;
         break;
       case 'myWinnings':
         pageConfiguration = MyWinnigsPageConfig;
@@ -601,13 +635,41 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case 'walkthrough':
         pageConfiguration = WalkThroughConfig;
-      // case 'tambolaTickets':
-      //   pageConfiguration = TambolaTicketsPageConfig;
-      //   break;
+        break;
+      case 'blocked':
+        pageConfiguration = BlockedUserPageConfig;
+        break;
+      case 'dailySaver':
+        openTopSaverScreen("SAVER_DAILY");
+        break;
+      case 'weeklySaver':
+        openTopSaverScreen("SAVER_WEEKLY");
+        break;
+      case 'monthlySaver':
+        openTopSaverScreen("SAVER_MONTHLY");
+        break;
+      case 'milestones':
+        pageConfiguration = GoldenMilestonesViewPageConfig;
+        break;
+      case 'goldBalanceDetails':
+        pageConfiguration = GoldBalanceDetailsViewPageConfig;
+        break;
+      case 'pop':
+        AppState.backButtonDispatcher.didPopRoute();
+        break;
     }
     if (pageConfiguration != null) {
       addPage(pageConfiguration);
       notifyListeners();
     }
+  }
+
+  openTopSaverScreen(String eventType) {
+    AppState.delegate.appState.currentAction = PageAction(
+        state: PageState.addWidget,
+        widget: TopSaverView(
+          eventType: eventType,
+        ),
+        page: TopSaverViewPageConfig);
   }
 }

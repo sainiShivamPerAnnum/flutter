@@ -11,8 +11,6 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 
 class PrizeWin extends StatefulWidget {
   final Map<String, int> winningsMap;
@@ -62,15 +60,18 @@ class _PrizeWinState extends State<PrizeWin> {
             ),
           ),
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 20),
+            padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.pageHorizontalMargins),
             child: Column(
               children: [
                 Spacer(
                   flex: 1,
                 ),
-                Text(
-                  locale.tWinTitle,
-                  style: TextStyles.title1.bold,
+                FittedBox(
+                  child: Text(
+                    locale.tWinTitle,
+                    style: TextStyles.title1.bold,
+                  ),
                 ),
                 WinnerBox(
                   winningsmap: widget.winningsMap,
@@ -85,8 +86,7 @@ class _PrizeWinState extends State<PrizeWin> {
                 Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Text(locale.tWinSubtitle2,
-                      textAlign: TextAlign.center,
-                      style: TextStyles.body3.letterSpace(2)),
+                      textAlign: TextAlign.center, style: TextStyles.body3),
                 ),
                 SizedBox(height: SizeConfig.padding12),
                 Container(

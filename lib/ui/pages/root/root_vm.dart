@@ -2,22 +2,23 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
-import 'package:felloapp/core/service/user_coin_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
-import 'package:felloapp/core/service/winners_service.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/golden_ticket_claim.dart';
 import 'package:felloapp/ui/modals_sheets/security_modal_sheet.dart';
 import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
-import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
-import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
-import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
+import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -25,28 +26,34 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class RootViewModel extends BaseModel {
   final BaseUtil _baseUtil = locator<BaseUtil>();
   final HttpModel _httpModel = locator<HttpModel>();
   final FcmHandler _fcmListener = locator<FcmHandler>();
   final LocalDBModel _localDBModel = locator<LocalDBModel>();
+  final DBModel _dbModel = locator<DBModel>();
   final UserService _userService = locator<UserService>();
   final UserCoinService _userCoinService = locator<UserCoinService>();
   final AppState _appState = locator<AppState>();
-  final Logger _logger = locator<Logger>();
+  final CustomLogger _logger = locator<CustomLogger>();
   final winnerService = locator<WinnerService>();
+  final txnService = locator<TransactionService>();
+  final _analyticsService = locator<AnalyticsService>();
 
   BuildContext rootContext;
   bool _isInitialized = false;
 
   String get myUserDpUrl => _userService.myUserDpUrl;
-  int get currentTabIndex => _appState.rootIndex;
+  //int get currentTabIndex => _appState.rootIndex;
 
   Future<void> refresh() async {
+    if (AppState().getCurrentTabIndex == 2) return;
     await _userCoinService.getUserCoinBalance();
     await _userService.getUserFundWalletData();
+    txnService.signOut();
+    await txnService.fetchTransactions(limit: 4);
   }
 
   static final GlobalKey<ScaffoldState> scaffoldKey =
@@ -55,14 +62,14 @@ class RootViewModel extends BaseModel {
 
   onInit() {
     // pages = <Widget>[Save(), Play(), Win()];
-    AppState().setCurrentTabIndex = 1;
+    // AppState.delegate.appState.setCurrentTabIndex = 1;
     AppState().setRootLoadValue = true;
     _initDynamicLinks(AppState.delegate.navigatorKey.currentContext);
     _verifyManualReferral(AppState.delegate.navigatorKey.currentContext);
   }
 
   onDispose() {
-    if (_baseUtil != null) _baseUtil.cancelIncomingNotifications();
+    // if (_baseUtil != null) _baseUtil.cancelIncomingNotifications();
     _fcmListener.addIncomingMessageListener(null);
   }
 
@@ -88,15 +95,20 @@ class RootViewModel extends BaseModel {
   }
 
   void onItemTapped(int index) {
+    switch (index) {
+      case 0:
+        _analyticsService.track(eventName: AnalyticsEvents.saveSection);
+        break;
+      case 1:
+        _analyticsService.track(eventName: AnalyticsEvents.playSection);
+        break;
+      case 2:
+        _analyticsService.track(eventName: AnalyticsEvents.winSection);
+        break;
+      default:
+    }
+    _userService.buyFieldFocusNode.unfocus();
     AppState.delegate.appState.setCurrentTabIndex = index;
-    // switch (index) {
-    //   case 1:
-    //     AppState.isSaveOpened = true;
-    //     break;
-    //   case 2:
-    //     winnerService.fetchWinners();
-    //     break;
-    // }
     notifyListeners();
   }
 
@@ -112,24 +124,24 @@ class RootViewModel extends BaseModel {
   }
 
   void _showSecurityBottomSheet() {
-    showModalBottomSheet(
-        context: AppState.delegate.navigatorKey.currentContext,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30.0),
-                topRight: Radius.circular(30.0))),
+    BaseUtil.openModalBottomSheet(
+        addToScreenStack: true,
+        isBarrierDismissable: false,
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
         backgroundColor: UiConstants.bottomNavBarColor,
-        builder: (context) {
-          return const SecurityModalSheet();
-        });
+        content: const SecurityModalSheet());
   }
 
   initialize() async {
     if (!_isInitialized) {
       _isInitialized = true;
+      _initAdhocNotifications();
+
       _localDBModel.showHomeTutorial.then((value) {
-        if (value) {
+        if (_userService.showOnboardingTutorial) {
           //show tutorial
+          _userService.showOnboardingTutorial = false;
           _localDBModel.setShowHomeTutorial = false;
           // AppState.delegate.parseRoute(Uri.parse('dashboard/walkthrough'));
           AppState.delegate.appState.currentAction =
@@ -138,13 +150,13 @@ class RootViewModel extends BaseModel {
         }
       });
 
-      _initAdhocNotifications();
-
       _baseUtil.getProfilePicture();
       // show security modal
       if (_baseUtil.show_security_prompt &&
-          _baseUtil.myUser.isAugmontOnboarded &&
-          _baseUtil.myUser.userPreferences.getPreference(Preferences.APPLOCK) ==
+          _userService.baseUser.isAugmontOnboarded &&
+          _userService.userFundWallet.augGoldQuantity > 0 &&
+          _userService.baseUser.userPreferences
+                  .getPreference(Preferences.APPLOCK) ==
               0) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _showSecurityBottomSheet();
@@ -170,7 +182,8 @@ class RootViewModel extends BaseModel {
       Uri deepLink = dynamicLinkData?.link;
       _logger.d(deepLink.toString());
       if (deepLink != null)
-        return _processDynamicLink(_baseUtil.myUser.uid, deepLink, context);
+        return _processDynamicLink(
+            _userService.baseUser.uid, deepLink, context);
     } catch (e) {
       _logger.e(e.toString());
     }
@@ -181,9 +194,8 @@ class RootViewModel extends BaseModel {
         onSuccess: (PendingDynamicLinkData dynamicLink) async {
       final Uri deepLink = dynamicLink?.link;
       if (deepLink == null) return null;
-
       _logger.d('Received deep link. Process the referral');
-      return _processDynamicLink(_baseUtil.myUser.uid, deepLink, context);
+      return _processDynamicLink(_userService.baseUser.uid, deepLink, context);
     }, onError: (OnLinkErrorException e) async {
       _logger.e('Error in fetching deeplink');
       _logger.e(e);
@@ -195,28 +207,74 @@ class RootViewModel extends BaseModel {
     final Uri deepLink = data?.link;
     if (deepLink != null) {
       _logger.d('Received deep link. Process the referral');
-      return _processDynamicLink(_baseUtil.myUser.uid, deepLink, context);
+      return _processDynamicLink(_userService.baseUser.uid, deepLink, context);
     }
+  }
+
+  _findCampaignId(String uri) {
+    int res = uri.indexOf(RegExp(r'campaign_source='));
+    int finalres = res + 16;
+    print(res);
+    print(finalres);
+    String code = '';
+    RegExp anregex = RegExp(r'^[a-zA-Z0-9]*$');
+    for (int i = finalres; i < uri.length; i++) {
+      if (anregex.hasMatch(uri[i])) {
+        code += uri[i];
+      } else {
+        break;
+      }
+    }
+    return code;
   }
 
   _processDynamicLink(String userId, Uri deepLink, BuildContext context) async {
     String _uri = deepLink.toString();
+
     if (_uri.startsWith(Constants.GOLDENTICKET_DYNAMICLINK_PREFIX)) {
       //Golden ticket dynamic link
       int flag = await _submitGoldenTicket(userId, _uri, context);
+    } else if (_uri.startsWith(Constants.APP_DOWNLOAD_LINK)) {
+      _submitTrack(_uri);
+    } else if (_uri.startsWith(Constants.APP_NAVIGATION_LINK)) {
+      try {
+        final path =
+            _uri.substring(Constants.APP_NAVIGATION_LINK.length, _uri.length);
+        AppState.delegate.parseRoute(Uri.parse(path));
+      } catch (error) {
+        _logger.e(error);
+      }
     } else {
       BaseUtil.manualReferralCode =
           null; //make manual Code null in case user used both link and code
 
       //Referral dynamic link
       bool _flag = await _submitReferral(
-          _baseUtil.myUser.uid, _userService.myUserName, _uri);
+          _userService.baseUser.uid, _userService.myUserName, _uri);
       if (_flag) {
         _logger.d('Rewards added');
         refresh();
       } else {
         // _logger.d('$addUserTicketCount tickets need to be added for the user');
       }
+    }
+  }
+
+  bool _submitTrack(String deepLink) {
+    try {
+      String prefix = '${Constants.APP_DOWNLOAD_LINK}/campaign/';
+      if (deepLink.startsWith(prefix)) {
+        String campaignId = deepLink.replaceAll(prefix, '');
+        if (campaignId.isNotEmpty || campaignId == null) {
+          _logger.d(campaignId);
+          _analyticsService.trackInstall(campaignId);
+          return true;
+        }
+      }
+      return false;
+    } catch (e) {
+      _logger.e(e);
+      return false;
     }
   }
 
@@ -286,5 +344,35 @@ class RootViewModel extends BaseModel {
       _logger.e('$e');
       return -1;
     }
+  }
+
+  void earnMoreTokens() {
+    _analyticsService.track(eventName: AnalyticsEvents.earnMoreTokens);
+    BaseUtil.openModalBottomSheet(
+      addToScreenStack: true,
+      content: WantMoreTicketsModalSheet(),
+      hapticVibrate: true,
+      backgroundColor: Colors.transparent,
+      isBarrierDismissable: true,
+    );
+  }
+
+  void focusBuyField() {
+    Haptic.vibrate();
+    if (_userService.buyFieldFocusNode.hasPrimaryFocus ||
+        _userService.buyFieldFocusNode.hasFocus) {
+      _logger.d("field has focus");
+      FocusManager.instance.primaryFocus.unfocus();
+    }
+    Future.delayed(Duration(milliseconds: 100), () {
+      _userService.buyFieldFocusNode.requestFocus();
+    });
+  }
+
+  Future<String> _getBearerToken() async {
+    String token = await _userService.firebaseUser.getIdToken();
+    _logger.d(token);
+
+    return token;
   }
 }

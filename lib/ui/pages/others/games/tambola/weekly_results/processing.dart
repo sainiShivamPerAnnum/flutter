@@ -13,6 +13,8 @@ class PrizeProcessing extends StatelessWidget {
     S locale = S.of(context);
     return SafeArea(
       child: Container(
+        padding:
+            EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
         margin: EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -29,7 +31,7 @@ class PrizeProcessing extends StatelessWidget {
               child: Text(
                 locale.tProcessingSubtitle,
                 textAlign: TextAlign.center,
-                style: TextStyles.body3.letterSpace(2),
+                style: TextStyles.body3,
               ),
             ),
             LottieBuilder.asset(
@@ -46,7 +48,7 @@ class PrizeProcessing extends StatelessWidget {
                     fontSize: SizeConfig.largeTextSize,
                     height: 1.5,
                     fontWeight: FontWeight.w700,
-                    letterSpacing: 5),
+                    letterSpacing: 2),
               ),
             ),
             Spacer(

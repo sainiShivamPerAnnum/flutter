@@ -95,7 +95,7 @@ class _ContactUsState extends State<ContactUsDialog> {
                 ),
                 onTap: () async {
                   const url =
-                      "mailto:hello@fello.in?subject=Fello Inquiry&body=Hello";
+                      "mailto:support@fello.in?subject=Fello Support&body=Hello";
                   if (await canLaunch(url)) {
                     await launch(url);
                   }

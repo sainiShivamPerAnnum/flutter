@@ -25,6 +25,7 @@ class Assets {
   static final String dummyCancelledCheque = 'images/Cancelled_cheque.png';
   static final String kycUnavailableAsset = 'images/kyc_unavailable.png';
   static final String noTransaction = "images/no-transactions.png";
+  static final String augmontShare = "images/augmont-share.png";
 
   //APPBAR
 
@@ -47,7 +48,9 @@ class Assets {
   static final String onb2 = "assets/lotties/slide2.json";
   static final String onb3 = "assets/lotties/slide3.json";
   static final String indFlag = "assets/images/indflag.jpg";
-
+  static final String blocked = "assets/images/blocked.png";
+  static final String signout = "assets/vectors/signout.svg";
+  static final String truecaller = "assets/images/truecaller.png";
   // WANT MORE MODAL
   static final String wmtsaveMoney = "assets/vectors/icons/wmt_save_money.svg";
   static final String wmtShare = "assets/vectors/icons/wmt_share.svg";
@@ -75,6 +78,8 @@ class Assets {
   static final String gold24K = "assets/vectors/icons/gold24k.svg";
   static final String goldPure = "assets/vectors/icons/goldPure.svg";
   static final String goldSecure = "assets/vectors/icons/goldSecure.svg";
+  static final String couponIcon = "assets/vectors/coupon.svg";
+  static final String processing = "assets/vectors/processing.svg";
 
   // WIN
 
@@ -89,7 +94,8 @@ class Assets {
 
   static final String amazonCoupon = "assets/images/amazon_coupon.png";
   static final String myntraCoupon = "assets/images/myntra_coupon.png";
-  static final String gplayCoupon = "assets/images/ggv.png";
+  static final String gplayCoupon = "assets/images/google_coupon.png";
+  static final String bdubsCoupon = "assets/images/bdubs_coupon.png";
 
   // TRANSACTIONS
 
@@ -128,6 +134,23 @@ class Assets {
       "assets/vectors/prize_claim_confirm.svg";
   static final String congrats = "assets/vectors/congrats.svg";
   static final String noTickets = "assets/vectors/no_tickets.svg";
+  static final String noData = "assets/lotties/no_data.json";
+
+  //FELLO REWARDS
+  static final String digitalGold = "images/augmont-share.png";
+  static final String amazonGiftVoucher = "images/amazon-share.png";
+  static final String felloRewards = "assets/images/fello_prize.png";
+  static final String voucherBg = "assets/images/voucher_bg.jpg";
+
+  //GT ASSETS
+  static final String gtWon = "assets/images/gtWon.png";
+  static final String gtLose = "assets/images/gtlose.png";
+  static final String gtCover = "assets/images/gtCover.png";
+  static final String txnFinish = "assets/lotties/finish.json";
+  static final String coinStack = "assets/lotties/coin-stack.json";
+  static final String glitter = "assets/lotties/glitter.json";
+  static final String gtBackground = "assets/images/gtdbg.png";
+  static final String gtConfetti = "assets/lotties/confetti.json";
 
   static final List<String> onboardingHeader = [
     'Save',
@@ -190,7 +213,7 @@ class Assets {
     'Fello is a game based savings and investment application for you to save, play and '
         'get returns more than a traditional savings bank account. We are making savings fun '
         'and easy through fun,exciting and rewarding games.',
-  'You can start saving and investing in the funds or financial assets listed on Fello. For every Rs.1, you save or invest with Fello, you receive 1 Fello Token which you can use to play your favourite games on the application. For example: If you save Rs.500 in gold, you get 500 Fello Tokens which can be used to play the games listed on the app. To play one game of cricket, you will need 10 Tokens, and for every Tambola Ticket, you will need 10 Tokens. The more you play, or the more tickets you have, the higher your chances of winning.',
+    'You can start saving and investing in the funds or financial assets listed on Fello. For every Rs.1, you save or invest with Fello, you receive 1 Fello Token which you can use to play your favourite games on the application. For example: If you save Rs.500 in gold, you get 500 Fello Tokens which can be used to play the games listed on the app. To play one game of cricket, you will need 10 Tokens, and for every Tambola Ticket, you will need 10 Tokens. The more you play, or the more tickets you have, the higher your chances of winning.',
     'Fello aims to make saving and investing as fun as it is rewarding for our users. By saving and investing with Fello, users can win exciting prizes, earn returns much higher than bank accounts and get to be a part of a cool community of gamers and investors.',
     'You can play fun and exciting games! Play these games and get a chance to win amazing rewards and prizes. Currently, there are two games available - Cricket and Tambola. To play one game of Cricket, you need 10 Tokens, and for every Tambola Ticket, you need 10 Tokens. The more you play, or the more tickets you have, the higher your chances of winning. We’re always listening to our users and coming up with more exciting games. Now saving is not boring, it\'s fun and exciting!',
     'As per the RBI and SEBI guidelines, users must verify their KYC before saving and investing. In the case of Digital Gold, you only need to verify your KYC details when you want to withdraw your balance. But don’t worry, your information is confidential and absolutely safe with us.',

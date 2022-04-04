@@ -1,7 +1,7 @@
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
-import 'package:felloapp/core/service/transaction_service.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/dialogs/transaction_details_dialog.dart';
@@ -14,7 +14,6 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
-import 'package:provider/provider.dart';
 
 class MiniTransactionCard extends StatelessWidget {
   @override
@@ -50,7 +49,7 @@ class MiniTransactionCard extends StatelessWidget {
                                   return ListTile(
                                     onTap: () {
                                       Haptic.vibrate();
-                                      bool freeBeerStatus = model
+                                      bool freeBeerStatus = model.txnService
                                           .getBeerTicketStatus(m.txnList[i]);
                                       showDialog(
                                           context: AppState.delegate
@@ -68,11 +67,11 @@ class MiniTransactionCard extends StatelessWidget {
                                           SizeConfig.blockSizeHorizontal * 2),
                                       height: SizeConfig.blockSizeVertical * 5,
                                       width: SizeConfig.blockSizeVertical * 5,
-                                      child: model
+                                      child: model.txnService
                                           .getTileLead(m.txnList[i].tranStatus),
                                     ),
                                     title: Text(
-                                      model.getTileTitle(
+                                      model.txnService.getTileTitle(
                                         m.txnList[i].subType.toString(),
                                       ),
                                       style: TextStyle(
@@ -80,9 +79,10 @@ class MiniTransactionCard extends StatelessWidget {
                                       ),
                                     ),
                                     subtitle: Text(
-                                      model.getTileSubtitle(m.txnList[i].type),
+                                      model.txnService
+                                          .getTileSubtitle(m.txnList[i].type),
                                       style: TextStyle(
-                                        color: model.getTileColor(
+                                        color: model.txnService.getTileColor(
                                             m.txnList[i].tranStatus),
                                         fontSize: SizeConfig.smallTextSize,
                                       ),
@@ -90,24 +90,28 @@ class MiniTransactionCard extends StatelessWidget {
                                     trailing: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
                                       children: [
                                         Text(
-                                          (m.txnList[i].type == "WITHDRAWAL"
-                                                  ? "- "
-                                                  : "+ ") +
-                                              "₹ ${m.txnList[i].type == "WITHDRAWAL" ? (m.txnList[i].amount * -1).toString() : m.txnList[i].amount.toString()}",
+                                          model.txnService
+                                              .getFormattedTxnAmount(
+                                                  m.txnList[i].amount),
                                           style: TextStyle(
-                                            color: model.getTileColor(
-                                                m.txnList[i].tranStatus),
+                                            // color: model.txnService
+                                            //     .getTileColor(
+                                            //         m.txnList[i].tranStatus),
                                             fontSize: SizeConfig.mediumTextSize,
                                           ),
                                         ),
                                         Text(
-                                          model.getFormattedTime(
+                                          model.txnService.getFormattedTime(
                                               m.txnList[i].timestamp),
                                           style: TextStyle(
-                                              color: model.getTileColor(
-                                                  m.txnList[i].tranStatus),
+                                              // color: model.txnService
+                                              //     .getTileColor(
+                                              //         m.txnList[i].tranStatus),
+                                              color: Colors.black45,
                                               fontSize:
                                                   SizeConfig.smallTextSize),
                                         )

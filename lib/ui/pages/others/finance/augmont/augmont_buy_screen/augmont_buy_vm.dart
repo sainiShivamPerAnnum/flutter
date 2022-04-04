@@ -1,61 +1,104 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
-import 'package:felloapp/core/model/user_augmont_details_model.dart';
-import 'package:felloapp/core/model/user_transaction_model.dart';
+import 'package:felloapp/core/model/coupon_card_model.dart';
+import 'package:felloapp/core/model/eligible_coupon_model.dart';
+import 'package:felloapp/core/model/paytm_models/deposit_fcm_response_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/repository/coupons_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
-import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
-import 'package:felloapp/core/service/transaction_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/dialogs/augmont_disabled_dialog.dart';
+import 'package:felloapp/ui/modals_sheets/augmont_coupons_modal.dart';
 import 'package:felloapp/ui/modals_sheets/augmont_register_modal_sheet.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
+import 'package:felloapp/ui/pages/static/transaction_loader.dart';
+import 'package:felloapp/ui/pages/static/txn_completed_ui/txn_completed_view.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/fcm_topics.dart';
+import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/fail_types.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AugmontGoldBuyViewModel extends BaseModel {
   static const int STATUS_UNAVAILABLE = 0;
   static const int STATUS_REGISTER = 1;
   static const int STATUS_OPEN = 2;
-  final Log log = new Log("AugmontBuy");
-  BaseUtil _baseUtil = locator<BaseUtil>();
-  DBModel _dbModel = locator<DBModel>();
-  AugmontModel _augmontModel = locator<AugmontModel>();
-  FcmListener _fcmListener = locator<FcmListener>();
-  UserService _userService = locator<UserService>();
-  TransactionService _txnService = locator<TransactionService>();
+
+  final _logger = locator<CustomLogger>();
+  final BaseUtil _baseUtil = locator<BaseUtil>();
+  final DBModel _dbModel = locator<DBModel>();
+  final AugmontModel _augmontModel = locator<AugmontModel>();
+  final UserService _userService = locator<UserService>();
+  final TransactionService _txnService = locator<TransactionService>();
+  final GoldenTicketService _gtService = GoldenTicketService();
+
+  final _analyticsService = locator<AnalyticsService>();
+  final _couponRepo = locator<CouponRepository>();
+  final _paytmService = locator<PaytmService>();
+  final _userCoinService = locator<UserCoinService>();
 
   int _status = 0;
-
+  int lastTappedChipIndex = 1;
+  CouponModel _focusCoupon;
+  EligibleCouponResponseModel _appliedCoupon;
   bool _showMaxCapText = false;
-  bool isGoldRateFetching = false;
-  AugmontRates goldRates;
+  bool _isGoldRateFetching = false;
   bool _isGoldBuyInProgress = false;
+  bool _couponApplyInProgress = false;
+  bool _showCoupons = false;
+  AugmontRates goldRates;
   String userAugmontState;
-  FocusNode buyFieldNode = FocusNode();
+  FocusNode buyFieldNode;
   bool _augOnbRegInProgress = false;
   bool _augRegFailed = false;
+  String buyNotice;
 
   double goldBuyAmount = 0;
   double goldAmountInGrams = 0.0;
   TextEditingController goldAmountController;
-  List<double> chipAmountList = [100, 500, 1000, 5000];
+  List<double> chipAmountList = [101, 201, 501, 1001];
+  List<CouponModel> _couponList;
+
+  bool get couponApplyInProgress => _couponApplyInProgress;
+
+  set couponApplyInProgress(bool val) {
+    _couponApplyInProgress = val;
+    notifyListeners();
+  }
+
+  List<CouponModel> get couponList => _couponList;
+
+  set couponList(List<CouponModel> list) {
+    _couponList = list;
+    notifyListeners();
+  }
 
   double get goldBuyPrice => goldRates != null ? goldRates.goldBuyPrice : 0.0;
 
@@ -94,49 +137,109 @@ class AugmontGoldBuyViewModel extends BaseModel {
     notifyListeners();
   }
 
-  init() {
-    goldAmountController = TextEditingController();
-    fetchGoldRates();
-    status = checkAugmontStatus();
+  get isGoldRateFetching => this._isGoldRateFetching;
 
-    if (status == STATUS_REGISTER) {
-      _onboardUser();
+  set isGoldRateFetching(value) {
+    this._isGoldRateFetching = value;
+
+    notifyListeners();
+  }
+
+  EligibleCouponResponseModel get appliedCoupon => this._appliedCoupon;
+
+  set appliedCoupon(EligibleCouponResponseModel value) {
+    this._appliedCoupon = value;
+    notifyListeners();
+  }
+
+  CouponModel get focusCoupon => this._focusCoupon;
+
+  set focusCoupon(CouponModel coupon) {
+    _focusCoupon = coupon;
+    notifyListeners();
+  }
+
+  bool get showCoupons => _showCoupons;
+
+  set showCoupons(bool val) {
+    _showCoupons = val;
+    notifyListeners();
+  }
+
+  init() async {
+    setState(ViewState.Busy);
+    buyFieldNode = _userService.buyFieldFocusNode;
+    goldBuyAmount = chipAmountList[1];
+    goldAmountController =
+        TextEditingController(text: chipAmountList[1].toInt().toString());
+    fetchGoldRates();
+    await fetchNotices();
+    status = checkAugmontStatus();
+    //Fetch available coupons
+    getAvailableCoupons();
+    //Check if user can be registered automagically
+    userAugmontState = await CacheManager.readCache(key: "UserAugmontState");
+    if (status == STATUS_REGISTER && userAugmontState != null) {
+      _onboardUserAutomatically(userAugmontState);
     }
+    if (_baseUtil.augmontDetail == null) {
+      _baseUtil.augmontDetail =
+          await _dbModel.getUserAugmontDetails(_userService.baseUser.uid);
+    }
+    // Check if deposit is locked the this particular user
+    if (_baseUtil.augmontDetail != null &&
+        _baseUtil.augmontDetail.depNotice != null &&
+        _baseUtil.augmontDetail.depNotice.isNotEmpty)
+      buyNotice = _baseUtil.augmontDetail.depNotice;
+
+    setState(ViewState.Idle);
+  }
+
+  fetchNotices() async {
+    buyNotice = await _dbModel.showAugmontBuyNotice();
+  }
+
+  resetBuyOptions() {
+    goldBuyAmount = chipAmountList[1];
+    goldAmountController.text = chipAmountList[1].toInt().toString();
+    appliedCoupon = null;
+    lastTappedChipIndex = 1;
+    notifyListeners();
   }
 
 // UI ESSENTIALS
 
-  Widget amoutChip(double amt) {
+  Widget amoutChip(int index) {
+    double amt = chipAmountList[index];
     return GestureDetector(
       onTap: () {
+        showMaxCapText = false;
+        Haptic.vibrate();
+        lastTappedChipIndex = index;
         buyFieldNode.unfocus();
-        if (goldBuyAmount == null)
-          goldBuyAmount = amt;
-        else {
-          if (goldBuyAmount + amt <= 50000)
-            goldBuyAmount += amt;
-          else
-            goldBuyAmount = 50000;
-        }
-
-        goldAmountController.text = goldBuyAmount.toString();
+        goldBuyAmount = amt;
+        goldAmountController.text = goldBuyAmount.toInt().toString();
         updateGoldAmount();
+        //checkIfCouponIsStillApplicable();
+        appliedCoupon = null;
         notifyListeners();
       },
       child: Container(
-        width: SizeConfig.screenWidth * 0.229,
-        height: SizeConfig.screenWidth * 0.103,
+        padding: EdgeInsets.symmetric(
+            vertical: SizeConfig.padding8, horizontal: SizeConfig.padding12),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-          color: amt.toInt() == 1000
-              ? UiConstants.tertiarySolid
-              : UiConstants.tertiaryLight,
+          color: lastTappedChipIndex == index
+              ? UiConstants.primaryColor
+              : UiConstants.primaryLight.withOpacity(0.5),
         ),
         alignment: Alignment.center,
         child: Text(
-          "+ ₹ ${amt.toInt()}",
+          " ₹ ${amt.toInt()} ",
           style: TextStyles.body3.bold.colour(
-            amt.toInt() == 1000 ? Colors.white : UiConstants.tertiarySolid,
+            lastTappedChipIndex == index
+                ? Colors.white
+                : UiConstants.primaryColor,
           ),
         ),
       ),
@@ -169,28 +272,95 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
   fetchGoldRates() async {
     isGoldRateFetching = true;
-    refresh();
     goldRates = await _augmontModel.getRates();
+    updateGoldAmount();
     if (goldRates == null)
       BaseUtil.showNegativeAlert(
         'Portal unavailable',
         'The current rates couldn\'t be loaded. Please try again',
       );
     isGoldRateFetching = false;
-
-    refresh();
   }
 
   // BUY LOGIC
 
+  fcmTransactionResponseUpdate(fcmDataPayload) async {
+    //Stop loader if loading.
+    _logger.i("Updating response value.");
+
+    try {
+      final DepositFcmResponseModel depositFcmResponseModel =
+          DepositFcmResponseModel.fromJson(json.decode(fcmDataPayload));
+
+      //Handle failed condition here.
+      if (!depositFcmResponseModel.status) {
+        AppState.delegate.appState.isTxnLoaderInView = false;
+        BaseUtil.showNegativeAlert("Transaction Failed",
+            "Gold purchase failed, you amount will be refunded");
+        return;
+      }
+
+      double newAugPrinciple = depositFcmResponseModel.augmontPrinciple;
+      if (newAugPrinciple != null && newAugPrinciple > 0) {
+        _userService.augGoldPrinciple = newAugPrinciple;
+      }
+      double newAugQuantity = depositFcmResponseModel.augmontGoldQty;
+      if (newAugQuantity != null && newAugQuantity > 0) {
+        _userService.augGoldQuantity = newAugQuantity;
+      }
+      //add this to augmontBuyVM
+      int newFlcBalance = depositFcmResponseModel.flcBalance;
+      if (newFlcBalance > 0) {
+        _userCoinService.setFlcBalance(newFlcBalance);
+      }
+      if (AppState.delegate.appState.isTxnLoaderInView == true) {
+        if (depositFcmResponseModel.gtId != null) {
+          GoldenTicketService.goldenTicketId = depositFcmResponseModel.gtId;
+          if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
+            Future.delayed(Duration(milliseconds: 220), () {
+              AppState.delegate.appState.isTxnLoaderInView = false;
+            });
+            _gtService.showInstantGoldenTicketView(
+                amount: depositFcmResponseModel.amount,
+                title:
+                    "You successfully saved ₹${getAmount(depositFcmResponseModel.amount)}",
+                source: GTSOURCE.deposit);
+          } else {
+            AppState.delegate.appState.isTxnLoaderInView = false;
+            showTxnSuccessScreen(depositFcmResponseModel.amount,
+                "You successfully saved ₹${getAmount(depositFcmResponseModel.amount)}");
+          }
+        } else {
+          AppState.delegate.appState.isTxnLoaderInView = false;
+          showTxnSuccessScreen(depositFcmResponseModel.amount,
+              "You successfully saved ₹${getAmount(depositFcmResponseModel.amount)}");
+        }
+      }
+
+      _txnService.updateTransactions();
+    } catch (e) {
+      _logger.e(e);
+      _dbModel.logFailure(
+          _userService.baseUser.uid, FailType.DepositPayloadError, e);
+    }
+  }
+
   initiateBuy() async {
+    //Check if user is registered on augmont
+    if (status == STATUS_UNAVAILABLE) return;
+    if (status == STATUS_REGISTER) {
+      _onboardUserManually();
+      return;
+    }
     // if (_status == 1) {
     //   bool res = await _onboardUser();
     //   if (!res) await _checkRegistrationStatus();
     //   status = checkAugmontStatus();
     //   return;
     // }
+    if (couponApplyInProgress) return;
     double buyAmount = double.tryParse(goldAmountController.text);
+    // checkIfCouponIsStillApplicable();
     if (goldRates == null) {
       BaseUtil.showNegativeAlert(
         'Gold Rates Unavailable',
@@ -207,16 +377,12 @@ class AugmontGoldBuyViewModel extends BaseModel {
     }
     if (buyAmount < 10) {
       BaseUtil.showNegativeAlert(
-        'Minimum amount should be 10',
-        'Please enter a minimum purchase amount or Rs 10',
+        'Minimum amount should be ₹ 10',
+        'Please enter a minimum purchase amount of ₹ 10',
       );
       return;
     }
 
-    if (_baseUtil.augmontDetail == null) {
-      _baseUtil.augmontDetail =
-          await _dbModel.getUserAugmontDetails(_baseUtil.myUser.uid);
-    }
     if (_baseUtil.augmontDetail == null) {
       BaseUtil.showNegativeAlert(
         'Deposit Failed',
@@ -224,27 +390,62 @@ class AugmontGoldBuyViewModel extends BaseModel {
       );
       return;
     }
+
+    if (_baseUtil.augmontDetail.isDepLocked) {
+      BaseUtil.showNegativeAlert(
+        'Purchase Failed',
+        "${buyNotice ?? 'Gold buying is currently on hold. Please try again after sometime.'}",
+      );
+      return;
+    }
+
+    bool _disabled = await _dbModel.isAugmontBuyDisabled();
+    if (_disabled != null && _disabled) {
+      BaseUtil.showNegativeAlert(
+        'Purchase Failed',
+        'Gold buying is currently on hold. Please try again after sometime.',
+      );
+      return;
+    }
     isGoldBuyInProgress = true;
-    _augmontModel.initiateGoldPurchase(goldRates, buyAmount).then((txn) {
-      if (txn == null) {
-        isGoldBuyInProgress = false;
-        BaseUtil.showNegativeAlert(
-          'Transaction failed',
-          'Please try again in sometime or contact us for further assistance.',
-        );
+    _analyticsService.track(eventName: AnalyticsEvents.buyGold);
+
+    final _status = await _paytmService.initiateTransactions(
+        amount: buyAmount,
+        augmontRates: goldRates,
+        couponCode: appliedCoupon?.code ?? "",
+        restrictAppInvoke: FlavorConfig.isDevelopment());
+
+    isGoldBuyInProgress = false;
+    resetBuyOptions();
+
+    if (_status) {
+      AppState.delegate.appState.isTxnLoaderInView = true;
+      Future.delayed(Duration(seconds: 30), () async {
+        if (AppState.delegate.appState.isTxnLoaderInView == true) {
+          AppState.delegate.appState.isTxnLoaderInView = false;
+          showTransactionPendingDialog();
+        }
+      });
+    } else {
+      if (AppState.delegate.appState.isTxnLoaderInView == true) {
+        AppState.delegate.appState.isTxnLoaderInView = false;
       }
-    });
-    _augmontModel.setAugmontTxnProcessListener(_onDepositTransactionComplete);
+      BaseUtil.showNegativeAlert(
+        'Transaction failed',
+        'Please try again in sometime or contact us for further assistance.',
+      );
+    }
   }
 
   onBuyValueChanged(String val) {
-    log.debug("Value: $val");
+    _logger.d("Value: $val");
     if (showMaxCapText) showMaxCapText = false;
     if (val != null && val.isNotEmpty) {
       if (double.tryParse(val.trim()) != null &&
           double.tryParse(val.trim()) > 50000) {
         goldBuyAmount = 50000;
-        goldAmountController.text = goldBuyAmount.toString();
+        goldAmountController.text = goldBuyAmount.toInt().toString();
         updateGoldAmount();
         showMaxCapText = true;
         buyFieldNode.unfocus();
@@ -256,13 +457,8 @@ class AugmontGoldBuyViewModel extends BaseModel {
       goldBuyAmount = 0;
       updateGoldAmount();
     }
-  }
-
-  buyButtonAction() async {
-    if (await BaseUtil.showNoInternetAlert()) return;
-    Haptic.vibrate();
-    _baseUtil.isAugDepositRouteLogicInProgress = true;
-    _onDepositClicked().then((value) {});
+    // checkIfCouponIsStillApplicable();
+    appliedCoupon = null;
   }
 
   int checkAugmontStatus() {
@@ -278,10 +474,11 @@ class AugmontGoldBuyViewModel extends BaseModel {
         _isGeneralUserAllowed = 1;
       }
     }
+    //TODO: looks like dead code
     if (_isGeneralUserAllowed == 0) {
       //General permission is denied. Check if specific user permission granted
-      if (_baseUtil.myUser.isAugmontEnabled != null &&
-          _baseUtil.myUser.isAugmontEnabled) {
+      if (_userService.baseUser.isAugmontEnabled != null &&
+          _userService.baseUser.isAugmontEnabled) {
         //this specific user is allowed to use Augmont
         _isAllowed = true;
       } else {
@@ -293,199 +490,96 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
     if (!_isAllowed)
       return STATUS_UNAVAILABLE;
-    else if (_baseUtil.myUser.isAugmontOnboarded == null ||
-        _baseUtil.myUser.isAugmontOnboarded == false)
+    else if (_userService.baseUser.isAugmontOnboarded == null ||
+        _userService.baseUser.isAugmontOnboarded == false)
       return STATUS_REGISTER;
     else
       return STATUS_OPEN;
   }
 
-  Future _onboardUser() async {
+  Future _onboardUserAutomatically(String state) async {
     augOnbRegInProgress = true;
-    userAugmontState = await CacheManager.readCache(key: "UserAugmontState");
-    if (userAugmontState == null) {
-      return Future.delayed(Duration.zero, () {
-        BaseUtil.openModalBottomSheet(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(SizeConfig.roundness24),
-              topRight: Radius.circular(SizeConfig.roundness24),
-            ),
-            addToScreenStack: false,
-            content: AugmontRegisterModalSheet(
-              onSuccessfulAugReg: (val) {
-                if (val) {
-                  augOnbRegInProgress = false;
-                  status = checkAugmontStatus();
-                }
-              },
-            ),
-            isBarrierDismissable: false);
-      });
+    _logger.d("Augmont Onboarding started automagically");
+    _baseUtil.augmontDetail = await _augmontModel.createSimpleUser(
+        _userService.baseUser.mobile, userAugmontState);
+    if (_baseUtil.augmontDetail == null) {
+      // BaseUtil.showNegativeAlert('Registration Failed',
+      //     'Failed to register for digital gold. Please check your connection and try after some time.');
+      augOnbRegInProgress = false;
+      augRegFailed = true;
+      return;
     } else {
-      _baseUtil.augmontDetail = await _augmontModel.createSimpleUser(
-          _userService.baseUser.mobile, userAugmontState);
-      if (_baseUtil.augmontDetail == null) {
-        BaseUtil.showNegativeAlert('Registration Failed',
-            'Failed to register for digital gold. Please check your connection and reopen.');
-        augOnbRegInProgress = false;
-        augRegFailed = true;
-        return;
-      } else {
-        augOnbRegInProgress = false;
-        status = checkAugmontStatus();
-        // BaseUtil.showPositiveAlert('Registration Successful',
-        //     'You are successfully onboarded to Augmont Digital Gold');
-      }
+      augOnbRegInProgress = false;
+      status = checkAugmontStatus();
+      augRegFailed = false;
+      // BaseUtil.showPositiveAlert('Registration Successful',
+      //     'You are successfully onboarded to Augmont Digital Gold');
     }
+    _logger.d("Augmont Onboarding Completed");
     isGoldBuyInProgress = false;
     setState(ViewState.Idle);
     return true;
   }
 
-  Future<bool> _onDepositClicked() async {
-    setState(ViewState.Busy);
-    _baseUtil.augmontDetail = (_baseUtil.augmontDetail == null)
-        ? (await _dbModel.getUserAugmontDetails(_baseUtil.myUser.uid))
-        : _baseUtil.augmontDetail;
-    int _status = checkAugmontStatus();
-    if (_status == STATUS_UNAVAILABLE) {
-      _baseUtil.isAugDepositRouteLogicInProgress = false;
-      setState(ViewState.Idle);
-      BaseUtil.openDialog(
-          content: AugmontDisabled(),
-          addToScreenStack: true,
-          isBarrierDismissable: true);
-
-      return true;
-    } else if (_status == STATUS_REGISTER) {
+  Future _onboardUserManually() async {
+    // userAugmontState = await CacheManager.readCache(key: "UserAugmontState");
+    // if (userAugmontState == null) {
+    return Future.delayed(Duration.zero, () {
       BaseUtil.openModalBottomSheet(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(SizeConfig.roundness24),
+            topRight: Radius.circular(SizeConfig.roundness24),
+          ),
           addToScreenStack: true,
-          content: AugmontRegisterModalSheet(),
+          content: AugmontRegisterModalSheet(
+            onAugRegInit: (val) {
+              augOnbRegInProgress = val;
+            },
+            onSuccessfulAugReg: (val) {
+              if (val) {
+                augOnbRegInProgress = false;
+                status = checkAugmontStatus();
+                isGoldBuyInProgress = false;
+                augRegFailed = false;
+                setState(ViewState.Idle);
+              }
+            },
+          ),
           isBarrierDismissable: false);
-      isGoldBuyInProgress = false;
-      notifyListeners();
-
-      return true;
-    } else {
-      _baseUtil.augmontGoldRates =
-          await _augmontModel.getRates(); //refresh rates
-      _baseUtil.isAugDepositRouteLogicInProgress = false;
-      setState(ViewState.Idle);
-
-      if (_baseUtil.augmontGoldRates == null) {
-        BaseUtil.showNegativeAlert(
-          'Portal unavailable',
-          'The current rates couldn\'t be loaded. Please try again',
-        );
-        return false;
-      } else {
-        await _augmontModel.initiateGoldPurchase(_baseUtil.augmontGoldRates,
-            double.tryParse(goldAmountController.text));
-
-        await _augmontModel
-            .setAugmontTxnProcessListener(_onDepositTransactionComplete);
-        // BaseUtil.openModalBottomSheet(
-        //     isBarrierDismissable: false,
-        //     content: AugmontDepositModalSheet(
-        //       key: _modalKey2,
-        //       onDepositConfirmed: (double amount) {
-        //         _augmontModel.initiateGoldPurchase(
-        //             _baseUtil.augmontGoldRates, amount);
-        //         _augmontModel.setAugmontTxnProcessListener(
-        //             _onDepositTransactionComplete);
-        //       },
-        //       currentRates: _baseUtil.augmontGoldRates,
-        //     ),
-        //     addToScreenStack: true);
-        // showModalBottomSheet(
-        //     isDismissible: false,
-        //     // backgroundColor: Colors.transparent,
-        //     shape: RoundedRectangleBorder(
-        //       borderRadius: BorderRadius.circular(16),
-        //     ),
-        //     context: augContext,
-        //     isScrollControlled: true,
-        //     builder: (context) {
-        //       return;
-        //     });
-      }
-    }
-    return true;
+    });
   }
 
-  Future<void> _onDepositTransactionComplete(UserTransaction txn) async {
-    if (txn.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE) {
-      if (_baseUtil.currentAugmontTxn != null) {
-        ///if this was the user's first investment
-        ///- update AugmontDetail obj
-        ///- add notification subscription
-
-        if (!_baseUtil.augmontDetail.firstInvMade) {
-          _baseUtil.augmontDetail.firstInvMade = true;
-
-          bool _aflag = await _dbModel.updateUserAugmontDetails(
-              _baseUtil.myUser.uid, _baseUtil.augmontDetail);
-          if (_aflag) {
-            _fcmListener.removeSubscription(FcmTopic.MISSEDCONNECTION);
-            _fcmListener.addSubscription(FcmTopic.GOLDINVESTOR);
-          }
-        }
-
-        ///check if referral bonuses need to be unlocked
-        if (_userService.userFundWallet.augGoldPrinciple >=
-            BaseRemoteConfig.UNLOCK_REFERRAL_AMT) {
-          bool _isUnlocked =
-              await _dbModel.unlockReferralTickets(_baseUtil.myUser.uid);
-          if (_isUnlocked) {
-            //give it a few seconds before showing congratulatory message
-            Timer(const Duration(seconds: 4), () {
-              BaseUtil.showPositiveAlert(
-                'Congratulations are in order!',
-                'Your referral bonus has been unlocked 🎉',
-              );
-            });
-          }
-        }
-
-        ///update UI
-        onDepositComplete(true);
-        _augmontModel.completeTransaction();
-        return true;
-      }
-    } else if (txn.tranStatus == UserTransaction.TRAN_STATUS_CANCELLED) {
-      //razorpay payment failed
-      log.debug('Payment cancelled');
-      if (_baseUtil.currentAugmontTxn != null) {
-        onDepositComplete(false);
-        _augmontModel.completeTransaction();
-      }
-    } else if (txn.tranStatus == UserTransaction.TRAN_STATUS_PENDING) {
-      //razorpay completed but augmont purchase didnt go through
-      log.debug('Payment pending');
-      if (_baseUtil.currentAugmontTxn != null) {
-        onDepositComplete(false);
-        _augmontModel.completeTransaction();
-      }
-    }
+  onboardUser() async {
+    userAugmontState = await CacheManager.readCache(key: "UserAugmontState");
+    if (userAugmontState != null)
+      _onboardUserAutomatically(userAugmontState);
+    else
+      _onboardUserManually();
   }
 
-  onDepositComplete(bool flag) {
-    // _isDepositInProgress = false;
-    // setState(() {});
-    isGoldBuyInProgress = false;
-    if (flag) {
-      // BaseUtil.showPositiveAlert(
-      //     'SUCCESS', 'You gold deposit was confirmed!', context);
-      showSuccessGoldBuyDialog();
-    } else {
-      AppState.backButtonDispatcher.didPopRoute();
-      BaseUtil.showNegativeAlert('Failed',
-          'Your gold deposit failed. Please try again or contact us if you are facing issues',
-          seconds: 5);
-    }
+  void showOfferModal(AugmontGoldBuyViewModel model) {
+    BaseUtil.openModalBottomSheet(
+      addToScreenStack: true,
+      backgroundColor: Colors.white,
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(SizeConfig.padding16),
+        topRight: Radius.circular(SizeConfig.padding16),
+      ),
+      hapticVibrate: true,
+      isBarrierDismissable: false,
+      isScrollControlled: true,
+      content: AugmontCouponsModalSheet(model: model),
+    );
   }
 
-  showSuccessGoldBuyDialog() {
+  getAmount(double amount) {
+    if (amount > amount.toInt())
+      return amount;
+    else
+      return amount.toInt();
+  }
+
+  showSuccessGoldBuyDialog(amount) {
     BaseUtil.openDialog(
       addToScreenStack: true,
       hapticVibrate: true,
@@ -494,9 +588,9 @@ class AugmontGoldBuyViewModel extends BaseModel {
         asset: Assets.goldenTicket,
         title: "Congratulations",
         subtitle:
-            "You have successfully saved ${_baseUtil.currentAugmontTxn.amount} and earned ${_baseUtil.currentAugmontTxn.amount.ceil()} tokens!",
+            "You have successfully saved ₹ ${getAmount(amount)} and earned ${amount.ceil()} tokens!",
         result: (res) {
-          if (res) ;
+          // if (res) ;
         },
         accept: "Invest more",
         reject: "Start Playing",
@@ -504,12 +598,161 @@ class AugmontGoldBuyViewModel extends BaseModel {
         rejectColor: UiConstants.tertiarySolid,
         onReject: () {
           AppState.backButtonDispatcher.didPopRoute();
-          AppState.backButtonDispatcher.didPopRoute();
           AppState.delegate.appState.setCurrentTabIndex = 1;
         },
         onAccept: () {
           AppState.backButtonDispatcher.didPopRoute();
         },
+      ),
+    );
+  }
+
+  showTransactionPendingDialog() {
+    BaseUtil.openDialog(
+      addToScreenStack: true,
+      hapticVibrate: true,
+      isBarrierDismissable: false,
+      content: FelloInfoDialog(
+        customContent: Column(
+          children: [
+            SizedBox(height: SizeConfig.screenHeight * 0.04),
+            SvgPicture.asset(
+              Assets.processing,
+              height: SizeConfig.screenHeight * 0.16,
+            ),
+            SizedBox(
+              height: SizeConfig.screenHeight * 0.04,
+            ),
+            Text(
+              "We're still processing!",
+              style: TextStyles.title3.bold,
+            ),
+            SizedBox(height: SizeConfig.padding16),
+            RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                text:
+                    "Your transaction is taking longer than usual. We'll get back to you in ",
+                style: TextStyles.body3.colour(Colors.black54),
+                children: [
+                  TextSpan(
+                    text: "15 minutes",
+                    style:
+                        TextStyles.body3.bold.colour(UiConstants.tertiarySolid),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(height: SizeConfig.screenHeight * 0.02),
+            Container(
+              width: SizeConfig.screenWidth,
+              child: FelloButtonLg(
+                child: Text(
+                  "OK",
+                  style: TextStyles.body3.colour(Colors.white),
+                ),
+                color: UiConstants.primaryColor,
+                onPressed: () {
+                  AppState.backButtonDispatcher.didPopRoute();
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+// ----------------------------------------NAVIGATION--------------------------------------//
+
+  navigateToGoldBalanceDetailsScreen() {
+    AppState.delegate.appState.currentAction = PageAction(
+      state: PageState.addPage,
+      page: GoldBalanceDetailsViewPageConfig,
+    );
+
+    _analyticsService.track(eventName: AnalyticsEvents.saveBalance);
+  }
+
+  navigateToAboutGold() {
+    AppState.delegate.appState.currentAction = PageAction(
+        state: PageState.addPage, page: AugmontGoldDetailsPageConfig);
+  }
+
+  openAugmontWebUri() async {
+    const url = "https://www.augmont.com/about-us";
+    if (await canLaunch(url))
+      await launch(url);
+    else
+      BaseUtil.showNegativeAlert(
+          'Failed to launch URL', 'Please try again in sometime');
+  }
+
+//----------------------------------------------- COUPON LOGIC -------------------------------
+
+  getAvailableCoupons() async {
+    couponList = await _dbModel.getCoupons();
+    if (couponList[0].priority == 1) focusCoupon = couponList[0];
+    showCoupons = true;
+  }
+
+  Future applyCoupon(String couponCode) async {
+    if (couponApplyInProgress || isGoldBuyInProgress) return;
+
+    _analyticsService.track(eventName: AnalyticsEvents.saveBuyCoupon);
+
+    buyFieldNode.unfocus();
+
+    couponApplyInProgress = true;
+
+    ApiResponse<EligibleCouponResponseModel> response =
+        await _couponRepo.getEligibleCoupon(
+      uid: _userService.baseUser.uid,
+      amount: goldBuyAmount.toInt(),
+      couponcode: couponCode,
+    );
+
+    couponApplyInProgress = false;
+
+    if (response.code == 200) {
+      if (response.model.flag == true) {
+        appliedCoupon = response.model;
+        BaseUtil.showPositiveAlert(
+            "Coupon Applied Successfully", response?.model?.message);
+      } else {
+        BaseUtil.showNegativeAlert(
+            "Coupon cannot be applied", response?.model?.message);
+      }
+    } else if (response.code == 400) {
+      BaseUtil.showNegativeAlert("Coupon not applied", response?.errorMessage);
+    } else {
+      BaseUtil.showNegativeAlert(
+          "Coupon not applied", "Please try another coupon");
+    }
+  }
+
+  //------------------------------- TEST -------------------------------- //
+
+  showInstantTestGT() async {
+    GoldenTicketService.goldenTicketId =
+        (await _dbModel.getLatestGoldenTicket(_userService.baseUser.uid)).gtId;
+    await _gtService.fetchAndVerifyGoldenTicketByID();
+    _gtService.showInstantGoldenTicketView(
+        title: 'You successfully saved ₹500.',
+        source: GTSOURCE.deposit,
+        amount: 500);
+  }
+
+  showTxnSuccessScreen(double amount, String title) {
+    AppState.screenStack.add(ScreenItem.dialog);
+    Navigator.of(AppState.delegate.navigatorKey.currentContext).push(
+      PageRouteBuilder(
+        opaque: false,
+        pageBuilder: (BuildContext context, _, __) =>
+            TxnCompletedConfirmationScreenView(
+          amount: amount ?? 400.4,
+          title: title ?? "Hurray, we saved ₹400.4",
+        ),
       ),
     );
   }

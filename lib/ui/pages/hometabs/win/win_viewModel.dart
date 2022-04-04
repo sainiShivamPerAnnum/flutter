@@ -1,31 +1,71 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/tambola_winners_details.dart';
 import 'package:felloapp/core/model/winners_model.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/winners_repo.dart';
-import 'package:felloapp/core/service/user_service.dart';
-import 'package:felloapp/core/service/winners_service.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/events_service.dart';
+import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/dialogs/Prize-Card/card.dart';
-import 'package:felloapp/ui/dialogs/share-card.dart';
+import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
+import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class WinViewModel extends BaseModel {
   final _userService = locator<UserService>();
   final _winnersRepo = locator<WinnersRepository>();
-  final _logger = locator<Logger>();
+  final _logger = locator<CustomLogger>();
   final _winnerService = locator<WinnerService>();
+  final _lbService = locator<LeaderboardService>();
+  final _dbModel = locator<DBModel>();
+  final _analyticsService = locator<AnalyticsService>();
+  final eventService = EventService();
+  Timer _timer;
 
   LocalDBModel _localDBModel = locator<LocalDBModel>();
   bool isWinnersLoading = false;
   WinnersModel _winners;
+  int _currentPage = 0;
+  int get getCurrentPage => this._currentPage;
+  final ScrollController eventScrollController = new ScrollController();
+
+  List<EventModel> _ongoingEvents;
+
+  static PanelController _panelController = PanelController();
+
+  List<EventModel> get ongoingEvents => this._ongoingEvents;
+
+  set ongoingEvents(List<EventModel> value) {
+    this._ongoingEvents = value;
+    notifyListeners();
+  }
+
+  PanelController get panelController => _panelController;
+
+  set panelController(val) {
+    _panelController = val;
+    notifyListeners();
+  }
+
+  set setCurrentPage(int currentPage) {
+    this._currentPage = currentPage;
+    notifyListeners();
+  }
 
   WinnersModel get winners => _winners;
 
@@ -40,13 +80,31 @@ class WinViewModel extends BaseModel {
       _userService.userFundWallet.unclaimedBalance;
 
   init() {
-    // if (!AppState.isWinOpened) {
-    //   _winnerService.fetchWinners();
-    //   AppState.isWinOpened = true;
-    // }
+    setupAutoEventScroll();
+    getOngoingEvents();
   }
 
-  getWinningsButtonText() {
+  setupAutoEventScroll() {
+    _timer = Timer.periodic(Duration(seconds: 6), (Timer timer) {
+      if (eventScrollController.position.pixels <
+          eventScrollController.position.maxScrollExtent) {
+        eventScrollController.animateTo(
+            eventScrollController.position.pixels +
+                SizeConfig.screenWidth * 0.64,
+            duration: Duration(seconds: 1),
+            curve: Curves.decelerate);
+      } else {
+        eventScrollController.animateTo(0,
+            duration: Duration(seconds: 2), curve: Curves.decelerate);
+      }
+    });
+  }
+
+  void clear() {
+    _timer?.cancel();
+  }
+
+  String getWinningsButtonText() {
     if (_userService.userFundWallet.isPrizeBalanceUnclaimed())
       return "Redeem";
     else
@@ -62,17 +120,53 @@ class WinViewModel extends BaseModel {
         PageAction(state: PageState.addPage, page: MyWinnigsPageConfig);
   }
 
-  // fetchWinners() async {
-  //   isWinnersLoading = true;
-  //   notifyListeners();
-  //   var temp = await _winnersRepo.getWinners("GM_CRIC2020", "weekly");
-  //   if (temp != null) {
-  //     winners = temp.model;
-  //     _logger.d("Winners fetched");
-  //   } else
-  //     BaseUtil.showNegativeAlert(
-  //         "Unable to fetch winners", "try again in sometime");
-  //   isWinnersLoading = false;
-  //   notifyListeners();
-  // }
+  void navigateToRefer() {
+    _analyticsService.track(eventName: AnalyticsEvents.winReferral);
+    AppState.delegate.appState.currentAction = PageAction(
+      state: PageState.addPage,
+      page: ReferralDetailsPageConfig,
+    );
+  }
+
+  void navigateToWinnings() {
+    _analyticsService.track(eventName: AnalyticsEvents.winReferral);
+    AppState.delegate.appState.currentAction = PageAction(
+      state: PageState.addPage,
+      page: MyWinnigsPageConfig,
+    );
+  }
+
+  openVoucherModal(
+    String asset,
+    String title,
+    String subtitle,
+    Color color,
+    bool commingsoon,
+    List<String> instructions,
+  ) {
+    if (Platform.isIOS && commingsoon)
+      return;
+    else
+      return BaseUtil.openModalBottomSheet(
+        addToScreenStack: true,
+        content: VoucherModal(
+          color: color,
+          asset: asset,
+          commingSoon: commingsoon,
+          title: title,
+          subtitle: subtitle,
+          instructions: instructions,
+        ),
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(SizeConfig.padding24),
+            topRight: Radius.circular(SizeConfig.padding24)),
+        // backgroundColor: Color(0xffFFDBF6),
+        isBarrierDismissable: false,
+        hapticVibrate: true,
+      );
+  }
+
+  getOngoingEvents() async {
+    ongoingEvents = await _dbModel.getOngoingEvents();
+  }
 }

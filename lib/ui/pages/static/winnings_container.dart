@@ -12,31 +12,46 @@ import 'package:flutter/material.dart';
 class WinningsContainer extends StatelessWidget {
   final bool shadow;
   final Widget child;
-  WinningsContainer({this.child, @required this.shadow});
+  final double height;
+  final Function onTap;
+  final double borderRadius;
+  final Color color;
+  WinningsContainer({
+    this.child,
+    @required this.shadow,
+    this.height,
+    this.onTap,
+    this.borderRadius,
+    this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return InkWell(
-      onTap: () => AppState.delegate.appState.currentAction =
-          PageAction(state: PageState.addPage, page: MyWinnigsPageConfig),
+      onTap: onTap ??
+          () => AppState.delegate.appState.currentAction =
+              PageAction(state: PageState.addPage, page: MyWinnigsPageConfig),
       child: Container(
         decoration: BoxDecoration(
-            color: UiConstants.primaryColor,
-            borderRadius: BorderRadius.circular(SizeConfig.roundness24),
-            boxShadow: [
-              if (shadow)
-                BoxShadow(
-                  blurRadius: 30,
-                  color: UiConstants.primaryColor.withOpacity(0.5),
-                  offset: Offset(
-                    0,
-                    SizeConfig.screenWidth * 0.1,
-                  ),
-                  spreadRadius: -30,
-                )
-            ]),
-        height: SizeConfig.screenWidth * 0.24,
+          color: color ?? UiConstants.primaryColor,
+          borderRadius:
+              BorderRadius.circular(borderRadius ?? SizeConfig.roundness24),
+          boxShadow: [
+            if (shadow)
+              BoxShadow(
+                blurRadius: 30,
+                color: color.withOpacity(0.5) ??
+                    UiConstants.primaryColor.withOpacity(0.5),
+                offset: Offset(
+                  0,
+                  SizeConfig.screenWidth * 0.1,
+                ),
+                spreadRadius: -30,
+              )
+          ],
+        ),
+        height: height ?? SizeConfig.screenWidth * 0.24,
         margin:
             EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
         child: Stack(
@@ -60,7 +75,7 @@ class WinningsContainer extends StatelessWidget {
                       children: [
                         Text(
                           locale.saveWinningsLabel,
-                          style: TextStyles.title5.colour(Colors.white60),
+                          style: TextStyles.title5.colour(Colors.white),
                         ),
                         UserWinningsSE(
                           style: TextStyles.title2

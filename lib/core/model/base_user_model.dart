@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:encrypt/encrypt.dart' as encrypt;
-import 'package:felloapp/util/constants.dart';
+
 import 'package:felloapp/util/logger.dart';
 
 class BaseUser {
@@ -18,6 +17,7 @@ class BaseUser {
   bool isIciciOnboarded;
   bool isAugmontOnboarded;
   bool isSimpleKycVerified;
+  bool isBlocked;
   int isKycVerified;
   String kycName;
   String pendingTxnId;
@@ -43,6 +43,7 @@ class BaseUser {
   static final String fldIsIciciOnboarded = "mIsIciciOnboarded";
   static final String fldIsAugmontOnboarded = "mIsAugmontOnboarded";
   static final String fldIsSimpleKycVerified = "mIsSimpleKycVerified";
+  static final String fldIsBlocked = "mIsBlocked";
   static final String fldIsKycVerified = "mIsKycVerified";
   static final String fldPendingTxnId = "mPendingTxnId";
   static final String fldIsIciciEnabled = "mIsIciciEnabled";
@@ -50,6 +51,7 @@ class BaseUser {
   static final String fldUserPrefs = "mUserPrefs";
   static final String fldCreatedOn = "mCreatedOn";
   static final String fldKycName = "mKycName";
+  static final String fldStateId = "stateId";
 
   BaseUser(
       this.uid,
@@ -70,6 +72,7 @@ class BaseUser {
       this.isAugmontEnabled,
       this.username,
       this.isEmailVerified,
+      this.isBlocked,
       this.userPreferences,
       this.createdOn);
 
@@ -93,29 +96,31 @@ class BaseUser {
             null,
             "",
             false,
+            false,
             UserPreferences(null),
             Timestamp.now());
 
   BaseUser.fromMap(Map<String, dynamic> data, String id, [String client_token])
       : this(
             id,
-            data[fldMobile],
-            data[fldEmail],
-            data[fldName],
-            data[fldDob],
-            data[fldGender],
-            client_token,
+            data[fldMobile]?.toString(),
+            data[fldEmail]?.toString(),
+            data[fldName]?.toString(),
+            data[fldDob]?.toString(),
+            data[fldGender]?.toString()?.toUpperCase(),
+            client_token?.toString(),
             data[fldIsInvested] ?? false,
             data[fldIsIciciOnboarded],
-            data[fldIsAugmontOnboarded],
+            data[fldIsAugmontOnboarded] ?? false,
             data[fldIsSimpleKycVerified],
             data[fldIsKycVerified],
             data[fldKycName],
             data[fldPendingTxnId],
             data[fldIsIciciEnabled],
             data[fldIsAugmontEnabled],
-            data[fldUsername],
-            data[fldIsEmailVerified],
+            data[fldUsername]?.toString(),
+            data[fldIsEmailVerified] ?? false,
+            data[fldIsBlocked] ?? false,
             UserPreferences(data[fldUserPrefs]),
             data[fldCreatedOn]);
 
@@ -135,7 +140,7 @@ class BaseUser {
       fldCreatedOn: createdOn
     };
     if (isKycVerified != null) userObj[fldIsKycVerified] = isKycVerified;
-    if(kycName != null) userObj[fldKycName] = kycName;
+    if (kycName != null) userObj[fldKycName] = kycName;
     if (isIciciOnboarded != null)
       userObj[fldIsIciciOnboarded] = isIciciOnboarded;
     if (isIciciEnabled != null) userObj[fldIsIciciEnabled] = isIciciEnabled;
@@ -143,13 +148,19 @@ class BaseUser {
       userObj[fldIsAugmontEnabled] = isAugmontEnabled;
     if (userPreferences != null)
       userObj[fldUserPrefs] = userPreferences.toJson();
-
+    if (isBlocked != null) userObj[fldIsBlocked] = isBlocked;
     return userObj;
   }
 
   bool hasIncompleteDetails() {
     //return ((_mobile?.isEmpty??true) || (_name?.isEmpty??true) || (_email?.isEmpty??true));
-    return (((mobile?.isEmpty ?? true) || (name?.isEmpty ?? true)));
+    return (((mobile?.isEmpty ?? true) || (name?.isEmpty ?? true)) ||
+        (username?.isEmpty ?? true));
+  }
+
+  @override
+  String toString() {
+    return 'BaseUser(uid: $uid, mobile: $mobile, name: $name, email: $email, dob: $dob, gender: $gender, username: $username, verifiedName: $verifiedName, client_token: $client_token, isInvested: $isInvested, isIciciOnboarded: $isIciciOnboarded, isAugmontOnboarded: $isAugmontOnboarded, isSimpleKycVerified: $isSimpleKycVerified, isBlocked: $isBlocked, isKycVerified: $isKycVerified, kycName: $kycName, pendingTxnId: $pendingTxnId, isIciciEnabled: $isIciciEnabled, isAugmontEnabled: $isAugmontEnabled, isEmailVerified: $isEmailVerified, userPreferences: $userPreferences, createdOn: $createdOn)';
   }
 }
 

@@ -1,1 +1,1 @@
-enum WinnerServiceProperties { winLeaderboard }
+enum WinnerServiceProperties { winLeaderboard, topWinners }

@@ -1,7 +1,13 @@
 //Project Imports
+import 'dart:io';
+
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/feedback_dialog.dart';
@@ -12,23 +18,19 @@ import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/util/locator.dart';
-
 //Flutter Imports
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
 //Pub Imports
 import 'package:freshchat_sdk/freshchat_sdk.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:logger/logger.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 class SupportPage extends StatefulWidget {
   const SupportPage({Key key}) : super(key: key);
@@ -38,29 +40,31 @@ class SupportPage extends StatefulWidget {
 }
 
 class _SupportPageState extends State<SupportPage> {
-  final Logger logger = locator<Logger>();
+  final CustomLogger logger = locator<CustomLogger>();
+  final UserService _userService = locator<UserService>();
   BaseUtil baseProvider;
   AppState appState;
   DBModel dbProvider;
   TextEditingController _requestCallPhoneController = TextEditingController();
   bool isInit = false;
+  final _analyticsService = locator<AnalyticsService>();
 
   void init() {
-    _requestCallPhoneController.text = baseProvider.myUser.mobile;
-    enableFlashChat();
+    _requestCallPhoneController.text = _userService.baseUser.mobile;
+    // enableFlashChat();
     isInit = true;
   }
-
-  void enableFlashChat() async {
-    ///Freshchat utils
-    final freshchatKeys = await dbProvider.getActiveFreshchatKey();
-    if (freshchatKeys != null && freshchatKeys.isNotEmpty) {
-      Freshchat.init(freshchatKeys['app_id'], freshchatKeys['app_key'],
-          freshchatKeys['app_domain'],
-          gallerySelectionEnabled: true, themeName: 'FreshchatCustomTheme');
-      logger.i("Flash Chat enabled");
-    }
-  }
+  //
+  // void enableFlashChat() async {
+  //   ///Freshchat utils
+  //   final freshchatKeys = await dbProvider.getActiveFreshchatKey();
+  //   if (freshchatKeys != null && freshchatKeys.isNotEmpty) {
+  //     Freshchat.init(freshchatKeys['app_id'], freshchatKeys['app_key'],
+  //         freshchatKeys['app_domain'],
+  //         gallerySelectionEnabled: true, themeName: 'FreshchatCustomTheme');
+  //     logger.i("Flash Chat enabled");
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +72,7 @@ class _SupportPageState extends State<SupportPage> {
     appState = Provider.of<AppState>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     ConnectivityStatus connectivityStatus =
-    Provider.of<ConnectivityStatus>(context);
+        Provider.of<ConnectivityStatus>(context);
 
     if (!isInit) {
       init();
@@ -96,42 +100,69 @@ class _SupportPageState extends State<SupportPage> {
                     child: ListView(
                       padding: EdgeInsets.zero,
                       children: [
-                        FelloBriefTile(
-                          leadingAsset: Assets.hsCustomerService,
-                          title: "Chat with us",
-                          onTap: () {
-                            Haptic.vibrate();
-                            appState.currentAction = PageAction(
-                                state: PageState.addPage,
-                                page: ChatSupportPageConfig);
-                          },
-                        ),
-                        FelloBriefTile(
-                          leadingIcon: Icons.call,
-                          title: "Request a Callback",
-                          onTap: () {
-                            Haptic.vibrate();
-                            if (connectivityStatus != ConnectivityStatus.Offline)
-                              _showRequestCallSheet();
-                            else
-                              BaseUtil.showNoInternetAlert();
-                          },
-                        ),
-                        FelloBriefTile(
-                          leadingAsset: Assets.hsMail,
-                          title: "Email us your query",
-                          onTap: () {
-                            Haptic.vibrate();
-                            try {
-                              _launchEmail();
-                            } catch (e) {
-                              BaseUtil.showNegativeAlert(
-                                'Error',
-                                'Something went wrong, could not launch email right now. Please try again later',
-                              );
-                            }
-                          },
-                        ),
+                        // FelloBriefTile(
+                        //   leadingAsset: Assets.hsCustomerService,
+                        //   title: "Chat with us",
+                        //   onTap: () {
+                        //     Haptic.vibrate();
+                        //     // _mixpanelService.track(
+                        //     //     eventName: MixpanelEvents.initiateChatSupport,
+                        //     //     properties: {
+                        //     //       'userId': _userService.baseUser.uid
+                        //     //     });
+                        //
+                        //     _analyticsService
+                        //         .track(eventName: AnalyticsEvents.initiateChatSupport,properties: {'userId':_userService.baseUser.uid});
+                        //
+                        //     appState.currentAction = PageAction(
+                        //         state: PageState.addPage,
+                        //         page: ChatSupportPageConfig);
+                        //   },
+                        // ),
+                        if (!Platform.isIOS)
+                          FelloBriefTile(
+                            leadingAsset: Assets.hsCustomerService,
+                            title: "Contact Us",
+                            onTap: () {
+                              Haptic.vibrate();
+                              // _mixpanelService.track(
+                              //     eventName: MixpanelEvents.initiateChatSupport,
+                              //     properties: {
+                              //       'userId': _userService.baseUser.uid
+                              //     });
+                              appState.currentAction = PageAction(
+                                  state: PageState.addPage,
+                                  page: FreshDeskHelpPageConfig);
+                            },
+                          ),
+                        // FelloBriefTile(
+                        //   leadingIcon: Icons.call,
+                        //   title: "Request a Callback",
+                        //   onTap: () {
+                        //     Haptic.vibrate();
+                        //     if (connectivityStatus !=
+                        //         ConnectivityStatus.Offline)
+                        //       _showRequestCallSheet();
+                        //     else
+                        //       BaseUtil.showNoInternetAlert();
+                        //   },
+                        // ),
+                        if (Platform.isIOS)
+                          FelloBriefTile(
+                            leadingAsset: Assets.hsMail,
+                            title: "Email us your query",
+                            onTap: () {
+                              Haptic.vibrate();
+                              try {
+                                _launchEmail();
+                              } catch (e) {
+                                BaseUtil.showNegativeAlert(
+                                  'Error',
+                                  'Something went wrong, could not launch email right now. Please try again later',
+                                );
+                              }
+                            },
+                          ),
                         FelloBriefTile(
                           leadingAsset: Assets.hsFaqs,
                           title: "FAQs",
@@ -162,15 +193,18 @@ class _SupportPageState extends State<SupportPage> {
                                       //feedback submission allowed even if user not signed in
                                       dbProvider
                                           .submitFeedback(
-                                          (baseProvider.firebaseUser == null ||
-                                              baseProvider
-                                                  .firebaseUser.uid ==
-                                                  null)
-                                              ? 'UNKNOWN'
-                                              : baseProvider.firebaseUser.uid,
-                                          fdbk)
+                                              (_userService.firebaseUser ==
+                                                          null ||
+                                                      _userService.firebaseUser
+                                                              .uid ==
+                                                          null)
+                                                  ? 'UNKNOWN'
+                                                  : baseProvider
+                                                      .firebaseUser.uid,
+                                              fdbk)
                                           .then((flag) {
-                                        AppState.backButtonDispatcher.didPopRoute();
+                                        AppState.backButtonDispatcher
+                                            .didPopRoute();
                                         if (flag) {
                                           BaseUtil.showPositiveAlert(
                                             'Thank You',
@@ -239,9 +273,9 @@ class _SupportPageState extends State<SupportPage> {
                                 .textTheme
                                 .headline5
                                 .copyWith(
-                                color: UiConstants.primaryColor,
-                                fontSize: SizeConfig.largeTextSize * 1.2,
-                                fontWeight: FontWeight.bold),
+                                    color: UiConstants.primaryColor,
+                                    fontSize: SizeConfig.largeTextSize * 1.2,
+                                    fontWeight: FontWeight.bold),
                           ),
                         ),
                         GestureDetector(
@@ -261,7 +295,7 @@ class _SupportPageState extends State<SupportPage> {
                     Text(
                       'Confirm your number and we will call you back.',
                       style:
-                      TextStyle(fontSize: SizeConfig.mediumTextSize * 1.3),
+                          TextStyle(fontSize: SizeConfig.mediumTextSize * 1.3),
                     ),
                     SizedBox(
                       height: SizeConfig.blockSizeVertical * 3.5,
@@ -289,7 +323,7 @@ class _SupportPageState extends State<SupportPage> {
                     Text(
                       'What time should we call you?',
                       style:
-                      TextStyle(fontSize: SizeConfig.mediumTextSize * 1.3),
+                          TextStyle(fontSize: SizeConfig.mediumTextSize * 1.3),
                     ),
                     SizedBox(
                       height: SizeConfig.blockSizeVertical * 1.5,
@@ -323,16 +357,16 @@ class _SupportPageState extends State<SupportPage> {
                                   padding: EdgeInsets.all(5.0),
                                   child: (_selectedTimeSlotIndex == index)
                                       ? Center(
-                                    child: Text(
-                                      timeSlots[index],
-                                      style:
-                                      TextStyle(color: Colors.white),
-                                    ),
-                                  )
+                                          child: Text(
+                                            timeSlots[index],
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        )
                                       : Center(
-                                      child: Text(
-                                        timeSlots[index],
-                                      )),
+                                          child: Text(
+                                          timeSlots[index],
+                                        )),
                                 ),
                               ),
                             );
@@ -358,16 +392,16 @@ class _SupportPageState extends State<SupportPage> {
                                   padding: EdgeInsets.all(5.0),
                                   child: (_selectedTimeSlotIndex == index)
                                       ? Center(
-                                    child: Text(
-                                      timeSlots[index],
-                                      style:
-                                      TextStyle(color: Colors.white),
-                                    ),
-                                  )
+                                          child: Text(
+                                            timeSlots[index],
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        )
                                       : Center(
-                                      child: Text(
-                                        timeSlots[index],
-                                      )),
+                                          child: Text(
+                                          timeSlots[index],
+                                        )),
                                 ),
                               ),
                             );
@@ -390,16 +424,16 @@ class _SupportPageState extends State<SupportPage> {
                                   padding: EdgeInsets.all(5.0),
                                   child: (_selectedTimeSlotIndex == index)
                                       ? Center(
-                                    child: Text(
-                                      timeSlots[index],
-                                      style:
-                                      TextStyle(color: Colors.white),
-                                    ),
-                                  )
+                                          child: Text(
+                                            timeSlots[index],
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        )
                                       : Center(
-                                      child: Text(
-                                        timeSlots[index],
-                                      )),
+                                          child: Text(
+                                          timeSlots[index],
+                                        )),
                                 ),
                               ),
                             );
@@ -428,8 +462,8 @@ class _SupportPageState extends State<SupportPage> {
                           onPressed: () async {
                             try {
                               if (_requestCallPhoneController.text
-                                  .trim()
-                                  .length !=
+                                      .trim()
+                                      .length !=
                                   10) {
                                 BaseUtil.showNegativeAlert(
                                   'Incorrect',
@@ -438,11 +472,19 @@ class _SupportPageState extends State<SupportPage> {
                                 return;
                               }
                               bool res = await dbProvider.addCallbackRequest(
-                                  baseProvider.myUser.uid,
-                                  baseProvider.myUser.name,
+                                  _userService.baseUser.uid,
+                                  _userService.baseUser.name,
                                   _requestCallPhoneController.text.trim(),
                                   callTimes[_selectedTimeSlotIndex]);
                               if (res) {
+                                // _mixpanelService.track(
+                                //     eventName:
+                                //         MixpanelEvents.requestedCallback);
+
+                                _analyticsService.track(
+                                    eventName:
+                                        AnalyticsEvents.requestedCallback);
+
                                 BaseUtil.showPositiveAlert(
                                   'Callback Placed',
                                   'Thank you for letting us know, we will call you soon!',
@@ -453,15 +495,15 @@ class _SupportPageState extends State<SupportPage> {
                                   'Error',
                                   'Something went wrong while placing a request, please try again later.',
                                 );
-                                if (baseProvider.myUser.uid != null) {
+                                if (_userService.baseUser.uid != null) {
                                   Map<String, dynamic> errorDetails = {
                                     'error_msg':
-                                    'Placing a call request failed',
+                                        'Placing a call request failed',
                                     'Phone Number':
-                                    _requestCallPhoneController.text.trim(),
+                                        _requestCallPhoneController.text.trim(),
                                   };
                                   dbProvider.logFailure(
-                                      baseProvider.myUser.uid,
+                                      _userService.baseUser.uid,
                                       FailType.RequestCallbackFailed,
                                       errorDetails);
                                 }
@@ -487,11 +529,11 @@ class _SupportPageState extends State<SupportPage> {
   }
 
   void _launchEmail() {
-    final Uri emailLaunchUri = Uri(scheme: 'mailto', path: 'hello@fello.in');
+    _analyticsService.track(eventName: AnalyticsEvents.emailInitiated);
+    final Uri emailLaunchUri = Uri(scheme: 'mailto', path: 'support@fello.in');
     launch(emailLaunchUri.toString());
   }
 }
-
 
 class TermsRow extends StatelessWidget {
   const TermsRow();
