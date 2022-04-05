@@ -154,7 +154,7 @@ class AugmontGoldSellViewModel extends BaseModel {
   fetchGoldRates() async {
     isGoldRateFetching = true;
     refresh();
-    // goldRates = await _augmontModel.getRates();
+    goldRates = await _augmontModel.getRates();
     if (goldRates == null)
       BaseUtil.showNegativeAlert(
         'Portal unavailable',
