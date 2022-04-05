@@ -81,6 +81,7 @@ class RootViewModel extends BaseModel {
     // print("drawer opened");
     //AppState.screenStack.add(ScreenItem.dialog);
     scaffoldKey.currentState.openDrawer();
+    _analyticsService.track(eventName: AnalyticsEvents.profileClicked);
   }
 
   showTicketModal(BuildContext context) {

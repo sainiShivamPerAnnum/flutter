@@ -719,7 +719,10 @@ class AugmontGoldBuyViewModel extends BaseModel {
       page: GoldBalanceDetailsViewPageConfig,
     );
 
-    _analyticsService.track(eventName: AnalyticsEvents.saveBalance);
+    _analyticsService.track(
+      eventName: AnalyticsEvents.saveBalance,
+      properties: {'balance': _userService?.userFundWallet?.augGoldQuantity},
+    );
   }
 
   navigateToAboutGold() {
