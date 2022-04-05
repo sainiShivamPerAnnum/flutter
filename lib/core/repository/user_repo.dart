@@ -10,6 +10,8 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/custom_logger.dart';
 
+import '../service/notifier_services/user_service.dart';
+
 class UserRepository {
   final _logger = locator<CustomLogger>();
   final _appflyerService = locator<AppFlyerAnalytics>();
@@ -64,7 +66,7 @@ class UserRepository {
     }
   }
 
-  Future<ApiResponse> updateUserAppFlyer(BaseUser user) async {
+  Future<ApiResponse> updateUserAppFlyer(BaseUser user, String token) async {
     try {
       final id = await _appflyerService.appFlyerId;
 
@@ -76,9 +78,11 @@ class UserRepository {
         'uid': user.uid,
         'appFlyerId': id,
       };
-      await APIService.instance.putData(
+
+      final res = await APIService.instance.putData(
         _apiPaths.kUpdateUserAppflyer,
         body: body,
+        token: 'Bearer $token',
       );
 
       return ApiResponse(code: 200);
