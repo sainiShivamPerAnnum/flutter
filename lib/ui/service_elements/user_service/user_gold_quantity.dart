@@ -27,8 +27,9 @@ class UserGoldQuantitySE extends StatelessWidget {
         "${getGoldQuantity(model.userFundWallet?.augGoldQuantity)} gm" ?? "-",
         style: style ??
             GoogleFonts.montserrat(
-                fontWeight: FontWeight.w500,
-                fontSize: SizeConfig.largeTextSize),
+              fontWeight: FontWeight.w500,
+              fontSize: SizeConfig.largeTextSize,
+            ),
       ),
     );
   }
