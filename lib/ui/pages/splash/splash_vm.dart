@@ -67,8 +67,8 @@ class LauncherViewModel extends BaseModel {
           );
       if (userService.baseUser != null) {
         await _analyticsService.login(
-          isOnBoarded: userService.isUserOnborded,
-          baseUser: userService.baseUser,
+          isOnBoarded: userService?.isUserOnborded,
+          baseUser: userService?.baseUser,
         );
       }
     } catch (e) {

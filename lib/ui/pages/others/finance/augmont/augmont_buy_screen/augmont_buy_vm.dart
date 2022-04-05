@@ -721,7 +721,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
     _analyticsService.track(
       eventName: AnalyticsEvents.saveBalance,
-      properties: {'balance': _userService.userFundWallet.augGoldQuantity},
+      properties: {'balance': _userService?.userFundWallet?.augGoldQuantity},
     );
   }
 

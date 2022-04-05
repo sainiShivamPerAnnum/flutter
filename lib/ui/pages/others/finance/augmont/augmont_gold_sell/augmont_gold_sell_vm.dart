@@ -154,7 +154,7 @@ class AugmontGoldSellViewModel extends BaseModel {
   fetchGoldRates() async {
     isGoldRateFetching = true;
     refresh();
-    goldRates = await _augmontModel.getRates();
+    // goldRates = await _augmontModel.getRates();
     if (goldRates == null)
       BaseUtil.showNegativeAlert(
         'Portal unavailable',
@@ -167,6 +167,14 @@ class AugmontGoldSellViewModel extends BaseModel {
 
   initiateSell() async {
     double sellGramAmount = double.tryParse(goldAmountController.text.trim());
+    if (goldRates == null) {
+      BaseUtil.showNegativeAlert(
+        'Portal unavailable',
+        'The current rates couldn\'t be loaded. Please try again',
+      );
+      return;
+    }
+
     if (sellGramAmount == null) {
       BaseUtil.showNegativeAlert(
           "No Amount Entered", "Please enter some amount");
