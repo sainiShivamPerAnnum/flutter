@@ -237,7 +237,12 @@ class AugmontGoldSellViewModel extends BaseModel {
     _augmontModel.initiateWithdrawal(goldRates, sellGramAmount);
     _augmontModel.setAugmontTxnProcessListener(_onSellTransactionComplete);
 
-    _analyticsService.track(eventName: AnalyticsEvents.sellGold);
+    final totalSellAmount =
+        BaseUtil.digitPrecision(sellGramAmount * goldRates.goldSellPrice);
+    _analyticsService.track(
+      eventName: AnalyticsEvents.sellGold,
+      properties: {'selling_amount': totalSellAmount},
+    );
   }
 
   Future<void> _onSellTransactionComplete(UserTransaction txn) async {
