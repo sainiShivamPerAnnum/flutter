@@ -29,7 +29,7 @@ class AppFlyerAnalytics extends BaseAnalyticsService {
 
   void track({String eventName, Map<String, dynamic> properties}) {
     try {
-      _appsflyerSdk.logEvent(eventName, properties);
+      _appsflyerSdk.logEvent(eventName, properties ?? {});
     } catch (e) {
       String error = e ?? "Unable to track event: $eventName";
       _logger.e(error);
