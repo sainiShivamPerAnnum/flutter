@@ -59,7 +59,7 @@ class LauncherViewModel extends BaseModel {
   initLogic() async {
     try {
       await userService.init();
-      userService.firebaseUser.getIdToken().then(
+      userService.firebaseUser?.getIdToken()?.then(
             (token) =>
                 _userRepo.updateUserAppFlyer(userService.baseUser, token),
           );
@@ -68,8 +68,9 @@ class LauncherViewModel extends BaseModel {
 
       if (userService.baseUser != null) {
         await _analyticsService.login(
-            isOnBoarded: userService.isUserOnborded,
-            baseUser: userService.baseUser);
+          isOnBoarded: userService.isUserOnborded,
+          baseUser: userService.baseUser,
+        );
       }
     } catch (e) {
       _logger.e("Splash Screen init : " + e);
