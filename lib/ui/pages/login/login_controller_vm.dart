@@ -419,7 +419,8 @@ class LoginControllerViewModel extends BaseModel {
       await BaseAnalytics.analytics.logLogin(loginMethod: 'phonenumber');
       logger.d("User details available: Name: " + user.model.name);
       userService.baseUser = user.model;
-      _userRepo.updateUserAppFlyer(user.model);
+      _userRepo.updateUserAppFlyer(
+          user.model, await userService.firebaseUser.getIdToken());
 
       _onSignUpComplete();
     }

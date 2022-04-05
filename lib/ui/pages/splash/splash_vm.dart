@@ -59,7 +59,10 @@ class LauncherViewModel extends BaseModel {
   initLogic() async {
     try {
       await userService.init();
-      _userRepo.updateUserAppFlyer(userService.baseUser);
+      userService.firebaseUser.getIdToken().then(
+            (token) =>
+                _userRepo.updateUserAppFlyer(userService.baseUser, token),
+          );
 
       await Future.wait([_baseUtil.init(), _fcmListener.setupFcm()]);
 
