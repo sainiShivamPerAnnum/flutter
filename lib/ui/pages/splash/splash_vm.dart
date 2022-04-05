@@ -59,13 +59,12 @@ class LauncherViewModel extends BaseModel {
   initLogic() async {
     try {
       await userService.init();
+      await Future.wait([_baseUtil.init(), _fcmListener.setupFcm()]);
+
       userService.firebaseUser?.getIdToken()?.then(
             (token) =>
                 _userRepo.updateUserAppFlyer(userService.baseUser, token),
           );
-
-      await Future.wait([_baseUtil.init(), _fcmListener.setupFcm()]);
-
       if (userService.baseUser != null) {
         await _analyticsService.login(
           isOnBoarded: userService.isUserOnborded,
