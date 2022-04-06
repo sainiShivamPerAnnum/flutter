@@ -4,8 +4,8 @@ variables:
 
 stages:
   - build
-  - test
-  - deploy
+  # - test
+  # - deploy
 
 android:debug:
   stage: archive
