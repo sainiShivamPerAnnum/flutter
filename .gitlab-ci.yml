@@ -4,9 +4,11 @@ variables:
 
 stages:
   - build
+  - test
+  - deploy
 
 android:debug:
-  stage: archive
+  stage: build
   before_script:
     - flutter packages get
     - flutter clean
@@ -19,7 +21,7 @@ android:debug:
     expire_in: 1 day
 
 android:release:
-  stage: archive
+  stage: build
   before_script:
     - flutter packages get
     - flutter clean
@@ -32,7 +34,7 @@ android:release:
     expire_in: 1 day
 
 ios:debug:
-  stage: archive
+  stage: build
   before_script:
     - flutter packages get
     - flutter clean
@@ -51,7 +53,7 @@ ios:debug:
     expire_in: 1 day
 
 ios:release:
-  stage: archive
+  stage: build
   before_script:
     - flutter packages get
     - flutter clean
