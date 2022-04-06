@@ -4,69 +4,78 @@ variables:
 
 stages:
   - build
-  - test
-  - deploy
+  # - test
+  # - deploy
 
-android:debug:
+build:
   stage: build
-  before_script:
-    - flutter pub get
-    - flutter clean
   script:
-    - flutter doctor --android-licenses
-    - flutter build apk --flavor ${FLAVOR} --debug
+    - bundle install
+    - bundle exec fastlane Runner
   artifacts:
     paths:
-      - "**/**/**/**/**/**/*.apk"
-    expire_in: 1 day
+    - ./Runner.ipa
 
-android:release:
-  stage: build
-  before_script:
-    - flutter pub get
-    - flutter clean
-  script:
-    - flutter doctor --android-licenses
-    - flutter build apk --flavor ${FLAVOR} --release
-  artifacts:
-    paths:
-      - "**/**/**/**/**/**/*.apk"
-    expire_in: 1 day
+# android:debug:
+#   stage: build
+#   before_script:
+#     - flutter pub get
+#     - flutter clean
+#   script:
+#     - flutter doctor --android-licenses
+#     - flutter build apk --flavor ${FLAVOR} --debug
+#   artifacts:
+#     paths:
+#       - "**/**/**/**/**/**/*.apk"
+#     expire_in: 1 day
 
-ios:debug:
-  stage: build
-  before_script:
-    - flutter pub get
-    - flutter clean
-  script:
-    - flutter build ios --flavor ${FLAVOR}
-    - if [ -d archive ]; then rm -rf archive; fi && mkdir archive
-    - if [ -d artifact ]; then rm -rf artifact; fi && mkdir artifact
-    - export PLIST_DIRECTORY="ci-cd/iOS/${FLAVOR}/debug"
-    - cd ios
-    - pod install;
-    - xcodebuild clean archive -quiet -workspace ${IOS_XCODE_PROJECT_NAME}.xcworkspace -scheme ${FLAVOR} -archivePath "../archive/${IOS_XCODE_PROJECT_NAME}.xcarchive";
-    - xcodebuild -quiet -exportArchive -archivePath  "../archive/${IOS_XCODE_PROJECT_NAME}.xcarchive" -exportPath ../artifact/ -exportOptionsPlist ${PLIST_DIRECTORY}/*.plist
-  artifacts:
-    paths:
-      - "artifact/*.ipa"
-    expire_in: 1 day
+# android:release:
+#   stage: build
+#   before_script:
+#     - flutter pub get
+#     - flutter clean
+#   script:
+#     - flutter doctor --android-licenses
+#     - flutter build apk --flavor ${FLAVOR} --release
+#   artifacts:
+#     paths:
+#       - "**/**/**/**/**/**/*.apk"
+#     expire_in: 1 day
 
-ios:release:
-  stage: build
-  before_script:
-    - flutter pub get
-    - flutter clean
-  script:
-    - flutter build ios --flavor ${FLAVOR}
-    - if [ -d archive ]; then rm -rf archive; fi && mkdir archive
-    - if [ -d artifact ]; then rm -rf artifact; fi && mkdir artifact
-    - export PLIST_DIRECTORY="ci-cd/iOS/${FLAVOR}/release"
-    - cd ios
-    - pod install;
-    - xcodebuild clean archive -quiet -workspace ${IOS_XCODE_PROJECT_NAME}.xcworkspace -scheme ${FLAVOR} -archivePath "../archive/${IOS_XCODE_PROJECT_NAME}.xcarchive";
-    - xcodebuild -quiet -exportArchive -archivePath  "../archive/${IOS_XCODE_PROJECT_NAME}.xcarchive" -exportPath ../artifact/ -exportOptionsPlist ${PLIST_DIRECTORY}/*.plist
-  artifacts:
-    paths:
-      - "artifact/*.ipa"
-    expire_in: 1 day
+# ios:debug:
+#   stage: build
+#   before_script:
+#     - flutter pub get
+#     - flutter clean
+#   script:
+#     - flutter build ios --flavor ${FLAVOR}
+#     - if [ -d archive ]; then rm -rf archive; fi && mkdir archive
+#     - if [ -d artifact ]; then rm -rf artifact; fi && mkdir artifact
+#     - export PLIST_DIRECTORY="ci-cd/iOS/${FLAVOR}/debug"
+#     - cd ios
+#     - pod install;
+#     - xcodebuild clean archive -quiet -workspace ${IOS_XCODE_PROJECT_NAME}.xcworkspace -scheme ${FLAVOR} -archivePath "../archive/${IOS_XCODE_PROJECT_NAME}.xcarchive";
+#     - xcodebuild -quiet -exportArchive -archivePath  "../archive/${IOS_XCODE_PROJECT_NAME}.xcarchive" -exportPath ../artifact/ -exportOptionsPlist ${PLIST_DIRECTORY}/*.plist
+#   artifacts:
+#     paths:
+#       - "artifact/*.ipa"
+#     expire_in: 1 day
+
+# ios:release:
+#   stage: build
+#   before_script:
+#     - flutter pub get
+#     - flutter clean
+#   script:
+#     - flutter build ios --flavor ${FLAVOR}
+#     - if [ -d archive ]; then rm -rf archive; fi && mkdir archive
+#     - if [ -d artifact ]; then rm -rf artifact; fi && mkdir artifact
+#     - export PLIST_DIRECTORY="ci-cd/iOS/${FLAVOR}/release"
+#     - cd ios
+#     - pod install;
+#     - xcodebuild clean archive -quiet -workspace ${IOS_XCODE_PROJECT_NAME}.xcworkspace -scheme ${FLAVOR} -archivePath "../archive/${IOS_XCODE_PROJECT_NAME}.xcarchive";
+#     - xcodebuild -quiet -exportArchive -archivePath  "../archive/${IOS_XCODE_PROJECT_NAME}.xcarchive" -exportPath ../artifact/ -exportOptionsPlist ${PLIST_DIRECTORY}/*.plist
+#   artifacts:
+#     paths:
+#       - "artifact/*.ipa"
+#     expire_in: 1 day
