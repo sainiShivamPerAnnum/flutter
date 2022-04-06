@@ -41,7 +41,8 @@ class AutoPayProcessViewModel extends BaseModel {
   TextEditingController amountFieldController =
       new TextEditingController(text: '500');
 
-  get pageController => _paytmService.subscriptionFlowPageController;
+  PageController get pageController =>
+      _paytmService.subscriptionFlowPageController;
   get subId => _paytmService.currentSubscriptionId;
 
   set subId(value) {
@@ -54,6 +55,7 @@ class AutoPayProcessViewModel extends BaseModel {
 
   set isSubscriptionAmountUpdateInProgress(value) {
     this._isSubscriptionAmountUpdateInProgress = value;
+    notifyListeners();
   }
 
   bool get isSubscriptionInProgress => this._isSubscriptionInProgress;
@@ -138,7 +140,7 @@ class AutoPayProcessViewModel extends BaseModel {
     if (response.status) {
       _paytmService.jumpToSubPage(1);
       AppState.screenStack.add(ScreenItem.loader);
-      Future.delayed(Duration(seconds: 30), () {
+      Future.delayed(Duration(minutes: 8), () {
         if (AppState.screenStack.last == ScreenItem.loader) {
           AppState.screenStack.removeLast();
           AppState.backButtonDispatcher.didPopRoute();

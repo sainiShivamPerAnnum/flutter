@@ -25,6 +25,8 @@ class APIService implements API {
   // String _baseUrl = 'http://028b-103-108-4-230.ngrok.io/fello-dev-station/asia-south1';
   String _baseUrl = 'https://' + FlavorConfig.instance.values.baseUriAsia;
   //"https://asia-south1-fello-dev-station.cloudfunctions.net";
+  String _awsDevUrl =
+      "https://8w0eika6u8.execute-api.ap-south-1.amazonaws.com/dev";
   final logger = locator<CustomLogger>();
   final userService = locator<UserService>();
   String _versionString = "";
@@ -37,6 +39,7 @@ class APIService implements API {
     String url, {
     String token,
     Map<String, dynamic> queryParams,
+    bool isAWSURL = false,
   }) async {
     final HttpMetric metric =
         FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Get);
@@ -46,7 +49,7 @@ class APIService implements API {
     // token = Preference.getString('token');
     try {
       String queryString = '';
-      String finalPath = '$_baseUrl$url';
+      String finalPath = isAWSURL ? '$_awsDevUrl$url' : '$_baseUrl$url';
       if (queryParams != null) {
         queryString = Uri(queryParameters: queryParams).query;
         finalPath += '?$queryString';
@@ -80,6 +83,7 @@ class APIService implements API {
     Map<String, dynamic> body,
     String token,
     bool isAuthTokenAvailable = true,
+    bool isAWSURL = false,
   }) async {
     final HttpMetric metric =
         FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Post);
@@ -99,7 +103,7 @@ class APIService implements API {
 
       if (!isAuthTokenAvailable) _headers['x-api-key'] = 'QTp93rVNrUJ9nv7rXDDh';
 
-      String _url = _baseUrl + url;
+      String _url = (isAWSURL ? _awsDevUrl : _baseUrl) + url;
       logger.d("response from $url");
 
       final response = await http.post(
@@ -123,9 +127,10 @@ class APIService implements API {
     String url, {
     Map<String, dynamic> body,
     String token,
+    bool isAWSURL = false,
   }) async {
     final HttpMetric metric =
-        FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Get);
+        FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Put);
     await metric.start();
 
     var responseJson;
@@ -133,7 +138,7 @@ class APIService implements API {
     try {
       logger.d("response from $url");
       final response = await http.put(
-        Uri.parse(_baseUrl + url),
+        Uri.parse((isAWSURL ? _awsDevUrl : _baseUrl) + url),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           HttpHeaders.authorizationHeader: token != null ? token : '',

@@ -1,22 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ActiveSubscriptionModel {
-  String subId;
   String amountType;
-  Timestamp expiryDate;
-  String frequencyUnit;
   double autoAmount;
+  String autoFrequency;
+  Timestamp createdOn;
+  Timestamp expiryDate;
+  int frequency;
+  String frequencyUnit;
+  double maxAmount;
+  Timestamp startDate;
+  String status;
+
+  String subscriptionId;
   String vpa;
   Timestamp updatedOn;
-  double maxAmount;
-  Timestamp createdOn;
-  Timestamp startDate;
-  int frequency;
-  String status;
-  String autoFrequency;
 
   ActiveSubscriptionModel(
-      {this.subId,
+      {this.subscriptionId,
       this.amountType,
       this.expiryDate,
       this.frequencyUnit,
@@ -31,7 +32,7 @@ class ActiveSubscriptionModel {
       this.autoFrequency});
 
   ActiveSubscriptionModel.fromJson(Map<String, dynamic> json, String sid) {
-    subId = sid;
+    subscriptionId = sid;
     amountType = json['amountType'];
     expiryDate = json['expiryDate'];
     frequencyUnit = json['frequencyUnit'];

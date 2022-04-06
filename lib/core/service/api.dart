@@ -829,13 +829,13 @@ class Api {
     return _query.get();
   }
 
-  Future<QuerySnapshot> fetchActiveSubscriptionDetails(String userid) async {
-    Query _query = _db
+  Future<DocumentSnapshot> fetchActiveSubscriptionDetails(String userid) async {
+    DocumentReference doc = _db
         .collection(Constants.COLN_USERS)
         .doc(userid)
         .collection(Constants.SUBCOLN_USER_SUBSCRIPTION)
-        .where('isActive', isEqualTo: true);
-    return _query.get();
+        .doc("detail");
+    return await doc.get();
   }
 
   Future<QuerySnapshot> getAutopayTransactions({

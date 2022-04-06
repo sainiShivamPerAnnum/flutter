@@ -77,7 +77,7 @@ class AutopayTransactionsViewModel extends BaseModel {
     }
     final result = await _dBModel.getAutopayTransactions(
         uid: _userService.baseUser.uid,
-        subId: activeSubscription.subId,
+        subId: activeSubscription.subscriptionId,
         lastDocument: lastDoc,
         limit: 30);
     autopaytranList = result['listOfTransactions'];

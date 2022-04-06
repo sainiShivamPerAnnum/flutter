@@ -46,8 +46,9 @@ class ApiPath {
 
   //PaytmApis
   static const kCreatePaytmTransaction = "/paymentOps/transaction";
-  get kCreateSubscription => "/subscriptionOps/subscription";
-  get kPauseSubscription => "/subscriptionOps/subscription/pause";
-  get kResumeSubscription => "/subscriptionOps/subscription/resume";
-  get kValidateVpa => "/subscriptionOps/vpa";
+  get kCreateSubscription => "/subscription";
+  get kPauseSubscription => "/subscription/pause";
+  get kResumeSubscription => "/subscription/resume";
+  get kValidateVpa => "/subscription/vpa";
+  get kProcessSubscription => "/process";
 }

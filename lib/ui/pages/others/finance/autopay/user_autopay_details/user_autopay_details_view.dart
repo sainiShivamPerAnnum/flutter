@@ -381,6 +381,7 @@ class DetailsView extends StatelessWidget {
                         builder: (context, model, property) =>
                             WinningsContainer(
                           shadow: false,
+                          onTap: () {},
                           color: UiConstants.autopayColor,
                           child: Container(
                             width: SizeConfig.screenWidth,
@@ -790,7 +791,7 @@ class _PauseAutoPayModalState extends State<PauseAutoPayModal> {
               setState(() {
                 isPausing = true;
               });
-              await widget.model.pauseSubscription();
+              await widget.model.pauseSubscription(pauseValue);
               setState(() {
                 isPausing = false;
               });

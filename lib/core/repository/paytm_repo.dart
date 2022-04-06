@@ -7,6 +7,7 @@ import 'package:felloapp/core/model/paytm_models/validate_vpa_response_model.dar
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
@@ -98,13 +99,21 @@ class PaytmRepository {
       final Map<String, dynamic> _body = {
         "uid": _uid,
         "maxAmount": 3000,
-        "expiryDate": "2030-03-10",
-        "amount": 1
+        "amount": 0
       };
+      //  final Map<String, dynamic> _body = {
+      //   "uid": _uid,
+      //   "maxAmount": 3000,
+      //   "expiryDate": "2030-03-10",
+      //   "amount": 1
+      // };
       final _token = await _getBearerToken();
       _logger.d("This is body: $_body");
-      final response = await APIService.instance
-          .postData(ApiPath().kCreateSubscription, body: _body, token: _token);
+      final response = await APIService.instance.postData(
+          ApiPath().kCreateSubscription,
+          body: _body,
+          token: _token,
+          isAWSURL: true);
 
       CreateSubscriptionResponseModel _responseModel =
           CreateSubscriptionResponseModel.fromMap(response);
@@ -126,12 +135,17 @@ class PaytmRepository {
       final _queryParams = {
         "uid": _uid,
         "vpa": vpa,
-        "subId": subscriptionResponseModel.data.subscriptionId,
         "token": subscriptionResponseModel.data.temptoken,
-        "orderId": subscriptionResponseModel.data.orderId
       };
+      //       final _queryParams = {
+      //   "uid": _uid,
+      //   "vpa": vpa,
+      //   "subId": subscriptionResponseModel.data.subscriptionId,
+      //   "token": subscriptionResponseModel.data.temptoken,
+      //   "orderId": subscriptionResponseModel.data.orderId
+      // };
       final response = await APIService.instance.getData(ApiPath().kValidateVpa,
-          token: _token, queryParams: _queryParams);
+          token: _token, queryParams: _queryParams, isAWSURL: true);
 
       final _responseModel = ValidateVpaResponseModel.fromJson(response);
       return ApiResponse<ValidateVpaResponseModel>(
@@ -143,24 +157,29 @@ class PaytmRepository {
   }
 
   Future<ApiResponse<bool>> updateDailyAmount(
-      {@required String subId,
-      @required double amount,
-      @required String freq}) async {
+      {@required double amount, @required String freq}) async {
     try {
       final _token = await _getBearerToken();
 
       final _body = {
         'uid': _userService.baseUser.uid,
-        'subId': subId,
         'amount': amount,
         'freq': freq
       };
-      final response = await APIService.instance
-          .patchData(ApiPath().kCreateSubscription, body: _body, token: _token);
+      final response = await APIService.instance.putData(
+          ApiPath().kCreateSubscription,
+          body: _body,
+          token: _token,
+          isAWSURL: true);
+      if (response != null) {
+        final Map responseData = response["data"];
 
-      if (response['success'])
-        return ApiResponse(model: true, code: 200);
-      else
+        if (responseData["status"] != null &&
+            responseData["status"] == Constants.SUBSCRIPTION_ACTIVE)
+          return ApiResponse(model: true, code: 200);
+        else
+          return ApiResponse(model: false, code: 400);
+      } else
         return ApiResponse(model: false, code: 400);
     } catch (e) {
       _logger.e(e.toString());
@@ -168,16 +187,23 @@ class PaytmRepository {
     }
   }
 
-  Future<ApiResponse<bool>> pauseSubscription(String subId) async {
+  Future<ApiResponse<bool>> pauseSubscription(String resumeDate) async {
     try {
       final _token = await _getBearerToken();
 
       final _body = {
         'uid': _userService.baseUser.uid,
-        'subId': subId,
+        'resumeData': resumeDate,
       };
-      final response = await APIService.instance
-          .postData(ApiPath().kPauseSubscription, body: _body, token: _token);
+      //  final _body = {
+      //   'uid': _userService.baseUser.uid,
+      //   'subId': subId,
+      // };
+      final response = await APIService.instance.postData(
+          ApiPath().kPauseSubscription,
+          body: _body,
+          token: _token,
+          isAWSURL: true);
 
       if (response['success'])
         return ApiResponse(model: true, code: 200);
@@ -189,18 +215,48 @@ class PaytmRepository {
     }
   }
 
-  Future<ApiResponse<bool>> resumeSubscription(String subId) async {
+  Future<ApiResponse<bool>> resumeSubscription() async {
     try {
       final _token = await _getBearerToken();
 
       final _body = {
         'uid': _userService.baseUser.uid,
-        'subId': subId,
       };
-      final response = await APIService.instance
-          .postData(ApiPath().kResumeSubscription, body: _body, token: _token);
+      //  final _body = {
+      //   'uid': _userService.baseUser.uid,
+      //   'subId': subId,
+      // };
+      final response = await APIService.instance.postData(
+          ApiPath().kResumeSubscription,
+          body: _body,
+          token: _token,
+          isAWSURL: true);
 
       if (response['success'])
+        return ApiResponse(model: true, code: 200);
+      else
+        return ApiResponse(model: false, code: 400);
+    } catch (e) {
+      _logger.e(e.toString());
+      return ApiResponse.withError("Unable to resume subscription", 400);
+    }
+  }
+
+  Future<ApiResponse<bool>> processSubscription() async {
+    try {
+      final _token = await _getBearerToken();
+
+      final _body = {
+        'uid': _userService.baseUser.uid,
+      };
+
+      final response = await APIService.instance.postData(
+          ApiPath().kProcessSubscription,
+          body: _body,
+          token: _token,
+          isAWSURL: true);
+      final Map<String, dynamic> responseData = response['data'];
+      if (responseData['status'])
         return ApiResponse(model: true, code: 200);
       else
         return ApiResponse(model: false, code: 400);

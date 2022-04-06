@@ -253,8 +253,7 @@ class _AutoPayCardState extends State<AutoPayCard> {
           setState(() {
             isResumingInProgress = true;
           });
-          bool response =
-              await _paytmService.resumeDailySubscription(subscription.subId);
+          bool response = await _paytmService.resumeSubscription();
           if (response) {
             BaseUtil.showPositiveAlert("Subscription resumed",
                 "Now you are back to your savings journey");

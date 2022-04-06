@@ -229,6 +229,7 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
           ),
         ),
         SizedBox(height: SizeConfig.padding8),
+        // if (model?.pageController?.page == 1.0)
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

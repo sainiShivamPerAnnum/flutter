@@ -95,25 +95,31 @@ class CricketHomeViewModel extends BaseModel {
     int _cost = -1 * int.tryParse(_cricPlayCost) ?? 10;
     ApiResponse<FlcModel> _flcResponse =
         await _fclActionRepo.substractFlc(_cost);
-    _message = _flcResponse.model.message;
-    if (_flcResponse.model.flcBalance != null) {
-      _userCoinService.setFlcBalance(_flcResponse.model.flcBalance);
-    } else {
-      _logger.d("Flc balance is null");
-    }
+    if (_flcResponse.code == 200) {
+      _message = _flcResponse.model.message;
+      if (_flcResponse.model.flcBalance != null) {
+        _userCoinService.setFlcBalance(_flcResponse.model.flcBalance);
+      } else {
+        _logger.d("Flc balance is null");
+      }
 
-    if (_flcResponse.model.sessionId != null) {
-      _sessionId = _flcResponse.model.sessionId;
-    } else {
-      _logger.d("sessionId null");
-    }
+      if (_flcResponse.model.sessionId != null) {
+        _sessionId = _flcResponse.model.sessionId;
+      } else {
+        _logger.d("sessionId null");
+      }
 
-    if (_flcResponse.model.canUserPlay) {
-      setState(ViewState.Idle);
-      return true;
+      if (_flcResponse.model.canUserPlay) {
+        setState(ViewState.Idle);
+        return true;
+      } else {
+        setState(ViewState.Idle);
+        return false;
+      }
     } else {
+      BaseUtil.showNegativeAlert(
+          "Something went wrong!", "Please try again in sometime");
       setState(ViewState.Idle);
-      return false;
     }
   }
 

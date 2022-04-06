@@ -11,6 +11,7 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
+import 'package:intl/intl.dart';
 
 class UserAutoPayDetailsViewModel extends BaseModel {
   final _dbModel = locator<DBModel>();
@@ -83,7 +84,7 @@ class UserAutoPayDetailsViewModel extends BaseModel {
     activeSubscription = _paytmService.activeSubscription;
     // await _dbModel.getActiveSubscriptionDetails(_userService.baseUser.uid);
     if (activeSubscription != null) {
-      subIdController.text = activeSubscription.subId;
+      subIdController.text = activeSubscription.subscriptionId;
       pUpiController.text = activeSubscription.vpa;
       subAmountController.text =
           "${activeSubscription.autoAmount.toString()}/${activeSubscription.autoFrequency}";
@@ -93,9 +94,9 @@ class UserAutoPayDetailsViewModel extends BaseModel {
     }
   }
 
-  pauseSubscription() async {
+  pauseSubscription(int pauseValue) async {
     bool response =
-        await _paytmService.pauseSubscription(activeSubscription.subId, 2);
+        await _paytmService.pauseSubscription(getResumeDate(pauseValue));
     if (response) {
       AppState.backButtonDispatcher.didPopRoute();
       isInEditMode = false;
@@ -106,13 +107,28 @@ class UserAutoPayDetailsViewModel extends BaseModel {
           "Failed to pause Subscription", "Please try again");
   }
 
+  String getResumeDate(int pauseValue) {
+    switch (pauseValue) {
+      case 1:
+        return "ONEWEEK";
+      case 2:
+        return "TWOWEEK";
+      case 3:
+        return "ONEMONTH";
+      case 4:
+        return "FOREVER";
+      default:
+        return "FOREVER";
+    }
+  }
+
   getLatestTransactions() async {
     if (activeSubscription == null) {
       return;
     }
     final result = await _dBModel.getAutopayTransactions(
         uid: _userService.baseUser.uid,
-        subId: activeSubscription.subId,
+        subId: activeSubscription.subscriptionId,
         lastDocument: null,
         limit: 5);
     filteredList = result['listOfTransactions'];
@@ -161,7 +177,7 @@ class UserAutoPayDetailsViewModel extends BaseModel {
   setSubscriptionAmount(double amount) async {
     isSubscriptionAmountUpdateInProgress = true;
     final res = await _paytmService.updateDailySubscriptionAmount(
-        subId: activeSubscription.subId,
+        subId: activeSubscription.subscriptionId,
         amount: amount,
         freq: isDaily ? "DAILY" : "WEEKLY");
     isSubscriptionAmountUpdateInProgress = false;
