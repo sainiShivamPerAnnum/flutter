@@ -3,7 +3,9 @@ variables:
   FLAVOR: "dev"
 
 stages:
-  - archive
+  - build
+  - test
+  - deploy
 
 android:debug:
   stage: archive
