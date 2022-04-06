@@ -10,7 +10,7 @@ stages:
 android:debug:
   stage: build
   before_script:
-    - flutter packages get
+    - flutter pub get
     - flutter clean
   script:
     - flutter doctor --android-licenses
@@ -23,7 +23,7 @@ android:debug:
 android:release:
   stage: build
   before_script:
-    - flutter packages get
+    - flutter pub get
     - flutter clean
   script:
     - flutter doctor --android-licenses
@@ -36,7 +36,7 @@ android:release:
 ios:debug:
   stage: build
   before_script:
-    - flutter packages get
+    - flutter pub get
     - flutter clean
   script:
     - flutter build ios --flavor ${FLAVOR}
@@ -55,7 +55,7 @@ ios:debug:
 ios:release:
   stage: build
   before_script:
-    - flutter packages get
+    - flutter pub get
     - flutter clean
   script:
     - flutter build ios --flavor ${FLAVOR}
