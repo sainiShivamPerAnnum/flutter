@@ -10,6 +10,7 @@ stages:
 build:
   stage: build
   script:
+    - cd ios
     - bundle install
     - bundle exec fastlane checkRelease
   artifacts:
