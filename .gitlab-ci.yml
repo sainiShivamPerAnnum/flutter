@@ -10,7 +10,7 @@ build:
   stage: build
   script:
     - bundle install
-    - bundle exec fastlane Runner
+    - bundle exec fastlane checkRelease
   artifacts:
     paths:
     - ./Runner.ipa
