@@ -132,9 +132,12 @@ class _AutoPayCardState extends State<AutoPayCard> {
                                         ],
                                       ),
                                       child: isResumingInProgress
-                                          ? SpinKitThreeBounce(
-                                              color: Colors.white,
-                                              size: SizeConfig.padding12,
+                                          ? Container(
+                                              height: SizeConfig.body2,
+                                              child: SpinKitThreeBounce(
+                                                color: Colors.white,
+                                                size: SizeConfig.padding12,
+                                              ),
                                             )
                                           : Text(
                                               getActiveButtonText(
@@ -195,13 +198,18 @@ class _AutoPayCardState extends State<AutoPayCard> {
   }
 
   String getActiveTitle(ActiveSubscriptionModel subscription) {
-    if (subscription == null) {
+    if (subscription == null ||
+        (subscription.status == Constants.SUBSCRIPTION_INIT ||
+            subscription.status == Constants.SUBSCRIPTION_CANCELLED)) {
       return "Savings made easy for you with";
+    }
+    if (subscription.status == Constants.SUBSCRIPTION_PROCESSING) {
+      return "Your UPI Autopay";
     } else {
       if (subscription.status == Constants.SUBSCRIPTION_ACTIVE) {
         return "Your Subscription is Active for";
       }
-      if (subscription.status == Constants.SUBSCRIPTION_PAUSED) {
+      if (subscription.status == Constants.SUBSCRIPTION_INACTIVE) {
         return "Your Subscription is Paused for";
       }
       return "Your Subscription";
@@ -209,13 +217,18 @@ class _AutoPayCardState extends State<AutoPayCard> {
   }
 
   String getactiveSubtitle(ActiveSubscriptionModel subscription) {
-    if (subscription == null) {
+    if (subscription == null ||
+        (subscription.status == Constants.SUBSCRIPTION_INIT ||
+            subscription.status == Constants.SUBSCRIPTION_CANCELLED)) {
       return "UPI Autopay";
+    }
+    if (subscription.status == Constants.SUBSCRIPTION_PROCESSING) {
+      return "is in process";
     } else {
       if (subscription.status == Constants.SUBSCRIPTION_ACTIVE) {
         return "${subscription.autoAmount}/day";
       }
-      if (subscription.status == Constants.SUBSCRIPTION_PAUSED) {
+      if (subscription.status == Constants.SUBSCRIPTION_INACTIVE) {
         return "${subscription.autoAmount}/day";
       }
       return "0.0/day";
@@ -223,13 +236,18 @@ class _AutoPayCardState extends State<AutoPayCard> {
   }
 
   String getActiveButtonText(ActiveSubscriptionModel subscription) {
-    if (subscription == null) {
+    if (subscription == null ||
+        (subscription.status == Constants.SUBSCRIPTION_INIT ||
+            subscription.status == Constants.SUBSCRIPTION_CANCELLED)) {
       return "Set up";
+    }
+    if (subscription.status == Constants.SUBSCRIPTION_PROCESSING) {
+      return "Check";
     } else {
       if (subscription.status == Constants.SUBSCRIPTION_ACTIVE) {
         return "More..";
       }
-      if (subscription.status == Constants.SUBSCRIPTION_PAUSED) {
+      if (subscription.status == Constants.SUBSCRIPTION_INACTIVE) {
         return "Resume";
       }
       return "Details";
@@ -237,10 +255,18 @@ class _AutoPayCardState extends State<AutoPayCard> {
   }
 
   getActiveButtonAction(ActiveSubscriptionModel subscription) async {
-    if (subscription == null) {
+    if (subscription == null ||
+        (subscription.status == Constants.SUBSCRIPTION_INIT ||
+            subscription.status == Constants.SUBSCRIPTION_CANCELLED)) {
       AppState.delegate.appState.currentAction = PageAction(
           page: AutoPayProcessViewPageConfig, state: PageState.addPage);
       // _paytmService.initiateSubscription();
+    } else if (subscription.status == Constants.SUBSCRIPTION_PROCESSING) {
+      AppState.delegate.appState.currentAction = PageAction(
+          page: AutoPayProcessViewPageConfig, state: PageState.addPage);
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        _paytmService.jumpToSubPage(1);
+      });
     } else {
       if (subscription.status == Constants.SUBSCRIPTION_ACTIVE) {
         {
@@ -248,8 +274,14 @@ class _AutoPayCardState extends State<AutoPayCard> {
               page: UserAutoPayDetailsViewPageConfig, state: PageState.addPage);
         }
       }
-      if (subscription.status == Constants.SUBSCRIPTION_PAUSED) {
-        {
+      if (subscription.status == Constants.SUBSCRIPTION_INACTIVE) {
+        if (subscription.autoAmount == 0.0) {
+          AppState.delegate.appState.currentAction = PageAction(
+              page: AutoPayProcessViewPageConfig, state: PageState.addPage);
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            _paytmService.jumpToSubPage(2);
+          });
+        } else {
           setState(() {
             isResumingInProgress = true;
           });
@@ -275,8 +307,15 @@ class _AutoPayCardState extends State<AutoPayCard> {
       if (subscription.status == Constants.SUBSCRIPTION_ACTIVE) {
         return UiConstants.primaryColor;
       }
-      if (subscription.status == Constants.SUBSCRIPTION_PAUSED) {
+      if (subscription.status == Constants.SUBSCRIPTION_INACTIVE) {
         return Colors.amber;
+      }
+      if (subscription.status == Constants.SUBSCRIPTION_INIT ||
+          subscription.status == Constants.SUBSCRIPTION_CANCELLED) {
+        return UiConstants.primaryColor;
+      }
+      if (subscription.status == Constants.SUBSCRIPTION_PROCESSING) {
+        return Colors.blue;
       }
       return UiConstants.scaffoldColor;
     }

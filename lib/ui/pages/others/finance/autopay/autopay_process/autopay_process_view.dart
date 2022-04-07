@@ -59,16 +59,23 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
                         ),
                         color: Colors.white,
                       ),
-                      child: PageView(
-                          controller: model.pageController,
-                          physics: NeverScrollableScrollPhysics(),
+                      child: PageView(controller: model.pageController,
+                          // physics: NeverScrollableScrollPhysics(),
                           children: [
                             addUpiIdUI(model),
                             pendingUI(model),
+                            amountSetUI(model),
                             completedUI(model),
                             cancelledUI(model),
-                            amountSetUI(model),
-                          ]),
+                          ]
+                          // children: [
+                          //   addUpiIdUI(model),
+                          //   pendingUI(model),
+                          //   completedUI(model),
+                          //   cancelledUI(model),
+                          //   amountSetUI(model),
+                          // ]
+                          ),
                     ),
                   ),
                 ],
@@ -631,12 +638,17 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
         model.vpaController.text =
             model.vpaController.text.trim().split('@').first + suffix;
       },
-      child: Chip(
-        labelPadding: EdgeInsets.symmetric(
-          horizontal: SizeConfig.padding12,
-          vertical: SizeConfig.padding2,
+      child: Container(
+        decoration: BoxDecoration(
+          color: UiConstants.primaryLight.withOpacity(0.5),
+          borderRadius: BorderRadius.circular(SizeConfig.roundness12),
         ),
-        label: Text(
+        padding: EdgeInsets.symmetric(
+          horizontal: SizeConfig.padding12,
+          vertical: SizeConfig.padding8,
+        ),
+        margin: EdgeInsets.only(bottom: SizeConfig.padding4),
+        child: Text(
           suffix,
           style: TextStyles.body3,
         ),

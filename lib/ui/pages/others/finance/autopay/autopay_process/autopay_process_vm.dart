@@ -150,7 +150,7 @@ class AutoPayProcessViewModel extends BaseModel {
       });
     } else
       switch (response.errorCode) {
-        case INVALID_VPA_DETECTED:
+        case ERR_INVALID_VPA_DETECTED:
           BaseUtil.showNegativeAlert(
             response.reason,
             'Please enter a valid vpa address',
@@ -172,8 +172,7 @@ class AutoPayProcessViewModel extends BaseModel {
           subId: subId, amount: amount, freq: isDaily ? "DAILY" : "WEEKLY");
       isSubscriptionAmountUpdateInProgress = false;
       if (res) {
-        _paytmService.getActiveSubscriptionDetails();
-        _paytmService.jumpToSubPage(2);
+        _paytmService.jumpToSubPage(3);
         Future.delayed(Duration(seconds: 2), () {
           while (AppState.screenStack.length > 1)
             AppState.backButtonDispatcher.didPopRoute();
@@ -197,11 +196,11 @@ class AutoPayProcessViewModel extends BaseModel {
     if (res != null && res['status'] != null && res['status'] == true) {
       subId = res['subId'] ?? "";
       _paytmService.getActiveSubscriptionDetails();
-      _paytmService.jumpToSubPage(4);
+      _paytmService.jumpToSubPage(2);
       // onAmountValueChanged(amountFieldController.text);
 
     } else {
-      _paytmService.jumpToSubPage(3);
+      _paytmService.jumpToSubPage(4);
     }
   }
 }

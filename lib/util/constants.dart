@@ -93,6 +93,9 @@ class Constants {
   static const SIGNUP_TRACKING = 'FELLO_SIGNUP';
 
   //Subscription Status
+  static const SUBSCRIPTION_INIT = "INIT";
   static const SUBSCRIPTION_ACTIVE = "ACTIVE";
-  static const SUBSCRIPTION_PAUSED = "SUSPENDED";
+  static const SUBSCRIPTION_PROCESSING = "PROCESSING";
+  static const SUBSCRIPTION_INACTIVE = "INACTIVE";
+  static const SUBSCRIPTION_CANCELLED = "CANCELLED";
 }

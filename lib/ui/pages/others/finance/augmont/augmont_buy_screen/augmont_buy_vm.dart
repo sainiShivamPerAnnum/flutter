@@ -378,7 +378,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
       showSuccessGoldBuyDialog(1.0, subtitle: response.reason);
     else
       switch (response.errorCode) {
-        case INVALID_VPA_DETECTED:
+        case ERR_INVALID_VPA_DETECTED:
           BaseUtil.showNegativeAlert(
             response.reason,
             'Please enter a valid vpa address',

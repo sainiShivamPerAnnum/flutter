@@ -24,13 +24,13 @@ import 'package:paytm_allinonesdk/paytm_allinonesdk.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 //ERROR CODE
-const int CREATE_SUBSCRIPTION_FAILED = 0;
-const int INITIATE_SUBSCRIPTION_FAILED = 1;
-const int VALIDATE_VPA_FAILED = 2;
-const int INVALID_VPA_DETECTED = 3;
-const int UNSUPPORTED_BANK_DETECTED = 4;
-const int PAYTM_POST_CALL_FAILED = 5;
-const int PROCESS_SUBSCRIPTION_FAILED = 6;
+const int ERR_CREATE_SUBSCRIPTION_FAILED = 0;
+const int ERR_INITIATE_SUBSCRIPTION_FAILED = 1;
+const int ERR_VALIDATE_VPA_FAILED = 2;
+const int ERR_INVALID_VPA_DETECTED = 3;
+const int ERR_UNSUPPORTED_BANK_DETECTED = 4;
+const int ERR_PAYTM_POST_CALL_FAILED = 5;
+const int ERR_PROCESS_SUBSCRIPTION_FAILED = 6;
 
 class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   final _logger = locator<CustomLogger>();
@@ -252,7 +252,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       _logger.e(
           "Subscription Message: ${paytmSubscriptionApiResponse.errorMessage}");
       return PaytmResponse(
-          errorCode: INITIATE_SUBSCRIPTION_FAILED,
+          errorCode: ERR_INITIATE_SUBSCRIPTION_FAILED,
           reason: "Unable to create subscription",
           status: false);
     }
@@ -282,7 +282,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
         !isVpaValidResponse.model.data.status) {
       _logger.e(isVpaValidResponse.errorMessage);
       return PaytmResponse(
-          errorCode: VALIDATE_VPA_FAILED,
+          errorCode: ERR_VALIDATE_VPA_FAILED,
           reason: "Unable to verify upi at the moment",
           status: false);
     }
@@ -290,7 +290,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     if (!isVpaValidResponse.model.data.valid) {
       _logger.e("Invalid UPI");
       return PaytmResponse(
-          errorCode: INVALID_VPA_DETECTED,
+          errorCode: ERR_INVALID_VPA_DETECTED,
           reason: "Entered VPA Address is invalid",
           status: false);
     }
@@ -299,7 +299,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
         !isVpaValidResponse.model.data.pspSupportedRecurring) {
       _logger.e("Bank does not support UPI Autopay");
       return PaytmResponse(
-          errorCode: UNSUPPORTED_BANK_DETECTED,
+          errorCode: ERR_UNSUPPORTED_BANK_DETECTED,
           reason: "Your UPI linked bank does not support Autopay",
           status: false);
     }
@@ -323,13 +323,12 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
           paytmSubscriptionModel.data.temptoken,
           paytmSubscriptionModel.data.subscriptionId);
       if (postResponse.model) {
-        ApiResponse<bool> processResponse =
-            await _paytmRepo.processSubscription();
-        if (processResponse.model) {
+        bool processResponse = await processSubscription();
+        if (processResponse) {
           return PaytmResponse(reason: "Everything seems good!", status: true);
         } else {
           return PaytmResponse(
-              errorCode: PROCESS_SUBSCRIPTION_FAILED,
+              errorCode: ERR_PROCESS_SUBSCRIPTION_FAILED,
               reason: "Unable to update the Subscription status",
               status: false);
         }
@@ -348,9 +347,49 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       }
       return PaytmResponse(
           reason: "Subscription failed, please try again in sometime",
-          errorCode: CREATE_SUBSCRIPTION_FAILED,
+          errorCode: ERR_CREATE_SUBSCRIPTION_FAILED,
           status: false);
     }
+  }
+
+  Future<bool> updateDailySubscriptionAmount(
+      {@required String subId,
+      @required double amount,
+      @required String freq}) async {
+    ApiResponse response =
+        await _paytmRepo.updateDailyAmount(amount: amount, freq: freq);
+    await getActiveSubscriptionDetails();
+    if (response.code == 200)
+      return response.model;
+    else
+      return false;
+  }
+
+  Future<bool> pauseSubscription(String daysCode) async {
+    ApiResponse response = await _paytmRepo.pauseSubscription(daysCode);
+    await getActiveSubscriptionDetails();
+    if (response.code == 200)
+      return response.model;
+    else
+      return false;
+  }
+
+  Future<bool> resumeSubscription() async {
+    ApiResponse response = await _paytmRepo.resumeSubscription();
+    await getActiveSubscriptionDetails();
+    if (response.code == 200)
+      return response.model;
+    else
+      return false;
+  }
+
+  Future<bool> processSubscription() async {
+    ApiResponse response = await _paytmRepo.processSubscription();
+    await getActiveSubscriptionDetails();
+    if (response.code == 200)
+      return response.model;
+    else
+      return false;
   }
 
   Future<ApiResponse<bool>> makePostRequest(
@@ -386,36 +425,6 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       return ApiResponse(model: false, code: 400);
     }
     return ApiResponse(model: false, code: 400);
-  }
-
-  Future<bool> updateDailySubscriptionAmount(
-      {@required String subId,
-      @required double amount,
-      @required String freq}) async {
-    ApiResponse response =
-        await _paytmRepo.updateDailyAmount(amount: amount, freq: freq);
-    if (response.code == 200)
-      return response.model;
-    else
-      return false;
-  }
-
-  Future<bool> pauseSubscription(String resumeDate) async {
-    ApiResponse response = await _paytmRepo.pauseSubscription(resumeDate);
-    await getActiveSubscriptionDetails();
-    if (response.code == 200)
-      return response.model;
-    else
-      return false;
-  }
-
-  Future<bool> resumeSubscription() async {
-    ApiResponse response = await _paytmRepo.resumeSubscription();
-    await getActiveSubscriptionDetails();
-    if (response.code == 200)
-      return response.model;
-    else
-      return false;
   }
 }
 

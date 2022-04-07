@@ -62,7 +62,7 @@ class SizeConfig {
   static double get title2 => 32;
   static double get title3 => 28;
   static double get title4 => screenWidth * 0.058; //24
-  static double get title5 => screenWidth * 0.048; //20
+  static double get title5 => screenWidth * 0.052; //20
   static double get body1 => screenWidth * 0.043; // 18
   static double get body2 => screenWidth * 0.038; // 16
   static double get body3 => screenWidth * 0.033; //14

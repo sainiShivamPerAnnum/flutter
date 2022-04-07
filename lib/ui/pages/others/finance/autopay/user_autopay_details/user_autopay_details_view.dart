@@ -20,6 +20,7 @@ import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -215,72 +216,80 @@ class UpdateDetailsView extends StatelessWidget {
             ),
           ),
         ),
-        if (model.isInEditMode)
-          Positioned(
-            bottom: 0,
-            right: SizeConfig.pageHorizontalMargins,
-            child: SafeArea(
-              child: Container(
-                color: Colors.white,
-                child: Column(
-                  children: [
-                    Container(
-                      width: SizeConfig.screenWidth -
-                          SizeConfig.pageHorizontalMargins * 2,
-                      child: FelloButtonLg(
-                        child: model.isSubscriptionAmountUpdateInProgress
-                            ? SpinKitThreeBounce(
-                                color: Colors.white,
-                                size: 20,
-                              )
-                            : Text(
-                                "Update",
-                                style:
-                                    TextStyles.body2.bold.colour(Colors.white),
-                              ),
-                        onPressed: () {
-                          model.setSubscriptionAmount(
-                              int.tryParse(model.amountFieldController.text)
-                                  .toDouble());
-                        },
-                      ),
-                    ),
-                    SizedBox(height: SizeConfig.padding6),
-                    TextButton(
-                      onPressed: () {
-                        BaseUtil.openModalBottomSheet(
-                          addToScreenStack: true,
-                          hapticVibrate: true,
-                          backgroundColor: Colors.white,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(SizeConfig.roundness32),
-                            topRight: Radius.circular(SizeConfig.roundness32),
-                          ),
-                          isBarrierDismissable: false,
-                          isScrollControlled: true,
-                          content: PauseAutoPayModal(
-                            model: model,
-                          ),
-                        );
-                      },
-                      child: Text(
-                        "PAUSE SUBSCRIPTION",
-                        style: TextStyles.body2
-                            .colour(UiConstants.tertiarySolid)
-                            .light,
-                      ),
-                    ),
-                    SizedBox(
-                      height: SizeConfig.viewInsets.bottom != 0
-                          ? 0
-                          : SizeConfig.padding12,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          )
+        if (model.isInEditMode) PauseResumeButton(model: model),
       ],
+    );
+  }
+}
+
+class PauseResumeButton extends StatelessWidget {
+  const PauseResumeButton({
+    Key key,
+    @required this.model,
+  }) : super(key: key);
+
+  final UserAutoPayDetailsViewModel model;
+
+  @override
+  Widget build(BuildContext context) {
+    return PropertyChangeConsumer<PaytmService, PaytmServiceProperties>(
+      properties: [PaytmServiceProperties.ActiveSubscription],
+      builder: (context, m, property) => Positioned(
+        bottom: 0,
+        left: SizeConfig.pageHorizontalMargins,
+        child: SafeArea(
+          child: Container(
+            color: Colors.white,
+            child: Column(
+              children: [
+                Container(
+                  width: SizeConfig.screenWidth -
+                      SizeConfig.pageHorizontalMargins * 2,
+                  child: FelloButtonLg(
+                    child: model.isSubscriptionAmountUpdateInProgress
+                        ? SpinKitThreeBounce(
+                            color: Colors.white,
+                            size: 20,
+                          )
+                        : Text(
+                            "Update",
+                            style: TextStyles.body2.bold.colour(Colors.white),
+                          ),
+                    onPressed: () {
+                      model.setSubscriptionAmount(
+                          int.tryParse(model.amountFieldController.text)
+                              .toDouble());
+                    },
+                  ),
+                ),
+                SizedBox(height: SizeConfig.padding6),
+                model.isResumingInProgress
+                    ? SpinKitThreeBounce(
+                        size: SizeConfig.padding24,
+                        color: UiConstants.tertiarySolid,
+                      )
+                    : TextButton(
+                        onPressed: () => model.pauseResume(model),
+                        child: Text(
+                          m.activeSubscription.status ==
+                                  Constants.SUBSCRIPTION_INACTIVE
+                              ? "RESUME SUBSCRIPTION"
+                              : "PAUSE SUBSCRIPTION",
+                          style: TextStyles.body2
+                              .colour(UiConstants.tertiarySolid)
+                              .light,
+                        ),
+                      ),
+                SizedBox(
+                  height: SizeConfig.viewInsets.bottom != 0
+                      ? 0
+                      : SizeConfig.padding12,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

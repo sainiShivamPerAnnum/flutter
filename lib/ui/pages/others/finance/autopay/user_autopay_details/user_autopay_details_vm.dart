@@ -8,9 +8,13 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_view.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class UserAutoPayDetailsViewModel extends BaseModel {
@@ -43,6 +47,14 @@ class UserAutoPayDetailsViewModel extends BaseModel {
       amountFieldController;
   bool isVerified = true;
   bool _isPausingInProgress = false;
+  bool _isResumingInProgress = false;
+  bool get isResumingInProgress => this._isResumingInProgress;
+
+  set isResumingInProgress(bool value) {
+    this._isResumingInProgress = value;
+    notifyListeners();
+  }
+
   bool _isInEditMode = false;
   bool hasMoreTxns = false;
 
@@ -100,11 +112,27 @@ class UserAutoPayDetailsViewModel extends BaseModel {
     if (response) {
       AppState.backButtonDispatcher.didPopRoute();
       isInEditMode = false;
-      BaseUtil.showPositiveAlert("Subscription paused for 2 days",
-          "Remember it will automatically after 2 days");
+      BaseUtil.showPositiveAlert(
+          "Subscription paused for${getResumeValue(pauseValue)}",
+          "Remember it will automatically after ");
     } else
       BaseUtil.showNegativeAlert(
           "Failed to pause Subscription", "Please try again");
+  }
+
+  getResumeValue(int pauseValue) {
+    switch (pauseValue) {
+      case 1:
+        return " one week";
+      case 2:
+        return " two week";
+      case 3:
+        return " one month";
+      case 4:
+        return "ever";
+      default:
+        return "ever";
+    }
   }
 
   String getResumeDate(int pauseValue) {
@@ -191,5 +219,35 @@ class UserAutoPayDetailsViewModel extends BaseModel {
       BaseUtil.showNegativeAlert(
           "Amount update failed", "Please try again in sometime");
     }
+  }
+
+  pauseResume(model) async {
+    if (_paytmService.activeSubscription.status ==
+        Constants.SUBSCRIPTION_INACTIVE) {
+      model.isResumingInProgress = true;
+      bool response = await _paytmService.resumeSubscription();
+      if (response) {
+        isInEditMode = false;
+        BaseUtil.showPositiveAlert(
+            "Subscription resumed", "Now you are back to your savings journey");
+      } else
+        BaseUtil.showNegativeAlert(
+            "Failed to resume Subscription", "Please try again");
+      model.isResumingInProgress = false;
+    } else
+      BaseUtil.openModalBottomSheet(
+        addToScreenStack: true,
+        hapticVibrate: true,
+        backgroundColor: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(SizeConfig.roundness32),
+          topRight: Radius.circular(SizeConfig.roundness32),
+        ),
+        isBarrierDismissable: false,
+        isScrollControlled: true,
+        content: PauseAutoPayModal(
+          model: model,
+        ),
+      );
   }
 }

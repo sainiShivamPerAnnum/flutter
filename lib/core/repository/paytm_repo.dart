@@ -193,8 +193,9 @@ class PaytmRepository {
 
       final _body = {
         'uid': _userService.baseUser.uid,
-        'resumeData': resumeDate,
+        'resume': resumeDate,
       };
+      _logger.d(_body);
       //  final _body = {
       //   'uid': _userService.baseUser.uid,
       //   'subId': subId,
@@ -204,8 +205,9 @@ class PaytmRepository {
           body: _body,
           token: _token,
           isAWSURL: true);
+      final Map responseData = response["data"];
 
-      if (response['success'])
+      if (responseData["status"] != null && responseData["status"])
         return ApiResponse(model: true, code: 200);
       else
         return ApiResponse(model: false, code: 400);
@@ -232,7 +234,9 @@ class PaytmRepository {
           token: _token,
           isAWSURL: true);
 
-      if (response['success'])
+      final Map responseData = response["data"];
+
+      if (responseData["status"] != null && responseData["status"])
         return ApiResponse(model: true, code: 200);
       else
         return ApiResponse(model: false, code: 400);

@@ -49,10 +49,16 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView>
   //   });
   // }
 
-  List<String> benifits = [
-    "Savings on autopilot (Your money gets saved into digital gold automatically)",
-    "Highly safe and secure( Your money is contantly being monitored by government)",
-    "Gaming never stops (Never run out of Fello tokens while playing)"
+  List<String> bTitle = [
+    "Savings on autopilot",
+    "Highly safe and secure",
+    "Gaming never stops"
+  ];
+
+  List<String> bSubtitle = [
+    "Your money gets saved automatically",
+    "Your money is contantly being monitored",
+    "Never run out of Fello tokens while playing"
   ];
 
   List<String> assets = [
@@ -144,6 +150,7 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView>
             ),
             Positioned(
               bottom: usedHeight * 0.48,
+              left: SizeConfig.pageHorizontalMargins,
               child: AnimatedOpacity(
                 curve: Curves.decelerate,
                 duration: Duration(milliseconds: 600),
@@ -157,18 +164,21 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView>
                           SizeConfig.viewInsets.top +
                           SizeConfig.padding24 +
                           SizeConfig.avatarRadius * 2) *
-                      0.32 *
+                      0.3 *
                       animValue,
-                  width: SizeConfig.screenWidth,
+                  width: SizeConfig.screenWidth -
+                      SizeConfig.pageHorizontalMargins * 2,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: NetworkImage(assets[2]), fit: BoxFit.contain),
+                        image: NetworkImage(assets[_currentPage]),
+                        fit: BoxFit.contain),
                   ),
                 ),
               ),
             ),
             Positioned(
-              bottom: usedHeight * 0.5,
+              bottom: usedHeight * 0.48,
+              left: SizeConfig.pageHorizontalMargins,
               child: AnimatedOpacity(
                 curve: Curves.decelerate,
                 duration: Duration(milliseconds: 600),
@@ -182,12 +192,14 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView>
                           SizeConfig.viewInsets.top +
                           SizeConfig.padding24 +
                           SizeConfig.avatarRadius * 2) *
-                      0.32 *
+                      0.3 *
                       (animValue - 1).abs(),
-                  width: SizeConfig.screenWidth,
+                  width: SizeConfig.screenWidth -
+                      SizeConfig.pageHorizontalMargins * 2,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: NetworkImage(assets[1]), fit: BoxFit.contain),
+                        image: NetworkImage(assets[_currentPage]),
+                        fit: BoxFit.contain),
                   ),
                 ),
               ),
@@ -208,9 +220,19 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView>
                     SizedBox(
                       height: SizeConfig.padding8,
                     ),
-                    Text(
-                      "UPI AUTOPAY",
-                      style: TextStyles.title1.bold,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Image.asset(
+                          Assets.logoMaxSize,
+                          height: SizeConfig.title1 * 1.3,
+                        ),
+                        Text(
+                          " AUTOSAVE",
+                          style: TextStyles.title1.colour(Color(0xff3F4748)),
+                        ),
+                      ],
                     )
                   ],
                 ),
@@ -263,10 +285,22 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView>
                                   return Container(
                                     alignment: Alignment.center,
                                     height: SizeConfig.padding64,
-                                    child: Text(
-                                      benifits[i],
-                                      style: TextStyles.body2,
-                                      textAlign: TextAlign.center,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          bTitle[i],
+                                          style: TextStyles.body2.bold,
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        SizedBox(height: SizeConfig.padding2),
+                                        Text(
+                                          bSubtitle[i],
+                                          style: TextStyles.body2,
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ],
                                     ),
                                   );
                                 },
@@ -352,11 +386,11 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView>
                               child: ListView(
                                 padding: EdgeInsets.zero,
                                 children: [
+                                  SizedBox(height: SizeConfig.padding12),
                                   Text(
                                     "Set up UPI Autopay in 3 easy Steps:",
-                                    style: TextStyles.title4.bold,
+                                    style: TextStyles.body1.bold,
                                   ),
-                                  SizedBox(height: SizeConfig.padding12),
                                   InfoTile(
                                     png: "assets/images/icons/bank.png",
                                     title: "Enter your UPI Id",
