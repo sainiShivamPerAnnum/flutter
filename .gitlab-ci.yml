@@ -22,8 +22,6 @@ update:
   stage: update
   only:
     - master
-  tags:
-    - appditto_mac
   script:
     - gem install fastlane
     - flutter packages get
