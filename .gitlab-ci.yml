@@ -38,7 +38,7 @@ android:build:
   script:
     - cd android
     # - gem install bundler
-    - bundle install
+    - bundle update --bundler
     - bundle exec fastlane build_android deploy:true
     - rm -f android/local.properties
     - rm -f android/key.properties
