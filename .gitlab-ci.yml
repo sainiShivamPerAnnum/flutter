@@ -1,6 +1,13 @@
+image: cirrusci/flutter
+
 variables:
   IOS_XCODE_PROJECT_NAME: "Runner"
   FLAVOR: "dev"
+  ANDROID_COMPILE_SDK: "28"
+  ANDROID_BUILD_TOOLS: "28.0.2"
+  ANDROID_SDK_TOOLS:   "4333796"
+
+  
 
 stages:
   # - test
