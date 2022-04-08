@@ -9,7 +9,7 @@ variables:
 
 stages:
   # - test
-  - update
+  # - update
   - build
   - deploy
 
@@ -37,7 +37,7 @@ android:build:
   stage: build
   script:
     - cd android
-    - gem install bundler
+    # - gem install bundler
     - bundle install
     - bundle exec fastlane build_android deploy:true
     - rm -f android/local.properties
