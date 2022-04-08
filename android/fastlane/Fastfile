@@ -42,4 +42,9 @@ platform :android do
       skip_upload_screenshots: true,
     )
   end
+
+  desc "Promote Internal to Alpha"
+  lane :promote_internal_to_alpha do
+    upload_to_play_store(track: 'internal', track_promote_to: 'alpha')
+  end
 end

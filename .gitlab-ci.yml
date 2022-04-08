@@ -14,7 +14,7 @@ tests:
     - master
   tags:
     - appditto_mac
-  script: 
+  script:
     - flutter test
   interruptible: true
 
@@ -25,9 +25,10 @@ update:
   tags:
     - appditto_mac
   script:
+    - gem install fastlane
     - flutter packages get
     - flutter packages upgrade
-  interruptible: true
+  interruptible: false
 
 android:build:
   stage: build
@@ -47,8 +48,8 @@ android:build:
     - rm -f android/key.properties
   artifacts:
     paths:
-    - build/app/outputs/apk/release/app-release.apk
-    - build/app/outputs/bundle/release/app.aab
+      - build/app/outputs/apk/release/app-release.apk
+      - build/app/outputs/bundle/release/app.aab
     expire_in: 1 week
   interruptible: true
 
@@ -99,7 +100,6 @@ z:internal:android:deploy:
   when: manual
   dependencies:
     - android:build
-
 # z:tflight:ios:deploy:
 #   stage: deploy
 #   tags:
