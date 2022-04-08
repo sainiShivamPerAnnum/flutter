@@ -3,80 +3,110 @@ variables:
   FLAVOR: "dev"
 
 stages:
+  - test
+  - update
   - build
-  # - test
-  # - deploy
+  - deploy
 
-build:
+tests:
+  stage: test
+  only:
+    - master
+  tags:
+    - appditto_mac
+  script: 
+    - flutter test
+  interruptible: true
+
+update:
+  stage: update
+  only:
+    - master
+  tags:
+    - appditto_mac
+  script:
+    - flutter packages get
+    - flutter packages upgrade
+  interruptible: true
+
+android:build:
   stage: build
   script:
-    - cd ios
-    - bundle install
-    - bundle exec fastlane checkRelease
+    # Flutter local configuration
+    - echo flutter.sdk=$FLUTTER_PATH > android/local.properties
+    - echo sdk.dir=$ANDROID_SDK_PATH >> android/local.properties
+    - echo flutter.buildMode=release >> android/local.properties
+    # Android signing
+    - echo storePassword=$ANDROID_KEY_STORE_PASSWORD > android/key.properties
+    - echo keyPassword=$ANDROID_KEY_PASSWORD >> android/key.properties
+    - echo keyAlias=$ANDROID_KEY_ALIAS >> android/key.properties
+    - echo storeFile=$ANDROID_KEYSTORE_PATH >> android/key.properties
+    - cd android
+    - bundle exec fastlane build_android production:true
+    - rm -f android/local.properties
+    - rm -f android/key.properties
   artifacts:
     paths:
-    - ./Runner.ipa
+    - build/app/outputs/apk/release/app-release.apk
+    - build/app/outputs/bundle/release/app.aab
+    expire_in: 1 week
+  interruptible: true
 
-# android:debug:
+# ios:build:
 #   stage: build
-#   before_script:
-#     - flutter pub get
-#     - flutter clean
+#   tags:
+#     - appditto_mac
 #   script:
-#     - flutter doctor --android-licenses
-#     - flutter build apk --flavor ${FLAVOR} --debug
-#   artifacts:
-#     paths:
-#       - "**/**/**/**/**/**/*.apk"
-#     expire_in: 1 day
-
-# android:release:
-#   stage: build
-#   before_script:
-#     - flutter pub get
-#     - flutter clean
-#   script:
-#     - flutter doctor --android-licenses
-#     - flutter build apk --flavor ${FLAVOR} --release
-#   artifacts:
-#     paths:
-#       - "**/**/**/**/**/**/*.apk"
-#     expire_in: 1 day
-
-# ios:debug:
-#   stage: build
-#   before_script:
-#     - flutter pub get
-#     - flutter clean
-#   script:
-#     - flutter build ios --flavor ${FLAVOR}
-#     - if [ -d archive ]; then rm -rf archive; fi && mkdir archive
-#     - if [ -d artifact ]; then rm -rf artifact; fi && mkdir artifact
-#     - export PLIST_DIRECTORY="ci-cd/iOS/${FLAVOR}/debug"
 #     - cd ios
-#     - pod install;
-#     - xcodebuild clean archive -quiet -workspace ${IOS_XCODE_PROJECT_NAME}.xcworkspace -scheme ${FLAVOR} -archivePath "../archive/${IOS_XCODE_PROJECT_NAME}.xcarchive";
-#     - xcodebuild -quiet -exportArchive -archivePath  "../archive/${IOS_XCODE_PROJECT_NAME}.xcarchive" -exportPath ../artifact/ -exportOptionsPlist ${PLIST_DIRECTORY}/*.plist
+#     - export TEMP_KEYCHAIN_NAME=fastlane_$(cat /dev/urandom | LC_ALL=C tr -dc 'a-zA-Z0-9' | fold -w ${1:-16} | head -n 1)
+#     - export TEMP_KEYCHAIN_PASSWORD=$(cat /dev/urandom | LC_ALL=C tr -dc 'a-zA-Z0-9' | fold -w ${1:-64} | head -n 1)
+#     - bundle exec fastlane build_ios
 #   artifacts:
 #     paths:
-#       - "artifact/*.ipa"
-#     expire_in: 1 day
+#     - ios/Runner.ipa
+#     expire_in: 1 week
+#   interruptible: true
 
-# ios:release:
-#   stage: build
-#   before_script:
-#     - flutter pub get
-#     - flutter clean
+prod:android:deploy:
+  stage: deploy
+  tags:
+    - appditto_mac
+  script:
+    - cd android
+    - bundle exec fastlane deploy_android production:true
+  when: manual
+  dependencies:
+    - android:build
+
+# prod:ios:deploy:
+#   stage: deploy
+#   tags:
+#     - appditto_mac
 #   script:
-#     - flutter build ios --flavor ${FLAVOR}
-#     - if [ -d archive ]; then rm -rf archive; fi && mkdir archive
-#     - if [ -d artifact ]; then rm -rf artifact; fi && mkdir artifact
-#     - export PLIST_DIRECTORY="ci-cd/iOS/${FLAVOR}/release"
 #     - cd ios
-#     - pod install;
-#     - xcodebuild clean archive -quiet -workspace ${IOS_XCODE_PROJECT_NAME}.xcworkspace -scheme ${FLAVOR} -archivePath "../archive/${IOS_XCODE_PROJECT_NAME}.xcarchive";
-#     - xcodebuild -quiet -exportArchive -archivePath  "../archive/${IOS_XCODE_PROJECT_NAME}.xcarchive" -exportPath ../artifact/ -exportOptionsPlist ${PLIST_DIRECTORY}/*.plist
-#   artifacts:
-#     paths:
-#       - "artifact/*.ipa"
-#     expire_in: 1 day
+#     - bundle exec fastlane deploy_ios
+#   when: manual
+#   dependencies:
+#     - ios:build
+
+z:internal:android:deploy:
+  stage: deploy
+  tags:
+    - appditto_mac
+  script:
+    - cd android
+    - bundle exec fastlane deploy_android internal:true
+  when: manual
+  dependencies:
+    - android:build
+
+# z:tflight:ios:deploy:
+#   stage: deploy
+#   tags:
+#     - appditto_mac
+#   script:
+#     - cd ios
+#     - bundle exec fastlane deploy_ios testflight:true
+#   when: manual
+#   dependencies:
+#     - android:build
