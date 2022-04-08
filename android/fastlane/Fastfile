@@ -4,22 +4,33 @@ update_fastlane
 default_platform(:android)
 
 platform :android do
-  before_all do
+
+  desc "Updating build number android"
+  lane :update_build_number do 
     g = google_play_track_version_codes
     gb = google_play_track_version_codes(track: 'beta')
     ga = google_play_track_version_codes(track: 'alpha')
-    max_value = [g[0].to_i, gb[0].to_i, ga[0].to_i].max
+    gi = google_play_track_version_codes(track: 'internal')
+    max_value = [g[0].to_i, gb[0].to_i,gi[0].to_i, ga[0].to_i].max
     version_updated = max_value + 1
-    increment_version_code(app_project_dir: "./app", version_code: version_updated.to_i)
+    increment_version_code(gradle_file_path: "./app/build.gradle", version_code: version_updated.to_i, ext_constant_name:"versionCode")
   end
 
   desc "Build android aab and apk"
   lane :build_android do |options|
+    update_build_number
+
     # sh "./flutter_test.sh"
     # Build AAB
-    sh "./flutter_build.sh --clean"
+    # sh "./flutter_build.sh --clean"
     # Build APK
     # sh "./flutter_build.sh --apk"
+    if options[:deploy]
+      puts "Running deploy lane, deployCheck exists"
+      deploy_android
+    else 
+      puts "deployCheck option missing, not deploying"
+    end
   end
 
   desc "Deploy (Upload to play store)"
