@@ -23,15 +23,15 @@ stages:
 #     - flutter test
 #   interruptible: true
 
-update:
-  stage: update
-  # only:
-  #   - master
-  script:
-    - gem install fastlane
-    - flutter packages get
-    - flutter packages upgrade
-  interruptible: false
+# update:
+#   stage: update
+#   # only:
+#   #   - master
+#   script:
+#     - gem install fastlane
+#     - flutter packages get
+#     - flutter packages upgrade
+#   interruptible: false
 
 android:build:
   stage: build
