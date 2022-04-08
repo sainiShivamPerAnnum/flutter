@@ -4,21 +4,29 @@ update_fastlane
 default_platform(:android)
 
 platform :android do
+  before_all do
+    g = google_play_track_version_codes
+    gb = google_play_track_version_codes(track: 'beta')
+    ga = google_play_track_version_codes(track: 'alpha')
+    max_value = [g[0].to_i, gb[0].to_i, ga[0].to_i].max
+    version_updated = max_value + 1
+    increment_version_code(app_project_dir: "./app", version_code: version_updated.to_i)
+  end
+
   desc "Build android aab and apk"
   lane :build_android do |options|
-   
     # sh "./flutter_test.sh"
     # Build AAB
     sh "./flutter_build.sh --clean"
     # Build APK
-    sh "./flutter_build.sh --apk"
+    # sh "./flutter_build.sh --apk"
   end
 
   desc "Deploy (Upload to play store)"
   lane :deploy_android do |options|
     upload_to_play_store(
-      track: options[:production] ? 'production' : options[:internal] ? 'internal' : options[:alpha] ? 'alpha' : 'beta',
-      aab: '../build/app/outputs/bundle/release/app.aab',
+      track: options[:production] ? 'production' : options[:internal] ? 'internal' : options[:alpha] ? 'alpha' : options[:beta] ? 'beta' : 'internal',
+      aab: '../build/app/outputs/bundle/prodRelease/app-prod-release.aab',
       skip_upload_images: true,
       skip_upload_screenshots: true,
     )
