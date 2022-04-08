@@ -3,25 +3,25 @@ variables:
   FLAVOR: "dev"
 
 stages:
-  - test
+  # - test
   - update
   - build
   - deploy
 
-tests:
-  stage: test
-  only:
-    - master
-  tags:
-    - appditto_mac
-  script:
-    - flutter test
-  interruptible: true
+# tests:
+#   stage: test
+#   only:
+#     - master
+#   tags:
+#     - appditto_mac
+#   script:
+#     - flutter test
+#   interruptible: true
 
 update:
   stage: update
-  only:
-    - master
+  # only:
+  #   - master
   script:
     - gem install fastlane
     - flutter packages get
