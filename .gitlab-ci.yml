@@ -5,9 +5,7 @@ variables:
   FLAVOR: "dev"
   ANDROID_COMPILE_SDK: "28"
   ANDROID_BUILD_TOOLS: "28.0.2"
-  ANDROID_SDK_TOOLS:   "4333796"
-
-  
+  ANDROID_SDK_TOOLS: "4333796"
 
 stages:
   # - test
@@ -38,17 +36,10 @@ update:
 android:build:
   stage: build
   script:
-    # Flutter local configuration
-    - echo flutter.sdk=$FLUTTER_PATH > android/local.properties
-    - echo sdk.dir=$ANDROID_SDK_PATH >> android/local.properties
-    - echo flutter.buildMode=release >> android/local.properties
-    # Android signing
-    - echo storePassword=$ANDROID_KEY_STORE_PASSWORD > android/key.properties
-    - echo keyPassword=$ANDROID_KEY_PASSWORD >> android/key.properties
-    - echo keyAlias=$ANDROID_KEY_ALIAS >> android/key.properties
-    - echo storeFile=$ANDROID_KEYSTORE_PATH >> android/key.properties
     - cd android
-    - bundle exec fastlane build_android production:true
+    - gem install bundler
+    - bundle install
+    - bundle exec fastlane build_android deploy:true
     - rm -f android/local.properties
     - rm -f android/key.properties
   artifacts:
