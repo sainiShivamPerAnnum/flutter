@@ -9,14 +9,14 @@ variables:
 
 before_script:
   #Read CICD Vars in a file
-  # - "echo { > android/app/globalSettings.json"
-  # - 'echo \"PLAY_STORE_UPLOAD_KEYSTORE_ALIAS\": \"$PLAY_STORE_UPLOAD_KEYSTORE_ALIAS\", >> android/app/globalSettings.json'
-  # - 'echo \"PLAY_STORE_UPLOAD_KEYSTORE_PASSWORD\": \"$PLAY_STORE_UPLOAD_KEYSTORE_PASSWORD\", >> android/app/globalSettings.json'
-  # - 'echo \"PLAY_STORE_UPLOAD_KEY_PASSWORD\": \"$PLAY_STORE_UPLOAD_KEY_PASSWORD\", >> android/app/globalSettings.json'
-  # - 'echo \"GCP_PLAYSTORE_SERIVCE_ACCOUNT_EMAIL\": \"$PLAY_STORE_SERVICE_ACCOUNT_EMAIL\", >> android/app/globalSettings.json'
-  # - "echo } >> android/app/globalSettings.json"
-  # - cat android/app/globalSettings.json
-  # - "echo fs.inotify.max_user_watches=524288 | tee -a /etc/sysctl.conf && sysctl -p"
+  - "echo { > android/app/globalSettings.json"
+  - 'echo \"PLAY_STORE_UPLOAD_KEYSTORE_ALIAS\": \"$PLAY_STORE_UPLOAD_KEYSTORE_ALIAS\", >> android/app/globalSettings.json'
+  - 'echo \"PLAY_STORE_UPLOAD_KEYSTORE_PASSWORD\": \"$PLAY_STORE_UPLOAD_KEYSTORE_PASSWORD\", >> android/app/globalSettings.json'
+  - 'echo \"PLAY_STORE_UPLOAD_KEY_PASSWORD\": \"$PLAY_STORE_UPLOAD_KEY_PASSWORD\", >> android/app/globalSettings.json'
+  - 'echo \"GCP_PLAYSTORE_SERIVCE_ACCOUNT_EMAIL\": \"$PLAY_STORE_SERVICE_ACCOUNT_EMAIL\", >> android/app/globalSettings.json'
+  - "echo } >> android/app/globalSettings.json"
+  - cat android/app/globalSettings.json
+  - "echo fs.inotify.max_user_watches=524288 | tee -a /etc/sysctl.conf && sysctl -p"
 
   # Output Playstore Service Account Key JSON to a runtime JSON file
   - "echo $PLAY_STORE_JSON > android/app/serviceAccess.json"
