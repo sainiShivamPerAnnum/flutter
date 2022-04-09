@@ -51,7 +51,7 @@ stages:
 android:build:
   stage: build
   script:
-    - base64 -d $PLAY_STORE_UPLOAD_KEYSTORE_FILE_BASE64 > android/app/uploadRelease.keystore
+    - base64 -d $PLAYSTORE_UPLOAD_KEY_BASE64 > android/app/key.jks
     - cd android
     # - gem install bundler
     - bundle update --bundler
