@@ -24,7 +24,7 @@ platform :android do
     # Build AAB
     sh "./flutter_build.sh --clean"
     # Build APK
-    sh "./flutter_build.sh --apk"
+    # sh "./flutter_build.sh --apk"
     if options[:deploy]
       puts "Running deploy lane, deployCheck exists"
       deploy_android
