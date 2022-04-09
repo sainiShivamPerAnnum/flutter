@@ -19,9 +19,8 @@ before_script:
   # - "echo fs.inotify.max_user_watches=524288 | tee -a /etc/sysctl.conf && sysctl -p"
 
   # Output Playstore Service Account Key JSON to a runtime JSON file
-  - "echo $GCP_PLAYSTORE_SERIVCE_ACCOUNT_KEY_JSON > android/app/serviceAccess.json"
+  - "echo $PLAY_STORE_JSON > android/app/serviceAccess.json"
   - cat android/app/serviceAccess.json
-
 
 stages:
   # - test
