@@ -59,8 +59,8 @@ android:build:
     - rm -f android/key.properties
   artifacts:
     paths:
-      - ../build/app/outputs/apk/release/app-release.apk
-      - ../build/app/outputs/bundle/prodRelease/app-prod-release.aab 
+      - ./build/app/outputs/apk/release/app-release.apk
+      - ./build/app/outputs/bundle/prodRelease/app-prod-release.aab 
     expire_in: 1 week
   interruptible: true
 
