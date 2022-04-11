@@ -48,7 +48,7 @@ update:
     - flutter packages upgrade
   interruptible: false
 
-build:
+ios:build:
   stage: build
   only:
     - develop
