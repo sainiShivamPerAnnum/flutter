@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:device_info/device_info.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/alert_model.dart';
@@ -49,6 +49,7 @@ class DBModel extends ChangeNotifier {
   bool isDeviceInfoInitiated = false;
   String phoneModel;
   String softwareVersion;
+  String deviceId;
 
   Future<void> initDeviceInfo() async {
     try {
@@ -57,10 +58,16 @@ class DBModel extends ChangeNotifier {
         iosDeviceInfo = await deviceInfo.iosInfo;
         phoneModel = iosDeviceInfo.model;
         softwareVersion = iosDeviceInfo.systemVersion;
+        deviceId = iosDeviceInfo.identifierForVendor;
+        logger.d(
+            "Device Information - \n $phoneModel \n $softwareVersion \n $deviceId");
       } else if (Platform.isAndroid) {
         AndroidDeviceInfo androidDeviceInfo = await deviceInfo.androidInfo;
         phoneModel = androidDeviceInfo.model;
         softwareVersion = androidDeviceInfo.version.release;
+        deviceId = androidDeviceInfo.androidId;
+        logger.d(
+            "Device Information - \n $phoneModel \n $softwareVersion \n $deviceId");
       }
       isDeviceInfoInitiated = true;
     } catch (e) {
