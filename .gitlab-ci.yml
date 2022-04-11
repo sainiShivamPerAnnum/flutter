@@ -24,7 +24,7 @@ before_script:
 
 stages:
   # - test
-  # - update
+  - update
   - build
   - deploy
 
@@ -40,16 +40,30 @@ stages:
 
 update:
   stage: update
-  # only:
-  #   - master
+  only:
+    - develop
   script:
     - gem install fastlane
     - flutter packages get
     - flutter packages upgrade
   interruptible: false
 
+build:
+  stage: build
+  only:
+    - develop
+  when: manual
+  script:
+    - bundle install
+    - bundle exec fastlane Runner
+  artifacts:
+    paths:
+    - ./Runner.ipa
+
 android:build:
   stage: build
+  only:
+    - develop
   script:
     - base64 -d $PLAYSTORE_UPLOAD_KEY_BASE64 > android/app/key.jks
     - cd android
@@ -66,6 +80,8 @@ android:build:
 
 internal:android:deploy:
   stage: deploy
+  only:
+    - develop
   script:
     - cd android
     - bundle update --bundler
@@ -76,6 +92,8 @@ internal:android:deploy:
 
 alpha:android:deploy:
   stage: deploy
+  only:
+    - develop
   script:
     - cd android
     - bundle update --bundler
