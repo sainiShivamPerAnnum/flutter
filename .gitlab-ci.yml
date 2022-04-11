@@ -48,17 +48,29 @@ update:
     - flutter packages upgrade
   interruptible: false
 
-ios:build:
+ios:prod:buildAndDeploy:
   stage: build
   only:
     - develop
   when: manual
   script:
     - bundle install
-    - bundle exec fastlane Runner
+    - bundle exec fastlane buildAndRelease prod:true
   artifacts:
     paths:
-    - ./Runner.ipa
+      - ./Runner.ipa
+
+ios:dev:buildAndDeploy:
+  stage: build
+  only:
+    - develop
+  when: manual
+  script:
+    - bundle install
+    - bundle exec fastlane buildAndRelease
+  artifacts:
+    paths:
+      - ./Runner.ipa
 
 android:build:
   stage: build
@@ -101,6 +113,3 @@ alpha:android:deploy:
   when: manual
   dependencies:
     - android:build
-
-
-

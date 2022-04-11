@@ -19,7 +19,6 @@ platform :android do
   desc "Build android aab and apk"
   lane :build_android do |options|
     update_build_number
-
     # sh "./flutter_test.sh"
     # Build AAB
     sh "./flutter_build.sh --clean"

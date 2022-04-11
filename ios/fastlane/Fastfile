@@ -44,10 +44,8 @@ platform :ios do
       # end
   end
 
-
-
-  lane :release do
-    build_app(workspace: "Runner.xcworkspace", scheme: "dev")
+  lane :buildAndRelease do |options|
+    build_app(workspace: "Runner.xcworkspace", scheme: options[:dev] ?  'dev' : options[:prod] ? 'prod': 'dev')
     upload_to_app_store
   end
 end
