@@ -1,13 +1,24 @@
+import 'dart:math';
+
+import 'package:external_app_launcher/external_app_launcher.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/paytm_service_enums.dart';
+import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_view.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_vm.dart';
+
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -18,20 +29,25 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
+import 'package:timelines/timelines.dart';
 
-class AutoPayProcessView extends StatefulWidget {
-  const AutoPayProcessView({Key key}) : super(key: key);
+class AutoSaveProcessView extends StatefulWidget {
+  final int page;
+  AutoSaveProcessView({this.page = 0});
 
   @override
-  State<AutoPayProcessView> createState() => _AutoPayProcessViewState();
+  State<AutoSaveProcessView> createState() => _AutoSaveProcessViewState();
 }
 
-class _AutoPayProcessViewState extends State<AutoPayProcessView> {
+class _AutoSaveProcessViewState extends State<AutoSaveProcessView> {
   @override
   Widget build(BuildContext context) {
-    return BaseView<AutoPayProcessViewModel>(onModelReady: (model) {
-      model.init();
+    final _processes = ['Prospect', 'Tour', 'Offer'];
+
+    return BaseView<AutoSaveProcessViewModel>(onModelReady: (model) {
+      model.init(widget.page);
     }, builder: (context, model, child) {
       return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -45,13 +61,11 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
                     leading: model.isSubscriptionInProgress
                         ? SizedBox()
                         : FelloAppBarBackButton(),
-                    title: "Set up UPI AutoPay",
+                    title: "Set up Autosave",
                   ),
                   Expanded(
                     child: Container(
                       width: SizeConfig.screenWidth,
-                      padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.pageHorizontalMargins),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(SizeConfig.padding40),
@@ -59,23 +73,149 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
                         ),
                         color: Colors.white,
                       ),
-                      child: PageView(controller: model.pageController,
-                          // physics: NeverScrollableScrollPhysics(),
-                          children: [
-                            addUpiIdUI(model),
-                            pendingUI(model),
-                            amountSetUI(model),
-                            completedUI(model),
-                            cancelledUI(model),
-                          ]
-                          // children: [
-                          //   addUpiIdUI(model),
-                          //   pendingUI(model),
-                          //   completedUI(model),
-                          //   cancelledUI(model),
-                          //   amountSetUI(model),
-                          // ]
-                          ),
+                      child: Stack(
+                        children: [
+                          if (model.showProgressIndicator)
+                            Align(
+                              alignment: Alignment.topCenter,
+                              child: Container(
+                                  alignment: Alignment.center,
+                                  width: SizeConfig.screenWidth,
+                                  height: SizeConfig.padding24,
+                                  margin: EdgeInsets.only(
+                                      top: SizeConfig.pageHorizontalMargins -
+                                          SizeConfig.padding8),
+                                  child: Timeline.tileBuilder(
+                                      shrinkWrap: true,
+                                      theme: TimelineThemeData(
+                                        direction: Axis.horizontal,
+                                        connectorTheme: ConnectorThemeData(
+                                          space: SizeConfig.screenWidth * 0.05,
+                                          thickness: 5.0,
+                                        ),
+                                      ),
+                                      physics: NeverScrollableScrollPhysics(),
+                                      builder: TimelineTileBuilder.connected(
+                                        connectionDirection:
+                                            ConnectionDirection.before,
+                                        itemExtentBuilder: (_, __) =>
+                                            MediaQuery.of(context).size.width /
+                                            (_processes.length * 2),
+                                        indicatorBuilder: (_, index) {
+                                          var color;
+                                          var child;
+                                          if (index == model.fraction) {
+                                            color = model.inProgressColor;
+                                            child = Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 3.0,
+                                                valueColor:
+                                                    AlwaysStoppedAnimation(
+                                                        Colors.white),
+                                              ),
+                                            );
+                                          } else if (index < model.fraction) {
+                                            color = model.completeColor;
+                                            child = Icon(
+                                              Icons.check,
+                                              color: Colors.white,
+                                              size: 15.0,
+                                            );
+                                          } else {
+                                            color = model.todoColor;
+                                          }
+
+                                          if (index <= model.fraction) {
+                                            return Stack(
+                                              children: [
+                                                CustomPaint(
+                                                  size: Size(30.0, 30.0),
+                                                  painter: _BezierPainter(
+                                                    color: color,
+                                                    drawStart: index > 0,
+                                                    drawEnd:
+                                                        index < model.fraction,
+                                                  ),
+                                                ),
+                                                DotIndicator(
+                                                  size: 30.0,
+                                                  color: color,
+                                                  child: child,
+                                                ),
+                                              ],
+                                            );
+                                          } else {
+                                            return Stack(
+                                              children: [
+                                                CustomPaint(
+                                                  size: Size(15.0, 15.0),
+                                                  painter: _BezierPainter(
+                                                    color: color,
+                                                    drawEnd: index <
+                                                        _processes.length - 1,
+                                                  ),
+                                                ),
+                                                OutlinedDotIndicator(
+                                                  borderWidth: 4.0,
+                                                  color: color,
+                                                ),
+                                              ],
+                                            );
+                                          }
+                                        },
+                                        connectorBuilder: (_, index, type) {
+                                          if (index > 0) {
+                                            if (index == model.fraction) {
+                                              final prevColor =
+                                                  model.getColor(index - 1);
+                                              final color =
+                                                  model.getColor(index);
+                                              List<Color> gradientColors;
+                                              if (type == ConnectorType.start) {
+                                                gradientColors = [
+                                                  Color.lerp(
+                                                      prevColor, color, 0.5),
+                                                  color
+                                                ];
+                                              } else {
+                                                gradientColors = [
+                                                  prevColor,
+                                                  Color.lerp(
+                                                      prevColor, color, 0.5)
+                                                ];
+                                              }
+                                              return DecoratedLineConnector(
+                                                decoration: BoxDecoration(
+                                                  gradient: LinearGradient(
+                                                    colors: gradientColors,
+                                                  ),
+                                                ),
+                                              );
+                                            } else {
+                                              return SolidLineConnector(
+                                                color: model.getColor(index),
+                                              );
+                                            }
+                                          } else {
+                                            return null;
+                                          }
+                                        },
+                                        itemCount: _processes.length,
+                                      ))),
+                            ),
+                          PageView(controller: model.pageController,
+                              // physics: NeverScrollableScrollPhysics(),
+                              children: [
+                                addUpiIdUI(model),
+                                pendingUI(model),
+                                amountSetUI(model),
+                                completedUI(model),
+                                cancelledUI(model),
+                              ]),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -87,505 +227,713 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
     });
   }
 
-  pendingUI(AutoPayProcessViewModel model) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SizedBox(height: SizeConfig.pageHorizontalMargins),
-        Text(
-          "STEP 2/3",
-          style: TextStyles.body2.colour(Colors.black26).letterSpace(3),
-        ),
-        SizedBox(height: SizeConfig.padding24),
-        Lottie.asset("assets/lotties/pending.json",
-            height: SizeConfig.screenWidth * 0.2, repeat: false),
-        SizedBox(height: SizeConfig.padding24),
-        Text(
-          "Complete Payment",
-          style: TextStyles.title3.bold,
-          textAlign: TextAlign.center,
-        ),
-        SizedBox(height: SizeConfig.padding8),
-        Container(
-          margin:
-              EdgeInsets.symmetric(vertical: SizeConfig.pageHorizontalMargins),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-            child: Shimmer(
-              color: UiConstants.tertiarySolid,
-              colorOpacity: 0.2,
-              enabled: true,
-              interval: Duration(seconds: 2),
-              child: Container(
-                height: SizeConfig.screenWidth * 0.25,
-                decoration: BoxDecoration(
-                  color: UiConstants.tertiaryLight,
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-                ),
-                padding: EdgeInsets.all(SizeConfig.padding24),
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      backgroundColor:
-                          UiConstants.tertiarySolid.withOpacity(0.2),
-                      radius: SizeConfig.screenWidth * 0.067,
-                      child: SvgPicture.asset(
-                        "assets/vectors/icons/upi.svg",
-                        height: SizeConfig.screenWidth * 0.067,
-                        // width: SizeConfig.padding64,
-                      ),
-                    ),
-                    SizedBox(
-                      width: SizeConfig.padding12,
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          FittedBox(
-                            child: Row(
-                              children: [
-                                Text(
-                                  model.vpaController.text.trim(),
-                                  style: TextStyles.body1.bold,
-                                ),
-                                SizedBox(width: SizeConfig.padding4),
-                                SvgPicture.asset(
-                                  "assets/vectors/check.svg",
-                                  height: SizeConfig.iconSize1,
-                                  // width: SizeConfig.padding64,
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: SizeConfig.padding4),
-                          FittedBox(
-                            child: Text(
-                              "Entered UPI Address",
-                              style: TextStyles.body3.colour(Colors.grey),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-        Row(
-          children: [
-            Container(
-              width: 2,
-              height: SizeConfig.padding54,
-              color: UiConstants.primaryColor,
-            ),
-            Expanded(
-              child: ListTile(
-                title: Text(
-                  "Step 1",
-                  style: TextStyles.body1.bold,
-                ),
-                subtitle: Text(
-                  "Go to your ${getUpiAppName(model)} mobile app",
-                  style: TextStyles.body2,
-                ),
-                trailing: CircleAvatar(
-                  backgroundColor: UiConstants.tertiaryLight,
-                  radius: SizeConfig.padding20,
-                ),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: SizeConfig.padding16),
-        Row(
-          children: [
-            Container(
-              width: 2,
-              height: SizeConfig.padding64,
-              color: UiConstants.primaryColor,
-            ),
-            Expanded(
-              child: ListTile(
-                title: Text(
-                  "Step 2",
-                  style: TextStyles.body1.bold,
-                ),
-                subtitle: Text(
-                  "Check pending requests and approve payment by entering UPI PIN",
-                  style: TextStyles.body2,
-                ),
-                trailing: CircleAvatar(
-                  backgroundColor: UiConstants.tertiaryLight,
-                  radius: SizeConfig.padding20,
-                ),
-              ),
-            ),
-          ],
-        ),
-        Spacer(),
-        FittedBox(
-          fit: BoxFit.scaleDown,
-          child: Text(
-            "Please do not press back until the payment is completed",
-            style: TextStyles.body2.colour(Colors.red[400]).light,
+  pendingUI(AutoSaveProcessViewModel model) {
+    return Container(
+      padding:
+          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(height: SizeConfig.padding54),
+          Lottie.asset("assets/lotties/pending.json",
+              height: SizeConfig.screenWidth * 0.2, repeat: false),
+          SizedBox(height: SizeConfig.padding24),
+          Text(
+            "Authorize UPI request",
+            style: TextStyles.title3.bold,
             textAlign: TextAlign.center,
           ),
-        ),
-        SizedBox(height: SizeConfig.padding8),
-        // if (model?.pageController?.page == 1.0)
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "This page will expire in ",
-              style: TextStyles.body3.colour(Colors.grey).light,
-            ),
-            TweenAnimationBuilder<Duration>(
-                duration: Duration(minutes: 8),
-                tween: Tween(begin: Duration(minutes: 8), end: Duration.zero),
-                onEnd: () {
-                  print('Timer ended');
-                },
-                builder: (BuildContext context, Duration value, Widget child) {
-                  final minutes = value.inMinutes;
-                  final seconds = value.inSeconds % 60;
-                  return Text(
-                    '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
-                    style: TextStyles.body3.bold,
-                  );
-                }),
-          ],
-        ),
-        SizedBox(
-          height:
-              SizeConfig.viewInsets.bottom + SizeConfig.pageHorizontalMargins,
-        )
-      ],
-    );
-  }
-
-  completedUI(AutoPayProcessViewModel model) {
-    return Stack(
-      children: [
-        Container(
-          width: SizeConfig.screenWidth,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Spacer(),
-              Lottie.asset(
-                "assets/lotties/complete.json",
-                height: SizeConfig.screenWidth / 2,
-              ),
-              Text(
-                "Setup Successful",
-                style: TextStyles.title3.bold,
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: SizeConfig.padding8),
-              Text(
-                "Your UPI AutoPay Setup is successfully completed!",
-                style: TextStyles.body2,
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: SizeConfig.screenWidth / 3),
-              Spacer(),
-            ],
-          ),
-        ),
-        Align(
-            alignment: Alignment.topCenter,
-            child: Container(
-              alignment: Alignment.center,
-              height: SizeConfig.screenHeight,
-              width: SizeConfig.screenWidth,
-              child: Transform.scale(
-                scale: 2,
-                child: Lottie.asset(
-                  Assets.gtConfetti,
+          SizedBox(height: SizeConfig.padding8),
+          Container(
+            margin: EdgeInsets.symmetric(
+                vertical: SizeConfig.pageHorizontalMargins),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+              child: Shimmer(
+                color: UiConstants.tertiarySolid,
+                colorOpacity: 0.2,
+                enabled: true,
+                interval: Duration(seconds: 2),
+                child: Container(
+                  height: SizeConfig.screenWidth * 0.25,
+                  decoration: BoxDecoration(
+                    color: UiConstants.tertiaryLight,
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+                  ),
+                  padding: EdgeInsets.all(SizeConfig.padding24),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        backgroundColor:
+                            UiConstants.tertiarySolid.withOpacity(0.2),
+                        radius: SizeConfig.screenWidth * 0.067,
+                        child: SvgPicture.asset(
+                          "assets/vectors/icons/upi.svg",
+                          height: SizeConfig.screenWidth * 0.067,
+                          // width: SizeConfig.padding64,
+                        ),
+                      ),
+                      SizedBox(
+                        width: SizeConfig.padding12,
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            FittedBox(
+                              child: Row(
+                                children: [
+                                  Text(
+                                    model.vpaController.text.trim(),
+                                    style: TextStyles.body1.bold,
+                                  ),
+                                  SizedBox(width: SizeConfig.padding4),
+                                  SvgPicture.asset(
+                                    "assets/vectors/check.svg",
+                                    height: SizeConfig.iconSize1,
+                                    // width: SizeConfig.padding64,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: SizeConfig.padding4),
+                            FittedBox(
+                              child: Text(
+                                "Your UPI Address",
+                                style: TextStyles.body3.colour(Colors.grey),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            )),
-      ],
-    );
-  }
-
-  cancelledUI(AutoPayProcessViewModel model) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Spacer(),
-        Lottie.asset(
-          "assets/lotties/cancel.json",
-          repeat: false,
-          height: SizeConfig.screenWidth / 3,
-        ),
-        Text(
-          "Snap!",
-          style: TextStyles.title3.bold,
-          textAlign: TextAlign.center,
-        ),
-        SizedBox(height: SizeConfig.padding12),
-        Text(
-          "Your UPI AutoPay Setup was not successful!. Don't worry you can still try",
-          style: TextStyles.body2,
-          textAlign: TextAlign.center,
-        ),
-        SizedBox(height: SizeConfig.padding24),
-        Container(
-          width: SizeConfig.screenWidth * 0.6,
-          child: FelloButtonLg(
-            child: Text(
-              "Try Again",
-              style: TextStyles.body2.bold.colour(Colors.white),
             ),
-            onPressed: () {
-              model.tryAgain();
+          ),
+          Row(
+            children: [
+              Container(
+                width: 2,
+                height: SizeConfig.padding54,
+                color: UiConstants.primaryColor,
+              ),
+              Expanded(
+                child: ListTile(
+                  title: Text(
+                    "Step 1",
+                    style: TextStyles.body1.bold,
+                  ),
+                  subtitle: Text(
+                    "Go to your ${getUpiAppName(model)} mobile app",
+                    style: TextStyles.body2,
+                  ),
+                  // trailing: CircleAvatar(
+                  //   backgroundColor: UiConstants.tertiaryLight,
+                  //   radius: SizeConfig.padding20,
+                  // ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: SizeConfig.padding16),
+          Row(
+            children: [
+              Container(
+                width: 2,
+                height: SizeConfig.padding64,
+                color: UiConstants.primaryColor,
+              ),
+              Expanded(
+                child: ListTile(
+                  title: Text(
+                    "Step 2",
+                    style: TextStyles.body1.bold,
+                  ),
+                  subtitle: Text(
+                    "Check pending requests and approve Autosave by entering UPI PIN",
+                    style: TextStyles.body2,
+                  ),
+                  // trailing: CircleAvatar(
+                  //   backgroundColor: UiConstants.tertiaryLight,
+                  //   radius: SizeConfig.padding20,
+                  // ),
+                ),
+              ),
+            ],
+          ),
+          Spacer(),
+          // if (model.showAppLaunchButton)
+          FelloButtonLg(
+            child: Text("Open ${getUpiAppName(model)} mobile app",
+                style: TextStyles.body2.colour(Colors.white)),
+            onPressed: () async {
+              await LaunchApp.openApp(
+                  androidPackageName: "net.one97.paytm",
+                  iosUrlScheme: "paytmmp://mini-app?");
             },
           ),
-        ),
-        Spacer()
-      ],
-    );
-  }
-
-  addUpiIdUI(AutoPayProcessViewModel model) {
-    return Column(
-      children: [
-        SizedBox(height: SizeConfig.pageHorizontalMargins),
-        Text(
-          "STEP 1/3",
-          style: TextStyles.body2.colour(Colors.black26).letterSpace(3),
-        ),
-        SizedBox(height: SizeConfig.padding24),
-        Image.asset("assets/images/upisetup.png",
-            height: SizeConfig.screenHeight * 0.16),
-        SizedBox(height: SizeConfig.padding24),
-        Row(
-          children: [
-            TextFieldLabel("Enter your UPI Id"),
-          ],
-        ),
-        TextField(
-          enabled: !model.isSubscriptionInProgress,
-          controller: model.vpaController,
-          autofocus: true,
-          decoration: InputDecoration(hintText: "Your upi address"),
-        ),
-        SizedBox(
-          height: SizeConfig.padding12,
-        ),
-        Container(
-          width: SizeConfig.screenWidth,
-          child: Wrap(
-            runSpacing: SizeConfig.padding8,
-            spacing: SizeConfig.padding12,
-            children: [
-              upichips('@upi', model),
-              upichips('@apl', model),
-              upichips('@fbl', model),
-              upichips('@ybl', model),
-              upichips('@paytm', model),
-              upichips('@okhdfcbank', model),
-              upichips('@okaksis', model),
-            ],
+          SizedBox(height: SizeConfig.padding16),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              "Please do not press back until the payment is completed",
+              style: TextStyles.body2.colour(Colors.red[400]).light,
+              textAlign: TextAlign.center,
+            ),
           ),
-        ),
-        Spacer(),
-        FelloButtonLg(
-          child: model.isSubscriptionInProgress
-              ? SpinKitThreeBounce(
-                  color: Colors.white,
-                  size: 20,
-                )
-              : Text(
-                  "SUBSCRIBE",
-                  style: TextStyles.body2.colour(Colors.white).bold,
-                ),
-          onPressed: () async {
-            model.initiateCustomSubscription();
-            FocusScope.of(context).unfocus();
-          },
-        ),
-        SizedBox(
-          height: SizeConfig.padding24,
-        ),
-        Text(
-          "Banks that supports UPI Autopay",
-          style: TextStyles.body3.colour(Colors.grey),
-        ),
-        SizedBox(height: SizeConfig.padding16),
-        Image.asset(
-          "assets/images/autopaybanks.png",
-          width: SizeConfig.screenWidth * 0.7,
-        ),
-        SizedBox(height: SizeConfig.padding12),
-        RichText(
-          text: new TextSpan(
+          SizedBox(height: SizeConfig.padding8),
+          // if (model?.pageController?.page == 1.0)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              new TextSpan(
-                text: 'and ',
-                style: TextStyles.body3.colour(Colors.black45),
-              ),
-              new TextSpan(
-                text: '59 more...',
-                style: TextStyles.body3.colour(UiConstants.primaryColor).bold,
-                recognizer: new TapGestureRecognizer()
-                  ..onTap = () {
-                    Haptic.vibrate();
-                    BaseUtil.launchUrl(
-                        'https://www.npci.org.in/what-we-do/autopay/list-of-banks-and-apps-live-on-autopay');
-                  },
-              ),
-            ],
-          ),
-        ),
-        SizedBox(
-          height: SizeConfig.viewInsets.bottom != 0
-              ? SizeConfig.viewInsets.bottom
-              : SizeConfig.pageHorizontalMargins,
-        )
-      ],
-    );
-  }
-
-  amountSetUI(AutoPayProcessViewModel model) {
-    return Stack(
-      children: [
-        SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Column(
-            children: [
-              SizedBox(height: SizeConfig.pageHorizontalMargins),
               Text(
-                "STEP 3/3",
-                style: TextStyles.body2.colour(Colors.black26).letterSpace(3),
+                "This page will expire in ",
+                style: TextStyles.body3.colour(Colors.grey).light,
               ),
-              SizedBox(height: SizeConfig.padding24),
-              SvgPicture.asset("assets/vectors/addmoney.svg",
-                  height: SizeConfig.screenHeight * 0.16),
-              SizedBox(height: SizeConfig.padding24),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.pageHorizontalMargins),
-                child: Text(
-                  "How much would you like to save?",
-                  style: TextStyles.title5.bold,
+              TweenAnimationBuilder<Duration>(
+                  duration: Duration(minutes: 8),
+                  tween: Tween(begin: Duration(minutes: 8), end: Duration.zero),
+                  onEnd: () {
+                    print('Timer ended');
+                  },
+                  builder:
+                      (BuildContext context, Duration value, Widget child) {
+                    final minutes = value.inMinutes;
+                    final seconds = value.inSeconds % 60;
+                    return Text(
+                      '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
+                      style: TextStyles.body3.bold,
+                    );
+                  }),
+            ],
+          ),
+          SizedBox(
+            height:
+                SizeConfig.viewInsets.bottom + SizeConfig.pageHorizontalMargins,
+          )
+        ],
+      ),
+    );
+  }
+
+  completedUI(AutoSaveProcessViewModel model) {
+    return Container(
+      padding:
+          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+      child: Stack(
+        children: [
+          Container(
+            width: SizeConfig.screenWidth,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Spacer(),
+                Lottie.asset(
+                  "assets/lotties/complete.json",
+                  height: SizeConfig.screenWidth / 2,
+                ),
+                Text(
+                  "Setup Successful",
+                  style: TextStyles.title3.bold,
                   textAlign: TextAlign.center,
                 ),
-              ),
-              SizedBox(height: SizeConfig.padding24),
-              Row(
-                children: [
-                  Expanded(
-                    child: SegmentChips(
-                      model: model,
-                      text: "Daily",
-                    ),
-                  ),
-                  SizedBox(width: SizeConfig.padding16),
-                  Expanded(
-                    child: SegmentChips(
-                      model: model,
-                      text: "Weekly",
-                    ),
-                  ),
-                ],
-              ),
-              Container(
-                width: SizeConfig.screenWidth,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Container(
-                      width: SizeConfig.screenWidth / 2 +
-                          SizeConfig.padding16 -
-                          (model.isDaily ? 0 : SizeConfig.padding12),
-                      child: TextField(
-                        controller: model.amountFieldController,
-                        decoration: InputDecoration(
-                            contentPadding: EdgeInsets.zero,
-                            isDense: true,
-                            isCollapsed: true,
-                            border: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            focusedBorder: InputBorder.none),
-                        // autofocus: true,
-                        // cursorHeight: SizeConfig.screenWidth / 6,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly
-                        ],
-                        enableInteractiveSelection: false,
-                        keyboardType: TextInputType.number,
-                        cursorWidth: 0.5,
-                        onChanged: (value) {
-                          model.onAmountValueChanged(value);
-                        },
-                        textAlign: TextAlign.end,
-                        style: GoogleFonts.sourceSansPro(
-                            fontWeight: FontWeight.bold,
-                            fontSize: SizeConfig.screenWidth / 4.8,
-                            color: Colors.black),
-                      ),
-                    ),
-                    Container(
-                      width: SizeConfig.screenWidth / 2 -
-                          SizeConfig.pageHorizontalMargins * 2 -
-                          SizeConfig.padding16 +
-                          (model.isDaily ? 0 : SizeConfig.padding12),
-                      // height: SizeConfig.padding24,
-                      child: Text(model.isDaily ? '/day' : '/week',
-                          style: GoogleFonts.sourceSansPro(
-                              fontSize: SizeConfig.title2,
-                              fontWeight: FontWeight.w300,
-                              height: SizeConfig.padding4,
-                              color: Colors.black38)),
-                    )
-                  ],
+                SizedBox(height: SizeConfig.padding8),
+                Text(
+                  "Your Fello Autosave account has been successfully set up!",
+                  style: TextStyles.body2,
+                  textAlign: TextAlign.center,
                 ),
-              ),
-              Text(
-                "You'll be saving ₹${model.saveAmount.toInt().toString().replaceAllMapped(model.reg, model.mathFunc)} every year",
-                style: TextStyles.body2.bold.colour(Colors.black45),
-              ),
-              SizedBox(
-                height: SizeConfig.padding24,
-              ),
-              Container(
+                SizedBox(height: SizeConfig.screenWidth / 3),
+                Spacer(),
+                // DetailsView(model: _userAutosaveDetailsVM)
+              ],
+            ),
+          ),
+          Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                alignment: Alignment.center,
+                height: SizeConfig.screenHeight,
                 width: SizeConfig.screenWidth,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    AmountChips(amount: 100, model: model),
-                    AmountChips(
-                        amount: 250,
-                        model: model,
-                        isBestSeller: model.isDaily ? true : false),
-                    AmountChips(
-                        amount: 500,
-                        model: model,
-                        isBestSeller: !model.isDaily ? true : false),
-                    AmountChips(amount: 1000, model: model),
-                    AmountChips(amount: 5000, model: model),
-                  ],
+                child: Transform.scale(
+                  scale: 2,
+                  child: Lottie.asset(Assets.gtConfetti, repeat: false),
                 ),
+              )),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              margin: EdgeInsets.symmetric(
+                  vertical: SizeConfig.pageHorizontalMargins),
+              width: SizeConfig.screenWidth,
+              child: FelloButtonLg(
+                child: Text(
+                  "Done",
+                  style: TextStyles.body2.bold.colour(Colors.white),
+                ),
+                onPressed: () {
+                  AppState.backButtonDispatcher.didPopRoute();
+                },
               ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  cancelledUI(AutoSaveProcessViewModel model) {
+    return Container(
+      padding:
+          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Spacer(),
+          Lottie.asset(
+            "assets/lotties/cancel.json",
+            repeat: false,
+            height: SizeConfig.screenWidth / 3,
+          ),
+          Text(
+            "Autosave Failed!",
+            style: TextStyles.title3.bold,
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: SizeConfig.padding12),
+          Text(
+            "Your setup was not successful!. Don't worry you can still try",
+            style: TextStyles.body2,
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: SizeConfig.padding24),
+          Container(
+            width: SizeConfig.screenWidth * 0.6,
+            child: FelloButtonLg(
+              child: Text(
+                "Try Again",
+                style: TextStyles.body2.bold.colour(Colors.white),
+              ),
+              onPressed: () {
+                model.tryAgain();
+              },
+            ),
+          ),
+          Spacer()
+        ],
+      ),
+    );
+  }
+
+  addUpiIdUI(AutoSaveProcessViewModel model) {
+    return Container(
+      padding:
+          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+      child: Column(
+        children: [
+          SizedBox(height: SizeConfig.padding54),
+          Image.asset("assets/images/upisetup.png",
+              height: SizeConfig.screenHeight * 0.16),
+          SizedBox(height: SizeConfig.padding24),
+          InkWell(
+            onTap: () {
+              BaseUtil.openDialog(
+                addToScreenStack: true,
+                hapticVibrate: true,
+                isBarrierDismissable: true,
+                content: MoreInfoDialog(
+                  text:
+                      "You can find your UPI Id on any of your payments application",
+                  title: "What is my UPI address ?",
+                  imagePath: "assets/images/upisetup.png",
+                ),
+              );
+            },
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextFieldLabel("Enter your UPI Id "),
+                SizedBox(width: SizeConfig.padding2),
+                Container(
+                  // height: SizeConfig.body3,
+                  margin: EdgeInsets.only(
+                      top: SizeConfig.padding16 + SizeConfig.padding2),
+                  decoration: BoxDecoration(
+                      border:
+                          Border.all(width: 1, color: UiConstants.primaryColor),
+                      shape: BoxShape.circle),
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.all(SizeConfig.padding2),
+                  child: Icon(
+                    Icons.question_mark_outlined,
+                    color: UiConstants.primaryColor,
+                    size: SizeConfig.body5,
+                  ),
+                )
+              ],
+            ),
+          ),
+          TextField(
+            enabled: !model.isSubscriptionInProgress,
+            controller: model.vpaController,
+            autofocus: true,
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z@]")),
             ],
+            keyboardType: TextInputType.emailAddress,
+            decoration: InputDecoration(hintText: "abcd@upi"),
+          ),
+          SizedBox(
+            height: SizeConfig.padding12,
+          ),
+          Container(
+            width: SizeConfig.screenWidth,
+            child: Wrap(
+              runSpacing: SizeConfig.padding8,
+              spacing: SizeConfig.padding12,
+              children: [
+                upichips('@upi', model),
+                upichips('@apl', model),
+                upichips('@fbl', model),
+                upichips('@ybl', model),
+                upichips('@paytm', model),
+                upichips('@okhdfcbank', model),
+                upichips('@okaksis', model),
+              ],
+            ),
+          ),
+          Spacer(),
+          model.isSubscriptionInProgress
+              ? SubProcessText()
+              : FelloButtonLg(
+                  child: model.isSubscriptionInProgress
+                      ? SpinKitThreeBounce(
+                          color: Colors.white,
+                          size: 20,
+                        )
+                      : Text(
+                          "NEXT",
+                          style: TextStyles.body2.colour(Colors.white).bold,
+                        ),
+                  onPressed: () async {
+                    Haptic.vibrate();
+                    model.initiateCustomSubscription();
+                    FocusScope.of(context).unfocus();
+                  },
+                ),
+          SizedBox(
+            height: SizeConfig.padding24,
+          ),
+          Text(
+            "Banks that support UPI Autosave",
+            style: TextStyles.body3.colour(Colors.grey),
+          ),
+          SizedBox(height: SizeConfig.padding16),
+          Image.asset(
+            "assets/images/autosavebanks.png",
+            width: SizeConfig.screenWidth * 0.7,
+          ),
+          SizedBox(height: SizeConfig.padding12),
+          RichText(
+            text: new TextSpan(
+              children: [
+                new TextSpan(
+                  text: 'and ',
+                  style: TextStyles.body3.colour(Colors.black45),
+                ),
+                new TextSpan(
+                  text: '59 more...',
+                  style: TextStyles.body3.colour(UiConstants.primaryColor).bold,
+                  recognizer: new TapGestureRecognizer()
+                    ..onTap = () {
+                      Haptic.vibrate();
+                      BaseUtil.launchUrl(
+                          'https://www.npci.org.in/what-we-do/autosave/list-of-banks-and-apps-live-on-autosave');
+                    },
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: SizeConfig.viewInsets.bottom != 0
+                ? SizeConfig.viewInsets.bottom
+                : SizeConfig.pageHorizontalMargins,
+          )
+        ],
+      ),
+    );
+  }
+
+  amountSetUI(AutoSaveProcessViewModel model) {
+    return Stack(
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.pageHorizontalMargins),
+          child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Column(
+              children: [
+                SizedBox(height: SizeConfig.padding54),
+                SvgPicture.asset("assets/vectors/addmoney.svg",
+                    height: SizeConfig.screenHeight * 0.16),
+                SizedBox(height: SizeConfig.padding12),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.pageHorizontalMargins),
+                  child: Text(
+                    "How much would you like to save?",
+                    style: TextStyles.title3.bold,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                SizedBox(height: SizeConfig.padding16),
+                Container(
+                  decoration: BoxDecoration(
+                    color: UiConstants.scaffoldColor,
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+                  ),
+                  padding: EdgeInsets.all(SizeConfig.padding6),
+                  height: SizeConfig.padding54,
+                  child: Stack(
+                    children: [
+                      AnimatedPositioned(
+                        duration: Duration(milliseconds: 500),
+                        curve: Curves.decelerate,
+                        left: model.isDaily
+                            ? 0
+                            : (SizeConfig.screenWidth / 2 -
+                                SizeConfig.pageHorizontalMargins -
+                                SizeConfig.padding6),
+                        child: Container(
+                          width: SizeConfig.screenWidth / 2 -
+                              SizeConfig.pageHorizontalMargins -
+                              SizeConfig.padding6,
+                          height: SizeConfig.padding54 * 0.8,
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.circular(SizeConfig.roundness12),
+                            color: UiConstants.primaryColor,
+                          ),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: InkWell(
+                                onTap: () {
+                                  Haptic.vibrate();
+                                  model.isDaily = true;
+                                  model.onAmountValueChanged(
+                                      model.amountFieldController.text);
+                                },
+                                child: SegmentChips(
+                                  model: model,
+                                  text: "Daily",
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: InkWell(
+                                onTap: () {
+                                  Haptic.vibrate();
+                                  model.isDaily = false;
+                                  model.onAmountValueChanged(
+                                      model.amountFieldController.text);
+                                },
+                                child: SegmentChips(
+                                  model: model,
+                                  text: "Weekly",
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  width: SizeConfig.screenWidth,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Expanded(child: SizedBox()),
+                      IntrinsicWidth(
+                        child: Container(
+                          height: SizeConfig.screenWidth / 4.2,
+                          child: TextField(
+                            controller: model.amountFieldController,
+                            maxLines: null,
+
+                            decoration: InputDecoration(
+                                prefixText: "₹",
+                                prefixStyle: GoogleFonts.sourceSansPro(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: SizeConfig.screenWidth / 4.8,
+                                    color: Colors.black),
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: -SizeConfig.padding4),
+                                isDense: true,
+                                isCollapsed: true,
+                                border: InputBorder.none,
+                                enabledBorder: InputBorder.none,
+                                focusedBorder: InputBorder.none),
+                            // autofocus: true,
+                            // cursorHeight: SizeConfig.padding20,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            // enableInteractiveSelection: false,
+                            keyboardType: TextInputType.number,
+                            // cursorWidth: 0,
+                            autofocus: true,
+                            onChanged: (value) {
+                              model.onAmountValueChanged(value);
+                            },
+
+                            style: GoogleFonts.sourceSansPro(
+                                fontWeight: FontWeight.bold,
+                                height: 0.9,
+                                fontSize: SizeConfig.screenWidth / 4.8,
+                                color: Colors.black),
+                          ),
+                        ),
+                      ),
+                      Column(
+                        children: [
+                          Text(
+                            model.isDaily ? '/day' : '/week',
+                            style: GoogleFonts.sourceSansPro(
+                                fontSize: SizeConfig.title2,
+                                height: 2,
+                                color: Colors.black38),
+                          ),
+                          SizedBox(height: SizeConfig.padding12)
+                        ],
+                      ),
+                      Expanded(child: SizedBox()),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  "You'll be saving ₹${model.saveAmount.toInt().toString().replaceAllMapped(model.reg, model.mathFunc)} every year",
+                  style: TextStyles.body2.bold.colour(Colors.black45),
+                ),
+                SizedBox(
+                  height: SizeConfig.padding24,
+                ),
+                Container(
+                  width: SizeConfig.screenWidth,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: model.isDaily
+                        ? List.generate(
+                            model.dailyChips.length,
+                            (index) => AmountChips(
+                                  amount: model.dailyChips[index].value,
+                                  model: model,
+                                  isBestSeller: model.dailyChips[index].best,
+                                ))
+                        : List.generate(
+                            model.weeklyChips.length,
+                            (index) => AmountChips(
+                                  amount: model.weeklyChips[index].value,
+                                  model: model,
+                                  isBestSeller: model.weeklyChips[index].best,
+                                )),
+                  ),
+                ),
+                SizedBox(
+                  height: SizeConfig.screenHeight * 0.2,
+                )
+              ],
+            ),
           ),
         ),
         Positioned(
             bottom: 0,
             child: SafeArea(
               child: Container(
-                color: Colors.white,
+                width: SizeConfig.screenWidth,
+                padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.pageHorizontalMargins,
+                  vertical: SizeConfig.padding16,
+                ),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(SizeConfig.roundness32),
+                      topRight: Radius.circular(SizeConfig.roundness32),
+                    ),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        offset: Offset(0, -2),
+                        color: UiConstants.primaryLight.withOpacity(0.5),
+                        blurRadius: 5,
+                        spreadRadius: 5,
+                      )
+                    ]),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Container(
+                      margin:
+                          EdgeInsets.symmetric(vertical: SizeConfig.padding16),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Every ${model.isDaily ? 'day' : 'week'} you'll get",
+                              style: TextStyles.body1.bold,
+                            ),
+                            Divider(),
+                            Container(
+                              height: SizeConfig.screenWidth * 0.2,
+                              width: SizeConfig.screenWidth,
+                              child: ListView(scrollDirection: Axis.horizontal,
+                                  // initialItemCount: model.autosaveBenifits.length,
+                                  // itemBuilder: (ctx, i, anim) {
+                                  //   return AutosavePerks(
+                                  //     image:
+                                  //         "https://img.freepik.com/free-vector/rebate-program-consumer-benefit-selling-discount-customer-reward-online-store-e-shopping-internet-shop-money-savings-cumulative-bonuses-vector-isolated-concept-metaphor-illustration_335657-2754.jpg?t=st=1649673787~exp=1649674387~hmac=30b282fd0156a96e060169f8a9cc7f0f01fed296dcd524b4cba491a238b88e8a&w=826",
+                                  //     text: "6% interest on gold",
+                                  //   );
+                                  // },
+                                  children: [
+                                    AutosavePerks(
+                                      svg: 'images/svgs/gold.svg',
+                                      text: "Interest on gold",
+                                    ),
+                                    if (int.tryParse(
+                                            model.amountFieldController.text ??
+                                                '0') >=
+                                        100)
+                                      AutosavePerks(
+                                        svg: Assets.goldenTicket,
+                                        text: "Golden ticket",
+                                      ),
+                                    if (int.tryParse(
+                                            model.amountFieldController.text ??
+                                                '0') >=
+                                        0)
+                                      AutosavePerks(
+                                        svg: Assets.tokens,
+                                        text:
+                                            "${int.tryParse(model.amountFieldController.text)} Fello Tokens",
+                                      )
+                                  ]),
+                            )
+                          ]),
+                    ),
                     Container(
                       width: SizeConfig.screenWidth -
                           SizeConfig.pageHorizontalMargins * 2,
@@ -601,40 +949,31 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
                                     TextStyles.body2.bold.colour(Colors.white),
                               ),
                         onPressed: () {
-                          model.setSubscriptionAmount(
-                              int.tryParse(model.amountFieldController.text)
-                                  .toDouble());
+                          model.setSubscriptionAmount(int.tryParse(
+                                  model.amountFieldController.text.isEmpty ||
+                                          model.amountFieldController == null
+                                      ? '0'
+                                      : model.amountFieldController.text)
+                              .toDouble());
                         },
                       ),
-                    ),
-                    // SizedBox(height: SizeConfig.padding6),
-                    // TextButton(
-                    //   onPressed: () => AppState.backButtonDispatcher.didPopRoute(),
-                    //   child: Text(
-                    //     "Skip",
-                    //     style: TextStyles.body1.colour(Colors.grey).light,
-                    //   ),
-                    // ),
-                    SizedBox(
-                      height: SizeConfig.viewInsets.bottom != 0
-                          ? 0
-                          : SizeConfig.pageHorizontalMargins,
                     ),
                   ],
                 ),
               ),
-            ))
+            )),
       ],
     );
   }
 
-  defaultUI(AutoPayProcessViewModel model) {
+  defaultUI(AutoSaveProcessViewModel model) {
     return ListLoader();
   }
 
-  upichips(String suffix, AutoPayProcessViewModel model) {
+  upichips(String suffix, AutoSaveProcessViewModel model) {
     return InkWell(
       onTap: () {
+        Haptic.vibrate();
         model.vpaController.text =
             model.vpaController.text.trim().split('@').first + suffix;
       },
@@ -656,7 +995,7 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
     );
   }
 
-  amountchips(int amount, AutoPayProcessViewModel model) {
+  amountchips(int amount, AutoSaveProcessViewModel model) {
     return InkWell(
       onTap: () {
         model.amountFieldController.text = amount.toString();
@@ -674,7 +1013,7 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
     );
   }
 
-  String getUpiAppName(AutoPayProcessViewModel model) {
+  String getUpiAppName(AutoSaveProcessViewModel model) {
     final String upi = model.vpaController.text.split('@').last;
     switch (upi) {
       case 'upi':
@@ -705,6 +1044,84 @@ class _AutoPayProcessViewState extends State<AutoPayProcessView> {
   }
 }
 
+class AutosavePerks extends StatelessWidget {
+  final String image;
+  final String svg;
+  final String text;
+
+  AutosavePerks({this.image, @required this.text, this.svg});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(right: SizeConfig.padding12),
+      child: Column(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+                border: Border.all(color: UiConstants.tertiarySolid, width: 1),
+                shape: BoxShape.circle,
+                color: Colors.white),
+            padding: EdgeInsets.all(SizeConfig.padding4),
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+              ),
+              child: CircleAvatar(
+                backgroundColor: UiConstants.tertiaryLight,
+                child: image != null
+                    ? Image.asset(image)
+                    : SvgPicture.asset(
+                        svg,
+                        height: SizeConfig.padding32,
+                      ),
+                radius: SizeConfig.padding24,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Container(
+              // width: SizeConfig.padding64,
+              alignment: Alignment.center,
+              child: Text(
+                text,
+                maxLines: 2,
+                textAlign: TextAlign.center,
+                style: TextStyles.body4,
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class SubProcessText extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return PropertyChangeConsumer<PaytmService, PaytmServiceProperties>(
+      properties: [PaytmServiceProperties.SubscriptionProcess],
+      builder: (context, model, property) => Container(
+        height: SizeConfig.padding64,
+        child: Column(
+          children: [
+            SpinKitWave(
+              color: UiConstants.primaryColor,
+              size: SizeConfig.padding24,
+            ),
+            SizedBox(height: SizeConfig.padding4),
+            Text(
+              model.processText,
+              style: TextStyles.body1.bold,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class SegmentChips extends StatelessWidget {
   final model;
   final String text;
@@ -713,38 +1130,8 @@ class SegmentChips extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        model.isDaily = !model.isDaily;
-        model.onAmountValueChanged(model.amountFieldController.text);
-      },
-      child: Container(
-          margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding2),
-          padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.padding24, vertical: SizeConfig.padding12),
-          alignment: Alignment.center,
-          height: SizeConfig.screenWidth * 0.12,
-          decoration: BoxDecoration(
-            color: getColor(),
-            borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-            border: Border.all(width: 0.5, color: getBorder()),
-          ),
-          child: Text(text, style: TextStyles.body3.bold.colour(getBorder()))),
-    );
-  }
-
-  getColor() {
-    if (model.isDaily) {
-      if (text == "Daily")
-        return UiConstants.primaryColor;
-      else
-        return Colors.white;
-    } else {
-      if (text == "Daily")
-        return Colors.white;
-      else
-        return UiConstants.primaryColor;
-    }
+    return Center(
+        child: Text(text, style: TextStyles.body3.bold.colour(getBorder())));
   }
 
   getBorder() {
@@ -752,12 +1139,83 @@ class SegmentChips extends StatelessWidget {
       if (text == "Daily")
         return Colors.white;
       else
-        return UiConstants.primaryColor;
+        return Colors.grey;
     } else {
       if (text == "Daily")
-        return UiConstants.primaryColor;
+        return Colors.grey;
       else
         return Colors.white;
     }
+  }
+}
+
+/// hardcoded bezier painter
+/// TODO: Bezier curve into package component
+class _BezierPainter extends CustomPainter {
+  const _BezierPainter({
+    @required this.color,
+    this.drawStart = true,
+    this.drawEnd = true,
+  });
+
+  final Color color;
+  final bool drawStart;
+  final bool drawEnd;
+
+  Offset _offset(double radius, double angle) {
+    return Offset(
+      radius * cos(angle) + radius,
+      radius * sin(angle) + radius,
+    );
+  }
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..style = PaintingStyle.fill
+      ..color = color;
+
+    final radius = size.width / 2;
+
+    var angle;
+    var offset1;
+    var offset2;
+
+    var path;
+
+    if (drawStart) {
+      angle = 3 * pi / 4;
+      offset1 = _offset(radius, angle);
+      offset2 = _offset(radius, -angle);
+      path = Path()
+        ..moveTo(offset1.dx, offset1.dy)
+        ..quadraticBezierTo(0.0, size.height / 2, -radius,
+            radius) // TODO connector start & gradient
+        ..quadraticBezierTo(0.0, size.height / 2, offset2.dx, offset2.dy)
+        ..close();
+
+      canvas.drawPath(path, paint);
+    }
+    if (drawEnd) {
+      angle = -pi / 4;
+      offset1 = _offset(radius, angle);
+      offset2 = _offset(radius, -angle);
+
+      path = Path()
+        ..moveTo(offset1.dx, offset1.dy)
+        ..quadraticBezierTo(size.width, size.height / 2, size.width + radius,
+            radius) // TODO connector end & gradient
+        ..quadraticBezierTo(size.width, size.height / 2, offset2.dx, offset2.dy)
+        ..close();
+
+      canvas.drawPath(path, paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_BezierPainter oldDelegate) {
+    return oldDelegate.color != color ||
+        oldDelegate.drawStart != drawStart ||
+        oldDelegate.drawEnd != drawEnd;
   }
 }

@@ -1,1 +1,6 @@
-enum PaytmServiceProperties { ActiveSubscription }
+enum PaytmServiceProperties {
+  ActiveSubscription,
+  SubscriptionProcess,
+  FirstTimeView,
+  AutosaveVisibility
+}

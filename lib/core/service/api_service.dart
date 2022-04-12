@@ -25,8 +25,7 @@ class APIService implements API {
   // String _baseUrl = 'http://028b-103-108-4-230.ngrok.io/fello-dev-station/asia-south1';
   String _baseUrl = 'https://' + FlavorConfig.instance.values.baseUriAsia;
   //"https://asia-south1-fello-dev-station.cloudfunctions.net";
-  String _awsDevUrl =
-      "https://8w0eika6u8.execute-api.ap-south-1.amazonaws.com/dev";
+  String _awsDevUrl = "https://dev.fellofinance.com";
   final logger = locator<CustomLogger>();
   final userService = locator<UserService>();
   String _versionString = "";

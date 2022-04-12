@@ -1,28 +1,32 @@
 import 'dart:async';
 
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/gold_balance_details/gold_balance_details_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-class AutoPayDetailsView extends StatefulWidget {
-  const AutoPayDetailsView({Key key}) : super(key: key);
+class AutoSaveDetailsView extends StatefulWidget {
+  const AutoSaveDetailsView({Key key}) : super(key: key);
 
   @override
-  State<AutoPayDetailsView> createState() => _AutoPayDetailsViewState();
+  State<AutoSaveDetailsView> createState() => _AutoSaveDetailsViewState();
 }
 
-class _AutoPayDetailsViewState extends State<AutoPayDetailsView>
+class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
     with SingleTickerProviderStateMixin {
-  PageController autopayPageController;
+  final _paytmService = locator<PaytmService>();
+  PageController autosavePageController;
   double usedHeight = (SizeConfig.screenHeight -
       SizeConfig.viewInsets.top +
       SizeConfig.padding24 +
@@ -35,6 +39,7 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView>
   // double initialPos = SizeConfig.screenHeight - SizeConfig.viewInsets.top;
   // double maxPos = 1;
   double animValue = 0;
+  bool showSetupButton = false;
 
   AnimationController controller;
   Animation benifitAnimation;
@@ -51,26 +56,31 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView>
 
   List<String> bTitle = [
     "Savings on autopilot",
-    "Highly safe and secure",
+    "Power of Compounding",
     "Gaming never stops"
   ];
 
   List<String> bSubtitle = [
     "Your money gets saved automatically",
-    "Your money is contantly being monitored",
+    "Your money is compounding everyday",
     "Never run out of Fello tokens while playing"
   ];
 
-  List<String> assets = [
-    "https://firebasestorage.googleapis.com/v0/b/fello-dev-station.appspot.com/o/test%2Fautopay%20benifits%2Fpoc.png?alt=media&token=7aeded8a-2013-497a-8669-d53527620047",
-    "https://firebasestorage.googleapis.com/v0/b/fello-dev-station.appspot.com/o/test%2Fautopay%20benifits%2FMask%20group.png?alt=media&token=e24c660f-0efd-4c0c-9fca-2df2d09fe1da",
-    "https://firebasestorage.googleapis.com/v0/b/fello-dev-station.appspot.com/o/test%2Fautopay%20benifits%2Fnphc.png?alt=media&token=f5d08fdc-4027-4ab7-a1b2-a5e74edbb92a"
-  ];
+  List<String> svgassets = [Assets.fasben1, Assets.fasben2, Assets.fasben3];
+
+  List<String> pngassets = [Assets.fasben1, Assets.fasben2, Assets.fasben3];
 
   @override
   void initState() {
-    autopayPageController = new PageController(initialPage: 0);
-    autopayPageController.addListener(_pageListener);
+    if (_paytmService.activeSubscription == null ||
+        _paytmService.activeSubscription.status ==
+            Constants.SUBSCRIPTION_INIT ||
+        _paytmService.activeSubscription.status ==
+            Constants.SUBSCRIPTION_CANCELLED) {
+      showSetupButton = true;
+    }
+    autosavePageController = new PageController(initialPage: 0);
+    autosavePageController.addListener(_pageListener);
     _pageNotifier = ValueNotifier(0.0);
     _timer = Timer.periodic(Duration(seconds: 4), (Timer timer) {
       if (_currentPage < 2) {
@@ -82,7 +92,7 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView>
         animValue = animValue == 0 ? 1 : 0;
       });
       print("Anim value: $animValue");
-      autopayPageController.animateToPage(
+      autosavePageController.animateToPage(
         _currentPage,
         duration: Duration(milliseconds: 600),
         curve: Curves.easeIn,
@@ -98,13 +108,13 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView>
   }
 
   void _pageListener() {
-    _pageNotifier.value = autopayPageController.page;
+    _pageNotifier.value = autosavePageController.page;
   }
 
   @override
   void dispose() {
-    autopayPageController.removeListener(_pageListener);
-    autopayPageController.dispose();
+    autosavePageController.removeListener(_pageListener);
+    autosavePageController.dispose();
     controller.dispose();
 
     _timer?.cancel();
@@ -152,11 +162,11 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView>
               bottom: usedHeight * 0.48,
               left: SizeConfig.pageHorizontalMargins,
               child: AnimatedOpacity(
-                curve: Curves.decelerate,
-                duration: Duration(milliseconds: 600),
+                curve: Curves.easeOutCirc,
+                duration: Duration(milliseconds: 300),
                 opacity: animValue,
                 child: AnimatedContainer(
-                  margin: EdgeInsets.symmetric(vertical: SizeConfig.padding24),
+                  margin: EdgeInsets.only(top: SizeConfig.padding24),
                   alignment: Alignment.topCenter,
                   curve: Curves.decelerate,
                   duration: Duration(milliseconds: 600),
@@ -168,11 +178,14 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView>
                       animValue,
                   width: SizeConfig.screenWidth -
                       SizeConfig.pageHorizontalMargins * 2,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: NetworkImage(assets[_currentPage]),
-                        fit: BoxFit.contain),
-                  ),
+                  child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Image.asset(pngassets[_currentPage])),
+                  // decoration: BoxDecoration(
+                  //   image: DecorationImage(
+                  //       image: NetworkImage(assets[_currentPage]),
+                  //       fit: BoxFit.contain),
+                  // ),
                 ),
               ),
             ),
@@ -180,11 +193,11 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView>
               bottom: usedHeight * 0.48,
               left: SizeConfig.pageHorizontalMargins,
               child: AnimatedOpacity(
-                curve: Curves.decelerate,
-                duration: Duration(milliseconds: 600),
+                curve: Curves.easeOutCirc,
+                duration: Duration(milliseconds: 300),
                 opacity: (animValue - 1).abs(),
                 child: AnimatedContainer(
-                  margin: EdgeInsets.symmetric(vertical: SizeConfig.padding24),
+                  margin: EdgeInsets.only(top: SizeConfig.padding24),
                   alignment: Alignment.topCenter,
                   curve: Curves.decelerate,
                   duration: Duration(milliseconds: 600),
@@ -193,17 +206,46 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView>
                           SizeConfig.padding24 +
                           SizeConfig.avatarRadius * 2) *
                       0.3 *
-                      (animValue - 1).abs(),
+                      ((animValue - 1).abs()),
                   width: SizeConfig.screenWidth -
                       SizeConfig.pageHorizontalMargins * 2,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: NetworkImage(assets[_currentPage]),
-                        fit: BoxFit.contain),
-                  ),
+                  child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Image.asset(pngassets[_currentPage])),
+                  // decoration: BoxDecoration(
+                  //   image: DecorationImage(
+                  //       image: NetworkImage(assets[_currentPage]),
+                  //       fit: BoxFit.contain),
+                  // ),
                 ),
               ),
             ),
+            // Positioned(
+            //   bottom: usedHeight * 0.48,
+            //   left: SizeConfig.pageHorizontalMargins,
+            //   child: AnimatedOpacity(
+            //     curve: Curves.easeInCubic,
+            //     duration: Duration(milliseconds: 600),
+            //     opacity: (animValue - 1).abs(),
+            //     child: AnimatedContainer(
+            //       margin: EdgeInsets.symmetric(vertical: SizeConfig.padding24),
+            //       alignment: Alignment.topCenter,
+            //       curve: Curves.decelerate,
+            //       duration: Duration(milliseconds: 600),
+            //       height: (SizeConfig.screenHeight -
+            //               SizeConfig.viewInsets.top +
+            //               SizeConfig.padding24 +
+            //               SizeConfig.avatarRadius * 2) *
+            //           0.3 *
+            //           (animValue - 1).abs(),
+            //       width: SizeConfig.screenWidth -
+            //           SizeConfig.pageHorizontalMargins * 2,
+            //       child: FittedBox(
+            //           fit: BoxFit.scaleDown,
+            //           child: Image.asset(pngassets[_currentPage])),
+            //     ),
+            //   ),
+            // ),
             Positioned(
               top: SizeConfig.viewInsets.top +
                   SizeConfig.padding12 +
@@ -213,26 +255,40 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
-                      "INTRODUCING",
-                      style: TextStyles.body3.colour(Colors.black45),
+                    // Text(
+                    //   "INTRODUCING",
+                    //   style: TextStyles.body3.colour(Colors.black45),
+                    // ),
+                    Image.asset(
+                      Assets.logoMaxSize,
+                      height: SizeConfig.title2,
                     ),
-                    SizedBox(
-                      height: SizeConfig.padding8,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Image.asset(
-                          Assets.logoMaxSize,
-                          height: SizeConfig.title1 * 1.3,
-                        ),
-                        Text(
-                          " AUTOSAVE",
-                          style: TextStyles.title1.colour(Color(0xff3F4748)),
-                        ),
-                      ],
+                    // SizedBox(
+                    //   height: SizeConfig.padding8,
+                    // ),
+                    Transform.translate(
+                      offset: Offset(0, -10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          // Image.asset(
+                          //   Assets.logoMaxSize,
+                          //   height: SizeConfig.title1 * 1.2,
+                          // ),
+                          // SizedBox(width: SizeConfig.padding4),
+                          Text("Autosave",
+                              style: GoogleFonts.prompt(
+                                  fontWeight: FontWeight.w300,
+                                  // height: 1.6,
+                                  color: Color(0xff3F4748),
+                                  letterSpacing: 2,
+                                  fontSize: SizeConfig.title3)
+
+                              //  TextStyles.title1.colour(Color(0xff3F4748)),
+                              ),
+                        ],
+                      ),
                     )
                   ],
                 ),
@@ -278,7 +334,7 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView>
                                   horizontal: SizeConfig.pageHorizontalMargins),
                               child: PageView.builder(
                                 physics: NeverScrollableScrollPhysics(),
-                                controller: autopayPageController,
+                                controller: autosavePageController,
                                 scrollDirection: Axis.vertical,
                                 itemCount: 3,
                                 itemBuilder: (ctx, i) {
@@ -338,7 +394,7 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView>
                                 }),
                             Divider(),
                             // Text(
-                            //   "Setup UPI AutoPay and we'll automagically save for you. You just grab a beer and chill!!",
+                            //   "Setup UPI AutoSave and we'll automagically save for you. You just grab a beer and chill!!",
                             //   style: TextStyles.body3.light.italic,
                             //   textAlign: TextAlign.center,
                             // ),
@@ -388,14 +444,14 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView>
                                 children: [
                                   SizedBox(height: SizeConfig.padding12),
                                   Text(
-                                    "Set up UPI Autopay in 3 easy Steps:",
+                                    "Set up UPI Autosave in 3 easy Steps:",
                                     style: TextStyles.body1.bold,
                                   ),
                                   InfoTile(
                                     png: "assets/images/icons/bank.png",
                                     title: "Enter your UPI Id",
                                     subtitle:
-                                        "Make sure your bank supports autopay",
+                                        "Make sure your bank supports autosave",
                                   ),
                                   InfoTile(
                                     svg: "assets/vectors/check.svg",
@@ -439,65 +495,65 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView>
                                       ),
                                     ),
                                   ),
-                                  Container(
-                                    margin: EdgeInsets.symmetric(
-                                        vertical:
-                                            SizeConfig.pageHorizontalMargins /
-                                                2),
-                                    decoration: BoxDecoration(
-                                      color: UiConstants.scaffoldColor,
-                                      borderRadius: BorderRadius.circular(
-                                          SizeConfig.roundness32),
-                                    ),
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: SizeConfig.padding20,
-                                        horizontal: SizeConfig.padding16),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        SizedBox(height: SizeConfig.padding6),
-                                        Text(" Why UPI AutoPay",
-                                            style: TextStyles.title4.bold),
-                                        SizedBox(height: SizeConfig.padding20),
-                                        FeatureTile(
-                                          leadingAsset:
-                                              "assets/vectors/ontime.svg",
-                                          title: "Always on time",
-                                          subtitle:
-                                              "No worries about making timely investments",
-                                          color: Colors.white,
-                                        ),
-                                        SizedBox(height: SizeConfig.padding12),
-                                        FeatureTile(
-                                          leadingAsset:
-                                              "assets/vectors/moneys.svg",
-                                          title: "Get tokens on the go",
-                                          subtitle:
-                                              "Get free tokens everyday with the investment",
-                                          color: Colors.white,
-                                        ),
-                                        SizedBox(height: SizeConfig.padding12),
-                                        FeatureTile(
-                                          leadingAsset:
-                                              "assets/vectors/easy.svg",
-                                          title: "Easy Set up",
-                                          subtitle:
-                                              "Takes less than 1 minute with no paperwork",
-                                          color: Colors.white,
-                                        ),
-                                        SizedBox(height: SizeConfig.padding12),
-                                        FeatureTile(
-                                          leadingAsset:
-                                              "assets/vectors/gear.svg",
-                                          title: "Customised Options",
-                                          subtitle:
-                                              "You can Update or Cancel UPI Autopay anytime ",
-                                          color: Colors.white,
-                                        )
-                                      ],
-                                    ),
-                                  ),
+                                  // Container(
+                                  //   margin: EdgeInsets.symmetric(
+                                  //       vertical:
+                                  //           SizeConfig.pageHorizontalMargins /
+                                  //               2),
+                                  //   decoration: BoxDecoration(
+                                  //     color: UiConstants.scaffoldColor,
+                                  //     borderRadius: BorderRadius.circular(
+                                  //         SizeConfig.roundness32),
+                                  //   ),
+                                  //   padding: EdgeInsets.symmetric(
+                                  //       vertical: SizeConfig.padding20,
+                                  //       horizontal: SizeConfig.padding16),
+                                  //   child: Column(
+                                  //     crossAxisAlignment:
+                                  //         CrossAxisAlignment.start,
+                                  //     children: [
+                                  //       SizedBox(height: SizeConfig.padding6),
+                                  //       Text(" Why UPI AutoSave",
+                                  //           style: TextStyles.title4.bold),
+                                  //       SizedBox(height: SizeConfig.padding20),
+                                  //       FeatureTile(
+                                  //         leadingAsset:
+                                  //             "assets/vectors/ontime.svg",
+                                  //         title: "Always on time",
+                                  //         subtitle:
+                                  //             "No worries about making timely investments",
+                                  //         color: Colors.white,
+                                  //       ),
+                                  //       SizedBox(height: SizeConfig.padding12),
+                                  //       FeatureTile(
+                                  //         leadingAsset:
+                                  //             "assets/vectors/moneys.svg",
+                                  //         title: "Get tokens on the go",
+                                  //         subtitle:
+                                  //             "Get free tokens everyday with the investment",
+                                  //         color: Colors.white,
+                                  //       ),
+                                  //       SizedBox(height: SizeConfig.padding12),
+                                  //       FeatureTile(
+                                  //         leadingAsset:
+                                  //             "assets/vectors/easy.svg",
+                                  //         title: "Easy Set up",
+                                  //         subtitle:
+                                  //             "Takes less than 1 minute with no paperwork",
+                                  //         color: Colors.white,
+                                  //       ),
+                                  //       SizedBox(height: SizeConfig.padding12),
+                                  //       FeatureTile(
+                                  //         leadingAsset:
+                                  //             "assets/vectors/gear.svg",
+                                  //         title: "Customised Options",
+                                  //         subtitle:
+                                  //             "You can Update or Cancel UPI Autosave anytime ",
+                                  //         color: Colors.white,
+                                  //       )
+                                  //     ],
+                                  //   ),
+                                  // ),
                                   SizedBox(
                                     height: SizeConfig.navBarHeight * 1.6,
                                   )
@@ -525,6 +581,7 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView>
                 ),
               ),
             ),
+            // if (showSetupButton)
             Align(
               alignment: Alignment.bottomCenter,
               child: SafeArea(
@@ -536,13 +593,13 @@ class _AutoPayDetailsViewState extends State<AutoPayDetailsView>
                       horizontal: SizeConfig.pageHorizontalMargins),
                   child: FelloButtonLg(
                     child: Text(
-                      "Setup AutoPay",
+                      "Setup Autosave",
                       style: TextStyles.body2.bold.colour(Colors.white),
                     ),
                     onPressed: () {
                       AppState.delegate.appState.currentAction = PageAction(
-                          page: AutoPayProcessViewPageConfig,
-                          state: PageState.addPage);
+                          page: AutoSaveProcessViewPageConfig,
+                          state: PageState.replace);
                     },
                   ),
                 ),

@@ -109,7 +109,7 @@
 //                   child: Row(
 //                     children: [
 //                       Text(
-//                         "Setup UPI AutoPay",
+//                         "Setup UPI AutoSave",
 //                         textAlign: TextAlign.center,
 //                         style: TextStyles.title3.bold
 //                             .colour(UiConstants.primaryColor),
@@ -174,7 +174,7 @@
 //                   text: new TextSpan(
 //                     children: [
 //                       new TextSpan(
-//                         text: 'Does your bank supports Autopay? ',
+//                         text: 'Does your bank supports Autosave? ',
 //                         style: TextStyles.body3.colour(Colors.black45),
 //                       ),
 //                       new TextSpan(
@@ -186,7 +186,7 @@
 //                           ..onTap = () {
 //                             Haptic.vibrate();
 //                             BaseUtil.launchUrl(
-//                                 'https://www.npci.org.in/what-we-do/autopay/list-of-banks-and-apps-live-on-autopay');
+//                                 'https://www.npci.org.in/what-we-do/autosave/list-of-banks-and-apps-live-on-autosave');
 //                           },
 //                       ),
 //                     ],

@@ -11,18 +11,18 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class AutopayTransactionDetailsDialog extends StatefulWidget {
-  final AutopayTransactionModel _transaction;
+class AutosaveTransactionDetailsDialog extends StatefulWidget {
+  final AutosaveTransactionModel _transaction;
 
-  AutopayTransactionDetailsDialog(this._transaction);
+  AutosaveTransactionDetailsDialog(this._transaction);
 
   @override
-  State createState() => AutopayTransactionDetailsDialogState();
+  State createState() => AutosaveTransactionDetailsDialogState();
 }
 
-class AutopayTransactionDetailsDialogState
-    extends State<AutopayTransactionDetailsDialog> {
-  final Log log = new Log('AutopayAutopayTransactionDetailsDialog');
+class AutosaveTransactionDetailsDialogState
+    extends State<AutosaveTransactionDetailsDialog> {
+  final Log log = new Log('AutosaveAutosaveTransactionDetailsDialog');
   final txnService = locator<TransactionService>();
 
   @override

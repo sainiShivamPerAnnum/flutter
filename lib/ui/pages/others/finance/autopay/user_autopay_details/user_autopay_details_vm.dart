@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -10,23 +11,26 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_view.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 
-class UserAutoPayDetailsViewModel extends BaseModel {
+class UserAutoSaveDetailsViewModel extends BaseModel {
   final _dbModel = locator<DBModel>();
   final _userService = locator<UserService>();
   final _paytmService = locator<PaytmService>();
   final _dBModel = locator<DBModel>();
+  final _logger = locator<CustomLogger>();
 
   ActiveSubscriptionModel _activeSubscription;
-  List<AutopayTransactionModel> _filteredList;
+  List<AutosaveTransactionModel> _filteredList;
 
-  List<AutopayTransactionModel> get filteredList => this._filteredList;
+  List<AutosaveTransactionModel> get filteredList => this._filteredList;
 
   set filteredList(value) {
     this._filteredList = value;
@@ -48,6 +52,23 @@ class UserAutoPayDetailsViewModel extends BaseModel {
   bool isVerified = true;
   bool _isPausingInProgress = false;
   bool _isResumingInProgress = false;
+
+  List<AmountChipsModel> _dailyChips = [];
+  List<AmountChipsModel> _weeklyChips = [];
+  get dailyChips => this._dailyChips;
+
+  set dailyChips(dailyChips) {
+    this._dailyChips = dailyChips;
+    notifyListeners();
+  }
+
+  get weeklyChips => this._weeklyChips;
+
+  set weeklyChips(weeklyChips) {
+    this._weeklyChips = weeklyChips;
+    notifyListeners();
+  }
+
   bool get isResumingInProgress => this._isResumingInProgress;
 
   set isResumingInProgress(bool value) {
@@ -58,6 +79,8 @@ class UserAutoPayDetailsViewModel extends BaseModel {
   bool _isInEditMode = false;
   bool hasMoreTxns = false;
 
+  int minAmount = 10;
+  int maxAmount = 5000;
   bool get getHasMoreTxns => this.hasMoreTxns;
 
   set setHasMoreTxns(bool hasMoreTxns) {
@@ -81,13 +104,14 @@ class UserAutoPayDetailsViewModel extends BaseModel {
 
   init() async {
     setState(ViewState.Busy);
-
+    _paytmService.isOnSubscriptionFlow = false;
     subIdController = new TextEditingController();
     pUpiController = new TextEditingController();
     subAmountController = new TextEditingController();
     amountFieldController = new TextEditingController();
     subStatusController = new TextEditingController(text: "Active");
     await findActiveSubscription();
+    await getChipAmounts();
     await getLatestTransactions();
     setState(ViewState.Idle);
   }
@@ -103,21 +127,23 @@ class UserAutoPayDetailsViewModel extends BaseModel {
       subStatusController.text = activeSubscription.status;
       amountFieldController.text =
           activeSubscription.autoAmount.toInt().toString();
+      onAmountValueChanged(amountFieldController.text);
     }
   }
 
   pauseSubscription(int pauseValue) async {
     bool response =
         await _paytmService.pauseSubscription(getResumeDate(pauseValue));
-    if (response) {
-      AppState.backButtonDispatcher.didPopRoute();
-      isInEditMode = false;
-      BaseUtil.showPositiveAlert(
-          "Subscription paused for${getResumeValue(pauseValue)}",
-          "Remember it will automatically after ");
-    } else
+    isPausingInProgress = false;
+    if (!response) {
       BaseUtil.showNegativeAlert(
           "Failed to pause Subscription", "Please try again");
+    } else {
+      BaseUtil.showPositiveAlert("Autosave paused successfully",
+          "For more details check Autosave section");
+      AppState.backButtonDispatcher.didPopRoute();
+      AppState.backButtonDispatcher.didPopRoute();
+    }
   }
 
   getResumeValue(int pauseValue) {
@@ -154,7 +180,7 @@ class UserAutoPayDetailsViewModel extends BaseModel {
     if (activeSubscription == null) {
       return;
     }
-    final result = await _dBModel.getAutopayTransactions(
+    final result = await _dBModel.getAutosaveTransactions(
         uid: _userService.baseUser.uid,
         subId: activeSubscription.subscriptionId,
         lastDocument: null,
@@ -163,6 +189,13 @@ class UserAutoPayDetailsViewModel extends BaseModel {
     if (filteredList != null && filteredList.isNotEmpty) {
       if (filteredList.length > 4) hasMoreTxns = true;
     }
+  }
+
+  getChipAmounts() async {
+    dailyChips =
+        await _paytmService.getAmountChips(Constants.DOC_IAR_DAILY_CHIPS);
+    weeklyChips =
+        await _paytmService.getAmountChips(Constants.DOC_IAR_WEEKLY_CHIPS);
   }
 
   //==========================UPDATE METHODS==============================//
@@ -178,6 +211,7 @@ class UserAutoPayDetailsViewModel extends BaseModel {
 
   set isDaily(value) {
     this._isDaily = value;
+    _logger.d("Isdaily: $isDaily");
     notifyListeners();
   }
 
@@ -190,6 +224,15 @@ class UserAutoPayDetailsViewModel extends BaseModel {
   }
 
   onAmountValueChanged(String val) {
+    if (val != null && val.isNotEmpty) {
+      if (int.tryParse(val) > maxAmount) {
+        amountFieldController.text = maxAmount.toString();
+        val = maxAmount.toString();
+        FocusManager.instance.primaryFocus.unfocus();
+      }
+    } else {
+      val = '0';
+    }
     saveAmount = calculateSaveAmount(int.tryParse(val ?? '0'));
     notifyListeners();
   }
@@ -203,11 +246,29 @@ class UserAutoPayDetailsViewModel extends BaseModel {
   }
 
   setSubscriptionAmount(double amount) async {
+    if (amount < 10) {
+      return BaseUtil.showNegativeAlert(
+        'Minimum amount should be ₹ 10',
+        'Please enter a minimum amount of ₹ 10',
+      );
+    }
+
+    if (amount == _paytmService.activeSubscription.autoAmount) {
+      if (isDaily &&
+          _paytmService.activeSubscription.autoFrequency == "DAILY") {
+        return BaseUtil.showNegativeAlert(
+            "No changes found", "Make some changes to update");
+      }
+      if (!isDaily &&
+          _paytmService.activeSubscription.autoFrequency == "WEEKLY") {
+        return BaseUtil.showNegativeAlert(
+            "No changes found", "Make some changes to update");
+      }
+    }
+
     isSubscriptionAmountUpdateInProgress = true;
     final res = await _paytmService.updateDailySubscriptionAmount(
-        subId: activeSubscription.subscriptionId,
-        amount: amount,
-        freq: isDaily ? "DAILY" : "WEEKLY");
+        amount: amount, freq: isDaily ? "DAILY" : "WEEKLY");
     isSubscriptionAmountUpdateInProgress = false;
     if (res) {
       _paytmService.getActiveSubscriptionDetails();
@@ -224,16 +285,18 @@ class UserAutoPayDetailsViewModel extends BaseModel {
   pauseResume(model) async {
     if (_paytmService.activeSubscription.status ==
         Constants.SUBSCRIPTION_INACTIVE) {
-      model.isResumingInProgress = true;
+      if (model.isResumingInProgress) return;
+      isResumingInProgress = true;
       bool response = await _paytmService.resumeSubscription();
-      if (response) {
-        isInEditMode = false;
-        BaseUtil.showPositiveAlert(
-            "Subscription resumed", "Now you are back to your savings journey");
-      } else
+      if (!response) {
+        isResumingInProgress = false;
         BaseUtil.showNegativeAlert(
             "Failed to resume Subscription", "Please try again");
-      model.isResumingInProgress = false;
+      } else {
+        BaseUtil.showPositiveAlert("Autosave resumed successfully",
+            "For more details check Autosave section");
+        AppState.backButtonDispatcher.didPopRoute();
+      }
     } else
       BaseUtil.openModalBottomSheet(
         addToScreenStack: true,
@@ -245,7 +308,7 @@ class UserAutoPayDetailsViewModel extends BaseModel {
         ),
         isBarrierDismissable: false,
         isScrollControlled: true,
-        content: PauseAutoPayModal(
+        content: PauseAutoSaveModal(
           model: model,
         ),
       );

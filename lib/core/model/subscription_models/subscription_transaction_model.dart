@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
-class AutopayTransactionModel {
+class AutosaveTransactionModel {
   double amount;
   String status;
   String txnId;
@@ -17,7 +17,7 @@ class AutopayTransactionModel {
   AugmontDataModel augmontMap;
   double closingBalance;
   Timestamp createdOn;
-  AutopayTransactionModel({
+  AutosaveTransactionModel({
     @required this.amount,
     @required this.status,
     @required this.txnId,
@@ -33,7 +33,7 @@ class AutopayTransactionModel {
     @required this.createdOn,
   });
 
-  AutopayTransactionModel copyWith({
+  AutosaveTransactionModel copyWith({
     double amount,
     String status,
     String txnId,
@@ -48,7 +48,7 @@ class AutopayTransactionModel {
     double closingBalance,
     Timestamp createdOn,
   }) {
-    return AutopayTransactionModel(
+    return AutosaveTransactionModel(
       amount: amount ?? this.amount,
       status: status ?? this.status,
       txnId: txnId ?? this.txnId,
@@ -83,8 +83,8 @@ class AutopayTransactionModel {
     };
   }
 
-  factory AutopayTransactionModel.fromMap(Map<String, dynamic> map) {
-    return AutopayTransactionModel(
+  factory AutosaveTransactionModel.fromMap(Map<String, dynamic> map) {
+    return AutosaveTransactionModel(
       amount: map['amount']?.toDouble() ?? 0.0,
       status: map['status'] ?? '',
       txnId: map['txnId'] ?? '',
@@ -103,19 +103,19 @@ class AutopayTransactionModel {
 
   String toJson() => json.encode(toMap());
 
-  factory AutopayTransactionModel.fromJson(String source) =>
-      AutopayTransactionModel.fromMap(json.decode(source));
+  factory AutosaveTransactionModel.fromJson(String source) =>
+      AutosaveTransactionModel.fromMap(json.decode(source));
 
   @override
   String toString() {
-    return 'AutopayTransactionModel(amount: $amount, status: $status, txnId: $txnId, txnDateTime: $txnDateTime, currency: $currency, paymentMode: $paymentMode, bankTxnId: $bankTxnId, gatewayName: $gatewayName, bankName: $bankName, note: $note, augmontMap: $augmontMap, closingBalance: $closingBalance, createdOn: $createdOn)';
+    return 'AutosaveTransactionModel(amount: $amount, status: $status, txnId: $txnId, txnDateTime: $txnDateTime, currency: $currency, paymentMode: $paymentMode, bankTxnId: $bankTxnId, gatewayName: $gatewayName, bankName: $bankName, note: $note, augmontMap: $augmontMap, closingBalance: $closingBalance, createdOn: $createdOn)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is AutopayTransactionModel &&
+    return other is AutosaveTransactionModel &&
         other.amount == amount &&
         other.status == status &&
         other.txnId == txnId &&

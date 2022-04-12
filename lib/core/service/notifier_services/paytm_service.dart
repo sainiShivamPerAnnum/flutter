@@ -1,8 +1,11 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
+import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_subscription_response_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
@@ -11,8 +14,12 @@ import 'package:felloapp/core/model/paytm_models/validate_vpa_response_model.dar
 import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/service/api.dart';
+import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_view.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -20,6 +27,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:paytm_allinonesdk/paytm_allinonesdk.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
@@ -37,6 +45,62 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   final _paytmRepo = locator<PaytmRepository>();
   final _userService = locator<UserService>();
   final _api = locator<Api>();
+  bool _isFirstTime = true;
+  bool _autosaveVisible = true;
+  bool get autosaveVisible => this._autosaveVisible;
+  String nextDebitString = "";
+  String get getNextDebitString => this.nextDebitString;
+
+  set setNextDebitString(String nextDebitString) {
+    this.nextDebitString = nextDebitString;
+    notifyListeners();
+  }
+
+  set autosaveVisible(bool autosaveVisible) {
+    this._autosaveVisible = autosaveVisible;
+    notifyListeners(PaytmServiceProperties.AutosaveVisibility);
+    _logger.d("Paytm Service:Autosave Visibility Properties notified");
+  }
+
+  List<AmountChipsModel> defaultAmountChipList = [
+    AmountChipsModel(order: 0, value: 100, best: false),
+    AmountChipsModel(order: 0, value: 250, best: true),
+    AmountChipsModel(order: 0, value: 500, best: false),
+    AmountChipsModel(order: 0, value: 750, best: false),
+    AmountChipsModel(order: 0, value: 1000, best: false),
+  ];
+
+  // bool _isPausing = false;
+  // bool _isResuming = false;
+  // get isPausing => this._isPausing;
+
+  // set isPausing(isPausing) {
+  //   this._isPausing = isPausing;
+  //   notifyListeners(PaytmServiceProperties.IsPausing);
+  //   _logger.d("Paytm Service:Pausing Subscription Properties notified");
+  //   if (isPausing) refreshAutoSaveDetails();
+  // }
+
+  // get isResuming => this._isResuming;
+
+  // set isResuming(isResuming) {
+  //   this._isResuming = isResuming;
+  //   notifyListeners(PaytmServiceProperties.IsResuming);
+  //   _logger.d("Paytm Service:Resuming Subscription Properties notified");
+  //   if (isResuming) refreshAutoSaveDetails();
+  // }
+
+  bool isOnSubscriptionFlow = false;
+
+  bool get isFirstTime => this._isFirstTime;
+
+  set isFirstTime(isFirstTime) {
+    this._isFirstTime = isFirstTime;
+    notifyListeners(PaytmServiceProperties.FirstTimeView);
+    _logger.d("Paytm Service:Active Subscription Properties notified");
+  }
+
+  String _processText = "processing";
 
   final String devMid = "qpHRfp13374268724583";
   final String prodMid = "CMTNKX90967647249644";
@@ -52,10 +116,18 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
 
   ActiveSubscriptionModel get activeSubscription => this._activeSubscription;
 
-  set activeSubscription(value) {
+  set activeSubscription(ActiveSubscriptionModel value) {
     this._activeSubscription = value;
     notifyListeners(PaytmServiceProperties.ActiveSubscription);
     _logger.d("Paytm Service:Active Subscription Properties notified");
+  }
+
+  get processText => this._processText;
+
+  set processText(value) {
+    this._processText = value;
+    notifyListeners(PaytmServiceProperties.SubscriptionProcess);
+    _logger.d("Paytm Service: Subscription process notified");
   }
 
   PaytmService() {
@@ -73,6 +145,13 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
 
   Future init() async {
     await getActiveSubscriptionDetails();
+
+    if (await CacheManager.exits(
+        CacheManager.CACHE_IS_SUBSCRIPTION_FIRST_TIME)) {
+      isFirstTime = await CacheManager.readCache(
+          key: CacheManager.CACHE_IS_SUBSCRIPTION_FIRST_TIME,
+          type: CacheType.bool);
+    }
   }
 
   Future signout() async {
@@ -227,23 +306,31 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   }
 
   Future<void> getActiveSubscriptionDetails() async {
-    try {
-      DocumentSnapshot snapshot =
-          await _api.fetchActiveSubscriptionDetails(_userService.baseUser.uid);
-      if (snapshot.id == "detail" &&
-          snapshot != null &&
-          snapshot.data() != null) {
-        _logger.d(snapshot.data());
-        activeSubscription =
-            ActiveSubscriptionModel.fromJson(snapshot.data(), snapshot.id);
-      }
-    } catch (e) {
-      _logger.e(e.toString());
+    ApiResponse<ActiveSubscriptionModel> response =
+        await _paytmRepo.getActiveSubscription();
+    if (response.code == 200)
+      activeSubscription = response.model;
+    else
       activeSubscription = null;
-    }
+    if (activeSubscription != null &&
+        activeSubscription.status == Constants.SUBSCRIPTION_ACTIVE)
+      await _paytmRepo.getNextDebitDate();
+    // else {
+    //   BaseUtil.showNegativeAlert(
+    //       "Unable to fetch Your Autosave details", "Please try after sometime");
+    // }
+  }
+
+  Future<List<AmountChipsModel>> getAmountChips(String type) async {
+    List<AmountChipsModel> data = await _api.getAmountChips(type);
+    if (data != null && data.isNotEmpty)
+      return data;
+    else
+      return defaultAmountChipList;
   }
 
   Future<PaytmResponse> initiateCustomSubscription(String vpa) async {
+    processText = "Creating your Autosave account";
     final ApiResponse<CreateSubscriptionResponseModel>
         paytmSubscriptionApiResponse =
         await _paytmRepo.createPaytmSubscription();
@@ -253,7 +340,8 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
           "Subscription Message: ${paytmSubscriptionApiResponse.errorMessage}");
       return PaytmResponse(
           errorCode: ERR_INITIATE_SUBSCRIPTION_FAILED,
-          reason: "Unable to create subscription",
+          title: "Unable to create your Autosave account",
+          subtitle: "Please try again after sometime",
           status: false);
     }
 
@@ -274,16 +362,17 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
 
     // final paytmSubscriptionModel =
     //     CreateSubscriptionResponseModel.fromMap(response);
-
+    processText = "Verifying your UPI address";
     final ApiResponse<ValidateVpaResponseModel> isVpaValidResponse =
         await _paytmRepo.validateVPA(paytmSubscriptionModel, vpa);
+
     _logger.d("Validate vpa response: $isVpaValidResponse");
-    if (isVpaValidResponse.code == 400 ||
-        !isVpaValidResponse.model.data.status) {
+    if (isVpaValidResponse.code == 400) {
       _logger.e(isVpaValidResponse.errorMessage);
       return PaytmResponse(
           errorCode: ERR_VALIDATE_VPA_FAILED,
-          reason: "Unable to verify upi at the moment",
+          title: "Unable to create your Autosave account",
+          subtitle: "Please try again after sometime",
           status: false);
     }
 
@@ -291,16 +380,18 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       _logger.e("Invalid UPI");
       return PaytmResponse(
           errorCode: ERR_INVALID_VPA_DETECTED,
-          reason: "Entered VPA Address is invalid",
+          title: "Entered UPI address is not valid ",
+          subtitle: "Please retry with a different UPI address",
           status: false);
     }
 
     if (!isVpaValidResponse.model.data.bankSupportedRecurring ||
         !isVpaValidResponse.model.data.pspSupportedRecurring) {
-      _logger.e("Bank does not support UPI Autopay");
+      _logger.e("Bank does not support UPI Autosave");
       return PaytmResponse(
           errorCode: ERR_UNSUPPORTED_BANK_DETECTED,
-          reason: "Your UPI linked bank does not support Autopay",
+          title: "Your bank does not support UPI Autosave",
+          subtitle: "Please retry with a different UPI address",
           status: false);
     }
     try {
@@ -317,24 +408,28 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       //     ),
       //   ),
       // );
+      processText = "Connecting to your bank";
       ApiResponse<bool> postResponse = await makePostRequest(
           paytmSubscriptionModel.data.orderId,
           vpa,
           paytmSubscriptionModel.data.temptoken,
           paytmSubscriptionModel.data.subscriptionId);
       if (postResponse.model) {
+        processText = "Sending payment request";
         bool processResponse = await processSubscription();
         if (processResponse) {
-          return PaytmResponse(reason: "Everything seems good!", status: true);
+          return PaytmResponse(title: "Everything seems good!", status: true);
         } else {
           return PaytmResponse(
               errorCode: ERR_PROCESS_SUBSCRIPTION_FAILED,
-              reason: "Unable to update the Subscription status",
+              title: "Unable to update the Subscription status",
+              subtitle: "Please try again after sometime",
               status: false);
         }
       } else
         return PaytmResponse(
-            reason: "Unable to connect to Paytm Servers",
+            title: "Your Autosave account could not be verified",
+            subtitle: "Please try again after sometime",
             errorCode: 4,
             status: false);
 
@@ -346,16 +441,16 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
         _logger.e(onError.toString());
       }
       return PaytmResponse(
-          reason: "Subscription failed, please try again in sometime",
+          title: "Your Autosave account could not be verified",
+          subtitle: "Please try again after sometime",
           errorCode: ERR_CREATE_SUBSCRIPTION_FAILED,
           status: false);
     }
   }
 
   Future<bool> updateDailySubscriptionAmount(
-      {@required String subId,
-      @required double amount,
-      @required String freq}) async {
+      {@required double amount, @required String freq}) async {
+    _logger.d("Amount: $amount || Frequency: $freq");
     ApiResponse response =
         await _paytmRepo.updateDailyAmount(amount: amount, freq: freq);
     await getActiveSubscriptionDetails();
@@ -381,6 +476,14 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       return response.model;
     else
       return false;
+  }
+
+  Future<void> getNextDebitDate() async {
+    ApiResponse<String> response = await _paytmRepo.getNextDebitDate();
+    if (response.code == 200) {
+      nextDebitString = response.model;
+    } else
+      nextDebitString = "";
   }
 
   Future<bool> processSubscription() async {
@@ -429,11 +532,13 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
 }
 
 class PaytmResponse {
-  String reason;
+  String title;
+  String subtitle;
   bool status;
   int errorCode;
   PaytmResponse({
-    this.reason,
+    this.title,
+    this.subtitle,
     this.status,
     this.errorCode,
   });

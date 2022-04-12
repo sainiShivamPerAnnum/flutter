@@ -10,7 +10,7 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 
-class AutopayTransactionsViewModel extends BaseModel {
+class AutosaveTransactionsViewModel extends BaseModel {
   final _dBModel = locator<DBModel>();
   final _userService = locator<UserService>();
   final _logger = locator<CustomLogger>();
@@ -18,7 +18,7 @@ class AutopayTransactionsViewModel extends BaseModel {
 
   DocumentSnapshot lastDoc;
   bool _isMoreTxnsBeingFetched = false;
-  List<AutopayTransactionModel> _filteredList, autopaytranList;
+  List<AutosaveTransactionModel> _filteredList, autosavetranList;
   ScrollController tranListController;
   bool hasMoreTxns = true;
   ActiveSubscriptionModel _activeSubscription;
@@ -30,14 +30,15 @@ class AutopayTransactionsViewModel extends BaseModel {
     notifyListeners();
   }
 
-  List<AutopayTransactionModel> get getAutopaytranList => this.autopaytranList;
+  List<AutosaveTransactionModel> get getAutosavetranList =>
+      this.autosavetranList;
 
-  set setAutopaytranList(autopaytranList) {
-    this.autopaytranList = autopaytranList;
+  set setAutosavetranList(autosavetranList) {
+    this.autosavetranList = autosavetranList;
     notifyListeners();
   }
 
-  List<AutopayTransactionModel> get filteredList => this._filteredList;
+  List<AutosaveTransactionModel> get filteredList => this._filteredList;
 
   set filteredList(value) {
     this._filteredList = value;
@@ -75,23 +76,23 @@ class AutopayTransactionsViewModel extends BaseModel {
       // filteredList = [];
       return;
     }
-    final result = await _dBModel.getAutopayTransactions(
+    final result = await _dBModel.getAutosaveTransactions(
         uid: _userService.baseUser.uid,
         subId: activeSubscription.subscriptionId,
         lastDocument: lastDoc,
         limit: 30);
-    autopaytranList = result['listOfTransactions'];
+    autosavetranList = result['listOfTransactions'];
     lastDoc = result['lastDocument'];
-    if (autopaytranList.length <= 30) hasMoreTxns = false;
+    if (autosavetranList.length <= 30) hasMoreTxns = false;
     if (filteredList == null)
-      filteredList = autopaytranList;
+      filteredList = autosavetranList;
     else {
-      autopaytranList.forEach((txn) {
-        AutopayTransactionModel duplicate = filteredList
+      autosavetranList.forEach((txn) {
+        AutosaveTransactionModel duplicate = filteredList
             .firstWhere((t) => t.txnId == txn.txnId, orElse: () => null);
         if (duplicate == null) filteredList.add(txn);
       });
-      autopaytranList
+      autosavetranList
           .sort((a, b) => b.createdOn.seconds.compareTo(a.createdOn.seconds));
     }
   }

@@ -27,6 +27,7 @@ class Constants {
   static final String COLN_FAQS = "faqs";
   static final String COLN_APPCAMPAIGNS = "appcampaigns";
   static final String COLN_COUPONS = 'coupons';
+  static final String COLN_INAPPRESOURCES = "inappresources";
 
   //Sub-collections
   static final String SUBCOLN_USER_FCM = "fcm";
@@ -49,6 +50,8 @@ class Constants {
   static final String DOC_USER_WALLET_FUND_BALANCE = "fndbalance";
   static final String DOC_USER_WALLET_TICKET_BALANCE = "tckbalance";
   static final String DOC_USER_WALLET_COIN_BALANCE = "coinbalance";
+  static final String DOC_IAR_DAILY_CHIPS = "SUBSCRIPTION_DAILY_CHIPS";
+  static final String DOC_IAR_WEEKLY_CHIPS = "SUBSCRIPTION_WEEKLY_CHIPS";
 
   //Sub-Collection docs Collection docs
   static final String DOC_USER_SUBSCRIPTIONS_ORDERS = 'orders';

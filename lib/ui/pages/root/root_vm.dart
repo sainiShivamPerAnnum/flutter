@@ -8,6 +8,7 @@ import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
+import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -41,6 +42,7 @@ class RootViewModel extends BaseModel {
   final winnerService = locator<WinnerService>();
   final txnService = locator<TransactionService>();
   final _analyticsService = locator<AnalyticsService>();
+  final _paytmService = locator<PaytmService>();
 
   BuildContext rootContext;
   bool _isInitialized = false;
@@ -53,6 +55,7 @@ class RootViewModel extends BaseModel {
     await _userCoinService.getUserCoinBalance();
     await _userService.getUserFundWalletData();
     txnService.signOut();
+    _paytmService.getActiveSubscriptionDetails();
     await txnService.fetchTransactions(limit: 4);
   }
 

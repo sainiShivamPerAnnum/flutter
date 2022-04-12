@@ -369,29 +369,29 @@ class AugmontGoldBuyViewModel extends BaseModel {
     }
   }
 
-  initiateCustomSubscription() async {
-    isSubscriptionInProgress = true;
-    PaytmResponse response = await _paytmService
-        .initiateCustomSubscription(vpaController.text + "@paytm");
-    isSubscriptionInProgress = false;
-    if (response.status)
-      showSuccessGoldBuyDialog(1.0, subtitle: response.reason);
-    else
-      switch (response.errorCode) {
-        case ERR_INVALID_VPA_DETECTED:
-          BaseUtil.showNegativeAlert(
-            response.reason,
-            'Please enter a valid vpa address',
-          );
-          break;
-        default:
-          BaseUtil.showNegativeAlert(
-            response.reason,
-            'Please try again',
-          );
-          break;
-      }
-  }
+  // initiateCustomSubscription() async {
+  //   isSubscriptionInProgress = true;
+  //   PaytmResponse response = await _paytmService
+  //       .initiateCustomSubscription(vpaController.text + "@paytm");
+  //   isSubscriptionInProgress = false;
+  //   if (response.status)
+  //     showSuccessGoldBuyDialog(1.0, subtitle: response.reason);
+  //   else
+  //     switch (response.errorCode) {
+  //       case ERR_INVALID_VPA_DETECTED:
+  //         BaseUtil.showNegativeAlert(
+  //           response.reason,
+  //           'Please enter a valid vpa address',
+  //         );
+  //         break;
+  //       default:
+  //         BaseUtil.showNegativeAlert(
+  //           response.reason,
+  //           'Please try again',
+  //         );
+  //         break;
+  //     }
+  // }
 
   initiateBuy() async {
     //Check if user is registered on augmont

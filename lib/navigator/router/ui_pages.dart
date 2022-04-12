@@ -50,10 +50,10 @@ const String GoldenMilestonesViewPath = '/goldenMilestonesView';
 const String TopSaverViewPath = '/topSaverView';
 const String AllParticipantsViewPath = '/allParticipantsView';
 const String GoldBalanceDetailsViewPath = '/goldBalanceDetailsView';
-const String AutoPayDetailsViewPath = '/autoPayDetailsView';
-const String AutoPayProcessViewPath = '/autoPayProcessView';
-const String UserAutoPayDetailsViewPath = '/userAutopayDetailsView';
-const String AutopayTransactionsViewPath = '/autopayTransactionsViewPath';
+const String AutoSaveDetailsViewPath = '/autosaveDetailsView';
+const String AutoSaveProcessViewPath = '/autosaveProcessView';
+const String UserAutoSaveDetailsViewPath = '/userAutosaveDetailsView';
+const String AutosaveTransactionsViewPath = '/autosaveTransactionsViewPath';
 
 enum Pages {
   Splash,
@@ -104,10 +104,10 @@ enum Pages {
   TopSaverView,
   AllParticipantsView,
   GoldBalanceDetailsView,
-  AutoPayDetailsView,
-  AutoPayProcessView,
-  UserAutoPayDetailsView,
-  AutopayTransactionsView,
+  AutoSaveDetailsView,
+  AutoSaveProcessView,
+  UserAutoSaveDetailsView,
+  AutosaveTransactionsView,
 }
 
 class PageConfiguration {
@@ -464,27 +464,27 @@ PageConfiguration GoldBalanceDetailsViewPageConfig = PageConfiguration(
   name: 'Gold Balance Details Screen',
 );
 
-PageConfiguration AutoPayDetailsViewPageConfig = PageConfiguration(
-  key: 'AutoPayDetailsView',
-  path: AutoPayDetailsViewPath,
-  uiPage: Pages.AutoPayDetailsView,
-  name: 'AutoPay Details Screen',
+PageConfiguration AutoSaveDetailsViewPageConfig = PageConfiguration(
+  key: 'AutoSaveDetailsView',
+  path: AutoSaveDetailsViewPath,
+  uiPage: Pages.AutoSaveDetailsView,
+  name: 'AutoSave Details Screen',
 );
 
-PageConfiguration AutoPayProcessViewPageConfig = PageConfiguration(
-    key: 'AutoPayProcessView',
-    path: AutoPayProcessViewPath,
-    uiPage: Pages.AutoPayProcessView,
-    name: "AutoPay Process Screen");
+PageConfiguration AutoSaveProcessViewPageConfig = PageConfiguration(
+    key: 'AutoSaveProcessView',
+    path: AutoSaveProcessViewPath,
+    uiPage: Pages.AutoSaveProcessView,
+    name: "AutoSave Process Screen");
 
-PageConfiguration UserAutoPayDetailsViewPageConfig = PageConfiguration(
-    key: 'UserAutoPayDetailsView',
-    path: UserAutoPayDetailsViewPath,
-    uiPage: Pages.UserAutoPayDetailsView,
-    name: "User AutoPay DetailsScreen");
+PageConfiguration UserAutoSaveDetailsViewPageConfig = PageConfiguration(
+    key: 'UserAutoSaveDetailsView',
+    path: UserAutoSaveDetailsViewPath,
+    uiPage: Pages.UserAutoSaveDetailsView,
+    name: "User AutoSave DetailsScreen");
 
-PageConfiguration AutopayTransactionsViewPageConfig = PageConfiguration(
-    key: 'AutopayTransactionsView',
-    path: AutopayTransactionsViewPath,
-    uiPage: Pages.AutopayTransactionsView,
-    name: "Autopay transaction Screen");
+PageConfiguration AutosaveTransactionsViewPageConfig = PageConfiguration(
+    key: 'AutosaveTransactionsView',
+    path: AutosaveTransactionsViewPath,
+    uiPage: Pages.AutosaveTransactionsView,
+    name: "Autosave transaction Screen");

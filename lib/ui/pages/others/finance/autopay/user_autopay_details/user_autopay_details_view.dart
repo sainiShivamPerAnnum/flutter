@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
@@ -11,6 +12,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_transaction/autopay_transactions_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_vm.dart';
+
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
 import 'package:felloapp/ui/pages/others/profile/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/static/blinker.dart';
@@ -19,6 +21,7 @@ import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -33,12 +36,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
-class UserAutoPayDetailsView extends StatelessWidget {
-  const UserAutoPayDetailsView({Key key}) : super(key: key);
+class UserAutoSaveDetailsView extends StatelessWidget {
+  const UserAutoSaveDetailsView({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BaseView<UserAutoPayDetailsViewModel>(
+    return BaseView<UserAutoSaveDetailsViewModel>(
       onModelReady: (model) {
         model.init();
       },
@@ -53,7 +56,7 @@ class UserAutoPayDetailsView extends StatelessWidget {
                   children: [
                     FelloAppBar(
                       leading: FelloAppBarBackButton(),
-                      title: "UPI AutoPay Details",
+                      title: "UPI AutoSave Details",
                     ),
                     Expanded(
                       child: Container(
@@ -88,7 +91,7 @@ class UserAutoPayDetailsView extends StatelessWidget {
 }
 
 class UpdateDetailsView extends StatelessWidget {
-  final UserAutoPayDetailsViewModel model;
+  final UserAutoSaveDetailsViewModel model;
   UpdateDetailsView({this.model});
   @override
   Widget build(BuildContext context) {
@@ -115,22 +118,72 @@ class UpdateDetailsView extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: SizeConfig.padding24),
-                Row(
-                  children: [
-                    Expanded(
-                      child: SegmentChips(
-                        model: model,
-                        text: "Daily",
+                Container(
+                  decoration: BoxDecoration(
+                    color: UiConstants.scaffoldColor,
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+                  ),
+                  padding: EdgeInsets.all(SizeConfig.padding6),
+                  height: SizeConfig.padding54,
+                  child: Stack(
+                    children: [
+                      AnimatedPositioned(
+                        duration: Duration(milliseconds: 500),
+                        curve: Curves.decelerate,
+                        left: model.isDaily
+                            ? 0
+                            : (SizeConfig.screenWidth / 2 -
+                                SizeConfig.pageHorizontalMargins -
+                                SizeConfig.padding6),
+                        child: Container(
+                          width: SizeConfig.screenWidth / 2 -
+                              SizeConfig.pageHorizontalMargins -
+                              SizeConfig.padding6,
+                          height: SizeConfig.padding54 * 0.8,
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.circular(SizeConfig.roundness12),
+                            color: UiConstants.primaryColor,
+                          ),
+                        ),
                       ),
-                    ),
-                    SizedBox(width: SizeConfig.padding16),
-                    Expanded(
-                      child: SegmentChips(
-                        model: model,
-                        text: "Weekly",
+                      Align(
+                        alignment: Alignment.center,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: InkWell(
+                                onTap: () {
+                                  Haptic.vibrate();
+                                  model.isDaily = true;
+                                  model.onAmountValueChanged(
+                                      model.amountFieldController.text);
+                                },
+                                child: SegmentChips(
+                                  model: model,
+                                  text: "Daily",
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: InkWell(
+                                onTap: () {
+                                  Haptic.vibrate();
+                                  model.isDaily = false;
+                                  model.onAmountValueChanged(
+                                      model.amountFieldController.text);
+                                },
+                                child: SegmentChips(
+                                  model: model,
+                                  text: "Weekly",
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 Container(
                   width: SizeConfig.screenWidth,
@@ -138,50 +191,61 @@ class UpdateDetailsView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Container(
-                        width: SizeConfig.screenWidth / 2 +
-                            SizeConfig.padding16 -
-                            (model.isDaily ? 0 : SizeConfig.padding12),
-                        child: TextField(
-                          controller: model.amountFieldController,
-                          decoration: InputDecoration(
-                              contentPadding: EdgeInsets.zero,
-                              isDense: true,
-                              isCollapsed: true,
-                              border: InputBorder.none,
-                              enabledBorder: InputBorder.none,
-                              focusedBorder: InputBorder.none),
-                          // autofocus: true,
-                          // cursorHeight: SizeConfig.screenWidth / 6,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly
-                          ],
-                          enableInteractiveSelection: false,
-                          keyboardType: TextInputType.number,
-                          cursorWidth: 0.5,
-                          onChanged: (value) {
-                            model.onAmountValueChanged(value);
-                          },
-                          textAlign: TextAlign.end,
-                          style: GoogleFonts.sourceSansPro(
-                              fontWeight: FontWeight.bold,
-                              fontSize: SizeConfig.screenWidth / 4.8,
-                              color: Colors.black),
+                      Expanded(child: SizedBox()),
+                      IntrinsicWidth(
+                        child: Container(
+                          height: SizeConfig.screenWidth / 4.2,
+                          child: TextField(
+                            controller: model.amountFieldController,
+                            maxLines: null,
+
+                            decoration: InputDecoration(
+                                prefixText: "₹",
+                                prefixStyle: GoogleFonts.sourceSansPro(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: SizeConfig.screenWidth / 4.8,
+                                    color: Colors.black),
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: -SizeConfig.padding4),
+                                isDense: true,
+                                isCollapsed: true,
+                                border: InputBorder.none,
+                                enabledBorder: InputBorder.none,
+                                focusedBorder: InputBorder.none),
+                            // autofocus: true,
+                            // cursorHeight: SizeConfig.padding20,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            // enableInteractiveSelection: false,
+                            keyboardType: TextInputType.number,
+                            // cursorWidth: 0,
+                            autofocus: true,
+                            onChanged: (value) {
+                              model.onAmountValueChanged(value);
+                            },
+
+                            style: GoogleFonts.sourceSansPro(
+                                fontWeight: FontWeight.bold,
+                                height: 0.9,
+                                fontSize: SizeConfig.screenWidth / 4.8,
+                                color: Colors.black),
+                          ),
                         ),
                       ),
-                      Container(
-                        width: SizeConfig.screenWidth / 2 -
-                            SizeConfig.pageHorizontalMargins * 2 -
-                            SizeConfig.padding16 +
-                            (model.isDaily ? 0 : SizeConfig.padding12),
-                        // height: SizeConfig.padding24,
-                        child: Text(model.isDaily ? '/day' : '/week',
+                      Column(
+                        children: [
+                          Text(
+                            model.isDaily ? '/day' : '/week',
                             style: GoogleFonts.sourceSansPro(
                                 fontSize: SizeConfig.title2,
-                                fontWeight: FontWeight.w300,
-                                height: SizeConfig.padding4,
-                                color: Colors.black38)),
-                      )
+                                height: 2,
+                                color: Colors.black38),
+                          ),
+                          SizedBox(height: SizeConfig.padding12)
+                        ],
+                      ),
+                      Expanded(child: SizedBox()),
                     ],
                   ),
                 ),
@@ -197,19 +261,21 @@ class UpdateDetailsView extends StatelessWidget {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      AmountChips(amount: 100, model: model),
-                      AmountChips(
-                          amount: 250,
-                          model: model,
-                          isBestSeller: model.isDaily ? true : false),
-                      AmountChips(
-                          amount: 500,
-                          model: model,
-                          isBestSeller: !model.isDaily ? true : false),
-                      AmountChips(amount: 1000, model: model),
-                      AmountChips(amount: 5000, model: model),
-                    ],
+                    children: model.isDaily
+                        ? List.generate(
+                            model.dailyChips.length,
+                            (index) => AmountChips(
+                                  amount: model.dailyChips[index].value,
+                                  model: model,
+                                  isBestSeller: model.dailyChips[index].best,
+                                ))
+                        : List.generate(
+                            model.weeklyChips.length,
+                            (index) => AmountChips(
+                                  amount: model.weeklyChips[index].value,
+                                  model: model,
+                                  isBestSeller: model.weeklyChips[index].best,
+                                )),
                   ),
                 ),
               ],
@@ -228,65 +294,68 @@ class PauseResumeButton extends StatelessWidget {
     @required this.model,
   }) : super(key: key);
 
-  final UserAutoPayDetailsViewModel model;
+  final UserAutoSaveDetailsViewModel model;
 
   @override
   Widget build(BuildContext context) {
-    return PropertyChangeConsumer<PaytmService, PaytmServiceProperties>(
-      properties: [PaytmServiceProperties.ActiveSubscription],
-      builder: (context, m, property) => Positioned(
-        bottom: 0,
-        left: SizeConfig.pageHorizontalMargins,
-        child: SafeArea(
-          child: Container(
-            color: Colors.white,
-            child: Column(
-              children: [
-                Container(
-                  width: SizeConfig.screenWidth -
-                      SizeConfig.pageHorizontalMargins * 2,
-                  child: FelloButtonLg(
-                    child: model.isSubscriptionAmountUpdateInProgress
-                        ? SpinKitThreeBounce(
-                            color: Colors.white,
-                            size: 20,
-                          )
-                        : Text(
-                            "Update",
-                            style: TextStyles.body2.bold.colour(Colors.white),
-                          ),
-                    onPressed: () {
-                      model.setSubscriptionAmount(
-                          int.tryParse(model.amountFieldController.text)
-                              .toDouble());
-                    },
-                  ),
+    return Positioned(
+      bottom: 0,
+      left: SizeConfig.pageHorizontalMargins,
+      child: SafeArea(
+        child: Container(
+          color: Colors.white,
+          child: Column(
+            children: [
+              Container(
+                width: SizeConfig.screenWidth -
+                    SizeConfig.pageHorizontalMargins * 2,
+                child: FelloButtonLg(
+                  child: model.isSubscriptionAmountUpdateInProgress
+                      ? SpinKitThreeBounce(
+                          color: Colors.white,
+                          size: 20,
+                        )
+                      : Text(
+                          "Update",
+                          style: TextStyles.body2.bold.colour(Colors.white),
+                        ),
+                  onPressed: () {
+                    model.setSubscriptionAmount(int.tryParse(
+                            model.amountFieldController.text.isEmpty ||
+                                    model.amountFieldController == null
+                                ? '0'
+                                : model.amountFieldController.text)
+                        .toDouble());
+                  },
                 ),
-                SizedBox(height: SizeConfig.padding6),
-                model.isResumingInProgress
-                    ? SpinKitThreeBounce(
+              ),
+              SizedBox(height: SizeConfig.padding6),
+              model.isResumingInProgress
+                  ? Container(
+                      height: SizeConfig.padding40,
+                      child: SpinKitThreeBounce(
                         size: SizeConfig.padding24,
                         color: UiConstants.tertiarySolid,
-                      )
-                    : TextButton(
-                        onPressed: () => model.pauseResume(model),
-                        child: Text(
-                          m.activeSubscription.status ==
-                                  Constants.SUBSCRIPTION_INACTIVE
-                              ? "RESUME SUBSCRIPTION"
-                              : "PAUSE SUBSCRIPTION",
-                          style: TextStyles.body2
-                              .colour(UiConstants.tertiarySolid)
-                              .light,
-                        ),
                       ),
-                SizedBox(
-                  height: SizeConfig.viewInsets.bottom != 0
-                      ? 0
-                      : SizeConfig.padding12,
-                ),
-              ],
-            ),
+                    )
+                  : TextButton(
+                      onPressed: () => model.pauseResume(model),
+                      child: Text(
+                        model.activeSubscription.status ==
+                                Constants.SUBSCRIPTION_INACTIVE
+                            ? "RESUME SUBSCRIPTION"
+                            : "PAUSE SUBSCRIPTION",
+                        style: TextStyles.body2
+                            .colour(UiConstants.tertiarySolid)
+                            .light,
+                      ),
+                    ),
+              SizedBox(
+                height: SizeConfig.viewInsets.bottom != 0
+                    ? 0
+                    : SizeConfig.padding12,
+              ),
+            ],
           ),
         ),
       ),
@@ -308,6 +377,7 @@ class AmountChips extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        Haptic.vibrate();
         model.amountFieldController.text = amount.toString();
         model.onAmountValueChanged(amount.toString());
       },
@@ -319,10 +389,11 @@ class AmountChips extends StatelessWidget {
                 horizontal: SizeConfig.padding12),
             decoration: BoxDecoration(
               border: Border.all(
-                  color: isBestSeller
-                      ? UiConstants.primaryColor
-                      : UiConstants.primaryLight.withOpacity(0.5),
-                  width: 0.5),
+                  color:
+                      int.tryParse(model.amountFieldController.text) == amount
+                          ? UiConstants.primaryColor
+                          : UiConstants.primaryLight.withOpacity(0.5),
+                  width: 1),
               borderRadius: BorderRadius.circular(SizeConfig.roundness12),
               color: UiConstants.primaryLight.withOpacity(0.5),
             ),
@@ -358,7 +429,7 @@ class AmountChips extends StatelessWidget {
 }
 
 class DetailsView extends StatelessWidget {
-  final UserAutoPayDetailsViewModel model;
+  final UserAutoSaveDetailsViewModel model;
   DetailsView({this.model});
 
   getFreq(String freq) {
@@ -391,7 +462,7 @@ class DetailsView extends StatelessWidget {
                             WinningsContainer(
                           shadow: false,
                           onTap: () {},
-                          color: UiConstants.autopayColor,
+                          color: UiConstants.autosaveColor,
                           child: Container(
                             width: SizeConfig.screenWidth,
                             alignment: Alignment.center,
@@ -554,7 +625,7 @@ class DetailsView extends StatelessWidget {
                                               PageAction(
                                                   state: PageState.addPage,
                                                   page:
-                                                      AutoPayDetailsViewPageConfig);
+                                                      AutoSaveDetailsViewPageConfig);
                                         },
                                     ),
                                     new TextSpan(
@@ -615,7 +686,8 @@ class DetailsView extends StatelessWidget {
                                       AppState.delegate.appState.currentAction =
                                           PageAction(
                                         state: PageState.addPage,
-                                        page: AutopayTransactionsViewPageConfig,
+                                        page:
+                                            AutosaveTransactionsViewPageConfig,
                                       );
                                     },
                                     defaultButtonText: "View All",
@@ -631,7 +703,7 @@ class DetailsView extends StatelessWidget {
                 : Center(
                     child: NoRecordDisplayWidget(
                       assetLottie: Assets.noData,
-                      text: "No UPI Autopay Details available",
+                      text: "No UPI Autosave Details available",
                     ),
                   )),
         Align(
@@ -681,7 +753,7 @@ class DetailsView extends StatelessWidget {
                   //         topRight: Radius.circular(SizeConfig.roundness32),
                   //       ),
                   //       isBarrierDismissable: false,
-                  //       content: PauseAutoPayModal(
+                  //       content: PauseAutoSaveModal(
                   //         model: model,
                   //       ),
                   //     );
@@ -705,16 +777,16 @@ class DetailsView extends StatelessWidget {
   }
 }
 
-class PauseAutoPayModal extends StatefulWidget {
-  final UserAutoPayDetailsViewModel model;
+class PauseAutoSaveModal extends StatefulWidget {
+  final UserAutoSaveDetailsViewModel model;
 
-  const PauseAutoPayModal({Key key, this.model}) : super(key: key);
+  const PauseAutoSaveModal({Key key, this.model}) : super(key: key);
 
   @override
-  State<PauseAutoPayModal> createState() => _PauseAutoPayModalState();
+  State<PauseAutoSaveModal> createState() => _PauseAutoSaveModalState();
 }
 
-class _PauseAutoPayModalState extends State<PauseAutoPayModal> {
+class _PauseAutoSaveModalState extends State<PauseAutoSaveModal> {
   int pauseValue = 1;
   setPauseValue(value) {
     setState(() {
@@ -736,7 +808,7 @@ class _PauseAutoPayModalState extends State<PauseAutoPayModal> {
           Row(
             children: [
               Text(
-                "Pause AutoPay",
+                "Pause AutoSave",
                 style: TextStyle(
                   color: Colors.black54,
                   fontWeight: FontWeight.w700,
@@ -765,7 +837,7 @@ class _PauseAutoPayModalState extends State<PauseAutoPayModal> {
           ),
           SizedBox(height: SizeConfig.padding8),
           Text(
-            "Pause AutoPay for",
+            "Pause AutoSave for",
             style: TextStyles.body2.colour(Colors.grey),
           ),
           SizedBox(height: SizeConfig.padding8),
@@ -797,13 +869,43 @@ class _PauseAutoPayModalState extends State<PauseAutoPayModal> {
                     style: TextStyles.body2.bold.colour(Colors.white),
                   ),
             onPressed: () async {
-              setState(() {
-                isPausing = true;
-              });
-              await widget.model.pauseSubscription(pauseValue);
-              setState(() {
-                isPausing = false;
-              });
+              if (pauseValue == 4) {
+                BaseUtil.openDialog(
+                  addToScreenStack: true,
+                  isBarrierDismissable: false,
+                  hapticVibrate: true,
+                  content: FelloConfirmationDialog(
+                    title: "Are you sure ?",
+                    subtitle: "Your want to pause Autosave forever",
+                    reject: "No",
+                    acceptColor: Colors.grey.withOpacity(0.5),
+                    rejectColor: UiConstants.primaryColor,
+                    acceptTextColor: Colors.black,
+                    rejectTextColor: Colors.white,
+                    onReject: () {
+                      AppState.backButtonDispatcher.didPopRoute();
+                    },
+                    accept: "Yes",
+                    onAccept: () async {
+                      if (isPausing) return;
+                      setState(() {
+                        isPausing = false;
+                      });
+                      await widget.model.pauseSubscription(pauseValue);
+                      AppState.backButtonDispatcher.didPopRoute();
+                    },
+                  ),
+                );
+              } else {
+                if (isPausing) return;
+                setState(() {
+                  isPausing = true;
+                });
+                await widget.model.pauseSubscription(pauseValue);
+                setState(() {
+                  isPausing = false;
+                });
+              }
             },
           ),
           SizedBox(height: SizeConfig.pageHorizontalMargins / 2),

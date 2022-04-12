@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_subscription_response_model.dart';
 import 'package:felloapp/core/model/paytm_models/paytm_subscription_response_model.dart';
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
 import 'package:felloapp/core/model/paytm_models/validate_vpa_response_model.dart';
+import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -16,6 +19,7 @@ import 'package:intl/intl.dart';
 class PaytmRepository {
   final _logger = locator<CustomLogger>();
   final _userService = locator<UserService>();
+  String processText = "processing";
 
   Future<String> _getBearerToken() async {
     String token = await _userService.firebaseUser.getIdToken();
@@ -71,26 +75,6 @@ class PaytmRepository {
     }
   }
 
-  // Future<ApiResponse<SubscriptionResponseModel>> getSubscriptionStatus(
-  //     String subId) async {
-  //   try {
-  //     final String _uid = _userService.baseUser.uid;
-  //     final _token = await _getBearerToken();
-  //     final _queryParams = {"subId": subId, "uid": _uid};
-  //     final response = await APIService.instance.getData(
-  //         ApiPath().kCreateSubscription,
-  //         token: _token,
-  //         queryParams: _queryParams);
-
-  //     final _responseModel = SubscriptionResponseModel.fromJson(response);
-  //     return ApiResponse<SubscriptionResponseModel>(
-  //         model: _responseModel, code: 200);
-  //   } catch (e) {
-  //     _logger.e(e.toString());
-  //     return ApiResponse.withError("Unable create transaction", 400);
-  //   }
-  // }
-
   Future<ApiResponse<CreateSubscriptionResponseModel>>
       createPaytmSubscription() async {
     print(DateFormat('dd-MM-YYY').format(DateTime.now()));
@@ -137,13 +121,6 @@ class PaytmRepository {
         "vpa": vpa,
         "token": subscriptionResponseModel.data.temptoken,
       };
-      //       final _queryParams = {
-      //   "uid": _uid,
-      //   "vpa": vpa,
-      //   "subId": subscriptionResponseModel.data.subscriptionId,
-      //   "token": subscriptionResponseModel.data.temptoken,
-      //   "orderId": subscriptionResponseModel.data.orderId
-      // };
       final response = await APIService.instance.getData(ApiPath().kValidateVpa,
           token: _token, queryParams: _queryParams, isAWSURL: true);
 
@@ -267,6 +244,53 @@ class PaytmRepository {
     } catch (e) {
       _logger.e(e.toString());
       return ApiResponse.withError("Unable to resume subscription", 400);
+    }
+  }
+
+  Future<ApiResponse<ActiveSubscriptionModel>> getActiveSubscription() async {
+    try {
+      final _token = await _getBearerToken();
+      final _queryParams = {
+        "uid": _userService.baseUser.uid,
+      };
+      final response = await APIService.instance.getData(
+          ApiPath().kActiveSubscription,
+          token: _token,
+          queryParams: _queryParams,
+          isAWSURL: true);
+      _logger.d(response);
+      final _responseData = response["data"];
+      final _responseModel = ActiveSubscriptionModel.fromJson(_responseData);
+
+      return ApiResponse<ActiveSubscriptionModel>(
+          model: _responseModel, code: 200);
+    } catch (e) {
+      _logger.e(e.toString());
+      return ApiResponse.withError("Unable to find active subscription", 400);
+    }
+  }
+
+  Future<ApiResponse<String>> getNextDebitDate() async {
+    try {
+      final _token = await _getBearerToken();
+      final _queryParams = {
+        "uid": _userService.baseUser.uid,
+      };
+      final response = await APIService.instance.getData(
+          ApiPath().kNextDebitDate,
+          token: _token,
+          queryParams: _queryParams,
+          isAWSURL: true);
+
+      final _responseStatus = response["data"];
+      _logger.d(response);
+      if (_responseStatus["status"])
+        return ApiResponse<String>(model: response["message"], code: 200);
+      else
+        return ApiResponse.withError("Unable to find active subscription", 400);
+    } catch (e) {
+      _logger.e(e.toString());
+      return ApiResponse.withError("Unable to find active subscription", 400);
     }
   }
 }

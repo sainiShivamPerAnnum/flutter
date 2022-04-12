@@ -18,12 +18,12 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-class AutoPayTransactionsView extends StatelessWidget {
-  const AutoPayTransactionsView({Key key}) : super(key: key);
+class AutoSaveTransactionsView extends StatelessWidget {
+  const AutoSaveTransactionsView({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BaseView<AutopayTransactionsViewModel>(
+    return BaseView<AutosaveTransactionsViewModel>(
       onModelReady: (model) {
         model.init();
       },
@@ -35,7 +35,7 @@ class AutoPayTransactionsView extends StatelessWidget {
               children: [
                 FelloAppBar(
                   leading: FelloAppBarBackButton(),
-                  title: "Autopay Transaction History",
+                  title: "Autosave Transaction History",
                 ),
                 Expanded(
                   child: Container(
@@ -119,8 +119,8 @@ class AutoPayTransactionsView extends StatelessWidget {
 }
 
 class SubscriptionTransactionTile extends StatelessWidget {
-  // final AutopayTransactionsViewModel model;
-  final AutopayTransactionModel txn;
+  // final AutosaveTransactionsViewModel model;
+  final AutosaveTransactionModel txn;
   final _txnService = locator<TransactionService>();
   SubscriptionTransactionTile({
     // @required this.model,
@@ -136,7 +136,7 @@ class SubscriptionTransactionTile extends StatelessWidget {
             context: AppState.delegate.navigatorKey.currentContext,
             builder: (BuildContext context) {
               AppState.screenStack.add(ScreenItem.dialog);
-              return AutopayTransactionDetailsDialog(txn);
+              return AutosaveTransactionDetailsDialog(txn);
             });
       },
       dense: true,

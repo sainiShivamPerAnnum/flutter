@@ -12,6 +12,8 @@ class FelloConfirmationDialog extends StatefulWidget {
   final Function onReject;
   final Color acceptColor;
   final Color rejectColor;
+  final Color acceptTextColor;
+  final Color rejectTextColor;
   final ValueChanged result;
   final bool showCrossIcon;
   final String title;
@@ -29,6 +31,8 @@ class FelloConfirmationDialog extends StatefulWidget {
     this.onReject,
     this.asset,
     this.showCrossIcon,
+    this.acceptTextColor,
+    this.rejectTextColor,
     this.subtitle,
     this.title,
     this.accept,
@@ -105,7 +109,8 @@ class _FelloConfirmationDialogState extends State<FelloConfirmationDialog> {
                       child: FelloButtonLg(
                         child: Text(
                           widget.accept,
-                          style: TextStyles.body3.bold.colour(Colors.white),
+                          style: TextStyles.body3.bold
+                              .colour(widget.acceptTextColor ?? Colors.white),
                         ),
                         color: widget.acceptColor,
                         height: SizeConfig.padding54,
@@ -124,7 +129,8 @@ class _FelloConfirmationDialogState extends State<FelloConfirmationDialog> {
                       child: FelloButtonLg(
                         child: Text(
                           widget.reject,
-                          style: TextStyles.body3.bold,
+                          style: TextStyles.body3.bold
+                              .colour(widget.rejectTextColor ?? Colors.black),
                         ),
                         color: widget.rejectColor,
                         height: SizeConfig.padding54,

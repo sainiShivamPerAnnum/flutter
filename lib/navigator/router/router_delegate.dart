@@ -23,9 +23,8 @@ import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/au
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/edit_augmont_bank_details.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_balance_details/gold_balance_details_view.dart';
-import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_details_view.dart';
-import 'package:felloapp/ui/pages/others/finance/autopay/autopay_transaction/autopay_transactions_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_transaction/autopay_transactions_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_view.dart';
 import 'package:felloapp/ui/pages/others/games/cricket/cricket_game/cricket_game_view.dart';
@@ -280,19 +279,19 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(
               GoldBalanceDetailsView(), GoldBalanceDetailsViewPageConfig);
           break;
-        case Pages.AutoPayDetailsView:
-          _addPageData(AutoPayDetailsView(), AutoPayDetailsViewPageConfig);
+        case Pages.AutoSaveDetailsView:
+          _addPageData(AutoSaveDetailsView(), AutoSaveDetailsViewPageConfig);
           break;
-        case Pages.AutoPayProcessView:
-          _addPageData(AutoPayProcessView(), AutoPayProcessViewPageConfig);
+        case Pages.AutoSaveProcessView:
+          _addPageData(AutoSaveProcessView(), AutoSaveProcessViewPageConfig);
           break;
-        case Pages.UserAutoPayDetailsView:
+        case Pages.UserAutoSaveDetailsView:
           _addPageData(
-              UserAutoPayDetailsView(), UserAutoPayDetailsViewPageConfig);
+              UserAutoSaveDetailsView(), UserAutoSaveDetailsViewPageConfig);
           break;
-        case Pages.AutopayTransactionsView:
+        case Pages.AutosaveTransactionsView:
           _addPageData(
-              AutoPayTransactionsView(), AutopayTransactionsViewPageConfig);
+              AutoSaveTransactionsView(), AutosaveTransactionsViewPageConfig);
           break;
         default:
           break;
@@ -495,17 +494,17 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.GoldBalanceDetailsView:
         GoldBalanceDetailsViewPageConfig.currentPageAction = action;
         break;
-      case Pages.AutoPayDetailsView:
-        AutoPayDetailsViewPageConfig.currentPageAction = action;
+      case Pages.AutoSaveDetailsView:
+        AutoSaveDetailsViewPageConfig.currentPageAction = action;
         break;
-      case Pages.AutoPayProcessView:
-        AutoPayProcessViewPageConfig.currentPageAction = action;
+      case Pages.AutoSaveProcessView:
+        AutoSaveProcessViewPageConfig.currentPageAction = action;
         break;
-      case Pages.UserAutoPayDetailsView:
-        UserAutoPayDetailsViewPageConfig.currentPageAction = action;
+      case Pages.UserAutoSaveDetailsView:
+        UserAutoSaveDetailsViewPageConfig.currentPageAction = action;
         break;
-      case Pages.AutopayTransactionsView:
-        AutopayTransactionsViewPageConfig.currentPageAction = action;
+      case Pages.AutosaveTransactionsView:
+        AutosaveTransactionsViewPageConfig.currentPageAction = action;
         break;
       default:
         break;
@@ -680,23 +679,23 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'pop':
         AppState.backButtonDispatcher.didPopRoute();
         break;
-      case 'autoPayDetails':
-        pageConfiguration = AutoPayDetailsViewPageConfig;
+      case 'autosaveDetails':
+        pageConfiguration = AutoSaveDetailsViewPageConfig;
         break;
-      case 'autoPayProcess':
-        pageConfiguration = AutoPayProcessViewPageConfig;
+      case 'autosaveProcess':
+        pageConfiguration = AutoSaveProcessViewPageConfig;
         break;
-      case 'UserAutoPayDetails':
-        pageConfiguration = UserAutoPayDetailsViewPageConfig;
+      case 'UserAutoSaveDetails':
+        pageConfiguration = UserAutoSaveDetailsViewPageConfig;
         break;
-      case 'AutopayTxns':
-        pageConfiguration = AutopayTransactionsViewPageConfig;
+      case 'AutosaveTxns':
+        pageConfiguration = AutosaveTransactionsViewPageConfig;
         break;
       case 'AppWalkthrough':
         openAppWalkthrough();
         break;
-      case 'AutopayWalkthrough':
-        openAutoPayWalkthrough();
+      case 'AutosaveWalkthrough':
+        openAutoSaveWalkthrough();
         break;
     }
     if (pageConfiguration != null) {
@@ -729,7 +728,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         page: WalkThroughConfig);
   }
 
-  openAutoPayWalkthrough() {
+  openAutoSaveWalkthrough() {
     AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,
         widget: WalkThroughPage(

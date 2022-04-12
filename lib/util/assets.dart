@@ -27,6 +27,12 @@ class Assets {
   static final String noTransaction = "images/no-transactions.png";
   static final String augmontShare = "images/augmont-share.png";
 
+  //AUTOSAVE
+  static final String autosavemain = "assets/images/autosave.png";
+  static final String fasben1 = "assets/images/fasben1.png";
+  static final String fasben2 = "assets/images/fasben2.png";
+  static final String fasben3 = "assets/images/fasben3.png";
+
   //APPBAR
 
   static final String alerts = "assets/vectors/icons/alerts.svg";

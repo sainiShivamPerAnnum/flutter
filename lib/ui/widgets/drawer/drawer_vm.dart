@@ -33,6 +33,11 @@ class FDrawerVM extends BaseModel {
       pageConfig: MyWinnigsPageConfig,
     ),
     DrawerModel(
+      icon: Assets.repeat,
+      title: "Autosave Details",
+      pageConfig: UserAutoSaveDetailsViewPageConfig,
+    ),
+    DrawerModel(
       icon: Assets.dPanKyc,
       title: "PAN & KYC",
       pageConfig: KycDetailsPageConfig,

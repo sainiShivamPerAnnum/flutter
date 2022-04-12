@@ -1,137 +1,148 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
 import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
+import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:intl/intl.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
-class AutoPayCard extends StatefulWidget {
-  AutoPayCard({Key key}) : super(key: key);
+class AutoSaveCard extends StatefulWidget {
+  AutoSaveCard({Key key}) : super(key: key);
 
   @override
-  State<AutoPayCard> createState() => _AutoPayCardState();
+  State<AutoSaveCard> createState() => _AutoSaveCardState();
 }
 
-class _AutoPayCardState extends State<AutoPayCard> {
+class _AutoSaveCardState extends State<AutoSaveCard> {
   final _paytmService = locator<PaytmService>();
   bool isResumingInProgress = false;
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<PaytmService, PaytmServiceProperties>(
-        properties: [PaytmServiceProperties.ActiveSubscription],
-        builder: (context, model, property) => Container(
-              width: SizeConfig.screenWidth,
-              margin: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.pageHorizontalMargins),
-              decoration: BoxDecoration(
-                // color: Color(0xfff3c5c5),
-                color: UiConstants.autopayColor,
-
-                //color: Colors.white,
-                borderRadius: BorderRadius.circular(SizeConfig.roundness24),
-              ),
-              child: Stack(
-                children: [
-                  Opacity(
-                    opacity: 0.06,
-                    child: Image.asset(
-                      Assets.whiteRays,
+      properties: [
+        PaytmServiceProperties.ActiveSubscription,
+        PaytmServiceProperties.AutosaveVisibility
+      ],
+      builder: (context, model, property) => model.autosaveVisible
+          ? InkWell(
+              onTap: () async {
+                if (isLoading) return;
+                setState(() {
+                  isLoading = true;
+                });
+                if (model.isFirstTime) {
+                  CacheManager.writeCache(
+                      key: CacheManager.CACHE_IS_SUBSCRIPTION_FIRST_TIME,
+                      value: false,
+                      type: CacheType.bool);
+                  model.isFirstTime = false;
+                  AppState.delegate.appState.currentAction = PageAction(
+                      page: AutoSaveDetailsViewPageConfig,
+                      state: PageState.addPage);
+                } else
+                  await getActiveButtonAction();
+                setState(() {
+                  isLoading = false;
+                });
+              },
+              child: Container(
+                width: SizeConfig.screenWidth,
+                margin: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.pageHorizontalMargins),
+                decoration: BoxDecoration(
+                  // color: Color(0xfff3c5c5),
+                  // color: UiConstants.autosaveColor,
+                  gradient: getGradient(model.activeSubscription),
+                  image: DecorationImage(
+                      image: AssetImage(Assets.whiteRays),
                       fit: BoxFit.cover,
-                      width: SizeConfig.screenWidth -
-                          SizeConfig.pageHorizontalMargins * 2,
+                      opacity: 0.06),
+                  //color: Colors.white,
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness24),
+                ),
+                child: Stack(
+                  children: [
+                    // Opacity(
+                    //   opacity: 0.06,
+                    //   child: Image.asset(
+                    //     Assets.whiteRays,
+                    //     fit: BoxFit.cover,
+                    //     width: SizeConfig.screenWidth -
+                    //         SizeConfig.pageHorizontalMargins * 2,
+                    //   ),
+                    // ),
+                    Positioned(
+                      bottom: 0,
+                      right: SizeConfig.padding16,
+                      child: Image.asset(
+                        Assets.autosavemain,
+                        width: SizeConfig.screenWidth / 2.4,
+                      ),
                     ),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    right: SizeConfig.padding16,
-                    child: Image.asset(
-                      "assets/images/autopay.png",
-                      width: SizeConfig.screenWidth / 2.4,
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      SizedBox(width: SizeConfig.pageHorizontalMargins),
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                                height: SizeConfig.pageHorizontalMargins * 2),
-                            FittedBox(
-                              child: Text(
-                                getActiveTitle(model.activeSubscription),
-                                style:
-                                    TextStyles.body2.light.colour(Colors.white),
+                    Row(
+                      children: [
+                        SizedBox(width: SizeConfig.pageHorizontalMargins),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                  height: SizeConfig.pageHorizontalMargins * 2),
+                              FittedBox(
+                                child: Text(
+                                  getActiveTitle(model.activeSubscription),
+                                  style: TextStyles.body2.light
+                                      .colour(Colors.white),
+                                ),
                               ),
-                            ),
-                            SizedBox(height: SizeConfig.padding2),
-                            Text(
-                              getactiveSubtitle(model.activeSubscription),
-                              style:
-                                  TextStyles.title3.bold.colour(Colors.white),
-                            ),
-                            SizedBox(height: SizeConfig.padding16),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: InkWell(
-                                    onTap: () {
-                                      // BaseUtil.openModalBottomSheet(
-                                      //   addToScreenStack: true,
-                                      //   backgroundColor: Colors.white,
-                                      //   borderRadius: BorderRadius.only(
-                                      //     topLeft:
-                                      //         Radius.circular(SizeConfig.roundness32),
-                                      //     topRight:
-                                      //         Radius.circular(SizeConfig.roundness32),
-                                      //   ),
-                                      //   content: CustomSubscriptionModal(),
-                                      //   hapticVibrate: true,
-                                      //   isBarrierDismissable: false,
-                                      //   isScrollControlled: true,
-                                      // );
-                                      // AppState.delegate.appState.currentAction =
-                                      //     PageAction(
-                                      //         page: model.activeSubscription !=
-                                      //                 null
-                                      //             ? UserAutoPayDetailsViewPageConfig
-                                      //             : AutoPayProcessViewPageConfig,
-                                      //         state: PageState.addPage);
-                                      getActiveButtonAction(
-                                          model.activeSubscription);
-                                    },
+                              SizedBox(height: SizeConfig.padding2),
+                              Text(
+                                getactiveSubtitle(model.activeSubscription),
+                                style:
+                                    TextStyles.title5.bold.colour(Colors.white),
+                              ),
+                              SizedBox(height: SizeConfig.padding16),
+                              Row(
+                                children: [
+                                  FittedBox(
+                                    fit: BoxFit.scaleDown,
                                     child: Container(
+                                      height: SizeConfig.padding40,
                                       padding: EdgeInsets.symmetric(
-                                          vertical: SizeConfig.padding8),
+                                          vertical: SizeConfig.padding8,
+                                          horizontal: SizeConfig.padding16),
                                       alignment: Alignment.center,
                                       decoration: BoxDecoration(
-                                        color: Color(0xff8f97b3),
+                                        color: Colors.white.withOpacity(0.3),
                                         borderRadius:
                                             BorderRadius.circular(100),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: getShadow(
-                                                    model.activeSubscription)
-                                                .withOpacity(0.2),
-                                            offset: Offset(0, 2),
-                                            blurRadius: 5,
-                                            spreadRadius: 5,
-                                          )
-                                        ],
+                                        // boxShadow: [
+                                        //   BoxShadow(
+                                        //     color: getShadow(model.activeSubscription)
+                                        //         .withOpacity(0.2),
+                                        //     offset: Offset(0, 2),
+                                        //     blurRadius: 5,
+                                        //     spreadRadius: 5,
+                                        //   )
+                                        // ],
                                       ),
-                                      child: isResumingInProgress
+                                      child: isResumingInProgress || isLoading
                                           ? Container(
                                               height: SizeConfig.body2,
                                               child: SpinKitThreeBounce(
@@ -147,72 +158,93 @@ class _AutoPayCardState extends State<AutoPayCard> {
                                             ),
                                     ),
                                   ),
-                                ),
-                                SizedBox(width: SizeConfig.padding8),
-                                Expanded(
-                                  child: InkWell(
-                                    onTap: () {
-                                      AppState.delegate.appState.currentAction =
-                                          PageAction(
-                                              state: PageState.addPage,
-                                              page:
-                                                  AutoPayDetailsViewPageConfig);
-                                    },
-                                    child: model.activeSubscription != null
-                                        ? SizedBox()
-                                        : Container(
-                                            padding: EdgeInsets.symmetric(
-                                                vertical: SizeConfig.padding8),
-                                            alignment: Alignment.center,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(100),
-                                              border: Border.all(
-                                                width: 0.5,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                            child: Text(
-                                              "Details",
-                                              style: TextStyles.body2
-                                                  .colour(Colors.white),
-                                            ),
-                                          ),
+                                  SizedBox(width: SizeConfig.padding8),
+                                  Expanded(
+                                    child: SizedBox(),
                                   ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                                height: SizeConfig.pageHorizontalMargins * 2)
-                          ],
+                                ],
+                              ),
+                              SizedBox(
+                                  height: SizeConfig.pageHorizontalMargins * 2)
+                            ],
+                          ),
                         ),
-                      ),
-                      Expanded(
-                        child: Container(),
+                        Expanded(
+                          child: Container(),
+                        )
+                      ],
+                    ),
+                    if (!model.isFirstTime)
+                      Positioned(
+                        right: SizeConfig.padding4,
+                        top: SizeConfig.padding4,
+                        child: IconButton(
+                          onPressed: () {
+                            AppState.delegate.appState.currentAction =
+                                PageAction(
+                                    page: AutoSaveDetailsViewPageConfig,
+                                    state: PageState.addPage);
+                          },
+                          icon: Icon(
+                            Icons.info_outline_rounded,
+                            size: SizeConfig.padding20,
+                            color: Colors.white70,
+                          ),
+                        ),
                       )
-                    ],
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ));
+            )
+          : SizedBox(),
+    );
+  }
+
+  getGradient(ActiveSubscriptionModel subscription) {
+    if (subscription == null ||
+        (subscription.status == Constants.SUBSCRIPTION_INIT ||
+            subscription.status == Constants.SUBSCRIPTION_CANCELLED)) {
+      return new LinearGradient(
+        colors: [UiConstants.autosaveColor, UiConstants.autosaveColor],
+      );
+    }
+
+    if (subscription.status == Constants.SUBSCRIPTION_INACTIVE &&
+        subscription.autoAmount != 0.0 &&
+        subscription.resumeDate.isNotEmpty) {
+      return new LinearGradient(
+          colors: [Color(0xffFD746C), Color(0xffFF9068)],
+          begin: Alignment.topLeft,
+          end: Alignment.centerRight);
+    }
+    return new LinearGradient(
+      colors: [UiConstants.autosaveColor, UiConstants.autosaveColor],
+    );
   }
 
   String getActiveTitle(ActiveSubscriptionModel subscription) {
     if (subscription == null ||
         (subscription.status == Constants.SUBSCRIPTION_INIT ||
             subscription.status == Constants.SUBSCRIPTION_CANCELLED)) {
-      return "Savings made easy for you with";
+      return "Savings on autopilot with";
     }
     if (subscription.status == Constants.SUBSCRIPTION_PROCESSING) {
-      return "Your UPI Autopay";
+      return "Your Fello Autosave is currently";
     } else {
       if (subscription.status == Constants.SUBSCRIPTION_ACTIVE) {
-        return "Your Subscription is Active for";
+        return "Your Autosave is Active";
       }
       if (subscription.status == Constants.SUBSCRIPTION_INACTIVE) {
-        return "Your Subscription is Paused for";
+        if (subscription.autoAmount == 0.0)
+          return "Your Autosave setup is complete";
+        else {
+          if (subscription.resumeDate.isEmpty)
+            return "Savings on autopilot with";
+          else
+            return "Your Autosave is Paused till";
+        }
       }
-      return "Your Subscription";
+      return "Autosave";
     }
   }
 
@@ -220,16 +252,23 @@ class _AutoPayCardState extends State<AutoPayCard> {
     if (subscription == null ||
         (subscription.status == Constants.SUBSCRIPTION_INIT ||
             subscription.status == Constants.SUBSCRIPTION_CANCELLED)) {
-      return "UPI Autopay";
+      return "Fello Autosave";
     }
     if (subscription.status == Constants.SUBSCRIPTION_PROCESSING) {
-      return "is in process";
+      return "in Progress";
     } else {
       if (subscription.status == Constants.SUBSCRIPTION_ACTIVE) {
-        return "${subscription.autoAmount}/day";
+        return "₹${subscription.autoAmount.toInt()}${getFreq(subscription.autoFrequency)}";
       }
       if (subscription.status == Constants.SUBSCRIPTION_INACTIVE) {
-        return "${subscription.autoAmount}/day";
+        if (subscription.autoAmount == 0.0)
+          return "Start saving now";
+        else {
+          if (subscription.resumeDate.isEmpty)
+            return "Fello Autosave";
+          else
+            return "${getResumeDate()}";
+        }
       }
       return "0.0/day";
     }
@@ -242,59 +281,73 @@ class _AutoPayCardState extends State<AutoPayCard> {
       return "Set up";
     }
     if (subscription.status == Constants.SUBSCRIPTION_PROCESSING) {
-      return "Check";
+      return "View";
     } else {
       if (subscription.status == Constants.SUBSCRIPTION_ACTIVE) {
-        return "More..";
+        return "View";
       }
       if (subscription.status == Constants.SUBSCRIPTION_INACTIVE) {
-        return "Resume";
+        if (subscription.autoAmount == 0.0)
+          return "Set amount";
+        else {
+          if (subscription.resumeDate.isEmpty)
+            return "Restart";
+          else
+            return "Resume";
+        }
       }
       return "Details";
     }
   }
 
-  getActiveButtonAction(ActiveSubscriptionModel subscription) async {
-    if (subscription == null ||
-        (subscription.status == Constants.SUBSCRIPTION_INIT ||
-            subscription.status == Constants.SUBSCRIPTION_CANCELLED)) {
+  getActiveButtonAction() async {
+    Haptic.vibrate();
+    await _paytmService.getActiveSubscriptionDetails();
+    if (_paytmService.activeSubscription == null ||
+        (_paytmService.activeSubscription.status ==
+                Constants.SUBSCRIPTION_INIT ||
+            _paytmService.activeSubscription.status ==
+                Constants.SUBSCRIPTION_CANCELLED)) {
       AppState.delegate.appState.currentAction = PageAction(
-          page: AutoPayProcessViewPageConfig, state: PageState.addPage);
+          page: AutoSaveProcessViewPageConfig, state: PageState.addPage);
       // _paytmService.initiateSubscription();
-    } else if (subscription.status == Constants.SUBSCRIPTION_PROCESSING) {
+    } else if (_paytmService.activeSubscription.status ==
+        Constants.SUBSCRIPTION_PROCESSING) {
       AppState.delegate.appState.currentAction = PageAction(
-          page: AutoPayProcessViewPageConfig, state: PageState.addPage);
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        _paytmService.jumpToSubPage(1);
-      });
+          page: AutoSaveProcessViewPageConfig,
+          widget: AutoSaveProcessView(page: 1),
+          state: PageState.addWidget);
     } else {
-      if (subscription.status == Constants.SUBSCRIPTION_ACTIVE) {
+      if (_paytmService.activeSubscription.status ==
+          Constants.SUBSCRIPTION_ACTIVE) {
         {
           AppState.delegate.appState.currentAction = PageAction(
-              page: UserAutoPayDetailsViewPageConfig, state: PageState.addPage);
+              page: UserAutoSaveDetailsViewPageConfig,
+              state: PageState.addPage);
         }
       }
-      if (subscription.status == Constants.SUBSCRIPTION_INACTIVE) {
-        if (subscription.autoAmount == 0.0) {
+      if (_paytmService.activeSubscription.status ==
+          Constants.SUBSCRIPTION_INACTIVE) {
+        if (_paytmService.activeSubscription.autoAmount == 0.0) {
           AppState.delegate.appState.currentAction = PageAction(
-              page: AutoPayProcessViewPageConfig, state: PageState.addPage);
-          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-            _paytmService.jumpToSubPage(2);
-          });
+              page: AutoSaveProcessViewPageConfig,
+              widget: AutoSaveProcessView(page: 2),
+              state: PageState.addWidget);
         } else {
           setState(() {
             isResumingInProgress = true;
           });
           bool response = await _paytmService.resumeSubscription();
-          if (response) {
-            BaseUtil.showPositiveAlert("Subscription resumed",
-                "Now you are back to your savings journey");
-          } else
-            BaseUtil.showNegativeAlert(
-                "Failed to resume Subscription", "Please try again");
           setState(() {
             isResumingInProgress = false;
           });
+          if (!response) {
+            BaseUtil.showNegativeAlert(
+                "Unable to resume at the moment", "Please try again");
+          } else {
+            BaseUtil.showPositiveAlert("Autosave resumed successfully",
+                "For more details check Autosave section");
+          }
         }
       }
     }
@@ -319,5 +372,25 @@ class _AutoPayCardState extends State<AutoPayCard> {
       }
       return UiConstants.scaffoldColor;
     }
+  }
+
+  String getResumeDate() {
+    if (_paytmService.activeSubscription.resumeDate != null) {
+      List<String> dateSplitList =
+          _paytmService.activeSubscription.resumeDate.split('-');
+      int day = int.tryParse(dateSplitList[0]);
+      int month = int.tryParse(dateSplitList[1]);
+      int year = int.tryParse(dateSplitList[2]);
+      final resumeDate = DateTime(year, month, day);
+      return DateFormat.MMMEd().format(resumeDate);
+    } else {
+      return "Forever";
+    }
+  }
+
+  getFreq(String freq) {
+    if (freq == "DAILY") return "/day";
+    if (freq == "WEEKLY") return "/week";
+    return "";
   }
 }

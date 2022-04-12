@@ -1437,40 +1437,40 @@ class DBModel extends ChangeNotifier {
     return couponList;
   }
 
-  Future<Map<String, dynamic>> getAutopayTransactions(
+  Future<Map<String, dynamic>> getAutosaveTransactions(
       {@required String uid,
       @required String subId,
       DocumentSnapshot lastDocument,
       @required int limit}) async {
-    Map<String, dynamic> resultAutopayTransactionsMap = Map<String, dynamic>();
-    List<AutopayTransactionModel> requestedTxns = [];
+    Map<String, dynamic> resultAutosaveTransactionsMap = Map<String, dynamic>();
+    List<AutosaveTransactionModel> requestedTxns = [];
     try {
-      QuerySnapshot _querySnapshot = await _api.getAutopayTransactions(
+      QuerySnapshot _querySnapshot = await _api.getAutosaveTransactions(
         userId: uid,
         subId: subId,
         lastDocument: lastDocument,
         limit: limit,
       );
-      resultAutopayTransactionsMap['lastDocument'] = _querySnapshot.docs.last;
-      resultAutopayTransactionsMap['length'] = _querySnapshot.docs.length;
+      resultAutosaveTransactionsMap['lastDocument'] = _querySnapshot.docs.last;
+      resultAutosaveTransactionsMap['length'] = _querySnapshot.docs.length;
       _querySnapshot.docs.forEach((txn) {
         try {
           if (txn.exists)
-            requestedTxns.add(AutopayTransactionModel.fromMap(txn.data()));
+            requestedTxns.add(AutosaveTransactionModel.fromMap(txn.data()));
         } catch (e) {
           log.error('Failed to parse user transaction $txn');
         }
       });
-      logger.d("No of autopay transactions fetched: ${requestedTxns.length}");
-      resultAutopayTransactionsMap['listOfTransactions'] = requestedTxns;
-      return resultAutopayTransactionsMap;
+      logger.d("No of autosave transactions fetched: ${requestedTxns.length}");
+      resultAutosaveTransactionsMap['listOfTransactions'] = requestedTxns;
+      return resultAutosaveTransactionsMap;
     } catch (err) {
       requestedTxns = [];
       log.error('Failed to fetch transactions:: $err');
-      resultAutopayTransactionsMap['length'] = 0;
-      resultAutopayTransactionsMap['listOfTransactions'] = requestedTxns;
-      resultAutopayTransactionsMap['lastDocument'] = lastDocument;
-      return resultAutopayTransactionsMap;
+      resultAutosaveTransactionsMap['length'] = 0;
+      resultAutosaveTransactionsMap['listOfTransactions'] = requestedTxns;
+      resultAutosaveTransactionsMap['lastDocument'] = lastDocument;
+      return resultAutosaveTransactionsMap;
     }
   }
 
