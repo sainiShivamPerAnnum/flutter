@@ -165,9 +165,9 @@ void setupLocator() {
   locator.registerFactory(() => TopSaverViewModel());
   locator
       .registerFactory(() => TransactionCompletedConfirmationScreenViewModel());
-  locator.registerFactory(() => AutoPayProcessViewModel());
-  locator.registerFactory(() => UserAutoPayDetailsViewModel());
-  locator.registerFactory(() => AutopayTransactionsViewModel());
+  locator.registerFactory(() => AutoSaveProcessViewModel());
+  locator.registerFactory(() => UserAutoSaveDetailsViewModel());
+  locator.registerFactory(() => AutosaveTransactionsViewModel());
 
   //WIDGETS
   locator.registerFactory(() => FDrawerVM());
