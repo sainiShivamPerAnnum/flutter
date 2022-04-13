@@ -9,16 +9,12 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_view.dart';
-import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_vm.dart';
-
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
-import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -44,8 +40,6 @@ class AutoSaveProcessView extends StatefulWidget {
 class _AutoSaveProcessViewState extends State<AutoSaveProcessView> {
   @override
   Widget build(BuildContext context) {
-    final _processes = ['Prospect', 'Tour', 'Offer'];
-
     return BaseView<AutoSaveProcessViewModel>(onModelReady: (model) {
       model.init(widget.page);
     }, builder: (context, model, child) {
@@ -76,137 +70,10 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView> {
                       child: Stack(
                         children: [
                           if (model.showProgressIndicator)
-                            Align(
-                              alignment: Alignment.topCenter,
-                              child: Container(
-                                  alignment: Alignment.center,
-                                  width: SizeConfig.screenWidth,
-                                  height: SizeConfig.padding24,
-                                  margin: EdgeInsets.only(
-                                      top: SizeConfig.pageHorizontalMargins -
-                                          SizeConfig.padding8),
-                                  child: Timeline.tileBuilder(
-                                      shrinkWrap: true,
-                                      theme: TimelineThemeData(
-                                        direction: Axis.horizontal,
-                                        connectorTheme: ConnectorThemeData(
-                                          space: SizeConfig.screenWidth * 0.05,
-                                          thickness: 5.0,
-                                        ),
-                                      ),
-                                      physics: NeverScrollableScrollPhysics(),
-                                      builder: TimelineTileBuilder.connected(
-                                        connectionDirection:
-                                            ConnectionDirection.before,
-                                        itemExtentBuilder: (_, __) =>
-                                            MediaQuery.of(context).size.width /
-                                            (_processes.length * 2),
-                                        indicatorBuilder: (_, index) {
-                                          var color;
-                                          var child;
-                                          if (index == model.fraction) {
-                                            color = model.inProgressColor;
-                                            child = Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: CircularProgressIndicator(
-                                                strokeWidth: 3.0,
-                                                valueColor:
-                                                    AlwaysStoppedAnimation(
-                                                        Colors.white),
-                                              ),
-                                            );
-                                          } else if (index < model.fraction) {
-                                            color = model.completeColor;
-                                            child = Icon(
-                                              Icons.check,
-                                              color: Colors.white,
-                                              size: 15.0,
-                                            );
-                                          } else {
-                                            color = model.todoColor;
-                                          }
-
-                                          if (index <= model.fraction) {
-                                            return Stack(
-                                              children: [
-                                                CustomPaint(
-                                                  size: Size(30.0, 30.0),
-                                                  painter: _BezierPainter(
-                                                    color: color,
-                                                    drawStart: index > 0,
-                                                    drawEnd:
-                                                        index < model.fraction,
-                                                  ),
-                                                ),
-                                                DotIndicator(
-                                                  size: 30.0,
-                                                  color: color,
-                                                  child: child,
-                                                ),
-                                              ],
-                                            );
-                                          } else {
-                                            return Stack(
-                                              children: [
-                                                CustomPaint(
-                                                  size: Size(15.0, 15.0),
-                                                  painter: _BezierPainter(
-                                                    color: color,
-                                                    drawEnd: index <
-                                                        _processes.length - 1,
-                                                  ),
-                                                ),
-                                                OutlinedDotIndicator(
-                                                  borderWidth: 4.0,
-                                                  color: color,
-                                                ),
-                                              ],
-                                            );
-                                          }
-                                        },
-                                        connectorBuilder: (_, index, type) {
-                                          if (index > 0) {
-                                            if (index == model.fraction) {
-                                              final prevColor =
-                                                  model.getColor(index - 1);
-                                              final color =
-                                                  model.getColor(index);
-                                              List<Color> gradientColors;
-                                              if (type == ConnectorType.start) {
-                                                gradientColors = [
-                                                  Color.lerp(
-                                                      prevColor, color, 0.5),
-                                                  color
-                                                ];
-                                              } else {
-                                                gradientColors = [
-                                                  prevColor,
-                                                  Color.lerp(
-                                                      prevColor, color, 0.5)
-                                                ];
-                                              }
-                                              return DecoratedLineConnector(
-                                                decoration: BoxDecoration(
-                                                  gradient: LinearGradient(
-                                                    colors: gradientColors,
-                                                  ),
-                                                ),
-                                              );
-                                            } else {
-                                              return SolidLineConnector(
-                                                color: model.getColor(index),
-                                              );
-                                            }
-                                          } else {
-                                            return null;
-                                          }
-                                        },
-                                        itemCount: _processes.length,
-                                      ))),
-                            ),
-                          PageView(controller: model.pageController,
-                              // physics: NeverScrollableScrollPhysics(),
+                            AutosaveProgressIndicator(),
+                          PageView(
+                              controller: model.pageController,
+                              physics: NeverScrollableScrollPhysics(),
                               children: [
                                 addUpiIdUI(model),
                                 pendingUI(model),
@@ -584,7 +451,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView> {
               FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z@]")),
             ],
             keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(hintText: "abcd@upi"),
+            decoration: InputDecoration(hintText: "hello@upi"),
           ),
           SizedBox(
             height: SizeConfig.padding12,
@@ -673,190 +540,191 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView> {
         Container(
           padding: EdgeInsets.symmetric(
               horizontal: SizeConfig.pageHorizontalMargins),
-          child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: Column(
-              children: [
-                SizedBox(height: SizeConfig.padding54),
-                SvgPicture.asset("assets/vectors/addmoney.svg",
-                    height: SizeConfig.screenHeight * 0.16),
-                SizedBox(height: SizeConfig.padding12),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.pageHorizontalMargins),
-                  child: Text(
-                    "How much would you like to save?",
-                    style: TextStyles.title3.bold,
-                    textAlign: TextAlign.center,
-                  ),
+          child: Column(
+            children: [
+              SizedBox(height: SizeConfig.padding54),
+              // SvgPicture.asset("assets/vectors/addmoney.svg",
+              //     height: SizeConfig.screenHeight * 0.16),
+              SizedBox(height: SizeConfig.padding12),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.pageHorizontalMargins),
+                child: Text(
+                  "How much would you like to save?",
+                  style: TextStyles.title3.bold,
+                  textAlign: TextAlign.center,
                 ),
-                SizedBox(height: SizeConfig.padding16),
-                Container(
-                  decoration: BoxDecoration(
-                    color: UiConstants.scaffoldColor,
-                    borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-                  ),
-                  padding: EdgeInsets.all(SizeConfig.padding6),
-                  height: SizeConfig.padding54,
-                  child: Stack(
-                    children: [
-                      AnimatedPositioned(
-                        duration: Duration(milliseconds: 500),
-                        curve: Curves.decelerate,
-                        left: model.isDaily
-                            ? 0
-                            : (SizeConfig.screenWidth / 2 -
-                                SizeConfig.pageHorizontalMargins -
-                                SizeConfig.padding6),
-                        child: Container(
-                          width: SizeConfig.screenWidth / 2 -
+              ),
+
+              SizedBox(height: SizeConfig.padding24),
+              Container(
+                decoration: BoxDecoration(
+                  color: UiConstants.scaffoldColor,
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+                ),
+                padding: EdgeInsets.all(SizeConfig.padding6),
+                height: SizeConfig.padding54,
+                child: Stack(
+                  children: [
+                    AnimatedPositioned(
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.decelerate,
+                      left: model.isDaily
+                          ? 0
+                          : (SizeConfig.screenWidth / 2 -
                               SizeConfig.pageHorizontalMargins -
-                              SizeConfig.padding6,
-                          height: SizeConfig.padding54 * 0.8,
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.circular(SizeConfig.roundness12),
-                            color: UiConstants.primaryColor,
-                          ),
+                              SizeConfig.padding6),
+                      child: Container(
+                        width: SizeConfig.screenWidth / 2 -
+                            SizeConfig.pageHorizontalMargins -
+                            SizeConfig.padding6,
+                        height: SizeConfig.padding54 * 0.8,
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.circular(SizeConfig.roundness12),
+                          color: UiConstants.primaryColor,
                         ),
                       ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: InkWell(
-                                onTap: () {
-                                  Haptic.vibrate();
-                                  model.isDaily = true;
-                                  model.onAmountValueChanged(
-                                      model.amountFieldController.text);
-                                },
-                                child: SegmentChips(
-                                  model: model,
-                                  text: "Daily",
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: InkWell(
-                                onTap: () {
-                                  Haptic.vibrate();
-                                  model.isDaily = false;
-                                  model.onAmountValueChanged(
-                                      model.amountFieldController.text);
-                                },
-                                child: SegmentChips(
-                                  model: model,
-                                  text: "Weekly",
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: SizeConfig.screenWidth,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Expanded(child: SizedBox()),
-                      IntrinsicWidth(
-                        child: Container(
-                          height: SizeConfig.screenWidth / 4.2,
-                          child: TextField(
-                            controller: model.amountFieldController,
-                            maxLines: null,
-
-                            decoration: InputDecoration(
-                                prefixText: "₹",
-                                prefixStyle: GoogleFonts.sourceSansPro(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: SizeConfig.screenWidth / 4.8,
-                                    color: Colors.black),
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: -SizeConfig.padding4),
-                                isDense: true,
-                                isCollapsed: true,
-                                border: InputBorder.none,
-                                enabledBorder: InputBorder.none,
-                                focusedBorder: InputBorder.none),
-                            // autofocus: true,
-                            // cursorHeight: SizeConfig.padding20,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                            // enableInteractiveSelection: false,
-                            keyboardType: TextInputType.number,
-                            // cursorWidth: 0,
-                            autofocus: true,
-                            onChanged: (value) {
-                              model.onAmountValueChanged(value);
-                            },
-
-                            style: GoogleFonts.sourceSansPro(
-                                fontWeight: FontWeight.bold,
-                                height: 0.9,
-                                fontSize: SizeConfig.screenWidth / 4.8,
-                                color: Colors.black),
-                          ),
-                        ),
-                      ),
-                      Column(
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Row(
                         children: [
-                          Text(
-                            model.isDaily ? '/day' : '/week',
-                            style: GoogleFonts.sourceSansPro(
-                                fontSize: SizeConfig.title2,
-                                height: 2,
-                                color: Colors.black38),
+                          Expanded(
+                            child: InkWell(
+                              onTap: () {
+                                Haptic.vibrate();
+                                model.isDaily = true;
+                                model.onAmountValueChanged(
+                                    model.amountFieldController.text);
+                              },
+                              child: SegmentChips(
+                                model: model,
+                                text: "Daily",
+                              ),
+                            ),
                           ),
-                          SizedBox(height: SizeConfig.padding12)
+                          Expanded(
+                            child: InkWell(
+                              onTap: () {
+                                Haptic.vibrate();
+                                model.isDaily = false;
+                                model.onAmountValueChanged(
+                                    model.amountFieldController.text);
+                              },
+                              child: SegmentChips(
+                                model: model,
+                                text: "Weekly",
+                              ),
+                            ),
+                          ),
                         ],
                       ),
-                      Expanded(child: SizedBox()),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                SizedBox(height: 10),
-                Text(
-                  "You'll be saving ₹${model.saveAmount.toInt().toString().replaceAllMapped(model.reg, model.mathFunc)} every year",
-                  style: TextStyles.body2.bold.colour(Colors.black45),
+              ),
+              Spacer(),
+              Container(
+                width: SizeConfig.screenWidth,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Expanded(child: SizedBox()),
+                    IntrinsicWidth(
+                      child: Container(
+                        height: SizeConfig.screenWidth / 4.2,
+                        child: TextField(
+                          controller: model.amountFieldController,
+                          maxLines: null,
+
+                          decoration: InputDecoration(
+                              prefixText: "₹",
+                              prefixStyle: GoogleFonts.sourceSansPro(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: SizeConfig.screenWidth / 4.8,
+                                  color: Colors.black),
+                              contentPadding: EdgeInsets.symmetric(
+                                  vertical: -SizeConfig.padding4),
+                              isDense: true,
+                              isCollapsed: true,
+                              border: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+                              focusedBorder: InputBorder.none),
+                          // autofocus: true,
+                          // cursorHeight: SizeConfig.padding20,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          // enableInteractiveSelection: false,
+                          keyboardType: TextInputType.number,
+                          // cursorWidth: 0,
+                          autofocus: true,
+                          onChanged: (value) {
+                            model.onAmountValueChanged(value);
+                          },
+
+                          style: GoogleFonts.sourceSansPro(
+                              fontWeight: FontWeight.bold,
+                              height: 0.9,
+                              fontSize: SizeConfig.screenWidth / 4.8,
+                              color: Colors.black),
+                        ),
+                      ),
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          model.isDaily ? '/day' : '/week',
+                          style: GoogleFonts.sourceSansPro(
+                              fontSize: SizeConfig.title2,
+                              height: 2,
+                              color: Colors.black38),
+                        ),
+                        SizedBox(height: SizeConfig.padding12)
+                      ],
+                    ),
+                    Expanded(child: SizedBox()),
+                  ],
                 ),
-                SizedBox(
-                  height: SizeConfig.padding24,
+              ),
+              SizedBox(height: 10),
+              Text(
+                "You'll be saving ₹${model.saveAmount.toInt().toString().replaceAllMapped(model.reg, model.mathFunc)} every year",
+                style: TextStyles.body2.bold.colour(Colors.black45),
+              ),
+              SizedBox(
+                height: SizeConfig.padding24,
+              ),
+              Container(
+                width: SizeConfig.screenWidth,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: model.isDaily
+                      ? List.generate(
+                          model.dailyChips.length,
+                          (index) => AmountChips(
+                                amount: model.dailyChips[index].value,
+                                model: model,
+                                isBestSeller: model.dailyChips[index].best,
+                              ))
+                      : List.generate(
+                          model.weeklyChips.length,
+                          (index) => AmountChips(
+                                amount: model.weeklyChips[index].value,
+                                model: model,
+                                isBestSeller: model.weeklyChips[index].best,
+                              )),
                 ),
-                Container(
-                  width: SizeConfig.screenWidth,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: model.isDaily
-                        ? List.generate(
-                            model.dailyChips.length,
-                            (index) => AmountChips(
-                                  amount: model.dailyChips[index].value,
-                                  model: model,
-                                  isBestSeller: model.dailyChips[index].best,
-                                ))
-                        : List.generate(
-                            model.weeklyChips.length,
-                            (index) => AmountChips(
-                                  amount: model.weeklyChips[index].value,
-                                  model: model,
-                                  isBestSeller: model.weeklyChips[index].best,
-                                )),
-                  ),
-                ),
-                SizedBox(
-                  height: SizeConfig.screenHeight * 0.2,
-                )
-              ],
-            ),
+              ),
+
+              Spacer(),
+              SizedBox(
+                height: SizeConfig.screenHeight * 0.3,
+              )
+            ],
           ),
         ),
         Positioned(
@@ -869,19 +737,20 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView> {
                   vertical: SizeConfig.padding16,
                 ),
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(SizeConfig.roundness32),
-                      topRight: Radius.circular(SizeConfig.roundness32),
-                    ),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        offset: Offset(0, -2),
-                        color: UiConstants.primaryLight.withOpacity(0.5),
-                        blurRadius: 5,
-                        spreadRadius: 5,
-                      )
-                    ]),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(SizeConfig.roundness32),
+                    topRight: Radius.circular(SizeConfig.roundness32),
+                  ),
+                  color: Colors.white,
+                  // boxShadow: [
+                  //   BoxShadow(
+                  //     offset: Offset(0, -2),
+                  //     color: UiConstants.primaryLight.withOpacity(0.5),
+                  //     blurRadius: 5,
+                  //     spreadRadius: 5,
+                  //   )
+                  // ]
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -893,9 +762,12 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView> {
                           children: [
                             Text(
                               "Every ${model.isDaily ? 'day' : 'week'} you'll get",
-                              style: TextStyles.body1.bold,
+                              style: TextStyles.body2.bold,
                             ),
-                            Divider(),
+                            // Divider(
+                            //   height: SizeConfig.padding24,
+                            // ),
+                            SizedBox(height: SizeConfig.padding12),
                             Container(
                               height: SizeConfig.screenWidth * 0.2,
                               width: SizeConfig.screenWidth,
@@ -1041,6 +913,149 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView> {
       default:
         return "preferred UPI";
     }
+  }
+}
+
+class AutosaveProgressIndicator extends StatelessWidget {
+  final _processes = ['Prospect', 'Tour', 'Offer'];
+
+  final completeColor = UiConstants.primaryColor;
+  final inProgressColor = UiConstants.tertiarySolid;
+  final todoColor = Color(0xffd1d2d7);
+  Color getColor(model, index) {
+    if (index == model.fraction) {
+      return inProgressColor;
+    } else if (index < model.fraction) {
+      return completeColor;
+    } else {
+      return todoColor;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PropertyChangeConsumer<PaytmService, PaytmServiceProperties>(
+        properties: [PaytmServiceProperties.ProcessFraction],
+        builder: (context, model, property) => Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                  alignment: Alignment.center,
+                  width: SizeConfig.screenWidth,
+                  height: SizeConfig.padding24,
+                  margin: EdgeInsets.only(
+                      top: SizeConfig.pageHorizontalMargins -
+                          SizeConfig.padding8),
+                  child: Timeline.tileBuilder(
+                      shrinkWrap: true,
+                      theme: TimelineThemeData(
+                        direction: Axis.horizontal,
+                        connectorTheme: ConnectorThemeData(
+                          space: SizeConfig.screenWidth * 0.05,
+                          thickness: 5.0,
+                        ),
+                      ),
+                      physics: NeverScrollableScrollPhysics(),
+                      builder: TimelineTileBuilder.connected(
+                        connectionDirection: ConnectionDirection.before,
+                        itemExtentBuilder: (_, __) =>
+                            MediaQuery.of(context).size.width /
+                            (_processes.length * 2),
+                        indicatorBuilder: (_, index) {
+                          var color;
+                          var child;
+                          if (index == model.fraction) {
+                            color = inProgressColor;
+                            child = Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: CircularProgressIndicator(
+                                strokeWidth: 3.0,
+                                valueColor:
+                                    AlwaysStoppedAnimation(Colors.white),
+                              ),
+                            );
+                          } else if (index < model.fraction) {
+                            color = completeColor;
+                            child = Icon(
+                              Icons.check,
+                              color: Colors.white,
+                              size: 15.0,
+                            );
+                          } else {
+                            color = todoColor;
+                          }
+
+                          if (index <= model.fraction) {
+                            return Stack(
+                              children: [
+                                CustomPaint(
+                                  size: Size(30.0, 30.0),
+                                  painter: _BezierPainter(
+                                    color: color,
+                                    drawStart: index > 0,
+                                    drawEnd: index < model.fraction,
+                                  ),
+                                ),
+                                DotIndicator(
+                                  size: 30.0,
+                                  color: color,
+                                  child: child,
+                                ),
+                              ],
+                            );
+                          } else {
+                            return Stack(
+                              children: [
+                                CustomPaint(
+                                  size: Size(15.0, 15.0),
+                                  painter: _BezierPainter(
+                                    color: color,
+                                    drawEnd: index < _processes.length - 1,
+                                  ),
+                                ),
+                                OutlinedDotIndicator(
+                                  borderWidth: 4.0,
+                                  color: color,
+                                ),
+                              ],
+                            );
+                          }
+                        },
+                        connectorBuilder: (_, index, type) {
+                          if (index > 0) {
+                            if (index == model.fraction) {
+                              final prevColor = getColor(model, index - 1);
+                              final color = getColor(model, index);
+                              List<Color> gradientColors;
+                              if (type == ConnectorType.start) {
+                                gradientColors = [
+                                  Color.lerp(prevColor, color, 0.5),
+                                  color
+                                ];
+                              } else {
+                                gradientColors = [
+                                  prevColor,
+                                  Color.lerp(prevColor, color, 0.5)
+                                ];
+                              }
+                              return DecoratedLineConnector(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: gradientColors,
+                                  ),
+                                ),
+                              );
+                            } else {
+                              return SolidLineConnector(
+                                color: getColor(model, index),
+                              );
+                            }
+                          } else {
+                            return null;
+                          }
+                        },
+                        itemCount: _processes.length,
+                      ))),
+            ));
   }
 }
 

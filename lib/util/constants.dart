@@ -42,6 +42,7 @@ class Constants {
   static final String SUBCOLN_USER_REWARDS = "rewards";
   static final String SUBCOLN_USER_STATS = "stats";
   static final String SUBCOLN_USER_SUBSCRIPTION = "subscription";
+  static final String SUBCOLN_USER_SUB_TXN = "sub-txns";
   //Sub-collection docs
   static final String DOC_USER_FCM_TOKEN = "client_token";
   static final String DOC_USER_ICICI_DETAIL = "detail";

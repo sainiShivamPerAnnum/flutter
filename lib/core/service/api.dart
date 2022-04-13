@@ -851,9 +851,7 @@ class Api {
     Query query = _db
         .collection(Constants.COLN_USERS)
         .doc(userId)
-        .collection(Constants.SUBCOLN_USER_SUBSCRIPTION)
-        .doc(subId)
-        .collection(Constants.DOC_USER_SUBSCRIPTIONS_ORDERS);
+        .collection(Constants.SUBCOLN_USER_SUBSCRIPTION);
     if (limit != -1 && limit > 3) query = query.limit(limit);
     query = query.orderBy('createdOn', descending: true);
     if (lastDocument != null) query = query.startAfterDocument(lastDocument);

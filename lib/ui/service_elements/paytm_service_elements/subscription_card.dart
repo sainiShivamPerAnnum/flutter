@@ -60,7 +60,9 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
                   isLoading = false;
                 });
               },
-              child: Container(
+              child: AnimatedContainer(
+                duration: Duration(seconds: 2),
+                curve: Curves.decelerate,
                 width: SizeConfig.screenWidth,
                 margin: EdgeInsets.symmetric(
                     horizontal: SizeConfig.pageHorizontalMargins),
@@ -77,15 +79,6 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
                 ),
                 child: Stack(
                   children: [
-                    // Opacity(
-                    //   opacity: 0.06,
-                    //   child: Image.asset(
-                    //     Assets.whiteRays,
-                    //     fit: BoxFit.cover,
-                    //     width: SizeConfig.screenWidth -
-                    //         SizeConfig.pageHorizontalMargins * 2,
-                    //   ),
-                    // ),
                     Positioned(
                       bottom: 0,
                       right: SizeConfig.padding16,

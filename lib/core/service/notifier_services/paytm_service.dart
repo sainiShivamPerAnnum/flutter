@@ -100,6 +100,15 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     _logger.d("Paytm Service:Active Subscription Properties notified");
   }
 
+  int _fraction = 0;
+  get fraction => this._fraction;
+
+  set fraction(value) {
+    this._fraction = value;
+    notifyListeners(PaytmServiceProperties.ProcessFraction);
+    _logger.d("Fraction value: $_fraction");
+  }
+
   String _processText = "processing";
 
   final String devMid = "qpHRfp13374268724583";

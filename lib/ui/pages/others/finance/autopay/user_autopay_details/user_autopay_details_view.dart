@@ -846,7 +846,7 @@ class _PauseAutoSaveModalState extends State<PauseAutoSaveModal> {
             radioValue: 1,
           ),
           pauseOptionTile(
-            text: "2 Week",
+            text: "2 Weeks",
             radioValue: 2,
           ),
           pauseOptionTile(

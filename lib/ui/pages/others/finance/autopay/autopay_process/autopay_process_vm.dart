@@ -25,7 +25,7 @@ class AutoSaveProcessViewModel extends BaseModel {
   bool _showSetAmountView = false;
   bool _isDaily = true;
   bool _showProgressIndicator = false;
-  int _fraction = 0;
+
   int minAmount = 10;
   int maxAmount = 5000;
   String _title = "Set up Autosave";
@@ -68,9 +68,6 @@ class AutoSaveProcessViewModel extends BaseModel {
   String Function(Match) mathFunc = (Match match) => '${match[1]},';
   static const kTileHeight = 50.0;
 
-  final completeColor = UiConstants.primaryColor;
-  final inProgressColor = UiConstants.tertiarySolid;
-  final todoColor = Color(0xffd1d2d7);
   // updateSliderValue(val) {
   //   sliderValue = val;
   //   saveAmount = calculateSaveAmount();
@@ -134,14 +131,6 @@ class AutoSaveProcessViewModel extends BaseModel {
     notifyListeners();
   }
 
-  get fraction => this._fraction;
-
-  set fraction(value) {
-    this._fraction = value;
-    _logger.d("Fraction value: $_fraction");
-    notifyListeners();
-  }
-
   init(int page) async {
     getChipAmounts();
     counter = 0;
@@ -151,23 +140,13 @@ class AutoSaveProcessViewModel extends BaseModel {
       vpaController.text = _paytmService.activeSubscription.vpa;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _paytmService.jumpToSubPage(page);
-      fraction = page;
+      _paytmService.fraction = page;
       // getTitle();
       print(pageController.page);
       showProgressIndicator = true;
       _paytmService.processText = "processing";
     });
     onAmountValueChanged(amountFieldController.text);
-  }
-
-  Color getColor(int index) {
-    if (index == fraction) {
-      return inProgressColor;
-    } else if (index < fraction) {
-      return completeColor;
-    } else {
-      return todoColor;
-    }
   }
 
   onAmountValueChanged(String val) {
@@ -225,7 +204,7 @@ class AutoSaveProcessViewModel extends BaseModel {
   tryAgain() {
     _paytmService.jumpToSubPage(0);
     showProgressIndicator = true;
-    fraction = 0;
+    _paytmService.fraction = 0;
   }
 
   initiateCustomSubscription() async {
@@ -253,7 +232,7 @@ class AutoSaveProcessViewModel extends BaseModel {
     isSubscriptionInProgress = false;
     if (response.status) {
       _paytmService.jumpToSubPage(1);
-      fraction = 1;
+      _paytmService.fraction = 1;
       AppState.screenStack.add(ScreenItem.loader);
       Future.delayed(Duration(minutes: 8), () {
         if (AppState.screenStack.last == ScreenItem.loader) {
@@ -314,7 +293,7 @@ class AutoSaveProcessViewModel extends BaseModel {
       // subId = res['subId'] ?? "";
       _paytmService.getActiveSubscriptionDetails();
       _paytmService.jumpToSubPage(2);
-      fraction = 2;
+      _paytmService.fraction = 2;
       showProgressIndicator = false;
       // onAmountValueChanged(amountFieldController.text);
 

@@ -34,7 +34,7 @@ class FDrawerVM extends BaseModel {
     ),
     DrawerModel(
       icon: Assets.repeat,
-      title: "Autosave Details",
+      title: "Autosave",
       pageConfig: UserAutoSaveDetailsViewPageConfig,
     ),
     DrawerModel(
