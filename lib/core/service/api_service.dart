@@ -79,6 +79,7 @@ class APIService implements API {
     Map<String, dynamic> body,
     String token,
     bool isAuthTokenAvailable = true,
+    bool isCustomUrl = false,
   }) async {
     final HttpMetric metric =
         FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Post);
@@ -98,7 +99,7 @@ class APIService implements API {
 
       if (!isAuthTokenAvailable) _headers['x-api-key'] = 'QTp93rVNrUJ9nv7rXDDh';
 
-      String _url = _baseUrl + url;
+      String _url = isCustomUrl ? url : _baseUrl + url;
       logger.d("response from $url");
 
       final response = await http.post(

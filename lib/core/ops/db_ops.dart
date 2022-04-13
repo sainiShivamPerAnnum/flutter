@@ -50,28 +50,33 @@ class DBModel extends ChangeNotifier {
   String phoneModel;
   String softwareVersion;
   String deviceId;
+  String platform;
 
   Future<void> initDeviceInfo() async {
-    try {
-      if (Platform.isIOS) {
-        IosDeviceInfo iosDeviceInfo;
-        iosDeviceInfo = await deviceInfo.iosInfo;
-        phoneModel = iosDeviceInfo.model;
-        softwareVersion = iosDeviceInfo.systemVersion;
-        deviceId = iosDeviceInfo.identifierForVendor;
-        logger.d(
-            "Device Information - \n $phoneModel \n $softwareVersion \n $deviceId");
-      } else if (Platform.isAndroid) {
-        AndroidDeviceInfo androidDeviceInfo = await deviceInfo.androidInfo;
-        phoneModel = androidDeviceInfo.model;
-        softwareVersion = androidDeviceInfo.version.release;
-        deviceId = androidDeviceInfo.androidId;
-        logger.d(
-            "Device Information - \n $phoneModel \n $softwareVersion \n $deviceId");
+    if (!isDeviceInfoInitiated) {
+      try {
+        if (Platform.isIOS) {
+          IosDeviceInfo iosDeviceInfo;
+          iosDeviceInfo = await deviceInfo.iosInfo;
+          phoneModel = iosDeviceInfo.model;
+          softwareVersion = iosDeviceInfo.systemVersion;
+          deviceId = iosDeviceInfo.identifierForVendor;
+          platform = "ios";
+          logger.d(
+              "Device Information - \n $phoneModel \n $softwareVersion \n $deviceId");
+        } else if (Platform.isAndroid) {
+          AndroidDeviceInfo androidDeviceInfo = await deviceInfo.androidInfo;
+          phoneModel = androidDeviceInfo.model;
+          softwareVersion = androidDeviceInfo.version.release;
+          deviceId = androidDeviceInfo.androidId;
+          platform = "android";
+          logger.d(
+              "Device Information - \n $phoneModel \n $softwareVersion \n $deviceId");
+        }
+        isDeviceInfoInitiated = true;
+      } catch (e) {
+        log.error('Initiating Device Info failed');
       }
-      isDeviceInfoInitiated = true;
-    } catch (e) {
-      log.error('Initiating Device Info failed');
     }
   }
 

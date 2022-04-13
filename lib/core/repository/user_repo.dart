@@ -120,4 +120,26 @@ class UserRepository {
       throw e;
     }
   }
+
+  Future<void> setNewDeviceId(
+      {String uid, String deviceId, String platform, String token}) async {
+    try {
+      final String _bearer = token;
+
+      Map<String, dynamic> _body = {
+        "uid": uid,
+        "deviceId": deviceId,
+        "platform": platform,
+      };
+
+      await APIService.instance.postData(
+          "https://w7l6dgq5n9.execute-api.ap-south-1.amazonaws.com/dev/setUserDeviceId",
+          body: _body,
+          isCustomUrl: true);
+
+      _logger.d("Device added");
+    } catch (e) {
+      _logger.e(e);
+    }
+  }
 }

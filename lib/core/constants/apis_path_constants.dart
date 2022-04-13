@@ -46,4 +46,7 @@ class ApiPath {
 
   //PaytmApis
   static const kCreatePaytmTransaction = "/paymentOps/transaction";
+
+  //DeviceInfo
+  get kSetUserDeviceId =>  "/$stage/setUserDeviceId";
 }

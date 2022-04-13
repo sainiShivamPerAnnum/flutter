@@ -375,6 +375,7 @@ class LoginControllerViewModel extends BaseModel {
     logger.d("User authenticated. Now check if details previously available.");
     userService.firebaseUser = FirebaseAuth.instance.currentUser;
     logger.d("User is set: " + userService.firebaseUser.uid);
+
     ApiResponse<BaseUser> user =
         await dbProvider.getUser(userService.firebaseUser.uid);
     if (user.code == 400) {
@@ -449,6 +450,19 @@ class LoginControllerViewModel extends BaseModel {
           PageAction(state: PageState.replaceAll, page: BlockedUserPageConfig);
       return;
     }
+
+    await dbProvider.initDeviceInfo();
+    final String deviceId = dbProvider.deviceId;
+    final String platform = dbProvider.platform;
+    
+    final token = await _getBearerToken();
+
+    _userRepo.setNewDeviceId(
+        uid: userService.baseUser.uid,
+        deviceId: deviceId,
+        platform: platform,
+        token: token);
+
     appStateProvider.currentAction =
         PageAction(state: PageState.replaceAll, page: RootPageConfig);
     BaseUtil.showPositiveAlert(
