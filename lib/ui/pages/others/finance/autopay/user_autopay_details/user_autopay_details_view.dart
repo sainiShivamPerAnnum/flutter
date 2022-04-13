@@ -329,27 +329,6 @@ class PauseResumeButton extends StatelessWidget {
                   },
                 ),
               ),
-              SizedBox(height: SizeConfig.padding6),
-              model.isResumingInProgress
-                  ? Container(
-                      height: SizeConfig.padding40,
-                      child: SpinKitThreeBounce(
-                        size: SizeConfig.padding24,
-                        color: UiConstants.tertiarySolid,
-                      ),
-                    )
-                  : TextButton(
-                      onPressed: () => model.pauseResume(model),
-                      child: Text(
-                        model.activeSubscription.status ==
-                                Constants.SUBSCRIPTION_INACTIVE
-                            ? "RESUME SUBSCRIPTION"
-                            : "PAUSE SUBSCRIPTION",
-                        style: TextStyles.body2
-                            .colour(UiConstants.tertiarySolid)
-                            .light,
-                      ),
-                    ),
               SizedBox(
                 height: SizeConfig.viewInsets.bottom != 0
                     ? 0
@@ -741,32 +720,30 @@ class DetailsView extends StatelessWidget {
                       },
                     ),
                   ),
-                  // SizedBox(height: SizeConfig.padding6),
-                  // TextButton(
-                  //   onPressed: () {
-                  //     BaseUtil.openModalBottomSheet(
-                  //       addToScreenStack: true,
-                  //       hapticVibrate: true,
-                  //       backgroundColor: Colors.white,
-                  //       borderRadius: BorderRadius.only(
-                  //         topLeft: Radius.circular(SizeConfig.roundness32),
-                  //         topRight: Radius.circular(SizeConfig.roundness32),
-                  //       ),
-                  //       isBarrierDismissable: false,
-                  //       content: PauseAutoSaveModal(
-                  //         model: model,
-                  //       ),
-                  //     );
-                  //   },
-                  //   child: Text(
-                  //     "PAUSE",
-                  //     style: TextStyles.body1.colour(Colors.grey).light,
-                  //   ),
-                  // ),
+                  model.isResumingInProgress
+                      ? Container(
+                          height: SizeConfig.padding40,
+                          child: SpinKitThreeBounce(
+                            size: SizeConfig.padding24,
+                            color: UiConstants.tertiarySolid,
+                          ),
+                        )
+                      : TextButton(
+                          onPressed: () => model.pauseResume(model),
+                          child: Text(
+                            model.activeSubscription.status ==
+                                    Constants.SUBSCRIPTION_INACTIVE
+                                ? "RESUME SUBSCRIPTION"
+                                : "PAUSE SUBSCRIPTION",
+                            style: TextStyles.body2
+                                .colour(UiConstants.tertiarySolid)
+                                .light,
+                          ),
+                        ),
                   SizedBox(
                     height: SizeConfig.viewInsets.bottom != 0
                         ? 0
-                        : SizeConfig.pageHorizontalMargins,
+                        : SizeConfig.padding12,
                   ),
                 ],
               ),
@@ -835,12 +812,7 @@ class _PauseAutoSaveModalState extends State<PauseAutoSaveModal> {
             height: SizeConfig.padding24,
             thickness: 2,
           ),
-          SizedBox(height: SizeConfig.padding8),
-          Text(
-            "Pause AutoSave for",
-            style: TextStyles.body2.colour(Colors.grey),
-          ),
-          SizedBox(height: SizeConfig.padding8),
+          SizedBox(height: SizeConfig.padding16),
           pauseOptionTile(
             text: "1 Week",
             radioValue: 1,
@@ -857,7 +829,7 @@ class _PauseAutoSaveModalState extends State<PauseAutoSaveModal> {
             text: "Forever",
             radioValue: 4,
           ),
-          SizedBox(height: SizeConfig.padding16),
+          Container(height: SizeConfig.padding16),
           FelloButtonLg(
             child: isPausing
                 ? SpinKitThreeBounce(

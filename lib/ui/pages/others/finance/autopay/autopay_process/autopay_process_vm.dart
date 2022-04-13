@@ -25,6 +25,7 @@ class AutoSaveProcessViewModel extends BaseModel {
   bool _showSetAmountView = false;
   bool _isDaily = true;
   bool _showProgressIndicator = false;
+  bool _showConfetti = false;
 
   int minAmount = 10;
   int maxAmount = 5000;
@@ -49,16 +50,17 @@ class AutoSaveProcessViewModel extends BaseModel {
     notifyListeners();
   }
 
-  // List<String> autosaveBenifits = [
-  //   "https://img.freepik.com/free-vector/rebate-program-consumer-benefit-selling-discount-customer-reward-online-store-e-shopping-internet-shop-money-savings-cumulative-bonuses-vector-isolated-concept-metaphor-illustration_335657-2754.jpg?t=st=1649673787~exp=1649674387~hmac=30b282fd0156a96e060169f8a9cc7f0f01fed296dcd524b4cba491a238b88e8a&w=826",
-  //   "https://img.freepik.com/free-vector/vintage-theatre-tickets-template-golden-tickets-isolated_53562-6579.jpg?w=826"
-  //       "https://img.freepik.com/free-vector/indian-rupee-coins-falling-background_23-2148005748.jpg?t=st=1649674476~exp=1649675076~hmac=0e02a76793ab8663a09722875f0acdfca3c1f61f3aabe676a99abc7cb90e5e9e&w=826"
-  // ];
-
   get showAppLaunchButton => this._showAppLaunchButton;
 
   set showAppLaunchButton(value) {
     this._showAppLaunchButton = value;
+    notifyListeners();
+  }
+
+  bool get showConfetti => this._showConfetti;
+
+  set showConfetti(bool value) {
+    this._showConfetti = value;
     notifyListeners();
   }
 
@@ -269,9 +271,8 @@ class AutoSaveProcessViewModel extends BaseModel {
       if (res) {
         _paytmService.jumpToSubPage(3);
         showProgressIndicator = false;
-        Future.delayed(Duration(seconds: 4), () {
-          while (AppState.screenStack.length > 1)
-            AppState.backButtonDispatcher.didPopRoute();
+        Future.delayed(Duration(seconds: 2), () {
+          showConfetti = true;
           _paytmService.currentSubscriptionId = null;
         });
         BaseUtil.showPositiveAlert(

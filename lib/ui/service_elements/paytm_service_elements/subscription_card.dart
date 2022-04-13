@@ -18,6 +18,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class AutoSaveCard extends StatefulWidget {
@@ -91,18 +92,26 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
                       children: [
                         SizedBox(width: SizeConfig.pageHorizontalMargins),
                         Expanded(
+                          flex: 2,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SizedBox(
                                   height: SizeConfig.pageHorizontalMargins * 2),
-                              FittedBox(
-                                child: Text(
-                                  getActiveTitle(model.activeSubscription),
-                                  style: TextStyles.body2.light
-                                      .colour(Colors.white),
-                                ),
+                              Row(
+                                children: [
+                                  FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      getActiveTitle(model.activeSubscription),
+                                      style: TextStyles.body2.light
+                                          .colour(Colors.white),
+                                    ),
+                                  ),
+                                  SizedBox(width: SizeConfig.padding6),
+                                  getIcon(model.activeSubscription)
+                                ],
                               ),
                               SizedBox(height: SizeConfig.padding2),
                               Text(
@@ -287,6 +296,48 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
             return "Restart";
           else
             return "Resume";
+        }
+      }
+      return "Details";
+    }
+  }
+
+  getIcon(ActiveSubscriptionModel subscription) {
+    if (subscription == null ||
+        (subscription.status == Constants.SUBSCRIPTION_INIT ||
+            subscription.status == Constants.SUBSCRIPTION_CANCELLED)) {
+      return SizedBox();
+    }
+    if (subscription.status == Constants.SUBSCRIPTION_PROCESSING) {
+      return Icon(
+        Icons.run_circle,
+        color: UiConstants.tertiarySolid,
+        size: SizeConfig.iconSize1,
+      );
+    } else {
+      if (subscription.status == Constants.SUBSCRIPTION_ACTIVE) {
+        return Icon(
+          Icons.verified_rounded,
+          color: UiConstants.primaryColor,
+          size: SizeConfig.iconSize1,
+        );
+      }
+      if (subscription.status == Constants.SUBSCRIPTION_INACTIVE) {
+        if (subscription.autoAmount == 0.0)
+          return Icon(
+            Icons.verified_rounded,
+            color: UiConstants.primaryColor,
+            size: SizeConfig.iconSize1,
+          );
+        else {
+          if (subscription.resumeDate.isEmpty)
+            return Icon(
+              Icons.pending,
+              color: UiConstants.tertiarySolid,
+              size: SizeConfig.iconSize1,
+            );
+          else
+            return SizedBox();
         }
       }
       return "Details";

@@ -71,9 +71,8 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView> {
                         children: [
                           if (model.showProgressIndicator)
                             AutosaveProgressIndicator(),
-                          PageView(
-                              controller: model.pageController,
-                              physics: NeverScrollableScrollPhysics(),
+                          PageView(controller: model.pageController,
+                              // physics: NeverScrollableScrollPhysics(),
                               children: [
                                 addUpiIdUI(model),
                                 pendingUI(model),
@@ -101,10 +100,13 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(height: SizeConfig.padding54),
-          Lottie.asset("assets/lotties/pending.json",
-              height: SizeConfig.screenWidth * 0.2, repeat: false),
-          SizedBox(height: SizeConfig.padding24),
+          SizedBox(height: SizeConfig.padding64),
+          // Lottie.asset("assets/lotties/pending.json",
+          //     height: SizeConfig.screenWidth * 0.2, repeat: false),
+          Icon(Icons.timer_outlined,
+              color: UiConstants.tertiarySolid,
+              size: SizeConfig.screenWidth * 0.2),
+          SizedBox(height: SizeConfig.padding16),
           Text(
             "Authorize UPI request",
             style: TextStyles.title3.bold,
@@ -243,15 +245,15 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView> {
             },
           ),
           SizedBox(height: SizeConfig.padding16),
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(
-              "Please do not press back until the payment is completed",
-              style: TextStyles.body2.colour(Colors.red[400]).light,
-              textAlign: TextAlign.center,
-            ),
-          ),
-          SizedBox(height: SizeConfig.padding8),
+          // FittedBox(
+          //   fit: BoxFit.scaleDown,
+          //   child: Text(
+          //     "Please do not press back until the payment is completed",
+          //     style: TextStyles.body4.colour(Colors.red[400]).light,
+          //     textAlign: TextAlign.center,
+          //   ),
+          // ),
+          // SizedBox(height: SizeConfig.padding8),
           // if (model?.pageController?.page == 1.0)
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -319,17 +321,18 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView> {
               ],
             ),
           ),
-          Align(
-              alignment: Alignment.topCenter,
-              child: Container(
-                alignment: Alignment.center,
-                height: SizeConfig.screenHeight,
-                width: SizeConfig.screenWidth,
-                child: Transform.scale(
-                  scale: 2,
-                  child: Lottie.asset(Assets.gtConfetti, repeat: false),
-                ),
-              )),
+          if (model.showConfetti)
+            Align(
+                alignment: Alignment.topCenter,
+                child: Container(
+                  alignment: Alignment.center,
+                  height: SizeConfig.screenHeight,
+                  width: SizeConfig.screenWidth,
+                  child: Transform.scale(
+                    scale: 2,
+                    child: Lottie.asset(Assets.gtConfetti, repeat: false),
+                  ),
+                )),
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -542,10 +545,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView> {
               horizontal: SizeConfig.pageHorizontalMargins),
           child: Column(
             children: [
-              SizedBox(height: SizeConfig.padding54),
-              // SvgPicture.asset("assets/vectors/addmoney.svg",
-              //     height: SizeConfig.screenHeight * 0.16),
-              SizedBox(height: SizeConfig.padding12),
+              SizedBox(height: SizeConfig.padding64),
               Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: SizeConfig.pageHorizontalMargins),
@@ -555,7 +555,6 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView> {
                   textAlign: TextAlign.center,
                 ),
               ),
-
               SizedBox(height: SizeConfig.padding24),
               Container(
                 decoration: BoxDecoration(
@@ -624,7 +623,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView> {
                   ],
                 ),
               ),
-              Spacer(),
+              SizedBox(height: SizeConfig.padding24),
               Container(
                 width: SizeConfig.screenWidth,
                 child: Row(
@@ -678,7 +677,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView> {
                         Text(
                           model.isDaily ? '/day' : '/week',
                           style: GoogleFonts.sourceSansPro(
-                              fontSize: SizeConfig.title2,
+                              fontSize: SizeConfig.title3,
                               height: 2,
                               color: Colors.black38),
                         ),
@@ -690,9 +689,35 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView> {
                 ),
               ),
               SizedBox(height: 10),
-              Text(
-                "You'll be saving ₹${model.saveAmount.toInt().toString().replaceAllMapped(model.reg, model.mathFunc)} every year",
-                style: TextStyles.body2.bold.colour(Colors.black45),
+              Container(
+                width: SizeConfig.screenWidth,
+                padding: EdgeInsets.symmetric(
+                  vertical: SizeConfig.padding12,
+                  horizontal: SizeConfig.pageHorizontalMargins,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(
+                    SizeConfig.roundness12,
+                  ),
+                  color: UiConstants.tertiaryLight,
+                ),
+                alignment: Alignment.center,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: RichText(
+                      text: TextSpan(
+                    text: "You'll be saving ",
+                    children: [
+                      TextSpan(
+                          text:
+                              "₹${model.saveAmount.toInt().toString().replaceAllMapped(model.reg, model.mathFunc)}",
+                          style: TextStyles.body2.bold
+                              .colour(UiConstants.tertiarySolid)),
+                      TextSpan(text: " every year")
+                    ],
+                    style: TextStyles.body2.colour(Colors.black),
+                  )),
+                ),
               ),
               SizedBox(
                 height: SizeConfig.padding24,
@@ -719,7 +744,6 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView> {
                               )),
                 ),
               ),
-
               Spacer(),
               SizedBox(
                 height: SizeConfig.screenHeight * 0.3,
@@ -734,7 +758,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView> {
                 width: SizeConfig.screenWidth,
                 padding: EdgeInsets.symmetric(
                   horizontal: SizeConfig.pageHorizontalMargins,
-                  vertical: SizeConfig.padding16,
+                  // vertical: SizeConfig.padding16,
                 ),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
@@ -742,26 +766,41 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView> {
                     topRight: Radius.circular(SizeConfig.roundness32),
                   ),
                   color: Colors.white,
-                  // boxShadow: [
-                  //   BoxShadow(
-                  //     offset: Offset(0, -2),
-                  //     color: UiConstants.primaryLight.withOpacity(0.5),
-                  //     blurRadius: 5,
-                  //     spreadRadius: 5,
-                  //   )
-                  // ]
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      margin:
-                          EdgeInsets.symmetric(vertical: SizeConfig.padding16),
+                      width: SizeConfig.screenWidth -
+                          SizeConfig.pageHorizontalMargins * 2,
+                      child: FelloButtonLg(
+                        child: model.isSubscriptionAmountUpdateInProgress
+                            ? SpinKitThreeBounce(
+                                color: Colors.white,
+                                size: 20,
+                              )
+                            : Text(
+                                "Finish",
+                                style:
+                                    TextStyles.body2.bold.colour(Colors.white),
+                              ),
+                        onPressed: () {
+                          model.setSubscriptionAmount(int.tryParse(
+                                  model.amountFieldController.text.isEmpty ||
+                                          model.amountFieldController == null
+                                      ? '0'
+                                      : model.amountFieldController.text)
+                              .toDouble());
+                        },
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: SizeConfig.padding16),
                       child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              "Every ${model.isDaily ? 'day' : 'week'} you'll get",
+                              "Great choice. every ${model.isDaily ? 'day' : 'week'} you'll recieve",
                               style: TextStyles.body2.bold,
                             ),
                             // Divider(
@@ -769,17 +808,10 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView> {
                             // ),
                             SizedBox(height: SizeConfig.padding12),
                             Container(
-                              height: SizeConfig.screenWidth * 0.2,
                               width: SizeConfig.screenWidth,
+                              height: SizeConfig.padding40,
                               child: ListView(scrollDirection: Axis.horizontal,
-                                  // initialItemCount: model.autosaveBenifits.length,
-                                  // itemBuilder: (ctx, i, anim) {
-                                  //   return AutosavePerks(
-                                  //     image:
-                                  //         "https://img.freepik.com/free-vector/rebate-program-consumer-benefit-selling-discount-customer-reward-online-store-e-shopping-internet-shop-money-savings-cumulative-bonuses-vector-isolated-concept-metaphor-illustration_335657-2754.jpg?t=st=1649673787~exp=1649674387~hmac=30b282fd0156a96e060169f8a9cc7f0f01fed296dcd524b4cba491a238b88e8a&w=826",
-                                  //     text: "6% interest on gold",
-                                  //   );
-                                  // },
+                                  // mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     AutosavePerks(
                                       svg: 'images/svgs/gold.svg',
@@ -805,30 +837,6 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView> {
                                   ]),
                             )
                           ]),
-                    ),
-                    Container(
-                      width: SizeConfig.screenWidth -
-                          SizeConfig.pageHorizontalMargins * 2,
-                      child: FelloButtonLg(
-                        child: model.isSubscriptionAmountUpdateInProgress
-                            ? SpinKitThreeBounce(
-                                color: Colors.white,
-                                size: 20,
-                              )
-                            : Text(
-                                "Finish",
-                                style:
-                                    TextStyles.body2.bold.colour(Colors.white),
-                              ),
-                        onPressed: () {
-                          model.setSubscriptionAmount(int.tryParse(
-                                  model.amountFieldController.text.isEmpty ||
-                                          model.amountFieldController == null
-                                      ? '0'
-                                      : model.amountFieldController.text)
-                              .toDouble());
-                        },
-                      ),
                     ),
                   ],
                 ),
@@ -951,7 +959,7 @@ class AutosaveProgressIndicator extends StatelessWidget {
                         direction: Axis.horizontal,
                         connectorTheme: ConnectorThemeData(
                           space: SizeConfig.screenWidth * 0.05,
-                          thickness: 5.0,
+                          thickness: SizeConfig.padding4,
                         ),
                       ),
                       physics: NeverScrollableScrollPhysics(),
@@ -965,20 +973,12 @@ class AutosaveProgressIndicator extends StatelessWidget {
                           var child;
                           if (index == model.fraction) {
                             color = inProgressColor;
-                            child = Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: CircularProgressIndicator(
-                                strokeWidth: 3.0,
-                                valueColor:
-                                    AlwaysStoppedAnimation(Colors.white),
-                              ),
-                            );
                           } else if (index < model.fraction) {
                             color = completeColor;
                             child = Icon(
                               Icons.check,
                               color: Colors.white,
-                              size: 15.0,
+                              size: SizeConfig.padding16,
                             );
                           } else {
                             color = todoColor;
@@ -988,7 +988,8 @@ class AutosaveProgressIndicator extends StatelessWidget {
                             return Stack(
                               children: [
                                 CustomPaint(
-                                  size: Size(30.0, 30.0),
+                                  size: Size(SizeConfig.padding24,
+                                      SizeConfig.padding24),
                                   painter: _BezierPainter(
                                     color: color,
                                     drawStart: index > 0,
@@ -996,7 +997,7 @@ class AutosaveProgressIndicator extends StatelessWidget {
                                   ),
                                 ),
                                 DotIndicator(
-                                  size: 30.0,
+                                  size: SizeConfig.padding24,
                                   color: color,
                                   child: child,
                                 ),
@@ -1006,14 +1007,15 @@ class AutosaveProgressIndicator extends StatelessWidget {
                             return Stack(
                               children: [
                                 CustomPaint(
-                                  size: Size(15.0, 15.0),
+                                  size: Size(SizeConfig.padding16,
+                                      SizeConfig.padding16),
                                   painter: _BezierPainter(
                                     color: color,
                                     drawEnd: index < _processes.length - 1,
                                   ),
                                 ),
                                 OutlinedDotIndicator(
-                                  borderWidth: 4.0,
+                                  borderWidth: SizeConfig.padding4,
                                   color: color,
                                 ),
                               ],
@@ -1070,11 +1072,11 @@ class AutosavePerks extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(right: SizeConfig.padding12),
-      child: Column(
+      child: Row(
         children: [
           Container(
             decoration: BoxDecoration(
-                border: Border.all(color: UiConstants.tertiarySolid, width: 1),
+                // border: Border.all(color: UiConstants.tertiarySolid, width: 1),
                 shape: BoxShape.circle,
                 color: Colors.white),
             padding: EdgeInsets.all(SizeConfig.padding4),
@@ -1085,25 +1087,26 @@ class AutosavePerks extends StatelessWidget {
               child: CircleAvatar(
                 backgroundColor: UiConstants.tertiaryLight,
                 child: image != null
-                    ? Image.asset(image)
+                    ? Image.asset(
+                        image,
+                        height: SizeConfig.padding16,
+                      )
                     : SvgPicture.asset(
                         svg,
-                        height: SizeConfig.padding32,
+                        height: SizeConfig.padding16,
                       ),
-                radius: SizeConfig.padding24,
+                radius: SizeConfig.padding16,
               ),
             ),
           ),
-          Expanded(
-            child: Container(
-              // width: SizeConfig.padding64,
-              alignment: Alignment.center,
-              child: Text(
-                text,
-                maxLines: 2,
-                textAlign: TextAlign.center,
-                style: TextStyles.body4,
-              ),
+          SizedBox(width: SizeConfig.padding4),
+          Container(
+            alignment: Alignment.center,
+            child: Text(
+              text,
+              maxLines: 2,
+              textAlign: TextAlign.center,
+              style: TextStyles.body4,
             ),
           )
         ],
