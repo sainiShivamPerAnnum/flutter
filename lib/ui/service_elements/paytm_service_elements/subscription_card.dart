@@ -84,101 +84,94 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
                       bottom: 0,
                       right: SizeConfig.padding16,
                       child: Image.asset(
-                        Assets.autosavemain,
-                        width: SizeConfig.screenWidth / 2.4,
+                        getImage(model.activeSubscription),
+                        width: SizeConfig.screenWidth / 2.8,
                       ),
                     ),
-                    Row(
-                      children: [
-                        SizedBox(width: SizeConfig.pageHorizontalMargins),
-                        Expanded(
-                          flex: 2,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                    Container(
+                      margin: EdgeInsets.only(
+                          left: SizeConfig.pageHorizontalMargins),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                              height: SizeConfig.pageHorizontalMargins * 2),
+                          Container(
+                            width: SizeConfig.screenWidth * 0.5,
+                            alignment: Alignment.centerLeft,
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  // fit: BoxFit.scaleDown,
+                                  child: FittedBox(
+                                    child: Text(
+                                      getActiveTitle(model.activeSubscription),
+                                      style: TextStyles.body2.light
+                                          .colour(Colors.white),
+                                      textAlign: TextAlign.left,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: SizeConfig.padding6),
+                                getIcon(model.activeSubscription)
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: SizeConfig.padding2),
+                          Text(
+                            getactiveSubtitle(model.activeSubscription),
+                            style: TextStyles.title5.bold.colour(Colors.white),
+                          ),
+                          SizedBox(height: SizeConfig.padding16),
+                          Row(
                             children: [
-                              SizedBox(
-                                  height: SizeConfig.pageHorizontalMargins * 2),
-                              Row(
-                                children: [
-                                  Container(
-                                    width: SizeConfig.screenWidth * 0.4,
-                                    child: FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: Text(
-                                        getActiveTitle(
-                                            model.activeSubscription),
-                                        style: TextStyles.body2.light
-                                            .colour(Colors.white),
-                                      ),
-                                    ),
+                              FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Container(
+                                  height: SizeConfig.padding40,
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: SizeConfig.padding8,
+                                      horizontal: SizeConfig.padding16),
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.3),
+                                    borderRadius: BorderRadius.circular(100),
+                                    // boxShadow: [
+                                    //   BoxShadow(
+                                    //     color: getShadow(model.activeSubscription)
+                                    //         .withOpacity(0.2),
+                                    //     offset: Offset(0, 2),
+                                    //     blurRadius: 5,
+                                    //     spreadRadius: 5,
+                                    //   )
+                                    // ],
                                   ),
-                                  SizedBox(width: SizeConfig.padding6),
-                                  getIcon(model.activeSubscription)
-                                ],
+                                  child: isResumingInProgress || isLoading
+                                      ? Container(
+                                          height: SizeConfig.body2,
+                                          child: SpinKitThreeBounce(
+                                            color: Colors.white,
+                                            size: SizeConfig.padding12,
+                                          ),
+                                        )
+                                      : Text(
+                                          getActiveButtonText(
+                                              model.activeSubscription),
+                                          style: TextStyles.body2
+                                              .colour(Colors.white),
+                                        ),
+                                ),
                               ),
-                              SizedBox(height: SizeConfig.padding2),
-                              Text(
-                                getactiveSubtitle(model.activeSubscription),
-                                style:
-                                    TextStyles.title5.bold.colour(Colors.white),
+                              SizedBox(width: SizeConfig.padding8),
+                              Expanded(
+                                child: SizedBox(),
                               ),
-                              SizedBox(height: SizeConfig.padding16),
-                              Row(
-                                children: [
-                                  FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: Container(
-                                      height: SizeConfig.padding40,
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: SizeConfig.padding8,
-                                          horizontal: SizeConfig.padding16),
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white.withOpacity(0.3),
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                        // boxShadow: [
-                                        //   BoxShadow(
-                                        //     color: getShadow(model.activeSubscription)
-                                        //         .withOpacity(0.2),
-                                        //     offset: Offset(0, 2),
-                                        //     blurRadius: 5,
-                                        //     spreadRadius: 5,
-                                        //   )
-                                        // ],
-                                      ),
-                                      child: isResumingInProgress || isLoading
-                                          ? Container(
-                                              height: SizeConfig.body2,
-                                              child: SpinKitThreeBounce(
-                                                color: Colors.white,
-                                                size: SizeConfig.padding12,
-                                              ),
-                                            )
-                                          : Text(
-                                              getActiveButtonText(
-                                                  model.activeSubscription),
-                                              style: TextStyles.body2
-                                                  .colour(Colors.white),
-                                            ),
-                                    ),
-                                  ),
-                                  SizedBox(width: SizeConfig.padding8),
-                                  Expanded(
-                                    child: SizedBox(),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                  height: SizeConfig.pageHorizontalMargins * 2)
                             ],
                           ),
-                        ),
-                        Expanded(
-                          child: Container(),
-                        )
-                      ],
+                          SizedBox(height: SizeConfig.pageHorizontalMargins * 2)
+                        ],
+                      ),
                     ),
                     if (!model.isFirstTime)
                       Positioned(
@@ -423,9 +416,35 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
       int month = int.tryParse(dateSplitList[1]);
       int year = int.tryParse(dateSplitList[2]);
       final resumeDate = DateTime(year, month, day);
-      return DateFormat.MMMEd().format(resumeDate);
+      return DateFormat("dd MMM yyyy").format(resumeDate);
     } else {
       return "Forever";
+    }
+  }
+
+  getImage(ActiveSubscriptionModel subscription) {
+    if (subscription == null ||
+        (subscription.status == Constants.SUBSCRIPTION_INIT ||
+            subscription.status == Constants.SUBSCRIPTION_CANCELLED)) {
+      return Assets.preautosave;
+    }
+    if (subscription.status == Constants.SUBSCRIPTION_PROCESSING) {
+      return Assets.preautosave;
+    } else {
+      if (subscription.status == Constants.SUBSCRIPTION_ACTIVE) {
+        return Assets.postautosave;
+      }
+      if (subscription.status == Constants.SUBSCRIPTION_INACTIVE) {
+        if (subscription.autoAmount == 0.0)
+          return Assets.preautosave;
+        else {
+          if (subscription.resumeDate.isEmpty)
+            return Assets.autopause;
+          else
+            return Assets.autopause;
+        }
+      }
+      return Assets.preautosave;
     }
   }
 

@@ -301,24 +301,28 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Spacer(),
                 Lottie.asset(
                   "assets/lotties/complete.json",
                   height: SizeConfig.screenWidth / 2,
                 ),
-                Text(
-                  "Setup Successful",
-                  style: TextStyles.title3.bold,
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: SizeConfig.padding8),
-                Text(
-                  "Your Fello Autosave account has been successfully set up!",
-                  style: TextStyles.body2,
-                  textAlign: TextAlign.center,
+                AnimatedContainer(
+                  duration: Duration(seconds: 1),
+                  curve: Curves.decelerate,
+                  child: Column(children: [
+                    Text(
+                      "Setup Successful",
+                      style: TextStyles.title3.bold,
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: SizeConfig.padding8),
+                    Text(
+                      "Your Fello Autosave account has been successfully set up!",
+                      style: TextStyles.body2,
+                      textAlign: TextAlign.center,
+                    ),
+                  ]),
                 ),
                 SizedBox(height: SizeConfig.screenWidth / 3),
-                Spacer(),
                 // DetailsView(model: _userAutosaveDetailsVM)
               ],
             ),
@@ -609,7 +613,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
                                 Haptic.vibrate();
                                 model.isDaily = true;
                                 model.onAmountValueChanged(
-                                    model.amountFieldController.text);
+                                    model?.amountFieldController?.text);
                               },
                               child: SegmentChips(
                                 model: model,
@@ -651,9 +655,11 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
                         child: TextField(
                           controller: model.amountFieldController,
                           maxLines: null,
+                          maxLength: 4,
 
                           decoration: InputDecoration(
                               prefixText: "₹",
+                              counterText: "",
                               prefixStyle: GoogleFonts.sourceSansPro(
                                   fontWeight: FontWeight.bold,
                                   fontSize: SizeConfig.screenWidth / 4.8,
@@ -785,6 +791,61 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
+                      margin: EdgeInsets.only(top: SizeConfig.padding16),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Great choice. every ${model.isDaily ? 'day' : 'week'} you'll recieve",
+                              style: TextStyles.body2.bold,
+                            ),
+                            // Divider(
+                            //   height: SizeConfig.padding24,
+                            // ),
+                            SizedBox(height: SizeConfig.padding12),
+                            Container(
+                              width: SizeConfig.screenWidth,
+                              // height: SizeConfig.padding40,
+                              child: Row(
+                                  // scrollDirection: Axis.horizontal,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    AutosavePerks(
+                                      svg: 'images/svgs/gold.svg',
+                                      text: "Interest on gold",
+                                    ),
+                                    if (model.amountFieldController.text !=
+                                            null &&
+                                        model.amountFieldController.text
+                                            .isNotEmpty &&
+                                        int.tryParse(model
+                                                ?.amountFieldController
+                                                ?.text) >=
+                                            100)
+                                      AutosavePerks(
+                                        svg: Assets.goldenTicket,
+                                        text: "Golden ticket",
+                                      ),
+                                    if (model.amountFieldController.text !=
+                                            null &&
+                                        model.amountFieldController.text
+                                            .isNotEmpty &&
+                                        int.tryParse(model
+                                                    ?.amountFieldController
+                                                    ?.text ??
+                                                '0') >=
+                                            0)
+                                      AutosavePerks(
+                                        svg: Assets.tokens,
+                                        text:
+                                            "${int.tryParse(model?.amountFieldController?.text)} Fello Tokens",
+                                      )
+                                  ]),
+                            )
+                          ]),
+                    ),
+                    SizedBox(height: SizeConfig.padding16),
+                    Container(
                       width: SizeConfig.screenWidth -
                           SizeConfig.pageHorizontalMargins * 2,
                       child: FelloButtonLg(
@@ -800,57 +861,16 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
                               ),
                         onPressed: () {
                           model.setSubscriptionAmount(int.tryParse(
-                                  model.amountFieldController.text.isEmpty ||
-                                          model.amountFieldController == null
+                                  model.amountFieldController == null ||
+                                          model.amountFieldController?.text ==
+                                              null ||
+                                          model.amountFieldController.text
+                                              .isEmpty
                                       ? '0'
-                                      : model.amountFieldController.text)
+                                      : model.amountFieldController?.text)
                               .toDouble());
                         },
                       ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(top: SizeConfig.padding16),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Great choice. every ${model.isDaily ? 'day' : 'week'} you'll recieve",
-                              style: TextStyles.body2.bold,
-                            ),
-                            // Divider(
-                            //   height: SizeConfig.padding24,
-                            // ),
-                            SizedBox(height: SizeConfig.padding12),
-                            Container(
-                              width: SizeConfig.screenWidth,
-                              height: SizeConfig.padding40,
-                              child: ListView(scrollDirection: Axis.horizontal,
-                                  // mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    AutosavePerks(
-                                      svg: 'images/svgs/gold.svg',
-                                      text: "Interest on gold",
-                                    ),
-                                    if (int.tryParse(
-                                            model.amountFieldController.text ??
-                                                '0') >=
-                                        100)
-                                      AutosavePerks(
-                                        svg: Assets.goldenTicket,
-                                        text: "Golden ticket",
-                                      ),
-                                    if (int.tryParse(
-                                            model.amountFieldController.text ??
-                                                '0') >=
-                                        0)
-                                      AutosavePerks(
-                                        svg: Assets.tokens,
-                                        text:
-                                            "${int.tryParse(model.amountFieldController.text)} Fello Tokens",
-                                      )
-                                  ]),
-                            )
-                          ]),
                     ),
                     SizedBox(
                       height: SizeConfig.viewInsets.bottom != 0
@@ -897,7 +917,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
   amountchips(int amount, AutoSaveProcessViewModel model) {
     return InkWell(
       onTap: () {
-        model.amountFieldController.text = amount.toString();
+        model.amountFieldController?.text = amount.toString();
         model.onAmountValueChanged(amount.toString());
       },
       child: Chip(
@@ -1096,7 +1116,7 @@ class AutosavePerks extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(right: SizeConfig.padding12),
-      child: Row(
+      child: Column(
         children: [
           Container(
             decoration: BoxDecoration(
@@ -1123,7 +1143,7 @@ class AutosavePerks extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(width: SizeConfig.padding4),
+          SizedBox(height: SizeConfig.padding4),
           Container(
             alignment: Alignment.center,
             child: Text(

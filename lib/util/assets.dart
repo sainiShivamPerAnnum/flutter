@@ -32,6 +32,9 @@ class Assets {
   static final String fasben1 = "assets/images/fasben1.png";
   static final String fasben2 = "assets/images/fasben2.png";
   static final String fasben3 = "assets/images/fasben3.png";
+  static final String preautosave = "assets/images/preautosave.png";
+  static final String postautosave = "assets/images/postautosave.png";
+  static final String autopause = "assets/images/autopause.png";
 
   //APPBAR
 
