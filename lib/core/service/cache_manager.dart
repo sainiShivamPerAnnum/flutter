@@ -8,11 +8,33 @@ class CacheManager {
   static const CACHE_RATING_DIALOG_OPEN_COUNT = "RDShowCount";
   static const CACHE_LATEST_NOTIFICATION_TIME = "latestNotification";
   static const CACHE_LATEST_GOLDEN_TICKET_TIME = "latestGoldenTicket";
+  static const CACHE_IS_SUBSCRIPTION_FIRST_TIME = "isSubFirstTime";
 
-  static Future readCache({@required String key}) async {
+  static Future readCache(
+      {@required String key, CacheType type = CacheType.string}) async {
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
-    var cache = sharedPreferences.getString(key);
+
+    var cache;
+    switch (type) {
+      case CacheType.int:
+        cache = sharedPreferences.getInt(key);
+        break;
+      case CacheType.double:
+        cache = sharedPreferences.getDouble(key);
+        break;
+      case CacheType.bool:
+        cache = sharedPreferences.getBool(key);
+        break;
+      case CacheType.stringList:
+        cache = sharedPreferences.getStringList(key);
+        break;
+      case CacheType.string:
+        cache = sharedPreferences.getString(key);
+        break;
+      default:
+        cache = sharedPreferences.getString(key);
+    }
     return cache;
   }
 

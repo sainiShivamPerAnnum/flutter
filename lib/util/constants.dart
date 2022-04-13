@@ -33,6 +33,7 @@ class Constants {
   static final String COLN_FAQS = "faqs";
   static final String COLN_APPCAMPAIGNS = "appcampaigns";
   static final String COLN_COUPONS = 'coupons';
+  static final String COLN_INAPPRESOURCES = "inappresources";
 
   //Sub-collections
   static final String SUBCOLN_USER_FCM = "fcm";
@@ -46,6 +47,8 @@ class Constants {
   static final String SUBCOLN_USER_ALERTS = "alerts";
   static final String SUBCOLN_USER_REWARDS = "rewards";
   static final String SUBCOLN_USER_STATS = "stats";
+  static final String SUBCOLN_USER_SUBSCRIPTION = "subscription";
+  static final String SUBCOLN_USER_SUB_TXN = "sub-txns";
   //Sub-collection docs
   static final String DOC_USER_FCM_TOKEN = "client_token";
   static final String DOC_USER_ICICI_DETAIL = "detail";
@@ -54,6 +57,11 @@ class Constants {
   static final String DOC_USER_WALLET_FUND_BALANCE = "fndbalance";
   static final String DOC_USER_WALLET_TICKET_BALANCE = "tckbalance";
   static final String DOC_USER_WALLET_COIN_BALANCE = "coinbalance";
+  static final String DOC_IAR_DAILY_CHIPS = "SUBSCRIPTION_DAILY_CHIPS";
+  static final String DOC_IAR_WEEKLY_CHIPS = "SUBSCRIPTION_WEEKLY_CHIPS";
+
+  //Sub-Collection docs Collection docs
+  static final String DOC_USER_SUBSCRIPTIONS_ORDERS = 'orders';
 
   static const int CORNERS_COMPLETED = 0;
   static const int ROW_ONE_COMPLETED = 1;
@@ -93,4 +101,11 @@ class Constants {
 
   static const INSTALL_TRACKING = 'FELLO_INSTALL';
   static const SIGNUP_TRACKING = 'FELLO_SIGNUP';
+
+  //Subscription Status
+  static const SUBSCRIPTION_INIT = "INIT";
+  static const SUBSCRIPTION_ACTIVE = "ACTIVE";
+  static const SUBSCRIPTION_PROCESSING = "PROCESSING";
+  static const SUBSCRIPTION_INACTIVE = "INACTIVE";
+  static const SUBSCRIPTION_CANCELLED = "CANCELLED";
 }

@@ -7,6 +7,7 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
+import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -35,6 +36,7 @@ class LauncherViewModel extends BaseModel {
   final _tambolaService = locator<TambolaService>();
   final _analyticsService = locator<AnalyticsService>();
   final _userRepo = locator<UserRepository>();
+  final _paytmService = locator<PaytmService>();
 
   //GETTERS
   bool get isSlowConnection => _isSlowConnection;

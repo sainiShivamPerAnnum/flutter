@@ -14,8 +14,9 @@ class DrawerModel {
   String icon;
   PageConfiguration pageConfig;
   String analyticEvent;
-
-  DrawerModel({this.icon, this.pageConfig, this.title, this.analyticEvent});
+  Function onTap;
+  DrawerModel(
+      {this.icon, this.pageConfig, this.title, this.onTap, this.analyticEvent});
 }
 
 class FDrawerVM extends BaseModel {
@@ -34,6 +35,11 @@ class FDrawerVM extends BaseModel {
       title: "My Golden Tickets",
       pageConfig: MyWinnigsPageConfig,
       analyticEvent: AnalyticsEvents.myGoldenTickets,
+    ),
+    DrawerModel(
+      icon: Assets.repeat,
+      title: "Autosave",
+      pageConfig: UserAutoSaveDetailsViewPageConfig,
     ),
     DrawerModel(
       icon: Assets.dPanKyc,
@@ -58,6 +64,9 @@ class FDrawerVM extends BaseModel {
       title: "How it works",
       pageConfig: WalkThroughConfig,
       analyticEvent: AnalyticsEvents.howItWorks,
+      onTap: () => AppState.delegate.parseRoute(
+        Uri.parse('/AppWalkthrough'),
+      ),
     ),
     DrawerModel(
       icon: Assets.dAboutDigitalGold,
@@ -73,7 +82,10 @@ class FDrawerVM extends BaseModel {
   void onItemSelected(int i) {
     if (RootViewModel.scaffoldKey.currentState.isDrawerOpen)
       RootViewModel.scaffoldKey.currentState.openEndDrawer();
-
+    if (drawerList[i].onTap != null) {
+      drawerList[i].onTap();
+      return;
+    }
     AppState.delegate.appState.currentAction = PageAction(
       state: PageState.addPage,
       page: drawerList[i].pageConfig,

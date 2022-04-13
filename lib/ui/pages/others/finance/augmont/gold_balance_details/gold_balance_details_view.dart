@@ -178,22 +178,19 @@ class FeatureTile extends StatelessWidget {
   final String leadingAsset;
   final String title;
   final String subtitle;
+  final Color color;
 
-  FeatureTile({
-    this.leadingAsset,
-    this.subtitle,
-    this.title,
-  });
+  FeatureTile({this.leadingAsset, this.subtitle, this.title, this.color});
   @override
   Widget build(BuildContext context) {
     return Container(
       //height: SizeConfig.screenWidth * 0.25,
       decoration: BoxDecoration(
-        color: Color(0xffF6F9FF),
+        color: color ?? Color(0xffF6F9FF),
         borderRadius: BorderRadius.circular(SizeConfig.roundness16),
       ),
       padding: EdgeInsets.symmetric(
-          vertical: SizeConfig.padding16, horizontal: SizeConfig.padding24),
+          vertical: SizeConfig.padding16, horizontal: SizeConfig.padding20),
       child: Row(
         children: [
           CircleAvatar(

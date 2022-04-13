@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_view.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
@@ -720,6 +724,47 @@ class Api {
     return _query.get();
   }
 
+  Future<DocumentSnapshot> fetchActiveSubscriptionDetails(String userid) async {
+    DocumentReference doc = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userid)
+        .collection(Constants.SUBCOLN_USER_SUBSCRIPTION)
+        .doc("detail");
+    return await doc.get();
+  }
+
+  Future<QuerySnapshot> getAutosaveTransactions({
+    @required String userId,
+    @required String subId,
+    DocumentSnapshot lastDocument,
+    @required int limit,
+  }) {
+    Query query = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
+        .collection(Constants.SUBCOLN_USER_SUBSCRIPTION);
+    if (limit != -1 && limit > 3) query = query.limit(limit);
+    query = query.orderBy('createdOn', descending: true);
+    if (lastDocument != null) query = query.startAfterDocument(lastDocument);
+    return query.get();
+  }
+
+  Future<List<AmountChipsModel>> getAmountChips(String type) async {
+    List<AmountChipsModel> amountChipList = [];
+    try {
+      DocumentSnapshot snapshot =
+          await _db.collection(Constants.COLN_INAPPRESOURCES).doc(type).get();
+      Map<String, dynamic> snapData = snapshot.data();
+      snapData["userOptions"].forEach((e) {
+        amountChipList.add(AmountChipsModel.fromMap(e));
+      });
+      amountChipList.sort((a, b) => a.order.compareTo(b.order));
+      return amountChipList;
+      // logger.d(data);
+    } catch (e) {
+      logger.e(e.toString());
+    }
+  }
   //---------------------------------------REALTIME DATABASE-------------------------------------------//
 
   Future<bool> checkUserNameAvailability(String username) async {

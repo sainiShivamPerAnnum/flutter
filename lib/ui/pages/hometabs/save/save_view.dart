@@ -8,6 +8,7 @@ import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augm
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/ui/pages/static/poolview.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
+import 'package:felloapp/ui/service_elements/paytm_service_elements/subscription_card.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -18,6 +19,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 
 class Save extends StatelessWidget {
   final CustomLogger logger = locator<CustomLogger>();
@@ -62,11 +64,20 @@ class Save extends StatelessWidget {
                     ],
                   ),
                   Container(
+                    decoration: BoxDecoration(
+                      color: UiConstants.primaryLight.withOpacity(0.3),
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness12),
+                    ),
                     alignment: Alignment.center,
                     width: SizeConfig.screenWidth,
-                    margin: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.pageHorizontalMargins * 2,
-                        vertical: SizeConfig.padding12),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.pageHorizontalMargins / 2,
+                      vertical: SizeConfig.padding16,
+                    ),
+                    margin: EdgeInsets.all(
+                      SizeConfig.pageHorizontalMargins,
+                    ),
                     child: CurrentPriceWidget(
                       fetchGoldRates: model.fetchGoldRates,
                       goldprice: model.goldRates != null
@@ -105,6 +116,10 @@ class Save extends StatelessWidget {
                   //   child: Text("Show pool game"),
                   // ),
 
+                  AutoSaveCard(),
+                  SizedBox(height: SizeConfig.padding32),
+                  // Goldlinks(model: model),
+                  //CustomSubscriptionContainer(),
                   SizedBox(height: SizeConfig.navBarHeight * 2),
                 ],
               ),
@@ -145,32 +160,40 @@ class FocusCouponClip extends StatelessWidget {
               child: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(
-                  (model.focusCoupon.highlight != null)?model.focusCoupon.highlight:model.focusCoupon.description,
+                  (model.focusCoupon.highlight != null)
+                      ? model.focusCoupon.highlight
+                      : model.focusCoupon.description,
                   overflow: TextOverflow.clip,
                   textAlign: TextAlign.start,
                   style: TextStyles.body2.colour(Colors.white),
                 ),
               ),
             ),
-            SizedBox(width: SizeConfig.padding6),
+            SizedBox(width: SizeConfig.padding12),
             InkWell(
               onTap: () => model.applyCoupon(model.focusCoupon.code),
-              child: Container(
-                alignment: Alignment.center,
-                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
-                //width: SizeConfig.screenWidth * 0.171,
-                height: SizeConfig.screenWidth * 0.065,
-                margin: EdgeInsets.only(left: SizeConfig.padding4),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(100),
-                ),
-                child: Text(
-                  "Apply",
-                  style: TextStyles.body4.colour(Colors.white).bold,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(100),
+                child: Shimmer(
+                  child: Container(
+                    alignment: Alignment.center,
+                    padding:
+                        EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
+                    //width: SizeConfig.screenWidth * 0.171,
+                    height: SizeConfig.screenWidth * 0.065,
+                    // margin: EdgeInsets.only(left: SizeConfig.padding4),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.3),
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: Text(
+                      "Apply",
+                      style: TextStyles.body4.colour(Colors.white).bold,
+                    ),
+                  ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

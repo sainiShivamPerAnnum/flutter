@@ -1,8 +1,10 @@
 import 'package:felloapp/core/constants/fcm_commands_constants.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
+import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_vm.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_game/web_game_vm.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -19,11 +21,14 @@ class FcmHandler extends ChangeNotifier {
   final _augmontGoldBuyViewModel = locator<AugmontGoldBuyViewModel>();
   final _fcmHandlerDataPayloads = locator<FcmHandlerDataPayloads>();
   final _webGameViewModel = locator<WebGameViewModel>();
+  final _autosaveProcessViewModel = locator<AutoSaveProcessViewModel>();
+  final _paytmService = locator<PaytmService>();
+
   ValueChanged<Map> notifListener;
 
   Future<bool> handleMessage(Map data, MsgSource source) async {
     _logger.d(
-        "Fcm handler receives on ${DateFormat('yyyy-MM-dd – hh:mm a').format(DateTime.now())} - $data");
+        "Fcm handler receives on ${DateFormat('yyyy-MM-dd - hh:mm a').format(DateTime.now())} - $data");
     bool showSnackbar = true;
     String title = data['dialog_title'];
     String body = data['dialog_body'];
@@ -44,7 +49,8 @@ class FcmHandler extends ChangeNotifier {
       showSnackbar = false;
       switch (command) {
         case FcmCommands.DEPOSIT_TRANSACTION_RESPONSE:
-          if(AppState.delegate.appState.isTxnLoaderInView == false)showSnackbar = true;
+          if (AppState.delegate.appState.isTxnLoaderInView == false)
+            showSnackbar = true;
           _augmontGoldBuyViewModel
               .fcmTransactionResponseUpdate(data['payload']);
 
@@ -64,6 +70,12 @@ class FcmHandler extends ChangeNotifier {
           break;
         case FcmCommands.COMMAND_USER_PRIZE_WIN_2:
           await _fcmHandlerDataPayloads.userPrizeWinPrompt();
+          break;
+        case FcmCommands.COMMAND_SUBSCRIPTION_RESPONSE:
+          if (_paytmService.isOnSubscriptionFlow)
+            await _autosaveProcessViewModel.handleSubscriptionPayload(data);
+          // else
+          //   await _paytmService.handleFCMStatusUpdate(data);
           break;
         default:
       }
