@@ -53,12 +53,12 @@ class Transactions extends StatelessWidget {
                     //   trailingIcon: Icons.arrow_forward_ios_rounded,
                     //   onTap: () => onTap(UserAutoSaveDetailsViewPageConfig),
                     // ),
-                    // FelloBriefTile(
-                    //   leadingAsset: Assets.txnHistory,
-                    //   title: "AutoSave transactions",
-                    //   trailingIcon: Icons.arrow_forward_ios_rounded,
-                    //   onTap: () => onTap(AutosaveTransactionsViewPageConfig),
-                    // ),
+                    FelloBriefTile(
+                      leadingAsset: Assets.txnHistory,
+                      title: "AutoSave transactions",
+                      trailingIcon: Icons.arrow_forward_ios_rounded,
+                      onTap: () => onTap(AutosaveTransactionsViewPageConfig),
+                    ),
                   ],
                 ),
               ),

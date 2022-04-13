@@ -735,14 +735,13 @@ class Api {
 
   Future<QuerySnapshot> getAutosaveTransactions({
     @required String userId,
-    @required String subId,
     DocumentSnapshot lastDocument,
     @required int limit,
   }) {
     Query query = _db
         .collection(Constants.COLN_USERS)
         .doc(userId)
-        .collection(Constants.SUBCOLN_USER_SUBSCRIPTION);
+        .collection(Constants.SUBCOLN_USER_SUB_TXN);
     if (limit != -1 && limit > 3) query = query.limit(limit);
     query = query.orderBy('createdOn', descending: true);
     if (lastDocument != null) query = query.startAfterDocument(lastDocument);

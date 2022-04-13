@@ -159,7 +159,7 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
               ),
             ),
             Positioned(
-              bottom: usedHeight * 0.48,
+              bottom: usedHeight * 0.54,
               left: SizeConfig.pageHorizontalMargins,
               child: AnimatedOpacity(
                 curve: Curves.easeOutCirc,
@@ -178,9 +178,7 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
                       animValue,
                   width: SizeConfig.screenWidth -
                       SizeConfig.pageHorizontalMargins * 2,
-                  child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Image.asset(pngassets[_currentPage])),
+                  child: Image.asset(pngassets[_currentPage]),
                   // decoration: BoxDecoration(
                   //   image: DecorationImage(
                   //       image: NetworkImage(assets[_currentPage]),
@@ -190,7 +188,7 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
               ),
             ),
             Positioned(
-              bottom: usedHeight * 0.48,
+              bottom: usedHeight * 0.54,
               left: SizeConfig.pageHorizontalMargins,
               child: AnimatedOpacity(
                 curve: Curves.easeOutCirc,
@@ -209,9 +207,7 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
                       ((animValue - 1).abs()),
                   width: SizeConfig.screenWidth -
                       SizeConfig.pageHorizontalMargins * 2,
-                  child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Image.asset(pngassets[_currentPage])),
+                  child: Image.asset(pngassets[_currentPage]),
                   // decoration: BoxDecoration(
                   //   image: DecorationImage(
                   //       image: NetworkImage(assets[_currentPage]),
@@ -581,30 +577,30 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
                 ),
               ),
             ),
-            // if (showSetupButton)
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: SafeArea(
-                child: Container(
-                  margin: EdgeInsets.symmetric(
-                      vertical: SizeConfig.viewInsets.bottom != 0
-                          ? 0
-                          : SizeConfig.pageHorizontalMargins,
-                      horizontal: SizeConfig.pageHorizontalMargins),
-                  child: FelloButtonLg(
-                    child: Text(
-                      "Setup Autosave",
-                      style: TextStyles.body2.bold.colour(Colors.white),
+            if (showSetupButton)
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: SafeArea(
+                  child: Container(
+                    margin: EdgeInsets.symmetric(
+                        vertical: SizeConfig.viewInsets.bottom != 0
+                            ? 0
+                            : SizeConfig.pageHorizontalMargins,
+                        horizontal: SizeConfig.pageHorizontalMargins),
+                    child: FelloButtonLg(
+                      child: Text(
+                        "Setup Autosave",
+                        style: TextStyles.body2.bold.colour(Colors.white),
+                      ),
+                      onPressed: () {
+                        AppState.delegate.appState.currentAction = PageAction(
+                            page: AutoSaveProcessViewPageConfig,
+                            state: PageState.replace);
+                      },
                     ),
-                    onPressed: () {
-                      AppState.delegate.appState.currentAction = PageAction(
-                          page: AutoSaveProcessViewPageConfig,
-                          state: PageState.replace);
-                    },
                   ),
                 ),
-              ),
-            )
+              )
           ],
         ),
       ),

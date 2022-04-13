@@ -42,7 +42,8 @@ class PaytmRepository {
       final response = await APIService.instance.postData(
           ApiPath.kCreatePaytmTransaction,
           body: _body,
-          token: _token);
+          token: _token,
+          isAwsTxnUrl: true);
 
       CreatePaytmTransactionModel _responseModel =
           CreatePaytmTransactionModel.fromMap(response);
@@ -64,7 +65,8 @@ class PaytmRepository {
       final response = await APIService.instance.getData(
           ApiPath.kCreatePaytmTransaction,
           token: _token,
-          queryParams: _queryParams);
+          queryParams: _queryParams,
+          isAwsTxnUrl: true);
 
       final _responseModel = TransactionResponseModel.fromMap(response);
       return ApiResponse<TransactionResponseModel>(
@@ -97,7 +99,7 @@ class PaytmRepository {
           ApiPath().kCreateSubscription,
           body: _body,
           token: _token,
-          isAWSURL: true);
+          isAwsSubUrl: true);
 
       CreateSubscriptionResponseModel _responseModel =
           CreateSubscriptionResponseModel.fromMap(response);
@@ -121,8 +123,12 @@ class PaytmRepository {
         "vpa": vpa,
         "token": subscriptionResponseModel.data.temptoken,
       };
-      final response = await APIService.instance.getData(ApiPath().kValidateVpa,
-          token: _token, queryParams: _queryParams, isAWSURL: true);
+      final response = await APIService.instance.getData(
+        ApiPath().kValidateVpa,
+        token: _token,
+        queryParams: _queryParams,
+        isAwsSubUrl: true,
+      );
 
       final _responseModel = ValidateVpaResponseModel.fromJson(response);
       return ApiResponse<ValidateVpaResponseModel>(
@@ -144,10 +150,11 @@ class PaytmRepository {
         'freq': freq
       };
       final response = await APIService.instance.putData(
-          ApiPath().kCreateSubscription,
-          body: _body,
-          token: _token,
-          isAWSURL: true);
+        ApiPath().kCreateSubscription,
+        body: _body,
+        token: _token,
+        isAwsSubUrl: true,
+      );
       if (response != null) {
         final Map responseData = response["data"];
 
@@ -178,10 +185,11 @@ class PaytmRepository {
       //   'subId': subId,
       // };
       final response = await APIService.instance.postData(
-          ApiPath().kPauseSubscription,
-          body: _body,
-          token: _token,
-          isAWSURL: true);
+        ApiPath().kPauseSubscription,
+        body: _body,
+        token: _token,
+        isAwsSubUrl: true,
+      );
       final Map responseData = response["data"];
 
       if (responseData["status"] != null && responseData["status"])
@@ -206,10 +214,11 @@ class PaytmRepository {
       //   'subId': subId,
       // };
       final response = await APIService.instance.postData(
-          ApiPath().kResumeSubscription,
-          body: _body,
-          token: _token,
-          isAWSURL: true);
+        ApiPath().kResumeSubscription,
+        body: _body,
+        token: _token,
+        isAwsSubUrl: true,
+      );
 
       final Map responseData = response["data"];
 
@@ -232,10 +241,11 @@ class PaytmRepository {
       };
 
       final response = await APIService.instance.postData(
-          ApiPath().kProcessSubscription,
-          body: _body,
-          token: _token,
-          isAWSURL: true);
+        ApiPath().kProcessSubscription,
+        body: _body,
+        token: _token,
+        isAwsSubUrl: true,
+      );
       final Map<String, dynamic> responseData = response['data'];
       if (responseData['status'])
         return ApiResponse(model: true, code: 200);
@@ -254,10 +264,11 @@ class PaytmRepository {
         "uid": _userService.baseUser.uid,
       };
       final response = await APIService.instance.getData(
-          ApiPath().kActiveSubscription,
-          token: _token,
-          queryParams: _queryParams,
-          isAWSURL: true);
+        ApiPath().kActiveSubscription,
+        token: _token,
+        queryParams: _queryParams,
+        isAwsSubUrl: true,
+      );
       _logger.d(response);
       final _responseData = response["data"];
       final _responseModel = ActiveSubscriptionModel.fromJson(_responseData);
@@ -277,10 +288,11 @@ class PaytmRepository {
         "uid": _userService.baseUser.uid,
       };
       final response = await APIService.instance.getData(
-          ApiPath().kNextDebitDate,
-          token: _token,
-          queryParams: _queryParams,
-          isAWSURL: true);
+        ApiPath().kNextDebitDate,
+        token: _token,
+        queryParams: _queryParams,
+        isAwsSubUrl: true,
+      );
 
       final _responseStatus = response["data"];
       _logger.d(response);

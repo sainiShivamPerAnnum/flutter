@@ -1281,10 +1281,10 @@ class DBModel extends ChangeNotifier {
     try {
       QuerySnapshot _querySnapshot = await _api.getAutosaveTransactions(
         userId: uid,
-        subId: subId,
         lastDocument: lastDocument,
         limit: limit,
       );
+      logger.d(_querySnapshot.docs.first.data());
       resultAutosaveTransactionsMap['lastDocument'] = _querySnapshot.docs.last;
       resultAutosaveTransactionsMap['length'] = _querySnapshot.docs.length;
       _querySnapshot.docs.forEach((txn) {

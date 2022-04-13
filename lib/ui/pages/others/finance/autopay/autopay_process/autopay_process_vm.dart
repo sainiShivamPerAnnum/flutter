@@ -26,6 +26,7 @@ class AutoSaveProcessViewModel extends BaseModel {
   bool _isDaily = true;
   bool _showProgressIndicator = false;
   bool _showConfetti = false;
+  AnimationController lottieAnimationController;
 
   int minAmount = 10;
   int maxAmount = 5000;
@@ -235,14 +236,10 @@ class AutoSaveProcessViewModel extends BaseModel {
     if (response.status) {
       _paytmService.jumpToSubPage(1);
       _paytmService.fraction = 1;
-      AppState.screenStack.add(ScreenItem.loader);
       Future.delayed(Duration(minutes: 8), () {
-        if (AppState.screenStack.last == ScreenItem.loader) {
-          AppState.screenStack.removeLast();
-          AppState.backButtonDispatcher.didPopRoute();
-          BaseUtil.showNegativeAlert(
-              "Its taking too long", "We'll inform you in 15 mins");
-        }
+        // if (AppState.screenStack.last == ScreenItem.loader) {
+        BaseUtil.showNegativeAlert(
+            "Its taking too long", "We'll inform you in 15 mins");
       });
     } else
       BaseUtil.showNegativeAlert(
@@ -272,7 +269,7 @@ class AutoSaveProcessViewModel extends BaseModel {
         _paytmService.jumpToSubPage(3);
         showProgressIndicator = false;
         Future.delayed(Duration(seconds: 2), () {
-          showConfetti = true;
+          lottieAnimationController.forward();
           _paytmService.currentSubscriptionId = null;
         });
         BaseUtil.showPositiveAlert(

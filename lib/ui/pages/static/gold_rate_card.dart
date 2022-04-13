@@ -68,7 +68,7 @@ class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
               Blinker(
                 child: CircleAvatar(
                   backgroundColor: UiConstants.primaryColor,
-                  radius: 5,
+                  radius: SizeConfig.padding4,
                 ),
               ),
               SizedBox(width: SizeConfig.padding6),

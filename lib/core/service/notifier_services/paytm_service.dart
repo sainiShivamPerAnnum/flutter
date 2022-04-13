@@ -154,7 +154,6 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
 
   Future init() async {
     await getActiveSubscriptionDetails();
-
     if (await CacheManager.exits(
         CacheManager.CACHE_IS_SUBSCRIPTION_FIRST_TIME)) {
       isFirstTime = await CacheManager.readCache(

@@ -64,20 +64,11 @@ class Save extends StatelessWidget {
                     ],
                   ),
                   Container(
-                    decoration: BoxDecoration(
-                      color: UiConstants.primaryLight.withOpacity(0.3),
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness12),
-                    ),
                     alignment: Alignment.center,
                     width: SizeConfig.screenWidth,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.pageHorizontalMargins / 2,
-                      vertical: SizeConfig.padding16,
-                    ),
-                    margin: EdgeInsets.all(
-                      SizeConfig.pageHorizontalMargins,
-                    ),
+                    margin: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.pageHorizontalMargins * 2,
+                        vertical: SizeConfig.padding20),
                     child: CurrentPriceWidget(
                       fetchGoldRates: model.fetchGoldRates,
                       goldprice: model.goldRates != null

@@ -46,12 +46,12 @@ class ApiPath {
   get kFelloCoupons => "/felloCoupons/$stage/api/eligible";
 
   //PaytmApis
-  static const kCreatePaytmTransaction = "/paymentOps/transaction";
-  get kCreateSubscription => "/subs/subscription";
-  get kPauseSubscription => "/subs/subscription/pause";
-  get kResumeSubscription => "/subs/subscription/resume";
-  get kValidateVpa => "/subs/subscription/vpa";
-  get kProcessSubscription => "/subs/process";
-  get kActiveSubscription => "/subs/subscription";
-  get kNextDebitDate => "/subs/debit";
+  static const kCreatePaytmTransaction = "/transaction";
+  get kCreateSubscription => "/subscription";
+  get kPauseSubscription => "/subscription/pause";
+  get kResumeSubscription => "/subscription/resume";
+  get kValidateVpa => "/subscription/vpa";
+  get kProcessSubscription => "/process";
+  get kActiveSubscription => "/subscription";
+  get kNextDebitDate => "/debit";
 }

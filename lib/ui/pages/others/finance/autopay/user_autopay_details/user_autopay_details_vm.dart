@@ -272,7 +272,7 @@ class UserAutoSaveDetailsViewModel extends BaseModel {
     isSubscriptionAmountUpdateInProgress = false;
     if (res) {
       _paytmService.getActiveSubscriptionDetails();
-      isInEditMode = false;
+      AppState.backButtonDispatcher.didPopRoute();
       // init();
       BaseUtil.showPositiveAlert(
           "Subscription Successful", "Check transactions for more details");

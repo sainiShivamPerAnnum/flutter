@@ -711,7 +711,7 @@ class DetailsView extends StatelessWidget {
                         horizontal: SizeConfig.pageHorizontalMargins),
                     child: FelloButtonLg(
                       child: Text(
-                        "Update Subscription",
+                        "Update Autosave",
                         style: TextStyles.body2.bold.colour(Colors.white),
                       ),
                       onPressed: () {
@@ -732,8 +732,8 @@ class DetailsView extends StatelessWidget {
                           child: Text(
                             model.activeSubscription.status ==
                                     Constants.SUBSCRIPTION_INACTIVE
-                                ? "RESUME SUBSCRIPTION"
-                                : "PAUSE SUBSCRIPTION",
+                                ? "RESUME AUTOSAVE"
+                                : "PAUSE AUTOSAVE",
                             style: TextStyles.body2
                                 .colour(UiConstants.tertiarySolid)
                                 .light,

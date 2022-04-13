@@ -46,17 +46,17 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
                 setState(() {
                   isLoading = true;
                 });
-                if (model.isFirstTime) {
-                  CacheManager.writeCache(
-                      key: CacheManager.CACHE_IS_SUBSCRIPTION_FIRST_TIME,
-                      value: false,
-                      type: CacheType.bool);
-                  model.isFirstTime = false;
-                  AppState.delegate.appState.currentAction = PageAction(
-                      page: AutoSaveDetailsViewPageConfig,
-                      state: PageState.addPage);
-                } else
-                  await getActiveButtonAction();
+                // if (model.isFirstTime) {
+                //   CacheManager.writeCache(
+                //       key: CacheManager.CACHE_IS_SUBSCRIPTION_FIRST_TIME,
+                //       value: false,
+                //       type: CacheType.bool);
+                //   model.isFirstTime = false;
+                //   AppState.delegate.appState.currentAction = PageAction(
+                //       page: AutoSaveDetailsViewPageConfig,
+                //       state: PageState.addPage);
+                // } else
+                await getActiveButtonAction();
                 setState(() {
                   isLoading = false;
                 });
@@ -101,12 +101,16 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
                                   height: SizeConfig.pageHorizontalMargins * 2),
                               Row(
                                 children: [
-                                  FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: Text(
-                                      getActiveTitle(model.activeSubscription),
-                                      style: TextStyles.body2.light
-                                          .colour(Colors.white),
+                                  Container(
+                                    width: SizeConfig.screenWidth * 0.4,
+                                    child: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        getActiveTitle(
+                                            model.activeSubscription),
+                                        style: TextStyles.body2.light
+                                            .colour(Colors.white),
+                                      ),
                                     ),
                                   ),
                                   SizedBox(width: SizeConfig.padding6),
@@ -331,11 +335,7 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
           );
         else {
           if (subscription.resumeDate.isEmpty)
-            return Icon(
-              Icons.pending,
-              color: UiConstants.tertiarySolid,
-              size: SizeConfig.iconSize1,
-            );
+            return SizedBox();
           else
             return SizedBox();
         }
@@ -353,7 +353,7 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
             _paytmService.activeSubscription.status ==
                 Constants.SUBSCRIPTION_CANCELLED)) {
       AppState.delegate.appState.currentAction = PageAction(
-          page: AutoSaveProcessViewPageConfig, state: PageState.addPage);
+          page: AutoSaveDetailsViewPageConfig, state: PageState.addPage);
       // _paytmService.initiateSubscription();
     } else if (_paytmService.activeSubscription.status ==
         Constants.SUBSCRIPTION_PROCESSING) {
@@ -364,11 +364,8 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
     } else {
       if (_paytmService.activeSubscription.status ==
           Constants.SUBSCRIPTION_ACTIVE) {
-        {
-          AppState.delegate.appState.currentAction = PageAction(
-              page: UserAutoSaveDetailsViewPageConfig,
-              state: PageState.addPage);
-        }
+        AppState.delegate.appState.currentAction = PageAction(
+            page: UserAutoSaveDetailsViewPageConfig, state: PageState.addPage);
       }
       if (_paytmService.activeSubscription.status ==
           Constants.SUBSCRIPTION_INACTIVE) {

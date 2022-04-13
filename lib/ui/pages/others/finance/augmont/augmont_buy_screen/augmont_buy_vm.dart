@@ -194,6 +194,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
     fetchGoldRates();
     await fetchNotices();
     status = checkAugmontStatus();
+    _paytmService.getActiveSubscriptionDetails();
     //Fetch available coupons
     getAvailableCoupons();
     //Check if user can be registered automagically

@@ -37,10 +37,12 @@ class AutoSaveProcessView extends StatefulWidget {
   State<AutoSaveProcessView> createState() => _AutoSaveProcessViewState();
 }
 
-class _AutoSaveProcessViewState extends State<AutoSaveProcessView> {
+class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
+    with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return BaseView<AutoSaveProcessViewModel>(onModelReady: (model) {
+      model.lottieAnimationController = AnimationController(vsync: this);
       model.init(widget.page);
     }, builder: (context, model, child) {
       return Scaffold(
@@ -235,26 +237,26 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView> {
           ),
           Spacer(),
           // if (model.showAppLaunchButton)
-          FelloButtonLg(
-            child: Text("Open ${getUpiAppName(model)} mobile app",
-                style: TextStyles.body2.colour(Colors.white)),
-            onPressed: () async {
-              await LaunchApp.openApp(
-                  androidPackageName: "net.one97.paytm",
-                  iosUrlScheme: "paytmmp://mini-app?");
-            },
-          ),
-          SizedBox(height: SizeConfig.padding16),
-          // FittedBox(
-          //   fit: BoxFit.scaleDown,
-          //   child: Text(
-          //     "Please do not press back until the payment is completed",
-          //     style: TextStyles.body4.colour(Colors.red[400]).light,
-          //     textAlign: TextAlign.center,
-          //   ),
+          // FelloButtonLg(
+          //   child: Text("Open ${getUpiAppName(model)} mobile app",
+          //       style: TextStyles.body2.colour(Colors.white)),
+          //   onPressed: () async {
+          //     await LaunchApp.openApp(
+          //         androidPackageName: "net.one97.paytm",
+          //         iosUrlScheme: "paytmmp://mini-app?");
+          //   },
           // ),
-          // SizedBox(height: SizeConfig.padding8),
-          // if (model?.pageController?.page == 1.0)
+          SizedBox(height: SizeConfig.padding16),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              "Please do not press back until the payment is completed",
+              style: TextStyles.body4.colour(Colors.red[400]).light,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          SizedBox(height: SizeConfig.padding8),
+          // if (model.pageController != null && model.pageController.page == 1.0)
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -321,18 +323,25 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView> {
               ],
             ),
           ),
-          if (model.showConfetti)
-            Align(
-                alignment: Alignment.topCenter,
-                child: Container(
-                  alignment: Alignment.center,
-                  height: SizeConfig.screenHeight,
-                  width: SizeConfig.screenWidth,
-                  child: Transform.scale(
-                    scale: 2,
-                    child: Lottie.asset(Assets.gtConfetti, repeat: false),
+          Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                alignment: Alignment.center,
+                height: SizeConfig.screenHeight,
+                width: SizeConfig.screenWidth,
+                child: Transform.scale(
+                  scale: 2,
+                  child: Lottie.asset(
+                    Assets.gtConfetti,
+                    controller: model.lottieAnimationController,
+                    onLoaded: (composition) {
+                      model.lottieAnimationController
+                        ..duration = composition.duration;
+                    },
+                    repeat: false,
                   ),
-                )),
+                ),
+              )),
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -345,6 +354,11 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView> {
                   style: TextStyles.body2.bold.colour(Colors.white),
                 ),
                 onPressed: () {
+                  // if (model.lottieAnimationController.isAnimating) {
+                  //   model.lottieAnimationController.stop();
+                  //   model.lottieAnimationController.repeat();
+                  // } else
+                  //   model.lottieAnimationController.repeat();
                   AppState.backButtonDispatcher.didPopRoute();
                 },
               ),
@@ -838,6 +852,11 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView> {
                             )
                           ]),
                     ),
+                    SizedBox(
+                      height: SizeConfig.viewInsets.bottom != 0
+                          ? 0
+                          : SizeConfig.padding12,
+                    ),
                   ],
                 ),
               ),
@@ -1014,9 +1033,14 @@ class AutosaveProgressIndicator extends StatelessWidget {
                                     drawEnd: index < _processes.length - 1,
                                   ),
                                 ),
-                                OutlinedDotIndicator(
-                                  borderWidth: SizeConfig.padding4,
-                                  color: color,
+                                Positioned(
+                                  left: SizeConfig.padding2,
+                                  top: SizeConfig.padding2,
+                                  child: OutlinedDotIndicator(
+                                    borderWidth: SizeConfig.padding4,
+                                    color: color,
+                                    size: SizeConfig.padding12,
+                                  ),
                                 ),
                               ],
                             );
