@@ -5,6 +5,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/event_model.dart';
+import 'package:felloapp/core/service/events_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -18,6 +19,7 @@ import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/pages/static/web_game_prize_view.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -147,8 +149,15 @@ class InstructionsTab extends StatelessWidget {
         shadow: false,
         borderRadius: SizeConfig.roundness16,
         onTap: () {
-          AppState.delegate.appState.setCurrentTabIndex = 0;
-          AppState.backButtonDispatcher.didPopRoute();
+          if (event.type == "FPL") {
+            AppState.delegate.appState.setCurrentTabIndex = 1;
+            AppState.backButtonDispatcher.didPopRoute();
+            Haptic.vibrate();
+            AppState.delegate.parseRoute(Uri.parse('/cricketHome'));
+          } else {
+            AppState.delegate.appState.setCurrentTabIndex = 0;
+            AppState.backButtonDispatcher.didPopRoute();
+          }
         },
         height: SizeConfig.screenWidth * 0.16,
         child: Container(
@@ -157,13 +166,16 @@ class InstructionsTab extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SvgPicture.asset(
-                'images/svgs/gold.svg',
-                height: SizeConfig.padding40,
-              ),
+              event.type == "FPL"
+                  ? Image.asset('images/cricketThumbIcon.png',
+                      height: SizeConfig.padding54)
+                  : SvgPicture.asset(
+                      'images/svgs/gold.svg',
+                      height: SizeConfig.padding40,
+                    ),
               SizedBox(width: SizeConfig.padding16),
               Text(
-                "Buy Digital Gold",
+                event.type == "FPL" ? "Play Cricket" : "Buy Digital Gold",
                 style: TextStyles.title5.colour(Colors.white).bold.setHeight(1),
               ),
               Spacer(),
@@ -405,10 +417,15 @@ class EventLeaderboard extends StatelessWidget {
                                           text: TextSpan(
                                               text:
                                                   "${isInteger(model.currentParticipants[i].score) ? model.currentParticipants[i].score.toInt() : model.currentParticipants[i].score.truncateToDecimalPlaces(3)}",
-                                              style: TextStyles.body2.bold.colour(UiConstants.primaryColor),
+                                              style: TextStyles.body2.bold
+                                                  .colour(
+                                                      UiConstants.primaryColor),
                                               children: [
                                                 TextSpan(
-                                                    text: " gm",
+                                                    text: model.event.type ==
+                                                            "FPL"
+                                                        ? ""
+                                                        : " gm",
                                                     style: TextStyles
                                                         .body4.light
                                                         .colour(Colors.grey))
