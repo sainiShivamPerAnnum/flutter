@@ -89,6 +89,13 @@ class TopSaverViewModel extends BaseModel {
           // winnerTitle = "Last Month's Winners";
           break;
         }
+      case SaverType.FPL:
+        {
+          appbarTitle = "Fello Premier League";
+          saverFreq = "daily";
+          // winnerTitle = "Last Month's Winners";
+          break;
+        }
     }
     notifyListeners();
   }
