@@ -127,6 +127,7 @@ class UserAutoSaveDetailsViewModel extends BaseModel {
       subStatusController.text = activeSubscription.status;
       amountFieldController.text =
           activeSubscription.autoAmount.toInt().toString();
+      isDaily = activeSubscription.autoFrequency == "DAILY" ? true : false;
       onAmountValueChanged(amountFieldController.text);
     }
   }

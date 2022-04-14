@@ -467,21 +467,21 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
                                         border: Border.all(
                                             width: 0.8,
                                             color: UiConstants.primaryColor),
-                                        borderRadius:
-                                            BorderRadius.circular(100),
+                                        borderRadius: BorderRadius.circular(
+                                            SizeConfig.roundness12),
                                       ),
                                       padding: EdgeInsets.symmetric(
                                         horizontal:
                                             SizeConfig.pageHorizontalMargins,
-                                        vertical: SizeConfig.padding4,
+                                        vertical: SizeConfig.padding12,
                                       ),
-                                      child: TextButton(
-                                        onPressed: () {
+                                      child: InkWell(
+                                        onTap: () {
                                           AppState.delegate.parseRoute(
                                               Uri.parse('/AppWalkthrough'));
                                         },
                                         child: Text(
-                                          "See example",
+                                          "See an example",
                                           style: TextStyles.body1
                                               .colour(UiConstants.primaryColor),
                                         ),
