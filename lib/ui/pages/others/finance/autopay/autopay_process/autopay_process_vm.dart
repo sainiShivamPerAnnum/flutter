@@ -315,10 +315,13 @@ class AutoSaveProcessViewModel extends BaseModel {
       showProgressIndicator = false;
       // onAmountValueChanged(amountFieldController.text);
 
+    } else if (res['status'] == false) {
+      tryAgain();
+      BaseUtil.showNegativeAlert("Something went wrong!!", res['message']);
     } else {
+      tryAgain();
       BaseUtil.showNegativeAlert(
           "Something went wrong!", "Please try again after sometime");
-      showProgressIndicator = false;
     }
   }
 

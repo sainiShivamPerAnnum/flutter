@@ -718,7 +718,9 @@ class DetailsView extends StatelessWidget {
                                     ),
                                   )
                                 : (model.filteredList?.length == 0
-                                    ? NoTransactionsContent()
+                                    ? NoTransactionsContent(
+                                        width: SizeConfig.screenWidth * 0.4,
+                                      )
                                     : ListView(
                                         physics: NeverScrollableScrollPhysics(),
                                         shrinkWrap: true,

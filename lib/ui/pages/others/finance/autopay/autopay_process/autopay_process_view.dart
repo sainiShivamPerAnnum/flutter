@@ -472,7 +472,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
             controller: model.vpaController,
             autofocus: widget.page == 0 ? true : false,
             inputFormatters: <TextInputFormatter>[
-              FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z@]")),
+              FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z@.]")),
             ],
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(hintText: "hello@upi"),
