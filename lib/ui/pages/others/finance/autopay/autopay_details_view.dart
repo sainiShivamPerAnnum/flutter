@@ -442,7 +442,7 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
                                   ),
                                   InfoTile(
                                     png: "assets/images/icons/bank.png",
-                                    title: "Enter your UPI Id",
+                                    title: "Enter your UPI ID",
                                     subtitle:
                                         "Make sure your bank supports autosave",
                                   ),
@@ -586,9 +586,6 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
                     if (showSetupButton)
                       Container(
                         margin: EdgeInsets.symmetric(
-                            vertical: SizeConfig.viewInsets.bottom != 0
-                                ? 0
-                                : SizeConfig.pageHorizontalMargins,
                             horizontal: SizeConfig.pageHorizontalMargins),
                         child: FelloButtonLg(
                           child: Text(
@@ -604,6 +601,7 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
                         ),
                       ),
                     SizedBox(
+                      width: SizeConfig.screenWidth,
                       height: SizeConfig.viewInsets.bottom != 0
                           ? 0
                           : SizeConfig.pageHorizontalMargins,
