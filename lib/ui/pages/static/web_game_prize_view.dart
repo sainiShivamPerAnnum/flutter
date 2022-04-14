@@ -1,4 +1,9 @@
+import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -52,10 +57,21 @@ class PrizesView extends StatelessWidget {
               child: Stack(
                 children: [
                   //Image.asset("assets/images/confetti.png"),
-                  Text(
-                    subtitle,
-                    textAlign: TextAlign.center,
-                    style: TextStyles.body3.light,
+                  GestureDetector(
+                    onTap: () {
+                      if (subtitle ==
+                          BaseRemoteConfig.remoteConfig.getString(
+                              BaseRemoteConfig.GAME_CRICKET_FPL_ANNOUNCEMENT)) {
+                        AppState.delegate.appState.setCurrentTabIndex = 1;
+                        AppState.backButtonDispatcher.didPopRoute();
+                        AppState.delegate.parseRoute(Uri.parse("/FPL"));
+                      }
+                    },
+                    child: Text(
+                      subtitle,
+                      textAlign: TextAlign.center,
+                      style: TextStyles.body3.light,
+                    ),
                   ),
                 ],
               ),

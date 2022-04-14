@@ -134,6 +134,9 @@ class BaseRemoteConfig {
     'game_tambola_announcement':
         'Stand to win big prizes every week by matching your tambola tickets! Winners are announced every Monday'
   };
+  static const Map<String, String> _GAME_CRICKET_FPL_ANNOUNCEMENT = {
+    'game_cricket_fpl_announcement': 'Fello Premier League is live.'
+  };
   static const Map<String, String> _GAME_CRICKET_ANNOUNCEMENT = {
     'game_cricket_announcement':
         'The highest scorers of the week win prizes every Sunday at midnight'
@@ -183,6 +186,7 @@ class BaseRemoteConfig {
     ..._MIN_WITHDRAWABLE_PRIZE,
     ..._GAME_TAMBOLA_ANNOUNCEMENT,
     ..._GAME_CRICKET_ANNOUNCEMENT,
+    ..._GAME_CRICKET_FPL_ANNOUNCEMENT,
     ..._AMZ_VOUCHER_REDEMPTION,
     ..._APP_SHARE_MSG
   };
@@ -310,6 +314,9 @@ class BaseRemoteConfig {
 
   static String get GAME_CRICKET_ANNOUNCEMENT =>
       _GAME_CRICKET_ANNOUNCEMENT.keys.first;
+
+  static String get GAME_CRICKET_FPL_ANNOUNCEMENT =>
+      _GAME_CRICKET_FPL_ANNOUNCEMENT.keys.first;
 
   static String get APP_SHARE_MSG => _APP_SHARE_MSG.keys.first;
 }

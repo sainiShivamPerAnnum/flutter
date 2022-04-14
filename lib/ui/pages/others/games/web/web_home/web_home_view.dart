@@ -133,7 +133,7 @@ class WebHomeView extends StatelessWidget {
                                                             .remoteConfig
                                                             .getString(
                                                                 BaseRemoteConfig
-                                                                    .GAME_CRICKET_ANNOUNCEMENT) ??
+                                                                    .GAME_CRICKET_FPL_ANNOUNCEMENT) ??
                                                         'The highest scorers of the week win prizes every Sunday at midnight',
                                                     leading: List.generate(
                                                         model.prizes.prizesA
