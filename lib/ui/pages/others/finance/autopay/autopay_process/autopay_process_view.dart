@@ -790,60 +790,62 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      margin: EdgeInsets.only(top: SizeConfig.padding16),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Great choice. every ${model.isDaily ? 'day' : 'week'} you'll recieve",
-                              style: TextStyles.body2.bold,
-                            ),
-                            // Divider(
-                            //   height: SizeConfig.padding24,
-                            // ),
-                            SizedBox(height: SizeConfig.padding12),
-                            Container(
-                              width: SizeConfig.screenWidth,
-                              // height: SizeConfig.padding40,
-                              child: Row(
-                                  // scrollDirection: Axis.horizontal,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    AutosavePerks(
-                                      svg: 'images/svgs/gold.svg',
-                                      text: "Interest on gold",
-                                    ),
-                                    if (model.amountFieldController.text !=
-                                            null &&
-                                        model.amountFieldController.text
-                                            .isNotEmpty &&
-                                        int.tryParse(model
-                                                ?.amountFieldController
-                                                ?.text) >=
-                                            100)
+                    if (model.amountFieldController.text != null &&
+                        model.amountFieldController.text.isNotEmpty)
+                      Container(
+                        margin: EdgeInsets.only(top: SizeConfig.padding16),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Great choice. every ${model.isDaily ? 'day' : 'week'} you'll recieve",
+                                style: TextStyles.body2.bold,
+                              ),
+                              // Divider(
+                              //   height: SizeConfig.padding24,
+                              // ),
+                              SizedBox(height: SizeConfig.padding12),
+                              Container(
+                                width: SizeConfig.screenWidth,
+                                // height: SizeConfig.padding40,
+                                child: Row(
+                                    // scrollDirection: Axis.horizontal,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
                                       AutosavePerks(
-                                        svg: Assets.goldenTicket,
-                                        text: "Golden ticket",
+                                        svg: 'images/svgs/gold.svg',
+                                        text: "Interest on gold",
                                       ),
-                                    if (model.amountFieldController.text !=
-                                            null &&
-                                        model.amountFieldController.text
-                                            .isNotEmpty &&
-                                        int.tryParse(model
-                                                    ?.amountFieldController
-                                                    ?.text ??
-                                                '0') >=
-                                            0)
-                                      AutosavePerks(
-                                        svg: Assets.tokens,
-                                        text:
-                                            "${int.tryParse(model?.amountFieldController?.text)} Fello Tokens",
-                                      )
-                                  ]),
-                            )
-                          ]),
-                    ),
+                                      if (model.amountFieldController.text !=
+                                              null &&
+                                          model.amountFieldController.text
+                                              .isNotEmpty &&
+                                          int.tryParse(model
+                                                  ?.amountFieldController
+                                                  ?.text) >=
+                                              100)
+                                        AutosavePerks(
+                                          svg: Assets.goldenTicket,
+                                          text: "Golden ticket",
+                                        ),
+                                      if (model.amountFieldController.text !=
+                                              null &&
+                                          model.amountFieldController.text
+                                              .isNotEmpty &&
+                                          int.tryParse(model
+                                                      ?.amountFieldController
+                                                      ?.text ??
+                                                  '0') >=
+                                              0)
+                                        AutosavePerks(
+                                          svg: Assets.tokens,
+                                          text:
+                                              "${int.tryParse(model?.amountFieldController?.text)} Fello Tokens",
+                                        )
+                                    ]),
+                              )
+                            ]),
+                      ),
                     SizedBox(height: SizeConfig.padding16),
                     Container(
                       width: SizeConfig.screenWidth -

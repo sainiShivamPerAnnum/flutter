@@ -3,5 +3,6 @@ enum PaytmServiceProperties {
   SubscriptionProcess,
   FirstTimeView,
   ProcessFraction,
-  AutosaveVisibility
+  AutosaveVisibility,
+  NextDebitString
 }

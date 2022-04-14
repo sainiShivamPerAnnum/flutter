@@ -267,6 +267,7 @@ class AutoSaveProcessViewModel extends BaseModel {
       isSubscriptionAmountUpdateInProgress = false;
       if (res) {
         _paytmService.jumpToSubPage(3);
+        _paytmService.getActiveSubscriptionDetails();
         showProgressIndicator = false;
         Future.delayed(Duration(seconds: 2), () {
           lottieAnimationController.forward();

@@ -53,7 +53,8 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
 
   set setNextDebitString(String nextDebitString) {
     this.nextDebitString = nextDebitString;
-    notifyListeners();
+    notifyListeners(PaytmServiceProperties.NextDebitString);
+    _logger.d("Paytm Service: Next Debit String properties notified");
   }
 
   set autosaveVisible(bool autosaveVisible) {
@@ -321,8 +322,15 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     else
       activeSubscription = null;
     if (activeSubscription != null &&
-        activeSubscription.status == Constants.SUBSCRIPTION_ACTIVE)
-      await _paytmRepo.getNextDebitDate();
+        activeSubscription.status == Constants.SUBSCRIPTION_ACTIVE) {
+      final ApiResponse<String> nextDebitResponse =
+          await _paytmRepo.getNextDebitDate();
+      if (nextDebitResponse.code == 200)
+        nextDebitString = nextDebitResponse.model;
+      else
+        nextDebitString = "";
+    }
+
     // else {
     //   BaseUtil.showNegativeAlert(
     //       "Unable to fetch Your Autosave details", "Please try after sometime");

@@ -37,7 +37,8 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
     return PropertyChangeConsumer<PaytmService, PaytmServiceProperties>(
       properties: [
         PaytmServiceProperties.ActiveSubscription,
-        PaytmServiceProperties.AutosaveVisibility
+        PaytmServiceProperties.AutosaveVisibility,
+        PaytmServiceProperties.NextDebitString,
       ],
       builder: (context, model, property) => model.autosaveVisible
           ? InkWell(
@@ -96,7 +97,7 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(
-                              height: SizeConfig.pageHorizontalMargins * 2),
+                              height: SizeConfig.pageHorizontalMargins * 1.6),
                           Container(
                             width: SizeConfig.screenWidth * 0.5,
                             alignment: Alignment.centerLeft,
@@ -169,7 +170,27 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
                               ),
                             ],
                           ),
-                          SizedBox(height: SizeConfig.pageHorizontalMargins * 2)
+                          SizedBox(height: SizeConfig.padding16),
+                          if (model.activeSubscription != null)
+                            AnimatedContainer(
+                              duration: Duration(seconds: 2),
+                              curve: Curves.easeOutBack,
+                              height: model.activeSubscription.status ==
+                                      Constants.SUBSCRIPTION_ACTIVE
+                                  ? SizeConfig.padding12
+                                  : 0,
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                model.activeSubscription.status ==
+                                        Constants.SUBSCRIPTION_ACTIVE
+                                    ? model.nextDebitString
+                                    : "",
+                                style: TextStyles.body5.colour(Colors.white),
+                                textAlign: TextAlign.left,
+                              ),
+                            ),
+                          SizedBox(
+                              height: SizeConfig.pageHorizontalMargins * 1.6),
                         ],
                       ),
                     ),
@@ -206,15 +227,19 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
       return new LinearGradient(
         colors: [UiConstants.autosaveColor, UiConstants.autosaveColor],
       );
-    }
-
-    if (subscription.status == Constants.SUBSCRIPTION_INACTIVE &&
+    } else if (subscription.status == Constants.SUBSCRIPTION_INACTIVE &&
         subscription.autoAmount != 0.0 &&
         subscription.resumeDate.isNotEmpty) {
       return new LinearGradient(
           colors: [Color(0xffFD746C), Color(0xffFF9068)],
           begin: Alignment.topLeft,
           end: Alignment.centerRight);
+    } else if (subscription.status == Constants.SUBSCRIPTION_INACTIVE &&
+        subscription.autoAmount != 0.0 &&
+        subscription.resumeDate.isEmpty) {
+      return new LinearGradient(
+        colors: [Color(0xffEACDA3), Color(0xffD6AE7B)],
+      );
     }
     return new LinearGradient(
       colors: [UiConstants.autosaveColor, UiConstants.autosaveColor],

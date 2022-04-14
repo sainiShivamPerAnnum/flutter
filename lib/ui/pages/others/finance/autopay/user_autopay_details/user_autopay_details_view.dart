@@ -1,6 +1,3 @@
-import 'dart:developer';
-import 'dart:io';
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
@@ -104,15 +101,12 @@ class UpdateDetailsView extends StatelessWidget {
             child: Column(
               children: [
                 SizedBox(height: SizeConfig.pageHorizontalMargins),
-                SvgPicture.asset("assets/vectors/addmoney.svg",
-                    height: SizeConfig.screenHeight * 0.16),
-                SizedBox(height: SizeConfig.padding24),
                 Padding(
                   padding: EdgeInsets.symmetric(
                       horizontal: SizeConfig.pageHorizontalMargins),
                   child: Text(
                     "How much would you like to save?",
-                    style: TextStyles.title5.bold,
+                    style: TextStyles.title3.bold,
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -156,7 +150,7 @@ class UpdateDetailsView extends StatelessWidget {
                                   Haptic.vibrate();
                                   model.isDaily = true;
                                   model.onAmountValueChanged(
-                                      model.amountFieldController.text);
+                                      model?.amountFieldController?.text);
                                 },
                                 child: SegmentChips(
                                   model: model,
@@ -184,6 +178,7 @@ class UpdateDetailsView extends StatelessWidget {
                     ],
                   ),
                 ),
+                SizedBox(height: SizeConfig.padding24),
                 Container(
                   width: SizeConfig.screenWidth,
                   child: Row(
@@ -197,9 +192,11 @@ class UpdateDetailsView extends StatelessWidget {
                           child: TextField(
                             controller: model.amountFieldController,
                             maxLines: null,
+                            maxLength: 4,
 
                             decoration: InputDecoration(
                                 prefixText: "₹",
+                                counterText: "",
                                 prefixStyle: GoogleFonts.sourceSansPro(
                                     fontWeight: FontWeight.bold,
                                     fontSize: SizeConfig.screenWidth / 4.8,
@@ -237,7 +234,7 @@ class UpdateDetailsView extends StatelessWidget {
                           Text(
                             model.isDaily ? '/day' : '/week',
                             style: GoogleFonts.sourceSansPro(
-                                fontSize: SizeConfig.title2,
+                                fontSize: SizeConfig.title3,
                                 height: 2,
                                 color: Colors.black38),
                           ),
@@ -248,9 +245,36 @@ class UpdateDetailsView extends StatelessWidget {
                     ],
                   ),
                 ),
-                Text(
-                  "You'll be saving ₹${model.saveAmount.toInt().toString().replaceAllMapped(model.reg, model.mathFunc)} every year",
-                  style: TextStyles.body2.bold.colour(Colors.black45),
+                SizedBox(height: 10),
+                Container(
+                  width: SizeConfig.screenWidth,
+                  padding: EdgeInsets.symmetric(
+                    vertical: SizeConfig.padding12,
+                    horizontal: SizeConfig.pageHorizontalMargins,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      SizeConfig.roundness12,
+                    ),
+                    color: UiConstants.tertiaryLight,
+                  ),
+                  alignment: Alignment.center,
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: RichText(
+                        text: TextSpan(
+                      text: "You'll be saving ",
+                      children: [
+                        TextSpan(
+                            text:
+                                "₹${model.saveAmount.toInt().toString().replaceAllMapped(model.reg, model.mathFunc)}",
+                            style: TextStyles.body2.bold
+                                .colour(UiConstants.tertiarySolid)),
+                        TextSpan(text: " every year")
+                      ],
+                      style: TextStyles.body2.colour(Colors.black),
+                    )),
+                  ),
                 ),
                 SizedBox(
                   height: SizeConfig.padding24,
@@ -277,18 +301,21 @@ class UpdateDetailsView extends StatelessWidget {
                                 )),
                   ),
                 ),
+                SizedBox(
+                  height: SizeConfig.screenHeight * 0.3,
+                )
               ],
             ),
           ),
         ),
-        if (model.isInEditMode) PauseResumeButton(model: model),
+        if (model.isInEditMode) AmountFreqUpdateButton(model: model),
       ],
     );
   }
 }
 
-class PauseResumeButton extends StatelessWidget {
-  const PauseResumeButton({
+class AmountFreqUpdateButton extends StatelessWidget {
+  const AmountFreqUpdateButton({
     Key key,
     @required this.model,
   }) : super(key: key);
@@ -299,12 +326,69 @@ class PauseResumeButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Positioned(
       bottom: 0,
-      left: SizeConfig.pageHorizontalMargins,
       child: SafeArea(
         child: Container(
+          width: SizeConfig.screenWidth,
+          padding: EdgeInsets.symmetric(
+            horizontal: SizeConfig.pageHorizontalMargins,
+            // vertical: SizeConfig.padding16,
+          ),
           color: Colors.white,
           child: Column(
             children: [
+              if (model.amountFieldController.text != null &&
+                  model.amountFieldController.text.isNotEmpty)
+                Container(
+                  margin: EdgeInsets.only(top: SizeConfig.padding16),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Great choice. every ${model.isDaily ? 'day' : 'week'} you'll recieve",
+                          style: TextStyles.body2.bold,
+                        ),
+                        // Divider(
+                        //   height: SizeConfig.padding24,
+                        // ),
+                        SizedBox(height: SizeConfig.padding12),
+                        Container(
+                          width: SizeConfig.screenWidth,
+                          // height: SizeConfig.padding40,
+                          child: Row(
+                              // scrollDirection: Axis.horizontal,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                AutosavePerks(
+                                  svg: 'images/svgs/gold.svg',
+                                  text: "Interest on gold",
+                                ),
+                                if (model.amountFieldController.text != null &&
+                                    model.amountFieldController.text
+                                        .isNotEmpty &&
+                                    int.tryParse(model
+                                            ?.amountFieldController?.text) >=
+                                        100)
+                                  AutosavePerks(
+                                    svg: Assets.goldenTicket,
+                                    text: "Golden ticket",
+                                  ),
+                                if (model.amountFieldController.text != null &&
+                                    model.amountFieldController.text
+                                        .isNotEmpty &&
+                                    int.tryParse(model
+                                                ?.amountFieldController?.text ??
+                                            '0') >=
+                                        0)
+                                  AutosavePerks(
+                                    svg: Assets.tokens,
+                                    text:
+                                        "${int.tryParse(model?.amountFieldController?.text)} Fello Tokens",
+                                  )
+                              ]),
+                        )
+                      ]),
+                ),
+              SizedBox(height: SizeConfig.padding16),
               Container(
                 width: SizeConfig.screenWidth -
                     SizeConfig.pageHorizontalMargins * 2,
@@ -331,7 +415,7 @@ class PauseResumeButton extends StatelessWidget {
               SizedBox(
                 height: SizeConfig.viewInsets.bottom != 0
                     ? 0
-                    : SizeConfig.padding12,
+                    : SizeConfig.pageHorizontalMargins,
               ),
             ],
           ),
@@ -465,8 +549,8 @@ class DetailsView extends StatelessWidget {
                                     Text(
                                       model.activeSubscription.status ==
                                               "ACTIVE"
-                                          ? "Active Subscription"
-                                          : "Subscription Paused",
+                                          ? "Autosave Active"
+                                          : "Autosave Paused",
                                       style:
                                           TextStyles.body1.colour(Colors.white),
                                     ),
