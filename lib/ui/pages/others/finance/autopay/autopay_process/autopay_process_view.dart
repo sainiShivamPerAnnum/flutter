@@ -245,7 +245,8 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
               onPressed: () async {
                 await LaunchApp.openApp(
                     androidPackageName: model.androidPackageName,
-                    iosUrlScheme: model.iosUrlScheme);
+                    iosUrlScheme: model.iosUrlScheme,
+                    openStore: false);
               },
             ),
           SizedBox(height: SizeConfig.padding16),

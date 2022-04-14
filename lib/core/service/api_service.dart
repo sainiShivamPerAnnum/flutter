@@ -28,8 +28,9 @@ class APIService implements API {
   String _awssubUrl = FlavorConfig.isProduction()
       ? "https://2z48o79cm5.execute-api.ap-south-1.amazonaws.com/prod/"
       : "https://2je5zoqtuc.execute-api.ap-south-1.amazonaws.com/dev";
-  String _awstxnUrl =
-      "https://hl4otla349.execute-api.ap-south-1.amazonaws.com/dev";
+  String _awstxnUrl = FlavorConfig.isProduction()
+      ? "https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod"
+      : "https://hl4otla349.execute-api.ap-south-1.amazonaws.com/dev";
   final logger = locator<CustomLogger>();
   final userService = locator<UserService>();
   String _versionString = "";
@@ -69,7 +70,7 @@ class APIService implements API {
           'uid': userService?.baseUser?.uid,
         },
       );
-      logger.d("response from $url");
+      logger.d("response from $finalPath");
       logger.d("Full url: $finalPath");
       responseJson = returnResponse(response);
     } on SocketException {
@@ -111,7 +112,7 @@ class APIService implements API {
 
       String _url =
           getBaseUrl(isSubUrl: isAwsSubUrl, isTxnUrl: isAwsTxnUrl) + url;
-      logger.d("response from $url");
+      logger.d("response from $_url");
 
       final response = await http.post(
         Uri.parse(_url),
