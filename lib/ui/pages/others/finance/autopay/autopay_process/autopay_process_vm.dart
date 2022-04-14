@@ -178,6 +178,7 @@ class AutoSaveProcessViewModel extends BaseModel {
   }
 
   onAmountValueChanged(String val) {
+    if (val == "00000") amountFieldController.text = '0';
     if (val != null && val.isNotEmpty) {
       if (int.tryParse(val) > maxAmount) {
         amountFieldController.text = maxAmount.toString();
@@ -287,7 +288,7 @@ class AutoSaveProcessViewModel extends BaseModel {
         _paytmService.jumpToSubPage(3);
         _paytmService.getActiveSubscriptionDetails();
         showProgressIndicator = false;
-        Future.delayed(Duration(seconds: 2), () {
+        Future.delayed(Duration(milliseconds: 1500), () {
           lottieAnimationController.forward();
           _paytmService.currentSubscriptionId = null;
         });

@@ -658,7 +658,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
                         child: TextField(
                           controller: model.amountFieldController,
                           maxLines: null,
-                          maxLength: 4,
+                          // maxLength: 4,
 
                           decoration: InputDecoration(
                               prefixText: "₹",

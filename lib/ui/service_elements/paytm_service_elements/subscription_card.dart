@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
+import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
 import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
@@ -19,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:provider/provider.dart';
 
 class AutoSaveCard extends StatefulWidget {
   AutoSaveCard({Key key}) : super(key: key);
@@ -33,6 +35,8 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
   bool isLoading = false;
   @override
   Widget build(BuildContext context) {
+    ConnectivityStatus connectivityStatus =
+        Provider.of<ConnectivityStatus>(context);
     return PropertyChangeConsumer<PaytmService, PaytmServiceProperties>(
       properties: [
         PaytmServiceProperties.ActiveSubscription,
@@ -42,6 +46,8 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
       builder: (context, model, property) => model.autosaveVisible
           ? InkWell(
               onTap: () async {
+                if (connectivityStatus == ConnectivityStatus.Offline)
+                  return BaseUtil.showNoInternetAlert();
                 if (isLoading) return;
                 setState(() {
                   isLoading = true;
@@ -156,15 +162,16 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
                               curve: Curves.easeOut,
                               height: model.activeSubscription?.status ==
                                       Constants.SUBSCRIPTION_ACTIVE
-                                  ? SizeConfig.padding12
+                                  ? SizeConfig.body3
                                   : 0,
+                              width: SizeConfig.screenWidth * 0.5,
                               alignment: Alignment.centerLeft,
                               child: (model.nextDebitString != null &&
                                       model.nextDebitString.isNotEmpty)
                                   ? Text(
                                       model.nextDebitString,
                                       style:
-                                          TextStyles.body5.colour(Colors.white),
+                                          TextStyles.body4.colour(Colors.white),
                                       textAlign: TextAlign.left,
                                     )
                                   : SizedBox(),
