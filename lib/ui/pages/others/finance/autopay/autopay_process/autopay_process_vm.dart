@@ -27,6 +27,8 @@ class AutoSaveProcessViewModel extends BaseModel {
   bool _showProgressIndicator = false;
   bool _showConfetti = false;
   AnimationController lottieAnimationController;
+  String _androidPackageName = "";
+  String _iosUrlScheme = "";
 
   int minAmount = 10;
   int maxAmount = 5000;
@@ -62,6 +64,20 @@ class AutoSaveProcessViewModel extends BaseModel {
 
   set showConfetti(bool value) {
     this._showConfetti = value;
+    notifyListeners();
+  }
+
+  get androidPackageName => this._androidPackageName;
+
+  set androidPackageName(value) {
+    this._androidPackageName = value;
+    notifyListeners();
+  }
+
+  get iosUrlScheme => this._iosUrlScheme;
+
+  set iosUrlScheme(value) {
+    this._iosUrlScheme = value;
     notifyListeners();
   }
 
@@ -105,6 +121,13 @@ class AutoSaveProcessViewModel extends BaseModel {
 
   set isSubscriptionInProgress(bool value) {
     this._isSubscriptionInProgress = value;
+    if (value) {
+      AppState.screenStack.add(ScreenItem.loader);
+    } else {
+      if (AppState.screenStack.last == ScreenItem.loader) {
+        AppState.screenStack.removeLast();
+      }
+    }
     notifyListeners();
   }
 
@@ -144,6 +167,8 @@ class AutoSaveProcessViewModel extends BaseModel {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _paytmService.jumpToSubPage(page);
       _paytmService.fraction = page;
+      if (page == 1)
+        checkForUPIAppExistence(vpaController.text.trim().split("@").last);
       // getTitle();
       print(pageController.page);
       showProgressIndicator = true;
@@ -219,27 +244,20 @@ class AutoSaveProcessViewModel extends BaseModel {
       return BaseUtil.showNegativeAlert("You are not onboarded to augmont yet",
           "Please finish augmont onboarding first");
     }
-
     isSubscriptionInProgress = true;
-
-    // await _paytmService.getActiveSubscriptionDetails();
-    // if (_paytmService.activeSubscription != null) {
-    //   BaseUtil.showNegativeAlert("You are already subscribed",
-    //       "Check Autosave details sections for more info");
-    //   isSubscriptionInProgress = false;
-    //   return;
-    // }
-
     PaytmResponse response =
         await _paytmService.initiateCustomSubscription(vpaController.text);
     isSubscriptionInProgress = false;
     if (response.status) {
+      checkForUPIAppExistence(vpaController.text.trim().split("@").last);
       _paytmService.jumpToSubPage(1);
       _paytmService.fraction = 1;
       Future.delayed(Duration(minutes: 8), () {
-        // if (AppState.screenStack.last == ScreenItem.loader) {
-        BaseUtil.showNegativeAlert(
-            "Its taking too long", "We'll inform you in 15 mins");
+        if (_paytmService.fraction == 1) {
+          AppState.backButtonDispatcher.didPopRoute();
+          BaseUtil.showNegativeAlert(
+              "Its taking too long", "We'll inform you in 15 mins");
+        }
       });
     } else
       BaseUtil.showNegativeAlert(
@@ -303,50 +321,41 @@ class AutoSaveProcessViewModel extends BaseModel {
     }
   }
 
-  checkForUPIAppExistence(upi) async {
-    String androidPackageName = "net.one97.paytm";
-    String iosUrlScheme = "paytmmp://mini-app?";
-    // switch (upi) {
-    //   case 'upi':
-    //     androidPackageName = 'BHIM';
-    //     iosUrlScheme = "";
-    //     break;
-    //   case 'paytm':
-    //     androidPackageName = 'BHIM';
-    //     iosUrlScheme = "";
-    //     break;
-    //   case 'ybl':
-    //     androidPackageName = 'BHIM';
-    //     iosUrlScheme = "";
-    //     break;
-    //   case 'ibl':
-    //     androidPackageName = 'BHIM';
-    //     iosUrlScheme = "";
-    //     break;
-    //   case 'axl':
-    //     androidPackageName = 'BHIM';
-    //     iosUrlScheme = "";
-    //     break;
-    //   case 'okhdfcbank':
-    //     androidPackageName = 'BHIM';
-    //     iosUrlScheme = "";
-    //     break;
-    //   case 'okaksix':
-    //     androidPackageName = 'BHIM';
-    //     iosUrlScheme = "";
-    //     break;
-    //   case 'apl':
-    //     androidPackageName = 'BHIM';
-    //     iosUrlScheme = "";
-    //     break; // case 'indus':
-    //   //   return "BHIM Indus Pay";
-    //   // case 'boi':
-    //   //   return "BHIM BOI UPI";
-    //   // case 'cnrb':
-    //   //   return "BHIM Canara";
-    //   // default:
-    //   //   return "preferred UPI";
-    // }
+  checkForUPIAppExistence(String upi) async {
+    switch (upi) {
+      case 'upi':
+        androidPackageName = "in.org.npci.upiapp";
+        iosUrlScheme = "bhim";
+        break;
+      case 'paytm':
+        androidPackageName = "net.one97.paytm";
+        iosUrlScheme = "paytm";
+        break;
+      case 'ybl':
+        androidPackageName = "com.phonepe.app";
+        iosUrlScheme = "phonepe";
+        break;
+      case 'ibl':
+        androidPackageName = "com.phonepe.app";
+        iosUrlScheme = "phonepe";
+        break;
+      case 'axl':
+        androidPackageName = "com.phonepe.app";
+        iosUrlScheme = "phonepe";
+        break;
+      case 'okhdfcbank':
+        androidPackageName = "com.google.android.apps.nbu.paisa.user";
+        iosUrlScheme = "gpay";
+        break;
+      case 'okaksix':
+        androidPackageName = "com.google.android.apps.nbu.paisa.user";
+        iosUrlScheme = "gpay";
+        break;
+      case 'apl':
+        androidPackageName = "in.amazon.mShop.android.shopping";
+        iosUrlScheme = "amazon";
+        break; // case 'indus':
+    }
     if (await LaunchApp.isAppInstalled(
         androidPackageName: androidPackageName, iosUrlScheme: iosUrlScheme)) {
       showAppLaunchButton = true;

@@ -159,7 +159,7 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
               ),
             ),
             Positioned(
-              bottom: usedHeight * 0.54,
+              bottom: usedHeight * 0.56,
               left: SizeConfig.pageHorizontalMargins,
               child: AnimatedOpacity(
                 curve: Curves.easeOutCirc,
@@ -188,7 +188,7 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
               ),
             ),
             Positioned(
-              bottom: usedHeight * 0.54,
+              bottom: usedHeight * 0.56,
               left: SizeConfig.pageHorizontalMargins,
               child: AnimatedOpacity(
                 curve: Curves.easeOutCirc,
@@ -243,27 +243,21 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
             //   ),
             // ),
             Positioned(
-              top: SizeConfig.viewInsets.top +
-                  SizeConfig.padding12 +
-                  SizeConfig.avatarRadius,
+              top: SizeConfig.viewInsets.top + SizeConfig.padding16,
               child: Container(
                 width: SizeConfig.screenWidth,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // Text(
-                    //   "INTRODUCING",
-                    //   style: TextStyles.body3.colour(Colors.black45),
-                    // ),
                     Image.asset(
                       Assets.logoMaxSize,
-                      height: SizeConfig.title2,
+                      height: SizeConfig.title1,
                     ),
                     // SizedBox(
                     //   height: SizeConfig.padding8,
                     // ),
                     Transform.translate(
-                      offset: Offset(0, -10),
+                      offset: Offset(0, -SizeConfig.padding12),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -273,13 +267,13 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
                           //   height: SizeConfig.title1 * 1.2,
                           // ),
                           // SizedBox(width: SizeConfig.padding4),
-                          Text("Autosave",
-                              style: GoogleFonts.prompt(
+                          Text("AUTOSAVE",
+                              style: GoogleFonts.suranna(
                                   fontWeight: FontWeight.w300,
                                   // height: 1.6,
                                   color: Color(0xff3F4748),
                                   letterSpacing: 2,
-                                  fontSize: SizeConfig.title3)
+                                  fontSize: SizeConfig.title4)
 
                               //  TextStyles.title1.colour(Color(0xff3F4748)),
                               ),
@@ -294,7 +288,7 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
-                height: usedHeight * 0.54,
+                height: usedHeight * 0.56,
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -329,7 +323,10 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
                               padding: EdgeInsets.symmetric(
                                   horizontal: SizeConfig.pageHorizontalMargins),
                               child: PageView.builder(
-                                physics: NeverScrollableScrollPhysics(),
+                                // physics: NeverScrollableScrollPhysics(),
+                                onPageChanged: (int page) {
+                                  _pageNotifier.value = page.toDouble();
+                                },
                                 controller: autosavePageController,
                                 scrollDirection: Axis.vertical,
                                 itemCount: 3,

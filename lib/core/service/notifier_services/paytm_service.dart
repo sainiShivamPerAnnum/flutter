@@ -48,11 +48,11 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   bool _isFirstTime = true;
   bool _autosaveVisible = true;
   bool get autosaveVisible => this._autosaveVisible;
-  String nextDebitString = "";
-  String get getNextDebitString => this.nextDebitString;
+  String _nextDebitString;
+  String get nextDebitString => this._nextDebitString;
 
-  set setNextDebitString(String nextDebitString) {
-    this.nextDebitString = nextDebitString;
+  set nextDebitString(String nextDebitString) {
+    this._nextDebitString = nextDebitString;
     notifyListeners(PaytmServiceProperties.NextDebitString);
     _logger.d("Paytm Service: Next Debit String properties notified");
   }

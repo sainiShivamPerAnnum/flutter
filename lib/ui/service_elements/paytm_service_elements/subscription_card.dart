@@ -18,7 +18,6 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
-import 'package:lottie/lottie.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class AutoSaveCard extends StatefulWidget {
@@ -47,16 +46,6 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
                 setState(() {
                   isLoading = true;
                 });
-                // if (model.isFirstTime) {
-                //   CacheManager.writeCache(
-                //       key: CacheManager.CACHE_IS_SUBSCRIPTION_FIRST_TIME,
-                //       value: false,
-                //       type: CacheType.bool);
-                //   model.isFirstTime = false;
-                //   AppState.delegate.appState.currentAction = PageAction(
-                //       page: AutoSaveDetailsViewPageConfig,
-                //       state: PageState.addPage);
-                // } else
                 await getActiveButtonAction();
                 setState(() {
                   isLoading = false;
@@ -99,19 +88,17 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
                           SizedBox(
                               height: SizeConfig.pageHorizontalMargins * 1.6),
                           Container(
-                            width: SizeConfig.screenWidth * 0.5,
+                            // width: SizeConfig.screenWidth * 0.5,
                             alignment: Alignment.centerLeft,
                             child: Row(
                               children: [
-                                Expanded(
-                                  // fit: BoxFit.scaleDown,
-                                  child: FittedBox(
-                                    child: Text(
-                                      getActiveTitle(model.activeSubscription),
-                                      style: TextStyles.body2.light
-                                          .colour(Colors.white),
-                                      textAlign: TextAlign.left,
-                                    ),
+                                FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    getActiveTitle(model.activeSubscription),
+                                    style: TextStyles.body2.light
+                                        .colour(Colors.white),
+                                    textAlign: TextAlign.left,
                                   ),
                                 ),
                                 SizedBox(width: SizeConfig.padding6),
@@ -122,7 +109,7 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
                           SizedBox(height: SizeConfig.padding2),
                           Text(
                             getactiveSubtitle(model.activeSubscription),
-                            style: TextStyles.title5.bold.colour(Colors.white),
+                            style: TextStyles.title4.bold.colour(Colors.white),
                           ),
                           SizedBox(height: SizeConfig.padding16),
                           Row(
@@ -138,15 +125,6 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
                                   decoration: BoxDecoration(
                                     color: Colors.white.withOpacity(0.3),
                                     borderRadius: BorderRadius.circular(100),
-                                    // boxShadow: [
-                                    //   BoxShadow(
-                                    //     color: getShadow(model.activeSubscription)
-                                    //         .withOpacity(0.2),
-                                    //     offset: Offset(0, 2),
-                                    //     blurRadius: 5,
-                                    //     spreadRadius: 5,
-                                    //   )
-                                    // ],
                                   ),
                                   child: isResumingInProgress || isLoading
                                       ? Container(
@@ -170,27 +148,33 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
                               ),
                             ],
                           ),
-                          SizedBox(height: SizeConfig.padding16),
                           if (model.activeSubscription != null)
                             AnimatedContainer(
+                              margin:
+                                  EdgeInsets.only(top: SizeConfig.padding16),
                               duration: Duration(seconds: 2),
-                              curve: Curves.easeOutBack,
-                              height: model.activeSubscription.status ==
+                              curve: Curves.easeOut,
+                              height: model.activeSubscription?.status ==
                                       Constants.SUBSCRIPTION_ACTIVE
                                   ? SizeConfig.padding12
                                   : 0,
                               alignment: Alignment.centerLeft,
-                              child: Text(
-                                model.activeSubscription.status ==
-                                        Constants.SUBSCRIPTION_ACTIVE
-                                    ? model.nextDebitString
-                                    : "",
-                                style: TextStyles.body5.colour(Colors.white),
-                                textAlign: TextAlign.left,
-                              ),
+                              child: (model.nextDebitString != null &&
+                                      model.nextDebitString.isNotEmpty)
+                                  ? Text(
+                                      model.nextDebitString,
+                                      style:
+                                          TextStyles.body5.colour(Colors.white),
+                                      textAlign: TextAlign.left,
+                                    )
+                                  : SizedBox(),
                             ),
                           SizedBox(
-                              height: SizeConfig.pageHorizontalMargins * 1.6),
+                              height: (model.activeSubscription != null &&
+                                      model.activeSubscription.status ==
+                                          Constants.SUBSCRIPTION_ACTIVE)
+                                  ? SizeConfig.pageHorizontalMargins
+                                  : SizeConfig.pageHorizontalMargins * 1.6),
                         ],
                       ),
                     ),
@@ -221,13 +205,11 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
   }
 
   getGradient(ActiveSubscriptionModel subscription) {
-    if (subscription == null ||
-        (subscription.status == Constants.SUBSCRIPTION_INIT ||
-            subscription.status == Constants.SUBSCRIPTION_CANCELLED)) {
+    if (subscription == null)
       return new LinearGradient(
         colors: [UiConstants.autosaveColor, UiConstants.autosaveColor],
       );
-    } else if (subscription.status == Constants.SUBSCRIPTION_INACTIVE &&
+    if (subscription.status == Constants.SUBSCRIPTION_INACTIVE &&
         subscription.autoAmount != 0.0 &&
         subscription.resumeDate.isNotEmpty) {
       return new LinearGradient(
@@ -240,10 +222,10 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
       return new LinearGradient(
         colors: [Color(0xffEACDA3), Color(0xffD6AE7B)],
       );
-    }
-    return new LinearGradient(
-      colors: [UiConstants.autosaveColor, UiConstants.autosaveColor],
-    );
+    } else
+      return new LinearGradient(
+        colors: [UiConstants.autosaveColor, UiConstants.autosaveColor],
+      );
   }
 
   String getActiveTitle(ActiveSubscriptionModel subscription) {
@@ -358,7 +340,7 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
             return SizedBox();
         }
       }
-      return "Details";
+      return SizedBox();
     }
   }
 
@@ -409,27 +391,6 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
           }
         }
       }
-    }
-  }
-
-  Color getShadow(ActiveSubscriptionModel subscription) {
-    if (subscription == null) {
-      return UiConstants.primaryColor;
-    } else {
-      if (subscription.status == Constants.SUBSCRIPTION_ACTIVE) {
-        return UiConstants.primaryColor;
-      }
-      if (subscription.status == Constants.SUBSCRIPTION_INACTIVE) {
-        return Colors.amber;
-      }
-      if (subscription.status == Constants.SUBSCRIPTION_INIT ||
-          subscription.status == Constants.SUBSCRIPTION_CANCELLED) {
-        return UiConstants.primaryColor;
-      }
-      if (subscription.status == Constants.SUBSCRIPTION_PROCESSING) {
-        return Colors.blue;
-      }
-      return UiConstants.scaffoldColor;
     }
   }
 

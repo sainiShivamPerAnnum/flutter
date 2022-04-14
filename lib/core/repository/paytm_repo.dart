@@ -84,7 +84,7 @@ class PaytmRepository {
       final String _uid = _userService.baseUser.uid;
       final Map<String, dynamic> _body = {
         "uid": _uid,
-        "maxAmount": 3000,
+        "maxAmount": 5000,
         "amount": 0
       };
       //  final Map<String, dynamic> _body = {

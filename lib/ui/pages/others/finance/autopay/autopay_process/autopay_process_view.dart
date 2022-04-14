@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:app_install_date/utils.dart';
 import 'package:external_app_launcher/external_app_launcher.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
@@ -73,8 +74,9 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
                         children: [
                           if (model.showProgressIndicator)
                             AutosaveProgressIndicator(),
-                          PageView(controller: model.pageController,
-                              // physics: NeverScrollableScrollPhysics(),
+                          PageView(
+                              controller: model.pageController,
+                              physics: NeverScrollableScrollPhysics(),
                               children: [
                                 addUpiIdUI(model),
                                 pendingUI(model),
@@ -236,16 +238,16 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
             ],
           ),
           Spacer(),
-          // if (model.showAppLaunchButton)
-          // FelloButtonLg(
-          //   child: Text("Open ${getUpiAppName(model)} mobile app",
-          //       style: TextStyles.body2.colour(Colors.white)),
-          //   onPressed: () async {
-          //     await LaunchApp.openApp(
-          //         androidPackageName: "net.one97.paytm",
-          //         iosUrlScheme: "paytmmp://mini-app?");
-          //   },
-          // ),
+          if (model.showAppLaunchButton && PlatformUtils.isAndroid)
+            FelloButtonLg(
+              child: Text("Go to ${getUpiAppName(model)} app",
+                  style: TextStyles.body2.colour(Colors.white)),
+              onPressed: () async {
+                await LaunchApp.openApp(
+                    androidPackageName: model.androidPackageName,
+                    iosUrlScheme: model.iosUrlScheme);
+              },
+            ),
           SizedBox(height: SizeConfig.padding16),
           FittedBox(
             fit: BoxFit.scaleDown,
@@ -467,7 +469,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
           TextField(
             enabled: !model.isSubscriptionInProgress,
             controller: model.vpaController,
-            autofocus: true,
+            autofocus: widget.page == 0 ? true : false,
             inputFormatters: <TextInputFormatter>[
               FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z@]")),
             ],
@@ -539,7 +541,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
                     ..onTap = () {
                       Haptic.vibrate();
                       BaseUtil.launchUrl(
-                          'https://www.npci.org.in/what-we-do/autosave/list-of-banks-and-apps-live-on-autosave');
+                          'https://www.npci.org.in/what-we-do/autopay/list-of-banks-and-apps-live-on-autopay');
                     },
                 ),
               ],
@@ -877,7 +879,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
                     SizedBox(
                       height: SizeConfig.viewInsets.bottom != 0
                           ? 0
-                          : SizeConfig.padding12,
+                          : SizeConfig.pageHorizontalMargins,
                     ),
                   ],
                 ),
