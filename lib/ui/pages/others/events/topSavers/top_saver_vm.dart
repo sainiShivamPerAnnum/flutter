@@ -116,8 +116,12 @@ class TopSaverViewModel extends BaseModel {
   }
 
   fetchPastWinners() async {
-    ApiResponse<List<WinnersModel>> response = await _winnersRepo
-        .getPastWinners(Constants.GAME_TYPE_HIGHEST_SAVER, saverFreq);
+    ApiResponse<List<WinnersModel>> response =
+        await _winnersRepo.getPastWinners(
+            event.type == "FPL"
+                ? Constants.GAME_TYPE_FPL
+                : Constants.GAME_TYPE_HIGHEST_SAVER,
+            saverFreq);
     if (response != null &&
         response.model != null &&
         response.model.isNotEmpty) {
