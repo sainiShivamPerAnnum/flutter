@@ -101,8 +101,9 @@ class TopSaverViewModel extends BaseModel {
   }
 
   fetchTopSavers() async {
-    ApiResponse<TopSaversModel> response =
-        await _statsRepo.getTopSavers(saverFreq);
+    ApiResponse<TopSaversModel> response = await _statsRepo.getTopSavers(
+        saverFreq,
+        type: event.type == "FPL" ? "FPL" : "HIGHEST_SAVER");
     if (response != null &&
         response.model != null &&
         response.model.scoreboard != null) {
