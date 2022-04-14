@@ -492,7 +492,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
                 upichips('@ybl', model),
                 upichips('@paytm', model),
                 upichips('@okhdfcbank', model),
-                upichips('@okaksis', model),
+                upichips('@okaxsis', model),
               ],
             ),
           ),

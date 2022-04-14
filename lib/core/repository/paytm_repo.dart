@@ -296,7 +296,8 @@ class PaytmRepository {
 
       final _responseStatus = response["data"];
       _logger.d(response);
-      if (_responseStatus["status"])
+      if (_responseStatus["status"] != null &&
+          _responseStatus["status"] == true)
         return ApiResponse<String>(model: response["message"], code: 200);
       else
         return ApiResponse.withError("Unable to find active subscription", 400);

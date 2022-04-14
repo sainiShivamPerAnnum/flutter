@@ -52,7 +52,7 @@ class UserAutoSaveDetailsView extends StatelessWidget {
                   children: [
                     FelloAppBar(
                       leading: FelloAppBarBackButton(),
-                      title: "UPI AutoSave Details",
+                      title: "AutoSave Details",
                     ),
                     Expanded(
                       child: Container(

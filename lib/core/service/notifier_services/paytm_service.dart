@@ -387,8 +387,8 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       _logger.e(isVpaValidResponse.errorMessage);
       return PaytmResponse(
           errorCode: ERR_VALIDATE_VPA_FAILED,
-          title: "Unable to create your Autosave account",
-          subtitle: "Please try again after sometime",
+          title: "Unable to validate your UPI address",
+          subtitle: "Please try again",
           status: false);
     }
 

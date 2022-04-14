@@ -257,7 +257,7 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
                     //   height: SizeConfig.padding8,
                     // ),
                     Transform.translate(
-                      offset: Offset(0, -SizeConfig.padding12),
+                      offset: Offset(0, -SizeConfig.padding2),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -268,7 +268,7 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
                           // ),
                           // SizedBox(width: SizeConfig.padding4),
                           Text("AUTOSAVE",
-                              style: GoogleFonts.suranna(
+                              style: GoogleFonts.prompt(
                                   fontWeight: FontWeight.w300,
                                   // height: 1.6,
                                   color: Color(0xff3F4748),
@@ -451,43 +451,14 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
                                     title:
                                         "Open the UPI app and approve the request",
                                     subtitle:
-                                        "Check you PENDING upi transactions for this request",
+                                        "Check you PENDING UPI transactions for the request",
                                   ),
                                   InfoTile(
                                     svg: Assets.wmtsaveMoney,
                                     title: "Set a daily saving amount",
                                     subtitle: "You can change it anytime",
                                   ),
-                                  Container(
-                                    alignment: Alignment.center,
-                                    margin: EdgeInsets.symmetric(
-                                        vertical: SizeConfig.padding16),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                            width: 0.8,
-                                            color: UiConstants.primaryColor),
-                                        borderRadius: BorderRadius.circular(
-                                            SizeConfig.roundness12),
-                                      ),
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal:
-                                            SizeConfig.pageHorizontalMargins,
-                                        vertical: SizeConfig.padding12,
-                                      ),
-                                      child: InkWell(
-                                        onTap: () {
-                                          AppState.delegate.parseRoute(
-                                              Uri.parse('/AppWalkthrough'));
-                                        },
-                                        child: Text(
-                                          "See an example",
-                                          style: TextStyles.body1
-                                              .colour(UiConstants.primaryColor),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+
                                   // Container(
                                   //   margin: EdgeInsets.symmetric(
                                   //       vertical:
@@ -564,7 +535,7 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
-                height: SizeConfig.navBarHeight * 1,
+                height: SizeConfig.navBarHeight * 2,
                 width: SizeConfig.screenWidth,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(colors: [
@@ -574,30 +545,73 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
                 ),
               ),
             ),
-            if (showSetupButton)
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: SafeArea(
-                  child: Container(
-                    margin: EdgeInsets.symmetric(
-                        vertical: SizeConfig.viewInsets.bottom != 0
-                            ? 0
-                            : SizeConfig.pageHorizontalMargins,
-                        horizontal: SizeConfig.pageHorizontalMargins),
-                    child: FelloButtonLg(
-                      child: Text(
-                        "Setup Autosave",
-                        style: TextStyles.body2.bold.colour(Colors.white),
+
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: SafeArea(
+                child: Wrap(
+                  children: [
+                    Container(
+                      alignment: Alignment.center,
+                      color: Colors.white,
+                      margin: EdgeInsets.symmetric(
+                          vertical: SizeConfig.padding12,
+                          horizontal: SizeConfig.pageHorizontalMargins),
+                      child: Container(
+                        alignment: Alignment.center,
+                        width: SizeConfig.screenWidth,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                              width: 0.8, color: UiConstants.primaryColor),
+                          borderRadius:
+                              BorderRadius.circular(SizeConfig.roundness12),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.pageHorizontalMargins,
+                          vertical: SizeConfig.padding12,
+                        ),
+                        child: InkWell(
+                          onTap: () {
+                            AppState.delegate
+                                .parseRoute(Uri.parse('/AppWalkthrough'));
+                          },
+                          child: Text(
+                            "See an example",
+                            style: TextStyles.body1
+                                .colour(UiConstants.primaryColor),
+                          ),
+                        ),
                       ),
-                      onPressed: () {
-                        AppState.delegate.appState.currentAction = PageAction(
-                            page: AutoSaveProcessViewPageConfig,
-                            state: PageState.replace);
-                      },
                     ),
-                  ),
+                    if (showSetupButton)
+                      Container(
+                        margin: EdgeInsets.symmetric(
+                            vertical: SizeConfig.viewInsets.bottom != 0
+                                ? 0
+                                : SizeConfig.pageHorizontalMargins,
+                            horizontal: SizeConfig.pageHorizontalMargins),
+                        child: FelloButtonLg(
+                          child: Text(
+                            "Setup Autosave",
+                            style: TextStyles.body2.bold.colour(Colors.white),
+                          ),
+                          onPressed: () {
+                            AppState.delegate.appState.currentAction =
+                                PageAction(
+                                    page: AutoSaveProcessViewPageConfig,
+                                    state: PageState.replace);
+                          },
+                        ),
+                      ),
+                    SizedBox(
+                      height: SizeConfig.viewInsets.bottom != 0
+                          ? 0
+                          : SizeConfig.pageHorizontalMargins,
+                    )
+                  ],
                 ),
-              )
+              ),
+            )
           ],
         ),
       ),
