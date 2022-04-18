@@ -2,6 +2,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/service/autosave_services.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -524,6 +525,8 @@ class DetailsView extends StatelessWidget {
                             WinningsContainer(
                           shadow: false,
                           onTap: () {},
+                          gradient: AutosaveServices.getGradient(
+                              model.activeSubscription),
                           color: UiConstants.autosaveColor,
                           child: Container(
                             width: SizeConfig.screenWidth,
@@ -535,25 +538,29 @@ class DetailsView extends StatelessWidget {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Blinker(
-                                      child: CircleAvatar(
-                                        backgroundColor:
-                                            model.activeSubscription.status ==
-                                                    "ACTIVE"
-                                                ? UiConstants.primaryColor
-                                                : UiConstants.tertiarySolid,
-                                        radius: SizeConfig.padding4,
-                                      ),
-                                    ),
-                                    SizedBox(width: SizeConfig.padding4),
                                     Text(
                                       model.activeSubscription.status ==
-                                              "ACTIVE"
+                                              Constants.SUBSCRIPTION_ACTIVE
                                           ? "Autosave Active"
                                           : "Autosave Paused",
                                       style:
                                           TextStyles.body1.colour(Colors.white),
                                     ),
+                                    if (model.activeSubscription.status ==
+                                        Constants.SUBSCRIPTION_ACTIVE)
+                                      Container(
+                                        child: Row(
+                                          children: [
+                                            SizedBox(
+                                                width: SizeConfig.padding4),
+                                            Icon(
+                                              Icons.verified_rounded,
+                                              color: UiConstants.primaryColor,
+                                              size: SizeConfig.iconSize2,
+                                            )
+                                          ],
+                                        ),
+                                      )
                                   ],
                                 ),
                                 RichText(

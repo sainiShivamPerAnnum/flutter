@@ -30,6 +30,7 @@ import 'package:felloapp/ui/pages/others/games/tambola/dailyPicksDraw/dailyPicks
 import 'package:felloapp/ui/pages/others/games/tambola/show_all_tickets.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_game/tambola_game_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/tambola_walkthrough.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_result.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_home/web_home_view.dart';
 import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_view.dart';
@@ -218,7 +219,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.TShowAllTickets:
           _addPageData(ShowAllTickets(), TShowAllTicketsPageConfig);
           break;
-
+        case Pages.TWalkthrough:
+          _addPageData(Walkthrough(), TWalkthroughPageConfig);
+          break;
         case Pages.TWeeklyResult:
           _addPageData(WeeklyResult(), TWeeklyResultPageConfig);
           break;

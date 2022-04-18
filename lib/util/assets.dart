@@ -148,7 +148,7 @@ class Assets {
   static final String noData = "assets/lotties/no_data.json";
 
   //FELLO REWARDS
-  static final String digitalGold = "images/augmont-share.png";
+  // static final String digitalGold = "images/augmont-share.png";
   static final String amazonGiftVoucher = "images/amazon-share.png";
   static final String felloRewards = "assets/images/fello_prize.png";
   static final String voucherBg = "assets/images/voucher_bg.jpg";

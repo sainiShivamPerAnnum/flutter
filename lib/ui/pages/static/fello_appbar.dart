@@ -127,8 +127,11 @@ class FelloAppBarBackButton extends StatelessWidget {
         backgroundColor: color.withOpacity(0.4),
         child: Padding(
           padding: EdgeInsets.all(SizeConfig.padding4),
-          child:
-              Icon(Icons.arrow_back_rounded, color: UiConstants.primaryColor),
+          child: Icon(
+            Icons.arrow_back_rounded,
+            color: UiConstants.primaryColor,
+            size: SizeConfig.iconSize1,
+          ),
         ),
       ),
     );

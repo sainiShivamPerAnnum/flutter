@@ -246,7 +246,7 @@ class Goldlinks extends StatelessWidget {
             },
           ),
           SaveInfoTile(
-            png: "images/augmont-share.png",
+            png: Assets.augmontShare,
             title: "Learn more about Augmont",
             onPressed: () {
               model.openAugmontWebUri();

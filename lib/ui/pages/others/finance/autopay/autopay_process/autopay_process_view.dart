@@ -439,7 +439,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
                   text:
                       "You can find your UPI Id on any of your payments application",
                   title: "What is my UPI address ?",
-                  imagePath: "assets/images/upisetup.png",
+                  imagePath: "assets/images/upiExample.png",
                 ),
               );
             },

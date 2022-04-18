@@ -39,19 +39,11 @@ class PrizesView extends StatelessWidget {
               margin: EdgeInsets.only(top: SizeConfig.padding8),
               decoration: BoxDecoration(
                 color: UiConstants.tertiaryLight,
-                // image: DecorationImage(
-                //   image: AssetImage("assets/images/confetti.png"),
-                //   fit: BoxFit.cover,
-                //   colorFilter: new ColorFilter.mode(
-                //       UiConstants.tertiaryLight.withOpacity(0.1),
-                //       BlendMode.dstATop),
-                // ),
                 borderRadius: BorderRadius.circular(SizeConfig.roundness16),
               ),
               padding: EdgeInsets.all(SizeConfig.padding16),
               child: Stack(
                 children: [
-                  //Image.asset("assets/images/confetti.png"),
                   Text(
                     subtitle,
                     textAlign: TextAlign.center,

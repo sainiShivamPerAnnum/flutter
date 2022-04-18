@@ -140,7 +140,7 @@ class MyWinningsViewModel extends BaseModel {
   getWinningHistoryLeadingImage(String subtype) {
     switch (subtype) {
       case "GOLD_CREDIT":
-        return Assets.digitalGold;
+        return Assets.augmontShare;
       case "AMZ_VOUCHER":
         return Assets.amazonGiftVoucher;
         break;
@@ -162,7 +162,7 @@ class MyWinningsViewModel extends BaseModel {
         showCrossIcon: true,
         assetpng: choice == PrizeClaimChoice.AMZ_VOUCHER
             ? Assets.amazonGiftVoucher
-            : Assets.digitalGold,
+            : Assets.augmontShare,
         title: "Confirmation",
         subtitle: choice == PrizeClaimChoice.AMZ_VOUCHER
             ? "Are you sure you want to redeem ₹ ${_userService.userFundWallet.unclaimedBalance} as an Amazon gift voucher?"

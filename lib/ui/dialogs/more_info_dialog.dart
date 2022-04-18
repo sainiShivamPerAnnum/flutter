@@ -1,4 +1,6 @@
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 
 class MoreInfoDialog extends StatelessWidget {
@@ -32,7 +34,7 @@ class MoreInfoDialog extends StatelessWidget {
                   Text(
                     title,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 24),
+                    style: TextStyles.title4.bold,
                   ),
                   Divider(),
                   SizedBox(
@@ -50,7 +52,7 @@ class MoreInfoDialog extends StatelessWidget {
                   Text(
                     text,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyles.body2,
                   ),
                   SizedBox(
                     height: 10,

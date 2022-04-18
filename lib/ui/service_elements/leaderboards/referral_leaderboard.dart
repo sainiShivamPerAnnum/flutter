@@ -57,26 +57,26 @@ class ReferralLeaderboard extends StatelessWidget {
                             )
                           : Column(
                               children: [
-                                Container(
-                                  margin: EdgeInsets.only(
-                                      bottom: SizeConfig.padding20),
-                                  width: SizeConfig.screenWidth,
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: SizeConfig.padding4,
-                                      horizontal:
-                                          SizeConfig.pageHorizontalMargins),
-                                  color:
-                                      UiConstants.primaryLight.withOpacity(0.5),
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: Text(
-                                      "You've to make atleast 100 referrals to win an iphone 13",
-                                      maxLines: 1,
-                                      style: TextStyles.body3
-                                          .colour(UiConstants.primaryColor),
-                                    ),
-                                  ),
-                                ),
+                                // Container(
+                                //   margin: EdgeInsets.only(
+                                //       bottom: SizeConfig.padding20),
+                                //   width: SizeConfig.screenWidth,
+                                //   padding: EdgeInsets.symmetric(
+                                //       vertical: SizeConfig.padding4,
+                                //       horizontal:
+                                //           SizeConfig.pageHorizontalMargins),
+                                //   color:
+                                //       UiConstants.primaryLight.withOpacity(0.5),
+                                //   child: FittedBox(
+                                //     fit: BoxFit.scaleDown,
+                                //     child: Text(
+                                //       "You've to make atleast 100 referrals to win an iphone 13",
+                                //       maxLines: 1,
+                                //       style: TextStyles.body3
+                                //           .colour(UiConstants.primaryColor),
+                                //     ),
+                                //   ),
+                                // ),
                                 Padding(
                                   padding: EdgeInsets.symmetric(
                                     horizontal:

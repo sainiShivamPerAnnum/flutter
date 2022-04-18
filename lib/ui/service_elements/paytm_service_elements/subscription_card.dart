@@ -4,6 +4,7 @@ import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
 import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
+import 'package:felloapp/core/service/autosave_services.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -31,6 +32,7 @@ class AutoSaveCard extends StatefulWidget {
 
 class _AutoSaveCardState extends State<AutoSaveCard> {
   final _paytmService = locator<PaytmService>();
+  // final _autosaveServices = locator<AutosaveServices>();
   bool isResumingInProgress = false;
   bool isLoading = false;
   @override
@@ -58,15 +60,16 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
                 });
               },
               child: AnimatedContainer(
-                duration: Duration(seconds: 2),
-                curve: Curves.decelerate,
+                duration: Duration(seconds: 1),
+                curve: Curves.easeOutExpo,
                 width: SizeConfig.screenWidth,
                 margin: EdgeInsets.symmetric(
                     horizontal: SizeConfig.pageHorizontalMargins),
                 decoration: BoxDecoration(
                   // color: Color(0xfff3c5c5),
                   // color: UiConstants.autosaveColor,
-                  gradient: getGradient(model.activeSubscription),
+                  gradient:
+                      AutosaveServices.getGradient(model.activeSubscription),
                   image: DecorationImage(
                       image: AssetImage(Assets.whiteRays),
                       fit: BoxFit.cover,
@@ -158,8 +161,8 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
                             AnimatedContainer(
                               margin:
                                   EdgeInsets.only(top: SizeConfig.padding16),
-                              duration: Duration(seconds: 2),
-                              curve: Curves.easeOut,
+                              duration: Duration(seconds: 1),
+                              curve: Curves.easeOutExpo,
                               height: model.activeSubscription?.status ==
                                       Constants.SUBSCRIPTION_ACTIVE
                                   ? SizeConfig.body3
@@ -209,30 +212,6 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
             )
           : SizedBox(),
     );
-  }
-
-  getGradient(ActiveSubscriptionModel subscription) {
-    if (subscription == null)
-      return new LinearGradient(
-        colors: [UiConstants.autosaveColor, UiConstants.autosaveColor],
-      );
-    if (subscription.status == Constants.SUBSCRIPTION_INACTIVE &&
-        subscription.autoAmount != 0.0 &&
-        subscription.resumeDate.isNotEmpty) {
-      return new LinearGradient(
-          colors: [Color(0xffFD746C), Color(0xffFF9068)],
-          begin: Alignment.topLeft,
-          end: Alignment.centerRight);
-    } else if (subscription.status == Constants.SUBSCRIPTION_INACTIVE &&
-        subscription.autoAmount != 0.0 &&
-        subscription.resumeDate.isEmpty) {
-      return new LinearGradient(
-        colors: [Color(0xffEACDA3), Color(0xffD6AE7B)],
-      );
-    } else
-      return new LinearGradient(
-        colors: [UiConstants.autosaveColor, UiConstants.autosaveColor],
-      );
   }
 
   String getActiveTitle(ActiveSubscriptionModel subscription) {
