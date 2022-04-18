@@ -20,7 +20,7 @@ class AutosaveServices {
         subscription.autoAmount != 0.0 &&
         subscription.resumeDate.isEmpty) {
       return new LinearGradient(
-        colors: [Color(0xffEACDA3), Color(0xffD6AE7B)],
+        colors: [UiConstants.autosaveColor, UiConstants.autosaveColor],
       );
     } else
       return new LinearGradient(

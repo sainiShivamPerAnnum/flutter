@@ -249,7 +249,7 @@ class UpdateDetailsView extends StatelessWidget {
                 SizedBox(height: SizeConfig.padding12),
                 if (model.showMinAlert)
                   Text(
-                    "Minimum investment amount is ₹ 10",
+                    "Minimum investment amount is ₹ ${model.minValue}",
                     style: TextStyles.body3.bold.colour(Colors.red[300]),
                   ),
                 SizedBox(height: SizeConfig.padding12),
@@ -539,7 +539,7 @@ class DetailsView extends StatelessWidget {
                             alignment: Alignment.center,
                             padding: EdgeInsets.all(SizeConfig.padding8),
                             child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -569,27 +569,27 @@ class DetailsView extends StatelessWidget {
                                       )
                                   ],
                                 ),
-                                RichText(
-                                  text: TextSpan(
-                                    text:
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
                                         "₹${model.activeSubscription.autoAmount.toInt() ?? 0.0}",
-                                    style: GoogleFonts.sourceSansPro(
-                                        fontSize: SizeConfig.title2,
-                                        fontWeight: FontWeight.w800,
-                                        letterSpacing: 2,
-                                        color: Colors.white),
-                                    children: [
-                                      TextSpan(
-                                        text: getFreq(model
-                                            .activeSubscription.autoFrequency),
                                         style: GoogleFonts.sourceSansPro(
-                                            fontSize: SizeConfig.title4,
-                                            fontWeight: FontWeight.w300,
-                                            color: Colors.white),
-                                      )
-                                    ],
-                                  ),
-                                )
+                                            fontSize: SizeConfig.title1,
+                                            fontWeight: FontWeight.w800,
+                                            letterSpacing: 2,
+                                            color: Colors.white)),
+                                    Text(
+                                      getFreq(model
+                                          .activeSubscription.autoFrequency),
+                                      style: GoogleFonts.sourceSansPro(
+                                          fontSize: SizeConfig.title5,
+                                          fontWeight: FontWeight.w300,
+                                          height: 1.6,
+                                          color: Colors.white),
+                                    )
+                                  ],
+                                ),
                               ],
                             ),
                           ),

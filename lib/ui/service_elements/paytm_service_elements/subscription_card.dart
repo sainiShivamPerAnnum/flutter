@@ -19,6 +19,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
@@ -116,10 +117,34 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
                             ),
                           ),
                           SizedBox(height: SizeConfig.padding2),
-                          Text(
-                            getactiveSubtitle(model.activeSubscription),
-                            style: TextStyles.title4.bold.colour(Colors.white),
-                          ),
+                          model.activeSubscription.status ==
+                                  Constants.SUBSCRIPTION_ACTIVE
+                              ? Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                        "₹${model.activeSubscription.autoAmount.toInt() ?? 0.0}",
+                                        style: GoogleFonts.sourceSansPro(
+                                            fontSize: SizeConfig.title1,
+                                            fontWeight: FontWeight.w800,
+                                            // letterSpacing: 2,
+                                            color: Colors.white)),
+                                    Text(
+                                      getFreq(model
+                                          .activeSubscription.autoFrequency),
+                                      style: GoogleFonts.sourceSansPro(
+                                          fontSize: SizeConfig.title5,
+                                          fontWeight: FontWeight.w300,
+                                          height: 1.6,
+                                          color: Colors.white),
+                                    )
+                                  ],
+                                )
+                              : Text(
+                                  getactiveSubtitle(model.activeSubscription),
+                                  style: TextStyles.title4.bold
+                                      .colour(Colors.white),
+                                ),
                           SizedBox(height: SizeConfig.padding16),
                           Row(
                             children: [
@@ -361,19 +386,26 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
               widget: AutoSaveProcessView(page: 2),
               state: PageState.addWidget);
         } else {
-          setState(() {
-            isResumingInProgress = true;
-          });
-          bool response = await _paytmService.resumeSubscription();
-          setState(() {
-            isResumingInProgress = false;
-          });
-          if (!response) {
-            BaseUtil.showNegativeAlert(
-                "Unable to resume at the moment", "Please try again");
+          if (_paytmService.activeSubscription.resumeDate.isEmpty) {
+            AppState.delegate.appState.currentAction = PageAction(
+                page: AutoSaveProcessViewPageConfig,
+                widget: AutoSaveProcessView(page: 2),
+                state: PageState.addWidget);
           } else {
-            BaseUtil.showPositiveAlert("Autosave resumed successfully",
-                "For more details check Autosave section");
+            setState(() {
+              isResumingInProgress = true;
+            });
+            bool response = await _paytmService.resumeSubscription();
+            setState(() {
+              isResumingInProgress = false;
+            });
+            if (!response) {
+              BaseUtil.showNegativeAlert(
+                  "Unable to resume at the moment", "Please try again");
+            } else {
+              BaseUtil.showPositiveAlert("Autosave resumed successfully",
+                  "For more details check Autosave section");
+            }
           }
         }
       }
@@ -411,7 +443,7 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
           return Assets.preautosave;
         else {
           if (subscription.resumeDate.isEmpty)
-            return Assets.autopause;
+            return Assets.preautosave;
           else
             return Assets.autopause;
         }

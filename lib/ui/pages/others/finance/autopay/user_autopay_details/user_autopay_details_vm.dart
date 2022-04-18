@@ -6,6 +6,7 @@ import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -14,11 +15,7 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:logger/logger.dart';
 
 class UserAutoSaveDetailsViewModel extends BaseModel {
   final _dbModel = locator<DBModel>();
@@ -53,6 +50,7 @@ class UserAutoSaveDetailsViewModel extends BaseModel {
   bool _isPausingInProgress = false;
   bool _isResumingInProgress = false;
   bool _showMinAlert = false;
+  int _minValue = 25;
 
   List<AmountChipsModel> _dailyChips = [];
   List<AmountChipsModel> _weeklyChips = [];
@@ -80,7 +78,6 @@ class UserAutoSaveDetailsViewModel extends BaseModel {
   bool _isInEditMode = false;
   bool hasMoreTxns = false;
 
-  int minAmount = 10;
   int maxAmount = 5000;
   bool get getHasMoreTxns => this.hasMoreTxns;
 
@@ -110,6 +107,13 @@ class UserAutoSaveDetailsViewModel extends BaseModel {
     notifyListeners();
   }
 
+  get minValue => this._minValue;
+
+  set minValue(value) {
+    this._minValue = value;
+    notifyListeners();
+  }
+
   init() async {
     setState(ViewState.Busy);
     _paytmService.isOnSubscriptionFlow = false;
@@ -136,6 +140,7 @@ class UserAutoSaveDetailsViewModel extends BaseModel {
       amountFieldController.text =
           activeSubscription.autoAmount.toInt().toString();
       isDaily = activeSubscription.autoFrequency == "DAILY" ? true : false;
+      isDaily ? minValue = 25 : minValue = 100;
       onAmountValueChanged(amountFieldController.text);
     }
   }
@@ -221,6 +226,10 @@ class UserAutoSaveDetailsViewModel extends BaseModel {
   set isDaily(value) {
     this._isDaily = value;
     _logger.d("Isdaily: $isDaily");
+    if (value)
+      minValue = 25;
+    else
+      minValue = 100;
     notifyListeners();
   }
 
@@ -235,7 +244,7 @@ class UserAutoSaveDetailsViewModel extends BaseModel {
   onAmountValueChanged(String val) {
     if (val == "00000") amountFieldController.text = '0';
     if (val != null && val.isNotEmpty) {
-      if (int.tryParse(val) < 10)
+      if (int.tryParse(val) < minValue)
         showMinAlert = true;
       else
         showMinAlert = false;
@@ -261,10 +270,10 @@ class UserAutoSaveDetailsViewModel extends BaseModel {
   }
 
   setSubscriptionAmount(double amount) async {
-    if (amount < 10) {
+    if (amount < minValue) {
       return BaseUtil.showNegativeAlert(
-        'Minimum amount should be ₹ 10',
-        'Please enter a minimum amount of ₹ 10',
+        'Minimum amount should be ₹ $minValue',
+        'Please enter a minimum amount of ₹ $minValue',
       );
     }
 

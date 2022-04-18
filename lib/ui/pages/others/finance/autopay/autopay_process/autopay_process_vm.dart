@@ -30,7 +30,7 @@ class AutoSaveProcessViewModel extends BaseModel {
   String _androidPackageName = "";
   String _iosUrlScheme = "";
 
-  int minAmount = 10;
+  int _minValue = 25;
   int maxAmount = 5000;
   String _title = "Set up Autosave";
   String get title => this._title;
@@ -86,6 +86,13 @@ class AutoSaveProcessViewModel extends BaseModel {
 
   set showMinAlert(bool value) {
     this._showMinAlert = value;
+    notifyListeners();
+  }
+
+  get minValue => this._minValue;
+
+  set minValue(value) {
+    this._minValue = value;
     notifyListeners();
   }
 
@@ -155,6 +162,10 @@ class AutoSaveProcessViewModel extends BaseModel {
 
   set isDaily(value) {
     this._isDaily = value;
+    if (value)
+      minValue = 25;
+    else
+      minValue = 100;
     notifyListeners();
   }
 
@@ -188,7 +199,7 @@ class AutoSaveProcessViewModel extends BaseModel {
   onAmountValueChanged(String val) {
     if (val == "00000") amountFieldController.text = '0';
     if (val != null && val.isNotEmpty) {
-      if (int.tryParse(val) < 10)
+      if (int.tryParse(val) < minValue)
         showMinAlert = true;
       else
         showMinAlert = false;
@@ -285,10 +296,10 @@ class AutoSaveProcessViewModel extends BaseModel {
           "No Amount Entered", "Please enter some amount to continue");
       return;
     }
-    if (amount < 10) {
+    if (amount < minValue) {
       return BaseUtil.showNegativeAlert(
-        'Minimum amount should be ₹ 10',
-        'Please enter a minimum amount of ₹ 10',
+        'Minimum amount should be ₹ $minValue',
+        'Please enter a minimum amount of ₹ $minValue',
       );
     }
     if (_paytmService.activeSubscription != null) {
@@ -300,7 +311,7 @@ class AutoSaveProcessViewModel extends BaseModel {
         _paytmService.jumpToSubPage(3);
         _paytmService.getActiveSubscriptionDetails();
         showProgressIndicator = false;
-        Future.delayed(Duration(milliseconds: 1500), () {
+        Future.delayed(Duration(milliseconds: 1000), () {
           lottieAnimationController.forward();
           _paytmService.currentSubscriptionId = null;
         });

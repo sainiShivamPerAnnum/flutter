@@ -714,7 +714,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
               SizedBox(height: SizeConfig.padding12),
               if (model.showMinAlert)
                 Text(
-                  "Minimum investment amount is ₹ 10",
+                  "Minimum investment amount is ₹ ${model.minValue}",
                   style: TextStyles.body3.bold.colour(Colors.red[300]),
                 ),
               SizedBox(height: SizeConfig.padding12),
