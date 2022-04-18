@@ -275,8 +275,8 @@ class UserAutoSaveDetailsViewModel extends BaseModel {
       _paytmService.getActiveSubscriptionDetails();
       AppState.backButtonDispatcher.didPopRoute();
       // init();
-      BaseUtil.showPositiveAlert(
-          "Subscription Successful", "Check transactions for more details");
+      // BaseUtil.showPositiveAlert(
+      //     "Autosave setup Successful", "Check transactions for more details");
     } else {
       BaseUtil.showNegativeAlert(
           "Amount update failed", "Please try again in sometime");
@@ -292,7 +292,7 @@ class UserAutoSaveDetailsViewModel extends BaseModel {
       if (!response) {
         isResumingInProgress = false;
         BaseUtil.showNegativeAlert(
-            "Failed to resume Subscription", "Please try again");
+            "Failed to resume Autosave", "Please try again");
       } else {
         BaseUtil.showPositiveAlert("Autosave resumed successfully",
             "For more details check Autosave section");

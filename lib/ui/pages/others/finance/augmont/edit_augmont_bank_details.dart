@@ -574,8 +574,8 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                       AppState.backButtonDispatcher.didPopRoute();
                     } else {
                       BaseUtil.showNegativeAlert(
-                        'Failed',
-                        'Your details could not be updated at the moment. Please try again',
+                        'Details could not be updated at the moment',
+                        'Please try again',
                       );
                     }
                   }

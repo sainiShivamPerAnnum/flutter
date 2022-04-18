@@ -399,20 +399,20 @@ class AugmontGoldBuyViewModel extends BaseModel {
     }
   }
 
-  initiateSubscription() async {
-    isSubscriptionInProgress = true;
-    bool _status = await _paytmService.initiateSubscription();
-    isSubscriptionInProgress = false;
-    if (_status) {
-      showSuccessGoldBuyDialog(1.0,
-          subtitle: "Your subscription was successfull!!");
-    } else {
-      BaseUtil.showNegativeAlert(
-        'Subscription failed',
-        'Please try again in sometime or contact us for further assistance.',
-      );
-    }
-  }
+  // initiateSubscription() async {
+  //   isSubscriptionInProgress = true;
+  //   bool _status = await _paytmService.initiateSubscription();
+  //   isSubscriptionInProgress = false;
+  //   if (_status) {
+  //     showSuccessGoldBuyDialog(1.0,
+  //         subtitle: "Your subscription was successfull!!");
+  //   } else {
+  //     BaseUtil.showNegativeAlert(
+  //       'Subscription failed',
+  //       'Please try again in sometime or contact us for further assistance.',
+  //     );
+  //   }
+  // }
 
   // initiateCustomSubscription() async {
   //   isSubscriptionInProgress = true;

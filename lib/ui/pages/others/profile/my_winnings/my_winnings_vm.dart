@@ -83,7 +83,7 @@ class MyWinningsViewModel extends BaseModel {
       winningHistory = temp.model;
     else
       BaseUtil.showNegativeAlert(
-          "Winning History fetch failed", temp.errorMessage);
+          "Winning History fetch failed", "Please try again after sometime");
   }
 
   getWinningHistoryTitle(UserTransaction tran) {
@@ -280,7 +280,8 @@ class MyWinningsViewModel extends BaseModel {
 
       return true;
     } else {
-      BaseUtil.showNegativeAlert('Withdrawal Failed', response['message']);
+      BaseUtil.showNegativeAlert('Withdrawal Failed',
+          response['message'] ?? "Please try again after sometime");
       return false;
     }
   }

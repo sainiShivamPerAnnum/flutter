@@ -774,7 +774,7 @@ class DetailsView extends StatelessWidget {
                 : Center(
                     child: NoRecordDisplayWidget(
                       assetLottie: Assets.noData,
-                      text: "No UPI Autosave Details available",
+                      text: "No Autosave Details available",
                     ),
                   )),
         Align(

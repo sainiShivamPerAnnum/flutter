@@ -29,8 +29,7 @@ class UserRepository {
           body: _body, isAuthTokenAvailable: false);
       return ApiResponse(model: res['token'], code: 200);
     } catch (e) {
-      return ApiResponse.withError(
-          "Unable to register user using truecaller", 400);
+      return ApiResponse.withError("Unable to signup using truecaller", 400);
     }
   }
 

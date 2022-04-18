@@ -317,7 +317,8 @@ class AutoSaveProcessViewModel extends BaseModel {
 
     } else if (res['status'] == false) {
       tryAgain();
-      BaseUtil.showNegativeAlert("Something went wrong!!", res['message']);
+      BaseUtil.showNegativeAlert("Something went wrong!!",
+          res['message'] ?? "Please try after sometime");
     } else {
       tryAgain();
       BaseUtil.showNegativeAlert(

@@ -583,22 +583,23 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
                         ),
                       ),
                     ),
-                    // if (showSetupButton)
-                    Container(
-                      margin: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.pageHorizontalMargins),
-                      child: FelloButtonLg(
-                        child: Text(
-                          "Setup Autosave",
-                          style: TextStyles.body2.bold.colour(Colors.white),
+                    if (showSetupButton)
+                      Container(
+                        margin: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.pageHorizontalMargins),
+                        child: FelloButtonLg(
+                          child: Text(
+                            "Setup Autosave",
+                            style: TextStyles.body2.bold.colour(Colors.white),
+                          ),
+                          onPressed: () {
+                            AppState.delegate.appState.currentAction =
+                                PageAction(
+                                    page: AutoSaveProcessViewPageConfig,
+                                    state: PageState.replace);
+                          },
                         ),
-                        onPressed: () {
-                          AppState.delegate.appState.currentAction = PageAction(
-                              page: AutoSaveProcessViewPageConfig,
-                              state: PageState.replace);
-                        },
                       ),
-                    ),
                     SizedBox(
                       width: SizeConfig.screenWidth,
                       height: SizeConfig.viewInsets.bottom != 0

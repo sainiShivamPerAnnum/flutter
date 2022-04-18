@@ -414,7 +414,7 @@ class _SupportPageState extends State<SupportPage> {
                                       .length !=
                                   10) {
                                 BaseUtil.showNegativeAlert(
-                                  'Incorrect',
+                                  'Incorrect phone number',
                                   'Please enter a valid phone number',
                                 );
                                 return;
@@ -440,8 +440,8 @@ class _SupportPageState extends State<SupportPage> {
                                 Navigator.of(context).pop();
                               } else {
                                 BaseUtil.showNegativeAlert(
-                                  'Error',
-                                  'Something went wrong while placing a request, please try again later.',
+                                  'Something went wrong while placing a request',
+                                  'Please try again later.',
                                 );
                                 if (_userService.baseUser.uid != null) {
                                   Map<String, dynamic> errorDetails = {
@@ -459,8 +459,8 @@ class _SupportPageState extends State<SupportPage> {
                               }
                             } catch (e) {
                               BaseUtil.showNegativeAlert(
-                                'Error',
-                                'Something went wrong while placing a request, please try again later.',
+                                'Something went wrong while placing a request',
+                                'Please try again later.',
                               );
                               Navigator.of(context).pop();
                             }

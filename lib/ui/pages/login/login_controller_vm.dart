@@ -321,7 +321,7 @@ class LoginControllerViewModel extends BaseModel {
                       userService.baseUser, token, cstate);
                   logger.e(response.toString());
                   if (response.code == 400) {
-                    message = response.errorMessage ??
+                    message =
                         "Unable to create account, please try again later.";
                     _usernameKey.currentState.model.enabled = true;
                     flag = false;

@@ -7,14 +7,16 @@ class MoreInfoDialog extends StatelessWidget {
   final String title;
   final String text;
   final String imagePath;
-  double _height, _width;
+  final Size imageSize;
 
-  MoreInfoDialog({@required this.title, @required this.text, this.imagePath});
+  MoreInfoDialog(
+      {@required this.title,
+      @required this.text,
+      this.imagePath,
+      this.imageSize});
 
   @override
   Widget build(BuildContext context) {
-    _height = MediaQuery.of(context).size.height;
-    _width = MediaQuery.of(context).size.width;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -45,8 +47,10 @@ class MoreInfoDialog extends StatelessWidget {
                           imagePath,
                           alignment: Alignment.center,
                           fit: BoxFit.contain,
-                          height: 200,
-                          width: 200,
+                          height:
+                              imageSize?.height ?? SizeConfig.screenWidth * 0.8,
+                          width:
+                              imageSize?.width ?? SizeConfig.screenWidth * 0.8,
                         )
                       : Container(),
                   Text(

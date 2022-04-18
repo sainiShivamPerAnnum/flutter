@@ -83,6 +83,11 @@ class ReferralDetailsView extends StatelessWidget {
                                               isBarrierDismissable: false,
                                               content: MoreInfoDialog(
                                                   title: "Eligibility",
+                                                  imagePath: Assets.iphone,
+                                                  imageSize: Size(
+                                                    SizeConfig.padding80,
+                                                    SizeConfig.padding80,
+                                                  ),
                                                   text:
                                                       "User must refer more than 100 people to become eligible for the Referrer of the month"));
                                         },
