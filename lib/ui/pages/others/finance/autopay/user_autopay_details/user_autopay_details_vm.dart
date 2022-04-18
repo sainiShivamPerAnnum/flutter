@@ -52,6 +52,7 @@ class UserAutoSaveDetailsViewModel extends BaseModel {
   bool isVerified = true;
   bool _isPausingInProgress = false;
   bool _isResumingInProgress = false;
+  bool _showMinAlert = false;
 
   List<AmountChipsModel> _dailyChips = [];
   List<AmountChipsModel> _weeklyChips = [];
@@ -99,6 +100,13 @@ class UserAutoSaveDetailsViewModel extends BaseModel {
 
   set isPausingInProgress(bool val) {
     this._isPausingInProgress = val;
+    notifyListeners();
+  }
+
+  bool get showMinAlert => this._showMinAlert;
+
+  set showMinAlert(bool value) {
+    this._showMinAlert = value;
     notifyListeners();
   }
 
@@ -225,7 +233,13 @@ class UserAutoSaveDetailsViewModel extends BaseModel {
   }
 
   onAmountValueChanged(String val) {
+    if (val == "00000") amountFieldController.text = '0';
     if (val != null && val.isNotEmpty) {
+      if (int.tryParse(val) < 10)
+        showMinAlert = true;
+      else
+        showMinAlert = false;
+
       if (int.tryParse(val) > maxAmount) {
         amountFieldController.text = maxAmount.toString();
         val = maxAmount.toString();

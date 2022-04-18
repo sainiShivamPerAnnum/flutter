@@ -161,6 +161,11 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   Future signout() async {
     activeSubscription = null;
     currentSubscriptionId = null;
+    isFirstTime = true;
+    autosaveVisible = true;
+    nextDebitString = "";
+    fraction = 0;
+    isOnSubscriptionFlow = false;
   }
 
   jumpToSubPage(int index) {

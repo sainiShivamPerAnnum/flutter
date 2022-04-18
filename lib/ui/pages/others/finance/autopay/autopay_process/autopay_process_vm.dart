@@ -36,6 +36,7 @@ class AutoSaveProcessViewModel extends BaseModel {
   String get title => this._title;
   bool _showAppLaunchButton = false;
   int counter = 0;
+  bool _showMinAlert = false;
 
   List<AmountChipsModel> _dailyChips = [];
   List<AmountChipsModel> _weeklyChips = [];
@@ -78,6 +79,13 @@ class AutoSaveProcessViewModel extends BaseModel {
 
   set iosUrlScheme(value) {
     this._iosUrlScheme = value;
+    notifyListeners();
+  }
+
+  bool get showMinAlert => this._showMinAlert;
+
+  set showMinAlert(bool value) {
+    this._showMinAlert = value;
     notifyListeners();
   }
 
@@ -180,6 +188,10 @@ class AutoSaveProcessViewModel extends BaseModel {
   onAmountValueChanged(String val) {
     if (val == "00000") amountFieldController.text = '0';
     if (val != null && val.isNotEmpty) {
+      if (int.tryParse(val) < 10)
+        showMinAlert = true;
+      else
+        showMinAlert = false;
       if (int.tryParse(val) > maxAmount) {
         amountFieldController.text = maxAmount.toString();
         val = maxAmount.toString();

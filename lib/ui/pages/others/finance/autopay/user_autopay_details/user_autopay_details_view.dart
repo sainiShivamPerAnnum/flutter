@@ -193,7 +193,7 @@ class UpdateDetailsView extends StatelessWidget {
                           child: TextField(
                             controller: model.amountFieldController,
                             maxLines: null,
-                            maxLength: 4,
+                            // maxLength: 4,
 
                             decoration: InputDecoration(
                                 prefixText: "₹",
@@ -246,7 +246,13 @@ class UpdateDetailsView extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: SizeConfig.padding12),
+                if (model.showMinAlert)
+                  Text(
+                    "Minimum investment amount is ₹ 10",
+                    style: TextStyles.body3.bold.colour(Colors.red[300]),
+                  ),
+                SizedBox(height: SizeConfig.padding12),
                 Container(
                   width: SizeConfig.screenWidth,
                   padding: EdgeInsets.symmetric(
