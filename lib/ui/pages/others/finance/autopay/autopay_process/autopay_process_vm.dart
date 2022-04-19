@@ -280,7 +280,8 @@ class AutoSaveProcessViewModel extends BaseModel {
         if (_paytmService.fraction == 1) {
           AppState.backButtonDispatcher.didPopRoute();
           BaseUtil.showNegativeAlert(
-              "Its taking too long", "We'll inform you in 15 mins");
+              "Your Autosave is taking longer than usual.",
+              "We'll get back to you in 10 mins");
         }
       });
     } else
@@ -332,6 +333,7 @@ class AutoSaveProcessViewModel extends BaseModel {
     print(res['status']);
     if (res != null && res['status'] != null && res['status'] == true) {
       // subId = res['subId'] ?? "";
+
       _paytmService.getActiveSubscriptionDetails();
       _paytmService.jumpToSubPage(2);
       _paytmService.fraction = 2;
@@ -375,7 +377,7 @@ class AutoSaveProcessViewModel extends BaseModel {
         androidPackageName = "com.google.android.apps.nbu.paisa.user";
         iosUrlScheme = "gpay";
         break;
-      case 'okaksix':
+      case 'okaxis':
         androidPackageName = "com.google.android.apps.nbu.paisa.user";
         iosUrlScheme = "gpay";
         break;

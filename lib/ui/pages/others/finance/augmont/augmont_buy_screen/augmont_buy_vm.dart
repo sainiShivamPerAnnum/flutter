@@ -72,7 +72,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   bool _showMinCapText = false;
   bool _isGoldRateFetching = false;
   bool _isGoldBuyInProgress = false;
-  bool _isSubscriptionInProgress = false;
+  // bool _isSubscriptionInProgress = false;
   bool _couponApplyInProgress = false;
   bool _showCoupons = false;
   bool _augmontSecondFetchDone = false;
@@ -175,13 +175,6 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
   set showCoupons(bool val) {
     _showCoupons = val;
-    notifyListeners();
-  }
-
-  get isSubscriptionInProgress => this._isSubscriptionInProgress;
-
-  set isSubscriptionInProgress(value) {
-    this._isSubscriptionInProgress = value;
     notifyListeners();
   }
 
@@ -398,45 +391,6 @@ class AugmontGoldBuyViewModel extends BaseModel {
           _userService.baseUser.uid, FailType.DepositPayloadError, e);
     }
   }
-
-  // initiateSubscription() async {
-  //   isSubscriptionInProgress = true;
-  //   bool _status = await _paytmService.initiateSubscription();
-  //   isSubscriptionInProgress = false;
-  //   if (_status) {
-  //     showSuccessGoldBuyDialog(1.0,
-  //         subtitle: "Your subscription was successfull!!");
-  //   } else {
-  //     BaseUtil.showNegativeAlert(
-  //       'Subscription failed',
-  //       'Please try again in sometime or contact us for further assistance.',
-  //     );
-  //   }
-  // }
-
-  // initiateCustomSubscription() async {
-  //   isSubscriptionInProgress = true;
-  //   PaytmResponse response = await _paytmService
-  //       .initiateCustomSubscription(vpaController.text + "@paytm");
-  //   isSubscriptionInProgress = false;
-  //   if (response.status)
-  //     showSuccessGoldBuyDialog(1.0, subtitle: response.reason);
-  //   else
-  //     switch (response.errorCode) {
-  //       case ERR_INVALID_VPA_DETECTED:
-  //         BaseUtil.showNegativeAlert(
-  //           response.reason,
-  //           'Please enter a valid vpa address',
-  //         );
-  //         break;
-  //       default:
-  //         BaseUtil.showNegativeAlert(
-  //           response.reason,
-  //           'Please try again',
-  //         );
-  //         break;
-  //     }
-  // }
 
   initiateBuy() async {
     //Check if user is registered on augmont

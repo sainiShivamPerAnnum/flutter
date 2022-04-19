@@ -4,6 +4,7 @@ import 'package:app_install_date/utils.dart';
 import 'package:external_app_launcher/external_app_launcher.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -11,6 +12,7 @@ import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
@@ -40,6 +42,8 @@ class AutoSaveProcessView extends StatefulWidget {
 
 class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
     with SingleTickerProviderStateMixin {
+  GoldenTicketService _gtService = GoldenTicketService();
+
   @override
   Widget build(BuildContext context) {
     return BaseView<AutoSaveProcessViewModel>(onModelReady: (model) {
@@ -367,6 +371,12 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
                   // } else
                   //   model.lottieAnimationController.repeat();
                   AppState.backButtonDispatcher.didPopRoute();
+                  _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
+                    if (res)
+                      _gtService.showInstantGoldenTicketView(
+                          title: 'Your Autosave setup was successful!',
+                          source: GTSOURCE.autosave);
+                  });
                 },
               ),
             ),
@@ -742,7 +752,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
                               "₹${model.saveAmount.toInt().toString().replaceAllMapped(model.reg, model.mathFunc)}",
                           style: TextStyles.body2.bold
                               .colour(UiConstants.tertiarySolid)),
-                      TextSpan(text: " every year")
+                      TextSpan(text: " every year!")
                     ],
                     style: TextStyles.body2.colour(Colors.black),
                   )),
@@ -807,7 +817,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                "Great choice. every ${model.isDaily ? 'day' : 'week'} you'll recieve",
+                                "Every ${model.isDaily ? 'day' : 'week'} you'll recieve",
                                 style: TextStyles.body2.bold,
                               ),
                               // Divider(
@@ -823,7 +833,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
                                     children: [
                                       AutosavePerks(
                                         svg: 'images/svgs/gold.svg',
-                                        text: "Interest on gold",
+                                        text: "Savings in gold",
                                       ),
                                       if (model.amountFieldController.text !=
                                               null &&
@@ -835,7 +845,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
                                               100)
                                         AutosavePerks(
                                           svg: Assets.goldenTicket,
-                                          text: "Golden ticket",
+                                          text: "1 Golden ticket",
                                         ),
                                       if (model.amountFieldController.text !=
                                               null &&

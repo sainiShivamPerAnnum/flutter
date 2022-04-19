@@ -1,9 +1,6 @@
-import 'dart:convert';
-
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_subscription_response_model.dart';
-import 'package:felloapp/core/model/paytm_models/paytm_subscription_response_model.dart';
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
 import 'package:felloapp/core/model/paytm_models/validate_vpa_response_model.dart';
 import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';

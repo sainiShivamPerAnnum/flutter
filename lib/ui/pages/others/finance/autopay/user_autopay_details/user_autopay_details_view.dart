@@ -53,7 +53,7 @@ class UserAutoSaveDetailsView extends StatelessWidget {
                   children: [
                     FelloAppBar(
                       leading: FelloAppBarBackButton(),
-                      title: "AutoSave Details",
+                      title: "Autosave Details",
                     ),
                     Expanded(
                       child: Container(
@@ -277,7 +277,7 @@ class UpdateDetailsView extends StatelessWidget {
                                 "₹${model.saveAmount.toInt().toString().replaceAllMapped(model.reg, model.mathFunc)}",
                             style: TextStyles.body2.bold
                                 .colour(UiConstants.tertiarySolid)),
-                        TextSpan(text: " every year")
+                        TextSpan(text: " every year!")
                       ],
                       style: TextStyles.body2.colour(Colors.black),
                     )),
@@ -351,7 +351,7 @@ class AmountFreqUpdateButton extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          "Great choice. every ${model.isDaily ? 'day' : 'week'} you'll recieve",
+                          "Every ${model.isDaily ? 'day' : 'week'} you'll recieve",
                           style: TextStyles.body2.bold,
                         ),
                         // Divider(
@@ -367,7 +367,7 @@ class AmountFreqUpdateButton extends StatelessWidget {
                               children: [
                                 AutosavePerks(
                                   svg: 'images/svgs/gold.svg',
-                                  text: "Interest on gold",
+                                  text: "Savings in gold",
                                 ),
                                 if (model.amountFieldController.text != null &&
                                     model.amountFieldController.text
@@ -377,7 +377,7 @@ class AmountFreqUpdateButton extends StatelessWidget {
                                         100)
                                   AutosavePerks(
                                     svg: Assets.goldenTicket,
-                                    text: "Golden ticket",
+                                    text: "1 Golden ticket",
                                   ),
                                 if (model.amountFieldController.text != null &&
                                     model.amountFieldController.text

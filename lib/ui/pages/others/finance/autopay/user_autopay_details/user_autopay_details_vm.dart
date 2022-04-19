@@ -280,13 +280,11 @@ class UserAutoSaveDetailsViewModel extends BaseModel {
     if (amount == _paytmService.activeSubscription.autoAmount) {
       if (isDaily &&
           _paytmService.activeSubscription.autoFrequency == "DAILY") {
-        return BaseUtil.showNegativeAlert(
-            "No changes found", "Make some changes to update");
+        return AppState.backButtonDispatcher.didPopRoute();
       }
       if (!isDaily &&
           _paytmService.activeSubscription.autoFrequency == "WEEKLY") {
-        return BaseUtil.showNegativeAlert(
-            "No changes found", "Make some changes to update");
+        return AppState.backButtonDispatcher.didPopRoute();
       }
     }
 

@@ -20,7 +20,7 @@ import 'package:lottie/lottie.dart';
 import 'package:scratcher/scratcher.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
-enum GTSOURCE { newuser, deposit, cricket, poolClub, panVerify }
+enum GTSOURCE { newuser, deposit, cricket, poolClub, panVerify, autosave }
 
 class GTInstantView extends StatefulWidget {
   final String title;
@@ -455,7 +455,7 @@ class _GTInstantViewState extends State<GTInstantView>
 
   getButtonText(GTInstantViewModel model, GTSOURCE source) {
     String title;
-    if (source == GTSOURCE.deposit) {
+    if (source == GTSOURCE.deposit || source == GTSOURCE.autosave) {
       title = "Start Playing";
     } else {
       title = "Continue";

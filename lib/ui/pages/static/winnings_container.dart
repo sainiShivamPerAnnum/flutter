@@ -3,6 +3,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_winnings.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -30,8 +31,12 @@ class WinningsContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return InkWell(
-      onTap: onTap ??
-          () => AppState.delegate.appState.currentAction =
+      onTap: onTap != null
+          ? () {
+              Haptic.vibrate();
+              onTap();
+            }
+          : () => AppState.delegate.appState.currentAction =
               PageAction(state: PageState.addPage, page: MyWinnigsPageConfig),
       child: Container(
         decoration: gradient != null
