@@ -5,6 +5,7 @@ import 'package:external_app_launcher/external_app_launcher.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -333,7 +334,10 @@ class AutoSaveProcessViewModel extends BaseModel {
     print(res['status']);
     if (res != null && res['status'] != null && res['status'] == true) {
       // subId = res['subId'] ?? "";
-
+      if (res['gtId'] != null && res['gtId'].toString().isNotEmpty) {
+        _logger.d(res.toString());
+        GoldenTicketService.goldenTicketId = res['gtId'];
+      }
       _paytmService.getActiveSubscriptionDetails();
       _paytmService.jumpToSubPage(2);
       _paytmService.fraction = 2;
