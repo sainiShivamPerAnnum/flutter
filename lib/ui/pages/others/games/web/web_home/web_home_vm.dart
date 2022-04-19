@@ -45,6 +45,7 @@ class WebHomeViewModel extends BaseModel {
   PrizesModel _prizes;
   String _message;
   String _sessionId;
+  String _gameEndpoint;
 
   //Getters
   String get currentGame => this._currentGame;
@@ -185,8 +186,11 @@ class WebHomeViewModel extends BaseModel {
       widget: WebGameView(
         initialUrl: initialUrl,
         game: currentGame,
-        inLandscapeMode:
-            currentGame == Constants.GAME_TYPE_POOLCLUB ? true : false,
+        inLandscapeMode: currentGame == Constants.GAME_TYPE_POOLCLUB ||
+                (currentGame == Constants.GAME_TYPE_CRICKET &&
+                    _gameEndpoint != null)
+            ? true
+            : false,
       ),
     );
   }
@@ -213,6 +217,12 @@ class WebHomeViewModel extends BaseModel {
       _logger.d("sessionId null");
     }
 
+    if (_flcResponse.model.gameEndpoint != null) {
+      _gameEndpoint = _flcResponse.model.gameEndpoint;
+    } else {
+      _logger.d("gameEndpoint null");
+    }
+
     if (_flcResponse.model.canUserPlay) {
       setState(ViewState.Idle);
       return true;
@@ -223,7 +233,9 @@ class WebHomeViewModel extends BaseModel {
   }
 
   String _generateCricketGameUrl() {
-    return '${Constants.GAME_CRICKET_URI}?userId=${_userService.baseUser.uid}&userName=${_userService.baseUser.username}&sessionId=$_sessionId&stage=${FlavorConfig.getStage()}&gameId=cric2020';
+    return _gameEndpoint != null
+        ? _gameEndpoint
+        : '${Constants.GAME_CRICKET_URI}?userId=${_userService.baseUser.uid}&userName=${_userService.baseUser.username}&sessionId=$_sessionId&stage=${FlavorConfig.getStage()}&gameId=cric2020';
   }
 
   //Cricket Methods -----------------------------------END--------------------//
@@ -246,9 +258,11 @@ class WebHomeViewModel extends BaseModel {
   }
 
   String _generatePoolClubGameUrl() {
-    String _poolClubUri = "https://d2qfyj2eqvh06a.cloudfront.net/pool-club/index.html";
-    String _loadUri = "$_poolClubUri?user=${_userService.baseUser.uid}&name=${_userService.baseUser.username}";
-    if(FlavorConfig.isDevelopment())_loadUri = "$_loadUri&dev=true";
+    String _poolClubUri =
+        "https://d2qfyj2eqvh06a.cloudfront.net/pool-club/index.html";
+    String _loadUri =
+        "$_poolClubUri?user=${_userService.baseUser.uid}&name=${_userService.baseUser.username}";
+    if (FlavorConfig.isDevelopment()) _loadUri = "$_loadUri&dev=true";
     return _loadUri;
   }
 

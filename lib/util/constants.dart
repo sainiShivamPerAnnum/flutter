@@ -7,6 +7,7 @@ class Constants {
   static const String GAME_TYPE_TAMBOLA = "GM_TAMBOLA2020";
   static const String GAME_TYPE_POOLCLUB = "GM_POOL_CLUB";
   static const String GAME_TYPE_HIGHEST_SAVER = "HIGHEST_SAVER";
+  static const String GAME_TYPE_FPL = "FPL";
 
   //HIGHEST SAVER
   static const String HS_DAILY_SAVER = "SAVER_DAILY";
