@@ -117,8 +117,9 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
                             ),
                           ),
                           SizedBox(height: SizeConfig.padding2),
-                          model.activeSubscription.status ==
-                                  Constants.SUBSCRIPTION_ACTIVE
+                          model.activeSubscription != null &&
+                                  model.activeSubscription.status ==
+                                      Constants.SUBSCRIPTION_ACTIVE
                               ? Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
