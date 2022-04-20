@@ -102,4 +102,8 @@ class FcmHandlerDataPayloads extends ChangeNotifier {
       ),
     );
   }
+
+  updateSubscriptionStatus(data) {
+    _logger.d(data);
+  }
 }

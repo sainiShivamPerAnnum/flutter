@@ -20,7 +20,7 @@ import 'package:felloapp/core/service/notifier_services/golden_ticket_service.da
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/core/service/paytm_service.dart';
+import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -72,6 +72,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   bool _showMinCapText = false;
   bool _isGoldRateFetching = false;
   bool _isGoldBuyInProgress = false;
+  // bool _isSubscriptionInProgress = false;
   bool _couponApplyInProgress = false;
   bool _showCoupons = false;
   bool _augmontSecondFetchDone = false;
@@ -86,6 +87,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   double goldBuyAmount = 0;
   double goldAmountInGrams = 0.0;
   TextEditingController goldAmountController;
+  TextEditingController vpaController;
   List<double> chipAmountList = [101, 201, 501, 1001];
   List<CouponModel> _couponList;
 
@@ -185,6 +187,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
     fetchGoldRates();
     await fetchNotices();
     status = checkAugmontStatus();
+    _paytmService.getActiveSubscriptionDetails();
     //Fetch available coupons
     getAvailableCoupons();
     //Check if user can be registered automagically
@@ -626,7 +629,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
       return amount.toInt();
   }
 
-  showSuccessGoldBuyDialog(amount) {
+  showSuccessGoldBuyDialog(double amount, {String subtitle}) {
     BaseUtil.openDialog(
       addToScreenStack: true,
       hapticVibrate: true,
@@ -634,7 +637,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
       content: FelloConfirmationDialog(
         asset: Assets.goldenTicket,
         title: "Congratulations",
-        subtitle:
+        subtitle: subtitle ??
             "You have successfully saved ₹ ${getAmount(amount)} and earned ${amount.ceil()} tokens!",
         result: (res) {
           // if (res) ;

@@ -32,6 +32,7 @@ class TextStyles {
   static TextStyle get body2 => bodyFont.copyWith(fontSize: SizeConfig.body2);
   static TextStyle get body3 => bodyFont.copyWith(fontSize: SizeConfig.body3);
   static TextStyle get body4 => bodyFont.copyWith(fontSize: SizeConfig.body4);
+  static TextStyle get body5 => bodyFont.copyWith(fontSize: SizeConfig.body5);
 }
 
 extension TextStyleHelpers on TextStyle {

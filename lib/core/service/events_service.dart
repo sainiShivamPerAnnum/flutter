@@ -1,4 +1,4 @@
-enum SaverType { MONTHLY, DAILY, WEEKLY }
+enum SaverType { MONTHLY, DAILY, WEEKLY, FPL }
 
 class EventService {
   SaverType getEventType(String type) {
@@ -11,6 +11,9 @@ class EventService {
         break;
       case "SAVER_MONTHLY":
         return SaverType.MONTHLY;
+        break;
+      case "FPL":
+        return SaverType.FPL;
         break;
       default:
         return SaverType.DAILY;

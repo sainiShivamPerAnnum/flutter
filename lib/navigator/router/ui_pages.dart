@@ -22,7 +22,6 @@ const String VerifyEmailPath = '/verifyEmail';
 const String SupportPath = '/support';
 const String UpdateRequiredPath = '/updateRequired';
 const String WalkThroughPath = '/walkThrough';
-const String WalkThroughCompletedPath = '/walkThroughCompleted';
 const String YourFundsPath = '/yourFunds';
 const String NotificationsPath = '/notifications';
 const String THome = '/tHome';
@@ -51,6 +50,10 @@ const String GoldBalanceDetailsViewPath = '/goldBalanceDetailsView';
 const String PoolViewPath = "/poolView";
 const String WebHomeViewPath = "/webHomeView";
 const String WebGameViewPath = "/webGameView";
+const String AutoSaveDetailsViewPath = '/autosaveDetailsView';
+const String AutoSaveProcessViewPath = '/autosaveProcessView';
+const String UserAutoSaveDetailsViewPath = '/userAutosaveDetailsView';
+const String AutosaveTransactionsViewPath = '/autosaveTransactionsViewPath';
 
 enum Pages {
   Splash,
@@ -73,7 +76,6 @@ enum Pages {
   VerifyEmail,
   Support,
   WalkThrough,
-  WalkThroughCompleted,
   YourFunds,
   THome,
   TGame,
@@ -103,6 +105,10 @@ enum Pages {
   PoolView,
   WebHomeView,
   WebGameView,
+  AutoSaveDetailsView,
+  AutoSaveProcessView,
+  UserAutoSaveDetailsView,
+  AutosaveTransactionsView,
 }
 
 class PageConfiguration {
@@ -462,3 +468,28 @@ PageConfiguration PoolViewPageConfig = PageConfiguration(
   uiPage: Pages.PoolView,
   name: 'Pool View Screen',
 );
+
+PageConfiguration AutoSaveDetailsViewPageConfig = PageConfiguration(
+  key: 'AutoSaveDetailsView',
+  path: AutoSaveDetailsViewPath,
+  uiPage: Pages.AutoSaveDetailsView,
+  name: 'AutoSave Details Screen',
+);
+
+PageConfiguration AutoSaveProcessViewPageConfig = PageConfiguration(
+    key: 'AutoSaveProcessView',
+    path: AutoSaveProcessViewPath,
+    uiPage: Pages.AutoSaveProcessView,
+    name: "AutoSave Process Screen");
+
+PageConfiguration UserAutoSaveDetailsViewPageConfig = PageConfiguration(
+    key: 'UserAutoSaveDetailsView',
+    path: UserAutoSaveDetailsViewPath,
+    uiPage: Pages.UserAutoSaveDetailsView,
+    name: "User AutoSave DetailsScreen");
+
+PageConfiguration AutosaveTransactionsViewPageConfig = PageConfiguration(
+    key: 'AutosaveTransactionsView',
+    path: AutosaveTransactionsViewPath,
+    uiPage: Pages.AutosaveTransactionsView,
+    name: "Autosave transaction Screen");

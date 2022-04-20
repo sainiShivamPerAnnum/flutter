@@ -31,7 +31,7 @@ import 'package:felloapp/core/service/notifier_services/transaction_service.dart
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
-import 'package:felloapp/core/service/paytm_service.dart';
+import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
@@ -47,6 +47,9 @@ import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augm
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_balance_details/gold_balance-details_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/autopay_transaction/autopay_transactions_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/dailyPicksDraw/dailyPicksDraw_viewModel.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_game/tambola_game_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_vm.dart';
@@ -165,6 +168,9 @@ void setupLocator() {
   locator.registerFactory(() => TopSaverViewModel());
   locator
       .registerFactory(() => TransactionCompletedConfirmationScreenViewModel());
+  locator.registerFactory(() => AutoSaveProcessViewModel());
+  locator.registerFactory(() => UserAutoSaveDetailsViewModel());
+  locator.registerFactory(() => AutosaveTransactionsViewModel());
 
   //WIDGETS
   locator.registerFactory(() => FDrawerVM());

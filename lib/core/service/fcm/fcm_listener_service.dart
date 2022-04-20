@@ -248,7 +248,7 @@ class FcmListener {
         _dbModel.logFailure(_userService.baseUser.uid,
             FailType.TambolaDrawNotificationSettingFailed, errorDetails);
       }
-      BaseUtil.showNegativeAlert("Error", "Please try again");
+      BaseUtil.showNegativeAlert("Something went wrong!", "Please try again");
       return false;
     }
   }

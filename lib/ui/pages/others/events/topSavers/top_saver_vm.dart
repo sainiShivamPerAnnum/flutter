@@ -89,13 +89,21 @@ class TopSaverViewModel extends BaseModel {
           // winnerTitle = "Last Month's Winners";
           break;
         }
+      case SaverType.FPL:
+        {
+          appbarTitle = "Fello Premier League";
+          saverFreq = "daily";
+          // winnerTitle = "Last Month's Winners";
+          break;
+        }
     }
     notifyListeners();
   }
 
   fetchTopSavers() async {
-    ApiResponse<TopSaversModel> response =
-        await _statsRepo.getTopSavers(saverFreq);
+    ApiResponse<TopSaversModel> response = await _statsRepo.getTopSavers(
+        saverFreq,
+        type: event.type == "FPL" ? "FPL" : "HIGHEST_SAVER");
     if (response != null &&
         response.model != null &&
         response.model.scoreboard != null) {
@@ -108,8 +116,12 @@ class TopSaverViewModel extends BaseModel {
   }
 
   fetchPastWinners() async {
-    ApiResponse<List<WinnersModel>> response = await _winnersRepo
-        .getPastWinners(Constants.GAME_TYPE_HIGHEST_SAVER, saverFreq);
+    ApiResponse<List<WinnersModel>> response =
+        await _winnersRepo.getPastWinners(
+            event.type == "FPL"
+                ? Constants.GAME_TYPE_FPL
+                : Constants.GAME_TYPE_HIGHEST_SAVER,
+            saverFreq);
     if (response != null &&
         response.model != null &&
         response.model.isNotEmpty) {

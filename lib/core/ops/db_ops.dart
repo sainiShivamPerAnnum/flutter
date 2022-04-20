@@ -15,6 +15,8 @@ import 'package:felloapp/core/model/feed_card_model.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
+import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
+import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/model/tambola_winners_details.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
@@ -1267,6 +1269,43 @@ class DBModel extends ChangeNotifier {
     }
 
     return couponList;
+  }
+
+  Future<Map<String, dynamic>> getAutosaveTransactions(
+      {@required String uid,
+      @required String subId,
+      DocumentSnapshot lastDocument,
+      @required int limit}) async {
+    Map<String, dynamic> resultAutosaveTransactionsMap = Map<String, dynamic>();
+    List<AutosaveTransactionModel> requestedTxns = [];
+    try {
+      QuerySnapshot _querySnapshot = await _api.getAutosaveTransactions(
+        userId: uid,
+        lastDocument: lastDocument,
+        limit: limit,
+      );
+      logger.d(_querySnapshot.docs.first.data());
+      resultAutosaveTransactionsMap['lastDocument'] = _querySnapshot.docs.last;
+      resultAutosaveTransactionsMap['length'] = _querySnapshot.docs.length;
+      _querySnapshot.docs.forEach((txn) {
+        try {
+          if (txn.exists)
+            requestedTxns.add(AutosaveTransactionModel.fromMap(txn.data()));
+        } catch (e) {
+          log.error('Failed to parse user transaction $txn');
+        }
+      });
+      logger.d("No of autosave transactions fetched: ${requestedTxns.length}");
+      resultAutosaveTransactionsMap['listOfTransactions'] = requestedTxns;
+      return resultAutosaveTransactionsMap;
+    } catch (err) {
+      requestedTxns = [];
+      log.error('Failed to fetch transactions:: $err');
+      resultAutosaveTransactionsMap['length'] = 0;
+      resultAutosaveTransactionsMap['listOfTransactions'] = requestedTxns;
+      resultAutosaveTransactionsMap['lastDocument'] = lastDocument;
+      return resultAutosaveTransactionsMap;
+    }
   }
 
 //------------------------------------------------REALTIME----------------------------

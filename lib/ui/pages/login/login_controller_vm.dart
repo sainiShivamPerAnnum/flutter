@@ -278,8 +278,11 @@ class LoginControllerViewModel extends BaseModel {
                 .animateToPage(Username.index,
                     duration: Duration(milliseconds: 500),
                     curve: Curves.easeInToLinear)
-                .then((value) =>
-                    _usernameKey.currentState.focusNode.requestFocus());
+                .then((value) {
+              Future.delayed(Duration(seconds: 1), () {
+                _usernameKey.currentState.focusNode.requestFocus();
+              });
+            });
           }
           break;
         }
@@ -316,9 +319,9 @@ class LoginControllerViewModel extends BaseModel {
                   userService.baseUser.mobile = userMobile;
                   final ApiResponse response = await _userRepo.setNewUser(
                       userService.baseUser, token, cstate);
-
+                  logger.e(response.toString());
                   if (response.code == 400) {
-                    message = response.errorMessage ??
+                    message =
                         "Unable to create account, please try again later.";
                     _usernameKey.currentState.model.enabled = true;
                     flag = false;

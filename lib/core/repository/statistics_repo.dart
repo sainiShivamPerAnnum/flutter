@@ -48,13 +48,16 @@ class StatisticsRepository {
     }
   }
 
-  Future<ApiResponse<TopSaversModel>> getTopSavers(String freq) async {
+  Future<ApiResponse<TopSaversModel>> getTopSavers(String freq,
+      {String type = "HIGHEST_SAVER"}) async {
     try {
       String code =
           CodeFromFreq.getCodeFromFreq(freq, isMondayCorrected: false);
+
       _logger.d("Top Savers : $freq\nCode: $code");
-      final QueryDocumentSnapshot _response = await _api
-          .getStatisticsByFreqGameTypeAndCode("HIGHEST_SAVER", freq, code);
+
+      final QueryDocumentSnapshot _response =
+          await _api.getStatisticsByFreqGameTypeAndCode(type, freq, code);
 
       TopSaversModel _responseModel = TopSaversModel.fromMap(_response.data());
 

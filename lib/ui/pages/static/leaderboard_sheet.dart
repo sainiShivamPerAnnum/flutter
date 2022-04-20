@@ -42,40 +42,50 @@ class WinnersLeaderBoardSE extends StatelessWidget {
               Container(
                 child: Column(
                   children: [
-                    SvgPicture.asset(
-                      Assets.clip,
-                      width: SizeConfig.screenWidth,
-                    ),
-                    Row(
-                      children: [
-                        Container(
-                          width: SizeConfig.screenWidth,
-                          color: Colors.white,
-                          padding: EdgeInsets.only(
-                              bottom: SizeConfig.padding16,
-                              left: SizeConfig.pageHorizontalMargins),
-                          child: Text(
-                            "Leaderboard",
-                            style: TextStyles.title3.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      color: Colors.white,
-                      padding: EdgeInsets.only(
-                        left: SizeConfig.pageHorizontalMargins,
-                        bottom: SizeConfig.padding4,
-                      ),
-                      alignment: Alignment.center,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                    GestureDetector(
+                      onVerticalDragEnd: (details) {
+                        if (model.panelController.isPanelOpen)
+                          model.panelController.close();
+                      },
+                      child: Column(
                         children: [
-                          leaderboardChips(
-                              0, "Game Winners", myscrollController),
-                          SizedBox(width: 16),
-                          leaderboardChips(
-                              1, "Top Referrers", myscrollController),
+                          SvgPicture.asset(
+                            Assets.clip,
+                            width: SizeConfig.screenWidth,
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                width: SizeConfig.screenWidth,
+                                color: Colors.white,
+                                padding: EdgeInsets.only(
+                                    bottom: SizeConfig.padding16,
+                                    left: SizeConfig.pageHorizontalMargins),
+                                child: Text(
+                                  "Leaderboard",
+                                  style: TextStyles.title3.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            color: Colors.white,
+                            padding: EdgeInsets.only(
+                              left: SizeConfig.pageHorizontalMargins,
+                              bottom: SizeConfig.padding4,
+                            ),
+                            alignment: Alignment.center,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                leaderboardChips(
+                                    0, "Game Winners", myscrollController),
+                                SizedBox(width: 16),
+                                leaderboardChips(
+                                    1, "Top Referrers", myscrollController),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ),

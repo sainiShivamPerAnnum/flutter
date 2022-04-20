@@ -22,6 +22,10 @@ import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/au
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/edit_augmont_bank_details.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_balance_details/gold_balance_details_view.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/autopay_details_view.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_view.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/autopay_transaction/autopay_transactions_view.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/dailyPicksDraw/dailyPicksDraw_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/show_all_tickets.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_game/tambola_game_view.dart';
@@ -202,9 +206,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.Support:
           _addPageData(SupportPage(), SupportPageConfig);
           break;
-        case Pages.WalkThrough:
-          _addPageData(WalkThroughPage(), WalkThroughConfig);
-          break;
+
         case Pages.THome:
           _addPageData(TambolaHomeView(), THomePageConfig);
           break;
@@ -272,8 +274,21 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         // case Pages.WebGameView:
         //   _addPageData(WebGameView(), WebGameViewPageConfig);
         //   break;
-        case Pages.PoolView:
-          _addPageData(PoolView(), PoolViewPageConfig);
+        // case Pages.PoolView:
+        //   _addPageData(PoolView(), PoolViewPageConfig);
+        case Pages.AutoSaveDetailsView:
+          _addPageData(AutoSaveDetailsView(), AutoSaveDetailsViewPageConfig);
+          break;
+        case Pages.AutoSaveProcessView:
+          _addPageData(AutoSaveProcessView(), AutoSaveProcessViewPageConfig);
+          break;
+        case Pages.UserAutoSaveDetailsView:
+          _addPageData(
+              UserAutoSaveDetailsView(), UserAutoSaveDetailsViewPageConfig);
+          break;
+        case Pages.AutosaveTransactionsView:
+          _addPageData(
+              AutoSaveTransactionsView(), AutosaveTransactionsViewPageConfig);
           break;
         default:
           break;
@@ -399,8 +414,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.Support:
         SupportPageConfig.currentPageAction = action;
         break;
-      case Pages.WalkThrough:
-        WalkThroughConfig.currentPageAction = action;
+
         break;
       case Pages.YourFunds:
         YourFundsConfig.currentPageAction = action;
@@ -476,6 +490,18 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.WebGameView:
         WebGameViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.AutoSaveDetailsView:
+        AutoSaveDetailsViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.AutoSaveProcessView:
+        AutoSaveProcessViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.UserAutoSaveDetailsView:
+        UserAutoSaveDetailsViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.AutosaveTransactionsView:
+        AutosaveTransactionsViewPageConfig.currentPageAction = action;
         break;
       default:
         break;
@@ -626,9 +652,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'verifyEmail':
         pageConfiguration = VerifyEmailPageConfig;
         break;
-      case 'walkthrough':
-        pageConfiguration = WalkThroughConfig;
-        break;
       case 'blocked':
         pageConfiguration = BlockedUserPageConfig;
         break;
@@ -640,6 +663,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case 'monthlySaver':
         openTopSaverScreen(Constants.HS_MONTHLY_SAVER);
+        break;
+      case 'FPL':
+        openTopSaverScreen('FPL');
         break;
       case 'cricketHome':
         openWebGame(Constants.GAME_TYPE_CRICKET);
@@ -655,6 +681,24 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case 'pop':
         AppState.backButtonDispatcher.didPopRoute();
+        break;
+      case 'autosaveDetails':
+        pageConfiguration = AutoSaveDetailsViewPageConfig;
+        break;
+      case 'autosaveProcess':
+        pageConfiguration = AutoSaveProcessViewPageConfig;
+        break;
+      case 'UserAutoSaveDetails':
+        pageConfiguration = UserAutoSaveDetailsViewPageConfig;
+        break;
+      case 'AutosaveTxns':
+        pageConfiguration = AutosaveTransactionsViewPageConfig;
+        break;
+      case 'AppWalkthrough':
+        openAppWalkthrough();
+        break;
+      case 'AutosaveWalkthrough':
+        openAutoSaveWalkthrough();
         break;
     }
     if (pageConfiguration != null) {
@@ -677,5 +721,35 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         state: PageState.addWidget,
         widget: WebHomeView(game: game),
         page: WebHomeViewPageConfig);
+  }
+
+  openAppWalkthrough() {
+    AppState.delegate.appState.currentAction = PageAction(
+        state: PageState.addWidget,
+        widget: WalkThroughPage(
+          lottieList: [Assets.onb1, Assets.onb2, Assets.onb3],
+          titleList: ["SAVE", "PLAY", "WIN"],
+          descList: [
+            "Save and invest in strong assets and earn tokens 🪙",
+            "Use these tokens to play fun and exciting games 🎮",
+            "Stand to win exclusive prizes and fun rewards 🎉"
+          ],
+        ),
+        page: WalkThroughConfig);
+  }
+
+  openAutoSaveWalkthrough() {
+    AppState.delegate.appState.currentAction = PageAction(
+        state: PageState.addWidget,
+        widget: WalkThroughPage(
+          lottieList: [Assets.onb1, Assets.onb2, Assets.onb3],
+          titleList: ["SAVE", "PLAY", "WIN"],
+          descList: [
+            "Save and invest in strong assets and earn tokens 🪙",
+            "Use these tokens to play fun and exciting games 🎮",
+            "Stand to win exclusive prizes and fun rewards 🎉"
+          ],
+        ),
+        page: WalkThroughConfig);
   }
 }

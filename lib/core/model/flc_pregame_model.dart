@@ -8,6 +8,7 @@ class FlcModel {
   bool canUserPlay;
   bool isWalletInitalized;
   String ticketFieldName;
+  String gameEndpoint;
   bool isGtRewarded;
 
   FlcModel(
@@ -15,6 +16,7 @@ class FlcModel {
       this.flcBalance,
       this.ticketCount,
       this.ticketFieldName,
+      this.gameEndpoint,
       this.sessionId,
       this.isValidUser,
       this.canUserPlay,
@@ -30,6 +32,7 @@ class FlcModel {
     canUserPlay = json['canUserPlay'];
     isWalletInitalized = json['isWalletInitalized'];
     ticketFieldName = json['ticketFieldName'];
+    gameEndpoint = json['gameEndpoint'];
     status = json['status'];
     ticketCount = json['ticketCount'];
     isGtRewarded = json['isGtRewarded'];
@@ -45,6 +48,7 @@ class FlcModel {
     data['isWalletInitalized'] = this.isWalletInitalized;
     data['status'] = this.status;
     data['ticketFieldName'] = this.ticketFieldName;
+    data['gameEndpoint'] = this.gameEndpoint;
     data['ticketCount'] = this.ticketCount;
     data['isGtRewarded'] = this.isGtRewarded;
     return data;
@@ -58,7 +62,7 @@ class FlcModel {
       'isValidUser': isValidUser,
       'canUserPlay': canUserPlay,
       'isWalletInitalized': isWalletInitalized,
-      'ticketFieldName': ticketFieldName,
+      'gameEndpoint': gameEndpoint,
       'status': status,
       'ticketCount': ticketCount,
       'isGtRewarded': isGtRewarded
@@ -73,7 +77,7 @@ class FlcModel {
         isValidUser: map['isValidUser'],
         canUserPlay: map['canUserPlay'],
         isWalletInitalized: map['isWalletInitalized'],
-        ticketFieldName: map['ticketFieldName'],
+        gameEndpoint: map['gameEndpoint'],
         status: map['status'],
         ticketCount: map['ticketCount'],
         isGtRewarded: map['isGtRewarded']);
