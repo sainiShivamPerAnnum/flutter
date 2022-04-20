@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
@@ -43,6 +44,7 @@ class AutoSaveProcessViewModel extends BaseModel {
   bool _showAppLaunchButton = false;
   int counter = 0;
   bool _showMinAlert = false;
+  Timer _timer;
 
   List<AmountChipsModel> _dailyChips = [];
   List<AmountChipsModel> _weeklyChips = [];
@@ -202,6 +204,10 @@ class AutoSaveProcessViewModel extends BaseModel {
     onAmountValueChanged(amountFieldController.text);
   }
 
+  clear() {
+    _timer.cancel();
+  }
+
   onAmountValueChanged(String val) {
     if (val == "00000") amountFieldController.text = '0';
     if (val != null && val.isNotEmpty) {
@@ -227,6 +233,23 @@ class AutoSaveProcessViewModel extends BaseModel {
     final double t = 1;
     final double ci = p * (pow(1 + r / 100, t) - 1);
     return p + ci;
+  }
+
+  checkTransactionStatus() {
+    _timer = Timer.periodic(Duration(seconds: 15), (timer) async {
+      if (_paytmService.subscriptionFlowPageController.page == 1.0) {
+        _logger.d("Fetching subscription details");
+        await _paytmService.getActiveSubscriptionDetails();
+        if (_paytmService.activeSubscription != null &&
+            _paytmService.activeSubscription.status ==
+                Constants.SUBSCRIPTION_INACTIVE &&
+            pageController.page == 1.0) {
+          _paytmService.jumpToSubPage(2);
+          _paytmService.fraction = 2;
+          showProgressIndicator = false;
+        }
+      }
+    });
   }
 
   // getTitle() {
@@ -299,6 +322,7 @@ class AutoSaveProcessViewModel extends BaseModel {
       _analyticsService.track(
           eventName: AnalyticsEvents.autosaveMandateGenerated);
       checkForUPIAppExistence(vpaController.text.trim().split("@").last);
+      checkTransactionStatus();
       _paytmService.jumpToSubPage(1);
       _paytmService.fraction = 1;
       Future.delayed(Duration(minutes: 8), () {
@@ -372,10 +396,12 @@ class AutoSaveProcessViewModel extends BaseModel {
         _logger.d(res.toString());
         GoldenTicketService.goldenTicketId = res['gtId'];
       }
-      _paytmService.getActiveSubscriptionDetails();
-      _paytmService.jumpToSubPage(2);
-      _paytmService.fraction = 2;
-      showProgressIndicator = false;
+      if (_paytmService.subscriptionFlowPageController.page == 1.0) {
+        _paytmService.getActiveSubscriptionDetails();
+        _paytmService.jumpToSubPage(2);
+        _paytmService.fraction = 2;
+        showProgressIndicator = false;
+      }
       // onAmountValueChanged(amountFieldController.text);
 
     } else if (res['status'] == false) {

@@ -89,15 +89,24 @@ class _AutosaveWalkthroughState extends State<AutosaveWalkthrough> {
     _pageNotifier.value = _pageController.page;
     if (_pageController.page == 0.0) {
       _controller1.play();
+      setState(() {
+        slidelength1 = SizeConfig.padding24;
+      });
     } else
       _controller1.pause();
-    if (_pageController.page == 1.0)
+    if (_pageController.page == 1.0) {
       _controller2.play();
-    else
+      setState(() {
+        slidelength2 = SizeConfig.padding24;
+      });
+    } else
       _controller2.pause();
-    if (_pageController.page == 2.0)
+    if (_pageController.page == 2.0) {
       _controller3.play();
-    else
+      setState(() {
+        slidelength3 = SizeConfig.padding24;
+      });
+    } else
       _controller3.pause();
   }
 
@@ -109,19 +118,13 @@ class _AutosaveWalkthroughState extends State<AutosaveWalkthrough> {
     await Future.delayed(Duration(seconds: 5), () {
       if (mounted) {
         _pageController.animateToPage(1,
-            duration: Duration(seconds: 1), curve: Curves.linear);
-        setState(() {
-          slidelength2 = SizeConfig.padding24;
-        });
+            duration: Duration(seconds: 1), curve: Curves.easeInOutCirc);
       }
     });
-    await Future.delayed(Duration(seconds: 13), () {
+    await Future.delayed(Duration(seconds: 16), () {
       if (mounted) {
         _pageController.animateToPage(2,
-            duration: Duration(seconds: 1), curve: Curves.linear);
-        setState(() {
-          slidelength3 = SizeConfig.padding24;
-        });
+            duration: Duration(seconds: 1), curve: Curves.easeInOutCirc);
       }
     });
     await Future.delayed(Duration(seconds: 10), () {
@@ -132,100 +135,135 @@ class _AutosaveWalkthroughState extends State<AutosaveWalkthrough> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: HomeBackground(
-      child: Column(
-        children: [
-          FelloAppBar(
-            leading: FelloAppBarBackButton(),
-            title: "Autosave Example",
-          ),
-          Expanded(
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.pageHorizontalMargins),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(SizeConfig.padding40),
-                  topRight: Radius.circular(SizeConfig.padding40),
-                ),
-                color: Colors.white,
+        floatingActionButton: ValueListenableBuilder(
+          valueListenable: _pageNotifier,
+          builder: (context, value, child) {
+            return CircleAvatar(
+              backgroundColor: UiConstants.primaryColor,
+              // radius: SizeConfig.padding16,
+              child: IconButton(
+                icon: value == 2.0
+                    ? Icon(Icons.check)
+                    : Icon(Icons.navigate_next),
+                color: UiConstants.backgroundColor,
+                onPressed: () {
+                  value == 2.0
+                      ? AppState.backButtonDispatcher.didPopRoute()
+                      : _pageController.animateToPage(
+                          _pageController.page.toInt().floor() + 1,
+                          duration: Duration(seconds: 1),
+                          curve: Curves.easeInOutCirc);
+                },
               ),
-              child: Column(
-                children: [
-                  SizedBox(height: SizeConfig.pageHorizontalMargins),
-                  // ValueListenableBuilder(
-                  //   valueListenable: _pageNotifier,
-                  //   builder: (ctx, value, _) {
-                  //     return Text(titleList[value.toInt()],
-                  //         style: TextStyles.title1.bold);
-                  //   },
-                  // ),
-                  ValueListenableBuilder(
-                    valueListenable: _pageNotifier,
-                    builder: (ctx, value, _) {
-                      return Text(descList[value.toInt()],
-                          textAlign: TextAlign.center,
-                          maxLines: 3,
-                          overflow: TextOverflow.clip,
-                          style: TextStyles.body1);
-                    },
+            );
+          },
+        ),
+        body: HomeBackground(
+          child: Column(
+            children: [
+              FelloAppBar(
+                leading: FelloAppBarBackButton(),
+                title: "Autosave Example",
+              ),
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.pageHorizontalMargins),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(SizeConfig.padding40),
+                      topRight: Radius.circular(SizeConfig.padding40),
+                    ),
+                    color: Colors.white,
                   ),
-                  Spacer(),
-                  showLotties
-                      ? ValueListenableBuilder(
+                  child: Column(
+                    children: [
+                      SizedBox(height: SizeConfig.pageHorizontalMargins),
+                      // ValueListenableBuilder(
+                      //   valueListenable: _pageNotifier,
+                      //   builder: (ctx, value, _) {
+                      //     return Text(titleList[value.toInt()],
+                      //         style: TextStyles.title1.bold);
+                      //   },
+                      // ),
+                      ValueListenableBuilder(
+                        valueListenable: _pageNotifier,
+                        builder: (ctx, value, _) {
+                          return Text(descList[value.toInt()],
+                              textAlign: TextAlign.center,
+                              maxLines: 3,
+                              overflow: TextOverflow.clip,
+                              style: TextStyles.body1);
+                        },
+                      ),
+                      Spacer(),
+                      showLotties
+                          ? ValueListenableBuilder(
+                              valueListenable: _pageNotifier,
+                              builder: (ctx, value, _) {
+                                return Container(
+                                  height: SizeConfig.screenHeight * 0.7,
+                                  width: SizeConfig.screenWidth,
+                                  child: PageView(
+                                      physics: NeverScrollableScrollPhysics(),
+                                      controller: _pageController,
+                                      children: [
+                                        _controller1.value.isInitialized
+                                            ? Slide(controller: _controller1)
+                                            : AnimLoader(),
+                                        _controller2.value.isInitialized
+                                            ? Slide(controller: _controller2)
+                                            : AnimLoader(),
+                                        _controller3.value.isInitialized
+                                            ? Slide(controller: _controller3)
+                                            : AnimLoader(),
+                                      ]),
+                                );
+                              },
+                            )
+                          : Container(
+                              height: SizeConfig.screenWidth,
+                              width: SizeConfig.screenWidth,
+                              child: SpinKitWave(
+                                size: SizeConfig.padding32,
+                                color: UiConstants.primaryColor,
+                              )),
+                      Spacer(),
+
+                      ValueListenableBuilder(
                           valueListenable: _pageNotifier,
                           builder: (ctx, value, _) {
-                            return Container(
-                              height: SizeConfig.screenHeight * 0.7,
-                              width: SizeConfig.screenWidth,
-                              child: PageView(
-                                  physics: NeverScrollableScrollPhysics(),
-                                  controller: _pageController,
-                                  children: [
-                                    _controller1.value.isInitialized
-                                        ? Slide(controller: _controller1)
-                                        : AnimLoader(),
-                                    _controller2.value.isInitialized
-                                        ? Slide(controller: _controller2)
-                                        : AnimLoader(),
-                                    _controller3.value.isInitialized
-                                        ? Slide(controller: _controller3)
-                                        : AnimLoader(),
-                                  ]),
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CustomProgressIndicator(
+                                  slidelength: slidelength1,
+                                  value: value,
+                                  index: 0,
+                                ),
+                                SizedBox(width: SizeConfig.padding6),
+                                CustomProgressIndicator(
+                                  slidelength: slidelength2,
+                                  value: value,
+                                  index: 1,
+                                ),
+                                SizedBox(width: SizeConfig.padding6),
+                                CustomProgressIndicator(
+                                  slidelength: slidelength3,
+                                  value: value,
+                                  index: 2,
+                                ),
+                              ],
                             );
-                          },
-                        )
-                      : Container(
-                          height: SizeConfig.screenWidth,
-                          width: SizeConfig.screenWidth,
-                          child: SpinKitWave(
-                            size: SizeConfig.padding32,
-                            color: UiConstants.primaryColor,
-                          )),
-                  Spacer(),
-
-                  ValueListenableBuilder(
-                      valueListenable: _pageNotifier,
-                      builder: (ctx, value, _) {
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CustomProgressIndicator(slidelength: slidelength1),
-                            SizedBox(width: SizeConfig.padding6),
-                            CustomProgressIndicator(slidelength: slidelength2),
-                            SizedBox(width: SizeConfig.padding6),
-                            CustomProgressIndicator(slidelength: slidelength3),
-                          ],
-                        );
-                      }),
-                  SizedBox(height: SizeConfig.pageHorizontalMargins),
-                ],
+                          }),
+                      SizedBox(height: SizeConfig.pageHorizontalMargins),
+                    ],
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
-    ));
+        ));
   }
 }
 
@@ -233,9 +271,13 @@ class CustomProgressIndicator extends StatelessWidget {
   const CustomProgressIndicator({
     Key key,
     @required this.slidelength,
+    @required this.value,
+    @required this.index,
   }) : super(key: key);
 
   final double slidelength;
+  final double value;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
@@ -243,7 +285,9 @@ class CustomProgressIndicator extends StatelessWidget {
       width: SizeConfig.padding24,
       height: SizeConfig.padding4,
       decoration: BoxDecoration(
-        color: UiConstants.scaffoldColor,
+        color: value >= index + 1
+            ? UiConstants.primaryColor
+            : UiConstants.scaffoldColor,
         borderRadius: BorderRadius.circular(SizeConfig.roundness12),
       ),
       alignment: Alignment.centerLeft,
@@ -252,12 +296,23 @@ class CustomProgressIndicator extends StatelessWidget {
           color: UiConstants.primaryColor,
           borderRadius: BorderRadius.circular(SizeConfig.roundness12),
         ),
-        duration: Duration(seconds: 5),
+        duration: Duration(seconds: getDuration(index)),
         curve: Curves.linear,
         height: SizeConfig.padding4,
         width: slidelength,
       ),
     );
+  }
+
+  getDuration(index) {
+    switch (index) {
+      case 0:
+        return 5;
+      case 1:
+        return 14;
+      case 2:
+        return 10;
+    }
   }
 }
 
