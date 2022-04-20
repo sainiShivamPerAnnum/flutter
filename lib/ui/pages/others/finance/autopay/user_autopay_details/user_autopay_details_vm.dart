@@ -124,7 +124,7 @@ class UserAutoSaveDetailsViewModel extends BaseModel {
     subStatusController = new TextEditingController(text: "Active");
     await findActiveSubscription();
     await getChipAmounts();
-    await getLatestTransactions();
+    if (activeSubscription != null) await getLatestTransactions();
     setState(ViewState.Idle);
   }
 

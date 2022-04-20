@@ -36,10 +36,9 @@ class Assets {
   static final String postautosave = "assets/images/postautosave.png";
   static final String autopause = "assets/images/autopause.png";
 
-  // static final String autosaveSlide1 = "assets/lotties/autosave-slide1.json";
-  // static final String autosaveSlide2 = "assets/lotties/autosave-slide2.json";
-  // static final String autosaveSlide3 = "assets/lotties/autosave-slide3.json";
-  // static final String autosaveSlide4 = "assets/lotties/autosave-slide4.json";
+  static final String autosaveSlide1 = "assets/videos/asanim-1.mp4";
+  static final String autosaveSlide2 = "assets/videos/asanim-2.mp4";
+  static final String autosaveSlide3 = "assets/videos/asanim-3.mp4";
 
   //APPBAR
 

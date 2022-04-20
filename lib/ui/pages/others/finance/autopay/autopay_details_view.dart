@@ -551,30 +551,30 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
               child: SafeArea(
                 child: Wrap(
                   children: [
-                    Container(
-                      alignment: Alignment.center,
-                      color: Colors.white,
-                      margin: EdgeInsets.symmetric(
-                          vertical: SizeConfig.padding12,
-                          horizontal: SizeConfig.pageHorizontalMargins),
+                    InkWell(
+                      onTap: () {
+                        AppState.delegate
+                            .parseRoute(Uri.parse('/AutosaveWalkthrough'));
+                      },
                       child: Container(
                         alignment: Alignment.center,
-                        width: SizeConfig.screenWidth,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                              width: 0.8, color: UiConstants.primaryColor),
-                          borderRadius:
-                              BorderRadius.circular(SizeConfig.roundness12),
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.pageHorizontalMargins,
-                          vertical: SizeConfig.padding12,
-                        ),
-                        child: InkWell(
-                          onTap: () {
-                            AppState.delegate
-                                .parseRoute(Uri.parse('/AppWalkthrough'));
-                          },
+                        color: Colors.white,
+                        margin: EdgeInsets.symmetric(
+                            vertical: SizeConfig.padding12,
+                            horizontal: SizeConfig.pageHorizontalMargins),
+                        child: Container(
+                          alignment: Alignment.center,
+                          width: SizeConfig.screenWidth,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                width: 0.8, color: UiConstants.primaryColor),
+                            borderRadius:
+                                BorderRadius.circular(SizeConfig.roundness12),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.pageHorizontalMargins,
+                            vertical: SizeConfig.padding12,
+                          ),
                           child: Text(
                             "See an example",
                             style: TextStyles.body1
