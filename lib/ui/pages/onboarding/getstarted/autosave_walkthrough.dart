@@ -179,7 +179,7 @@ class _AutosaveWalkthroughState extends State<AutosaveWalkthrough> {
                               height: SizeConfig.screenHeight * 0.7,
                               width: SizeConfig.screenWidth,
                               child: PageView(
-                                  // physics: NeverScrollableScrollPhysics(),
+                                  physics: NeverScrollableScrollPhysics(),
                                   controller: _pageController,
                                   children: [
                                     _controller1.value.isInitialized

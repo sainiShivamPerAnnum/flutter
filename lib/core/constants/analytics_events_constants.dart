@@ -69,6 +69,8 @@ class AnalyticsEvents {
   static const updatedProfilePicture = "Updated profile picture";
   static const mobileOtpDone = "Mobile-otp done";
   static const truecallerVerified = "Truecaller verified done";
+  static const truecallerSignup = "Signup using Truecaller";
+  static const truecallerLogin = "Login using Truecaller";
   static const initiateChatSupport = "Initiated Chat Support";
   static const requestedCallback = "Requested Callback";
   static const signOut = "User Signed Out";
