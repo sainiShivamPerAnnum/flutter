@@ -1,11 +1,13 @@
 import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -23,6 +25,7 @@ class UserAutoSaveDetailsViewModel extends BaseModel {
   final _paytmService = locator<PaytmService>();
   final _dBModel = locator<DBModel>();
   final _logger = locator<CustomLogger>();
+  final _analyticsService = locator<AnalyticsService>();
 
   ActiveSubscriptionModel _activeSubscription;
   List<AutosaveTransactionModel> _filteredList;
@@ -115,6 +118,8 @@ class UserAutoSaveDetailsViewModel extends BaseModel {
   }
 
   init() async {
+    _analyticsService.track(
+        eventName: AnalyticsEvents.autosaveDetailsScreenViewed);
     setState(ViewState.Busy);
     _paytmService.isOnSubscriptionFlow = false;
     subIdController = new TextEditingController();
@@ -153,6 +158,7 @@ class UserAutoSaveDetailsViewModel extends BaseModel {
       BaseUtil.showNegativeAlert(
           "Failed to pause Subscription", "Please try again");
     } else {
+      trackPause(pauseValue);
       BaseUtil.showPositiveAlert("Autosave paused successfully",
           "For more details check Autosave section");
       AppState.backButtonDispatcher.didPopRoute();
@@ -160,18 +166,28 @@ class UserAutoSaveDetailsViewModel extends BaseModel {
     }
   }
 
-  getResumeValue(int pauseValue) {
+  trackPause(int pauseValue) {
     switch (pauseValue) {
       case 1:
-        return " one week";
+        _analyticsService.track(
+            eventName: AnalyticsEvents.autosavePauseOneWeek);
+        return;
       case 2:
-        return " two week";
+        _analyticsService.track(
+            eventName: AnalyticsEvents.autosavePauseTwoWeeks);
+        return;
       case 3:
-        return " one month";
+        _analyticsService.track(
+            eventName: AnalyticsEvents.autosavePauseOneMonth);
+        return;
       case 4:
-        return "ever";
+        _analyticsService.track(
+            eventName: AnalyticsEvents.autosavePauseForever);
+        return;
       default:
-        return "ever";
+        _analyticsService.track(
+            eventName: AnalyticsEvents.autosavePauseForever);
+        return;
     }
   }
 
@@ -288,6 +304,13 @@ class UserAutoSaveDetailsViewModel extends BaseModel {
       }
     }
 
+    if (isDaily && _paytmService.activeSubscription.autoFrequency == "WEEKLY")
+      _analyticsService.track(
+          eventName: AnalyticsEvents.autosaveWeeklyToDailySaver);
+    if (!isDaily && _paytmService.activeSubscription.autoFrequency == "DAILY")
+      _analyticsService.track(
+          eventName: AnalyticsEvents.autosaveDailyToWeeklySaver);
+
     isSubscriptionAmountUpdateInProgress = true;
     final res = await _paytmService.updateDailySubscriptionAmount(
         amount: amount, freq: isDaily ? "DAILY" : "WEEKLY");
@@ -319,7 +342,8 @@ class UserAutoSaveDetailsViewModel extends BaseModel {
             "For more details check Autosave section");
         AppState.backButtonDispatcher.didPopRoute();
       }
-    } else
+    } else {
+      _analyticsService.track(eventName: AnalyticsEvents.autosavePauseModal);
       BaseUtil.openModalBottomSheet(
         addToScreenStack: true,
         hapticVibrate: true,
@@ -334,5 +358,6 @@ class UserAutoSaveDetailsViewModel extends BaseModel {
           model: model,
         ),
       );
+    }
   }
 }

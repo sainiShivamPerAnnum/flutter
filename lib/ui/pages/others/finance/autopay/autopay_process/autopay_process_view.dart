@@ -42,8 +42,6 @@ class AutoSaveProcessView extends StatefulWidget {
 
 class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
     with SingleTickerProviderStateMixin {
-  GoldenTicketService _gtService = GoldenTicketService();
-
   @override
   Widget build(BuildContext context) {
     return BaseView<AutoSaveProcessViewModel>(onModelReady: (model) {
@@ -364,20 +362,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
                   "Done",
                   style: TextStyles.body2.bold.colour(Colors.white),
                 ),
-                onPressed: () {
-                  // if (model.lottieAnimationController.isAnimating) {
-                  //   model.lottieAnimationController.stop();
-                  //   model.lottieAnimationController.repeat();
-                  // } else
-                  //   model.lottieAnimationController.repeat();
-                  AppState.backButtonDispatcher.didPopRoute();
-                  _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
-                    if (res)
-                      _gtService.showInstantGoldenTicketView(
-                          title: 'Your Autosave setup was successful!',
-                          source: GTSOURCE.autosave);
-                  });
-                },
+                onPressed: model.onCompleteClose,
               ),
             ),
           )
