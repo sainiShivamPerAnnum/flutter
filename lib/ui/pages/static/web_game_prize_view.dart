@@ -44,22 +44,16 @@ class PrizesView extends StatelessWidget {
               children: [
                 if (promo != null && promo.isNotEmpty)
                   FPLBanner(
-                    subtitle: subtitle,
-                    isFPL: true,
+                    promo: promo,
                     onTap: () {
-                      if (subtitle ==
-                          BaseRemoteConfig.remoteConfig.getString(
-                              BaseRemoteConfig.GAME_CRICKET_FPL_ANNOUNCEMENT)) {
-                        AppState.delegate.appState.setCurrentTabIndex = 1;
-                        AppState.backButtonDispatcher.didPopRoute();
-                        AppState.delegate.parseRoute(Uri.parse("/FPL"));
-                      }
+                      AppState.delegate.appState.setCurrentTabIndex = 1;
+                      AppState.backButtonDispatcher.didPopRoute();
+                      AppState.delegate.parseRoute(Uri.parse("/FPL"));
                     },
                   ),
                 if (subtitle != null && subtitle.isNotEmpty)
                   WebhomeListBanners(
                     subtitle: subtitle,
-                    onTap: () {},
                   ),
               ],
             );
@@ -114,11 +108,8 @@ class PrizesView extends StatelessWidget {
 }
 
 class WebhomeListBanners extends StatelessWidget {
-  WebhomeListBanners({this.subtitle, this.onTap, this.isFPL = false});
+  WebhomeListBanners({this.subtitle});
   final String subtitle;
-  final bool isFPL;
-  final Function onTap;
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -130,37 +121,18 @@ class WebhomeListBanners extends StatelessWidget {
       ),
       width: SizeConfig.screenWidth,
       padding: EdgeInsets.all(SizeConfig.padding16),
-      child: Stack(
-        children: [
-          //Image.asset("assets/images/confetti.png"),
-          if (isFPL)
-            Positioned(
-              right: 0,
-              bottom: 0,
-              child: LottieBuilder.asset(
-                "assets/lotties/fpl.json",
-                height: SizeConfig.padding32,
-                width: SizeConfig.padding64,
-              ),
-            ),
-          GestureDetector(
-            onTap: onTap,
-            child: Text(
-              subtitle,
-              textAlign: TextAlign.center,
-              style: TextStyles.body3.light,
-            ),
-          ),
-        ],
+      child: Text(
+        subtitle,
+        textAlign: TextAlign.center,
+        style: TextStyles.body3.light,
       ),
     );
   }
 }
 
 class FPLBanner extends StatelessWidget {
-  FPLBanner({this.subtitle, this.onTap, this.isFPL = false});
-  final String subtitle;
-  final bool isFPL;
+  FPLBanner({this.promo, this.onTap});
+  final String promo;
   final Function onTap;
 
   @override
@@ -198,7 +170,7 @@ class FPLBanner extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.all(SizeConfig.padding12),
                   child: Text(
-                    "Fello Premiere league is LIVE",
+                    promo,
                     textAlign: TextAlign.center,
                     style: TextStyles.body2.bold.colour(Colors.white),
                   ),

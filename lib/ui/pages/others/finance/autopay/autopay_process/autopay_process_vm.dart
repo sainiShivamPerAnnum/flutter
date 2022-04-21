@@ -13,6 +13,7 @@ import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -194,8 +195,9 @@ class AutoSaveProcessViewModel extends BaseModel {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _paytmService.jumpToSubPage(page);
       _paytmService.fraction = page;
-      if (page == 1)
+      if (page == 1) {
         checkForUPIAppExistence(vpaController.text.trim().split("@").last);
+      }
       // getTitle();
       print(pageController.page);
       showProgressIndicator = true;
@@ -205,7 +207,7 @@ class AutoSaveProcessViewModel extends BaseModel {
   }
 
   clear() {
-    _timer.cancel();
+    _timer?.cancel();
   }
 
   onAmountValueChanged(String val) {
@@ -327,12 +329,11 @@ class AutoSaveProcessViewModel extends BaseModel {
       _paytmService.fraction = 1;
       Future.delayed(Duration(minutes: 8), () {
         if (_paytmService.fraction == 1) {
+          _paytmService.fraction = 0;
           _analyticsService.track(
               eventName: AnalyticsEvents.autosaveMandateTimeout);
           AppState.backButtonDispatcher.didPopRoute();
-          BaseUtil.showNegativeAlert(
-              "Your Autosave is taking longer than usual.",
-              "We'll get back to you in 10 mins");
+          showAutosavePendingDialog();
         }
       });
     } else
@@ -413,6 +414,22 @@ class AutoSaveProcessViewModel extends BaseModel {
       BaseUtil.showNegativeAlert(
           "Something went wrong!", "Please try again after sometime");
     }
+  }
+
+  showAutosavePendingDialog() {
+    Future.delayed(Duration(seconds: 1), () {
+      BaseUtil.openDialog(
+        addToScreenStack: true,
+        hapticVibrate: true,
+        isBarrierDismissable: false,
+        content: PendingDialog(
+          title: "We're still processing!",
+          subtitle:
+              "Your Autosave is taking longer than usual. We'll get back to you in ",
+          duration: '20 minutes',
+        ),
+      );
+    });
   }
 
   checkForUPIAppExistence(String upi) async {

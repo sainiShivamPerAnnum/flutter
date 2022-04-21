@@ -241,7 +241,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
           Spacer(),
           if (model.showAppLaunchButton && PlatformUtils.isAndroid)
             FelloButtonLg(
-              child: Text("Go to ${getUpiAppName(model)} app",
+              child: Text("Go to ${getUpiAppName(model)}",
                   style: TextStyles.body2.colour(Colors.white)),
               onPressed: () async {
                 await LaunchApp.openApp(
