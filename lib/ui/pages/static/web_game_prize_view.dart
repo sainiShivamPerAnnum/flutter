@@ -162,13 +162,13 @@ class FPLBanner extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(width: SizeConfig.padding12),
                 Center(
-                  child: Image.asset('assets/images/icons/cricket.png',
-                      height: SizeConfig.padding40),
+                  child: Image.asset(
+                    'assets/images/icons/cricket.png',
+                  ),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(SizeConfig.padding12),
+                  padding: EdgeInsets.symmetric(vertical: SizeConfig.padding12),
                   child: Text(
                     promo,
                     textAlign: TextAlign.center,
