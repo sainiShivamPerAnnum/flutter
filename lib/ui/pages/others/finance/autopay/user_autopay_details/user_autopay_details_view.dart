@@ -519,11 +519,12 @@ class DetailsView extends StatelessWidget {
                 ),
               )
             : (model.activeSubscription != null
-                ? ListView(
-                    shrinkWrap: true,
-                    padding: EdgeInsets.symmetric(
-                        vertical: SizeConfig.pageHorizontalMargins),
+                ? Column(
+                    // shrinkWrap: true,
+                    // padding: EdgeInsets.symmetric(
+                    //     vertical: SizeConfig.pageHorizontalMargins),
                     children: [
+                      SizedBox(height: SizeConfig.pageHorizontalMargins),
                       PropertyChangeConsumer<PaytmService,
                           PaytmServiceProperties>(
                         properties: [PaytmServiceProperties.ActiveSubscription],
@@ -595,186 +596,239 @@ class DetailsView extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Container(
-                        margin:
-                            EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius:
-                              BorderRadius.circular(SizeConfig.roundness32),
-                        ),
-                        padding: EdgeInsets.symmetric(
-                            vertical: SizeConfig.pageHorizontalMargins),
-                        child: Column(
-                          children: [
-                            Container(
-                              height: SizeConfig.screenWidth * 0.25,
-                              decoration: BoxDecoration(
-                                color: UiConstants.scaffoldColor,
-                                borderRadius: BorderRadius.circular(
-                                    SizeConfig.roundness16),
-                              ),
-                              margin: EdgeInsets.symmetric(
-                                  horizontal: SizeConfig.padding16),
-                              padding: EdgeInsets.all(SizeConfig.padding24),
-                              child: Row(
-                                children: [
-                                  CircleAvatar(
-                                    backgroundColor: UiConstants.primaryLight,
-                                    radius: SizeConfig.screenWidth * 0.067,
-                                    child: SvgPicture.asset(
-                                      "assets/vectors/icons/upi.svg",
-                                      height: SizeConfig.screenWidth * 0.067,
-
-                                      // width: SizeConfig.padding64,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: SizeConfig.padding12,
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        FittedBox(
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                model.activeSubscription.vpa ??
-                                                    "Ille",
-                                                style: TextStyles.body1.bold,
-                                              ),
-                                              SizedBox(
-                                                  width: SizeConfig.padding4),
-                                              SvgPicture.asset(
-                                                "assets/vectors/check.svg",
-                                                height: SizeConfig.iconSize1,
-                                                // width: SizeConfig.padding64,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(height: SizeConfig.padding4),
-                                        FittedBox(
-                                          child: Text(
-                                            "Primary UPI",
-                                            style: TextStyles.body3
-                                                .colour(Colors.grey),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.symmetric(
-                                  vertical: SizeConfig.padding12),
-                              child: RichText(
-                                textAlign: TextAlign.center,
-                                text: new TextSpan(
+                      Expanded(
+                        child: Container(
+                          margin:
+                              EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius:
+                                BorderRadius.circular(SizeConfig.roundness32),
+                          ),
+                          padding: EdgeInsets.only(
+                              top: SizeConfig.pageHorizontalMargins),
+                          child: Column(
+                            children: [
+                              Container(
+                                height: SizeConfig.screenWidth * 0.25,
+                                decoration: BoxDecoration(
+                                  color: UiConstants.scaffoldColor,
+                                  borderRadius: BorderRadius.circular(
+                                      SizeConfig.roundness16),
+                                ),
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: SizeConfig.padding16),
+                                padding: EdgeInsets.all(SizeConfig.padding24),
+                                child: Row(
                                   children: [
-                                    new TextSpan(
-                                      text:
-                                          'Congratulations! your investments are on\n',
-                                      style: TextStyles.body3
-                                          .colour(Colors.black45)
-                                          .italic,
-                                    ),
-                                    new TextSpan(
-                                      text: 'auto-pilot mode',
-                                      style: TextStyles.body3
-                                          .colour(UiConstants.primaryColor)
-                                          .bold
-                                          .italic,
-                                      recognizer: new TapGestureRecognizer()
-                                        ..onTap = () {
-                                          Haptic.vibrate();
+                                    CircleAvatar(
+                                      backgroundColor: UiConstants.primaryLight,
+                                      radius: SizeConfig.screenWidth * 0.067,
+                                      child: SvgPicture.asset(
+                                        "assets/vectors/icons/upi.svg",
+                                        height: SizeConfig.screenWidth * 0.067,
 
-                                          AppState.delegate.appState
-                                                  .currentAction =
-                                              PageAction(
-                                                  state: PageState.addPage,
-                                                  page:
-                                                      AutoSaveDetailsViewPageConfig);
-                                        },
+                                        // width: SizeConfig.padding64,
+                                      ),
                                     ),
-                                    new TextSpan(
-                                      text: ' now.',
-                                      style: TextStyles.body3
-                                          .colour(Colors.black45)
-                                          .italic,
+                                    SizedBox(
+                                      width: SizeConfig.padding12,
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          FittedBox(
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  model.activeSubscription
+                                                          .vpa ??
+                                                      "hello@upi",
+                                                  style: TextStyles.body1.bold,
+                                                ),
+                                                SizedBox(
+                                                    width: SizeConfig.padding4),
+                                                SvgPicture.asset(
+                                                  "assets/vectors/check.svg",
+                                                  height: SizeConfig.iconSize1,
+                                                  // width: SizeConfig.padding64,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(height: SizeConfig.padding4),
+                                          FittedBox(
+                                            child: Text(
+                                              "Primary UPI",
+                                              style: TextStyles.body3
+                                                  .colour(Colors.grey),
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
-                            ),
-                            Divider(),
-                            Row(
-                              children: [
-                                SizedBox(width: SizeConfig.padding20),
-                                Text(
-                                  "History",
-                                  style: TextStyles.title3.bold,
-                                ),
-                              ],
-                            ),
-                            model.filteredList == null
-                                ? Center(
-                                    child: SpinKitWave(
-                                      color: UiConstants.primaryColor,
-                                      size: SizeConfig.padding32,
-                                    ),
-                                  )
-                                : (model.filteredList?.length == 0
-                                    ? NoTransactionsContent(
-                                        width: SizeConfig.screenWidth * 0.4,
-                                      )
-                                    : ListView(
-                                        physics: NeverScrollableScrollPhysics(),
-                                        shrinkWrap: true,
-                                        padding: EdgeInsets.only(
-                                            top: SizeConfig
-                                                .pageHorizontalMargins,
-                                            left: SizeConfig
-                                                    .pageHorizontalMargins /
-                                                2,
-                                            right: SizeConfig
-                                                .pageHorizontalMargins),
-                                        children: List.generate(
-                                          model.filteredList?.length,
-                                          (index) =>
-                                              SubscriptionTransactionTile(
-                                            // model: model,
-                                            txn: model.filteredList[index],
-                                          ),
-                                        ),
-                                      )),
-                            !model.hasMoreTxns
-                                ? SizedBox(
-                                    height: SizeConfig.padding16,
-                                  )
-                                : FelloButton(
-                                    onPressed: () {
-                                      AppState.delegate.appState.currentAction =
-                                          PageAction(
-                                        state: PageState.addPage,
-                                        page:
-                                            AutosaveTransactionsViewPageConfig,
-                                      );
-                                    },
-                                    defaultButtonText: "View All",
-                                    defaultButtonColor: Colors.white,
-                                    textStyle: TextStyles.body1.bold
-                                        .colour(UiConstants.primaryColor),
+                              Container(
+                                margin: EdgeInsets.symmetric(
+                                    vertical: SizeConfig.padding12),
+                                child: RichText(
+                                  textAlign: TextAlign.center,
+                                  text: new TextSpan(
+                                    children: [
+                                      new TextSpan(
+                                        text:
+                                            'Congratulations! your investments are on\n',
+                                        style: TextStyles.body3
+                                            .colour(Colors.black45)
+                                            .italic,
+                                      ),
+                                      new TextSpan(
+                                        text: 'auto-pilot mode',
+                                        style: TextStyles.body3
+                                            .colour(UiConstants.primaryColor)
+                                            .bold
+                                            .italic,
+                                        recognizer: new TapGestureRecognizer()
+                                          ..onTap = () {
+                                            Haptic.vibrate();
+
+                                            AppState.delegate.appState
+                                                    .currentAction =
+                                                PageAction(
+                                                    state: PageState.addPage,
+                                                    page:
+                                                        AutoSaveDetailsViewPageConfig);
+                                          },
+                                      ),
+                                      new TextSpan(
+                                        text: ' now.',
+                                        style: TextStyles.body3
+                                            .colour(Colors.black45)
+                                            .italic,
+                                      ),
+                                    ],
                                   ),
-                          ],
+                                ),
+                              ),
+                              Divider(),
+                              Row(
+                                children: [
+                                  SizedBox(width: SizeConfig.padding20),
+                                  Text(
+                                    "History",
+                                    style: TextStyles.title3.bold,
+                                  ),
+                                ],
+                              ),
+                              Expanded(
+                                child: model.filteredList == null
+                                    ? Center(
+                                        child: SpinKitWave(
+                                          color: UiConstants.primaryColor,
+                                          size: SizeConfig.padding32,
+                                        ),
+                                      )
+                                    : (model.filteredList?.length == 0
+                                        ? NoTransactionsContent(
+                                            width: SizeConfig.screenWidth * 0.4,
+                                          )
+                                        : ListView(
+                                            physics:
+                                                NeverScrollableScrollPhysics(),
+                                            shrinkWrap: true,
+                                            padding: EdgeInsets.only(
+                                                top: SizeConfig
+                                                    .pageHorizontalMargins,
+                                                left: SizeConfig
+                                                        .pageHorizontalMargins /
+                                                    2,
+                                                right: SizeConfig
+                                                    .pageHorizontalMargins),
+                                            children: List.generate(
+                                              model.filteredList?.length,
+                                              (index) =>
+                                                  SubscriptionTransactionTile(
+                                                // model: model,
+                                                txn: model.filteredList[index],
+                                              ),
+                                            ),
+                                          )),
+                              ),
+                              !model.hasMoreTxns
+                                  ? SizedBox(
+                                      height: SizeConfig.padding16,
+                                    )
+                                  : FelloButton(
+                                      onPressed: () {
+                                        AppState.delegate.appState
+                                            .currentAction = PageAction(
+                                          state: PageState.addPage,
+                                          page:
+                                              AutosaveTransactionsViewPageConfig,
+                                        );
+                                      },
+                                      defaultButtonText: "View All",
+                                      defaultButtonColor: Colors.white,
+                                      textStyle: TextStyles.body1.bold
+                                          .colour(UiConstants.primaryColor),
+                                    ),
+                            ],
+                          ),
                         ),
                       ),
+                      // SizedBox(height: SizeConfig.pageHorizontalMargins / 2),
+                      if (model.state == ViewState.Idle &&
+                          model.activeSubscription != null &&
+                          !model.isInEditMode)
+                        Column(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: SizeConfig.pageHorizontalMargins),
+                              child: FelloButtonLg(
+                                child: Text(
+                                  "Update Autosave",
+                                  style: TextStyles.body2.bold
+                                      .colour(Colors.white),
+                                ),
+                                onPressed: () {
+                                  model.isInEditMode = true;
+                                },
+                              ),
+                            ),
+                            model.isResumingInProgress
+                                ? Container(
+                                    height: SizeConfig.padding40,
+                                    child: SpinKitThreeBounce(
+                                      size: SizeConfig.padding24,
+                                      color: UiConstants.tertiarySolid,
+                                    ),
+                                  )
+                                : TextButton(
+                                    onPressed: () => model.pauseResume(model),
+                                    child: Text(
+                                      model.activeSubscription.status ==
+                                              Constants.SUBSCRIPTION_INACTIVE
+                                          ? "RESUME AUTOSAVE"
+                                          : "PAUSE AUTOSAVE",
+                                      style: TextStyles.body2
+                                          .colour(UiConstants.tertiarySolid)
+                                          .light,
+                                    ),
+                                  ),
+                            SizedBox(
+                              height: SizeConfig.viewInsets.bottom != 0
+                                  ? 0
+                                  : SizeConfig.padding12,
+                            ),
+                          ],
+                        )
                     ],
                   )
                 : Center(
@@ -783,70 +837,19 @@ class DetailsView extends StatelessWidget {
                       text: "No Autosave Details available",
                     ),
                   )),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Container(
-            height: SizeConfig.navBarHeight * 2,
-            width: SizeConfig.screenWidth,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [
-                Colors.white,
-                Colors.white.withOpacity(0.0),
-              ], begin: Alignment.bottomCenter, end: Alignment.topCenter),
-            ),
-          ),
-        ),
-        if (model.state == ViewState.Idle &&
-            model.activeSubscription != null &&
-            !model.isInEditMode)
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: SafeArea(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Container(
-                    margin: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.pageHorizontalMargins),
-                    child: FelloButtonLg(
-                      child: Text(
-                        "Update Autosave",
-                        style: TextStyles.body2.bold.colour(Colors.white),
-                      ),
-                      onPressed: () {
-                        model.isInEditMode = true;
-                      },
-                    ),
-                  ),
-                  model.isResumingInProgress
-                      ? Container(
-                          height: SizeConfig.padding40,
-                          child: SpinKitThreeBounce(
-                            size: SizeConfig.padding24,
-                            color: UiConstants.tertiarySolid,
-                          ),
-                        )
-                      : TextButton(
-                          onPressed: () => model.pauseResume(model),
-                          child: Text(
-                            model.activeSubscription.status ==
-                                    Constants.SUBSCRIPTION_INACTIVE
-                                ? "RESUME AUTOSAVE"
-                                : "PAUSE AUTOSAVE",
-                            style: TextStyles.body2
-                                .colour(UiConstants.tertiarySolid)
-                                .light,
-                          ),
-                        ),
-                  SizedBox(
-                    height: SizeConfig.viewInsets.bottom != 0
-                        ? 0
-                        : SizeConfig.padding12,
-                  ),
-                ],
-              ),
-            ),
-          )
+        // Align(
+        //   alignment: Alignment.bottomCenter,
+        //   child: Container(
+        //     height: SizeConfig.navBarHeight * 2,
+        //     width: SizeConfig.screenWidth,
+        //     decoration: BoxDecoration(
+        //       gradient: LinearGradient(colors: [
+        //         Colors.white,
+        //         Colors.white.withOpacity(0.0),
+        //       ], begin: Alignment.bottomCenter, end: Alignment.topCenter),
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }

@@ -121,13 +121,13 @@ class _AutosaveWalkthroughState extends State<AutosaveWalkthrough> {
             duration: Duration(seconds: 1), curve: Curves.easeInOutCirc);
       }
     });
-    await Future.delayed(Duration(seconds: 16), () {
+    await Future.delayed(Duration(seconds: 13), () {
       if (mounted) {
         _pageController.animateToPage(2,
             duration: Duration(seconds: 1), curve: Curves.easeInOutCirc);
       }
     });
-    await Future.delayed(Duration(seconds: 10), () {
+    await Future.delayed(Duration(seconds: 9), () {
       if (mounted) AppState.backButtonDispatcher.didPopRoute();
     });
   }
@@ -309,9 +309,9 @@ class CustomProgressIndicator extends StatelessWidget {
       case 0:
         return 5;
       case 1:
-        return 14;
+        return 13;
       case 2:
-        return 10;
+        return 9;
     }
   }
 }
