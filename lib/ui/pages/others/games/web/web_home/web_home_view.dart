@@ -129,12 +129,9 @@ class WebHomeView extends StatelessWidget {
                                                     model: model.prizes,
                                                     controller:
                                                         model.scrollController,
-                                                    subtitle: BaseRemoteConfig
-                                                            .remoteConfig
-                                                            .getString(
-                                                                BaseRemoteConfig
-                                                                    .GAME_CRICKET_FPL_ANNOUNCEMENT) ??
-                                                        'The highest scorers of the week win prizes every Sunday at midnight',
+                                                    subtitle:
+                                                        model.getSubtitle(),
+                                                    promo: model.getPromo(),
                                                     leading: List.generate(
                                                         model.prizes.prizesA
                                                             .length,

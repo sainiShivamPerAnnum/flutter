@@ -257,6 +257,29 @@ class WebHomeViewModel extends BaseModel {
     }
   }
 
+  getPromo() {
+    switch (currentGame) {
+      case Constants.GAME_TYPE_POOLCLUB:
+        return null;
+      case Constants.GAME_TYPE_CRICKET:
+        return BaseRemoteConfig.remoteConfig
+            .getString(BaseRemoteConfig.GAME_CRICKET_FPL_ANNOUNCEMENT);
+      default:
+        return null;
+    }
+  }
+
+  getSubtitle() {
+    switch (currentGame) {
+      case Constants.GAME_TYPE_POOLCLUB:
+        return 'The highest scorers of the week win prizes every Sunday at midnight';
+      case Constants.GAME_TYPE_CRICKET:
+        return 'The highest scorers of the week win prizes every Sunday at midnight';
+      default:
+        return null;
+    }
+  }
+
   String _generatePoolClubGameUrl() {
     String _poolClubUri =
         "https://d2qfyj2eqvh06a.cloudfront.net/pool-club/index.html";

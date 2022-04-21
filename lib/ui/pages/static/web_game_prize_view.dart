@@ -1,23 +1,23 @@
 import 'package:felloapp/core/base_remote_config.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 
 class PrizesView extends StatelessWidget {
   final PrizesModel model;
   final ScrollController controller;
   final List<Widget> leading;
   final String subtitle;
+  final String promo;
 
-  PrizesView({this.model, this.leading, this.controller, this.subtitle});
+  PrizesView(
+      {this.model, this.leading, this.controller, this.subtitle, this.promo});
   @override
   Widget build(BuildContext context) {
     return NotificationListener<OverscrollNotification>(
@@ -40,17 +40,12 @@ class PrizesView extends StatelessWidget {
         padding: EdgeInsets.only(bottom: SizeConfig.navBarHeight),
         itemBuilder: (ctx, i) {
           if (i == 0)
-            return Container(
-              margin: EdgeInsets.only(top: SizeConfig.padding8),
-              decoration: BoxDecoration(
-                color: UiConstants.tertiaryLight,
-                borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-              ),
-              padding: EdgeInsets.all(SizeConfig.padding16),
-              child: Stack(
-                children: [
-                  //Image.asset("assets/images/confetti.png"),
-                  GestureDetector(
+            return Column(
+              children: [
+                if (promo != null && promo.isNotEmpty)
+                  FPLBanner(
+                    subtitle: subtitle,
+                    isFPL: true,
                     onTap: () {
                       if (subtitle ==
                           BaseRemoteConfig.remoteConfig.getString(
@@ -60,14 +55,13 @@ class PrizesView extends StatelessWidget {
                         AppState.delegate.parseRoute(Uri.parse("/FPL"));
                       }
                     },
-                    child: Text(
-                      subtitle,
-                      textAlign: TextAlign.center,
-                      style: TextStyles.body3.light,
-                    ),
                   ),
-                ],
-              ),
+                if (subtitle != null && subtitle.isNotEmpty)
+                  WebhomeListBanners(
+                    subtitle: subtitle,
+                    onTap: () {},
+                  ),
+              ],
             );
           else {
             i--;
@@ -114,6 +108,107 @@ class PrizesView extends StatelessWidget {
             );
           }
         },
+      ),
+    );
+  }
+}
+
+class WebhomeListBanners extends StatelessWidget {
+  WebhomeListBanners({this.subtitle, this.onTap, this.isFPL = false});
+  final String subtitle;
+  final bool isFPL;
+  final Function onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(
+          top: SizeConfig.padding8, bottom: SizeConfig.padding8),
+      decoration: BoxDecoration(
+        color: UiConstants.tertiaryLight,
+        borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+      ),
+      width: SizeConfig.screenWidth,
+      padding: EdgeInsets.all(SizeConfig.padding16),
+      child: Stack(
+        children: [
+          //Image.asset("assets/images/confetti.png"),
+          if (isFPL)
+            Positioned(
+              right: 0,
+              bottom: 0,
+              child: LottieBuilder.asset(
+                "assets/lotties/fpl.json",
+                height: SizeConfig.padding32,
+                width: SizeConfig.padding64,
+              ),
+            ),
+          GestureDetector(
+            onTap: onTap,
+            child: Text(
+              subtitle,
+              textAlign: TextAlign.center,
+              style: TextStyles.body3.light,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class FPLBanner extends StatelessWidget {
+  FPLBanner({this.subtitle, this.onTap, this.isFPL = false});
+  final String subtitle;
+  final bool isFPL;
+  final Function onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        margin: EdgeInsets.only(
+            top: SizeConfig.padding8, bottom: SizeConfig.padding8),
+        decoration: BoxDecoration(
+          color: Color(0xff00237D),
+          borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+        ),
+        height: SizeConfig.padding64,
+        width: SizeConfig.screenWidth,
+        // padding: EdgeInsets.all(SizeConfig.padding16),
+        child: Stack(
+          children: [
+            Opacity(
+              opacity: 0.06,
+              child: Image.asset(
+                Assets.whiteRays,
+                fit: BoxFit.cover,
+                width: SizeConfig.screenWidth,
+              ),
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(width: SizeConfig.padding12),
+                Center(
+                  child: Image.asset('assets/images/icons/cricket.png',
+                      height: SizeConfig.padding40),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(SizeConfig.padding12),
+                  child: Text(
+                    "Fello Premiere league is LIVE",
+                    textAlign: TextAlign.center,
+                    style: TextStyles.body2.bold.colour(Colors.white),
+                  ),
+                ),
+                Spacer(),
+                Lottie.asset("assets/lotties/golden-arrow.json"),
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

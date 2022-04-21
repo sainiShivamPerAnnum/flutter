@@ -167,7 +167,7 @@ class InstructionsTab extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               event.type == "FPL"
-                  ? Image.asset('images/cricketThumbIcon.png',
+                  ? Image.asset('assets/images/icons/cricket.png',
                       height: SizeConfig.padding54)
                   : SvgPicture.asset(
                       'images/svgs/gold.svg',
@@ -175,7 +175,7 @@ class InstructionsTab extends StatelessWidget {
                     ),
               SizedBox(width: SizeConfig.padding16),
               Text(
-                event.type == "FPL" ? "Play Cricket" : "Buy Digital Gold",
+                event.type == "FPL" ? "Play FPL" : "Buy Digital Gold",
                 style: TextStyles.title5.colour(Colors.white).bold.setHeight(1),
               ),
               Spacer(),

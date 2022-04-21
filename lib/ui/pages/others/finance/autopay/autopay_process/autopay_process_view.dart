@@ -201,7 +201,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
                     style: TextStyles.body1.bold,
                   ),
                   subtitle: Text(
-                    "Go to your ${getUpiAppName(model)} mobile app",
+                    "Go to ${getUpiAppName(model)}",
                     style: TextStyles.body2,
                   ),
                   // trailing: CircleAvatar(
@@ -963,7 +963,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
       case 'cnrb':
         return "BHIM Canara";
       default:
-        return "preferred UPI";
+        return "preferred UPI App";
     }
   }
 }

@@ -319,8 +319,8 @@ class UserAutoSaveDetailsViewModel extends BaseModel {
       _paytmService.getActiveSubscriptionDetails();
       AppState.backButtonDispatcher.didPopRoute();
       // init();
-      // BaseUtil.showPositiveAlert(
-      //     "Autosave setup Successful", "Check transactions for more details");
+      BaseUtil.showPositiveAlert("Autosave amount update successful",
+          "Check Autosave section for more details");
     } else {
       BaseUtil.showNegativeAlert(
           "Amount update failed", "Please try again in sometime");
