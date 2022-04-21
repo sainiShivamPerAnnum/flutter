@@ -107,6 +107,13 @@ class BaseRemoteConfig {
   static const Map<String, String> _CRICKET_PLAY_PRIZE = {
     'cricket_play_prize': '25,000'
   };
+
+  static const Map<String, String> _POOLCLUB_PLAY_COST = {
+    'poolclub_play_cost': '10'
+  };
+  static const Map<String, String> _POOLCLUB_PLAY_PRIZE = {
+    'poolclub_play_prize': '25,000'
+  };
   static const Map<String, String> _CRICKET_THUMBNAIL_URI = {
     'cricket_thumbnail':
         'https://fello-assets.s3.ap-south-1.amazonaws.com/fello_cricket.png'
@@ -115,12 +122,20 @@ class BaseRemoteConfig {
     'tambola_thumbnail':
         'https://fello-assets.s3.ap-south-1.amazonaws.com/fello_tambola.png'
   };
+
+  static const Map<String, String> _POOLCLUB_THUMBNAIL_URI = {
+    'poolclub_thumbnail':
+        'https://firebasestorage.googleapis.com/v0/b/fello-dev-station.appspot.com/o/test%2Fpoolclub.png?alt=media&token=23403ec7-1c55-4ce7-827e-045ad6d059de'
+  };
   static const Map<String, String> _MIN_WITHDRAWABLE_PRIZE = {
     'min_withdrawable_prize': '100'
   };
   static const Map<String, String> _GAME_TAMBOLA_ANNOUNCEMENT = {
     'game_tambola_announcement':
         'Stand to win big prizes every week by matching your tambola tickets! Winners are announced every Monday'
+  };
+  static const Map<String, String> _GAME_CRICKET_FPL_ANNOUNCEMENT = {
+    'game_cricket_fpl_announcement': 'Fello Premier League is live.'
   };
   static const Map<String, String> _GAME_CRICKET_ANNOUNCEMENT = {
     'game_cricket_announcement':
@@ -163,11 +178,15 @@ class BaseRemoteConfig {
     ..._TAMBOLA_PLAY_PRIZE,
     ..._CRICKET_PLAY_COST,
     ..._CRICKET_PLAY_PRIZE,
+    ..._POOLCLUB_PLAY_COST,
+    ..._POOLCLUB_PLAY_PRIZE,
     ..._CRICKET_THUMBNAIL_URI,
     ..._TAMBOLA_THUMBNAIL_URI,
+    ..._POOLCLUB_THUMBNAIL_URI,
     ..._MIN_WITHDRAWABLE_PRIZE,
     ..._GAME_TAMBOLA_ANNOUNCEMENT,
     ..._GAME_CRICKET_ANNOUNCEMENT,
+    ..._GAME_CRICKET_FPL_ANNOUNCEMENT,
     ..._AMZ_VOUCHER_REDEMPTION,
     ..._APP_SHARE_MSG
   };
@@ -182,7 +201,7 @@ class BaseRemoteConfig {
 
       await remoteConfig.setConfigSettings(RemoteConfigSettings(
         fetchTimeout: const Duration(milliseconds: 30000),
-        minimumFetchInterval: const Duration(hours: 6),
+        minimumFetchInterval: const Duration(seconds: 6),
       ));
       await remoteConfig.setDefaults(DEFAULTS);
       //RemoteConfigValue(null, ValueSource.valueStatic);
@@ -274,9 +293,16 @@ class BaseRemoteConfig {
 
   static String get CRICKET_PLAY_PRIZE => _CRICKET_PLAY_PRIZE.keys.first;
 
+  static String get POOLCLUB_PLAY_COST => _POOLCLUB_PLAY_COST.keys.first;
+
+  static String get POOLCLUB_PLAY_PRIZE => _POOLCLUB_PLAY_PRIZE.keys.first;
+
   static String get CRICKET_THUMBNAIL_URI => _CRICKET_THUMBNAIL_URI.keys.first;
 
   static String get TAMBOLA_THUMBNAIL_URI => _TAMBOLA_THUMBNAIL_URI.keys.first;
+
+  static String get POOLCLUB_THUMBNAIL_URI =>
+      _POOLCLUB_THUMBNAIL_URI.keys.first;
 
   static String get UNLOCK_REFERRAL_AMT => _UNLOCK_REFERRAL_AMT.keys.first;
 
@@ -288,6 +314,9 @@ class BaseRemoteConfig {
 
   static String get GAME_CRICKET_ANNOUNCEMENT =>
       _GAME_CRICKET_ANNOUNCEMENT.keys.first;
+
+  static String get GAME_CRICKET_FPL_ANNOUNCEMENT =>
+      _GAME_CRICKET_FPL_ANNOUNCEMENT.keys.first;
 
   static String get APP_SHARE_MSG => _APP_SHARE_MSG.keys.first;
 }

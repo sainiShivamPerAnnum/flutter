@@ -76,7 +76,7 @@ class TambolaHomeViewModel extends BaseModel {
     await _prizeService.fetchTambolaPrizes();
     if (tPrizes == null)
       BaseUtil.showNegativeAlert(
-          "Prizesd failed to update", "Please refresh again");
+          "This week's prizes could not be fetched", "Please try again in sometime");
     isPrizesLoading = false;
     notifyListeners();
   }

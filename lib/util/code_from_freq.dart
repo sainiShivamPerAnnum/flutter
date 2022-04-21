@@ -13,10 +13,7 @@ class CodeFromFreq {
       response += "-$weekcode";
       if (freq == 'daily') {
         final dailyFormat = new DateFormat('dd');
-        if (isMondayCorrected)
-          response += "-${dailyFormat.format(_currentTime)}";
-        else
-          response += "-${dailyFormat.format(DateTime.now())}";
+        response += "-${dailyFormat.format(DateTime.now())}";
       }
     }
     return response;
@@ -90,5 +87,49 @@ class CodeFromFreq {
     } else {
       return "${_currentTime.year}-${(_currentTime.month - 1).toString().padLeft(2, '0')}";
     }
+  }
+
+  static getDayFromCode(String code) {
+    List<String> _de = code.split('-');
+    int year = int.tryParse(_de[0]);
+    int month = int.tryParse(_de[1]);
+    int day = int.tryParse(_de[3]);
+    final dateTime = DateTime(year, month, day);
+    return DateFormat.yMMMd().format(dateTime);
+  }
+
+  static getWeekFromCode(String code) {
+    List<String> _de = code.split('-');
+    int year = int.tryParse(_de[0]);
+    int weeknumber = int.tryParse(_de[2]);
+
+    final startDateTime =
+        getDateByWeekNumber(start: true, year: year, weeknumber: weeknumber);
+    final endDateTime =
+        getDateByWeekNumber(start: false, year: year, weeknumber: weeknumber);
+    return "${DateFormat.yMMMd().format(startDateTime)} - ${DateFormat.yMMMd().format(endDateTime)}";
+  }
+
+  static getMonthFromCode(String code) {
+    List<String> _de = code.split('-');
+    int year = int.tryParse(_de[0]);
+    int month = int.tryParse(_de[1]);
+
+    final dateTime = DateTime(year, month);
+    return DateFormat.yMMM().format(dateTime);
+  }
+
+  static DateTime getDateByWeekNumber({int weeknumber, int year, bool start}) {
+    //check if start == true retrun start date of week
+    //else return end date
+    var days = weeknumber * 7;
+
+    DateTime tempDate = DateTime.utc(year, 1, days);
+    if (tempDate.weekday > 1) {
+      tempDate = DateTime(
+          tempDate.year, tempDate.month, tempDate.day - (tempDate.weekday - 1));
+    }
+    final correctedDate = start ? tempDate : tempDate.add(Duration(days: 6));
+    return correctedDate;
   }
 }

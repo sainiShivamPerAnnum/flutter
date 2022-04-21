@@ -7,6 +7,10 @@ import 'package:webengage_flutter/webengage_flutter.dart';
 class WebEngageAnalytics extends BaseAnalyticsService {
   final _logger = locator<CustomLogger>();
 
+  WebEngageAnalytics() {
+    new WebEngagePlugin();
+  }
+
   Future<void> login({bool isOnBoarded, BaseUser baseUser}) async {
     if (isOnBoarded != null && isOnBoarded && baseUser != null) {
       _logger.d(baseUser);

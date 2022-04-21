@@ -22,7 +22,6 @@ const String VerifyEmailPath = '/verifyEmail';
 const String SupportPath = '/support';
 const String UpdateRequiredPath = '/updateRequired';
 const String WalkThroughPath = '/walkThrough';
-const String WalkThroughCompletedPath = '/walkThroughCompleted';
 const String YourFundsPath = '/yourFunds';
 const String NotificationsPath = '/notifications';
 const String THome = '/tHome';
@@ -32,12 +31,9 @@ const String TShowAllTickets = 'tShowAllTickets';
 const String TPickDraw = 'tPickDraw';
 const String TWeeklyResult = 'tWeeklyResult';
 const String TSummaryDetails = 'tSummaryDetails';
-const String CricketHomePath = 'cricketHome';
-const String CricketGamePath = 'cricketGame';
 const String TransactionsHistoryPath = 'transHistory';
 const String KycDetailsPath = 'kycDetails';
 const String BankDetailsPath = 'bankDetails';
-// const String AugmontGoldBuyPath = '/augBuy';
 const String AugmontGoldSellPath = '/augSell';
 const String AugmontGoldDetailsPath = '/augDetails';
 const String ReferralDetailsPath = '/referralDetails';
@@ -51,6 +47,13 @@ const String GoldenMilestonesViewPath = '/goldenMilestonesView';
 const String TopSaverViewPath = '/topSaverView';
 const String AllParticipantsViewPath = '/allParticipantsView';
 const String GoldBalanceDetailsViewPath = '/goldBalanceDetailsView';
+const String PoolViewPath = "/poolView";
+const String WebHomeViewPath = "/webHomeView";
+const String WebGameViewPath = "/webGameView";
+const String AutoSaveDetailsViewPath = '/autosaveDetailsView';
+const String AutoSaveProcessViewPath = '/autosaveProcessView';
+const String UserAutoSaveDetailsViewPath = '/userAutosaveDetailsView';
+const String AutosaveTransactionsViewPath = '/autosaveTransactionsViewPath';
 
 enum Pages {
   Splash,
@@ -73,7 +76,6 @@ enum Pages {
   VerifyEmail,
   Support,
   WalkThrough,
-  WalkThroughCompleted,
   YourFunds,
   THome,
   TGame,
@@ -83,12 +85,10 @@ enum Pages {
   TShowAllTickets,
   TSummaryDetails,
   Notifications,
-  CricketHome,
-  CricketGame,
+
   TxnHistory,
   KycDetails,
   BankDetails,
-  // AugGoldBuy,
   AugGoldSell,
   AugGoldDetails,
   ReferralDetails,
@@ -101,7 +101,14 @@ enum Pages {
   GoldenMilestonesView,
   TopSaverView,
   AllParticipantsView,
-  GoldBalanceDetailsView
+  GoldBalanceDetailsView,
+  PoolView,
+  WebHomeView,
+  WebGameView,
+  AutoSaveDetailsView,
+  AutoSaveProcessView,
+  UserAutoSaveDetailsView,
+  AutosaveTransactionsView,
 }
 
 class PageConfiguration {
@@ -330,20 +337,6 @@ PageConfiguration TSummaryDetailsPageConfig = PageConfiguration(
   name: 'Tambola Summary Screen',
 );
 
-PageConfiguration CricketHomePageConfig = PageConfiguration(
-  key: 'CricketHome',
-  path: CricketHomePath,
-  uiPage: Pages.CricketHome,
-  name: 'Cricket Home Screen',
-);
-
-PageConfiguration CricketGamePageConfig = PageConfiguration(
-  key: 'CricketGame',
-  path: CricketGamePath,
-  uiPage: Pages.CricketGame,
-  name: 'Cricket Game Screen',
-);
-
 PageConfiguration TransactionsHistoryPageConfig = PageConfiguration(
   key: 'TxnHistory',
   path: TransactionsHistoryPath,
@@ -457,3 +450,46 @@ PageConfiguration GoldBalanceDetailsViewPageConfig = PageConfiguration(
   uiPage: Pages.GoldBalanceDetailsView,
   name: 'Gold Balance Details Screen',
 );
+PageConfiguration WebHomeViewPageConfig = PageConfiguration(
+  key: 'WebHomeView',
+  path: WebHomeViewPath,
+  uiPage: Pages.WebHomeView,
+  name: 'Web Games Home Screen',
+);
+PageConfiguration WebGameViewPageConfig = PageConfiguration(
+  key: 'WebGameView',
+  path: WebGameViewPath,
+  uiPage: Pages.WebGameView,
+  name: 'Web games Screen',
+);
+PageConfiguration PoolViewPageConfig = PageConfiguration(
+  key: 'PoolView',
+  path: PoolViewPath,
+  uiPage: Pages.PoolView,
+  name: 'Pool View Screen',
+);
+
+PageConfiguration AutoSaveDetailsViewPageConfig = PageConfiguration(
+  key: 'AutoSaveDetailsView',
+  path: AutoSaveDetailsViewPath,
+  uiPage: Pages.AutoSaveDetailsView,
+  name: 'AutoSave Details Screen',
+);
+
+PageConfiguration AutoSaveProcessViewPageConfig = PageConfiguration(
+    key: 'AutoSaveProcessView',
+    path: AutoSaveProcessViewPath,
+    uiPage: Pages.AutoSaveProcessView,
+    name: "AutoSave Process Screen");
+
+PageConfiguration UserAutoSaveDetailsViewPageConfig = PageConfiguration(
+    key: 'UserAutoSaveDetailsView',
+    path: UserAutoSaveDetailsViewPath,
+    uiPage: Pages.UserAutoSaveDetailsView,
+    name: "User AutoSave DetailsScreen");
+
+PageConfiguration AutosaveTransactionsViewPageConfig = PageConfiguration(
+    key: 'AutosaveTransactionsView',
+    path: AutosaveTransactionsViewPath,
+    uiPage: Pages.AutosaveTransactionsView,
+    name: "Autosave transaction Screen");

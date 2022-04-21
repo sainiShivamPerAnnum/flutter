@@ -12,10 +12,7 @@ class AnalyticsEvents {
   static const saveBuy = "Select Buy Digital Gold";
   static const saveBuyCoupon = "User selecting coupons";
   static const buyGold = "Buy gold initiated";
-  static const buyGoldSuccess = "Buy gold successful";
-  static const buyGoldFailed = "Buy gold fail";
   static const buyGoldInvestMore = "Investing more through pop up";
-  static const buyGoldPlay = "Selecting Play through pop up";
   static const saveBalance = "Selecting Gold Balance";
   static const saveSell = "Selling Gold";
   static const sellGold = "Selling Gold Succcessful";
@@ -28,10 +25,25 @@ class AnalyticsEvents {
   static const selectPlayCricket = "Select Cricket";
   static const startPlayingCricket = "Play Cricket";
   static const selectPlayTambola = "Select Tambola";
+  static const selectPlayPoolClub = "Select PoolClub";
   static const startPlayingTambola = "Enter Tambola";
   static const buyTambolaTickets = "Play Tambola";
+  static const poolClubStarts = "Pool Club starts";
+  static const poolClubEnds = "Pool Club ends";
+  static const gamePlayStarted = "Game started";
+
+  // profile section
+  static const profileClicked = "Profile Clicked";
+  static const myGoldenTickets = 'My Golden Tickets';
+  static const selectKYC = 'Select KYC';
+  static const transactions = "Transactions";
+  static const helpAndSupport = 'Help and Support';
+  static const howItWorks = 'How it Works';
+  static const aboutDigitalGold = 'About Digital Gold';
 
   static const openAppFirstTimeInADay = "App Open";
+  static const addFLCTokensTopRight = 'Add FLC tokens top-right';
+  static const notifications = 'Notifications';
 
   // win section
   static const winSection = "Win Section";
@@ -63,4 +75,6 @@ class AnalyticsEvents {
   static const goldWithdrawal = "Augmont withdrawal";
   static const prizeGold = "Prize claim choice gold";
   static const prizeAWS = "Prize claim choice AWS gift card";
+
+  static const flcTokensExhasuted = 'Fello Tokens Exhausted';
 }

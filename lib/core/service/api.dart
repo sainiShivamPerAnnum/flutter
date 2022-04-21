@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_view.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
@@ -141,11 +145,6 @@ class Api {
     return ref.doc(id).get();
   }
 
-  Future<void> updateUserDocument(String docId, Map data) {
-    ref = _db.collection(Constants.COLN_USERS);
-    return ref.doc(docId).set(data, SetOptions(merge: true));
-  }
-
   Future<void> updateUserDocumentPreferenceField(
       String docId, Map<String, dynamic> data) {
     ref = _db.collection(Constants.COLN_USERS);
@@ -158,14 +157,6 @@ class Api {
         .doc(userId)
         .collection(Constants.SUBCOLN_USER_PRTD);
     return ref.doc('pan').get();
-  }
-
-  Future<void> addUserPrtdDocPan(String userId, Map data) {
-    ref = _db
-        .collection(Constants.COLN_USERS)
-        .doc(userId)
-        .collection(Constants.SUBCOLN_USER_PRTD);
-    return ref.doc('pan').set(data, SetOptions(merge: false));
   }
 
   Future<DocumentSnapshot> getUserAugmontDetailDocument(String userId) {
@@ -194,16 +185,6 @@ class Api {
     return ref.doc(Constants.DOC_USER_KYC_DETAIL).get();
   }
 
-  Future<void> updateUserKycDetailDocument(String userId, Map data) {
-    ref = _db
-        .collection(Constants.COLN_USERS)
-        .doc(userId)
-        .collection(Constants.SUBCOLN_USER_KYC_DETAILS);
-    return ref
-        .doc(Constants.DOC_USER_KYC_DETAIL)
-        .set(data, SetOptions(merge: true));
-  }
-
   Future<DocumentReference> addUserTransactionDocument(
       String userId, Map data) {
     ref = _db
@@ -229,15 +210,6 @@ class Api {
         .collection(Constants.SUBCOLN_USER_TXNS)
         .where('tType', isEqualTo: 'PRIZE');
     return query.get();
-  }
-
-  Future<void> updateUserTransactionDocument(
-      String userId, String txnId, Map data) {
-    ref = _db
-        .collection(Constants.COLN_USERS)
-        .doc(userId)
-        .collection(Constants.SUBCOLN_USER_TXNS);
-    return ref.doc(txnId).set(data, SetOptions(merge: true));
   }
 
   Future<DocumentReference> createTicketRequest(String userId, Map data) {
@@ -388,24 +360,6 @@ class Api {
         .set(data, SetOptions(merge: false));
   }
 
-  Future<void> addDepositDocument(String year, String monthCde, Map data) {
-    return _db
-        .collection('deposits')
-        .doc(year)
-        .collection(monthCde)
-        .doc()
-        .set(data, SetOptions(merge: false));
-  }
-
-  Future<void> addWithdrawalDocument(String year, String monthCde, Map data) {
-    return _db
-        .collection('withdrawals')
-        .doc(year)
-        .collection(monthCde)
-        .doc()
-        .set(data, SetOptions(merge: false));
-  }
-
   Future<void> addClaimDocument(Map data) {
     return _db.collection('claims').doc().set(data, SetOptions(merge: false));
   }
@@ -433,61 +387,12 @@ class Api {
     return ref.doc(id).update(upObj);
   }
 
-  Future<void> addUserPollResponseDocument(String id, String pollId, Map data) {
-    ref = _db
-        .collection(Constants.COLN_USERS)
-        .doc(id)
-        .collection(Constants.SUBCOLN_USER_POLL_RESPONSES);
-    return ref.doc(pollId).set(data, SetOptions(merge: false));
-  }
-
-  Future<DocumentSnapshot> getUserPollResponseDocument(
-      String id, String pollId) {
-    ref = _db
-        .collection(Constants.COLN_USERS)
-        .doc(id)
-        .collection(Constants.SUBCOLN_USER_POLL_RESPONSES);
-    return ref.doc(pollId).get();
-  }
-
   Future<DocumentSnapshot> getUserFundWalletDocById(String id) {
     ref = _db
         .collection(Constants.COLN_USERS)
         .doc(id)
         .collection(Constants.SUBCOLN_USER_WALLET);
     return ref.doc(Constants.DOC_USER_WALLET_FUND_BALANCE).get();
-  }
-
-  Future<bool> updateUserFundWalletFields(
-      String userId, String verifyFld, double verifyValue, Map data) {
-    DocumentReference _docRef = _db
-        .collection(Constants.COLN_USERS)
-        .doc(userId)
-        .collection(Constants.SUBCOLN_USER_WALLET)
-        .doc(Constants.DOC_USER_WALLET_FUND_BALANCE);
-    return _db
-        .runTransaction((transaction) async {
-          DocumentSnapshot snapshot = await transaction.get(_docRef);
-          if (!snapshot.exists) {
-            //wallet didnt exist?
-            transaction.set(_docRef, data, SetOptions(merge: true));
-          } else {
-            Map<String, dynamic> _map = snapshot.data();
-            if (_map[verifyFld] == null) {
-              ///field doesnt exist. add the field
-              transaction.set(_docRef, data, SetOptions(merge: true));
-            } else if (_map[verifyFld] != null &&
-                _map[verifyFld] == verifyValue) {
-              ///field exists and the condition is satisfied
-              transaction.set(_docRef, data, SetOptions(merge: true));
-            } else {
-              ///field exists but there is a data discrepancy
-              throw Exception('Condition not satisfied');
-            }
-          }
-        })
-        .then((value) => true)
-        .catchError((onErr) => false);
   }
 
   DocumentReference getUserTransactionDocumentKey(String userId) {
@@ -551,33 +456,6 @@ class Api {
             } else {
               ///field exists but there is a data discrepancy
               throw Exception('Condition not satisfied');
-            }
-          }
-        })
-        .then((value) => true)
-        .catchError((onErr) => false);
-  }
-
-  //sets the 'gGEN_COUNT_LEFT' field in the user ticket wallet object
-  Future<bool> setUserTicketWalletGenerationField(
-      String userId, String actionFld, int count) {
-    DocumentReference _docRef = _db
-        .collection(Constants.COLN_USERS)
-        .doc(userId)
-        .collection(Constants.SUBCOLN_USER_WALLET)
-        .doc(Constants.DOC_USER_WALLET_TICKET_BALANCE);
-    return _db
-        .runTransaction((transaction) async {
-          DocumentSnapshot snapshot = await transaction.get(_docRef);
-          if (!snapshot.exists) {
-            return false;
-          } else {
-            Map<String, dynamic> _map = snapshot.data();
-            if (_map[actionFld] != null && _map[actionFld] > 0) {
-              ///generation field already presesnt
-              throw Exception('Field already present');
-            } else {
-              transaction.update(_docRef, {'$actionFld': count});
             }
           }
         })
@@ -744,6 +622,23 @@ class Api {
     }
   }
 
+  Future<List<QueryDocumentSnapshot>> getPastHighestSaverWinners(
+      String gameType, String freq) async {
+    Query _query = _db
+        .collection(Constants.WINNERS)
+        .where('freq', isEqualTo: freq)
+        .where('gametype', isEqualTo: gameType);
+
+    try {
+      QuerySnapshot _querySnapshot =
+          await _query.orderBy('timestamp', descending: true).limit(5).get();
+      return _querySnapshot.docs;
+    } catch (e) {
+      logger.e(e.toString());
+      throw e;
+    }
+  }
+
   //Prizes
   Future<QueryDocumentSnapshot> getPrizesPerGamePerFreq(
       String gameCode, String freq) async {
@@ -829,6 +724,46 @@ class Api {
     return _query.get();
   }
 
+  Future<DocumentSnapshot> fetchActiveSubscriptionDetails(String userid) async {
+    DocumentReference doc = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userid)
+        .collection(Constants.SUBCOLN_USER_SUBSCRIPTION)
+        .doc("detail");
+    return await doc.get();
+  }
+
+  Future<QuerySnapshot> getAutosaveTransactions({
+    @required String userId,
+    DocumentSnapshot lastDocument,
+    @required int limit,
+  }) {
+    Query query = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
+        .collection(Constants.SUBCOLN_USER_SUB_TXN);
+    if (limit != -1 && limit > 3) query = query.limit(limit);
+    query = query.orderBy('createdOn', descending: true);
+    if (lastDocument != null) query = query.startAfterDocument(lastDocument);
+    return query.get();
+  }
+
+  Future<List<AmountChipsModel>> getAmountChips(String type) async {
+    List<AmountChipsModel> amountChipList = [];
+    try {
+      DocumentSnapshot snapshot =
+          await _db.collection(Constants.COLN_INAPPRESOURCES).doc(type).get();
+      Map<String, dynamic> snapData = snapshot.data();
+      snapData["userOptions"].forEach((e) {
+        amountChipList.add(AmountChipsModel.fromMap(e));
+      });
+      amountChipList.sort((a, b) => a.order.compareTo(b.order));
+      return amountChipList;
+      // logger.d(data);
+    } catch (e) {
+      logger.e(e.toString());
+    }
+  }
   //---------------------------------------REALTIME DATABASE-------------------------------------------//
 
   Future<bool> checkUserNameAvailability(String username) async {
@@ -842,19 +777,6 @@ class Api {
 
       print(data.key.toString() + "  " + data.value.toString());
       if (data.value != null) return false;
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  Future<bool> setUserName(String username, String userId) async {
-    try {
-      await _realtimeDatabase
-          .reference()
-          .child("usernames")
-          .child(username)
-          .set(userId);
       return true;
     } catch (e) {
       return false;

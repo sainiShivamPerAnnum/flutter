@@ -3,6 +3,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_winnings.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -16,41 +17,73 @@ class WinningsContainer extends StatelessWidget {
   final Function onTap;
   final double borderRadius;
   final Color color;
-  WinningsContainer({
-    this.child,
-    @required this.shadow,
-    this.height,
-    this.onTap,
-    this.borderRadius,
-    this.color,
-  });
+  final LinearGradient gradient;
+  WinningsContainer(
+      {this.child,
+      @required this.shadow,
+      this.height,
+      this.onTap,
+      this.borderRadius,
+      this.color,
+      this.gradient});
 
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return InkWell(
-      onTap: onTap ??
-          () => AppState.delegate.appState.currentAction =
+      onTap: onTap != null
+          ? () {
+              Haptic.vibrate();
+              onTap();
+            }
+          : () => AppState.delegate.appState.currentAction =
               PageAction(state: PageState.addPage, page: MyWinnigsPageConfig),
       child: Container(
-        decoration: BoxDecoration(
-          color: color ?? UiConstants.primaryColor,
-          borderRadius:
-              BorderRadius.circular(borderRadius ?? SizeConfig.roundness24),
-          boxShadow: [
-            if (shadow)
-              BoxShadow(
-                blurRadius: 30,
-                color: color.withOpacity(0.5) ??
-                    UiConstants.primaryColor.withOpacity(0.5),
-                offset: Offset(
-                  0,
-                  SizeConfig.screenWidth * 0.1,
-                ),
-                spreadRadius: -30,
+        decoration: gradient != null
+            ? BoxDecoration(
+                gradient: gradient ??
+                    new LinearGradient(
+                      colors: [
+                        UiConstants.primaryColor,
+                        UiConstants.primaryColor
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                borderRadius: BorderRadius.circular(
+                    borderRadius ?? SizeConfig.roundness24),
+                boxShadow: [
+                  if (shadow)
+                    BoxShadow(
+                      blurRadius: 30,
+                      color: color.withOpacity(0.5) ??
+                          UiConstants.primaryColor.withOpacity(0.5),
+                      offset: Offset(
+                        0,
+                        SizeConfig.screenWidth * 0.1,
+                      ),
+                      spreadRadius: -30,
+                    )
+                ],
               )
-          ],
-        ),
+            : BoxDecoration(
+                color: color ?? UiConstants.primaryColor,
+                borderRadius: BorderRadius.circular(
+                    borderRadius ?? SizeConfig.roundness24),
+                boxShadow: [
+                  if (shadow)
+                    BoxShadow(
+                      blurRadius: 30,
+                      color: color.withOpacity(0.5) ??
+                          UiConstants.primaryColor.withOpacity(0.5),
+                      offset: Offset(
+                        0,
+                        SizeConfig.screenWidth * 0.1,
+                      ),
+                      spreadRadius: -30,
+                    )
+                ],
+              ),
         height: height ?? SizeConfig.screenWidth * 0.24,
         margin:
             EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),

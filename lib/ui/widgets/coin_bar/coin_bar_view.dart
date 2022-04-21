@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
@@ -11,8 +12,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../../../core/service/analytics/analytics_service.dart';
+import '../../../util/locator.dart';
+
 class FelloCoinBar extends StatelessWidget {
-  const FelloCoinBar();
+  final _analytics = locator<AnalyticsService>();
+
+  FelloCoinBar();
+
   @override
   Widget build(BuildContext context) {
     return BaseView<FelloCoinBarViewModel>(
@@ -21,6 +28,8 @@ class FelloCoinBar extends StatelessWidget {
           ? CircularProgressIndicator()
           : GestureDetector(
               onTap: () {
+                _analytics.track(
+                    eventName: AnalyticsEvents.addFLCTokensTopRight);
                 BaseUtil.openModalBottomSheet(
                   addToScreenStack: true,
                   backgroundColor: Colors.transparent,

@@ -1,3 +1,4 @@
+import 'package:felloapp/ui/pages/static/blinker.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -62,8 +63,15 @@ class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
   Widget build(BuildContext context) {
     return widget.mini
         ? Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Blinker(
+                child: CircleAvatar(
+                  backgroundColor: UiConstants.primaryColor,
+                  radius: SizeConfig.padding4,
+                ),
+              ),
+              SizedBox(width: SizeConfig.padding6),
               Text(
                 "Current Gold Price: ",
                 style: TextStyles.body3.colour(Colors.black54),

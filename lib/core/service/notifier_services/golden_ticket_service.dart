@@ -29,6 +29,7 @@ class GoldenTicketService extends ChangeNotifier {
 
   static String goldenTicketId;
   static GoldenTicket currentGT;
+  static String lastGoldenTicketId;
 
   List<GoldenTicket> _activeGoldenTickets;
 

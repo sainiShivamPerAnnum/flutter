@@ -43,9 +43,34 @@ class TransactionLoader extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: SizeConfig.padding12),
-                  Text(
-                    "Please wait",
-                    style: TextStyles.body4.colour(Colors.grey).light,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Please wait ",
+                        style: TextStyles.body4.colour(Colors.grey).light,
+                      ),
+                      TweenAnimationBuilder<Duration>(
+                          duration: Duration(seconds: 31),
+                          tween: Tween(
+                              begin: Duration(seconds: 31), end: Duration.zero),
+                          onEnd: () {
+                            print('Timer ended');
+                            AppState.backButtonDispatcher.didPopRoute();
+                          },
+                          builder: (BuildContext context, Duration value,
+                              Widget child) {
+                            final minutes = value.inMinutes;
+                            final seconds = value.inSeconds % 60;
+                            return Text(
+                              '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
+                              style: TextStyle(
+                                color: UiConstants.primaryColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            );
+                          }),
+                    ],
                   ),
                   SizedBox(height: SizeConfig.padding24),
                 ],

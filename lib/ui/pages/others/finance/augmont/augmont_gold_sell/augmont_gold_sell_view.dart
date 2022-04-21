@@ -155,8 +155,10 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(locale.saveGoldBalancelabel,
-                                    style: TextStyles.title5.light),
+                                Text(
+                                  locale.saveGoldBalancelabel,
+                                  style: TextStyles.title5.light,
+                                ),
                                 PropertyChangeConsumer<UserService,
                                     UserServiceProperties>(
                                   properties: [

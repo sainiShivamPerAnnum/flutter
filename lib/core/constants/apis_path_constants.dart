@@ -32,6 +32,7 @@ class ApiPath {
 
   //User Ops Apis
   get kAddNewUser => "/userOps/api/v3/newuser";
+  get kUpdateUserAppflyer => "/userOps/api/v3/user/appflyer";
   get kAmountTransfer => "/userOps/api/v3/accountTransfer";
   get kVerifyTransfer => "/userOps/api/v3/verifyTransfer";
   get kVerifyPan => "/userOps/api/v3/verifyPan";
@@ -45,5 +46,12 @@ class ApiPath {
   get kFelloCoupons => "/felloCoupons/$stage/api/eligible";
 
   //PaytmApis
-  static const kCreatePaytmTransaction = "/paymentOps/transaction";
+  static const kCreatePaytmTransaction = "/transaction";
+  get kCreateSubscription => "/subscription";
+  get kPauseSubscription => "/subscription/pause";
+  get kResumeSubscription => "/subscription/resume";
+  get kValidateVpa => "/subscription/vpa";
+  get kProcessSubscription => "/process";
+  get kActiveSubscription => "/subscription";
+  get kNextDebitDate => "/debit";
 }

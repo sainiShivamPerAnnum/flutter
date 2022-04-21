@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -38,26 +36,28 @@ class Transactions extends StatelessWidget {
                   children: [
                     SizedBox(height: SizeConfig.scaffoldMargin),
                     FelloBriefTile(
-                      leadingAsset: Assets.bankDetails,
+                      leadingAsset: Assets.bank,
                       title: "Bank Account Details",
                       trailingIcon: Icons.arrow_forward_ios_rounded,
-                      onTap: () {
-                        AppState.delegate.appState.currentAction = PageAction(
-                          state: PageState.addPage,
-                          page: EditAugBankDetailsPageConfig,
-                        );
-                      },
+                      onTap: () => onTap(EditAugBankDetailsPageConfig),
                     ),
                     FelloBriefTile(
                       leadingAsset: Assets.txnHistory,
                       title: "Transaction History and Invoice",
                       trailingIcon: Icons.arrow_forward_ios_rounded,
-                      onTap: () {
-                        AppState.delegate.appState.currentAction = PageAction(
-                          state: PageState.addPage,
-                          page: TransactionsHistoryPageConfig,
-                        );
-                      },
+                      onTap: () => onTap(TransactionsHistoryPageConfig),
+                    ),
+                    // FelloBriefTile(
+                    //   leadingAsset: Assets.repeat,
+                    //   title: "AutoSave UPI Details",
+                    //   trailingIcon: Icons.arrow_forward_ios_rounded,
+                    //   onTap: () => onTap(UserAutoSaveDetailsViewPageConfig),
+                    // ),
+                    FelloBriefTile(
+                      leadingAsset: Assets.txnHistory,
+                      title: "AutoSave transactions",
+                      trailingIcon: Icons.arrow_forward_ios_rounded,
+                      onTap: () => onTap(AutosaveTransactionsViewPageConfig),
                     ),
                   ],
                 ),
@@ -66,6 +66,13 @@ class Transactions extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  onTap(PageConfiguration config) {
+    AppState.delegate.appState.currentAction = PageAction(
+      state: PageState.addPage,
+      page: config,
     );
   }
 }

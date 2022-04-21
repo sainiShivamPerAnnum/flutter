@@ -1,6 +1,6 @@
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -10,6 +10,15 @@ class TransactionCompletedConfirmationScreenViewModel extends BaseModel {
 
   bool _isInvestmentAnimationInProgress = false;
   bool _isCoinAnimationInProgress = false;
+  bool _showPlayButton = false;
+  bool get showPlayButton => this._showPlayButton;
+  AnimationController lottieAnimationController;
+
+  set showPlayButton(bool showPlayButton) {
+    this._showPlayButton = showPlayButton;
+    notifyListeners();
+  }
+
   int coinsCount = 200;
 
   get isInvestmentAnimationInProgress => this._isInvestmentAnimationInProgress;
@@ -34,6 +43,7 @@ class TransactionCompletedConfirmationScreenViewModel extends BaseModel {
   }
 
   init(double amount) {
+    Haptic.vibrate();
     coinsCount = _coinService.flcBalance - amount.toInt();
     initDepositSuccessAnimation(amount);
   }
@@ -42,7 +52,7 @@ class TransactionCompletedConfirmationScreenViewModel extends BaseModel {
     isAnimationInProgress = true;
     isInvestmentAnimationInProgress = true;
     notifyListeners();
-    Future.delayed(Duration(milliseconds: 2800), () {
+    Future.delayed(Duration(milliseconds: 2500), () {
       isInvestmentAnimationInProgress = false;
       notifyListeners();
       initCoinAnimation(amount);
@@ -52,6 +62,8 @@ class TransactionCompletedConfirmationScreenViewModel extends BaseModel {
   initCoinAnimation(double amount) async {
     await Future.delayed(Duration(milliseconds: 100), () {
       isCoinAnimationInProgress = true;
+      lottieAnimationController.forward();
+
       coinsCount = _coinService.flcBalance;
       notifyListeners();
     });
@@ -59,13 +71,9 @@ class TransactionCompletedConfirmationScreenViewModel extends BaseModel {
     //   coinContentOpacity = 0;
     //   notifyListeners();
     // });
-    await Future.delayed(Duration(milliseconds: 2000), () {
-      isCoinAnimationInProgress = false;
-      notifyListeners();
-    });
-    Future.delayed(Duration(milliseconds: 00), () {
-      if (isAnimationInProgress) AppState.backButtonDispatcher.didPopRoute();
-      isAnimationInProgress = false;
+    await Future.delayed(Duration(milliseconds: 2500), () {
+      if (isAnimationInProgress) isAnimationInProgress = false;
+      showPlayButton = true;
     });
   }
 }

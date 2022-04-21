@@ -7,6 +7,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/locator.dart';
@@ -87,8 +88,9 @@ class FcmListener {
 
       _fcm.getInitialMessage().then((RemoteMessage message) {
         if (message != null && message.data != null) {
-          logger.d("onMessage recieved: " + message.toString());
-          _handler.handleMessage(message.data, MsgSource.Terminated);
+          logger.d("terminated onMessage recieved: " + message.data.toString());
+          // _handler.handleMessage(message.data, MsgSource.Terminated);
+          AppState.startupNotifMessage = message.data;
         }
       });
 
@@ -246,7 +248,7 @@ class FcmListener {
         _dbModel.logFailure(_userService.baseUser.uid,
             FailType.TambolaDrawNotificationSettingFailed, errorDetails);
       }
-      BaseUtil.showNegativeAlert("Error", "Please try again");
+      BaseUtil.showNegativeAlert("Something went wrong!", "Please try again");
       return false;
     }
   }

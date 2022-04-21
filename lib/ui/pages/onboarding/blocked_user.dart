@@ -73,8 +73,8 @@ class BlockedUserView extends StatelessWidget {
                                       'https://fello.in/policy/tnc');
                                 } catch (e) {
                                   BaseUtil.showNegativeAlert(
-                                    'Error',
-                                    'Something went wrong, could not launch T&C right now. Please try again later',
+                                    'Something went wrong',
+                                    'Could not launch T&C right now. Please try again later',
                                   );
                                 }
                               },

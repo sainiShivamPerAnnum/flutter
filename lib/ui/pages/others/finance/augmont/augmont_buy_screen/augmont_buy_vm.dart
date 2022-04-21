@@ -20,7 +20,7 @@ import 'package:felloapp/core/service/notifier_services/golden_ticket_service.da
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/core/service/paytm_service.dart';
+import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -69,10 +69,14 @@ class AugmontGoldBuyViewModel extends BaseModel {
   CouponModel _focusCoupon;
   EligibleCouponResponseModel _appliedCoupon;
   bool _showMaxCapText = false;
+  bool _showMinCapText = false;
   bool _isGoldRateFetching = false;
   bool _isGoldBuyInProgress = false;
+  // bool _isSubscriptionInProgress = false;
   bool _couponApplyInProgress = false;
   bool _showCoupons = false;
+  bool _augmontSecondFetchDone = false;
+
   AugmontRates goldRates;
   String userAugmontState;
   FocusNode buyFieldNode;
@@ -83,6 +87,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   double goldBuyAmount = 0;
   double goldAmountInGrams = 0.0;
   TextEditingController goldAmountController;
+  TextEditingController vpaController;
   List<double> chipAmountList = [101, 201, 501, 1001];
   List<CouponModel> _couponList;
 
@@ -103,6 +108,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   double get goldBuyPrice => goldRates != null ? goldRates.goldBuyPrice : 0.0;
 
   get isGoldBuyInProgress => this._isGoldBuyInProgress;
+  get augmontObjectSecondFetchDone => _augmontSecondFetchDone;
 
   set isGoldBuyInProgress(value) {
     this._isGoldBuyInProgress = value;
@@ -137,11 +143,17 @@ class AugmontGoldBuyViewModel extends BaseModel {
     notifyListeners();
   }
 
+  get showMinCapText => this._showMinCapText;
+
+  set showMinCapText(value) {
+    this._showMinCapText = value;
+    notifyListeners();
+  }
+
   get isGoldRateFetching => this._isGoldRateFetching;
 
   set isGoldRateFetching(value) {
     this._isGoldRateFetching = value;
-
     notifyListeners();
   }
 
@@ -175,6 +187,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
     fetchGoldRates();
     await fetchNotices();
     status = checkAugmontStatus();
+    _paytmService.getActiveSubscriptionDetails();
     //Fetch available coupons
     getAvailableCoupons();
     //Check if user can be registered automagically
@@ -182,10 +195,19 @@ class AugmontGoldBuyViewModel extends BaseModel {
     if (status == STATUS_REGISTER && userAugmontState != null) {
       _onboardUserAutomatically(userAugmontState);
     }
+
+    if (!_userService.showOnboardingTutorial) {
+      _augmontSecondFetchDone = true;
+    }
+
     if (_baseUtil.augmontDetail == null) {
       _baseUtil.augmontDetail =
           await _dbModel.getUserAugmontDetails(_userService.baseUser.uid);
     }
+
+    if (_baseUtil.augmontDetail == null && !_augmontSecondFetchDone)
+      delayedAugmontCall();
+
     // Check if deposit is locked the this particular user
     if (_baseUtil.augmontDetail != null &&
         _baseUtil.augmontDetail.depNotice != null &&
@@ -193,6 +215,14 @@ class AugmontGoldBuyViewModel extends BaseModel {
       buyNotice = _baseUtil.augmontDetail.depNotice;
 
     setState(ViewState.Idle);
+  }
+
+  delayedAugmontCall() async {
+    await Future.delayed(Duration(seconds: 2));
+    _baseUtil.augmontDetail =
+        await _dbModel.getUserAugmontDetails(_userService.baseUser.uid);
+    _augmontSecondFetchDone = true;
+    notifyListeners();
   }
 
   fetchNotices() async {
@@ -213,7 +243,9 @@ class AugmontGoldBuyViewModel extends BaseModel {
     double amt = chipAmountList[index];
     return GestureDetector(
       onTap: () {
+        if (couponApplyInProgress || isGoldBuyInProgress) return;
         showMaxCapText = false;
+        showMinCapText = false;
         Haptic.vibrate();
         lastTappedChipIndex = index;
         buyFieldNode.unfocus();
@@ -283,7 +315,6 @@ class AugmontGoldBuyViewModel extends BaseModel {
   }
 
   // BUY LOGIC
-
   fcmTransactionResponseUpdate(fcmDataPayload) async {
     //Stop loader if loading.
     _logger.i("Updating response value.");
@@ -295,9 +326,25 @@ class AugmontGoldBuyViewModel extends BaseModel {
       //Handle failed condition here.
       if (!depositFcmResponseModel.status) {
         AppState.delegate.appState.isTxnLoaderInView = false;
-        BaseUtil.showNegativeAlert("Transaction Failed",
-            "Gold purchase failed, you amount will be refunded");
+        BaseUtil.showNegativeAlert("Transaction failed",
+            "Your gold purchase did not complete successfully");
         return;
+      }
+      //handle multiple fcm command for same transaction
+      if (depositFcmResponseModel.gtId != null) {
+        print(
+            "Hey a new fcm recived with gtId: ${depositFcmResponseModel.gtId}");
+        if (GoldenTicketService.lastGoldenTicketId != null) {
+          if (GoldenTicketService.lastGoldenTicketId ==
+              depositFcmResponseModel.gtId) {
+            return;
+          } else {
+            GoldenTicketService.lastGoldenTicketId =
+                depositFcmResponseModel.gtId;
+          }
+        } else {
+          GoldenTicketService.lastGoldenTicketId = depositFcmResponseModel.gtId;
+        }
       }
 
       double newAugPrinciple = depositFcmResponseModel.augmontPrinciple;
@@ -323,17 +370,17 @@ class AugmontGoldBuyViewModel extends BaseModel {
             _gtService.showInstantGoldenTicketView(
                 amount: depositFcmResponseModel.amount,
                 title:
-                    "You successfully saved ₹${getAmount(depositFcmResponseModel.amount)}",
+                    "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}",
                 source: GTSOURCE.deposit);
           } else {
             AppState.delegate.appState.isTxnLoaderInView = false;
             showTxnSuccessScreen(depositFcmResponseModel.amount,
-                "You successfully saved ₹${getAmount(depositFcmResponseModel.amount)}");
+                "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}");
           }
         } else {
           AppState.delegate.appState.isTxnLoaderInView = false;
           showTxnSuccessScreen(depositFcmResponseModel.amount,
-              "You successfully saved ₹${getAmount(depositFcmResponseModel.amount)}");
+              "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}");
         }
       }
 
@@ -376,10 +423,11 @@ class AugmontGoldBuyViewModel extends BaseModel {
       return;
     }
     if (buyAmount < 10) {
-      BaseUtil.showNegativeAlert(
-        'Minimum amount should be ₹ 10',
-        'Please enter a minimum purchase amount of ₹ 10',
-      );
+      showMinCapText = true;
+      // BaseUtil.showNegativeAlert(
+      //   'Minimum amount should be ₹ 10',
+      //   'Please enter a minimum purchase amount of ₹ 10',
+      // );
       return;
     }
 
@@ -398,16 +446,17 @@ class AugmontGoldBuyViewModel extends BaseModel {
       );
       return;
     }
+    isGoldBuyInProgress = true;
 
     bool _disabled = await _dbModel.isAugmontBuyDisabled();
     if (_disabled != null && _disabled) {
+      isGoldBuyInProgress = false;
       BaseUtil.showNegativeAlert(
         'Purchase Failed',
         'Gold buying is currently on hold. Please try again after sometime.',
       );
       return;
     }
-    isGoldBuyInProgress = true;
     _analyticsService.track(eventName: AnalyticsEvents.buyGold);
 
     final _status = await _paytmService.initiateTransactions(
@@ -433,7 +482,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
       }
       BaseUtil.showNegativeAlert(
         'Transaction failed',
-        'Please try again in sometime or contact us for further assistance.',
+        'Your transaction was unsuccessful. Please try again',
       );
     }
   }
@@ -441,6 +490,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   onBuyValueChanged(String val) {
     _logger.d("Value: $val");
     if (showMaxCapText) showMaxCapText = false;
+    if (showMinCapText) showMinCapText = false;
     if (val != null && val.isNotEmpty) {
       if (double.tryParse(val.trim()) != null &&
           double.tryParse(val.trim()) > 50000) {
@@ -579,7 +629,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
       return amount.toInt();
   }
 
-  showSuccessGoldBuyDialog(amount) {
+  showSuccessGoldBuyDialog(double amount, {String subtitle}) {
     BaseUtil.openDialog(
       addToScreenStack: true,
       hapticVibrate: true,
@@ -587,7 +637,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
       content: FelloConfirmationDialog(
         asset: Assets.goldenTicket,
         title: "Congratulations",
-        subtitle:
+        subtitle: subtitle ??
             "You have successfully saved ₹ ${getAmount(amount)} and earned ${amount.ceil()} tokens!",
         result: (res) {
           // if (res) ;
@@ -601,6 +651,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
           AppState.delegate.appState.setCurrentTabIndex = 1;
         },
         onAccept: () {
+          _analyticsService.track(eventName: AnalyticsEvents.buyGoldInvestMore);
           AppState.backButtonDispatcher.didPopRoute();
         },
       ),
@@ -671,7 +722,10 @@ class AugmontGoldBuyViewModel extends BaseModel {
       page: GoldBalanceDetailsViewPageConfig,
     );
 
-    _analyticsService.track(eventName: AnalyticsEvents.saveBalance);
+    _analyticsService.track(
+      eventName: AnalyticsEvents.saveBalance,
+      properties: {'balance': _userService?.userFundWallet?.augGoldQuantity},
+    );
   }
 
   navigateToAboutGold() {
@@ -738,7 +792,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
         (await _dbModel.getLatestGoldenTicket(_userService.baseUser.uid)).gtId;
     await _gtService.fetchAndVerifyGoldenTicketByID();
     _gtService.showInstantGoldenTicketView(
-        title: 'You successfully saved ₹500.',
+        title: 'You have successfully saved ₹500.',
         source: GTSOURCE.deposit,
         amount: 500);
   }
@@ -750,8 +804,8 @@ class AugmontGoldBuyViewModel extends BaseModel {
         opaque: false,
         pageBuilder: (BuildContext context, _, __) =>
             TxnCompletedConfirmationScreenView(
-          amount: amount ?? 400.4,
-          title: title ?? "Hurray, we saved ₹400.4",
+          amount: amount ?? 0,
+          title: title ?? "Hurray, we saved ₹NA",
         ),
       ),
     );

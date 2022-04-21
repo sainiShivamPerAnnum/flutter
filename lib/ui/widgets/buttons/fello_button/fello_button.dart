@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -63,12 +64,22 @@ class _FelloButtonState extends State<FelloButton> {
       return widget.offlineButtonUI != null
           ? InkWell(
               onTap: () async {
+                if (Platform.isAndroid)
+                  HapticFeedback.vibrate();
+                else
+                  HapticFeedback.lightImpact();
                 if (await BaseUtil.showNoInternetAlert()) return;
               },
               child: widget.offlineButtonUI,
             )
           : ElevatedButton(
-              onPressed: () => BaseUtil.showNoInternetAlert(),
+              onPressed: () {
+                if (Platform.isAndroid)
+                  HapticFeedback.vibrate();
+                else
+                  HapticFeedback.lightImpact();
+                BaseUtil.showNoInternetAlert();
+              },
               style: ElevatedButton.styleFrom(primary: Colors.grey),
               child: Opacity(
                 opacity: 0.7,
@@ -87,13 +98,14 @@ class _FelloButtonState extends State<FelloButton> {
         return widget.activeButtonUI != null
             ? InkWell(
                 onTap: () async {
-                  if (isAlreadyClicked) return;
-                  isAlreadyClicked = true;
-                  if (await BaseUtil.showNoInternetAlert()) return;
                   if (Platform.isAndroid)
                     HapticFeedback.vibrate();
                   else
                     HapticFeedback.lightImpact();
+                  if (isAlreadyClicked) return;
+                  isAlreadyClicked = true;
+                  if (await BaseUtil.showNoInternetAlert()) return;
+
                   if (widget.onPressedAsync != null) {
                     if (widget.action != null)
                       widget.action(true);
@@ -111,14 +123,14 @@ class _FelloButtonState extends State<FelloButton> {
                 child: widget.activeButtonUI)
             : TextButton(
                 onPressed: () async {
-                  if (isAlreadyClicked) return;
-                  isAlreadyClicked = true;
-                  if (await BaseUtil.showNoInternetAlert()) return;
-
                   if (Platform.isAndroid)
                     HapticFeedback.vibrate();
                   else
                     HapticFeedback.lightImpact();
+                  if (isAlreadyClicked) return;
+                  isAlreadyClicked = true;
+                  if (await BaseUtil.showNoInternetAlert()) return;
+
                   if (widget.onPressedAsync != null) {
                     if (widget.action != null)
                       widget.action(true);

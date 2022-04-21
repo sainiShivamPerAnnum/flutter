@@ -13,8 +13,10 @@ class DrawerModel {
   String title;
   String icon;
   PageConfiguration pageConfig;
-
-  DrawerModel({this.icon, this.pageConfig, this.title});
+  String analyticEvent;
+  Function onTap;
+  DrawerModel(
+      {this.icon, this.pageConfig, this.title, this.onTap, this.analyticEvent});
 }
 
 class FDrawerVM extends BaseModel {
@@ -26,36 +28,51 @@ class FDrawerVM extends BaseModel {
       icon: Assets.dReferNEarn,
       title: "Refer and Earn",
       pageConfig: ReferralDetailsPageConfig,
+      analyticEvent: AnalyticsEvents.referralSection,
     ),
     DrawerModel(
       icon: Assets.gold24K,
       title: "My Golden Tickets",
       pageConfig: MyWinnigsPageConfig,
+      analyticEvent: AnalyticsEvents.myGoldenTickets,
+    ),
+    DrawerModel(
+      icon: Assets.repeat,
+      title: "Autosave",
+      pageConfig: UserAutoSaveDetailsViewPageConfig,
     ),
     DrawerModel(
       icon: Assets.dPanKyc,
       title: "PAN & KYC",
       pageConfig: KycDetailsPageConfig,
+      analyticEvent: AnalyticsEvents.selectKYC,
     ),
     DrawerModel(
       icon: Assets.dTransactions,
       title: "Transactions",
       pageConfig: TransactionPageConfig,
+      analyticEvent: AnalyticsEvents.transactions,
     ),
     DrawerModel(
       icon: Assets.dHelpNSupport,
       title: "Help & Support",
       pageConfig: SupportPageConfig,
+      analyticEvent: AnalyticsEvents.helpAndSupport,
     ),
     DrawerModel(
       icon: Assets.dHowItWorks,
       title: "How it works",
       pageConfig: WalkThroughConfig,
+      analyticEvent: AnalyticsEvents.howItWorks,
+      onTap: () => AppState.delegate.parseRoute(
+        Uri.parse('/AppWalkthrough'),
+      ),
     ),
     DrawerModel(
       icon: Assets.dAboutDigitalGold,
       title: "About Digital Gold",
       pageConfig: AugmontGoldDetailsPageConfig,
+      analyticEvent: AnalyticsEvents.aboutDigitalGold,
     ),
   ];
 
@@ -65,14 +82,17 @@ class FDrawerVM extends BaseModel {
   void onItemSelected(int i) {
     if (RootViewModel.scaffoldKey.currentState.isDrawerOpen)
       RootViewModel.scaffoldKey.currentState.openEndDrawer();
-
+    if (drawerList[i].onTap != null) {
+      drawerList[i].onTap();
+      return;
+    }
     AppState.delegate.appState.currentAction = PageAction(
       state: PageState.addPage,
       page: drawerList[i].pageConfig,
     );
 
-    if (i == 0)
-      _analyticsService.track(eventName: AnalyticsEvents.referralSection);
+    if (drawerList[i].analyticEvent != '')
+      _analyticsService.track(eventName: drawerList[i].analyticEvent);
   }
 
   refreshDrawer() {

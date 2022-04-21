@@ -146,7 +146,7 @@ class FelloBriefTile extends StatelessWidget {
             SizedBox(width: SizeConfig.padding12),
             Icon(
               trailingIcon ?? Icons.arrow_right_rounded,
-              size: SizeConfig.padding24,
+              size: SizeConfig.padding20,
               color: UiConstants.primaryColor,
             )
           ],

@@ -2,6 +2,7 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/tambola_walkthrough.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
@@ -14,6 +15,11 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
 class WalkThroughPage extends StatefulWidget {
+  final List<String> lottieList, titleList, descList;
+  WalkThroughPage(
+      {@required this.lottieList,
+      @required this.titleList,
+      @required this.descList});
   @override
   _WalkThroughPageState createState() => _WalkThroughPageState();
 }
@@ -24,14 +30,6 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
   bool showLotties = false;
   GoldenTicketService _gtService = GoldenTicketService();
   final _analyticsService = locator<AnalyticsService>();
-
-  List<String> lottieList = [Assets.onb1, Assets.onb2, Assets.onb3];
-  List<String> titleList = ["SAVE", "PLAY", "WIN"];
-  List<String> descList = [
-    "Save and invest in strong assets and earn tokens 🪙",
-    "Use these tokens to play fun and exciting games 🎮",
-    "Stand to win exclusive prizes and fun rewards 🎉"
-  ];
 
   @override
   void initState() {
@@ -81,7 +79,7 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
               ValueListenableBuilder(
                 valueListenable: _pageNotifier,
                 builder: (ctx, value, _) {
-                  return Text(titleList[value.toInt()],
+                  return Text(widget.titleList[value.toInt()],
                       style: TextStyles.title1.bold);
                 },
               ),
@@ -172,7 +170,7 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                 child: ValueListenableBuilder(
                   valueListenable: _pageNotifier,
                   builder: (ctx, value, _) {
-                    return Text(descList[value.toInt()],
+                    return Text(widget.descList[value.toInt()],
                         textAlign: TextAlign.center,
                         maxLines: 3,
                         overflow: TextOverflow.clip,

@@ -63,6 +63,7 @@ class AugmontGoldSellViewModel extends BaseModel {
 
   init() async {
     setState(ViewState.Busy);
+    _analyticsService.track(eventName: AnalyticsEvents.saveSell);
     goldAmountController = TextEditingController();
     await fetchNotices();
     fetchGoldRates();
@@ -166,6 +167,14 @@ class AugmontGoldSellViewModel extends BaseModel {
 
   initiateSell() async {
     double sellGramAmount = double.tryParse(goldAmountController.text.trim());
+    if (goldRates == null) {
+      BaseUtil.showNegativeAlert(
+        'Portal unavailable',
+        'The current rates couldn\'t be loaded. Please try again',
+      );
+      return;
+    }
+
     if (sellGramAmount == null) {
       BaseUtil.showNegativeAlert(
           "No Amount Entered", "Please enter some amount");
@@ -236,7 +245,12 @@ class AugmontGoldSellViewModel extends BaseModel {
     _augmontModel.initiateWithdrawal(goldRates, sellGramAmount);
     _augmontModel.setAugmontTxnProcessListener(_onSellTransactionComplete);
 
-    _analyticsService.track(eventName: AnalyticsEvents.sellGold);
+    final totalSellAmount =
+        BaseUtil.digitPrecision(sellGramAmount * goldRates.goldSellPrice);
+    _analyticsService.track(
+      eventName: AnalyticsEvents.sellGold,
+      properties: {'selling_amount': totalSellAmount},
+    );
   }
 
   Future<void> _onSellTransactionComplete(UserTransaction txn) async {

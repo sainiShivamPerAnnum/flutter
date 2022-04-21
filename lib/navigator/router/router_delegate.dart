@@ -12,27 +12,28 @@ import 'package:felloapp/ui/pages/hamburger/freshdesk_help.dart';
 import 'package:felloapp/ui/pages/hamburger/referral_policy_page.dart';
 import 'package:felloapp/ui/pages/hamburger/support.dart';
 import 'package:felloapp/ui/pages/login/login_controller_view.dart';
-import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_view.dart';
+import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_page.dart';
 import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/all_participants.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/edit_augmont_bank_details.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_balance_details/gold_balance_details_view.dart';
-import 'package:felloapp/ui/pages/others/games/cricket/cricket_game/cricket_game_view.dart';
-import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/autopay_details_view.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_view.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/autopay_transaction/autopay_transactions_view.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/dailyPicksDraw/dailyPicksDraw_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/show_all_tickets.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_game/tambola_game_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_walkthrough.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_result.dart';
+import 'package:felloapp/ui/pages/others/games/web/web_home/web_home_view.dart';
 import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_view.dart';
-import 'package:felloapp/ui/pages/others/profile/claim_username.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
 import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_view.dart';
@@ -45,8 +46,10 @@ import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed
 import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_view.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/pages/splash/splash_view.dart';
+import 'package:felloapp/ui/pages/static/poolview.dart';
 import 'package:felloapp/ui/pages/static/transactions_view.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 //Flutter Imports
 import 'package:flutter/foundation.dart';
@@ -197,18 +200,13 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.ChatSupport:
           _addPageData(ChatSupport(), ChatSupportPageConfig);
           break;
-        case Pages.ClaimUsername:
-          _addPageData(ClaimUsername(), ClaimUsernamePageConfig);
-          break;
         case Pages.VerifyEmail:
           _addPageData(VerifyEmail(), VerifyEmailPageConfig);
           break;
         case Pages.Support:
           _addPageData(SupportPage(), SupportPageConfig);
           break;
-        case Pages.WalkThrough:
-          _addPageData(WalkThroughPage(), WalkThroughConfig);
-          break;
+
         case Pages.THome:
           _addPageData(TambolaHomeView(), THomePageConfig);
           break;
@@ -230,15 +228,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.Notifications:
           _addPageData(NotficationsPage(), NotificationsConfig);
           break;
-        case Pages.CricketHome:
-          _addPageData(CricketHomeView(), CricketHomePageConfig);
-          break;
-        case Pages.CricketGame:
-          _addPageData(CricketGameView(), CricketGamePageConfig);
-          break;
-        // case Pages.AugGoldBuy:
-        //   _addPageData(AugmontGoldBuyView(), AugmontGoldBuyPageConfig);
-        //   break;
         case Pages.AugGoldSell:
           _addPageData(AugmontGoldSellView(), AugmontGoldSellPageConfig);
           break;
@@ -278,6 +267,28 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.GoldBalanceDetailsView:
           _addPageData(
               GoldBalanceDetailsView(), GoldBalanceDetailsViewPageConfig);
+          break;
+        // case Pages.WebHomeView:
+        //   _addPageData(WebHomeView(), WebHomeViewPageConfig);
+        //   break;
+        // case Pages.WebGameView:
+        //   _addPageData(WebGameView(), WebGameViewPageConfig);
+        //   break;
+        // case Pages.PoolView:
+        //   _addPageData(PoolView(), PoolViewPageConfig);
+        case Pages.AutoSaveDetailsView:
+          _addPageData(AutoSaveDetailsView(), AutoSaveDetailsViewPageConfig);
+          break;
+        case Pages.AutoSaveProcessView:
+          _addPageData(AutoSaveProcessView(), AutoSaveProcessViewPageConfig);
+          break;
+        case Pages.UserAutoSaveDetailsView:
+          _addPageData(
+              UserAutoSaveDetailsView(), UserAutoSaveDetailsViewPageConfig);
+          break;
+        case Pages.AutosaveTransactionsView:
+          _addPageData(
+              AutoSaveTransactionsView(), AutosaveTransactionsViewPageConfig);
           break;
         default:
           break;
@@ -403,8 +414,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.Support:
         SupportPageConfig.currentPageAction = action;
         break;
-      case Pages.WalkThrough:
-        WalkThroughConfig.currentPageAction = action;
+
         break;
       case Pages.YourFunds:
         YourFundsConfig.currentPageAction = action;
@@ -433,15 +443,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.Notifications:
         NotificationsConfig.currentPageAction = action;
         break;
-      case Pages.CricketHome:
-        CricketHomePageConfig.currentPageAction = action;
-        break;
-      case Pages.CricketGame:
-        CricketGamePageConfig.currentPageAction = action;
-        break;
-      // case Pages.AugGoldBuy:
-      //   AugmontGoldBuyPageConfig.currentPageAction = action;
-      //   break;
       case Pages.AugGoldSell:
         AugmontGoldSellPageConfig.currentPageAction = action;
         break;
@@ -480,6 +481,27 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.GoldBalanceDetailsView:
         GoldBalanceDetailsViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.PoolView:
+        PoolViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.WebHomeView:
+        WebHomeViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.WebGameView:
+        WebGameViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.AutoSaveDetailsView:
+        AutoSaveDetailsViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.AutoSaveProcessView:
+        AutoSaveProcessViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.UserAutoSaveDetailsView:
+        UserAutoSaveDetailsViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.AutosaveTransactionsView:
+        AutosaveTransactionsViewPageConfig.currentPageAction = action;
         break;
       default:
         break;
@@ -612,9 +634,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'tambolaHome':
         _baseUtil.openTambolaHome();
         break;
-      case 'cricketHome':
-        pageConfiguration = CricketHomePageConfig;
-        break;
       case 'myWinnings':
         pageConfiguration = MyWinnigsPageConfig;
         break;
@@ -633,20 +652,26 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'verifyEmail':
         pageConfiguration = VerifyEmailPageConfig;
         break;
-      case 'walkthrough':
-        pageConfiguration = WalkThroughConfig;
-        break;
       case 'blocked':
         pageConfiguration = BlockedUserPageConfig;
         break;
       case 'dailySaver':
-        openTopSaverScreen("SAVER_DAILY");
+        openTopSaverScreen(Constants.HS_DAILY_SAVER);
         break;
       case 'weeklySaver':
-        openTopSaverScreen("SAVER_WEEKLY");
+        openTopSaverScreen(Constants.HS_WEEKLY_SAVER);
         break;
       case 'monthlySaver':
-        openTopSaverScreen("SAVER_MONTHLY");
+        openTopSaverScreen(Constants.HS_MONTHLY_SAVER);
+        break;
+      case 'FPL':
+        openTopSaverScreen('FPL');
+        break;
+      case 'cricketHome':
+        openWebGame(Constants.GAME_TYPE_CRICKET);
+        break;
+      case 'poolHome':
+        openWebGame(Constants.GAME_TYPE_POOLCLUB);
         break;
       case 'milestones':
         pageConfiguration = GoldenMilestonesViewPageConfig;
@@ -656,6 +681,24 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case 'pop':
         AppState.backButtonDispatcher.didPopRoute();
+        break;
+      case 'autosaveDetails':
+        pageConfiguration = AutoSaveDetailsViewPageConfig;
+        break;
+      case 'autosaveProcess':
+        pageConfiguration = AutoSaveProcessViewPageConfig;
+        break;
+      case 'UserAutoSaveDetails':
+        pageConfiguration = UserAutoSaveDetailsViewPageConfig;
+        break;
+      case 'AutosaveTxns':
+        pageConfiguration = AutosaveTransactionsViewPageConfig;
+        break;
+      case 'AppWalkthrough':
+        openAppWalkthrough();
+        break;
+      case 'AutosaveWalkthrough':
+        openAutoSaveWalkthrough();
         break;
     }
     if (pageConfiguration != null) {
@@ -671,5 +714,42 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           eventType: eventType,
         ),
         page: TopSaverViewPageConfig);
+  }
+
+  openWebGame(String game) {
+    AppState.delegate.appState.currentAction = PageAction(
+        state: PageState.addWidget,
+        widget: WebHomeView(game: game),
+        page: WebHomeViewPageConfig);
+  }
+
+  openAppWalkthrough() {
+    AppState.delegate.appState.currentAction = PageAction(
+        state: PageState.addWidget,
+        widget: WalkThroughPage(
+          lottieList: [Assets.onb1, Assets.onb2, Assets.onb3],
+          titleList: ["SAVE", "PLAY", "WIN"],
+          descList: [
+            "Save and invest in strong assets and earn tokens 🪙",
+            "Use these tokens to play fun and exciting games 🎮",
+            "Stand to win exclusive prizes and fun rewards 🎉"
+          ],
+        ),
+        page: WalkThroughConfig);
+  }
+
+  openAutoSaveWalkthrough() {
+    AppState.delegate.appState.currentAction = PageAction(
+        state: PageState.addWidget,
+        widget: WalkThroughPage(
+          lottieList: [Assets.onb1, Assets.onb2, Assets.onb3],
+          titleList: ["SAVE", "PLAY", "WIN"],
+          descList: [
+            "Save and invest in strong assets and earn tokens 🪙",
+            "Use these tokens to play fun and exciting games 🎮",
+            "Stand to win exclusive prizes and fun rewards 🎉"
+          ],
+        ),
+        page: WalkThroughConfig);
   }
 }
