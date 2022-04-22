@@ -63,7 +63,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>74</string>
+	<string>77</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<string>0</string>
 	<key>FirebaseDynamicLinksCustomDomains</key>

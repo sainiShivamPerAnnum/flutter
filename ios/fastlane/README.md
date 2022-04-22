@@ -23,10 +23,10 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 Push a new release build to the App Store
 
-### ios release
+### ios buildAndRelease
 
 ```sh
-[bundle exec] fastlane ios release
+[bundle exec] fastlane ios buildAndRelease
 ```
 
 
