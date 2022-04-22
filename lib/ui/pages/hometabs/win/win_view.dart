@@ -58,8 +58,13 @@ class Win extends StatelessWidget {
                           image: Assets.iphone,
                           painter: IphoneCustomPaint(),
                           onPressed: () {
-                            model.panelController.animatePanelToPosition(1);
-                            model.setCurrentPage = 1;
+                            // model.panelController.animatePanelToPosition(1);
+                            // model.setCurrentPage = 1;
+                            AppState.delegate.appState.currentAction =
+                                PageAction(
+                              page: ReferralDetailsPageConfig,
+                              state: PageState.addPage,
+                            );
                           },
                         ),
                       ],

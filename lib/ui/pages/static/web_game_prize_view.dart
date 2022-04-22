@@ -1,6 +1,9 @@
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -47,8 +50,13 @@ class PrizesView extends StatelessWidget {
                     promo: promo,
                     onTap: () {
                       AppState.delegate.appState.setCurrentTabIndex = 1;
-                      AppState.backButtonDispatcher.didPopRoute();
-                      AppState.delegate.parseRoute(Uri.parse("/FPL"));
+                      AppState.delegate.appState.currentAction = PageAction(
+                          page: TopSaverViewPageConfig,
+                          state: PageState.replaceWidget,
+                          widget: TopSaverView(
+                            eventType: "FPL",
+                            isGameRedirected: true,
+                          ));
                     },
                   ),
                 if (subtitle != null && subtitle.isNotEmpty)

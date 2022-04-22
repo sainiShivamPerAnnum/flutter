@@ -338,6 +338,11 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     });
   }
 
+  // 7
+  void replaceWidget(Widget child, PageConfiguration newRoute) {
+    _addPageData(child, newRoute);
+  }
+
   @override
   Future<void> setNewRoutePath(PageConfiguration configuration) {
     final shouldAddPage = _pages.isEmpty ||
@@ -547,6 +552,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case PageState.addAll:
         // 9
         addAll(appState.currentAction.pages);
+        break;
+      case PageState.replaceWidget:
+        replaceWidget(
+            appState.currentAction.widget, appState.currentAction.page);
         break;
     }
     // 10

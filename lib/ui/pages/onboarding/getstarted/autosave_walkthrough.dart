@@ -5,6 +5,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -36,9 +37,9 @@ class _AutosaveWalkthroughState extends State<AutosaveWalkthrough> {
   final titleList = ["SAVE", "PLAY", "WIN"];
 
   final descList = [
-    "Save and invest in strong assets and earn tokens 🪙",
-    "Use these tokens to play fun and exciting games 🎮",
-    "Stand to win exclusive prizes and fun rewards 🎉"
+    "1️⃣ Enter the UPI ID of your linked bank account and click on Subscribe",
+    "2️⃣ Go to your UPI app and check your requests to complete a ₹1 transaction",
+    "3️⃣ Come back to the Fello app and set the daily or weekly amount that you would like to save"
   ];
 
   @override
@@ -106,6 +107,11 @@ class _AutosaveWalkthroughState extends State<AutosaveWalkthrough> {
       setState(() {
         slidelength3 = SizeConfig.padding24;
       });
+      Future.delayed(Duration(seconds: 9), () {
+        if (mounted) {
+          AppState.backButtonDispatcher.didPopRoute();
+        }
+      });
     } else
       _controller3.pause();
   }
@@ -116,13 +122,13 @@ class _AutosaveWalkthroughState extends State<AutosaveWalkthrough> {
         slidelength1 = SizeConfig.padding24;
       });
     await Future.delayed(Duration(seconds: 5), () {
-      if (mounted) {
+      if (mounted && _pageController.page < 1) {
         _pageController.animateToPage(1,
             duration: Duration(seconds: 1), curve: Curves.easeInOutCirc);
       }
     });
     await Future.delayed(Duration(seconds: 13), () {
-      if (mounted) {
+      if (mounted && _pageController.page < 2) {
         _pageController.animateToPage(2,
             duration: Duration(seconds: 1), curve: Curves.easeInOutCirc);
       }
@@ -147,6 +153,7 @@ class _AutosaveWalkthroughState extends State<AutosaveWalkthrough> {
                     : Icon(Icons.navigate_next),
                 color: UiConstants.backgroundColor,
                 onPressed: () {
+                  Haptic.vibrate();
                   value == 2.0
                       ? AppState.backButtonDispatcher.didPopRoute()
                       : _pageController.animateToPage(
