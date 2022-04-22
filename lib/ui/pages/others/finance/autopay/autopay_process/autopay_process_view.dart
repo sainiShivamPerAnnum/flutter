@@ -4,15 +4,12 @@ import 'package:app_install_date/utils.dart';
 import 'package:external_app_launcher/external_app_launcher.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
@@ -42,13 +39,13 @@ class AutoSaveProcessView extends StatefulWidget {
 
 class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
     with SingleTickerProviderStateMixin {
-  GoldenTicketService _gtService = GoldenTicketService();
-
   @override
   Widget build(BuildContext context) {
     return BaseView<AutoSaveProcessViewModel>(onModelReady: (model) {
       model.lottieAnimationController = AnimationController(vsync: this);
       model.init(widget.page);
+    }, onModelDispose: (model) {
+      model.clear();
     }, builder: (context, model, child) {
       return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -204,7 +201,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
                     style: TextStyles.body1.bold,
                   ),
                   subtitle: Text(
-                    "Go to your ${getUpiAppName(model)} mobile app",
+                    "Go to ${getUpiAppName(model)}",
                     style: TextStyles.body2,
                   ),
                   // trailing: CircleAvatar(
@@ -244,7 +241,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
           Spacer(),
           if (model.showAppLaunchButton && PlatformUtils.isAndroid)
             FelloButtonLg(
-              child: Text("Go to ${getUpiAppName(model)} app",
+              child: Text("Go to ${getUpiAppName(model)}",
                   style: TextStyles.body2.colour(Colors.white)),
               onPressed: () async {
                 await LaunchApp.openApp(
@@ -364,20 +361,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
                   "Done",
                   style: TextStyles.body2.bold.colour(Colors.white),
                 ),
-                onPressed: () {
-                  // if (model.lottieAnimationController.isAnimating) {
-                  //   model.lottieAnimationController.stop();
-                  //   model.lottieAnimationController.repeat();
-                  // } else
-                  //   model.lottieAnimationController.repeat();
-                  AppState.backButtonDispatcher.didPopRoute();
-                  _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
-                    if (res)
-                      _gtService.showInstantGoldenTicketView(
-                          title: 'Your Autosave setup was successful!',
-                          source: GTSOURCE.autosave);
-                  });
-                },
+                onPressed: model.onCompleteClose,
               ),
             ),
           )
@@ -482,7 +466,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
             controller: model.vpaController,
             autofocus: widget.page == 0 ? true : false,
             inputFormatters: <TextInputFormatter>[
-              FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z@.]")),
+              FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z@.-]")),
             ],
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(hintText: "hello@upi"),
@@ -979,7 +963,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
       case 'cnrb':
         return "BHIM Canara";
       default:
-        return "preferred UPI";
+        return "preferred UPI App";
     }
   }
 }

@@ -107,6 +107,7 @@ flutter:
     - assets/vectors/icons/
     - assets/vectors/drawer/
     - assets/lotties/
+    - assets/videos/
 
   fonts:
     - family: Cucciolo

@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -26,6 +28,8 @@ class AutoSaveDetailsView extends StatefulWidget {
 class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
     with SingleTickerProviderStateMixin {
   final _paytmService = locator<PaytmService>();
+  final _analyticsService = locator<AnalyticsService>();
+
   PageController autosavePageController;
   double usedHeight = (SizeConfig.screenHeight -
       SizeConfig.viewInsets.top +
@@ -79,6 +83,8 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
             Constants.SUBSCRIPTION_CANCELLED) {
       showSetupButton = true;
     }
+    _analyticsService.track(
+        eventName: AnalyticsEvents.autosaveDetailsScreenViewed);
     autosavePageController = new PageController(initialPage: 0);
     autosavePageController.addListener(_pageListener);
     _pageNotifier = ValueNotifier(0.0);
@@ -551,30 +557,30 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
               child: SafeArea(
                 child: Wrap(
                   children: [
-                    Container(
-                      alignment: Alignment.center,
-                      color: Colors.white,
-                      margin: EdgeInsets.symmetric(
-                          vertical: SizeConfig.padding12,
-                          horizontal: SizeConfig.pageHorizontalMargins),
+                    InkWell(
+                      onTap: () {
+                        AppState.delegate
+                            .parseRoute(Uri.parse('/AutosaveWalkthrough'));
+                      },
                       child: Container(
                         alignment: Alignment.center,
-                        width: SizeConfig.screenWidth,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                              width: 0.8, color: UiConstants.primaryColor),
-                          borderRadius:
-                              BorderRadius.circular(SizeConfig.roundness12),
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.pageHorizontalMargins,
-                          vertical: SizeConfig.padding12,
-                        ),
-                        child: InkWell(
-                          onTap: () {
-                            AppState.delegate
-                                .parseRoute(Uri.parse('/AppWalkthrough'));
-                          },
+                        color: Colors.white,
+                        margin: EdgeInsets.symmetric(
+                            vertical: SizeConfig.padding12,
+                            horizontal: SizeConfig.pageHorizontalMargins),
+                        child: Container(
+                          alignment: Alignment.center,
+                          width: SizeConfig.screenWidth,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                width: 0.8, color: UiConstants.primaryColor),
+                            borderRadius:
+                                BorderRadius.circular(SizeConfig.roundness12),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.pageHorizontalMargins,
+                            vertical: SizeConfig.padding12,
+                          ),
                           child: Text(
                             "See an example",
                             style: TextStyles.body1
@@ -593,6 +599,8 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
                             style: TextStyles.body2.bold.colour(Colors.white),
                           ),
                           onPressed: () {
+                            _analyticsService.track(
+                                eventName: AnalyticsEvents.autosaveSetupViewed);
                             AppState.delegate.appState.currentAction =
                                 PageAction(
                                     page: AutoSaveProcessViewPageConfig,

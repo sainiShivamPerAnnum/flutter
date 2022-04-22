@@ -176,6 +176,10 @@ class TopSaverViewModel extends BaseModel {
         {
           return CodeFromFreq.getMonthFromCode(code);
         }
+      case SaverType.FPL:
+        {
+          return CodeFromFreq.getDayFromCode(code);
+        }
     }
   }
 }

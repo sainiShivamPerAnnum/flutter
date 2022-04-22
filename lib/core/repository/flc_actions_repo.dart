@@ -38,7 +38,8 @@ class FlcActionsRepo {
       "user_id": _userService.baseUser.uid,
       "flc_amount": flcAmount,
       "type": "SUBTRACT",
-      "sub_type": "GM_CRIC2020"
+      "sub_type": "GM_CRIC2020",
+      "user_name": _userService.baseUser.username
     };
     _logger.d("Substract FLC : $_body");
     try {

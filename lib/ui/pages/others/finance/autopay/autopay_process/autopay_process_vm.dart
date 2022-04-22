@@ -1,15 +1,20 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
 import 'package:external_app_launcher/external_app_launcher.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
@@ -22,6 +27,8 @@ class AutoSaveProcessViewModel extends BaseModel {
   final _paytmService = locator<PaytmService>();
   final _logger = locator<CustomLogger>();
   final _userService = locator<UserService>();
+  final _analyticsService = locator<AnalyticsService>();
+  final GoldenTicketService _gtService = GoldenTicketService();
 
   bool _showSetAmountView = false;
   bool _isDaily = true;
@@ -38,6 +45,7 @@ class AutoSaveProcessViewModel extends BaseModel {
   bool _showAppLaunchButton = false;
   int counter = 0;
   bool _showMinAlert = false;
+  Timer _timer;
 
   List<AmountChipsModel> _dailyChips = [];
   List<AmountChipsModel> _weeklyChips = [];
@@ -187,14 +195,19 @@ class AutoSaveProcessViewModel extends BaseModel {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _paytmService.jumpToSubPage(page);
       _paytmService.fraction = page;
-      if (page == 1)
+      if (page == 1) {
         checkForUPIAppExistence(vpaController.text.trim().split("@").last);
+      }
       // getTitle();
       print(pageController.page);
       showProgressIndicator = true;
       _paytmService.processText = "processing";
     });
     onAmountValueChanged(amountFieldController.text);
+  }
+
+  clear() {
+    _timer?.cancel();
   }
 
   onAmountValueChanged(String val) {
@@ -222,6 +235,23 @@ class AutoSaveProcessViewModel extends BaseModel {
     final double t = 1;
     final double ci = p * (pow(1 + r / 100, t) - 1);
     return p + ci;
+  }
+
+  checkTransactionStatus() {
+    _timer = Timer.periodic(Duration(seconds: 15), (timer) async {
+      if (_paytmService.subscriptionFlowPageController.page == 1.0) {
+        _logger.d("Fetching subscription details");
+        await _paytmService.getActiveSubscriptionDetails();
+        if (_paytmService.activeSubscription != null &&
+            _paytmService.activeSubscription.status ==
+                Constants.SUBSCRIPTION_INACTIVE &&
+            pageController.page == 1.0) {
+          _paytmService.jumpToSubPage(2);
+          _paytmService.fraction = 2;
+          showProgressIndicator = false;
+        }
+      }
+    });
   }
 
   // getTitle() {
@@ -260,7 +290,24 @@ class AutoSaveProcessViewModel extends BaseModel {
     _paytmService.fraction = 0;
   }
 
+  onCompleteClose() {
+    _analyticsService.track(
+        eventName: AnalyticsEvents.autosaveCompleteScreenClosed);
+    AppState.backButtonDispatcher.didPopRoute();
+    _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
+      if (res) {
+        _analyticsService.track(
+            eventName: AnalyticsEvents.autosaveSetupGTReceived);
+        _gtService.showInstantGoldenTicketView(
+            title: 'Your Autosave setup was successful!',
+            source: GTSOURCE.autosave);
+      }
+    });
+  }
+
   initiateCustomSubscription() async {
+    _analyticsService.track(eventName: AnalyticsEvents.autosaveSetupInitiated);
+    _analyticsService.track(eventName: AnalyticsEvents.autosaveUpiEntered);
     if (counter > 4) {
       return BaseUtil.showNegativeAlert(
           "Too many attempts", "Please try again later");
@@ -274,15 +321,19 @@ class AutoSaveProcessViewModel extends BaseModel {
         await _paytmService.initiateCustomSubscription(vpaController.text);
     isSubscriptionInProgress = false;
     if (response.status) {
+      _analyticsService.track(
+          eventName: AnalyticsEvents.autosaveMandateGenerated);
       checkForUPIAppExistence(vpaController.text.trim().split("@").last);
+      checkTransactionStatus();
       _paytmService.jumpToSubPage(1);
       _paytmService.fraction = 1;
       Future.delayed(Duration(minutes: 8), () {
         if (_paytmService.fraction == 1) {
+          _paytmService.fraction = 0;
+          _analyticsService.track(
+              eventName: AnalyticsEvents.autosaveMandateTimeout);
           AppState.backButtonDispatcher.didPopRoute();
-          BaseUtil.showNegativeAlert(
-              "Your Autosave is taking longer than usual.",
-              "We'll get back to you in 10 mins");
+          showAutosavePendingDialog();
         }
       });
     } else
@@ -293,6 +344,11 @@ class AutoSaveProcessViewModel extends BaseModel {
   }
 
   setSubscriptionAmount(double amount) async {
+    if (isDaily)
+      _analyticsService.track(eventName: AnalyticsEvents.autosaveDailySaver);
+    else
+      _analyticsService.track(eventName: AnalyticsEvents.autosaveWeeklySaver);
+
     if (amount == null || amount == 0) {
       BaseUtil.showNegativeAlert(
           "No Amount Entered", "Please enter some amount to continue");
@@ -317,6 +373,9 @@ class AutoSaveProcessViewModel extends BaseModel {
           lottieAnimationController.forward();
           _paytmService.currentSubscriptionId = null;
         });
+        _analyticsService.track(
+            eventName: AnalyticsEvents.autosaveSetupCompleted);
+
         BaseUtil.showPositiveAlert(
             "Subscription Successful", "Check transactions for more details");
       } else {
@@ -338,10 +397,12 @@ class AutoSaveProcessViewModel extends BaseModel {
         _logger.d(res.toString());
         GoldenTicketService.goldenTicketId = res['gtId'];
       }
-      _paytmService.getActiveSubscriptionDetails();
-      _paytmService.jumpToSubPage(2);
-      _paytmService.fraction = 2;
-      showProgressIndicator = false;
+      if (_paytmService.subscriptionFlowPageController.page == 1.0) {
+        _paytmService.getActiveSubscriptionDetails();
+        _paytmService.jumpToSubPage(2);
+        _paytmService.fraction = 2;
+        showProgressIndicator = false;
+      }
       // onAmountValueChanged(amountFieldController.text);
 
     } else if (res['status'] == false) {
@@ -353,6 +414,22 @@ class AutoSaveProcessViewModel extends BaseModel {
       BaseUtil.showNegativeAlert(
           "Something went wrong!", "Please try again after sometime");
     }
+  }
+
+  showAutosavePendingDialog() {
+    Future.delayed(Duration(seconds: 1), () {
+      BaseUtil.openDialog(
+        addToScreenStack: true,
+        hapticVibrate: true,
+        isBarrierDismissable: false,
+        content: PendingDialog(
+          title: "We're still processing!",
+          subtitle:
+              "Your Autosave is taking longer than usual. We'll get back to you in ",
+          duration: '20 minutes',
+        ),
+      );
+    });
   }
 
   checkForUPIAppExistence(String upi) async {

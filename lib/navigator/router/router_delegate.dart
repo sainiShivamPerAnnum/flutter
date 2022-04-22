@@ -14,6 +14,7 @@ import 'package:felloapp/ui/pages/hamburger/support.dart';
 import 'package:felloapp/ui/pages/login/login_controller_view.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_view.dart';
 import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
+import 'package:felloapp/ui/pages/onboarding/getstarted/autosave_walkthrough.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_page.dart';
 import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/all_participants.dart';
@@ -221,6 +222,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
         case Pages.TWalkthrough:
           _addPageData(Walkthrough(), TWalkthroughPageConfig);
+          break;
+        case Pages.AutosaveWalkthrough:
+          _addPageData(AutosaveWalkthrough(), AutosaveWalkThroughConfig);
           break;
         case Pages.TWeeklyResult:
           _addPageData(WeeklyResult(), TWeeklyResultPageConfig);
@@ -503,6 +507,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.AutosaveTransactionsView:
         AutosaveTransactionsViewPageConfig.currentPageAction = action;
         break;
+      case Pages.AutosaveWalkthrough:
+        AutosaveWalkThroughConfig.currentPageAction = action;
+        break;
       default:
         break;
     }
@@ -698,7 +705,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         openAppWalkthrough();
         break;
       case 'AutosaveWalkthrough':
-        openAutoSaveWalkthrough();
+        pageConfiguration = AutosaveWalkThroughConfig;
         break;
     }
     if (pageConfiguration != null) {
@@ -738,18 +745,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         page: WalkThroughConfig);
   }
 
-  openAutoSaveWalkthrough() {
-    AppState.delegate.appState.currentAction = PageAction(
-        state: PageState.addWidget,
-        widget: WalkThroughPage(
-          lottieList: [Assets.onb1, Assets.onb2, Assets.onb3],
-          titleList: ["SAVE", "PLAY", "WIN"],
-          descList: [
-            "Save and invest in strong assets and earn tokens 🪙",
-            "Use these tokens to play fun and exciting games 🎮",
-            "Stand to win exclusive prizes and fun rewards 🎉"
-          ],
-        ),
-        page: WalkThroughConfig);
-  }
+  // openAutoSaveWalkthrough() {
+  //   AppState.delegate.appState.currentAction = PageAction(
+  //       state: PageState.addWidget,
+  //       widget: WalkThroughPage(
+
+  //       ),
+  //       page: WalkThroughConfig);
+  // }
 }
