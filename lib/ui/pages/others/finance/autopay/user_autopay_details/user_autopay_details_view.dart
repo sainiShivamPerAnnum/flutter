@@ -54,6 +54,26 @@ class UserAutoSaveDetailsView extends StatelessWidget {
                     FelloAppBar(
                       leading: FelloAppBarBackButton(),
                       title: "Autosave Details",
+                      actions: [
+                        CircleAvatar(
+                          backgroundColor: Colors.white.withOpacity(0.2),
+                          radius: SizeConfig.avatarRadius,
+                          child: InkWell(
+                            child: Icon(
+                              Icons.info_outline_rounded,
+                              size: SizeConfig.iconSize1,
+                              color: Colors.white.withOpacity(0.8),
+                            ),
+                            onTap: () {
+                              AppState.delegate.appState.currentAction =
+                                  PageAction(
+                                state: PageState.addPage,
+                                page: AutoSaveDetailsViewPageConfig,
+                              );
+                            },
+                          ),
+                        )
+                      ],
                     ),
                     Expanded(
                       child: Container(
@@ -663,7 +683,7 @@ class DetailsView extends StatelessWidget {
                                           SizedBox(height: SizeConfig.padding4),
                                           FittedBox(
                                             child: Text(
-                                              "Primary UPI",
+                                              "Verified UPI",
                                               style: TextStyles.body3
                                                   .colour(Colors.grey),
                                             ),
@@ -721,7 +741,7 @@ class DetailsView extends StatelessWidget {
                                 children: [
                                   SizedBox(width: SizeConfig.padding20),
                                   Text(
-                                    "History",
+                                    "Autosave History",
                                     style: TextStyles.title3.bold,
                                   ),
                                 ],
@@ -949,7 +969,8 @@ class _PauseAutoSaveModalState extends State<PauseAutoSaveModal> {
                   hapticVibrate: true,
                   content: FelloConfirmationDialog(
                     title: "Are you sure ?",
-                    subtitle: "Your want to pause Autosave forever",
+                    subtitle:
+                        "You'll lose out on automated savings & many Autosave exclusive reward.",
                     reject: "No",
                     acceptColor: Colors.grey.withOpacity(0.5),
                     rejectColor: UiConstants.primaryColor,

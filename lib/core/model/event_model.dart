@@ -11,16 +11,17 @@ class EventModel {
   int color;
   String image;
   List<dynamic> instructions;
-  EventModel({
-    @required this.title,
-    @required this.subtitle,
-    @required this.thumbnail,
-    @required this.type,
-    @required this.position,
-    @required this.color,
-    @required this.image,
-    @required this.instructions,
-  });
+  String todayMatch; //Only for FPL
+  EventModel(
+      {@required this.title,
+      @required this.subtitle,
+      @required this.thumbnail,
+      @required this.type,
+      @required this.position,
+      @required this.color,
+      @required this.image,
+      @required this.instructions,
+      this.todayMatch});
 
   EventModel copyWith(
       {String title,
@@ -39,7 +40,8 @@ class EventModel {
         position: position ?? this.position,
         color: color ?? this.color,
         image: image ?? this.image,
-        instructions: instructions ?? this.instructions);
+        instructions: instructions ?? this.instructions,
+        todayMatch: todayMatch ?? this.todayMatch);
   }
 
   Map<String, dynamic> toMap() {
@@ -51,7 +53,8 @@ class EventModel {
       'position': position,
       'color': color,
       'image': image,
-      'instructions': instructions
+      'instructions': instructions,
+      'todayMatch': todayMatch
     };
   }
 
@@ -64,7 +67,8 @@ class EventModel {
         position: map['position'] ?? 1,
         color: map['color'] ?? 4280492835,
         image: map['image'] ?? '',
-        instructions: map['info'] ?? ["Fello Event Instructions"]);
+        instructions: map['info'] ?? ["Fello Event Instructions"],
+        todayMatch: map['todayMatch'] ?? "");
   }
 
   String toJson() => json.encode(toMap());
@@ -74,6 +78,6 @@ class EventModel {
 
   @override
   String toString() {
-    return 'EventModel(title: $title, subtitle: $subtitle, thumbnail: $thumbnail, type: $type, position: $position color: $color image: $image)';
+    return 'EventModel(title: $title, subtitle: $subtitle, thumbnail: $thumbnail, type: $type, position: $position color: $color image: $image  todayMatch : $todayMatch)';
   }
 }
