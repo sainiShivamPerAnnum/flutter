@@ -808,20 +808,23 @@ class DetailsView extends StatelessWidget {
                           !model.isInEditMode)
                         Column(
                           children: [
-                            Container(
-                              margin: EdgeInsets.symmetric(
-                                  horizontal: SizeConfig.pageHorizontalMargins),
-                              child: FelloButtonLg(
-                                child: Text(
-                                  "Update Autosave",
-                                  style: TextStyles.body2.bold
-                                      .colour(Colors.white),
+                            if (model.activeSubscription.status ==
+                                Constants.SUBSCRIPTION_ACTIVE)
+                              Container(
+                                margin: EdgeInsets.symmetric(
+                                    horizontal:
+                                        SizeConfig.pageHorizontalMargins),
+                                child: FelloButtonLg(
+                                  child: Text(
+                                    "Update Autosave",
+                                    style: TextStyles.body2.bold
+                                        .colour(Colors.white),
+                                  ),
+                                  onPressed: () {
+                                    model.isInEditMode = true;
+                                  },
                                 ),
-                                onPressed: () {
-                                  model.isInEditMode = true;
-                                },
                               ),
-                            ),
                             model.isResumingInProgress
                                 ? Container(
                                     height: SizeConfig.padding40,

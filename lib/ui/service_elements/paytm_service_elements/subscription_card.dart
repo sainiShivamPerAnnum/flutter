@@ -390,20 +390,23 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
                 widget: AutoSaveProcessView(page: 2),
                 state: PageState.addWidget);
           } else {
-            setState(() {
-              isResumingInProgress = true;
-            });
-            bool response = await _paytmService.resumeSubscription();
-            setState(() {
-              isResumingInProgress = false;
-            });
-            if (!response) {
-              BaseUtil.showNegativeAlert(
-                  "Unable to resume at the moment", "Please try again");
-            } else {
-              BaseUtil.showPositiveAlert("Autosave resumed successfully",
-                  "For more details check Autosave section");
-            }
+            AppState.delegate.appState.currentAction = PageAction(
+                page: UserAutoSaveDetailsViewPageConfig,
+                state: PageState.addPage);
+            // setState(() {
+            //   isResumingInProgress = true;
+            // });
+            // bool response = await _paytmService.resumeSubscription();
+            // setState(() {
+            //   isResumingInProgress = false;
+            // });
+            // if (!response) {
+            //   BaseUtil.showNegativeAlert(
+            //       "Unable to resume at the moment", "Please try again");
+            // } else {
+            //   BaseUtil.showPositiveAlert("Autosave resumed successfully",
+            //       "For more details check Autosave section");
+            // }
           }
         }
       }

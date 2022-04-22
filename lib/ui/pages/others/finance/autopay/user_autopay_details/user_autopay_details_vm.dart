@@ -156,7 +156,7 @@ class UserAutoSaveDetailsViewModel extends BaseModel {
     isPausingInProgress = false;
     if (!response) {
       BaseUtil.showNegativeAlert(
-          "Failed to pause Subscription", "Please try again");
+          "Failed to pause Autosave", "Please try again");
     } else {
       trackPause(pauseValue);
       BaseUtil.showPositiveAlert("Autosave paused successfully",
