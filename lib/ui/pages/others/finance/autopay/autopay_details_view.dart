@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -8,6 +10,7 @@ import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -26,6 +29,8 @@ class AutoSaveDetailsView extends StatefulWidget {
 class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
     with SingleTickerProviderStateMixin {
   final _paytmService = locator<PaytmService>();
+  final _analyticsService = locator<AnalyticsService>();
+
   PageController autosavePageController;
   double usedHeight = (SizeConfig.screenHeight -
       SizeConfig.viewInsets.top +
@@ -56,14 +61,14 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
 
   List<String> bTitle = [
     "Savings on autopilot",
-    "Power of Compounding",
-    "Gaming never stops"
+    "Complete control",
+    "Discover new Rewards"
   ];
 
   List<String> bSubtitle = [
-    "Your money gets saved automatically",
-    "Your money is compounding everyday",
-    "Never run out of Fello tokens while playing"
+    "Your money gets saved in Digital Gold",
+    "Choose how much to save and when",
+    "Unlock new milestones & win exciting rewards"
   ];
 
   List<String> svgassets = [Assets.fasben1, Assets.fasben2, Assets.fasben3];
@@ -79,6 +84,8 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
             Constants.SUBSCRIPTION_CANCELLED) {
       showSetupButton = true;
     }
+    _analyticsService.track(
+        eventName: AnalyticsEvents.autosaveDetailsScreenViewed);
     autosavePageController = new PageController(initialPage: 0);
     autosavePageController.addListener(_pageListener);
     _pageNotifier = ValueNotifier(0.0);
@@ -320,8 +327,8 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
                               width: SizeConfig.screenWidth -
                                   SizeConfig.pageHorizontalMargins * 2,
                               height: SizeConfig.padding64,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: SizeConfig.pageHorizontalMargins),
+                              // padding: EdgeInsets.symmetric(
+                              //     horizontal: SizeConfig.pageHorizontalMargins),
                               child: PageView.builder(
                                 physics: NeverScrollableScrollPhysics(),
                                 onPageChanged: (int page) {
@@ -437,26 +444,26 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
                                 children: [
                                   SizedBox(height: SizeConfig.padding12),
                                   Text(
-                                    "Set up UPI Autosave in 3 easy Steps:",
+                                    "Set up UPI Autosave in 3 easy steps:",
                                     style: TextStyles.body1.bold,
                                   ),
                                   InfoTile(
                                     png: "assets/images/icons/bank.png",
                                     title: "Enter your UPI ID",
                                     subtitle:
-                                        "Make sure your bank supports autosave",
+                                        "This is the UPI of your preferred bank account",
                                   ),
                                   InfoTile(
                                     svg: "assets/vectors/check.svg",
-                                    title:
-                                        "Open the UPI app and approve the request",
+                                    title: "Approve request on your UPI app",
                                     subtitle:
-                                        "Check you PENDING UPI transactions for the request",
+                                        "Confirm request by completing a ₹1 payment",
                                   ),
                                   InfoTile(
                                     svg: Assets.wmtsaveMoney,
-                                    title: "Set a daily saving amount",
-                                    subtitle: "You can change it anytime",
+                                    title:
+                                        "Set a daily or weekly savings amount",
+                                    subtitle: "You can change this anytime",
                                   ),
 
                                   // Container(
@@ -551,30 +558,31 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
               child: SafeArea(
                 child: Wrap(
                   children: [
-                    Container(
-                      alignment: Alignment.center,
-                      color: Colors.white,
-                      margin: EdgeInsets.symmetric(
-                          vertical: SizeConfig.padding12,
-                          horizontal: SizeConfig.pageHorizontalMargins),
+                    InkWell(
+                      onTap: () {
+                        Haptic.vibrate();
+                        AppState.delegate
+                            .parseRoute(Uri.parse('/AutosaveWalkthrough'));
+                      },
                       child: Container(
                         alignment: Alignment.center,
-                        width: SizeConfig.screenWidth,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                              width: 0.8, color: UiConstants.primaryColor),
-                          borderRadius:
-                              BorderRadius.circular(SizeConfig.roundness12),
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.pageHorizontalMargins,
-                          vertical: SizeConfig.padding12,
-                        ),
-                        child: InkWell(
-                          onTap: () {
-                            AppState.delegate
-                                .parseRoute(Uri.parse('/AppWalkthrough'));
-                          },
+                        color: Colors.white,
+                        margin: EdgeInsets.symmetric(
+                            vertical: SizeConfig.padding12,
+                            horizontal: SizeConfig.pageHorizontalMargins),
+                        child: Container(
+                          alignment: Alignment.center,
+                          width: SizeConfig.screenWidth,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                width: 0.8, color: UiConstants.primaryColor),
+                            borderRadius:
+                                BorderRadius.circular(SizeConfig.roundness12),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.pageHorizontalMargins,
+                            vertical: SizeConfig.padding12,
+                          ),
                           child: Text(
                             "See an example",
                             style: TextStyles.body1
@@ -593,6 +601,9 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
                             style: TextStyles.body2.bold.colour(Colors.white),
                           ),
                           onPressed: () {
+                            Haptic.vibrate();
+                            _analyticsService.track(
+                                eventName: AnalyticsEvents.autosaveSetupViewed);
                             AppState.delegate.appState.currentAction =
                                 PageAction(
                                     page: AutoSaveProcessViewPageConfig,

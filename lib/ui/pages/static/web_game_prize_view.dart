@@ -10,14 +10,17 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 
 class PrizesView extends StatelessWidget {
   final PrizesModel model;
   final ScrollController controller;
   final List<Widget> leading;
   final String subtitle;
+  final String promo;
 
-  PrizesView({this.model, this.leading, this.controller, this.subtitle});
+  PrizesView(
+      {this.model, this.leading, this.controller, this.subtitle, this.promo});
   @override
   Widget build(BuildContext context) {
     return NotificationListener<OverscrollNotification>(
@@ -40,34 +43,27 @@ class PrizesView extends StatelessWidget {
         padding: EdgeInsets.only(bottom: SizeConfig.navBarHeight),
         itemBuilder: (ctx, i) {
           if (i == 0)
-            return Container(
-              margin: EdgeInsets.only(top: SizeConfig.padding8),
-              decoration: BoxDecoration(
-                color: UiConstants.tertiaryLight,
-                borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-              ),
-              padding: EdgeInsets.all(SizeConfig.padding16),
-              child: Stack(
-                children: [
-                  //Image.asset("assets/images/confetti.png"),
-                  GestureDetector(
+            return Column(
+              children: [
+                if (promo != null && promo.isNotEmpty)
+                  FPLBanner(
+                    promo: promo,
                     onTap: () {
-                      if (subtitle ==
-                          BaseRemoteConfig.remoteConfig.getString(
-                              BaseRemoteConfig.GAME_CRICKET_FPL_ANNOUNCEMENT)) {
-                        AppState.delegate.appState.setCurrentTabIndex = 1;
-                        AppState.backButtonDispatcher.didPopRoute();
-                        AppState.delegate.parseRoute(Uri.parse("/FPL"));
-                      }
+                      AppState.delegate.appState.setCurrentTabIndex = 1;
+                      AppState.delegate.appState.currentAction = PageAction(
+                          page: TopSaverViewPageConfig,
+                          state: PageState.replaceWidget,
+                          widget: TopSaverView(
+                            eventType: "FPL",
+                            isGameRedirected: true,
+                          ));
                     },
-                    child: Text(
-                      subtitle,
-                      textAlign: TextAlign.center,
-                      style: TextStyles.body3.light,
-                    ),
                   ),
-                ],
-              ),
+                if (subtitle != null && subtitle.isNotEmpty)
+                  WebhomeListBanners(
+                    subtitle: subtitle,
+                  ),
+              ],
             );
           else {
             i--;
@@ -114,6 +110,85 @@ class PrizesView extends StatelessWidget {
             );
           }
         },
+      ),
+    );
+  }
+}
+
+class WebhomeListBanners extends StatelessWidget {
+  WebhomeListBanners({this.subtitle});
+  final String subtitle;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(
+          top: SizeConfig.padding8, bottom: SizeConfig.padding8),
+      decoration: BoxDecoration(
+        color: UiConstants.tertiaryLight,
+        borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+      ),
+      width: SizeConfig.screenWidth,
+      padding: EdgeInsets.all(SizeConfig.padding16),
+      child: Text(
+        subtitle,
+        textAlign: TextAlign.center,
+        style: TextStyles.body3.light,
+      ),
+    );
+  }
+}
+
+class FPLBanner extends StatelessWidget {
+  FPLBanner({this.promo, this.onTap});
+  final String promo;
+  final Function onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        margin: EdgeInsets.only(
+            top: SizeConfig.padding8, bottom: SizeConfig.padding8),
+        decoration: BoxDecoration(
+          color: Color(0xff00237D),
+          borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+        ),
+        height: SizeConfig.padding64,
+        width: SizeConfig.screenWidth,
+        // padding: EdgeInsets.all(SizeConfig.padding16),
+        child: Stack(
+          children: [
+            Opacity(
+              opacity: 0.06,
+              child: Image.asset(
+                Assets.whiteRays,
+                fit: BoxFit.cover,
+                width: SizeConfig.screenWidth,
+              ),
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Center(
+                  child: Image.asset(
+                    'assets/images/icons/cricket.png',
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: SizeConfig.padding12),
+                  child: Text(
+                    promo,
+                    textAlign: TextAlign.center,
+                    style: TextStyles.body2.bold.colour(Colors.white),
+                  ),
+                ),
+                Spacer(),
+                Lottie.asset("assets/lotties/golden-arrow.json"),
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

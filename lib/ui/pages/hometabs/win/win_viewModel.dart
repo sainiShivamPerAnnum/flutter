@@ -85,19 +85,25 @@ class WinViewModel extends BaseModel {
   }
 
   setupAutoEventScroll() {
-    _timer = Timer.periodic(Duration(seconds: 6), (Timer timer) {
-      if (eventScrollController.position.pixels <
-          eventScrollController.position.maxScrollExtent) {
-        eventScrollController.animateTo(
-            eventScrollController.position.pixels +
-                SizeConfig.screenWidth * 0.64,
-            duration: Duration(seconds: 1),
-            curve: Curves.decelerate);
-      } else {
-        eventScrollController.animateTo(0,
-            duration: Duration(seconds: 2), curve: Curves.decelerate);
-      }
-    });
+    try {
+      Future.delayed(Duration(seconds: 6), () {
+        _timer = Timer.periodic(Duration(seconds: 6), (Timer timer) {
+          if (eventScrollController.position.pixels <
+              eventScrollController.position.maxScrollExtent) {
+            eventScrollController.animateTo(
+                eventScrollController.position.pixels +
+                    SizeConfig.screenWidth * 0.64,
+                duration: Duration(seconds: 1),
+                curve: Curves.decelerate);
+          } else {
+            eventScrollController.animateTo(0,
+                duration: Duration(seconds: 2), curve: Curves.decelerate);
+          }
+        });
+      });
+    } catch (e) {
+      _logger.e(e.toString());
+    }
   }
 
   void clear() {

@@ -663,53 +663,11 @@ class AugmontGoldBuyViewModel extends BaseModel {
       addToScreenStack: true,
       hapticVibrate: true,
       isBarrierDismissable: false,
-      content: FelloInfoDialog(
-        customContent: Column(
-          children: [
-            SizedBox(height: SizeConfig.screenHeight * 0.04),
-            SvgPicture.asset(
-              Assets.processing,
-              height: SizeConfig.screenHeight * 0.16,
-            ),
-            SizedBox(
-              height: SizeConfig.screenHeight * 0.04,
-            ),
-            Text(
-              "We're still processing!",
-              style: TextStyles.title3.bold,
-            ),
-            SizedBox(height: SizeConfig.padding16),
-            RichText(
-              textAlign: TextAlign.center,
-              text: TextSpan(
-                text:
-                    "Your transaction is taking longer than usual. We'll get back to you in ",
-                style: TextStyles.body3.colour(Colors.black54),
-                children: [
-                  TextSpan(
-                    text: "15 minutes",
-                    style:
-                        TextStyles.body3.bold.colour(UiConstants.tertiarySolid),
-                  )
-                ],
-              ),
-            ),
-            SizedBox(height: SizeConfig.screenHeight * 0.02),
-            Container(
-              width: SizeConfig.screenWidth,
-              child: FelloButtonLg(
-                child: Text(
-                  "OK",
-                  style: TextStyles.body3.colour(Colors.white),
-                ),
-                color: UiConstants.primaryColor,
-                onPressed: () {
-                  AppState.backButtonDispatcher.didPopRoute();
-                },
-              ),
-            ),
-          ],
-        ),
+      content: PendingDialog(
+        title: "We're still processing!",
+        subtitle:
+            "Your transaction is taking longer than usual. We'll get back to you in ",
+        duration: '15 minutes',
       ),
     );
   }
@@ -807,6 +765,64 @@ class AugmontGoldBuyViewModel extends BaseModel {
           amount: amount ?? 0,
           title: title ?? "Hurray, we saved ₹NA",
         ),
+      ),
+    );
+  }
+}
+
+class PendingDialog extends StatelessWidget {
+  final String title, subtitle, duration;
+
+  PendingDialog(
+      {@required this.title, @required this.subtitle, @required this.duration});
+
+  @override
+  Widget build(BuildContext context) {
+    return FelloInfoDialog(
+      customContent: Column(
+        children: [
+          SizedBox(height: SizeConfig.screenHeight * 0.04),
+          SvgPicture.asset(
+            Assets.processing,
+            height: SizeConfig.screenHeight * 0.16,
+          ),
+          SizedBox(
+            height: SizeConfig.screenHeight * 0.04,
+          ),
+          Text(
+            title,
+            style: TextStyles.title3.bold,
+          ),
+          SizedBox(height: SizeConfig.padding16),
+          RichText(
+            textAlign: TextAlign.center,
+            text: TextSpan(
+              text: subtitle,
+              style: TextStyles.body3.colour(Colors.black54),
+              children: [
+                TextSpan(
+                  text: duration,
+                  style:
+                      TextStyles.body3.bold.colour(UiConstants.tertiarySolid),
+                )
+              ],
+            ),
+          ),
+          SizedBox(height: SizeConfig.screenHeight * 0.02),
+          Container(
+            width: SizeConfig.screenWidth,
+            child: FelloButtonLg(
+              child: Text(
+                "OK",
+                style: TextStyles.body3.colour(Colors.white),
+              ),
+              color: UiConstants.primaryColor,
+              onPressed: () {
+                AppState.backButtonDispatcher.didPopRoute();
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -69,6 +69,8 @@ class AnalyticsEvents {
   static const updatedProfilePicture = "Updated profile picture";
   static const mobileOtpDone = "Mobile-otp done";
   static const truecallerVerified = "Truecaller verified done";
+  static const truecallerSignup = "Signup using Truecaller";
+  static const truecallerLogin = "Login using Truecaller";
   static const initiateChatSupport = "Initiated Chat Support";
   static const requestedCallback = "Requested Callback";
   static const signOut = "User Signed Out";
@@ -77,4 +79,29 @@ class AnalyticsEvents {
   static const prizeAWS = "Prize claim choice AWS gift card";
 
   static const flcTokensExhasuted = 'Fello Tokens Exhausted';
+
+  //autosave section
+  static const autosaveDetailsViewed = "Autosave details Screen Viewed";
+  static const autosaveSetupViewed = "Autosave Setup View entered";
+  static const autosaveSetupInitiated = "Autosave setup initiated";
+  static const autosaveUpiEntered = "Autosave UPI Entered";
+  static const autosaveMandateGenerated = "Autosave mandate generated";
+  static const autosaveMandateTimeout = "Autosave Mandate Expired";
+  static const autosaveDailySaver = "Autosave daily frequency selected";
+  static const autosaveWeeklySaver = "Autosave weekly frequency selected";
+  static const autosaveSetupCompleted = "Autosave setup completed successfully";
+  static const autosaveCompleteScreenClosed =
+      "Autosave setup complete screen closed";
+  static const autosaveSetupGTReceived =
+      "Autosave Setup GT recieved and opened";
+  static const autosaveDetailsScreenViewed = "Autosave details screen viewed";
+  static const autosaveDailyToWeeklySaver =
+      "Autosave user switched from daily to weekly";
+  static const autosaveWeeklyToDailySaver =
+      "Autosave user switched weekly to daily";
+  static const autosavePauseModal = "Autosave pause modal opened";
+  static const autosavePauseOneWeek = "Autosave paused for one week";
+  static const autosavePauseTwoWeeks = "Autosave paused for two weeks";
+  static const autosavePauseOneMonth = "Autosave paused for one month";
+  static const autosavePauseForever = "Autosave paused forever";
 }

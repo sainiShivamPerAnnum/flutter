@@ -131,20 +131,22 @@ class AutosaveTransactionDetailsDialogState
                 margin: EdgeInsets.only(bottom: 20),
                 child: Column(
                   children: [
-                    Row(
-                      children: [
-                        referralTile(
-                          'Purchase Rate:',
-                          '₹ ${widget._transaction.augmontMap.aLockPrice ?? 'N/A'}/gm',
-                          Colors.redAccent.withOpacity(0.6),
-                        ),
-                        referralTile(
-                          'Gold Purchased:',
-                          '${_getAugmontGoldGrams(BaseUtil.toDouble(widget._transaction.augmontMap.aGoldBalance) ?? 'N/A')} grams',
-                          Colors.redAccent.withOpacity(0.6),
-                        )
-                      ],
-                    ),
+                    if (widget._transaction.status ==
+                        UserTransaction.TRAN_STATUS_COMPLETE)
+                      Row(
+                        children: [
+                          referralTile(
+                            'Purchase Rate:',
+                            '₹ ${widget._transaction.augmontMap.aLockPrice ?? 'N/A'}/gm',
+                            Colors.redAccent.withOpacity(0.6),
+                          ),
+                          referralTile(
+                            'Gold Purchased:',
+                            '${_getAugmontGoldGrams(BaseUtil.toDouble(widget._transaction.augmontMap.aGoldBalance) ?? 'N/A')} grams',
+                            Colors.redAccent.withOpacity(0.6),
+                          )
+                        ],
+                      ),
                     (widget._transaction.status != null)
                         ? referralTileWide(
                             'Transaction Status:',

@@ -22,6 +22,7 @@ const String VerifyEmailPath = '/verifyEmail';
 const String SupportPath = '/support';
 const String UpdateRequiredPath = '/updateRequired';
 const String WalkThroughPath = '/walkThrough';
+const String AutosaveWalkThroughPath = '/autosaveWalkThrough';
 const String YourFundsPath = '/yourFunds';
 const String NotificationsPath = '/notifications';
 const String THome = '/tHome';
@@ -76,6 +77,7 @@ enum Pages {
   VerifyEmail,
   Support,
   WalkThrough,
+  AutosaveWalkthrough,
   YourFunds,
   THome,
   TGame,
@@ -279,6 +281,13 @@ PageConfiguration WalkThroughConfig = PageConfiguration(
   path: WalkThroughPath,
   uiPage: Pages.WalkThrough,
   name: 'Walk Thorugh Screen',
+);
+
+PageConfiguration AutosaveWalkThroughConfig = PageConfiguration(
+  key: 'AutosaveWalkThrough',
+  path: AutosaveWalkThroughPath,
+  uiPage: Pages.AutosaveWalkthrough,
+  name: 'Autosave Walk Thorugh Screen',
 );
 
 PageConfiguration YourFundsConfig = PageConfiguration(

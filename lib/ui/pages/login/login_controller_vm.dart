@@ -403,7 +403,8 @@ class LoginControllerViewModel extends BaseModel {
       _isSignup = true;
       logger.d(
           "No existing user details found or found incomplete details for user. Moving to details page");
-
+      if (source == LoginSource.TRUECALLER)
+        _analyticsService.track(eventName: AnalyticsEvents.truecallerSignup);
       //Move to name input page
       BaseUtil.isNewUser = true;
       BaseUtil.isFirstFetchDone = false;
@@ -421,6 +422,8 @@ class LoginControllerViewModel extends BaseModel {
       ///Existing user
       await BaseAnalytics.analytics.logLogin(loginMethod: 'phonenumber');
       logger.d("User details available: Name: " + user.model.name);
+      if (source == LoginSource.TRUECALLER)
+        _analyticsService.track(eventName: AnalyticsEvents.truecallerLogin);
       userService.baseUser = user.model;
       _userRepo.updateUserAppFlyer(
           user.model, await userService.firebaseUser.getIdToken());

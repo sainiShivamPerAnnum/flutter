@@ -1,11 +1,9 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
 import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
 import 'package:felloapp/core/service/autosave_services.dart';
-import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -33,7 +31,6 @@ class AutoSaveCard extends StatefulWidget {
 
 class _AutoSaveCardState extends State<AutoSaveCard> {
   final _paytmService = locator<PaytmService>();
-  // final _autosaveServices = locator<AutosaveServices>();
   bool isResumingInProgress = false;
   bool isLoading = false;
   @override
@@ -393,20 +390,23 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
                 widget: AutoSaveProcessView(page: 2),
                 state: PageState.addWidget);
           } else {
-            setState(() {
-              isResumingInProgress = true;
-            });
-            bool response = await _paytmService.resumeSubscription();
-            setState(() {
-              isResumingInProgress = false;
-            });
-            if (!response) {
-              BaseUtil.showNegativeAlert(
-                  "Unable to resume at the moment", "Please try again");
-            } else {
-              BaseUtil.showPositiveAlert("Autosave resumed successfully",
-                  "For more details check Autosave section");
-            }
+            AppState.delegate.appState.currentAction = PageAction(
+                page: UserAutoSaveDetailsViewPageConfig,
+                state: PageState.addPage);
+            // setState(() {
+            //   isResumingInProgress = true;
+            // });
+            // bool response = await _paytmService.resumeSubscription();
+            // setState(() {
+            //   isResumingInProgress = false;
+            // });
+            // if (!response) {
+            //   BaseUtil.showNegativeAlert(
+            //       "Unable to resume at the moment", "Please try again");
+            // } else {
+            //   BaseUtil.showPositiveAlert("Autosave resumed successfully",
+            //       "For more details check Autosave section");
+            // }
           }
         }
       }

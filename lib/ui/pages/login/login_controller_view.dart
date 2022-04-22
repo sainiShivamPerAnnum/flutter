@@ -245,7 +245,13 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                             : Container(
                                 width: SizeConfig.screenWidth,
                                 padding: EdgeInsets.fromLTRB(
-                                    0, 10, 0, Platform.isIOS ? 0 : 20),
+                                    0,
+                                    10,
+                                    0,
+                                    MediaQuery.of(context).viewInsets.bottom !=
+                                            0
+                                        ? 0
+                                        : SizeConfig.pageHorizontalMargins),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.end,

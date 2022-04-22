@@ -34,13 +34,14 @@ extension TruncateDoubles on double {
 
 class TopSaverView extends StatelessWidget {
   final String eventType;
-  TopSaverView({this.eventType});
+  final bool isGameRedirected;
+  TopSaverView({this.eventType, this.isGameRedirected = false});
 
   @override
   Widget build(BuildContext context) {
     return BaseView<TopSaverViewModel>(
       onModelReady: (model) {
-        model.init(eventType);
+        model.init(eventType, isGameRedirected);
       },
       builder: (context, model, child) {
         return Scaffold(
@@ -161,24 +162,50 @@ class InstructionsTab extends StatelessWidget {
         },
         height: SizeConfig.screenWidth * 0.16,
         child: Container(
-          padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.pageHorizontalMargins),
+          padding: EdgeInsets.only(right: SizeConfig.pageHorizontalMargins),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              if (event.type != "FPL")
+                SizedBox(
+                  width: SizeConfig.pageHorizontalMargins,
+                ),
               event.type == "FPL"
-                  ? Image.asset('images/cricketThumbIcon.png',
-                      height: SizeConfig.padding54)
+                  ? Image.asset(
+                      'assets/images/icons/cricket.png',
+                      // height: SizeConfig.padding54,
+                    )
                   : SvgPicture.asset(
                       'images/svgs/gold.svg',
                       height: SizeConfig.padding40,
                     ),
-              SizedBox(width: SizeConfig.padding16),
-              Text(
-                event.type == "FPL" ? "Play Cricket" : "Buy Digital Gold",
-                style: TextStyles.title5.colour(Colors.white).bold.setHeight(1),
+              if (event.type != "FPL") SizedBox(width: SizeConfig.padding16),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      event.type == "FPL" ? "Play Cricket" : "Buy Digital Gold",
+                      style: TextStyles.title5
+                          .colour(Colors.white)
+                          .bold
+                          .setHeight(1),
+                    ),
+                    if (event.type == "FPL")
+                      Container(
+                        margin: EdgeInsets.only(top: SizeConfig.padding2),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            event.todayMatch,
+                            style: TextStyles.body3.colour(Colors.white),
+                          ),
+                        ),
+                      )
+                  ],
+                ),
               ),
-              Spacer(),
               Lottie.asset("assets/lotties/golden-arrow.json"),
             ],
           ),

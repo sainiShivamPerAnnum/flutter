@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/top_saver_model.dart';
@@ -8,11 +9,14 @@ import 'package:felloapp/core/repository/winners_repo.dart';
 import 'package:felloapp/core/service/events_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/modals_sheets/event_instructions_modal.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/code_from_freq.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:flutter/material.dart';
 
 class TopSaverViewModel extends BaseModel {
   final _logger = locator<CustomLogger>();
@@ -51,7 +55,7 @@ class TopSaverViewModel extends BaseModel {
     notifyListeners();
   }
 
-  init(String eventType) async {
+  init(String eventType, bool isGameRedirected) async {
     setState(ViewState.Busy);
     event = await _dbModel.getSingleEventDetails(eventType);
     setState(ViewState.Idle);
@@ -64,6 +68,21 @@ class TopSaverViewModel extends BaseModel {
     // _logger.d(CodeFromFreq.getPastDayCode());
     // _logger.d(CodeFromFreq.getPastWeekCode());
     // _logger.d(CodeFromFreq.getPastMonthCode());
+    _logger.d(event.type);
+    _logger.d(isGameRedirected);
+    if (event.type == "FPL" && isGameRedirected)
+      BaseUtil.openModalBottomSheet(
+        addToScreenStack: true,
+        backgroundColor: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(SizeConfig.roundness32),
+          topRight: Radius.circular(SizeConfig.roundness32),
+        ),
+        isScrollControlled: true,
+        hapticVibrate: true,
+        isBarrierDismissable: false,
+        content: EventInstructionsModal(instructions: event.instructions),
+      );
   }
 
   setAppbarTitle() {
@@ -175,6 +194,10 @@ class TopSaverViewModel extends BaseModel {
       case SaverType.MONTHLY:
         {
           return CodeFromFreq.getMonthFromCode(code);
+        }
+      case SaverType.FPL:
+        {
+          return CodeFromFreq.getDayFromCode(code);
         }
     }
   }
