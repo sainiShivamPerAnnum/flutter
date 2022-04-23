@@ -53,7 +53,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
       return Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: UiConstants.primaryColor,
-        floatingActionButton: keyboardIsOpen
+        floatingActionButton: keyboardIsOpen && PlatformUtils.isIOS
             ? Container(
                 margin: EdgeInsets.only(
                     bottom: MediaQuery.of(context).viewInsets.bottom),
