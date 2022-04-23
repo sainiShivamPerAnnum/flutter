@@ -81,7 +81,8 @@ class AnalyticsEvents {
   static const flcTokensExhasuted = 'Fello Tokens Exhausted';
 
   //autosave section
-  static const autosaveDetailsViewed = "Autosave details Screen Viewed";
+  static const autosaveDetailsScreenView = "Autosave details Screen Viewed";
+  static const autosaveExampleView = "Autosave example viewed";
   static const autosaveSetupViewed = "Autosave Setup View entered";
   static const autosaveSetupInitiated = "Autosave setup initiated";
   static const autosaveUpiEntered = "Autosave UPI Entered";

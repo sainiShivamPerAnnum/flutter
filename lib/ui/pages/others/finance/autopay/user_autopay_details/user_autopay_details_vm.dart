@@ -119,7 +119,7 @@ class UserAutoSaveDetailsViewModel extends BaseModel {
 
   init() async {
     _analyticsService.track(
-        eventName: AnalyticsEvents.autosaveDetailsScreenViewed);
+        eventName: AnalyticsEvents.autosaveUserDetailsScreenViewed);
     setState(ViewState.Busy);
     _paytmService.isOnSubscriptionFlow = false;
     subIdController = new TextEditingController();

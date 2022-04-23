@@ -85,7 +85,7 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
       showSetupButton = true;
     }
     _analyticsService.track(
-        eventName: AnalyticsEvents.autosaveDetailsScreenViewed);
+        eventName: AnalyticsEvents.autosaveDetailsScreenView);
     autosavePageController = new PageController(initialPage: 0);
     autosavePageController.addListener(_pageListener);
     _pageNotifier = ValueNotifier(0.0);
@@ -560,6 +560,8 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
                   children: [
                     InkWell(
                       onTap: () {
+                        _analyticsService.track(
+                            eventName: AnalyticsEvents.autosaveExampleView);
                         Haptic.vibrate();
                         AppState.delegate
                             .parseRoute(Uri.parse('/AutosaveWalkthrough'));
