@@ -22,14 +22,14 @@ import 'package:intl/intl.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
 
-class AutoSaveCard extends StatefulWidget {
-  AutoSaveCard({Key key}) : super(key: key);
+class AutosaveCard extends StatefulWidget {
+  AutosaveCard({Key key}) : super(key: key);
 
   @override
-  State<AutoSaveCard> createState() => _AutoSaveCardState();
+  State<AutosaveCard> createState() => _AutosaveCardState();
 }
 
-class _AutoSaveCardState extends State<AutoSaveCard> {
+class _AutosaveCardState extends State<AutosaveCard> {
   final _paytmService = locator<PaytmService>();
   bool isResumingInProgress = false;
   bool isLoading = false;
@@ -219,7 +219,7 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
                           onPressed: () {
                             AppState.delegate.appState.currentAction =
                                 PageAction(
-                                    page: AutoSaveDetailsViewPageConfig,
+                                    page: AutosaveDetailsViewPageConfig,
                                     state: PageState.addPage);
                           },
                           icon: Icon(
@@ -362,36 +362,36 @@ class _AutoSaveCardState extends State<AutoSaveCard> {
             _paytmService.activeSubscription.status ==
                 Constants.SUBSCRIPTION_CANCELLED)) {
       AppState.delegate.appState.currentAction = PageAction(
-          page: AutoSaveDetailsViewPageConfig, state: PageState.addPage);
+          page: AutosaveDetailsViewPageConfig, state: PageState.addPage);
       // _paytmService.initiateSubscription();
     } else if (_paytmService.activeSubscription.status ==
         Constants.SUBSCRIPTION_PROCESSING) {
       AppState.delegate.appState.currentAction = PageAction(
-          page: AutoSaveProcessViewPageConfig,
-          widget: AutoSaveProcessView(page: 1),
+          page: AutosaveProcessViewPageConfig,
+          widget: AutosaveProcessView(page: 1),
           state: PageState.addWidget);
     } else {
       if (_paytmService.activeSubscription.status ==
           Constants.SUBSCRIPTION_ACTIVE) {
         AppState.delegate.appState.currentAction = PageAction(
-            page: UserAutoSaveDetailsViewPageConfig, state: PageState.addPage);
+            page: UserAutosaveDetailsViewPageConfig, state: PageState.addPage);
       }
       if (_paytmService.activeSubscription.status ==
           Constants.SUBSCRIPTION_INACTIVE) {
         if (_paytmService.activeSubscription.autoAmount == 0.0) {
           AppState.delegate.appState.currentAction = PageAction(
-              page: AutoSaveProcessViewPageConfig,
-              widget: AutoSaveProcessView(page: 2),
+              page: AutosaveProcessViewPageConfig,
+              widget: AutosaveProcessView(page: 2),
               state: PageState.addWidget);
         } else {
           if (_paytmService.activeSubscription.resumeDate.isEmpty) {
             AppState.delegate.appState.currentAction = PageAction(
-                page: AutoSaveProcessViewPageConfig,
-                widget: AutoSaveProcessView(page: 2),
+                page: AutosaveProcessViewPageConfig,
+                widget: AutosaveProcessView(page: 2),
                 state: PageState.addWidget);
           } else {
             AppState.delegate.appState.currentAction = PageAction(
-                page: UserAutoSaveDetailsViewPageConfig,
+                page: UserAutosaveDetailsViewPageConfig,
                 state: PageState.addPage);
             // setState(() {
             //   isResumingInProgress = true;

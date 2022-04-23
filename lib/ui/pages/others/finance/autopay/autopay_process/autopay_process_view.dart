@@ -30,21 +30,21 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:timelines/timelines.dart';
 
-class AutoSaveProcessView extends StatefulWidget {
+class AutosaveProcessView extends StatefulWidget {
   final int page;
-  AutoSaveProcessView({this.page = 0});
+  AutosaveProcessView({this.page = 0});
 
   @override
-  State<AutoSaveProcessView> createState() => _AutoSaveProcessViewState();
+  State<AutosaveProcessView> createState() => _AutosaveProcessViewState();
 }
 
-class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
+class _AutosaveProcessViewState extends State<AutosaveProcessView>
     with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
 
-    return BaseView<AutoSaveProcessViewModel>(onModelReady: (model) {
+    return BaseView<AutosaveProcessViewModel>(onModelReady: (model) {
       model.lottieAnimationController = AnimationController(vsync: this);
       model.init(widget.page);
     }, onModelDispose: (model) {
@@ -115,7 +115,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
     });
   }
 
-  pendingUI(AutoSaveProcessViewModel model) {
+  pendingUI(AutosaveProcessViewModel model) {
     return Container(
       padding:
           EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
@@ -311,7 +311,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
     );
   }
 
-  completedUI(AutoSaveProcessViewModel model) {
+  completedUI(AutosaveProcessViewModel model) {
     return Container(
       padding:
           EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
@@ -387,7 +387,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
     );
   }
 
-  cancelledUI(AutoSaveProcessViewModel model) {
+  cancelledUI(AutosaveProcessViewModel model) {
     return Container(
       padding:
           EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
@@ -430,7 +430,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
     );
   }
 
-  addUpiIdUI(AutoSaveProcessViewModel model) {
+  addUpiIdUI(AutosaveProcessViewModel model) {
     return Container(
       padding:
           EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
@@ -569,7 +569,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
     );
   }
 
-  amountSetUI(AutoSaveProcessViewModel model) {
+  amountSetUI(AutosaveProcessViewModel model) {
     return Stack(
       children: [
         Container(
@@ -724,9 +724,13 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
               ),
               SizedBox(height: SizeConfig.padding12),
               if (model.showMinAlert)
-                Text(
-                  "Minimum investment amount is ₹ ${model.minValue}",
-                  style: TextStyles.body3.bold.colour(Colors.red[300]),
+                Container(
+                  width: SizeConfig.screenWidth,
+                  alignment: Alignment.center,
+                  child: Text(
+                    "Minimum investment amount is ₹ ${model.minValue}",
+                    style: TextStyles.body3.bold.colour(Colors.red[300]),
+                  ),
                 ),
               SizedBox(height: SizeConfig.padding12),
               Container(
@@ -746,7 +750,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
                   fit: BoxFit.scaleDown,
                   child: RichText(
                       text: TextSpan(
-                    text: "You'll be saving ",
+                    text: "You will be saving ",
                     children: [
                       TextSpan(
                           text:
@@ -817,7 +821,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                "Every ${model.isDaily ? 'day' : 'week'} you'll recieve",
+                                "Every ${model.isDaily ? 'day' : 'week'} You will recieve",
                                 style: TextStyles.body2.bold,
                               ),
                               // Divider(
@@ -906,11 +910,11 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
     );
   }
 
-  defaultUI(AutoSaveProcessViewModel model) {
+  defaultUI(AutosaveProcessViewModel model) {
     return ListLoader();
   }
 
-  upichips(String suffix, AutoSaveProcessViewModel model) {
+  upichips(String suffix, AutosaveProcessViewModel model) {
     return InkWell(
       onTap: () {
         Haptic.vibrate();
@@ -935,7 +939,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
     );
   }
 
-  amountchips(int amount, AutoSaveProcessViewModel model) {
+  amountchips(int amount, AutosaveProcessViewModel model) {
     return InkWell(
       onTap: () {
         model.amountFieldController?.text = amount.toString();
@@ -953,7 +957,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
     );
   }
 
-  String getUpiAppName(AutoSaveProcessViewModel model) {
+  String getUpiAppName(AutosaveProcessViewModel model) {
     final String upi = model.vpaController.text.split('@').last;
     switch (upi) {
       case 'upi':

@@ -33,12 +33,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
-class UserAutoSaveDetailsView extends StatelessWidget {
-  const UserAutoSaveDetailsView({Key key}) : super(key: key);
+class UserAutosaveDetailsView extends StatelessWidget {
+  const UserAutosaveDetailsView({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BaseView<UserAutoSaveDetailsViewModel>(
+    return BaseView<UserAutosaveDetailsViewModel>(
       onModelReady: (model) {
         model.init();
       },
@@ -68,7 +68,7 @@ class UserAutoSaveDetailsView extends StatelessWidget {
                               AppState.delegate.appState.currentAction =
                                   PageAction(
                                 state: PageState.addPage,
-                                page: AutoSaveDetailsViewPageConfig,
+                                page: AutosaveDetailsViewPageConfig,
                               );
                             },
                           ),
@@ -108,7 +108,7 @@ class UserAutoSaveDetailsView extends StatelessWidget {
 }
 
 class UpdateDetailsView extends StatelessWidget {
-  final UserAutoSaveDetailsViewModel model;
+  final UserAutosaveDetailsViewModel model;
   UpdateDetailsView({this.model});
   @override
   Widget build(BuildContext context) {
@@ -290,7 +290,7 @@ class UpdateDetailsView extends StatelessWidget {
                     fit: BoxFit.scaleDown,
                     child: RichText(
                         text: TextSpan(
-                      text: "You'll be saving ",
+                      text: "You will be saving ",
                       children: [
                         TextSpan(
                             text:
@@ -347,7 +347,7 @@ class AmountFreqUpdateButton extends StatelessWidget {
     @required this.model,
   }) : super(key: key);
 
-  final UserAutoSaveDetailsViewModel model;
+  final UserAutosaveDetailsViewModel model;
 
   @override
   Widget build(BuildContext context) {
@@ -371,7 +371,7 @@ class AmountFreqUpdateButton extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          "Every ${model.isDaily ? 'day' : 'week'} you'll recieve",
+                          "Every ${model.isDaily ? 'day' : 'week'} You will recieve",
                           style: TextStyles.body2.bold,
                         ),
                         // Divider(
@@ -518,7 +518,7 @@ class AmountChips extends StatelessWidget {
 }
 
 class DetailsView extends StatelessWidget {
-  final UserAutoSaveDetailsViewModel model;
+  final UserAutosaveDetailsViewModel model;
   DetailsView({this.model});
 
   getFreq(String freq) {
@@ -548,71 +548,82 @@ class DetailsView extends StatelessWidget {
                       PropertyChangeConsumer<PaytmService,
                           PaytmServiceProperties>(
                         properties: [PaytmServiceProperties.ActiveSubscription],
-                        builder: (context, model, property) =>
-                            WinningsContainer(
+                        builder: (context, m, property) => WinningsContainer(
                           shadow: false,
                           onTap: () {},
                           gradient: AutosaveServices.getGradient(
-                              model.activeSubscription),
+                              m.activeSubscription),
                           color: UiConstants.autosaveColor,
                           child: Container(
                             width: SizeConfig.screenWidth,
                             alignment: Alignment.center,
                             padding: EdgeInsets.all(SizeConfig.padding8),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      model.activeSubscription.status ==
-                                              Constants.SUBSCRIPTION_ACTIVE
-                                          ? "Autosave Active"
-                                          : "Autosave Paused",
-                                      style:
-                                          TextStyles.body1.colour(Colors.white),
+                            child: (m.activeSubscription.status ==
+                                        Constants.SUBSCRIPTION_INACTIVE &&
+                                    m.activeSubscription.resumeDate.isEmpty)
+                                ? Center(
+                                    child: Text(
+                                      "Autosave Inactive",
+                                      style: TextStyles.title3.bold
+                                          .colour(Colors.white),
                                     ),
-                                    if (model.activeSubscription.status ==
-                                        Constants.SUBSCRIPTION_ACTIVE)
-                                      Container(
-                                        child: Row(
-                                          children: [
-                                            SizedBox(
-                                                width: SizeConfig.padding4),
-                                            Icon(
-                                              Icons.verified_rounded,
-                                              color: UiConstants.primaryColor,
-                                              size: SizeConfig.iconSize2,
+                                  )
+                                : Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            model
+                                                .getTitle(m.activeSubscription),
+                                            style: TextStyles.body1
+                                                .colour(Colors.white),
+                                          ),
+                                          if (m.activeSubscription.status ==
+                                              Constants.SUBSCRIPTION_ACTIVE)
+                                            Container(
+                                              child: Row(
+                                                children: [
+                                                  SizedBox(
+                                                      width:
+                                                          SizeConfig.padding4),
+                                                  Icon(
+                                                    Icons.verified_rounded,
+                                                    color: UiConstants
+                                                        .primaryColor,
+                                                    size: SizeConfig.iconSize2,
+                                                  )
+                                                ],
+                                              ),
                                             )
-                                          ],
-                                        ),
-                                      )
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                        "₹${model.activeSubscription.autoAmount.toInt() ?? 0.0}",
-                                        style: GoogleFonts.sourceSansPro(
-                                            fontSize: SizeConfig.title1,
-                                            fontWeight: FontWeight.w800,
-                                            letterSpacing: 2,
-                                            color: Colors.white)),
-                                    Text(
-                                      getFreq(model
-                                          .activeSubscription.autoFrequency),
-                                      style: GoogleFonts.sourceSansPro(
-                                          fontSize: SizeConfig.title5,
-                                          fontWeight: FontWeight.w300,
-                                          height: 1.6,
-                                          color: Colors.white),
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                              "₹${m.activeSubscription.autoAmount.toInt() ?? 0.0}",
+                                              style: GoogleFonts.sourceSansPro(
+                                                  fontSize: SizeConfig.title1,
+                                                  fontWeight: FontWeight.w800,
+                                                  letterSpacing: 2,
+                                                  color: Colors.white)),
+                                          Text(
+                                            getFreq(m.activeSubscription
+                                                .autoFrequency),
+                                            style: GoogleFonts.sourceSansPro(
+                                                fontSize: SizeConfig.title5,
+                                                fontWeight: FontWeight.w300,
+                                                height: 1.6,
+                                                color: Colors.white),
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                           ),
                         ),
                       ),
@@ -702,36 +713,38 @@ class DetailsView extends StatelessWidget {
                                   text: new TextSpan(
                                     children: [
                                       new TextSpan(
-                                        text:
-                                            'Congratulations! your investments are on\n',
+                                        text: 'Your Autosave account is ',
                                         style: TextStyles.body3
                                             .colour(Colors.black45)
                                             .italic,
                                       ),
                                       new TextSpan(
-                                        text: 'auto-pilot mode',
+                                        text: model.getRichText(),
                                         style: TextStyles.body3
-                                            .colour(UiConstants.primaryColor)
+                                            .colour(model.getRichTextColor())
                                             .bold
                                             .italic,
-                                        recognizer: new TapGestureRecognizer()
-                                          ..onTap = () {
-                                            Haptic.vibrate();
+                                        // recognizer: new TapGestureRecognizer()
+                                        //   ..onTap = () {
+                                        //     Haptic.vibrate();
 
-                                            AppState.delegate.appState
-                                                    .currentAction =
-                                                PageAction(
-                                                    state: PageState.addPage,
-                                                    page:
-                                                        AutoSaveDetailsViewPageConfig);
-                                          },
+                                        //     AppState.delegate.appState
+                                        //             .currentAction =
+                                        //         PageAction(
+                                        //             state: PageState.addPage,
+                                        //             page:
+                                        //                 AutosaveDetailsViewPageConfig);
+                                        //   },
                                       ),
-                                      new TextSpan(
-                                        text: ' now.',
-                                        style: TextStyles.body3
-                                            .colour(Colors.black45)
-                                            .italic,
-                                      ),
+                                      //Verified and Active
+                                      // Verified and Paused
+                                      // currently active
+                                      // new TextSpan(
+                                      //   text: ' now.',
+                                      //   style: TextStyles.body3
+                                      //       .colour(Colors.black45)
+                                      //       .italic,
+                                      // ),
                                     ],
                                   ),
                                 ),
@@ -807,50 +820,76 @@ class DetailsView extends StatelessWidget {
                           model.activeSubscription != null &&
                           !model.isInEditMode)
                         Column(
-                          children: [
-                            if (model.activeSubscription.status ==
-                                Constants.SUBSCRIPTION_ACTIVE)
-                              Container(
-                                margin: EdgeInsets.symmetric(
-                                    horizontal:
+                          children: (model.activeSubscription.status ==
+                                      Constants.SUBSCRIPTION_INACTIVE &&
+                                  model.activeSubscription.resumeDate.isEmpty)
+                              ? [
+                                  Container(
+                                    margin: EdgeInsets.all(
                                         SizeConfig.pageHorizontalMargins),
-                                child: FelloButtonLg(
-                                  child: Text(
-                                    "Update Autosave",
-                                    style: TextStyles.body2.bold
-                                        .colour(Colors.white),
-                                  ),
-                                  onPressed: () {
-                                    model.isInEditMode = true;
-                                  },
-                                ),
-                              ),
-                            model.isResumingInProgress
-                                ? Container(
-                                    height: SizeConfig.padding40,
-                                    child: SpinKitThreeBounce(
-                                      size: SizeConfig.padding24,
-                                      color: UiConstants.tertiarySolid,
-                                    ),
-                                  )
-                                : TextButton(
-                                    onPressed: () => model.pauseResume(model),
-                                    child: Text(
-                                      model.activeSubscription.status ==
-                                              Constants.SUBSCRIPTION_INACTIVE
-                                          ? "RESUME AUTOSAVE"
-                                          : "PAUSE AUTOSAVE",
-                                      style: TextStyles.body2
-                                          .colour(UiConstants.tertiarySolid)
-                                          .light,
+                                    child: FelloButtonLg(
+                                      child: Text(
+                                        "Restart Autosave",
+                                        style: TextStyles.body2.bold
+                                            .colour(Colors.white),
+                                      ),
+                                      onPressed: () {
+                                        AppState.delegate.appState.currentAction =
+                                            PageAction(
+                                                page:
+                                                    AutosaveProcessViewPageConfig,
+                                                widget: AutosaveProcessView(
+                                                    page: 2),
+                                                state: PageState.replaceWidget);
+                                      },
                                     ),
                                   ),
-                            SizedBox(
-                              height: SizeConfig.viewInsets.bottom != 0
-                                  ? 0
-                                  : SizeConfig.padding12,
-                            ),
-                          ],
+                                ]
+                              : [
+                                  if (model.activeSubscription.status ==
+                                      Constants.SUBSCRIPTION_ACTIVE)
+                                    Container(
+                                      margin: EdgeInsets.symmetric(
+                                          horizontal:
+                                              SizeConfig.pageHorizontalMargins),
+                                      child: FelloButtonLg(
+                                        child: Text(
+                                          "Update Autosave",
+                                          style: TextStyles.body2.bold
+                                              .colour(Colors.white),
+                                        ),
+                                        onPressed: () {
+                                          model.isInEditMode = true;
+                                        },
+                                      ),
+                                    ),
+                                  model.isResumingInProgress
+                                      ? Container(
+                                          height: SizeConfig.padding40,
+                                          child: SpinKitThreeBounce(
+                                            size: SizeConfig.padding24,
+                                            color: UiConstants.tertiarySolid,
+                                          ),
+                                        )
+                                      : TextButton(
+                                          onPressed: () =>
+                                              model.pauseResume(model),
+                                          child: Text(
+                                            model.activeSubscription.status ==
+                                                    Constants
+                                                        .SUBSCRIPTION_INACTIVE
+                                                ? "RESUME AUTOSAVE"
+                                                : "PAUSE AUTOSAVE",
+                                            style: TextStyles.body2.bold.colour(
+                                                UiConstants.tertiarySolid),
+                                          ),
+                                        ),
+                                  SizedBox(
+                                    height: SizeConfig.viewInsets.bottom != 0
+                                        ? 0
+                                        : SizeConfig.padding12,
+                                  ),
+                                ],
                         )
                     ],
                   )
@@ -878,16 +917,16 @@ class DetailsView extends StatelessWidget {
   }
 }
 
-class PauseAutoSaveModal extends StatefulWidget {
-  final UserAutoSaveDetailsViewModel model;
+class PauseAutosaveModal extends StatefulWidget {
+  final UserAutosaveDetailsViewModel model;
 
-  const PauseAutoSaveModal({Key key, this.model}) : super(key: key);
+  const PauseAutosaveModal({Key key, this.model}) : super(key: key);
 
   @override
-  State<PauseAutoSaveModal> createState() => _PauseAutoSaveModalState();
+  State<PauseAutosaveModal> createState() => _PauseAutosaveModalState();
 }
 
-class _PauseAutoSaveModalState extends State<PauseAutoSaveModal> {
+class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
   int pauseValue = 1;
   setPauseValue(value) {
     setState(() {
@@ -909,7 +948,7 @@ class _PauseAutoSaveModalState extends State<PauseAutoSaveModal> {
           Row(
             children: [
               Text(
-                "Pause AutoSave",
+                "Pause Autosave",
                 style: TextStyle(
                   color: Colors.black54,
                   fontWeight: FontWeight.w700,
@@ -973,7 +1012,7 @@ class _PauseAutoSaveModalState extends State<PauseAutoSaveModal> {
                   content: FelloConfirmationDialog(
                     title: "Are you sure ?",
                     subtitle:
-                        "You'll lose out on automated savings & many Autosave exclusive reward.",
+                        "You will lose out on automated savings & many exclusive rewards⏸️",
                     reject: "No",
                     acceptColor: Colors.grey.withOpacity(0.5),
                     rejectColor: UiConstants.primaryColor,

@@ -74,7 +74,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   //   this._isPausing = isPausing;
   //   notifyListeners(PaytmServiceProperties.IsPausing);
   //   _logger.d("Paytm Service:Pausing Subscription Properties notified");
-  //   if (isPausing) refreshAutoSaveDetails();
+  //   if (isPausing) refreshAutosaveDetails();
   // }
 
   // get isResuming => this._isResuming;
@@ -83,7 +83,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   //   this._isResuming = isResuming;
   //   notifyListeners(PaytmServiceProperties.IsResuming);
   //   _logger.d("Paytm Service:Resuming Subscription Properties notified");
-  //   if (isResuming) refreshAutoSaveDetails();
+  //   if (isResuming) refreshAutosaveDetails();
   // }
 
   bool isOnSubscriptionFlow = false;

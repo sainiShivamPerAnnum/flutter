@@ -149,7 +149,7 @@ class PaytmRepository {
       final response = await APIService.instance.putData(
         ApiPath().kCreateSubscription,
         body: _body,
-        token: _token,
+        token: "Bearer $_token",
         isAwsSubUrl: true,
       );
       if (response != null) {

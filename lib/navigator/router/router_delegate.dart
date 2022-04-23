@@ -1,4 +1,6 @@
 //Project Imports
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
@@ -146,6 +148,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   void _addPageData(Widget child, PageConfiguration pageConfig) {
     AppState.screenStack.add(ScreenItem.page);
     print("Added a page ${pageConfig.key}");
+    log("Current Stack: ${AppState.screenStack}");
     _analytics.trackScreen(screen: pageConfig.name);
     _pages.add(
       _createPage(child, pageConfig),
@@ -280,19 +283,19 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         //   break;
         // case Pages.PoolView:
         //   _addPageData(PoolView(), PoolViewPageConfig);
-        case Pages.AutoSaveDetailsView:
-          _addPageData(AutoSaveDetailsView(), AutoSaveDetailsViewPageConfig);
+        case Pages.AutosaveDetailsView:
+          _addPageData(AutosaveDetailsView(), AutosaveDetailsViewPageConfig);
           break;
-        case Pages.AutoSaveProcessView:
-          _addPageData(AutoSaveProcessView(), AutoSaveProcessViewPageConfig);
+        case Pages.AutosaveProcessView:
+          _addPageData(AutosaveProcessView(), AutosaveProcessViewPageConfig);
           break;
-        case Pages.UserAutoSaveDetailsView:
+        case Pages.UserAutosaveDetailsView:
           _addPageData(
-              UserAutoSaveDetailsView(), UserAutoSaveDetailsViewPageConfig);
+              UserAutosaveDetailsView(), UserAutosaveDetailsViewPageConfig);
           break;
         case Pages.AutosaveTransactionsView:
           _addPageData(
-              AutoSaveTransactionsView(), AutosaveTransactionsViewPageConfig);
+              AutosaveTransactionsView(), AutosaveTransactionsViewPageConfig);
           break;
         default:
           break;
@@ -303,6 +306,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 // 1
   void replace(PageConfiguration newRoute) {
     if (_pages.isNotEmpty) {
+      AppState.screenStack.removeLast();
       _pages.removeLast();
     }
     addPage(newRoute);
@@ -340,6 +344,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
   // 7
   void replaceWidget(Widget child, PageConfiguration newRoute) {
+    if (_pages.isNotEmpty) {
+      AppState.screenStack.removeLast();
+      _pages.removeLast();
+    }
     _addPageData(child, newRoute);
   }
 
@@ -500,14 +508,14 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.WebGameView:
         WebGameViewPageConfig.currentPageAction = action;
         break;
-      case Pages.AutoSaveDetailsView:
-        AutoSaveDetailsViewPageConfig.currentPageAction = action;
+      case Pages.AutosaveDetailsView:
+        AutosaveDetailsViewPageConfig.currentPageAction = action;
         break;
-      case Pages.AutoSaveProcessView:
-        AutoSaveProcessViewPageConfig.currentPageAction = action;
+      case Pages.AutosaveProcessView:
+        AutosaveProcessViewPageConfig.currentPageAction = action;
         break;
-      case Pages.UserAutoSaveDetailsView:
-        UserAutoSaveDetailsViewPageConfig.currentPageAction = action;
+      case Pages.UserAutosaveDetailsView:
+        UserAutosaveDetailsViewPageConfig.currentPageAction = action;
         break;
       case Pages.AutosaveTransactionsView:
         AutosaveTransactionsViewPageConfig.currentPageAction = action;
@@ -699,13 +707,13 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         AppState.backButtonDispatcher.didPopRoute();
         break;
       case 'autosaveDetails':
-        pageConfiguration = AutoSaveDetailsViewPageConfig;
+        pageConfiguration = AutosaveDetailsViewPageConfig;
         break;
       case 'autosaveProcess':
-        pageConfiguration = AutoSaveProcessViewPageConfig;
+        pageConfiguration = AutosaveProcessViewPageConfig;
         break;
-      case 'UserAutoSaveDetails':
-        pageConfiguration = UserAutoSaveDetailsViewPageConfig;
+      case 'UserAutosaveDetails':
+        pageConfiguration = UserAutosaveDetailsViewPageConfig;
         break;
       case 'AutosaveTxns':
         pageConfiguration = AutosaveTransactionsViewPageConfig;
@@ -754,7 +762,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         page: WalkThroughConfig);
   }
 
-  // openAutoSaveWalkthrough() {
+  // openAutosaveWalkthrough() {
   //   AppState.delegate.appState.currentAction = PageAction(
   //       state: PageState.addWidget,
   //       widget: WalkThroughPage(

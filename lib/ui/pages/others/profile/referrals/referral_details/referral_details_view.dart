@@ -82,14 +82,14 @@ class ReferralDetailsView extends StatelessWidget {
                                               hapticVibrate: true,
                                               isBarrierDismissable: false,
                                               content: MoreInfoDialog(
-                                                  title: "Eligibility",
+                                                  title: "To be Eligible",
                                                   imagePath: Assets.iphone,
                                                   imageSize: Size(
                                                     SizeConfig.padding80,
                                                     SizeConfig.padding80,
                                                   ),
                                                   text:
-                                                      "User must refer more than 100 people to become eligible for the Referrer of the month"));
+                                                      "In a month, user must refer at least 100 people who have saved ₹100 or above on the app."));
                                         },
                                     ),
                                     TextSpan(

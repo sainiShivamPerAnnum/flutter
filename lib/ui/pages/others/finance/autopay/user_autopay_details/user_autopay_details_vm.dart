@@ -17,9 +17,10 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
-class UserAutoSaveDetailsViewModel extends BaseModel {
+class UserAutosaveDetailsViewModel extends BaseModel {
   final _dbModel = locator<DBModel>();
   final _userService = locator<UserService>();
   final _paytmService = locator<PaytmService>();
@@ -285,6 +286,42 @@ class UserAutoSaveDetailsViewModel extends BaseModel {
     return p + ci;
   }
 
+  getTitle(ActiveSubscriptionModel activeAutosave) {
+    if (activeAutosave.status == Constants.SUBSCRIPTION_ACTIVE)
+      return "Autosave Active";
+    else if (activeAutosave.status == Constants.SUBSCRIPTION_INACTIVE) {
+      if (activeAutosave.resumeDate.isEmpty) {
+        return "Autosave Inactive";
+      } else {
+        return "Autosave Paused";
+      }
+    }
+  }
+
+  getRichText() {
+    if (activeSubscription.status == Constants.SUBSCRIPTION_ACTIVE)
+      return "Verified and active";
+    else if (activeSubscription.status == Constants.SUBSCRIPTION_INACTIVE) {
+      if (activeSubscription.resumeDate.isEmpty) {
+        return "currently Inactive";
+      } else {
+        return "Verified and paused";
+      }
+    }
+  }
+
+  getRichTextColor() {
+    if (activeSubscription.status == Constants.SUBSCRIPTION_ACTIVE)
+      return UiConstants.primaryColor;
+    else if (activeSubscription.status == Constants.SUBSCRIPTION_INACTIVE) {
+      if (activeSubscription.resumeDate.isEmpty) {
+        return Colors.red;
+      } else {
+        return UiConstants.tertiarySolid;
+      }
+    }
+  }
+
   setSubscriptionAmount(double amount) async {
     if (amount < minValue) {
       return BaseUtil.showNegativeAlert(
@@ -354,7 +391,7 @@ class UserAutoSaveDetailsViewModel extends BaseModel {
         ),
         isBarrierDismissable: false,
         isScrollControlled: true,
-        content: PauseAutoSaveModal(
+        content: PauseAutosaveModal(
           model: model,
         ),
       );

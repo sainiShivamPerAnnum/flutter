@@ -1161,6 +1161,8 @@ class DBModel extends ChangeNotifier {
 
   Future<List<PromoCardModel>> getPromoCards() async {
     List<PromoCardModel> _cards = [];
+    List<PromoCardModel> filteredcards = [];
+
     try {
       logger.i("CALLING: getPromoCardCollection");
       QuerySnapshot querySnapshot = await _api.getPromoCardCollection();
@@ -1181,7 +1183,14 @@ class DBModel extends ChangeNotifier {
     } catch (e) {
       log.error('Error Fetching Home cards: ${e.toString()}');
     }
-    return _cards;
+    for (int i = 0; i < _cards.length; i++) {
+      if (_cards[i].minVersion == 0 ||
+          int.tryParse(BaseUtil.packageInfo.buildNumber) >=
+              _cards[i].minVersion) {
+        filteredcards.add(_cards[i]);
+      }
+    }
+    return filteredcards;
   }
 
   Future<List<UserMilestoneModel>> getUserAchievedMilestones(String uid) async {
@@ -1224,6 +1233,7 @@ class DBModel extends ChangeNotifier {
 
   Future<List<EventModel>> getOngoingEvents() async {
     List<EventModel> events = [];
+    List<EventModel> filteredEvents = [];
     try {
       logger.i("CALLING: fetchOngoingEvents");
       QuerySnapshot snapshot = await _api.fetchOngoingEvents();
@@ -1237,7 +1247,14 @@ class DBModel extends ChangeNotifier {
       logger.e(e.toString());
       events = [];
     }
-    return events;
+    for (int i = 0; i < events.length; i++) {
+      if (events[i].minVersion == 0 ||
+          int.tryParse(BaseUtil.packageInfo.buildNumber) >=
+              events[i].minVersion) {
+        filteredEvents.add(events[i]);
+      }
+    }
+    return filteredEvents;
   }
 
   Future<EventModel> getSingleEventDetails(String eventType) async {

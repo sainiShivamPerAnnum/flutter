@@ -1,12 +1,15 @@
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_view.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 
 class DrawerModel {
@@ -22,60 +25,78 @@ class DrawerModel {
 class FDrawerVM extends BaseModel {
   final userService = locator<UserService>();
   final _analyticsService = locator<AnalyticsService>();
-
-  List<DrawerModel> _drawerItems = [
-    DrawerModel(
-      icon: Assets.dReferNEarn,
-      title: "Refer and Earn",
-      pageConfig: ReferralDetailsPageConfig,
-      analyticEvent: AnalyticsEvents.referralSection,
-    ),
-    DrawerModel(
-      icon: Assets.gold24K,
-      title: "My Golden Tickets",
-      pageConfig: MyWinnigsPageConfig,
-      analyticEvent: AnalyticsEvents.myGoldenTickets,
-    ),
-    DrawerModel(
-      icon: Assets.repeat,
-      title: "Autosave",
-      pageConfig: UserAutoSaveDetailsViewPageConfig,
-      analyticEvent: AnalyticsEvents.autosaveUserDetailsScreenViewed,
-    ),
-    DrawerModel(
-      icon: Assets.dPanKyc,
-      title: "PAN & KYC",
-      pageConfig: KycDetailsPageConfig,
-      analyticEvent: AnalyticsEvents.selectKYC,
-    ),
-    DrawerModel(
-      icon: Assets.dTransactions,
-      title: "Transactions",
-      pageConfig: TransactionPageConfig,
-      analyticEvent: AnalyticsEvents.transactions,
-    ),
-    DrawerModel(
-      icon: Assets.dHelpNSupport,
-      title: "Help & Support",
-      pageConfig: SupportPageConfig,
-      analyticEvent: AnalyticsEvents.helpAndSupport,
-    ),
-    DrawerModel(
-      icon: Assets.dHowItWorks,
-      title: "How it works",
-      pageConfig: WalkThroughConfig,
-      analyticEvent: AnalyticsEvents.howItWorks,
-      onTap: () => AppState.delegate.parseRoute(
-        Uri.parse('/AppWalkthrough'),
+  final _paytmService = locator<PaytmService>();
+  List<DrawerModel> _drawerItems;
+  init() {
+    _drawerItems = [
+      DrawerModel(
+        icon: Assets.dReferNEarn,
+        title: "Refer and Earn",
+        pageConfig: ReferralDetailsPageConfig,
+        analyticEvent: AnalyticsEvents.referralSection,
       ),
-    ),
-    DrawerModel(
-      icon: Assets.dAboutDigitalGold,
-      title: "About Digital Gold",
-      pageConfig: AugmontGoldDetailsPageConfig,
-      analyticEvent: AnalyticsEvents.aboutDigitalGold,
-    ),
-  ];
+      DrawerModel(
+        icon: Assets.gold24K,
+        title: "My Golden Tickets",
+        pageConfig: MyWinnigsPageConfig,
+        analyticEvent: AnalyticsEvents.myGoldenTickets,
+      ),
+      DrawerModel(
+        icon: Assets.repeat,
+        title: "Autosave",
+        onTap: () {
+          if (_paytmService.activeSubscription != null &&
+              _paytmService.activeSubscription.status !=
+                  Constants.SUBSCRIPTION_INIT &&
+              _paytmService.activeSubscription.status !=
+                  Constants.SUBSCRIPTION_CANCELLED)
+            AppState.delegate.appState.currentAction = PageAction(
+              state: PageState.addPage,
+              page: UserAutosaveDetailsViewPageConfig,
+            );
+          else
+            AppState.delegate.appState.currentAction = PageAction(
+              state: PageState.addPage,
+              page: AutosaveDetailsViewPageConfig,
+            );
+        },
+        analyticEvent: AnalyticsEvents.autosaveUserDetailsScreenViewed,
+      ),
+      DrawerModel(
+        icon: Assets.dPanKyc,
+        title: "PAN & KYC",
+        pageConfig: KycDetailsPageConfig,
+        analyticEvent: AnalyticsEvents.selectKYC,
+      ),
+      DrawerModel(
+        icon: Assets.dTransactions,
+        title: "Transactions",
+        pageConfig: TransactionPageConfig,
+        analyticEvent: AnalyticsEvents.transactions,
+      ),
+      DrawerModel(
+        icon: Assets.dHelpNSupport,
+        title: "Help & Support",
+        pageConfig: SupportPageConfig,
+        analyticEvent: AnalyticsEvents.helpAndSupport,
+      ),
+      DrawerModel(
+        icon: Assets.dHowItWorks,
+        title: "How it works",
+        pageConfig: WalkThroughConfig,
+        analyticEvent: AnalyticsEvents.howItWorks,
+        onTap: () => AppState.delegate.parseRoute(
+          Uri.parse('/AppWalkthrough'),
+        ),
+      ),
+      DrawerModel(
+        icon: Assets.dAboutDigitalGold,
+        title: "About Digital Gold",
+        pageConfig: AugmontGoldDetailsPageConfig,
+        analyticEvent: AnalyticsEvents.aboutDigitalGold,
+      ),
+    ];
+  }
 
   List<DrawerModel> get drawerList => _drawerItems;
   String get username => userService.baseUser.username;
