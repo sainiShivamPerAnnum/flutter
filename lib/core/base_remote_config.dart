@@ -135,7 +135,7 @@ class BaseRemoteConfig {
         'Stand to win big prizes every week by matching your tambola tickets! Winners are announced every Monday'
   };
   static const Map<String, String> _GAME_CRICKET_FPL_ANNOUNCEMENT = {
-    'game_cricket_fpl_announcement': 'Fello Premier League is live.'
+    'game_cricket_fpl_announcement': ''
   };
   static const Map<String, String> _GAME_CRICKET_ANNOUNCEMENT = {
     'game_cricket_announcement':

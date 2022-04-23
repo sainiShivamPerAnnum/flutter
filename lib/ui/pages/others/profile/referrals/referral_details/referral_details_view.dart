@@ -82,7 +82,8 @@ class ReferralDetailsView extends StatelessWidget {
                                               hapticVibrate: true,
                                               isBarrierDismissable: false,
                                               content: MoreInfoDialog(
-                                                  title: "To be Eligible",
+                                                  title:
+                                                      "To be eligible for referrer of the month",
                                                   imagePath: Assets.iphone,
                                                   imageSize: Size(
                                                     SizeConfig.padding80,

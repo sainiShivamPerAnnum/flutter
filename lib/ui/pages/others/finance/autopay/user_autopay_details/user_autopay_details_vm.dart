@@ -300,12 +300,12 @@ class UserAutosaveDetailsViewModel extends BaseModel {
 
   getRichText() {
     if (activeSubscription.status == Constants.SUBSCRIPTION_ACTIVE)
-      return "Verified and active";
+      return "verified and active";
     else if (activeSubscription.status == Constants.SUBSCRIPTION_INACTIVE) {
       if (activeSubscription.resumeDate.isEmpty) {
-        return "currently Inactive";
+        return "currently inactive";
       } else {
-        return "Verified and paused";
+        return "verified and paused";
       }
     }
   }

@@ -244,7 +244,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView>
                     style: TextStyles.body1.bold,
                   ),
                   subtitle: Text(
-                    "Check pending requests and approve Autosave by entering UPI PIN",
+                    "Authorize request by completing a ₹1 transaction.",
                     style: TextStyles.body2,
                   ),
                   // trailing: CircleAvatar(
@@ -448,7 +448,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView>
                 isBarrierDismissable: true,
                 content: MoreInfoDialog(
                   text:
-                      "You can find your UPI Id on any of your payments application",
+                      "You can find your UPI address in the profile section or the settings of your payments app",
                   title: "What is my UPI address ?",
                   imagePath: "assets/images/upiExample.png",
                 ),
@@ -821,7 +821,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView>
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                "Every ${model.isDaily ? 'day' : 'week'} You will recieve",
+                                "Every ${model.isDaily ? 'day' : 'week'} You will receive",
                                 style: TextStyles.body2.bold,
                               ),
                               // Divider(

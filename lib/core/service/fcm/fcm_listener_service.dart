@@ -88,7 +88,7 @@ class FcmListener {
 
       _fcm.getInitialMessage().then((RemoteMessage message) {
         if (message != null && message.data != null) {
-          logger.d("terminated onMessage recieved: " + message.data.toString());
+          logger.d("terminated onMessage received: " + message.data.toString());
           // _handler.handleMessage(message.data, MsgSource.Terminated);
           AppState.startupNotifMessage = message.data;
         }

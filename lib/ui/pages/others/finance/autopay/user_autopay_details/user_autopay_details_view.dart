@@ -371,7 +371,7 @@ class AmountFreqUpdateButton extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          "Every ${model.isDaily ? 'day' : 'week'} You will recieve",
+                          "Every ${model.isDaily ? 'day' : 'week'} You will receive",
                           style: TextStyles.body2.bold,
                         ),
                         // Divider(
