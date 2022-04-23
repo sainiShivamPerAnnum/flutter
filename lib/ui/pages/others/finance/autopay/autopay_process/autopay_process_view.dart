@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:app_install_date/utils.dart';
@@ -41,6 +42,8 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
     with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
+    bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
+
     return BaseView<AutoSaveProcessViewModel>(onModelReady: (model) {
       model.lottieAnimationController = AnimationController(vsync: this);
       model.init(widget.page);
@@ -50,6 +53,20 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
       return Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: UiConstants.primaryColor,
+        floatingActionButton: keyboardIsOpen
+            ? Container(
+                margin: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom),
+                child: FloatingActionButton(
+                  child: Icon(
+                    Icons.done,
+                    color: Colors.white,
+                  ),
+                  backgroundColor: UiConstants.tertiarySolid,
+                  onPressed: () => FocusScope.of(context).unfocus(),
+                ),
+              )
+            : SizedBox(),
         body: HomeBackground(
           child: Stack(
             children: [
@@ -558,9 +575,9 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
         Container(
           padding: EdgeInsets.symmetric(
               horizontal: SizeConfig.pageHorizontalMargins),
-          child: Column(
+          child: ListView(
             children: [
-              SizedBox(height: SizeConfig.padding64),
+              SizedBox(height: SizeConfig.padding40),
               Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: SizeConfig.pageHorizontalMargins),
@@ -638,7 +655,7 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
                   ],
                 ),
               ),
-              SizedBox(height: SizeConfig.padding24),
+              SizedBox(height: SizeConfig.padding12),
               Container(
                 width: SizeConfig.screenWidth,
                 child: Row(
@@ -767,9 +784,8 @@ class _AutoSaveProcessViewState extends State<AutoSaveProcessView>
                               )),
                 ),
               ),
-              Spacer(),
               SizedBox(
-                height: SizeConfig.screenHeight * 0.3,
+                height: SizeConfig.navBarHeight * 2,
               )
             ],
           ),

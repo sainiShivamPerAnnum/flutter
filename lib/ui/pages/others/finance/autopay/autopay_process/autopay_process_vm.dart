@@ -240,7 +240,7 @@ class AutoSaveProcessViewModel extends BaseModel {
   checkTransactionStatus() {
     _timer = Timer.periodic(Duration(seconds: 15), (timer) async {
       if (_paytmService.subscriptionFlowPageController.page == 1.0) {
-        _logger.d("Fetching subscription details");
+        _logger.d("Fetching Autosave details");
         await _paytmService.getActiveSubscriptionDetails();
         if (_paytmService.activeSubscription != null &&
             _paytmService.activeSubscription.status ==
@@ -367,6 +367,7 @@ class AutoSaveProcessViewModel extends BaseModel {
       isSubscriptionAmountUpdateInProgress = false;
       if (res) {
         _paytmService.jumpToSubPage(3);
+        _paytmService.fraction = 0;
         _paytmService.getActiveSubscriptionDetails();
         showProgressIndicator = false;
         Future.delayed(Duration(milliseconds: 1000), () {
@@ -377,7 +378,7 @@ class AutoSaveProcessViewModel extends BaseModel {
             eventName: AnalyticsEvents.autosaveSetupCompleted);
 
         BaseUtil.showPositiveAlert(
-            "Subscription Successful", "Check transactions for more details");
+            "Autosave Successful", "Check transactions for more details");
       } else {
         BaseUtil.showNegativeAlert(
             "Amount update failed", "Please try again in sometime");

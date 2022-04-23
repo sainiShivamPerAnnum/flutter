@@ -94,7 +94,8 @@ class AnalyticsEvents {
       "Autosave setup complete screen closed";
   static const autosaveSetupGTReceived =
       "Autosave Setup GT recieved and opened";
-  static const autosaveDetailsScreenViewed = "Autosave details screen viewed";
+  static const autosaveUserDetailsScreenViewed =
+      "Autosave User details screen viewed";
   static const autosaveDailyToWeeklySaver =
       "Autosave user switched from daily to weekly";
   static const autosaveWeeklyToDailySaver =

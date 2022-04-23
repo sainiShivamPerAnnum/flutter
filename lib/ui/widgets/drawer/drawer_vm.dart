@@ -40,6 +40,7 @@ class FDrawerVM extends BaseModel {
       icon: Assets.repeat,
       title: "Autosave",
       pageConfig: UserAutoSaveDetailsViewPageConfig,
+      analyticEvent: AnalyticsEvents.autosaveUserDetailsScreenViewed,
     ),
     DrawerModel(
       icon: Assets.dPanKyc,
