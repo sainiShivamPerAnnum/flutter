@@ -102,7 +102,7 @@ class Save extends StatelessWidget {
                   //   child: Text("Show pool game"),
                   // ),
 
-                  AutoSaveCard(),
+                  AutosaveCard(),
                   SizedBox(height: SizeConfig.padding32),
                   // Goldlinks(model: model),
                   //CustomSubscriptionContainer(),

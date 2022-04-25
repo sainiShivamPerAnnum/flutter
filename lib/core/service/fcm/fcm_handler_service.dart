@@ -21,7 +21,7 @@ class FcmHandler extends ChangeNotifier {
   final _augmontGoldBuyViewModel = locator<AugmontGoldBuyViewModel>();
   final _fcmHandlerDataPayloads = locator<FcmHandlerDataPayloads>();
   final _webGameViewModel = locator<WebGameViewModel>();
-  final _autosaveProcessViewModel = locator<AutoSaveProcessViewModel>();
+  final _autosaveProcessViewModel = locator<AutosaveProcessViewModel>();
   final _paytmService = locator<PaytmService>();
 
   ValueChanged<Map> notifListener;

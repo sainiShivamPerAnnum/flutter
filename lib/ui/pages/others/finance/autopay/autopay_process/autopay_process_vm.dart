@@ -7,6 +7,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
@@ -17,17 +18,19 @@ import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augm
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 // enum STATUS { Pending, Complete, Cancel }
 
-class AutoSaveProcessViewModel extends BaseModel {
+class AutosaveProcessViewModel extends BaseModel {
   final _paytmService = locator<PaytmService>();
   final _logger = locator<CustomLogger>();
   final _userService = locator<UserService>();
   final _analyticsService = locator<AnalyticsService>();
+  final _dbModel = locator<DBModel>();
   final GoldenTicketService _gtService = GoldenTicketService();
 
   bool _showSetAmountView = false;
@@ -145,13 +148,6 @@ class AutoSaveProcessViewModel extends BaseModel {
 
   set isSubscriptionInProgress(bool value) {
     this._isSubscriptionInProgress = value;
-    if (value) {
-      AppState.screenStack.add(ScreenItem.loader);
-    } else {
-      if (AppState.screenStack.last == ScreenItem.loader) {
-        AppState.screenStack.removeLast();
-      }
-    }
     notifyListeners();
   }
 
@@ -190,6 +186,7 @@ class AutoSaveProcessViewModel extends BaseModel {
     counter = 0;
     _paytmService.isOnSubscriptionFlow = true;
     showProgressIndicator = true;
+    if (FlavorConfig.isDevelopment()) vpaController.text = "7777777777@paytm";
     if (_paytmService.activeSubscription != null)
       vpaController.text = _paytmService.activeSubscription.vpa;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -208,6 +205,7 @@ class AutoSaveProcessViewModel extends BaseModel {
 
   clear() {
     _timer?.cancel();
+    lottieAnimationController.dispose();
   }
 
   onAmountValueChanged(String val) {
@@ -240,7 +238,7 @@ class AutoSaveProcessViewModel extends BaseModel {
   checkTransactionStatus() {
     _timer = Timer.periodic(Duration(seconds: 15), (timer) async {
       if (_paytmService.subscriptionFlowPageController.page == 1.0) {
-        _logger.d("Fetching subscription details");
+        _logger.d("Fetching Autosave details");
         await _paytmService.getActiveSubscriptionDetails();
         if (_paytmService.activeSubscription != null &&
             _paytmService.activeSubscription.status ==
@@ -317,9 +315,13 @@ class AutoSaveProcessViewModel extends BaseModel {
           "Please finish augmont onboarding first");
     }
     isSubscriptionInProgress = true;
+    AppState.screenStack.add(ScreenItem.loader);
     PaytmResponse response =
         await _paytmService.initiateCustomSubscription(vpaController.text);
     isSubscriptionInProgress = false;
+    if (AppState.screenStack.last == ScreenItem.loader) {
+      AppState.screenStack.removeLast();
+    }
     if (response.status) {
       _analyticsService.track(
           eventName: AnalyticsEvents.autosaveMandateGenerated);
@@ -367,6 +369,7 @@ class AutoSaveProcessViewModel extends BaseModel {
       isSubscriptionAmountUpdateInProgress = false;
       if (res) {
         _paytmService.jumpToSubPage(3);
+        _paytmService.fraction = 0;
         _paytmService.getActiveSubscriptionDetails();
         showProgressIndicator = false;
         Future.delayed(Duration(milliseconds: 1000), () {
@@ -375,9 +378,6 @@ class AutoSaveProcessViewModel extends BaseModel {
         });
         _analyticsService.track(
             eventName: AnalyticsEvents.autosaveSetupCompleted);
-
-        BaseUtil.showPositiveAlert(
-            "Subscription Successful", "Check transactions for more details");
       } else {
         BaseUtil.showNegativeAlert(
             "Amount update failed", "Please try again in sometime");

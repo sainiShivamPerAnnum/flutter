@@ -168,8 +168,8 @@ void setupLocator() {
   locator.registerFactory(() => TopSaverViewModel());
   locator
       .registerFactory(() => TransactionCompletedConfirmationScreenViewModel());
-  locator.registerFactory(() => AutoSaveProcessViewModel());
-  locator.registerFactory(() => UserAutoSaveDetailsViewModel());
+  locator.registerFactory(() => AutosaveProcessViewModel());
+  locator.registerFactory(() => UserAutosaveDetailsViewModel());
   locator.registerFactory(() => AutosaveTransactionsViewModel());
 
   //WIDGETS

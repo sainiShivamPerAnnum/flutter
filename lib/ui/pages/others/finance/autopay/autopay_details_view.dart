@@ -19,14 +19,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class AutoSaveDetailsView extends StatefulWidget {
-  const AutoSaveDetailsView({Key key}) : super(key: key);
+class AutosaveDetailsView extends StatefulWidget {
+  const AutosaveDetailsView({Key key}) : super(key: key);
 
   @override
-  State<AutoSaveDetailsView> createState() => _AutoSaveDetailsViewState();
+  State<AutosaveDetailsView> createState() => _AutosaveDetailsViewState();
 }
 
-class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
+class _AutosaveDetailsViewState extends State<AutosaveDetailsView>
     with SingleTickerProviderStateMixin {
   final _paytmService = locator<PaytmService>();
   final _analyticsService = locator<AnalyticsService>();
@@ -85,7 +85,7 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
       showSetupButton = true;
     }
     _analyticsService.track(
-        eventName: AnalyticsEvents.autosaveDetailsScreenViewed);
+        eventName: AnalyticsEvents.autosaveDetailsScreenView);
     autosavePageController = new PageController(initialPage: 0);
     autosavePageController.addListener(_pageListener);
     _pageNotifier = ValueNotifier(0.0);
@@ -309,17 +309,6 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
                       horizontal: SizeConfig.pageHorizontalMargins),
                   child: Column(
                     children: [
-                      // Transform.translate(
-                      //   offset: Offset(0, 5),
-                      //   child: Container(
-                      //     child: Column(
-                      //       children: [
-                      //         SizedBox(height: 10),
-                      //         ScrollHandle(),
-                      //       ],
-                      //     ),
-                      //   ),
-                      // ),
                       Expanded(
                         child: Column(
                           children: [
@@ -393,51 +382,6 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
                                   );
                                 }),
                             Divider(),
-                            // Text(
-                            //   "Setup UPI AutoSave and we'll automagically save for you. You just grab a beer and chill!!",
-                            //   style: TextStyles.body3.light.italic,
-                            //   textAlign: TextAlign.center,
-                            // ),
-                            // Row(
-                            //   children: [
-                            //     Expanded(
-                            //       child: Container(
-                            //         width: SizeConfig.screenWidth * 0.422,
-                            //         height: SizeConfig.screenWidth * 0.144,
-                            //         decoration: BoxDecoration(
-                            //           borderRadius: BorderRadius.circular(
-                            //               SizeConfig.roundness12),
-                            //           color: UiConstants.scaffoldColor,
-                            //         ),
-                            //         alignment: Alignment.center,
-                            //         child: Text(
-                            //           "How to set it up",
-                            //           style: TextStyles.body2
-                            //               .colour(Colors.grey),
-                            //         ),
-                            //       ),
-                            //     ),
-                            //     SizedBox(width: SizeConfig.padding12),
-                            //     Expanded(
-                            //       child: Container(
-                            //         width: SizeConfig.screenWidth * 0.422,
-                            //         height: SizeConfig.screenWidth * 0.144,
-                            //         decoration: BoxDecoration(
-                            //           borderRadius: BorderRadius.circular(
-                            //               SizeConfig.roundness12),
-                            //           color: UiConstants.primaryColor,
-                            //         ),
-                            //         alignment: Alignment.center,
-                            //         child: Text(
-                            //           "Benefits you get",
-                            //           style: TextStyles.body2
-                            //               .colour(Colors.white),
-                            //         ),
-                            //       ),
-                            //     )
-                            //   ],
-                            // ),
-                            // SizedBox(height: SizeConfig.padding32),
                             Expanded(
                               child: ListView(
                                 padding: EdgeInsets.zero,
@@ -465,66 +409,6 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
                                         "Set a daily or weekly savings amount",
                                     subtitle: "You can change this anytime",
                                   ),
-
-                                  // Container(
-                                  //   margin: EdgeInsets.symmetric(
-                                  //       vertical:
-                                  //           SizeConfig.pageHorizontalMargins /
-                                  //               2),
-                                  //   decoration: BoxDecoration(
-                                  //     color: UiConstants.scaffoldColor,
-                                  //     borderRadius: BorderRadius.circular(
-                                  //         SizeConfig.roundness32),
-                                  //   ),
-                                  //   padding: EdgeInsets.symmetric(
-                                  //       vertical: SizeConfig.padding20,
-                                  //       horizontal: SizeConfig.padding16),
-                                  //   child: Column(
-                                  //     crossAxisAlignment:
-                                  //         CrossAxisAlignment.start,
-                                  //     children: [
-                                  //       SizedBox(height: SizeConfig.padding6),
-                                  //       Text(" Why UPI AutoSave",
-                                  //           style: TextStyles.title4.bold),
-                                  //       SizedBox(height: SizeConfig.padding20),
-                                  //       FeatureTile(
-                                  //         leadingAsset:
-                                  //             "assets/vectors/ontime.svg",
-                                  //         title: "Always on time",
-                                  //         subtitle:
-                                  //             "No worries about making timely investments",
-                                  //         color: Colors.white,
-                                  //       ),
-                                  //       SizedBox(height: SizeConfig.padding12),
-                                  //       FeatureTile(
-                                  //         leadingAsset:
-                                  //             "assets/vectors/moneys.svg",
-                                  //         title: "Get tokens on the go",
-                                  //         subtitle:
-                                  //             "Get free tokens everyday with the investment",
-                                  //         color: Colors.white,
-                                  //       ),
-                                  //       SizedBox(height: SizeConfig.padding12),
-                                  //       FeatureTile(
-                                  //         leadingAsset:
-                                  //             "assets/vectors/easy.svg",
-                                  //         title: "Easy Set up",
-                                  //         subtitle:
-                                  //             "Takes less than 1 minute with no paperwork",
-                                  //         color: Colors.white,
-                                  //       ),
-                                  //       SizedBox(height: SizeConfig.padding12),
-                                  //       FeatureTile(
-                                  //         leadingAsset:
-                                  //             "assets/vectors/gear.svg",
-                                  //         title: "Customised Options",
-                                  //         subtitle:
-                                  //             "You can Update or Cancel UPI Autosave anytime ",
-                                  //         color: Colors.white,
-                                  //       )
-                                  //     ],
-                                  //   ),
-                                  // ),
                                   SizedBox(
                                     height: SizeConfig.navBarHeight * 1.6,
                                   )
@@ -560,6 +444,8 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
                   children: [
                     InkWell(
                       onTap: () {
+                        _analyticsService.track(
+                            eventName: AnalyticsEvents.autosaveExampleView);
                         Haptic.vibrate();
                         AppState.delegate
                             .parseRoute(Uri.parse('/AutosaveWalkthrough'));
@@ -606,7 +492,7 @@ class _AutoSaveDetailsViewState extends State<AutoSaveDetailsView>
                                 eventName: AnalyticsEvents.autosaveSetupViewed);
                             AppState.delegate.appState.currentAction =
                                 PageAction(
-                                    page: AutoSaveProcessViewPageConfig,
+                                    page: AutosaveProcessViewPageConfig,
                                     state: PageState.replace);
                           },
                         ),

@@ -11,6 +11,7 @@ class EventModel {
   int color;
   String image;
   List<dynamic> instructions;
+  int minVersion;
   String todayMatch; //Only for FPL
   EventModel(
       {@required this.title,
@@ -20,6 +21,7 @@ class EventModel {
       @required this.position,
       @required this.color,
       @required this.image,
+      @required this.minVersion,
       @required this.instructions,
       this.todayMatch});
 
@@ -30,6 +32,7 @@ class EventModel {
       String type,
       int position,
       int color,
+      int minVersion,
       String image,
       List<dynamic> instructions}) {
     return EventModel(
@@ -40,6 +43,7 @@ class EventModel {
         position: position ?? this.position,
         color: color ?? this.color,
         image: image ?? this.image,
+        minVersion: minVersion ?? this.minVersion,
         instructions: instructions ?? this.instructions,
         todayMatch: todayMatch ?? this.todayMatch);
   }
@@ -53,6 +57,7 @@ class EventModel {
       'position': position,
       'color': color,
       'image': image,
+      'minVersion': minVersion,
       'instructions': instructions,
       'todayMatch': todayMatch
     };
@@ -67,6 +72,7 @@ class EventModel {
         position: map['position'] ?? 1,
         color: map['color'] ?? 4280492835,
         image: map['image'] ?? '',
+        minVersion: map["minVersion"] ?? 0,
         instructions: map['info'] ?? ["Fello Event Instructions"],
         todayMatch: map['todayMatch'] ?? "");
   }
@@ -78,6 +84,6 @@ class EventModel {
 
   @override
   String toString() {
-    return 'EventModel(title: $title, subtitle: $subtitle, thumbnail: $thumbnail, type: $type, position: $position color: $color image: $image  todayMatch : $todayMatch)';
+    return 'EventModel(title: $title, subtitle: $subtitle, thumbnail: $thumbnail, type: $type, position: $position color: $color image: $image  todayMatch : $todayMatch  minVersion: $minVersion)';
   }
 }
