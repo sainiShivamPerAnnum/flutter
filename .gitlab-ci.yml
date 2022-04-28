@@ -41,7 +41,7 @@ stages:
 update:
   stage: update
   only:
-    - develop
+    - shreeyash/develop
   script:
     - gem install fastlane
     - flutter packages get
@@ -51,7 +51,7 @@ update:
 ios:prod:buildAndDeploy:
   stage: build
   only:
-    - develop
+    - shreeyash/develop
   when: manual
   script:
     - bundle install
@@ -63,7 +63,7 @@ ios:prod:buildAndDeploy:
 ios:dev:buildAndDeploy:
   stage: build
   only:
-    - develop
+    - shreeyash/develop
   when: manual
   script:
     - bundle install
@@ -75,7 +75,7 @@ ios:dev:buildAndDeploy:
 android:build:
   stage: build
   only:
-    - develop
+    - shreeyash/develop
   script:
     - base64 -d $PLAYSTORE_UPLOAD_KEY_BASE64 > android/app/key.jks
     - cd android
@@ -93,7 +93,7 @@ android:build:
 internal:android:deploy:
   stage: deploy
   only:
-    - develop
+    - shreeyash/develop
   script:
     - cd android
     - bundle update --bundler
@@ -105,7 +105,7 @@ internal:android:deploy:
 alpha:android:deploy:
   stage: deploy
   only:
-    - develop
+    - shreeyash/develop
   script:
     - cd android
     - bundle update --bundler
