@@ -240,6 +240,22 @@ class BaseUtil extends ChangeNotifier {
   void setGameDefaults() {
     gamesList = [
       GameModel(
+        gameName: "Football",
+        pageConfig: THomePageConfig,
+        tag: 'football',
+        shadowColor: Color(0xff4B489E),
+        thumbnailUri: BaseRemoteConfig.remoteConfig
+            .getString(BaseRemoteConfig.FOOTBALL_THUMBNAIL_URI),
+        playCost: BaseRemoteConfig.remoteConfig
+                .getString(BaseRemoteConfig.FOOTBALL_PLAY_COST) ??
+            "10",
+        prizeAmount: BaseRemoteConfig.remoteConfig
+                .getString(BaseRemoteConfig.FOOTBALL_PLAY_PRIZE) ??
+            "50000",
+        // pending from here
+        analyticEvent: AnalyticsEvents.selectPlayFootball,
+      ),
+      GameModel(
         gameName: "Cricket",
         pageConfig: THomePageConfig,
         tag: 'cricket',

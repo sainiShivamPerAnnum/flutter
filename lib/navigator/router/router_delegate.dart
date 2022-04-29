@@ -214,7 +214,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.THome:
           _addPageData(TambolaHomeView(), THomePageConfig);
           break;
-        case Pages.TGame:
+        case Pages.TGame: //
           _addPageData(TambolaGameView(), TGamePageConfig);
           break;
         case Pages.TPickDraw:
@@ -690,6 +690,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case 'FPL':
         openTopSaverScreen('FPL');
+        break;
+      case 'footballHome':
+        openWebGame(Constants.GAME_TYPE_FOOTBALL);
         break;
       case 'cricketHome':
         openWebGame(Constants.GAME_TYPE_CRICKET);

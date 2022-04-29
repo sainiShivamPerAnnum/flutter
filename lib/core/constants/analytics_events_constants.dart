@@ -24,6 +24,10 @@ class AnalyticsEvents {
   static const earnMoreRefer = "Select refer in earn more section";
   static const selectPlayCricket = "Select Cricket";
   static const startPlayingCricket = "Play Cricket";
+  //
+  static const selectPlayFootball = "Select Football";
+  static const startPlayingFootball = "Play Football";
+  //
   static const selectPlayTambola = "Select Tambola";
   static const selectPlayPoolClub = "Select PoolClub";
   static const startPlayingTambola = "Enter Tambola";

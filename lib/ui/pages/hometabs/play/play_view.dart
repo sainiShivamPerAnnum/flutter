@@ -93,10 +93,21 @@ class Play extends StatelessWidget {
                         onTap: () {
                           Haptic.vibrate();
                           AppState.delegate
-                              .parseRoute(Uri.parse('/cricketHome'));
+                              .parseRoute(Uri.parse('/footballHome'));
                         },
                         child: GameCard(
                           gameData: BaseUtil.gamesList[0],
+                        ),
+                      ),
+                      SizedBox(height: SizeConfig.padding6),
+                      GestureDetector(
+                        onTap: () {
+                          Haptic.vibrate();
+                          AppState.delegate
+                              .parseRoute(Uri.parse('/cricketHome'));
+                        },
+                        child: GameCard(
+                          gameData: BaseUtil.gamesList[1],
                         ),
                       ),
                       SizedBox(height: SizeConfig.padding6),
@@ -107,7 +118,7 @@ class Play extends StatelessWidget {
                           AppState.delegate.parseRoute(Uri.parse('/poolHome'));
                         },
                         child: GameCard(
-                          gameData: BaseUtil.gamesList[1],
+                          gameData: BaseUtil.gamesList[2],
                         ),
                       ),
                       SizedBox(height: SizeConfig.padding6),
@@ -117,12 +128,12 @@ class Play extends StatelessWidget {
                           model.openGame(BaseUtil.gamesList[2]);
                         },
                         child: GameCard(
-                          gameData: BaseUtil.gamesList[2],
+                          gameData: BaseUtil.gamesList[3],
                         ),
                       ),
                       SizedBox(
                         height: SizeConfig.navBarHeight * 2.4,
-                      )
+                      ),
                     ]),
               ),
             ],

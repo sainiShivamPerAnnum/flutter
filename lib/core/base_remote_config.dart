@@ -101,11 +101,17 @@ class BaseRemoteConfig {
   static const Map<String, String> _TAMBOLA_PLAY_PRIZE = {
     'tambola_play_prize': '25,000'
   };
+  static const Map<String, String> _FOOTBALL_PLAY_COST = {
+    'football_play_cost': '10'
+  };
   static const Map<String, String> _CRICKET_PLAY_COST = {
     'cricket_play_cost': '10'
   };
   static const Map<String, String> _CRICKET_PLAY_PRIZE = {
     'cricket_play_prize': '25,000'
+  };
+  static const Map<String, String> _FOOTBALL_PLAY_PRIZE = {
+    'football_play_prize': '25,000'
   };
 
   static const Map<String, String> _POOLCLUB_PLAY_COST = {
@@ -113,6 +119,10 @@ class BaseRemoteConfig {
   };
   static const Map<String, String> _POOLCLUB_PLAY_PRIZE = {
     'poolclub_play_prize': '25,000'
+  };
+  static const Map<String, String> _FOOTBALL_THUMBNAIL_URI = {
+    'football_thumbnail':
+        'https://img.freepik.com/free-vector/gradient-football-field-background_52683-67789.jpg?t=st=1651147964~exp=1651148564~hmac=4d7297e0201d5f1513486c39fb6b0d0beeb2b5abbe8051ded63454464e438605&w=1800'
   };
   static const Map<String, String> _CRICKET_THUMBNAIL_URI = {
     'cricket_thumbnail':
@@ -176,10 +186,13 @@ class BaseRemoteConfig {
     ..._OCT_FEST_MIN_DEPOSIT,
     ..._TAMBOLA_PLAY_COST,
     ..._TAMBOLA_PLAY_PRIZE,
+    ..._FOOTBALL_PLAY_COST,
     ..._CRICKET_PLAY_COST,
     ..._CRICKET_PLAY_PRIZE,
+    ..._FOOTBALL_PLAY_PRIZE,
     ..._POOLCLUB_PLAY_COST,
     ..._POOLCLUB_PLAY_PRIZE,
+    ..._FOOTBALL_THUMBNAIL_URI,
     ..._CRICKET_THUMBNAIL_URI,
     ..._TAMBOLA_THUMBNAIL_URI,
     ..._POOLCLUB_THUMBNAIL_URI,
@@ -289,13 +302,20 @@ class BaseRemoteConfig {
 
   static String get TAMBOLA_PLAY_PRIZE => _TAMBOLA_PLAY_PRIZE.keys.first;
 
+  static String get FOOTBALL_PLAY_COST => _FOOTBALL_PLAY_COST.keys.first;
+
   static String get CRICKET_PLAY_COST => _CRICKET_PLAY_COST.keys.first;
+
+  static String get FOOTBALL_PLAY_PRIZE => _FOOTBALL_PLAY_PRIZE.keys.first;
 
   static String get CRICKET_PLAY_PRIZE => _CRICKET_PLAY_PRIZE.keys.first;
 
   static String get POOLCLUB_PLAY_COST => _POOLCLUB_PLAY_COST.keys.first;
 
   static String get POOLCLUB_PLAY_PRIZE => _POOLCLUB_PLAY_PRIZE.keys.first;
+
+  static String get FOOTBALL_THUMBNAIL_URI =>
+      _FOOTBALL_THUMBNAIL_URI.keys.first;
 
   static String get CRICKET_THUMBNAIL_URI => _CRICKET_THUMBNAIL_URI.keys.first;
 

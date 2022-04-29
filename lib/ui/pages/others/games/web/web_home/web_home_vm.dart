@@ -146,6 +146,8 @@ class WebHomeViewModel extends BaseModel {
         prizes = _prizeService.tambolaPrizes;
 
         break;
+
+      // add case
     }
     isPrizesLoading = false;
     if (prizes == null)
@@ -161,6 +163,8 @@ class WebHomeViewModel extends BaseModel {
       case Constants.GAME_TYPE_CRICKET:
         return _setupCricketGame();
         break;
+
+      // add case
       default:
         return false;
     }
@@ -231,6 +235,8 @@ class WebHomeViewModel extends BaseModel {
       return false;
     }
   }
+
+  // add function for football to check game cost
 
   String _generateCricketGameUrl() {
     return _gameEndpoint != null
