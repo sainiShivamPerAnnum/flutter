@@ -98,6 +98,9 @@ class WebHomeViewModel extends BaseModel {
       case Constants.GAME_TYPE_TAMBOLA:
         gameIndex = 2;
         break;
+      case Constants.GAME_TYPE_FOOTBALL:
+        gameIndex = 3;
+        break;
     }
     this.gameIndex = gameIndex;
     notifyListeners();
@@ -109,6 +112,8 @@ class WebHomeViewModel extends BaseModel {
         break;
       case Constants.GAME_TYPE_CRICKET:
         break;
+      case Constants.GAME_TYPE_FOOTBALL:
+        break;
       default:
         return;
     }
@@ -119,6 +124,8 @@ class WebHomeViewModel extends BaseModel {
       case Constants.GAME_TYPE_POOLCLUB:
         break;
       case Constants.GAME_TYPE_CRICKET:
+        break;
+      case Constants.GAME_TYPE_FOOTBALL:
         break;
       default:
         return;
@@ -146,8 +153,12 @@ class WebHomeViewModel extends BaseModel {
         prizes = _prizeService.tambolaPrizes;
 
         break;
+      case Constants.GAME_TYPE_FOOTBALL:
+        if (_prizeService.footballPrizes == null)
+          await _prizeService.fetchFootballPrizes();
+        prizes = _prizeService.footballPrizes;
 
-      // add case
+        break;
     }
     isPrizesLoading = false;
     if (prizes == null)
@@ -163,8 +174,9 @@ class WebHomeViewModel extends BaseModel {
       case Constants.GAME_TYPE_CRICKET:
         return _setupCricketGame();
         break;
-
-      // add case
+      case Constants.GAME_TYPE_FOOTBALL:
+        return _setupFootBallGame();
+        break;
       default:
         return false;
     }
@@ -183,6 +195,11 @@ class WebHomeViewModel extends BaseModel {
         _analyticsService.track(eventName: AnalyticsEvents.startPlayingCricket);
         initialUrl = _generateCricketGameUrl();
         break;
+      case Constants.GAME_TYPE_FOOTBALL:
+        _analyticsService.track(
+            eventName: AnalyticsEvents.startPlayingFootball);
+        initialUrl = _generateFootBallGameUrl();
+        break;
     }
     AppState.delegate.appState.currentAction = PageAction(
       state: PageState.addWidget,
@@ -192,7 +209,8 @@ class WebHomeViewModel extends BaseModel {
         game: currentGame,
         inLandscapeMode: currentGame == Constants.GAME_TYPE_POOLCLUB ||
                 (currentGame == Constants.GAME_TYPE_CRICKET &&
-                    _gameEndpoint != null)
+                    _gameEndpoint != null) ||
+                currentGame == Constants.GAME_TYPE_FOOTBALL
             ? true
             : false,
       ),
@@ -246,6 +264,33 @@ class WebHomeViewModel extends BaseModel {
 
   //Cricket Methods -----------------------------------END--------------------//
 
+  //FootBall Methods --------------------------------START--------------------//
+  Future<bool> _setupFootBallGame() async {
+    setState(ViewState.Busy);
+    String _footballPlayCost = BaseRemoteConfig.remoteConfig
+            .getString(BaseRemoteConfig.FOOTBALL_PLAY_COST) ??
+        "10";
+    int _cost = int.tryParse(_footballPlayCost) ?? 10;
+    ApiResponse<FlcModel> _flcResponse = await _fclActionRepo.getCoinBalance();
+    setState(ViewState.Idle);
+    if (_flcResponse.model.flcBalance != null &&
+        _flcResponse.model.flcBalance >= _cost)
+      return true;
+    else {
+      return false;
+    }
+  }
+
+  String _generateFootBallGameUrl() {
+    String _footBallUri = "https://fl-games-football-kickoff.onrender.com/";
+    String _loadUri =
+        "$_footBallUri?user=${_userService.baseUser.uid}&name=${_userService.baseUser.username}";
+    if (FlavorConfig.isDevelopment()) _loadUri = "$_loadUri&dev=true";
+    return _loadUri;
+  }
+
+  //FootBall Methods -----------------------------------END-------------------//
+
   //PoolClub Methods --------------------------------START--------------------//
   Future<bool> _setupPoolClubGame() async {
     setState(ViewState.Busy);
@@ -270,6 +315,8 @@ class WebHomeViewModel extends BaseModel {
       case Constants.GAME_TYPE_CRICKET:
         return BaseRemoteConfig.remoteConfig
             .getString(BaseRemoteConfig.GAME_CRICKET_FPL_ANNOUNCEMENT);
+      case Constants.GAME_TYPE_FOOTBALL:
+        return null;
       default:
         return null;
     }
@@ -280,6 +327,8 @@ class WebHomeViewModel extends BaseModel {
       case Constants.GAME_TYPE_POOLCLUB:
         return 'The highest scorers of the week win prizes every Sunday at midnight';
       case Constants.GAME_TYPE_CRICKET:
+        return 'The highest scorers of the week win prizes every Sunday at midnight';
+      case Constants.GAME_TYPE_FOOTBALL:
         return 'The highest scorers of the week win prizes every Sunday at midnight';
       default:
         return null;
