@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
@@ -38,6 +40,7 @@ class UserAutosaveDetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
     return BaseView<UserAutosaveDetailsViewModel>(
       onModelReady: (model) {
         model.init();
@@ -46,6 +49,20 @@ class UserAutosaveDetailsView extends StatelessWidget {
       builder: (ctx, model, child) {
         return Scaffold(
           resizeToAvoidBottomInset: false,
+          floatingActionButton: keyboardIsOpen && Platform.isIOS
+              ? Container(
+                  margin: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom),
+                  child: FloatingActionButton(
+                    child: Icon(
+                      Icons.done,
+                      color: Colors.white,
+                    ),
+                    backgroundColor: UiConstants.tertiarySolid,
+                    onPressed: () => FocusScope.of(context).unfocus(),
+                  ),
+                )
+              : SizedBox(),
           body: HomeBackground(
             child: Stack(
               children: [
@@ -371,7 +388,7 @@ class AmountFreqUpdateButton extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          "Every ${model.isDaily ? 'day' : 'week'} You will receive",
+                          "Every ${model.isDaily ? 'day' : 'week'} you will receive",
                           style: TextStyles.body2.bold,
                         ),
                         // Divider(
