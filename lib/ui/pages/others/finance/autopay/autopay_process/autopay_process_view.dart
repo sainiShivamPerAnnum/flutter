@@ -821,7 +821,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView>
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                "Every ${model.isDaily ? 'day' : 'week'} You will receive",
+                                "Every ${model.isDaily ? 'day' : 'week'} you will receive",
                                 style: TextStyles.body2.bold,
                               ),
                               // Divider(

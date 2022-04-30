@@ -28,7 +28,6 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
 
     return BaseView<UserProfileVM>(
       onModelReady: (model) {
@@ -36,20 +35,6 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
       },
       builder: (ctx, model, child) => Scaffold(
         backgroundColor: UiConstants.primaryColor,
-        floatingActionButton: keyboardIsOpen && Platform.isIOS
-            ? Container(
-                margin: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom),
-                child: FloatingActionButton(
-                  child: Icon(
-                    Icons.done,
-                    color: Colors.white,
-                  ),
-                  backgroundColor: UiConstants.tertiarySolid,
-                  onPressed: () => FocusScope.of(context).unfocus(),
-                ),
-              )
-            : SizedBox(),
         body: HomeBackground(
           child: Column(
             children: [
