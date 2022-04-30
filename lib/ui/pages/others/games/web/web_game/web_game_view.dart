@@ -1,6 +1,9 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/cache_type_enum.dart';
+import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_game/web_game_vm.dart';
@@ -22,10 +25,19 @@ class WebGameView extends StatelessWidget {
   final String initialUrl;
   final String game;
   final bool inLandscapeMode;
+
   @override
   Widget build(BuildContext context) {
     return BaseView<WebGameViewModel>(
-      onModelReady: (model) {
+      onModelReady: (model) async {
+        if (await CacheManager.readCache(key: 'lorem ipsum01') == null) {
+          CacheManager.writeCache(
+              key: 'lorem ipsum01', value: true, type: CacheType.bool);
+
+          BaseUtil.showPositiveAlert(
+              'this game is heavy and might take some time to load',
+              'Loading.....');
+        }
         if (inLandscapeMode) {
           SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
               overlays: [SystemUiOverlay.bottom]);

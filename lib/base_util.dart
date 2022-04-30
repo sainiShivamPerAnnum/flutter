@@ -252,7 +252,6 @@ class BaseUtil extends ChangeNotifier {
         prizeAmount: BaseRemoteConfig.remoteConfig
                 .getString(BaseRemoteConfig.FOOTBALL_PLAY_PRIZE) ??
             "50000",
-        // pending from here
         analyticEvent: AnalyticsEvents.selectPlayFootball,
       ),
       GameModel(

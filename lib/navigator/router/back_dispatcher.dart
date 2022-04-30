@@ -116,6 +116,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
           didPopRoute();
           didPopRoute();
           _webGameViewModel.handlePoolClubSessionEnd();
+          _webGameViewModel.handleFootBallSessionEnd();
         },
         true,
       );
