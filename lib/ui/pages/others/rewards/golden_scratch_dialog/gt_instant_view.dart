@@ -27,7 +27,8 @@ enum GTSOURCE {
   footBall,
   poolClub,
   panVerify,
-  autosave
+  autosave,
+  game
 }
 
 class GTInstantView extends StatefulWidget {
@@ -445,7 +446,8 @@ class _GTInstantViewState extends State<GTInstantView>
     if (source == GTSOURCE.cricket ||
         source == GTSOURCE.panVerify ||
         source == GTSOURCE.poolClub ||
-        source == GTSOURCE.footBall) {
+        source == GTSOURCE.footBall ||
+        source == GTSOURCE.game) {
       onPressed = () {
         if (!model.isCardScratched) return;
         AppState.backButtonDispatcher.didPopRoute();

@@ -89,16 +89,16 @@ class WebHomeViewModel extends BaseModel {
 
   setGameIndex() {
     switch (currentGame) {
-      case Constants.GAME_TYPE_CRICKET:
+      case Constants.GAME_TYPE_FOOTBALL:
         gameIndex = 0;
         break;
-      case Constants.GAME_TYPE_POOLCLUB:
+      case Constants.GAME_TYPE_CRICKET:
         gameIndex = 1;
         break;
-      case Constants.GAME_TYPE_TAMBOLA:
+      case Constants.GAME_TYPE_POOLCLUB:
         gameIndex = 2;
         break;
-      case Constants.GAME_TYPE_FOOTBALL:
+      case Constants.GAME_TYPE_TAMBOLA:
         gameIndex = 3;
         break;
     }
@@ -182,7 +182,7 @@ class WebHomeViewModel extends BaseModel {
     }
   }
 
-  launchGame() async {
+  launchGame() {
     String initialUrl;
     viewpage(1);
     _analyticsService.track(eventName: AnalyticsEvents.gamePlayStarted);

@@ -30,28 +30,7 @@ class WebGameView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseView<WebGameViewModel>(
       onModelReady: (model) async {
-        if (await CacheManager.readCache(key: 'lorem ipsum01') == null) {
-          CacheManager.writeCache(
-              key: 'lorem ipsum01', value: true, type: CacheType.bool);
-
-          BaseUtil.showPositiveAlert(
-              'this game is heavy and might take some time to load',
-              'Loading.....');
-        }
-        if (inLandscapeMode) {
-          SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-              overlays: [SystemUiOverlay.bottom]);
-          SystemChrome.setPreferredOrientations([
-            Platform.isIOS
-                ? DeviceOrientation.landscapeRight
-                : DeviceOrientation.landscapeLeft,
-          ]);
-          AppState.isWebGameLInProgress = true;
-        } else {
-          AppState.isWebGamePInProgress = true;
-        }
-
-        model.init(game);
+        model.init(game, inLandscapeMode);
       },
       onModelDispose: (model) {
         if (inLandscapeMode) {
