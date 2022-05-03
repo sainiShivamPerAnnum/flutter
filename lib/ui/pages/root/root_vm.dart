@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
@@ -6,6 +7,7 @@ import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
@@ -18,14 +20,19 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/golden_ticket_claim.dart';
 import 'package:felloapp/ui/modals_sheets/security_modal_sheet.dart';
 import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class RootViewModel extends BaseModel {
   final BaseUtil _baseUtil = locator<BaseUtil>();
@@ -183,10 +190,49 @@ class RootViewModel extends BaseModel {
       });
       if (canExecuteStartupNotification &&
           AppState.startupNotifMessage != null) {
+        canExecuteStartupNotification = false;
         _logger
             .d("terminated startup message: ${AppState.startupNotifMessage}");
         _fcmListener.handleMessage(
             AppState.startupNotifMessage, MsgSource.Terminated);
+      }
+
+      if (canExecuteStartupNotification &&
+          _userService.isAnyUnscratchedGTAvailable) {
+        int count = 0;
+        if (await CacheManager.exits("UGTCount")) {
+          count = await CacheManager.readCache(
+              key: "UGTCount", type: CacheType.int);
+          count++;
+          await CacheManager.writeCache(
+              key: "UGTCount", value: count, type: CacheType.int);
+        } else {
+          await CacheManager.writeCache(
+              key: "UGTCount", value: count, type: CacheType.int);
+        }
+        _logger.d("Unscratched Golden Ticket Show Count: $count");
+        if (count % 5 == 1)
+          BaseUtil.openDialog(
+            addToScreenStack: true,
+            hapticVibrate: true,
+            isBarrierDismissable: false,
+            content: FelloInfoDialog(
+              asset: Assets.goldenTicket,
+              title: "Unscratched Golden Tickets",
+              subtitle: "Scratch them now and unlock exciting rewards",
+              action: FelloButtonLg(
+                child: Text(
+                  "Let's go",
+                  style: TextStyles.body2.bold.colour(Colors.white),
+                ),
+                onPressed: () {
+                  AppState.backButtonDispatcher.didPopRoute();
+                  AppState.delegate.appState.currentAction = PageAction(
+                      page: MyWinnigsPageConfig, state: PageState.addPage);
+                },
+              ),
+            ),
+          );
       }
     }
   }

@@ -242,6 +242,22 @@ class DBModel extends ChangeNotifier {
     return false;
   }
 
+  Future<bool> checkIfUserHasUnscratchedGT(String userId) async {
+    try {
+      QuerySnapshot gtSnapshot = await _api.checkForLatestGTStatus(userId);
+      GoldenTicket latestGT = GoldenTicket.fromJson(
+          gtSnapshot.docs.first.data(), gtSnapshot.docs.first.id);
+      // logger.d("Latest Golden Ticket: ${gtSnapshot.docs.first.data()}");
+      if (latestGT.redeemedTimestamp == null)
+        return true;
+      else
+        return false;
+    } catch (e) {
+      logger.e(e.toString());
+      return false;
+    }
+  }
+
   Future<Map<String, dynamic>> getUserNotifications(
       String userId, DocumentSnapshot lastDoc, bool more) async {
     List<AlertModel> alerts = [];
