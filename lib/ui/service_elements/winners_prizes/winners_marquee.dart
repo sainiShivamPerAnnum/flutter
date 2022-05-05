@@ -8,11 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class WinnersMarqueeStrip extends StatelessWidget {
+  final String type;
+  WinnersMarqueeStrip({this.type});
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<WinnerService, WinnerServiceProperties>(
       properties: [WinnerServiceProperties.topWinners],
-      builder: (context, WModel, properties) {
+      builder: (context, wModel, properties) {
         return Container(
           width: SizeConfig.screenWidth,
           margin: EdgeInsets.symmetric(
@@ -23,7 +25,10 @@ class WinnersMarqueeStrip extends StatelessWidget {
             color: UiConstants.tertiaryLight.withOpacity(0.5),
           ),
           child: MarqueeText(
-            infoList: _getMarqueeText(WModel.topWinners, WModel.winners),
+            infoList: _getMarqueeText(
+              getTextArray(wModel),
+              winners: wModel.winners,
+            ),
             showBullet: true,
             bulletColor: UiConstants.tertiarySolid,
           ),
@@ -31,9 +36,20 @@ class WinnersMarqueeStrip extends StatelessWidget {
       },
     );
   }
+
+  List<String> getTextArray(WinnerService wModel) {
+    switch (type) {
+      case "BUG_BOUNTY":
+        return wModel.bugBountyWinners;
+      case "NEW_FELLO":
+        return wModel.newFelloWinners;
+      default:
+        return wModel.topWinners;
+    }
+  }
 }
 
-List<String> _getMarqueeText(List<String> topWinners, List<Winners> winners) {
+List<String> _getMarqueeText(List<String> topWinners, {List<Winners> winners}) {
   if (topWinners != null && topWinners.isNotEmpty)
     return List.generate(topWinners.length, (i) => topWinners[i]);
   else if (winners != null && winners.isNotEmpty)

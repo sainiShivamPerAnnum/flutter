@@ -10,22 +10,22 @@ import 'package:flutter/material.dart';
 
 class AllParticipantsView extends StatelessWidget {
   final List<TopSavers> participants;
-  final SaverType type;
+  final CampaignType type;
   AllParticipantsView({this.participants, this.type});
   bool isInteger(num value) => value is int || value == value.roundToDouble();
 
   getItemCount() {
-    if (type == SaverType.DAILY) {
+    if (type == CampaignType.DAILY) {
       if (participants.length < 30)
         return participants.length;
       else
         return 30;
-    } else if (type == SaverType.WEEKLY) {
+    } else if (type == CampaignType.WEEKLY) {
       if (participants.length < 50)
         return participants.length;
       else
         return 50;
-    } else if (type == SaverType.MONTHLY) {
+    } else if (type == CampaignType.MONTHLY) {
       if (participants.length < 80)
         return participants.length;
       else

@@ -1,1 +1,1 @@
-enum WinnerServiceProperties { winLeaderboard, topWinners }
+enum WinnerServiceProperties { winLeaderboard, topWinners, bugBounty, newFello }
