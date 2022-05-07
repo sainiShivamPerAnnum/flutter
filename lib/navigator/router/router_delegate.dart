@@ -694,6 +694,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'footballHome':
         openWebGame(Constants.GAME_TYPE_FOOTBALL);
         break;
+      case 'candyfiestaHome':
+        openWebGame(Constants.GAME_TYPE_CANDYFIESTA);
+        break;
       case 'cricketHome':
         openWebGame(Constants.GAME_TYPE_CRICKET);
         break;

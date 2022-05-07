@@ -56,9 +56,7 @@ class WebGameViewModel extends BaseModel {
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
           overlays: [SystemUiOverlay.bottom]);
       SystemChrome.setPreferredOrientations([
-        Platform.isIOS
-            ? DeviceOrientation.landscapeRight
-            : DeviceOrientation.landscapeLeft,
+        DeviceOrientation.portraitUp,
       ]);
       AppState.isWebGameLInProgress = true;
     } else {
@@ -162,7 +160,6 @@ class WebGameViewModel extends BaseModel {
     });
   }
 
-// Foot Ball Handler Start>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> //
   handleFootBallRoundEnd(Map<String, dynamic> data, String game) async {
     _analyticsService.track(eventName: AnalyticsEvents.footBallEnds);
     if (data['gt_id'] != null && data['gt_id'].toString().isNotEmpty) {
@@ -173,18 +170,15 @@ class WebGameViewModel extends BaseModel {
     _lbService.fetchWebGameLeaderBoard(game: game);
   }
 
-  // handleFootBallSessionEnd() {
-  //   updateFlcBalance();
-  //   _logger.d("Checking for golden tickets");
-  //   _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
-  //     if (res)
-  //       Future.delayed(Duration(seconds: 1), () {
-  //         _gtService.showInstantGoldenTicketView(
-  //             title: 'Foot Ball Milestone reached', source: GTSOURCE.footBall);
-  //       });
-  //   });
-  // }
-// Foot Ball Handler End>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> //
+  handleCandyFiestaRoundEnd(Map<String, dynamic> data, String game) async {
+    _analyticsService.track(eventName: AnalyticsEvents.candyFiestaEnds);
+    if (data['gt_id'] != null && data['gt_id'].toString().isNotEmpty) {
+      _logger.d("Recived a Golden ticket with id: ${data['gt_id']}");
+      GoldenTicketService.goldenTicketId = data['gt_id'];
+    }
+    updateFlcBalance();
+    _lbService.fetchWebGameLeaderBoard(game: game);
+  }
 
   handleLowBalanceAlert() {
     if (AppState.isWebGameLInProgress || AppState.isWebGamePInProgress) {

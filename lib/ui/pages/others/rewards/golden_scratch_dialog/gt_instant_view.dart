@@ -25,6 +25,7 @@ enum GTSOURCE {
   deposit,
   cricket,
   footBall,
+  candyFiesta,
   poolClub,
   panVerify,
   autosave,
@@ -447,6 +448,7 @@ class _GTInstantViewState extends State<GTInstantView>
         source == GTSOURCE.panVerify ||
         source == GTSOURCE.poolClub ||
         source == GTSOURCE.footBall ||
+        source == GTSOURCE.candyFiesta ||
         source == GTSOURCE.game) {
       onPressed = () {
         if (!model.isCardScratched) return;

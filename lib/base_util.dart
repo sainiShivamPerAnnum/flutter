@@ -240,6 +240,21 @@ class BaseUtil extends ChangeNotifier {
   void setGameDefaults() {
     gamesList = [
       GameModel(
+        gameName: "Candy Fiesta",
+        pageConfig: THomePageConfig,
+        tag: 'candyFiesta',
+        shadowColor: Color(0xff4B489E),
+        thumbnailUri: BaseRemoteConfig.remoteConfig
+            .getString(BaseRemoteConfig.CANDYFIESTA_THUMBNAIL_URI),
+        playCost: BaseRemoteConfig.remoteConfig
+                .getString(BaseRemoteConfig.CANDYFIESTA_PLAY_COST) ??
+            "10",
+        prizeAmount: BaseRemoteConfig.remoteConfig
+                .getString(BaseRemoteConfig.CANDYFIESTA_PLAY_PRIZE) ??
+            "50000",
+        analyticEvent: AnalyticsEvents.selectCandyFiesta,
+      ),
+      GameModel(
         gameName: "Football",
         pageConfig: THomePageConfig,
         tag: 'football',

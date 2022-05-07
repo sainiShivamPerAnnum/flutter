@@ -24,16 +24,19 @@ class AnalyticsEvents {
   static const earnMoreRefer = "Select refer in earn more section";
   static const selectPlayCricket = "Select Cricket";
   static const startPlayingCricket = "Play Cricket";
-  //
   static const selectPlayFootball = "Select Football";
   static const startPlayingFootball = "Play Football";
-  //
+  static const selectCandyFiesta = "Select CandyFiesta";
+  static const startPlayingCandyFiesta = "Play CandyFiesta";
+
   static const selectPlayTambola = "Select Tambola";
   static const selectPlayPoolClub = "Select PoolClub";
   static const startPlayingTambola = "Enter Tambola";
   static const buyTambolaTickets = "Play Tambola";
   static const poolClubStarts = "Pool Club starts";
   static const poolClubEnds = "Pool Club ends";
+  static const candyFiestaEnds = "Candy Fiesta ends";
+  static const candyFiestaStarts = "Candy Fiesta starts";
   static const footBallEnds = "Foot Ball ends";
   static const gamePlayStarted = "Game started";
 

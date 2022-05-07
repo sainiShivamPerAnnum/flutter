@@ -17,6 +17,7 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
   int _tambolaWinnersLength = 0;
   int _poolClubWinnersLength = 0;
   int _footBallWinnersLength = 0;
+  int _candyFiestaWinnersLength = 0;
   Timestamp _timestamp;
 
   List<Winners> _winners = [];
@@ -32,6 +33,8 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
   get poolClubWinnersLength => this._poolClubWinnersLength;
 
   get footBallWinnersLength => this._footBallWinnersLength;
+
+  get candyFiestaWinnersLength => this._candyFiestaWinnersLength;
 
   get timeStamp => _timestamp;
 
@@ -68,6 +71,9 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
 
     ApiResponse<WinnersModel> _footBallWinners =
         await _winnersRepo.getWinners(Constants.GAME_TYPE_FOOTBALL, "weekly");
+
+    ApiResponse<WinnersModel> _candyFiestaWinners = await _winnersRepo
+        .getWinners(Constants.GAME_TYPE_CANDYFIESTA, "weekly");
 
     _winners.clear();
 
@@ -120,6 +126,19 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
       _logger.d("FootBall Winners added to leaderboard");
     } else {
       _logger.i("FootBall Winners not added to leaderboard");
+    }
+
+    if (_candyFiestaWinners != null &&
+        _candyFiestaWinners.model != null &&
+        _candyFiestaWinners.model.winners != null &&
+        _candyFiestaWinners.model?.winners?.length != 0) {
+      _timestamp = _candyFiestaWinners.model?.timestamp;
+      _candyFiestaWinnersLength = _candyFiestaWinners.model?.winners?.length;
+      _winners.addAll(_candyFiestaWinners.model.winners);
+      _logger.d(_candyFiestaWinners.model.winners.toString());
+      _logger.d("CandyFiesta Winners added to leaderboard");
+    } else {
+      _logger.i("CandyFiesta Winners not added to leaderboard");
     }
 
     if (_tambolaWinners.model?.winners?.length == 0 &&

@@ -4,6 +4,7 @@ class Constants {
 
   //Game Type
 
+  static const String GAME_TYPE_CANDYFIESTA = "GM_CANDY_FIESTA";
   static const String GAME_TYPE_FOOTBALL = "GM_FOOTBALL_KICKOFF";
   static const String GAME_TYPE_CRICKET = "GM_CRIC2020";
   static const String GAME_TYPE_TAMBOLA = "GM_TAMBOLA2020";

@@ -89,17 +89,20 @@ class WebHomeViewModel extends BaseModel {
 
   setGameIndex() {
     switch (currentGame) {
-      case Constants.GAME_TYPE_FOOTBALL:
+      case Constants.GAME_TYPE_CANDYFIESTA:
         gameIndex = 0;
         break;
-      case Constants.GAME_TYPE_CRICKET:
+      case Constants.GAME_TYPE_FOOTBALL:
         gameIndex = 1;
         break;
-      case Constants.GAME_TYPE_POOLCLUB:
+      case Constants.GAME_TYPE_CRICKET:
         gameIndex = 2;
         break;
-      case Constants.GAME_TYPE_TAMBOLA:
+      case Constants.GAME_TYPE_POOLCLUB:
         gameIndex = 3;
+        break;
+      case Constants.GAME_TYPE_TAMBOLA:
+        gameIndex = 4;
         break;
     }
     this.gameIndex = gameIndex;
@@ -108,6 +111,8 @@ class WebHomeViewModel extends BaseModel {
 
   setUpWebHomeView() {
     switch (currentGame) {
+      case Constants.GAME_TYPE_CANDYFIESTA:
+        break;
       case Constants.GAME_TYPE_POOLCLUB:
         break;
       case Constants.GAME_TYPE_CRICKET:
@@ -121,6 +126,8 @@ class WebHomeViewModel extends BaseModel {
 
   cleanUpWebHomeView() {
     switch (currentGame) {
+      case Constants.GAME_TYPE_CANDYFIESTA:
+        break;
       case Constants.GAME_TYPE_POOLCLUB:
         break;
       case Constants.GAME_TYPE_CRICKET:
@@ -159,6 +166,12 @@ class WebHomeViewModel extends BaseModel {
         prizes = _prizeService.footballPrizes;
 
         break;
+      case Constants.GAME_TYPE_CANDYFIESTA:
+        if (_prizeService.candyfiestaPrizes == null)
+          await _prizeService.fetchCandyFiestaPrizes();
+        prizes = _prizeService.candyfiestaPrizes;
+
+        break;
     }
     isPrizesLoading = false;
     if (prizes == null)
@@ -176,6 +189,9 @@ class WebHomeViewModel extends BaseModel {
         break;
       case Constants.GAME_TYPE_FOOTBALL:
         return _setupFootBallGame();
+        break;
+      case Constants.GAME_TYPE_CANDYFIESTA:
+        return _setupCandyFiestaGame();
         break;
       default:
         return false;
@@ -200,6 +216,11 @@ class WebHomeViewModel extends BaseModel {
             eventName: AnalyticsEvents.startPlayingFootball);
         initialUrl = _generateFootBallGameUrl();
         break;
+      case Constants.GAME_TYPE_CANDYFIESTA:
+        _analyticsService.track(
+            eventName: AnalyticsEvents.startPlayingCandyFiesta);
+        initialUrl = _generateCandyFiestaGameUrl();
+        break;
     }
     AppState.delegate.appState.currentAction = PageAction(
       state: PageState.addWidget,
@@ -210,7 +231,8 @@ class WebHomeViewModel extends BaseModel {
         inLandscapeMode: currentGame == Constants.GAME_TYPE_POOLCLUB ||
                 (currentGame == Constants.GAME_TYPE_CRICKET &&
                     _gameEndpoint != null) ||
-                currentGame == Constants.GAME_TYPE_FOOTBALL
+                currentGame == Constants.GAME_TYPE_FOOTBALL ||
+                currentGame == Constants.GAME_TYPE_CANDYFIESTA
             ? true
             : false,
       ),
@@ -290,6 +312,33 @@ class WebHomeViewModel extends BaseModel {
   }
 
   //FootBall Methods -----------------------------------END-------------------//
+
+  //CandyFiesta Methods --------------------------------START--------------------//
+  Future<bool> _setupCandyFiestaGame() async {
+    setState(ViewState.Busy);
+    String _candyFiestaCost = BaseRemoteConfig.remoteConfig
+            .getString(BaseRemoteConfig.CANDYFIESTA_PLAY_COST) ??
+        "10";
+    int _cost = int.tryParse(_candyFiestaCost) ?? 10;
+    ApiResponse<FlcModel> _flcResponse = await _fclActionRepo.getCoinBalance();
+    setState(ViewState.Idle);
+    if (_flcResponse.model.flcBalance != null &&
+        _flcResponse.model.flcBalance >= _cost)
+      return true;
+    else {
+      return false;
+    }
+  }
+
+  String _generateCandyFiestaGameUrl() {
+    String _candyfiestaUri = "https://fl-games-candy-fiesta.onrender.com/";
+    String _loadUri =
+        "$_candyfiestaUri?user=${_userService.baseUser.uid}&name=${_userService.baseUser.username}";
+    if (FlavorConfig.isDevelopment()) _loadUri = "$_loadUri&dev=true";
+    return _loadUri;
+  }
+
+  //CandyFiesta Methods -----------------------------------END-------------------//
 
   //PoolClub Methods --------------------------------START--------------------//
   Future<bool> _setupPoolClubGame() async {

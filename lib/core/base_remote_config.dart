@@ -114,6 +114,13 @@ class BaseRemoteConfig {
     'football_play_prize': '25,000'
   };
 
+  static const Map<String, String> _CANDYFIESTA_PLAY_COST = {
+    'candyfiesta_play_cost': '10'
+  };
+  static const Map<String, String> _CANDYFIESTA_PLAY_PRIZE = {
+    'candyfiesta_play_prize': '25,000'
+  };
+
   static const Map<String, String> _POOLCLUB_PLAY_COST = {
     'poolclub_play_cost': '10'
   };
@@ -123,6 +130,10 @@ class BaseRemoteConfig {
   static const Map<String, String> _FOOTBALL_THUMBNAIL_URI = {
     'football_thumbnail':
         'https://img.freepik.com/free-vector/gradient-football-field-background_52683-67789.jpg?t=st=1651147964~exp=1651148564~hmac=4d7297e0201d5f1513486c39fb6b0d0beeb2b5abbe8051ded63454464e438605&w=1800'
+  };
+  static const Map<String, String> _CANDYFIESTA_THUMBNAIL_URI = {
+    'candyfiesta_thumbnail':
+        'https://firebasestorage.googleapis.com/v0/b/fello-dev-station.appspot.com/o/games%2FCandy%20Fiesta-Thumbnail.jpg?alt=media&token=19bfc19e-2f1d-457a-8350-dec9674a8269'
   };
   static const Map<String, String> _CRICKET_THUMBNAIL_URI = {
     'cricket_thumbnail':
@@ -192,10 +203,13 @@ class BaseRemoteConfig {
     ..._FOOTBALL_PLAY_PRIZE,
     ..._POOLCLUB_PLAY_COST,
     ..._POOLCLUB_PLAY_PRIZE,
+    ..._CANDYFIESTA_PLAY_COST,
+    ..._CANDYFIESTA_PLAY_PRIZE,
     ..._FOOTBALL_THUMBNAIL_URI,
     ..._CRICKET_THUMBNAIL_URI,
     ..._TAMBOLA_THUMBNAIL_URI,
     ..._POOLCLUB_THUMBNAIL_URI,
+    ..._CANDYFIESTA_THUMBNAIL_URI,
     ..._MIN_WITHDRAWABLE_PRIZE,
     ..._GAME_TAMBOLA_ANNOUNCEMENT,
     ..._GAME_CRICKET_ANNOUNCEMENT,
@@ -304,6 +318,11 @@ class BaseRemoteConfig {
 
   static String get FOOTBALL_PLAY_COST => _FOOTBALL_PLAY_COST.keys.first;
 
+  static String get CANDYFIESTA_PLAY_PRIZE =>
+      _CANDYFIESTA_PLAY_PRIZE.keys.first;
+
+  static String get CANDYFIESTA_PLAY_COST => _CANDYFIESTA_PLAY_COST.keys.first;
+
   static String get CRICKET_PLAY_COST => _CRICKET_PLAY_COST.keys.first;
 
   static String get FOOTBALL_PLAY_PRIZE => _FOOTBALL_PLAY_PRIZE.keys.first;
@@ -320,6 +339,9 @@ class BaseRemoteConfig {
   static String get CRICKET_THUMBNAIL_URI => _CRICKET_THUMBNAIL_URI.keys.first;
 
   static String get TAMBOLA_THUMBNAIL_URI => _TAMBOLA_THUMBNAIL_URI.keys.first;
+
+  static String get CANDYFIESTA_THUMBNAIL_URI =>
+      _CANDYFIESTA_THUMBNAIL_URI.keys.first;
 
   static String get POOLCLUB_THUMBNAIL_URI =>
       _POOLCLUB_THUMBNAIL_URI.keys.first;

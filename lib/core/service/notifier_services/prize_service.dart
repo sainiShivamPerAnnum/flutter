@@ -11,11 +11,19 @@ class PrizeService extends ChangeNotifier {
   PrizesModel _cricketPrizes;
   PrizesModel _poolClubPrizes;
   PrizesModel _footballPrizes;
+  PrizesModel _candyfiestaPrizes;
 
   get footballPrizes => this._footballPrizes;
 
   set footballPrizes(ApiResponse<PrizesModel> value) {
     this._footballPrizes = value.model;
+    notifyListeners();
+  }
+
+  get candyfiestaPrizes => this._candyfiestaPrizes;
+
+  set candyfiestaPrizes(ApiResponse<PrizesModel> value) {
+    this._candyfiestaPrizes = value.model;
     notifyListeners();
   }
 
@@ -43,6 +51,11 @@ class PrizeService extends ChangeNotifier {
   fetchFootballPrizes() async {
     footballPrizes = await _prizeRepo.getPrizesPerGamePerFreq(
         Constants.GAME_TYPE_FOOTBALL, "weekly");
+  }
+
+  fetchCandyFiestaPrizes() async {
+    footballPrizes = await _prizeRepo.getPrizesPerGamePerFreq(
+        Constants.GAME_TYPE_CANDYFIESTA, "weekly");
   }
 
   fetchTambolaPrizes() async {
