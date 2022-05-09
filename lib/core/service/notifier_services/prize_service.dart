@@ -54,7 +54,7 @@ class PrizeService extends ChangeNotifier {
   }
 
   fetchCandyFiestaPrizes() async {
-    footballPrizes = await _prizeRepo.getPrizesPerGamePerFreq(
+    candyfiestaPrizes = await _prizeRepo.getPrizesPerGamePerFreq(
         Constants.GAME_TYPE_CANDYFIESTA, "weekly");
   }
 
