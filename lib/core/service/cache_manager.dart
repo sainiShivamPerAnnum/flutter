@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -38,65 +36,6 @@ class CacheManager {
         cache = sharedPreferences.getString(key);
     }
     return cache;
-  }
-
-  static Future<bool> isApiCacheable(String key) async {
-    final SharedPreferences sharedPreferences =
-        await SharedPreferences.getInstance();
-    if (sharedPreferences.containsKey(key)) {
-      //cache exists
-      final List<String> cache = sharedPreferences.getStringList(key);
-      final String cacheExpireTimeString = cache[0];
-      final DateTime cacheExpireTime = DateTime.parse(cacheExpireTimeString);
-
-      if (DateTime.now().compareTo(cacheExpireTime) >= 0) {
-        // cache expired
-        await sharedPreferences.remove(key);
-        return true;
-      } else {
-        // cache not expired
-        return false;
-      }
-    } else {
-      //key does not exists, cache can be added.
-      return true;
-    }
-  }
-
-  static Future<Map> getApiCache({@required String key}) async {
-    final SharedPreferences sharedPreferences =
-        await SharedPreferences.getInstance();
-    final List<String> cache = sharedPreferences.getStringList(key);
-    final String valueString = cache[1];
-    final Map value = jsonDecode(valueString);
-    return value;
-  }
-
-  static Future<bool> writeApiCache({
-    //apiPath as key
-    @required String key,
-    @required Duration ttl,
-    @required Map value,
-    @required CacheType type,
-  }) async {
-    final writeTimeStamp = DateTime.now();
-    final SharedPreferences sharedPreferences =
-        await SharedPreferences.getInstance();
-    if (type == CacheType.stringList) {
-      try {
-        //Add ttl to current time to calculate time to expire
-        final DateTime cacheExpireTime = writeTimeStamp.add(ttl);
-        final String valueString = jsonEncode(value);
-
-        await sharedPreferences
-            .setStringList(key, [cacheExpireTime.toString(), valueString]);
-        return true;
-      } catch (e) {
-        print("Error in writing cache: $e");
-        return false;
-      }
-    }
-    return false;
   }
 
   static Future writeCache({

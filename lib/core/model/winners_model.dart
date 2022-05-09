@@ -34,14 +34,14 @@ class WinnersModel {
     data['timestamp'] = this.timestamp;
     return data;
   }
-
+  
   Map<String, dynamic> toMap() {
     return {
       'winners': winners?.map((x) => x.toMap())?.toList(),
       'code': code,
       'gametype': gametype,
       'freq': freq,
-      'timestamp': timestamp.millisecondsSinceEpoch,
+      'timestamp': timestamp.toString(),
     };
   }
 

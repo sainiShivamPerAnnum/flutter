@@ -1,22 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
-import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/model/top_winners_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/service/api.dart';
+import 'package:felloapp/core/service/api_cache_manager.dart';
 import 'package:felloapp/core/service/api_service.dart';
-import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/code_from_freq.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/locator.dart';
 
 class WinnersRepository {
   final _userService = locator<UserService>();
   final _api = locator<Api>();
   final _logger = locator<CustomLogger>();
   final _apiPaths = locator<ApiPath>();
+  final _apiCacheManager = locator<ApiCacheManager>();
 
   Future<String> _getBearerToken() async {
     String token = await _userService.firebaseUser.getIdToken();
@@ -34,24 +34,31 @@ class WinnersRepository {
       String cacheKey = "winners" + gameType + freq;
       _logger.d("Cachekey: $cacheKey");
 
-      bool isCacheable = await CacheManager.isApiCacheable(cacheKey);
+      bool isCacheable = await _apiCacheManager.isApiCacheable(cacheKey);
+      _logger.d("isCacheable: $isCacheable");
+
       Map data;
+      WinnersModel _responseModel;
+
       if (isCacheable) {
+        _logger.d("Adding Api cache with key isCacheable: $cacheKey");
         final QueryDocumentSnapshot _response =
             await _api.getWinnersByGameTypeFreqAndCode(gameType, freq, code);
+
         data = _response.data();
-        await CacheManager.writeApiCache(
-            key: cacheKey,
-            ttl: Duration(hours: 6),
-            value: data,
-            type: CacheType.stringList);
+        _responseModel = WinnersModel.fromMap(data, gameType);
+
+        await _apiCacheManager.writeApiCache(
+          key: cacheKey,
+          ttl: Duration(hours: 6),
+          value: _responseModel.toMap(),
+        );
       } else {
-        data = await CacheManager.getApiCache(key: cacheKey);
+        _logger.d("Reading Api cache with key: $cacheKey");
+        data = await _apiCacheManager.getApiCache(key: cacheKey);
+        _responseModel = WinnersModel.fromMap(data, gameType);
       }
 
-      WinnersModel _responseModel = WinnersModel.fromMap(data, gameType);
-
-      _logger.d(data.toString());
       return ApiResponse(model: _responseModel, code: 200);
     } catch (e) {
       _logger.e(e);
