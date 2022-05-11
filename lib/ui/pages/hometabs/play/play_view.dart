@@ -90,18 +90,18 @@ class Play extends StatelessWidget {
                     padding:
                         EdgeInsets.symmetric(vertical: SizeConfig.padding12),
                     children: [
-                      if (BaseRemoteConfig.CANDY_FIESTA_ONLINE == 'true') ...[
-                        GestureDetector(
-                          onTap: () {
-                            Haptic.vibrate();
-                            AppState.delegate
-                                .parseRoute(Uri.parse('/candyfiestaHome'));
-                          },
-                          child: GameCard(
-                            gameData: BaseUtil.gamesList[0],
-                          ),
+                      //   if (BaseRemoteConfig.CANDY_FIESTA_ONLINE == 'true') ...[
+                      GestureDetector(
+                        onTap: () {
+                          Haptic.vibrate();
+                          AppState.delegate
+                              .parseRoute(Uri.parse('/candyfiestaHome'));
+                        },
+                        child: GameCard(
+                          gameData: BaseUtil.gamesList[0],
                         ),
-                      ],
+                      ),
+                      //  ],
                       SizedBox(height: SizeConfig.padding6),
                       GestureDetector(
                         onTap: () {

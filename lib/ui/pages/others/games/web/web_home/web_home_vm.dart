@@ -304,7 +304,8 @@ class WebHomeViewModel extends BaseModel {
   }
 
   String _generateFootBallGameUrl() {
-    String _footBallUri = "https://fl-games-football-kickoff.onrender.com/";
+    String _footBallUri = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.FOOTBALL_GAME_URI);
     String _loadUri =
         "$_footBallUri?user=${_userService.baseUser.uid}&name=${_userService.baseUser.username}";
     if (FlavorConfig.isDevelopment()) _loadUri = "$_loadUri&dev=true";
@@ -331,7 +332,8 @@ class WebHomeViewModel extends BaseModel {
   }
 
   String _generateCandyFiestaGameUrl() {
-    String _candyfiestaUri = "https://fl-games-candy-fiesta.onrender.com/";
+    String _candyfiestaUri = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.CANDYFIESTA_GAME_URI);
     String _loadUri =
         "$_candyfiestaUri?user=${_userService.baseUser.uid}&name=${_userService.baseUser.username}";
     if (FlavorConfig.isDevelopment()) _loadUri = "$_loadUri&dev=true";
@@ -385,8 +387,8 @@ class WebHomeViewModel extends BaseModel {
   }
 
   String _generatePoolClubGameUrl() {
-    String _poolClubUri =
-        "https://d2qfyj2eqvh06a.cloudfront.net/pool-club/index.html";
+    String _poolClubUri = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.POOLCLUB_GAME_URI);
     String _loadUri =
         "$_poolClubUri?user=${_userService.baseUser.uid}&name=${_userService.baseUser.username}";
     if (FlavorConfig.isDevelopment()) _loadUri = "$_loadUri&dev=true";
