@@ -92,6 +92,10 @@ class TopSaverView extends StatelessWidget {
                                       WinnersMarqueeStrip(),
                                     if (!model.showStandingsAndWinners)
                                       InstructionBoard(model: model),
+                                    if (!model.showStandingsAndWinners)
+                                      SizedBox(
+                                        height: SizeConfig.navBarHeight,
+                                      )
                                   ],
                                 ),
                         ),
@@ -174,21 +178,31 @@ class InstructionBoard extends StatelessWidget {
               "Instructions",
               style: TextStyles.title4.bold,
             ),
+            SizedBox(height: SizeConfig.padding16),
             model.event != null
                 ? Column(
                     children: List.generate(
                       model.event.instructions.length,
                       (i) {
-                        return ListTile(
-                          leading: CircleAvatar(
-                            backgroundColor: UiConstants.tertiarySolid,
-                            radius: SizeConfig.padding12,
-                            child: Text(
-                              (i + 1).toString(),
-                              style: TextStyles.body3.colour(Colors.white),
-                            ),
+                        return Container(
+                          padding:
+                              EdgeInsets.only(bottom: SizeConfig.padding16),
+                          child: Row(
+                            children: [
+                              CircleAvatar(
+                                backgroundColor: UiConstants.tertiarySolid,
+                                radius: SizeConfig.padding16,
+                                child: Text(
+                                  (i + 1).toString(),
+                                  style: TextStyles.body3.colour(Colors.white),
+                                ),
+                              ),
+                              SizedBox(
+                                width: SizeConfig.padding16,
+                              ),
+                              Expanded(child: Text(model.event.instructions[i]))
+                            ],
                           ),
-                          title: Text(model.event.instructions[i]),
                         );
                       },
                     ),
