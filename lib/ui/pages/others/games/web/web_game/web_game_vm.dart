@@ -40,21 +40,6 @@ class WebGameViewModel extends BaseModel {
   set currentGame(value) => this._currentGame = value;
   init(String game, bool inLandscapeMode) async {
     currentGame = game;
-    print("In Landscape mode: $inLandscapeMode");
-    if (!await CacheManager.exits(CacheManager.CACHE_IS_FIRST_TIME_FOOTBALL) &&
-        currentGame == Constants.GAME_TYPE_FOOTBALL) {
-      CacheManager.writeCache(
-          key: CacheManager.CACHE_IS_FIRST_TIME_FOOTBALL,
-          value: true,
-          type: CacheType.bool);
-
-      Future.delayed(Duration(seconds: 2), () {
-        BaseUtil.showNegativeAlert(
-          'Loading..Please wait..',
-          'This game is heavy and might take some time to load',
-        );
-      });
-    }
     if (inLandscapeMode) {
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
           overlays: [SystemUiOverlay.bottom]);
@@ -67,6 +52,22 @@ class WebGameViewModel extends BaseModel {
     } else {
       AppState.isWebGamePInProgress = true;
     }
+    print("In Landscape mode: $inLandscapeMode");
+    if (!await CacheManager.exits(CacheManager.CACHE_IS_FIRST_TIME_FOOTBALL) &&
+        currentGame == Constants.GAME_TYPE_FOOTBALL) {
+      CacheManager.writeCache(
+          key: CacheManager.CACHE_IS_FIRST_TIME_FOOTBALL,
+          value: true,
+          type: CacheType.bool);
+
+      Future.delayed(Duration(seconds: 1), () {
+        BaseUtil.showNegativeAlert(
+          'Loading..Please wait..',
+          'This game is heavy and might take some time to load',
+        );
+      });
+    }
+
     // setUpWebGameView(game);
   }
 
