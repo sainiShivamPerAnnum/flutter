@@ -130,6 +130,11 @@ class BaseRemoteConfig {
   static const Map<String, String> _POOLCLUB_PLAY_PRIZE = {
     'poolclub_play_prize': '25,000'
   };
+
+  static const Map<String, String> _CRICKET_GAME_URI = {
+    'cricket_game_url': 'https://prod.freakx.in/fello/cricket-2021-V2/'
+  };
+
   static const Map<String, String> _FOOTBALL_GAME_URI = {
     'football_game_url': 'https://fl-games-football-kickoff.onrender.com/'
   };
@@ -224,6 +229,7 @@ class BaseRemoteConfig {
     ..._TAMBOLA_THUMBNAIL_URI,
     ..._POOLCLUB_THUMBNAIL_URI,
     ..._CANDYFIESTA_THUMBNAIL_URI,
+    ..._CRICKET_GAME_URI,
     ..._FOOTBALL_GAME_URI,
     ..._CANDYFIESTA_GAME_URI,
     ..._POOLCLUB_GAME_URI,
@@ -352,6 +358,7 @@ class BaseRemoteConfig {
 
   static String get POOLCLUB_PLAY_PRIZE => _POOLCLUB_PLAY_PRIZE.keys.first;
 
+  static String get CRICKET_GAME_URI => _CRICKET_GAME_URI.keys.first;
   static String get FOOTBALL_GAME_URI => _FOOTBALL_GAME_URI.keys.first;
   static String get CANDYFIESTA_GAME_URI => _CANDYFIESTA_GAME_URI.keys.first;
   static String get POOLCLUB_GAME_URI => _POOLCLUB_GAME_URI.keys.first;

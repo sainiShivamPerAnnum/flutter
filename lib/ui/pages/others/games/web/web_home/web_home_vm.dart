@@ -279,7 +279,7 @@ class WebHomeViewModel extends BaseModel {
   String _generateCricketGameUrl() {
     return _gameEndpoint != null
         ? _gameEndpoint
-        : '${Constants.GAME_CRICKET_URI}?userId=${_userService.baseUser.uid}&userName=${_userService.baseUser.username}&sessionId=$_sessionId&stage=${FlavorConfig.getStage()}&gameId=cric2020';
+        : '${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.CRICKET_GAME_URI)}?userId=${_userService.baseUser.uid}&userName=${_userService.baseUser.username}&sessionId=$_sessionId&stage=${FlavorConfig.getStage()}&gameId=cric2020';
   }
 
   //Cricket Methods -----------------------------------END--------------------//
