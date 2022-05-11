@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -89,16 +90,18 @@ class Play extends StatelessWidget {
                     padding:
                         EdgeInsets.symmetric(vertical: SizeConfig.padding12),
                     children: [
-                      GestureDetector(
-                        onTap: () {
-                          Haptic.vibrate();
-                          AppState.delegate
-                              .parseRoute(Uri.parse('/candyfiestaHome'));
-                        },
-                        child: GameCard(
-                          gameData: BaseUtil.gamesList[0],
+                      if (BaseRemoteConfig.CANDY_FIESTA_ONLINE == 'true') ...[
+                        GestureDetector(
+                          onTap: () {
+                            Haptic.vibrate();
+                            AppState.delegate
+                                .parseRoute(Uri.parse('/candyfiestaHome'));
+                          },
+                          child: GameCard(
+                            gameData: BaseUtil.gamesList[0],
+                          ),
                         ),
-                      ),
+                      ],
                       SizedBox(height: SizeConfig.padding6),
                       GestureDetector(
                         onTap: () {
@@ -136,7 +139,7 @@ class Play extends StatelessWidget {
                       GestureDetector(
                         onTap: () {
                           Haptic.vibrate();
-                          model.openGame(BaseUtil.gamesList[3]);
+                          model.openGame(BaseUtil.gamesList[4]);
                         },
                         child: GameCard(
                           gameData: BaseUtil.gamesList[4],

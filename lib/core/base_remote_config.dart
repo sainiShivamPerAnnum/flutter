@@ -38,6 +38,9 @@ class BaseRemoteConfig {
   static const Map<String, String> _PLAY_SCREEN_FIRST = {
     'play_screen_first': 'true'
   };
+  static const Map<String, String> _CANDY_FIESTA_ONLINE = {
+    'candy_fiesta_online': 'true'
+  };
   static const Map<String, String> _TAMBOLA_WIN_CORNER = {
     'tambola_win_corner': '1000'
   };
@@ -205,6 +208,7 @@ class BaseRemoteConfig {
     ..._POOLCLUB_PLAY_PRIZE,
     ..._CANDYFIESTA_PLAY_COST,
     ..._CANDYFIESTA_PLAY_PRIZE,
+    ..._CANDY_FIESTA_ONLINE,
     ..._FOOTBALL_THUMBNAIL_URI,
     ..._CRICKET_THUMBNAIL_URI,
     ..._TAMBOLA_THUMBNAIL_URI,
@@ -320,6 +324,8 @@ class BaseRemoteConfig {
 
   static String get CANDYFIESTA_PLAY_PRIZE =>
       _CANDYFIESTA_PLAY_PRIZE.keys.first;
+
+  static String get CANDY_FIESTA_ONLINE => _CANDY_FIESTA_ONLINE.keys.first;
 
   static String get CANDYFIESTA_PLAY_COST => _CANDYFIESTA_PLAY_COST.keys.first;
 

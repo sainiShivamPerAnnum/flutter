@@ -238,8 +238,8 @@ class BaseUtil extends ChangeNotifier {
   }
 
   void setGameDefaults() {
-    gamesList = [
-      GameModel(
+    if (BaseRemoteConfig.CANDY_FIESTA_ONLINE == 'true')
+      gamesList[0] = GameModel(
         gameName: "Candy Fiesta",
         pageConfig: THomePageConfig,
         tag: 'candyFiesta',
@@ -253,7 +253,8 @@ class BaseUtil extends ChangeNotifier {
                 .getString(BaseRemoteConfig.CANDYFIESTA_PLAY_PRIZE) ??
             "50000",
         analyticEvent: AnalyticsEvents.selectCandyFiesta,
-      ),
+      );
+    gamesList = [
       GameModel(
         gameName: "Football",
         pageConfig: THomePageConfig,
