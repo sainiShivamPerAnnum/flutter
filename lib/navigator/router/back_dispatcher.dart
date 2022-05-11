@@ -38,7 +38,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       isBarrierDismissable: false,
       hapticVibrate: true,
       content: RotatedBox(
-        quarterTurns: isInLandScape ? -1 : 0,
+        quarterTurns: 0,
         child: FelloConfirmationLandScapeDialog(
           asset: Assets.noTickets,
           title: title,

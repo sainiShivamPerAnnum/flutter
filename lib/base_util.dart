@@ -238,28 +238,13 @@ class BaseUtil extends ChangeNotifier {
   }
 
   void setGameDefaults() {
-    // if (BaseRemoteConfig.CANDY_FIESTA_ONLINE == 'true')
-    //   gamesList[0] = ;
     gamesList = [
-      GameModel(
-        gameName: "Candy Fiesta",
-        pageConfig: THomePageConfig,
-        tag: 'candyFiesta',
-        shadowColor: Color(0xff4B489E),
-        thumbnailUri: BaseRemoteConfig.remoteConfig
-            .getString(BaseRemoteConfig.CANDYFIESTA_THUMBNAIL_URI),
-        playCost: BaseRemoteConfig.remoteConfig
-                .getString(BaseRemoteConfig.CANDYFIESTA_PLAY_COST) ??
-            "10",
-        prizeAmount: BaseRemoteConfig.remoteConfig
-                .getString(BaseRemoteConfig.CANDYFIESTA_PLAY_PRIZE) ??
-            "50000",
-        analyticEvent: AnalyticsEvents.selectCandyFiesta,
-      ),
       GameModel(
         gameName: "Football",
         pageConfig: THomePageConfig,
         tag: 'football',
+        route: "/footballHome",
+        gameCode: Constants.GAME_TYPE_FOOTBALL,
         shadowColor: Color(0xff4B489E),
         thumbnailUri: BaseRemoteConfig.remoteConfig
             .getString(BaseRemoteConfig.FOOTBALL_THUMBNAIL_URI),
@@ -275,6 +260,8 @@ class BaseUtil extends ChangeNotifier {
         gameName: "Cricket",
         pageConfig: THomePageConfig,
         tag: 'cricket',
+        route: "/cricketHome",
+        gameCode: Constants.GAME_TYPE_CRICKET,
         shadowColor: Color(0xff4B489E),
         thumbnailUri: BaseRemoteConfig.remoteConfig
             .getString(BaseRemoteConfig.CRICKET_THUMBNAIL_URI),
@@ -290,6 +277,8 @@ class BaseUtil extends ChangeNotifier {
         gameName: "Pool Club",
         pageConfig: THomePageConfig,
         tag: 'poolclub',
+        route: "/poolHome",
+        gameCode: Constants.GAME_TYPE_POOLCLUB,
         shadowColor: Color(0xff00982B),
         thumbnailUri: BaseRemoteConfig.remoteConfig
             .getString(BaseRemoteConfig.POOLCLUB_THUMBNAIL_URI),
@@ -305,6 +294,8 @@ class BaseUtil extends ChangeNotifier {
         gameName: "Tambola",
         pageConfig: THomePageConfig,
         tag: 'tambola',
+        route: "/tambolaHome",
+        gameCode: Constants.GAME_TYPE_TAMBOLA,
         shadowColor: Color(0xff1D173D),
         thumbnailUri: BaseRemoteConfig.remoteConfig
             .getString(BaseRemoteConfig.TAMBOLA_THUMBNAIL_URI),
@@ -317,6 +308,28 @@ class BaseUtil extends ChangeNotifier {
         analyticEvent: AnalyticsEvents.selectPlayTambola,
       ),
     ];
+    if (BaseRemoteConfig.remoteConfig
+            .getString(BaseRemoteConfig.CANDY_FIESTA_ONLINE) ==
+        'true')
+      gamesList.insert(
+          0,
+          GameModel(
+            gameName: "Candy Fiesta",
+            pageConfig: THomePageConfig,
+            tag: 'candyFiesta',
+            route: "/candyFiestaHome",
+            gameCode: Constants.GAME_TYPE_CANDYFIESTA,
+            shadowColor: Color(0xff4B489E),
+            thumbnailUri: BaseRemoteConfig.remoteConfig
+                .getString(BaseRemoteConfig.CANDYFIESTA_THUMBNAIL_URI),
+            playCost: BaseRemoteConfig.remoteConfig
+                    .getString(BaseRemoteConfig.CANDYFIESTA_PLAY_COST) ??
+                "10",
+            prizeAmount: BaseRemoteConfig.remoteConfig
+                    .getString(BaseRemoteConfig.CANDYFIESTA_PLAY_PRIZE) ??
+                "50000",
+            analyticEvent: AnalyticsEvents.selectCandyFiesta,
+          ));
   }
 
   Future<bool> isUnreadFreshchatSupportMessages() async {
@@ -681,7 +694,7 @@ class BaseUtil extends ChangeNotifier {
     }
   }
 
-  void openTambolaHome() async {
+  void openTambolaGame() async {
     if (await getDrawStatus()) {
       await _lModel.saveDailyPicksAnimStatus(DateTime.now().weekday).then(
             (value) =>

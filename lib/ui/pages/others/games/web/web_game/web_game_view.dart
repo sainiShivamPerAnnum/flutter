@@ -50,35 +50,54 @@ class WebGameView extends StatelessWidget {
         return WillPopScope(
           onWillPop: () async => false,
           child: Scaffold(
-            backgroundColor: Colors.black,
-            body: Stack(
-              children: [
-                Container(
-                  margin: EdgeInsets.symmetric(
-                      horizontal: Platform.isIOS
-                          ? MediaQuery.of(context).padding.right
-                          : 0),
-                  child: WebView(
-                    initialUrl: initialUrl,
-                    javascriptMode: JavascriptMode.unrestricted,
-                  ),
-                ),
-                inLandscapeMode
-                    ? Positioned(
-                        top: SizeConfig.padding16,
-                        right: SizeConfig.padding16,
-                        child: Close(inLandScape: inLandscapeMode),
-                      )
-                    : Positioned(
-                        bottom: SizeConfig.padding16,
-                        right: SizeConfig.padding16,
-                        child: Close(),
-                      )
-              ],
-            ),
-          ),
+              backgroundColor: Colors.black,
+              body: inLandscapeMode
+                  ? GameView(
+                      inLandscapeMode: inLandscapeMode, initialUrl: initialUrl)
+                  : SafeArea(
+                      child: GameView(
+                          inLandscapeMode: inLandscapeMode,
+                          initialUrl: initialUrl),
+                    )),
         );
       },
+    );
+  }
+}
+
+class GameView extends StatelessWidget {
+  final bool inLandscapeMode;
+  final String initialUrl;
+
+  GameView({@required this.inLandscapeMode, @required this.initialUrl});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Stack(
+        children: [
+          Container(
+            margin: EdgeInsets.symmetric(
+                horizontal:
+                    Platform.isIOS ? MediaQuery.of(context).padding.right : 0),
+            child: WebView(
+              initialUrl: initialUrl,
+              javascriptMode: JavascriptMode.unrestricted,
+            ),
+          ),
+          // inLandscapeMode
+          //     ?
+          Positioned(
+            top: SizeConfig.padding16,
+            right: SizeConfig.padding16,
+            child: Close(inLandScape: inLandscapeMode),
+          )
+          // : Positioned(
+          //     bottom: SizeConfig.padding16,
+          //     right: SizeConfig.padding16,
+          //     child: Close(),
+          //   )
+        ],
+      ),
     );
   }
 }

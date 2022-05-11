@@ -39,6 +39,7 @@ class WebGameViewModel extends BaseModel {
   set currentGame(value) => this._currentGame = value;
   init(String game, bool inLandscapeMode) async {
     currentGame = game;
+    print("In Landscape mode: $inLandscapeMode");
     if (!await CacheManager.exits(CacheManager.CACHE_IS_FIRST_TIME_FOOTBALL)) {
       CacheManager.writeCache(
           key: CacheManager.CACHE_IS_FIRST_TIME_FOOTBALL,
@@ -56,7 +57,9 @@ class WebGameViewModel extends BaseModel {
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
           overlays: [SystemUiOverlay.bottom]);
       SystemChrome.setPreferredOrientations([
-        DeviceOrientation.portraitUp,
+        Platform.isIOS
+            ? DeviceOrientation.landscapeRight
+            : DeviceOrientation.landscapeLeft
       ]);
       AppState.isWebGameLInProgress = true;
     } else {

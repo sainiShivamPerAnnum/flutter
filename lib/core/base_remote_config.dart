@@ -39,7 +39,7 @@ class BaseRemoteConfig {
     'play_screen_first': 'true'
   };
   static const Map<String, String> _CANDY_FIESTA_ONLINE = {
-    'candy_fiesta_online': 'true'
+    'candy_fiesta_online': 'false'
   };
   static const Map<String, String> _TAMBOLA_WIN_CORNER = {
     'tambola_win_corner': '1000'
