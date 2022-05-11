@@ -17,6 +17,7 @@ import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instan
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -40,7 +41,8 @@ class WebGameViewModel extends BaseModel {
   init(String game, bool inLandscapeMode) async {
     currentGame = game;
     print("In Landscape mode: $inLandscapeMode");
-    if (!await CacheManager.exits(CacheManager.CACHE_IS_FIRST_TIME_FOOTBALL)) {
+    if (!await CacheManager.exits(CacheManager.CACHE_IS_FIRST_TIME_FOOTBALL) &&
+        currentGame == Constants.GAME_TYPE_FOOTBALL) {
       CacheManager.writeCache(
           key: CacheManager.CACHE_IS_FIRST_TIME_FOOTBALL,
           value: true,
