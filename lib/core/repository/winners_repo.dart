@@ -51,11 +51,12 @@ class WinnersRepository {
         await _apiCacheManager.writeApiCache(
           key: cacheKey,
           ttl: Duration(hours: 6),
-          value: _responseModel.toMap(),
+          value: _responseModel.toJson(),
         );
       } else {
         _logger.d("Reading Api cache with key: $cacheKey");
         data = await _apiCacheManager.getApiCache(key: cacheKey);
+        _logger.d("Cache with key $cacheKey data: $data");
         _responseModel = WinnersModel.fromMap(data, gameType);
       }
 

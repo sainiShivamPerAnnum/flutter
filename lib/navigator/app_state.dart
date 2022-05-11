@@ -96,10 +96,12 @@ class AppState extends ChangeNotifier {
   set setCurrentTabIndex(int index) {
     _rootIndex = index;
     if (index == 2 && isWinOpened == false) {
-      _winnerService.fetchWinners();
       _winnerService.fetchTopWinner();
       _lbService.fetchReferralLeaderBoard();
       isWinOpened = true;
+    }
+    if (index == 2) {
+      _winnerService.fetchWinners();
     }
     print(_rootIndex);
     notifyListeners();
