@@ -656,7 +656,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         pageConfiguration = ReferralDetailsPageConfig;
         break;
       case 'tambolaHome':
-        _baseUtil.openTambolaHome();
+        pageConfiguration = THomePageConfig;
+        break;
+      case 'tambolaGame':
+        _baseUtil.openTambolaGame();
         break;
       case 'myWinnings':
         pageConfiguration = MyWinnigsPageConfig;
@@ -694,7 +697,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'footballHome':
         openWebGame(Constants.GAME_TYPE_FOOTBALL);
         break;
-      case 'candyfiestaHome':
+      case 'candyFiestaHome':
         openWebGame(Constants.GAME_TYPE_CANDYFIESTA);
         break;
       case 'cricketHome':

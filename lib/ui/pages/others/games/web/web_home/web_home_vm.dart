@@ -74,9 +74,10 @@ class WebHomeViewModel extends BaseModel {
   //Super Methods
   init(String game) async {
     currentGame = game;
+    print(currentGame);
     scrollController = _lbService.parentController;
     pageController = new PageController(initialPage: 0);
-    setGameIndex();
+    // setGameIndex();
     refreshPrizes();
     refreshLeaderboard();
   }
@@ -87,27 +88,27 @@ class WebHomeViewModel extends BaseModel {
 
   //Conditional Main Methods
 
-  setGameIndex() {
-    switch (currentGame) {
-      case Constants.GAME_TYPE_CANDYFIESTA:
-        gameIndex = 0;
-        break;
-      case Constants.GAME_TYPE_FOOTBALL:
-        gameIndex = 1;
-        break;
-      case Constants.GAME_TYPE_CRICKET:
-        gameIndex = 2;
-        break;
-      case Constants.GAME_TYPE_POOLCLUB:
-        gameIndex = 3;
-        break;
-      case Constants.GAME_TYPE_TAMBOLA:
-        gameIndex = 4;
-        break;
-    }
-    this.gameIndex = gameIndex;
-    notifyListeners();
-  }
+  // setGameIndex() {
+  //   switch (currentGame) {
+  //     case Constants.GAME_TYPE_CANDYFIESTA:
+  //       gameIndex = 0;
+  //       break;
+  //     case Constants.GAME_TYPE_FOOTBALL:
+  //       gameIndex = 1;
+  //       break;
+  //     case Constants.GAME_TYPE_CRICKET:
+  //       gameIndex = 2;
+  //       break;
+  //     case Constants.GAME_TYPE_POOLCLUB:
+  //       gameIndex = 3;
+  //       break;
+  //     case Constants.GAME_TYPE_TAMBOLA:
+  //       gameIndex = 4;
+  //       break;
+  //   }
+  //   this.gameIndex = gameIndex;
+  //   notifyListeners();
+  // }
 
   setUpWebHomeView() {
     switch (currentGame) {
@@ -167,9 +168,9 @@ class WebHomeViewModel extends BaseModel {
 
         break;
       case Constants.GAME_TYPE_CANDYFIESTA:
-        if (_prizeService.candyfiestaPrizes == null)
+        if (_prizeService.candyFiestaPrizes == null)
           await _prizeService.fetchCandyFiestaPrizes();
-        prizes = _prizeService.candyfiestaPrizes;
+        prizes = _prizeService.candyFiestaPrizes;
 
         break;
     }
@@ -229,10 +230,7 @@ class WebHomeViewModel extends BaseModel {
         initialUrl: initialUrl,
         game: currentGame,
         inLandscapeMode: currentGame == Constants.GAME_TYPE_POOLCLUB ||
-                (currentGame == Constants.GAME_TYPE_CRICKET &&
-                    _gameEndpoint != null) ||
-                currentGame == Constants.GAME_TYPE_FOOTBALL ||
-                currentGame == Constants.GAME_TYPE_CANDYFIESTA
+                (currentGame == Constants.GAME_TYPE_CRICKET)
             ? true
             : false,
       ),
@@ -331,9 +329,9 @@ class WebHomeViewModel extends BaseModel {
   }
 
   String _generateCandyFiestaGameUrl() {
-    String _candyfiestaUri = "https://fl-games-candy-fiesta.onrender.com/";
+    String _candyFiestaUri = "https://fl-games-candy-fiesta.onrender.com/";
     String _loadUri =
-        "$_candyfiestaUri?user=${_userService.baseUser.uid}&name=${_userService.baseUser.username}";
+        "$_candyFiestaUri?user=${_userService.baseUser.uid}&name=${_userService.baseUser.username}";
     if (FlavorConfig.isDevelopment()) _loadUri = "$_loadUri&dev=true";
     return _loadUri;
   }

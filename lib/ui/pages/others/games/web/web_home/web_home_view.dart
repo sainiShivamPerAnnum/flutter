@@ -69,7 +69,8 @@ class WebHomeView extends StatelessWidget {
                               curve: Curves.decelerate,
                               opacity: model.cardOpacity ?? 1,
                               child: GameCard(
-                                gameData: BaseUtil.gamesList[model.gameIndex],
+                                gameData: BaseUtil.gamesList.firstWhere(
+                                    (element) => element.gameCode == game),
                               ),
                             ),
                           ),

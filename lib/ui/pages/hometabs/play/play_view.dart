@@ -89,66 +89,28 @@ class Play extends StatelessWidget {
                     physics: BouncingScrollPhysics(),
                     padding:
                         EdgeInsets.symmetric(vertical: SizeConfig.padding12),
-                    children: [
-                      if (BaseRemoteConfig.CANDY_FIESTA_ONLINE == 'true') ...[
-                        GestureDetector(
-                          onTap: () {
-                            Haptic.vibrate();
-                            AppState.delegate
-                                .parseRoute(Uri.parse('/candyfiestaHome'));
-                          },
-                          child: GameCard(
-                            gameData: BaseUtil.gamesList[0],
+                    children: List.generate(
+                      BaseUtil.gamesList.length,
+                      (index) => Column(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Haptic.vibrate();
+                              AppState.delegate.parseRoute(
+                                  Uri.parse(BaseUtil.gamesList[index].route));
+                            },
+                            child: GameCard(
+                              gameData: BaseUtil.gamesList[index],
+                            ),
                           ),
-                        ),
-                      ],
-                      SizedBox(height: SizeConfig.padding6),
-                      GestureDetector(
-                        onTap: () {
-                          Haptic.vibrate();
-                          AppState.delegate
-                              .parseRoute(Uri.parse('/footballHome'));
-                        },
-                        child: GameCard(
-                          gameData: BaseUtil.gamesList[1],
-                        ),
+                          (index == BaseUtil.gamesList.length - 1)
+                              ? SizedBox(
+                                  height: SizeConfig.navBarHeight * 2.4,
+                                )
+                              : SizedBox(height: SizeConfig.padding6),
+                        ],
                       ),
-                      SizedBox(height: SizeConfig.padding6),
-                      GestureDetector(
-                        onTap: () {
-                          Haptic.vibrate();
-                          AppState.delegate
-                              .parseRoute(Uri.parse('/cricketHome'));
-                        },
-                        child: GameCard(
-                          gameData: BaseUtil.gamesList[2],
-                        ),
-                      ),
-                      SizedBox(height: SizeConfig.padding6),
-                      GestureDetector(
-                        onTap: () {
-                          Haptic.vibrate();
-
-                          AppState.delegate.parseRoute(Uri.parse('/poolHome'));
-                        },
-                        child: GameCard(
-                          gameData: BaseUtil.gamesList[3],
-                        ),
-                      ),
-                      SizedBox(height: SizeConfig.padding6),
-                      GestureDetector(
-                        onTap: () {
-                          Haptic.vibrate();
-                          model.openGame(BaseUtil.gamesList[4]);
-                        },
-                        child: GameCard(
-                          gameData: BaseUtil.gamesList[4],
-                        ),
-                      ),
-                      SizedBox(
-                        height: SizeConfig.navBarHeight * 2.4,
-                      ),
-                    ]),
+                    )),
               ),
             ],
           ),
