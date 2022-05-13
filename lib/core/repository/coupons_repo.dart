@@ -45,9 +45,8 @@ class CouponRepository {
         token: _bearer,
         cBaseUrl: "https://z8gkfckos5.execute-api.ap-south-1.amazonaws.com",
       );
-
       EligibleCouponResponseModel _reponseModel =
-          EligibleCouponResponseModel.fromMap(res);
+          EligibleCouponResponseModel.fromMap(res["data"]);
 
       return ApiResponse(model: _reponseModel, code: 200);
     } catch (e) {
