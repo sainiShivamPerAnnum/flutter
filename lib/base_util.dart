@@ -284,34 +284,6 @@ class BaseUtil extends ChangeNotifier {
             "10,000",
         analyticEvent: AnalyticsEvents.selectPlayTambola,
       ),
-      GameModel(
-        gameName: "Football Fiesta",
-        pageConfig: THomePageConfig,
-        tag: 'football',
-        shadowColor: Color(0xff1D173D),
-        thumbnailUri: "assets/images/football.jpg",
-        playCost: BaseRemoteConfig.remoteConfig
-                .getString(BaseRemoteConfig.TAMBOLA_PLAY_COST) ??
-            "10",
-        prizeAmount: BaseRemoteConfig.remoteConfig
-                .getString(BaseRemoteConfig.TAMBOLA_PLAY_PRIZE) ??
-            "10,000",
-        analyticEvent: AnalyticsEvents.selectPlayTambola,
-      ),
-      GameModel(
-        gameName: "Candy Crush",
-        pageConfig: THomePageConfig,
-        tag: 'candycrush',
-        shadowColor: Color(0xff1D173D),
-        thumbnailUri: "assets/images/candycrush.jpg",
-        playCost: BaseRemoteConfig.remoteConfig
-                .getString(BaseRemoteConfig.TAMBOLA_PLAY_COST) ??
-            "10",
-        prizeAmount: BaseRemoteConfig.remoteConfig
-                .getString(BaseRemoteConfig.TAMBOLA_PLAY_PRIZE) ??
-            "10,000",
-        analyticEvent: AnalyticsEvents.selectPlayTambola,
-      ),
     ];
   }
 

@@ -2,6 +2,7 @@ import 'package:felloapp/core/enums/winner_service_enum.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/ui/elements/texts/marquee_text.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -39,9 +40,9 @@ class WinnersMarqueeStrip extends StatelessWidget {
 
   List<String> getTextArray(WinnerService wModel) {
     switch (type) {
-      case "BUG_BOUNTY":
+      case Constants.BUG_BOUNTY:
         return wModel.bugBountyWinners;
-      case "NEW_FELLO":
+      case Constants.NEW_FELLO_UI:
         return wModel.newFelloWinners;
       default:
         return wModel.topWinners;

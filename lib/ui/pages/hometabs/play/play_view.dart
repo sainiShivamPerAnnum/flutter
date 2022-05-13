@@ -120,14 +120,6 @@ class Play extends StatelessWidget {
                           gameData: BaseUtil.gamesList[2],
                         ),
                       ),
-                      SizedBox(height: SizeConfig.padding6),
-                      GameCard(
-                        gameData: BaseUtil.gamesList[3],
-                      ),
-                      SizedBox(height: SizeConfig.padding6),
-                      GameCard(
-                        gameData: BaseUtil.gamesList[4],
-                      ),
                       SizedBox(
                         height: SizeConfig.navBarHeight * 2.4,
                       )

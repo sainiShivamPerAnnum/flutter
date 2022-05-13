@@ -5,7 +5,6 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/event_model.dart';
-import 'package:felloapp/core/service/events_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -29,6 +28,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 extension TruncateDoubles on double {
   double truncateToDecimalPlaces(int fractionalDigits) =>
@@ -89,7 +89,9 @@ class TopSaverView extends StatelessWidget {
                                     if (model.showStandingsAndWinners)
                                       WinnersBoard(model: model),
                                     if (!model.showStandingsAndWinners)
-                                      WinnersMarqueeStrip(),
+                                      WinnersMarqueeStrip(
+                                        type: eventType,
+                                      ),
                                     if (!model.showStandingsAndWinners)
                                       InstructionBoard(model: model),
                                     if (!model.showStandingsAndWinners)
@@ -116,6 +118,12 @@ class TopSaverView extends StatelessWidget {
                                     style: TextStyles.body2.bold
                                         .colour(Colors.white),
                                   ),
+                                  onPressed: () async {
+                                    String url = model.event.formUrl;
+                                    if (await canLaunch(url)) {
+                                      launch(url);
+                                    }
+                                  },
                                 ),
                               ),
                               if (model.event.type == "NEW_FELLO")
@@ -133,6 +141,12 @@ class TopSaverView extends StatelessWidget {
                                       style: TextStyles.body2.bold
                                           .colour(Colors.white),
                                     ),
+                                    onPressed: () async {
+                                      String url = model.event.url;
+                                      if (await canLaunch(url)) {
+                                        launch(url);
+                                      }
+                                    },
                                   ),
                                 ),
                               SizedBox(

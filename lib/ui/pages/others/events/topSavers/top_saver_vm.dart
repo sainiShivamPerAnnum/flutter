@@ -6,7 +6,6 @@ import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/statistics_repo.dart';
 import 'package:felloapp/core/repository/winners_repo.dart';
-import 'package:felloapp/core/service/events_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -27,11 +26,12 @@ class TopSaverViewModel extends BaseModel {
   final _winnersRepo = locator<WinnersRepository>();
   final _winnerService = locator<WinnerService>();
 
-  final eventService = EventService();
+  // final eventService = EventService();
   //Local variables
 
   String appbarTitle = "Top Saver";
-  CampaignType campaignType = CampaignType.DAILY;
+  String campaignType = Constants.HS_DAILY_SAVER;
+
   String saverFreq = "daily";
   String freqCode;
   int _userRank = 0;
@@ -64,7 +64,8 @@ class TopSaverViewModel extends BaseModel {
     setState(ViewState.Busy);
     event = await _dbModel.getSingleEventDetails(eventType);
     setState(ViewState.Idle);
-    campaignType = eventService.getEventType(event.type);
+    campaignType = event.type;
+    // eventService.getEventType(event.type);
     _logger
         .d("Top Saver Viewmodel initialised with saver type : ${event.type}");
     setAppbarTitle();
@@ -92,26 +93,26 @@ class TopSaverViewModel extends BaseModel {
 
   setAppbarTitle() {
     switch (campaignType) {
-      case CampaignType.DAILY:
+      case Constants.HS_DAILY_SAVER:
         {
           appbarTitle = "Saver of the Day";
           saverFreq = "daily";
 
           break;
         }
-      case CampaignType.WEEKLY:
+      case Constants.HS_WEEKLY_SAVER:
         {
           appbarTitle = "Saver of the Week";
           saverFreq = "weekly";
           break;
         }
-      case CampaignType.MONTHLY:
+      case Constants.HS_MONTHLY_SAVER:
         {
           appbarTitle = "Saver of the Month";
           saverFreq = "monthly";
           break;
         }
-      case CampaignType.FPL:
+      case Constants.GAME_TYPE_FPL:
         {
           appbarTitle = "Fello Premier League";
           saverFreq = "daily";
@@ -119,7 +120,7 @@ class TopSaverViewModel extends BaseModel {
           actionTitle = "Play Cricket";
           break;
         }
-      case CampaignType.BUGBOUNTY:
+      case Constants.BUG_BOUNTY:
         {
           appbarTitle = "Fello Bug Bounty";
           saverFreq = "monthly";
@@ -129,7 +130,7 @@ class TopSaverViewModel extends BaseModel {
           _winnerService.fetchBugBountyWinners();
           break;
         }
-      case CampaignType.NEWFELLO:
+      case Constants.NEW_FELLO_UI:
         {
           appbarTitle = "New Fello App";
           saverFreq = "monthly";
@@ -206,19 +207,19 @@ class TopSaverViewModel extends BaseModel {
 
   getFormattedDate(String code) {
     switch (campaignType) {
-      case CampaignType.DAILY:
+      case Constants.HS_DAILY_SAVER:
         {
           return CodeFromFreq.getDayFromCode(code);
         }
-      case CampaignType.WEEKLY:
+      case Constants.HS_WEEKLY_SAVER:
         {
           return CodeFromFreq.getWeekFromCode(code);
         }
-      case CampaignType.MONTHLY:
+      case Constants.HS_MONTHLY_SAVER:
         {
           return CodeFromFreq.getMonthFromCode(code);
         }
-      case CampaignType.FPL:
+      case Constants.GAME_TYPE_FPL:
         {
           return CodeFromFreq.getDayFromCode(code);
         }

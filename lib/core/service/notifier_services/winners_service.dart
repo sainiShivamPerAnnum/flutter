@@ -67,9 +67,23 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
     }
   }
 
-  fetchBugBountyWinners() async {}
+  fetchBugBountyWinners() async {
+    _bugBountyWinners = [
+      "madmaen won ₹5000 for Pool bug",
+      "kaiser won ₹5000 for Cricket Bug"
+    ];
+    setBugBountyWinners();
+    _logger.d("Bug Bounty Winners successfully fetched");
+  }
 
-  fetchNewFelloWinners() async {}
+  fetchNewFelloWinners() async {
+    _newFelloWinners = [
+      "Godon won ₹5000 for reviewing new Fello",
+      "buckminister won ₹5000 for reviewing Save Screen"
+    ];
+    setNewFelloWinners();
+    _logger.d("New Fello winners successfully fetched");
+  }
 
   fetchWinners() async {
     _winners.clear();
