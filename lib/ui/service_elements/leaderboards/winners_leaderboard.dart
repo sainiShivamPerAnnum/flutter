@@ -34,6 +34,10 @@ class WinnerboardView extends StatelessWidget {
         return "Cricket";
       case Constants.GAME_TYPE_POOLCLUB:
         return "Pool Club";
+      case Constants.GAME_TYPE_FOOTBALL:
+        return "Foot Ball";
+      case Constants.GAME_TYPE_CANDYFIESTA:
+        return "Candy Fiesta";
     }
   }
 

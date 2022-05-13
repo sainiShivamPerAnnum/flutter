@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -13,11 +17,13 @@ import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instan
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class WebGameViewModel extends BaseModel {
   final _gtService = locator<GoldenTicketService>();
@@ -32,8 +38,36 @@ class WebGameViewModel extends BaseModel {
   get currentGame => this._currentGame;
 
   set currentGame(value) => this._currentGame = value;
-  init(String game) {
+  init(String game, bool inLandscapeMode) async {
     currentGame = game;
+    if (inLandscapeMode) {
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+          overlays: [SystemUiOverlay.bottom]);
+      SystemChrome.setPreferredOrientations([
+        Platform.isIOS
+            ? DeviceOrientation.landscapeRight
+            : DeviceOrientation.landscapeLeft
+      ]);
+      AppState.isWebGameLInProgress = true;
+    } else {
+      AppState.isWebGamePInProgress = true;
+    }
+    print("In Landscape mode: $inLandscapeMode");
+    if (!await CacheManager.exits(CacheManager.CACHE_IS_FIRST_TIME_FOOTBALL) &&
+        currentGame == Constants.GAME_TYPE_FOOTBALL) {
+      CacheManager.writeCache(
+          key: CacheManager.CACHE_IS_FIRST_TIME_FOOTBALL,
+          value: true,
+          type: CacheType.bool);
+
+      Future.delayed(Duration(seconds: 1), () {
+        BaseUtil.showNegativeAlert(
+          'Loading..Please wait..',
+          'This game is heavy and might take some time to load',
+        );
+      });
+    }
+
     // setUpWebGameView(game);
   }
 
@@ -120,16 +154,36 @@ class WebGameViewModel extends BaseModel {
     _lbService.fetchWebGameLeaderBoard(game: game);
   }
 
-  handlePoolClubSessionEnd() {
+  handleGameSessionEnd() {
     updateFlcBalance();
     _logger.d("Checking for golden tickets");
     _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
       if (res)
         Future.delayed(Duration(seconds: 1), () {
           _gtService.showInstantGoldenTicketView(
-              title: 'Pool Club Milestone reached', source: GTSOURCE.poolClub);
+              title: 'Game Milestone reached', source: GTSOURCE.game);
         });
     });
+  }
+
+  handleFootBallRoundEnd(Map<String, dynamic> data, String game) async {
+    _analyticsService.track(eventName: AnalyticsEvents.footBallEnds);
+    if (data['gt_id'] != null && data['gt_id'].toString().isNotEmpty) {
+      _logger.d("Recived a Golden ticket with id: ${data['gt_id']}");
+      GoldenTicketService.goldenTicketId = data['gt_id'];
+    }
+    updateFlcBalance();
+    _lbService.fetchWebGameLeaderBoard(game: game);
+  }
+
+  handleCandyFiestaRoundEnd(Map<String, dynamic> data, String game) async {
+    _analyticsService.track(eventName: AnalyticsEvents.candyFiestaEnds);
+    if (data['gt_id'] != null && data['gt_id'].toString().isNotEmpty) {
+      _logger.d("Recived a Golden ticket with id: ${data['gt_id']}");
+      GoldenTicketService.goldenTicketId = data['gt_id'];
+    }
+    updateFlcBalance();
+    _lbService.fetchWebGameLeaderBoard(game: game);
   }
 
   handleLowBalanceAlert() {

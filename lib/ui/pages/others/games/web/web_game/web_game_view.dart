@@ -1,6 +1,9 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/cache_type_enum.dart';
+import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_game/web_game_vm.dart';
@@ -22,24 +25,12 @@ class WebGameView extends StatelessWidget {
   final String initialUrl;
   final String game;
   final bool inLandscapeMode;
+
   @override
   Widget build(BuildContext context) {
     return BaseView<WebGameViewModel>(
-      onModelReady: (model) {
-        if (inLandscapeMode) {
-          SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-              overlays: [SystemUiOverlay.bottom]);
-          SystemChrome.setPreferredOrientations([
-            Platform.isIOS
-                ? DeviceOrientation.landscapeRight
-                : DeviceOrientation.landscapeLeft,
-          ]);
-          AppState.isWebGameLInProgress = true;
-        } else {
-          AppState.isWebGamePInProgress = true;
-        }
-
-        model.init(game);
+      onModelReady: (model) async {
+        model.init(game, inLandscapeMode);
       },
       onModelDispose: (model) {
         if (inLandscapeMode) {
@@ -59,35 +50,54 @@ class WebGameView extends StatelessWidget {
         return WillPopScope(
           onWillPop: () async => false,
           child: Scaffold(
-            backgroundColor: Colors.black,
-            body: Stack(
-              children: [
-                Container(
-                  margin: EdgeInsets.symmetric(
-                      horizontal: Platform.isIOS
-                          ? MediaQuery.of(context).padding.right
-                          : 0),
-                  child: WebView(
-                    initialUrl: initialUrl,
-                    javascriptMode: JavascriptMode.unrestricted,
-                  ),
-                ),
-                inLandscapeMode
-                    ? Positioned(
-                        top: SizeConfig.padding16,
-                        right: SizeConfig.padding16,
-                        child: Close(inLandScape: inLandscapeMode),
-                      )
-                    : Positioned(
-                        bottom: SizeConfig.padding16,
-                        right: SizeConfig.padding16,
-                        child: Close(),
-                      )
-              ],
-            ),
-          ),
+              backgroundColor: Colors.black,
+              body: inLandscapeMode
+                  ? GameView(
+                      inLandscapeMode: inLandscapeMode, initialUrl: initialUrl)
+                  : SafeArea(
+                      child: GameView(
+                          inLandscapeMode: inLandscapeMode,
+                          initialUrl: initialUrl),
+                    )),
         );
       },
+    );
+  }
+}
+
+class GameView extends StatelessWidget {
+  final bool inLandscapeMode;
+  final String initialUrl;
+
+  GameView({@required this.inLandscapeMode, @required this.initialUrl});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Stack(
+        children: [
+          Container(
+            margin: EdgeInsets.symmetric(
+                horizontal:
+                    Platform.isIOS ? MediaQuery.of(context).padding.right : 0),
+            child: WebView(
+              initialUrl: initialUrl,
+              javascriptMode: JavascriptMode.unrestricted,
+            ),
+          ),
+          // inLandscapeMode
+          //     ?
+          Positioned(
+            top: SizeConfig.padding16,
+            right: SizeConfig.padding16,
+            child: Close(inLandScape: inLandscapeMode),
+          )
+          // : Positioned(
+          //     bottom: SizeConfig.padding16,
+          //     right: SizeConfig.padding16,
+          //     child: Close(),
+          //   )
+        ],
+      ),
     );
   }
 }
