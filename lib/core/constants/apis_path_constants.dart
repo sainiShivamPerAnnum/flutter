@@ -43,7 +43,8 @@ class ApiPath {
   get kRedeemGtReward => "/gtRewardsOps/$stage/v2/api/redeemGtReward";
 
   //Fello Coupons
-  get kFelloCoupons => "/felloCoupons/$stage/api/eligible";
+  get kFelloCoupons => "/dev/eligible";
+  //"/felloCoupons/$stage/api/eligible";
 
   //PaytmApis
   static const kCreatePaytmTransaction = "/transaction";

@@ -29,7 +29,7 @@ class CouponRepository {
       final String _bearer = await _getBearerToken();
       Map<String, dynamic> _body = {
         "uid": uid,
-        "couponcode": couponcode,
+        "couponCode": couponcode,
         "amt": amount
       };
       _logger.d("initiateUserDeposit:: Pre encryption: $_body");
@@ -39,8 +39,12 @@ class CouponRepository {
       } else {
         _logger.e("Encrypter initialization failed!! exiting method");
       }
-      final res = await APIService.instance
-          .postData(_apiPaths.kFelloCoupons, body: _body, token: _bearer);
+      final res = await APIService.instance.postData(
+        _apiPaths.kFelloCoupons,
+        body: _body,
+        token: _bearer,
+        cBaseUrl: "https://z8gkfckos5.execute-api.ap-south-1.amazonaws.com",
+      );
 
       EligibleCouponResponseModel _reponseModel =
           EligibleCouponResponseModel.fromMap(res);

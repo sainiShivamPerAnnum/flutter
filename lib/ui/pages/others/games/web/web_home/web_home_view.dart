@@ -1,5 +1,4 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
@@ -30,7 +29,7 @@ class WebHomeView extends StatelessWidget {
         });
       },
       onModelDispose: (model) {
-        model.cleanUpWebHomeView();
+        model.clear();
       },
       builder: (ctx, model, child) {
         return RefreshIndicator(

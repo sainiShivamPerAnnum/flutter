@@ -77,68 +77,11 @@ class WebHomeViewModel extends BaseModel {
     print(currentGame);
     scrollController = _lbService.parentController;
     pageController = new PageController(initialPage: 0);
-    // setGameIndex();
     refreshPrizes();
     refreshLeaderboard();
   }
 
-  clear() {
-    cleanUpWebHomeView();
-  }
-
-  //Conditional Main Methods
-
-  // setGameIndex() {
-  //   switch (currentGame) {
-  //     case Constants.GAME_TYPE_CANDYFIESTA:
-  //       gameIndex = 0;
-  //       break;
-  //     case Constants.GAME_TYPE_FOOTBALL:
-  //       gameIndex = 1;
-  //       break;
-  //     case Constants.GAME_TYPE_CRICKET:
-  //       gameIndex = 2;
-  //       break;
-  //     case Constants.GAME_TYPE_POOLCLUB:
-  //       gameIndex = 3;
-  //       break;
-  //     case Constants.GAME_TYPE_TAMBOLA:
-  //       gameIndex = 4;
-  //       break;
-  //   }
-  //   this.gameIndex = gameIndex;
-  //   notifyListeners();
-  // }
-
-  setUpWebHomeView() {
-    switch (currentGame) {
-      case Constants.GAME_TYPE_CANDYFIESTA:
-        break;
-      case Constants.GAME_TYPE_POOLCLUB:
-        break;
-      case Constants.GAME_TYPE_CRICKET:
-        break;
-      case Constants.GAME_TYPE_FOOTBALL:
-        break;
-      default:
-        return;
-    }
-  }
-
-  cleanUpWebHomeView() {
-    switch (currentGame) {
-      case Constants.GAME_TYPE_CANDYFIESTA:
-        break;
-      case Constants.GAME_TYPE_POOLCLUB:
-        break;
-      case Constants.GAME_TYPE_CRICKET:
-        break;
-      case Constants.GAME_TYPE_FOOTBALL:
-        break;
-      default:
-        return;
-    }
-  }
+  clear() {}
 
   refreshPrizes() async {
     isPrizesLoading = true;

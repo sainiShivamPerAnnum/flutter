@@ -312,7 +312,7 @@ class BaseUtil extends ChangeNotifier {
             .getString(BaseRemoteConfig.CANDY_FIESTA_ONLINE) ==
         'true')
       gamesList.insert(
-          0,
+          3,
           GameModel(
             gameName: "Candy Fiesta",
             pageConfig: THomePageConfig,
