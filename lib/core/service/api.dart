@@ -102,7 +102,7 @@ class Api {
         .doc(userId)
         .collection(Constants.SUBCOLN_USER_REWARDS);
     try {
-      snapshot = query.orderBy('timestamp', descending: true).limit(1).get();
+      snapshot = query.orderBy('timestamp', descending: true).limit(30).get();
     } catch (e) {
       logger.e(e);
     }

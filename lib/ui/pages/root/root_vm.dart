@@ -20,6 +20,7 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/golden_ticket_claim.dart';
 import 'package:felloapp/ui/modals_sheets/security_modal_sheet.dart';
 import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
+import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/util/assets.dart';
@@ -199,19 +200,19 @@ class RootViewModel extends BaseModel {
 
       if (canExecuteStartupNotification &&
           _userService.isAnyUnscratchedGTAvailable) {
-        int count = 0;
-        if (await CacheManager.exits("UGTCount")) {
-          count = await CacheManager.readCache(
-              key: "UGTCount", type: CacheType.int);
-          count++;
-          await CacheManager.writeCache(
-              key: "UGTCount", value: count, type: CacheType.int);
-        } else {
-          await CacheManager.writeCache(
-              key: "UGTCount", value: count, type: CacheType.int);
-        }
-        _logger.d("Unscratched Golden Ticket Show Count: $count");
-        if (count % 5 == 1)
+        int lastWeekday;
+        if (await CacheManager.exits(CacheManager.CACHE_LAST_UGT_CHECK_TIME))
+          lastWeekday = await CacheManager.readCache(
+              key: CacheManager.CACHE_LAST_UGT_CHECK_TIME, type: CacheType.int);
+        await CacheManager.writeCache(
+            key: CacheManager.CACHE_LAST_UGT_CHECK_TIME,
+            value: DateTime.now().millisecondsSinceEpoch,
+            type: CacheType.int);
+        // _logger.d("Unscratched Golden Ticket Show Count: $count");
+        if ((lastWeekday != null) &&
+            (
+                // lastWeekday == 7 ||
+                lastWeekday < DateTime.now().millisecondsSinceEpoch))
           BaseUtil.openDialog(
             addToScreenStack: true,
             hapticVibrate: true,
@@ -228,7 +229,9 @@ class RootViewModel extends BaseModel {
                 onPressed: () {
                   AppState.backButtonDispatcher.didPopRoute();
                   AppState.delegate.appState.currentAction = PageAction(
-                      page: MyWinnigsPageConfig, state: PageState.addPage);
+                      widget: MyWinningsView(openFirst: true),
+                      page: MyWinnigsPageConfig,
+                      state: PageState.addWidget);
                 },
               ),
             ),

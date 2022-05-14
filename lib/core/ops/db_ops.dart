@@ -245,13 +245,17 @@ class DBModel extends ChangeNotifier {
   Future<bool> checkIfUserHasUnscratchedGT(String userId) async {
     try {
       QuerySnapshot gtSnapshot = await _api.checkForLatestGTStatus(userId);
-      GoldenTicket latestGT = GoldenTicket.fromJson(
-          gtSnapshot.docs.first.data(), gtSnapshot.docs.first.id);
-      // logger.d("Latest Golden Ticket: ${gtSnapshot.docs.first.data()}");
-      if (latestGT.redeemedTimestamp == null)
-        return true;
-      else
-        return false;
+      List<GoldenTicket> latestGTs = [];
+      gtSnapshot.docs.forEach((element) {
+        latestGTs.add(GoldenTicket.fromJson(element.data(), element.id));
+      });
+      logger.d("Latest Golden Ticket: ${gtSnapshot.docs.first.data()}");
+      for (int i = 0; i < latestGTs.length; i++) {
+        if (latestGTs[i].redeemedTimestamp == null) {
+          return true;
+        }
+      }
+      return false;
     } catch (e) {
       logger.e(e.toString());
       return false;

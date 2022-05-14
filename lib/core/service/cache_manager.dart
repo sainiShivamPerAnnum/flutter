@@ -9,7 +9,7 @@ class CacheManager {
   static const CACHE_LATEST_NOTIFICATION_TIME = "latestNotification";
   static const CACHE_LATEST_GOLDEN_TICKET_TIME = "latestGoldenTicket";
   static const CACHE_IS_SUBSCRIPTION_FIRST_TIME = "isSubFirstTime";
-
+  static const CACHE_LAST_UGT_CHECK_TIME = "lastUGTCheckTime";
   static Future readCache(
       {@required String key, CacheType type = CacheType.string}) async {
     final SharedPreferences sharedPreferences =

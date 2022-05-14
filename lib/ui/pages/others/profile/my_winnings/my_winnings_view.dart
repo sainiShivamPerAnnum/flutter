@@ -21,6 +21,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class MyWinningsView extends StatelessWidget {
+  final openFirst;
+  MyWinningsView({this.openFirst = false});
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
@@ -162,7 +164,9 @@ class MyWinningsView extends StatelessWidget {
                                   style: TextStyles.title3.bold,
                                 ),
                               ),
-                              GoldenTicketsView()
+                              GoldenTicketsView(
+                                openFirst: openFirst,
+                              )
                             ],
                           ),
                         )
