@@ -18,6 +18,7 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
 import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
 import 'package:felloapp/core/service/api.dart';
+import 'package:felloapp/core/service/campaigns_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
@@ -171,6 +172,7 @@ void setupLocator() {
   locator.registerFactory(() => AutosaveProcessViewModel());
   locator.registerFactory(() => UserAutosaveDetailsViewModel());
   locator.registerFactory(() => AutosaveTransactionsViewModel());
+  locator.registerFactory(() => CampaignService());
 
   //WIDGETS
   locator.registerFactory(() => FDrawerVM());
