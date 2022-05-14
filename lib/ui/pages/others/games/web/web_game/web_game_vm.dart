@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/constants/fcm_commands_constants.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
@@ -12,6 +13,7 @@ import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/dialogs/score_reject_dialog.dart';
 import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
@@ -95,6 +97,7 @@ class WebGameViewModel extends BaseModel {
 
   endWebGame(data, game) {
     _logger.i("FCM Command received to end Cricket game");
+
     //  check if payload has a golden ticket
     if (data['gt_id'] != null && data['gt_id'].toString().isNotEmpty) {
       _logger.d(data.toString());
@@ -105,7 +108,20 @@ class WebGameViewModel extends BaseModel {
       AppState.isWebGameLInProgress = false;
       AppState.isWebGamePInProgress = false;
       AppState.backButtonDispatcher.didPopRoute();
+
       Future.delayed(Duration(milliseconds: 100), () async {
+        //check if there is any end game message
+        if (data[FcmCommands.GAME_END_MESSAGE_KEY] != null &&
+            data[FcmCommands.GAME_END_MESSAGE_KEY].toString().isNotEmpty) {
+          BaseUtil.openDialog(
+              addToScreenStack: true,
+              isBarrierDismissable: false,
+              hapticVibrate: true,
+              content: ScoreRejectedDialog(
+                contentText: data[FcmCommands.GAME_END_MESSAGE_KEY],
+              ));
+          return;
+        }
         if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
           _gtService.showInstantGoldenTicketView(
               title: 'Game milestone achieved', source: GTSOURCE.cricket);
@@ -150,20 +166,7 @@ class WebGameViewModel extends BaseModel {
       _logger.d("Recived a Golden ticket with id: ${data['gt_id']}");
       GoldenTicketService.goldenTicketId = data['gt_id'];
     }
-    updateFlcBalance();
-    _lbService.fetchWebGameLeaderBoard(game: game);
-  }
-
-  handleGameSessionEnd({Duration duration}) {
-    updateFlcBalance();
-    _logger.d("Checking for golden tickets");
-    _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
-      if (res)
-        Future.delayed(duration ?? Duration(seconds: 1), () {
-          _gtService.showInstantGoldenTicketView(
-              title: 'Game Milestone reached', source: GTSOURCE.game);
-        });
-    });
+    handleGameEndRound(data, game);
   }
 
   handleFootBallRoundEnd(Map<String, dynamic> data, String game) async {
@@ -172,8 +175,7 @@ class WebGameViewModel extends BaseModel {
       _logger.d("Recived a Golden ticket with id: ${data['gt_id']}");
       GoldenTicketService.goldenTicketId = data['gt_id'];
     }
-    updateFlcBalance();
-    _lbService.fetchWebGameLeaderBoard(game: game);
+    handleGameEndRound(data, game);
   }
 
   handleCandyFiestaRoundEnd(Map<String, dynamic> data, String game) async {
@@ -182,8 +184,7 @@ class WebGameViewModel extends BaseModel {
       _logger.d("Recived a Golden ticket with id: ${data['gt_id']}");
       GoldenTicketService.goldenTicketId = data['gt_id'];
     }
-    updateFlcBalance();
-    _lbService.fetchWebGameLeaderBoard(game: game);
+    handleGameEndRound(data, game);
   }
 
   handleLowBalanceAlert() {
@@ -205,7 +206,42 @@ class WebGameViewModel extends BaseModel {
     }
   }
 
+  handleGameEndRound(Map<String, dynamic> data, String game) {
+    if (data[FcmCommands.GAME_END_MESSAGE_KEY] != null &&
+        data[FcmCommands.GAME_END_MESSAGE_KEY].toString().isNotEmpty) {
+      GoldenTicketService.gameEndMsgText =
+          data[FcmCommands.GAME_END_MESSAGE_KEY];
+    }
+    updateFlcBalance();
+    _lbService.fetchWebGameLeaderBoard(game: game);
+  }
+
+  handleGameSessionEnd({Duration duration}) {
+    updateFlcBalance();
+    _logger.d("Checking for golden tickets");
+    if (GoldenTicketService.gameEndMsgText != null &&
+        GoldenTicketService.gameEndMsgText.isNotEmpty) {
+      BaseUtil.openDialog(
+          addToScreenStack: true,
+          isBarrierDismissable: false,
+          hapticVibrate: true,
+          content: ScoreRejectedDialog(
+            contentText: GoldenTicketService.gameEndMsgText,
+          ));
+      GoldenTicketService.gameEndMsgText = null;
+      return;
+    }
+    _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
+      if (res)
+        Future.delayed(duration ?? Duration(seconds: 1), () {
+          _gtService.showInstantGoldenTicketView(
+              title: 'Game Milestone reached', source: GTSOURCE.game);
+        });
+    });
+  }
+
   //helper
+
   updateFlcBalance() async {
     ApiResponse<FlcModel> _flcResponse = await _fclActionRepo.getCoinBalance();
     if (_flcResponse.model.flcBalance != null) {

@@ -48,10 +48,6 @@ class FcmHandler extends ChangeNotifier {
     // If message has a command payload
     if (data['command'] != null) {
       showSnackbar = false;
-      if (data[FcmCommands.GAME_END_MESSAGE_KEY] != null &&
-          data[FcmCommands.GAME_END_MESSAGE_KEY].toString().isNotEmpty)
-        GoldenTicketService.gameEndMsgText =
-            data[FcmCommands.GAME_END_MESSAGE_KEY];
       switch (command) {
         case FcmCommands.DEPOSIT_TRANSACTION_RESPONSE:
           if (AppState.delegate.appState.isTxnLoaderInView == false)
