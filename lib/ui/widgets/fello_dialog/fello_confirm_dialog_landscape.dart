@@ -52,7 +52,7 @@ class _FelloConfirmationDialogState
     return FelloDialog(
       content: widget.inLandScape
           ? RotatedBox(
-              quarterTurns: 1,
+              quarterTurns: 0,
               child: Container(
                 height: SizeConfig.screenWidth * 0.7,
                 width: SizeConfig.screenWidth * 0.7,

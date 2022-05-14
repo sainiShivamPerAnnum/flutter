@@ -11,7 +11,6 @@ import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/winners_repo.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/events_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
@@ -34,7 +33,6 @@ class WinViewModel extends BaseModel {
   final _lbService = locator<LeaderboardService>();
   final _dbModel = locator<DBModel>();
   final _analyticsService = locator<AnalyticsService>();
-  final eventService = EventService();
   Timer _timer;
 
   LocalDBModel _localDBModel = locator<LocalDBModel>();

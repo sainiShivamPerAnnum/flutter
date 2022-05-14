@@ -87,6 +87,7 @@ class APIService implements API {
   Future<dynamic> postData(
     String url, {
     Map<String, dynamic> body,
+    String cBaseUrl,
     String token,
     bool isAuthTokenAvailable = true,
     bool isAwsSubUrl = false,
@@ -112,6 +113,8 @@ class APIService implements API {
 
       String _url =
           getBaseUrl(isSubUrl: isAwsSubUrl, isTxnUrl: isAwsTxnUrl) + url;
+
+      if (cBaseUrl != null) _url = cBaseUrl + url;
       logger.d("response from $_url");
 
       final response = await http.post(

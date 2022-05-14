@@ -37,6 +37,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   bool _hasNewNotifications = false;
   bool showOnboardingTutorial = false;
   bool showSecurityPrompt;
+  bool isAnyUnscratchedGTAvailable = false;
 
   User get firebaseUser => _firebaseUser;
   BaseUser get baseUser => _baseUser;
@@ -162,6 +163,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         isSimpleKycVerified = baseUser.isSimpleKycVerified ?? false;
         await Future.wait([setProfilePicture(), getUserFundWalletData()]);
         checkForNewNotifications();
+        checkForUnscratchedGTStatus();
       }
     } catch (e) {
       _logger.e(e.toString());
@@ -262,6 +264,13 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     _logger.d("Looking for new notifications");
     _dbModel.checkIfUserHasNewNotifications(baseUser.uid).then((value) {
       if (value) hasNewNotifications = true;
+    });
+  }
+
+  checkForUnscratchedGTStatus() {
+    _logger.d("Looking for Unscratched GTs");
+    _dbModel.checkIfUserHasUnscratchedGT(baseUser.uid).then((value) {
+      if (value) isAnyUnscratchedGTAvailable = true;
     });
   }
 

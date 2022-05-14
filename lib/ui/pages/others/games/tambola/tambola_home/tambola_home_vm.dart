@@ -75,14 +75,14 @@ class TambolaHomeViewModel extends BaseModel {
     notifyListeners();
     await _prizeService.fetchTambolaPrizes();
     if (tPrizes == null)
-      BaseUtil.showNegativeAlert(
-          "This week's prizes could not be fetched", "Please try again in sometime");
+      BaseUtil.showNegativeAlert("This week's prizes could not be fetched",
+          "Please try again in sometime");
     isPrizesLoading = false;
     notifyListeners();
   }
 
   void openGame() {
     _analyticsService.track(eventName: AnalyticsEvents.startPlayingTambola);
-    BaseUtil().openTambolaHome();
+    BaseUtil().openTambolaGame();
   }
 }

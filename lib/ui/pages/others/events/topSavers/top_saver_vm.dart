@@ -6,8 +6,8 @@ import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/statistics_repo.dart';
 import 'package:felloapp/core/repository/winners_repo.dart';
-import 'package:felloapp/core/service/events_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/modals_sheets/event_instructions_modal.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -24,17 +24,22 @@ class TopSaverViewModel extends BaseModel {
   final _userService = locator<UserService>();
   final _statsRepo = locator<StatisticsRepository>();
   final _winnersRepo = locator<WinnersRepository>();
+  final _winnerService = locator<WinnerService>();
 
-  final eventService = EventService();
+  // final eventService = EventService();
   //Local variables
 
   String appbarTitle = "Top Saver";
-  SaverType saverType = SaverType.DAILY;
+  String campaignType = Constants.HS_DAILY_SAVER;
+
   String saverFreq = "daily";
   String freqCode;
   int _userRank = 0;
   String winnerTitle = "Past Winners";
   EventModel event;
+  bool showStandingsAndWinners = true;
+  String eventStandingsType = "HIGHEST_SAVER";
+  String actionTitle = "Buy Digital Gold";
 
   List<TopSavers> currentParticipants;
   List<PastHighestSaver> _pastWinners;
@@ -59,7 +64,8 @@ class TopSaverViewModel extends BaseModel {
     setState(ViewState.Busy);
     event = await _dbModel.getSingleEventDetails(eventType);
     setState(ViewState.Idle);
-    saverType = eventService.getEventType(event.type);
+    campaignType = event.type;
+    // eventService.getEventType(event.type);
     _logger
         .d("Top Saver Viewmodel initialised with saver type : ${event.type}");
     setAppbarTitle();
@@ -86,33 +92,52 @@ class TopSaverViewModel extends BaseModel {
   }
 
   setAppbarTitle() {
-    switch (saverType) {
-      case SaverType.DAILY:
+    switch (campaignType) {
+      case Constants.HS_DAILY_SAVER:
         {
           appbarTitle = "Saver of the Day";
           saverFreq = "daily";
-          // winnerTitle = "Yesterday's Winners";
+
           break;
         }
-      case SaverType.WEEKLY:
+      case Constants.HS_WEEKLY_SAVER:
         {
           appbarTitle = "Saver of the Week";
           saverFreq = "weekly";
-          // winnerTitle = "Last Week's Winners";
           break;
         }
-      case SaverType.MONTHLY:
+      case Constants.HS_MONTHLY_SAVER:
         {
           appbarTitle = "Saver of the Month";
           saverFreq = "monthly";
-          // winnerTitle = "Last Month's Winners";
           break;
         }
-      case SaverType.FPL:
+      case Constants.GAME_TYPE_FPL:
         {
           appbarTitle = "Fello Premier League";
           saverFreq = "daily";
-          // winnerTitle = "Last Month's Winners";
+          eventStandingsType = "FPL";
+          actionTitle = "Play Cricket";
+          break;
+        }
+      case Constants.BUG_BOUNTY:
+        {
+          appbarTitle = "Fello Bug Bounty";
+          saverFreq = "monthly";
+          eventStandingsType = "BUG_BOUNTY";
+          showStandingsAndWinners = false;
+          actionTitle = "Review";
+          _winnerService.fetchBugBountyWinners();
+          break;
+        }
+      case Constants.NEW_FELLO_UI:
+        {
+          appbarTitle = "New Fello App";
+          saverFreq = "monthly";
+          eventStandingsType = "NEW_FELLO";
+          showStandingsAndWinners = false;
+          actionTitle = "View";
+          _winnerService.fetchNewFelloWinners();
           break;
         }
     }
@@ -120,9 +145,8 @@ class TopSaverViewModel extends BaseModel {
   }
 
   fetchTopSavers() async {
-    ApiResponse<TopSaversModel> response = await _statsRepo.getTopSavers(
-        saverFreq,
-        type: event.type == "FPL" ? "FPL" : "HIGHEST_SAVER");
+    ApiResponse<TopSaversModel> response =
+        await _statsRepo.getTopSavers(saverFreq, type: eventStandingsType);
     if (response != null &&
         response.model != null &&
         response.model.scoreboard != null) {
@@ -182,20 +206,20 @@ class TopSaverViewModel extends BaseModel {
   }
 
   getFormattedDate(String code) {
-    switch (saverType) {
-      case SaverType.DAILY:
+    switch (campaignType) {
+      case Constants.HS_DAILY_SAVER:
         {
           return CodeFromFreq.getDayFromCode(code);
         }
-      case SaverType.WEEKLY:
+      case Constants.HS_WEEKLY_SAVER:
         {
           return CodeFromFreq.getWeekFromCode(code);
         }
-      case SaverType.MONTHLY:
+      case Constants.HS_MONTHLY_SAVER:
         {
           return CodeFromFreq.getMonthFromCode(code);
         }
-      case SaverType.FPL:
+      case Constants.GAME_TYPE_FPL:
         {
           return CodeFromFreq.getDayFromCode(code);
         }

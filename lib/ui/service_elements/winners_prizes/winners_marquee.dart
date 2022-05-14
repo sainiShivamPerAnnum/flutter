@@ -2,17 +2,20 @@ import 'package:felloapp/core/enums/winner_service_enum.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/ui/elements/texts/marquee_text.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class WinnersMarqueeStrip extends StatelessWidget {
+  final String type;
+  WinnersMarqueeStrip({this.type});
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<WinnerService, WinnerServiceProperties>(
       properties: [WinnerServiceProperties.topWinners],
-      builder: (context, WModel, properties) {
+      builder: (context, wModel, properties) {
         return Container(
           width: SizeConfig.screenWidth,
           margin: EdgeInsets.symmetric(
@@ -23,7 +26,10 @@ class WinnersMarqueeStrip extends StatelessWidget {
             color: UiConstants.tertiaryLight.withOpacity(0.5),
           ),
           child: MarqueeText(
-            infoList: _getMarqueeText(WModel.topWinners, WModel.winners),
+            infoList: _getMarqueeText(
+              getTextArray(wModel),
+              winners: wModel.winners,
+            ),
             showBullet: true,
             bulletColor: UiConstants.tertiarySolid,
           ),
@@ -31,9 +37,20 @@ class WinnersMarqueeStrip extends StatelessWidget {
       },
     );
   }
+
+  List<String> getTextArray(WinnerService wModel) {
+    switch (type) {
+      case Constants.BUG_BOUNTY:
+        return wModel.bugBountyWinners;
+      case Constants.NEW_FELLO_UI:
+        return wModel.newFelloWinners;
+      default:
+        return wModel.topWinners;
+    }
+  }
 }
 
-List<String> _getMarqueeText(List<String> topWinners, List<Winners> winners) {
+List<String> _getMarqueeText(List<String> topWinners, {List<Winners> winners}) {
   if (topWinners != null && topWinners.isNotEmpty)
     return List.generate(topWinners.length, (i) => topWinners[i]);
   else if (winners != null && winners.isNotEmpty)
