@@ -46,6 +46,7 @@ class WebHomeViewModel extends BaseModel {
   String _message;
   String _sessionId;
   String _gameEndpoint;
+  String token = "";
 
   //Getters
   String get currentGame => this._currentGame;
@@ -124,6 +125,7 @@ class WebHomeViewModel extends BaseModel {
   }
 
   Future<bool> setupGame() async {
+    await getBearerToken();
     switch (currentGame) {
       case Constants.GAME_TYPE_POOLCLUB:
         return _setupPoolClubGame();
@@ -166,6 +168,10 @@ class WebHomeViewModel extends BaseModel {
         initialUrl = _generateCandyFiestaGameUrl();
         break;
     }
+    initialUrl = currentGame == Constants.GAME_TYPE_CRICKET
+        ? initialUrl
+        : initialUrl + "&token=$token";
+    _logger.d("Game Url: $initialUrl");
     AppState.delegate.appState.currentAction = PageAction(
       state: PageState.addWidget,
       page: WebGameViewPageConfig,
@@ -346,6 +352,11 @@ class WebHomeViewModel extends BaseModel {
         .clamp(0, 1)
         .toDouble();
     notifyListeners();
+  }
+
+  Future<void> getBearerToken() async {
+    token = await _userService.firebaseUser.getIdToken();
+    _logger.d(token);
   }
 
   void earnMoreTokens() {

@@ -12,6 +12,8 @@ class EventModel {
   String image;
   List<dynamic> instructions;
   int minVersion;
+  String url; //only for new fello
+  String formUrl;
   String todayMatch; //Only for FPL
   EventModel(
       {@required this.title,
@@ -22,6 +24,8 @@ class EventModel {
       @required this.color,
       @required this.image,
       @required this.minVersion,
+      @required this.url,
+      @required this.formUrl,
       @required this.instructions,
       this.todayMatch});
 
@@ -45,6 +49,8 @@ class EventModel {
         image: image ?? this.image,
         minVersion: minVersion ?? this.minVersion,
         instructions: instructions ?? this.instructions,
+        formUrl: formUrl ?? this.formUrl,
+        url: url ?? this.url,
         todayMatch: todayMatch ?? this.todayMatch);
   }
 
@@ -58,7 +64,9 @@ class EventModel {
       'color': color,
       'image': image,
       'minVersion': minVersion,
+      'url': url,
       'instructions': instructions,
+      'formUrl': formUrl,
       'todayMatch': todayMatch
     };
   }
@@ -72,6 +80,8 @@ class EventModel {
         position: map['position'] ?? 1,
         color: map['color'] ?? 4280492835,
         image: map['image'] ?? '',
+        url: map['url'] ?? '',
+        formUrl: map['formUrl'] ?? '',
         minVersion: map["minVersion"] ?? 0,
         instructions: map['info'] ?? ["Fello Event Instructions"],
         todayMatch: map['todayMatch'] ?? "");
@@ -84,6 +94,6 @@ class EventModel {
 
   @override
   String toString() {
-    return 'EventModel(title: $title, subtitle: $subtitle, thumbnail: $thumbnail, type: $type, position: $position color: $color image: $image  todayMatch : $todayMatch  minVersion: $minVersion)';
+    return 'EventModel(title: $title, subtitle: $subtitle, thumbnail: $thumbnail, type: $type, position: $position color: $color image: $image  todayMatch : $todayMatch  minVersion: $minVersion url: $url formUrl: $formUrl)';
   }
 }

@@ -49,7 +49,9 @@ class GameCard extends StatelessWidget {
                   color: UiConstants.primaryColor,
                   borderRadius: BorderRadius.circular(SizeConfig.roundness32),
                   image: DecorationImage(
-                      image: CachedNetworkImageProvider(gameData.thumbnailUri),
+                      image: gameData.thumbnailUri.split('.').last == "jpg"
+                          ? AssetImage(gameData.thumbnailUri)
+                          : CachedNetworkImageProvider(gameData.thumbnailUri),
                       fit: BoxFit.cover),
                 ),
               ),

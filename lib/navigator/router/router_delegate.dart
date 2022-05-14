@@ -691,6 +691,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'monthlySaver':
         openTopSaverScreen(Constants.HS_MONTHLY_SAVER);
         break;
+      case 'bugBounty':
+        openTopSaverScreen(Constants.BUG_BOUNTY);
+        break;
+      case 'newFello':
+        openTopSaverScreen(Constants.NEW_FELLO_UI);
+        break;
       case 'FPL':
         openTopSaverScreen('FPL');
         break;

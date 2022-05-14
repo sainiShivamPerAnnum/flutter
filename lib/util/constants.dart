@@ -16,6 +16,8 @@ class Constants {
   static const String HS_DAILY_SAVER = "SAVER_DAILY";
   static const String HS_WEEKLY_SAVER = "SAVER_WEEKLY";
   static const String HS_MONTHLY_SAVER = "SAVER_MONTHLY";
+  static const String BUG_BOUNTY = "BUG_BOUNTY";
+  static const String NEW_FELLO_UI = "NEW_FELLO";
 
   //Collections
   static final String COLN_USERS = "users";

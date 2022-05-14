@@ -127,6 +127,8 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
           AppState.isWebGamePInProgress = false;
           didPopRoute();
           didPopRoute();
+          _webGameViewModel.handleGameSessionEnd(
+              duration: Duration(milliseconds: 500));
         },
         false,
       );

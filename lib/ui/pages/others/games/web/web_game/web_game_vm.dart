@@ -154,12 +154,12 @@ class WebGameViewModel extends BaseModel {
     _lbService.fetchWebGameLeaderBoard(game: game);
   }
 
-  handleGameSessionEnd() {
+  handleGameSessionEnd({Duration duration}) {
     updateFlcBalance();
     _logger.d("Checking for golden tickets");
     _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
       if (res)
-        Future.delayed(Duration(seconds: 1), () {
+        Future.delayed(duration ?? Duration(seconds: 1), () {
           _gtService.showInstantGoldenTicketView(
               title: 'Game Milestone reached', source: GTSOURCE.game);
         });

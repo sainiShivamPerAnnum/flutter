@@ -95,6 +95,20 @@ class Api {
     return snapshot;
   }
 
+  Future<QuerySnapshot> checkForLatestGTStatus(String userId) {
+    Future<QuerySnapshot> snapshot;
+    Query query = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
+        .collection(Constants.SUBCOLN_USER_REWARDS);
+    try {
+      snapshot = query.orderBy('timestamp', descending: true).limit(30).get();
+    } catch (e) {
+      logger.e(e);
+    }
+    return snapshot;
+  }
+
   Future<QuerySnapshot> getUserNotifications(
       String userId, DocumentSnapshot lastDoc) async {
     Future<QuerySnapshot> snapshot;

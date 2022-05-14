@@ -22,7 +22,10 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
 
   List<Winners> _winners = [];
   List<String> _topWinners = [];
-
+  List<String> _bugBountyWinners = [];
+  List<String> _newFelloWinners = [];
+  get bugBountyWinners => this._bugBountyWinners;
+  get newFelloWinners => this._newFelloWinners;
   List<Winners> get winners => this._winners;
   List<String> get topWinners => this._topWinners;
 
@@ -48,6 +51,18 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
     _logger.d("Top Winners updated, property listeners notified");
   }
 
+  setBugBountyWinners() {
+    notifyListeners(WinnerServiceProperties.bugBounty);
+    _logger.d(
+        "Top Winners of Bug Bounty Campaign updated, property listeners notified");
+  }
+
+  setNewFelloWinners() {
+    notifyListeners(WinnerServiceProperties.newFello);
+    _logger.d(
+        "Top Winners of New Fello App Campaign updated, property listeners notified");
+  }
+
   fetchTopWinner() async {
     ApiResponse<List<String>> response = await _winnersRepo.getTopWinners();
     if (response.code == 200) {
@@ -56,6 +71,24 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
       setTopWinners();
       _logger.d("Top winners successfully fetched");
     }
+  }
+
+  fetchBugBountyWinners() async {
+    _bugBountyWinners = [
+      "madmaen won ₹5000 for Pool bug",
+      "kaiser won ₹5000 for Cricket Bug"
+    ];
+    setBugBountyWinners();
+    _logger.d("Bug Bounty Winners successfully fetched");
+  }
+
+  fetchNewFelloWinners() async {
+    _newFelloWinners = [
+      "Godon won ₹5000 for reviewing new Fello",
+      "buckminister won ₹5000 for reviewing Save Screen"
+    ];
+    setNewFelloWinners();
+    _logger.d("New Fello winners successfully fetched");
   }
 
   fetchWinners() async {

@@ -1,5 +1,6 @@
 import 'package:felloapp/core/constants/fcm_commands_constants.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -47,6 +48,10 @@ class FcmHandler extends ChangeNotifier {
     // If message has a command payload
     if (data['command'] != null) {
       showSnackbar = false;
+      if (data[FcmCommands.GAME_END_MESSAGE_KEY] != null &&
+          data[FcmCommands.GAME_END_MESSAGE_KEY].toString().isNotEmpty)
+        GoldenTicketService.gameEndMsgText =
+            data[FcmCommands.GAME_END_MESSAGE_KEY];
       switch (command) {
         case FcmCommands.DEPOSIT_TRANSACTION_RESPONSE:
           if (AppState.delegate.appState.isTxnLoaderInView == false)

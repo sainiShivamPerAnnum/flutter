@@ -21,8 +21,7 @@ final scratchKey = GlobalKey<ScratcherState>();
 
 class GTDetailedView extends StatelessWidget {
   final GoldenTicket ticket;
-  final GoldenTicketsViewModel superModel;
-  GTDetailedView({@required this.ticket, @required this.superModel});
+  GTDetailedView({@required this.ticket});
   @override
   Widget build(BuildContext context) {
     return BaseView<GTDetailedViewModel>(
@@ -66,8 +65,7 @@ class GTDetailedView extends StatelessWidget {
                               brushSize: 50,
                               threshold: 40,
                               key: scratchKey,
-                              onThreshold: () =>
-                                  model.redeemCard(superModel, ticket),
+                              onThreshold: () => model.redeemCard(ticket),
                               image: Image.asset(
                                 Assets.gtCover,
                                 fit: BoxFit.cover,
