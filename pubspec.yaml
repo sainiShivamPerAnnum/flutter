@@ -3,7 +3,7 @@ description: Game-based Investments
 
 publish_to: "none"
 
-version: 3.1.6+58
+version: 3.2.0+83
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -83,6 +83,8 @@ dependencies:
   sliding_up_panel: ^2.0.0+1
   app_install_date: ^0.1.1
   appsflyer_sdk: ^6.5.2
+  external_app_launcher: ^2.0.2
+
 
 dev_dependencies:
   flutter_test:
@@ -99,14 +101,13 @@ flutter:
     - resources/augmont/fello-augmont-invoice.html
     - resources/fello-email-verification.html
     - resources/public.key
-    - resources/freshdesk.html
-
     - assets/images/
     - assets/images/icons/
     - assets/vectors/
     - assets/vectors/icons/
     - assets/vectors/drawer/
     - assets/lotties/
+    - assets/videos/
 
   fonts:
     - family: Cucciolo

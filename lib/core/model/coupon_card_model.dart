@@ -9,6 +9,7 @@ class CouponModel {
   final int _maxuse;
   final int _priority;
   final int _minPurchase;
+  final String _highlight;
 
   CouponModel(
     //this._id,
@@ -19,6 +20,7 @@ class CouponModel {
     this._maxuse,
     this._priority,
     this._minPurchase,
+    this._highlight
   );
 
   CouponModel.fromMap(Map<String, dynamic> cMap)
@@ -31,11 +33,13 @@ class CouponModel {
           cMap['maxUse'],
           cMap['priority'],
           cMap['minPurchase'],
+          cMap['highlight']
         );
 
   //String get id => this._id;
   String get code => this._code;
   String get description => this._description;
+  String get highlight => this._highlight;
 
   Timestamp get expireOn => this._expireOn;
   Timestamp get createdOn => this._createdOn;

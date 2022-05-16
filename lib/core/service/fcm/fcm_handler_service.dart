@@ -1,9 +1,13 @@
 import 'package:felloapp/core/constants/fcm_commands_constants.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
-import 'package:felloapp/ui/pages/others/games/cricket/cricket_game/cricket_game_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_vm.dart';
+import 'package:felloapp/ui/pages/others/games/web/web_game/web_game_vm.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
@@ -17,13 +21,15 @@ class FcmHandler extends ChangeNotifier {
 
   final _augmontGoldBuyViewModel = locator<AugmontGoldBuyViewModel>();
   final _fcmHandlerDataPayloads = locator<FcmHandlerDataPayloads>();
-  final _cricketGameViewModel = locator<CricketGameViewModel>();
+  final _webGameViewModel = locator<WebGameViewModel>();
+  final _autosaveProcessViewModel = locator<AutosaveProcessViewModel>();
+  final _paytmService = locator<PaytmService>();
 
   ValueChanged<Map> notifListener;
 
   Future<bool> handleMessage(Map data, MsgSource source) async {
     _logger.d(
-        "Fcm handler receives on ${DateFormat('yyyy-MM-dd – hh:mm a').format(DateTime.now())} - $data");
+        "Fcm handler receives on ${DateFormat('yyyy-MM-dd - hh:mm a').format(DateTime.now())} - $data");
     bool showSnackbar = true;
     String title = data['dialog_title'];
     String body = data['dialog_body'];
@@ -44,19 +50,41 @@ class FcmHandler extends ChangeNotifier {
       showSnackbar = false;
       switch (command) {
         case FcmCommands.DEPOSIT_TRANSACTION_RESPONSE:
-          {
-            _augmontGoldBuyViewModel
-                .fcmTransactionResponseUpdate(data['payload']);
-          }
+          if (AppState.delegate.appState.isTxnLoaderInView == false)
+            showSnackbar = true;
+          _augmontGoldBuyViewModel
+              .fcmTransactionResponseUpdate(data['payload']);
+
           break;
         case FcmCommands.COMMAND_CRIC_GAME_END:
-          _cricketGameViewModel.endCricketGame(data);
+          _webGameViewModel.endWebGame(data, Constants.GAME_TYPE_CRICKET);
+          break;
+        case FcmCommands.COMMAND_POOL_CLUB_GAME_END:
+          _webGameViewModel.handlePoolClubRoundEnd(
+              data, Constants.GAME_TYPE_POOLCLUB);
+          break;
+        case FcmCommands.COMMAND_FOOT_BALL_GAME_END:
+          _webGameViewModel.handleFootBallRoundEnd(
+              data, Constants.GAME_TYPE_FOOTBALL);
+          break;
+        case FcmCommands.COMMAND_CANDY_FIESTA_GAME_END:
+          _webGameViewModel.handleCandyFiestaRoundEnd(
+              data, Constants.GAME_TYPE_CANDYFIESTA);
+          break;
+        case FcmCommands.COMMAND_LOW_BALANCE_ALERT:
+          _webGameViewModel.handleLowBalanceAlert();
           break;
         case FcmCommands.COMMAND_SHOW_DIALOG:
           _fcmHandlerDataPayloads.showDialog(title, body);
           break;
         case FcmCommands.COMMAND_USER_PRIZE_WIN_2:
           await _fcmHandlerDataPayloads.userPrizeWinPrompt();
+          break;
+        case FcmCommands.COMMAND_SUBSCRIPTION_RESPONSE:
+          if (_paytmService.isOnSubscriptionFlow)
+            await _autosaveProcessViewModel.handleSubscriptionPayload(data);
+          // else
+          //   await _paytmService.handleFCMStatusUpdate(data);
           break;
         default:
       }

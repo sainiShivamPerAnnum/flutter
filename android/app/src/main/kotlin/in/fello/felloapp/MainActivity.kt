@@ -2,11 +2,9 @@ package `in`.fello.felloapp
 
 import androidx.annotation.NonNull
 import io.flutter.embedding.android.FlutterActivity
-import io.flutter.embedding.android.FlutterActivityLaunchConfigs
-import io.flutter.embedding.android.FlutterActivityLaunchConfigs.BackgroundMode
-import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
+import io.flutter.embedding.android.FlutterFragmentActivity
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
@@ -43,14 +41,8 @@ class MainActivity: FlutterFragmentActivity() {
                 result.notImplemented()
             }
         }
-        // MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL_FRESHCHAT).setMethodCallHandler {
-        //     call, result -> 
-
-        //     if (call.method == 'createFreshchatNotificationHandler') {
-                
-        //     }
-        // }
     }
+
 
     // override fun getBackgroundMode(): FlutterActivityLaunchConfigs.BackgroundMode {
     // return BackgroundMode.transparent 

@@ -11,16 +11,23 @@ class EventModel {
   int color;
   String image;
   List<dynamic> instructions;
-  EventModel({
-    @required this.title,
-    @required this.subtitle,
-    @required this.thumbnail,
-    @required this.type,
-    @required this.position,
-    @required this.color,
-    @required this.image,
-    @required this.instructions,
-  });
+  int minVersion;
+  String url; //only for new fello
+  String formUrl;
+  String todayMatch; //Only for FPL
+  EventModel(
+      {@required this.title,
+      @required this.subtitle,
+      @required this.thumbnail,
+      @required this.type,
+      @required this.position,
+      @required this.color,
+      @required this.image,
+      @required this.minVersion,
+      @required this.url,
+      @required this.formUrl,
+      @required this.instructions,
+      this.todayMatch});
 
   EventModel copyWith(
       {String title,
@@ -29,6 +36,7 @@ class EventModel {
       String type,
       int position,
       int color,
+      int minVersion,
       String image,
       List<dynamic> instructions}) {
     return EventModel(
@@ -39,7 +47,11 @@ class EventModel {
         position: position ?? this.position,
         color: color ?? this.color,
         image: image ?? this.image,
-        instructions: instructions ?? this.instructions);
+        minVersion: minVersion ?? this.minVersion,
+        instructions: instructions ?? this.instructions,
+        formUrl: formUrl ?? this.formUrl,
+        url: url ?? this.url,
+        todayMatch: todayMatch ?? this.todayMatch);
   }
 
   Map<String, dynamic> toMap() {
@@ -51,7 +63,11 @@ class EventModel {
       'position': position,
       'color': color,
       'image': image,
-      'instructions': instructions
+      'minVersion': minVersion,
+      'url': url,
+      'instructions': instructions,
+      'formUrl': formUrl,
+      'todayMatch': todayMatch
     };
   }
 
@@ -64,7 +80,11 @@ class EventModel {
         position: map['position'] ?? 1,
         color: map['color'] ?? 4280492835,
         image: map['image'] ?? '',
-        instructions: map['info'] ?? ["Fello Event Instructions"]);
+        url: map['url'] ?? '',
+        formUrl: map['formUrl'] ?? '',
+        minVersion: map["minVersion"] ?? 0,
+        instructions: map['info'] ?? ["Fello Event Instructions"],
+        todayMatch: map['todayMatch'] ?? "");
   }
 
   String toJson() => json.encode(toMap());
@@ -74,6 +94,6 @@ class EventModel {
 
   @override
   String toString() {
-    return 'EventModel(title: $title, subtitle: $subtitle, thumbnail: $thumbnail, type: $type, position: $position color: $color image: $image)';
+    return 'EventModel(title: $title, subtitle: $subtitle, thumbnail: $thumbnail, type: $type, position: $position color: $color image: $image  todayMatch : $todayMatch  minVersion: $minVersion url: $url formUrl: $formUrl)';
   }
 }

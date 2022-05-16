@@ -426,7 +426,7 @@ class AugmontModel extends ChangeNotifier {
         BaseUtil.showNegativeAlert(title, body);
       } else {
         BaseUtil.showNegativeAlert(
-            'Deposit failed', 'Your payment failed. Please try again');
+            'Transaction failed', 'Your gold purchase did not complete successfully');
       }
 
       _baseProvider.currentAugmontTxn.tranStatus =

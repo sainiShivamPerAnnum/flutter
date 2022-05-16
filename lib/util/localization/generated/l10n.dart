@@ -595,10 +595,10 @@ class S {
     );
   }
 
-  /// `and win iphone 13`
+  /// `and win iPhone 13`
   String get winIphoneBigText {
     return Intl.message(
-      'and win iphone 13',
+      'and win iPhone 13',
       name: 'winIphoneBigText',
       desc: '',
       args: [],
@@ -637,10 +637,10 @@ class S {
     );
   }
 
-  /// `Notifications`
+  /// `Alerts`
   String get abNotifications {
     return Intl.message(
-      'Notifications',
+      'Alerts',
       name: 'abNotifications',
       desc: '',
       args: [],

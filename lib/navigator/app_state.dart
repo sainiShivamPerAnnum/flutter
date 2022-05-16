@@ -29,13 +29,15 @@ class AppState extends ChangeNotifier {
   final _lbService = locator<LeaderboardService>();
   int _rootIndex = 1;
   bool _isTxnLoaderInView = false;
+  static Map<String, dynamic> startupNotifMessage;
   static ScrollController homeCardListController = ScrollController();
   static String _fcmData;
   static bool isFirstTime = true;
   static bool isRootLoaded = false;
   static bool unsavedChanges = false;
   static bool unsavedPrefs = false;
-  static bool circGameInProgress = false;
+  static bool isWebGameLInProgress = false;
+  static bool isWebGamePInProgress = false;
   static bool isOnboardingInProgress = false;
   static bool isUpdateScreen = false;
   static bool isDrawerOpened = false;

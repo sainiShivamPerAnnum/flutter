@@ -109,7 +109,7 @@ class PrizeClaimCard extends StatelessWidget {
                                     : SizedBox(),
                                 ClaimButton(
                                   color: UiConstants.tertiarySolid,
-                                  image: "images/augmont-share.png",
+                                  image: Assets.augmontShare,
                                   onTap: () => model.showConfirmDialog(
                                       PrizeClaimChoice.GOLD_CREDIT),
                                   text: "Redeem as Digital Gold",

@@ -1,10 +1,8 @@
-import 'package:felloapp/core/service/paytm_service.dart';
 import 'package:felloapp/ui/modals_sheets/augmont_coupons_modal.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -74,7 +72,8 @@ class AugmontBuyCard extends StatelessWidget {
                 SizedBox(width: SizeConfig.padding24),
                 Expanded(
                   child: TextField(
-                    enabled: !model.isGoldBuyInProgress,
+                    enabled: !model.isGoldBuyInProgress &&
+                        !model.couponApplyInProgress,
                     focusNode: model.buyFieldNode,
                     enableInteractiveSelection: false,
                     controller: model.goldAmountController,
@@ -135,6 +134,14 @@ class AugmontBuyCard extends StatelessWidget {
               child: Text(
                 "Upto ₹ 50,000 can be invested at one go.",
                 style: TextStyles.body4.bold.colour(UiConstants.primaryColor),
+              ),
+            ),
+          if (model.showMinCapText)
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
+              child: Text(
+                "Minimum purchase amount is ₹ 10",
+                style: TextStyles.body4.bold.colour(Colors.red[400]),
               ),
             ),
           SizedBox(
@@ -209,7 +216,9 @@ class AugmontBuyCard extends StatelessWidget {
                 ),
               ),
             ),
-          if (model.augRegFailed && !model.augOnbRegInProgress)
+          if (model.augRegFailed &&
+              !model.augOnbRegInProgress &&
+              model.augmontObjectSecondFetchDone)
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(SizeConfig.roundness12),

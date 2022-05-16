@@ -5,10 +5,10 @@ import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/hero_router.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_ticket_utils.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_vm.dart';
+import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -17,17 +17,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class GoldenTicketsView extends StatelessWidget {
-  const GoldenTicketsView({Key key}) : super(key: key);
-
+  final bool openFirst;
+  GoldenTicketsView({this.openFirst = false});
   @override
   Widget build(BuildContext context) {
     return BaseView<GoldenTicketsViewModel>(
-      onModelReady: (model) {
-        model.init();
-      },
-      onModelDispose: (model) {
-        model.finish();
-      },
+      onModelReady: (model) => model.init(openFirst),
+      onModelDispose: (model) => model.finish(),
       builder: (ctx, model, child) {
         return Expanded(
           child: NotificationListener<ScrollNotification>(
@@ -56,8 +52,8 @@ class GoldenTicketsView extends StatelessWidget {
                     );
                   default:
                     log("Items: " + snapshot.data.length.toString());
+                    model.arrangeGoldenTickets(snapshot.data, openFirst);
 
-                    model.arrangeGoldenTickets(snapshot.data);
                     return model.arrangedGoldenTicketList == null ||
                             model.arrangedGoldenTicketList.length == 0
                         ? ListView(
@@ -92,7 +88,6 @@ class GoldenTicketsView extends StatelessWidget {
                                         return GTDetailedView(
                                           ticket:
                                               model.arrangedGoldenTicketList[i],
-                                          superModel: model,
                                         );
                                       },
                                     ),

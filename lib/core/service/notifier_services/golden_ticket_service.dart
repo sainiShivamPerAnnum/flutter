@@ -9,6 +9,7 @@ import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/dialogs/score_reject_dialog.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -28,7 +29,9 @@ class GoldenTicketService extends ChangeNotifier {
   // static bool hasGoldenTicket = false;
 
   static String goldenTicketId;
+  static String gameEndMsgText;
   static GoldenTicket currentGT;
+  static String lastGoldenTicketId;
 
   List<GoldenTicket> _activeGoldenTickets;
 
@@ -41,6 +44,17 @@ class GoldenTicketService extends ChangeNotifier {
   }
 
   Future<bool> fetchAndVerifyGoldenTicketByID() async {
+    if (gameEndMsgText != null && gameEndMsgText.isNotEmpty) {
+      BaseUtil.openDialog(
+          addToScreenStack: true,
+          isBarrierDismissable: false,
+          hapticVibrate: true,
+          content: ScoreRejectedDialog(
+            contentText: gameEndMsgText,
+          ));
+      gameEndMsgText = null;
+      return false;
+    }
     if (goldenTicketId != null && goldenTicketId.isNotEmpty) {
       currentGT = await _dbModel.getGoldenTicketById(
           _userService.baseUser.uid, goldenTicketId);

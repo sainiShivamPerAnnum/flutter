@@ -1,20 +1,24 @@
 import 'dart:io';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -57,10 +61,41 @@ class ReferralDetailsView extends StatelessWidget {
                               height: SizeConfig.screenHeight * 0.15,
                             ),
                             SizedBox(height: SizeConfig.padding32),
-                            Text(
-                              "Earn upto ₹50 and 200 tokens from every Golden Ticket. The referrer of the month wins a brand new iPhone 13!",
+                            RichText(
                               textAlign: TextAlign.center,
-                              style: TextStyles.body2,
+                              text: TextSpan(
+                                  text:
+                                      "Earn upto ₹50 and 200 tokens from every Golden Ticket. The ",
+                                  style: TextStyles.body2
+                                      .colour(UiConstants.textColor),
+                                  children: [
+                                    new TextSpan(
+                                      text: 'referrer of the month*',
+                                      style: TextStyles.body3
+                                          .colour(UiConstants.primaryColor)
+                                          .bold,
+                                      recognizer: new TapGestureRecognizer()
+                                        ..onTap = () {
+                                          Haptic.vibrate();
+                                          BaseUtil.openDialog(
+                                              addToScreenStack: true,
+                                              hapticVibrate: true,
+                                              isBarrierDismissable: false,
+                                              content: MoreInfoDialog(
+                                                  title:
+                                                      "To be eligible for referrer of the month",
+                                                  imagePath: Assets.iphone,
+                                                  imageSize: Size(
+                                                    SizeConfig.padding80,
+                                                    SizeConfig.padding80,
+                                                  ),
+                                                  text:
+                                                      "In a month, user must refer at least 100 people who have saved ₹100 or above on the app."));
+                                        },
+                                    ),
+                                    TextSpan(
+                                        text: " wins a brand new iPhone 13!")
+                                  ]),
                             ),
                             SizedBox(height: SizeConfig.padding24),
                             // model.loadingUrl
@@ -326,16 +361,17 @@ class ReferralDetailsView extends StatelessWidget {
                             SizedBox(height: SizeConfig.padding8),
                             InfoTile(
                               title:
-                                  "Once your friend plays Cricket more than 10 times, you receive a new Golden Ticket.",
+                                  "Once your friend plays Cricket or Pool Club more than 10 times, you receive a new Golden Ticket.",
                               leadingAsset: Assets.wmtShare,
                             ),
                             SizedBox(height: SizeConfig.padding8),
                             Center(
-                                child: Text(
-                              "You can win upto ₹150 and 600 Fello tokens from each referral!",
-                              style: TextStyles.body3.bold,
-                              textAlign: TextAlign.center,
-                            )),
+                              child: Text(
+                                "You can win upto ₹150 and 600 Fello tokens from each referral!",
+                                style: TextStyles.body3.bold,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
                             SizedBox(height: SizeConfig.navBarHeight * 1.2),
                           ],
                         ),

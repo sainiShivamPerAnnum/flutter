@@ -11,7 +11,7 @@ import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/winners_repo.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/events_service.dart';
+import 'package:felloapp/core/service/campaigns_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
@@ -34,9 +34,8 @@ class WinViewModel extends BaseModel {
   final _lbService = locator<LeaderboardService>();
   final _dbModel = locator<DBModel>();
   final _analyticsService = locator<AnalyticsService>();
-  final eventService = EventService();
+  final _campaignService = locator<CampaignService>();
   Timer _timer;
-
   LocalDBModel _localDBModel = locator<LocalDBModel>();
   bool isWinnersLoading = false;
   WinnersModel _winners;
@@ -85,19 +84,25 @@ class WinViewModel extends BaseModel {
   }
 
   setupAutoEventScroll() {
-    _timer = Timer.periodic(Duration(seconds: 6), (Timer timer) {
-      if (eventScrollController.position.pixels <
-          eventScrollController.position.maxScrollExtent) {
-        eventScrollController.animateTo(
-            eventScrollController.position.pixels +
-                SizeConfig.screenWidth * 0.64,
-            duration: Duration(seconds: 1),
-            curve: Curves.decelerate);
-      } else {
-        eventScrollController.animateTo(0,
-            duration: Duration(seconds: 2), curve: Curves.decelerate);
-      }
-    });
+    try {
+      Future.delayed(Duration(seconds: 6), () {
+        _timer = Timer.periodic(Duration(seconds: 6), (Timer timer) {
+          if (eventScrollController.position.pixels <
+              eventScrollController.position.maxScrollExtent) {
+            eventScrollController.animateTo(
+                eventScrollController.position.pixels +
+                    SizeConfig.screenWidth * 0.64,
+                duration: Duration(seconds: 1),
+                curve: Curves.decelerate);
+          } else {
+            eventScrollController.animateTo(0,
+                duration: Duration(seconds: 2), curve: Curves.decelerate);
+          }
+        });
+      });
+    } catch (e) {
+      _logger.e(e.toString());
+    }
   }
 
   void clear() {
@@ -167,6 +172,10 @@ class WinViewModel extends BaseModel {
   }
 
   getOngoingEvents() async {
-    ongoingEvents = await _dbModel.getOngoingEvents();
+    final response = await _campaignService.getOngoingEvents();
+    if (response.code == 200) {
+      ongoingEvents = response.model;
+    } else
+      ongoingEvents = [];
   }
 }

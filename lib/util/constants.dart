@@ -3,9 +3,21 @@ class Constants {
   static const String PAN_AES_KEY = 'felloisquitefun!';
 
   //Game Type
+
+  static const String GAME_TYPE_CANDYFIESTA = "GM_CANDY_FIESTA";
+  static const String GAME_TYPE_FOOTBALL = "GM_FOOTBALL_KICKOFF";
   static const String GAME_TYPE_CRICKET = "GM_CRIC2020";
   static const String GAME_TYPE_TAMBOLA = "GM_TAMBOLA2020";
+  static const String GAME_TYPE_POOLCLUB = "GM_POOL_CLUB";
   static const String GAME_TYPE_HIGHEST_SAVER = "HIGHEST_SAVER";
+  static const String GAME_TYPE_FPL = "FPL";
+
+  //HIGHEST SAVER
+  static const String HS_DAILY_SAVER = "SAVER_DAILY";
+  static const String HS_WEEKLY_SAVER = "SAVER_WEEKLY";
+  static const String HS_MONTHLY_SAVER = "SAVER_MONTHLY";
+  static const String BUG_BOUNTY = "BUG_BOUNTY";
+  static const String NEW_FELLO_UI = "NEW_FELLO";
 
   //Collections
   static final String COLN_USERS = "users";
@@ -27,6 +39,7 @@ class Constants {
   static final String COLN_FAQS = "faqs";
   static final String COLN_APPCAMPAIGNS = "appcampaigns";
   static final String COLN_COUPONS = 'coupons';
+  static final String COLN_INAPPRESOURCES = "inappresources";
 
   //Sub-collections
   static final String SUBCOLN_USER_FCM = "fcm";
@@ -40,6 +53,8 @@ class Constants {
   static final String SUBCOLN_USER_ALERTS = "alerts";
   static final String SUBCOLN_USER_REWARDS = "rewards";
   static final String SUBCOLN_USER_STATS = "stats";
+  static final String SUBCOLN_USER_SUBSCRIPTION = "subscription";
+  static final String SUBCOLN_USER_SUB_TXN = "sub-txns";
   //Sub-collection docs
   static final String DOC_USER_FCM_TOKEN = "client_token";
   static final String DOC_USER_ICICI_DETAIL = "detail";
@@ -48,6 +63,11 @@ class Constants {
   static final String DOC_USER_WALLET_FUND_BALANCE = "fndbalance";
   static final String DOC_USER_WALLET_TICKET_BALANCE = "tckbalance";
   static final String DOC_USER_WALLET_COIN_BALANCE = "coinbalance";
+  static final String DOC_IAR_DAILY_CHIPS = "SUBSCRIPTION_DAILY_CHIPS";
+  static final String DOC_IAR_WEEKLY_CHIPS = "SUBSCRIPTION_WEEKLY_CHIPS";
+
+  //Sub-Collection docs Collection docs
+  static final String DOC_USER_SUBSCRIPTIONS_ORDERS = 'orders';
 
   static const int CORNERS_COMPLETED = 0;
   static const int ROW_ONE_COMPLETED = 1;
@@ -87,4 +107,11 @@ class Constants {
 
   static const INSTALL_TRACKING = 'FELLO_INSTALL';
   static const SIGNUP_TRACKING = 'FELLO_SIGNUP';
+
+  //Subscription Status
+  static const SUBSCRIPTION_INIT = "INIT";
+  static const SUBSCRIPTION_ACTIVE = "ACTIVE";
+  static const SUBSCRIPTION_PROCESSING = "PROCESSING";
+  static const SUBSCRIPTION_INACTIVE = "INACTIVE";
+  static const SUBSCRIPTION_CANCELLED = "CANCELLED";
 }

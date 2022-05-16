@@ -181,6 +181,8 @@ class TranChip extends StatelessWidget {
 }
 
 class NoTransactionsContent extends StatelessWidget {
+  final double width;
+  NoTransactionsContent({this.width});
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
@@ -190,7 +192,7 @@ class NoTransactionsContent extends StatelessWidget {
         children: [
           Image.asset(
             Assets.noTransaction,
-            width: SizeConfig.screenWidth * 0.8,
+            width: width ?? SizeConfig.screenWidth * 0.8,
           ),
           SizedBox(
             height: 20,

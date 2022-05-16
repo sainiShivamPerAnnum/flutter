@@ -8,7 +8,10 @@ import 'package:felloapp/core/service/notifier_services/golden_ticket_service.da
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
+import 'package:felloapp/ui/pages/others/games/web/web_game/web_game_vm.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog_landscape.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -24,18 +27,19 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   DBModel _dbModel = locator<DBModel>();
   BaseUtil _baseUtil = locator<BaseUtil>();
   final _userService = locator<UserService>();
-  AppState _appState = locator<AppState>();
-  GoldenTicketService _gtService = GoldenTicketService();
+  final _webGameViewModel = locator<WebGameViewModel>();
 
   FelloBackButtonDispatcher(this._routerDelegate) : super();
 
-  Future<bool> _confirmExit(
-      String title, String description, Function confirmAction) {
+  Future<bool> _confirmExit(String title, String description,
+      Function confirmAction, bool isInLandScape) {
     BaseUtil.openDialog(
-        addToScreenStack: true,
-        isBarrierDismissable: false,
-        hapticVibrate: true,
-        content: FelloConfirmationLandScapeDialog(
+      addToScreenStack: true,
+      isBarrierDismissable: false,
+      hapticVibrate: true,
+      content: RotatedBox(
+        quarterTurns: 0,
+        child: FelloConfirmationLandScapeDialog(
           asset: Assets.noTickets,
           title: title,
           subtitle: description,
@@ -45,7 +49,9 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
           reject: "Stay",
           onAccept: confirmAction,
           onReject: didPopRoute,
-        ));
+        ),
+      ),
+    );
   }
 
   bool isAnyDialogOpen() {
@@ -100,12 +106,32 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       return Future.value(true);
     }
     //If the cricket game is in progress
-    else if (AppState.circGameInProgress)
-      return _confirmExit("Exit Game", "Are you sure you want to leave?", () {
-        AppState.circGameInProgress = false;
-        didPopRoute();
-        return didPopRoute();
-      });
+    else if (AppState.isWebGameLInProgress)
+      return _confirmExit(
+        "Exit Game",
+        "Are you sure you want to leave?",
+        () {
+          logger.d("Closing landscape mode game view");
+          AppState.isWebGameLInProgress = false;
+          didPopRoute();
+          didPopRoute();
+          _webGameViewModel.handleGameSessionEnd();
+        },
+        true,
+      );
+    else if (AppState.isWebGamePInProgress)
+      return _confirmExit(
+        "Exit Game",
+        "Are you sure you want to leave?",
+        () {
+          AppState.isWebGamePInProgress = false;
+          didPopRoute();
+          didPopRoute();
+          _webGameViewModel.handleGameSessionEnd(
+              duration: Duration(milliseconds: 500));
+        },
+        false,
+      );
     else if (AppState.isUpdateScreen) {
       AppState.isUpdateScreen = false;
       return _routerDelegate.popRoute();

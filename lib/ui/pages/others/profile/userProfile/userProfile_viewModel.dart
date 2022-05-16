@@ -10,6 +10,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
+import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -46,6 +47,7 @@ class UserProfileVM extends BaseModel {
   final _txnService = locator<TransactionService>();
   final _tambolaService = locator<TambolaService>();
   final _analyticsService = locator<AnalyticsService>();
+  final _paytmService = locator<PaytmService>();
   final S _locale = locator<S>();
   final BaseUtil baseProvider = locator<BaseUtil>();
   double picSize;
@@ -174,7 +176,13 @@ class UserProfileVM extends BaseModel {
           _userService.baseUser.dob =
               "${yearFieldController.text}-${monthFieldController.text}-${dateFieldController.text}";
           _userService.baseUser.gender = getGender();
-          await _dbModel.updateUser(_userService.baseUser).then((res) {
+          await _dbModel
+              .updateUserProfile(
+                  _userService.baseUser.uid,
+                  _userService.baseUser.name,
+                  _userService.baseUser.dob,
+                  _userService.baseUser.gender)
+              .then((res) {
             if (res) {
               _userService.setMyUserName(_userService.baseUser.name);
               _userService.setDateOfBirth(_userService.baseUser.dob);
@@ -280,6 +288,7 @@ class UserProfileVM extends BaseModel {
                 _txnService.signOut();
                 _tambolaService.signOut();
                 _analyticsService.signOut();
+                _paytmService.signout();
                 AppState.backButtonDispatcher.didPopRoute();
                 AppState.delegate.appState.currentAction = PageAction(
                     state: PageState.replaceAll, page: SplashPageConfig);
@@ -450,14 +459,13 @@ class UserProfileVM extends BaseModel {
     if (flag) {
       BaseAnalytics.logProfilePictureAdded();
       BaseUtil.showPositiveAlert(
-          'Complete', 'Your profile Picture has been updated');
+          'Complete', 'Your profile picture has been updated');
     } else {
       BaseUtil.showNegativeAlert(
         'Failed',
         'Your Profile Picture could not be updated at the moment',
       );
     }
-    //upload(false);
     AppState.backButtonDispatcher.didPopRoute();
   }
 

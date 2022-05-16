@@ -81,7 +81,7 @@ class Winners {
       this.flc});
 
   Winners.fromJson(Map<String, dynamic> json) {
-    score = json['score'].toDouble();
+    score = (json['score'] ?? 0).toDouble();
     userid = json['userid'];
     username = json['username'];
     isMockUser = json['isMockUser'];
@@ -112,7 +112,7 @@ class Winners {
 
   factory Winners.fromMap(Map<String, dynamic> map, String gameType) {
     return Winners(
-      score: map['score'].toDouble(),
+      score: (map['score'] ?? 0).toDouble(),
       userid: map['userid'],
       username: map['username'],
       gameType: gameType,

@@ -3,14 +3,19 @@ import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/fundbalance_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
+import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/custom_logger.dart';
 
+import '../service/notifier_services/user_service.dart';
+
 class UserRepository {
   final _logger = locator<CustomLogger>();
+  final _appflyerService = locator<AppFlyerAnalytics>();
   final _api = locator<Api>();
   final _apiPaths = locator<ApiPath>();
 
@@ -25,8 +30,7 @@ class UserRepository {
           body: _body, isAuthTokenAvailable: false);
       return ApiResponse(model: res['token'], code: 200);
     } catch (e) {
-      return ApiResponse.withError(
-          "Unable to register user using truecaller", 400);
+      return ApiResponse.withError("Unable to signup using truecaller", 400);
     }
   }
 
@@ -46,18 +50,52 @@ class UserRepository {
           BaseUser.fldGender: baseUser.gender,
           BaseUser.fldUsername: baseUser.username,
           BaseUser.fldUserPrefs: {"tn": 1, "al": 0},
-          BaseUser.fldStateId: state
+          BaseUser.fldStateId: state,
+          BaseUser.fldAppFlyerId: await _appflyerService.appFlyerId,
         }
       };
 
-      final res = await APIService.instance
-          .postData(_apiPaths.kAddNewUser, body: _body, token: _bearer);
-
+      final res = await APIService.instance.postData(_apiPaths.kAddNewUser,
+          cBaseUrl: FlavorConfig.isDevelopment()
+              ? "https://6w37rw51hj.execute-api.ap-south-1.amazonaws.com"
+              : "",
+          body: _body,
+          token: _bearer);
+      _logger.d(res);
+      final responseData = res['data'];
+      _logger.d(responseData);
       return ApiResponse(
-          code: 200, model: {"flag": res['flag'], "gtId": res['gtId']});
+          code: 200,
+          model: {"flag": responseData['flag'], "gtId": responseData['gtId']});
     } catch (e) {
       _logger.d(e);
-      ApiResponse.withError("User not added to firestore", 400);
+      return ApiResponse.withError("User not added to firestore", 400);
+    }
+  }
+
+  Future<ApiResponse> updateUserAppFlyer(BaseUser user, String token) async {
+    try {
+      final id = await _appflyerService.appFlyerId;
+
+      if (user.appFlyerId == id) {
+        return ApiResponse(code: 200);
+      }
+
+      final body = {
+        'uid': user.uid,
+        'appFlyerId': id,
+      };
+
+      final res = await APIService.instance.putData(
+        _apiPaths.kUpdateUserAppflyer,
+        body: body,
+        token: 'Bearer $token',
+      );
+
+      return ApiResponse(code: 200);
+    } catch (e) {
+      _logger.d(e);
+      return ApiResponse.withError("User not added to firestore", 400);
     }
   }
 
@@ -135,7 +173,7 @@ class UserRepository {
       await APIService.instance.postData(
           "https://w7l6dgq5n9.execute-api.ap-south-1.amazonaws.com/dev/setUserDeviceId",
           body: _body,
-          isCustomUrl: true);
+          isAwsSubUrl: true);
 
       _logger.d("Device added");
     } catch (e) {

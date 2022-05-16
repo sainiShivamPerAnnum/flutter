@@ -193,6 +193,10 @@ class LoginControllerViewModel extends BaseModel {
             //   return false;
             // }
 
+            _analyticsService.track(
+              eventName: AnalyticsEvents.signupProfile,
+            );
+
             if (_nameScreenKey.currentState.model.selectedDate == null) {
               BaseUtil.showNegativeAlert(
                 'Invalid Date of Birth',
@@ -274,8 +278,11 @@ class LoginControllerViewModel extends BaseModel {
                 .animateToPage(Username.index,
                     duration: Duration(milliseconds: 500),
                     curve: Curves.easeInToLinear)
-                .then((value) =>
-                    _usernameKey.currentState.focusNode.requestFocus());
+                .then((value) {
+              Future.delayed(Duration(seconds: 1), () {
+                _usernameKey.currentState.focusNode.requestFocus();
+              });
+            });
           }
           break;
         }
@@ -312,9 +319,9 @@ class LoginControllerViewModel extends BaseModel {
                   userService.baseUser.mobile = userMobile;
                   final ApiResponse response = await _userRepo.setNewUser(
                       userService.baseUser, token, cstate);
-
+                  logger.e(response.toString());
                   if (response.code == 400) {
-                    message = response.errorMessage ??
+                    message =
                         "Unable to create account, please try again later.";
                     _usernameKey.currentState.model.enabled = true;
                     flag = false;
@@ -397,7 +404,8 @@ class LoginControllerViewModel extends BaseModel {
       _isSignup = true;
       logger.d(
           "No existing user details found or found incomplete details for user. Moving to details page");
-
+      if (source == LoginSource.TRUECALLER)
+        _analyticsService.track(eventName: AnalyticsEvents.truecallerSignup);
       //Move to name input page
       BaseUtil.isNewUser = true;
       BaseUtil.isFirstFetchDone = false;
@@ -415,13 +423,22 @@ class LoginControllerViewModel extends BaseModel {
       ///Existing user
       await BaseAnalytics.analytics.logLogin(loginMethod: 'phonenumber');
       logger.d("User details available: Name: " + user.model.name);
+      if (source == LoginSource.TRUECALLER)
+        _analyticsService.track(eventName: AnalyticsEvents.truecallerLogin);
       userService.baseUser = user.model;
+      _userRepo.updateUserAppFlyer(
+          user.model, await userService.firebaseUser.getIdToken());
+
       _onSignUpComplete();
     }
   }
 
   Future _onSignUpComplete() async {
     if (_isSignup) {
+      await _analyticsService.login(
+          isOnBoarded: userService.isUserOnborded,
+          baseUser: userService.baseUser);
+
       await BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
       _analyticsService.track(
         eventName: AnalyticsEvents.signupComplete,
@@ -648,6 +665,7 @@ class LoginControllerViewModel extends BaseModel {
 
   Future<void> _authenticateTrucallerUser(String phno) async {
     //Make api call to get custom token
+
     final ApiResponse<String> tokenRes =
         await _userRepo.getCustomUserToken(phno);
 

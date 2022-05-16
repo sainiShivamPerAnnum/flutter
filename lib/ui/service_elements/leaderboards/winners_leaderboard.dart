@@ -1,6 +1,7 @@
 import 'package:felloapp/core/enums/winner_service_enum.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
-import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
+import 'package:felloapp/ui/pages/static/game_card.dart';
+import 'package:felloapp/ui/pages/static/web_game_prize_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -23,6 +24,21 @@ class WinnerboardView extends StatelessWidget {
         return count;
     } else
       return listLength;
+  }
+
+  getGameName(String gamename) {
+    switch (gamename) {
+      case Constants.GAME_TYPE_TAMBOLA:
+        return "Tambola";
+      case Constants.GAME_TYPE_CRICKET:
+        return "Cricket";
+      case Constants.GAME_TYPE_POOLCLUB:
+        return "Pool Club";
+      case Constants.GAME_TYPE_FOOTBALL:
+        return "Foot Ball";
+      case Constants.GAME_TYPE_CANDYFIESTA:
+        return "Candy Fiesta";
+    }
   }
 
   @override
@@ -120,11 +136,8 @@ class WinnerboardView extends StatelessWidget {
                                             SizedBox(
                                                 height: SizeConfig.padding4),
                                             Text(
-                                              model.winners[i].gameType ==
-                                                      Constants
-                                                          .GAME_TYPE_CRICKET
-                                                  ? "Cricket"
-                                                  : "Tambola",
+                                              getGameName(
+                                                  model.winners[i].gameType),
                                               style: TextStyles.body4.colour(
                                                   UiConstants.primaryColor),
                                             )

@@ -48,7 +48,7 @@ class OtpInputScreenViewModel extends BaseModel {
       _otpFieldEnabled = true;
       _autoDetectingOtp = false;
       _loaderMessage =
-          'OTP requests exceeded. Please try again in sometime or contact us';
+          'OTP requests exceeded. Please try again after sometime';
       notifyListeners();
     }
   }

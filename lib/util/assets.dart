@@ -27,6 +27,19 @@ class Assets {
   static final String noTransaction = "images/no-transactions.png";
   static final String augmontShare = "images/augmont-share.png";
 
+  //AUTOSAVE
+  static final String autosavemain = "assets/images/autosave.png";
+  static final String fasben1 = "assets/images/fasben1.png";
+  static final String fasben2 = "assets/images/fasben2.png";
+  static final String fasben3 = "assets/images/fasben3.png";
+  static final String preautosave = "assets/images/preautosave.png";
+  static final String postautosave = "assets/images/postautosave.png";
+  static final String autopause = "assets/images/autopause.png";
+
+  static final String autosaveSlide1 = "assets/videos/asanim-1.mp4";
+  static final String autosaveSlide2 = "assets/videos/asanim-2.mp4";
+  static final String autosaveSlide3 = "assets/videos/asanim-3.mp4";
+
   //APPBAR
 
   static final String alerts = "assets/vectors/icons/alerts.svg";
@@ -101,6 +114,8 @@ class Assets {
 
   static final String bankDetails = "assets/vectors/icons/bankDetails.svg";
   static final String txnHistory = "assets/vectors/icons/txnHistory.svg";
+  static final String bank = "assets/vectors/icons/bank.svg";
+  static final String repeat = "assets/vectors/icons/repeat.svg";
 
   //DRAWER
   static final String dAboutDigitalGold =
@@ -137,7 +152,7 @@ class Assets {
   static final String noData = "assets/lotties/no_data.json";
 
   //FELLO REWARDS
-  static final String digitalGold = "images/augmont-share.png";
+  // static final String digitalGold = "images/augmont-share.png";
   static final String amazonGiftVoucher = "images/amazon-share.png";
   static final String felloRewards = "assets/images/fello_prize.png";
   static final String voucherBg = "assets/images/voucher_bg.jpg";
