@@ -58,7 +58,7 @@ class UserRepository {
       final res = await APIService.instance.postData(_apiPaths.kAddNewUser,
           cBaseUrl: FlavorConfig.isDevelopment()
               ? "https://6w37rw51hj.execute-api.ap-south-1.amazonaws.com"
-              : "",
+              : "https://7y9layzs7j.execute-api.ap-south-1.amazonaws.com",
           body: _body,
           token: _bearer);
       _logger.d(res);

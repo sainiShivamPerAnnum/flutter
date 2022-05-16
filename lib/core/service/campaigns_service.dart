@@ -5,6 +5,7 @@ import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 
 class CampaignService {
@@ -20,11 +21,14 @@ class CampaignService {
       final response = await APIService.instance.getData(
         ApiPath().kOngoingCampaigns,
         token: _token,
-        cBaseUrl: "https://rco4comkpa.execute-api.ap-south-1.amazonaws.com",
+        cBaseUrl: FlavorConfig.isDevelopment()
+            ? "https://rco4comkpa.execute-api.ap-south-1.amazonaws.com"
+            : "https://l4aighxmj3.execute-api.ap-south-1.amazonaws.com",
         queryParams: _queryParams,
       );
 
       final responseData = response["data"];
+      _logger.d(responseData);
       if (responseData['status'] == true) {
         responseData["campaigns"].forEach((e) {
           events.add(EventModel.fromMap(e));

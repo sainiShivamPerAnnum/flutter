@@ -175,6 +175,10 @@ class WinViewModel extends BaseModel {
     final response = await _campaignService.getOngoingEvents();
     if (response.code == 200) {
       ongoingEvents = response.model;
+      ongoingEvents.sort((a, b) => a.position.compareTo(b.position));
+      ongoingEvents.forEach((element) {
+        print(element.toString());
+      });
     } else
       ongoingEvents = [];
   }

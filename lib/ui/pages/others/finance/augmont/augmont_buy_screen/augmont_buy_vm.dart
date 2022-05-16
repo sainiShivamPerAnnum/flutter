@@ -318,7 +318,10 @@ class AugmontGoldBuyViewModel extends BaseModel {
   fcmTransactionResponseUpdate(fcmDataPayload) async {
     //Stop loader if loading.
     _logger.i("Updating response value.");
-    AppState.delegate.appState.txnFunction = null;
+    // AppState.delegate.appState.txnFunction.timeout(Duration(seconds: 1));
+    AppState.delegate.appState.txnTimer.cancel();
+    _logger.d("timer cancelled");
+
     try {
       final DepositFcmResponseModel depositFcmResponseModel =
           DepositFcmResponseModel.fromJson(json.decode(fcmDataPayload));
@@ -471,15 +474,22 @@ class AugmontGoldBuyViewModel extends BaseModel {
     if (_status) {
       AppState.delegate.appState.isTxnLoaderInView = true;
       _logger.d("Txn Timer Function reinitialised and set with 30 secs delay");
-      AppState.delegate.appState.txnFunction = null;
-      AppState.delegate.appState.txnFunction =
-          Future.delayed(Duration(seconds: 30), () async {
-        if (AppState.delegate.appState.isTxnLoaderInView == true) {
-          AppState.delegate.appState.isTxnLoaderInView = false;
-          AppState.delegate.appState.txnFunction = null;
-          showTransactionPendingDialog();
-        }
+      // AppState.delegate.appState.txnFunction = null;
+      AppState.delegate.appState.txnTimer = Timer(Duration(seconds: 30), () {
+        AppState.delegate.appState.isTxnLoaderInView = false;
+        showTransactionPendingDialog();
+        AppState.delegate.appState.txnTimer.cancel();
+        _logger.d("timer cancelled");
       });
+      // AppState.delegate.appState.txnFunction =
+      //     Future.delayed(Duration(seconds: 30), () async {
+      //   if (AppState.delegate.appState.isTxnLoaderInView == true) {
+      //     AppState.delegate.appState.isTxnLoaderInView = false;
+      //     AppState.delegate.appState.txnFunction = null;
+      //     showTransactionPendingDialog();
+      //   }
+      // });
+      //  AppState.delegate.appState.txnFunction()
     } else {
       if (AppState.delegate.appState.isTxnLoaderInView == true) {
         AppState.delegate.appState.isTxnLoaderInView = false;

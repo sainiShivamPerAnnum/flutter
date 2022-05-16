@@ -43,7 +43,7 @@ class ApiPath {
   get kRedeemGtReward => "/gtRewardsOps/$stage/v2/api/redeemGtReward";
 
   //Fello Coupons
-  get kFelloCoupons => "/dev/eligible";
+  get kFelloCoupons => "/$stage/eligible";
   //"/felloCoupons/$stage/api/eligible";
 
   //PaytmApis
@@ -55,5 +55,5 @@ class ApiPath {
   get kProcessSubscription => "/process";
   get kActiveSubscription => "/subscription";
   get kNextDebitDate => "/debit";
-  get kOngoingCampaigns => "/dev/campaigns";
+  get kOngoingCampaigns => "/$stage/campaigns";
 }
