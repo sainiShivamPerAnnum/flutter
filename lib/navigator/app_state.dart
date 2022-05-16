@@ -1,4 +1,6 @@
 //Project imports
+import 'dart:async';
+
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/navigator/router/back_dispatcher.dart';
@@ -29,6 +31,7 @@ class AppState extends ChangeNotifier {
   final _lbService = locator<LeaderboardService>();
   int _rootIndex = 1;
   bool _isTxnLoaderInView = false;
+  Future _txnFunction;
   static Map<String, dynamic> startupNotifMessage;
   static ScrollController homeCardListController = ScrollController();
   static String _fcmData;
@@ -63,6 +66,13 @@ class AppState extends ChangeNotifier {
 
   set isTxnLoaderInView(bool val) {
     this._isTxnLoaderInView = val;
+    notifyListeners();
+  }
+
+  get txnFunction => this._txnFunction;
+
+  set txnFunction(Future function) {
+    this._txnFunction = function;
     notifyListeners();
   }
 

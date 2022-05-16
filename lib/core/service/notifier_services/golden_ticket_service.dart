@@ -44,17 +44,6 @@ class GoldenTicketService extends ChangeNotifier {
   }
 
   Future<bool> fetchAndVerifyGoldenTicketByID() async {
-    if (gameEndMsgText != null && gameEndMsgText.isNotEmpty) {
-      BaseUtil.openDialog(
-          addToScreenStack: true,
-          isBarrierDismissable: false,
-          hapticVibrate: true,
-          content: ScoreRejectedDialog(
-            contentText: gameEndMsgText,
-          ));
-      gameEndMsgText = null;
-      return false;
-    }
     if (goldenTicketId != null && goldenTicketId.isNotEmpty) {
       currentGT = await _dbModel.getGoldenTicketById(
           _userService.baseUser.uid, goldenTicketId);

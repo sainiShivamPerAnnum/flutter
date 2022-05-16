@@ -318,7 +318,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   fcmTransactionResponseUpdate(fcmDataPayload) async {
     //Stop loader if loading.
     _logger.i("Updating response value.");
-
+    AppState.delegate.appState.txnFunction = null;
     try {
       final DepositFcmResponseModel depositFcmResponseModel =
           DepositFcmResponseModel.fromJson(json.decode(fcmDataPayload));
@@ -470,9 +470,13 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
     if (_status) {
       AppState.delegate.appState.isTxnLoaderInView = true;
-      Future.delayed(Duration(seconds: 30), () async {
+      _logger.d("Txn Timer Function reinitialised and set with 30 secs delay");
+      AppState.delegate.appState.txnFunction = null;
+      AppState.delegate.appState.txnFunction =
+          Future.delayed(Duration(seconds: 30), () async {
         if (AppState.delegate.appState.isTxnLoaderInView == true) {
           AppState.delegate.appState.isTxnLoaderInView = false;
+          AppState.delegate.appState.txnFunction = null;
           showTransactionPendingDialog();
         }
       });
