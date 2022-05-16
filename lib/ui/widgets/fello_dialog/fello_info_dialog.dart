@@ -21,32 +21,37 @@ class FelloInfoDialog extends StatelessWidget {
     return FelloDialog(
       content: customContent != null
           ? customContent
-          : Column(
-              children: [
-                if (asset != null)
-                  SizedBox(height: SizeConfig.screenHeight * 0.04),
-                if (asset != null)
-                  SvgPicture.asset(
-                    asset,
-                    height: SizeConfig.screenHeight * 0.16,
+          : Container(
+              width: SizeConfig.screenWidth,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  if (asset != null)
+                    SizedBox(height: SizeConfig.screenHeight * 0.04),
+                  if (asset != null)
+                    SvgPicture.asset(
+                      asset,
+                      height: SizeConfig.screenHeight * 0.16,
+                    ),
+                  if (asset != null)
+                    SizedBox(
+                      height: SizeConfig.screenHeight * 0.04,
+                    ),
+                  Text(
+                    title,
+                    style: TextStyles.title3.bold,
+                    textAlign: TextAlign.center,
                   ),
-                if (asset != null)
-                  SizedBox(
-                    height: SizeConfig.screenHeight * 0.04,
+                  SizedBox(height: SizeConfig.padding16),
+                  Text(
+                    subtitle,
+                    textAlign: TextAlign.center,
+                    style: TextStyles.body2.colour(Colors.grey),
                   ),
-                Text(
-                  title,
-                  style: TextStyles.title3.bold,
-                ),
-                SizedBox(height: SizeConfig.padding16),
-                Text(
-                  subtitle,
-                  textAlign: TextAlign.center,
-                  style: TextStyles.body2.colour(Colors.grey),
-                ),
-                SizedBox(height: SizeConfig.screenHeight * 0.02),
-                action
-              ],
+                  SizedBox(height: SizeConfig.screenHeight * 0.02),
+                  action
+                ],
+              ),
             ),
       showCrossIcon: showCrossIcon ?? false,
     );

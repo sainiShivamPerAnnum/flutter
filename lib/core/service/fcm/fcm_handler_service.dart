@@ -1,5 +1,6 @@
 import 'package:felloapp/core/constants/fcm_commands_constants.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -61,6 +62,14 @@ class FcmHandler extends ChangeNotifier {
         case FcmCommands.COMMAND_POOL_CLUB_GAME_END:
           _webGameViewModel.handlePoolClubRoundEnd(
               data, Constants.GAME_TYPE_POOLCLUB);
+          break;
+        case FcmCommands.COMMAND_FOOT_BALL_GAME_END:
+          _webGameViewModel.handleFootBallRoundEnd(
+              data, Constants.GAME_TYPE_FOOTBALL);
+          break;
+        case FcmCommands.COMMAND_CANDY_FIESTA_GAME_END:
+          _webGameViewModel.handleCandyFiestaRoundEnd(
+              data, Constants.GAME_TYPE_CANDYFIESTA);
           break;
         case FcmCommands.COMMAND_LOW_BALANCE_ALERT:
           _webGameViewModel.handleLowBalanceAlert();

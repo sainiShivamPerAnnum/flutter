@@ -46,7 +46,7 @@ class DBModel extends ChangeNotifier {
   Lock _lock = new Lock();
   final Log log = new Log("DBModel");
   final logger = locator<CustomLogger>();
-  FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.instance;
+  final FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.instance;
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   bool isDeviceInfoInitiated = false;
   String phoneModel;
@@ -240,6 +240,26 @@ class DBModel extends ChangeNotifier {
       logger.e(e);
     }
     return false;
+  }
+
+  Future<bool> checkIfUserHasUnscratchedGT(String userId) async {
+    try {
+      QuerySnapshot gtSnapshot = await _api.checkForLatestGTStatus(userId);
+      List<GoldenTicket> latestGTs = [];
+      gtSnapshot.docs.forEach((element) {
+        latestGTs.add(GoldenTicket.fromJson(element.data(), element.id));
+      });
+      logger.d("Latest Golden Ticket: ${gtSnapshot.docs.first.data()}");
+      for (int i = 0; i < latestGTs.length; i++) {
+        if (latestGTs[i].redeemedTimestamp == null) {
+          return true;
+        }
+      }
+      return false;
+    } catch (e) {
+      logger.e(e.toString());
+      return false;
+    }
   }
 
   Future<Map<String, dynamic>> getUserNotifications(
@@ -1229,32 +1249,6 @@ class DBModel extends ChangeNotifier {
     }
 
     return felloMilestones;
-  }
-
-  Future<List<EventModel>> getOngoingEvents() async {
-    List<EventModel> events = [];
-    List<EventModel> filteredEvents = [];
-    try {
-      logger.i("CALLING: fetchOngoingEvents");
-      QuerySnapshot snapshot = await _api.fetchOngoingEvents();
-      if (snapshot.docs != null && snapshot.docs.isNotEmpty) {
-        snapshot.docs.forEach((element) {
-          print(element.data());
-          events.add(EventModel.fromMap(element.data()));
-        });
-      }
-    } catch (e) {
-      logger.e(e.toString());
-      events = [];
-    }
-    for (int i = 0; i < events.length; i++) {
-      if (events[i].minVersion == 0 ||
-          int.tryParse(BaseUtil.packageInfo.buildNumber) >=
-              events[i].minVersion) {
-        filteredEvents.add(events[i]);
-      }
-    }
-    return filteredEvents;
   }
 
   Future<EventModel> getSingleEventDetails(String eventType) async {

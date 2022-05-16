@@ -3,6 +3,9 @@ class Constants {
   static const String PAN_AES_KEY = 'felloisquitefun!';
 
   //Game Type
+
+  static const String GAME_TYPE_CANDYFIESTA = "GM_CANDY_FIESTA";
+  static const String GAME_TYPE_FOOTBALL = "GM_FOOTBALL_KICKOFF";
   static const String GAME_TYPE_CRICKET = "GM_CRIC2020";
   static const String GAME_TYPE_TAMBOLA = "GM_TAMBOLA2020";
   static const String GAME_TYPE_POOLCLUB = "GM_POOL_CLUB";
@@ -13,6 +16,8 @@ class Constants {
   static const String HS_DAILY_SAVER = "SAVER_DAILY";
   static const String HS_WEEKLY_SAVER = "SAVER_WEEKLY";
   static const String HS_MONTHLY_SAVER = "SAVER_MONTHLY";
+  static const String BUG_BOUNTY = "BUG_BOUNTY";
+  static const String NEW_FELLO_UI = "NEW_FELLO";
 
   //Collections
   static final String COLN_USERS = "users";

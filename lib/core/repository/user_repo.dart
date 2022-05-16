@@ -7,6 +7,7 @@ import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/custom_logger.dart';
 
@@ -54,11 +55,18 @@ class UserRepository {
         }
       };
 
-      final res = await APIService.instance
-          .postData(_apiPaths.kAddNewUser, body: _body, token: _bearer);
-
+      final res = await APIService.instance.postData(_apiPaths.kAddNewUser,
+          cBaseUrl: FlavorConfig.isDevelopment()
+              ? "https://6w37rw51hj.execute-api.ap-south-1.amazonaws.com"
+              : "",
+          body: _body,
+          token: _bearer);
+      _logger.d(res);
+      final responseData = res['data'];
+      _logger.d(responseData);
       return ApiResponse(
-          code: 200, model: {"flag": res['flag'], "gtId": res['gtId']});
+          code: 200,
+          model: {"flag": responseData['flag'], "gtId": responseData['gtId']});
     } catch (e) {
       _logger.d(e);
       return ApiResponse.withError("User not added to firestore", 400);
