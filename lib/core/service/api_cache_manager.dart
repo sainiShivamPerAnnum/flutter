@@ -10,36 +10,41 @@ class ApiCacheManager {
   final _logger = locator<CustomLogger>();
   SharedPreferences sharedPreferences;
 
-  Future<bool> isApiCacheable(String key) async {
+  Future<bool> _isApiCached(String key) async {
     if (sharedPreferences == null) {
       _logger.i("Creating instance isCacheable for $key");
       sharedPreferences = await SharedPreferences.getInstance();
     }
 
-    _logger.d("isCacheable key: $key");
-    bool cacheExists = sharedPreferences.containsKey(key);
-    if (cacheExists) {
-      _logger.d("isCacheable exists");
-      //cache exists
-      final List<String> cache = sharedPreferences.getStringList(key);
-      final String cacheExpireTimeString = cache[0];
-      final DateTime cacheExpireTime = DateTime.parse(cacheExpireTimeString);
-      _logger.d(
-          "isCacheable : ${cacheExpireTime.compareTo(DateTime.now()) <= 0} $key");
-      if (cacheExpireTime.compareTo(DateTime.now()) <= 0) {
-        // cache expired
-        await sharedPreferences.remove(key);
-        _logger.d("Returning true for $key");
-        return true;
+    try {
+      _logger.d("isCacheable key: $key");
+      bool cacheExists = sharedPreferences.containsKey(key);
+      if (cacheExists) {
+        _logger.d("isCacheable exists");
+        //cache exists
+        final List<String> cache = sharedPreferences.getStringList(key);
+        final String cacheExpireTimeString = cache[0];
+        final DateTime cacheExpireTime = DateTime.parse(cacheExpireTimeString);
+        _logger.d(
+            "isCacheable : ${cacheExpireTime.compareTo(DateTime.now()) <= 0} $key");
+        if (cacheExpireTime.compareTo(DateTime.now()) <= 0) {
+          // cache expired
+          await sharedPreferences.remove(key);
+          _logger.d("Returning true for $key");
+          return false;
+        } else {
+          // cache not expired
+          _logger.d("Returning false for $key");
+          return true;
+        }
       } else {
-        // cache not expired
-        _logger.d("Returning false for $key");
+        //key does not exists, cache can be added.
+        _logger.d("isCacheable does not exists");
         return false;
       }
-    } else {
-      //key does not exists, cache can be added.
-      _logger.d("isCacheable does not exists");
-      return true;
+    } catch (e) {
+      _logger.d("Something went wrong: $e");
+      return false;
     }
   }
 
@@ -47,10 +52,17 @@ class ApiCacheManager {
     if (sharedPreferences == null) {
       sharedPreferences = await SharedPreferences.getInstance();
     }
-    final List<String> cache = sharedPreferences.getStringList(key);
-    final String valueString = cache[1];
-    final Map value = jsonDecode(valueString);
-    return value;
+
+    bool isApiCached = await _isApiCached(key);
+
+    if (isApiCached) {
+      final List<String> cache = sharedPreferences.getStringList(key);
+      final String valueString = cache[1];
+      final Map value = jsonDecode(valueString);
+      return value;
+    } else {
+      return null;
+    }
   }
 
   Future<void> writeApiCache({
@@ -77,6 +89,18 @@ class ApiCacheManager {
       _logger.d("Cache added for $key $isDataAdded");
     } catch (e) {
       _logger.e("Cache not added for $key : $e");
+    }
+  }
+
+  Future<void> clearCacheMemory() async {
+    try {
+      if (sharedPreferences == null) {
+        sharedPreferences = await SharedPreferences.getInstance();
+      }
+      await sharedPreferences.clear();
+      _logger.i("Api cache cleared.");
+    } catch (e) {
+      _logger.d("Something went wrong $e");
     }
   }
 }

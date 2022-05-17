@@ -34,13 +34,17 @@ class WinnersRepository {
       String cacheKey = "winners" + gameType + freq;
       _logger.d("Cachekey: $cacheKey");
 
-      bool isCacheable = await _apiCacheManager.isApiCacheable(cacheKey);
-      _logger.d("isCacheable: $isCacheable");
-
       Map data;
       WinnersModel _responseModel;
 
-      if (isCacheable) {
+      //Caching Mechanism
+      data = await _apiCacheManager.getApiCache(key: cacheKey);
+      _logger.d("Cache with key $cacheKey data: $data");
+
+      if (data != null) {
+        _logger.d("Reading Api cache with key: $cacheKey");
+        _responseModel = WinnersModel.fromMap(data, gameType);
+      } else {
         _logger.d("Adding Api cache with key isCacheable: $cacheKey");
         final QueryDocumentSnapshot _response =
             await _api.getWinnersByGameTypeFreqAndCode(gameType, freq, code);
@@ -53,11 +57,6 @@ class WinnersRepository {
           ttl: Duration(hours: 6),
           value: _responseModel.toJson(),
         );
-      } else {
-        _logger.d("Reading Api cache with key: $cacheKey");
-        data = await _apiCacheManager.getApiCache(key: cacheKey);
-        _logger.d("Cache with key $cacheKey data: $data");
-        _responseModel = WinnersModel.fromMap(data, gameType);
       }
 
       return ApiResponse(model: _responseModel, code: 200);
