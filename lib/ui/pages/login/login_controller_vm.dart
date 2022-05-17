@@ -471,14 +471,9 @@ class LoginControllerViewModel extends BaseModel {
     await dbProvider.initDeviceInfo();
     final String deviceId = dbProvider.deviceId;
     final String platform = dbProvider.platform;
-    
-    final token = await _getBearerToken();
 
     _userRepo.setNewDeviceId(
-        uid: userService.baseUser.uid,
-        deviceId: deviceId,
-        platform: platform,
-        token: token);
+        uid: userService.baseUser.uid, deviceId: deviceId, platform: platform);
 
     appStateProvider.currentAction =
         PageAction(state: PageState.replaceAll, page: RootPageConfig);
