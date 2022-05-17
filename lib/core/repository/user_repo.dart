@@ -175,10 +175,8 @@ class UserRepository {
         "platform": platform,
       };
 
-      await APIService.instance.postData(
-          "https://w7l6dgq5n9.execute-api.ap-south-1.amazonaws.com/dev/setUserDeviceId",
-          body: _body,
-          isAwsSubUrl: true);
+      await APIService.instance
+          .postData("/setUserDeviceId", body: _body, isAwsDeviceUrl: true);
 
       _logger.d("Device added");
     } catch (e) {
