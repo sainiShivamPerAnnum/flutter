@@ -51,10 +51,10 @@ class DBModel extends ChangeNotifier {
   bool isDeviceInfoInitiated = false;
   String phoneModel;
   String softwareVersion;
-  String deviceId;
-  String platform;
 
-  Future<void> initDeviceInfo() async {
+  Future<Map<String, dynamic>> initDeviceInfo() async {
+    String _deviceId;
+    String _platform;
     if (!isDeviceInfoInitiated) {
       try {
         if (Platform.isIOS) {
@@ -62,20 +62,21 @@ class DBModel extends ChangeNotifier {
           iosDeviceInfo = await deviceInfo.iosInfo;
           phoneModel = iosDeviceInfo.model;
           softwareVersion = iosDeviceInfo.systemVersion;
-          deviceId = iosDeviceInfo.identifierForVendor;
-          platform = "ios";
+          _deviceId = iosDeviceInfo.identifierForVendor;
+          _platform = "ios";
           logger.d(
-              "Device Information - \n $phoneModel \n $softwareVersion \n $deviceId");
+              "Device Information - \n $phoneModel \n $softwareVersion \n $_deviceId");
         } else if (Platform.isAndroid) {
           AndroidDeviceInfo androidDeviceInfo = await deviceInfo.androidInfo;
           phoneModel = androidDeviceInfo.model;
           softwareVersion = androidDeviceInfo.version.release;
-          deviceId = androidDeviceInfo.androidId;
-          platform = "android";
+          _deviceId = androidDeviceInfo.androidId;
+          _platform = "android";
           logger.d(
-              "Device Information - \n $phoneModel \n $softwareVersion \n $deviceId");
+              "Device Information - \n $phoneModel \n $softwareVersion \n $_deviceId");
         }
         isDeviceInfoInitiated = true;
+        return {"deviceId": _deviceId, "platform": _platform};
       } catch (e) {
         log.error('Initiating Device Info failed');
       }

@@ -468,9 +468,9 @@ class LoginControllerViewModel extends BaseModel {
       return;
     }
 
-    await dbProvider.initDeviceInfo();
-    final String deviceId = dbProvider.deviceId;
-    final String platform = dbProvider.platform;
+    Map<String, dynamic> response = await dbProvider.initDeviceInfo();
+    final String deviceId = response["deviceId"];
+    final String platform = response["platform"];
 
     _userRepo.setNewDeviceId(
         uid: userService.baseUser.uid, deviceId: deviceId, platform: platform);
