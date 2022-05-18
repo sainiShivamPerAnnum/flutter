@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:device_info/device_info.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/alert_model.dart';
@@ -52,21 +52,34 @@ class DBModel extends ChangeNotifier {
   String phoneModel;
   String softwareVersion;
 
-  Future<void> initDeviceInfo() async {
-    try {
-      if (Platform.isIOS) {
-        IosDeviceInfo iosDeviceInfo;
-        iosDeviceInfo = await deviceInfo.iosInfo;
-        phoneModel = iosDeviceInfo.model;
-        softwareVersion = iosDeviceInfo.systemVersion;
-      } else if (Platform.isAndroid) {
-        AndroidDeviceInfo androidDeviceInfo = await deviceInfo.androidInfo;
-        phoneModel = androidDeviceInfo.model;
-        softwareVersion = androidDeviceInfo.version.release;
+  Future<Map<String, dynamic>> initDeviceInfo() async {
+    String _deviceId;
+    String _platform;
+    if (!isDeviceInfoInitiated) {
+      try {
+        if (Platform.isIOS) {
+          IosDeviceInfo iosDeviceInfo;
+          iosDeviceInfo = await deviceInfo.iosInfo;
+          phoneModel = iosDeviceInfo.model;
+          softwareVersion = iosDeviceInfo.systemVersion;
+          _deviceId = iosDeviceInfo.identifierForVendor;
+          _platform = "ios";
+          logger.d(
+              "Device Information - \n $phoneModel \n $softwareVersion \n $_deviceId");
+        } else if (Platform.isAndroid) {
+          AndroidDeviceInfo androidDeviceInfo = await deviceInfo.androidInfo;
+          phoneModel = androidDeviceInfo.model;
+          softwareVersion = androidDeviceInfo.version.release;
+          _deviceId = androidDeviceInfo.androidId;
+          _platform = "android";
+          logger.d(
+              "Device Information - \n $phoneModel \n $softwareVersion \n $_deviceId");
+        }
+        isDeviceInfoInitiated = true;
+        return {"deviceId": _deviceId, "platform": _platform};
+      } catch (e) {
+        log.error('Initiating Device Info failed');
       }
-      isDeviceInfoInitiated = true;
-    } catch (e) {
-      log.error('Initiating Device Info failed');
     }
   }
 

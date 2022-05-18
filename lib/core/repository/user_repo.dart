@@ -10,6 +10,7 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../service/notifier_services/user_service.dart';
 
@@ -20,6 +21,12 @@ class UserRepository {
   final _apiPaths = locator<ApiPath>();
 
 //Stack overflow condition when we inject _userUid from user service.
+
+  Future<String> _getBearerToken() async {
+    String token = await FirebaseAuth.instance.currentUser.getIdToken();
+    _logger.d("BearerToken: $token");
+    return token;
+  }
 
   Future<ApiResponse<String>> getCustomUserToken(String mobileNo) async {
     try {
@@ -156,6 +163,24 @@ class UserRepository {
     } catch (e) {
       _logger.e(e);
       throw e;
+    }
+  }
+
+  Future<void> setNewDeviceId(
+      {String uid, String deviceId, String platform}) async {
+    try {
+      Map<String, dynamic> _body = {
+        "uid": uid,
+        "deviceId": deviceId,
+        "platform": platform,
+      };
+
+      await APIService.instance
+          .postData("/setUserDeviceId", body: _body, isAwsDeviceUrl: true);
+
+      _logger.d("Device added");
+    } catch (e) {
+      _logger.e(e);
     }
   }
 }
