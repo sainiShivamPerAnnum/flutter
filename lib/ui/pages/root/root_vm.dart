@@ -206,13 +206,11 @@ class RootViewModel extends BaseModel {
               key: CacheManager.CACHE_LAST_UGT_CHECK_TIME, type: CacheType.int);
         await CacheManager.writeCache(
             key: CacheManager.CACHE_LAST_UGT_CHECK_TIME,
-            value: DateTime.now().millisecondsSinceEpoch,
+            value: DateTime.now().weekday,
             type: CacheType.int);
         // _logger.d("Unscratched Golden Ticket Show Count: $count");
         if ((lastWeekday != null) &&
-            (
-                // lastWeekday == 7 ||
-                lastWeekday < DateTime.now().millisecondsSinceEpoch))
+            (lastWeekday == 7 || lastWeekday < DateTime.now().weekday))
           BaseUtil.openDialog(
             addToScreenStack: true,
             hapticVibrate: true,
@@ -220,11 +218,12 @@ class RootViewModel extends BaseModel {
             content: FelloInfoDialog(
               showCrossIcon: true,
               asset: Assets.goldenTicket,
-              title: "Unscratched Golden Tickets",
-              subtitle: "Scratch them now and unlock exciting rewards",
+              title: "Your Golden Tickets are waiting",
+              subtitle:
+                  "You have unopened Golden Tickets available in your rewards wallet",
               action: FelloButtonLg(
                 child: Text(
-                  "Let's go",
+                  "Open Rewards",
                   style: TextStyles.body2.bold.colour(Colors.white),
                 ),
                 onPressed: () {

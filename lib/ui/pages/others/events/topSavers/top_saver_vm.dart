@@ -6,6 +6,7 @@ import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/statistics_repo.dart';
 import 'package:felloapp/core/repository/winners_repo.dart';
+import 'package:felloapp/core/service/campaigns_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -25,6 +26,7 @@ class TopSaverViewModel extends BaseModel {
   final _statsRepo = locator<StatisticsRepository>();
   final _winnersRepo = locator<WinnersRepository>();
   final _winnerService = locator<WinnerService>();
+  final _campaignService = locator<CampaignService>();
 
   // final eventService = EventService();
   //Local variables
@@ -62,7 +64,7 @@ class TopSaverViewModel extends BaseModel {
 
   init(String eventType, bool isGameRedirected) async {
     setState(ViewState.Busy);
-    event = await _dbModel.getSingleEventDetails(eventType);
+    event = await getSingleEventDetails(eventType);
     setState(ViewState.Idle);
     campaignType = event.type;
     // eventService.getEventType(event.type);
@@ -142,6 +144,19 @@ class TopSaverViewModel extends BaseModel {
         }
     }
     notifyListeners();
+  }
+
+  Future<EventModel> getSingleEventDetails(String eventType) async {
+    EventModel event;
+    final response = await _campaignService.getOngoingEvents();
+    if (response.code == 200) {
+      List<EventModel> ongoingEvents = response.model;
+      // ongoingEvents.sort((a, b) => a.position.compareTo(b.position));
+      ongoingEvents.forEach((element) {
+        if (element.type == eventType) event = element;
+      });
+    }
+    return event;
   }
 
   fetchTopSavers() async {

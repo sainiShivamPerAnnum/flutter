@@ -66,8 +66,8 @@ class WebGameViewModel extends BaseModel {
 
       Future.delayed(Duration(seconds: 1), () {
         BaseUtil.showNegativeAlert(
-          'Loading..Please wait..',
-          'This game is heavy and might take some time to load',
+          'Game Loading',
+          'This game might take longer than usual to load',
         );
       });
     }

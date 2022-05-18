@@ -200,7 +200,7 @@ class InstructionBoard extends StatelessWidget {
                       (i) {
                         return Container(
                           padding:
-                              EdgeInsets.only(bottom: SizeConfig.padding16),
+                              EdgeInsets.only(bottom: SizeConfig.padding20),
                           child: Row(
                             children: [
                               CircleAvatar(
