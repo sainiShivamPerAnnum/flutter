@@ -204,13 +204,10 @@ class RootViewModel extends BaseModel {
         if (await CacheManager.exits(CacheManager.CACHE_LAST_UGT_CHECK_TIME))
           lastWeekday = await CacheManager.readCache(
               key: CacheManager.CACHE_LAST_UGT_CHECK_TIME, type: CacheType.int);
-        await CacheManager.writeCache(
-            key: CacheManager.CACHE_LAST_UGT_CHECK_TIME,
-            value: DateTime.now().weekday,
-            type: CacheType.int);
         // _logger.d("Unscratched Golden Ticket Show Count: $count");
-        if ((lastWeekday != null) &&
-            (lastWeekday == 7 || lastWeekday < DateTime.now().weekday))
+        if (lastWeekday == null ||
+            lastWeekday == 7 ||
+            lastWeekday < DateTime.now().weekday)
           BaseUtil.openDialog(
             addToScreenStack: true,
             hapticVibrate: true,
@@ -236,6 +233,10 @@ class RootViewModel extends BaseModel {
               ),
             ),
           );
+        CacheManager.writeCache(
+            key: CacheManager.CACHE_LAST_UGT_CHECK_TIME,
+            value: DateTime.now().weekday,
+            type: CacheType.int);
       }
     }
   }
