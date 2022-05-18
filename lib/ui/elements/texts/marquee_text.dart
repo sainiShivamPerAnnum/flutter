@@ -3,7 +3,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
 class MarqueeText extends StatelessWidget {
-  final List<String> infoList;
+  final List<dynamic> infoList;
   final Color bulletColor, textColor;
   final showBullet;
 
@@ -42,7 +42,7 @@ class MarqueeText extends StatelessWidget {
                     width: 5,
                   ),
                   Text(
-                    infoList[index],
+                    infoList[index].toString(),
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       color: textColor ??

@@ -15,6 +15,7 @@ class EventModel {
   String url; //only for new fello
   String formUrl;
   String todayMatch; //Only for FPL
+  List<dynamic> winners; //only for bug_Bounty and new_Fello
   EventModel(
       {@required this.title,
       @required this.subtitle,
@@ -27,18 +28,21 @@ class EventModel {
       @required this.url,
       @required this.formUrl,
       @required this.instructions,
+      @required this.winners,
       this.todayMatch});
 
-  EventModel copyWith(
-      {String title,
-      String subtitle,
-      String thumbnail,
-      String type,
-      int position,
-      int color,
-      int minVersion,
-      String image,
-      List<dynamic> instructions}) {
+  EventModel copyWith({
+    String title,
+    String subtitle,
+    String thumbnail,
+    String type,
+    int position,
+    int color,
+    int minVersion,
+    String image,
+    List<dynamic> instructions,
+    List<dynamic> winners,
+  }) {
     return EventModel(
         title: title ?? this.title,
         subtitle: subtitle ?? this.subtitle,
@@ -51,7 +55,8 @@ class EventModel {
         instructions: instructions ?? this.instructions,
         formUrl: formUrl ?? this.formUrl,
         url: url ?? this.url,
-        todayMatch: todayMatch ?? this.todayMatch);
+        todayMatch: todayMatch ?? this.todayMatch,
+        winners: winners ?? this.winners);
   }
 
   Map<String, dynamic> toMap() {
@@ -67,7 +72,8 @@ class EventModel {
       'url': url,
       'instructions': instructions,
       'formUrl': formUrl,
-      'todayMatch': todayMatch
+      'todayMatch': todayMatch,
+      'winners': winners
     };
   }
 
@@ -84,7 +90,8 @@ class EventModel {
         formUrl: map['formUrl'] ?? '',
         minVersion: map["minVersion"] ?? 0,
         instructions: map['info'] ?? ["Fello Event Instructions"],
-        todayMatch: map['todayMatch'] ?? "");
+        todayMatch: map['todayMatch'] ?? "",
+        winners: map['winners'] ?? ["ritika won ₹4000"]);
   }
 
   String toJson() => json.encode(toMap());
@@ -94,6 +101,6 @@ class EventModel {
 
   @override
   String toString() {
-    return 'EventModel(title: $title, subtitle: $subtitle, thumbnail: $thumbnail, type: $type, position: $position color: $color image: $image  todayMatch : $todayMatch  minVersion: $minVersion url: $url formUrl: $formUrl)';
+    return 'EventModel(title: $title, subtitle: $subtitle, thumbnail: $thumbnail, type: $type, position: $position color: $color image: $image  todayMatch : $todayMatch  minVersion: $minVersion url: $url formUrl: $formUrl winners: $winners)';
   }
 }

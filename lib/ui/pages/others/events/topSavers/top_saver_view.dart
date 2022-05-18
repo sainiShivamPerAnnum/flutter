@@ -91,6 +91,7 @@ class TopSaverView extends StatelessWidget {
                                     if (!model.showStandingsAndWinners)
                                       WinnersMarqueeStrip(
                                         type: eventType,
+                                        winners: model.event.winners,
                                       ),
                                     if (!model.showStandingsAndWinners)
                                       InstructionBoard(model: model),
