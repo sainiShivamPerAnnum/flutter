@@ -121,7 +121,7 @@ class TopSaverView extends StatelessWidget {
                                   child: FelloButtonLg(
                                     color: Color(0xff495db2),
                                     child: Text(
-                                      "View App",
+                                      "Checkout new version",
                                       style: TextStyles.body2.bold
                                           .colour(Colors.white),
                                     ),
