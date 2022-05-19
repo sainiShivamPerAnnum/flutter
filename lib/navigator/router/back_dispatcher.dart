@@ -38,7 +38,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       isBarrierDismissable: false,
       hapticVibrate: true,
       content: RotatedBox(
-        quarterTurns: isInLandScape ? -1 : 0,
+        quarterTurns: 0,
         child: FelloConfirmationLandScapeDialog(
           asset: Assets.noTickets,
           title: title,
@@ -115,7 +115,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
           AppState.isWebGameLInProgress = false;
           didPopRoute();
           didPopRoute();
-          _webGameViewModel.handlePoolClubSessionEnd();
+          _webGameViewModel.handleGameSessionEnd();
         },
         true,
       );
@@ -127,6 +127,8 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
           AppState.isWebGamePInProgress = false;
           didPopRoute();
           didPopRoute();
+          _webGameViewModel.handleGameSessionEnd(
+              duration: Duration(milliseconds: 500));
         },
         false,
       );

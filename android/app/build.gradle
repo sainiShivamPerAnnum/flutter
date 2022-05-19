@@ -68,12 +68,12 @@ android {
     }
 
     signingConfigs {
-//        debug {
-//            keyAlias keystoreProperties['debugkeyAlias']
-//            keyPassword keystoreProperties['debugkeyPassword']
-//            storeFile keystoreProperties['debugstoreFile'] ? file(keystoreProperties['debugstoreFile']) : null
-//            storePassword keystoreProperties['debugstorePassword']
-//        }
+        // debug {
+        //     keyAlias keystoreProperties['debugkeyAlias']
+        //     keyPassword keystoreProperties['debugkeyPassword']
+        //     storeFile keystoreProperties['debugstoreFile'] ? file(keystoreProperties['debugstoreFile']) : null
+        //     storePassword keystoreProperties['debugstorePassword']
+        // }
 
         // release {
         //     keyAlias keystoreProperties['keyAlias']
@@ -141,4 +141,5 @@ dependencies {
     implementation 'com.facebook.android:facebook-android-sdk:5.11.1'
     implementation 'com.google.firebase:firebase-messaging:20.1.6'
     implementation "com.truecaller.android.sdk:truecaller-sdk:2.6.0"
+    implementation 'com.android.installreferrer:installreferrer:1.1.1'
 }

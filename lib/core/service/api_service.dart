@@ -28,6 +28,11 @@ class APIService implements API {
   String _awssubUrl = FlavorConfig.isProduction()
       ? "https://2z48o79cm5.execute-api.ap-south-1.amazonaws.com/prod/"
       : "https://2je5zoqtuc.execute-api.ap-south-1.amazonaws.com/dev";
+
+  String _awsdeviceUrl = FlavorConfig.isProduction()
+      ? "https://w7l6dgq5n9.execute-api.ap-south-1.amazonaws.com/prod"
+      : "https://w7l6dgq5n9.execute-api.ap-south-1.amazonaws.com/dev";
+
   String _awstxnUrl = FlavorConfig.isProduction()
       ? "https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod"
       : "https://hl4otla349.execute-api.ap-south-1.amazonaws.com/dev";
@@ -43,6 +48,7 @@ class APIService implements API {
     String url, {
     String token,
     Map<String, dynamic> queryParams,
+    String cBaseUrl,
     bool isAwsSubUrl = false,
     bool isAwsTxnUrl = false,
   }) async {
@@ -56,6 +62,8 @@ class APIService implements API {
       String queryString = '';
       String finalPath =
           "${getBaseUrl(isSubUrl: isAwsSubUrl, isTxnUrl: isAwsTxnUrl)}$url";
+      if (cBaseUrl != null) finalPath = cBaseUrl + url;
+      logger.d(finalPath);
       if (queryParams != null) {
         queryString = Uri(queryParameters: queryParams).query;
         finalPath += '?$queryString';
@@ -84,14 +92,14 @@ class APIService implements API {
   }
 
   @override
-  Future<dynamic> postData(
-    String url, {
-    Map<String, dynamic> body,
-    String token,
-    bool isAuthTokenAvailable = true,
-    bool isAwsSubUrl = false,
-    bool isAwsTxnUrl = false,
-  }) async {
+  Future<dynamic> postData(String url,
+      {Map<String, dynamic> body,
+      String cBaseUrl,
+      String token,
+      bool isAuthTokenAvailable = true,
+      bool isAwsSubUrl = false,
+      bool isAwsTxnUrl = false,
+      bool isAwsDeviceUrl = false}) async {
     final HttpMetric metric =
         FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Post);
     await metric.start();
@@ -110,8 +118,13 @@ class APIService implements API {
 
       if (!isAuthTokenAvailable) _headers['x-api-key'] = 'QTp93rVNrUJ9nv7rXDDh';
 
-      String _url =
-          getBaseUrl(isSubUrl: isAwsSubUrl, isTxnUrl: isAwsTxnUrl) + url;
+      String _url = getBaseUrl(
+              isSubUrl: isAwsSubUrl,
+              isTxnUrl: isAwsTxnUrl,
+              isAwsDeviceUrl: isAwsDeviceUrl) +
+          url;
+
+      if (cBaseUrl != null) _url = cBaseUrl + url;
       logger.d("response from $_url");
 
       final response = await http.post(
@@ -274,11 +287,16 @@ class APIService implements API {
     _baseUrl = url;
   }
 
-  getBaseUrl({bool isSubUrl = false, bool isTxnUrl = false}) {
+  getBaseUrl(
+      {bool isSubUrl = false,
+      bool isTxnUrl = false,
+      bool isAwsDeviceUrl = false}) {
     if (isSubUrl)
       return _awssubUrl;
     else if (isTxnUrl)
       return _awstxnUrl;
+    else if (isAwsDeviceUrl)
+      return _awsdeviceUrl;
     else
       return _baseUrl;
   }

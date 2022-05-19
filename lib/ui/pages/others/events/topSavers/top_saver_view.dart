@@ -5,7 +5,6 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/event_model.dart';
-import 'package:felloapp/core/service/events_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -18,14 +17,18 @@ import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/pages/static/web_game_prize_view.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
+import 'package:felloapp/ui/service_elements/winners_prizes/winners_marquee.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 extension TruncateDoubles on double {
   double truncateToDecimalPlaces(int fractionalDigits) =>
@@ -54,37 +57,108 @@ class TopSaverView extends StatelessWidget {
                   title: model.appbarTitle,
                 ),
                 Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(SizeConfig.padding40),
-                        topRight: Radius.circular(SizeConfig.padding40),
+                  child: Stack(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(SizeConfig.padding40),
+                            topRight: Radius.circular(SizeConfig.padding40),
+                          ),
+                          color: UiConstants.scaffoldColor,
+                        ),
+                        width: SizeConfig.screenWidth,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(SizeConfig.padding40),
+                            topRight: Radius.circular(SizeConfig.padding40),
+                          ),
+                          child: model.state == ViewState.Busy
+                              ? Center(
+                                  child: ListLoader(),
+                                )
+                              : ListView(
+                                  physics: ClampingScrollPhysics(),
+                                  padding: EdgeInsets.zero,
+                                  children: [
+                                    Thumbnail(event: model.event),
+                                    if (model.showStandingsAndWinners)
+                                      EventLeaderboard(model: model),
+                                    if (model.showStandingsAndWinners)
+                                      InstructionsTab(event: model.event),
+                                    if (model.showStandingsAndWinners)
+                                      WinnersBoard(model: model),
+                                    if (!model.showStandingsAndWinners)
+                                      WinnersMarqueeStrip(
+                                        type: eventType,
+                                        winners: model.event.winners,
+                                      ),
+                                    if (!model.showStandingsAndWinners)
+                                      InstructionBoard(model: model),
+                                    if (!model.showStandingsAndWinners)
+                                      SizedBox(
+                                        height: SizeConfig.navBarHeight,
+                                      )
+                                  ],
+                                ),
+                        ),
                       ),
-                      color: UiConstants.scaffoldColor,
-                    ),
-                    width: SizeConfig.screenWidth,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(SizeConfig.padding40),
-                        topRight: Radius.circular(SizeConfig.padding40),
-                      ),
-                      child: model.state == ViewState.Busy
-                          ? Center(
-                              child: ListLoader(),
-                            )
-                          : ListView(
-                              physics: ClampingScrollPhysics(),
-                              padding: EdgeInsets.zero,
-                              children: [
-                                Thumbnail(event: model.event),
-                                // if (model.currentParticipants != null)
-                                EventLeaderboard(model: model),
-                                InstructionsTab(event: model.event),
-                                // if (model.pastWinners != null)
-                                WinnersBoard(model: model),
-                              ],
-                            ),
-                    ),
+                      if (!model.showStandingsAndWinners)
+                        Positioned(
+                          bottom: 0,
+                          child: Column(
+                            children: [
+                              Container(
+                                width: SizeConfig.screenWidth,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal:
+                                        SizeConfig.pageHorizontalMargins),
+                                child: FelloButtonLg(
+                                  child: Text(
+                                    "Give Feedback",
+                                    style: TextStyles.body2.bold
+                                        .colour(Colors.white),
+                                  ),
+                                  onPressed: () async {
+                                    String url = model.event.formUrl;
+                                    if (await canLaunch(url)) {
+                                      launch(url);
+                                    }
+                                  },
+                                ),
+                              ),
+                              if (model.event.type == "NEW_FELLO")
+                                Container(
+                                  width: SizeConfig.screenWidth,
+                                  padding: EdgeInsets.only(
+                                    top: SizeConfig.padding16,
+                                    left: SizeConfig.pageHorizontalMargins,
+                                    right: SizeConfig.pageHorizontalMargins,
+                                  ),
+                                  child: FelloButtonLg(
+                                    color: Colors.black54,
+                                    child: Text(
+                                      "View App",
+                                      style: TextStyles.body2.bold
+                                          .colour(Colors.white),
+                                    ),
+                                    onPressed: () async {
+                                      String url = model.event.url;
+                                      if (await canLaunch(url)) {
+                                        launch(url);
+                                      }
+                                    },
+                                  ),
+                                ),
+                              SizedBox(
+                                height: SizeConfig.viewInsets.bottom != 0
+                                    ? 0
+                                    : SizeConfig.pageHorizontalMargins,
+                              )
+                            ],
+                          ),
+                        )
+                    ],
                   ),
                 ),
               ],
@@ -93,6 +167,69 @@ class TopSaverView extends StatelessWidget {
         );
       },
     );
+  }
+}
+
+class InstructionBoard extends StatelessWidget {
+  final TopSaverViewModel model;
+  InstructionBoard({this.model});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(SizeConfig.roundness32),
+        ),
+        padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+        margin: EdgeInsets.only(
+            top: SizeConfig.pageHorizontalMargins,
+            left: SizeConfig.pageHorizontalMargins,
+            right: SizeConfig.pageHorizontalMargins,
+            bottom: SizeConfig.navBarHeight),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Instructions",
+              style: TextStyles.title4.bold,
+            ),
+            SizedBox(height: SizeConfig.padding16),
+            model.event != null
+                ? Column(
+                    children: List.generate(
+                      model.event.instructions.length,
+                      (i) {
+                        return Container(
+                          padding:
+                              EdgeInsets.only(bottom: SizeConfig.padding20),
+                          child: Row(
+                            children: [
+                              CircleAvatar(
+                                backgroundColor: UiConstants.tertiarySolid,
+                                radius: SizeConfig.padding16,
+                                child: Text(
+                                  (i + 1).toString(),
+                                  style: TextStyles.body3.colour(Colors.white),
+                                ),
+                              ),
+                              SizedBox(
+                                width: SizeConfig.padding16,
+                              ),
+                              Expanded(child: Text(model.event.instructions[i]))
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  )
+                : Center(
+                    child: SpinKitWave(
+                      color: UiConstants.primaryColor,
+                      size: SizeConfig.padding32,
+                    ),
+                  ),
+          ],
+        ));
   }
 }
 
@@ -486,7 +623,7 @@ class EventLeaderboard extends StatelessWidget {
                                                     widget: AllParticipantsView(
                                                       participants: model
                                                           .currentParticipants,
-                                                      type: model.saverType,
+                                                      type: model.campaignType,
                                                     ),
                                                     page:
                                                         AllParticipantsViewPageConfig,

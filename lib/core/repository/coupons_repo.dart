@@ -4,6 +4,7 @@ import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/rsa_encryption.dart';
 
@@ -29,7 +30,7 @@ class CouponRepository {
       final String _bearer = await _getBearerToken();
       Map<String, dynamic> _body = {
         "uid": uid,
-        "couponcode": couponcode,
+        "couponCode": couponcode,
         "amt": amount
       };
       _logger.d("initiateUserDeposit:: Pre encryption: $_body");
@@ -39,11 +40,16 @@ class CouponRepository {
       } else {
         _logger.e("Encrypter initialization failed!! exiting method");
       }
-      final res = await APIService.instance
-          .postData(_apiPaths.kFelloCoupons, body: _body, token: _bearer);
-
+      final res = await APIService.instance.postData(
+        _apiPaths.kFelloCoupons,
+        body: _body,
+        token: _bearer,
+        cBaseUrl: FlavorConfig.isDevelopment()
+            ? "https://z8gkfckos5.execute-api.ap-south-1.amazonaws.com"
+            : "https://mwl33qq6sd.execute-api.ap-south-1.amazonaws.com",
+      );
       EligibleCouponResponseModel _reponseModel =
-          EligibleCouponResponseModel.fromMap(res);
+          EligibleCouponResponseModel.fromMap(res["data"]);
 
       return ApiResponse(model: _reponseModel, code: 200);
     } catch (e) {

@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
@@ -6,6 +7,7 @@ import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
@@ -18,14 +20,20 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/golden_ticket_claim.dart';
 import 'package:felloapp/ui/modals_sheets/security_modal_sheet.dart';
 import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
+import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class RootViewModel extends BaseModel {
   final BaseUtil _baseUtil = locator<BaseUtil>();
@@ -183,10 +191,52 @@ class RootViewModel extends BaseModel {
       });
       if (canExecuteStartupNotification &&
           AppState.startupNotifMessage != null) {
+        canExecuteStartupNotification = false;
         _logger
             .d("terminated startup message: ${AppState.startupNotifMessage}");
         _fcmListener.handleMessage(
             AppState.startupNotifMessage, MsgSource.Terminated);
+      }
+
+      if (canExecuteStartupNotification &&
+          _userService.isAnyUnscratchedGTAvailable) {
+        int lastWeekday;
+        if (await CacheManager.exits(CacheManager.CACHE_LAST_UGT_CHECK_TIME))
+          lastWeekday = await CacheManager.readCache(
+              key: CacheManager.CACHE_LAST_UGT_CHECK_TIME, type: CacheType.int);
+        // _logger.d("Unscratched Golden Ticket Show Count: $count");
+        if (lastWeekday == null ||
+            lastWeekday == 7 ||
+            lastWeekday < DateTime.now().weekday)
+          BaseUtil.openDialog(
+            addToScreenStack: true,
+            hapticVibrate: true,
+            isBarrierDismissable: false,
+            content: FelloInfoDialog(
+              showCrossIcon: true,
+              asset: Assets.goldenTicket,
+              title: "Your Golden Tickets are waiting",
+              subtitle:
+                  "You have unopened Golden Tickets available in your rewards wallet",
+              action: FelloButtonLg(
+                child: Text(
+                  "Open Rewards",
+                  style: TextStyles.body2.bold.colour(Colors.white),
+                ),
+                onPressed: () {
+                  AppState.backButtonDispatcher.didPopRoute();
+                  AppState.delegate.appState.currentAction = PageAction(
+                      widget: MyWinningsView(openFirst: true),
+                      page: MyWinnigsPageConfig,
+                      state: PageState.addWidget);
+                },
+              ),
+            ),
+          );
+        CacheManager.writeCache(
+            key: CacheManager.CACHE_LAST_UGT_CHECK_TIME,
+            value: DateTime.now().weekday,
+            type: CacheType.int);
       }
     }
   }

@@ -11,7 +11,7 @@ import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/winners_repo.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/events_service.dart';
+import 'package:felloapp/core/service/campaigns_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
@@ -34,9 +34,8 @@ class WinViewModel extends BaseModel {
   final _lbService = locator<LeaderboardService>();
   final _dbModel = locator<DBModel>();
   final _analyticsService = locator<AnalyticsService>();
-  final eventService = EventService();
+  final _campaignService = locator<CampaignService>();
   Timer _timer;
-
   LocalDBModel _localDBModel = locator<LocalDBModel>();
   bool isWinnersLoading = false;
   WinnersModel _winners;
@@ -173,6 +172,14 @@ class WinViewModel extends BaseModel {
   }
 
   getOngoingEvents() async {
-    ongoingEvents = await _dbModel.getOngoingEvents();
+    final response = await _campaignService.getOngoingEvents();
+    if (response.code == 200) {
+      ongoingEvents = response.model;
+      ongoingEvents.sort((a, b) => a.position.compareTo(b.position));
+      ongoingEvents.forEach((element) {
+        print(element.toString());
+      });
+    } else
+      ongoingEvents = [];
   }
 }

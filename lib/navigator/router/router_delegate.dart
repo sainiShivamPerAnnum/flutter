@@ -214,7 +214,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.THome:
           _addPageData(TambolaHomeView(), THomePageConfig);
           break;
-        case Pages.TGame:
+        case Pages.TGame: //
           _addPageData(TambolaGameView(), TGamePageConfig);
           break;
         case Pages.TPickDraw:
@@ -656,7 +656,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         pageConfiguration = ReferralDetailsPageConfig;
         break;
       case 'tambolaHome':
-        _baseUtil.openTambolaHome();
+        pageConfiguration = THomePageConfig;
+        break;
+      case 'tambolaGame':
+        _baseUtil.openTambolaGame();
         break;
       case 'myWinnings':
         pageConfiguration = MyWinnigsPageConfig;
@@ -688,8 +691,20 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'monthlySaver':
         openTopSaverScreen(Constants.HS_MONTHLY_SAVER);
         break;
+      case 'bugBounty':
+        openTopSaverScreen(Constants.BUG_BOUNTY);
+        break;
+      case 'newFello':
+        openTopSaverScreen(Constants.NEW_FELLO_UI);
+        break;
       case 'FPL':
         openTopSaverScreen('FPL');
+        break;
+      case 'footballHome':
+        openWebGame(Constants.GAME_TYPE_FOOTBALL);
+        break;
+      case 'candyFiestaHome':
+        openWebGame(Constants.GAME_TYPE_CANDYFIESTA);
         break;
       case 'cricketHome':
         openWebGame(Constants.GAME_TYPE_CRICKET);
