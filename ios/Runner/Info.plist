@@ -118,5 +118,7 @@
 	<string>$(WEBENGAGE_LICENSE_CODE)</string>
 	<key>WEGLogLevel</key>
 	<string>VERBOSE</string>
+	<key>UIRequiresFullScreen</key>
+	<true/>
 </dict>
 </plist>
