@@ -108,25 +108,6 @@ class TopSaverView extends StatelessWidget {
                           bottom: 0,
                           child: Column(
                             children: [
-                              Container(
-                                width: SizeConfig.screenWidth,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal:
-                                        SizeConfig.pageHorizontalMargins),
-                                child: FelloButtonLg(
-                                  child: Text(
-                                    "Give Feedback",
-                                    style: TextStyles.body2.bold
-                                        .colour(Colors.white),
-                                  ),
-                                  onPressed: () async {
-                                    String url = model.event.formUrl;
-                                    if (await canLaunch(url)) {
-                                      launch(url);
-                                    }
-                                  },
-                                ),
-                              ),
                               if (model.event.type == "NEW_FELLO")
                                 Container(
                                   width: SizeConfig.screenWidth,
@@ -135,10 +116,12 @@ class TopSaverView extends StatelessWidget {
                                     left: SizeConfig.pageHorizontalMargins,
                                     right: SizeConfig.pageHorizontalMargins,
                                   ),
+                                  margin: EdgeInsets.only(
+                                      bottom: SizeConfig.padding12),
                                   child: FelloButtonLg(
-                                    color: Colors.black54,
+                                    color: Color(0xff495db2),
                                     child: Text(
-                                      "View App",
+                                      "Checkout new version",
                                       style: TextStyles.body2.bold
                                           .colour(Colors.white),
                                     ),
@@ -150,6 +133,25 @@ class TopSaverView extends StatelessWidget {
                                     },
                                   ),
                                 ),
+                              Container(
+                                width: SizeConfig.screenWidth,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal:
+                                        SizeConfig.pageHorizontalMargins),
+                                child: FelloButtonLg(
+                                  child: Text(
+                                    "Share Feedback",
+                                    style: TextStyles.body2.bold
+                                        .colour(Colors.white),
+                                  ),
+                                  onPressed: () async {
+                                    String url = model.event.formUrl;
+                                    if (await canLaunch(url)) {
+                                      launch(url);
+                                    }
+                                  },
+                                ),
+                              ),
                               SizedBox(
                                 height: SizeConfig.viewInsets.bottom != 0
                                     ? 0
@@ -190,7 +192,7 @@ class InstructionBoard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Instructions",
+              "About",
               style: TextStyles.title4.bold,
             ),
             SizedBox(height: SizeConfig.padding16),
