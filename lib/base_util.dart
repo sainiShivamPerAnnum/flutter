@@ -238,11 +238,32 @@ class BaseUtil extends ChangeNotifier {
   }
 
   void setGameDefaults() {
-    gamesList = [
+    List<GameModel> allgamesList = [
+      GameModel(
+        gameName: "Football",
+        pageConfig: THomePageConfig,
+        tag: 'football',
+        route: "/footballHome",
+        code: 'FO',
+        gameCode: Constants.GAME_TYPE_FOOTBALL,
+        shadowColor: Color(0xff4B489E),
+        thumbnailUri: BaseRemoteConfig.remoteConfig
+            .getString(BaseRemoteConfig.FOOTBALL_THUMBNAIL_URI),
+        playCost: BaseRemoteConfig.remoteConfig
+                .getString(BaseRemoteConfig.FOOTBALL_PLAY_COST) ??
+            "10",
+        prizeAmount: BaseRemoteConfig.remoteConfig
+                .getString(BaseRemoteConfig.FOOTBALL_PLAY_PRIZE) ??
+            "50000",
+        analyticEvent: AnalyticsEvents.selectPlayFootball,
+      ),
       GameModel(
         gameName: "Cricket",
         pageConfig: THomePageConfig,
         tag: 'cricket',
+        route: "/cricketHome",
+        code: 'CR',
+        gameCode: Constants.GAME_TYPE_CRICKET,
         shadowColor: Color(0xff4B489E),
         thumbnailUri: BaseRemoteConfig.remoteConfig
             .getString(BaseRemoteConfig.CRICKET_THUMBNAIL_URI),
@@ -258,6 +279,9 @@ class BaseUtil extends ChangeNotifier {
         gameName: "Pool Club",
         pageConfig: THomePageConfig,
         tag: 'poolclub',
+        route: "/poolHome",
+        code: 'PO',
+        gameCode: Constants.GAME_TYPE_POOLCLUB,
         shadowColor: Color(0xff00982B),
         thumbnailUri: BaseRemoteConfig.remoteConfig
             .getString(BaseRemoteConfig.POOLCLUB_THUMBNAIL_URI),
@@ -270,9 +294,30 @@ class BaseUtil extends ChangeNotifier {
         analyticEvent: AnalyticsEvents.selectPlayPoolClub,
       ),
       GameModel(
+        gameName: "Candy Fiesta",
+        pageConfig: THomePageConfig,
+        tag: 'candyFiesta',
+        route: "/candyFiestaHome",
+        code: 'CA',
+        gameCode: Constants.GAME_TYPE_CANDYFIESTA,
+        shadowColor: Color(0xff4B489E),
+        thumbnailUri: BaseRemoteConfig.remoteConfig
+            .getString(BaseRemoteConfig.CANDYFIESTA_THUMBNAIL_URI),
+        playCost: BaseRemoteConfig.remoteConfig
+                .getString(BaseRemoteConfig.CANDYFIESTA_PLAY_COST) ??
+            "10",
+        prizeAmount: BaseRemoteConfig.remoteConfig
+                .getString(BaseRemoteConfig.CANDYFIESTA_PLAY_PRIZE) ??
+            "50000",
+        analyticEvent: AnalyticsEvents.selectCandyFiesta,
+      ),
+      GameModel(
         gameName: "Tambola",
         pageConfig: THomePageConfig,
         tag: 'tambola',
+        route: "/tambolaHome",
+        code: 'TA',
+        gameCode: Constants.GAME_TYPE_TAMBOLA,
         shadowColor: Color(0xff1D173D),
         thumbnailUri: BaseRemoteConfig.remoteConfig
             .getString(BaseRemoteConfig.TAMBOLA_THUMBNAIL_URI),
@@ -285,6 +330,17 @@ class BaseUtil extends ChangeNotifier {
         analyticEvent: AnalyticsEvents.selectPlayTambola,
       ),
     ];
+    //Arrange Games according to the position defined in baseremoteconfig.
+    List<String> gamePosition = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.GAME_POSITION)
+        .split('-');
+    logger.d("Games List: $gamePosition");
+    gamesList = [];
+    gamePosition.forEach((code) {
+      gamesList.add(
+        allgamesList.firstWhere((game) => game.code == code),
+      );
+    });
   }
 
   Future<bool> isUnreadFreshchatSupportMessages() async {
@@ -649,7 +705,7 @@ class BaseUtil extends ChangeNotifier {
     }
   }
 
-  void openTambolaHome() async {
+  void openTambolaGame() async {
     if (await getDrawStatus()) {
       await _lModel.saveDailyPicksAnimStatus(DateTime.now().weekday).then(
             (value) =>

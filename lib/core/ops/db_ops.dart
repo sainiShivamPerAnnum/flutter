@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:device_info/device_info.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/alert_model.dart';
@@ -46,27 +46,40 @@ class DBModel extends ChangeNotifier {
   Lock _lock = new Lock();
   final Log log = new Log("DBModel");
   final logger = locator<CustomLogger>();
-  FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.instance;
+  final FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.instance;
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   bool isDeviceInfoInitiated = false;
   String phoneModel;
   String softwareVersion;
 
-  Future<void> initDeviceInfo() async {
-    try {
-      if (Platform.isIOS) {
-        IosDeviceInfo iosDeviceInfo;
-        iosDeviceInfo = await deviceInfo.iosInfo;
-        phoneModel = iosDeviceInfo.model;
-        softwareVersion = iosDeviceInfo.systemVersion;
-      } else if (Platform.isAndroid) {
-        AndroidDeviceInfo androidDeviceInfo = await deviceInfo.androidInfo;
-        phoneModel = androidDeviceInfo.model;
-        softwareVersion = androidDeviceInfo.version.release;
+  Future<Map<String, dynamic>> initDeviceInfo() async {
+    String _deviceId;
+    String _platform;
+    if (!isDeviceInfoInitiated) {
+      try {
+        if (Platform.isIOS) {
+          IosDeviceInfo iosDeviceInfo;
+          iosDeviceInfo = await deviceInfo.iosInfo;
+          phoneModel = iosDeviceInfo.model;
+          softwareVersion = iosDeviceInfo.systemVersion;
+          _deviceId = iosDeviceInfo.identifierForVendor;
+          _platform = "ios";
+          logger.d(
+              "Device Information - \n $phoneModel \n $softwareVersion \n $_deviceId");
+        } else if (Platform.isAndroid) {
+          AndroidDeviceInfo androidDeviceInfo = await deviceInfo.androidInfo;
+          phoneModel = androidDeviceInfo.model;
+          softwareVersion = androidDeviceInfo.version.release;
+          _deviceId = androidDeviceInfo.androidId;
+          _platform = "android";
+          logger.d(
+              "Device Information - \n $phoneModel \n $softwareVersion \n $_deviceId");
+        }
+        isDeviceInfoInitiated = true;
+        return {"deviceId": _deviceId, "platform": _platform};
+      } catch (e) {
+        log.error('Initiating Device Info failed');
       }
-      isDeviceInfoInitiated = true;
-    } catch (e) {
-      log.error('Initiating Device Info failed');
     }
   }
 
@@ -240,6 +253,26 @@ class DBModel extends ChangeNotifier {
       logger.e(e);
     }
     return false;
+  }
+
+  Future<bool> checkIfUserHasUnscratchedGT(String userId) async {
+    try {
+      QuerySnapshot gtSnapshot = await _api.checkForLatestGTStatus(userId);
+      List<GoldenTicket> latestGTs = [];
+      gtSnapshot.docs.forEach((element) {
+        latestGTs.add(GoldenTicket.fromJson(element.data(), element.id));
+      });
+      logger.d("Latest Golden Ticket: ${gtSnapshot.docs.first.data()}");
+      for (int i = 0; i < latestGTs.length; i++) {
+        if (latestGTs[i].redeemedTimestamp == null) {
+          return true;
+        }
+      }
+      return false;
+    } catch (e) {
+      logger.e(e.toString());
+      return false;
+    }
   }
 
   Future<Map<String, dynamic>> getUserNotifications(
@@ -1229,32 +1262,6 @@ class DBModel extends ChangeNotifier {
     }
 
     return felloMilestones;
-  }
-
-  Future<List<EventModel>> getOngoingEvents() async {
-    List<EventModel> events = [];
-    List<EventModel> filteredEvents = [];
-    try {
-      logger.i("CALLING: fetchOngoingEvents");
-      QuerySnapshot snapshot = await _api.fetchOngoingEvents();
-      if (snapshot.docs != null && snapshot.docs.isNotEmpty) {
-        snapshot.docs.forEach((element) {
-          print(element.data());
-          events.add(EventModel.fromMap(element.data()));
-        });
-      }
-    } catch (e) {
-      logger.e(e.toString());
-      events = [];
-    }
-    for (int i = 0; i < events.length; i++) {
-      if (events[i].minVersion == 0 ||
-          int.tryParse(BaseUtil.packageInfo.buildNumber) >=
-              events[i].minVersion) {
-        filteredEvents.add(events[i]);
-      }
-    }
-    return filteredEvents;
   }
 
   Future<EventModel> getSingleEventDetails(String eventType) async {

@@ -38,6 +38,9 @@ class BaseRemoteConfig {
   static const Map<String, String> _PLAY_SCREEN_FIRST = {
     'play_screen_first': 'true'
   };
+  static const Map<String, String> _CANDY_FIESTA_ONLINE = {
+    'candy_fiesta_online': 'false'
+  };
   static const Map<String, String> _TAMBOLA_WIN_CORNER = {
     'tambola_win_corner': '1000'
   };
@@ -101,11 +104,24 @@ class BaseRemoteConfig {
   static const Map<String, String> _TAMBOLA_PLAY_PRIZE = {
     'tambola_play_prize': '25,000'
   };
+  static const Map<String, String> _FOOTBALL_PLAY_COST = {
+    'football_play_cost': '10'
+  };
   static const Map<String, String> _CRICKET_PLAY_COST = {
     'cricket_play_cost': '10'
   };
   static const Map<String, String> _CRICKET_PLAY_PRIZE = {
     'cricket_play_prize': '25,000'
+  };
+  static const Map<String, String> _FOOTBALL_PLAY_PRIZE = {
+    'football_play_prize': '25,000'
+  };
+
+  static const Map<String, String> _CANDYFIESTA_PLAY_COST = {
+    'candyfiesta_play_cost': '10'
+  };
+  static const Map<String, String> _CANDYFIESTA_PLAY_PRIZE = {
+    'candyfiesta_play_prize': '25,000'
   };
 
   static const Map<String, String> _POOLCLUB_PLAY_COST = {
@@ -113,6 +129,29 @@ class BaseRemoteConfig {
   };
   static const Map<String, String> _POOLCLUB_PLAY_PRIZE = {
     'poolclub_play_prize': '25,000'
+  };
+
+  static const Map<String, String> _CRICKET_GAME_URI = {
+    'cricket_game_url': 'https://prod.freakx.in/fello/cricket-2021-V2/'
+  };
+
+  static const Map<String, String> _FOOTBALL_GAME_URI = {
+    'football_game_url': 'https://fl-games-football-kickoff.onrender.com/'
+  };
+  static const Map<String, String> _CANDYFIESTA_GAME_URI = {
+    'candyfiesta_game_url': 'https://fl-games-candy-fiesta.onrender.com/'
+  };
+  static const Map<String, String> _POOLCLUB_GAME_URI = {
+    'poolclub_game_url':
+        'https://d2qfyj2eqvh06a.cloudfront.net/pool-club/index.html'
+  };
+  static const Map<String, String> _FOOTBALL_THUMBNAIL_URI = {
+    'football_thumbnail':
+        'https://img.freepik.com/free-vector/gradient-football-field-background_52683-67789.jpg?t=st=1651147964~exp=1651148564~hmac=4d7297e0201d5f1513486c39fb6b0d0beeb2b5abbe8051ded63454464e438605&w=1800'
+  };
+  static const Map<String, String> _CANDYFIESTA_THUMBNAIL_URI = {
+    'candyfiesta_thumbnail':
+        'https://firebasestorage.googleapis.com/v0/b/fello-dev-station.appspot.com/o/games%2FCandy%20Fiesta-Thumbnail.jpg?alt=media&token=19bfc19e-2f1d-457a-8350-dec9674a8269'
   };
   static const Map<String, String> _CRICKET_THUMBNAIL_URI = {
     'cricket_thumbnail':
@@ -126,6 +165,10 @@ class BaseRemoteConfig {
   static const Map<String, String> _POOLCLUB_THUMBNAIL_URI = {
     'poolclub_thumbnail':
         'https://firebasestorage.googleapis.com/v0/b/fello-dev-station.appspot.com/o/test%2Fpoolclub.png?alt=media&token=23403ec7-1c55-4ce7-827e-045ad6d059de'
+  };
+
+  static const Map<String, String> _GAME_POSITION = {
+    'games_position': "FO-CR-PO-CA-TA"
   };
   static const Map<String, String> _MIN_WITHDRAWABLE_PRIZE = {
     'min_withdrawable_prize': '100'
@@ -176,19 +219,31 @@ class BaseRemoteConfig {
     ..._OCT_FEST_MIN_DEPOSIT,
     ..._TAMBOLA_PLAY_COST,
     ..._TAMBOLA_PLAY_PRIZE,
+    ..._FOOTBALL_PLAY_COST,
     ..._CRICKET_PLAY_COST,
     ..._CRICKET_PLAY_PRIZE,
+    ..._FOOTBALL_PLAY_PRIZE,
     ..._POOLCLUB_PLAY_COST,
     ..._POOLCLUB_PLAY_PRIZE,
+    ..._CANDYFIESTA_PLAY_COST,
+    ..._CANDYFIESTA_PLAY_PRIZE,
+    ..._CANDY_FIESTA_ONLINE,
+    ..._FOOTBALL_THUMBNAIL_URI,
     ..._CRICKET_THUMBNAIL_URI,
     ..._TAMBOLA_THUMBNAIL_URI,
     ..._POOLCLUB_THUMBNAIL_URI,
+    ..._CANDYFIESTA_THUMBNAIL_URI,
+    ..._CRICKET_GAME_URI,
+    ..._FOOTBALL_GAME_URI,
+    ..._CANDYFIESTA_GAME_URI,
+    ..._POOLCLUB_GAME_URI,
     ..._MIN_WITHDRAWABLE_PRIZE,
     ..._GAME_TAMBOLA_ANNOUNCEMENT,
     ..._GAME_CRICKET_ANNOUNCEMENT,
     ..._GAME_CRICKET_FPL_ANNOUNCEMENT,
     ..._AMZ_VOUCHER_REDEMPTION,
-    ..._APP_SHARE_MSG
+    ..._APP_SHARE_MSG,
+    ..._GAME_POSITION
   };
 
   static Future<bool> init() async {
@@ -289,7 +344,18 @@ class BaseRemoteConfig {
 
   static String get TAMBOLA_PLAY_PRIZE => _TAMBOLA_PLAY_PRIZE.keys.first;
 
+  static String get FOOTBALL_PLAY_COST => _FOOTBALL_PLAY_COST.keys.first;
+
+  static String get CANDYFIESTA_PLAY_PRIZE =>
+      _CANDYFIESTA_PLAY_PRIZE.keys.first;
+
+  static String get CANDY_FIESTA_ONLINE => _CANDY_FIESTA_ONLINE.keys.first;
+
+  static String get CANDYFIESTA_PLAY_COST => _CANDYFIESTA_PLAY_COST.keys.first;
+
   static String get CRICKET_PLAY_COST => _CRICKET_PLAY_COST.keys.first;
+
+  static String get FOOTBALL_PLAY_PRIZE => _FOOTBALL_PLAY_PRIZE.keys.first;
 
   static String get CRICKET_PLAY_PRIZE => _CRICKET_PLAY_PRIZE.keys.first;
 
@@ -297,9 +363,20 @@ class BaseRemoteConfig {
 
   static String get POOLCLUB_PLAY_PRIZE => _POOLCLUB_PLAY_PRIZE.keys.first;
 
+  static String get CRICKET_GAME_URI => _CRICKET_GAME_URI.keys.first;
+  static String get FOOTBALL_GAME_URI => _FOOTBALL_GAME_URI.keys.first;
+  static String get CANDYFIESTA_GAME_URI => _CANDYFIESTA_GAME_URI.keys.first;
+  static String get POOLCLUB_GAME_URI => _POOLCLUB_GAME_URI.keys.first;
+
+  static String get FOOTBALL_THUMBNAIL_URI =>
+      _FOOTBALL_THUMBNAIL_URI.keys.first;
+
   static String get CRICKET_THUMBNAIL_URI => _CRICKET_THUMBNAIL_URI.keys.first;
 
   static String get TAMBOLA_THUMBNAIL_URI => _TAMBOLA_THUMBNAIL_URI.keys.first;
+
+  static String get CANDYFIESTA_THUMBNAIL_URI =>
+      _CANDYFIESTA_THUMBNAIL_URI.keys.first;
 
   static String get POOLCLUB_THUMBNAIL_URI =>
       _POOLCLUB_THUMBNAIL_URI.keys.first;
@@ -319,4 +396,6 @@ class BaseRemoteConfig {
       _GAME_CRICKET_FPL_ANNOUNCEMENT.keys.first;
 
   static String get APP_SHARE_MSG => _APP_SHARE_MSG.keys.first;
+
+  static String get GAME_POSITION => _GAME_POSITION.keys.first;
 }

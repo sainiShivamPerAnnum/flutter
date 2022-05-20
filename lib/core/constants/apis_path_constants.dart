@@ -31,7 +31,7 @@ class ApiPath {
   get kGetGoldRates => "/augmontOps/$stage/api/rates";
 
   //User Ops Apis
-  get kAddNewUser => "/userOps/api/v3/newuser";
+  get kAddNewUser => "/$stage/api/v3/newuser";
   get kUpdateUserAppflyer => "/userOps/api/v3/user/appflyer";
   get kAmountTransfer => "/userOps/api/v3/accountTransfer";
   get kVerifyTransfer => "/userOps/api/v3/verifyTransfer";
@@ -43,9 +43,12 @@ class ApiPath {
   get kRedeemGtReward => "/gtRewardsOps/$stage/v2/api/redeemGtReward";
 
   //Fello Coupons
-  get kFelloCoupons => "/felloCoupons/$stage/api/eligible";
+  get kFelloCoupons => "/$stage/eligible";
+  //"/felloCoupons/$stage/api/eligible";
 
-  //PaytmApis
+
+  //DeviceInfo
+  get kSetUserDeviceId =>  "/setUserDeviceId";
   static const kCreatePaytmTransaction = "/transaction";
   get kCreateSubscription => "/subscription";
   get kPauseSubscription => "/subscription/pause";
@@ -54,4 +57,5 @@ class ApiPath {
   get kProcessSubscription => "/process";
   get kActiveSubscription => "/subscription";
   get kNextDebitDate => "/debit";
+  get kOngoingCampaigns => "/$stage/campaigns";
 }

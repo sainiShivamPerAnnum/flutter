@@ -14,8 +14,7 @@ class CustomLogger {
   IV iv;
   Key aesKey;
   static const String _chars = 'abcdef1234567890';
-  static bool isEnc = //FlavorConfig.isProduction() ??
-      false;
+  static bool isEnc = FlavorConfig.isProduction() ?? false;
 
   final LogFilter _filter;
   final LogPrinter _printer;

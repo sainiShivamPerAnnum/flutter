@@ -10,6 +10,9 @@ class GameModel {
   final String prizeAmount;
   final String analyticEvent;
   final Color shadowColor;
+  final String route;
+  final String gameCode;
+  final String code;
 
   GameModel({
     this.gameName,
@@ -17,8 +20,11 @@ class GameModel {
     this.tag,
     this.thumbnailUri,
     this.playCost,
+    this.route,
+    this.gameCode,
     this.prizeAmount,
     this.shadowColor,
+    this.code,
     @required this.analyticEvent,
   });
 }
