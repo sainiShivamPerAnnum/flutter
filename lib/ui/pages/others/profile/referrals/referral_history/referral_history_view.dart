@@ -3,14 +3,14 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
-import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
+import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -42,28 +42,6 @@ class _ReferralHistoryViewState extends State<ReferralHistoryView> {
       dbProvider.getUserReferrals(_userService.baseUser.uid).then((refList) {
         baseProvider.referralsFetched = true;
         baseProvider.userReferralsList = refList ?? [];
-
-        ///check if user referral count is correct in the user object
-        ///if not, update it
-        if (baseProvider.userReferralsList != null &&
-            baseProvider.userReferralsList.length > 0) {
-          int _n = baseProvider.userReferralsList.length;
-          int _t = 0;
-          if (baseProvider.myReferralInfo != null &&
-              baseProvider.myReferralInfo.refCount != null &&
-              baseProvider.myReferralInfo.refCount > 0) {
-            _t = baseProvider.myReferralInfo.refCount;
-          }
-          if (baseProvider.myReferralInfo != null && _t < _n) {
-            baseProvider.myReferralInfo.refCount = _n;
-            if (_n != null && _n > 0)
-              _analyticsService.track(
-                  eventName: AnalyticsEvents.referralCount,
-                  properties: {"count": _n});
-            dbProvider.updateUserReferralCount(_userService.baseUser.uid,
-                baseProvider.myReferralInfo); //await not required
-          }
-        }
         setState(() {});
       });
     }

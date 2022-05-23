@@ -3,17 +3,22 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
-import 'package:felloapp/core/service/golden_ticket_service.dart';
-import 'package:felloapp/core/service/user_coin_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/hero_router.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_view.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/rsa_encryption.dart';
+import 'package:flutter/material.dart';
 
 class GoldenTicketsViewModel extends BaseModel {
   //Dependencies
@@ -34,6 +39,7 @@ class GoldenTicketsViewModel extends BaseModel {
   Query _query;
   bool _isRequesting = false;
   bool _isFinish = false;
+  bool showFirst = true;
 
   //Getters and Setters
   List<GoldenTicket> get arrangedGoldenTicketList =>
@@ -48,13 +54,13 @@ class GoldenTicketsViewModel extends BaseModel {
       this._arrangedGoldenTicketList = value;
 
 // Core Methods
-  void init() {
+  Future<void> init(bool openFirst) async {
     _query = _db
         .collection(Constants.COLN_USERS)
         .doc(_userService.baseUser.uid)
         .collection(Constants.SUBCOLN_USER_REWARDS)
         .orderBy('timestamp', descending: true);
-    getGoldenTickets();
+    await getGoldenTickets();
   }
 
   void finish() {
@@ -71,37 +77,11 @@ class GoldenTicketsViewModel extends BaseModel {
   Future<void> getGoldenTickets() async {
     _query.snapshots().listen((data) => onChangeData(data.docChanges),
         onError: (error, stacktrace) => onError(error, stacktrace));
-    requestMoreData();
+    await requestMoreData();
   }
 
   void onError(Object error, StackTrace stacktrace) {
     _logger.e(error, stacktrace);
-  }
-
-  Future<bool> redeemTicket(GoldenTicket ticket) async {
-    Map<String, dynamic> _body = {
-      "uid": _userService.baseUser.uid,
-      "gtId": ticket.gtId
-    };
-    _logger.d("initiateUserDeposit:: Pre encryption: $_body");
-    if (await _rsaEncryption.init()) {
-      _body = _rsaEncryption.encryptRequestBody(_body);
-      _logger.d("initiateUserDeposit:: Post encryption: ${_body.toString()}");
-    } else {
-      _logger.e("Encrypter initialization failed!! exiting method");
-    }
-    try {
-      final String _bearer = await _getBearerToken();
-      final _apiResponse = await APIService.instance
-          .postData(_apiPaths.kRedeemGtReward, token: _bearer, body: _body);
-      _logger.d(_apiResponse.toString());
-      _userService.getUserFundWalletData();
-      _userCoinService.getUserCoinBalance();
-      return true;
-    } catch (e) {
-      _logger.e(e);
-      return false;
-    }
   }
 
 //Stream Methods
@@ -184,14 +164,8 @@ class GoldenTicketsViewModel extends BaseModel {
   }
 
 //Helper methods
-  Future<String> _getBearerToken() async {
-    String token = await _userService.firebaseUser.getIdToken();
-    _logger.d(token);
 
-    return token;
-  }
-
-  arrangeGoldenTickets(List<DocumentSnapshot> data) {
+  arrangeGoldenTickets(List<DocumentSnapshot> data, openFirst) {
     goldenTicketList =
         data.map((e) => GoldenTicket.fromJson(e.data(), e.id)).toList();
     arrangedGoldenTicketList = [];
@@ -207,6 +181,21 @@ class GoldenTicketsViewModel extends BaseModel {
       }
     });
     _gtService.activeGoldenTickets = goldenTicketList;
+    if (openFirst && showFirst) {
+      showFirst = false;
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        AppState.screenStack.add(ScreenItem.dialog);
+        Navigator.of(AppState.delegate.navigatorKey.currentContext).push(
+          HeroDialogRoute(
+            builder: (context) {
+              return GTDetailedView(
+                ticket: arrangedGoldenTicketList[0],
+              );
+            },
+          ),
+        );
+      });
+    }
     // CODE FOR TICKET DISTINCTION - USE IF REQUIRED
     // final ids = Set();
     // arrangedGoldenTicketList.retainWhere((x) => ids.add(x.gtId));

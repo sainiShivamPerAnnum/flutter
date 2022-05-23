@@ -4,7 +4,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -155,8 +155,10 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(locale.saveGoldBalancelabel,
-                                    style: TextStyles.title5.light),
+                                Text(
+                                  locale.saveGoldBalancelabel,
+                                  style: TextStyles.title5.light,
+                                ),
                                 PropertyChangeConsumer<UserService,
                                     UserServiceProperties>(
                                   properties: [

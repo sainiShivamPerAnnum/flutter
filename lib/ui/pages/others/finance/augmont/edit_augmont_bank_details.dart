@@ -8,7 +8,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/signzy_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/augmont_confirm_register_dialog.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
@@ -19,7 +19,7 @@ import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -550,9 +550,15 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                 baseProvider.augmontDetail.ifsc = pBankIfsc.trim();
                 baseProvider.updateAugmontDetails(pBankHolderName.trim(),
                     pBankAccNo.trim(), pBankIfsc.trim());
+                // dbProvider
+                //     .updateUserAugmontDetails(
+                //         _userService.baseUser.uid, baseProvider.augmontDetail)
                 dbProvider
-                    .updateUserAugmontDetails(
-                        _userService.baseUser.uid, baseProvider.augmontDetail)
+                    .updateAugmontBankDetails(
+                        _userService.baseUser.uid,
+                        baseProvider.augmontDetail.bankAccNo,
+                        baseProvider.augmontDetail.ifsc,
+                        baseProvider.augmontDetail.bankHolderName)
                     .then((flag) {
                   if (widget.isWithdrawFlow) {
                     isEditAugmontBankDetailInProgress = false;
@@ -568,8 +574,8 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                       AppState.backButtonDispatcher.didPopRoute();
                     } else {
                       BaseUtil.showNegativeAlert(
-                        'Failed',
-                        'Your details could not be updated at the moment. Please try again',
+                        'Details could not be updated at the moment',
+                        'Please try again',
                       );
                     }
                   }

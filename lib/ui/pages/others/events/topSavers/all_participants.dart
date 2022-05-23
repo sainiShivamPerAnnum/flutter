@@ -1,7 +1,8 @@
 import 'package:felloapp/core/model/top_saver_model.dart';
-import 'package:felloapp/core/service/events_service.dart';
+import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -9,22 +10,22 @@ import 'package:flutter/material.dart';
 
 class AllParticipantsView extends StatelessWidget {
   final List<TopSavers> participants;
-  final SaverType type;
+  final String type;
   AllParticipantsView({this.participants, this.type});
   bool isInteger(num value) => value is int || value == value.roundToDouble();
 
   getItemCount() {
-    if (type == SaverType.DAILY) {
+    if (type == Constants.HS_DAILY_SAVER) {
       if (participants.length < 30)
         return participants.length;
       else
         return 30;
-    } else if (type == SaverType.WEEKLY) {
+    } else if (type == Constants.HS_WEEKLY_SAVER) {
       if (participants.length < 50)
         return participants.length;
       else
         return 50;
-    } else if (type == SaverType.MONTHLY) {
+    } else if (type == Constants.HS_MONTHLY_SAVER) {
       if (participants.length < 80)
         return participants.length;
       else
@@ -88,7 +89,7 @@ class AllParticipantsView extends StatelessWidget {
                           trailing: RichText(
                             text: TextSpan(
                                 text:
-                                    "${isInteger(participants[i].score) ? participants[i].score.toInt() : participants[i].score.toStringAsFixed(2)}",
+                                    "${isInteger(participants[i].score) ? participants[i].score.toInt() : participants[i].score.truncateToDecimalPlaces(3)}",
                                 style: TextStyles.body2.bold.colour(UiConstants.primaryColor),
                                 children: [
                                   TextSpan(

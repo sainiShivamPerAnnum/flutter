@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_analytics.dart';
+import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -11,12 +11,12 @@ import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
-import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
-import 'package:felloapp/core/service/golden_ticket_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -181,13 +181,21 @@ class LoginControllerViewModel extends BaseModel {
       case NameInputScreen.index:
         {
           if (_nameScreenKey.currentState.model.formKey.currentState
-                  .validate() &&
-              _nameScreenKey.currentState.model.isValidDate()) {
-            if (!_nameScreenKey.currentState.model.isEmailEntered) {
-              BaseUtil.showNegativeAlert(
-                  'Email field empty', 'Please enter a valid email');
-              return false;
-            }
+              .validate()) {
+            if (!_nameScreenKey.currentState.model.validateFields()) return;
+            // if (!_nameScreenKey.currentState.model.isEmailEntered ||
+            //     _nameScreenKey.currentState.model.emailFieldController ==
+            //         null ||
+            //     _nameScreenKey
+            //         .currentState.model.emailFieldController.text.isEmpty) {
+            //   BaseUtil.showNegativeAlert(
+            //       'Email field empty', 'Please enter a valid email');
+            //   return false;
+            // }
+
+            _analyticsService.track(
+              eventName: AnalyticsEvents.signupProfile,
+            );
 
             if (_nameScreenKey.currentState.model.selectedDate == null) {
               BaseUtil.showNegativeAlert(
@@ -203,14 +211,14 @@ class LoginControllerViewModel extends BaseModel {
               );
               return false;
             }
-            if (_nameScreenKey.currentState.gen == null) {
+            if (_nameScreenKey.currentState.model.gen == null) {
               BaseUtil.showNegativeAlert(
                 'Invalid details',
                 'Please enter all the fields',
               );
               return false;
             }
-            if (_nameScreenKey.currentState.state == null) {
+            if (_nameScreenKey.currentState.model.stateChosenValue == null) {
               BaseUtil.showNegativeAlert(
                 'Invalid details',
                 'Please enter your state of residence',
@@ -244,7 +252,7 @@ class LoginControllerViewModel extends BaseModel {
 
             userService.baseUser.dob = dob.trim();
 
-            int gender = _nameScreenKey.currentState.gen;
+            int gender = _nameScreenKey.currentState.model.gen;
             if (gender != null) {
               if (gender == 1) {
                 userService.baseUser.gender = "M";
@@ -254,7 +262,7 @@ class LoginControllerViewModel extends BaseModel {
                 userService.baseUser.gender = "O";
             }
 
-            cstate = _nameScreenKey.currentState.state;
+            cstate = _nameScreenKey.currentState.model.stateChosenValue;
 
             await CacheManager.writeCache(
                 key: "UserAugmontState", value: cstate, type: CacheType.string);
@@ -270,10 +278,11 @@ class LoginControllerViewModel extends BaseModel {
                 .animateToPage(Username.index,
                     duration: Duration(milliseconds: 500),
                     curve: Curves.easeInToLinear)
-                .then((value) =>
-                    _usernameKey.currentState.focusNode.requestFocus());
-
-            _nameScreenKey.currentState.setClearStateValue();
+                .then((value) {
+              Future.delayed(Duration(seconds: 1), () {
+                _usernameKey.currentState.focusNode.requestFocus();
+              });
+            });
           }
           break;
         }
@@ -299,54 +308,51 @@ class LoginControllerViewModel extends BaseModel {
               if (await dbProvider.checkIfUsernameIsAvailable(username)) {
                 _usernameKey.currentState.model.enabled = false;
                 notifyListeners();
-                bool res = await dbProvider.setUsername(
-                    username, userService.firebaseUser.uid);
-                if (res) {
-                  userService.baseUser.username = username;
-                  bool flag = false;
-                  logger.d(userService.baseUser.toJson().toString());
 
-                  try {
-                    final token = await _getBearerToken();
-                    userService.baseUser.mobile = userMobile;
-                    final ApiResponse response =
-                        await _userRepo.setNewUser(userService.baseUser, token);
+                userService.baseUser.username = username;
+                bool flag = false;
+                String message = "Please try again in sometime";
+                logger.d(userService.baseUser.toJson().toString());
 
+                try {
+                  final token = await _getBearerToken();
+                  userService.baseUser.mobile = userMobile;
+                  final ApiResponse response = await _userRepo.setNewUser(
+                      userService.baseUser, token, cstate);
+                  logger.e(response.toString());
+                  if (response.code == 400) {
+                    message =
+                        "Unable to create account, please try again later.";
+                    _usernameKey.currentState.model.enabled = true;
+                    flag = false;
+                  } else {
                     final gtId = response.model['gtId'];
                     response.model['flag'] ? flag = true : flag = false;
 
                     logger.d("Is Golden Ticket Rewarded: $gtId");
                     if (gtId != null && gtId.toString().isNotEmpty)
                       GoldenTicketService.goldenTicketId = gtId;
-                  } catch (e) {
-                    logger.d(e);
-                    _usernameKey.currentState.model.enabled = false;
-                    flag = false;
                   }
+                } catch (e) {
+                  logger.d(e);
+                  _usernameKey.currentState.model.enabled = false;
+                  flag = false;
+                }
 
-                  if (flag) {
-                    _analyticsService.track(
-                      eventName: AnalyticsEvents.signupName,
-                      properties: {'userId': userService?.baseUser?.uid},
-                    );
-                    logger.d("User object saved successfully");
-                    userService.showOnboardingTutorial = true;
-                    _onSignUpComplete();
-                  } else {
-                    BaseUtil.showNegativeAlert(
-                      'Update failed',
-                      'Please try again in sometime',
-                    );
-                    _usernameKey.currentState.model.enabled = false;
-
-                    setState(ViewState.Idle);
-                  }
+                if (flag) {
+                  _analyticsService.track(
+                    eventName: AnalyticsEvents.signupName,
+                    properties: {'userId': userService?.baseUser?.uid},
+                  );
+                  logger.d("User object saved successfully");
+                  userService.showOnboardingTutorial = true;
+                  _onSignUpComplete();
                 } else {
                   BaseUtil.showNegativeAlert(
-                    'Username update failed',
-                    'Please try again in sometime',
+                    'Update failed',
+                    message,
                   );
-                  _usernameKey.currentState.model.enabled = false;
+                  _usernameKey.currentState.model.enabled = true;
 
                   setState(ViewState.Idle);
                 }
@@ -376,6 +382,7 @@ class LoginControllerViewModel extends BaseModel {
     logger.d("User authenticated. Now check if details previously available.");
     userService.firebaseUser = FirebaseAuth.instance.currentUser;
     logger.d("User is set: " + userService.firebaseUser.uid);
+
     ApiResponse<BaseUser> user =
         await dbProvider.getUser(userService.firebaseUser.uid);
     if (user.code == 400) {
@@ -397,7 +404,8 @@ class LoginControllerViewModel extends BaseModel {
       _isSignup = true;
       logger.d(
           "No existing user details found or found incomplete details for user. Moving to details page");
-
+      if (source == LoginSource.TRUECALLER)
+        _analyticsService.track(eventName: AnalyticsEvents.truecallerSignup);
       //Move to name input page
       BaseUtil.isNewUser = true;
       BaseUtil.isFirstFetchDone = false;
@@ -415,13 +423,22 @@ class LoginControllerViewModel extends BaseModel {
       ///Existing user
       await BaseAnalytics.analytics.logLogin(loginMethod: 'phonenumber');
       logger.d("User details available: Name: " + user.model.name);
+      if (source == LoginSource.TRUECALLER)
+        _analyticsService.track(eventName: AnalyticsEvents.truecallerLogin);
       userService.baseUser = user.model;
+      _userRepo.updateUserAppFlyer(
+          user.model, await userService.firebaseUser.getIdToken());
+
       _onSignUpComplete();
     }
   }
 
   Future _onSignUpComplete() async {
     if (_isSignup) {
+      await _analyticsService.login(
+          isOnBoarded: userService.isUserOnborded,
+          baseUser: userService.baseUser);
+
       await BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
       _analyticsService.track(
         eventName: AnalyticsEvents.signupComplete,
@@ -450,6 +467,14 @@ class LoginControllerViewModel extends BaseModel {
           PageAction(state: PageState.replaceAll, page: BlockedUserPageConfig);
       return;
     }
+
+    Map<String, dynamic> response = await dbProvider.initDeviceInfo();
+    final String deviceId = response["deviceId"];
+    final String platform = response["platform"];
+
+    _userRepo.setNewDeviceId(
+        uid: userService.baseUser.uid, deviceId: deviceId, platform: platform);
+
     appStateProvider.currentAction =
         PageAction(state: PageState.replaceAll, page: RootPageConfig);
     BaseUtil.showPositiveAlert(
@@ -635,6 +660,7 @@ class LoginControllerViewModel extends BaseModel {
 
   Future<void> _authenticateTrucallerUser(String phno) async {
     //Make api call to get custom token
+
     final ApiResponse<String> tokenRes =
         await _userRepo.getCustomUserToken(phno);
 

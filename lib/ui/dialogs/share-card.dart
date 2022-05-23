@@ -21,13 +21,13 @@ class ShareCard extends StatelessWidget {
   getImage() {
     switch (claimChoice) {
       case PrizeClaimChoice.AMZ_VOUCHER:
-        return "images/amazon-share.png";
+        return Assets.amazonGiftVoucher;
         break;
       case PrizeClaimChoice.GOLD_CREDIT:
-        return "images/augmont-share.png";
+        return Assets.augmontShare;
         break;
       default:
-        return "assets/images/fello_prize.png";
+        return Assets.felloRewards;
     }
   }
 

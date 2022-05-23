@@ -4,7 +4,7 @@ import 'dart:math' as math;
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/pin_input_custom_text_field.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input/name_input_view.dart';
@@ -148,8 +148,14 @@ class VerifyEmailState extends State<VerifyEmail> {
     if (generatedOTP == otp.text) {
       baseProvider.setEmail(email.text.trim());
       baseProvider.setEmailVerified();
+
+      _userService.setEmail(email.text.trim());
       _userService.isEmailVerified = true;
-      bool res = await dbProvider.updateUser(_userService.baseUser);
+      _userService.baseUser.isEmailVerified = true;
+
+      bool res = await dbProvider.updateUserEmail(_userService.baseUser.uid,
+          _userService.baseUser.email, _userService.baseUser.isEmailVerified);
+
       setState(() {
         _isVerifying = false;
       });
@@ -189,7 +195,9 @@ class VerifyEmailState extends State<VerifyEmail> {
         _userService.baseUser.email = googleUser.email;
         baseProvider.setEmailVerified();
         _userService.isEmailVerified = true;
-        bool res = await dbProvider.updateUser(_userService.baseUser);
+        _userService.baseUser.isEmailVerified = true;
+        bool res = await dbProvider.updateUserEmail(_userService.baseUser.uid,
+            _userService.baseUser.email, _userService.baseUser.isEmailVerified);
         if (res) {
           setState(() {
             baseProvider.isGoogleSignInProgress = false;
@@ -200,8 +208,8 @@ class VerifyEmailState extends State<VerifyEmail> {
         } else {
           baseProvider.isGoogleSignInProgress = false;
           BaseUtil.showNegativeAlert(
-            "Oops! we ran into problem",
-            "Email cannot be verified at the moment",
+            "Email verification failed",
+            "Your email could not be verified at the moment",
           );
         }
       } else {

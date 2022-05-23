@@ -4,11 +4,14 @@ import 'dart:developer';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/service/golden_ticket_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
+import 'package:felloapp/ui/pages/others/games/web/web_game/web_game_vm.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog_landscape.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -24,18 +27,19 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   DBModel _dbModel = locator<DBModel>();
   BaseUtil _baseUtil = locator<BaseUtil>();
   final _userService = locator<UserService>();
-  AppState _appState = locator<AppState>();
-  GoldenTicketService _gtService = GoldenTicketService();
+  final _webGameViewModel = locator<WebGameViewModel>();
 
   FelloBackButtonDispatcher(this._routerDelegate) : super();
 
-  Future<bool> _confirmExit(
-      String title, String description, Function confirmAction) {
+  Future<bool> _confirmExit(String title, String description,
+      Function confirmAction, bool isInLandScape) {
     BaseUtil.openDialog(
-        addToScreenStack: true,
-        isBarrierDismissable: false,
-        hapticVibrate: true,
-        content: FelloConfirmationLandScapeDialog(
+      addToScreenStack: true,
+      isBarrierDismissable: false,
+      hapticVibrate: true,
+      content: RotatedBox(
+        quarterTurns: 0,
+        child: FelloConfirmationLandScapeDialog(
           asset: Assets.noTickets,
           title: title,
           subtitle: description,
@@ -45,7 +49,9 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
           reject: "Stay",
           onAccept: confirmAction,
           onReject: didPopRoute,
-        ));
+        ),
+      ),
+    );
   }
 
   bool isAnyDialogOpen() {
@@ -55,6 +61,8 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
   @override
   Future<bool> didPopRoute() {
+    if (AppState.screenStack.last == ScreenItem.loader) return null;
+
     Future.delayed(Duration(milliseconds: 20), () {
       if (_userService.buyFieldFocusNode.hasPrimaryFocus ||
           _userService.buyFieldFocusNode.hasFocus) {
@@ -62,11 +70,6 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
         FocusManager.instance.primaryFocus.unfocus();
       }
     });
-
-    if (_userService.isConfirmationDialogOpen) {
-      logger.d("Change dialog view state");
-      _userService.isConfirmationDialogOpen = false;
-    }
     // if (WinViewModel().panelController.isPanelOpen) {
     //   WinViewModel().panelController.close();
     //   return Future.value(true);
@@ -75,12 +78,12 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
     if (AppState.unsavedPrefs) {
       if (_baseUtil != null &&
-          _baseUtil.myUser != null &&
-          _baseUtil.myUser.uid != null &&
-          _baseUtil.myUser.userPreferences != null)
+          _userService.baseUser != null &&
+          _userService.baseUser.uid != null &&
+          _userService.baseUser.userPreferences != null)
         _dbModel
-            .updateUserPreferences(
-                _baseUtil.myUser.uid, _baseUtil.myUser.userPreferences)
+            .updateUserPreferences(_userService.baseUser.uid,
+                _userService.baseUser.userPreferences)
             .then((value) {
           AppState.unsavedPrefs = false;
           log("Preferences updated");
@@ -103,12 +106,32 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       return Future.value(true);
     }
     //If the cricket game is in progress
-    else if (AppState.circGameInProgress)
-      return _confirmExit("Exit Game", "Are you sure you want to leave?", () {
-        AppState.circGameInProgress = false;
-        didPopRoute();
-        return didPopRoute();
-      });
+    else if (AppState.isWebGameLInProgress)
+      return _confirmExit(
+        "Exit Game",
+        "Are you sure you want to leave?",
+        () {
+          logger.d("Closing landscape mode game view");
+          AppState.isWebGameLInProgress = false;
+          didPopRoute();
+          didPopRoute();
+          _webGameViewModel.handleGameSessionEnd();
+        },
+        true,
+      );
+    else if (AppState.isWebGamePInProgress)
+      return _confirmExit(
+        "Exit Game",
+        "Are you sure you want to leave?",
+        () {
+          AppState.isWebGamePInProgress = false;
+          didPopRoute();
+          didPopRoute();
+          _webGameViewModel.handleGameSessionEnd(
+              duration: Duration(milliseconds: 500));
+        },
+        false,
+      );
     else if (AppState.isUpdateScreen) {
       AppState.isUpdateScreen = false;
       return _routerDelegate.popRoute();

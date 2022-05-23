@@ -16,8 +16,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Walkthrough extends StatelessWidget {
-  const Walkthrough({Key key}) : super(key: key);
-
   static List<String> dailyPicks = [
     "Starting Monday, ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_DAILY_PICK_COUNT)} random numbers are picked everyday from 1 to 90 at 6pm."
   ];

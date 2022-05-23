@@ -2,9 +2,9 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/leader_board_modal.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/repository/statistics_repo.dart';
-import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/prize_service.dart';
+import 'package:felloapp/core/service/notifier_services/prize_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
@@ -75,14 +75,14 @@ class TambolaHomeViewModel extends BaseModel {
     notifyListeners();
     await _prizeService.fetchTambolaPrizes();
     if (tPrizes == null)
-      BaseUtil.showNegativeAlert(
-          "Prizesd failed to update", "Please refresh again");
+      BaseUtil.showNegativeAlert("This week's prizes could not be fetched",
+          "Please try again in sometime");
     isPrizesLoading = false;
     notifyListeners();
   }
 
   void openGame() {
     _analyticsService.track(eventName: AnalyticsEvents.startPlayingTambola);
-    BaseUtil().openTambolaHome();
+    BaseUtil().openTambolaGame();
   }
 }

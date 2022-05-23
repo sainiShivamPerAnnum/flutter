@@ -10,10 +10,10 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
-import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/transaction_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/share-card.dart';
@@ -83,7 +83,7 @@ class MyWinningsViewModel extends BaseModel {
       winningHistory = temp.model;
     else
       BaseUtil.showNegativeAlert(
-          "Winning History fetch failed", temp.errorMessage);
+          "Winning History fetch failed", "Please try again after sometime");
   }
 
   getWinningHistoryTitle(UserTransaction tran) {
@@ -140,7 +140,7 @@ class MyWinningsViewModel extends BaseModel {
   getWinningHistoryLeadingImage(String subtype) {
     switch (subtype) {
       case "GOLD_CREDIT":
-        return Assets.digitalGold;
+        return Assets.augmontShare;
       case "AMZ_VOUCHER":
         return Assets.amazonGiftVoucher;
         break;
@@ -162,7 +162,7 @@ class MyWinningsViewModel extends BaseModel {
         showCrossIcon: true,
         assetpng: choice == PrizeClaimChoice.AMZ_VOUCHER
             ? Assets.amazonGiftVoucher
-            : Assets.digitalGold,
+            : Assets.augmontShare,
         title: "Confirmation",
         subtitle: choice == PrizeClaimChoice.AMZ_VOUCHER
             ? "Are you sure you want to redeem ₹ ${_userService.userFundWallet.unclaimedBalance} as an Amazon gift voucher?"
@@ -280,7 +280,8 @@ class MyWinningsViewModel extends BaseModel {
 
       return true;
     } else {
-      BaseUtil.showNegativeAlert('Withdrawal Failed', response['message']);
+      BaseUtil.showNegativeAlert('Withdrawal Failed',
+          response['message'] ?? "Please try again after sometime");
       return false;
     }
   }

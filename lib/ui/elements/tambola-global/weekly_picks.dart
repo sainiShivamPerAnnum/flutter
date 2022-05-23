@@ -1,5 +1,5 @@
 import 'package:felloapp/core/model/daily_pick_model.dart';
-import 'package:felloapp/core/service/tambola_service.dart';
+import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';

@@ -3,6 +3,7 @@ import 'package:felloapp/main.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() async {
   FlavorConfig(
@@ -15,6 +16,7 @@ void main() async {
       razorpayStage: RazorpayStage.DEV,
       signzyStage: SignzyStage.PROD,
       signzyPanStage: SignzyPanStage.DEV,
+      paytmStage: PaytmStage.DEV,
       baseUriUS: 'us-central1-fello-dev-station.cloudfunctions.net',
       baseUriAsia: 'asia-south1-fello-dev-station.cloudfunctions.net',
       mixpanelToken: MixpanelAnalytics.DEV_TOKEN,
@@ -23,5 +25,8 @@ void main() async {
   );
 
   await mainInit();
-  runApp(MyApp());
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) {
+    runApp(MyApp());
+  });
 }

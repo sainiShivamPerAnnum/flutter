@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -8,27 +11,40 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/modals_sheets/event_instructions_modal.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/all_participants.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_vm.dart';
-import 'package:felloapp/ui/pages/others/games/cricket/cricket_home/cricket_home_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
+import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
+import 'package:felloapp/ui/pages/static/web_game_prize_view.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
+import 'package:felloapp/ui/service_elements/winners_prizes/winners_marquee.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+extension TruncateDoubles on double {
+  double truncateToDecimalPlaces(int fractionalDigits) =>
+      (this * pow(10, fractionalDigits)).truncate() / pow(10, fractionalDigits);
+}
 
 class TopSaverView extends StatelessWidget {
-  final EventModel event;
-  TopSaverView({this.event});
+  final String eventType;
+  final bool isGameRedirected;
+  TopSaverView({this.eventType, this.isGameRedirected = false});
+
   @override
   Widget build(BuildContext context) {
     return BaseView<TopSaverViewModel>(
       onModelReady: (model) {
-        model.init(event);
+        model.init(eventType, isGameRedirected);
       },
       builder: (context, model, child) {
         return Scaffold(
@@ -41,33 +57,110 @@ class TopSaverView extends StatelessWidget {
                   title: model.appbarTitle,
                 ),
                 Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(SizeConfig.padding40),
-                        topRight: Radius.circular(SizeConfig.padding40),
+                  child: Stack(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(SizeConfig.padding40),
+                            topRight: Radius.circular(SizeConfig.padding40),
+                          ),
+                          color: UiConstants.scaffoldColor,
+                        ),
+                        width: SizeConfig.screenWidth,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(SizeConfig.padding40),
+                            topRight: Radius.circular(SizeConfig.padding40),
+                          ),
+                          child: model.state == ViewState.Busy
+                              ? Center(
+                                  child: ListLoader(),
+                                )
+                              : ListView(
+                                  physics: ClampingScrollPhysics(),
+                                  padding: EdgeInsets.zero,
+                                  children: [
+                                    Thumbnail(event: model.event),
+                                    if (model.showStandingsAndWinners)
+                                      EventLeaderboard(model: model),
+                                    if (model.showStandingsAndWinners)
+                                      InstructionsTab(event: model.event),
+                                    if (model.showStandingsAndWinners)
+                                      WinnersBoard(model: model),
+                                    if (!model.showStandingsAndWinners)
+                                      WinnersMarqueeStrip(
+                                        type: eventType,
+                                        winners: model.event.winners,
+                                      ),
+                                    if (!model.showStandingsAndWinners)
+                                      InstructionBoard(model: model),
+                                    if (!model.showStandingsAndWinners)
+                                      SizedBox(
+                                        height: SizeConfig.navBarHeight,
+                                      )
+                                  ],
+                                ),
+                        ),
                       ),
-                      color: UiConstants.scaffoldColor,
-                    ),
-                    width: SizeConfig.screenWidth,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(SizeConfig.padding40),
-                        topRight: Radius.circular(SizeConfig.padding40),
-                      ),
-                      child: ListView(
-                        physics: ClampingScrollPhysics(),
-                        padding: EdgeInsets.zero,
-                        children: [
-                          Thumbnail(event: event),
-                          // if (model.currentParticipants != null)
-                          EventLeaderboard(model: model),
-                          InstructionsTab(event: event),
-                          // if (model.pastWinners != null)
-                          WinnersBoard(model: model),
-                        ],
-                      ),
-                    ),
+                      if (!model.showStandingsAndWinners)
+                        Positioned(
+                          bottom: 0,
+                          child: Column(
+                            children: [
+                              if (model.event.type == "NEW_FELLO")
+                                Container(
+                                  width: SizeConfig.screenWidth,
+                                  padding: EdgeInsets.only(
+                                    top: SizeConfig.padding16,
+                                    left: SizeConfig.pageHorizontalMargins,
+                                    right: SizeConfig.pageHorizontalMargins,
+                                  ),
+                                  margin: EdgeInsets.only(
+                                      bottom: SizeConfig.padding12),
+                                  child: FelloButtonLg(
+                                    color: Color(0xff495db2),
+                                    child: Text(
+                                      "Checkout new version",
+                                      style: TextStyles.body2.bold
+                                          .colour(Colors.white),
+                                    ),
+                                    onPressed: () async {
+                                      String url = model.event.url;
+                                      if (await canLaunch(url)) {
+                                        launch(url);
+                                      }
+                                    },
+                                  ),
+                                ),
+                              Container(
+                                width: SizeConfig.screenWidth,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal:
+                                        SizeConfig.pageHorizontalMargins),
+                                child: FelloButtonLg(
+                                  child: Text(
+                                    "Share Feedback",
+                                    style: TextStyles.body2.bold
+                                        .colour(Colors.white),
+                                  ),
+                                  onPressed: () async {
+                                    String url = model.event.formUrl;
+                                    if (await canLaunch(url)) {
+                                      launch(url);
+                                    }
+                                  },
+                                ),
+                              ),
+                              SizedBox(
+                                height: SizeConfig.viewInsets.bottom != 0
+                                    ? 0
+                                    : SizeConfig.pageHorizontalMargins,
+                              )
+                            ],
+                          ),
+                        )
+                    ],
                   ),
                 ),
               ],
@@ -76,6 +169,69 @@ class TopSaverView extends StatelessWidget {
         );
       },
     );
+  }
+}
+
+class InstructionBoard extends StatelessWidget {
+  final TopSaverViewModel model;
+  InstructionBoard({this.model});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(SizeConfig.roundness32),
+        ),
+        padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+        margin: EdgeInsets.only(
+            top: SizeConfig.pageHorizontalMargins,
+            left: SizeConfig.pageHorizontalMargins,
+            right: SizeConfig.pageHorizontalMargins,
+            bottom: SizeConfig.navBarHeight),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "About",
+              style: TextStyles.title4.bold,
+            ),
+            SizedBox(height: SizeConfig.padding16),
+            model.event != null
+                ? Column(
+                    children: List.generate(
+                      model.event.instructions.length,
+                      (i) {
+                        return Container(
+                          padding:
+                              EdgeInsets.only(bottom: SizeConfig.padding20),
+                          child: Row(
+                            children: [
+                              CircleAvatar(
+                                backgroundColor: UiConstants.tertiarySolid,
+                                radius: SizeConfig.padding16,
+                                child: Text(
+                                  (i + 1).toString(),
+                                  style: TextStyles.body3.colour(Colors.white),
+                                ),
+                              ),
+                              SizedBox(
+                                width: SizeConfig.padding16,
+                              ),
+                              Expanded(child: Text(model.event.instructions[i]))
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  )
+                : Center(
+                    child: SpinKitWave(
+                      color: UiConstants.primaryColor,
+                      size: SizeConfig.padding32,
+                    ),
+                  ),
+          ],
+        ));
   }
 }
 
@@ -133,26 +289,62 @@ class InstructionsTab extends StatelessWidget {
         shadow: false,
         borderRadius: SizeConfig.roundness16,
         onTap: () {
-          AppState.delegate.appState.setCurrentTabIndex = 0;
-          AppState.backButtonDispatcher.didPopRoute();
+          if (event.type == "FPL") {
+            AppState.delegate.appState.setCurrentTabIndex = 1;
+            AppState.backButtonDispatcher.didPopRoute();
+            Haptic.vibrate();
+            AppState.delegate.parseRoute(Uri.parse('/cricketHome'));
+          } else {
+            AppState.delegate.appState.setCurrentTabIndex = 0;
+            AppState.backButtonDispatcher.didPopRoute();
+          }
         },
         height: SizeConfig.screenWidth * 0.16,
         child: Container(
-          padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.pageHorizontalMargins),
+          padding: EdgeInsets.only(right: SizeConfig.pageHorizontalMargins),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SvgPicture.asset(
-                'images/svgs/gold.svg',
-                height: SizeConfig.padding40,
+              if (event.type != "FPL")
+                SizedBox(
+                  width: SizeConfig.pageHorizontalMargins,
+                ),
+              event.type == "FPL"
+                  ? Image.asset(
+                      'assets/images/icons/cricket.png',
+                      // height: SizeConfig.padding54,
+                    )
+                  : SvgPicture.asset(
+                      'images/svgs/gold.svg',
+                      height: SizeConfig.padding40,
+                    ),
+              if (event.type != "FPL") SizedBox(width: SizeConfig.padding16),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      event.type == "FPL" ? "Play Cricket" : "Buy Digital Gold",
+                      style: TextStyles.title5
+                          .colour(Colors.white)
+                          .bold
+                          .setHeight(1),
+                    ),
+                    if (event.type == "FPL")
+                      Container(
+                        margin: EdgeInsets.only(top: SizeConfig.padding2),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            event.todayMatch,
+                            style: TextStyles.body3.colour(Colors.white),
+                          ),
+                        ),
+                      )
+                  ],
+                ),
               ),
-              SizedBox(width: SizeConfig.padding16),
-              Text(
-                "Buy Digital Gold",
-                style: TextStyles.title5.colour(Colors.white).bold.setHeight(1),
-              ),
-              Spacer(),
               Lottie.asset("assets/lotties/golden-arrow.json"),
             ],
           ),
@@ -225,9 +417,24 @@ class WinnersBoard extends StatelessWidget {
                                     ),
                                     SizedBox(width: SizeConfig.padding12),
                                     Expanded(
-                                      child: Text(
-                                        model.pastWinners[i].username,
-                                        style: TextStyles.body3,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            model.displayUsername(
+                                                model.pastWinners[i].username),
+                                            style: TextStyles.body3,
+                                          ),
+                                          SizedBox(height: SizeConfig.padding4),
+                                          Text(
+                                            model.getFormattedDate(model
+                                                    .pastWinners[i].code) ??
+                                                "",
+                                            style: TextStyles.body4
+                                                .colour(Colors.black54),
+                                          )
+                                        ],
                                       ),
                                     ),
                                     SizedBox(width: SizeConfig.padding12),
@@ -235,16 +442,20 @@ class WinnersBoard extends StatelessWidget {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        if (model.pastWinners[i]?.flc != null)
+                                        if (model.pastWinners[i]?.flc != null &&
+                                            model.pastWinners[i]?.flc != 0)
                                           PrizeChip(
                                             color: UiConstants.tertiarySolid,
                                             svg: Assets.tokens,
                                             text: "${model.pastWinners[i].flc}",
                                           ),
-                                        if (model.pastWinners[i]?.flc != null)
+                                        if (model.pastWinners[i]?.amount !=
+                                                null &&
+                                            model.pastWinners[i]?.amount != 0)
                                           SizedBox(width: SizeConfig.padding16),
                                         if (model.pastWinners[i]?.amount !=
-                                            null)
+                                                null &&
+                                            model.pastWinners[i]?.amount != 0)
                                           PrizeChip(
                                             color: UiConstants.primaryColor,
                                             png: Assets.moneyIcon,
@@ -356,7 +567,8 @@ class EventLeaderboard extends StatelessWidget {
                                       ),
                                     ),
                                     title: Text(
-                                      model.currentParticipants[i].username,
+                                      model.displayUsername(model
+                                          .currentParticipants[i].username),
                                       style: TextStyles.body3.bold
                                           .colour(Colors.black54),
                                     ),
@@ -370,11 +582,16 @@ class EventLeaderboard extends StatelessWidget {
                                         RichText(
                                           text: TextSpan(
                                               text:
-                                                  "${isInteger(model.currentParticipants[i].score) ? model.currentParticipants[i].score.toInt() : model.currentParticipants[i].score.toStringAsFixed(2)}",
-                                              style: TextStyles.body2.bold.colour(UiConstants.primaryColor),
+                                                  "${isInteger(model.currentParticipants[i].score) ? model.currentParticipants[i].score.toInt() : model.currentParticipants[i].score.truncateToDecimalPlaces(3)}",
+                                              style: TextStyles.body2.bold
+                                                  .colour(
+                                                      UiConstants.primaryColor),
                                               children: [
                                                 TextSpan(
-                                                    text: " gm",
+                                                    text: model.event.type ==
+                                                            "FPL"
+                                                        ? ""
+                                                        : " gm",
                                                     style: TextStyles
                                                         .body4.light
                                                         .colour(Colors.grey))
@@ -408,7 +625,7 @@ class EventLeaderboard extends StatelessWidget {
                                                     widget: AllParticipantsView(
                                                       participants: model
                                                           .currentParticipants,
-                                                      type: model.saverType,
+                                                      type: model.campaignType,
                                                     ),
                                                     page:
                                                         AllParticipantsViewPageConfig,

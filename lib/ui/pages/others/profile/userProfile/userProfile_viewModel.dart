@@ -2,7 +2,7 @@
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_analytics.dart';
+import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
@@ -10,9 +10,10 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
-import 'package:felloapp/core/service/tambola_service.dart';
-import 'package:felloapp/core/service/transaction_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
+import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -25,7 +26,7 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -46,6 +47,7 @@ class UserProfileVM extends BaseModel {
   final _txnService = locator<TransactionService>();
   final _tambolaService = locator<TambolaService>();
   final _analyticsService = locator<AnalyticsService>();
+  final _paytmService = locator<PaytmService>();
   final S _locale = locator<S>();
   final BaseUtil baseProvider = locator<BaseUtil>();
   double picSize;
@@ -174,7 +176,13 @@ class UserProfileVM extends BaseModel {
           _userService.baseUser.dob =
               "${yearFieldController.text}-${monthFieldController.text}-${dateFieldController.text}";
           _userService.baseUser.gender = getGender();
-          await _dbModel.updateUser(_userService.baseUser).then((res) {
+          await _dbModel
+              .updateUserProfile(
+                  _userService.baseUser.uid,
+                  _userService.baseUser.name,
+                  _userService.baseUser.dob,
+                  _userService.baseUser.gender)
+              .then((res) {
             if (res) {
               _userService.setMyUserName(_userService.baseUser.name);
               _userService.setDateOfBirth(_userService.baseUser.dob);
@@ -280,6 +288,7 @@ class UserProfileVM extends BaseModel {
                 _txnService.signOut();
                 _tambolaService.signOut();
                 _analyticsService.signOut();
+                _paytmService.signout();
                 AppState.backButtonDispatcher.didPopRoute();
                 AppState.delegate.appState.currentAction = PageAction(
                     state: PageState.replaceAll, page: SplashPageConfig);
@@ -434,11 +443,11 @@ class UserProfileVM extends BaseModel {
       } else
         return false;
     } catch (e) {
-      if (_baseUtil.myUser.uid != null) {
+      if (_userService.baseUser.uid != null) {
         Map<String, dynamic> errorDetails = {
           'error_msg': 'Method call to upload picture failed',
         };
-        _dbModel.logFailure(_baseUtil.myUser.uid,
+        _dbModel.logFailure(_userService.baseUser.uid,
             FailType.ProfilePictureUpdateFailed, errorDetails);
       }
       print('$e');
@@ -450,14 +459,13 @@ class UserProfileVM extends BaseModel {
     if (flag) {
       BaseAnalytics.logProfilePictureAdded();
       BaseUtil.showPositiveAlert(
-          'Complete', 'Your profile Picture has been updated');
+          'Complete', 'Your profile picture has been updated');
     } else {
       BaseUtil.showNegativeAlert(
         'Failed',
         'Your Profile Picture could not be updated at the moment',
       );
     }
-    //upload(false);
     AppState.backButtonDispatcher.didPopRoute();
   }
 
@@ -468,7 +476,7 @@ class UserProfileVM extends BaseModel {
         .setPreference(Preferences.APPLOCK, (val) ? 1 : 0);
     await _dbModel
         .updateUserPreferences(
-            _baseUtil.myUser.uid, _baseUtil.myUser.userPreferences)
+            _userService.baseUser.uid, _userService.baseUser.userPreferences)
         .then((value) {
       Log("Preferences updated");
     });
@@ -484,7 +492,7 @@ class UserProfileVM extends BaseModel {
           .setPreference(Preferences.TAMBOLANOTIFICATIONS, (val) ? 1 : 0);
       await _dbModel
           .updateUserPreferences(
-              _baseUtil.myUser.uid, _baseUtil.myUser.userPreferences)
+              _userService.baseUser.uid, _userService.baseUser.userPreferences)
           .then((value) {
         if (val)
           Log("Preferences updated");

@@ -7,8 +7,9 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
-import 'package:felloapp/core/service/tambola_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
+import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -17,10 +18,13 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:package_info/package_info.dart';
 
+import '../../../core/repository/user_repo.dart';
+
 class LauncherViewModel extends BaseModel {
   bool _isSlowConnection = false;
   Timer _timer3;
   DeviceUnlock deviceUnlock;
+
   final navigator = AppState.delegate.appState;
 
   // LOCATORS
@@ -31,6 +35,8 @@ class LauncherViewModel extends BaseModel {
   final _logger = locator<CustomLogger>();
   final _tambolaService = locator<TambolaService>();
   final _analyticsService = locator<AnalyticsService>();
+  final _userRepo = locator<UserRepository>();
+  final _paytmService = locator<PaytmService>();
 
   //GETTERS
   bool get isSlowConnection => _isSlowConnection;
@@ -53,15 +59,27 @@ class LauncherViewModel extends BaseModel {
   }
 
   initLogic() async {
-    await userService.init(); // PROCEED IF firebase != null
-    await _baseUtil.init();
-    _tambolaService.init();
-    await _fcmListener.setupFcm();
-    await _analyticsService.login(
-        isOnBoarded: userService.isUserOnborded,
-        baseUser: userService.baseUser);
+    try {
+      await userService.init();
+      await Future.wait([_baseUtil.init(), _fcmListener.setupFcm()]);
+
+      userService.firebaseUser?.getIdToken()?.then(
+            (token) =>
+                _userRepo.updateUserAppFlyer(userService.baseUser, token),
+          );
+      if (userService.baseUser != null) {
+        await _analyticsService.login(
+          isOnBoarded: userService?.isUserOnborded,
+          baseUser: userService?.baseUser,
+        );
+      }
+    } catch (e) {
+      _logger.e("Splash Screen init : " + e);
+    }
     _httpModel.init();
+    _tambolaService.init();
     _timer3.cancel();
+
     try {
       deviceUnlock = DeviceUnlock();
     } catch (e) {
@@ -86,14 +104,6 @@ class LauncherViewModel extends BaseModel {
       return;
     }
 
-    ///check for breaking update
-    if (await checkBreakingUpdate()) {
-      AppState.isUpdateScreen = true;
-      navigator.currentAction =
-          PageAction(state: PageState.replaceAll, page: UpdateRequiredConfig);
-      return;
-    }
-
     ///check if user is onboarded
     if (!userService.isUserOnborded) {
       _logger.d("New user. Moving to Onboarding..");
@@ -104,7 +114,8 @@ class LauncherViewModel extends BaseModel {
 
     ///Ceck if app needs to be open securely
     bool _unlocked = true;
-    if (_baseUtil.myUser.userPreferences.getPreference(Preferences.APPLOCK) ==
+    if (userService.baseUser.userPreferences
+                .getPreference(Preferences.APPLOCK) ==
             1 &&
         deviceUnlock != null) {
       _unlocked = await authenticateDevice();

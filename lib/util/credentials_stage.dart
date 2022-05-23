@@ -45,3 +45,11 @@ extension ParsePanSignzyToString on SignzyPanStage {
     return this.toString().split('.').last.toLowerCase();
   }
 }
+
+enum PaytmStage { DEV, PROD }
+
+extension PaytmStageToString on PaytmStage {
+  String value() {
+    return this.toString().split('.').last.toLowerCase();
+  }
+}

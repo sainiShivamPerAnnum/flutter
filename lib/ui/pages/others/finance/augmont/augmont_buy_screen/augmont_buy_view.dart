@@ -13,6 +13,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class AugmontBuyCard extends StatelessWidget {
   final AugmontGoldBuyViewModel model;
+
   AugmontBuyCard({this.model, Key key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -71,7 +72,8 @@ class AugmontBuyCard extends StatelessWidget {
                 SizedBox(width: SizeConfig.padding24),
                 Expanded(
                   child: TextField(
-                    enabled: !model.isGoldBuyInProgress,
+                    enabled: !model.isGoldBuyInProgress &&
+                        !model.couponApplyInProgress,
                     focusNode: model.buyFieldNode,
                     enableInteractiveSelection: false,
                     controller: model.goldAmountController,
@@ -132,6 +134,14 @@ class AugmontBuyCard extends StatelessWidget {
               child: Text(
                 "Upto ₹ 50,000 can be invested at one go.",
                 style: TextStyles.body4.bold.colour(UiConstants.primaryColor),
+              ),
+            ),
+          if (model.showMinCapText)
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
+              child: Text(
+                "Minimum purchase amount is ₹ 10",
+                style: TextStyles.body4.bold.colour(Colors.red[400]),
               ),
             ),
           SizedBox(
@@ -206,7 +216,9 @@ class AugmontBuyCard extends StatelessWidget {
                 ),
               ),
             ),
-          if (model.augRegFailed && !model.augOnbRegInProgress)
+          if (model.augRegFailed &&
+              !model.augOnbRegInProgress &&
+              model.augmontObjectSecondFetchDone)
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(SizeConfig.roundness12),
@@ -256,7 +268,7 @@ class AugmontBuyCard extends StatelessWidget {
                           : (model.status == 0 ? "UNAVAILABLE" : "REGISTER"),
                       style: TextStyles.body2.colour(Colors.white).bold,
                     ),
-              onPressed: () {
+              onPressed: () async {
                 if (!model.isGoldBuyInProgress) {
                   FocusScope.of(context).unfocus();
                   model.initiateBuy();

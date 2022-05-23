@@ -5,11 +5,11 @@ import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
-import 'package:felloapp/core/service/transaction_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
@@ -63,6 +63,7 @@ class AugmontGoldSellViewModel extends BaseModel {
 
   init() async {
     setState(ViewState.Busy);
+    _analyticsService.track(eventName: AnalyticsEvents.saveSell);
     goldAmountController = TextEditingController();
     await fetchNotices();
     fetchGoldRates();
@@ -70,7 +71,7 @@ class AugmontGoldSellViewModel extends BaseModel {
 
     if (_baseUtil.augmontDetail == null) {
       _baseUtil.augmontDetail =
-          await _dbModel.getUserAugmontDetails(_baseUtil.myUser.uid);
+          await _dbModel.getUserAugmontDetails(_userService.baseUser.uid);
     }
     // Check if sell is locked the this particular user
     if (_baseUtil.augmontDetail != null &&
@@ -133,8 +134,8 @@ class AugmontGoldSellViewModel extends BaseModel {
     isQntFetching = true;
     refresh();
     await _userService.getUserFundWalletData();
-    nonWithdrawableQnt =
-        await _dbModel.getNonWithdrawableAugGoldQuantity(_baseUtil.myUser.uid);
+    nonWithdrawableQnt = await _dbModel
+        .getNonWithdrawableAugGoldQuantity(_userService.baseUser.uid);
 
     if (nonWithdrawableQnt == null || nonWithdrawableQnt < 0)
       nonWithdrawableQnt = 0.0;
@@ -166,12 +167,20 @@ class AugmontGoldSellViewModel extends BaseModel {
 
   initiateSell() async {
     double sellGramAmount = double.tryParse(goldAmountController.text.trim());
+    if (goldRates == null) {
+      BaseUtil.showNegativeAlert(
+        'Portal unavailable',
+        'The current rates couldn\'t be loaded. Please try again',
+      );
+      return;
+    }
+
     if (sellGramAmount == null) {
       BaseUtil.showNegativeAlert(
           "No Amount Entered", "Please enter some amount");
       return;
     }
-    if (!_baseUtil.myUser.isAugmontOnboarded) {
+    if (!_userService.baseUser.isAugmontOnboarded) {
       BaseUtil.showNegativeAlert(
         'Not registered',
         'You have not registered for digital gold yet',
@@ -188,7 +197,7 @@ class AugmontGoldSellViewModel extends BaseModel {
           "Insufficient balance", "Please enter a lower amount");
       return;
     }
-    if (sellGramAmount > withdrawableQnt) {
+    if (sellGramAmount >= withdrawableQnt) {
       BaseUtil.showNegativeAlert(
           "Sell not processed", "Purchased Gold can be sold after 2 days");
       return;
@@ -196,7 +205,7 @@ class AugmontGoldSellViewModel extends BaseModel {
 
     if (_baseUtil.augmontDetail == null) {
       _baseUtil.augmontDetail =
-          await _dbModel.getUserAugmontDetails(_baseUtil.myUser.uid);
+          await _dbModel.getUserAugmontDetails(_userService.baseUser.uid);
     }
     if (_baseUtil.augmontDetail == null) {
       BaseUtil.showNegativeAlert(
@@ -236,7 +245,12 @@ class AugmontGoldSellViewModel extends BaseModel {
     _augmontModel.initiateWithdrawal(goldRates, sellGramAmount);
     _augmontModel.setAugmontTxnProcessListener(_onSellTransactionComplete);
 
-    _analyticsService.track(eventName: AnalyticsEvents.sellGold);
+    final totalSellAmount =
+        BaseUtil.digitPrecision(sellGramAmount * goldRates.goldSellPrice);
+    _analyticsService.track(
+      eventName: AnalyticsEvents.sellGold,
+      properties: {'selling_amount': totalSellAmount},
+    );
   }
 
   Future<void> _onSellTransactionComplete(UserTransaction txn) async {

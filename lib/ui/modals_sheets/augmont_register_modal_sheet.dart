@@ -3,8 +3,7 @@ import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
-import 'package:felloapp/core/ops/icici_ops.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/onboarding/input_field.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
@@ -41,7 +40,6 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
   final depositformKey3 = GlobalKey<FormState>();
   bool _isInitialized = false;
   AugmontModel augmontProvider;
-  ICICIModel iProvider;
   HttpModel httpProvider;
   DBModel dbProvider;
   static String stateChosenValue;
@@ -114,7 +112,9 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
           ),
           child: DropdownButtonFormField(
             decoration: InputDecoration(
-                border: InputBorder.none, enabledBorder: InputBorder.none),
+                focusedBorder: InputBorder.none,
+                border: InputBorder.none,
+                enabledBorder: InputBorder.none),
             iconEnabledColor: UiConstants.primaryColor,
             hint: Text("Which state do you live in?"),
             value: stateChosenValue,
@@ -174,9 +174,9 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
     setState(() {});
 
     ///now register the augmont user
-    UserAugmontDetail detail = await augmontProvider.createSimpleUser(
+    baseProvider.augmontDetail = await augmontProvider.createSimpleUser(
         _userService.baseUser.mobile, stateChosenValue);
-    if (detail == null) {
+    if (baseProvider.augmontDetail == null) {
       BaseUtil.showNegativeAlert('Registration Failed',
           'Failed to register at the moment. Please try again.');
       baseProvider.isAugmontRegnInProgress = false;

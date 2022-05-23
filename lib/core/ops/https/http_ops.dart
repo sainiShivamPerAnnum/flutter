@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/tambola_winners_details.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
@@ -29,7 +29,7 @@ class HttpModel extends ChangeNotifier {
     logger.d("Https Ops initialized");
   }
 
-  Future<String> getBearerToken() async{
+  Future<String> getBearerToken() async {
     String token = await _userService.firebaseUser.getIdToken();
     logger.d(token);
 
@@ -50,7 +50,8 @@ class HttpModel extends ChangeNotifier {
       String _bearer = await getBearerToken();
       Uri _uri = Uri.https(
           ASIA_BASE_URI, '/referralOps/$_stage/api/v2/validate', _params);
-      http.Response _response = await http.post(_uri, headers: {HttpHeaders.authorizationHeader: 'Bearer $_bearer'});
+      http.Response _response = await http.post(_uri,
+          headers: {HttpHeaders.authorizationHeader: 'Bearer $_bearer'});
       logger.d(_response.body);
       if (_response.statusCode == 200) {
         try {
@@ -79,15 +80,18 @@ class HttpModel extends ChangeNotifier {
 
   //amount must be integer
   //sample url: https://us-central1-fello-d3a9c.cloudfunctions.net/razorpayops/dev/api/orderid?amount=121&notes=hellp
-  Future<Map<String, dynamic>> generateRzpOrderId(
-      double amount, String userId, String txnId, String notes, String noteDetails) async {
+  Future<Map<String, dynamic>> generateRzpOrderId(double amount, String userId,
+      String txnId, String notes, String noteDetails) async {
     String amx = (amount * 100).round().toString();
     String _stage = FlavorConfig.instance.values.razorpayStage.value();
     Map<String, dynamic> queryMap = {'amount': amx};
-    if(userId != null && userId.isNotEmpty) queryMap['uid'] = Uri.encodeComponent(userId);
-    if(txnId != null && txnId.isNotEmpty)queryMap['txnid'] = Uri.encodeComponent(txnId);
+    if (userId != null && userId.isNotEmpty)
+      queryMap['uid'] = Uri.encodeComponent(userId);
+    if (txnId != null && txnId.isNotEmpty)
+      queryMap['txnid'] = Uri.encodeComponent(txnId);
     if (notes != null) queryMap['notes'] = Uri.encodeComponent(notes);
-    if (noteDetails != null) queryMap['notes_detail'] = Uri.encodeComponent(noteDetails);
+    if (noteDetails != null)
+      queryMap['notes_detail'] = Uri.encodeComponent(noteDetails);
 
     final Uri _uri =
         Uri.https(US_BASE_URI, '/razorpayops/$_stage/api/orderid', queryMap);
@@ -130,12 +134,12 @@ class HttpModel extends ChangeNotifier {
     }
   }
 
-  Future<Map<String, dynamic>> registerPrizeClaim(
-      String userId, String userName, double amount, PrizeClaimChoice claimChoice) async {
+  Future<Map<String, dynamic>> registerPrizeClaim(String userId,
+      String userName, double amount, PrizeClaimChoice claimChoice) async {
     if (userId == null || amount == null || claimChoice == null) return null;
 
-    final Uri _uri = Uri.https(
-        US_BASE_URI, '/userTxnOps/$_stage/api/prize/claim', {
+    final Uri _uri =
+        Uri.https(US_BASE_URI, '/userTxnOps/$_stage/api/prize/claim', {
       'userId': userId,
       'userName': userName,
       'amount': '$amount',
@@ -154,14 +158,12 @@ class HttpModel extends ChangeNotifier {
           parsed['flag'] != null &&
           parsed['flag'] == true) {
         logger.d('Action successful');
-        return {
-          'status': true
-        };
-      }
-      else {
+        return {'status': true};
+      } else {
         return {
           'status': false,
-          'message': parsed['message']??'Operation failed. Please try again in sometime'
+          'message': parsed['message'] ??
+              'Operation failed. Please try again in sometime'
         };
       }
     } catch (e) {
@@ -375,5 +377,4 @@ class HttpModel extends ChangeNotifier {
     }
     return {'flag': false, 'fail_msg': 'Your ticket could not be redeemed'};
   }
-
 }

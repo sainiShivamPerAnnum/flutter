@@ -1,6 +1,8 @@
 //Project Imports
 //Flutter & Dart Imports
 
+import 'dart:io';
+
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input/name_input_view.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_viewModel.dart';
@@ -26,6 +28,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
+
     return BaseView<UserProfileVM>(
       onModelReady: (model) {
         model.init();
@@ -261,7 +264,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                               } else if (int.tryParse(val) !=
                                                       null &&
                                                   (int.tryParse(val) > 13 ||
-                                                      int.tryParse(val) < 0)) {
+                                                      int.tryParse(val) < 1)) {
                                                 setState(() {
                                                   model.dateInputError =
                                                       "Invalid date";

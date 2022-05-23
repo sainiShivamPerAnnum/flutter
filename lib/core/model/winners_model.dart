@@ -24,15 +24,13 @@ class WinnersModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.winners != null) {
-      data['winners'] = this.winners.map((v) => v.toJson()).toList();
-    }
-    data['code'] = this.code;
-    data['gametype'] = this.gametype;
-    data['freq'] = this.freq;
-    data['timestamp'] = this.timestamp;
-    return data;
+    return {
+      'winners': winners?.map((x) => x.toMap())?.toList(),
+      'code': code,
+      'gametype': gametype,
+      'freq': freq,
+      'timestamp': timestamp.microsecondsSinceEpoch.toString(),
+    };
   }
 
   Map<String, dynamic> toMap() {
@@ -41,7 +39,7 @@ class WinnersModel {
       'code': code,
       'gametype': gametype,
       'freq': freq,
-      'timestamp': timestamp.millisecondsSinceEpoch,
+      'timestamp': timestamp,
     };
   }
 
@@ -52,7 +50,10 @@ class WinnersModel {
       code: map['code'],
       gametype: map['gametype'],
       freq: map['freq'],
-      timestamp: map['timestamp'],
+      timestamp: (map['timestamp'] is String)
+          ? Timestamp.fromDate(
+              DateTime.fromMicrosecondsSinceEpoch(int.parse(map['timestamp'])))
+          : map['timestamp'],
     );
   }
 
@@ -81,7 +82,7 @@ class Winners {
       this.flc});
 
   Winners.fromJson(Map<String, dynamic> json) {
-    score = json['score'].toDouble();
+    score = (json['score'] ?? 0).toDouble();
     userid = json['userid'];
     username = json['username'];
     isMockUser = json['isMockUser'];
@@ -112,7 +113,7 @@ class Winners {
 
   factory Winners.fromMap(Map<String, dynamic> map, String gameType) {
     return Winners(
-      score: map['score'].toDouble(),
+      score: (map['score'] ?? 0).toDouble(),
       userid: map['userid'],
       username: map['username'],
       gameType: gameType,

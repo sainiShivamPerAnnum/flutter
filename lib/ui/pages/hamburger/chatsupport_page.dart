@@ -1,4 +1,4 @@
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -49,8 +49,7 @@ class _ChatSupportState extends State<ChatSupport> {
       Navigator.pop(context);
     } else if (isFreshchatLoaded == "error") {
       Navigator.of(context).pop();
-      BaseUtil.showNegativeAlert(
-          'Error', 'Something went wrong, please try again!',
+      BaseUtil.showNegativeAlert('Something went wrong!', 'Please try again!',
           seconds: 3);
     }
     return Container(

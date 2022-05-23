@@ -9,8 +9,8 @@ import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/repository/signzy_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/golden_ticket_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/augmont_confirm_register_dialog.dart';
@@ -20,7 +20,7 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -101,10 +101,10 @@ class KYCDetailsViewModel extends BaseModel {
   checkForKycExistence() async {
     setState(ViewState.Busy);
     String pan = await _baseUtil.panService.getUserPan();
-    if (_baseUtil.myUser.isSimpleKycVerified != null &&
+    if (_userService.baseUser.isSimpleKycVerified != null &&
         pan != null &&
         pan.isNotEmpty) {
-      if (_baseUtil.myUser.isSimpleKycVerified) {
+      if (_userService.baseUser.isSimpleKycVerified) {
         panController.text = pan;
         nameController.text = _userService.baseUser.kycName;
         inEditMode = false;
@@ -141,70 +141,54 @@ class KYCDetailsViewModel extends BaseModel {
     FocusScope.of(context).unfocus();
 
     isKycInProgress = true;
-    _userService.isConfirmationDialogOpen = true;
     _analyticsService.track(eventName: AnalyticsEvents.openKYCSection);
 
     ///next get all details required for registration
     Map<String, dynamic> veriDetails =
         await _getVerifiedDetails(panController.text, nameController.text);
+
     if (veriDetails != null &&
         veriDetails['flag'] != null &&
         veriDetails['flag']) {
-      AppState.screenStack.add(ScreenItem.dialog);
-      //UPDATE DIRECTLY IN DATABASE
-      bool _p = true;
-      bool _q = true;
-
-      ///add the pan number
       if (_baseUtil.userRegdPan == null ||
           _baseUtil.userRegdPan.isEmpty ||
           _baseUtil.userRegdPan != panController.text) {
         _baseUtil.userRegdPan = panController.text;
-        _p = await _baseUtil.panService.saveUserPan(_baseUtil.userRegdPan);
       }
-      if (_baseUtil.myUser.isSimpleKycVerified == null ||
-          !_baseUtil.myUser.isSimpleKycVerified) {
-        _baseUtil.myUser.isSimpleKycVerified = true;
+
+      if (_userService.baseUser.isSimpleKycVerified == null ||
+          !_userService.baseUser.isSimpleKycVerified) {
+        _userService.baseUser.isSimpleKycVerified = true;
         if (veriDetails['upstreamName'] != null &&
             veriDetails['upstreamName'] != '') {
-          _baseUtil.myUser.kycName = veriDetails['upstreamName'];
-          _baseUtil.myUser.name = veriDetails['upstreamName'];
+          _userService.baseUser.kycName = veriDetails['upstreamName'];
+          _userService.baseUser.name = veriDetails['upstreamName'];
         }
         _baseUtil.setKycVerified(true);
-        _q = await _dbModel.updateUser(_userService.baseUser);
-      }
-      if (!_p || !_q) {
-        _analyticsService.track(
-          eventName: AnalyticsEvents.kycVerificationFailed,
-          properties: {'userId': _userService.baseUser.uid},
-        );
-
-        BaseUtil.showNegativeAlert('Verification Failed',
-            'Failed to verify at the moment. Please try again.');
-        isKycInProgress = false;
-        return;
-      } else {
-        _analyticsService.track(
-          eventName: AnalyticsEvents.panVerified,
-          properties: {'userId': _userService.baseUser.uid},
-        );
-
         _userService.isSimpleKycVerified = true;
-        _userService.setMyUserName(_userService.baseUser.name);
-        BaseUtil.showPositiveAlert(
-            'Verification Successful', 'You are successfully verified!');
-        isKycInProgress = false;
-        _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
-          if (res)
-            _gtService.showInstantGoldenTicketView(
-                title: 'Your KYC is complete', source: GTSOURCE.panVerify);
-        });
-        AppState.backButtonDispatcher.didPopRoute();
       }
+
+      _analyticsService.track(
+        eventName: AnalyticsEvents.panVerified,
+        properties: {'userId': _userService.baseUser.uid},
+      );
+
+      _userService.isSimpleKycVerified = true;
+      _userService.setMyUserName(_userService.baseUser.name);
+
+      BaseUtil.showPositiveAlert(
+          'Verification Successful', 'You are successfully verified!');
+      isKycInProgress = false;
+
+      _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
+        if (res)
+          _gtService.showInstantGoldenTicketView(
+              title: 'Your KYC is complete', source: GTSOURCE.panVerify);
+      });
+
+      AppState.backButtonDispatcher.didPopRoute();
     } else {
-      print('inside failed name');
       if (veriDetails['fail_code'] == 0) {
-        _userService.isConfirmationDialogOpen = true;
         BaseUtil.openDialog(
           addToScreenStack: true,
           content: MoreInfoDialog(
@@ -275,6 +259,11 @@ class KYCDetailsViewModel extends BaseModel {
       }
     }
     if (!_flag) {
+      _analyticsService.track(
+        eventName: AnalyticsEvents.kycVerificationFailed,
+        properties: {'userId': _userService.baseUser.uid},
+      );
+
       print('returning false flag');
       Map<String, dynamic> _data = {
         'flag': _flag,

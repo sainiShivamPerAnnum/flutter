@@ -31,16 +31,31 @@ class ApiPath {
   get kGetGoldRates => "/augmontOps/$stage/api/rates";
 
   //User Ops Apis
-  get kAddNewUser => "/userOps/$stage/api/v2/newuser";
-  get kAmountTransfer => "/userOps/$stage/api/v2/accountTransfer";
-  get kVerifyTransfer => "/userOps/$stage/api/v2/verifyTransfer";
-  get kVerifyPan => "/userOps/$stage/api/v2/verifyPan";
-  get kCustomAuthToken => "/userOps/$stage/api/v2/trucallerAuthToken";
-  static const acquisitionTracking = "/userOps/api/opt-analytics";
+  get kAddNewUser => "/$stage/api/v3/newuser";
+  get kUpdateUserAppflyer => "/userOps/api/v3/user/appflyer";
+  get kAmountTransfer => "/userOps/api/v3/accountTransfer";
+  get kVerifyTransfer => "/userOps/api/v3/verifyTransfer";
+  get kVerifyPan => "/userOps/api/v3/verifyPan";
+  get kCustomAuthToken => "/userOps/api/v3/trucallerAuthToken";
+  static const acquisitionTracking = "/userOps/api/v3/opt-analytics";
 
   //GT Rewards
   get kRedeemGtReward => "/gtRewardsOps/$stage/v2/api/redeemGtReward";
 
   //Fello Coupons
-  get kFelloCoupons => "/felloCoupons/$stage/api/eligible";
+  get kFelloCoupons => "/$stage/eligible";
+  //"/felloCoupons/$stage/api/eligible";
+
+
+  //DeviceInfo
+  get kSetUserDeviceId =>  "/setUserDeviceId";
+  static const kCreatePaytmTransaction = "/transaction";
+  get kCreateSubscription => "/subscription";
+  get kPauseSubscription => "/subscription/pause";
+  get kResumeSubscription => "/subscription/resume";
+  get kValidateVpa => "/subscription/vpa";
+  get kProcessSubscription => "/process";
+  get kActiveSubscription => "/subscription";
+  get kNextDebitDate => "/debit";
+  get kOngoingCampaigns => "/$stage/campaigns";
 }

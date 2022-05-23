@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -23,8 +23,10 @@ class _FreshDeskHelpState extends State<FreshDeskHelp> {
   int exitCounter = 0;
   bool isLoading = true;
   final _userService = locator<UserService>();
+
   _loadHtmlFromAssets() async {
-    _webViewController.loadFlutterAsset('resources/freshdesk.html');
+    await _webViewController.loadUrl(
+        'https://fello-assets.s3.ap-south-1.amazonaws.com/freshdesk/freshdesk.html');
   }
 
   exitLoading() {
@@ -76,9 +78,10 @@ class _FreshDeskHelpState extends State<FreshDeskHelp> {
                 //observe for window existence
                 Future.delayed(Duration(seconds: 3), () async {
                   _webViewController
-                      .runJavascriptReturningResult('observeWindow()')
+                      .runJavascriptReturningResult(
+                          'setTimeout(function() {observeWindow()}, 1000);')
                       .then((value) {
-                    log(value);
+                    log("This is value " + value);
                   });
                 });
               },

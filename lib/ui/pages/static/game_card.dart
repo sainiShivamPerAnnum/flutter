@@ -6,6 +6,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 
 class GameCard extends StatelessWidget {
   final GameModel gameData;
@@ -17,6 +18,7 @@ class GameCard extends StatelessWidget {
       color: Colors.transparent,
       child: Container(
         width: SizeConfig.screenWidth,
+        height: SizeConfig.screenWidth * 0.38,
         margin: EdgeInsets.only(
             right: SizeConfig.pageHorizontalMargins,
             left: SizeConfig.pageHorizontalMargins,
@@ -24,91 +26,95 @@ class GameCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(
-              SizeConfig.roundness40 + SizeConfig.padding8),
+              SizeConfig.roundness32 + SizeConfig.padding6),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black.withOpacity(0.06),
+                offset: Offset(0, 0),
+                spreadRadius: SizeConfig.padding4,
+                blurRadius: SizeConfig.padding6)
+          ],
         ),
-        padding: EdgeInsets.symmetric(
-            horizontal: SizeConfig.padding8, vertical: SizeConfig.padding6),
-        child: Column(
+        padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding8),
+        child: Stack(
           children: [
-            ClipPath(
-                clipper: GameThumbnailClipper(),
-                child: CachedNetworkImage(
-                  imageUrl: gameData.thumbnailUri,
-                )
-                // Container(
-                //   width: SizeConfig.screenWidth,
-                //   height: SizeConfig.screenHeight * 0.16,
-                //   decoration: BoxDecoration(
-                //     color: UiConstants.primaryColor,
-                //     image: DecorationImage(
-                //         image: AssetImage(gameData.thumbnailImage),
-                //         fit: BoxFit.cover),
-                //   ),
-                // ),
+            Align(
+              alignment: Alignment.center,
+              child: Container(
+                width: SizeConfig.screenWidth -
+                    SizeConfig.pageHorizontalMargins * 2 -
+                    SizeConfig.padding16,
+                height: SizeConfig.screenWidth * 0.35,
+                decoration: BoxDecoration(
+                  color: UiConstants.primaryColor,
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness32),
+                  image: DecorationImage(
+                      image: gameData.thumbnailUri.split('.').last == "jpg"
+                          ? AssetImage(gameData.thumbnailUri)
+                          : CachedNetworkImageProvider(gameData.thumbnailUri),
+                      fit: BoxFit.cover),
                 ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                // SizedBox(height: SizeConfig.padding4),
-                Text(
-                  gameData.gameName,
-                  style:
-                      TextStyles.title5.bold.colour(UiConstants.primaryColor),
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                margin: EdgeInsets.only(bottom: 0),
+                padding: EdgeInsets.symmetric(
+                    vertical: SizeConfig.padding12,
+                    horizontal: SizeConfig.padding16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                        color: UiConstants.textColor.withOpacity(0.2),
+                        offset: Offset(0, -16),
+                        spreadRadius: 5,
+                        blurRadius: 6),
+
+                    // BoxShadow(
+                    //   color: UiConstants.primaryColor,
+                    //   spreadRadius: -12.0,
+                    //   blurRadius: 12.0,
+                    // ),
+                  ],
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(SizeConfig.roundness24),
+                      topRight: Radius.circular(SizeConfig.roundness24)),
                 ),
-                Padding(
-                  padding: EdgeInsets.all(SizeConfig.screenHeight * 0.01),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Text("Entry: ${gameData.playCost ?? 0}   ",
-                                  style: TextStyles.body3),
-                              CircleAvatar(
-                                radius: SizeConfig.screenWidth * 0.029,
-                                backgroundColor:
-                                    UiConstants.tertiarySolid.withOpacity(0.2),
-                                child: SvgPicture.asset(
-                                  Assets.tokens,
-                                  height: SizeConfig.iconSize3,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                child: Wrap(
+                  //mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    Text("Entry: ${gameData.playCost ?? 0}   ",
+                        style: TextStyles.body3),
+                    CircleAvatar(
+                      radius: SizeConfig.screenWidth * 0.029,
+                      backgroundColor:
+                          UiConstants.tertiarySolid.withOpacity(0.2),
+                      child: SvgPicture.asset(
+                        Assets.tokens,
+                        height: SizeConfig.iconSize3,
                       ),
-                      SizedBox(
-                        width: SizeConfig.screenWidth * 0.05,
+                    ),
+                    SizedBox(
+                      width: SizeConfig.screenWidth * 0.05,
+                    ),
+                    Text("Win: ₹ ${gameData.prizeAmount ?? 0}   ",
+                        style: TextStyles.body3),
+                    CircleAvatar(
+                      radius: SizeConfig.screenWidth * 0.029,
+                      backgroundColor:
+                          UiConstants.primaryColor.withOpacity(0.2),
+                      child: Image.asset(
+                        Assets.moneyIcon,
+                        height: SizeConfig.iconSize3,
                       ),
-                      Expanded(
-                          child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text("Win: ₹ ${gameData.prizeAmount ?? 0}   ",
-                                style: TextStyles.body3),
-                            CircleAvatar(
-                              radius: SizeConfig.screenWidth * 0.029,
-                              backgroundColor:
-                                  UiConstants.primaryColor.withOpacity(0.2),
-                              child: RotatedBox(
-                                quarterTurns: 1,
-                                child: Image.asset(
-                                  Assets.moneyIcon,
-                                  height: SizeConfig.iconSize3,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ))
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            )
+              ),
+            ),
           ],
         ),
       ),
@@ -209,5 +215,57 @@ class GameThumbnailClipper extends CustomClipper<Path> {
   bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
     // TODO: implement shouldReclip
     return true;
+  }
+}
+
+class NoRecordDisplayWidget extends StatelessWidget {
+  final String asset;
+  final String assetSvg;
+  final String assetLottie;
+  final String text;
+  final bool topPadding;
+  final bool bottomPadding;
+
+  NoRecordDisplayWidget({
+    this.asset,
+    this.text,
+    this.assetSvg,
+    this.assetLottie,
+    this.topPadding = true,
+    this.bottomPadding = false,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        if (topPadding) SizedBox(height: SizeConfig.screenHeight * 0.1),
+        if (asset != null)
+          Image.asset(
+            asset,
+            height: SizeConfig.screenHeight * 0.16,
+          ),
+        if (assetSvg != null)
+          SvgPicture.asset(
+            assetSvg,
+            height: SizeConfig.screenHeight * 0.16,
+          ),
+        if (assetLottie != null)
+          Lottie.asset(
+            assetLottie,
+            repeat: false,
+            height: SizeConfig.screenHeight * 0.26,
+          ),
+        SizedBox(
+          height: SizeConfig.padding16,
+        ),
+        Text(
+          text,
+          textAlign: TextAlign.center,
+          style: TextStyles.body2.bold,
+        ),
+        if (bottomPadding) SizedBox(height: SizeConfig.padding16),
+      ],
+    );
   }
 }

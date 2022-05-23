@@ -1,9 +1,12 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/play_offer_card.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -40,16 +43,8 @@ class Play extends StatelessWidget {
                                 BorderRadius.circular(SizeConfig.roundness32),
                             child: OfferCard(
                               shimmer: true,
-                              model: PromoCardModel(
-                                1,
-                                null,
-                                null,
-                                null,
-                                null,
-                                4281648039,
-                                null,
-                                1,
-                              ),
+                              model: PromoCardModel(1, null, null, null, null,
+                                  4281648039, null, 1, 0),
                             ),
                           ),
                           ClipRRect(
@@ -58,7 +53,7 @@ class Play extends StatelessWidget {
                             child: OfferCard(
                               shimmer: true,
                               model: PromoCardModel(1, null, null, null, null,
-                                  4294942219, null, 1),
+                                  4294942219, null, 1, 0),
                             ),
                           ),
                         ],
@@ -77,7 +72,7 @@ class Play extends StatelessWidget {
                       ),
               ),
               Transform.translate(
-                offset: Offset(0, -SizeConfig.padding16),
+                offset: Offset(0, -SizeConfig.padding12),
                 child: Padding(
                   padding: EdgeInsets.only(
                     left: SizeConfig.pageHorizontalMargins,
@@ -89,29 +84,33 @@ class Play extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.only(
-                      // topLeft: Radius.circular(100),
-                      // topRight: Radius.circular(100),
+                child: ListView(
+                    shrinkWrap: true,
+                    physics: BouncingScrollPhysics(),
+                    padding:
+                        EdgeInsets.symmetric(vertical: SizeConfig.padding12),
+                    children: List.generate(
+                      BaseUtil.gamesList.length,
+                      (index) => Column(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Haptic.vibrate();
+                              AppState.delegate.parseRoute(
+                                  Uri.parse(BaseUtil.gamesList[index].route));
+                            },
+                            child: GameCard(
+                              gameData: BaseUtil.gamesList[index],
+                            ),
+                          ),
+                          (index == BaseUtil.gamesList.length - 1)
+                              ? SizedBox(
+                                  height: SizeConfig.navBarHeight * 2.4,
+                                )
+                              : SizedBox(height: SizeConfig.padding6),
+                        ],
                       ),
-                  child: ListView(padding: EdgeInsets.zero, children: [
-                    GestureDetector(
-                      onTap: () => model.openGame(BaseUtil.gamesList[0]),
-                      child: GameCard(
-                        gameData: BaseUtil.gamesList[0],
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () => model.openGame(BaseUtil.gamesList[1]),
-                      child: GameCard(
-                        gameData: BaseUtil.gamesList[1],
-                      ),
-                    ),
-                    SizedBox(
-                      height: SizeConfig.navBarHeight * 2.4,
-                    )
-                  ]),
-                ),
+                    )),
               ),
             ],
           ),

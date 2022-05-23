@@ -1,8 +1,9 @@
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
-import 'package:felloapp/core/service/transaction_service.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -19,21 +20,28 @@ class TransactionsHistoryViewModel extends BaseModel {
   //local variables
   int _filter = 1;
   bool _isMoreTxnsBeingFetched = false;
-  Map<String, int> _tranTypeFilterItems = {
-    "All": 1,
-    "Deposit": 2,
-    "Withdrawal": 3,
-    "Prize": 4,
-    // "Refunded": 5,
-  };
+  List<String> _tranTypeFilterItems = [
+    "All",
+    "Deposits",
+    "Withdrawals",
+    "Prizes"
+  ];
+  // Map<String, int> _tranTypeFilterItems = {
+  //   "All": 1,
+  //   "Deposit": 2,
+  //   "Withdrawal": 3,
+  //   "Prize": 4,
+  //   // "Refunded": 5,
+  // };
   List<UserTransaction> _filteredList;
   ScrollController _scrollController;
-
+  double tranAnimWidth = SizeConfig.screenWidth / 3;
   //getters
   int get filter => _filter;
 
-  Map<String, int> get tranTypeFilterItems => _tranTypeFilterItems;
+  // Map<String, int> get tranTypeFilterItems => _tranTypeFilterItems;
 
+  List<String> get tranTypeFilterItems => _tranTypeFilterItems;
   List<UserTransaction> get filteredList => _filteredList;
 
   ScrollController get tranListController => _scrollController;
@@ -58,11 +66,21 @@ class TransactionsHistoryViewModel extends BaseModel {
 
   init() {
     _scrollController = ScrollController();
+
     if (_txnService.txnList == null || _txnService.txnList.length < 5) {
-      getTransactions();
+      getTransactions().then((_) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          tranAnimWidth = 0;
+          notifyListeners();
+        });
+      });
     }
     if (_txnService.txnList != null) {
       filteredList = _txnService.txnList;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        tranAnimWidth = 0;
+        notifyListeners();
+      });
     } else {
       filteredList = [];
     }
@@ -77,7 +95,7 @@ class TransactionsHistoryViewModel extends BaseModel {
     });
   }
 
-  getTransactions() async {
+  Future getTransactions() async {
     setState(ViewState.Busy);
     await _txnService.fetchTransactions(
       limit: 30,

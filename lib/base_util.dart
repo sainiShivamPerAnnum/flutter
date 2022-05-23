@@ -4,7 +4,7 @@ import 'dart:async';
 import 'dart:math';
 //Pub Imports
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:felloapp/core/base_analytics.dart';
+import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
@@ -26,10 +26,10 @@ import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
-import 'package:felloapp/core/service/analytics/analytics_events.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
-import 'package:felloapp/core/service/pan_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/pan_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/constants.dart';
@@ -104,7 +104,6 @@ class BaseUtil extends ChangeNotifier {
 
   DateTime _userCreationTimestamp;
   int isOtpResendCount = 0;
-  bool show_security_prompt = false;
   String zeroBalanceAssetUri;
   static List<GameModel> gamesList;
   static String manualReferralCode;
@@ -185,7 +184,7 @@ class BaseUtil extends ChangeNotifier {
     playScreenFirst = true;
     // _atomicTicketGenerationLeftCount = 0;
     // atomicTicketDeletionLeftCount = 0;
-    show_security_prompt = false;
+
     firstAugmontTransaction = null;
   }
 
@@ -195,7 +194,7 @@ class BaseUtil extends ChangeNotifier {
       _setRuntimeDefaults();
 
       //Analytics logs app open state.
-      await BaseAnalytics.init();
+      BaseAnalytics.init();
       BaseAnalytics.analytics.logAppOpen();
 
       //remote config for various remote variables
@@ -209,9 +208,6 @@ class BaseUtil extends ChangeNotifier {
       firebaseUser = _userService.firebaseUser;
       isUserOnboarded = _userService.isUserOnborded;
 
-      // isUserOnboarded =
-      //     (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
-
       if (isUserOnboarded) {
         //set current user
         myUser = _userService.baseUser;
@@ -222,38 +218,18 @@ class BaseUtil extends ChangeNotifier {
         ///pick zerobalance asset
         Random rnd = new Random();
         zeroBalanceAssetUri = 'zerobal/zerobal_${rnd.nextInt(4) + 1}';
-
-        ///see if security needs to be shown -> Move to save tab
-        show_security_prompt = await _lModel.showSecurityPrompt();
-
-        await setUserDefaults();
+        setUserDefaults();
       }
     } catch (e) {
       logger.e(e.toString());
-      // if (_userService.isUserOnborded != null)
-      //   _dbModel.logFailure(
-      //       _userService.baseUser.uid, FailType.BaseUtilInitFailed, {
-      //     "title": "BaseUtil initialization Failed",
-      //     "error": e.toString(),
-      //   });
     }
   }
 
   Future<void> setUserDefaults() async {
-    ///get user wallet -> Try moving it to view and viewmodel for finance
-    // _userFundWallet = await _dbModel.getUserFundWallet(firebaseUser.uid);
-    // if (_userFundWallet == null) _compileUserWallet();
-
-    ///prefill pan details if available --> Profile Section (Show pan number eye)
     panService = new PanService();
     if (!checkKycMissing) {
       userRegdPan = await panService.getUserPan();
     }
-
-    ///prefill augmont details if available --> Save Tab
-    // if (myUser.isAugmontOnboarded) {
-    //   augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
-    // }
   }
 
   void setPackageInfo() async {
@@ -262,11 +238,33 @@ class BaseUtil extends ChangeNotifier {
   }
 
   void setGameDefaults() {
-    gamesList = [
+    List<GameModel> allgamesList = [
+      GameModel(
+        gameName: "Football",
+        pageConfig: THomePageConfig,
+        tag: 'football',
+        route: "/footballHome",
+        code: 'FO',
+        gameCode: Constants.GAME_TYPE_FOOTBALL,
+        shadowColor: Color(0xff4B489E),
+        thumbnailUri: BaseRemoteConfig.remoteConfig
+            .getString(BaseRemoteConfig.FOOTBALL_THUMBNAIL_URI),
+        playCost: BaseRemoteConfig.remoteConfig
+                .getString(BaseRemoteConfig.FOOTBALL_PLAY_COST) ??
+            "10",
+        prizeAmount: BaseRemoteConfig.remoteConfig
+                .getString(BaseRemoteConfig.FOOTBALL_PLAY_PRIZE) ??
+            "50000",
+        analyticEvent: AnalyticsEvents.selectPlayFootball,
+      ),
       GameModel(
         gameName: "Cricket",
-        pageConfig: CricketHomePageConfig,
+        pageConfig: THomePageConfig,
         tag: 'cricket',
+        route: "/cricketHome",
+        code: 'CR',
+        gameCode: Constants.GAME_TYPE_CRICKET,
+        shadowColor: Color(0xff4B489E),
         thumbnailUri: BaseRemoteConfig.remoteConfig
             .getString(BaseRemoteConfig.CRICKET_THUMBNAIL_URI),
         playCost: BaseRemoteConfig.remoteConfig
@@ -278,9 +276,49 @@ class BaseUtil extends ChangeNotifier {
         analyticEvent: AnalyticsEvents.selectPlayCricket,
       ),
       GameModel(
+        gameName: "Pool Club",
+        pageConfig: THomePageConfig,
+        tag: 'poolclub',
+        route: "/poolHome",
+        code: 'PO',
+        gameCode: Constants.GAME_TYPE_POOLCLUB,
+        shadowColor: Color(0xff00982B),
+        thumbnailUri: BaseRemoteConfig.remoteConfig
+            .getString(BaseRemoteConfig.POOLCLUB_THUMBNAIL_URI),
+        playCost: BaseRemoteConfig.remoteConfig
+                .getString(BaseRemoteConfig.POOLCLUB_PLAY_COST) ??
+            "10",
+        prizeAmount: BaseRemoteConfig.remoteConfig
+                .getString(BaseRemoteConfig.POOLCLUB_PLAY_PRIZE) ??
+            "10,000",
+        analyticEvent: AnalyticsEvents.selectPlayPoolClub,
+      ),
+      GameModel(
+        gameName: "Candy Fiesta",
+        pageConfig: THomePageConfig,
+        tag: 'candyFiesta',
+        route: "/candyFiestaHome",
+        code: 'CA',
+        gameCode: Constants.GAME_TYPE_CANDYFIESTA,
+        shadowColor: Color(0xff4B489E),
+        thumbnailUri: BaseRemoteConfig.remoteConfig
+            .getString(BaseRemoteConfig.CANDYFIESTA_THUMBNAIL_URI),
+        playCost: BaseRemoteConfig.remoteConfig
+                .getString(BaseRemoteConfig.CANDYFIESTA_PLAY_COST) ??
+            "10",
+        prizeAmount: BaseRemoteConfig.remoteConfig
+                .getString(BaseRemoteConfig.CANDYFIESTA_PLAY_PRIZE) ??
+            "50000",
+        analyticEvent: AnalyticsEvents.selectCandyFiesta,
+      ),
+      GameModel(
         gameName: "Tambola",
         pageConfig: THomePageConfig,
         tag: 'tambola',
+        route: "/tambolaHome",
+        code: 'TA',
+        gameCode: Constants.GAME_TYPE_TAMBOLA,
+        shadowColor: Color(0xff1D173D),
         thumbnailUri: BaseRemoteConfig.remoteConfig
             .getString(BaseRemoteConfig.TAMBOLA_THUMBNAIL_URI),
         playCost: BaseRemoteConfig.remoteConfig
@@ -292,8 +330,18 @@ class BaseUtil extends ChangeNotifier {
         analyticEvent: AnalyticsEvents.selectPlayTambola,
       ),
     ];
+    //Arrange Games according to the position defined in baseremoteconfig.
+    List<String> gamePosition = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.GAME_POSITION)
+        .split('-');
+    logger.d("Games List: $gamePosition");
+    gamesList = [];
+    gamePosition.forEach((code) {
+      gamesList.add(
+        allgamesList.firstWhere((game) => game.code == code),
+      );
+    });
   }
-
 
   Future<bool> isUnreadFreshchatSupportMessages() async {
     try {
@@ -362,7 +410,7 @@ class BaseUtil extends ChangeNotifier {
     return (!skFlag && !augFlag);
   }
 
-  static showPositiveAlert(String title, String message, {int seconds}) {
+  static showPositiveAlert(String title, String message, {int seconds = 3}) {
     // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Flushbar(
@@ -377,7 +425,7 @@ class BaseUtil extends ChangeNotifier {
         borderRadius: 8,
         title: title,
         message: message,
-        duration: Duration(seconds: 3),
+        duration: Duration(seconds: seconds),
         backgroundGradient: LinearGradient(
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,
@@ -596,7 +644,7 @@ class BaseUtil extends ChangeNotifier {
       lastTransactionListDocument = null;
       hasMoreTransactionListDocuments = true;
       isOtpResendCount = 0;
-      show_security_prompt = false;
+
       AppState.delegate.appState.setCurrentTabIndex = 0;
       manualReferralCode = null;
       _setRuntimeDefaults();
@@ -657,7 +705,7 @@ class BaseUtil extends ChangeNotifier {
     }
   }
 
-  void openTambolaHome() async {
+  void openTambolaGame() async {
     if (await getDrawStatus()) {
       await _lModel.saveDailyPicksAnimStatus(DateTime.now().weekday).then(
             (value) =>

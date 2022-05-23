@@ -1,0 +1,386 @@
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/model/flc_pregame_model.dart';
+import 'package:felloapp/core/model/prizes_model.dart';
+import 'package:felloapp/core/repository/flc_actions_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
+import 'package:felloapp/core/service/notifier_services/prize_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
+import 'package:felloapp/ui/pages/others/games/web/web_game/web_game_view.dart';
+import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/flavor_config.dart';
+import 'package:felloapp/util/locator.dart';
+import 'package:flutter/material.dart';
+
+class WebHomeViewModel extends BaseModel {
+  //Dependency Injection
+  final _userService = locator<UserService>();
+  final _lbService = locator<LeaderboardService>();
+  final _analyticsService = locator<AnalyticsService>();
+  final _prizeService = locator<PrizeService>();
+  final _fclActionRepo = locator<FlcActionsRepo>();
+  final _userCoinService = locator<UserCoinService>();
+  final _logger = locator<CustomLogger>();
+
+  //Local Variables
+
+  int currentPage = 0;
+  int gameIndex = 0;
+  double cardOpacity = 1;
+  bool _isPrizesLoading = false;
+  String _currentGame;
+  PageController pageController;
+  ScrollController scrollController;
+  PrizesModel _prizes;
+  String _message;
+  String _sessionId;
+  String _gameEndpoint;
+  String token = "";
+
+  //Getters
+  String get currentGame => this._currentGame;
+  PrizesModel get prizes => _prizes;
+  bool get isPrizesLoading => this._isPrizesLoading;
+  int get getGameIndex => this.gameIndex;
+  String get message => _message;
+  String get sessionID => _sessionId;
+
+  //Setters
+  set currentGame(value) {
+    this._currentGame = value;
+    notifyListeners();
+  }
+
+  set prizes(PrizesModel value) {
+    this._prizes = value;
+    notifyListeners();
+  }
+
+  set isPrizesLoading(value) {
+    this._isPrizesLoading = value;
+    notifyListeners();
+  }
+
+  //Super Methods
+  init(String game) async {
+    currentGame = game;
+    print(currentGame);
+    scrollController = _lbService.parentController;
+    pageController = new PageController(initialPage: 0);
+    refreshPrizes();
+    refreshLeaderboard();
+  }
+
+  clear() {}
+
+  refreshPrizes() async {
+    isPrizesLoading = true;
+    switch (currentGame) {
+      case Constants.GAME_TYPE_POOLCLUB:
+        if (_prizeService.poolClubPrizes == null)
+          await _prizeService.fetchPoolClubPrizes();
+        prizes = _prizeService.poolClubPrizes;
+
+        break;
+      case Constants.GAME_TYPE_CRICKET:
+        if (_prizeService.cricketPrizes == null)
+          await _prizeService.fetchCricketPrizes();
+        prizes = _prizeService.cricketPrizes;
+
+        break;
+      case Constants.GAME_TYPE_TAMBOLA:
+        if (_prizeService.tambolaPrizes == null)
+          await _prizeService.fetchTambolaPrizes();
+        prizes = _prizeService.tambolaPrizes;
+
+        break;
+      case Constants.GAME_TYPE_FOOTBALL:
+        if (_prizeService.footballPrizes == null)
+          await _prizeService.fetchFootballPrizes();
+        prizes = _prizeService.footballPrizes;
+
+        break;
+      case Constants.GAME_TYPE_CANDYFIESTA:
+        if (_prizeService.candyFiestaPrizes == null)
+          await _prizeService.fetchCandyFiestaPrizes();
+        prizes = _prizeService.candyFiestaPrizes;
+
+        break;
+    }
+    isPrizesLoading = false;
+    if (prizes == null)
+      BaseUtil.showNegativeAlert("Unable to fetch prizes at the moment",
+          "Please try again after sometime");
+  }
+
+  Future<bool> setupGame() async {
+    await getBearerToken();
+    switch (currentGame) {
+      case Constants.GAME_TYPE_POOLCLUB:
+        return _setupPoolClubGame();
+        break;
+      case Constants.GAME_TYPE_CRICKET:
+        return _setupCricketGame();
+        break;
+      case Constants.GAME_TYPE_FOOTBALL:
+        return _setupFootBallGame();
+        break;
+      case Constants.GAME_TYPE_CANDYFIESTA:
+        return _setupCandyFiestaGame();
+        break;
+      default:
+        return false;
+    }
+  }
+
+  launchGame() {
+    String initialUrl;
+    viewpage(1);
+    _analyticsService.track(eventName: AnalyticsEvents.gamePlayStarted);
+    switch (currentGame) {
+      case Constants.GAME_TYPE_POOLCLUB:
+        _analyticsService.track(eventName: AnalyticsEvents.poolClubStarts);
+        initialUrl = _generatePoolClubGameUrl();
+        break;
+      case Constants.GAME_TYPE_CRICKET:
+        _analyticsService.track(eventName: AnalyticsEvents.startPlayingCricket);
+        initialUrl = _generateCricketGameUrl();
+        break;
+      case Constants.GAME_TYPE_FOOTBALL:
+        _analyticsService.track(
+            eventName: AnalyticsEvents.startPlayingFootball);
+        initialUrl = _generateFootBallGameUrl();
+        break;
+      case Constants.GAME_TYPE_CANDYFIESTA:
+        _analyticsService.track(
+            eventName: AnalyticsEvents.startPlayingCandyFiesta);
+        initialUrl = _generateCandyFiestaGameUrl();
+        break;
+    }
+    initialUrl = currentGame == Constants.GAME_TYPE_CRICKET
+        ? initialUrl
+        : initialUrl + "&token=$token";
+    _logger.d("Game Url: $initialUrl");
+    AppState.delegate.appState.currentAction = PageAction(
+      state: PageState.addWidget,
+      page: WebGameViewPageConfig,
+      widget: WebGameView(
+        initialUrl: initialUrl,
+        game: currentGame,
+        inLandscapeMode: currentGame == Constants.GAME_TYPE_POOLCLUB ||
+                (currentGame == Constants.GAME_TYPE_CRICKET)
+            ? true
+            : false,
+      ),
+    );
+  }
+
+  //Cricket Methods -------------------------------------START----------------//
+  Future<bool> _setupCricketGame() async {
+    setState(ViewState.Busy);
+    String _cricPlayCost = BaseRemoteConfig.remoteConfig
+            .getString(BaseRemoteConfig.CRICKET_PLAY_COST) ??
+        "10";
+    int _cost = -1 * int.tryParse(_cricPlayCost) ?? 10;
+    ApiResponse<FlcModel> _flcResponse =
+        await _fclActionRepo.substractFlc(_cost);
+    _message = _flcResponse.model.message;
+    if (_flcResponse.model.flcBalance != null) {
+      _userCoinService.setFlcBalance(_flcResponse.model.flcBalance);
+    } else {
+      _logger.d("Flc balance is null");
+    }
+
+    if (_flcResponse.model.sessionId != null) {
+      _sessionId = _flcResponse.model.sessionId;
+    } else {
+      _logger.d("sessionId null");
+    }
+
+    if (_flcResponse.model.gameEndpoint != null) {
+      _gameEndpoint = _flcResponse.model.gameEndpoint;
+    } else {
+      _logger.d("gameEndpoint null");
+    }
+
+    if (_flcResponse.model.canUserPlay) {
+      setState(ViewState.Idle);
+      return true;
+    } else {
+      setState(ViewState.Idle);
+      return false;
+    }
+  }
+
+  // add function for football to check game cost
+
+  String _generateCricketGameUrl() {
+    return _gameEndpoint != null
+        ? _gameEndpoint
+        : '${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.CRICKET_GAME_URI)}?userId=${_userService.baseUser.uid}&userName=${_userService.baseUser.username}&sessionId=$_sessionId&stage=${FlavorConfig.getStage()}&gameId=cric2020';
+  }
+
+  //Cricket Methods -----------------------------------END--------------------//
+
+  //FootBall Methods --------------------------------START--------------------//
+  Future<bool> _setupFootBallGame() async {
+    setState(ViewState.Busy);
+    String _footballPlayCost = BaseRemoteConfig.remoteConfig
+            .getString(BaseRemoteConfig.FOOTBALL_PLAY_COST) ??
+        "10";
+    int _cost = int.tryParse(_footballPlayCost) ?? 10;
+    ApiResponse<FlcModel> _flcResponse = await _fclActionRepo.getCoinBalance();
+    setState(ViewState.Idle);
+    if (_flcResponse.model.flcBalance != null &&
+        _flcResponse.model.flcBalance >= _cost)
+      return true;
+    else {
+      return false;
+    }
+  }
+
+  String _generateFootBallGameUrl() {
+    String _footBallUri = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.FOOTBALL_GAME_URI);
+    String _loadUri =
+        "$_footBallUri?user=${_userService.baseUser.uid}&name=${_userService.baseUser.username}";
+    if (FlavorConfig.isDevelopment()) _loadUri = "$_loadUri&dev=true";
+    return _loadUri;
+  }
+
+  //FootBall Methods -----------------------------------END-------------------//
+
+  //CandyFiesta Methods --------------------------------START--------------------//
+  Future<bool> _setupCandyFiestaGame() async {
+    setState(ViewState.Busy);
+    String _candyFiestaCost = BaseRemoteConfig.remoteConfig
+            .getString(BaseRemoteConfig.CANDYFIESTA_PLAY_COST) ??
+        "10";
+    int _cost = int.tryParse(_candyFiestaCost) ?? 10;
+    ApiResponse<FlcModel> _flcResponse = await _fclActionRepo.getCoinBalance();
+    setState(ViewState.Idle);
+    if (_flcResponse.model.flcBalance != null &&
+        _flcResponse.model.flcBalance >= _cost)
+      return true;
+    else {
+      return false;
+    }
+  }
+
+  String _generateCandyFiestaGameUrl() {
+    String _candyFiestaUri = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.CANDYFIESTA_GAME_URI);
+    String _loadUri =
+        "$_candyFiestaUri?user=${_userService.baseUser.uid}&name=${_userService.baseUser.username}";
+    if (FlavorConfig.isDevelopment()) _loadUri = "$_loadUri&dev=true";
+    return _loadUri;
+  }
+
+  //CandyFiesta Methods -----------------------------------END-------------------//
+
+  //PoolClub Methods --------------------------------START--------------------//
+  Future<bool> _setupPoolClubGame() async {
+    setState(ViewState.Busy);
+    String _poolPlayCost = BaseRemoteConfig.remoteConfig
+            .getString(BaseRemoteConfig.POOLCLUB_PLAY_COST) ??
+        "10";
+    int _cost = int.tryParse(_poolPlayCost) ?? 10;
+    ApiResponse<FlcModel> _flcResponse = await _fclActionRepo.getCoinBalance();
+    setState(ViewState.Idle);
+    if (_flcResponse.model.flcBalance != null &&
+        _flcResponse.model.flcBalance >= _cost)
+      return true;
+    else {
+      return false;
+    }
+  }
+
+  getPromo() {
+    switch (currentGame) {
+      case Constants.GAME_TYPE_POOLCLUB:
+        return null;
+      case Constants.GAME_TYPE_CRICKET:
+        return BaseRemoteConfig.remoteConfig
+            .getString(BaseRemoteConfig.GAME_CRICKET_FPL_ANNOUNCEMENT);
+      case Constants.GAME_TYPE_FOOTBALL:
+        return null;
+      default:
+        return null;
+    }
+  }
+
+  getSubtitle() {
+    switch (currentGame) {
+      case Constants.GAME_TYPE_POOLCLUB:
+        return 'The highest scorers of the week win prizes every Sunday at midnight';
+      case Constants.GAME_TYPE_CRICKET:
+        return 'The highest scorers of the week win prizes every Sunday at midnight';
+      case Constants.GAME_TYPE_FOOTBALL:
+        return 'The highest scorers of the week win prizes every Sunday at midnight';
+      default:
+        return null;
+    }
+  }
+
+  String _generatePoolClubGameUrl() {
+    String _poolClubUri = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.POOLCLUB_GAME_URI);
+    String _loadUri =
+        "$_poolClubUri?user=${_userService.baseUser.uid}&name=${_userService.baseUser.username}";
+    if (FlavorConfig.isDevelopment()) _loadUri = "$_loadUri&dev=true";
+    return _loadUri;
+  }
+
+  //PoolClub Methods -----------------------------------END-------------------//
+
+  //Main Methods
+  udpateCardOpacity() {
+    cardOpacity = (1 -
+            (scrollController.offset /
+                scrollController.position.maxScrollExtent))
+        .clamp(0, 1)
+        .toDouble();
+    notifyListeners();
+  }
+
+  Future<void> getBearerToken() async {
+    token = await _userService.firebaseUser.getIdToken();
+    _logger.d(token);
+  }
+
+  void earnMoreTokens() {
+    _analyticsService.track(eventName: AnalyticsEvents.earnMoreTokens);
+    BaseUtil.openModalBottomSheet(
+      addToScreenStack: true,
+      content: WantMoreTicketsModalSheet(
+        isInsufficientBalance: true,
+      ),
+      hapticVibrate: true,
+      backgroundColor: Colors.transparent,
+      isBarrierDismissable: true,
+    );
+  }
+
+  void viewpage(int index) {
+    currentPage = index;
+    print(currentPage);
+    pageController.animateToPage(currentPage,
+        duration: Duration(milliseconds: 200), curve: Curves.decelerate);
+    refresh();
+  }
+
+  refreshLeaderboard() async {
+    await _lbService.fetchWebGameLeaderBoard(game: currentGame);
+  }
+}

@@ -3,7 +3,7 @@ import 'package:felloapp/core/model/transfer_amount_api_model.dart';
 import 'package:felloapp/core/model/verify_amount_api_response_model.dart';
 import 'package:felloapp/core/model/verify_pan_response_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/custom_logger.dart';
