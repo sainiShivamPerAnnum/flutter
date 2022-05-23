@@ -10,6 +10,7 @@ import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/campaigns_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -23,7 +24,8 @@ class PlayViewModel extends BaseModel {
   final _fclActionRepo = locator<FlcActionsRepo>();
   final _userCoinService = locator<UserCoinService>();
   final _userService = locator<UserService>();
-  final _dbProvider = locator<DBModel>();
+  // final _dbProvider = locator<DBModel>();
+  final _promoService = locator<CampaignService>();
   final _logger = locator<CustomLogger>();
   final _baseUtil = locator<BaseUtil>();
   final _analyticsService = locator<AnalyticsService>();
@@ -70,8 +72,11 @@ class PlayViewModel extends BaseModel {
 
   loadOfferList() async {
     isOfferListLoading = true;
-    await _dbProvider.getPromoCards().then((cards) {
-      _offerList = cards;
+    // await _dbProvider.getPromoCards().then((cards) {
+    //   _offerList = cards;
+    // });
+    await _promoService.getPromoCards().then((cards) {
+      _offerList = cards.model;
     });
     print(_offerList);
     if (_offerList != null && offerList.length > 1) initiate();
