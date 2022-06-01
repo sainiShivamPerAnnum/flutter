@@ -68,26 +68,33 @@ android {
     }
 
     signingConfigs {
-        // debug {
-        //     keyAlias keystoreProperties['debugkeyAlias']
-        //     keyPassword keystoreProperties['debugkeyPassword']
-        //     storeFile keystoreProperties['debugstoreFile'] ? file(keystoreProperties['debugstoreFile']) : null
-        //     storePassword keystoreProperties['debugstorePassword']
-        // }
 
-        // release {
-        //     keyAlias keystoreProperties['keyAlias']
-        //     keyPassword keystoreProperties['keyPassword']
-        //     storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-        //     storePassword keystoreProperties['storePassword']
-        // }
-
-        release {
-            storeFile file('key.jks')
-            storePassword getSetting("PLAY_STORE_UPLOAD_KEYSTORE_PASSWORD")
-            keyAlias getSetting("PLAY_STORE_UPLOAD_KEYSTORE_ALIAS")
-            keyPassword getSetting("PLAY_STORE_UPLOAD_KEY_PASSWORD")
+        //Comment it before push to develop, to build using CICD 
+        //Uncomment for local build and release.
+        debug {
+            keyAlias keystoreProperties['debugkeyAlias']
+            keyPassword keystoreProperties['debugkeyPassword']
+            storeFile keystoreProperties['debugstoreFile'] ? file(keystoreProperties['debugstoreFile']) : null
+            storePassword keystoreProperties['debugstorePassword']
         }
+
+         //Comment it before push to develop, to build using CICD 
+         //Uncomment for local build and release.
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storePassword keystoreProperties['storePassword']
+        }
+        
+        //Uncomment below, before push to develop to initiate CI and CD from gitlab.
+        //Comment for local build and release.
+        // release {
+        //     storeFile file('key.jks')
+        //     storePassword getSetting("PLAY_STORE_UPLOAD_KEYSTORE_PASSWORD")
+        //     keyAlias getSetting("PLAY_STORE_UPLOAD_KEYSTORE_ALIAS")
+        //     keyPassword getSetting("PLAY_STORE_UPLOAD_KEY_PASSWORD")
+        // }
     }
 
     buildTypes {
