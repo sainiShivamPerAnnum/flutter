@@ -73,39 +73,7 @@ class Save extends StatelessWidget {
                       mini: true,
                     ),
                   ),
-                  // SizedBox(height: SizeConfig.padding32),
-                  // // Goldlinks(model: model),
-                  // TextButton(
-                  //   onPressed: () {
-                  //     model.showInstantTestGT();
-                  //   },
-                  //   child: Text("Show instant gt"),
-                  // ),
-                  // TextButton(
-                  //   onPressed: () {
-                  //     model.showTxnSuccessScreen(null, null);
-                  //   },
-                  //   child: Text("Show txn complete UI"),
-                  // ),
-                  // TextButton(
-                  //   onPressed: () {
-                  //     model.showTransactionPendingDialog();
-                  //   },
-                  //   child: Text("Show txn waiting dialog"),
-                  // ),
-
-                  // TextButton(
-                  //   onPressed: () {
-                  //     AppState.delegate.appState.currentAction = PageAction(
-                  //         state: PageState.addPage, page: PoolViewPageConfig);
-                  //   },
-                  //   child: Text("Show pool game"),
-                  // ),
-
                   AutosaveCard(),
-                  SizedBox(height: SizeConfig.padding32),
-                  // Goldlinks(model: model),
-                  //CustomSubscriptionContainer(),
                   SizedBox(height: SizeConfig.navBarHeight * 2),
                 ],
               ),
