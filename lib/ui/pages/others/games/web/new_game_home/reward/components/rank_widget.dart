@@ -1,3 +1,6 @@
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -19,8 +22,8 @@ class RankWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const SizedBox(
-          height: 80,
+        SizedBox(
+          height: SizeConfig.padding54,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -31,7 +34,7 @@ class RankWidget extends StatelessWidget {
               image: 'rank_third.svg',
               priceMoney: thirdPriceMoney,
               pricePoint: thirdPricePoint,
-              color: const Color(0xFF34C3A7),
+              color: UiConstants.kThirdRankPillerColor,
               context: context,
             ),
             _buildRankPiller(
@@ -39,7 +42,7 @@ class RankWidget extends StatelessWidget {
               image: 'rank_first.svg',
               priceMoney: firstPriceMoney,
               pricePoint: firstPricePoint,
-              color: const Color(0xFFF2B826),
+              color: UiConstants.kFirstRankPillerColor,
               context: context,
             ),
             _buildRankPiller(
@@ -47,7 +50,7 @@ class RankWidget extends StatelessWidget {
               image: 'rank_second.svg',
               priceMoney: secondPriceMoney,
               pricePoint: secondPricePoint,
-              color: const Color(0xFF5371EE),
+              color: UiConstants.kSecondRankPillerColor,
               context: context,
             ),
           ],
@@ -64,35 +67,45 @@ class RankWidget extends StatelessWidget {
     Color color,
     BuildContext context,
   }) {
+    double pillerBoxHeight = SizeConfig.screenHeight * 0.257 -
+        ((rank - 1.0) *
+            SizeConfig.screenHeight *
+            0.024); // 200 - (rank - 1) * 20
+    double pillerHeight = SizeConfig.screenHeight * 0.2308 -
+        ((rank - 1.0) *
+            SizeConfig.screenHeight *
+            0.0256); // 180 - (rank - 1) * 20
     return SizedBox(
-      height: 200.0 - ((rank - 1.0) * 20.0),
+      height: pillerBoxHeight,
       child: Stack(
         children: [
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 5),
-              padding: const EdgeInsets.symmetric(vertical: 10),
+              margin: EdgeInsets.symmetric(
+                horizontal: SizeConfig.padding6,
+              ),
+              padding: EdgeInsets.symmetric(
+                vertical: SizeConfig.padding12,
+              ),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
+                borderRadius: BorderRadius.circular(
+                  SizeConfig.roundness5,
+                ),
                 color: color.withOpacity(0.1),
               ),
-              height: 180.0 - ((rank - 1.0) * 20.0),
-              width: 90,
+              height: pillerHeight,
+              width: SizeConfig.screenWidth * 0.25, // 90
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const SizedBox(
-                    height: 30,
+                  SizedBox(
+                    height: SizeConfig.padding32,
                   ),
                   Text(
                     "$rank${rank == 1 ? 'st' : rank == 2 ? 'nd' : 'rd'}",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Rajdhani.style.body1.bold,
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -100,25 +113,21 @@ class RankWidget extends StatelessWidget {
                     children: [
                       Text(
                         'Rs $priceMoney',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.white,
-                        ),
+                        style: SansPro.style.body3,
                       ),
-                      const SizedBox(height: 3),
+                      SizedBox(
+                        height: SizeConfig.padding4,
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           SvgPicture.asset('assets/temp/Tokens.svg'),
-                          const SizedBox(
-                            width: 5,
+                          SizedBox(
+                            width: SizeConfig.padding6,
                           ),
                           Text(
                             '$pricePoint',
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Color(0xFFB3B3B3),
-                            ),
+                            style: SansPro.style.body4.medium,
                           ),
                         ],
                       ),
@@ -129,10 +138,12 @@ class RankWidget extends StatelessWidget {
             ),
           ),
           Positioned(
-            left: rank == 1 ? 20 : 25,
+            left: rank == 1
+                ? SizeConfig.screenWidth * 0.0555
+                : SizeConfig.screenWidth * 0.0694,
             child: SvgPicture.asset(
               'assets/temp/$image',
-              width: rank == 1 ? 60 : 50,
+              width: rank == 1 ? SizeConfig.iconSize7 : SizeConfig.iconSize6,
             ),
           ),
         ],

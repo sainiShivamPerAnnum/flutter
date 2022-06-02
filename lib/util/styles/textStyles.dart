@@ -37,6 +37,8 @@ class TextStyles {
 
 extension TextStyleHelpers on TextStyle {
   TextStyle get bold => copyWith(fontWeight: FontWeight.bold);
+  TextStyle get medium => copyWith(fontWeight: FontWeight.w500);
+  TextStyle get semiBold => copyWith(fontWeight: FontWeight.w600);
   TextStyle get extraBold => copyWith(fontWeight: FontWeight.w900);
   TextStyle get light => copyWith(fontWeight: FontWeight.w300);
   TextStyle get underline => copyWith(decoration: TextDecoration.underline);
@@ -47,4 +49,28 @@ extension TextStyleHelpers on TextStyle {
   TextStyle weight(FontWeight weight) => copyWith(fontWeight: weight);
   TextStyle colour(Color color) => copyWith(color: color);
   TextStyle setHeight(double height) => copyWith(height: height);
+  TextStyle setOpecity(double opacity) =>
+      copyWith(color: color.withOpacity(opacity));
+}
+
+class SansPro {
+  static TextStyle get style => GoogleFonts.sourceSansPro(color: Colors.white);
+}
+
+class Rajdhani {
+  static TextStyle get style => GoogleFonts.rajdhani(color: Colors.white);
+}
+
+extension FontSize on TextStyle {
+  TextStyle get title1 => copyWith(fontSize: SizeConfig.title1);
+  TextStyle get title2 => copyWith(fontSize: SizeConfig.title2);
+  TextStyle get title3 => copyWith(fontSize: SizeConfig.title3);
+  TextStyle get title4 => copyWith(fontSize: SizeConfig.title4);
+  TextStyle get title5 => copyWith(fontSize: SizeConfig.title5);
+
+  TextStyle get body1 => copyWith(fontSize: SizeConfig.body1);
+  TextStyle get body2 => copyWith(fontSize: SizeConfig.body2);
+  TextStyle get body3 => copyWith(fontSize: SizeConfig.body3);
+  TextStyle get body4 => copyWith(fontSize: SizeConfig.body4);
+  TextStyle get body5 => copyWith(fontSize: SizeConfig.body5);
 }

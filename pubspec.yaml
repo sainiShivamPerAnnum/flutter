@@ -109,6 +109,8 @@ flutter:
     - assets/lotties/
     - assets/videos/
     - assets/temp/
+    - assets/fonts/rajdhani/
+    - assets/fonts/sansPro/
 
   fonts:
     - family: Cucciolo

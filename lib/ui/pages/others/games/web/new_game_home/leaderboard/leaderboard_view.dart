@@ -1,4 +1,7 @@
 import 'package:felloapp/ui/pages/others/games/web/new_game_home/leaderboard/components/winner_widget.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class LeaderBoardView extends StatelessWidget {
@@ -7,11 +10,17 @@ class LeaderBoardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 10),
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      margin: EdgeInsets.symmetric(
+        horizontal: SizeConfig.padding12,
+      ),
+      padding: EdgeInsets.symmetric(
+        horizontal: SizeConfig.padding12,
+      ),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        color: const Color(0xFF39393C),
+        borderRadius: BorderRadius.circular(
+          SizeConfig.roundness5,
+        ),
+        color: UiConstants.kLeaderBoardBackgroundColor,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -20,29 +29,25 @@ class LeaderBoardView extends StatelessWidget {
           const WinnerWidgets(),
           const UserRank(),
           const RemainingRank(),
-          const SizedBox(
-            height: 10,
+          SizedBox(
+            height: SizeConfig.padding12,
           ),
           TextButton(
             onPressed: () {},
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
+                Text(
                   'See All',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: Rajdhani.style.body2.semiBold,
                 ),
-                const SizedBox(
-                  width: 5,
+                SizedBox(
+                  width: SizeConfig.padding6,
                 ),
                 Image.asset(
                   'assets/temp/chevron_right.png',
-                  width: 16,
-                  height: 16,
+                  width: SizeConfig.iconSize1,
+                  height: SizeConfig.iconSize1,
                 )
               ],
             ),
@@ -59,59 +64,63 @@ class UserRank extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width,
+      width: SizeConfig.screenWidth,
       decoration: BoxDecoration(
-        color: const Color(0xFF000000).withOpacity(0.3),
-        borderRadius: BorderRadius.circular(5),
-      ),
-      margin: const EdgeInsets.only(bottom: 15, top: 35),
-      child: ListTile(
-        dense: true,
-        title: Row(
-          children: [
-            const Text(
-              '56',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(
-              width: 20,
-            ),
-            Image.asset(
-              'assets/temp/rank_one_profile.png',
-              width: 30,
-              height: 30,
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            const Text(
-              "YOU",
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            )
-          ],
+        color: UiConstants.kUserRankBackgroundColor,
+        borderRadius: BorderRadius.circular(
+          SizeConfig.roundness5,
         ),
-        trailing: RichText(
-          text: TextSpan(
-            children: <TextSpan>[
-              TextSpan(
-                text: 'Best : ',
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.6),
+      ),
+      margin: EdgeInsets.only(
+        bottom: SizeConfig.padding16,
+        top: SizeConfig.padding32,
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          vertical: SizeConfig.padding12,
+          horizontal: SizeConfig.padding16,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Text(
+                  '56',
+                  style: Rajdhani.style.body2.bold,
                 ),
+                SizedBox(
+                  width: SizeConfig.padding20,
+                ),
+                Image.asset(
+                  'assets/temp/rank_one_profile.png',
+                  width: SizeConfig.iconSize5,
+                  height: SizeConfig.iconSize5,
+                ),
+                SizedBox(
+                  width: SizeConfig.padding12,
+                ),
+                Text(
+                  "YOU",
+                  style: Rajdhani.style.body2.semiBold,
+                )
+              ],
+            ),
+            RichText(
+              text: TextSpan(
+                children: <TextSpan>[
+                  TextSpan(
+                    text: 'Best : ',
+                    style: Rajdhani.style.body3,
+                  ),
+                  TextSpan(
+                    text: '43 Runs',
+                    style: Rajdhani.style.body3.semiBold,
+                  ),
+                ],
               ),
-              const TextSpan(
-                text: '43 Runs',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -151,50 +160,49 @@ class _RemainingRankState extends State<RemainingRank> {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
-        return ListTile(
-          title: Row(
-            children: [
-              Text(
-                '${index + 4}',
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(
-                width: 20,
-              ),
-              Image.asset(
-                'assets/temp/${winnerDetails[index]['image']}',
-                width: 30,
-                height: 30,
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              Text(
-                '${winnerDetails[index]['name']}',
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.8),
-                  fontSize: 14,
-                ),
-              )
-            ],
+        return Padding(
+          padding: EdgeInsets.symmetric(
+            vertical: SizeConfig.padding20,
+            horizontal: SizeConfig.padding24,
           ),
-          trailing: Text(
-            '${winnerDetails[index]['score']}',
-            style: const TextStyle(
-              fontSize: 14,
-              color: Colors.white,
-            ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    '${index + 4}',
+                    style: Rajdhani.style.body2.semiBold,
+                  ),
+                  SizedBox(
+                    width: SizeConfig.padding20,
+                  ),
+                  Image.asset(
+                    'assets/temp/${winnerDetails[index]['image']}',
+                    width: SizeConfig.iconSize5,
+                    height: SizeConfig.iconSize5,
+                  ),
+                  SizedBox(
+                    width: SizeConfig.padding12,
+                  ),
+                  Text(
+                    '${winnerDetails[index]['name']}',
+                    style: SansPro.style.body3.setOpecity(0.8),
+                  )
+                ],
+              ),
+              Text(
+                '${winnerDetails[index]['score']}',
+                style: Rajdhani.style.body3.medium,
+              ),
+            ],
           ),
         );
       },
       separatorBuilder: (context, index) {
-        return const Divider(
-          height: 0.5,
-          color: Color(0xFF9EA1A1),
+        return Divider(
+          height: SizeConfig.dividerHeight, // 0.5
+          color: UiConstants.kDividerColor,
         );
       },
     );

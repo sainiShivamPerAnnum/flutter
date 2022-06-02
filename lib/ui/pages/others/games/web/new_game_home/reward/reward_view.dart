@@ -1,4 +1,7 @@
 import 'package:felloapp/ui/pages/others/games/web/new_game_home/reward/components/rank_widget.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -8,11 +11,17 @@ class RewardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 10),
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      margin: EdgeInsets.symmetric(
+        horizontal: SizeConfig.padding12,
+      ),
+      padding: EdgeInsets.symmetric(
+        horizontal: SizeConfig.padding12,
+      ),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        color: const Color(0xFF39393C),
+        borderRadius: BorderRadius.circular(
+          SizeConfig.roundness5,
+        ),
+        color: UiConstants.kLeaderBoardBackgroundColor,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -29,72 +38,64 @@ class RewardView extends StatelessWidget {
           ),
           Expanded(
             child: NotificationListener<OverscrollNotification>(
-              onNotification: (OverscrollNotification notification) {
-                // var controller = HomeController.to.scrollController;
-                // if (notification.overscroll < 0 &&
-                //     controller.offset + notification.overscroll <= 0) {
-                //   if (controller.offset != 0) controller.jumpTo(0);
-                //   return true;
-                // }
-                // if (controller.offset + notification.overscroll >=
-                //     controller.position.maxScrollExtent) {
-                //   if (controller.offset !=
-                //       controller.position.maxScrollExtent) {
-                //     controller.jumpTo(controller.position.maxScrollExtent);
-                //   }
-                //   return true;
-                // }
-                // controller.jumpTo(controller.offset + notification.overscroll);
-                return true;
-              },
+              // onNotification: (OverscrollNotification notification) {
+              // var controller = HomeController.to.scrollController;
+              // if (notification.overscroll < 0 &&
+              //     controller.offset + notification.overscroll <= 0) {
+              //   if (controller.offset != 0) controller.jumpTo(0);
+              //   return true;
+              // }
+              // if (controller.offset + notification.overscroll >=
+              //     controller.position.maxScrollExtent) {
+              //   if (controller.offset !=
+              //       controller.position.maxScrollExtent) {
+              //     controller.jumpTo(controller.position.maxScrollExtent);
+              //   }
+              //   return true;
+              // }
+              // controller.jumpTo(controller.offset + notification.overscroll);
+              // return true;
+              // },
               child: ListView.separated(
                 shrinkWrap: true,
-                itemCount: 7,
+                itemCount: 5,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   return SizedBox(
-                    height: 70,
+                    height: SizeConfig.screenHeight * 0.0897,
                     child: Center(
                       child: ListTile(
                         leading: SvgPicture.asset(
                           'assets/temp/medal.svg',
-                          width: 32,
-                          height: 32,
+                          width: SizeConfig.iconSize5,
+                          height: SizeConfig.iconSize5,
                         ),
                         title: Text(
                           index == 0
                               ? '4th - 10th'
                               : '${(index * 10) + 1}th - ${(index * 10) + 10}th',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 15,
-                          ),
+                          style: Rajdhani.style.body2.semiBold,
                         ),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
                               'Rs ${(5 - index) * 1000}',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.white,
-                              ),
+                              style: SansPro.style.body2,
                             ),
-                            const SizedBox(width: 15),
+                            SizedBox(
+                              width: SizeConfig.padding16,
+                            ),
                             Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 SvgPicture.asset('assets/temp/Tokens.svg'),
-                                const SizedBox(
-                                  width: 2,
+                                SizedBox(
+                                  width: SizeConfig.padding2,
                                 ),
-                                const Text(
+                                Text(
                                   '100',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Color(0xFFB3B3B3),
-                                  ),
+                                  style: SansPro.style.body3,
                                 ),
                               ],
                             ),
@@ -105,9 +106,9 @@ class RewardView extends StatelessWidget {
                   );
                 },
                 separatorBuilder: (context, index) {
-                  return const Divider(
-                    height: 0.5,
-                    color: Color(0xFF9EA1A1),
+                  return Divider(
+                    height: SizeConfig.dividerHeight,
+                    color: UiConstants.kDividerColor,
                   );
                 },
               ),
