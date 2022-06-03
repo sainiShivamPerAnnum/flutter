@@ -47,7 +47,7 @@ class OfferCard extends StatelessWidget {
           width: SizeConfig.screenWidth,
           height: SizeConfig.screenWidth * 0.28,
           margin: EdgeInsets.only(
-            bottom: SizeConfig.screenWidth * 0.1,
+            bottom: SizeConfig.screenWidth * 0.05,
             right: SizeConfig.pageHorizontalMargins,
           ),
           decoration: (model.bgImage == null || model.bgImage.isEmpty)
@@ -86,7 +86,7 @@ class OfferCard extends StatelessWidget {
                           : UiConstants.tertiarySolid.withOpacity(0.3),
                       offset: Offset(
                         0,
-                        SizeConfig.screenWidth * 0.14,
+                        SizeConfig.screenWidth * 0.1,
                       ),
                       spreadRadius: -44,
                     )

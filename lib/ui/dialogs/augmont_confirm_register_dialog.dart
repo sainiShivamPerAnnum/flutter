@@ -81,7 +81,6 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
 
   dialogContent(BuildContext context) {
     return Stack(
-      overflow: Overflow.visible,
       alignment: Alignment.topCenter,
       children: <Widget>[
         SingleChildScrollView(

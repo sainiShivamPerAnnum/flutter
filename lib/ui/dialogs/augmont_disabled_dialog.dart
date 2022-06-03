@@ -34,50 +34,46 @@ class AugmontDisabledState extends State<AugmontDisabled> {
   }
 
   dialogContent(BuildContext context) {
-    return Stack(
-        overflow: Overflow.visible,
-        alignment: Alignment.topCenter,
-        children: <Widget>[
-          SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: Padding(
-                padding:
-                    EdgeInsets.only(top: 30, bottom: 40, left: 35, right: 35),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      child: Image(
-                        image: AssetImage(Assets.onboardingSlide[2]),
-                        fit: BoxFit.contain,
-                      ),
-                      width: 150,
-                      height: 150,
-                    ),
-                    Text(
-                      'Currently Unavailable',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.w700,
-                          color: UiConstants.primaryColor),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      Assets.augmontUnavailable,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w300,
-                          color: UiConstants.accentColor),
-                    ),
-                  ],
-                )),
-          )
-        ]);
+    return Stack(alignment: Alignment.topCenter, children: <Widget>[
+      SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: Padding(
+            padding: EdgeInsets.only(top: 30, bottom: 40, left: 35, right: 35),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  child: Image(
+                    image: AssetImage(Assets.onboardingSlide[2]),
+                    fit: BoxFit.contain,
+                  ),
+                  width: 150,
+                  height: 150,
+                ),
+                Text(
+                  'Currently Unavailable',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w700,
+                      color: UiConstants.primaryColor),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  Assets.augmontUnavailable,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w300,
+                      color: UiConstants.accentColor),
+                ),
+              ],
+            )),
+      )
+    ]);
   }
 }

@@ -33,7 +33,7 @@ dependencies:
   flushbar: ^1.10.4
   flutter:
     sdk: flutter
-  flutter_facebook_sdk: ^1.0.0
+  # flutter_facebook_sdk: ^1.0.0
   # flutter_html: ^2.1.1
   flutter_html_to_pdf: ^0.7.0
   flutter_image_compress: ^1.1.0

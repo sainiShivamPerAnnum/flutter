@@ -11,6 +11,7 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 
 class Play extends StatelessWidget {
   @override
@@ -31,7 +32,7 @@ class Play extends StatelessWidget {
               //SizedBox(height: SizeConfig.padding80),
               Container(
                 width: SizeConfig.screenWidth,
-                height: SizeConfig.screenWidth * 0.38,
+                height: SizeConfig.screenWidth * 0.33,
                 child: model.isOfferListLoading
                     ? ListView(
                         padding: EdgeInsets.symmetric(
@@ -71,46 +72,81 @@ class Play extends StatelessWidget {
                         },
                       ),
               ),
-              Transform.translate(
-                offset: Offset(0, -SizeConfig.padding12),
-                child: Padding(
-                  padding: EdgeInsets.only(
-                    left: SizeConfig.pageHorizontalMargins,
-                  ),
-                  child: Text(
-                    locale.playTrendingGames,
-                    style: TextStyles.title3.bold,
-                  ),
-                ),
-              ),
+              // Transform.translate(
+              //   offset: Offset(0, -SizeConfig.padding12),
+              //   child: Padding(
+              //     padding: EdgeInsets.only(
+              //       left: SizeConfig.pageHorizontalMargins,
+              //     ),
+              //     child:
+              // Text(
+              //       locale.playTrendingGames,
+              //       style: TextStyles.title3.bold,
+              //     ),
+              //   ),
+              // ),
               Expanded(
                 child: ListView(
-                    shrinkWrap: true,
-                    physics: BouncingScrollPhysics(),
-                    padding:
-                        EdgeInsets.symmetric(vertical: SizeConfig.padding12),
-                    children: List.generate(
-                      BaseUtil.gamesList.length,
-                      (index) => Column(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Haptic.vibrate();
-                              AppState.delegate.parseRoute(
-                                  Uri.parse(BaseUtil.gamesList[index].route));
-                            },
-                            child: GameCard(
-                              gameData: BaseUtil.gamesList[index],
-                            ),
-                          ),
-                          (index == BaseUtil.gamesList.length - 1)
-                              ? SizedBox(
-                                  height: SizeConfig.navBarHeight * 2.4,
-                                )
-                              : SizedBox(height: SizeConfig.padding6),
-                        ],
+                  shrinkWrap: true,
+                  physics: BouncingScrollPhysics(),
+                  padding: EdgeInsets.zero,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(
+                          left: SizeConfig.pageHorizontalMargins,
+                          bottom: SizeConfig.padding8),
+                      child: Text(
+                        "Recently Played",
+                        style: TextStyles.title3.bold,
                       ),
-                    )),
+                    ),
+                    Container(
+                      width: SizeConfig.screenWidth,
+                      height: SizeConfig.screenWidth * 0.6,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: List.generate(
+                          BaseUtil.gamesList.length,
+                          (index) => GameCard(
+                            gameData: BaseUtil.gamesList[index],
+                            index: index,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      height: SizeConfig.padding8,
+                      color: Colors.black.withOpacity(0.2),
+                      indent: SizeConfig.screenWidth * 0.1,
+                      endIndent: SizeConfig.screenWidth * 0.1,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          left: SizeConfig.pageHorizontalMargins,
+                          bottom: SizeConfig.padding8),
+                      child: Text(
+                        "All Games",
+                        style: TextStyles.title3.bold,
+                      ),
+                    ),
+                    Container(
+                      width: SizeConfig.screenWidth,
+                      height: SizeConfig.screenWidth * 0.6,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: List.generate(
+                          BaseUtil.gamesList.length,
+                          (index) => GameCard(
+                            gameData: BaseUtil.gamesList[
+                                BaseUtil.gamesList.length - 1 - index],
+                            index: index,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: SizeConfig.navBarHeight * 2.4),
+                  ],
+                ),
               ),
             ],
           ),
