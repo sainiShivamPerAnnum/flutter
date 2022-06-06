@@ -56,6 +56,7 @@ const String AutosaveProcessViewPath = '/autosaveProcessView';
 const String UserAutosaveDetailsViewPath = '/userAutosaveDetailsView';
 const String AutosaveTransactionsViewPath = '/autosaveTransactionsViewPath';
 const String NewGameHomeViewPath = '/newGameHome';
+const String NewWebHomeViewPath = '/newWebHomeView';
 
 enum Pages {
   Splash,
@@ -112,7 +113,8 @@ enum Pages {
   AutosaveProcessView,
   UserAutosaveDetailsView,
   AutosaveTransactionsView,
-  NewGameHomeView
+  NewGameHomeView, // TODO: Remove this
+  NewWebHomeView,
 }
 
 class PageConfiguration {
@@ -510,4 +512,11 @@ PageConfiguration NewGameHomeViewPageConfig = PageConfiguration(
   path: NewGameHomeViewPath,
   uiPage: Pages.NewGameHomeView,
   name: "New Game Home Screen",
+);
+
+PageConfiguration NewWebHomeViewPageConfig = PageConfiguration(
+  key: 'NewWebHomeView',
+  path: NewWebHomeViewPath,
+  uiPage: Pages.NewWebHomeView,
+  name: "New Web Home Screen",
 );

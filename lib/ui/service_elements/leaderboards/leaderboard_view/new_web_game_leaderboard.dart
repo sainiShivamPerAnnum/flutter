@@ -1,14 +1,49 @@
-import 'package:felloapp/ui/pages/others/games/web/new_game_home/leaderboard/components/winner_widget.dart';
+import 'dart:developer';
+
+import 'package:felloapp/core/enums/leaderboard_service_enum.dart';
+import 'package:felloapp/core/model/leader_board_modal.dart';
+import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/ui/pages/static/game_card.dart';
+import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/components/winner_widget.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
 
-class LeaderBoardView extends StatelessWidget {
-  const LeaderBoardView({Key key}) : super(key: key);
+class NewWebGameLeaderBoardView extends StatelessWidget {
+  const NewWebGameLeaderBoardView({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    return PropertyChangeConsumer<LeaderboardService,
+        LeaderBoardServiceProperties>(
+      properties: [LeaderBoardServiceProperties.WebGameLeaderBoard],
+      builder: (context, m, properties) {
+        return m.WebGameLeaderBoard == null
+            ? NoRecordDisplayWidget(
+                asset: "images/leaderboard.png",
+                text: "Leaderboard will be updated soon",
+              )
+            : NewLeaderBoardView(
+                model: m.WebGameLeaderBoard,
+              );
+      },
+    );
+  }
+}
+
+class NewLeaderBoardView extends StatelessWidget {
+  NewLeaderBoardView({@required this.model});
+
+  final LeaderBoardModal model;
+  final _userService = locator<UserService>();
+
+  @override
+  Widget build(BuildContext context) {
+    log(model.toMap().toString());
     return Container(
       margin: EdgeInsets.symmetric(
         horizontal: SizeConfig.padding12,

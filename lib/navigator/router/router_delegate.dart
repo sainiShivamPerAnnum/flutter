@@ -36,6 +36,7 @@ import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_walkthrough.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_result.dart';
 import 'package:felloapp/ui/pages/others/games/web/new_game_home/new_game_home_view.dart';
+import 'package:felloapp/ui/pages/others/games/web/new_game_home/new_web_home.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_home/web_home_view.dart';
 import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
@@ -530,6 +531,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.NewGameHomeView:
         NewGameHomeViewPageConfig.currentPageAction = action;
         break;
+      case Pages.NewWebHomeView:
+        NewWebHomeViewPageConfig.currentPageAction = action;
+        break;
       default:
         break;
     }
@@ -762,12 +766,21 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         page: TopSaverViewPageConfig);
   }
 
+  // NOTE: UNCOMMENT THIS FUNCTION FOR OLD VIEW
   openWebGame(String game) {
     AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,
         widget: WebHomeView(game: game),
         page: WebHomeViewPageConfig);
   }
+
+  // openWebGame(String game) {
+  //   AppState.delegate.appState.currentAction = PageAction(
+  //     state: PageState.addWidget,
+  //     widget: NewWebHomeView(game: game),
+  //     page: NewWebHomeViewPageConfig,
+  //   );
+  // }
 
   openAppWalkthrough() {
     AppState.delegate.appState.currentAction = PageAction(

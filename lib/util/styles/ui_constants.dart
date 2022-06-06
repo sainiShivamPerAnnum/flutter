@@ -44,6 +44,7 @@ class UiConstants {
   );
 
   /// New UI Colors
+  static const Color kTextColor = const Color(0xFFFFFFFF);
   static const Color kBackgroundColor = const Color(0xFF232326);
   static const Color kLeaderBoardBackgroundColor = const Color(0xFF39393C);
   static const Color kTabBorderColor = const Color(0xFF62E3C4);

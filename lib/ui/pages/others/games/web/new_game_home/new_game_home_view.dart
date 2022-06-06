@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:felloapp/ui/pages/others/games/web/new_game_home/leaderboard/leaderboard_view.dart';
-import 'package:felloapp/ui/pages/others/games/web/new_game_home/reward/reward_view.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -54,7 +53,7 @@ class _WebGameHomeState extends State<WebGameHome>
               child: Center(
                 child: Text(
                   "Some Widgets",
-                  style: SansPro.style.body3,
+                  style: TextStyles.sourceSans.body3,
                 ),
               ),
             ),
@@ -78,14 +77,14 @@ class _WebGameHomeState extends State<WebGameHome>
                     Tab(
                       child: Text(
                         'Rewards',
-                        style: SansPro.style.body1.semiBold,
+                        style: TextStyles.sourceSansSB.body1,
                       ),
                       height: SizeConfig.navBarHeight,
                     ),
                     Tab(
                       child: Text(
                         'Laderboard',
-                        style: SansPro.style.body1.semiBold,
+                        style: TextStyles.sourceSansSB.body1,
                       ),
                       height: SizeConfig.navBarHeight,
                     ),
@@ -99,7 +98,7 @@ class _WebGameHomeState extends State<WebGameHome>
               child: Center(
                 child: Text(
                   "Some Widgets",
-                  style: SansPro.style.body3,
+                  style: TextStyles.sourceSans.body3,
                 ),
               ),
             ),
@@ -122,7 +121,7 @@ class _WebGameHomeState extends State<WebGameHome>
           : leaderboardSize,
       child: TabBarView(
         children: const [
-          RewardView(),
+          // RewardView(),
           LeaderBoardView(),
         ],
         controller: _tabController,

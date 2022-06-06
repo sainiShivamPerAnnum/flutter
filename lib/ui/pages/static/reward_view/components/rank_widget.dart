@@ -105,7 +105,7 @@ class RankWidget extends StatelessWidget {
                   ),
                   Text(
                     "$rank${rank == 1 ? 'st' : rank == 2 ? 'nd' : 'rd'}",
-                    style: Rajdhani.style.body1.bold,
+                    style: TextStyles.rajdhaniB.body1,
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -113,7 +113,7 @@ class RankWidget extends StatelessWidget {
                     children: [
                       Text(
                         'Rs $priceMoney',
-                        style: SansPro.style.body3,
+                        style: TextStyles.sourceSans.body3,
                       ),
                       SizedBox(
                         height: SizeConfig.padding4,
@@ -121,13 +121,21 @@ class RankWidget extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SvgPicture.asset('assets/temp/Tokens.svg'),
+                          SvgPicture.asset(
+                            'assets/temp/Tokens.svg',
+                            width: SizeConfig.body2,
+                            height: SizeConfig.body2,
+                          ),
                           SizedBox(
                             width: SizeConfig.padding6,
                           ),
-                          Text(
-                            '$pricePoint',
-                            style: SansPro.style.body4.medium,
+                          Flexible(
+                            child: Text(
+                              '$pricePoint',
+                              style: TextStyles.sourceSansM.body4,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
                           ),
                         ],
                       ),

@@ -19,8 +19,13 @@ class PrizesView extends StatelessWidget {
   final String subtitle;
   final String promo;
 
-  PrizesView(
-      {this.model, this.leading, this.controller, this.subtitle, this.promo});
+  PrizesView({
+    this.model,
+    this.leading,
+    this.controller,
+    this.subtitle,
+    this.promo,
+  });
   @override
   Widget build(BuildContext context) {
     return NotificationListener<OverscrollNotification>(
