@@ -61,8 +61,10 @@ class _AutosaveCardState extends State<AutosaveCard> {
                 duration: Duration(seconds: 1),
                 curve: Curves.easeOutExpo,
                 width: SizeConfig.screenWidth,
-                margin: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.pageHorizontalMargins),
+                margin: EdgeInsets.only(
+                    left: SizeConfig.pageHorizontalMargins,
+                    right: SizeConfig.pageHorizontalMargins,
+                    bottom: SizeConfig.padding16),
                 decoration: BoxDecoration(
                   // color: Color(0xfff3c5c5),
                   // color: UiConstants.autosaveColor,
@@ -92,8 +94,7 @@ class _AutosaveCardState extends State<AutosaveCard> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(
-                              height: SizeConfig.pageHorizontalMargins * 1.6),
+                          SizedBox(height: SizeConfig.pageHorizontalMargins),
                           Container(
                             // width: SizeConfig.screenWidth * 0.5,
                             alignment: Alignment.centerLeft,
@@ -202,12 +203,7 @@ class _AutosaveCardState extends State<AutosaveCard> {
                                     )
                                   : SizedBox(),
                             ),
-                          SizedBox(
-                              height: (model.activeSubscription != null &&
-                                      model.activeSubscription.status ==
-                                          Constants.SUBSCRIPTION_ACTIVE)
-                                  ? SizeConfig.pageHorizontalMargins
-                                  : SizeConfig.pageHorizontalMargins * 1.6),
+                          SizedBox(height: SizeConfig.pageHorizontalMargins),
                         ],
                       ),
                     ),

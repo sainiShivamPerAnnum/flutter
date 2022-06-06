@@ -10,6 +10,7 @@ import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -27,6 +28,7 @@ class PlayViewModel extends BaseModel {
   final _logger = locator<CustomLogger>();
   final _baseUtil = locator<BaseUtil>();
   final _analyticsService = locator<AnalyticsService>();
+  String gamesListOneTitle = "Trending", gamesListTwoTitle = "More games";
   final PageController promoPageController =
       new PageController(viewportFraction: 0.9, initialPage: 0);
   int _currentPage = 0;
@@ -62,6 +64,8 @@ class PlayViewModel extends BaseModel {
         curve: Curves.easeIn,
       );
     });
+
+    setGameListTitle();
   }
 
   void clear() {
@@ -87,33 +91,40 @@ class PlayViewModel extends BaseModel {
         PageAction(state: PageState.addPage, page: game.pageConfig);
   }
 
-  Future<bool> openWebView() async {
-    setState(ViewState.Busy);
-    String _cricPlayCost = BaseRemoteConfig.remoteConfig
-            .getString(BaseRemoteConfig.CRICKET_PLAY_COST) ??
-        "10";
-    int _cost = -1 * int.tryParse(_cricPlayCost) ?? 10;
-    ApiResponse<FlcModel> _flcResponse =
-        await _fclActionRepo.substractFlc(_cost);
-    _message = _flcResponse.model.message;
-    if (_flcResponse.model.flcBalance != null) {
-      _userCoinService.setFlcBalance(_flcResponse.model.flcBalance);
-    } else {
-      _logger.d("Flc balance is null");
-    }
-
-    if (_flcResponse.model.sessionId != null) {
-      _sessionId = _flcResponse.model.sessionId;
-    } else {
-      _logger.d("sessionId null");
-    }
-
-    if (_flcResponse.model.canUserPlay) {
-      setState(ViewState.Idle);
-      return true;
-    } else {
-      setState(ViewState.Idle);
-      return false;
+  setGameListTitle() async {
+    if (await CacheManager.exits(CacheManager.CACHE_LAST_PLAYED_GAMES)) {
+      gamesListOneTitle = "Last Played";
+      notifyListeners();
     }
   }
+
+  // Future<bool> openWebView() async {
+  //   setState(ViewState.Busy);
+  //   String _cricPlayCost = BaseRemoteConfig.remoteConfig
+  //           .getString(BaseRemoteConfig.CRICKET_PLAY_COST) ??
+  //       "10";
+  //   int _cost = -1 * int.tryParse(_cricPlayCost) ?? 10;
+  //   ApiResponse<FlcModel> _flcResponse =
+  //       await _fclActionRepo.substractFlc(_cost);
+  //   _message = _flcResponse.model.message;
+  //   if (_flcResponse.model.flcBalance != null) {
+  //     _userCoinService.setFlcBalance(_flcResponse.model.flcBalance);
+  //   } else {
+  //     _logger.d("Flc balance is null");
+  //   }
+
+  //   if (_flcResponse.model.sessionId != null) {
+  //     _sessionId = _flcResponse.model.sessionId;
+  //   } else {
+  //     _logger.d("sessionId null");
+  //   }
+
+  //   if (_flcResponse.model.canUserPlay) {
+  //     setState(ViewState.Idle);
+  //     return true;
+  //   } else {
+  //     setState(ViewState.Idle);
+  //     return false;
+  //   }
+  // }
 }

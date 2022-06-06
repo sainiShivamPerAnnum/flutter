@@ -4,6 +4,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
+import 'package:felloapp/ui/pages/static/game_card_big.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/pages/static/web_game_prize_view.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
@@ -52,7 +53,7 @@ class TambolaHomeView extends StatelessWidget {
                               duration: Duration(milliseconds: 10),
                               curve: Curves.decelerate,
                               opacity: model.cardOpacity ?? 1,
-                              child: GameCard(
+                              child: BigGameCard(
                                 gameData: BaseUtil.gamesList.firstWhere(
                                     (element) =>
                                         element.gameCode ==

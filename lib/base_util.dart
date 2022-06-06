@@ -106,6 +106,8 @@ class BaseUtil extends ChangeNotifier {
   int isOtpResendCount = 0;
   String zeroBalanceAssetUri;
   static List<GameModel> gamesList;
+  static List<GameModel> focusGameList;
+  static List<GameModel> restGamesList;
   static String manualReferralCode;
   static bool isNewUser, isFirstFetchDone; // = 'jdF1';
 
@@ -202,7 +204,7 @@ class BaseUtil extends ChangeNotifier {
       await BaseRemoteConfig.init();
 
       setPackageInfo();
-      setGameDefaults();
+      await setGameDefaults();
 
       ///fetch on-boarding status and User details
       firebaseUser = _userService.firebaseUser;
@@ -237,7 +239,7 @@ class BaseUtil extends ChangeNotifier {
     packageInfo = await PackageInfo.fromPlatform();
   }
 
-  void setGameDefaults() {
+  Future<void> setGameDefaults() async {
     List<GameModel> allgamesList = [
       GameModel(
         gameName: "Football",
@@ -331,9 +333,38 @@ class BaseUtil extends ChangeNotifier {
       ),
     ];
     //Arrange Games according to the position defined in baseremoteconfig.
+    focusGameList = [];
+    restGamesList = [];
     List<String> gamePosition = BaseRemoteConfig.remoteConfig
         .getString(BaseRemoteConfig.GAME_POSITION)
         .split('-');
+    final String userlastPlayedGames =
+        await CacheManager.readCache(key: CacheManager.CACHE_LAST_PLAYED_GAMES);
+    if (userlastPlayedGames != null && userlastPlayedGames.isNotEmpty) {
+      List<String> lastgamesOrder = userlastPlayedGames.split("-");
+      lastgamesOrder.forEach((code) {
+        focusGameList.add(allgamesList.firstWhere((game) => game.code == code));
+      });
+      if (focusGameList.length < 2) {
+        for (int i = 0; i < allgamesList.length; i++) {
+          if (!focusGameList.contains(allgamesList[i])) {
+            focusGameList.add(allgamesList[i]);
+            if (focusGameList.length >= 2) break;
+          }
+        }
+      }
+    } else {
+      List<String> newUserGamesOrder = BaseRemoteConfig.remoteConfig
+          .getString(BaseRemoteConfig.NEW_USER_GAMES_ORDER)
+          .split('-');
+      newUserGamesOrder.forEach((code) {
+        focusGameList.add(allgamesList.firstWhere((game) => game.code == code));
+      });
+    }
+    allgamesList.forEach((game) {
+      if (!focusGameList.contains(game)) restGamesList.add(game);
+    });
+
     logger.d("Games List: $gamePosition");
     gamesList = [];
     gamePosition.forEach((code) {
@@ -706,6 +737,7 @@ class BaseUtil extends ChangeNotifier {
   }
 
   void openTambolaGame() async {
+    await cacheGameorder("TA");
     if (await getDrawStatus()) {
       await _lModel.saveDailyPicksAnimStatus(DateTime.now().weekday).then(
             (value) =>
@@ -827,6 +859,20 @@ class BaseUtil extends ChangeNotifier {
   void setEmail(String email) {
     myUser.email = email;
     notifyListeners();
+  }
+
+  static cacheGameorder(String gameCode) async {
+    String gamesOrder =
+        await CacheManager.readCache(key: CacheManager.CACHE_LAST_PLAYED_GAMES);
+    if (gamesOrder != null && gamesOrder.isNotEmpty) {
+      gamesOrder = "$gameCode-" + gamesOrder;
+    } else {
+      gamesOrder = gameCode;
+    }
+    CacheManager.writeCache(
+        key: CacheManager.CACHE_LAST_PLAYED_GAMES,
+        value: gamesOrder,
+        type: CacheType.string);
   }
 
   void refreshAugmontBalance() async {

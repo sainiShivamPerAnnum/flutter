@@ -170,6 +170,11 @@ class BaseRemoteConfig {
   static const Map<String, String> _GAME_POSITION = {
     'games_position': "FO-CR-PO-CA-TA"
   };
+
+  static const Map<String, String> _NEW_USER_GAMES_ORDER = {
+    '_new_user_games_order': "FO-CA"
+  };
+
   static const Map<String, String> _MIN_WITHDRAWABLE_PRIZE = {
     'min_withdrawable_prize': '100'
   };
@@ -243,7 +248,8 @@ class BaseRemoteConfig {
     ..._GAME_CRICKET_FPL_ANNOUNCEMENT,
     ..._AMZ_VOUCHER_REDEMPTION,
     ..._APP_SHARE_MSG,
-    ..._GAME_POSITION
+    ..._GAME_POSITION,
+    ..._NEW_USER_GAMES_ORDER
   };
 
   static Future<bool> init() async {
@@ -398,4 +404,6 @@ class BaseRemoteConfig {
   static String get APP_SHARE_MSG => _APP_SHARE_MSG.keys.first;
 
   static String get GAME_POSITION => _GAME_POSITION.keys.first;
+
+  static String get NEW_USER_GAMES_ORDER => _NEW_USER_GAMES_ORDER.keys.first;
 }

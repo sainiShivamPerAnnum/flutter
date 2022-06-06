@@ -96,7 +96,7 @@ class Play extends StatelessWidget {
                           left: SizeConfig.pageHorizontalMargins,
                           bottom: SizeConfig.padding8),
                       child: Text(
-                        "Recently Played",
+                        model.gamesListOneTitle,
                         style: TextStyles.title3.bold,
                       ),
                     ),
@@ -106,11 +106,17 @@ class Play extends StatelessWidget {
                       child: ListView(
                         scrollDirection: Axis.horizontal,
                         children: List.generate(
-                          BaseUtil.gamesList.length,
-                          (index) => GameCard(
-                            gameData: BaseUtil.gamesList[index],
-                            index: index,
-                          ),
+                          BaseUtil.focusGameList.length,
+                          (index) => InkWell(
+                              onTap: () {
+                                Haptic.vibrate();
+                                AppState.delegate.parseRoute(Uri.parse(
+                                    BaseUtil.focusGameList[index].route));
+                              },
+                              child: GameCard(
+                                gameData: BaseUtil.focusGameList[index],
+                                index: index,
+                              )),
                         ),
                       ),
                     ),
@@ -125,7 +131,7 @@ class Play extends StatelessWidget {
                           left: SizeConfig.pageHorizontalMargins,
                           bottom: SizeConfig.padding8),
                       child: Text(
-                        "All Games",
+                        model.gamesListTwoTitle,
                         style: TextStyles.title3.bold,
                       ),
                     ),
@@ -135,11 +141,17 @@ class Play extends StatelessWidget {
                       child: ListView(
                         scrollDirection: Axis.horizontal,
                         children: List.generate(
-                          BaseUtil.gamesList.length,
-                          (index) => GameCard(
-                            gameData: BaseUtil.gamesList[
-                                BaseUtil.gamesList.length - 1 - index],
-                            index: index,
+                          BaseUtil.restGamesList.length,
+                          (index) => InkWell(
+                            onTap: () {
+                              Haptic.vibrate();
+                              AppState.delegate.parseRoute(Uri.parse(
+                                  BaseUtil.restGamesList[index].route));
+                            },
+                            child: GameCard(
+                              gameData: BaseUtil.restGamesList[index],
+                              index: index,
+                            ),
                           ),
                         ),
                       ),

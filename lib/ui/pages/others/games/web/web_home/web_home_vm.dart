@@ -1,12 +1,14 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/prize_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -47,6 +49,7 @@ class WebHomeViewModel extends BaseModel {
   String _sessionId;
   String _gameEndpoint;
   String token = "";
+  String gameCode;
 
   //Getters
   String get currentGame => this._currentGame;
@@ -91,31 +94,33 @@ class WebHomeViewModel extends BaseModel {
         if (_prizeService.poolClubPrizes == null)
           await _prizeService.fetchPoolClubPrizes();
         prizes = _prizeService.poolClubPrizes;
+        gameCode = "PO";
 
         break;
       case Constants.GAME_TYPE_CRICKET:
         if (_prizeService.cricketPrizes == null)
           await _prizeService.fetchCricketPrizes();
         prizes = _prizeService.cricketPrizes;
+        gameCode = "CR";
 
         break;
       case Constants.GAME_TYPE_TAMBOLA:
         if (_prizeService.tambolaPrizes == null)
           await _prizeService.fetchTambolaPrizes();
         prizes = _prizeService.tambolaPrizes;
-
+        gameCode = "TA";
         break;
       case Constants.GAME_TYPE_FOOTBALL:
         if (_prizeService.footballPrizes == null)
           await _prizeService.fetchFootballPrizes();
         prizes = _prizeService.footballPrizes;
-
+        gameCode = "FO";
         break;
       case Constants.GAME_TYPE_CANDYFIESTA:
         if (_prizeService.candyFiestaPrizes == null)
           await _prizeService.fetchCandyFiestaPrizes();
         prizes = _prizeService.candyFiestaPrizes;
-
+        gameCode = "CA";
         break;
     }
     isPrizesLoading = false;
@@ -126,6 +131,8 @@ class WebHomeViewModel extends BaseModel {
 
   Future<bool> setupGame() async {
     await getBearerToken();
+    await BaseUtil.cacheGameorder(gameCode);
+
     switch (currentGame) {
       case Constants.GAME_TYPE_POOLCLUB:
         return _setupPoolClubGame();
