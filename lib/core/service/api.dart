@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
-import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/util/constants.dart';
@@ -196,24 +195,6 @@ class Api {
     return ref.doc(Constants.DOC_USER_KYC_DETAIL).get();
   }
 
-  Future<DocumentReference> addUserTransactionDocument(
-      String userId, Map data) {
-    ref = _db
-        .collection(Constants.COLN_USERS)
-        .doc(userId)
-        .collection(Constants.SUBCOLN_USER_TXNS);
-    return ref.add(data);
-  }
-
-  Future<DocumentSnapshot> getUserTransactionDocument(
-      String userId, String txnId) {
-    ref = _db
-        .collection(Constants.COLN_USERS)
-        .doc(userId)
-        .collection(Constants.SUBCOLN_USER_TXNS);
-    return ref.doc(txnId).get();
-  }
-
   Future<QuerySnapshot> getUserPrizeTransactionDocuments(String userId) {
     final query = _db
         .collection(Constants.COLN_USERS)
@@ -250,54 +231,6 @@ class Api {
     return query.get();
   }
 
-  //set the mentioned fields to true
-  Future<bool> setReferralDocBonusField(String uid) async {
-    DocumentReference _rRef = _db.collection(Constants.COLN_REFERRALS).doc(uid);
-    return _db
-        .runTransaction((transaction) async {
-          DocumentSnapshot snapshot = await transaction.get(_rRef);
-          Map<String, dynamic> snapData =
-              (snapshot.exists) ? snapshot.data() : null;
-          if (!snapshot.exists && snapData == null) {
-            //did not sign up via referral
-            throw Exception('No referral found');
-          } else if (snapData[ReferralDetail.fldUsrBonusFlag] == null ||
-              snapData[ReferralDetail.fldRefereeBonusFlag] == null) {
-            throw Exception('Empty/invalid data');
-          } else {
-            bool _uFlag, _rFlag;
-            try {
-              _uFlag = snapData[ReferralDetail.fldUsrBonusFlag];
-              _rFlag = snapData[ReferralDetail.fldRefereeBonusFlag];
-            } catch (e) {
-              throw Exception('Failed to create bool flags');
-            }
-            if (_uFlag == null || _rFlag == null) {
-              throw Exception('Failed to create bool flags');
-            }
-            if (_uFlag == true && _rFlag == true) {
-              //referral bonus already unlocked
-              throw Exception('Referral bonus already unlocked');
-            } else {
-              Map<String, dynamic> rMap = {};
-              rMap[ReferralDetail.fldUsrBonusFlag] = true;
-              rMap[ReferralDetail.fldRefereeBonusFlag] = true;
-              transaction.set(_rRef, rMap, SetOptions(merge: true));
-              return true;
-            }
-          }
-        })
-        .then((value) => true)
-        .catchError((onErr) => false);
-  }
-
-  Future<void> updateReferralDocument(String docId, Map data) {
-    return _db
-        .collection(Constants.COLN_REFERRALS)
-        .doc(docId)
-        .set(data, SetOptions(merge: true));
-  }
-
   Future<void> addFeedbackDocument(Map data) {
     return _db.collection(Constants.COLN_FEEDBACK).add(data);
   }
@@ -321,10 +254,6 @@ class Api {
         .where('win_type', isEqualTo: 'tambola');
     final response = await query.get();
     return response;
-  }
-
-  Future updateWeeklyWinnerDocument(String docId, Map data) async {
-    return _db.collection(Constants.COLN_WINNERS).doc(docId).update(data);
   }
 
   Future<QuerySnapshot> getCredentialsByTypeAndStage(
@@ -380,11 +309,6 @@ class Api {
     return ref.where('ref_by', isEqualTo: id).get();
   }
 
-  Future<DocumentSnapshot> getUserReferDoc(String id) {
-    ref = _db.collection(Constants.COLN_REFERRALS);
-    return ref.doc(id).get();
-  }
-
   Future<DocumentSnapshot> getPollDocument(String id) {
     ref = _db.collection(Constants.COLN_POLLS);
     return ref.doc(id).get();
@@ -404,14 +328,6 @@ class Api {
         .doc(id)
         .collection(Constants.SUBCOLN_USER_WALLET);
     return ref.doc(Constants.DOC_USER_WALLET_FUND_BALANCE).get();
-  }
-
-  DocumentReference getUserTransactionDocumentKey(String userId) {
-    return _db
-        .collection(Constants.COLN_USERS)
-        .doc(userId)
-        .collection(Constants.SUBCOLN_USER_TXNS)
-        .doc();
   }
 
   Future<QuerySnapshot> getRecentAugmontDepositTxn(
@@ -474,11 +390,6 @@ class Api {
         .catchError((onErr) => false);
   }
 
-  Future<QuerySnapshot> getHomeCardCollection() {
-    Query _query = _db.collection(Constants.COLN_HOMECARDS).orderBy('id');
-    return _query.get();
-  }
-
   Future<QuerySnapshot> getPromoCardCollection() {
     Query _query = _db.collection(Constants.COLN_PROMOS).orderBy('position');
     return _query.get();
@@ -486,16 +397,6 @@ class Api {
 
   Future<String> getFileFromDPBucketURL(String uid, String path) {
     return _storage.ref('dps/$uid/$path').getDownloadURL();
-  }
-
-  Future<List<String>> getWalkthroughFiles() async {
-    ListResult _allVideos = await _storage.ref('walkthrough').listAll();
-    List<String> _res = [];
-    for (Reference ref in _allVideos.items) {
-      var value = await ref.getDownloadURL();
-      _res.add(value);
-    }
-    return _res;
   }
 
   Future<bool> deleteUserTicketsBeforeWeekCode(String uid, int weekCde) async {
@@ -713,18 +614,6 @@ class Api {
     Query _query =
         _db.collection(Constants.COLN_APPCAMPAIGNS).orderBy('position');
     return _query.get();
-  }
-
-  Future<Map<String, dynamic>> fetchSingleEvent(String eventType) async {
-    Query _query = _db
-        .collection(Constants.COLN_APPCAMPAIGNS)
-        .where('type', isEqualTo: eventType);
-    try {
-      QuerySnapshot _querySnapshot = await _query.get();
-      return _querySnapshot.docs?.first?.data();
-    } catch (e) {
-      throw e;
-    }
   }
 
   Future<QuerySnapshot> fetchCoupons() async {
