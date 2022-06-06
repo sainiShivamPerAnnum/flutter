@@ -74,7 +74,7 @@ class LauncherViewModel extends BaseModel {
         );
       }
     } catch (e) {
-      _logger.e("Splash Screen init : " + e);
+      _logger.e("Splash Screen init : " + e.toString());
     }
     _httpModel.init();
     _tambolaService.init();

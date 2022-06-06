@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,6 +23,7 @@ class TransactionsHistoryViewModel extends BaseModel {
   //local variables
   int _filter = 1;
   bool _isMoreTxnsBeingFetched = false;
+  List<UserTransaction> apiTxns = [];
   List<String> _tranTypeFilterItems = [
     "All",
     "Deposits",
@@ -102,6 +106,20 @@ class TransactionsHistoryViewModel extends BaseModel {
     );
     _filteredList = _txnService.txnList;
     setState(ViewState.Idle);
+  }
+
+  getTransactionsFromApi() async {
+    ApiResponse<List<UserTransaction>> res;
+    if (apiTxns.isNotEmpty)
+      res = await _txnService.getUserTransactionsfromApi(
+          start: apiTxns[0].docKey);
+    else
+      res = await _txnService.getUserTransactionsfromApi();
+    if (res.model != null && res.model.isNotEmpty)
+      res.model.forEach((element) {
+        apiTxns.add(element);
+      });
+    log("Length of Transaction List: ${apiTxns.length}");
   }
 
   getMoreTransactions() async {
