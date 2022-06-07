@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/model/leader_board_modal.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -6,8 +8,13 @@ import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 
 class WinnerWidgets extends StatelessWidget {
-  const WinnerWidgets({Key key, @required this.scoreboard}) : super(key: key);
+  const WinnerWidgets({
+    Key key,
+    @required this.scoreboard,
+    @required this.userProfilePicUrl,
+  }) : super(key: key);
   final List<Scoreboard> scoreboard;
+  final List<String> userProfilePicUrl;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -15,7 +22,7 @@ class WinnerWidgets extends StatelessWidget {
       children: [
         scoreboard.length >= 2
             ? _buildTopThreeWinner(
-                image: 'rank_two_profile.png',
+                image: userProfilePicUrl[1],
                 rank: 2,
                 name: scoreboard[1].username,
                 score: scoreboard[1].score.toString(),
@@ -24,7 +31,7 @@ class WinnerWidgets extends StatelessWidget {
             : SizedBox(width: SizeConfig.screenWidth * 0.194),
         if (scoreboard.isNotEmpty)
           _buildTopThreeWinner(
-            image: 'rank_one_profile.png',
+            image: userProfilePicUrl[0],
             rank: 1,
             name: scoreboard[0].username,
             score: scoreboard[0].score.toString(),
@@ -32,7 +39,7 @@ class WinnerWidgets extends StatelessWidget {
           ),
         scoreboard.length >= 3
             ? _buildTopThreeWinner(
-                image: 'rank_three_profile.png',
+                image: userProfilePicUrl[2],
                 rank: 3,
                 name: scoreboard[2].username,
                 score: scoreboard[2].score.toString(),
@@ -89,15 +96,25 @@ class WinnerWidgets extends StatelessWidget {
                       ? SizeConfig.screenWidth * 0.0055
                       : SizeConfig.screenWidth * 0.0083,
                 ),
-                child: Image.asset(
-                  'assets/temp/$image',
-                  width: rank == 1
-                      ? SizeConfig.screenWidth * 0.2222
-                      : SizeConfig.screenWidth * 0.2083,
-                  height: rank == 1
-                      ? SizeConfig.screenWidth * 0.2222
-                      : SizeConfig.screenWidth * 0.2083,
-                ),
+                child: image == null
+                    ? Image.asset(
+                        Assets.profilePic,
+                        width: rank == 1
+                            ? SizeConfig.screenWidth * 0.2222
+                            : SizeConfig.screenWidth * 0.2083,
+                        height: rank == 1
+                            ? SizeConfig.screenWidth * 0.2222
+                            : SizeConfig.screenWidth * 0.2083,
+                      )
+                    : CachedNetworkImage(
+                        imageUrl: image,
+                        width: rank == 1
+                            ? SizeConfig.screenWidth * 0.2222
+                            : SizeConfig.screenWidth * 0.2083,
+                        height: rank == 1
+                            ? SizeConfig.screenWidth * 0.2222
+                            : SizeConfig.screenWidth * 0.2083,
+                      ),
               ),
               SizedBox(
                 height: SizeConfig.padding4,

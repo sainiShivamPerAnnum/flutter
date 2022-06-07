@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/core/enums/leaderboard_service_enum.dart';
 import 'package:felloapp/core/model/leader_board_modal.dart';
 import 'package:felloapp/core/model/referral_board_modal.dart';
@@ -21,11 +23,14 @@ class LeaderboardService
   int _referralLBLength = 0;
 
   List<ReferralBoard> _referralLeaderBoard = [];
+  List<String> _userProfilePicUrl = [];
 
   LeaderBoardModal _WebGameLeaderBoard;
   LeaderBoardModal get WebGameLeaderBoard => this._WebGameLeaderBoard;
 
   List<ReferralBoard> get referralLeaderBoard => this._referralLeaderBoard;
+
+  List<String> get userProfilePicUrl => this._userProfilePicUrl;
 
   get referralLBLength => this._referralLBLength;
 
@@ -37,6 +42,11 @@ class LeaderboardService
   setWebGameLeaderBoard() {
     notifyListeners(LeaderBoardServiceProperties.WebGameLeaderBoard);
     _logger.d("Web Game leaderboard updated, property listeners notified");
+  }
+
+  setUserProfilePicUrl() {
+    notifyListeners(LeaderBoardServiceProperties.WebGameLeaderBoard);
+    _logger.d("User profile pic url updated, property listeners notified");
   }
 
   fetchReferralLeaderBoard() async {
@@ -60,6 +70,22 @@ class LeaderboardService
     } else {
       _WebGameLeaderBoard = null;
     }
+  }
+
+  fetchLeaderBoardProfileImage() async {
+    int length = _WebGameLeaderBoard.scoreboard.length <= 6
+        ? _WebGameLeaderBoard.scoreboard.length
+        : 6;
+    _userProfilePicUrl.clear();
+    for (var i = 0; i < length; i++) {
+      log(_WebGameLeaderBoard.scoreboard[i].userid);
+      //b4OjxLgfKZc5FyhNDs3DgzlWA3N2
+      String url = await _userService.getProfileImageUrl(
+        userId: _WebGameLeaderBoard.scoreboard[i].userid,
+      );
+      _userProfilePicUrl.add(url);
+    }
+    setUserProfilePicUrl();
   }
 
   scrollToUserIndexIfAvaiable() {

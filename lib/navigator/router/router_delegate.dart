@@ -35,9 +35,7 @@ import 'package:felloapp/ui/pages/others/games/tambola/tambola_game/tambola_game
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_walkthrough.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_result.dart';
-import 'package:felloapp/ui/pages/others/games/web/new_game_home/new_game_home_view.dart';
-import 'package:felloapp/ui/pages/others/games/web/new_game_home/new_web_home.dart';
-import 'package:felloapp/ui/pages/others/games/web/web_home/web_home_view.dart';
+import 'package:felloapp/ui/pages/others/games/web/new_web_home/new_web_home.dart';
 import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
@@ -299,9 +297,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(
               AutosaveTransactionsView(), AutosaveTransactionsViewPageConfig);
           break;
-        case Pages.NewGameHomeView:
-          _addPageData(NewGameHomeView(), NewGameHomeViewPageConfig);
-          break;
+
         default:
           break;
       }

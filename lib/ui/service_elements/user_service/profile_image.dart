@@ -18,7 +18,8 @@ class ProfileImageSE extends StatelessWidget {
 
     void _listener() {
       _logger.d(
-          "MyDpUrl updated in profile image widget, notified from user service.");
+        "MyDpUrl updated in profile image widget, notified from user service.",
+      );
     }
 
     // Listener

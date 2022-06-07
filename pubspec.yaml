@@ -84,6 +84,7 @@ dependencies:
   app_install_date: ^0.1.1
   appsflyer_sdk: ^6.5.2
   external_app_launcher: ^2.0.2
+  shimmer: ^2.0.0
 
 
 dev_dependencies:

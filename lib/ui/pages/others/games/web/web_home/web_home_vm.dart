@@ -15,7 +15,6 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
-import 'package:felloapp/ui/pages/others/games/web/new_game_home/new_game_home_view.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_game/web_game_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
@@ -81,6 +80,10 @@ class WebHomeViewModel extends BaseModel {
     pageController = new PageController(initialPage: 0);
     refreshPrizes();
     refreshLeaderboard();
+  }
+
+  newInit(String game) async {
+    currentGame = game;
   }
 
   clear() {}

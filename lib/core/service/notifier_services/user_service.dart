@@ -179,7 +179,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   Future<bool> signout() async {
     try {
-      
       await _userRepo.removeUserFCM(_baseUser.uid);
       await FirebaseAuth.instance.signOut();
       await CacheManager.clearCacheMemory();
@@ -321,5 +320,9 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     }
 
     return url.toString();
+  }
+
+  Future<String> getProfileImageUrl({String userId}) async {
+    return await _dbModel.getUserDP(userId);
   }
 }

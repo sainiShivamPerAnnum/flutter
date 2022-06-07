@@ -1,11 +1,14 @@
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/enums/leaderboard_service_enum.dart';
 import 'package:felloapp/core/model/leader_board_modal.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/components/winner_widget.dart';
+import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -22,13 +25,14 @@ class NewWebGameLeaderBoardView extends StatelessWidget {
         LeaderBoardServiceProperties>(
       properties: [LeaderBoardServiceProperties.WebGameLeaderBoard],
       builder: (context, m, properties) {
-        return m.WebGameLeaderBoard == null
+        return m.WebGameLeaderBoard == null || m.userProfilePicUrl.isEmpty
             ? NoRecordDisplayWidget(
                 asset: "images/leaderboard.png",
                 text: "Leaderboard will be updated soon",
               )
             : NewLeaderBoardView(
                 model: m.WebGameLeaderBoard,
+                userProfilePicUrl: m.userProfilePicUrl,
               );
       },
     );
@@ -36,21 +40,16 @@ class NewWebGameLeaderBoardView extends StatelessWidget {
 }
 
 class NewLeaderBoardView extends StatelessWidget {
-  NewLeaderBoardView({@required this.model});
+  NewLeaderBoardView({@required this.model, @required this.userProfilePicUrl});
 
   final LeaderBoardModal model;
+  final List<String> userProfilePicUrl;
   final _userService = locator<UserService>();
   @override
   Widget build(BuildContext context) {
-    bool isUserInTopSix = false;
+    log(userProfilePicUrl.toString());
+    bool isUserInTopThree = false;
     int currentUserRank = 0;
-    // int checkTill = model.scoreboard.length <= 6 ? model.scoreboard.length : 6;
-    // for (var i = 0; i < checkTill; i++) {
-    //   if (model.scoreboard[i].userid == _userService.baseUser.uid) {
-    //     isUserInTopSix = true;
-    //     break;
-    //   }
-    // }
 
     for (var i = 0; i < model.scoreboard.length; i++) {
       if (model.scoreboard[i].userid == _userService.baseUser.uid) {
@@ -59,11 +58,10 @@ class NewLeaderBoardView extends StatelessWidget {
       }
     }
 
-    if (currentUserRank <= 6 && currentUserRank > 0) {
-      isUserInTopSix = true;
+    if (currentUserRank <= 3 && currentUserRank > 0) {
+      isUserInTopThree = true;
     }
 
-    log(isUserInTopSix.toString());
     return Container(
       margin: EdgeInsets.symmetric(
         horizontal: SizeConfig.padding12,
@@ -82,12 +80,18 @@ class NewLeaderBoardView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           if (model.scoreboard.length >= 3)
-            WinnerWidgets(scoreboard: model.scoreboard),
+            WinnerWidgets(
+              scoreboard: model.scoreboard,
+              userProfilePicUrl: userProfilePicUrl,
+            ),
           if (model.scoreboard.length >= 7 &&
-              !isUserInTopSix &&
+              !isUserInTopThree &&
               currentUserRank != 0)
-            const UserRank(),
-          RemainingRank(model: model),
+            UserRank(
+              currentUserScore: model.scoreboard[currentUserRank - 1],
+              currentUserRank: currentUserRank,
+            ),
+          RemainingRank(model: model, userProfilePicUrl: userProfilePicUrl),
           SizedBox(
             height: SizeConfig.padding12,
           ),
@@ -119,8 +123,14 @@ class NewLeaderBoardView extends StatelessWidget {
 }
 
 class UserRank extends StatelessWidget {
-  const UserRank({Key key}) : super(key: key);
+  const UserRank({
+    Key key,
+    @required this.currentUserScore,
+    @required this.currentUserRank,
+  }) : super(key: key);
 
+  final Scoreboard currentUserScore;
+  final int currentUserRank;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -146,16 +156,14 @@ class UserRank extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  '56',
+                  currentUserRank.toString(),
                   style: TextStyles.rajdhaniB.body2,
                 ),
                 SizedBox(
                   width: SizeConfig.padding20,
                 ),
-                Image.asset(
-                  'assets/temp/rank_one_profile.png',
-                  width: SizeConfig.iconSize5,
-                  height: SizeConfig.iconSize5,
+                ProfileImageSE(
+                  radius: SizeConfig.iconSize1,
                 ),
                 SizedBox(
                   width: SizeConfig.padding12,
@@ -174,7 +182,7 @@ class UserRank extends StatelessWidget {
                     style: TextStyles.rajdhani.body3,
                   ),
                   TextSpan(
-                    text: '43 Runs',
+                    text: "${currentUserScore.score} points",
                     style: TextStyles.rajdhaniSB.body3,
                   ),
                 ],
@@ -187,47 +195,25 @@ class UserRank extends StatelessWidget {
   }
 }
 
-class RemainingRank extends StatefulWidget {
-  const RemainingRank({Key key, @required this.model}) : super(key: key);
+class RemainingRank extends StatelessWidget {
+  const RemainingRank(
+      {Key key, @required this.model, @required this.userProfilePicUrl})
+      : super(key: key);
   final LeaderBoardModal model;
-  @override
-  State<RemainingRank> createState() => _RemainingRankState();
-}
-
-class _RemainingRankState extends State<RemainingRank> {
-  final List<Map<String, dynamic>> winnerDetails = [
-    {
-      'name': 'A5hwin_Singh',
-      'image': 'rank_one_profile.png',
-      'score': '100 Runs'
-    },
-    {
-      'name': 'Mehul@Dutta',
-      'image': 'rank_three_profile.png',
-      'score': '76 Runs'
-    },
-    {
-      'name': 'Ashutosh_27',
-      'image': 'rank_two_profile.png',
-      'score': '75 Runs'
-    },
-  ];
-
+  final List<String> userProfilePicUrl;
   @override
   Widget build(BuildContext context) {
-    log(widget.model.scoreboard.length.toString());
     return Expanded(
       child: ListView.separated(
-        itemCount: widget.model.scoreboard.length <= 2
-            ? widget.model.scoreboard.length
-            : widget.model.scoreboard.length <= 6
-                ? widget.model.scoreboard.length - 3
+        itemCount: model.scoreboard.length <= 2
+            ? model.scoreboard.length
+            : model.scoreboard.length <= 6
+                ? model.scoreboard.length - 3
                 : 3,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
-          int countedIndex =
-              widget.model.scoreboard.length <= 2 ? index : index + 3;
+          int countedIndex = model.scoreboard.length <= 2 ? index : index + 3;
           return Padding(
             padding: EdgeInsets.symmetric(
               vertical: SizeConfig.padding20,
@@ -246,17 +232,23 @@ class _RemainingRankState extends State<RemainingRank> {
                       SizedBox(
                         width: SizeConfig.padding20,
                       ),
-                      Image.asset(
-                        'assets/temp/${winnerDetails[index]['image']}',
-                        width: SizeConfig.iconSize5,
-                        height: SizeConfig.iconSize5,
-                      ),
+                      userProfilePicUrl[countedIndex] == null
+                          ? Image.asset(
+                              Assets.profilePic,
+                              width: SizeConfig.iconSize5,
+                              height: SizeConfig.iconSize5,
+                            )
+                          : CachedNetworkImage(
+                              imageUrl: userProfilePicUrl[countedIndex],
+                              width: SizeConfig.iconSize5,
+                              height: SizeConfig.iconSize5,
+                            ),
                       SizedBox(
                         width: SizeConfig.padding12,
                       ),
                       Expanded(
                         child: Text(
-                          '${widget.model.scoreboard[countedIndex].username}',
+                          '${model.scoreboard[countedIndex].username}',
                           style: TextStyles.sourceSans.body3.setOpecity(0.8),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
@@ -266,7 +258,7 @@ class _RemainingRankState extends State<RemainingRank> {
                   ),
                 ),
                 Text(
-                  '${widget.model.scoreboard[countedIndex].score} points',
+                  '${model.scoreboard[countedIndex].score} points',
                   style: TextStyles.rajdhaniM.body3,
                 ),
               ],
