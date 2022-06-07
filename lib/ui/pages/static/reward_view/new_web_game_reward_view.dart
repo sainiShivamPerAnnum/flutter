@@ -50,68 +50,66 @@ class RewardView extends StatelessWidget {
             thirdPricePoint:
                 model.prizesA.firstWhere((element) => element.rank == 3).flc,
           ),
-          Expanded(
-            child: ListView.separated(
-              shrinkWrap: true,
-              itemCount: model.prizesA.length - 3,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                return SizedBox(
-                  height: SizeConfig.screenHeight * 0.0897,
-                  child: Center(
-                    child: ListTile(
-                      leading: SvgPicture.asset(
-                        'assets/temp/medal.svg',
-                        width: SizeConfig.iconSize5,
-                        height: SizeConfig.iconSize5,
+          Column(
+            // shrinkWrap: true,
+            // itemCount: model.prizesA.length - 3,
+            // physics: const NeverScrollableScrollPhysics(),
+            children: List.generate(model.prizesA.length - 3, (index) {
+              return SizedBox(
+                height: SizeConfig.screenHeight * 0.0897,
+                child: Center(
+                  child: ListTile(
+                    leading: SvgPicture.asset(
+                      'assets/temp/medal.svg',
+                      width: SizeConfig.iconSize5,
+                      height: SizeConfig.iconSize5,
+                    ),
+                    title: Text(
+                      model.prizesA[index + 3].displayName.replaceFirst(
+                        ' Prize',
+                        '',
                       ),
-                      title: Text(
-                        model.prizesA[index + 3].displayName.replaceFirst(
-                          ' Prize',
-                          '',
+                      style: TextStyles.rajdhaniSB.body2,
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Rs ${model.prizesA[index + 3].amt}',
+                          style: TextStyles.sourceSans.body2,
                         ),
-                        style: TextStyles.rajdhaniSB.body2,
-                      ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            'Rs ${model.prizesA[index + 3].amt}',
-                            style: TextStyles.sourceSans.body2,
-                          ),
-                          SizedBox(
-                            width: SizeConfig.padding16,
-                          ),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              SvgPicture.asset(
-                                'assets/temp/Tokens.svg',
-                                width: SizeConfig.body2,
-                                height: SizeConfig.body2,
-                              ),
-                              SizedBox(
-                                width: SizeConfig.padding2,
-                              ),
-                              Text(
-                                '${model.prizesA[index + 3].flc}',
-                                style: TextStyles.sourceSans.body3,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                        SizedBox(
+                          width: SizeConfig.padding16,
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SvgPicture.asset(
+                              'assets/temp/Tokens.svg',
+                              width: SizeConfig.body2,
+                              height: SizeConfig.body2,
+                            ),
+                            SizedBox(
+                              width: SizeConfig.padding2,
+                            ),
+                            Text(
+                              '${model.prizesA[index + 3].flc}',
+                              style: TextStyles.sourceSans.body3,
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                );
-              },
-              separatorBuilder: (context, index) {
-                return Divider(
-                  height: SizeConfig.dividerHeight,
-                  color: UiConstants.kDividerColor,
-                );
-              },
-            ),
+                ),
+              );
+            }),
+            // separatorBuilder: (context, index) {
+            //   return Divider(
+            //     height: SizeConfig.dividerHeight,
+            //     color: UiConstants.kDividerColor,
+            //   );
+            // },
           ),
         ],
       ),
