@@ -1,3 +1,4 @@
+import 'package:felloapp/core/model/leader_board_modal.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -5,34 +6,39 @@ import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 
 class WinnerWidgets extends StatelessWidget {
-  const WinnerWidgets({Key key}) : super(key: key);
-
+  const WinnerWidgets({Key key, @required this.scoreboard}) : super(key: key);
+  final List<Scoreboard> scoreboard;
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _buildTopThreeWinner(
-          image: 'rank_two_profile.png',
-          rank: 2,
-          name: 'John Doe',
-          score: '250 Runs',
-          context: context,
-        ),
-        _buildTopThreeWinner(
-          image: 'rank_one_profile.png',
-          rank: 1,
-          name: 'Pro Player',
-          score: '300 Runs',
-          context: context,
-        ),
-        _buildTopThreeWinner(
-          image: 'rank_three_profile.png',
-          rank: 3,
-          name: 'Classy Player',
-          score: '200 Runs',
-          context: context,
-        ),
+        scoreboard.length >= 2
+            ? _buildTopThreeWinner(
+                image: 'rank_two_profile.png',
+                rank: 2,
+                name: scoreboard[1].username,
+                score: scoreboard[1].score.toString(),
+                context: context,
+              )
+            : SizedBox(width: SizeConfig.screenWidth * 0.194),
+        if (scoreboard.isNotEmpty)
+          _buildTopThreeWinner(
+            image: 'rank_one_profile.png',
+            rank: 1,
+            name: scoreboard[0].username,
+            score: scoreboard[0].score.toString(),
+            context: context,
+          ),
+        scoreboard.length >= 3
+            ? _buildTopThreeWinner(
+                image: 'rank_three_profile.png',
+                rank: 3,
+                name: scoreboard[2].username,
+                score: scoreboard[2].score.toString(),
+                context: context,
+              )
+            : SizedBox(width: SizeConfig.screenWidth * 0.194),
       ],
     );
   }

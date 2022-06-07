@@ -124,19 +124,26 @@ class _NewWebHomeViewState extends State<NewWebHomeView>
 
   _buildTabView(BuildContext context, int i, WebHomeViewModel model) {
     // log(SizeConfig.screenWidth.toString()); // 360, 780
-    int rewardsCount = model.prizes.prizesA.length - 3;
-    double rewardSize = (SizeConfig.screenHeight * 0.3462) +
-        (SizeConfig.screenHeight *
-            0.0872 *
-            rewardsCount); // 300 + (68 * [rewardsCount])
+    int rewardsCount;
+    double rewardSize;
+
+    if (!model.isPrizesLoading) {
+      rewardsCount = model.prizes.prizesA.length - 3;
+      rewardSize = (SizeConfig.screenHeight * 0.335) +
+          (SizeConfig.screenHeight *
+              0.0872 *
+              rewardsCount); // 300 + (68 * [rewardsCount])
+    }
 
     double leaderboardSize = SizeConfig.screenHeight * 0.74; // 570
     return SizedBox(
-      height: _tabController.index == 0
-          ? rewardSize < leaderboardSize
-              ? leaderboardSize
-              : rewardSize
-          : leaderboardSize,
+      height: model.isPrizesLoading
+          ? 0
+          : _tabController.index == 0
+              ? rewardSize < leaderboardSize
+                  ? leaderboardSize
+                  : rewardSize
+              : leaderboardSize,
       child: TabBarView(
         children: [
           model.isPrizesLoading

@@ -40,10 +40,30 @@ class NewLeaderBoardView extends StatelessWidget {
 
   final LeaderBoardModal model;
   final _userService = locator<UserService>();
-
   @override
   Widget build(BuildContext context) {
-    log(model.toMap().toString());
+    bool isUserInTopSix = false;
+    int currentUserRank = 0;
+    // int checkTill = model.scoreboard.length <= 6 ? model.scoreboard.length : 6;
+    // for (var i = 0; i < checkTill; i++) {
+    //   if (model.scoreboard[i].userid == _userService.baseUser.uid) {
+    //     isUserInTopSix = true;
+    //     break;
+    //   }
+    // }
+
+    for (var i = 0; i < model.scoreboard.length; i++) {
+      if (model.scoreboard[i].userid == _userService.baseUser.uid) {
+        currentUserRank = i + 1;
+        break;
+      }
+    }
+
+    if (currentUserRank <= 6 && currentUserRank > 0) {
+      isUserInTopSix = true;
+    }
+
+    log(isUserInTopSix.toString());
     return Container(
       margin: EdgeInsets.symmetric(
         horizontal: SizeConfig.padding12,
@@ -61,32 +81,37 @@ class NewLeaderBoardView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          const WinnerWidgets(),
-          const UserRank(),
-          const RemainingRank(),
+          if (model.scoreboard.length >= 3)
+            WinnerWidgets(scoreboard: model.scoreboard),
+          if (model.scoreboard.length >= 7 &&
+              !isUserInTopSix &&
+              currentUserRank != 0)
+            const UserRank(),
+          RemainingRank(model: model),
           SizedBox(
             height: SizeConfig.padding12,
           ),
-          TextButton(
-            onPressed: () {},
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'See All',
-                  style: TextStyles.rajdhaniSB.body2,
-                ),
-                SizedBox(
-                  width: SizeConfig.padding6,
-                ),
-                Image.asset(
-                  'assets/temp/chevron_right.png',
-                  width: SizeConfig.iconSize1,
-                  height: SizeConfig.iconSize1,
-                )
-              ],
+          if (model.scoreboard.length >= 7)
+            TextButton(
+              onPressed: () {},
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'See All',
+                    style: TextStyles.rajdhaniSB.body2,
+                  ),
+                  SizedBox(
+                    width: SizeConfig.padding6,
+                  ),
+                  Image.asset(
+                    'assets/temp/chevron_right.png',
+                    width: SizeConfig.iconSize1,
+                    height: SizeConfig.iconSize1,
+                  )
+                ],
+              ),
             ),
-          ),
         ],
       ),
     );
@@ -163,8 +188,8 @@ class UserRank extends StatelessWidget {
 }
 
 class RemainingRank extends StatefulWidget {
-  const RemainingRank({Key key}) : super(key: key);
-
+  const RemainingRank({Key key, @required this.model}) : super(key: key);
+  final LeaderBoardModal model;
   @override
   State<RemainingRank> createState() => _RemainingRankState();
 }
@@ -190,62 +215,71 @@ class _RemainingRankState extends State<RemainingRank> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      itemCount: 3,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
-        return Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: SizeConfig.padding20,
-            horizontal: SizeConfig.padding24,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    Text(
-                      '${index + 4}',
-                      style: TextStyles.rajdhaniSB.body2,
-                    ),
-                    SizedBox(
-                      width: SizeConfig.padding20,
-                    ),
-                    Image.asset(
-                      'assets/temp/${winnerDetails[index]['image']}',
-                      width: SizeConfig.iconSize5,
-                      height: SizeConfig.iconSize5,
-                    ),
-                    SizedBox(
-                      width: SizeConfig.padding12,
-                    ),
-                    Expanded(
-                      child: Text(
-                        '${winnerDetails[index]['name']}',
-                        style: TextStyles.sourceSans.body3.setOpecity(0.8),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
+    log(widget.model.scoreboard.length.toString());
+    return Expanded(
+      child: ListView.separated(
+        itemCount: widget.model.scoreboard.length <= 2
+            ? widget.model.scoreboard.length
+            : widget.model.scoreboard.length <= 6
+                ? widget.model.scoreboard.length - 3
+                : 3,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemBuilder: (context, index) {
+          int countedIndex =
+              widget.model.scoreboard.length <= 2 ? index : index + 3;
+          return Padding(
+            padding: EdgeInsets.symmetric(
+              vertical: SizeConfig.padding20,
+              horizontal: SizeConfig.padding24,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Row(
+                    children: [
+                      Text(
+                        '${countedIndex + 1}',
+                        style: TextStyles.rajdhaniSB.body2,
                       ),
-                    )
-                  ],
+                      SizedBox(
+                        width: SizeConfig.padding20,
+                      ),
+                      Image.asset(
+                        'assets/temp/${winnerDetails[index]['image']}',
+                        width: SizeConfig.iconSize5,
+                        height: SizeConfig.iconSize5,
+                      ),
+                      SizedBox(
+                        width: SizeConfig.padding12,
+                      ),
+                      Expanded(
+                        child: Text(
+                          '${widget.model.scoreboard[countedIndex].username}',
+                          style: TextStyles.sourceSans.body3.setOpecity(0.8),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              Text(
-                '${winnerDetails[index]['score']}',
-                style: TextStyles.rajdhaniM.body3,
-              ),
-            ],
-          ),
-        );
-      },
-      separatorBuilder: (context, index) {
-        return Divider(
-          height: SizeConfig.dividerHeight, // 0.5
-          color: UiConstants.kDividerColor,
-        );
-      },
+                Text(
+                  '${widget.model.scoreboard[countedIndex].score} points',
+                  style: TextStyles.rajdhaniM.body3,
+                ),
+              ],
+            ),
+          );
+        },
+        separatorBuilder: (context, index) {
+          return Divider(
+            height: SizeConfig.dividerHeight, // 0.5
+            color: UiConstants.kDividerColor,
+          );
+        },
+      ),
     );
   }
 }
