@@ -93,7 +93,7 @@ class PlayViewModel extends BaseModel {
 
   setGameListTitle() async {
     if (await CacheManager.exits(CacheManager.CACHE_LAST_PLAYED_GAMES)) {
-      gamesListOneTitle = "Last Played";
+      gamesListOneTitle = "Recently Played";
       notifyListeners();
     }
   }

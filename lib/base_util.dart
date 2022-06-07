@@ -1,6 +1,7 @@
 //Project Imports
 //Dart & Flutter Imports
 import 'dart:async';
+import 'dart:developer' as dev;
 import 'dart:math';
 //Pub Imports
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -106,8 +107,8 @@ class BaseUtil extends ChangeNotifier {
   int isOtpResendCount = 0;
   String zeroBalanceAssetUri;
   static List<GameModel> gamesList;
-  static List<GameModel> focusGameList;
-  static List<GameModel> restGamesList;
+  static List<GameModel> _focusGameList;
+  static List<GameModel> _restGamesList;
   static String manualReferralCode;
   static bool isNewUser, isFirstFetchDone; // = 'jdF1';
 
@@ -240,7 +241,7 @@ class BaseUtil extends ChangeNotifier {
   }
 
   Future<void> setGameDefaults() async {
-    List<GameModel> allgamesList = [
+    gamesList = [
       GameModel(
         gameName: "Football",
         pageConfig: THomePageConfig,
@@ -333,24 +334,33 @@ class BaseUtil extends ChangeNotifier {
       ),
     ];
     //Arrange Games according to the position defined in baseremoteconfig.
-    focusGameList = [];
-    restGamesList = [];
-    List<String> gamePosition = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.GAME_POSITION)
-        .split('-');
+    await arrangeGames();
+  }
+
+  Future<void> arrangeGames() async {
+    List<GameModel> tempFocusGameList = [];
+    List<GameModel> tempRestGamesList = [];
+    // List<String> gamePosition = BaseRemoteConfig.remoteConfig
+    //     .getString(BaseRemoteConfig.GAME_POSITION)
+    //     .split('-');
     final String userlastPlayedGames =
         await CacheManager.readCache(key: CacheManager.CACHE_LAST_PLAYED_GAMES);
     if (userlastPlayedGames != null && userlastPlayedGames.isNotEmpty) {
       List<String> lastgamesOrder = userlastPlayedGames.split("-");
       lastgamesOrder.forEach((code) {
-        focusGameList.add(allgamesList.firstWhere((game) => game.code == code));
+        tempFocusGameList
+            .add(gamesList.firstWhere((game) => game.code == code));
       });
-      if (focusGameList.length < 2) {
-        for (int i = 0; i < allgamesList.length; i++) {
-          if (!focusGameList.contains(allgamesList[i])) {
-            focusGameList.add(allgamesList[i]);
-            if (focusGameList.length >= 2) break;
+      if (tempFocusGameList.length < 2) {
+        for (int i = 0; i < gamesList.length; i++) {
+          if (!tempFocusGameList.contains(gamesList[i])) {
+            tempFocusGameList.add(gamesList[i]);
+            if (tempFocusGameList.length >= 2) break;
           }
+        }
+      } else if (tempFocusGameList.length > 2) {
+        while (tempFocusGameList.length > 2) {
+          tempFocusGameList.removeLast();
         }
       }
     } else {
@@ -358,20 +368,24 @@ class BaseUtil extends ChangeNotifier {
           .getString(BaseRemoteConfig.NEW_USER_GAMES_ORDER)
           .split('-');
       newUserGamesOrder.forEach((code) {
-        focusGameList.add(allgamesList.firstWhere((game) => game.code == code));
+        tempFocusGameList
+            .add(gamesList.firstWhere((game) => game.code == code));
       });
     }
-    allgamesList.forEach((game) {
-      if (!focusGameList.contains(game)) restGamesList.add(game);
+    gamesList.forEach((game) {
+      if (!tempFocusGameList.contains(game)) tempRestGamesList.add(game);
     });
-
-    logger.d("Games List: $gamePosition");
-    gamesList = [];
-    gamePosition.forEach((code) {
-      gamesList.add(
-        allgamesList.firstWhere((game) => game.code == code),
-      );
-    });
+    focusGamesList = tempFocusGameList;
+    restGamesList = tempRestGamesList;
+    logger.d(
+        "Focused games list: $focusGamesList \nRest games List: $restGamesList");
+    // dev.log("Games List: $gamePosition");
+    // gamesList = [];
+    // gamePosition.forEach((code) {
+    //   gamesList.add(
+    //     gamesList.firstWhere((game) => game.code == code),
+    //   );
+    // });
   }
 
   Future<bool> isUnreadFreshchatSupportMessages() async {
@@ -861,11 +875,32 @@ class BaseUtil extends ChangeNotifier {
     notifyListeners();
   }
 
-  static cacheGameorder(String gameCode) async {
+  List<GameModel> get focusGamesList => _focusGameList;
+
+  set focusGamesList(List<GameModel> games) {
+    _focusGameList = games;
+    notifyListeners();
+  }
+
+  List<GameModel> get restGamesList => _restGamesList;
+
+  set restGamesList(List<GameModel> games) {
+    _restGamesList = games;
+    notifyListeners();
+  }
+
+  cacheGameorder(String gameCode) async {
     String gamesOrder =
         await CacheManager.readCache(key: CacheManager.CACHE_LAST_PLAYED_GAMES);
+
     if (gamesOrder != null && gamesOrder.isNotEmpty) {
-      gamesOrder = "$gameCode-" + gamesOrder;
+      List<String> cachedGamesList = gamesOrder.split('-');
+
+      if (!cachedGamesList.contains(gameCode)) {
+        cachedGamesList.insert(0, gameCode);
+        while (cachedGamesList.length > 2) cachedGamesList.removeLast();
+      }
+      gamesOrder = cachedGamesList.join('-');
     } else {
       gamesOrder = gameCode;
     }
@@ -873,6 +908,7 @@ class BaseUtil extends ChangeNotifier {
         key: CacheManager.CACHE_LAST_PLAYED_GAMES,
         value: gamesOrder,
         type: CacheType.string);
+    await arrangeGames();
   }
 
   void refreshAugmontBalance() async {

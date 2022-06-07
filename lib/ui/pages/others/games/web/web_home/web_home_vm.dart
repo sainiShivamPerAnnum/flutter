@@ -34,6 +34,7 @@ class WebHomeViewModel extends BaseModel {
   final _fclActionRepo = locator<FlcActionsRepo>();
   final _userCoinService = locator<UserCoinService>();
   final _logger = locator<CustomLogger>();
+  final _baseUtil = locator<BaseUtil>();
 
   //Local Variables
 
@@ -131,7 +132,7 @@ class WebHomeViewModel extends BaseModel {
 
   Future<bool> setupGame() async {
     await getBearerToken();
-    await BaseUtil.cacheGameorder(gameCode);
+    await _baseUtil.cacheGameorder(gameCode);
 
     switch (currentGame) {
       case Constants.GAME_TYPE_POOLCLUB:
