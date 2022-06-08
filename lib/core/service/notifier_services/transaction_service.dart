@@ -52,24 +52,13 @@ class TransactionService
   }
 
   fetchTransactions({
-    @required int limit,
     String status,
     String type,
     String subtype,
   }) async {
     if (_dBModel != null && _userService != null) {
       //fetch filtered transactions
-
-      // Map<String, dynamic> tMap = await _dBModel.getFilteredUserTransactions(
-      //   user: _userService.baseUser,
-      //   type: type,
-      //   subtype: subtype,
-      //   status: status,
-      //   lastDocument: getLastTxnDocType(status: status, type: type),
-      //   limit: limit,
-      // );
       final response = await getUserTransactionsfromApi(
-        limit: limit,
         type: type,
         subtype: subtype,
         status: status,
@@ -78,19 +67,20 @@ class TransactionService
 
       // if transaction list is empty
       if (_txnList == null || _txnList.length == 0) {
-        txnList = response.model;
-        // List.from(tMap['listOfTransactions']);
+        txnList = response.model.transactions;
       } else {
         // if transaction list already have some items
-        appendTxns(response.model);
+        appendTxns(response.model.transactions);
       }
       _logger.d("Current Transaction List length: ${_txnList.length}");
       // set proper lastDocument snapshot for further fetches
-      if (response.model.isNotEmpty)
+      if (response.model.transactions.isNotEmpty)
         setLastTxnDocType(
-            status: status, type: type, lastDocId: response.model.last.docKey);
+            status: status,
+            type: type,
+            lastDocId: response.model.transactions.last.docKey);
       // check and set which category has no more items to fetch
-      if (response.model.length < limit)
+      if (response.model.isLastPage)
         setHasMoreTxnsValue(type: type, status: status);
     }
   }
@@ -167,7 +157,7 @@ class TransactionService
     hasMoreWithdrawalTxns = true;
     hasMoreRefundedTxns = true;
     txnList?.clear();
-    await fetchTransactions(limit: 4);
+    await fetchTransactions();
     _logger.i("Transactions got updated");
   }
 
@@ -290,8 +280,7 @@ class TransactionService
     if (txnList != null) txnList.clear();
   }
 
-  Future<ApiResponse<List<UserTransaction>>> getUserTransactionsfromApi({
-    int limit,
+  Future<ApiResponse<TransactionResponse>> getUserTransactionsfromApi({
     String start,
     String type,
     String subtype,
@@ -314,13 +303,17 @@ class TransactionService
         cBaseUrl:
             "https://hl4otla349.execute-api.ap-south-1.amazonaws.com/dev/users/$_uid",
       );
-      _logger.d(response);
+
       final responseData = response["data"];
       responseData["transactions"].forEach((e) {
         events.add(UserTransaction.fromMap(e, e["id"]));
       });
 
-      return ApiResponse<List<UserTransaction>>(model: events, code: 200);
+      final bool isLastPage = responseData["isLastPage"] ?? false;
+      final TransactionResponse txnResponse =
+          TransactionResponse(isLastPage: isLastPage, transactions: events);
+
+      return ApiResponse<TransactionResponse>(model: txnResponse, code: 200);
     } catch (e) {
       _logger.e(e.toString());
       return ApiResponse.withError("Unable to fetch transactions", 400);
@@ -332,4 +325,11 @@ class TransactionService
     _logger.d(token);
     return token;
   }
+}
+
+class TransactionResponse {
+  final List<UserTransaction> transactions;
+  final bool isLastPage;
+
+  TransactionResponse({this.isLastPage, this.transactions});
 }

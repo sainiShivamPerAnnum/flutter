@@ -62,7 +62,7 @@ class RootViewModel extends BaseModel {
     await _userService.getUserFundWalletData();
     txnService.signOut();
     _paytmService.getActiveSubscriptionDetails();
-    await txnService.fetchTransactions(limit: 4);
+    await txnService.fetchTransactions();
   }
 
   static final GlobalKey<ScaffoldState> scaffoldKey =
