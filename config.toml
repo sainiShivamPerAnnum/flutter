@@ -1,4 +1,0 @@
-[[runners]]
-  name = "shell executor runner"
-  executor = "bash"
-  shell = "bash"

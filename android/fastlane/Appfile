@@ -1,3 +1,0 @@
-# json_key_file("~/keys/android/fello-d3a9c-gitlab-fastlane-cd.json")
-json_key_file("app/serviceAccess.json") # Path to the json secret file - Follow https://docs.fastlane.tools/actions/supply/#setup to get one
-package_name("in.fello.felloapp") # e.g. com.krausefx.app
