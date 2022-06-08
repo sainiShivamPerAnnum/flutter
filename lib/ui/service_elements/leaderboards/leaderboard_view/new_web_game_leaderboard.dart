@@ -203,75 +203,73 @@ class RemainingRank extends StatelessWidget {
   final List<String> userProfilePicUrl;
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: ListView.separated(
-        itemCount: model.scoreboard.length <= 2
-            ? model.scoreboard.length
-            : model.scoreboard.length <= 6
-                ? model.scoreboard.length - 3
-                : 3,
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemBuilder: (context, index) {
-          int countedIndex = model.scoreboard.length <= 2 ? index : index + 3;
-          return Padding(
-            padding: EdgeInsets.symmetric(
-              vertical: SizeConfig.padding20,
-              horizontal: SizeConfig.padding24,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Row(
-                    children: [
-                      Text(
-                        '${countedIndex + 1}',
-                        style: TextStyles.rajdhaniSB.body2,
+    return ListView.separated(
+      itemCount: model.scoreboard.length <= 2
+          ? model.scoreboard.length
+          : model.scoreboard.length <= 6
+              ? model.scoreboard.length - 3
+              : 3,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        int countedIndex = model.scoreboard.length <= 2 ? index : index + 3;
+        return Padding(
+          padding: EdgeInsets.symmetric(
+            vertical: SizeConfig.padding20,
+            horizontal: SizeConfig.padding24,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Row(
+                  children: [
+                    Text(
+                      '${countedIndex + 1}',
+                      style: TextStyles.rajdhaniSB.body2,
+                    ),
+                    SizedBox(
+                      width: SizeConfig.padding20,
+                    ),
+                    userProfilePicUrl[countedIndex] == null
+                        ? Image.asset(
+                            Assets.profilePic,
+                            width: SizeConfig.iconSize5,
+                            height: SizeConfig.iconSize5,
+                          )
+                        : CachedNetworkImage(
+                            imageUrl: userProfilePicUrl[countedIndex],
+                            width: SizeConfig.iconSize5,
+                            height: SizeConfig.iconSize5,
+                          ),
+                    SizedBox(
+                      width: SizeConfig.padding12,
+                    ),
+                    Expanded(
+                      child: Text(
+                        '${model.scoreboard[countedIndex].username}',
+                        style: TextStyles.sourceSans.body3.setOpecity(0.8),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
                       ),
-                      SizedBox(
-                        width: SizeConfig.padding20,
-                      ),
-                      userProfilePicUrl[countedIndex] == null
-                          ? Image.asset(
-                              Assets.profilePic,
-                              width: SizeConfig.iconSize5,
-                              height: SizeConfig.iconSize5,
-                            )
-                          : CachedNetworkImage(
-                              imageUrl: userProfilePicUrl[countedIndex],
-                              width: SizeConfig.iconSize5,
-                              height: SizeConfig.iconSize5,
-                            ),
-                      SizedBox(
-                        width: SizeConfig.padding12,
-                      ),
-                      Expanded(
-                        child: Text(
-                          '${model.scoreboard[countedIndex].username}',
-                          style: TextStyles.sourceSans.body3.setOpecity(0.8),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                      )
-                    ],
-                  ),
+                    )
+                  ],
                 ),
-                Text(
-                  '${model.scoreboard[countedIndex].score} points',
-                  style: TextStyles.rajdhaniM.body3,
-                ),
-              ],
-            ),
-          );
-        },
-        separatorBuilder: (context, index) {
-          return Divider(
-            height: SizeConfig.dividerHeight, // 0.5
-            color: UiConstants.kDividerColor,
-          );
-        },
-      ),
+              ),
+              Text(
+                '${model.scoreboard[countedIndex].score} points',
+                style: TextStyles.rajdhaniM.body3,
+              ),
+            ],
+          ),
+        );
+      },
+      separatorBuilder: (context, index) {
+        return Divider(
+          height: SizeConfig.dividerHeight, // 0.5
+          color: UiConstants.kDividerColor,
+        );
+      },
     );
   }
 }

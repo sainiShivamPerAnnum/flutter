@@ -7,21 +7,27 @@ import 'package:felloapp/core/service/notifier_services/prize_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
 class RewardLeaderboardViewModel extends BaseModel {
   String _currentGame;
   bool _isPrizesLoading = false, _isLeaderboardLoading = false;
-
+  PageController _pageController;
+  double _tabPosWidthFactor = SizeConfig.pageHorizontalMargins;
   PrizesModel _prizes;
+  int _tabNo = 0;
 
+  //Getters
   final _prizeService = locator<PrizeService>();
   final _lbService = locator<LeaderboardService>();
   String get currentGame => this._currentGame;
   bool get isPrizesLoading => this._isPrizesLoading;
   bool get isLeaderboardLoading => this._isLeaderboardLoading;
-
   PrizesModel get prizes => _prizes;
+  PageController get pageController => _pageController;
+  double get tabPosWidthFactor => _tabPosWidthFactor;
+  int get tabNo => _tabNo;
 
   //Setters
   set currentGame(value) {
@@ -44,15 +50,41 @@ class RewardLeaderboardViewModel extends BaseModel {
     notifyListeners();
   }
 
+  set tabPosWidthFactor(value) {
+    this._tabPosWidthFactor = value;
+    notifyListeners();
+  }
+
+  set tabNo(value) {
+    this._tabNo = value;
+    notifyListeners();
+  }
+
   //Super Methods
   init(String game) async {
     currentGame = game;
     print(currentGame);
+    _pageController = PageController(initialPage: 0);
     refreshPrizes();
     refreshLeaderboard();
   }
 
   clear() {}
+
+  switchTab(int tab) {
+    if (tab == tabNo) return;
+
+    tabPosWidthFactor = tabNo == 0
+        ? SizeConfig.screenWidth / 2 + SizeConfig.pageHorizontalMargins
+        : SizeConfig.pageHorizontalMargins;
+
+    _pageController.animateToPage(
+      tab,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.linear,
+    );
+    tabNo = tab;
+  }
 
   refreshPrizes() async {
     isPrizesLoading = true;

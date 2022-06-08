@@ -25,6 +25,7 @@ class RewardShimmer extends StatelessWidget {
         ),
         color: UiConstants.kLeaderBoardBackgroundColor,
       ),
+      height: SizeConfig.screenWidth * 1.389,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,

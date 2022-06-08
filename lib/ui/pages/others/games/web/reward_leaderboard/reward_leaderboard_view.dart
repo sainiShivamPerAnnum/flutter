@@ -8,44 +8,27 @@ import 'package:felloapp/ui/pages/others/games/web/reward_leaderboard/reward_lea
 import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/reward_view/new_web_game_reward_view.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/new_web_game_leaderboard.dart';
+import 'package:felloapp/ui/widgets/helpers/height_adaptive_pageview.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-class RewardLeaderboardView extends StatefulWidget {
-  const RewardLeaderboardView({Key key, @required this.game}) : super(key: key);
+class RewardLeaderboardView extends StatelessWidget {
+  RewardLeaderboardView({Key key, @required this.game}) : super(key: key);
   final String game;
 
-  @override
-  State<RewardLeaderboardView> createState() => _RewardLeaderboardViewState();
-}
+  final TextStyle selectedTextStyle =
+      TextStyles.sourceSansSB.body1.colour(UiConstants.titleTextColor);
 
-class _RewardLeaderboardViewState extends State<RewardLeaderboardView>
-    with SingleTickerProviderStateMixin {
-  TabController _tabController;
-
-  @override
-  void initState() {
-    _tabController = TabController(length: 2, vsync: this);
-    _tabController.addListener(() {
-      setState(() {});
-    });
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _tabController.dispose();
-  }
+  final TextStyle unselectedTextStyle = TextStyles.sourceSansSB.body1
+      .colour(UiConstants.titleTextColor.withOpacity(0.6));
 
   @override
   Widget build(BuildContext context) {
     return BaseView<RewardLeaderboardViewModel>(
       onModelReady: (model) {
-        model.init(widget.game);
+        model.init(game);
       },
       onModelDispose: (model) {
         model.clear();
@@ -53,81 +36,80 @@ class _RewardLeaderboardViewState extends State<RewardLeaderboardView>
       builder: (context, model, child) {
         return Column(
           children: [
-            TabBar(
-              controller: _tabController,
-              indicator: const BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: UiConstants.kTabBorderColor,
-                    width: 5,
+            Row(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => model.switchTab(0),
+                    child: Container(
+                      height: SizeConfig.navBarHeight,
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Rewards',
+                        style: model.tabNo == 0
+                            ? selectedTextStyle
+                            : unselectedTextStyle, // TextStyles.sourceSansSB.body1,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-              labelColor: UiConstants.titleTextColor,
-              unselectedLabelColor: UiConstants.titleTextColor.withOpacity(0.6),
-              indicatorPadding: const EdgeInsets.symmetric(horizontal: 30),
-              tabs: [
-                Tab(
-                  child: Text(
-                    'Rewards',
-                    style: TextStyles.sourceSansSB.body1,
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => model.switchTab(1),
+                    child: Container(
+                      height: SizeConfig.navBarHeight,
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Leaderboard',
+                        style: model.tabNo == 1
+                            ? selectedTextStyle
+                            : unselectedTextStyle, // style: TextStyles.sourceSansSB.body1,
+                      ),
+                    ),
                   ),
-                  height: SizeConfig.navBarHeight,
-                ),
-                Tab(
-                  child: Text(
-                    'Laderboard',
-                    style: TextStyles.sourceSansSB.body1,
-                  ),
-                  height: SizeConfig.navBarHeight,
-                ),
+                )
               ],
             ),
-            _buildTabView(context, 0, model),
+            Row(
+              children: [
+                AnimatedContainer(
+                  duration: Duration(milliseconds: 500),
+                  height: 5,
+                  width: model.tabPosWidthFactor,
+                ),
+                Container(
+                  color: UiConstants.kTabBorderColor,
+                  height: 5,
+                  width: SizeConfig.screenWidth * 0.4,
+                )
+              ],
+            ),
+            _buildTabView(model),
           ],
         );
       },
     );
   }
 
-  _buildTabView(BuildContext context, int i, RewardLeaderboardViewModel model) {
-    // log(SizeConfig.screenWidth.toString()); // 360, 780
-    int rewardsCount;
-    double rewardSize;
-
-    if (!model.isPrizesLoading) {
-      rewardsCount = model.prizes.prizesA.length - 3;
-      rewardSize = (SizeConfig.screenHeight * 0.335) +
-          (SizeConfig.screenHeight *
-              0.0872 *
-              rewardsCount); // 300 + (68 * [rewardsCount])
-    }
-
-    double leaderboardSize = SizeConfig.screenHeight * 0.74; // 570
-    return SizedBox(
-      height: model.isPrizesLoading
-          ? leaderboardSize
-          : _tabController.index == 0
-              ? rewardSize < leaderboardSize
-                  ? leaderboardSize
-                  : rewardSize
-              : leaderboardSize,
-      child: TabBarView(
-        children: [
-          model.isPrizesLoading
-              ? RewardShimmer()
-              : (model.prizes == null)
-                  ? NoRecordDisplayWidget(
-                      asset: "images/week-winners.png",
-                      text: "Prizes will be updates soon",
-                    )
-                  : RewardView(model: model.prizes),
-          model.isLeaderboardLoading
-              ? LeaderboardShimmer()
-              : NewWebGameLeaderBoardView(),
-        ],
-        controller: _tabController,
-      ),
+  _buildTabView(RewardLeaderboardViewModel model) {
+    return HeightAdaptivePageView(
+      controller: model.pageController,
+      onPageChanged: (int page) {
+        model.switchTab(page);
+      },
+      children: [
+        model.isPrizesLoading
+            ? RewardShimmer()
+            : (model.prizes == null)
+                ? NoRecordDisplayWidget(
+                    asset: "images/week-winners.png",
+                    text: "Prizes will be updates soon",
+                  )
+                : RewardView(model: model.prizes),
+        model.isLeaderboardLoading
+            ? LeaderboardShimmer()
+            : NewWebGameLeaderBoardView(),
+      ],
     );
   }
 }

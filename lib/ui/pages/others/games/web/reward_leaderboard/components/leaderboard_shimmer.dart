@@ -25,6 +25,7 @@ class LeaderboardShimmer extends StatelessWidget {
         ),
         color: UiConstants.kLeaderBoardBackgroundColor,
       ),
+      height: SizeConfig.screenWidth * 1.389,
       child: Column(
         children: [
           Row(

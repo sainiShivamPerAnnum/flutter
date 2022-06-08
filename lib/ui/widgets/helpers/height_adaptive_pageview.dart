@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 class HeightAdaptivePageView extends StatefulWidget {
   final List<Widget> children;
   final PageController controller;
-
+  final ValueChanged<int> onPageChanged;
   const HeightAdaptivePageView({
     Key key,
     @required this.children,
     this.controller,
+    this.onPageChanged,
   }) : super(key: key);
 
   @override
@@ -51,6 +52,7 @@ class _HeightAdaptivePageViewState extends State<HeightAdaptivePageView>
       tween: Tween<double>(begin: _heights[0], end: _currentHeight),
       builder: (context, value, child) => SizedBox(height: value, child: child),
       child: PageView(
+        onPageChanged: widget.onPageChanged,
         controller: _pageController,
         children: _sizeReportingChildren,
       ),
