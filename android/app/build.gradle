@@ -1,3 +1,5 @@
+import groovy.json.JsonSlurper
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -45,10 +47,6 @@ android {
          targetCompatibility JavaVersion.VERSION_1_8
     }
 
-//    lintOptions {
-//        disable 'InvalidPackage'
-//    }
-
     lintOptions {
         checkReleaseBuilds false
     }
@@ -63,12 +61,12 @@ android {
     }
 
     signingConfigs {
-        // debug {
-        //     keyAlias keystoreProperties['debugkeyAlias']
-        //     keyPassword keystoreProperties['debugkeyPassword']
-        //     storeFile keystoreProperties['debugstoreFile'] ? file(keystoreProperties['debugstoreFile']) : null
-        //     storePassword keystoreProperties['debugstorePassword']
-        // }
+        debug {
+            keyAlias keystoreProperties['debugkeyAlias']
+            keyPassword keystoreProperties['debugkeyPassword']
+            storeFile keystoreProperties['debugstoreFile'] ? file(keystoreProperties['debugstoreFile']) : null
+            storePassword keystoreProperties['debugstorePassword']
+        }
 
         release {
             keyAlias keystoreProperties['keyAlias']
