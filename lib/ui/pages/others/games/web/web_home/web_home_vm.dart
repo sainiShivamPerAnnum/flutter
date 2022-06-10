@@ -387,12 +387,4 @@ class WebHomeViewModel extends BaseModel {
   refreshLeaderboard() async {
     await _lbService.fetchWebGameLeaderBoard(game: currentGame);
   }
-
-  void luanchNewLeaderBoard() {
-    _logger.i('Luanching New LeaderBoard');
-    AppState.delegate.appState.currentAction = PageAction(
-      state: PageState.addPage,
-      page: NewGameHomeViewPageConfig,
-    );
-  }
 }

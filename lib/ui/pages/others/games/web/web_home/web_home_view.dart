@@ -208,13 +208,6 @@ class WebHomeView extends StatelessWidget {
                       FelloCoinBar(),
                       SizedBox(width: 16),
                       NotificationButton(),
-                      SizedBox(width: 10),
-                      KunjTempBtn(
-                        onTap: () {
-                          log('Luanching New LeaderBoard');
-                          model.luanchNewLeaderBoard();
-                        },
-                      ),
                     ],
                   ),
                 ],

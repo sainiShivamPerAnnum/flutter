@@ -156,27 +156,3 @@ class TextFieldLabel extends StatelessWidget {
     );
   }
 }
-
-class KunjTempBtn extends StatelessWidget {
-  final Function onTap;
-  final Color color;
-  KunjTempBtn({this.onTap, this.color = Colors.white});
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: CircleAvatar(
-        radius: SizeConfig.avatarRadius,
-        backgroundColor: color.withOpacity(0.4),
-        child: Padding(
-          padding: EdgeInsets.all(SizeConfig.padding4),
-          child: Icon(
-            Icons.leaderboard,
-            color: UiConstants.primaryColor,
-            size: SizeConfig.iconSize1,
-          ),
-        ),
-      ),
-    );
-  }
-}

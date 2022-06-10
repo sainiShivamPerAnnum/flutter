@@ -19,13 +19,13 @@ class LeaderboardService
   final _userService = locator<UserService>();
   final ScrollController ownController = ScrollController();
   final ScrollController parentController = ScrollController();
-
   int _referralLBLength = 0;
-
   List<ReferralBoard> _referralLeaderBoard = [];
   List<String> _userProfilePicUrl = [];
-
   LeaderBoardModal _WebGameLeaderBoard;
+  bool isUserInTopThree = false;
+  int currentUserRank = 0;
+
   LeaderBoardModal get WebGameLeaderBoard => this._WebGameLeaderBoard;
 
   List<ReferralBoard> get referralLeaderBoard => this._referralLeaderBoard;
@@ -65,6 +65,7 @@ class LeaderboardService
         await _statsRepo.getLeaderBoard(game, "weekly");
     if (response.code == 200) {
       _WebGameLeaderBoard = response.model;
+      setCurrentPlayerRank();
       setWebGameLeaderBoard();
       _logger.d("$game Leaderboard successfully fetched");
     } else {
@@ -78,8 +79,6 @@ class LeaderboardService
         : 6;
     _userProfilePicUrl.clear();
     for (var i = 0; i < length; i++) {
-      log(_WebGameLeaderBoard.scoreboard[i].userid);
-      //b4OjxLgfKZc5FyhNDs3DgzlWA3N2
       String url = await _userService.getProfileImageUrl(
         userId: _WebGameLeaderBoard.scoreboard[i].userid,
       );
@@ -102,6 +101,22 @@ class LeaderboardService
               duration: Duration(seconds: 1), curve: Curves.easeIn)
           .then((value) => ownController.animateTo(index * SizeConfig.padding54,
               duration: Duration(seconds: 1), curve: Curves.easeIn));
+    }
+  }
+
+  void setCurrentPlayerRank() {
+    currentUserRank = 0;
+    isUserInTopThree = false;
+    for (var i = 0; i < WebGameLeaderBoard.scoreboard.length; i++) {
+      if (WebGameLeaderBoard.scoreboard[i].userid ==
+          _userService.baseUser.uid) {
+        currentUserRank = i + 1;
+        break;
+      }
+    }
+
+    if (currentUserRank <= 3 && currentUserRank > 0) {
+      isUserInTopThree = true;
     }
   }
 }

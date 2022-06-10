@@ -1,13 +1,14 @@
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/enums/leaderboard_service_enum.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/leader_board_modal.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/components/user_rank.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/components/winner_widget.dart';
-import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -33,6 +34,8 @@ class NewWebGameLeaderBoardView extends StatelessWidget {
             : NewLeaderBoardView(
                 model: m.WebGameLeaderBoard,
                 userProfilePicUrl: m.userProfilePicUrl,
+                currentUserRank: m.currentUserRank,
+                isUserInTopThree: m.isUserInTopThree,
               );
       },
     );
@@ -40,28 +43,19 @@ class NewWebGameLeaderBoardView extends StatelessWidget {
 }
 
 class NewLeaderBoardView extends StatelessWidget {
-  NewLeaderBoardView({@required this.model, @required this.userProfilePicUrl});
+  NewLeaderBoardView({
+    @required this.model,
+    @required this.userProfilePicUrl,
+    @required this.isUserInTopThree,
+    @required this.currentUserRank,
+  });
 
   final LeaderBoardModal model;
   final List<String> userProfilePicUrl;
-  final _userService = locator<UserService>();
+  final bool isUserInTopThree;
+  final int currentUserRank;
   @override
   Widget build(BuildContext context) {
-    log(userProfilePicUrl.toString());
-    bool isUserInTopThree = false;
-    int currentUserRank = 0;
-
-    for (var i = 0; i < model.scoreboard.length; i++) {
-      if (model.scoreboard[i].userid == _userService.baseUser.uid) {
-        currentUserRank = i + 1;
-        break;
-      }
-    }
-
-    if (currentUserRank <= 3 && currentUserRank > 0) {
-      isUserInTopThree = true;
-    }
-
     return Container(
       margin: EdgeInsets.symmetric(
         horizontal: SizeConfig.padding12,
@@ -97,7 +91,12 @@ class NewLeaderBoardView extends StatelessWidget {
           ),
           if (model.scoreboard.length >= 7)
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                AppState.delegate.appState.currentAction = PageAction(
+                  state: PageState.addPage,
+                  page: TopPlayerLeaderboardPageConfig,
+                );
+              },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -122,83 +121,12 @@ class NewLeaderBoardView extends StatelessWidget {
   }
 }
 
-class UserRank extends StatelessWidget {
-  const UserRank({
-    Key key,
-    @required this.currentUserScore,
-    @required this.currentUserRank,
-  }) : super(key: key);
-
-  final Scoreboard currentUserScore;
-  final int currentUserRank;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: SizeConfig.screenWidth,
-      decoration: BoxDecoration(
-        color: UiConstants.kUserRankBackgroundColor,
-        borderRadius: BorderRadius.circular(
-          SizeConfig.roundness5,
-        ),
-      ),
-      margin: EdgeInsets.only(
-        bottom: SizeConfig.padding16,
-        top: SizeConfig.padding32,
-      ),
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          vertical: SizeConfig.padding12,
-          horizontal: SizeConfig.padding16,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Text(
-                  currentUserRank.toString(),
-                  style: TextStyles.rajdhaniB.body2,
-                ),
-                SizedBox(
-                  width: SizeConfig.padding20,
-                ),
-                ProfileImageSE(
-                  radius: SizeConfig.iconSize1,
-                ),
-                SizedBox(
-                  width: SizeConfig.padding12,
-                ),
-                Text(
-                  "YOU",
-                  style: TextStyles.rajdhaniSB.body2,
-                )
-              ],
-            ),
-            RichText(
-              text: TextSpan(
-                children: <TextSpan>[
-                  TextSpan(
-                    text: 'Best : ',
-                    style: TextStyles.rajdhani.body3,
-                  ),
-                  TextSpan(
-                    text: "${currentUserScore.score} points",
-                    style: TextStyles.rajdhaniSB.body3,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class RemainingRank extends StatelessWidget {
-  const RemainingRank(
-      {Key key, @required this.model, @required this.userProfilePicUrl})
-      : super(key: key);
+  const RemainingRank({
+    Key key,
+    @required this.model,
+    @required this.userProfilePicUrl,
+  }) : super(key: key);
   final LeaderBoardModal model;
   final List<String> userProfilePicUrl;
   @override

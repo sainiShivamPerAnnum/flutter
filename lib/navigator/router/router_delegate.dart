@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/model/leader_board_modal.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -36,6 +37,8 @@ import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_walkthrough.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_result.dart';
 import 'package:felloapp/ui/pages/others/games/web/new_web_home/new_web_home.dart';
+import 'package:felloapp/ui/pages/others/games/web/web_home/web_home_view.dart';
+import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/top_player_leaderboard.dart';
 import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
@@ -297,6 +300,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(
               AutosaveTransactionsView(), AutosaveTransactionsViewPageConfig);
           break;
+        case Pages.TopPlayerLeaderboard:
+          _addPageData(
+              TopPlayerLeaderboardView(), TopPlayerLeaderboardPageConfig);
+          break;
 
         default:
           break;
@@ -524,11 +531,11 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.AutosaveWalkthrough:
         AutosaveWalkThroughConfig.currentPageAction = action;
         break;
-      case Pages.NewGameHomeView:
-        NewGameHomeViewPageConfig.currentPageAction = action;
-        break;
       case Pages.NewWebHomeView:
         NewWebHomeViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.TopPlayerLeaderboard:
+        TopPlayerLeaderboardPageConfig.currentPageAction = action;
         break;
       default:
         break;
