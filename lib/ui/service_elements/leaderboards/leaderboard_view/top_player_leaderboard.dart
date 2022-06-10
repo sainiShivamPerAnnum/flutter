@@ -94,9 +94,10 @@ class TopPlayer extends StatelessWidget {
               userProfilePicUrl: userProfilePicUrl,
             ),
             AllPlayerList(
-                model: model,
-                currentUserRank: currentUserRank,
-                isUserInTopThree: isUserInTopThree),
+              model: model,
+              currentUserRank: currentUserRank,
+              isUserInTopThree: isUserInTopThree,
+            ),
           ],
         ),
       ),
@@ -185,7 +186,7 @@ class AllPlayerList extends StatelessWidget {
                               ),
                               Expanded(
                                 child: Text(
-                                  '${model.scoreboard[countedIndex - 1].username}',
+                                  '${model.scoreboard[countedIndex].username}',
                                   style: TextStyles.sourceSans.body3
                                       .setOpecity(0.8),
                                   overflow: TextOverflow.ellipsis,
@@ -196,7 +197,7 @@ class AllPlayerList extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          '${model.scoreboard[countedIndex - 1].score} points',
+                          '${model.scoreboard[countedIndex].score} points',
                           style: TextStyles.rajdhaniM.body3,
                         ),
                       ],
