@@ -22,27 +22,18 @@ class WinnerWidgets extends StatelessWidget {
       children: [
         scoreboard.length >= 2
             ? _buildTopThreeWinner(
-                image: userProfilePicUrl[1],
-                rank: 2,
-                name: scoreboard[1].username,
-                score: scoreboard[1].score.toString(),
+                rank: 1,
                 context: context,
               )
             : SizedBox(width: SizeConfig.screenWidth * 0.194),
         if (scoreboard.isNotEmpty)
           _buildTopThreeWinner(
-            image: userProfilePicUrl[0],
-            rank: 1,
-            name: scoreboard[0].username,
-            score: scoreboard[0].score.toString(),
+            rank: 0,
             context: context,
           ),
         scoreboard.length >= 3
             ? _buildTopThreeWinner(
-                image: userProfilePicUrl[2],
-                rank: 3,
-                name: scoreboard[2].username,
-                score: scoreboard[2].score.toString(),
+                rank: 2,
                 context: context,
               )
             : SizedBox(width: SizeConfig.screenWidth * 0.194),
@@ -51,16 +42,12 @@ class WinnerWidgets extends StatelessWidget {
   }
 
   Widget _buildTopThreeWinner({
-    String image,
     int rank,
-    String name,
-    String score,
     BuildContext context,
   }) {
-    // log(SizeConfig.screenWidth.toString());
     return Stack(
       children: [
-        if (rank == 1)
+        if (rank == 0)
           CustomPaint(
             painter: WinnerBackGroundPainter(context: context),
             size: Size(
@@ -70,13 +57,13 @@ class WinnerWidgets extends StatelessWidget {
           ),
         Padding(
           padding: EdgeInsets.only(
-            left: rank == 1 ? SizeConfig.screenWidth * 0.04444 : 0,
+            left: rank == 0 ? SizeConfig.screenWidth * 0.04444 : 0,
           ),
           child: Column(
             children: [
               Container(
                 margin: EdgeInsets.only(
-                  top: rank == 1
+                  top: rank == 0
                       ? SizeConfig.screenWidth * 0.125
                       : SizeConfig.screenWidth * 0.194,
                 ),
@@ -85,33 +72,33 @@ class WinnerWidgets extends StatelessWidget {
                     SizeConfig.screenWidth * 0.125,
                   ),
                   border: Border.all(
-                    color: rank == 1
+                    color: rank == 0
                         ? UiConstants.kWinnerPlayerPrimaryColor
                         : UiConstants.kOtherPlayerPrimaryColor.withOpacity(0.4),
                     width: SizeConfig.border2,
                   ),
                 ),
                 padding: EdgeInsets.all(
-                  rank == 1
+                  rank == 0
                       ? SizeConfig.screenWidth * 0.0055
                       : SizeConfig.screenWidth * 0.0083,
                 ),
-                child: image == null
+                child: userProfilePicUrl[rank] == null
                     ? Image.asset(
                         Assets.profilePic,
-                        width: rank == 1
+                        width: rank == 0
                             ? SizeConfig.screenWidth * 0.2222
                             : SizeConfig.screenWidth * 0.2083,
-                        height: rank == 1
+                        height: rank == 0
                             ? SizeConfig.screenWidth * 0.2222
                             : SizeConfig.screenWidth * 0.2083,
                       )
                     : CachedNetworkImage(
-                        imageUrl: image,
-                        width: rank == 1
+                        imageUrl: userProfilePicUrl[rank],
+                        width: rank == 0
                             ? SizeConfig.screenWidth * 0.2222
                             : SizeConfig.screenWidth * 0.2083,
-                        height: rank == 1
+                        height: rank == 0
                             ? SizeConfig.screenWidth * 0.2222
                             : SizeConfig.screenWidth * 0.2083,
                       ),
@@ -120,18 +107,22 @@ class WinnerWidgets extends StatelessWidget {
                 height: SizeConfig.padding4,
               ),
               Text(
-                '$rank${rank == 1 ? "st" : rank == 2 ? "nd" : "rd"}',
+                rank == 0
+                    ? '1st'
+                    : rank == 1
+                        ? '2nd'
+                        : '3rd',
                 style: TextStyles.rajdhaniB.body2,
               ),
               SizedBox(
                 height: SizeConfig.padding6,
               ),
               Text(
-                name,
+                scoreboard[rank].username,
                 style: TextStyles.rajdhaniM.body4,
               ),
               Text(
-                '($score)',
+                '(${scoreboard[rank].score})',
                 style: TextStyles.rajdhani.body4.setOpecity(0.6),
               ),
             ],
