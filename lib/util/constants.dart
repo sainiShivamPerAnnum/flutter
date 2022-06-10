@@ -37,7 +37,7 @@ class Constants {
   static final String WINNERS = "winners";
   static final String COLN_PRIZES = "prizes";
   static final String COLN_FAQS = "faqs";
-  static final String COLN_APPCAMPAIGNS = "appcampaigns";
+  static final String COLN_APPCAMPAIGNS = "inappcampaigns";
   static final String COLN_COUPONS = 'coupons';
   static final String COLN_INAPPRESOURCES = "inappresources";
 

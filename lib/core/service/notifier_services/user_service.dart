@@ -4,6 +4,7 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
+import 'package:felloapp/core/service/api_cache_manager.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -19,6 +20,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   final _dbModel = locator<DBModel>();
   final _logger = locator<CustomLogger>();
   final _userRepo = locator<UserRepository>();
+  final _apiCacheManager = locator<ApiCacheManager>();
 
   User _firebaseUser;
   BaseUser _baseUser;
@@ -177,9 +179,12 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   Future<bool> signout() async {
     try {
+      
       await _userRepo.removeUserFCM(_baseUser.uid);
       await FirebaseAuth.instance.signOut();
       await CacheManager.clearCacheMemory();
+      await _apiCacheManager.clearCacheMemory();
+
       _logger.d("UserService signout called");
       _userFundWallet = null;
       _firebaseUser = null;

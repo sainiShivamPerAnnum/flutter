@@ -1,4 +1,6 @@
 //Project imports
+import 'dart:async';
+
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/navigator/router/back_dispatcher.dart';
@@ -29,6 +31,8 @@ class AppState extends ChangeNotifier {
   final _lbService = locator<LeaderboardService>();
   int _rootIndex = 1;
   bool _isTxnLoaderInView = false;
+  Future _txnFunction;
+  Timer _txnTimer;
   static Map<String, dynamic> startupNotifMessage;
   static ScrollController homeCardListController = ScrollController();
   static String _fcmData;
@@ -56,6 +60,8 @@ class AppState extends ChangeNotifier {
 
   get isTxnLoaderInView => this._isTxnLoaderInView;
 
+  Timer get txnTimer => this._txnTimer;
+
   set rootIndex(value) {
     this._rootIndex = value;
     notifyListeners();
@@ -63,6 +69,18 @@ class AppState extends ChangeNotifier {
 
   set isTxnLoaderInView(bool val) {
     this._isTxnLoaderInView = val;
+    notifyListeners();
+  }
+
+  // Future get txnFunction => this._txnFunction;
+
+  // set txnFunction(Future function) {
+  //   this._txnFunction = function;
+  //   notifyListeners();
+  // }
+
+  set txnTimer(Timer timer) {
+    this._txnTimer = timer;
     notifyListeners();
   }
 
@@ -96,10 +114,12 @@ class AppState extends ChangeNotifier {
   set setCurrentTabIndex(int index) {
     _rootIndex = index;
     if (index == 2 && isWinOpened == false) {
-      _winnerService.fetchWinners();
       _winnerService.fetchTopWinner();
       _lbService.fetchReferralLeaderBoard();
       isWinOpened = true;
+    }
+    if (index == 2) {
+      _winnerService.fetchWinners();
     }
     print(_rootIndex);
     notifyListeners();

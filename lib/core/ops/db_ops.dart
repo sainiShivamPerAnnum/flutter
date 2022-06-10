@@ -2,23 +2,19 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:device_info/device_info.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
-import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/faq_model.dart';
-import 'package:felloapp/core/model/feed_card_model.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
-import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
-import 'package:felloapp/core/model/tambola_winners_details.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/model/user_ticket_wallet_model.dart';
@@ -30,6 +26,7 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/code_from_freq.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/credentials_stage.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/help_types.dart';
@@ -38,7 +35,6 @@ import 'package:felloapp/util/logger.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:felloapp/util/custom_logger.dart';
 import 'package:synchronized/synchronized.dart';
 
 class DBModel extends ChangeNotifier {
@@ -46,27 +42,40 @@ class DBModel extends ChangeNotifier {
   Lock _lock = new Lock();
   final Log log = new Log("DBModel");
   final logger = locator<CustomLogger>();
-  FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.instance;
+  final FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.instance;
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   bool isDeviceInfoInitiated = false;
   String phoneModel;
   String softwareVersion;
 
-  Future<void> initDeviceInfo() async {
-    try {
-      if (Platform.isIOS) {
-        IosDeviceInfo iosDeviceInfo;
-        iosDeviceInfo = await deviceInfo.iosInfo;
-        phoneModel = iosDeviceInfo.model;
-        softwareVersion = iosDeviceInfo.systemVersion;
-      } else if (Platform.isAndroid) {
-        AndroidDeviceInfo androidDeviceInfo = await deviceInfo.androidInfo;
-        phoneModel = androidDeviceInfo.model;
-        softwareVersion = androidDeviceInfo.version.release;
+  Future<Map<String, dynamic>> initDeviceInfo() async {
+    String _deviceId;
+    String _platform;
+    if (!isDeviceInfoInitiated) {
+      try {
+        if (Platform.isIOS) {
+          IosDeviceInfo iosDeviceInfo;
+          iosDeviceInfo = await deviceInfo.iosInfo;
+          phoneModel = iosDeviceInfo.model;
+          softwareVersion = iosDeviceInfo.systemVersion;
+          _deviceId = iosDeviceInfo.identifierForVendor;
+          _platform = "ios";
+          logger.d(
+              "Device Information - \n $phoneModel \n $softwareVersion \n $_deviceId");
+        } else if (Platform.isAndroid) {
+          AndroidDeviceInfo androidDeviceInfo = await deviceInfo.androidInfo;
+          phoneModel = androidDeviceInfo.model;
+          softwareVersion = androidDeviceInfo.version.release;
+          _deviceId = androidDeviceInfo.androidId;
+          _platform = "android";
+          logger.d(
+              "Device Information - \n $phoneModel \n $softwareVersion \n $_deviceId");
+        }
+        isDeviceInfoInitiated = true;
+        return {"deviceId": _deviceId, "platform": _platform};
+      } catch (e) {
+        log.error('Initiating Device Info failed');
       }
-      isDeviceInfoInitiated = true;
-    } catch (e) {
-      log.error('Initiating Device Info failed');
     }
   }
 
@@ -145,31 +154,6 @@ class DBModel extends ChangeNotifier {
       return true;
     } catch (e) {
       log.error("Failed to update user preference field: $e");
-      return false;
-    }
-  }
-
-  Future<bool> checkIfUserHasNewGoldenTicket(String userId) async {
-    try {
-      logger.i("CALLING: checkForLatestGoldenTicket");
-      QuerySnapshot gtSnapshot = await _api.checkForLatestGoldenTicket(userId);
-      if (gtSnapshot != null) {
-        if (await CacheManager.exits(
-            CacheManager.CACHE_LATEST_GOLDEN_TICKET_TIME)) {
-          int savedTimestamp = await CacheManager.readCache(
-              key: CacheManager.CACHE_LATEST_GOLDEN_TICKET_TIME);
-          int latestTimestamp = GoldenTicket.fromJson(
-                  gtSnapshot.docs.first.data(), gtSnapshot.docs.first.id)
-              .timestamp
-              .millisecondsSinceEpoch;
-          if (latestTimestamp > savedTimestamp)
-            return true;
-          else
-            return false;
-        }
-      }
-      return false;
-    } catch (e) {
       return false;
     }
   }
@@ -346,18 +330,6 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> updateUserAugmontDetails(
-      String userId, UserAugmontDetail augDetail) async {
-    try {
-      logger.i("CALLING: updateUserAugmontDetailDocument");
-      await _api.updateUserAugmontDetailDocument(userId, augDetail.toJson());
-      return true;
-    } catch (e) {
-      log.error("Failed to update user augmont detail object: " + e.toString());
-      return false;
-    }
-  }
-
   Future<bool> updateAugmontBankDetails(
       String userId, String accNo, String ifsc, String bankHolderName) async {
     try {
@@ -376,29 +348,6 @@ class DBModel extends ChangeNotifier {
   }
 
   /////////////////////////USER TRANSACTION/////////////////////
-  //returns document key
-  Future<String> addUserTransaction(String userId, UserTransaction txn) async {
-    try {
-      logger.i("CALLING: addUserTransactionDocument");
-      var ref = await _api.addUserTransactionDocument(userId, txn.toJson());
-      return ref.id;
-    } catch (e) {
-      log.error("Failed to update user transaction object: " + e.toString());
-      return null;
-    }
-  }
-
-  Future<UserTransaction> getUserTransaction(
-      String userId, String docId) async {
-    try {
-      logger.i("CALLING: getUserTransactionDocument");
-      var doc = await _api.getUserTransactionDocument(userId, docId);
-      return UserTransaction.fromMap(doc.data(), doc.id);
-    } catch (e) {
-      log.error('Failed to fetch user transaction details: $e');
-      return null;
-    }
-  }
 
   Future<Map<String, dynamic>> getFilteredUserTransactions(
       {@required BaseUser user,
@@ -483,72 +432,7 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> pushUserPrizeClaimChoice(
-      String uid, TambolaWinnersDetail detail, PrizeClaimChoice choice) async {
-    try {
-      String key = 'winners.$uid.claim_data';
-      Map<String, dynamic> updateMap = {key: choice.value()};
-      logger.i("CALLING: updateWeeklyWinnerDocument");
-      await _api.updateWeeklyWinnerDocument(detail.winnerDocumentId, updateMap);
-
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  Future<bool> updateUserReferralCount(
-      String userId, ReferralDetail detail) async {
-    try {
-      Map<String, dynamic> _map = {};
-      _map[ReferralDetail.fldUserReferralCount] = detail.refCount;
-      logger.i("CALLING: updateReferralDocument");
-      await _api.updateReferralDocument(userId, _map);
-      return true;
-    } catch (e) {
-      log.error('Failed to update referral count');
-      return false;
-    }
-  }
-
-  Future<bool> unlockReferralTickets(String userId) async {
-    try {
-      logger.i("CALLING: setReferralDocBonusField");
-      return await _api.setReferralDocBonusField(userId);
-    } catch (e) {
-      log.error('Failed to unlock referral tickets');
-      return false;
-    }
-  }
-
   ///////////////////////////CREDENTIALS//////////////////////////////
-  Future<Map<String, String>> getActiveAwsIciciApiKey() async {
-    String _awsKeyIndex = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.AWS_ICICI_KEY_INDEX);
-    if (_awsKeyIndex == null || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
-    int keyIndex = 1;
-    try {
-      keyIndex = int.parse(_awsKeyIndex);
-    } catch (e) {
-      log.error('Aws Index key parsing failed: ' + e.toString());
-      keyIndex = 1;
-    }
-    logger.i("CALLING: getCredentialsByTypeAndStage");
-    QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
-        'aws-icici',
-        FlavorConfig.instance.values.awsIciciStage.value(),
-        keyIndex);
-    if (querySnapshot != null && querySnapshot.docs.length == 1) {
-      DocumentSnapshot snapshot = querySnapshot.docs[0];
-      Map<String, dynamic> _doc = snapshot.data();
-      if (snapshot.exists && _doc != null && _doc['apiKey'] != null) {
-        log.debug('Found apiKey: ' + _doc['apiKey']);
-        return {'baseuri': _doc['base_url'], 'key': _doc['apiKey']};
-      }
-    }
-
-    return null;
-  }
 
   Future<Map<String, String>> getActiveAwsAugmontApiKey() async {
     String _awsKeyIndex = BaseRemoteConfig.remoteConfig
@@ -713,45 +597,6 @@ class DBModel extends ChangeNotifier {
     return false;
   }
 
-  Future<Map<String, String>> getActiveSignzyApiKey() async {
-    int keyIndex = 1;
-    logger.i("CALLING: getCredentialsByTypeAndStage");
-    QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
-        'signzy', FlavorConfig.instance.values.signzyStage.value(), keyIndex);
-    if (querySnapshot != null && querySnapshot.docs.length == 1) {
-      DocumentSnapshot snapshot = querySnapshot.docs[0];
-      Map<String, dynamic> _doc = snapshot.data();
-      if (snapshot.exists && _doc != null && _doc['apiKey'] != null) {
-        log.debug('Found apiKey: ' + _doc['apiKey']);
-        return {'baseuri': _doc['base_url'], 'key': _doc['apiKey']};
-      }
-    }
-    return null;
-  }
-
-  Future<Map<String, String>> getActiveFreshchatKey() async {
-    int keyIndex = 1;
-    logger.i("CALLING: getCredentialsByTypeAndStage");
-    QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
-        'freshchat',
-        FlavorConfig.instance.values.freshchatStage.value(),
-        keyIndex);
-    if (querySnapshot != null && querySnapshot.docs.length == 1) {
-      DocumentSnapshot snapshot = querySnapshot.docs[0];
-      if (snapshot.exists) {
-        Map<String, dynamic> fKeys = snapshot.data();
-        log.debug(fKeys.toString());
-        return {
-          'app_id': fKeys['appId'],
-          'app_key': fKeys['appKey'],
-          'app_domain': fKeys['domain'],
-        };
-      }
-    }
-
-    return null;
-  }
-
   Future<bool> addCallbackRequest(
       String uid, String name, String mobile, int callTime,
       [int callWindow = 2]) async {
@@ -828,21 +673,6 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<ReferralDetail> getUserReferralInfo(String uid) async {
-    try {
-      logger.i("CALLING: getUserReferDoc");
-      DocumentSnapshot snapshot = await _api.getUserReferDoc(uid);
-      // .getReferralDocs(uid);
-      Map<String, dynamic> _doc = snapshot.data();
-      if (snapshot.exists && _doc != null && _doc.isNotEmpty) {
-        return ReferralDetail.fromMap(snapshot.data());
-      }
-    } catch (e) {
-      log.error("Error fetch referrals details: " + e.toString());
-    }
-    return null;
-  }
-
   Future<List<ReferralDetail>> getUserReferrals(String uid) async {
     try {
       logger.i("CALLING: getReferralDocs");
@@ -901,16 +731,6 @@ class DBModel extends ChangeNotifier {
       return await _api.getFileFromDPBucketURL(uid, 'image');
     } catch (e) {
       log.error('Failed to fetch dp url');
-      return null;
-    }
-  }
-
-  Future<List<String>> getWalkthroughUrls() async {
-    try {
-      logger.i("CALLING: getWalkthroughFiles");
-      return await _api.getWalkthroughFiles();
-    } catch (e) {
-      log.error('Failed to fetch walkthrough files');
       return null;
     }
   }
@@ -977,19 +797,6 @@ class DBModel extends ChangeNotifier {
   }
 
   //////////////////////USER FUNDS BALANCING////////////////////////////////////////
-  Future<bool> isTicketGenerationInProcess(String id) async {
-    try {
-      logger.i("CALLING: getUserFundWalletDocById");
-      var doc = await _api.getUserFundWalletDocById(id);
-      Map<String, dynamic> resMap = doc.data();
-      return (resMap != null &&
-          resMap['tg_in_progress'] != null &&
-          resMap['tg_in_progress']);
-    } catch (e) {
-      log.error("Error fetch UserFundWallet failed: $e");
-      return false;
-    }
-  }
 
   Future<UserFundWallet> getUserFundWallet(String id) async {
     try {
@@ -1000,11 +807,6 @@ class DBModel extends ChangeNotifier {
       log.error("Error fetch UserFundWallet failed: $e");
       return null;
     }
-  }
-
-  String getMerchantTxnId(String uid) {
-    logger.i("CALLING: getUserTransactionDocumentKey");
-    return _api.getUserTransactionDocumentKey(uid).id;
   }
 
   ///Total Gold Balance = (current total grams owned * current selling rate)
@@ -1090,95 +892,6 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<UserTicketWallet> updateAugmontGoldUserTicketCount(
-      String uid, UserTicketWallet userTicketWallet, int count) async {
-    if (userTicketWallet == null) return null;
-    int currentValue = userTicketWallet.augGold99Tck ?? 0;
-    try {
-      return await _lock.synchronized(() async {
-        if (count < 0 && currentValue < count) {
-          userTicketWallet.augGold99Tck = 0;
-        } else {
-          userTicketWallet.augGold99Tck = currentValue + count;
-        }
-        Map<String, dynamic> tMap = {
-          UserTicketWallet.fldAugmontGoldTckCount: userTicketWallet.augGold99Tck
-        };
-        logger.i("CALLING: updateUserTicketWalletFields");
-        bool flag = await _api.updateUserTicketWalletFields(
-            uid, UserTicketWallet.fldAugmontGoldTckCount, currentValue, tMap);
-        if (!flag) {
-          //revert value back as the op failed
-          userTicketWallet.augGold99Tck = currentValue;
-        }
-        return userTicketWallet;
-      });
-    } catch (e) {
-      log.error('Failed to update the user ticket count');
-      userTicketWallet.augGold99Tck = currentValue;
-      return userTicketWallet;
-    }
-  }
-
-  Future<UserTicketWallet> updateICICIUserTicketCount(
-      String uid, UserTicketWallet userTicketWallet, int count) async {
-    if (userTicketWallet == null) return null;
-    int currentValue = userTicketWallet.icici1565Tck ?? 0;
-    try {
-      return await _lock.synchronized(() async {
-        if (count < 0 && currentValue < count) {
-          userTicketWallet.icici1565Tck = 0;
-        } else {
-          userTicketWallet.icici1565Tck = currentValue + count;
-        }
-        Map<String, dynamic> tMap = {
-          UserTicketWallet.fldICICI1565TckCount: userTicketWallet.icici1565Tck
-        };
-        logger.i("CALLING: updateUserTicketWalletFields");
-        bool flag = await _api.updateUserTicketWalletFields(
-            uid, UserTicketWallet.fldICICI1565TckCount, currentValue, tMap);
-        if (!flag) {
-          //revert value back as the op failed
-          userTicketWallet.icici1565Tck = currentValue;
-        }
-        return userTicketWallet;
-      });
-    } catch (e) {
-      log.error('Failed to update the user ticket count');
-      //revert value back as the op failed
-      userTicketWallet.icici1565Tck = currentValue;
-      return userTicketWallet;
-    }
-  }
-
-  Future<List<FeedCard>> getHomeCards() async {
-    List<FeedCard> _cards = [];
-    try {
-      logger.i("CALLING: getHomeCardCollection");
-      QuerySnapshot querySnapshot = await _api.getHomeCardCollection();
-      if (querySnapshot != null && querySnapshot.docs.length > 0) {
-        for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
-          Map<String, dynamic> _doc = documentSnapshot.data();
-          if (documentSnapshot != null &&
-              documentSnapshot.exists &&
-              _doc != null &&
-              _doc.length > 0) {
-            FeedCard _card = FeedCard.fromMap(documentSnapshot.data());
-
-            ///only include the feedcards that are not 'hidden'
-            if (_card != null && _card.isHidden != null && !_card.isHidden)
-              _cards.add(_card);
-
-            ///bump down the 'learn' card if the user is old
-          }
-        }
-      }
-    } catch (e) {
-      log.error('Error Fetching Home cards: ${e.toString()}');
-    }
-    return _cards;
-  }
-
   Future<List<PromoCardModel>> getPromoCards() async {
     List<PromoCardModel> _cards = [];
     List<PromoCardModel> filteredcards = [];
@@ -1249,47 +962,6 @@ class DBModel extends ChangeNotifier {
     }
 
     return felloMilestones;
-  }
-
-  Future<List<EventModel>> getOngoingEvents() async {
-    List<EventModel> events = [];
-    List<EventModel> filteredEvents = [];
-    try {
-      logger.i("CALLING: fetchOngoingEvents");
-      QuerySnapshot snapshot = await _api.fetchOngoingEvents();
-      if (snapshot.docs != null && snapshot.docs.isNotEmpty) {
-        snapshot.docs.forEach((element) {
-          print(element.data());
-          events.add(EventModel.fromMap(element.data()));
-        });
-      }
-    } catch (e) {
-      logger.e(e.toString());
-      events = [];
-    }
-    for (int i = 0; i < events.length; i++) {
-      if (events[i].minVersion == 0 ||
-          int.tryParse(BaseUtil.packageInfo.buildNumber) >=
-              events[i].minVersion) {
-        filteredEvents.add(events[i]);
-      }
-    }
-    return filteredEvents;
-  }
-
-  Future<EventModel> getSingleEventDetails(String eventType) async {
-    EventModel event;
-    try {
-      logger.i("CALLING: fetchSingleEvent");
-      Map<String, dynamic> response = await _api.fetchSingleEvent(eventType);
-      if (response != null && response.isNotEmpty) {
-        event = EventModel.fromMap(response);
-      }
-    } catch (e) {
-      logger.e(e.toString());
-    }
-
-    return event;
   }
 
   Future<List<CouponModel>> getCoupons() async {

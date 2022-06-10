@@ -10,7 +10,8 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 
 class WinnersMarqueeStrip extends StatelessWidget {
   final String type;
-  WinnersMarqueeStrip({this.type});
+  final List<dynamic> winners;
+  WinnersMarqueeStrip({this.type, this.winners});
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<WinnerService, WinnerServiceProperties>(
@@ -26,10 +27,11 @@ class WinnersMarqueeStrip extends StatelessWidget {
             color: UiConstants.tertiaryLight.withOpacity(0.5),
           ),
           child: MarqueeText(
-            infoList: _getMarqueeText(
-              getTextArray(wModel),
-              winners: wModel.winners,
-            ),
+            infoList: winners ??
+                _getMarqueeText(
+                  getTextArray(wModel),
+                  winners: wModel.winners,
+                ),
             showBullet: true,
             bulletColor: UiConstants.tertiarySolid,
           ),

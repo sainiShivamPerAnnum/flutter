@@ -4,6 +4,7 @@ import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/rsa_encryption.dart';
 
@@ -43,7 +44,9 @@ class CouponRepository {
         _apiPaths.kFelloCoupons,
         body: _body,
         token: _bearer,
-        cBaseUrl: "https://z8gkfckos5.execute-api.ap-south-1.amazonaws.com",
+        cBaseUrl: FlavorConfig.isDevelopment()
+            ? "https://z8gkfckos5.execute-api.ap-south-1.amazonaws.com"
+            : "https://mwl33qq6sd.execute-api.ap-south-1.amazonaws.com",
       );
       EligibleCouponResponseModel _reponseModel =
           EligibleCouponResponseModel.fromMap(res["data"]);

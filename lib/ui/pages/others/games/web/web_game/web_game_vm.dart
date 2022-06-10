@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/constants/fcm_commands_constants.dart';
@@ -26,6 +27,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
 class WebGameViewModel extends BaseModel {
   final _gtService = locator<GoldenTicketService>();
@@ -64,8 +66,8 @@ class WebGameViewModel extends BaseModel {
 
       Future.delayed(Duration(seconds: 1), () {
         BaseUtil.showNegativeAlert(
-          'Loading..Please wait..',
-          'This game is heavy and might take some time to load',
+          'Game Loading',
+          'This game might take longer than usual to load',
         );
       });
     }
@@ -113,13 +115,18 @@ class WebGameViewModel extends BaseModel {
         //check if there is any end game message
         if (data[FcmCommands.GAME_END_MESSAGE_KEY] != null &&
             data[FcmCommands.GAME_END_MESSAGE_KEY].toString().isNotEmpty) {
+          GoldenTicketService.gameEndMsgText =
+              data[FcmCommands.GAME_END_MESSAGE_KEY].toString();
           BaseUtil.openDialog(
-              addToScreenStack: true,
-              isBarrierDismissable: false,
-              hapticVibrate: true,
-              content: ScoreRejectedDialog(
-                contentText: data[FcmCommands.GAME_END_MESSAGE_KEY],
-              ));
+            addToScreenStack: true,
+            isBarrierDismissable: false,
+            hapticVibrate: true,
+            content: ScoreRejectedDialog(
+              contentText: GoldenTicketService.gameEndMsgText,
+            ),
+          );
+          GoldenTicketService.gameEndMsgText = null;
+
           return;
         }
         if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
@@ -207,10 +214,14 @@ class WebGameViewModel extends BaseModel {
   }
 
   handleGameEndRound(Map<String, dynamic> data, String game) {
+    _logger.d(
+        "$game round end at  ${DateFormat('yyyy-MM-dd - hh:mm a').format(DateTime.now())}");
+
     if (data[FcmCommands.GAME_END_MESSAGE_KEY] != null &&
         data[FcmCommands.GAME_END_MESSAGE_KEY].toString().isNotEmpty) {
+      _logger.d("Game end message: ${data[FcmCommands.GAME_END_MESSAGE_KEY]}");
       GoldenTicketService.gameEndMsgText =
-          data[FcmCommands.GAME_END_MESSAGE_KEY];
+          data[FcmCommands.GAME_END_MESSAGE_KEY].toString();
     }
     updateFlcBalance();
     _lbService.fetchWebGameLeaderBoard(game: game);
@@ -221,14 +232,17 @@ class WebGameViewModel extends BaseModel {
     _logger.d("Checking for golden tickets");
     if (GoldenTicketService.gameEndMsgText != null &&
         GoldenTicketService.gameEndMsgText.isNotEmpty) {
-      BaseUtil.openDialog(
+      _logger.d("Showing game end message");
+      Future.delayed(duration ?? Duration(seconds: 1), () {
+        BaseUtil.openDialog(
           addToScreenStack: true,
           isBarrierDismissable: false,
           hapticVibrate: true,
           content: ScoreRejectedDialog(
-            contentText: GoldenTicketService.gameEndMsgText,
-          ));
-      GoldenTicketService.gameEndMsgText = null;
+              contentText: GoldenTicketService.gameEndMsgText),
+        );
+        GoldenTicketService.gameEndMsgText = null;
+      });
       return;
     }
     _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {

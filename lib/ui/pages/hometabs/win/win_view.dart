@@ -81,7 +81,7 @@ class Win extends StatelessWidget {
                           padding: EdgeInsets.symmetric(
                               horizontal: SizeConfig.pageHorizontalMargins),
                           child: Text(
-                            "Ongoing Events",
+                            "Ongoing Campaigns",
                             style: TextStyles.title3.bold,
                           ),
                         ),

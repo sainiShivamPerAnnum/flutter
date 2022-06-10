@@ -166,6 +166,10 @@ class BaseRemoteConfig {
     'poolclub_thumbnail':
         'https://firebasestorage.googleapis.com/v0/b/fello-dev-station.appspot.com/o/test%2Fpoolclub.png?alt=media&token=23403ec7-1c55-4ce7-827e-045ad6d059de'
   };
+
+  static const Map<String, String> _GAME_POSITION = {
+    'games_position': "FO-CR-PO-CA-TA"
+  };
   static const Map<String, String> _MIN_WITHDRAWABLE_PRIZE = {
     'min_withdrawable_prize': '100'
   };
@@ -238,7 +242,8 @@ class BaseRemoteConfig {
     ..._GAME_CRICKET_ANNOUNCEMENT,
     ..._GAME_CRICKET_FPL_ANNOUNCEMENT,
     ..._AMZ_VOUCHER_REDEMPTION,
-    ..._APP_SHARE_MSG
+    ..._APP_SHARE_MSG,
+    ..._GAME_POSITION
   };
 
   static Future<bool> init() async {
@@ -391,4 +396,6 @@ class BaseRemoteConfig {
       _GAME_CRICKET_FPL_ANNOUNCEMENT.keys.first;
 
   static String get APP_SHARE_MSG => _APP_SHARE_MSG.keys.first;
+
+  static String get GAME_POSITION => _GAME_POSITION.keys.first;
 }

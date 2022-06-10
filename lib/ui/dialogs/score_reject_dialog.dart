@@ -1,3 +1,4 @@
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_dialog.dart';
@@ -8,7 +9,7 @@ import 'package:flutter/material.dart';
 
 class ScoreRejectedDialog extends StatelessWidget {
   final String contentText;
-  ScoreRejectedDialog({this.contentText});
+  ScoreRejectedDialog({@required this.contentText});
   @override
   Widget build(BuildContext context) {
     return FelloInfoDialog(

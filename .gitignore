@@ -19,6 +19,18 @@ fello.plantuml
 pubspec.lock
 ios/build/*
 ios/Podfile.lock
+
+# You definitely want these for CI and CD
+**/ios/*.ipa
+**/ios/*.app.dSYM.zip
+
+# These are optional
+android/fastlane/report.xml
+ios/fastlane/report.xml
+ios/fastlane/Preview.html
+ios/fastlane/metadata/review_information
+ios/fastlane/metadata/trade_representative_contact_information
+
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line
 # is commented out by default.
