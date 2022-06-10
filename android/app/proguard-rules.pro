@@ -12,3 +12,7 @@
 -keepclasseswithmembers class * {
   public void onPayment*(...);
 }
+-dontwarn com.appsflyer.**
+-keep public class com.google.firebase.messaging.FirebaseMessagingService {
+    public *;
+}

@@ -4,6 +4,7 @@ import Firebase
 import WebEngage
 import webengage_flutter
 import AppTrackingTransparency
+import AppsFlyerLib
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
@@ -31,4 +32,9 @@ import AppTrackingTransparency
               return
           } 
       }
+    
+    // Called when the application sucessfuly registers for push notifications
+    override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        AppsFlyerLib.shared().registerUninstall(deviceToken)
+    }
 }

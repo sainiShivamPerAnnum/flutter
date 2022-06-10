@@ -3,13 +3,14 @@ package `in`.fello.felloapp
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.webengage.sdk.android.WebEngage
-
+import com.appsflyer.AppsFlyerLib
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onNewToken(s: String) {
         super.onNewToken(s)
         WebEngage.get().setRegistrationID(s)
+        AppsFlyerLib.getInstance().updateServerUninstallToken(applicationContext, s)
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
