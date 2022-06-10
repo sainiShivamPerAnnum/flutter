@@ -321,8 +321,4 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
     return url.toString();
   }
-
-  Future<String> getProfileImageUrl({String userId}) async {
-    return await _dbModel.getUserDP(userId);
-  }
 }

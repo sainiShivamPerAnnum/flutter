@@ -50,6 +50,19 @@ class WinnerWidgets extends StatelessWidget {
     );
   }
 
+  getDefaultProfilePicture(int rank) {
+    switch (rank) {
+      case 1:
+        return "assets/temp/rank_one_profile.png";
+      case 2:
+        return "assets/temp/rank_two_profile.png";
+      case 3:
+        return "assets/temp/rank_three_profile.png";
+      default:
+        return Assets.profilePic;
+    }
+  }
+
   Widget _buildTopThreeWinner({
     String image,
     int rank,
@@ -98,7 +111,7 @@ class WinnerWidgets extends StatelessWidget {
                 ),
                 child: image == null
                     ? Image.asset(
-                        Assets.profilePic,
+                        getDefaultProfilePicture(rank),
                         width: rank == 1
                             ? SizeConfig.screenWidth * 0.2222
                             : SizeConfig.screenWidth * 0.2083,

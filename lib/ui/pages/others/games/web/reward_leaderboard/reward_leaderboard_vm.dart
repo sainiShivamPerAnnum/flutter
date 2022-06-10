@@ -69,7 +69,9 @@ class RewardLeaderboardViewModel extends BaseModel {
     refreshLeaderboard();
   }
 
-  clear() {}
+  clear() {
+    _pageController.dispose();
+  }
 
   switchTab(int tab) {
     if (tab == tabNo) return;
