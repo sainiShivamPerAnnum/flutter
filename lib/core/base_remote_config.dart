@@ -188,6 +188,9 @@ class BaseRemoteConfig {
     'app_share_message':
         'Hey I am gifting you ₹10 and 200 gaming tokens. Lets start saving and playing together ! '
   };
+  static const Map<String, String> _RESTRICT_PAYTM_APP_INVOKE = {
+    'restrict_paytm_app_invoke': 'true'
+  };
 
   static const Map<String, dynamic> DEFAULTS = {
     ..._DRAW_PICK_TIME,
@@ -243,7 +246,8 @@ class BaseRemoteConfig {
     ..._GAME_CRICKET_FPL_ANNOUNCEMENT,
     ..._AMZ_VOUCHER_REDEMPTION,
     ..._APP_SHARE_MSG,
-    ..._GAME_POSITION
+    ..._GAME_POSITION,
+    ..._RESTRICT_PAYTM_APP_INVOKE
   };
 
   static Future<bool> init() async {
@@ -398,4 +402,7 @@ class BaseRemoteConfig {
   static String get APP_SHARE_MSG => _APP_SHARE_MSG.keys.first;
 
   static String get GAME_POSITION => _GAME_POSITION.keys.first;
+
+  static String get RESTRICT_PAYTM_APP_INVOKE =>
+      _RESTRICT_PAYTM_APP_INVOKE.keys.first;
 }
