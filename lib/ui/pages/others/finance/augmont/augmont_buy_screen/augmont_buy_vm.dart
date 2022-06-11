@@ -462,11 +462,18 @@ class AugmontGoldBuyViewModel extends BaseModel {
     }
     _analyticsService.track(eventName: AnalyticsEvents.buyGold);
 
+    final bool restrictPaytmAppInvoke = (FlavorConfig.isDevelopment() ||
+            BaseRemoteConfig.remoteConfig
+                    .getString(BaseRemoteConfig.RESTRICT_PAYTM_APP_INVOKE) ==
+                "true")
+        ? true
+        : false;
+
     final _status = await _paytmService.initiateTransactions(
         amount: buyAmount,
         augmontRates: goldRates,
         couponCode: appliedCoupon?.code ?? "",
-        restrictAppInvoke: FlavorConfig.isDevelopment());
+        restrictAppInvoke: restrictPaytmAppInvoke);
 
     isGoldBuyInProgress = false;
     resetBuyOptions();

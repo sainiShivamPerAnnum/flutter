@@ -144,9 +144,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       postPrefix = devPostPrefix;
     } else {
       mid = prodMid;
-      isStaging = BaseRemoteConfig.remoteConfig
-              .getString(BaseRemoteConfig.RESTRICT_PAYTM_APP_INVOKE) ==
-          "true";
+      isStaging = false;
       postPrefix = prodPostPrefix;
     }
   }
@@ -234,6 +232,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
 
     try {
       _logger.d("Paytm order id: ${paytmSubscriptionModel.data.orderId}");
+      _logger.d("Paytm app invoke: $restrictAppInvoke");
       final response = await AllInOneSdk.startTransaction(
           mid,
           paytmSubscriptionModel.data.orderId,
