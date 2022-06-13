@@ -12,9 +12,12 @@ class WinnerWidgets extends StatelessWidget {
     Key key,
     @required this.scoreboard,
     @required this.userProfilePicUrl,
+    this.isSpotLightVisible = true,
   }) : super(key: key);
   final List<Scoreboard> scoreboard;
   final List<String> userProfilePicUrl;
+  final bool isSpotLightVisible;
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -49,7 +52,8 @@ class WinnerWidgets extends StatelessWidget {
       children: [
         if (rank == 0)
           CustomPaint(
-            painter: WinnerBackGroundPainter(context: context),
+            painter: WinnerBackGroundPainter(
+                context: context, isSpotLightVisible: isSpotLightVisible),
             size: Size(
               SizeConfig.screenWidth * 0.3333, // 120
               SizeConfig.screenWidth * 0.6666, // 240
@@ -135,7 +139,8 @@ class WinnerWidgets extends StatelessWidget {
 
 class WinnerBackGroundPainter extends CustomPainter {
   BuildContext context;
-  WinnerBackGroundPainter({this.context});
+  bool isSpotLightVisible;
+  WinnerBackGroundPainter({this.context, this.isSpotLightVisible});
   @override
   void paint(Canvas canvas, Size size) {
     double w = size.width;
@@ -152,14 +157,16 @@ class WinnerBackGroundPainter extends CustomPainter {
       ],
     );
 
-    /// Drawing the background
-    Path path0 = Path();
-    path0.moveTo(w * 0.5 - 30, 0);
-    path0.lineTo(0, h * 0.5);
-    path0.lineTo(w, h * 0.5);
-    path0.lineTo(w * 0.5 + 30, 0);
-    path0.close();
-    canvas.drawPath(path0, bgPaint);
+    /// Drawing the Spotlight
+    if (isSpotLightVisible) {
+      Path path0 = Path();
+      path0.moveTo(w * 0.5 - 30, 0);
+      path0.lineTo(0, h * 0.5);
+      path0.lineTo(w, h * 0.5);
+      path0.lineTo(w * 0.5 + 30, 0);
+      path0.close();
+      canvas.drawPath(path0, bgPaint);
+    }
 
     /// Drawing the circle
     canvas.drawCircle(
@@ -188,27 +195,29 @@ class WinnerBackGroundPainter extends CustomPainter {
       Paint()..color = UiConstants.kWinnerPlayerLightPrimaryColor,
     );
 
-    /// Drawing the taj
-    canvas.translate(w * -0.1416, h * 0.175); // -17, 42
-    canvas.rotate(-0.6); // -0.6
+    /// Drawing the Crown
+    if (isSpotLightVisible) {
+      canvas.translate(w * -0.1416, h * 0.175); // -17, 42
+      canvas.rotate(-0.6); // -0.6
 
-    Path path1 = Path();
-    path1.moveTo(w * 0.1666, h * 0.0833); // 20, 20
-    path1.lineTo(w * 0.2083, h * 0.14583); // 25, 35
-    path1.lineTo(w * 0.3750, h * 0.14583); // 45, 35
-    path1.lineTo(w * 0.4166, h * 0.0833); // 50, 20
-    path1.lineTo(w * 0.3333, h * 0.1166); // 40, 28
-    path1.lineTo(w * 0.2875, h * 0.0833); // 34.5, 20
-    path1.lineTo(w * 0.2416, h * 0.1166); // 29, 28
-    path1.close();
-    canvas.drawPath(
-      path1,
-      Paint()
-        ..strokeWidth = SizeConfig.screenWidth * 0.0083
-        ..color = UiConstants.kWinnerPlayerPrimaryColor
-        ..style = PaintingStyle.stroke
-        ..strokeJoin = StrokeJoin.round,
-    );
+      Path path1 = Path();
+      path1.moveTo(w * 0.1666, h * 0.0833); // 20, 20
+      path1.lineTo(w * 0.2083, h * 0.14583); // 25, 35
+      path1.lineTo(w * 0.3750, h * 0.14583); // 45, 35
+      path1.lineTo(w * 0.4166, h * 0.0833); // 50, 20
+      path1.lineTo(w * 0.3333, h * 0.1166); // 40, 28
+      path1.lineTo(w * 0.2875, h * 0.0833); // 34.5, 20
+      path1.lineTo(w * 0.2416, h * 0.1166); // 29, 28
+      path1.close();
+      canvas.drawPath(
+        path1,
+        Paint()
+          ..strokeWidth = SizeConfig.screenWidth * 0.0083
+          ..color = UiConstants.kWinnerPlayerPrimaryColor
+          ..style = PaintingStyle.stroke
+          ..strokeJoin = StrokeJoin.round,
+      );
+    }
   }
 
   @override

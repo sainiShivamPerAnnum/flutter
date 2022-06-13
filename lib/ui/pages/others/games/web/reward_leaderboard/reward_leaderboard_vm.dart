@@ -130,7 +130,9 @@ class RewardLeaderboardViewModel extends BaseModel {
 
   refreshLeaderboard() async {
     isLeaderboardLoading = true;
+
     await _lbService.fetchWebGameLeaderBoard(game: currentGame);
+
     await _lbService.fetchLeaderBoardProfileImage();
     isLeaderboardLoading = false;
   }

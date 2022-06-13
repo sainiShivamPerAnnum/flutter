@@ -49,6 +49,7 @@ class UiConstants {
   static const Color kLeaderBoardBackgroundColor = const Color(0xFF39393C);
   static const Color kTabBorderColor = const Color(0xFF62E3C4);
   static const Color kDividerColor = const Color(0xFF9EA1A1);
+  static const Color kBackgroundDividerColor = const Color(0xFF23272B);
   static const Color kFirstRankPillerColor = const Color(0xFFF2B826);
   static const Color kSecondRankPillerColor = const Color(0xF5371EE);
   static const Color kThirdRankPillerColor = const Color(0xFF34C3A7);

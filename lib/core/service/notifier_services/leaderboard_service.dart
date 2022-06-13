@@ -74,17 +74,19 @@ class LeaderboardService
   }
 
   fetchLeaderBoardProfileImage() async {
-    int length = _WebGameLeaderBoard.scoreboard.length <= 6
-        ? _WebGameLeaderBoard.scoreboard.length
-        : 6;
-    _userProfilePicUrl.clear();
-    for (var i = 0; i < length; i++) {
-      String url = await _userService.getProfileImageUrl(
-        userId: _WebGameLeaderBoard.scoreboard[i].userid,
-      );
-      _userProfilePicUrl.add(url);
+    if (_WebGameLeaderBoard != null) {
+      int length = _WebGameLeaderBoard.scoreboard.length <= 6
+          ? _WebGameLeaderBoard.scoreboard.length
+          : 6;
+      _userProfilePicUrl.clear();
+      for (var i = 0; i < length; i++) {
+        String url = await _userService.getProfileImageUrl(
+          userId: _WebGameLeaderBoard.scoreboard[i].userid,
+        );
+        _userProfilePicUrl.add(url);
+      }
+      setUserProfilePicUrl();
     }
-    setUserProfilePicUrl();
   }
 
   scrollToUserIndexIfAvaiable() {

@@ -166,10 +166,12 @@ class RemainingRank extends StatelessWidget {
                             width: SizeConfig.iconSize5,
                             height: SizeConfig.iconSize5,
                           )
-                        : CachedNetworkImage(
-                            imageUrl: userProfilePicUrl[countedIndex],
-                            width: SizeConfig.iconSize5,
-                            height: SizeConfig.iconSize5,
+                        : ClipOval(
+                            child: CachedNetworkImage(
+                              imageUrl: userProfilePicUrl[countedIndex],
+                              width: SizeConfig.iconSize5,
+                              height: SizeConfig.iconSize5,
+                            ),
                           ),
                     SizedBox(
                       width: SizeConfig.padding12,
