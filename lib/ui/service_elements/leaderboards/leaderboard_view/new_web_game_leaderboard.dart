@@ -5,12 +5,14 @@ import 'package:felloapp/core/enums/leaderboard_service_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/leader_board_modal.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/components/user_rank.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/components/winner_widget.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -123,13 +125,14 @@ class NewLeaderBoardView extends StatelessWidget {
 }
 
 class RemainingRank extends StatelessWidget {
-  const RemainingRank({
+  RemainingRank({
     Key key,
     @required this.model,
     @required this.userProfilePicUrl,
   }) : super(key: key);
   final LeaderBoardModal model;
   final List<String> userProfilePicUrl;
+  final _userService = locator<UserService>();
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
@@ -178,7 +181,7 @@ class RemainingRank extends StatelessWidget {
                     ),
                     Expanded(
                       child: Text(
-                        '${model.scoreboard[countedIndex].username}',
+                        '${_userService.diplayUsername(model.scoreboard[countedIndex].username)}',
                         style: TextStyles.sourceSans.body3.setOpecity(0.8),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,

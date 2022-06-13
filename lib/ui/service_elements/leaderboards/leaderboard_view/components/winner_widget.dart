@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/model/leader_board_modal.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -135,7 +137,8 @@ class WinnerWidgets extends StatelessWidget {
                 height: SizeConfig.padding6,
               ),
               Text(
-                scoreboard[rank].username,
+                locator<UserService>()
+                    .diplayUsername(scoreboard[rank].username),
                 style: TextStyles.rajdhaniM.body4,
               ),
               Text(

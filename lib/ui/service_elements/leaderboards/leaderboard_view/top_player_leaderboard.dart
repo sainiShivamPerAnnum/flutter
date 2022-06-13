@@ -199,7 +199,7 @@ class TopPlayer extends StatelessWidget {
                 ),
                 Expanded(
                   child: Text(
-                    '${model.scoreboard[countedIndex].username}',
+                    '${locator<UserService>().diplayUsername(model.scoreboard[countedIndex].username)}',
                     style: TextStyles.sourceSans.body3.setOpecity(0.8),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
