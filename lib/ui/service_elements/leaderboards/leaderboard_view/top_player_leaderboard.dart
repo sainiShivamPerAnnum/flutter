@@ -116,7 +116,7 @@ class TopPlayer extends StatelessWidget {
             isDraggable: false,
             color: UiConstants.kBackgroundColor,
             minHeight: SizeConfig.screenHeight * 0.597,
-            maxHeight: SizeConfig.screenHeight,
+            maxHeight: SizeConfig.screenHeight * 0.9,
           ),
         ),
       ],
@@ -124,6 +124,7 @@ class TopPlayer extends StatelessWidget {
   }
 
   Widget _buildAllPlayerList() {
+    ScrollController _scrollController = ScrollController();
     return Container(
       // height: SizeConfig.screenHeight * 0.597,
       padding: EdgeInsets.only(
@@ -162,9 +163,12 @@ class TopPlayer extends StatelessWidget {
               },
               child: Scrollbar(
                 radius: Radius.circular(SizeConfig.roundness24),
+                controller: _scrollController,
                 child: ListView.builder(
+                  controller: _scrollController,
+                  shrinkWrap: true,
                   itemCount: model.scoreboard.length - 3,
-                  physics: const ClampingScrollPhysics(),
+                  physics: ScrollPhysics(),
                   itemBuilder: (context, index) {
                     int countedIndex = index + 3;
                     return _buildLeaderboardTile(countedIndex);
