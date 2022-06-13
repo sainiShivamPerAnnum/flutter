@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:felloapp/core/enums/leaderboard_service_enum.dart';
 import 'package:felloapp/core/model/leader_board_modal.dart';
 import 'package:felloapp/core/model/referral_board_modal.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/statistics_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -17,6 +18,7 @@ class LeaderboardService
   final _logger = locator<CustomLogger>();
   final _statsRepo = locator<StatisticsRepository>();
   final _userService = locator<UserService>();
+  final _dbModel = locator<DBModel>();
   final ScrollController ownController = ScrollController();
   final ScrollController parentController = ScrollController();
   int _referralLBLength = 0;
@@ -80,12 +82,11 @@ class LeaderboardService
           : 6;
       _userProfilePicUrl.clear();
       for (var i = 0; i < length; i++) {
-        String url = await _userService.getProfileImageUrl(
+        String url = await getPlayerProfileImageUrl(
           userId: _WebGameLeaderBoard.scoreboard[i].userid,
         );
         _userProfilePicUrl.add(url);
       }
-      setUserProfilePicUrl();
     }
   }
 
@@ -120,5 +121,9 @@ class LeaderboardService
     if (currentUserRank <= 3 && currentUserRank > 0) {
       isUserInTopThree = true;
     }
+  }
+
+  Future<String> getPlayerProfileImageUrl({String userId}) async {
+    return await _dbModel.getUserDP(userId);
   }
 }

@@ -1,9 +1,13 @@
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
+import 'package:felloapp/ui/pages/others/games/web/new_web_home/new_web_home.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_home/web_home_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
@@ -208,6 +212,19 @@ class WebHomeView extends StatelessWidget {
                       FelloCoinBar(),
                       SizedBox(width: 16),
                       NotificationButton(),
+                      CircleAvatar(
+                        child: IconButton(
+                          icon: Icon(Icons.new_label),
+                          onPressed: () {
+                            AppState.delegate.appState.currentAction =
+                                PageAction(
+                              state: PageState.addWidget,
+                              widget: NewWebHomeView(game: game),
+                              page: NewWebHomeViewPageConfig,
+                            );
+                          },
+                        ),
+                      )
                     ],
                   ),
                 ],

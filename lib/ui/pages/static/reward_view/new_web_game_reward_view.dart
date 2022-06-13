@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/ui/pages/static/reward_view/components/rank_widget.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -12,10 +10,7 @@ class RewardView extends StatelessWidget {
   const RewardView({Key key, @required this.model}) : super(key: key);
 
   final PrizesModel model;
-  // final ScrollController controller;
-  // final List<Widget> leading;
-  // final String subtitle;
-  // final String promo;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -51,9 +46,6 @@ class RewardView extends StatelessWidget {
                 model.prizesA.firstWhere((element) => element.rank == 3).flc,
           ),
           Column(
-            // shrinkWrap: true,
-            // itemCount: model.prizesA.length - 3,
-            // physics: const NeverScrollableScrollPhysics(),
             children: List.generate(
               model.prizesA.length - 3,
               (index) {

@@ -36,32 +36,24 @@ class RewardLeaderboardView extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: GestureDetector(
-                    onTap: () => model.switchTab(0),
-                    child: Container(
-                      height: SizeConfig.navBarHeight,
-                      alignment: Alignment.center,
-                      child: Text(
-                        'Rewards',
-                        style: model.tabNo == 0
-                            ? selectedTextStyle
-                            : unselectedTextStyle, // TextStyles.sourceSansSB.body1,
-                      ),
+                  child: TextButton(
+                    onPressed: () => model.switchTab(0),
+                    child: Text(
+                      'Rewards',
+                      style: model.tabNo == 0
+                          ? selectedTextStyle
+                          : unselectedTextStyle, // TextStyles.sourceSansSB.body1,
                     ),
                   ),
                 ),
                 Expanded(
-                  child: GestureDetector(
-                    onTap: () => model.switchTab(1),
-                    child: Container(
-                      height: SizeConfig.navBarHeight,
-                      alignment: Alignment.center,
-                      child: Text(
-                        'Leaderboard',
-                        style: model.tabNo == 1
-                            ? selectedTextStyle
-                            : unselectedTextStyle, // style: TextStyles.sourceSansSB.body1,
-                      ),
+                  child: TextButton(
+                    onPressed: () => model.switchTab(1),
+                    child: Text(
+                      'Leaderboard',
+                      style: model.tabNo == 1
+                          ? selectedTextStyle
+                          : unselectedTextStyle, // style: TextStyles.sourceSansSB.body1,
                     ),
                   ),
                 )

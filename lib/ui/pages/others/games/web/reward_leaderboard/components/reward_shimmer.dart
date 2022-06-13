@@ -44,7 +44,7 @@ class RewardShimmer extends StatelessWidget {
             ),
           )),
           SizedBox(
-            height: SizeConfig.screenHeight * 0.0897,
+            height: SizeConfig.screenWidth * 0.05,
           ),
           Expanded(
             child: ListView.builder(
@@ -60,8 +60,12 @@ class RewardShimmer extends StatelessWidget {
                       horizontal: SizeConfig.padding12,
                       vertical: SizeConfig.padding8,
                     ),
+                    decoration: BoxDecoration(
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness12),
+                      color: Colors.white,
+                    ),
                     height: SizeConfig.screenWidth * 0.15,
-                    color: Colors.white,
                   ),
                 );
               },

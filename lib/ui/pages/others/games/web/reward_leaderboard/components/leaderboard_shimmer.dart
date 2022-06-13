@@ -1,10 +1,6 @@
-import 'dart:developer';
-
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shimmer/shimmer.dart';
 
 class LeaderboardShimmer extends StatelessWidget {
@@ -25,7 +21,6 @@ class LeaderboardShimmer extends StatelessWidget {
         ),
         color: UiConstants.kLeaderBoardBackgroundColor,
       ),
-      height: SizeConfig.screenWidth * 1.389,
       child: Column(
         children: [
           Row(
@@ -47,7 +42,7 @@ class LeaderboardShimmer extends StatelessWidget {
               ),
               _buildUserProfile(
                 padding: EdgeInsets.only(
-                  top: SizeConfig.padding64,
+                  top: SizeConfig.padding80,
                   left: SizeConfig.padding8,
                   right: SizeConfig.padding8,
                 ),
@@ -55,14 +50,12 @@ class LeaderboardShimmer extends StatelessWidget {
             ],
           ),
           SizedBox(
-            height: SizeConfig.screenHeight * 0.0897,
+            height: SizeConfig.screenWidth * 0.07,
           ),
-          Expanded(
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: 3,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
+          Column(
+            children: List.generate(
+              3,
+              (index) {
                 return Shimmer.fromColors(
                   baseColor: UiConstants.kUserRankBackgroundColor,
                   highlightColor: UiConstants.kBackgroundColor,
@@ -72,11 +65,18 @@ class LeaderboardShimmer extends StatelessWidget {
                       vertical: SizeConfig.padding8,
                     ),
                     height: SizeConfig.screenWidth * 0.15,
-                    color: Colors.white,
+                    decoration: BoxDecoration(
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness12),
+                      color: Colors.white,
+                    ),
                   ),
                 );
               },
             ),
+          ),
+          SizedBox(
+            height: SizeConfig.screenWidth * 0.07,
           ),
         ],
       ),
