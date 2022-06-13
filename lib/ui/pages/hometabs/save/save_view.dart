@@ -194,6 +194,7 @@ class GoldBalanceContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return WinningsContainer(
       onTap: model != null ? model.navigateToGoldBalanceDetailsScreen : () {},
+      borderRadius: SizeConfig.roundness16,
       shadow: true,
       color: UiConstants.tertiarySolid,
       height: SizeConfig.screenWidth * 0.16,

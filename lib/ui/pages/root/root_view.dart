@@ -45,8 +45,10 @@ class Root extends StatelessWidget {
           drawer: FDrawer(),
           drawerEnableOpenDragGesture: false,
           body: HomeBackground(
-            whiteBackground:
-                WhiteBackground(height: SizeConfig.safeScreenHeight * 0.16),
+            whiteBackground: WhiteBackground(
+                height: AppState.delegate.appState.getCurrentTabIndex == 0
+                    ? SizeConfig.safeScreenHeight * 0.12
+                    : SizeConfig.safeScreenHeight * 0.16),
             child: Stack(
               children: [
                 if (FlavorConfig.isDevelopment())

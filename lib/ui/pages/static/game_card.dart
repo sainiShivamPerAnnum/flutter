@@ -30,7 +30,7 @@ class GameCard extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(
-                  SizeConfig.roundness24 + SizeConfig.padding6),
+                  SizeConfig.roundness24 + SizeConfig.padding4),
               boxShadow: [
                 BoxShadow(
                     color: Colors.black.withOpacity(0.06),
@@ -40,7 +40,7 @@ class GameCard extends StatelessWidget {
               ],
             ),
             padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.padding4, vertical: SizeConfig.padding6),
+                horizontal: SizeConfig.padding4, vertical: SizeConfig.padding4),
             child: Container(
               decoration: BoxDecoration(
                 color: UiConstants.primaryColor,
@@ -89,7 +89,7 @@ class GameCard extends StatelessWidget {
                     Row(
                       children: [
                         Text("Win: ₹ ${gameData.prizeAmount ?? 0}   ",
-                            style: TextStyles.body2.bold),
+                            style: TextStyles.body1.bold),
                         CircleAvatar(
                           radius: SizeConfig.screenWidth * 0.029,
                           backgroundColor:
@@ -104,14 +104,15 @@ class GameCard extends StatelessWidget {
                     Row(
                       children: [
                         Text("Entry: ${gameData.playCost ?? 0}   ",
-                            style: TextStyles.body3),
+                            style: TextStyles.body3
+                                .colour(Colors.black.withOpacity(0.5))),
                         CircleAvatar(
-                          radius: SizeConfig.screenWidth * 0.029,
+                          radius: SizeConfig.screenWidth * 0.02,
                           backgroundColor:
                               UiConstants.tertiarySolid.withOpacity(0.2),
                           child: SvgPicture.asset(
                             Assets.tokens,
-                            height: SizeConfig.iconSize3,
+                            height: SizeConfig.iconSize4,
                           ),
                         ),
                       ],

@@ -132,9 +132,9 @@ class Play extends StatelessWidget {
                         endIndent: SizeConfig.screenWidth * 0.1,
                       ),
                       Padding(
-                        padding: EdgeInsets.only(
-                            left: SizeConfig.pageHorizontalMargins,
-                            bottom: SizeConfig.padding8),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.pageHorizontalMargins,
+                            vertical: SizeConfig.padding8),
                         child: Text(
                           model.gamesListTwoTitle,
                           style: TextStyles.title3.bold,
