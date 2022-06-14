@@ -165,7 +165,7 @@ class RemainingRank extends StatelessWidget {
                     ),
                     userProfilePicUrl[countedIndex] == null
                         ? Image.asset(
-                            Assets.profilePic,
+                            getDefaultProfilePicture(countedIndex),
                             width: SizeConfig.iconSize5,
                             height: SizeConfig.iconSize5,
                           )
@@ -205,5 +205,18 @@ class RemainingRank extends StatelessWidget {
         );
       },
     );
+  }
+
+  getDefaultProfilePicture(int rank) {
+    switch (rank) {
+      case 4:
+        return "assets/temp/rank_three_profile.png";
+      case 5:
+        return "assets/temp/rank_one_profile.png";
+      case 6:
+        return "assets/temp/rank_two_profile.png";
+      default:
+        return Assets.profilePic;
+    }
   }
 }

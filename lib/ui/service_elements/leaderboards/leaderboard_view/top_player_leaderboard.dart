@@ -57,76 +57,79 @@ class TopPlayer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: UiConstants.kBackgroundColor,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            NewSquareBackground(),
-            _buildTopPlayer(context),
-          ],
-        ),
+      body: Stack(
+        children: [
+          NewSquareBackground(),
+          _buildTopPlayer(context),
+        ],
       ),
     );
   }
 
-  Column _buildTopPlayer(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.only(
-            left: SizeConfig.padding20,
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              GestureDetector(
-                onTap: () => Navigator.pop(context),
-                child: Padding(
-                  padding: EdgeInsets.only(right: SizeConfig.padding20),
-                  child: SvgPicture.asset('assets/temp/chevron_left.svg'),
-                ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Leaderboard",
-                    style: TextStyles.rajdhaniSB.title4,
-                  ),
-                  Text(
-                    "Updated on: ${DateFormat('dd-MMM-yyyy | hh:mm:ss').format(model.lastupdated.toDate())}",
-                    style: TextStyles.sourceSans.body3
-                        .colour(UiConstants.kLastUpdatedTextColor),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        // SizedBox(height: SizeConfig.padding20),
-        Expanded(
-          child: SlidingUpPanel(
-            body: WinnerWidgets(
-              scoreboard: model.scoreboard,
-              userProfilePicUrl: userProfilePicUrl,
-              isSpotLightVisible: false,
+  Widget _buildTopPlayer(BuildContext context) {
+    log(SizeConfig.screenHeight.toString());
+    return Padding(
+      padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+              left: SizeConfig.padding20,
             ),
-            panel: _buildAllPlayerList(),
-            controller: panelController,
-            defaultPanelState: PanelState.CLOSED,
-            isDraggable: false,
-            color: UiConstants.kBackgroundColor,
-            minHeight: SizeConfig.screenHeight * 0.597,
-            maxHeight: SizeConfig.screenHeight * 0.9,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Padding(
+                    padding: EdgeInsets.only(right: SizeConfig.padding20),
+                    child: SvgPicture.asset('assets/temp/chevron_left.svg'),
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Leaderboard",
+                      style: TextStyles.rajdhaniSB.title4,
+                    ),
+                    Text(
+                      "Updated on: ${DateFormat('dd-MMM-yyyy | hh:mm:ss').format(model.lastupdated.toDate())}",
+                      style: TextStyles.sourceSans.body3
+                          .colour(UiConstants.kLastUpdatedTextColor),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
+          // SizedBox(height: SizeConfig.padding20),
+          Expanded(
+            child: SlidingUpPanel(
+              body: WinnerWidgets(
+                scoreboard: model.scoreboard,
+                userProfilePicUrl: userProfilePicUrl,
+                isSpotLightVisible: false,
+              ),
+              panel: _buildAllPlayerList(),
+              controller: panelController,
+              defaultPanelState: PanelState.CLOSED,
+              isDraggable: false,
+              color: UiConstants.kBackgroundColor,
+              minHeight: SizeConfig.screenHeight >= 800
+                  ? SizeConfig.screenHeight * 0.6
+                  : SizeConfig.screenHeight * 0.55,
+              maxHeight: SizeConfig.screenHeight * 0.9,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildAllPlayerList() {
     ScrollController _scrollController = ScrollController();
     return Container(
-      // height: SizeConfig.screenHeight * 0.597,
       padding: EdgeInsets.only(
         top: SizeConfig.padding24,
         left: SizeConfig.padding24,
@@ -168,7 +171,7 @@ class TopPlayer extends StatelessWidget {
                   controller: _scrollController,
                   shrinkWrap: true,
                   itemCount: model.scoreboard.length - 3,
-                  physics: ScrollPhysics(),
+                  padding: EdgeInsets.zero,
                   itemBuilder: (context, index) {
                     int countedIndex = index + 3;
                     return _buildLeaderboardTile(countedIndex);

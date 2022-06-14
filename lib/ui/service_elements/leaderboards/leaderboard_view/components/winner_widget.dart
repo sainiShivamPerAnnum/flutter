@@ -76,14 +76,14 @@ class WinnerWidgets extends StatelessWidget {
           ),
         Padding(
           padding: EdgeInsets.only(
-            left: rank == 0 ? SizeConfig.screenWidth * 0.04444 : 0,
+            left: rank == 0 ? SizeConfig.screenWidth * 0.0400 : 0,
           ),
           child: Column(
             children: [
               Container(
                 margin: EdgeInsets.only(
                   top: rank == 0
-                      ? SizeConfig.screenWidth * 0.125
+                      ? SizeConfig.screenWidth * 0.130
                       : SizeConfig.screenWidth * 0.194,
                 ),
                 decoration: BoxDecoration(
@@ -106,20 +106,20 @@ class WinnerWidgets extends StatelessWidget {
                     ? Image.asset(
                         getDefaultProfilePicture(rank),
                         width: rank == 0
-                            ? SizeConfig.screenWidth * 0.2222
+                            ? SizeConfig.screenWidth * 0.2344
                             : SizeConfig.screenWidth * 0.2083,
                         height: rank == 0
-                            ? SizeConfig.screenWidth * 0.2222
+                            ? SizeConfig.screenWidth * 0.2344
                             : SizeConfig.screenWidth * 0.2083,
                       )
                     : ClipOval(
                         child: CachedNetworkImage(
                           imageUrl: userProfilePicUrl[rank],
                           width: rank == 0
-                              ? SizeConfig.screenWidth * 0.2222
+                              ? SizeConfig.screenWidth * 0.2344
                               : SizeConfig.screenWidth * 0.2083,
                           height: rank == 0
-                              ? SizeConfig.screenWidth * 0.2222
+                              ? SizeConfig.screenWidth * 0.2344
                               : SizeConfig.screenWidth * 0.2083,
                         ),
                       ),
