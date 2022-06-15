@@ -67,14 +67,14 @@ class RankWidget extends StatelessWidget {
     Color color,
     BuildContext context,
   }) {
-    double pillerBoxHeight = SizeConfig.screenHeight * 0.257 -
+    double pillerBoxHeight = SizeConfig.screenWidth * 0.5556 -
         ((rank - 1.0) *
-            SizeConfig.screenHeight *
-            0.024); // 200 - (rank - 1) * 20
-    double pillerHeight = SizeConfig.screenHeight * 0.2308 -
+            SizeConfig.screenWidth *
+            0.055); // 200 - (rank - 1) * 20
+    double pillerHeight = SizeConfig.screenWidth * 0.5 -
         ((rank - 1.0) *
-            SizeConfig.screenHeight *
-            0.0256); // 180 - (rank - 1) * 20
+            SizeConfig.screenWidth *
+            0.055); // 180 - (rank - 1) * 20
     return SizedBox(
       height: pillerBoxHeight,
       child: Stack(
@@ -98,46 +98,42 @@ class RankWidget extends StatelessWidget {
               width: SizeConfig.screenWidth * 0.25, // 90
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  SizedBox(
-                    height: SizeConfig.padding32,
-                  ),
                   Text(
                     "$rank${rank == 1 ? 'st' : rank == 2 ? 'nd' : 'rd'}",
-                    style: TextStyles.rajdhaniB.body1,
+                    style: rank == 1
+                        ? TextStyles.rajdhaniB.title4
+                        : TextStyles.rajdhaniB.body1,
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.start,
+                  SizedBox(
+                    height: SizeConfig.padding24,
+                  ),
+                  Text(
+                    'Rs $priceMoney',
+                    style: TextStyles.sourceSans.body3,
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding4,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        'Rs $priceMoney',
-                        style: TextStyles.sourceSans.body3,
+                      SvgPicture.asset(
+                        'assets/temp/Tokens.svg',
+                        width: SizeConfig.body2,
+                        height: SizeConfig.body2,
                       ),
                       SizedBox(
-                        height: SizeConfig.padding4,
+                        width: SizeConfig.padding6,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset(
-                            'assets/temp/Tokens.svg',
-                            width: SizeConfig.body2,
-                            height: SizeConfig.body2,
-                          ),
-                          SizedBox(
-                            width: SizeConfig.padding6,
-                          ),
-                          Flexible(
-                            child: Text(
-                              '$pricePoint',
-                              style: TextStyles.sourceSansM.body4,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                          ),
-                        ],
+                      Flexible(
+                        child: Text(
+                          '$pricePoint',
+                          style: TextStyles.sourceSansM.body4,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
                       ),
                     ],
                   ),
@@ -147,7 +143,7 @@ class RankWidget extends StatelessWidget {
           ),
           Positioned(
             left: rank == 1
-                ? SizeConfig.screenWidth * 0.0555
+                ? SizeConfig.screenWidth * 0.045
                 : SizeConfig.screenWidth * 0.0694,
             child: SvgPicture.asset(
               'assets/temp/$image',

@@ -160,6 +160,7 @@ class _MyAppState extends State<MyApp> {
                         GlobalCupertinoLocalizations.delegate,
                       ],
                       supportedLocales: S.delegate.supportedLocales,
+                      useInheritedMediaQuery: FlavorConfig.isQA(),
                     ),
                   ),
                 ),
