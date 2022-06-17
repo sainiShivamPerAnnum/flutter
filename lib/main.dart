@@ -60,7 +60,6 @@ import 'core/service/notifier_services/user_coin_service.dart';
 //   runApp(MyApp());
 // }
 
-
 Future mainInit() async {
   setupLocator();
   WidgetsFlutterBinding.ensureInitialized();
@@ -159,7 +158,6 @@ class _MyAppState extends State<MyApp> {
                         GlobalCupertinoLocalizations.delegate,
                       ],
                       supportedLocales: S.delegate.supportedLocales,
-                      useInheritedMediaQuery: FlavorConfig.isQA(),
                     ),
                   ),
                 ),
