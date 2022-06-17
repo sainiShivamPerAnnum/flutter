@@ -1,0 +1,250 @@
+import 'dart:developer';
+
+import 'package:felloapp/core/enums/leaderboard_service_enum.dart';
+import 'package:felloapp/core/model/leader_board_modal.dart';
+import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/static/new_square_background.dart';
+import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/components/user_rank.dart';
+import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/components/winner_widget.dart';
+import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
+
+class TopPlayerLeaderboardView extends StatelessWidget {
+  const TopPlayerLeaderboardView({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return PropertyChangeConsumer<LeaderboardService,
+        LeaderBoardServiceProperties>(
+      properties: [LeaderBoardServiceProperties.WebGameLeaderBoard],
+      builder: (context, m, properties) {
+        return TopPlayer(
+          model: m.WebGameLeaderBoard,
+          userProfilePicUrl: m.userProfilePicUrl,
+          currentUserRank: m.currentUserRank,
+          isUserInTopThree: m.isUserInTopThree,
+        );
+      },
+    );
+  }
+}
+
+class TopPlayer extends StatelessWidget {
+  TopPlayer({
+    @required this.model,
+    @required this.userProfilePicUrl,
+    @required this.currentUserRank,
+    @required this.isUserInTopThree,
+  });
+
+  final LeaderBoardModal model;
+  final List<String> userProfilePicUrl;
+  final bool isUserInTopThree;
+  final int currentUserRank;
+  final PanelController panelController = PanelController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: UiConstants.kBackgroundColor,
+      body: Stack(
+        children: [
+          NewSquareBackground(),
+          _buildTopPlayer(context),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTopPlayer(BuildContext context) {
+    log(SizeConfig.screenHeight.toString());
+    return Padding(
+      padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+              left: SizeConfig.padding20,
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Padding(
+                    padding: EdgeInsets.only(right: SizeConfig.padding20),
+                    child: SvgPicture.asset('assets/temp/chevron_left.svg'),
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Leaderboard",
+                      style: TextStyles.rajdhaniSB.title4,
+                    ),
+                    Text(
+                      "Updated on: ${DateFormat('dd-MMM-yyyy | hh:mm:ss').format(model.lastupdated.toDate())}",
+                      style: TextStyles.sourceSans.body3
+                          .colour(UiConstants.kLastUpdatedTextColor),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          // SizedBox(height: SizeConfig.padding20),
+          Expanded(
+            child: SlidingUpPanel(
+              body: WinnerWidgets(
+                scoreboard: model.scoreboard,
+                userProfilePicUrl: userProfilePicUrl,
+                isSpotLightVisible: false,
+              ),
+              panel: _buildAllPlayerList(),
+              controller: panelController,
+              defaultPanelState: PanelState.CLOSED,
+              isDraggable: false,
+              color: UiConstants.kBackgroundColor,
+              minHeight: SizeConfig.screenHeight >= 800
+                  ? SizeConfig.screenHeight * 0.6
+                  : SizeConfig.screenHeight * 0.55,
+              maxHeight: SizeConfig.screenHeight * 0.9,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAllPlayerList() {
+    ScrollController _scrollController = ScrollController();
+    return Container(
+      padding: EdgeInsets.only(
+        top: SizeConfig.padding24,
+        left: SizeConfig.padding24,
+        right: SizeConfig.padding24,
+      ),
+      decoration: BoxDecoration(
+        color: UiConstants.kLeaderBoardBackgroundColor,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(SizeConfig.roundness24),
+          topRight: Radius.circular(SizeConfig.roundness24),
+        ),
+      ),
+      child: Column(
+        children: [
+          _buildLeaderBoardHeader(),
+          if (model.scoreboard.length >= 7 &&
+              !isUserInTopThree &&
+              currentUserRank != 0)
+            UserRank(
+              currentUserScore: model.scoreboard[currentUserRank - 1],
+              currentUserRank: currentUserRank,
+            ),
+          Expanded(
+            child: NotificationListener<ScrollNotification>(
+              onNotification: (ScrollNotification value) {
+                if (value.metrics.pixels >= 60 &&
+                    panelController.isPanelClosed) {
+                  panelController.open();
+                }
+                if (value.metrics.pixels == 0 && panelController.isPanelOpen) {
+                  panelController.close();
+                }
+                return true;
+              },
+              child: Scrollbar(
+                radius: Radius.circular(SizeConfig.roundness24),
+                controller: _scrollController,
+                child: ListView.builder(
+                  controller: _scrollController,
+                  shrinkWrap: true,
+                  itemCount: model.scoreboard.length - 3,
+                  padding: EdgeInsets.zero,
+                  itemBuilder: (context, index) {
+                    int countedIndex = index + 3;
+                    return _buildLeaderboardTile(countedIndex);
+                  },
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLeaderboardTile(int countedIndex) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        vertical: SizeConfig.padding20,
+        horizontal: SizeConfig.padding24,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Row(
+              children: [
+                Text(
+                  '${countedIndex + 1}',
+                  style: TextStyles.rajdhaniSB.body2,
+                ),
+                SizedBox(
+                  width: SizeConfig.padding12,
+                ),
+                Expanded(
+                  child: Text(
+                    '${locator<UserService>().diplayUsername(model.scoreboard[countedIndex].username)}',
+                    style: TextStyles.sourceSans.body3.setOpecity(0.8),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                )
+              ],
+            ),
+          ),
+          Text(
+            '${model.scoreboard[countedIndex].score} points',
+            style: TextStyles.rajdhaniM.body3,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Padding _buildLeaderBoardHeader() {
+    return Padding(
+      padding: EdgeInsets.only(
+        right: SizeConfig.padding16,
+        left: SizeConfig.padding16,
+        bottom: SizeConfig.padding12,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            "${model.scoreboard.length} Players",
+            style: TextStyles.sourceSansSB.body3,
+          ),
+          Text(
+            "Weekly",
+            style: TextStyles.sourceSansSB.body3,
+          ),
+        ],
+      ),
+    );
+  }
+}

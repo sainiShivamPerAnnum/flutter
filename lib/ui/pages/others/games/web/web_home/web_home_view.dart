@@ -1,7 +1,13 @@
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
+import 'package:felloapp/ui/pages/others/games/web/new_web_home/new_web_home.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_home/web_home_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
@@ -51,8 +57,9 @@ class WebHomeView extends StatelessWidget {
                         controller: model.scrollController,
                         children: [
                           SizedBox(
-                              height: SizeConfig.screenWidth * 0.1 +
-                                  SizeConfig.viewInsets.top),
+                            height: SizeConfig.screenWidth * 0.1 +
+                                SizeConfig.viewInsets.top,
+                          ),
                           InkWell(
                             onTap: () async {
                               if (await BaseUtil.showNoInternetAlert()) return;
@@ -92,7 +99,8 @@ class WebHomeView extends StatelessWidget {
                               children: [
                                 Container(
                                   padding: EdgeInsets.only(
-                                      bottom: SizeConfig.padding4),
+                                    bottom: SizeConfig.padding4,
+                                  ),
                                   alignment: Alignment.center,
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
@@ -113,38 +121,38 @@ class WebHomeView extends StatelessWidget {
                                 ),
                                 Expanded(
                                   child: PageView(
-                                      physics: NeverScrollableScrollPhysics(),
-                                      controller: model.pageController,
-                                      children: [
-                                        model.isPrizesLoading
-                                            ? ListLoader()
-                                            : (model.prizes == null
-                                                ? NoRecordDisplayWidget(
-                                                    asset:
-                                                        "images/week-winners.png",
-                                                    text:
-                                                        "Prizes will be updates soon",
-                                                  )
-                                                : PrizesView(
-                                                    model: model.prizes,
-                                                    controller:
-                                                        model.scrollController,
-                                                    subtitle:
-                                                        model.getSubtitle(),
-                                                    promo: model.getPromo(),
-                                                    leading: List.generate(
-                                                        model.prizes.prizesA
-                                                            .length,
-                                                        (i) => Text(
-                                                              "${i + 1}",
-                                                              style: TextStyles
-                                                                  .body3.bold
-                                                                  .colour(UiConstants
-                                                                      .primaryColor),
-                                                            )),
-                                                  )),
-                                        WebGameLeaderBoardView()
-                                      ]),
+                                    physics: NeverScrollableScrollPhysics(),
+                                    controller: model.pageController,
+                                    children: [
+                                      model.isPrizesLoading
+                                          ? ListLoader()
+                                          : (model.prizes == null
+                                              ? NoRecordDisplayWidget(
+                                                  asset:
+                                                      "images/week-winners.png",
+                                                  text:
+                                                      "Prizes will be updates soon",
+                                                )
+                                              : PrizesView(
+                                                  model: model.prizes,
+                                                  controller:
+                                                      model.scrollController,
+                                                  subtitle: model.getSubtitle(),
+                                                  promo: model.getPromo(),
+                                                  leading: List.generate(
+                                                    model.prizes.prizesA.length,
+                                                    (i) => Text(
+                                                      "${i + 1}",
+                                                      style: TextStyles
+                                                          .body3.bold
+                                                          .colour(UiConstants
+                                                              .primaryColor),
+                                                    ),
+                                                  ),
+                                                )),
+                                      WebGameLeaderBoardView()
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
@@ -204,6 +212,19 @@ class WebHomeView extends StatelessWidget {
                       FelloCoinBar(),
                       SizedBox(width: 16),
                       NotificationButton(),
+                      CircleAvatar(
+                        child: IconButton(
+                          icon: Icon(Icons.new_label),
+                          onPressed: () {
+                            AppState.delegate.appState.currentAction =
+                                PageAction(
+                              state: PageState.addWidget,
+                              widget: NewWebHomeView(game: game),
+                              page: NewWebHomeViewPageConfig,
+                            );
+                          },
+                        ),
+                      )
                     ],
                   ),
                 ],
