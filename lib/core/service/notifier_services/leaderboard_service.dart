@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:felloapp/core/enums/leaderboard_service_enum.dart';
 import 'package:felloapp/core/model/leader_board_modal.dart';
 import 'package:felloapp/core/model/referral_board_modal.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/statistics_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -15,17 +18,21 @@ class LeaderboardService
   final _logger = locator<CustomLogger>();
   final _statsRepo = locator<StatisticsRepository>();
   final _userService = locator<UserService>();
+  final _dbModel = locator<DBModel>();
   final ScrollController ownController = ScrollController();
   final ScrollController parentController = ScrollController();
-
   int _referralLBLength = 0;
-
   List<ReferralBoard> _referralLeaderBoard = [];
-
+  List<String> _userProfilePicUrl = [];
   LeaderBoardModal _WebGameLeaderBoard;
+  bool isUserInTopThree = false;
+  int currentUserRank = 0;
+
   LeaderBoardModal get WebGameLeaderBoard => this._WebGameLeaderBoard;
 
   List<ReferralBoard> get referralLeaderBoard => this._referralLeaderBoard;
+
+  List<String> get userProfilePicUrl => this._userProfilePicUrl;
 
   get referralLBLength => this._referralLBLength;
 
@@ -37,6 +44,11 @@ class LeaderboardService
   setWebGameLeaderBoard() {
     notifyListeners(LeaderBoardServiceProperties.WebGameLeaderBoard);
     _logger.d("Web Game leaderboard updated, property listeners notified");
+  }
+
+  setUserProfilePicUrl() {
+    notifyListeners(LeaderBoardServiceProperties.WebGameLeaderBoard);
+    _logger.d("User profile pic url updated, property listeners notified");
   }
 
   fetchReferralLeaderBoard() async {
@@ -55,10 +67,26 @@ class LeaderboardService
         await _statsRepo.getLeaderBoard(game, "weekly");
     if (response.code == 200) {
       _WebGameLeaderBoard = response.model;
+      setCurrentPlayerRank();
       setWebGameLeaderBoard();
       _logger.d("$game Leaderboard successfully fetched");
     } else {
       _WebGameLeaderBoard = null;
+    }
+  }
+
+  fetchLeaderBoardProfileImage() async {
+    if (_WebGameLeaderBoard != null) {
+      int length = _WebGameLeaderBoard.scoreboard.length <= 6
+          ? _WebGameLeaderBoard.scoreboard.length
+          : 6;
+      _userProfilePicUrl.clear();
+      for (var i = 0; i < length; i++) {
+        String url = await getPlayerProfileImageUrl(
+          userId: _WebGameLeaderBoard.scoreboard[i].userid,
+        );
+        _userProfilePicUrl.add(url);
+      }
     }
   }
 
@@ -77,5 +105,25 @@ class LeaderboardService
           .then((value) => ownController.animateTo(index * SizeConfig.padding54,
               duration: Duration(seconds: 1), curve: Curves.easeIn));
     }
+  }
+
+  void setCurrentPlayerRank() {
+    currentUserRank = 0;
+    isUserInTopThree = false;
+    for (var i = 0; i < WebGameLeaderBoard.scoreboard.length; i++) {
+      if (WebGameLeaderBoard.scoreboard[i].userid ==
+          _userService.baseUser.uid) {
+        currentUserRank = i + 1;
+        break;
+      }
+    }
+
+    if (currentUserRank <= 3 && currentUserRank > 0) {
+      isUserInTopThree = true;
+    }
+  }
+
+  Future<String> getPlayerProfileImageUrl({String userId}) async {
+    return await _dbModel.getUserDP(userId);
   }
 }

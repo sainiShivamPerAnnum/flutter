@@ -74,6 +74,9 @@ class SizeConfig {
   static double get iconSize2 => screenWidth * 0.033; //14
   static double get iconSize3 => screenWidth * 0.028; //12
   static double get iconSize4 => screenWidth * 0.019; //8
+  static double get iconSize5 => screenWidth * 0.077; //32
+  static double get iconSize6 => screenWidth * 0.139; //50
+  static double get iconSize7 => screenWidth * 0.194; //70
 
   // PADDINGS
   static double get padding2 => screenWidth * 0.0048;
@@ -95,6 +98,7 @@ class SizeConfig {
 
   //BORDER RADIUS
 
+  static double get roundness5 => screenWidth * 0.013; //5
   static double get roundness12 => screenWidth * 0.028; //12
   static double get roundness16 => screenWidth * 0.038; //12
   static double get roundness24 => screenWidth * 0.058; //24
@@ -117,4 +121,12 @@ class SizeConfig {
 
   static double get avatarRadius => screenWidth * 0.048;
   static double get tileAvatarRadius => screenWidth * 0.057;
+
+  //DIVIDERS HEIGHTS
+  static double get dividerHeight => screenWidth * 0.0006;
+
+  //BORDER SIZES
+  static double get border1 => screenWidth * 0.0024; // 1
+  static double get border2 => screenWidth * 0.0036; // 1.5
+  static double get border3 => screenWidth * 0.0048; // 2
 }

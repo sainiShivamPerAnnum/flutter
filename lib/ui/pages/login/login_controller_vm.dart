@@ -555,12 +555,13 @@ class LoginControllerViewModel extends BaseModel {
     };
 
     await FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: this._verificationId,
-        codeAutoRetrievalTimeout: autoRetrieve,
-        codeSent: smsCodeSent,
-        timeout: const Duration(seconds: 30),
-        verificationCompleted: verifiedSuccess,
-        verificationFailed: veriFailed);
+      phoneNumber: this._verificationId,
+      codeAutoRetrievalTimeout: autoRetrieve,
+      codeSent: smsCodeSent,
+      timeout: const Duration(seconds: 30),
+      verificationCompleted: verifiedSuccess,
+      verificationFailed: veriFailed,
+    );
   }
 
   Future<String> _getBearerToken() async {

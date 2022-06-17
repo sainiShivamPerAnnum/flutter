@@ -42,4 +42,20 @@ class UiConstants {
       900: const Color(0xff2EB19F),
     },
   );
+
+  /// New UI Colors
+  static const Color kTextColor = const Color(0xFFFFFFFF);
+  static const Color kBackgroundColor = const Color(0xFF232326);
+  static const Color kLeaderBoardBackgroundColor = const Color(0xFF39393C);
+  static const Color kTabBorderColor = const Color(0xFF62E3C4);
+  static const Color kDividerColor = const Color(0xFF9EA1A1);
+  static const Color kBackgroundDividerColor = const Color(0xFF23272B);
+  static const Color kFirstRankPillerColor = const Color(0xFFF2B826);
+  static const Color kSecondRankPillerColor = const Color(0xF5371EE);
+  static const Color kThirdRankPillerColor = const Color(0xFF34C3A7);
+  static Color kUserRankBackgroundColor = Color(0xFF000000).withOpacity(0.3);
+  static const Color kWinnerPlayerPrimaryColor = const Color(0xFFFFD979);
+  static const Color kWinnerPlayerLightPrimaryColor = const Color(0xFFFEF5DC);
+  static const Color kOtherPlayerPrimaryColor = const Color(0xFFFFFFFF);
+  static const Color kLastUpdatedTextColor = const Color(0xFF919193);
 }
