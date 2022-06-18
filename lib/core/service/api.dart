@@ -400,6 +400,16 @@ class Api {
     return await documentReference.set(page.toMap());
   }
 
+  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
+      fetchJourneyPage() async {
+    QuerySnapshot<Map<String, dynamic>> res =
+        await _db.collection('journey').get();
+    if (res != null && res.size > 0)
+      return res.docs;
+    else
+      return null;
+  }
+
   Future<QuerySnapshot> getPromoCardCollection() {
     Query _query = _db.collection(Constants.COLN_PROMOS).orderBy('position');
     return _query.get();

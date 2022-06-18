@@ -103,7 +103,7 @@ class Root extends StatelessWidget {
                             ? CircularProgressIndicator(color: Colors.black)
                             : Icon(Icons.input),
                         onPressed: () {
-                          model.uploadPageData();
+                          model.openJourneyView();
                         },
                       ),
                     )

@@ -13,6 +13,7 @@ import 'package:felloapp/ui/pages/hamburger/faq_page.dart';
 import 'package:felloapp/ui/pages/hamburger/freshdesk_help.dart';
 import 'package:felloapp/ui/pages/hamburger/referral_policy_page.dart';
 import 'package:felloapp/ui/pages/hamburger/support.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/login/login_controller_view.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_view.dart';
 import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
@@ -297,6 +298,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(
               AutosaveTransactionsView(), AutosaveTransactionsViewPageConfig);
           break;
+        case Pages.JourneyView:
+          _addPageData(JourneyView(), JourneyViewPageConfig);
+          break;
         default:
           break;
       }
@@ -522,6 +526,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.AutosaveWalkthrough:
         AutosaveWalkThroughConfig.currentPageAction = action;
+        break;
+      case Pages.JourneyView:
+        JourneyViewPageConfig.currentPageAction = action;
         break;
       default:
         break;

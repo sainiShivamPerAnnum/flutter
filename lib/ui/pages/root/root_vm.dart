@@ -148,10 +148,9 @@ class RootViewModel extends BaseModel {
     }
   }
 
-  Future<void> uploadPageData() async {
-    isUploading = true;
-    await _dbModel.addJourneypage(pages[1]);
-    isUploading = false;
+  Future<void> openJourneyView() async {
+    AppState.delegate.appState.currentAction =
+        PageAction(page: JourneyViewPageConfig, state: PageState.addPage);
   }
 
   void _showSecurityBottomSheet() {

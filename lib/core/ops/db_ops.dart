@@ -954,6 +954,22 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  Future<List<JourneyPage>> fetchJourneyPage() async {
+    List<JourneyPage> pages = [];
+    try {
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> pageData =
+          await _api.fetchJourneyPage();
+      if (pageData != null && pageData.isNotEmpty) {
+        pageData.forEach((page) {
+          pages.add(JourneyPage.fromMap(page.data()));
+        });
+      }
+    } catch (e) {
+      logger.e(e.toString());
+    }
+    return pages;
+  }
+
   Future<List<FelloMilestoneModel>> getMilestonesList() async {
     List<FelloMilestoneModel> felloMilestones = [];
     try {
