@@ -71,6 +71,10 @@ class Reward {
   toString() {
     return "Type: $type || Value: $value";
   }
+
+  static toMap(Reward x) {
+    return {'type': x.type, 'value': x.value};
+  }
 }
 
 

@@ -96,6 +96,17 @@ class Root extends StatelessWidget {
                     FelloCoinBar(),
                     SizedBox(width: 16),
                     NotificationButton(),
+                    SizedBox(width: 10),
+                    CircleAvatar(
+                      child: IconButton(
+                        icon: model.isUploading
+                            ? CircularProgressIndicator(color: Colors.black)
+                            : Icon(Icons.input),
+                        onPressed: () {
+                          model.uploadPageData();
+                        },
+                      ),
+                    )
                   ],
                 ),
                 Positioned(

@@ -1,6 +1,9 @@
+import 'dart:developer' as dev;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
+import 'package:felloapp/core/model/journey_models/journey_page.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/util/constants.dart';
@@ -388,6 +391,13 @@ class Api {
         })
         .then((value) => true)
         .catchError((onErr) => false);
+  }
+
+  Future addJourneyPage(JourneyPage page) async {
+    DocumentReference documentReference =
+        _db.collection('journey').doc('page-${page.page}');
+    dev.log(page.toMap().toString());
+    return await documentReference.set(page.toMap());
   }
 
   Future<QuerySnapshot> getPromoCardCollection() {

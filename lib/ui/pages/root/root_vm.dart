@@ -3,6 +3,12 @@ import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/model/golden_ticket_model.dart';
+import 'package:felloapp/core/model/journey_models/avatar_path_model.dart';
+import 'package:felloapp/core/model/journey_models/journey_page.dart';
+import 'package:felloapp/core/model/journey_models/journey_path_model.dart';
+import 'package:felloapp/core/model/journey_models/milestone_model.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -27,6 +33,7 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/journey_page_data.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -44,6 +51,7 @@ class RootViewModel extends BaseModel {
   final UserCoinService _userCoinService = locator<UserCoinService>();
   final CustomLogger _logger = locator<CustomLogger>();
   final LocalDBModel _lModel = locator<LocalDBModel>();
+  final DBModel _dbModel = locator<DBModel>();
 
   final winnerService = locator<WinnerService>();
   final txnService = locator<TransactionService>();
@@ -52,6 +60,13 @@ class RootViewModel extends BaseModel {
 
   BuildContext rootContext;
   bool _isInitialized = false;
+  bool _isUploading = false;
+  get isUploading => this._isUploading;
+
+  set isUploading(value) {
+    this._isUploading = value;
+    notifyListeners();
+  }
 
   String get myUserDpUrl => _userService.myUserDpUrl;
   //int get currentTabIndex => _appState.rootIndex;
@@ -131,6 +146,12 @@ class RootViewModel extends BaseModel {
         }
       });
     }
+  }
+
+  Future<void> uploadPageData() async {
+    isUploading = true;
+    await _dbModel.addJourneypage(pages[1]);
+    isUploading = false;
   }
 
   void _showSecurityBottomSheet() {
