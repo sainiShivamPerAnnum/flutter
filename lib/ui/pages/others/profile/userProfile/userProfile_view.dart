@@ -56,6 +56,28 @@ class UserProfileDetails extends StatelessWidget {
                           model.updateDetails();
                         }
                       },
+                // onTap: () {
+                //   showDialog(
+                //     context: context,
+                //     builder: (ctx) => AppCongratulatoryDialog(
+                //       title: 'Congratulations!',
+                //       description:
+                //           'Your email address abcxyz@gmail.com has been verified.',
+                //       buttonText: 'Grate!',
+                //       confirmAction: () {
+                //         // _isLoading = true;
+                //         // setState(() {});
+                //         // baseProvider.withdrawFlowStackCount = 1;
+                //         // widget.onAmountConfirmed({
+                //         //   'withdrawal_quantity':
+                //         //       baseProvider.activeGoldWithdrawalQuantity,
+                //         // });
+
+                //         return true;
+                //       },
+                //     ),
+                //   );
+                // },
                 child: !model.inEditMode
                     ? Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -73,10 +95,12 @@ class UserProfileDetails extends StatelessWidget {
                           ),
                         ],
                       )
-                    : Text(
-                        'DONE',
-                        style: TextStyles.sourceSansSB.body2.colour(
-                          UiConstants.kTabBorderColor,
+                    : Center(
+                        child: Text(
+                          'DONE',
+                          style: TextStyles.sourceSansSB.body2.colour(
+                            UiConstants.kTabBorderColor,
+                          ),
                         ),
                       ),
               ),
