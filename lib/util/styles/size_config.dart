@@ -83,6 +83,7 @@ class SizeConfig {
   static double get padding4 => screenWidth * 0.0096;
   static double get padding6 => screenWidth * 0.014;
   static double get padding8 => screenWidth * 0.019;
+  static double get padding10 => screenWidth * 0.023;
   static double get padding12 => screenWidth * 0.029;
   static double get padding16 => screenWidth * 0.038;
   static double get padding20 => screenWidth * 0.048;
@@ -126,7 +127,12 @@ class SizeConfig {
   static double get dividerHeight => screenWidth * 0.0006;
 
   //BORDER SIZES
+  static double get border0 => screenWidth * 0.0014; // 0.5
   static double get border1 => screenWidth * 0.0024; // 1
   static double get border2 => screenWidth * 0.0036; // 1.5
   static double get border3 => screenWidth * 0.0048; // 2
+  static double get border4 => screenWidth * 0.0069; // 2.5
+
+  // Button Border Radius
+  static double get buttonBorderRadius => screenWidth * 0.0139; // 5
 }

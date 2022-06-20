@@ -85,6 +85,7 @@ dependencies:
   appsflyer_sdk: ^6.5.2
   external_app_launcher: ^2.0.2
   shimmer: ^2.0.0
+  flutter_switch: ^0.3.2
 
 
 dev_dependencies:
@@ -110,8 +111,8 @@ flutter:
     - assets/lotties/
     - assets/videos/
     - assets/temp/
-    - assets/fonts/rajdhani/
-    - assets/fonts/sansPro/
+    # - assets/fonts/rajdhani/
+    # - assets/fonts/sansPro/
 
   fonts:
     - family: Cucciolo

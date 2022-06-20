@@ -45,8 +45,10 @@ class UiConstants {
 
   /// New UI Colors
   static const Color kTextColor = const Color(0xFFFFFFFF);
+  static const Color kTextColor2 = const Color(0xFF919193);
+
   static const Color kBackgroundColor = const Color(0xFF232326);
-  static const Color kLeaderBoardBackgroundColor = const Color(0xFF39393C);
+  static const Color kSecondaryBackgroundColor = const Color(0xFF39393C);
   static const Color kTabBorderColor = const Color(0xFF62E3C4);
   static const Color kDividerColor = const Color(0xFF9EA1A1);
   static const Color kBackgroundDividerColor = const Color(0xFF23272B);
@@ -57,5 +59,10 @@ class UiConstants {
   static const Color kWinnerPlayerPrimaryColor = const Color(0xFFFFD979);
   static const Color kWinnerPlayerLightPrimaryColor = const Color(0xFFFEF5DC);
   static const Color kOtherPlayerPrimaryColor = const Color(0xFFFFFFFF);
-  static const Color kLastUpdatedTextColor = const Color(0xFF919193);
+
+  static const Color kProfileBorderOutterColor = const Color(0xFF737373);
+  static const Color kProfileBorderColor = const Color(0xFFD9D9D9);
+  static const Color kTextFieldColor = const Color(0xFF161617);
+  static const Color kTextFieldTextColor = const Color(0xFFBDBDBE);
+  static const Color kSwitchColor = const Color(0xFF19191A);
 }

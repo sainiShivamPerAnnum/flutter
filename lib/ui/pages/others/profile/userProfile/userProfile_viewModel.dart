@@ -56,7 +56,7 @@ class UserProfileVM extends BaseModel {
   bool isUpdaingUserDetails = false;
   bool _isTambolaNotificationLoading = false;
   bool _isApplockLoading = false;
-  int gen;
+  int _gen;
   String gender;
   DateTime selectedDate;
   String dateInputError = "";
@@ -83,7 +83,7 @@ class UserProfileVM extends BaseModel {
       _userService.baseUser.userPreferences
           .getPreference(Preferences.TAMBOLANOTIFICATIONS) ==
       1;
-
+  int get gen => _gen;
   // Setters
   set isTambolaNotificationLoading(bool val) {
     _isTambolaNotificationLoading = val;
@@ -92,6 +92,11 @@ class UserProfileVM extends BaseModel {
 
   set isApplockLoading(bool val) {
     _isApplockLoading = val;
+    notifyListeners();
+  }
+
+  set gen(int val) {
+    _gen = val;
     notifyListeners();
   }
 
@@ -158,6 +163,8 @@ class UserProfileVM extends BaseModel {
     dateFieldController.text = res.day.toString().padLeft(2, '0');
     monthFieldController.text = res.month.toString().padLeft(2, '0');
     yearFieldController.text = res.year.toString();
+    dobController.text =
+        "${yearFieldController.text}-${monthFieldController.text}-${dateFieldController.text}";
     notifyListeners();
   }
 

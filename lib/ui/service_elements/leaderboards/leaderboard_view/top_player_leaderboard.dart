@@ -96,7 +96,7 @@ class TopPlayer extends StatelessWidget {
                     Text(
                       "Updated on: ${DateFormat('dd-MMM-yyyy | hh:mm:ss').format(model.lastupdated.toDate())}",
                       style: TextStyles.sourceSans.body3
-                          .colour(UiConstants.kLastUpdatedTextColor),
+                          .colour(UiConstants.kTextColor2),
                     ),
                   ],
                 ),
@@ -136,7 +136,7 @@ class TopPlayer extends StatelessWidget {
         right: SizeConfig.padding24,
       ),
       decoration: BoxDecoration(
-        color: UiConstants.kLeaderBoardBackgroundColor,
+        color: UiConstants.kSecondaryBackgroundColor,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(SizeConfig.roundness24),
           topRight: Radius.circular(SizeConfig.roundness24),
