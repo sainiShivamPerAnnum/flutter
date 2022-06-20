@@ -48,36 +48,14 @@ class UserProfileDetails extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(right: SizeConfig.padding16),
               child: GestureDetector(
-                // onTap: !model.inEditMode
-                //     ? model.enableEdit
-                //     : () {
-                //         if (!model.isUpdaingUserDetails) {
-                //           FocusScope.of(context).unfocus();
-                //           model.updateDetails();
-                //         }
-                //       },
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (ctx) => AppCongratulatoryDialog(
-                      title: 'Congratulations!',
-                      description:
-                          'Your email address abcxyz@gmail.com has been verified.',
-                      buttonText: 'Grate!',
-                      confirmAction: () {
-                        // _isLoading = true;
-                        // setState(() {});
-                        // baseProvider.withdrawFlowStackCount = 1;
-                        // widget.onAmountConfirmed({
-                        //   'withdrawal_quantity':
-                        //       baseProvider.activeGoldWithdrawalQuantity,
-                        // });
-
-                        return true;
+                onTap: !model.inEditMode
+                    ? model.enableEdit
+                    : () {
+                        if (!model.isUpdaingUserDetails) {
+                          FocusScope.of(context).unfocus();
+                          model.updateDetails();
+                        }
                       },
-                    ),
-                  );
-                },
                 child: !model.inEditMode
                     ? Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
