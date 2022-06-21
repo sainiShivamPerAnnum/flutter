@@ -5,6 +5,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
@@ -591,7 +592,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     // for one segement [bottom]
   }
 
-  void dialogCheck(String dialogKey) {
+  void dialogCheck(String dialogKey) async {
     Widget dialogWidget;
     bool barrierDismissable = true;
     switch (dialogKey) {
@@ -602,6 +603,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         );
         break;
       case "appRating":
+        bool isUserAlreadyRated = await CacheManager.readCache(
+            key: CacheManager.CACHE_RATING_IS_RATED);
+        if (isUserAlreadyRated != null && isUserAlreadyRated == true) return;
         dialogWidget = FelloRatingDialog(dailogShowCount: 1);
         break;
     }

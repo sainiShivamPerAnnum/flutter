@@ -131,8 +131,8 @@ class _FelloRatingDialogState extends State<FelloRatingDialog> {
                           try {
                             await CacheManager.writeCache(
                                 key: CacheManager.CACHE_RATING_IS_RATED,
-                                value: FcmCommands.COMMAND_USER_PRIZE_WIN,
-                                type: CacheType.string);
+                                value: true,
+                                type: CacheType.bool);
                           } catch (e) {
                             showLoading(false);
                             logger.e(e.toString());
