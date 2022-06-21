@@ -20,6 +20,7 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/change_profile_picture_dialog.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/dialogs/default_dialog.dart';
+import 'package:felloapp/ui/pages/static/profile_image.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -405,15 +406,19 @@ class UserProfileVM extends BaseModel {
         addToScreenStack: true,
         isBarrierDismissable: false,
         content: AppDefaultDialog(
-          asset: ClipOval(
-            child: Image.file(
-              File(selectedProfilePicture.path),
-              height: SizeConfig.screenHeight * 0.2,
-              width: SizeConfig.screenHeight * 0.2,
-              fit: BoxFit.cover,
+          asset: NewProfileImage(
+            image: ClipOval(
+              child: Image.file(
+                File(selectedProfilePicture.path),
+                height: SizeConfig.screenHeight * 0.2,
+                width: SizeConfig.screenHeight * 0.2,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
-          buttonText: 'Update',
+          buttonText: 'Save',
+          cancelBtnText: 'Discard',
+          description: 'Are you sure you want to update your profile picture',
           confirmAction: () {
             _updateProfilePicture().then(
               (flag) => _postProfilePictureUpdate(flag),
@@ -422,7 +427,7 @@ class UserProfileVM extends BaseModel {
           cancelAction: () {
             AppState.backButtonDispatcher.didPopRoute();
           },
-          title: 'Update Profile Picture',
+          title: 'Update Picture',
         ),
       );
       // _rootViewModel.refresh();

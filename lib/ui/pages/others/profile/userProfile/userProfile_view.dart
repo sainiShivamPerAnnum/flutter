@@ -8,6 +8,7 @@ import 'package:felloapp/ui/dialogs/negative_dialog.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_viewModel.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
+import 'package:felloapp/ui/pages/static/profile_image.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -359,108 +360,18 @@ class ProfileHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          _buildProfileImage(),
+          // _buildProfileImage(),
+          NewProfileImage(
+            image: ProfileImageSE(
+              radius: SizeConfig.screenWidth * 0.25,
+            ),
+            onShowImagePicker: model.handleDPOperation,
+          ),
           SizedBox(height: SizeConfig.padding6),
           _buildUserName(),
           Spacer(),
         ],
       ),
-    );
-  }
-
-  Stack _buildProfileImage() {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Container(
-          width: SizeConfig.screenWidth * 0.4667,
-          height: SizeConfig.screenWidth * 0.4667,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: UiConstants.kProfileBorderOutterColor,
-              width: SizeConfig.border0,
-            ),
-          ),
-        ),
-        Positioned(
-          bottom: (SizeConfig.screenWidth * 0.4667) * 0.25, // 168 * 0.25
-          left: 0,
-          child: Container(
-            height: SizeConfig.padding6,
-            width: SizeConfig.padding6,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: UiConstants.kTextColor,
-            ),
-          ),
-        ),
-        Container(
-          width: SizeConfig.screenWidth * 0.3944, // 142
-          height: SizeConfig.screenWidth * 0.3944,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: UiConstants.kTextColor.withOpacity(0.2),
-              width: SizeConfig.border2,
-            ),
-          ),
-        ),
-        Positioned(
-          bottom: SizeConfig.screenWidth * 0.3333, //120
-          right: (SizeConfig.screenWidth * 0.0639), // 23
-          child: Container(
-            height: SizeConfig.padding6,
-            width: SizeConfig.padding6,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: UiConstants.kTextColor,
-            ),
-          ),
-        ),
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            Container(
-              width: SizeConfig.screenWidth * 0.3111, // 112
-              height: SizeConfig.screenWidth * 0.3111,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: UiConstants.kProfileBorderColor,
-                  width: SizeConfig.border1,
-                ),
-              ),
-              padding: EdgeInsets.all(
-                SizeConfig.padding4,
-              ),
-              child: ProfileImageSE(
-                radius: SizeConfig.screenWidth * 0.25,
-              ),
-            ),
-            Positioned(
-              bottom: SizeConfig.padding6, // 5
-              right: SizeConfig.padding12, // 10
-              child: InkWell(
-                onTap: model.handleDPOperation,
-                child: Container(
-                  height: SizeConfig.screenWidth * 0.0556, // 20
-                  width: SizeConfig.screenWidth * 0.0556, // 20
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: UiConstants.kTextColor,
-                  ),
-                  child: Icon(
-                    Icons.camera_alt_rounded,
-                    size: SizeConfig.iconSize2,
-                    color: UiConstants.kTabBorderColor,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
     );
   }
 

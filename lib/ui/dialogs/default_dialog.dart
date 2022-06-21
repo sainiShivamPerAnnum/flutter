@@ -62,9 +62,11 @@ class _FormDialogState extends State<AppDefaultDialog> {
       //     ? SizeConfig.screenWidth * 0.5278
       //     : SizeConfig.screenWidth * 0.5833,
       child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: SizeConfig.padding12,
-          vertical: SizeConfig.padding12,
+        padding: EdgeInsets.only(
+          bottom: SizeConfig.padding12,
+          right: SizeConfig.padding12,
+          left: SizeConfig.padding12,
+          top: SizeConfig.padding32,
         ),
         // constraints: BoxConstraints(
         //   maxHeight: widget.description == ''
@@ -84,33 +86,25 @@ class _FormDialogState extends State<AppDefaultDialog> {
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            // SizedBox(
-            //   height: widget.description == ''
-            //       ? SizeConfig.padding40
-            //       : SizeConfig.padding32,
-            // ),
-            SizedBox(
-              width: SizeConfig.screenWidth * 0.5,
-              child: Text(
-                widget.title,
-                style: widget.description == ''
-                    ? TextStyles.sourceSansSB.body2
-                    : TextStyles.sourceSansSB.title4,
-                textAlign: TextAlign.center,
-              ),
-            ),
+            if (widget.asset != null) widget.asset,
             if (widget.asset != null)
               SizedBox(
-                height: SizeConfig.padding10,
+                height: SizeConfig.padding16,
               ),
-            if (widget.asset != null) widget.asset,
+            Text(
+              widget.title,
+              // style: widget.description == ''
+              //     ? TextStyles.sourceSansSB.body2
+              //     : TextStyles.sourceSansSB.title4,
+              style: TextStyles.rajdhaniB.title2,
+              textAlign: TextAlign.center,
+            ),
             if (widget.description.isNotEmpty)
-              SizedBox(
-                height: SizeConfig.padding10,
-              ),
-            if (widget.description.isNotEmpty)
-              SizedBox(
-                width: SizeConfig.screenWidth * 0.4722,
+              Container(
+                padding: EdgeInsets.only(
+                  top: SizeConfig.padding12,
+                ),
+                width: SizeConfig.screenWidth * 0.75,
                 child: Text(
                   widget.description,
                   style: TextStyles.sourceSans.body4.colour(
@@ -120,7 +114,7 @@ class _FormDialogState extends State<AppDefaultDialog> {
                 ),
               ),
             SizedBox(
-              height: SizeConfig.padding40,
+              height: SizeConfig.padding32,
             ),
             isLoading
                 ? Center(
