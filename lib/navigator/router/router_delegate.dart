@@ -51,6 +51,7 @@ import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/pages/splash/splash_view.dart';
 import 'package:felloapp/ui/pages/static/poolview.dart';
 import 'package:felloapp/ui/pages/static/transactions_view.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_rating_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
@@ -599,6 +600,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           text: Assets.infoWhyPan,
           title: 'Where is my PAN Number used?',
         );
+        break;
+      case "appRating":
+        dialogWidget = FelloRatingDialog(dailogShowCount: 1);
         break;
     }
     if (dialogWidget != null) {
