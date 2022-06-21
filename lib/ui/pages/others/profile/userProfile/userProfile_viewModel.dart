@@ -19,6 +19,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/change_profile_picture_dialog.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
+import 'package:felloapp/ui/dialogs/default_dialog.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -273,16 +274,16 @@ class UserProfileVM extends BaseModel {
     BaseUtil.openDialog(
       isBarrierDismissable: false,
       addToScreenStack: true,
-      content: FelloConfirmationDialog(
+      content: AppDefaultDialog(
           title: 'Confirm',
-          subtitle: 'Are you sure you want to sign out?',
-          accept: 'Yes',
-          acceptColor: UiConstants.primaryColor,
+          description: 'Are you sure you want to sign out?',
+          buttonText: 'Yes',
+          // acceptColor: UiConstants.primaryColor,
           // asset: Assets.signout,
-          reject: "No",
-          rejectColor: UiConstants.tertiarySolid,
-          showCrossIcon: false,
-          onAccept: () {
+          cancelBtnText: "No",
+          // rejectColor: UiConstants.tertiarySolid,
+          // showCrossIcon: false,
+          confirmAction: () {
             Haptic.vibrate();
 
             _analyticsService.track(eventName: AnalyticsEvents.signOut);
@@ -305,12 +306,14 @@ class UserProfileVM extends BaseModel {
                 );
               } else {
                 BaseUtil.showNegativeAlert(
-                    'Sign out failed', 'Couldn\'t signout. Please try again');
+                  'Sign out failed',
+                  'Couldn\'t signout. Please try again',
+                );
                 //log.error('Sign out process failed');
               }
             });
           },
-          onReject: () {
+          cancelAction: () {
             AppState.backButtonDispatcher.didPopRoute();
           }),
     );
@@ -359,22 +362,29 @@ class UserProfileVM extends BaseModel {
     var _status = await Permission.photos.status;
     if (_status.isRestricted || _status.isLimited || _status.isDenied) {
       BaseUtil.openDialog(
-          isBarrierDismissable: false,
-          addToScreenStack: true,
-          content: ConfirmActionDialog(
-              title: "Request Permission",
-              description:
-                  "Access to the gallery is requested. This is only required for choosing your profile picture 🤳🏼",
-              buttonText: "Continue",
-              asset: Padding(
-                padding: EdgeInsets.symmetric(vertical: 8),
-                child: Image.asset("images/gallery.png",
-                    height: SizeConfig.screenWidth * 0.24),
-              ),
-              confirmAction: () {
-                _chooseprofilePicture();
-              },
-              cancelAction: () {}));
+        isBarrierDismissable: false,
+        addToScreenStack: true,
+        content: AppDefaultDialog(
+          title: "Request Permission",
+          description:
+              "Access to the gallery is requested. This is only required for choosing your profile picture 🤳🏼",
+          buttonText: "Continue",
+          asset: Padding(
+            padding: EdgeInsets.symmetric(vertical: 8),
+            child: Image.asset(
+              "images/gallery.png",
+              height: SizeConfig.screenWidth * 0.24,
+            ),
+          ),
+          confirmAction: () {
+            AppState.backButtonDispatcher.didPopRoute();
+            _chooseprofilePicture();
+          },
+          cancelAction: () {
+            AppState.backButtonDispatcher.didPopRoute();
+          },
+        ),
+      );
     } else if (_status.isGranted) {
       await _chooseprofilePicture();
       _analyticsService.track(eventName: AnalyticsEvents.updatedProfilePicture);
@@ -394,13 +404,25 @@ class UserProfileVM extends BaseModel {
       await BaseUtil.openDialog(
         addToScreenStack: true,
         isBarrierDismissable: false,
-        content: ChangeProfilePicture(
-          image: File(selectedProfilePicture.path),
-          upload: (value) {
-            if (value)
-              _updateProfilePicture()
-                  .then((flag) => _postProfilePictureUpdate(flag));
+        content: AppDefaultDialog(
+          asset: ClipOval(
+            child: Image.file(
+              File(selectedProfilePicture.path),
+              height: SizeConfig.screenHeight * 0.2,
+              width: SizeConfig.screenHeight * 0.2,
+              fit: BoxFit.cover,
+            ),
+          ),
+          buttonText: 'Update',
+          confirmAction: () {
+            _updateProfilePicture().then(
+              (flag) => _postProfilePictureUpdate(flag),
+            );
           },
+          cancelAction: () {
+            AppState.backButtonDispatcher.didPopRoute();
+          },
+          title: 'Update Profile Picture',
         ),
       );
       // _rootViewModel.refresh();

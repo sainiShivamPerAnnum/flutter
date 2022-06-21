@@ -1,6 +1,7 @@
-import 'package:felloapp/navigator/app_state.dart';
+import 'dart:developer';
+
 import 'package:felloapp/ui/pages/static/app_widget.dart';
-import 'package:felloapp/util/haptic.dart';
+
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -28,6 +29,7 @@ class AppDefaultDialog extends StatefulWidget {
 
 class _FormDialogState extends State<AppDefaultDialog> {
   Log log = new Log('AppDefaultDialog');
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -56,90 +58,99 @@ class _FormDialogState extends State<AppDefaultDialog> {
           ],
         ),
       ),
-      height: widget.description == ''
-          ? SizeConfig.screenWidth * 0.5278
-          : SizeConfig.screenWidth * 0.5833,
-      child: Center(
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
-          constraints: BoxConstraints(
-            maxHeight: widget.description == ''
-                ? SizeConfig.screenWidth * 0.5222
-                : SizeConfig.screenWidth * 0.5778,
-            minHeight: widget.description == ''
-                ? SizeConfig.screenWidth * 0.5222
-                : SizeConfig.screenWidth * 0.5778,
-          ),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
-            color: UiConstants.kSecondaryBackgroundColor,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: widget.description == ''
-                    ? SizeConfig.padding40
-                    : SizeConfig.padding32,
+      // height: widget.description == ''
+      //     ? SizeConfig.screenWidth * 0.5278
+      //     : SizeConfig.screenWidth * 0.5833,
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: SizeConfig.padding12,
+          vertical: SizeConfig.padding12,
+        ),
+        // constraints: BoxConstraints(
+        //   maxHeight: widget.description == ''
+        //       ? SizeConfig.screenWidth * 0.5222
+        //       : SizeConfig.screenWidth * 0.5778,
+        //   minHeight: widget.description == ''
+        //       ? SizeConfig.screenWidth * 0.5222
+        //       : SizeConfig.screenWidth * 0.5778,
+        // ),
+        margin: EdgeInsets.all(1),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
+          color: UiConstants.kSecondaryBackgroundColor,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // SizedBox(
+            //   height: widget.description == ''
+            //       ? SizeConfig.padding40
+            //       : SizeConfig.padding32,
+            // ),
+            SizedBox(
+              width: SizeConfig.screenWidth * 0.5,
+              child: Text(
+                widget.title,
+                style: widget.description == ''
+                    ? TextStyles.sourceSansSB.body2
+                    : TextStyles.sourceSansSB.title4,
+                textAlign: TextAlign.center,
               ),
+            ),
+            if (widget.asset != null)
               SizedBox(
-                width: SizeConfig.screenWidth * 0.5,
+                height: SizeConfig.padding10,
+              ),
+            if (widget.asset != null) widget.asset,
+            if (widget.description.isNotEmpty)
+              SizedBox(
+                height: SizeConfig.padding10,
+              ),
+            if (widget.description.isNotEmpty)
+              SizedBox(
+                width: SizeConfig.screenWidth * 0.4722,
                 child: Text(
-                  widget.title,
-                  style: widget.description == ''
-                      ? TextStyles.sourceSansSB.body2
-                      : TextStyles.sourceSansSB.title4,
+                  widget.description,
+                  style: TextStyles.sourceSans.body4.colour(
+                    UiConstants.kTextColor.withOpacity(0.60),
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
-              if (widget.description.isNotEmpty)
-                SizedBox(
-                  height: SizeConfig.padding10,
-                ),
-              if (widget.description.isNotEmpty)
-                SizedBox(
-                  width: SizeConfig.screenWidth * 0.4722,
-                  child: Text(
-                    widget.description,
-                    style: TextStyles.sourceSans.body4.colour(
-                      UiConstants.kTextColor.withOpacity(0.60),
-                    ),
-                    textAlign: TextAlign.center,
+            SizedBox(
+              height: SizeConfig.padding40,
+            ),
+            isLoading
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      AppNegativeBtn(
+                        btnText: widget.cancelBtnText,
+                        onPressed: () {
+                          return widget.cancelAction();
+                        },
+                      ),
+                      SizedBox(
+                        width: SizeConfig.padding12,
+                      ),
+                      AppPositiveBtn(
+                        btnText: widget.buttonText,
+                        onPressed: () {
+                          setState(() {
+                            isLoading = true;
+                          });
+                          return widget.confirmAction();
+                        },
+                      ),
+                    ],
                   ),
-                ),
-              SizedBox(
-                height: SizeConfig.padding54,
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  AppNegativeBtn(
-                    btnText: widget.cancelBtnText,
-                    onPressed: () {
-                      Haptic.vibrate();
-                      log.debug('DialogAction cancelled');
-                      AppState.backButtonDispatcher.didPopRoute();
-                      return widget.cancelAction();
-                    },
-                  ),
-                  SizedBox(
-                    width: SizeConfig.padding12,
-                  ),
-                  AppPositiveBtn(
-                    btnText: widget.buttonText,
-                    onPressed: () {
-                      Haptic.vibrate();
-                      log.debug('DialogAction clicked');
-                      AppState.backButtonDispatcher.didPopRoute();
-                      return widget.confirmAction();
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
+          ],
         ),
       ),
     );
