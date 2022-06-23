@@ -9,8 +9,11 @@ import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/amount_chips.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_transaction/autopay_transactions_view.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/autosave_perks.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/segmate_chip.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_vm.dart';
 import 'package:felloapp/ui/pages/others/profile/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/static/blinker.dart';
@@ -464,71 +467,6 @@ class AmountFreqUpdateButton extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class AmountChips extends StatelessWidget {
-  final model;
-  final int amount;
-  final bool isBestSeller;
-  AmountChips({
-    this.model,
-    this.amount,
-    this.isBestSeller = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Haptic.vibrate();
-        model.amountFieldController.text = amount.toString();
-        model.onAmountValueChanged(amount.toString());
-      },
-      child: Column(
-        children: [
-          Container(
-            padding: EdgeInsets.symmetric(
-                vertical: SizeConfig.padding8,
-                horizontal: SizeConfig.padding12),
-            decoration: BoxDecoration(
-              border: Border.all(
-                  color:
-                      int.tryParse(model.amountFieldController.text) == amount
-                          ? UiConstants.primaryColor
-                          : UiConstants.primaryLight.withOpacity(0.5),
-                  width: 1),
-              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-              color: UiConstants.primaryLight.withOpacity(0.5),
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              " ₹ ${amount.toInt()} ",
-              style: TextStyles.body3.bold,
-            ),
-          ),
-          if (isBestSeller)
-            Transform.translate(
-              offset: Offset(0, -SizeConfig.padding8),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: UiConstants.primaryColor,
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-                ),
-                padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.padding6,
-                    vertical: SizeConfig.padding4),
-                child: Text(
-                  'BEST',
-                  style: TextStyles.body5.bold
-                      .colour(Colors.white)
-                      .letterSpace(SizeConfig.padding2),
-                ),
-              ),
-            )
-        ],
       ),
     );
   }

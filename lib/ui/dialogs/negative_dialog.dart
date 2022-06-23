@@ -74,6 +74,7 @@ class AppNegativeDialog extends StatelessWidget {
                 height: SizeConfig.padding32,
               ),
               AppPositiveBtn(
+                width: SizeConfig.screenWidth * 0.8333,
                 btnText: btnText,
                 onPressed: () {
                   Haptic.vibrate();

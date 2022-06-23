@@ -65,4 +65,7 @@ class UiConstants {
   static const Color kTextFieldColor = const Color(0xFF161617);
   static const Color kTextFieldTextColor = const Color(0xFFBDBDBE);
   static const Color kSwitchColor = const Color(0xFF19191A);
+  static const Color kAutopayAmountActiveTabColor = const Color(0xFFF5F2ED);
+  static const Color kAutopayAmountDeactiveTabColor = const Color(0xFF39393C);
+  static const Color kBorderColor = const Color(0xFFDADADA);
 }

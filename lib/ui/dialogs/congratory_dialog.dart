@@ -100,6 +100,7 @@ class AppCongratulatoryDialog extends StatelessWidget {
               ),
               AppPositiveBtn(
                 btnText: buttonText,
+                width: SizeConfig.screenWidth * 0.8333,
                 onPressed: () {
                   Haptic.vibrate();
                   AppState.backButtonDispatcher.didPopRoute();

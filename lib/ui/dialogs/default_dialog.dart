@@ -122,19 +122,21 @@ class _FormDialogState extends State<AppDefaultDialog> {
                   )
                 : Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       AppNegativeBtn(
+                        width: SizeConfig.screenWidth * 0.40,
                         btnText: widget.cancelBtnText,
                         onPressed: () {
                           return widget.cancelAction();
                         },
                       ),
                       SizedBox(
-                        width: SizeConfig.padding12,
+                        width: SizeConfig.padding10,
                       ),
                       AppPositiveBtn(
                         btnText: widget.buttonText,
+                        width: SizeConfig.screenWidth * 0.40,
                         onPressed: () {
                           setState(() {
                             isLoading = true;

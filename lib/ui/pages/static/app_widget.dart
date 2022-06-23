@@ -31,8 +31,22 @@ class AppTextField extends StatelessWidget {
     @required this.isEnabled,
     @required this.validator,
     //NOTE: Pass [] If inputformatters are not required
-    @required this.inputFormatters,
+    this.inputFormatters,
     this.hintText = '',
+    this.autoFocus = false,
+    this.keyboardType = TextInputType.text,
+    this.suffixIcon,
+    this.height,
+    this.prefixText,
+    this.prefixTextStyle,
+    this.onChanged,
+    this.textAlign = TextAlign.start,
+    this.textStyle,
+    this.suffixText,
+    this.suffixTextStyle,
+    this.suffix,
+    this.contentPadding,
+    this.inputDecoration,
   }) : super(key: key);
 
   final TextEditingController textEditingController;
@@ -40,62 +54,104 @@ class AppTextField extends StatelessWidget {
   final FormFieldValidator<String> validator;
   final String hintText;
   final List<TextInputFormatter> inputFormatters;
+  final TextInputType keyboardType;
+  final bool autoFocus;
+  final Widget suffixIcon;
+  final double height;
+  final String prefixText;
+  final TextStyle prefixTextStyle;
+  final String suffixText;
+  final TextStyle suffixTextStyle;
+
+  final Function onChanged;
+  final TextAlign textAlign;
+  final TextStyle textStyle;
+  final Widget suffix;
+  final EdgeInsets contentPadding;
+  final InputDecoration inputDecoration;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: SizeConfig.screenWidth * 0.1377,
+      height: height == null ? SizeConfig.screenWidth * 0.1377 : height,
       child: TextFormField(
         validator: validator,
         enabled: isEnabled,
         controller: textEditingController,
         cursorColor: UiConstants.kTextColor,
-        inputFormatters: inputFormatters,
-        style: TextStyles.body2.colour(
-          isEnabled ? UiConstants.kTextColor : UiConstants.kTextFieldTextColor,
-        ),
+        inputFormatters: inputFormatters ?? [],
+        style: textStyle == null
+            ? TextStyles.body2.colour(
+                isEnabled
+                    ? UiConstants.kTextColor
+                    : UiConstants.kTextFieldTextColor,
+              )
+            : textStyle,
+        textAlign: textAlign,
         expands: true,
         maxLines: null,
         minLines: null,
-        decoration: InputDecoration(
-          fillColor: isEnabled
-              ? UiConstants.kTextFieldColor
-              : UiConstants.kTextFieldColor.withOpacity(0.7),
-          filled: true,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-            borderSide: BorderSide(
-              color: UiConstants.kTextColor.withOpacity(0.1),
-              width: SizeConfig.border1,
-            ),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-            borderSide: BorderSide(
-              color: UiConstants.kTextColor.withOpacity(0.1),
-              width: SizeConfig.border1,
-            ),
-          ),
-          disabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-            borderSide: BorderSide(
-              color: UiConstants.kTextColor.withOpacity(0.1),
-              width: SizeConfig.border1,
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-            borderSide: BorderSide(
-              color: UiConstants.kTabBorderColor,
-              width: SizeConfig.border1,
-            ),
-          ),
-          hintText: hintText,
-          hintStyle: TextStyles.body3.colour(UiConstants.kTextColor2),
-          contentPadding: EdgeInsets.symmetric(
-            horizontal: SizeConfig.padding12,
-          ),
-        ),
+        autofocus: autoFocus,
+        keyboardType: keyboardType,
+        onChanged: onChanged,
+        decoration: inputDecoration != null
+            ? inputDecoration
+            : InputDecoration(
+                suffixIcon: Padding(
+                  padding: EdgeInsets.only(right: 10),
+                  child: suffixIcon,
+                ),
+                prefixText: prefixText,
+                prefixStyle: prefixTextStyle,
+                suffixText: suffixText,
+                suffixStyle: suffixTextStyle,
+                suffix: suffix,
+                suffixIconConstraints: BoxConstraints(
+                  minWidth: 40,
+                  minHeight: 40,
+                  maxHeight: 40,
+                  maxWidth: 40,
+                ),
+                fillColor: isEnabled
+                    ? UiConstants.kTextFieldColor
+                    : UiConstants.kTextFieldColor.withOpacity(0.7),
+                filled: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                  borderSide: BorderSide(
+                    color: UiConstants.kTextColor.withOpacity(0.1),
+                    width: SizeConfig.border1,
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                  borderSide: BorderSide(
+                    color: UiConstants.kTextColor.withOpacity(0.1),
+                    width: SizeConfig.border1,
+                  ),
+                ),
+                disabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                  borderSide: BorderSide(
+                    color: UiConstants.kTextColor.withOpacity(0.1),
+                    width: SizeConfig.border1,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                  borderSide: BorderSide(
+                    color: UiConstants.kTabBorderColor,
+                    width: SizeConfig.border1,
+                  ),
+                ),
+                hintText: hintText,
+                hintStyle: TextStyles.body3.colour(UiConstants.kTextColor2),
+                contentPadding: contentPadding == null
+                    ? EdgeInsets.symmetric(
+                        horizontal: SizeConfig.padding12,
+                      )
+                    : contentPadding,
+              ),
       ),
     );
   }
@@ -206,55 +262,57 @@ class AppPositiveBtn extends StatelessWidget {
     Key key,
     @required this.btnText,
     @required this.onPressed,
+    @required this.width,
   }) : super(key: key);
   final String btnText;
   final VoidCallback onPressed;
+  final double width;
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Stack(
-        children: [
-          Container(
-            height: SizeConfig.screenWidth * 0.1556,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(
-                SizeConfig.buttonBorderRadius,
-              ),
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xff12BC9D),
-                  Color(0xff249680),
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
+    return Stack(
+      children: [
+        Container(
+          height: SizeConfig.screenWidth * 0.1556,
+          width: width,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(
+              SizeConfig.buttonBorderRadius,
             ),
-            child: MaterialButton(
-              onPressed: onPressed,
-              child: Text(
-                btnText.toUpperCase(),
-                style: TextStyles.rajdhaniB.title5,
-              ),
-            ),
-          ),
-          Container(
-            height: SizeConfig.padding2,
-            margin: EdgeInsets.symmetric(
-              horizontal: SizeConfig.padding2,
-            ),
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: UiConstants.kTextColor,
-                  offset: Offset(0, SizeConfig.padding2),
-                  blurRadius: SizeConfig.padding4,
-                ),
+            gradient: LinearGradient(
+              colors: [
+                Color(0xff12BC9D),
+                Color(0xff249680),
               ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
           ),
-        ],
-      ),
+          child: MaterialButton(
+            // padding: EdgeInsets.zero,
+            onPressed: onPressed,
+            child: Text(
+              btnText.toUpperCase(),
+              style: TextStyles.rajdhaniB.title5,
+            ),
+          ),
+        ),
+        Container(
+          height: SizeConfig.padding2,
+          width: width - SizeConfig.padding4,
+          margin: EdgeInsets.symmetric(
+            horizontal: SizeConfig.padding2,
+          ),
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: UiConstants.kTextColor,
+                offset: Offset(0, SizeConfig.padding2),
+                blurRadius: SizeConfig.padding4,
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
@@ -264,27 +322,28 @@ class AppNegativeBtn extends StatelessWidget {
     Key key,
     @required this.btnText,
     @required this.onPressed,
+    @required this.width,
   }) : super(key: key);
   final String btnText;
   final VoidCallback onPressed;
+  final double width;
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        height: SizeConfig.screenWidth * 0.1556,
-        child: OutlinedButton(
-          onPressed: onPressed,
-          child: Text(
-            btnText,
-            style: TextStyles.rajdhaniSB.body1,
-          ),
-          style: ButtonStyle(
-            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            side: MaterialStateProperty.all<BorderSide>(
-              BorderSide(
-                color: UiConstants.kTextColor,
-                width: 1,
-              ),
+    return Container(
+      height: SizeConfig.screenWidth * 0.1556,
+      width: width,
+      child: OutlinedButton(
+        onPressed: onPressed,
+        child: Text(
+          btnText,
+          style: TextStyles.rajdhaniSB.body1,
+        ),
+        style: ButtonStyle(
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          side: MaterialStateProperty.all<BorderSide>(
+            BorderSide(
+              color: UiConstants.kTextColor,
+              width: 1,
             ),
           ),
         ),
