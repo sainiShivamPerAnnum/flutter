@@ -62,7 +62,6 @@ class AppTextField extends StatelessWidget {
   final TextStyle prefixTextStyle;
   final String suffixText;
   final TextStyle suffixTextStyle;
-
   final Function onChanged;
   final TextAlign textAlign;
   final TextStyle textStyle;
@@ -107,10 +106,10 @@ class AppTextField extends StatelessWidget {
                 suffixStyle: suffixTextStyle,
                 suffix: suffix,
                 suffixIconConstraints: BoxConstraints(
-                  minWidth: 40,
-                  minHeight: 40,
-                  maxHeight: 40,
-                  maxWidth: 40,
+                  minWidth: 35,
+                  minHeight: 35,
+                  maxHeight: 35,
+                  maxWidth: 35,
                 ),
                 fillColor: isEnabled
                     ? UiConstants.kTextFieldColor
@@ -137,6 +136,14 @@ class AppTextField extends StatelessWidget {
                     width: SizeConfig.border1,
                   ),
                 ),
+
+                // errorBorder: OutlineInputBorder(
+                //   borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                //   borderSide: BorderSide(
+                //     color: UiConstants.kTextColor.withOpacity(0.1),
+                //     width: SizeConfig.border1,
+                //   ),
+                // ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(SizeConfig.roundness5),
                   borderSide: BorderSide(
@@ -148,7 +155,7 @@ class AppTextField extends StatelessWidget {
                 hintStyle: TextStyles.body3.colour(UiConstants.kTextColor2),
                 contentPadding: contentPadding == null
                     ? EdgeInsets.symmetric(
-                        horizontal: SizeConfig.padding12,
+                        horizontal: SizeConfig.padding16,
                       )
                     : contentPadding,
               ),
@@ -190,7 +197,7 @@ class AppDropDownField extends StatelessWidget {
             : UiConstants.kTextFieldColor.withOpacity(0.7),
       ),
       padding: EdgeInsets.symmetric(
-        horizontal: SizeConfig.padding12,
+        horizontal: SizeConfig.padding16,
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton(
@@ -236,7 +243,7 @@ class AppDatePickerField extends StatelessWidget {
       child: Container(
         height: SizeConfig.screenWidth * 0.1377,
         padding: EdgeInsets.symmetric(
-          horizontal: SizeConfig.padding12,
+          horizontal: SizeConfig.padding16,
         ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(SizeConfig.roundness5),

@@ -107,7 +107,7 @@ class _FormDialogState extends State<AppDefaultDialog> {
                 width: SizeConfig.screenWidth * 0.75,
                 child: Text(
                   widget.description,
-                  style: TextStyles.sourceSans.body4.colour(
+                  style: TextStyles.sourceSans.body2.colour(
                     UiConstants.kTextColor.withOpacity(0.60),
                   ),
                   textAlign: TextAlign.center,

@@ -1,9 +1,6 @@
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/dialogs/congratory_dialog.dart';
-import 'package:felloapp/ui/dialogs/default_dialog.dart';
-import 'package:felloapp/ui/dialogs/negative_dialog.dart';
 
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_viewModel.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -17,6 +14,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 
 import 'package:flutter_switch/flutter_switch.dart';
 
@@ -38,6 +36,7 @@ class UserProfileDetails extends StatelessWidget {
             'My Profile',
             style: TextStyles.rajdhaniSB.title4,
           ),
+          centerTitle: false,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
@@ -145,7 +144,7 @@ class UserProfileForm extends StatelessWidget {
     return Form(
       key: model.formKey,
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
+        padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding40),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -156,15 +155,14 @@ class UserProfileForm extends StatelessWidget {
             AppTextField(
               textEditingController: model.nameController,
               isEnabled: model.inEditMode,
+              // contentPadding: EdgeInsets.symmetric(vertical: 10),
               inputFormatters: [
                 FilteringTextInputFormatter.allow(
                   RegExp(r'[a-zA-Z ]'),
                 ),
               ],
               validator: (value) {
-                return (value != null && value.isNotEmpty)
-                    ? null
-                    : 'Please enter your name';
+                return (value != null && value.isNotEmpty) ? null : '';
               },
             ),
             AppTextFieldLabel(
@@ -176,6 +174,10 @@ class UserProfileForm extends StatelessWidget {
               validator: (val) {
                 return null;
               },
+              suffixIcon: SvgPicture.asset(
+                "assets/temp/verified.svg",
+              ),
+              // suffixText: 'Verified',
               inputFormatters: [],
             ),
             AppTextFieldLabel(
