@@ -14,16 +14,16 @@ class JourneyPageViewModel extends BaseModel {
   static List<JourneyPathModel> journeyPathItemsList = [];
   static List<AvatarPathModel> customPathDataList = [];
 
-  JourneyPageViewModel(int stPage, int pgCount, List<JourneyPage> pgs) {
+  JourneyPageViewModel(int stPage, List<JourneyPage> pgs) {
     pageWidth = SizeConfig.screenWidth;
     pageHeight = pageWidth * 2.165;
     bottomPage = stPage;
-    pageCount = pgCount;
-    currentFullViewHeight = pageHeight * pgCount;
+    pageCount = pgs.length;
+    currentFullViewHeight = pageHeight * pageCount;
     pages = pgs;
-    setCurrentMilestones(pgs);
-    setCurrentPathItems(pgs);
-    setJourneyPathItems(pgs);
+    setCurrentMilestones(pages);
+    setCurrentPathItems(pages);
+    setJourneyPathItems(pages);
   }
 
   setCurrentMilestones(List<JourneyPage> pages) {

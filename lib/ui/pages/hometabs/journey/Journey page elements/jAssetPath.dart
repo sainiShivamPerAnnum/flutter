@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:felloapp/core/model/journey_models/journey_path_model.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +47,9 @@ class JourneyAssetPath extends StatelessWidget {
           left: JourneyPageViewModel.pageWidth *
               JourneyPageViewModel.journeyPathItemsList[i].dx,
           bottom: JourneyPageViewModel.pageHeight *
-              JourneyPageViewModel.journeyPathItemsList[i].dy,
+                  (JourneyPageViewModel.journeyPathItemsList[i].page - 1) +
+              JourneyPageViewModel.pageHeight *
+                  JourneyPageViewModel.journeyPathItemsList[i].dy,
           child: Container(
             width: JourneyPageViewModel.pageWidth *
                 JourneyPageViewModel.journeyPathItemsList[i].width,
@@ -61,7 +64,13 @@ class JourneyAssetPath extends StatelessWidget {
             //   // borderRadius: BorderRadius.circular(10),
             // ),
             alignment: Alignment.bottomCenter,
-            child: getChild(JourneyPageViewModel.journeyPathItemsList[i]),
+            child: Transform(
+                alignment: Alignment.center,
+                transform: Matrix4.rotationY(
+                    JourneyPageViewModel.journeyPathItemsList[i].hFlip
+                        ? math.pi
+                        : 0),
+                child: getChild(JourneyPageViewModel.journeyPathItemsList[i])),
           ),
         ),
       ),

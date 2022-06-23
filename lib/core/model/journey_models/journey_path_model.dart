@@ -11,47 +11,52 @@ class JourneyPathModel {
   final String type; // [PNG,SVG.CSP]
   final String alignment; //Left || Right
   final String source; // [NWT, AST, FILE, RAW, MMRY]
-  JourneyPathModel({
-    this.asset,
-    this.dy,
-    this.width,
-    this.dz,
-    this.dx,
-    this.height,
-    this.page,
-    this.level,
-    this.isBase,
-    this.type,
-    this.alignment,
-    this.source,
-  });
+  final bool hFlip;
+  final bool vFlip;
+  JourneyPathModel(
+      {this.asset,
+      this.dy,
+      this.width,
+      this.dz,
+      this.dx,
+      this.height,
+      this.page,
+      this.level,
+      this.isBase = false,
+      this.type,
+      this.alignment,
+      this.source,
+      this.hFlip = false,
+      this.vFlip = false});
 
-  JourneyPathModel copyWith({
-    String asset,
-    double dx,
-    dy,
-    double height,
-    width,
-    int dz,
-    int page,
-    int level,
-    bool isBase,
-    String type,
-    String alignment,
-    String source,
-  }) {
+  JourneyPathModel copyWith(
+      {String asset,
+      double dx,
+      dy,
+      double height,
+      width,
+      int dz,
+      int page,
+      int level,
+      bool isBase,
+      String type,
+      String alignment,
+      String source,
+      bool hFlip,
+      bool vFlip}) {
     return JourneyPathModel(
-      asset: asset ?? this.asset,
-      dy: dy ?? this.dy,
-      width: width ?? this.width,
-      dz: dz ?? this.dz,
-      page: page ?? this.page,
-      level: level ?? this.level,
-      isBase: isBase ?? this.isBase,
-      type: type ?? this.type,
-      alignment: alignment ?? this.alignment,
-      source: source ?? this.source,
-    );
+        asset: asset ?? this.asset,
+        dy: dy ?? this.dy,
+        width: width ?? this.width,
+        dz: dz ?? this.dz,
+        page: page ?? this.page,
+        level: level ?? this.level,
+        isBase: isBase ?? this.isBase,
+        type: type ?? this.type,
+        alignment: alignment ?? this.alignment,
+        source: source ?? this.source,
+        vFlip: vFlip ?? this.vFlip,
+        hFlip: hFlip ?? this.hFlip);
   }
 
   Map<String, dynamic> toMap() {
@@ -66,6 +71,8 @@ class JourneyPathModel {
       'type': type,
       'alignment': alignment,
       'source': source,
+      'vFlip': vFlip,
+      'hFlip': hFlip
     };
   }
 
@@ -83,6 +90,8 @@ class JourneyPathModel {
       type: map['type'] ?? '',
       alignment: map['alignment'] ?? '',
       source: map['source'] ?? '',
+      vFlip: map['vFlip'] ?? false,
+      hFlip: map['hFlip'] ?? false,
     );
   }
 
@@ -93,7 +102,7 @@ class JourneyPathModel {
 
   @override
   String toString() {
-    return 'JourneyPathModel(asset: $asset, dy: $dy, width: $width, dz: $dz, page: $page, level: $level, isBase: $isBase, type: $type, alignment: $alignment, source: $source)';
+    return 'JourneyPathModel(asset: $asset, dy: $dy, width: $width, dz: $dz, page: $page, level: $level, isBase: $isBase, type: $type, alignment: $alignment, source: $source, vFlip: $vFlip, hFlip: $hFlip )';
   }
 
   @override

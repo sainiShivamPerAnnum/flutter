@@ -7,9 +7,14 @@ import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jAs
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jBackground.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jMilestones.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
+import 'package:felloapp/util/journey_page_data.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
@@ -40,28 +45,42 @@ class JourneyViewState extends State<JourneyView>
     loadScreenData();
   }
 
-  loadScreenData() async {
+  loadPage() async {
     setState(() {
       isLoading = true;
     });
-    pages = await _dbModel.fetchJourneyPage();
+    await Future.delayed(Duration(seconds: 5));
+    if (pages == null) {
+      pages = [];
+      pages.addAll([jourenyPages[0], jourenyPages[1]]);
+    } else {
+      for (int i = pages.length; i < pages.length + 2; i++) {
+        if (i < jourenyPages.length) pages.add(jourenyPages[i]);
+      }
+    }
+    // await _dbModel.fetchJourneyPage();
+    JourneyPageViewModel(0, pages);
+    _path = JourneyPageViewModel.drawPath();
+    _avatarPosition = calculatePosition(0);
     setState(() {
       isLoading = false;
     });
-    JourneyPageViewModel(0, 2, pages);
+  }
+
+  loadScreenData() async {
+    await loadPage();
     _mainController = ScrollController();
     _controller = AnimationController(
         vsync: this,
         duration: const Duration(seconds: 10),
         animationBehavior: AnimationBehavior.preserve);
-    _path = JourneyPageViewModel.drawPath();
-    _avatarPosition = calculatePosition(0);
+
     _animation = Tween(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     )..addListener(() {
         setState(() {});
         _avatarPosition = calculatePosition(_animation.value);
-        log("Avatar Position( ${_avatarPosition.dx} , ${_avatarPosition.dy} )");
+        // log("Avatar Position( ${_avatarPosition.dx} , ${_avatarPosition.dy} )");
         double avatarPositionFromBottom =
             JourneyPageViewModel.currentFullViewHeight - _avatarPosition.dy;
         double scrollPostion =
@@ -83,14 +102,17 @@ class JourneyViewState extends State<JourneyView>
           JourneyPageViewModel.currentFullViewHeight - _avatarPosition.dy;
       double scrollPostion =
           JourneyPageViewModel.currentFullViewHeight - _mainController.offset;
-      log("Avatr to Scroll Ratio( $avatarPositionFromBottom , $scrollPostion )");
+      if (_mainController.offset >= _mainController.position.maxScrollExtent) {
+        loadPage();
+      }
+      // log("Avatr to Scroll Ratio( $avatarPositionFromBottom , $scrollPostion )");
     });
     log("Screen: Height: ${SizeConfig.screenHeight}");
     log("Screen Width: ${SizeConfig.screenWidth}");
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _mainController.animateTo(_mainController.position.maxScrollExtent,
-          duration: const Duration(seconds: 3), curve: Curves.easeInCubic);
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   _mainController.animateTo(_mainController.position.maxScrollExtent,
+    //       duration: const Duration(seconds: 3), curve: Curves.easeInCubic);
+    // });
   }
 
   @override
@@ -113,15 +135,26 @@ class JourneyViewState extends State<JourneyView>
                     _controller.forward();
                   }
                 }),
-      body: isLoading
+      body: isLoading && pages == null
           ? Container(
               width: SizeConfig.screenWidth,
               height: SizeConfig.screenHeight,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color(0xffB9D1FE),
+                    Color(0xffD6E0FF),
+                    Color(0xffF1EFFF)
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Lottie.asset("assets/lottie/pending.json",
+                  Lottie.asset("assets/lotties/pending.json",
                       height: SizeConfig.screenWidth / 3),
                   SizedBox(height: 20),
                   Text(
@@ -139,14 +172,26 @@ class JourneyViewState extends State<JourneyView>
                   child: SingleChildScrollView(
                     controller: _mainController,
                     physics: const ClampingScrollPhysics(),
-                    // reverse: true,
+                    reverse: true,
                     child: Container(
                       height: JourneyPageViewModel.currentFullViewHeight,
                       width: SizeConfig.screenWidth,
-                      color: Colors.black,
+                      // color: Colors.black,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Color(0xffB9D1FE),
+                            Color(0xffD6E0FF),
+                            Color(0xffF1EFFF)
+                          ],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                        ),
+                      ),
                       child: Stack(
                         children: [
-                          const Background(),
+                          // const Background(),
+
                           const JourneyAssetPath(),
                           const Milestones(),
                           Positioned(
@@ -155,7 +200,7 @@ class JourneyViewState extends State<JourneyView>
                             child: CustomPaint(
                               size: Size(SizeConfig.screenWidth,
                                   JourneyPageViewModel.currentFullViewHeight),
-                              painter: PathPainter(_path),
+                              painter: PathPainter(_path, Colors.red),
                             ),
                           ),
                           Avatar(
@@ -163,6 +208,47 @@ class JourneyViewState extends State<JourneyView>
                             hPos: _avatarPosition.dx,
                           ),
                         ],
+                      ),
+                    ),
+                  ),
+                ),
+                AnimatedPositioned(
+                  top: (isLoading && pages != null && pages.length > 0)
+                      ? SizeConfig.pageHorizontalMargins
+                      : -400,
+                  duration: Duration(seconds: 1),
+                  curve: Curves.decelerate,
+                  left: SizeConfig.pageHorizontalMargins,
+                  child: SafeArea(
+                    child: Container(
+                      width: SizeConfig.screenWidth -
+                          SizeConfig.pageHorizontalMargins * 2,
+                      height: SizeConfig.padding80,
+                      decoration: BoxDecoration(
+                        borderRadius:
+                            BorderRadius.circular(SizeConfig.roundness16),
+                        color: Colors.black54,
+                      ),
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.black,
+                          radius: SizeConfig.avatarRadius * 2,
+                          child: SpinKitCircle(
+                            color: UiConstants.primaryColor,
+                            size: SizeConfig.avatarRadius * 1.5,
+                          ),
+                        ),
+                        title: Text(
+                          "Loading",
+                          style: GoogleFonts.rajdhani(
+                              fontSize: SizeConfig.title3,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.white),
+                        ),
+                        subtitle: Text(
+                          "Loading more levels for you,please wait",
+                          style: TextStyles.body3.colour(Colors.white),
+                        ),
                       ),
                     ),
                   ),
@@ -228,7 +314,7 @@ class Avatar extends StatelessWidget {
         child: CircleAvatar(
           radius: 25,
           backgroundImage: NetworkImage(
-              "https://firebasestorage.googleapis.com/v0/b/fello-dev-station.appspot.com/o/test%2Favatar.pngalt=media&token=bab2c849-7694-41c4-9c34-1ab022799bfd"),
+              "https://w7.pngwing.com/pngs/312/283/png-transparent-man-s-face-avatar-computer-icons-user-profile-business-user-avatar-blue-face-heroes.png"),
         ),
       ),
     );
@@ -237,13 +323,13 @@ class Avatar extends StatelessWidget {
 
 class PathPainter extends CustomPainter {
   Path path;
-
-  PathPainter(this.path);
+  final Color color;
+  PathPainter(this.path, this.color);
 
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()
-      ..color = Colors.transparent
+      ..color = color
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round
       ..strokeWidth = 1.0;
