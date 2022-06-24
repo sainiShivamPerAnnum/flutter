@@ -1,6 +1,6 @@
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class AppBarButton extends StatelessWidget {
   final String svgAsset, coin;
@@ -26,11 +26,10 @@ class AppBarButton extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.transparent,
         border: Border.all(color: borderColor),
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: BorderRadius.circular(SizeConfig.roundness5),
       ),
       child: InkWell(
       onTap: onTap,
-
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [

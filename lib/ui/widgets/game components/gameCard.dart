@@ -13,19 +13,19 @@ class GameCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(12.0),
+      margin:  EdgeInsets.all(SizeConfig.padding16),
       height: SizeConfig.screenWidth * 0.688,
       width: SizeConfig.screenWidth,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: BorderRadius.circular(SizeConfig.roundness8),
       ),
       child: Column(
         children: [
           Container(
             height: SizeConfig.screenWidth * 0.474,
             width: SizeConfig.screenWidth,
-            child: SvgPicture.asset(
-              'assets/svg/game_svg.svg',
+            child: Image.network(
+              'https://fello-assets.s3.ap-south-1.amazonaws.com/cricket-thumbnail-2022.png',
               fit: BoxFit.fill,
             ),
           ),
@@ -35,56 +35,57 @@ class GameCard extends StatelessWidget {
             decoration: BoxDecoration(
               color: Color(0xff39393C),
               borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(8.0),
-                bottomRight: Radius.circular(8.0),
+                bottomLeft: Radius.circular(SizeConfig.roundness8),
+                bottomRight: Radius.circular(SizeConfig.roundness8),
               ),
             ),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                  padding:  EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
                   child: Container(
                     height: SizeConfig.screenWidth * 0.118,
                     width: SizeConfig.screenWidth * 0.117,
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: Colors.white,
+                        width: 2,
                       ),
+                      borderRadius: BorderRadius.circular(SizeConfig.padding4),
                     ),
-                    child: SvgPicture.asset(
-                      'assets/svg/game_svg.svg',
+                    child: Image.network(
+                      'https://fello-assets.s3.ap-south-1.amazonaws.com/cricket-thumbnail-2022.png',
                       fit: BoxFit.fill,
                     ),
                   ),
                 ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'Cricket',
                       style: GoogleFonts.rajdhani(
-                        fontSize: 22,
+                        fontSize: SizeConfig.title5,
                         fontWeight: FontWeight.w600,
                         color: Colors.white,
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      child: Row(
-                        children: [
-                          SvgPicture.asset(
-                            'assets/svg/gift_svg.svg',
-                            height: 22,
+                    Row(
+                      children: [
+                        SvgPicture.asset(
+                          'assets/svg/gift_svg.svg',
+                          height: SizeConfig.padding20,
+                        ),
+                        Text(
+                          'Win upto Rs.25,000',
+                          style: GoogleFonts.sourceSansPro(
+                            fontSize: SizeConfig.body4,
+                            color: Colors.grey.shade600,
                           ),
-                          Text(
-                            'Win upto Rs.25,000',
-                            style: GoogleFonts.sourceSansPro(
-                              fontSize: 12,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -92,11 +93,11 @@ class GameCard extends StatelessWidget {
                 AppBarButton(
                   svgAsset: 'assets/svg/token_svg.svg',
                   coin: '30',
-                  borderColor: Colors.white10,
+                  borderColor: Colors.transparent,
                   screenWidth: SizeConfig.screenWidth * 0.18,
                   onTap: () {},
                   style: GoogleFonts.sourceSansPro(
-                    fontSize: 32,
+                    fontSize: SizeConfig.title4,
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
                   ),
