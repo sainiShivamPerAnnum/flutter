@@ -65,6 +65,14 @@ class LauncherViewModel extends BaseModel {
       await userService.init();
       await Future.wait([_baseUtil.init(), _fcmListener.setupFcm()]);
 
+      // check if cache invalidation required
+      final now = DateTime.now().millisecondsSinceEpoch;
+      _logger.d(
+          'cache: invalidation time $now ${BaseRemoteConfig.invalidationBefore}');
+      if (now <= BaseRemoteConfig.invalidationBefore) {
+        new CacheService().invalidateAll();
+      }
+
       userService.firebaseUser?.getIdToken()?.then(
             (token) =>
                 _userRepo.updateUserAppFlyer(userService.baseUser, token),
@@ -76,7 +84,7 @@ class LauncherViewModel extends BaseModel {
         );
       }
     } catch (e) {
-      _logger.e("Splash Screen init : " + e);
+      _logger.e("Splash Screen init : $e");
     }
     _httpModel.init();
     _tambolaService.init();

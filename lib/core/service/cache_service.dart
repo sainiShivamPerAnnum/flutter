@@ -22,6 +22,17 @@ class CacheService {
     }
   }
 
+  Future<void> invalidateAll() async {
+    try {
+      _logger.d('cache: invalidate all');
+      await _isar.writeTxn((i) async {
+        await i.clear();
+      });
+    } catch (e) {
+      _logger.e('cache: invalidation failed $e');
+    }
+  }
+
   Future<ApiResponse> cachedApi(
     String key,
     int ttl,
@@ -32,10 +43,11 @@ class CacheService {
 
     if (cachedData != null) {
       try {
-        _logger.d('data read from cache successfully');
+        _logger.d('cache: data read successfully');
         return parseData(json.decode(cachedData.data));
       } catch (e) {
-        _logger.e('parsing saved cache failed, trying to fetch from API', e);
+        _logger.e(
+            'cache: parsing saved cache failed, trying to fetch from API', e);
         _delete(cachedData.id);
         return await _processApiAndSaveToCache(
           key,
@@ -68,18 +80,18 @@ class CacheService {
         key: key,
         ttl: ttl,
         expireAfterTimestamp:
-            DateTime.now().millisecondsSinceEpoch + ttl * 60 * 1000,
+            DateTime.now().millisecondsSinceEpoch + (ttl * 60 * 1000),
         data: json.encode(data),
       );
-      _logger.d('write $cache');
+      _logger.d('cache: write $cache');
       await _isar.writeTxn((i) async {
         final id = await i.cacheModels.put(cache);
-        _logger.d('write id $id');
+        _logger.d('cache: write id $id');
       });
 
       return true;
     } catch (e) {
-      _logger.e('writing to cache failed', e);
+      _logger.e('cache: writing to cache failed', e);
       return false;
     }
   }
@@ -92,17 +104,18 @@ class CacheService {
 
       return true;
     } catch (e) {
-      _logger.e('writing to cache failed', e);
+      _logger.e('cache: writing to cache failed', e);
       return false;
     }
   }
 
   Future<CacheModel> _getData(String key, int ttl) async {
     final data = await _isar.cacheModels.filter().keyEqualTo(key).findFirst();
-    _logger.d('data read from cache $data');
+    final now = DateTime.now().millisecondsSinceEpoch;
+    _logger.d(
+        'cache: data read from cache ${data.key} ${data.expireAfterTimestamp} $now');
 
-    if (data != null &&
-        data.expireAfterTimestamp < DateTime.now().millisecondsSinceEpoch) {
+    if (data != null && data.expireAfterTimestamp < now) {
       return data;
     }
 
