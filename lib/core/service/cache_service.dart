@@ -48,7 +48,7 @@ class CacheService {
       } catch (e) {
         _logger.e(
             'cache: parsing saved cache failed, trying to fetch from API', e);
-        _delete(cachedData.id);
+        await _delete(cachedData.id);
         return await _processApiAndSaveToCache(
           key,
           ttl,
@@ -76,11 +76,11 @@ class CacheService {
 
   Future<bool> _write(String key, int ttl, Map data) async {
     try {
+      final now = DateTime.now().millisecondsSinceEpoch;
       final cache = new CacheModel(
         key: key,
         ttl: ttl,
-        expireAfterTimestamp:
-            DateTime.now().millisecondsSinceEpoch + (ttl * 60 * 1000),
+        expireAfterTimestamp: now + (ttl * 60 * 1000),
         data: json.encode(data),
       );
       _logger.d('cache: write $cache');
@@ -115,8 +115,12 @@ class CacheService {
     _logger.d(
         'cache: data read from cache ${data.key} ${data.expireAfterTimestamp} $now');
 
-    if (data != null && data.expireAfterTimestamp < now) {
-      return data;
+    if (data != null) {
+      if (data.expireAfterTimestamp < now) {
+        return data;
+      } else {
+        await _delete(data.id);
+      }
     }
 
     return null;
