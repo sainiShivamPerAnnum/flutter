@@ -188,7 +188,6 @@ class BaseRemoteConfig {
     'app_share_message':
         'Hey I am gifting you ₹10 and 200 gaming tokens. Lets start saving and playing together ! '
   };
-  static const Map<String, int> _CACHE_INVALIDATION = {'invalidate_before': 0};
 
   static const Map<String, dynamic> DEFAULTS = {
     ..._DRAW_PICK_TIME,
@@ -244,8 +243,7 @@ class BaseRemoteConfig {
     ..._GAME_CRICKET_FPL_ANNOUNCEMENT,
     ..._AMZ_VOUCHER_REDEMPTION,
     ..._APP_SHARE_MSG,
-    ..._GAME_POSITION,
-    ..._CACHE_INVALIDATION
+    ..._GAME_POSITION
   };
 
   static Future<bool> init() async {
@@ -400,8 +398,4 @@ class BaseRemoteConfig {
   static String get APP_SHARE_MSG => _APP_SHARE_MSG.keys.first;
 
   static String get GAME_POSITION => _GAME_POSITION.keys.first;
-
-  static int get invalidationBefore {
-    return remoteConfig.getInt(_CACHE_INVALIDATION.keys.first);
-  }
 }

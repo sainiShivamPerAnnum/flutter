@@ -6,7 +6,7 @@ import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/statistics_repo.dart';
 import 'package:felloapp/core/repository/winners_repo.dart';
-import 'package:felloapp/core/repository/campaigns_repo.dart';
+import 'package:felloapp/core/service/campaigns_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -26,7 +26,7 @@ class TopSaverViewModel extends BaseModel {
   final _statsRepo = locator<StatisticsRepository>();
   final _winnersRepo = locator<WinnersRepository>();
   final _winnerService = locator<WinnerService>();
-  final _campaignService = locator<CampaignRepo>();
+  final _campaignService = locator<CampaignService>();
 
   // final eventService = EventService();
   //Local variables
