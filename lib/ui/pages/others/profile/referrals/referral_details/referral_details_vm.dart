@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -85,18 +86,22 @@ class ReferralDetailsViewModel extends BaseModel {
     shareLinkInProgress = true;
     refresh();
 
-    _userService.createDynamicLink(true, 'Other').then((url) async {
-      _logger.d(url);
-      shareLinkInProgress = false;
-      refresh();
-      if (Platform.isIOS) {
-        Share.share(_shareMsg + url);
-      } else {
-        FlutterShareMe().shareToSystem(msg: _shareMsg + url).then((flag) {
-          _logger.d(flag);
-        });
-      }
-    });
+    String url;
+    final link = await locator<AppFlyerAnalytics>().inviteLink();
+    if (link['status'] == 'success') {
+      url = link['payload']['userInviteUrl'];
+    }
+    _logger.d('appflyer invite link as $url');
+
+    shareLinkInProgress = false;
+    refresh();
+    if (Platform.isIOS) {
+      Share.share(_shareMsg + url);
+    } else {
+      FlutterShareMe().shareToSystem(msg: _shareMsg + url).then((flag) {
+        _logger.d(flag);
+      });
+    }
   }
 
   shareWhatsApp() async {
