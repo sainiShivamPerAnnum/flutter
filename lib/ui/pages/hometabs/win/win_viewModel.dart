@@ -34,7 +34,7 @@ class WinViewModel extends BaseModel {
   final _lbService = locator<LeaderboardService>();
   final _dbModel = locator<DBModel>();
   final _analyticsService = locator<AnalyticsService>();
-  final _campaignService = locator<CampaignService>();
+  final _campaignService = locator<CampaignRepo>();
   Timer _timer;
   LocalDBModel _localDBModel = locator<LocalDBModel>();
   bool isWinnersLoading = false;

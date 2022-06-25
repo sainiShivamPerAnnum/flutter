@@ -174,7 +174,7 @@ void setupLocator() {
   locator.registerFactory(() => AutosaveProcessViewModel());
   locator.registerFactory(() => UserAutosaveDetailsViewModel());
   locator.registerFactory(() => AutosaveTransactionsViewModel());
-  locator.registerFactory(() => CampaignService());
+  locator.registerFactory(() => CampaignRepo());
 
   //WIDGETS
   locator.registerFactory(() => FDrawerVM());
