@@ -4,7 +4,7 @@ import '../../util/custom_logger.dart';
 import '../../util/locator.dart';
 import '../service/notifier_services/user_service.dart';
 
-class BaseRepo {
+abstract class BaseRepo {
   @protected
   final logger = locator<CustomLogger>();
   @protected

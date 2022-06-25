@@ -26,7 +26,7 @@ class TopSaverViewModel extends BaseModel {
   final _statsRepo = locator<StatisticsRepository>();
   final _winnersRepo = locator<WinnersRepository>();
   final _winnerService = locator<WinnerService>();
-  final _campaignService = locator<CampaignService>();
+  final _campaignService = locator<CampaignRepo>();
 
   // final eventService = EventService();
   //Local variables

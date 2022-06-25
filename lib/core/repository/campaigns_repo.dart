@@ -9,7 +9,7 @@ import 'package:felloapp/util/flavor_config.dart';
 
 import 'base_repo.dart';
 
-class CampaignService extends BaseRepo {
+class CampaignRepo extends BaseRepo {
   final _cacheService = new CacheService();
 
   Future<ApiResponse<List<EventModel>>> getOngoingEvents() async {
