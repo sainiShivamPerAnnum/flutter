@@ -11,6 +11,9 @@ import 'base_repo.dart';
 
 class CampaignRepo extends BaseRepo {
   final _cacheService = new CacheService();
+  final _baseUrl = FlavorConfig.isDevelopment()
+      ? "https://rco4comkpa.execute-api.ap-south-1.amazonaws.com"
+      : "https://l4aighxmj3.execute-api.ap-south-1.amazonaws.com";
 
   Future<ApiResponse<List<EventModel>>> getOngoingEvents() async {
     List<EventModel> events = [];
@@ -25,9 +28,7 @@ class CampaignRepo extends BaseRepo {
           () => APIService.instance.getData(
                 ApiPath().kOngoingCampaigns,
                 token: _token,
-                cBaseUrl: FlavorConfig.isDevelopment()
-                    ? "https://rco4comkpa.execute-api.ap-south-1.amazonaws.com"
-                    : "https://l4aighxmj3.execute-api.ap-south-1.amazonaws.com",
+                cBaseUrl: _baseUrl,
                 queryParams: _queryParams,
               ), (response) {
         final responseData = response["data"];
