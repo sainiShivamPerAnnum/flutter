@@ -3,6 +3,7 @@ import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/fundbalance_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
+import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/api_service.dart';
@@ -14,7 +15,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import '../service/notifier_services/user_service.dart';
 
-class UserRepository {
+class UserRepository extends BaseRepo {
   final _logger = locator<CustomLogger>();
   final _appflyerService = locator<AppFlyerAnalytics>();
   final _api = locator<Api>();
@@ -22,7 +23,8 @@ class UserRepository {
 
 //Stack overflow condition when we inject _userUid from user service.
 
-  Future<String> _getBearerToken() async {
+  @override
+  Future<String> getBearerToken() async {
     String token = await FirebaseAuth.instance.currentUser.getIdToken();
     _logger.d("BearerToken: $token");
     return token;
