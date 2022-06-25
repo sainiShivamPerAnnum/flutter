@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class JourneyAssetPath extends StatelessWidget {
-  const JourneyAssetPath({Key key}) : super(key: key);
+  final JourneyPageViewModel model;
+  const JourneyAssetPath({Key key, this.model}) : super(key: key);
 
   getChild(JourneyPathModel item) {
     switch (item.type) {
@@ -18,8 +19,8 @@ class JourneyAssetPath extends StatelessWidget {
               )
             : SvgPicture.asset(
                 item.asset,
-                width: JourneyPageViewModel.pageWidth * item.width,
-                height: JourneyPageViewModel.pageHeight * item.height,
+                width: model.pageWidth * item.width,
+                height: model.pageHeight * item.height,
               );
       case "PNG":
         return item.source == "NTWRK"
@@ -30,31 +31,25 @@ class JourneyAssetPath extends StatelessWidget {
               )
             : Image.asset(
                 item.asset,
-                width: JourneyPageViewModel.pageWidth * item.width,
-                height: JourneyPageViewModel.pageHeight * item.height,
+                width: model.pageWidth * item.width,
+                height: model.pageHeight * item.height,
               );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    JourneyPageViewModel.journeyPathItemsList
-        .sort((a, b) => a.dz.compareTo(b.dz));
+    model.journeyPathItemsList.sort((a, b) => a.dz.compareTo(b.dz));
     return Stack(
       children: List.generate(
-        JourneyPageViewModel.journeyPathItemsList.length,
+        model.journeyPathItemsList.length,
         (i) => Positioned(
-          left: JourneyPageViewModel.pageWidth *
-              JourneyPageViewModel.journeyPathItemsList[i].dx,
-          bottom: JourneyPageViewModel.pageHeight *
-                  (JourneyPageViewModel.journeyPathItemsList[i].page - 1) +
-              JourneyPageViewModel.pageHeight *
-                  JourneyPageViewModel.journeyPathItemsList[i].dy,
+          left: model.pageWidth * model.journeyPathItemsList[i].dx,
+          bottom: model.pageHeight * (model.journeyPathItemsList[i].page - 1) +
+              model.pageHeight * model.journeyPathItemsList[i].dy,
           child: Container(
-            width: JourneyPageViewModel.pageWidth *
-                JourneyPageViewModel.journeyPathItemsList[i].width,
-            height: JourneyPageViewModel.pageHeight *
-                JourneyPageViewModel.journeyPathItemsList[i].height,
+            width: model.pageWidth * model.journeyPathItemsList[i].width,
+            height: model.pageHeight * model.journeyPathItemsList[i].height,
             // decoration: BoxDecoration(
             //   border: Border.all(
             //     color: Color((math.Random().nextDouble() * 0xFFFFFF).toInt())
@@ -67,10 +62,8 @@ class JourneyAssetPath extends StatelessWidget {
             child: Transform(
                 alignment: Alignment.center,
                 transform: Matrix4.rotationY(
-                    JourneyPageViewModel.journeyPathItemsList[i].hFlip
-                        ? math.pi
-                        : 0),
-                child: getChild(JourneyPageViewModel.journeyPathItemsList[i])),
+                    model.journeyPathItemsList[i].hFlip ? math.pi : 0),
+                child: getChild(model.journeyPathItemsList[i])),
           ),
         ),
       ),

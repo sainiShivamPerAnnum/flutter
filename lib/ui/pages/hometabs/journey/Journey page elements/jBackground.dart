@@ -3,9 +3,8 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
 class Background extends StatefulWidget {
-  const Background({
-    Key key,
-  }) : super(key: key);
+  final JourneyPageViewModel model;
+  const Background({Key key, this.model}) : super(key: key);
 
   @override
   State<Background> createState() => _BackgroundState();
@@ -32,17 +31,17 @@ class _BackgroundState extends State<Background> {
       curve: Curves.easeOutCubic,
       scale: bgZoom,
       child: SizedBox(
-        height: JourneyPageViewModel.currentFullViewHeight,
+        height: widget.model.currentFullViewHeight,
         width: SizeConfig.screenWidth,
         child: Column(
           children: List.generate(
-            JourneyPageViewModel.pageCount,
+            widget.model.pageCount,
             (mlIndex) => Image.asset(
               "assets/custompathassets/bg.png",
               // color: Colors.grey,
               fit: BoxFit.cover,
-              width: JourneyPageViewModel.pageWidth,
-              height: JourneyPageViewModel.pageHeight,
+              width: widget.model.pageWidth,
+              height: widget.model.pageHeight,
             ),
           ),
         ),

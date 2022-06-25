@@ -35,8 +35,8 @@ class MilestoneModel {
       this.page,
       this.level,
       this.aligment,
-      this.vFlip,
-      this.hFlip,
+      this.vFlip = false,
+      this.hFlip = false,
       this.shadow});
 
   MilestoneModel copyWith({
