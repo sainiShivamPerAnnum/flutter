@@ -335,27 +335,36 @@ class BaseUtil extends ChangeNotifier {
       ),
     ];
     //Arrange Games according to the position defined in baseremoteconfig.
-    await arrangeGames();
+    arrangeGames();
   }
 
-  Future<void> arrangeGames() async {
+  void arrangeGames() {
     List<GameModel> tempFocusGameList = [];
     List<GameModel> tempRestGamesList = [];
-    // List<String> gamePosition = BaseRemoteConfig.remoteConfig
-    //     .getString(BaseRemoteConfig.GAME_POSITION)
-    //     .split('-');
+    List<GameModel> tempGameList = [];
+    List<String> gamesOrder = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.GAME_POSITION)
+        .split('-');
+    gamesOrder.forEach(
+      (gameCode) {
+        tempGameList.add(
+          gamesList.firstWhere((game) => game.code == gameCode),
+        );
+      },
+    );
+
     final String userlastPlayedGames =
         PreferenceHelper.getString(PreferenceHelper.CACHE_LAST_PLAYED_GAMES);
     if (userlastPlayedGames != null && userlastPlayedGames.isNotEmpty) {
       List<String> lastgamesOrder = userlastPlayedGames.split("-");
       lastgamesOrder.forEach((code) {
         tempFocusGameList
-            .add(gamesList.firstWhere((game) => game.code == code));
+            .add(tempGameList.firstWhere((game) => game.code == code));
       });
       if (tempFocusGameList.length < 2) {
-        for (int i = 0; i < gamesList.length; i++) {
-          if (!tempFocusGameList.contains(gamesList[i])) {
-            tempFocusGameList.add(gamesList[i]);
+        for (int i = 0; i < tempGameList.length; i++) {
+          if (!tempFocusGameList.contains(tempGameList[i])) {
+            tempFocusGameList.add(tempGameList[i]);
             if (tempFocusGameList.length >= 2) break;
           }
         }
@@ -370,10 +379,10 @@ class BaseUtil extends ChangeNotifier {
           .split('-');
       newUserGamesOrder.forEach((code) {
         tempFocusGameList
-            .add(gamesList.firstWhere((game) => game.code == code));
+            .add(tempGameList.firstWhere((game) => game.code == code));
       });
     }
-    gamesList.forEach((game) {
+    tempGameList.forEach((game) {
       if (!tempFocusGameList.contains(game)) tempRestGamesList.add(game);
     });
     focusGamesList = tempFocusGameList;
@@ -752,7 +761,6 @@ class BaseUtil extends ChangeNotifier {
   }
 
   void openTambolaGame() async {
-    await cacheGameorder("TA");
     if (await getDrawStatus()) {
       await _lModel.saveDailyPicksAnimStatus(DateTime.now().weekday).then(
             (value) =>
@@ -890,7 +898,7 @@ class BaseUtil extends ChangeNotifier {
     notifyListeners();
   }
 
-  cacheGameorder(String gameCode) async {
+  cacheGameorder(String gameCode) {
     String gamesOrder =
         PreferenceHelper.getString(PreferenceHelper.CACHE_LAST_PLAYED_GAMES);
 
@@ -907,7 +915,7 @@ class BaseUtil extends ChangeNotifier {
     }
     PreferenceHelper.setString(
         PreferenceHelper.CACHE_LAST_PLAYED_GAMES, gamesOrder);
-    await arrangeGames();
+    arrangeGames();
   }
 
   void refreshAugmontBalance() async {

@@ -60,6 +60,7 @@ import 'package:felloapp/util/preference_helper.dart';
 //Flutter Imports
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
@@ -604,10 +605,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         );
         break;
       case "appRating":
-        bool isUserAlreadyRated =
-            PreferenceHelper.getBool(PreferenceHelper.CACHE_RATING_IS_RATED);
-        if (isUserAlreadyRated != null && isUserAlreadyRated == true) return;
-        dialogWidget = FelloRatingDialog();
+        if (checkForRatingDialog()) dialogWidget = FelloRatingDialog();
         break;
     }
     if (dialogWidget != null) {
@@ -795,4 +793,21 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   //       ),
   //       page: WalkThroughConfig);
   // }
+
+  bool checkForRatingDialog() {
+    bool isUserAlreadyRated =
+        PreferenceHelper.exist(PreferenceHelper.CACHE_RATING_IS_RATED);
+    if (isUserAlreadyRated) return false;
+
+    if (PreferenceHelper.exist(
+        PreferenceHelper.CACHE_RATING_EXPIRY_TIMESTAMP)) {
+      int expiryTimeStampInMSE = PreferenceHelper.getInt(
+          PreferenceHelper.CACHE_RATING_EXPIRY_TIMESTAMP);
+      if (DateTime.now().millisecondsSinceEpoch < expiryTimeStampInMSE)
+        return false;
+    }
+    PreferenceHelper.setInt(PreferenceHelper.CACHE_RATING_EXPIRY_TIMESTAMP,
+        DateTime.now().add(Duration(days: 10)).millisecondsSinceEpoch);
+    return true;
+  }
 }

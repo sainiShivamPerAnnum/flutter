@@ -108,7 +108,10 @@ class Save extends StatelessWidget {
                 ],
               ),
             ),
-            GoldBalanceContainer(model: model),
+            GoldBalanceContainer(
+              model: model,
+              showNavIcon: true,
+            ),
           ],
         );
       },
@@ -187,7 +190,8 @@ class FocusCouponClip extends StatelessWidget {
 
 class GoldBalanceContainer extends StatelessWidget {
   final AugmontGoldBuyViewModel model;
-  GoldBalanceContainer({this.model});
+  final bool showNavIcon;
+  GoldBalanceContainer({this.model, this.showNavIcon = false});
 
   @override
   Widget build(BuildContext context) {
@@ -200,22 +204,37 @@ class GoldBalanceContainer extends StatelessWidget {
       child: Container(
         width: SizeConfig.screenWidth,
         alignment: Alignment.center,
-        padding: EdgeInsets.symmetric(
-          vertical: SizeConfig.padding8,
-          horizontal: SizeConfig.padding32,
+        padding: EdgeInsets.only(
+          top: SizeConfig.padding8,
+          bottom: SizeConfig.padding8,
+          left: SizeConfig.padding24,
+          right: showNavIcon ? SizeConfig.padding12 : SizeConfig.padding24,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              "My Gold Balance",
-              style: TextStyles.title5.colour(Colors.white.withOpacity(0.8)),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                "My Gold Balance:",
+                style: TextStyles.title5.colour(Colors.white.withOpacity(0.8)),
+              ),
             ),
-            UserGoldQuantitySE(
-              style: TextStyles.title2
-                  .colour(Colors.white)
-                  .weight(FontWeight.w900),
+            Row(
+              children: [
+                UserGoldQuantitySE(
+                  style: TextStyles.title2
+                      .colour(Colors.white)
+                      .weight(FontWeight.w900),
+                ),
+                if (showNavIcon)
+                  Icon(
+                    Icons.navigate_next_rounded,
+                    color: Colors.white.withOpacity(0.5),
+                    size: SizeConfig.padding40,
+                  )
+              ],
             )
           ],
         ),

@@ -1,12 +1,11 @@
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/constants/fcm_commands_constants.dart';
-import 'package:felloapp/core/enums/cache_type_enum.dart';
-import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_dialog.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -16,7 +15,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:in_app_review/in_app_review.dart';
-import 'package:felloapp/util/custom_logger.dart';
 
 class FelloRatingDialog extends StatefulWidget {
   static const MAX_DAILOG_SHOW_COUNT = 3;
@@ -28,6 +26,7 @@ class FelloRatingDialog extends StatefulWidget {
 class _FelloRatingDialogState extends State<FelloRatingDialog> {
   double rating = 0;
   final CustomLogger logger = locator<CustomLogger>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
   bool showEmptyRatingError = false;
   bool showButtons = true;
 
@@ -127,6 +126,9 @@ class _FelloRatingDialogState extends State<FelloRatingDialog> {
                             return;
                           }
                           showLoading(true);
+                          _analyticsService.track(
+                              eventName: "App Rating",
+                              properties: {"rating": rating});
                           try {
                             PreferenceHelper.setBool(
                               PreferenceHelper.CACHE_RATING_IS_RATED,

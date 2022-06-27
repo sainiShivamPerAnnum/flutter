@@ -89,9 +89,8 @@ class PlayViewModel extends BaseModel {
   }
 
   setGameListTitle() async {
-    if (await PreferenceHelper.exist(
-        PreferenceHelper.CACHE_LAST_PLAYED_GAMES)) {
-      gamesListOneTitle = "Recently Played";
+    if (PreferenceHelper.exist(PreferenceHelper.CACHE_LAST_PLAYED_GAMES)) {
+      gamesListOneTitle = "Recently played";
       notifyListeners();
     }
   }

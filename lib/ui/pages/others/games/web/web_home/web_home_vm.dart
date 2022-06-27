@@ -132,7 +132,7 @@ class WebHomeViewModel extends BaseModel {
 
   Future<bool> setupGame() async {
     await getBearerToken();
-    await _baseUtil.cacheGameorder(gameCode);
+    _baseUtil.cacheGameorder(gameCode);
 
     switch (currentGame) {
       case Constants.GAME_TYPE_POOLCLUB:

@@ -172,7 +172,7 @@ class BaseRemoteConfig {
   };
 
   static const Map<String, String> _NEW_USER_GAMES_ORDER = {
-    '_new_user_games_order': "FO-CA"
+    'new_user_games_order': "FO-PO"
   };
 
   static const Map<String, String> _MIN_WITHDRAWABLE_PRIZE = {
