@@ -194,10 +194,6 @@ class BaseRemoteConfig {
         'Hey I am gifting you ₹10 and 200 gaming tokens. Lets start saving and playing together ! '
   };
 
-  static const Map<String, String> _AUTOSAVE_PROMPT_LIMIT = {
-    'autosave_prompt_limit': "1"
-  };
-
   static const Map<String, dynamic> DEFAULTS = {
     ..._DRAW_PICK_TIME,
     ..._TAMBOLA_HEADER_FIRST,
@@ -254,7 +250,6 @@ class BaseRemoteConfig {
     ..._APP_SHARE_MSG,
     ..._GAME_POSITION,
     ..._NEW_USER_GAMES_ORDER,
-    ..._AUTOSAVE_PROMPT_LIMIT,
   };
 
   static Future<bool> init() async {
@@ -411,6 +406,4 @@ class BaseRemoteConfig {
   static String get GAME_POSITION => _GAME_POSITION.keys.first;
 
   static String get NEW_USER_GAMES_ORDER => _NEW_USER_GAMES_ORDER.keys.first;
-
-  static String get AUTOSAVE_PROMPT_LIMIT => _AUTOSAVE_PROMPT_LIMIT.keys.first;
 }

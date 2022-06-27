@@ -291,13 +291,13 @@ class GoldenTicketService extends ChangeNotifier {
               child: Column(
                 children: [
                   Text(
-                    "Why not Autosave?",
+                    "Put your savings on autopilot",
                     style: TextStyles.title3.bold,
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: SizeConfig.padding16),
                   Text(
-                    "Set up autosave and automate your savings. easy peasy",
+                    "Now you can save in Digital Gold automatically without opening the app. Setup Fello autosave now!",
                     textAlign: TextAlign.center,
                     style: TextStyles.body2.colour(Colors.grey),
                   ),

@@ -318,8 +318,6 @@ class AugmontGoldBuyViewModel extends BaseModel {
   fcmTransactionResponseUpdate(fcmDataPayload) async {
     //Stop loader if loading.
     _logger.i("Updating response value.");
-    double autosavePromptLimit = double.tryParse(BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.AUTOSAVE_PROMPT_LIMIT));
     // AppState.delegate.appState.txnFunction.timeout(Duration(seconds: 1));
     AppState.delegate.appState.txnTimer.cancel();
     _logger.d("timer cancelled");
@@ -377,18 +375,18 @@ class AugmontGoldBuyViewModel extends BaseModel {
                 title:
                     "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}",
                 source: GTSOURCE.deposit,
-                showAutoSavePrompt: newAugQuantity > autosavePromptLimit);
+                showAutoSavePrompt: depositFcmResponseModel.autosavePrompt);
           } else {
             AppState.delegate.appState.isTxnLoaderInView = false;
             showTxnSuccessScreen(depositFcmResponseModel.amount,
                 "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}",
-                showAutoSavePrompt: newAugQuantity > autosavePromptLimit);
+                showAutoSavePrompt: depositFcmResponseModel.autosavePrompt);
           }
         } else {
           AppState.delegate.appState.isTxnLoaderInView = false;
           showTxnSuccessScreen(depositFcmResponseModel.amount,
               "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}",
-              showAutoSavePrompt: newAugQuantity > autosavePromptLimit);
+              showAutoSavePrompt: depositFcmResponseModel.autosavePrompt);
         }
       }
 

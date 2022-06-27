@@ -10,19 +10,22 @@ class DepositFcmResponseModel {
   String gtId;
   String error;
   bool status;
+  bool autosavePrompt;
 
-  DepositFcmResponseModel(
-      {this.goldBalance,
-      this.didWalletUpdate,
-      this.isWalletCreated,
-      this.didFLCUpdate,
-      this.augmontPrinciple,
-      this.augmontGoldQty,
-      this.amount,
-      this.flcBalance,
-      this.gtId,
-      this.error,
-      this.status});
+  DepositFcmResponseModel({
+    this.goldBalance,
+    this.didWalletUpdate,
+    this.isWalletCreated,
+    this.didFLCUpdate,
+    this.augmontPrinciple,
+    this.augmontGoldQty,
+    this.amount,
+    this.flcBalance,
+    this.gtId,
+    this.error,
+    this.status,
+    this.autosavePrompt = false,
+  });
 
   DepositFcmResponseModel.fromJson(Map<String, dynamic> json) {
     goldBalance = json['goldBalance'];
@@ -36,6 +39,7 @@ class DepositFcmResponseModel {
     gtId = json['gtId'];
     error = json['error'];
     status = json['status'];
+    autosavePrompt = json['autosavePrompt'];
   }
 
   Map<String, dynamic> toJson() {
@@ -51,6 +55,7 @@ class DepositFcmResponseModel {
     data['gtId'] = this.gtId;
     data['error'] = this.error;
     data['status'] = this.status;
+    data['autosavePrompt'] = this.autosavePrompt;
     return data;
   }
 }
