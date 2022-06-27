@@ -133,12 +133,10 @@ class UserProfileVM extends BaseModel {
 
   setDate() {
     if (myDob != null && myDob.isNotEmpty) {
-      dateFieldController =
-          new TextEditingController(text: myDob.split("-")[2]);
-      monthFieldController =
-          new TextEditingController(text: myDob.split("-")[1]);
-      yearFieldController =
-          new TextEditingController(text: myDob.split("-")[0]);
+      String dob = myDob.replaceAll('/', '-');
+      dateFieldController = new TextEditingController(text: dob.split("-")[2]);
+      monthFieldController = new TextEditingController(text: dob.split("-")[1]);
+      yearFieldController = new TextEditingController(text: dob.split("-")[0]);
     } else {
       dateFieldController = new TextEditingController(text: "");
       monthFieldController = new TextEditingController(text: "");

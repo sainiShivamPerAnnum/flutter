@@ -56,20 +56,26 @@ class GoldenTicketService extends ChangeNotifier {
   }
 
   showInstantGoldenTicketView(
-      {@required GTSOURCE source, String title, double amount = 0}) {
+      {@required GTSOURCE source,
+      String title,
+      double amount = 0,
+      bool showAutoSavePrompt}) {
     if (currentGT != null) {
       Future.delayed(Duration(milliseconds: 200), () {
         // if (source != GTSOURCE.deposit)
         AppState.screenStack.add(ScreenItem.dialog);
 
-        Navigator.of(AppState.delegate.navigatorKey.currentContext)
-            .push(PageRouteBuilder(
-                opaque: false,
-                pageBuilder: (BuildContext context, _, __) => GTInstantView(
-                      source: source,
-                      title: title,
-                      amount: amount,
-                    )));
+        Navigator.of(AppState.delegate.navigatorKey.currentContext).push(
+          PageRouteBuilder(
+            opaque: false,
+            pageBuilder: (BuildContext context, _, __) => GTInstantView(
+              source: source,
+              title: title,
+              amount: amount,
+              showAutosavePrompt: showAutoSavePrompt,
+            ),
+          ),
+        );
       });
     }
   }

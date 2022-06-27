@@ -197,7 +197,7 @@ class AugmontGoldSellViewModel extends BaseModel {
           "Insufficient balance", "Please enter a lower amount");
       return;
     }
-    if (sellGramAmount >= withdrawableQnt) {
+    if (sellGramAmount > withdrawableQnt) {
       BaseUtil.showNegativeAlert(
           "Sell not processed", "Purchased Gold can be sold after 2 days");
       return;

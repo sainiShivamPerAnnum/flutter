@@ -18,8 +18,6 @@ import 'package:in_app_review/in_app_review.dart';
 import 'package:felloapp/util/custom_logger.dart';
 
 class FelloRatingDialog extends StatefulWidget {
-  final int dailogShowCount;
-  FelloRatingDialog({@required this.dailogShowCount});
   static const MAX_DAILOG_SHOW_COUNT = 3;
 
   @override
@@ -175,22 +173,12 @@ class _FelloRatingDialogState extends State<FelloRatingDialog> {
                       width: SizeConfig.screenWidth,
                       child: FelloButtonLg(
                         child: Text(
-                          widget.dailogShowCount >
-                                  FelloRatingDialog.MAX_DAILOG_SHOW_COUNT
-                              ? "Don't ask again"
-                              : "Maybe later",
+                          "Maybe later",
                           style: TextStyles.body3.bold,
                         ),
-                        color: widget.dailogShowCount >
-                                FelloRatingDialog.MAX_DAILOG_SHOW_COUNT
-                            ? UiConstants.tertiarySolid
-                            : Colors.grey.withOpacity(0.5),
+                        color: Colors.grey.withOpacity(0.5),
                         height: SizeConfig.padding54,
                         onPressed: () async {
-                          await CacheManager.writeCache(
-                              key: CacheManager.CACHE_RATING_DIALOG_OPEN_COUNT,
-                              value: (widget.dailogShowCount + 1).toString(),
-                              type: CacheType.string);
                           AppState.backButtonDispatcher.didPopRoute();
                         },
                       ),

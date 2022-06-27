@@ -606,7 +606,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         bool isUserAlreadyRated = await CacheManager.readCache(
             key: CacheManager.CACHE_RATING_IS_RATED);
         if (isUserAlreadyRated != null && isUserAlreadyRated == true) return;
-        dialogWidget = FelloRatingDialog(dailogShowCount: 1);
+        dialogWidget = FelloRatingDialog();
         break;
     }
     if (dialogWidget != null) {

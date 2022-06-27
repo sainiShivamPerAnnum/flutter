@@ -16,8 +16,9 @@ class TxnCompletedConfirmationScreenView extends StatefulWidget {
   final String title;
   final double amount;
 
-  TxnCompletedConfirmationScreenView({@required this.amount, this.title});
-
+  final bool showAutoSavePrompt;
+  TxnCompletedConfirmationScreenView(
+      {@required this.amount, this.title, this.showAutoSavePrompt});
   @override
   State<TxnCompletedConfirmationScreenView> createState() =>
       _TxnCompletedConfirmationScreenViewState();
