@@ -37,9 +37,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../../../../core/repository/user_repo.dart';
+
 class UserProfileVM extends BaseModel {
   Log log = new Log('User Profile');
   bool inEditMode = false;
+  final _userRepo = locator<UserRepository>();
   final _userService = locator<UserService>();
   final BaseUtil _baseUtil = locator<BaseUtil>();
   final DBModel _dbModel = locator<DBModel>();
@@ -278,10 +281,11 @@ class UserProfileVM extends BaseModel {
           onAccept: () {
             Haptic.vibrate();
 
-            _analyticsService.track(eventName: AnalyticsEvents.signOut);
-            _analyticsService.signOut();
-
-            _userService.signout().then((flag) async {
+            _userService.signOut(() async {
+              _analyticsService.track(eventName: AnalyticsEvents.signOut);
+              _analyticsService.signOut();
+              await _userRepo.removeUserFCM(_userService.baseUser.uid);
+            }).then((flag) async {
               if (flag) {
                 //log.debug('Sign out process complete');
                 await _baseUtil.signOut();
