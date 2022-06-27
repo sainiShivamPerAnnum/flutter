@@ -165,7 +165,7 @@ class _TxnCompletedConfirmationScreenViewState
                         child: FelloButtonLg(
                           color: UiConstants.primaryColor,
                           child: Text(
-                            "Start Playing",
+                            "Continue",
                             style: TextStyles.body2.bold.colour(Colors.white),
                           ),
                           onPressed: () {

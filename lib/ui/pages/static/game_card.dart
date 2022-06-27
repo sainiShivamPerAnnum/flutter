@@ -54,50 +54,51 @@ class GameCard extends StatelessWidget {
             ),
           ),
           Container(
-              height: SizeConfig.screenWidth * 0.2,
-              width: SizeConfig.screenWidth * 0.4,
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                    vertical: SizeConfig.padding12,
-                    horizontal: SizeConfig.padding16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Row(
-                      children: [
-                        Text("Win: ₹ ${gameData.prizeAmount ?? 0}   ",
-                            style: TextStyles.body1.bold),
-                        CircleAvatar(
-                          radius: SizeConfig.screenWidth * 0.029,
-                          backgroundColor:
-                              UiConstants.primaryColor.withOpacity(0.2),
-                          child: Image.asset(
-                            Assets.moneyIcon,
-                            height: SizeConfig.iconSize3,
-                          ),
+            height: SizeConfig.screenWidth * 0.2,
+            width: SizeConfig.screenWidth * 0.4,
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                  vertical: SizeConfig.padding12,
+                  horizontal: SizeConfig.padding16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Row(
+                    children: [
+                      Text("Win: ₹ ${gameData.prizeAmount ?? 0}   ",
+                          style: TextStyles.body1.bold),
+                      CircleAvatar(
+                        radius: SizeConfig.screenWidth * 0.029,
+                        backgroundColor:
+                            UiConstants.primaryColor.withOpacity(0.2),
+                        child: Image.asset(
+                          Assets.moneyIcon,
+                          height: SizeConfig.iconSize3,
                         ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text("Entry: ${gameData.playCost ?? 0}   ",
-                            style: TextStyles.body3
-                                .colour(Colors.black.withOpacity(0.5))),
-                        CircleAvatar(
-                          radius: SizeConfig.screenWidth * 0.02,
-                          backgroundColor:
-                              UiConstants.tertiarySolid.withOpacity(0.2),
-                          child: SvgPicture.asset(
-                            Assets.tokens,
-                            height: SizeConfig.iconSize4,
-                          ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text("Entry: ${gameData.playCost ?? 0}   ",
+                          style: TextStyles.body3
+                              .colour(Colors.black.withOpacity(0.5))),
+                      CircleAvatar(
+                        radius: SizeConfig.screenWidth * 0.02,
+                        backgroundColor:
+                            UiConstants.tertiarySolid.withOpacity(0.2),
+                        child: SvgPicture.asset(
+                          Assets.tokens,
+                          height: SizeConfig.iconSize4,
                         ),
-                      ],
-                    )
-                  ],
-                ),
-              ))
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          )
         ],
       ),
     );

@@ -56,6 +56,7 @@ import 'package:felloapp/ui/widgets/fello_dialog/fello_rating_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 //Flutter Imports
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -592,7 +593,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     // for one segement [bottom]
   }
 
-  void dialogCheck(String dialogKey) async {
+  void dialogCheck(String dialogKey) {
     Widget dialogWidget;
     bool barrierDismissable = true;
     switch (dialogKey) {
@@ -603,8 +604,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         );
         break;
       case "appRating":
-        bool isUserAlreadyRated = await CacheManager.readCache(
-            key: CacheManager.CACHE_RATING_IS_RATED);
+        bool isUserAlreadyRated =
+            PreferenceHelper.getBool(PreferenceHelper.CACHE_RATING_IS_RATED);
         if (isUserAlreadyRated != null && isUserAlreadyRated == true) return;
         dialogWidget = FelloRatingDialog();
         break;
@@ -612,17 +613,18 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     if (dialogWidget != null) {
       AppState.screenStack.add(ScreenItem.dialog);
       showDialog(
-          context: navigatorKey.currentContext,
-          barrierDismissible: barrierDismissable,
-          builder: (ctx) {
-            return WillPopScope(
-                onWillPop: () {
-                  AppState.backButtonDispatcher.didPopRoute();
-                  print("Popped the dialog");
-                  return Future.value(true);
-                },
-                child: dialogWidget);
-          });
+        context: navigatorKey.currentContext,
+        barrierDismissible: barrierDismissable,
+        builder: (ctx) {
+          return WillPopScope(
+              onWillPop: () {
+                AppState.backButtonDispatcher.didPopRoute();
+                print("Popped the dialog");
+                return Future.value(true);
+              },
+              child: dialogWidget);
+        },
+      );
     }
   }
 

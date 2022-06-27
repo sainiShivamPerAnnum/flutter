@@ -34,10 +34,12 @@ class AugmontDisabledState extends State<AugmontDisabled> {
   }
 
   dialogContent(BuildContext context) {
-    return Stack(alignment: Alignment.topCenter, children: <Widget>[
-      SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: Padding(
+    return Stack(
+      alignment: Alignment.topCenter,
+      children: <Widget>[
+        SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Padding(
             padding: EdgeInsets.only(top: 30, bottom: 40, left: 35, right: 35),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -72,8 +74,10 @@ class AugmontDisabledState extends State<AugmontDisabled> {
                       color: UiConstants.accentColor),
                 ),
               ],
-            )),
-      )
-    ]);
+            ),
+          ),
+        )
+      ],
+    );
   }
 }

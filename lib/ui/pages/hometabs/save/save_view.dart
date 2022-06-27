@@ -28,7 +28,6 @@ class Save extends StatelessWidget {
         return Stack(
           children: [
             Container(
-              margin: EdgeInsets.only(top: SizeConfig.screenWidth * 0.0),
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [

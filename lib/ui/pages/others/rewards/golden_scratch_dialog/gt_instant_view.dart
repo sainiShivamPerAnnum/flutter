@@ -363,8 +363,8 @@ class _GTInstantViewState extends State<GTInstantView>
                                       child: FelloButtonLg(
                                         color: UiConstants.primaryColor,
                                         child: Text(
-                                          getButtonText(model, widget.source) ??
-                                              "Start Playing",
+                                          // getButtonText(model, widget.source) ??
+                                          "Continue",
                                           style: TextStyles.body2.bold
                                               .colour(Colors.white),
                                         ),

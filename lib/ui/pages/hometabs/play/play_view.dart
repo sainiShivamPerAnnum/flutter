@@ -76,19 +76,7 @@ class Play extends StatelessWidget {
                         },
                       ),
               ),
-              // Transform.translate(
-              //   offset: Offset(0, -SizeConfig.padding12),
-              //   child: Padding(
-              //     padding: EdgeInsets.only(
-              //       left: SizeConfig.pageHorizontalMargins,
-              //     ),
-              //     child:
-              // Text(
-              //       locale.playTrendingGames,
-              //       style: TextStyles.title3.bold,
-              //     ),
-              //   ),
-              // ),
+
               Consumer<BaseUtil>(
                 builder: (ctx, m, child) => Expanded(
                   child: ListView(

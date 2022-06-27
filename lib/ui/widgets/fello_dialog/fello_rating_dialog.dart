@@ -8,6 +8,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_dialog.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -127,10 +128,10 @@ class _FelloRatingDialogState extends State<FelloRatingDialog> {
                           }
                           showLoading(true);
                           try {
-                            await CacheManager.writeCache(
-                                key: CacheManager.CACHE_RATING_IS_RATED,
-                                value: true,
-                                type: CacheType.bool);
+                            PreferenceHelper.setBool(
+                              PreferenceHelper.CACHE_RATING_IS_RATED,
+                              true,
+                            );
                           } catch (e) {
                             showLoading(false);
                             logger.e(e.toString());

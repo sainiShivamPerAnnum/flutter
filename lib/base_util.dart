@@ -38,6 +38,7 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -344,7 +345,7 @@ class BaseUtil extends ChangeNotifier {
     //     .getString(BaseRemoteConfig.GAME_POSITION)
     //     .split('-');
     final String userlastPlayedGames =
-        await CacheManager.readCache(key: CacheManager.CACHE_LAST_PLAYED_GAMES);
+        PreferenceHelper.getString(PreferenceHelper.CACHE_LAST_PLAYED_GAMES);
     if (userlastPlayedGames != null && userlastPlayedGames.isNotEmpty) {
       List<String> lastgamesOrder = userlastPlayedGames.split("-");
       lastgamesOrder.forEach((code) {
@@ -891,7 +892,7 @@ class BaseUtil extends ChangeNotifier {
 
   cacheGameorder(String gameCode) async {
     String gamesOrder =
-        await CacheManager.readCache(key: CacheManager.CACHE_LAST_PLAYED_GAMES);
+        PreferenceHelper.getString(PreferenceHelper.CACHE_LAST_PLAYED_GAMES);
 
     if (gamesOrder != null && gamesOrder.isNotEmpty) {
       List<String> cachedGamesList = gamesOrder.split('-');
@@ -904,10 +905,8 @@ class BaseUtil extends ChangeNotifier {
     } else {
       gamesOrder = gameCode;
     }
-    CacheManager.writeCache(
-        key: CacheManager.CACHE_LAST_PLAYED_GAMES,
-        value: gamesOrder,
-        type: CacheType.string);
+    PreferenceHelper.setString(
+        PreferenceHelper.CACHE_LAST_PLAYED_GAMES, gamesOrder);
     await arrangeGames();
   }
 
