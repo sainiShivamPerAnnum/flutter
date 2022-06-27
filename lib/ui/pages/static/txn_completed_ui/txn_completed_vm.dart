@@ -1,3 +1,4 @@
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -8,6 +9,8 @@ import 'package:flutter/cupertino.dart';
 class TransactionCompletedConfirmationScreenViewModel extends BaseModel {
   final _coinService = locator<UserCoinService>();
   final _paytmService = locator<PaytmService>();
+
+  final _gtService = locator<GoldenTicketService>();
 
   bool _isAnimationInProgress = false;
 
@@ -52,6 +55,10 @@ class TransactionCompletedConfirmationScreenViewModel extends BaseModel {
     isAutosaveAlreadySetup = _paytmService.activeSubscription != null;
     coinsCount = _coinService.flcBalance - amount.toInt();
     initDepositSuccessAnimation(amount);
+  }
+
+  showAutosavePrompt() {
+    _gtService.showAutosavePrompt();
   }
 
   initDepositSuccessAnimation(double amount) async {

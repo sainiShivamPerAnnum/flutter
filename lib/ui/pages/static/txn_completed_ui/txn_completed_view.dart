@@ -169,9 +169,16 @@ class _TxnCompletedConfirmationScreenViewState
                             style: TextStyles.body2.bold.colour(Colors.white),
                           ),
                           onPressed: () {
-                            AppState.delegate.appState.setCurrentTabIndex = 1;
                             while (AppState.screenStack.length > 1) {
                               AppState.backButtonDispatcher.didPopRoute();
+                            }
+                            if (!model.isAutosaveAlreadySetup &&
+                                widget.showAutoSavePrompt) {
+                              AppState.delegate.appState.setCurrentTabIndex = 0;
+                              if (widget.showAutoSavePrompt)
+                                model.showAutosavePrompt();
+                            } else {
+                              AppState.delegate.appState.setCurrentTabIndex = 1;
                             }
                           },
                         ),

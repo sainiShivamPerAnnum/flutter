@@ -470,30 +470,7 @@ class _GTInstantViewState extends State<GTInstantView>
         }
         if (widget.showAutosavePrompt && !model.isAutosaveAlreadySetup) {
           AppState.delegate.appState.setCurrentTabIndex = 0;
-          BaseUtil.openDialog(
-            addToScreenStack: true,
-            isBarrierDismissable: false,
-            hapticVibrate: true,
-            content: FelloInfoDialog(
-              png: Assets.preautosave,
-              title: "Why not Autosave?",
-              subtitle: "Set up autosave and automate your savings. easy peasy",
-              showCrossIcon: true,
-              action: FelloButtonLg(
-                color: UiConstants.primaryColor,
-                child: Text(
-                  "Setup Autosave",
-                  style: TextStyles.body2.bold.colour(Colors.white),
-                ),
-                onPressed: () {
-                  AppState.backButtonDispatcher.didPopRoute();
-                  AppState.delegate.appState.currentAction = PageAction(
-                      page: AutosaveDetailsViewPageConfig,
-                      state: PageState.addPage);
-                },
-              ),
-            ),
-          );
+          model.showAutosavePrompt();
         } else
           AppState.delegate.appState.setCurrentTabIndex = 1;
       };

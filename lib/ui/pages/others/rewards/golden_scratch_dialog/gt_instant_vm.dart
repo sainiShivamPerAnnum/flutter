@@ -114,6 +114,10 @@ class GTInstantViewModel extends BaseModel {
     });
   }
 
+  showAutosavePrompt() {
+    _gtService.showAutosavePrompt();
+  }
+
   Future<void> redeemTicket() async {
     scratchKey.currentState.reveal();
     Haptic.vibrate();
