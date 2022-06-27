@@ -85,7 +85,7 @@ dependencies:
   appsflyer_sdk: ^6.5.2
   external_app_launcher: ^2.0.2
   shimmer: ^2.0.0
-  flutter_switch: ^0.3.2
+  # flutter_switch: ^0.3.2
 
 
 dev_dependencies:

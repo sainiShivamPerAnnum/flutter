@@ -17,12 +17,8 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/dialogs/change_profile_picture_dialog.dart';
-import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/dialogs/default_dialog.dart';
 import 'package:felloapp/ui/pages/static/profile_image.dart';
-import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -30,7 +26,6 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 //Flutter & Dart Imports
 import 'package:flutter/material.dart';
@@ -58,10 +53,11 @@ class UserProfileVM extends BaseModel {
   bool isUpdaingUserDetails = false;
   bool _isTambolaNotificationLoading = false;
   bool _isApplockLoading = false;
+  bool _hasInputError = false;
   int _gen;
   String gender;
   DateTime selectedDate;
-  String dateInputError = "";
+  String _dateInputError = "";
 
   final GlobalKey<FormState> formKey = new GlobalKey<FormState>();
 
@@ -76,6 +72,7 @@ class UserProfileVM extends BaseModel {
   bool get isSimpleKycVerified => _userService.isSimpleKycVerified;
   bool get isTambolaNotificationLoading => _isTambolaNotificationLoading;
   bool get isApplockLoading => _isApplockLoading;
+  bool get hasInputError => _hasInputError;
 
   bool get applock =>
       _userService.baseUser.userPreferences
@@ -86,6 +83,9 @@ class UserProfileVM extends BaseModel {
           .getPreference(Preferences.TAMBOLANOTIFICATIONS) ==
       1;
   int get gen => _gen;
+
+  String get dateInputError => _dateInputError;
+
   // Setters
   set isTambolaNotificationLoading(bool val) {
     _isTambolaNotificationLoading = val;
@@ -99,6 +99,16 @@ class UserProfileVM extends BaseModel {
 
   set gen(int val) {
     _gen = val;
+    notifyListeners();
+  }
+
+  set hasInputError(bool val) {
+    _hasInputError = val;
+    notifyListeners();
+  }
+
+  set dateInputError(String val) {
+    _dateInputError = val;
     notifyListeners();
   }
 

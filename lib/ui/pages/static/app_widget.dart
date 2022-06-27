@@ -136,14 +136,24 @@ class AppTextField extends StatelessWidget {
                     width: SizeConfig.border1,
                   ),
                 ),
-
-                // errorBorder: OutlineInputBorder(
-                //   borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-                //   borderSide: BorderSide(
-                //     color: UiConstants.kTextColor.withOpacity(0.1),
-                //     width: SizeConfig.border1,
-                //   ),
-                // ),
+                errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                  borderSide: BorderSide(
+                    color: Colors.red,
+                    width: SizeConfig.border1,
+                  ),
+                ),
+                focusedErrorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                  borderSide: BorderSide(
+                    color: Colors.red,
+                    width: SizeConfig.border1,
+                  ),
+                ),
+                errorStyle: TextStyle(
+                  height: 0.75,
+                  fontSize: 12,
+                ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(SizeConfig.roundness5),
                   borderSide: BorderSide(
@@ -353,6 +363,141 @@ class AppNegativeBtn extends StatelessWidget {
               width: 1,
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class AppDateField extends StatelessWidget {
+  final String labelText;
+  final TextEditingController controller;
+  final maxlength;
+  final double fieldWidth;
+  final Function validate;
+
+  AppDateField(
+      {this.controller,
+      this.labelText,
+      this.maxlength,
+      this.fieldWidth,
+      this.validate});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: fieldWidth,
+      child: TextFormField(
+        controller: controller,
+        maxLength: maxlength,
+        cursorColor: UiConstants.primaryColor,
+        cursorWidth: 1,
+        onChanged: (val) {
+          if (val.length == maxlength && maxlength == 2) {
+            FocusScope.of(context).nextFocus();
+          } else if (val.length == maxlength && maxlength == 4) {
+            FocusScope.of(context).unfocus();
+          }
+        },
+        inputFormatters: [
+          FilteringTextInputFormatter.digitsOnly,
+        ],
+        keyboardType: TextInputType.datetime,
+        style: TextStyles.sourceSans.body2,
+        decoration: InputDecoration(
+          counterText: "",
+          border: UnderlineInputBorder(
+            borderSide: BorderSide.none,
+          ),
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide.none,
+          ),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide.none,
+          ),
+          hintText: labelText,
+          hintStyle: TextStyle(
+            color: Colors.grey[400],
+            letterSpacing: 2,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class AppSwitch extends StatelessWidget {
+  const AppSwitch({
+    Key key,
+    @required this.onToggle,
+    @required this.value,
+    this.isLoading = false,
+    this.height = 22,
+    this.width = 32,
+    this.toggleSize = 12.0,
+    this.activeColor = UiConstants.kSwitchColor,
+    this.inactiveColor = UiConstants.kSwitchColor,
+    this.activeToggleColor = UiConstants.kTabBorderColor,
+    this.inactiveToggleColor = Colors.white,
+  }) : super(key: key);
+
+  final ValueChanged<bool> onToggle;
+  final bool value;
+  final bool isLoading;
+  final double width, height;
+  final double toggleSize;
+  final Color activeColor,
+      inactiveColor,
+      activeToggleColor,
+      inactiveToggleColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        onToggle(!value);
+      },
+      child: Container(
+        height: height,
+        width: width,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(
+            SizeConfig.padding24,
+          ),
+          color: value ? activeColor : inactiveColor,
+          border: Border.all(
+            color: UiConstants.kSecondaryBackgroundColor,
+            width: SizeConfig.border4,
+          ),
+        ),
+        child: AnimatedAlign(
+          alignment: value ? Alignment.centerRight : Alignment.centerLeft,
+          duration: Duration(milliseconds: 300),
+          child: isLoading
+              ? Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.padding2,
+                  ),
+                  child: SizedBox(
+                    width: toggleSize,
+                    height: toggleSize,
+                    child: CircularProgressIndicator(
+                      strokeWidth: SizeConfig.border3,
+                    ),
+                  ),
+                )
+              : Container(
+                  margin: EdgeInsets.only(
+                    left: SizeConfig.padding2,
+                    right: SizeConfig.padding2,
+                  ),
+                  width: toggleSize,
+                  height: toggleSize,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: value ? activeToggleColor : inactiveToggleColor,
+                  ),
+                ),
         ),
       ),
     );

@@ -67,7 +67,6 @@ class TopPlayer extends StatelessWidget {
   }
 
   Widget _buildTopPlayer(BuildContext context) {
-    log(SizeConfig.screenHeight.toString());
     return Padding(
       padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
       child: Column(

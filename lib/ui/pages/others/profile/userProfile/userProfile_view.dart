@@ -1,6 +1,7 @@
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/pages/login/screens/name_input/name_input_view.dart';
 
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_viewModel.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -155,14 +156,22 @@ class UserProfileForm extends StatelessWidget {
             AppTextField(
               textEditingController: model.nameController,
               isEnabled: model.inEditMode,
-              // contentPadding: EdgeInsets.symmetric(vertical: 10),
               inputFormatters: [
                 FilteringTextInputFormatter.allow(
                   RegExp(r'[a-zA-Z ]'),
                 ),
               ],
+              height:
+                  model.hasInputError ? SizeConfig.screenWidth * 0.183 : null,
+              suffix: SizedBox(),
               validator: (value) {
-                return (value != null && value.isNotEmpty) ? null : '';
+                if (value != null && value.isNotEmpty) {
+                  model.hasInputError = false;
+                  return null;
+                } else {
+                  model.hasInputError = true;
+                  return 'Please enter your name';
+                }
               },
             ),
             AppTextFieldLabel(
@@ -218,18 +227,157 @@ class UserProfileForm extends StatelessWidget {
             AppTextFieldLabel(
               locale.obDobLabel,
             ),
-            AppDatePickerField(
-              isEnabled: model.inEditMode,
-              child: Text(
-                "${model.dobController.text}",
-                style: TextStyles.body2.colour(
-                  model.inEditMode
-                      ? UiConstants.kTextColor
-                      : UiConstants.kTextFieldTextColor,
-                ),
+            // AppDatePickerField(
+            //   isEnabled: model.inEditMode,
+            //   child: Text(
+            //     "${model.dobController.text}",
+            //     style: TextStyles.body2.colour(
+            //       model.inEditMode
+            //           ? UiConstants.kTextColor
+            //           : UiConstants.kTextFieldTextColor,
+            //     ),
+            //   ),
+            //   onTap: model.inEditMode ? model.showAndroidDatePicker : null,
+            // ),
+            model.inEditMode
+                ? Container(
+                    width: double.infinity,
+                    height: SizeConfig.screenWidth * 0.1377,
+                    decoration: BoxDecoration(
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness5),
+                      border: Border.all(
+                        color: UiConstants.kTextColor.withOpacity(0.1),
+                        width: SizeConfig.border1,
+                      ),
+                      color: UiConstants.kTextFieldColor,
+                    ),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.padding16,
+                    ),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: SizeConfig.blockSizeHorizontal * 5,
+                        ),
+                        AppDateField(
+                          controller: model.dateFieldController,
+                          fieldWidth: SizeConfig.screenWidth * 0.12,
+                          labelText: "dd",
+                          maxlength: 2,
+                          validate: (String val) {
+                            if (val.isEmpty || val == null) {
+                              // setState(() {
+                              model.dateInputError =
+                                  "Date field cannot be empty";
+                              // });
+                            } else if (int.tryParse(val) > 31 ||
+                                int.tryParse(val) < 1) {
+                              // setState(() {
+                              model.dateInputError = "Invalid date";
+                              // });
+                            }
+                            return null;
+                          },
+                        ),
+                        Expanded(
+                          child: Center(
+                            child: Text(
+                              "/",
+                              style: TextStyles.sourceSans.body2,
+                            ),
+                          ),
+                        ),
+                        AppDateField(
+                          controller: model.monthFieldController,
+                          fieldWidth: SizeConfig.screenWidth * 0.12,
+                          labelText: "mm",
+                          maxlength: 2,
+                          validate: (String val) {
+                            if (val.isEmpty || val == null) {
+                              // setState(() {
+                              model.dateInputError =
+                                  "Date field cannot be empty";
+                              // });
+                            } else if (int.tryParse(val) != null &&
+                                (int.tryParse(val) > 13 ||
+                                    int.tryParse(val) < 1)) {
+                              // setState(() {
+                              model.dateInputError = "Invalid date";
+                              // });
+                            }
+                            return null;
+                          },
+                        ),
+                        Expanded(
+                          child: Center(
+                            child: Text(
+                              "/",
+                              style: TextStyles.sourceSans.body2,
+                            ),
+                          ),
+                        ),
+                        AppDateField(
+                          controller: model.yearFieldController,
+                          fieldWidth: SizeConfig.screenWidth * 0.16,
+                          labelText: "yyyy",
+                          maxlength: 4,
+                          validate: (String val) {
+                            if (val.isEmpty || val == null) {
+                              // setState(() {
+                              model.dateInputError =
+                                  "Date field cannot be empty";
+                              // });
+                            } else if (int.tryParse(val) >
+                                    DateTime.now().year ||
+                                int.tryParse(val) < 1950) {
+                              // setState(() {
+                              model.dateInputError = "Invalid date";
+                              // });
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(
+                          width: 16,
+                        ),
+                        IconButton(
+                          onPressed: model.showAndroidDatePicker,
+                          icon: Icon(
+                            Icons.calendar_today,
+                            size: 20,
+                            color: UiConstants.primaryColor,
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                : AppDatePickerField(
+                    isEnabled: false,
+                    child: Text(
+                      "${model.dobController.text}",
+                      style: TextStyles.body2.colour(
+                        model.inEditMode
+                            ? UiConstants.kTextColor
+                            : UiConstants.kTextFieldTextColor,
+                      ),
+                    ),
+                    onTap: null,
+                  ),
+            if (model.inEditMode && model.dateInputError != "")
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    child: Text(
+                      model.dateInputError,
+                      textAlign: TextAlign.start,
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
+                ],
               ),
-              onTap: model.inEditMode ? model.showAndroidDatePicker : null,
-            ),
+
             AppTextFieldLabel(
               locale.obMobileLabel,
             ),
@@ -252,30 +400,14 @@ class UserProfileForm extends StatelessWidget {
                         .colour(UiConstants.kTextColor2),
                   ),
                   Spacer(),
-                  model.isApplockLoading
-                      ? Container(
-                          margin: EdgeInsets.only(right: SizeConfig.padding12),
-                          padding: EdgeInsets.all(SizeConfig.padding2),
-                          height: SizeConfig.title3,
-                          width: SizeConfig.title3,
-                          child: CircularProgressIndicator(),
-                        )
-                      : FlutterSwitch(
-                          onToggle: (val) =>
-                              model.onAppLockPreferenceChanged(val),
-                          value: model.applock,
-                          height: SizeConfig.screenWidth * 0.0611, // 22
-                          width: SizeConfig.screenWidth * 0.0889, // 32
-                          padding: SizeConfig.padding2,
-                          activeColor: UiConstants.kSwitchColor,
-                          inactiveColor: UiConstants.kSwitchColor,
-                          activeToggleColor: UiConstants.kTabBorderColor,
-                          switchBorder: Border.all(
-                            color: UiConstants.kSecondaryBackgroundColor,
-                            width: SizeConfig.border4,
-                          ),
-                          toggleSize: SizeConfig.screenWidth * 0.0333, // 12
-                        )
+                  AppSwitch(
+                    onToggle: (val) => model.onAppLockPreferenceChanged(val),
+                    value: model.applock,
+                    isLoading: model.isApplockLoading,
+                    height: SizeConfig.screenWidth * 0.059,
+                    width: SizeConfig.screenWidth * 0.087,
+                    toggleSize: SizeConfig.screenWidth * 0.032,
+                  ),
                 ],
               ),
             ),
@@ -290,30 +422,15 @@ class UserProfileForm extends StatelessWidget {
                         .colour(UiConstants.kTextColor2),
                   ),
                   Spacer(),
-                  model.isTambolaNotificationLoading
-                      ? Container(
-                          margin: EdgeInsets.only(right: SizeConfig.padding12),
-                          padding: EdgeInsets.all(SizeConfig.padding2),
-                          height: SizeConfig.title3,
-                          width: SizeConfig.title3,
-                          child: CircularProgressIndicator(),
-                        )
-                      : FlutterSwitch(
-                          onToggle: (val) =>
-                              model.onTambolaNotificationPreferenceChanged(val),
-                          value: model.tambolaNotification,
-                          height: SizeConfig.screenWidth * 0.0611, // 22
-                          width: SizeConfig.screenWidth * 0.0889, // 32
-                          padding: SizeConfig.padding2,
-                          activeColor: UiConstants.kSwitchColor,
-                          inactiveColor: UiConstants.kSwitchColor,
-                          activeToggleColor: UiConstants.kTabBorderColor,
-                          switchBorder: Border.all(
-                            color: UiConstants.kSecondaryBackgroundColor,
-                            width: SizeConfig.border4,
-                          ),
-                          toggleSize: SizeConfig.screenWidth * 0.0333, // 12
-                        )
+                  AppSwitch(
+                    onToggle: (val) =>
+                        model.onTambolaNotificationPreferenceChanged(val),
+                    value: model.tambolaNotification,
+                    isLoading: model.isTambolaNotificationLoading,
+                    height: SizeConfig.screenWidth * 0.059,
+                    width: SizeConfig.screenWidth * 0.087,
+                    toggleSize: SizeConfig.screenWidth * 0.032,
+                  ),
                 ],
               ),
             ),
