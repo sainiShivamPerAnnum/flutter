@@ -8,6 +8,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_dialog.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -18,8 +19,6 @@ import 'package:in_app_review/in_app_review.dart';
 import 'package:felloapp/util/custom_logger.dart';
 
 class FelloRatingDialog extends StatefulWidget {
-  final int dailogShowCount;
-  FelloRatingDialog({@required this.dailogShowCount});
   static const MAX_DAILOG_SHOW_COUNT = 3;
 
   @override
@@ -129,10 +128,10 @@ class _FelloRatingDialogState extends State<FelloRatingDialog> {
                           }
                           showLoading(true);
                           try {
-                            await CacheManager.writeCache(
-                                key: CacheManager.CACHE_RATING_IS_RATED,
-                                value: FcmCommands.COMMAND_USER_PRIZE_WIN,
-                                type: CacheType.string);
+                            PreferenceHelper.setBool(
+                              PreferenceHelper.CACHE_RATING_IS_RATED,
+                              true,
+                            );
                           } catch (e) {
                             showLoading(false);
                             logger.e(e.toString());
@@ -175,22 +174,12 @@ class _FelloRatingDialogState extends State<FelloRatingDialog> {
                       width: SizeConfig.screenWidth,
                       child: FelloButtonLg(
                         child: Text(
-                          widget.dailogShowCount >
-                                  FelloRatingDialog.MAX_DAILOG_SHOW_COUNT
-                              ? "Don't ask again"
-                              : "Maybe later",
+                          "Maybe later",
                           style: TextStyles.body3.bold,
                         ),
-                        color: widget.dailogShowCount >
-                                FelloRatingDialog.MAX_DAILOG_SHOW_COUNT
-                            ? UiConstants.tertiarySolid
-                            : Colors.grey.withOpacity(0.5),
+                        color: Colors.grey.withOpacity(0.5),
                         height: SizeConfig.padding54,
                         onPressed: () async {
-                          await CacheManager.writeCache(
-                              key: CacheManager.CACHE_RATING_DIALOG_OPEN_COUNT,
-                              value: (widget.dailogShowCount + 1).toString(),
-                              type: CacheType.string);
                           AppState.backButtonDispatcher.didPopRoute();
                         },
                       ),

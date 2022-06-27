@@ -8,14 +8,19 @@ import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/play_offer_card.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
+
+import 'package:provider/provider.dart';
 
 class Play extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
+    BaseUtil baseUtil = locator<BaseUtil>();
     return BaseView<PlayViewModel>(
       onModelReady: (model) {
         model.loadOfferList();
@@ -31,7 +36,7 @@ class Play extends StatelessWidget {
               //SizedBox(height: SizeConfig.padding80),
               Container(
                 width: SizeConfig.screenWidth,
-                height: SizeConfig.screenWidth * 0.38,
+                height: SizeConfig.screenWidth * 0.33,
                 child: model.isOfferListLoading
                     ? ListView(
                         padding: EdgeInsets.symmetric(
@@ -71,46 +76,84 @@ class Play extends StatelessWidget {
                         },
                       ),
               ),
-              Transform.translate(
-                offset: Offset(0, -SizeConfig.padding12),
-                child: Padding(
-                  padding: EdgeInsets.only(
-                    left: SizeConfig.pageHorizontalMargins,
-                  ),
-                  child: Text(
-                    locale.playTrendingGames,
-                    style: TextStyles.title3.bold,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: ListView(
+
+              Consumer<BaseUtil>(
+                builder: (ctx, m, child) => Expanded(
+                  child: ListView(
                     shrinkWrap: true,
                     physics: BouncingScrollPhysics(),
-                    padding:
-                        EdgeInsets.symmetric(vertical: SizeConfig.padding12),
-                    children: List.generate(
-                      BaseUtil.gamesList.length,
-                      (index) => Column(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Haptic.vibrate();
-                              AppState.delegate.parseRoute(
-                                  Uri.parse(BaseUtil.gamesList[index].route));
-                            },
-                            child: GameCard(
-                              gameData: BaseUtil.gamesList[index],
+                    padding: EdgeInsets.zero,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(
+                            left: SizeConfig.pageHorizontalMargins,
+                            bottom: SizeConfig.padding8),
+                        child: Text(
+                          model.gamesListOneTitle,
+                          style: TextStyles.title3.bold,
+                        ),
+                      ),
+                      Container(
+                        width: SizeConfig.screenWidth,
+                        height: SizeConfig.screenWidth * 0.6,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: List.generate(
+                            baseUtil.focusGamesList.length,
+                            (index) => InkWell(
+                                onTap: () {
+                                  Haptic.vibrate();
+                                  AppState.delegate.parseRoute(Uri.parse(
+                                      baseUtil.focusGamesList[index].route));
+                                },
+                                child: GameCard(
+                                  gameData: baseUtil.focusGamesList[index],
+                                  index: index,
+                                )),
+                          ),
+                        ),
+                      ),
+                      Divider(
+                        height: SizeConfig.padding8,
+                        color: Colors.black.withOpacity(0.2),
+                        indent: SizeConfig.screenWidth * 0.1,
+                        endIndent: SizeConfig.screenWidth * 0.1,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.pageHorizontalMargins,
+                            vertical: SizeConfig.padding8),
+                        child: Text(
+                          model.gamesListTwoTitle,
+                          style: TextStyles.title3.bold,
+                        ),
+                      ),
+                      Container(
+                        width: SizeConfig.screenWidth,
+                        height: SizeConfig.screenWidth * 0.6,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: List.generate(
+                            baseUtil.restGamesList.length,
+                            (index) => InkWell(
+                              onTap: () {
+                                Haptic.vibrate();
+
+                                AppState.delegate.parseRoute(Uri.parse(
+                                    baseUtil.restGamesList[index].route));
+                              },
+                              child: GameCard(
+                                gameData: baseUtil.restGamesList[index],
+                                index: index,
+                              ),
                             ),
                           ),
-                          (index == BaseUtil.gamesList.length - 1)
-                              ? SizedBox(
-                                  height: SizeConfig.navBarHeight * 2.4,
-                                )
-                              : SizedBox(height: SizeConfig.padding6),
-                        ],
+                        ),
                       ),
-                    )),
+                      SizedBox(height: SizeConfig.navBarHeight * 2.4),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),

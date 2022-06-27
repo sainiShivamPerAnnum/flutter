@@ -5,7 +5,8 @@ class PreferenceHelper {
   static const DATE_APP_OPENED = 'date_app_opened';
   static const INSTALLATION_DAY = 'installation_day';
   static const CAMPAIGN_ID = 'campaign_id';
-
+  static const CACHE_RATING_IS_RATED = "isUserRated";
+  static const CACHE_LAST_PLAYED_GAMES = "lastTwoGamesPlayed";
   static SharedPreferences _prefs;
 
   static Future<SharedPreferences> initiate() async {
@@ -65,6 +66,10 @@ class PreferenceHelper {
 
   static Future<bool> remove(String key) async {
     return _prefs.remove(key);
+  }
+
+  static Future<bool> exist(String key) async {
+    return _prefs.containsKey(key);
   }
 
   static void clear() {

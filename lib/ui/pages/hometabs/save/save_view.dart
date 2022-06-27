@@ -28,7 +28,6 @@ class Save extends StatelessWidget {
         return Stack(
           children: [
             Container(
-              margin: EdgeInsets.only(top: SizeConfig.screenWidth * 0.12),
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
@@ -101,9 +100,8 @@ class Save extends StatelessWidget {
                   //   },
                   //   child: Text("Show pool game"),
                   // ),
-
                   AutosaveCard(),
-                  SizedBox(height: SizeConfig.padding32),
+
                   // Goldlinks(model: model),
                   //CustomSubscriptionContainer(),
                   SizedBox(height: SizeConfig.navBarHeight * 2),
@@ -195,14 +193,20 @@ class GoldBalanceContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return WinningsContainer(
       onTap: model != null ? model.navigateToGoldBalanceDetailsScreen : () {},
+      borderRadius: SizeConfig.roundness16,
       shadow: true,
       color: UiConstants.tertiarySolid,
+      height: SizeConfig.screenWidth * 0.16,
       child: Container(
         width: SizeConfig.screenWidth,
         alignment: Alignment.center,
-        padding: EdgeInsets.all(SizeConfig.padding8),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        padding: EdgeInsets.symmetric(
+          vertical: SizeConfig.padding8,
+          horizontal: SizeConfig.padding32,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
               "My Gold Balance",

@@ -4,16 +4,24 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/score_reject_dialog.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_share_me/flutter_share_me.dart';
@@ -56,20 +64,26 @@ class GoldenTicketService extends ChangeNotifier {
   }
 
   showInstantGoldenTicketView(
-      {@required GTSOURCE source, String title, double amount = 0}) {
+      {@required GTSOURCE source,
+      String title,
+      double amount = 0,
+      bool showAutoSavePrompt}) {
     if (currentGT != null) {
       Future.delayed(Duration(milliseconds: 200), () {
         // if (source != GTSOURCE.deposit)
         AppState.screenStack.add(ScreenItem.dialog);
 
-        Navigator.of(AppState.delegate.navigatorKey.currentContext)
-            .push(PageRouteBuilder(
-                opaque: false,
-                pageBuilder: (BuildContext context, _, __) => GTInstantView(
-                      source: source,
-                      title: title,
-                      amount: amount,
-                    )));
+        Navigator.of(AppState.delegate.navigatorKey.currentContext).push(
+          PageRouteBuilder(
+            opaque: false,
+            pageBuilder: (BuildContext context, _, __) => GTInstantView(
+              source: source,
+              title: title,
+              amount: amount,
+              showAutosavePrompt: showAutoSavePrompt,
+            ),
+          ),
+        );
       });
     }
   }
@@ -218,5 +232,99 @@ class GoldenTicketService extends ChangeNotifier {
       BaseUtil.showNegativeAlert(
           "Task Failed", "Unable to share the picture at the moment");
     }
+  }
+
+  showAutosavePrompt() {
+    BaseUtil.openDialog(
+      addToScreenStack: true,
+      isBarrierDismissable: false,
+      hapticVibrate: true,
+      content: FelloInfoDialog(
+        defaultPadding: false,
+        isAddedToScreenStack: true,
+        customContent: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(SizeConfig.roundness40),
+          ),
+          child: Column(children: [
+            Container(
+              width: SizeConfig.screenWidth,
+              decoration: BoxDecoration(
+                // color: UiConstants.primaryLight,
+                gradient: LinearGradient(
+                  colors: [
+                    UiConstants.primaryColor.withOpacity(0.6),
+                    UiConstants.primaryLight
+                  ],
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                ),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(SizeConfig.roundness40),
+                  topRight: Radius.circular(SizeConfig.roundness40),
+                ),
+                image: DecorationImage(
+                  alignment: Alignment.topCenter,
+                  image: AssetImage(Assets.splashBackground),
+                  fit: BoxFit.fitWidth,
+                ),
+              ),
+              child: Padding(
+                padding: EdgeInsets.only(
+                  top: SizeConfig.pageHorizontalMargins,
+                  left: SizeConfig.pageHorizontalMargins,
+                  right: SizeConfig.pageHorizontalMargins,
+                ),
+                child: Image.asset(
+                  Assets.preautosave,
+                  height: SizeConfig.screenHeight * 0.2,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: SizeConfig.screenHeight * 0.04,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.pageHorizontalMargins),
+              child: Column(
+                children: [
+                  Text(
+                    "Why not Autosave?",
+                    style: TextStyles.title3.bold,
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: SizeConfig.padding16),
+                  Text(
+                    "Set up autosave and automate your savings. easy peasy",
+                    textAlign: TextAlign.center,
+                    style: TextStyles.body2.colour(Colors.grey),
+                  ),
+                  SizedBox(height: SizeConfig.screenHeight * 0.02),
+                  FelloButtonLg(
+                    color: UiConstants.primaryColor,
+                    child: Text(
+                      "Setup Autosave",
+                      style: TextStyles.body2.bold.colour(Colors.white),
+                    ),
+                    onPressed: () {
+                      AppState.backButtonDispatcher.didPopRoute();
+                      AppState.delegate.appState.currentAction = PageAction(
+                          page: AutosaveDetailsViewPageConfig,
+                          state: PageState.addPage);
+                    },
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: SizeConfig.pageHorizontalMargins,
+            )
+          ]),
+        ),
+        showCrossIcon: true,
+      ),
+    );
   }
 }

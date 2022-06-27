@@ -5,6 +5,7 @@ import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home
 import 'package:felloapp/ui/pages/others/games/web/web_home/web_home_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
+import 'package:felloapp/ui/pages/static/game_card_big.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/pages/static/web_game_prize_view.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/web_game_leaderboard.dart';
@@ -51,7 +52,7 @@ class WebHomeView extends StatelessWidget {
                         controller: model.scrollController,
                         children: [
                           SizedBox(
-                              height: SizeConfig.screenWidth * 0.1 +
+                              height: SizeConfig.screenWidth * 0.05 +
                                   SizeConfig.viewInsets.top),
                           InkWell(
                             onTap: () async {
@@ -67,7 +68,7 @@ class WebHomeView extends StatelessWidget {
                               duration: Duration(milliseconds: 10),
                               curve: Curves.decelerate,
                               opacity: model.cardOpacity ?? 1,
-                              child: GameCard(
+                              child: BigGameCard(
                                 gameData: BaseUtil.gamesList.firstWhere(
                                     (element) => element.gameCode == game),
                               ),

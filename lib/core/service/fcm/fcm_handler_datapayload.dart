@@ -21,63 +21,16 @@ class FcmHandlerDataPayloads extends ChangeNotifier {
   String url;
   int tab, dailogShowCount = 0;
 
-  Future<bool> reviewDialogCanAppear(String command) async {
-    int hitCount;
-    String isUserRated;
-    List<int> arr = [2, 5, 7, 11, 13, 15];
-    try {
-      String htc = await CacheManager.readCache(
-          key: CacheManager.CACHE_RATING_HIT_COUNT);
-      if (htc == null) {
-        await CacheManager.writeCache(
-            key: CacheManager.CACHE_RATING_HIT_COUNT,
-            value: 2.toString(),
-            type: CacheType.string);
-        hitCount = 2;
-      } else {
-        hitCount = int.tryParse(htc) + 1;
-        await CacheManager.writeCache(
-            key: CacheManager.CACHE_RATING_HIT_COUNT,
-            value: hitCount.toString(),
-            type: CacheType.string);
-      }
-      isUserRated =
-          await CacheManager.readCache(key: CacheManager.CACHE_RATING_IS_RATED);
-      String dsc = await CacheManager.readCache(
-          key: CacheManager.CACHE_RATING_DIALOG_OPEN_COUNT);
-      if (dsc == null) {
-        await CacheManager.writeCache(
-            key: CacheManager.CACHE_RATING_DIALOG_OPEN_COUNT,
-            value: 1.toString(),
-            type: CacheType.string);
-        dailogShowCount = 1;
-      } else {
-        dailogShowCount = int.tryParse(dsc);
-      }
-    } catch (e) {
-      _logger.e(e.toString());
-    }
-
-    if ((isUserRated == null || isUserRated != command) &&
-        arr.contains(hitCount) &&
-        dailogShowCount < 5) return true;
-    return false;
-  }
-
   userPrizeWinPrompt() async {
-    if (await reviewDialogCanAppear(FcmCommands.COMMAND_USER_PRIZE_WIN_2)) {
-      AppState.delegate.appState.setCurrentTabIndex = 2;
-      notifyListeners();
-      Future.delayed(Duration(seconds: 4), () {
-        BaseUtil.openDialog(
-            addToScreenStack: true,
-            isBarrierDismissable: false,
-            hapticVibrate: false,
-            content: FelloRatingDialog(
-              dailogShowCount: dailogShowCount,
-            ));
-      });
-    }
+    AppState.delegate.appState.setCurrentTabIndex = 2;
+    notifyListeners();
+    Future.delayed(Duration(seconds: 4), () {
+      BaseUtil.openDialog(
+          addToScreenStack: true,
+          isBarrierDismissable: false,
+          hapticVibrate: false,
+          content: FelloRatingDialog());
+    });
   }
 
   showDialog(title, body) {

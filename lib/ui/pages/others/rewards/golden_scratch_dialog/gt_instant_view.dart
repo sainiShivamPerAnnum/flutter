@@ -1,4 +1,5 @@
 import 'package:confetti/confetti.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -10,6 +11,7 @@ import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instan
 import 'package:felloapp/ui/pages/others/rewards/golden_ticket_utils.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -36,7 +38,13 @@ class GTInstantView extends StatefulWidget {
   final String title;
   final GTSOURCE source;
   final double amount;
-  GTInstantView({this.title, @required this.source, this.amount});
+
+  final bool showAutosavePrompt;
+  GTInstantView(
+      {this.title,
+      @required this.source,
+      this.amount,
+      this.showAutosavePrompt});
   @override
   State<GTInstantView> createState() => _GTInstantViewState();
 }
@@ -355,8 +363,8 @@ class _GTInstantViewState extends State<GTInstantView>
                                       child: FelloButtonLg(
                                         color: UiConstants.primaryColor,
                                         child: Text(
-                                          getButtonText(model, widget.source) ??
-                                              "Start Playing",
+                                          // getButtonText(model, widget.source) ??
+                                          "Continue",
                                           style: TextStyles.body2.bold
                                               .colour(Colors.white),
                                         ),
@@ -457,10 +465,14 @@ class _GTInstantViewState extends State<GTInstantView>
     } else {
       onPressed = () {
         if (!model.isCardScratched) return;
-        AppState.delegate.appState.setCurrentTabIndex = 1;
         while (AppState.screenStack.length > 1) {
           AppState.backButtonDispatcher.didPopRoute();
         }
+        if (widget.showAutosavePrompt && !model.isAutosaveAlreadySetup) {
+          AppState.delegate.appState.setCurrentTabIndex = 0;
+          model.showAutosavePrompt();
+        } else
+          AppState.delegate.appState.setCurrentTabIndex = 1;
       };
     }
     return onPressed;
