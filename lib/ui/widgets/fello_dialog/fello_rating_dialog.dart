@@ -130,10 +130,11 @@ class _FelloRatingDialogState extends State<FelloRatingDialog> {
                               eventName: "App Rating",
                               properties: {"rating": rating});
                           try {
-                            PreferenceHelper.setBool(
-                              PreferenceHelper.CACHE_RATING_IS_RATED,
-                              true,
-                            );
+                            if (rating > 3)
+                              PreferenceHelper.setBool(
+                                PreferenceHelper.CACHE_RATING_IS_RATED,
+                                true,
+                              );
                           } catch (e) {
                             showLoading(false);
                             logger.e(e.toString());

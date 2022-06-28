@@ -52,7 +52,7 @@ class WebHomeView extends StatelessWidget {
                         controller: model.scrollController,
                         children: [
                           SizedBox(
-                              height: SizeConfig.screenWidth * 0.05 +
+                              height: SizeConfig.screenWidth * 0.1 +
                                   SizeConfig.viewInsets.top),
                           InkWell(
                             onTap: () async {

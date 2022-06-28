@@ -46,7 +46,9 @@ class TambolaHomeView extends StatelessWidget {
                       child: ListView(
                         controller: model.scrollController,
                         children: [
-                          SizedBox(height: SizeConfig.screenHeight * 0.1),
+                          SizedBox(
+                              height: SizeConfig.screenWidth * 0.1 +
+                                  SizeConfig.viewInsets.top),
                           InkWell(
                             onTap: model.openGame,
                             child: AnimatedOpacity(
