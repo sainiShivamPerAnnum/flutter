@@ -4,12 +4,10 @@ import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/model/user_ticket_wallet_model.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/ticket_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/elements/tambola-global/tambola_ticket.dart';
 import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
@@ -21,16 +19,11 @@ import 'package:flutter/rendering.dart';
 import 'package:felloapp/util/custom_logger.dart';
 
 class TambolaGameViewModel extends BaseModel {
-  TambolaService tambolaService = locator<TambolaService>();
-  DBModel _dbModel = locator<DBModel>();
-
-  // tambolaService. _tambolaService. = locator<tambolaService.>();
-  UserService _userService = locator<UserService>();
-  UserCoinService _coinService = locator<UserCoinService>();
-  CustomLogger _logger = locator<CustomLogger>();
-
-  final _tambolaRepo = locator<TambolaRepo>();
+  final _logger = locator<CustomLogger>();
+  final tambolaService = locator<TambolaService>();
+  final _coinService = locator<UserCoinService>();
   final _analyticsService = locator<AnalyticsService>();
+  final _tambolaRepo = locator<TambolaRepo>();
 
   int get dailyPicksCount => tambolaService.dailyPicksCount;
 
@@ -94,7 +87,7 @@ class TambolaGameViewModel extends BaseModel {
     notifyListeners();
   }
 
-  Widget get cardWidet => _widget;
+  Widget get cardWidget => _widget;
 
   List<Ticket> get topFiveTambolaBoards => _topFiveTambolaBoards;
 
@@ -282,18 +275,12 @@ class TambolaGameViewModel extends BaseModel {
 
   List<TambolaBoard> refreshBestBoards() {
     if (userWeeklyBoards == null || userWeeklyBoards.isEmpty) {
-      return new List<TambolaBoard>(5);
+      return new List<TambolaBoard>.filled(5, null);
     }
     _bestTambolaBoards = [];
     for (int i = 0; i < 5; i++) {
       _bestTambolaBoards.add(userWeeklyBoards[0]);
     }
-    //initialise
-    _bestTambolaBoards[0] = userWeeklyBoards[0];
-    _bestTambolaBoards[1] = userWeeklyBoards[0];
-    _bestTambolaBoards[2] = userWeeklyBoards[0];
-    _bestTambolaBoards[3] = userWeeklyBoards[0];
-    _bestTambolaBoards[4] = userWeeklyBoards[0];
 
     if (weeklyDigits == null || weeklyDigits.toList().isEmpty) {
       return _bestTambolaBoards;

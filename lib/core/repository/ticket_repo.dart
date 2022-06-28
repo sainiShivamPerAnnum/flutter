@@ -4,10 +4,10 @@ import 'package:felloapp/core/model/tambola_ticket_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/date_helper.dart';
 
 import '../../util/flavor_config.dart';
 import '../constants/cache_id.dart';
-import '../enums/ttl.dart';
 import '../model/flc_pregame_model.dart';
 import '../service/cache_service.dart';
 
@@ -22,9 +22,11 @@ class TambolaRepo extends BaseRepo {
       final uid = userService.baseUser.uid;
       final token = await getBearerToken();
 
+      // cache till end of week only
+      final ttl = DateHelper.timeToWeekendInMinutes();
       return await _cacheService.cachedApi(
           CacheId.TAMBOLA_TICKETS,
-          TTL.ONE_DAY,
+          ttl,
           () => APIService.instance.getData(
                 ApiPath.tambolaTickets(uid),
                 token: token,
@@ -76,16 +78,26 @@ class TambolaRepo extends BaseRepo {
     try {
       final String bearer = await getBearerToken();
 
-      final response = await APIService.instance.getData(
-        ApiPath.dailyPicks,
-        token: bearer,
-        cBaseUrl: _baseUrl,
-      );
+      // cache till 6 PM only
+      final now = DateTime.now();
+      final ttl = ((18 - now.hour) % 24) * 60 - now.minute;
 
-      final data = response['data'];
-      return ApiResponse(model: DailyPick.fromMap(data), code: 200);
+      return await _cacheService.cachedApi(
+          CacheId.TAMBOLA_PICKS,
+          ttl,
+          () => APIService.instance.getData(
+                ApiPath.dailyPicks,
+                token: bearer,
+                cBaseUrl: _baseUrl,
+              ), (dynamic response) {
+        final data = response['data'];
+        return ApiResponse<DailyPick>(
+          model: DailyPick.fromMap(data),
+          code: 200,
+        );
+      });
     } catch (e) {
-      logger.e(e);
+      logger.e('daily pick $e');
       return ApiResponse.withError(e.toString(), 400);
     }
   }

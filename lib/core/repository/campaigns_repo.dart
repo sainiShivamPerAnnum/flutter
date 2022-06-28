@@ -24,7 +24,7 @@ class CampaignRepo extends BaseRepo {
 
       return await _cacheService.cachedApi(
           CacheId.CAMPAIGNS,
-          TTL.FIVE_MIN,
+          TTL.TWO_HOURS,
           () => APIService.instance.getData(
                 ApiPath().kOngoingCampaigns,
                 token: _token,

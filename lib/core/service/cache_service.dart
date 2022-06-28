@@ -48,7 +48,7 @@ class CacheService {
       } catch (e) {
         _logger.e(
             'cache: parsing saved cache failed, trying to fetch from API', e);
-        await _invalidate(cachedData.id);
+        await invalidateByKey(key);
         return await _processApiAndSaveToCache(
           key,
           ttl,
@@ -98,29 +98,34 @@ class CacheService {
 
   Future<bool> invalidateByKey(String key) async {
     try {
+      _logger.d('cache: invalidating key $key');
+
       await _isar.writeTxn((i) async {
         final ids =
             await i.cacheModels.filter().keyEqualTo(key).idProperty().findAll();
 
-        return await i.cacheModels.deleteAll(ids);
+        final c = await i.cacheModels.deleteAll(ids);
+        _logger.d('cache: invalidated $c');
       });
 
       return true;
     } catch (e) {
-      _logger.e('cache: writing to cache failed', e);
+      _logger.e('cache: invalidation for key $key failed', e);
       return false;
     }
   }
 
   Future<bool> _invalidate(int id) async {
     try {
+      _logger.d('cache: invalidating id $id');
+
       await _isar.writeTxn((i) async {
         return await i.cacheModels.delete(id);
       });
 
       return true;
     } catch (e) {
-      _logger.e('cache: writing to cache failed', e);
+      _logger.e('cache: invalidation for id $id failed', e);
       return false;
     }
   }
@@ -131,9 +136,9 @@ class CacheService {
 
     if (data != null) {
       _logger.d(
-          'cache: data read from cache ${data.key} ${data.expireAfterTimestamp} $now');
+          'cache: data read from cache ${data.id} ${data.key} ${data.expireAfterTimestamp} $now');
 
-      if (data.expireAfterTimestamp < now) {
+      if (data.expireAfterTimestamp > now) {
         return data;
       } else {
         await _invalidate(data.id);
