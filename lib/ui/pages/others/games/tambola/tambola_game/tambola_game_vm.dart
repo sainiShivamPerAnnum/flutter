@@ -221,8 +221,8 @@ class TambolaGameViewModel extends BaseModel {
         await _tambolaRepo.buyTambolaTickets(ticketCount);
     if (_flcResponse.model != null && _flcResponse.code == 200) {
       BaseUtil.showPositiveAlert(
-        "Request is now processing",
-        "Generating your tickets, please wait",
+        "Tickets successfully generated 🥳",
+        "Your weekly odds are now way better!",
       );
 
       if (_flcResponse.model.flcBalance > 0) {
