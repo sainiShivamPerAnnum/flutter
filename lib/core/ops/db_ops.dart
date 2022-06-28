@@ -391,47 +391,6 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  ///////////////////////TAMBOLA TICKETING/////////////////////////
-  Future<List<TambolaBoard>> getWeeksTambolaTickets(String userId) async {
-    try {
-      logger.i("CALLING: getValidUserTickets");
-      QuerySnapshot _querySnapshot = await _api.getValidUserTickets(
-          userId, CodeFromFreq.getYearWeekCode());
-      if (_querySnapshot == null || _querySnapshot.size == 0) return null;
-
-      List<TambolaBoard> _requestedBoards = [];
-      for (QueryDocumentSnapshot _docSnapshot in _querySnapshot.docs) {
-        if (!_docSnapshot.exists || _docSnapshot.data() == null) continue;
-        TambolaBoard _board =
-            TambolaBoard.fromMap(_docSnapshot.data(), _docSnapshot.id);
-        if (_board.isValid()) _requestedBoards.add(_board);
-      }
-      return _requestedBoards;
-    } catch (err) {
-      log.error('Failed to fetch tambola boards');
-      return null;
-    }
-  }
-
-  Future<DailyPick> getWeeklyPicks() async {
-    try {
-      DateTime date = new DateTime.now();
-      int weekCde = CodeFromFreq.getYearWeekCode();
-      logger.i("CALLING: getWeekPickByCde");
-      QuerySnapshot querySnapshot = await _api.getWeekPickByCde(weekCde);
-
-      if (querySnapshot.docs.length != 1) {
-        log.error('Did not receive a single doc. Error staged');
-        return null;
-      } else {
-        return DailyPick.fromMap(querySnapshot.docs[0].data());
-      }
-    } catch (e) {
-      log.error("Error fetch Dailypick details: " + e.toString());
-      return null;
-    }
-  }
-
   ///////////////////////////CREDENTIALS//////////////////////////////
 
   Future<Map<String, String>> getActiveAwsAugmontApiKey() async {

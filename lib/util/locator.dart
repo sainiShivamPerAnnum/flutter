@@ -11,7 +11,7 @@ import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/repository/prizes_repo.dart';
 import 'package:felloapp/core/repository/signzy_repo.dart';
 import 'package:felloapp/core/repository/statistics_repo.dart';
-import 'package:felloapp/core/repository/ticket_generation_repo.dart';
+import 'package:felloapp/core/repository/ticket_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/repository/winners_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -126,7 +126,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => FlcActionsRepo());
   locator.registerLazySingleton(() => StatisticsRepository());
   locator.registerLazySingleton(() => WinnersRepository());
-  locator.registerLazySingleton(() => TicketGenerationRepo());
+  locator.registerLazySingleton(() => TambolaRepo());
   locator.registerLazySingleton(() => InvestmentActionsRepository());
   locator.registerLazySingleton(() => SignzyRepository());
   locator.registerLazySingleton(() => CouponRepository());

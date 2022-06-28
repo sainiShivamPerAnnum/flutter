@@ -39,7 +39,7 @@ class CacheService {
     Future<dynamic> Function() apiReq,
     ApiResponse Function(dynamic) parseData,
   ) async {
-    final cachedData = await _getData(key, ttl);
+    final cachedData = await _getData(key);
 
     if (cachedData != null) {
       try {
@@ -48,7 +48,7 @@ class CacheService {
       } catch (e) {
         _logger.e(
             'cache: parsing saved cache failed, trying to fetch from API', e);
-        await _delete(cachedData.id);
+        await _invalidate(cachedData.id);
         return await _processApiAndSaveToCache(
           key,
           ttl,
@@ -96,7 +96,23 @@ class CacheService {
     }
   }
 
-  Future<bool> _delete(int id) async {
+  Future<bool> invalidateByKey(String key) async {
+    try {
+      await _isar.writeTxn((i) async {
+        final ids =
+            await i.cacheModels.filter().keyEqualTo(key).idProperty().findAll();
+
+        return await i.cacheModels.deleteAll(ids);
+      });
+
+      return true;
+    } catch (e) {
+      _logger.e('cache: writing to cache failed', e);
+      return false;
+    }
+  }
+
+  Future<bool> _invalidate(int id) async {
     try {
       await _isar.writeTxn((i) async {
         return await i.cacheModels.delete(id);
@@ -109,17 +125,18 @@ class CacheService {
     }
   }
 
-  Future<CacheModel> _getData(String key, int ttl) async {
+  Future<CacheModel> _getData(String key) async {
     final data = await _isar.cacheModels.filter().keyEqualTo(key).findFirst();
     final now = DateTime.now().millisecondsSinceEpoch;
-    _logger.d(
-        'cache: data read from cache ${data.key} ${data.expireAfterTimestamp} $now');
 
     if (data != null) {
+      _logger.d(
+          'cache: data read from cache ${data.key} ${data.expireAfterTimestamp} $now');
+
       if (data.expireAfterTimestamp < now) {
         return data;
       } else {
-        await _delete(data.id);
+        await _invalidate(data.id);
       }
     }
 
