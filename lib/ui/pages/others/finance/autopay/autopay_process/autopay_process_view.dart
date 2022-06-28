@@ -44,10 +44,18 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           appBar: AppBar(
             backgroundColor: UiConstants.kBackgroundColor,
             elevation: 0.0,
-            title: Text(
-              'Setup Autopay',
-              style: TextStyles.rajdhaniSB.title4,
-            ),
+            // title: Text(
+            //   'Setup Autopay',
+            //   style: TextStyles.rajdhaniSB.title4,
+            // ),
+            title: model.currentPage <= 2
+                ? Text(
+                    "${model.currentPage + 1}/3",
+                    style: TextStyles.sourceSansL.body3,
+                  )
+                : Container(),
+            centerTitle: true,
+
             leading: IconButton(
               icon: Icon(
                 Icons.arrow_back_ios,
@@ -55,20 +63,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
               ),
               onPressed: () => AppState.backButtonDispatcher.didPopRoute(),
             ),
-            actions: [
-              if (model.currentPage <= 2)
-                Padding(
-                  padding: EdgeInsets.only(
-                    right: SizeConfig.padding16,
-                  ),
-                  child: Center(
-                    child: Text(
-                      "${model.currentPage + 1}/3",
-                      style: TextStyles.sourceSansL.body3,
-                    ),
-                  ),
-                )
-            ],
+            actions: [],
           ),
           resizeToAvoidBottomInset: false,
           body: PageView(
@@ -95,10 +90,17 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(
-          height: SizeConfig.screenWidth * 0.2426,
+          height: SizeConfig.screenWidth * 0.184,
         ),
         Text(
-          "Enter your UPI",
+          "SETUP AUTO PAY",
+          style: TextStyles.sourceSans.body3.setOpecity(0.5),
+        ),
+        SizedBox(
+          height: SizeConfig.padding10,
+        ),
+        Text(
+          "Enter UPI ID",
           style: TextStyles.rajdhaniSB.title4,
         ),
         SizedBox(
@@ -108,18 +110,26 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           padding: EdgeInsets.symmetric(
             horizontal: SizeConfig.padding40,
           ),
-          child: AppTextField(
-            autoFocus: widget.page == 0,
-            textEditingController: model.vpaController,
-            isEnabled: !model.isSubscriptionInProgress,
-            validator: (val) {
-              return null;
-            },
-            keyboardType: TextInputType.emailAddress,
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z@.-]")),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AppTextFieldLabel(
+                'Enter your UPI address:',
+              ),
+              AppTextField(
+                autoFocus: widget.page == 0,
+                textEditingController: model.vpaController,
+                isEnabled: !model.isSubscriptionInProgress,
+                validator: (val) {
+                  return null;
+                },
+                keyboardType: TextInputType.emailAddress,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z@.-]")),
+                ],
+                hintText: "hello@upi",
+              ),
             ],
-            hintText: "hello@upi",
           ),
         ),
         SizedBox(
@@ -143,6 +153,20 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           ),
         ),
         Spacer(),
+        Text(
+          "Supported by 60+ banks for AutoPay",
+          style: TextStyles.sourceSansL.body4,
+        ),
+        SizedBox(
+          height: SizeConfig.padding16,
+        ),
+        Image.asset(
+          "assets/images/autosavebanks.png",
+          width: SizeConfig.screenWidth * 0.7,
+        ),
+        SizedBox(
+          height: SizeConfig.padding54,
+        ),
         model.isSubscriptionInProgress
             ? SubProcessText()
             : AppPositiveBtn(
@@ -150,18 +174,11 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                 onPressed: () {
                   Haptic.vibrate();
                   model.initiateCustomSubscription();
-                  // model.pageController.jumpToPage(1);
                   FocusScope.of(context).unfocus();
+                  // model.pageController.jumpToPage(1);
                 },
                 width: SizeConfig.screenWidth * 0.8,
               ),
-        SizedBox(
-          height: SizeConfig.padding24,
-        ),
-        Text(
-          "60+ banks supported for Auto Pay",
-          style: TextStyles.sourceSansL.body4,
-        ),
         SizedBox(
           height: SizeConfig.padding32,
         ),
@@ -204,7 +221,14 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(
-          height: SizeConfig.screenWidth * 0.2426,
+          height: SizeConfig.screenWidth * 0.184,
+        ),
+        Text(
+          "SETUP AUTO PAY",
+          style: TextStyles.sourceSans.body3.setOpecity(0.5),
+        ),
+        SizedBox(
+          height: SizeConfig.padding10,
         ),
         Text(
           "Approve Request",
@@ -217,21 +241,27 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           padding: EdgeInsets.symmetric(
             horizontal: SizeConfig.padding40,
           ),
-          child: AppTextField(
-            autoFocus: widget.page == 1,
-            textEditingController: model.vpaController,
-            isEnabled: false,
-            validator: (val) {
-              return null;
-            },
-            keyboardType: TextInputType.emailAddress,
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp("[0-9]")),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AppTextFieldLabel('Entered UPI Id'),
+              AppTextField(
+                autoFocus: widget.page == 1,
+                textEditingController: model.vpaController,
+                isEnabled: false,
+                validator: (val) {
+                  return null;
+                },
+                keyboardType: TextInputType.emailAddress,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp("[0-9]")),
+                ],
+                suffixIcon: SvgPicture.asset(
+                  'assets/temp/verified.svg',
+                ),
+                hintText: "Enter amount",
+              ),
             ],
-            suffixIcon: SvgPicture.asset(
-              'assets/temp/verified.svg',
-            ),
-            hintText: "Enter amount",
           ),
         ),
         SizedBox(
@@ -250,20 +280,20 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
         SizedBox(
           height: SizeConfig.padding24,
         ),
-        if (model.showAppLaunchButton && PlatformUtils.isAndroid)
-          AppPositiveBtn(
-            btnText: 'Open ${getUpiAppName(model)}',
-            onPressed: () async {
-              Haptic.vibrate();
-              await LaunchApp.openApp(
-                androidPackageName: model.androidPackageName,
-                iosUrlScheme: model.iosUrlScheme,
-                openStore: false,
-              );
-              // model.pageController.jumpToPage(2);
-            },
-            width: SizeConfig.screenWidth * 0.8,
-          ),
+        // if (model.showAppLaunchButton && PlatformUtils.isAndroid)
+        AppPositiveBtn(
+          btnText: 'Open ${getUpiAppName(model)}',
+          onPressed: () async {
+            Haptic.vibrate();
+            await LaunchApp.openApp(
+              androidPackageName: model.androidPackageName,
+              iosUrlScheme: model.iosUrlScheme,
+              openStore: false,
+            );
+            // model.pageController.jumpToPage(2);
+          },
+          width: SizeConfig.screenWidth * 0.8,
+        ),
         SizedBox(
           height: SizeConfig.padding24,
         ),
@@ -335,7 +365,14 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(
-          height: SizeConfig.screenWidth * 0.2426,
+          height: SizeConfig.screenWidth * 0.184,
+        ),
+        Text(
+          "SETUP AUTO PAY",
+          style: TextStyles.sourceSans.body3.setOpecity(0.5),
+        ),
+        SizedBox(
+          height: SizeConfig.padding10,
         ),
         Text(
           "Enter amount",
@@ -509,6 +546,31 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           ),
         ),
         Spacer(),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              "assets/temp/star.svg",
+              width: SizeConfig.iconSize3,
+              height: SizeConfig.iconSize3,
+            ),
+            SizedBox(
+              width: SizeConfig.padding4,
+            ),
+            Text(
+              "Additional Daily Benefits",
+              style: TextStyles.sourceSans.body3.setOpecity(0.6),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: SizeConfig.padding32,
+        ),
+        _buildBenefits(),
+        SizedBox(
+          height: SizeConfig.padding40,
+        ),
         model.isSubscriptionAmountUpdateInProgress
             ? SpinKitThreeBounce(
                 color: Colors.white,
@@ -582,7 +644,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
             ),
           ),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               SizedBox(
@@ -591,10 +653,11 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  SizedBox(
-                    width: SizeConfig.padding40,
-                  ),
+                  // SizedBox(
+                  //   width: SizeConfig.padding40,
+                  // ),
                   Container(
                     width: SizeConfig.screenWidth * 0.05866,
                     height: SizeConfig.screenWidth * 0.05866,
@@ -623,26 +686,98 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
               SizedBox(
                 height: SizeConfig.padding12,
               ),
-              Padding(
-                padding: EdgeInsets.only(left: SizeConfig.screenWidth * 0.17),
-                child: RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: "₹${model.amountFieldController.text}/",
-                        style: TextStyles.rajdhaniB
-                            .size(SizeConfig.screenWidth * 0.1067),
-                      ),
-                      TextSpan(
-                        text: "${model.isDaily ? "Daily" : "Weekly"}",
-                        style: TextStyles.sourceSansSB.body1.setOpecity(0.5),
-                      ),
-                    ],
-                  ),
+              RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: "₹${model.amountFieldController.text}/",
+                      style: TextStyles.rajdhaniB
+                          .size(SizeConfig.screenWidth * 0.1067),
+                    ),
+                    TextSpan(
+                      text: "${model.isDaily ? "Daily" : "Weekly"}",
+                      style: TextStyles.sourceSansSB.body1.setOpecity(0.5),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBenefits() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SvgPicture.asset(
+              "assets/temp/sprout.svg",
+              width: SizeConfig.iconSize5,
+              height: SizeConfig.iconSize5,
+            ),
+            SizedBox(
+              height: SizeConfig.padding12,
+            ),
+            Text(
+              "Interest\non Gold",
+              style: TextStyles.sourceSans.body4
+                  .colour(UiConstants.kYellowTextColor.withOpacity(0.7)),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+        SizedBox(
+          width: SizeConfig.padding12,
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SvgPicture.asset(
+              "assets/temp/horizotal_outlined_ticket.svg",
+              width: SizeConfig.padding24,
+              height: SizeConfig.padding24,
+            ),
+            SizedBox(
+              height: SizeConfig.padding20,
+            ),
+            Text(
+              "1 Golden\nTicket",
+              style: TextStyles.sourceSans.body4
+                  .colour(UiConstants.kYellowTextColor.withOpacity(0.7)),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+        SizedBox(
+          width: SizeConfig.padding12,
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SvgPicture.asset(
+              "assets/temp/outline_token.svg",
+              width: SizeConfig.padding24,
+              height: SizeConfig.padding24,
+            ),
+            SizedBox(
+              height: SizeConfig.padding20,
+            ),
+            Text(
+              "50 Fello\nTokens",
+              style: TextStyles.sourceSans.body4
+                  .colour(UiConstants.kYellowTextColor.withOpacity(0.7)),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
       ],
     );

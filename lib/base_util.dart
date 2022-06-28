@@ -553,19 +553,23 @@ class BaseUtil extends ChangeNotifier {
     );
   }
 
-  static Future openModalBottomSheet(
-      {Widget content,
-      bool addToScreenStack,
-      bool hapticVibrate,
-      Color backgroundColor,
-      bool isBarrierDismissable,
-      BorderRadius borderRadius,
-      bool isScrollControlled = false}) {
+  static Future openModalBottomSheet({
+    Widget content,
+    bool addToScreenStack,
+    bool hapticVibrate,
+    Color backgroundColor,
+    bool isBarrierDismissable,
+    BorderRadius borderRadius,
+    bool isScrollControlled = false,
+    BoxConstraints boxContraints,
+    bool enableDrag = false,
+  }) {
     if (addToScreenStack != null && addToScreenStack == true)
       AppState.screenStack.add(ScreenItem.dialog);
     if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
     return showModalBottomSheet(
-        enableDrag: false,
+        enableDrag: enableDrag,
+        constraints: boxContraints,
         shape: RoundedRectangleBorder(
             borderRadius: borderRadius ?? BorderRadius.zero),
         isScrollControlled: isScrollControlled ?? false,

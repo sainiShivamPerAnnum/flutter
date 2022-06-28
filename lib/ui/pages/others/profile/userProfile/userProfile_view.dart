@@ -1,6 +1,8 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/modals_sheets/recharge_modal_sheet.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input/name_input_view.dart';
 
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_viewModel.dart';
@@ -16,8 +18,6 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-
-import 'package:flutter_switch/flutter_switch.dart';
 
 class UserProfileDetails extends StatelessWidget {
   const UserProfileDetails({Key key}) : super(key: key);
@@ -105,6 +105,30 @@ class UserProfileDetails extends StatelessWidget {
                         ),
                       ),
               ),
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.money,
+                color: UiConstants.kTextColor,
+              ),
+              onPressed: () {
+                BaseUtil.openModalBottomSheet(
+                  addToScreenStack: true,
+                  enableDrag: true,
+                  boxContraints: BoxConstraints(
+                    maxHeight: SizeConfig.screenHeight * 0.9,
+                  ),
+                  backgroundColor: UiConstants.kSecondaryBackgroundColor,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(SizeConfig.roundness24),
+                    topRight: Radius.circular(SizeConfig.roundness24),
+                  ),
+                  hapticVibrate: true,
+                  isBarrierDismissable: true,
+                  isScrollControlled: true,
+                  content: RechargeModalSheet(),
+                );
+              },
             ),
           ],
         ),

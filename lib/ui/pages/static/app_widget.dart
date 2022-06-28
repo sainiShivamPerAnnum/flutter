@@ -25,29 +25,30 @@ class AppTextFieldLabel extends StatelessWidget {
 }
 
 class AppTextField extends StatelessWidget {
-  AppTextField({
-    Key key,
-    @required this.textEditingController,
-    @required this.isEnabled,
-    @required this.validator,
-    //NOTE: Pass [] If inputformatters are not required
-    this.inputFormatters,
-    this.hintText = '',
-    this.autoFocus = false,
-    this.keyboardType = TextInputType.text,
-    this.suffixIcon,
-    this.height,
-    this.prefixText,
-    this.prefixTextStyle,
-    this.onChanged,
-    this.textAlign = TextAlign.start,
-    this.textStyle,
-    this.suffixText,
-    this.suffixTextStyle,
-    this.suffix,
-    this.contentPadding,
-    this.inputDecoration,
-  }) : super(key: key);
+  AppTextField(
+      {Key key,
+      @required this.textEditingController,
+      @required this.isEnabled,
+      @required this.validator,
+      //NOTE: Pass [] If inputformatters are not required
+      this.inputFormatters,
+      this.hintText = '',
+      this.autoFocus = false,
+      this.keyboardType = TextInputType.text,
+      this.suffixIcon,
+      this.height,
+      this.prefixText,
+      this.prefixTextStyle,
+      this.onChanged,
+      this.textAlign = TextAlign.start,
+      this.textStyle,
+      this.suffixText,
+      this.suffixTextStyle,
+      this.suffix,
+      this.contentPadding,
+      this.inputDecoration,
+      this.fillColor})
+      : super(key: key);
 
   final TextEditingController textEditingController;
   final bool isEnabled;
@@ -68,6 +69,7 @@ class AppTextField extends StatelessWidget {
   final Widget suffix;
   final EdgeInsets contentPadding;
   final InputDecoration inputDecoration;
+  final Color fillColor;
 
   @override
   Widget build(BuildContext context) {
@@ -111,9 +113,11 @@ class AppTextField extends StatelessWidget {
                   maxHeight: 35,
                   maxWidth: 35,
                 ),
-                fillColor: isEnabled
-                    ? UiConstants.kTextFieldColor
-                    : UiConstants.kTextFieldColor.withOpacity(0.7),
+                fillColor: fillColor != null
+                    ? fillColor
+                    : isEnabled
+                        ? UiConstants.kTextFieldColor
+                        : UiConstants.kTextFieldColor.withOpacity(0.7),
                 filled: true,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(SizeConfig.roundness5),

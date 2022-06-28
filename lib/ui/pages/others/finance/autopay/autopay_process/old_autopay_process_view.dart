@@ -767,10 +767,11 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView>
                     text: "You will be saving ",
                     children: [
                       TextSpan(
-                          text:
-                              "₹${model.saveAmount.toInt().toString().replaceAllMapped(model.reg, model.mathFunc)}",
-                          style: TextStyles.body2.bold
-                              .colour(UiConstants.tertiarySolid)),
+                        text:
+                            "₹${model.saveAmount.toInt().toString().replaceAllMapped(model.reg, model.mathFunc)}",
+                        style: TextStyles.body2.bold
+                            .colour(UiConstants.tertiarySolid),
+                      ),
                       TextSpan(text: " every year!")
                     ],
                     style: TextStyles.body2.colour(Colors.black),

@@ -46,6 +46,7 @@ class UiConstants {
   /// New UI Colors
   static const Color kTextColor = const Color(0xFFFFFFFF);
   static const Color kTextColor2 = const Color(0xFF919193);
+  static const Color kYellowTextColor = const Color(0xFFFEF5DC);
 
   static const Color kBackgroundColor = const Color(0xFF232326);
   static const Color kSecondaryBackgroundColor = const Color(0xFF39393C);
@@ -68,4 +69,13 @@ class UiConstants {
   static const Color kAutopayAmountActiveTabColor = const Color(0xFFF5F2ED);
   static const Color kAutopayAmountDeactiveTabColor = const Color(0xFF39393C);
   static const Color kBorderColor = const Color(0xFFDADADA);
+
+  // Recharge Modal Sheet
+  static const Color kRechargeModalSheetAmountSectionBackgroundColor =
+      const Color(0xFF49494C);
+
+  static const Color kpurpleTicketColor = const Color(0xFFCEC5FF);
+
+  // Autosave
+  static const Color kAutosaveBalanceColor = const Color(0xFFEFECD1);
 }
