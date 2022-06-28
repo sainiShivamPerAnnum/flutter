@@ -101,16 +101,16 @@ class CacheService {
       _logger.d('cache: invalidating key $key');
 
       await _isar.writeTxn((i) async {
-        final ids =
-            await i.cacheModels.filter().keyEqualTo(key).idProperty().findAll();
+        final data = await i.cacheModels.filter().keyEqualTo(key).findAll();
+        _logger.d('cache: $data');
 
-        final c = await i.cacheModels.deleteAll(ids);
+        final c = await i.cacheModels.deleteAll(data.map((e) => e.id).toList());
         _logger.d('cache: invalidated $c');
       });
 
       return true;
     } catch (e) {
-      _logger.e('cache: invalidation for key $key failed', e);
+      _logger.e('cache: invalidation for key $key failed $e');
       return false;
     }
   }
