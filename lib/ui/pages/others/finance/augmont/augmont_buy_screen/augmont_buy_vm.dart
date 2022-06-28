@@ -317,7 +317,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   // BUY LOGIC
   fcmTransactionResponseUpdate(fcmDataPayload) async {
     //Stop loader if loading.
-    _logger.i("Updating response value.");
+    _logger.i("Updating response value. $fcmDataPayload");
     // AppState.delegate.appState.txnFunction.timeout(Duration(seconds: 1));
     AppState.delegate.appState.txnTimer.cancel();
     _logger.d("timer cancelled");

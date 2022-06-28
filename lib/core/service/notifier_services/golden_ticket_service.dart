@@ -8,10 +8,11 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/dialogs/score_reject_dialog.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
@@ -34,6 +35,7 @@ class GoldenTicketService extends ChangeNotifier {
   final _logger = locator<CustomLogger>();
   final _dbModel = locator<DBModel>();
   final _userService = locator<UserService>();
+  final _paytmService = locator<PaytmService>();
   // static bool hasGoldenTicket = false;
 
   static String goldenTicketId;
@@ -310,9 +312,7 @@ class GoldenTicketService extends ChangeNotifier {
                     ),
                     onPressed: () {
                       AppState.backButtonDispatcher.didPopRoute();
-                      AppState.delegate.appState.currentAction = PageAction(
-                          page: AutosaveDetailsViewPageConfig,
-                          state: PageState.addPage);
+                      openAutosave();
                     },
                   ),
                 ],
@@ -326,5 +326,19 @@ class GoldenTicketService extends ChangeNotifier {
         showCrossIcon: true,
       ),
     );
+  }
+
+  openAutosave() {
+    if (_paytmService.activeSubscription != null) {
+      AppState.delegate.appState.currentAction = PageAction(
+          page: AutosaveProcessViewPageConfig,
+          widget: AutosaveProcessView(page: 2),
+          state: PageState.addWidget);
+    } else {
+      AppState.delegate.appState.currentAction = PageAction(
+        page: AutosaveDetailsViewPageConfig,
+        state: PageState.addPage,
+      );
+    }
   }
 }

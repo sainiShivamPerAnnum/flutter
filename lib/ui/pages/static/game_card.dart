@@ -66,7 +66,7 @@ class GameCard extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Text("Win: ₹ ${gameData.prizeAmount ?? 0}   ",
+                      Text("Win: ₹ ${gameData.prizeAmount ?? 0}  ",
                           style: TextStyles.body1.bold),
                       CircleAvatar(
                         radius: SizeConfig.screenWidth * 0.029,
@@ -74,23 +74,24 @@ class GameCard extends StatelessWidget {
                             UiConstants.primaryColor.withOpacity(0.2),
                         child: Image.asset(
                           Assets.moneyIcon,
-                          height: SizeConfig.iconSize3,
+                          height: SizeConfig.iconSize2,
                         ),
                       ),
                     ],
                   ),
                   Row(
                     children: [
-                      Text("Entry: ${gameData.playCost ?? 0}   ",
-                          style: TextStyles.body3
-                              .colour(Colors.black.withOpacity(0.5))),
+                      Text(
+                        "Entry: ${gameData.playCost ?? 0} ",
+                        style: TextStyles.body3.colour(Colors.black),
+                      ),
                       CircleAvatar(
-                        radius: SizeConfig.screenWidth * 0.02,
+                        radius: SizeConfig.screenWidth * 0.024,
                         backgroundColor:
                             UiConstants.tertiarySolid.withOpacity(0.2),
                         child: SvgPicture.asset(
                           Assets.tokens,
-                          height: SizeConfig.iconSize4,
+                          height: SizeConfig.iconSize2,
                         ),
                       ),
                     ],

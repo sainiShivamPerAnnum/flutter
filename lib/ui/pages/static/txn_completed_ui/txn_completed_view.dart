@@ -18,7 +18,7 @@ class TxnCompletedConfirmationScreenView extends StatefulWidget {
 
   final bool showAutoSavePrompt;
   TxnCompletedConfirmationScreenView(
-      {@required this.amount, this.title, this.showAutoSavePrompt});
+      {@required this.amount, this.title, this.showAutoSavePrompt = false});
   @override
   State<TxnCompletedConfirmationScreenView> createState() =>
       _TxnCompletedConfirmationScreenViewState();
@@ -165,7 +165,10 @@ class _TxnCompletedConfirmationScreenViewState
                         child: FelloButtonLg(
                           color: UiConstants.primaryColor,
                           child: Text(
-                            "Continue",
+                            (widget.showAutoSavePrompt &&
+                                    !model.isAutosaveAlreadySetup)
+                                ? "Continue"
+                                : "Start playing",
                             style: TextStyles.body2.bold.colour(Colors.white),
                           ),
                           onPressed: () {

@@ -2,6 +2,7 @@ import 'package:felloapp/core/service/notifier_services/golden_ticket_service.da
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/cupertino.dart';
@@ -52,7 +53,13 @@ class TransactionCompletedConfirmationScreenViewModel extends BaseModel {
 
   init(double amount) {
     Haptic.vibrate();
-    isAutosaveAlreadySetup = _paytmService.activeSubscription != null;
+    isAutosaveAlreadySetup = _paytmService.activeSubscription != null &&
+        (_paytmService.activeSubscription.status ==
+                Constants.SUBSCRIPTION_ACTIVE ||
+            (_paytmService.activeSubscription.status ==
+                    Constants.SUBSCRIPTION_INACTIVE &&
+                _paytmService.activeSubscription.resumeDate != null &&
+                _paytmService.activeSubscription.resumeDate.isNotEmpty));
     coinsCount = _coinService.flcBalance - amount.toInt();
     initDepositSuccessAnimation(amount);
   }

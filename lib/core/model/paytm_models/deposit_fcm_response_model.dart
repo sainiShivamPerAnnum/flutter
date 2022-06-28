@@ -39,7 +39,7 @@ class DepositFcmResponseModel {
     gtId = json['gtId'];
     error = json['error'];
     status = json['status'];
-    autosavePrompt = json['autosavePrompt'];
+    autosavePrompt = json['autosavePrompt'] ?? false;
   }
 
   Map<String, dynamic> toJson() {

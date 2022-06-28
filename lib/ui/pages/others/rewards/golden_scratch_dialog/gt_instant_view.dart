@@ -44,7 +44,7 @@ class GTInstantView extends StatefulWidget {
       {this.title,
       @required this.source,
       this.amount,
-      this.showAutosavePrompt});
+      this.showAutosavePrompt = false});
   @override
   State<GTInstantView> createState() => _GTInstantViewState();
 }
@@ -363,8 +363,8 @@ class _GTInstantViewState extends State<GTInstantView>
                                       child: FelloButtonLg(
                                         color: UiConstants.primaryColor,
                                         child: Text(
-                                          // getButtonText(model, widget.source) ??
-                                          "Continue",
+                                          getButtonText(model, widget.source) ??
+                                              "Continue",
                                           style: TextStyles.body2.bold
                                               .colour(Colors.white),
                                         ),
@@ -481,7 +481,10 @@ class _GTInstantViewState extends State<GTInstantView>
   getButtonText(GTInstantViewModel model, GTSOURCE source) {
     String title;
     if (source == GTSOURCE.deposit || source == GTSOURCE.autosave) {
-      title = "Start Playing";
+      if (widget.showAutosavePrompt != null && !model.isAutosaveAlreadySetup)
+        title = "Continue";
+      else
+        title = "Start playing";
     } else {
       title = "Continue";
     }
