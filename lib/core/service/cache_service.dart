@@ -39,7 +39,7 @@ class CacheService {
     Future<dynamic> Function() apiReq,
     ApiResponse Function(dynamic) parseData,
   ) async {
-    final cachedData = await _getData(key, ttl);
+    final cachedData = await _getData(key);
 
     if (cachedData != null) {
       try {
@@ -48,7 +48,7 @@ class CacheService {
       } catch (e) {
         _logger.e(
             'cache: parsing saved cache failed, trying to fetch from API', e);
-        await _delete(cachedData.id);
+        await invalidateByKey(key);
         return await _processApiAndSaveToCache(
           key,
           ttl,
@@ -96,30 +96,52 @@ class CacheService {
     }
   }
 
-  Future<bool> _delete(int id) async {
+  Future<bool> invalidateByKey(String key) async {
     try {
+      _logger.d('cache: invalidating key $key');
+
+      await _isar.writeTxn((i) async {
+        final data = await i.cacheModels.filter().keyEqualTo(key).findAll();
+        _logger.d('cache: $data');
+
+        final c = await i.cacheModels.deleteAll(data.map((e) => e.id).toList());
+        _logger.d('cache: invalidated $c');
+      });
+
+      return true;
+    } catch (e) {
+      _logger.e('cache: invalidation for key $key failed $e');
+      return false;
+    }
+  }
+
+  Future<bool> _invalidate(int id) async {
+    try {
+      _logger.d('cache: invalidating id $id');
+
       await _isar.writeTxn((i) async {
         return await i.cacheModels.delete(id);
       });
 
       return true;
     } catch (e) {
-      _logger.e('cache: writing to cache failed', e);
+      _logger.e('cache: invalidation for id $id failed', e);
       return false;
     }
   }
 
-  Future<CacheModel> _getData(String key, int ttl) async {
+  Future<CacheModel> _getData(String key) async {
     final data = await _isar.cacheModels.filter().keyEqualTo(key).findFirst();
     final now = DateTime.now().millisecondsSinceEpoch;
-    _logger.d(
-        'cache: data read from cache ${data.key} ${data.expireAfterTimestamp} $now');
 
     if (data != null) {
-      if (data.expireAfterTimestamp < now) {
+      _logger.d(
+          'cache: data read from cache ${data.id} ${data.key} ${data.expireAfterTimestamp} $now');
+
+      if (data.expireAfterTimestamp > now) {
         return data;
       } else {
-        await _delete(data.id);
+        await _invalidate(data.id);
       }
     }
 

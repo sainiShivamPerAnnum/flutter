@@ -30,6 +30,7 @@ const CacheModelSchema = CollectionSchema(
   linkIds: {},
   backlinkLinkNames: {},
   getId: _cacheModelGetId,
+  setId: _cacheModelSetId,
   getLinks: _cacheModelGetLinks,
   attachLinks: _cacheModelAttachLinks,
   serializeNative: _cacheModelSerializeNative,
@@ -47,6 +48,10 @@ int _cacheModelGetId(CacheModel object) {
   } else {
     return object.id;
   }
+}
+
+void _cacheModelSetId(CacheModel object, int id) {
+  object.id = id;
 }
 
 List<IsarLinkBase> _cacheModelGetLinks(CacheModel object) {
@@ -100,6 +105,7 @@ CacheModel _cacheModelDeserializeNative(IsarCollection<CacheModel> collection,
     key: reader.readStringOrNull(offsets[3]),
     ttl: reader.readLongOrNull(offsets[4]),
   );
+  object.id = id;
   return object;
 }
 
@@ -144,6 +150,7 @@ CacheModel _cacheModelDeserializeWeb(
     key: IsarNative.jsObjectGet(jsObj, 'key'),
     ttl: IsarNative.jsObjectGet(jsObj, 'ttl'),
   );
+  object.id = IsarNative.jsObjectGet(jsObj, 'id');
   return object;
 }
 

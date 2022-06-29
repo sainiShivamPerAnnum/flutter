@@ -17,7 +17,6 @@ import 'package:felloapp/core/model/prize_leader_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/referral_leader_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
-import 'package:felloapp/core/model/tambola_winners_details.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/model/user_icici_detail_model.dart';
@@ -85,7 +84,6 @@ class BaseUtil extends ChangeNotifier {
   AugmontRates augmontGoldRates;
 
   ///KYC global object
-  TambolaWinnersDetail tambolaWinnersDetail;
   List<PrizeLeader> prizeLeaders = [];
   List<ReferralLeader> referralLeaders = [];
   String myUserDpUrl;
@@ -139,12 +137,7 @@ class BaseUtil extends ChangeNotifier {
       show_game_tutorial,
       show_finance_tutorial;
   static bool isDeviceOffline, ticketRequestSent, playScreenFirst;
-  static int ticketCountBeforeRequest, infoSliderIndex
-
-      // _atomicTicketGenerationLeftCount,
-      //ticketGenerateCount,
-      // atomicTicketDeletionLeftCount
-      ;
+  static int ticketCountBeforeRequest, infoSliderIndex;
 
   _setRuntimeDefaults() {
     isNewUser = false;
@@ -631,7 +624,6 @@ class BaseUtil extends ChangeNotifier {
       _augmontDetail = null;
       augmontGoldRates = null;
       _currentAugmontTxn = null;
-      tambolaWinnersDetail = null;
       prizeLeaders = [];
       referralLeaders = [];
       myUserDpUrl = null;

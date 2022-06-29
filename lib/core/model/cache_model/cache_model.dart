@@ -16,7 +16,6 @@ class CacheModel {
   final String data;
 
   CacheModel({
-    this.id,
     @required this.key,
     @required this.ttl,
     @required this.expireAfterTimestamp,
@@ -31,7 +30,6 @@ class CacheModel {
     String data,
   }) {
     return CacheModel(
-      id: id ?? this.id,
       key: key ?? this.key,
       ttl: ttl ?? this.ttl,
       expireAfterTimestamp: expireAfterTimestamp ?? this.expireAfterTimestamp,
@@ -51,7 +49,6 @@ class CacheModel {
 
   factory CacheModel.fromMap(Map<String, dynamic> map) {
     return CacheModel(
-      id: map['id']?.toInt() ?? 0,
       key: map['key'] ?? '',
       ttl: map['ttl']?.toInt() ?? 0,
       expireAfterTimestamp: map['expireAfterTimestamp']?.toInt() ?? 0,

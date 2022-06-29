@@ -19,7 +19,6 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   final _dbModel = locator<DBModel>();
   final _logger = locator<CustomLogger>();
-  final _userRepo = locator<UserRepository>();
   final _apiCacheManager = locator<ApiCacheManager>();
 
   User _firebaseUser;
@@ -177,10 +176,9 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     }
   }
 
-  Future<bool> signout() async {
+  Future<bool> signOut(Function signOut) async {
     try {
-      
-      await _userRepo.removeUserFCM(_baseUser.uid);
+      await signOut();
       await FirebaseAuth.instance.signOut();
       await CacheManager.clearCacheMemory();
       await _apiCacheManager.clearCacheMemory();

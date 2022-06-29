@@ -9,7 +9,7 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:felloapp/util/time_ago.dart';
+import 'package:felloapp/util/date_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -123,7 +123,8 @@ class NotficationsPage extends StatelessWidget {
                                                       ),
                                                     ),
                                                     Text(
-                                                      TimeAgo.timeAgoSinceDate(
+                                                      DateHelper
+                                                          .timeAgoSinceDate(
                                                         DateTime.fromMillisecondsSinceEpoch(model
                                                                     .notifications[
                                                                         index]
