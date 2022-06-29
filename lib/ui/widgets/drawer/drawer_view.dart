@@ -37,9 +37,8 @@ class FDrawer extends StatelessWidget {
                             RootViewModel.scaffoldKey.currentState
                                 .openEndDrawer();
                           AppState.delegate.appState.currentAction = PageAction(
-                            state: PageState.addWidget,
+                            state: PageState.addPage,
                             page: UserProfileDetailsConfig,
-                            widget: UserProfileDetails(),
                           );
                         },
                         child: Row(

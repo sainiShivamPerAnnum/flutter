@@ -35,7 +35,7 @@ class APIService implements API {
 
   String _awstxnUrl = FlavorConfig.isProduction()
       ? "https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod"
-      : "https://hl4otla349.execute-api.ap-south-1.amazonaws.com/dev";
+      : "https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev";
   final logger = locator<CustomLogger>();
   final userService = locator<UserService>();
   String _versionString = "";
