@@ -7,10 +7,8 @@ import 'helper_model.dart';
 
 class TambolaModel {
   final String id;
-  final int matchCount;
   final String val;
   final int weekCode;
-  final List<String> matches;
   final TimestampModel assignedTime;
   static final helper =
       HelperModel<TambolaModel>((map) => TambolaModel.fromMap(map));
@@ -18,10 +16,8 @@ class TambolaModel {
 
   TambolaModel({
     @required this.id,
-    @required this.matchCount,
     @required this.val,
     @required this.weekCode,
-    @required this.matches,
     @required this.assignedTime,
     @required this.board,
   });
@@ -36,10 +32,8 @@ class TambolaModel {
   }) {
     return TambolaModel(
       id: id ?? this.id,
-      matchCount: matchCount ?? this.matchCount,
       val: val ?? this.val,
       weekCode: weekCode ?? this.weekCode,
-      matches: matches ?? this.matches,
       assignedTime: assignedTime ?? this.assignedTime,
       board: board ?? this.board,
     );
@@ -48,10 +42,8 @@ class TambolaModel {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'matchCount': matchCount,
       'val': val,
       'weekCode': weekCode,
-      'matches': matches,
       'assignedTime': assignedTime.toMap(),
     };
   }
@@ -59,10 +51,8 @@ class TambolaModel {
   factory TambolaModel.fromMap(Map<String, dynamic> map) {
     return TambolaModel(
       id: map['id'] ?? 0,
-      matchCount: map['matchCount'] ?? 0,
       val: map['val'] ?? '',
       weekCode: map['week_code'] ?? 0,
-      matches: List<String>.from(map['matches'] ?? []),
       assignedTime: TimestampModel.fromMap(map['assigned_time']),
       board: TambolaBoard.fromMap(map),
     );
@@ -75,7 +65,7 @@ class TambolaModel {
 
   @override
   String toString() {
-    return 'TambolaModel(id: $id, matchCount: $matchCount, val: $val, weekCode: $weekCode, matches: $matches, assignedTime: $assignedTime)';
+    return 'TambolaModel(id: $id, val: $val, weekCode: $weekCode, assignedTime: $assignedTime)';
   }
 
   @override
@@ -84,20 +74,16 @@ class TambolaModel {
 
     return other is TambolaModel &&
         other.id == id &&
-        other.matchCount == matchCount &&
         other.val == val &&
         other.weekCode == weekCode &&
-        listEquals(other.matches, matches) &&
         other.assignedTime == assignedTime;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-        matchCount.hashCode ^
         val.hashCode ^
         weekCode.hashCode ^
-        matches.hashCode ^
         assignedTime.hashCode;
   }
 }
