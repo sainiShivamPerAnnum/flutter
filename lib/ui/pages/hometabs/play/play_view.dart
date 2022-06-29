@@ -6,11 +6,18 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/play_offer_card.dart';
+import 'package:felloapp/ui/widgets/button4.0/appBar_button.dart';
+import 'package:felloapp/ui/widgets/game%20components/gameCard.dart';
+import 'package:felloapp/ui/widgets/game%20components/gameTitle.dart';
+import 'package:felloapp/ui/widgets/game%20components/moreGames.dart';
+import 'package:felloapp/ui/widgets/game%20components/titlesGames.dart';
+import 'package:felloapp/ui/widgets/game%20components/trendingGames.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class Play extends StatelessWidget {
   @override
@@ -18,102 +25,154 @@ class Play extends StatelessWidget {
     S locale = S.of(context);
     return BaseView<PlayViewModel>(
       onModelReady: (model) {
-        model.loadOfferList();
+        model.loadGameLists();
       },
       onModelDispose: (model) {
         model.clear();
       },
       builder: (ctx, model, child) {
-        return Container(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              //SizedBox(height: SizeConfig.padding80),
-              Container(
-                width: SizeConfig.screenWidth,
-                height: SizeConfig.screenWidth * 0.38,
-                child: model.isOfferListLoading
-                    ? ListView(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.pageHorizontalMargins),
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          ClipRRect(
-                            borderRadius:
-                                BorderRadius.circular(SizeConfig.roundness32),
-                            child: OfferCard(
-                              shimmer: true,
-                              model: PromoCardModel(1, null, null, null, null,
-                                  4281648039, null, 1, 0),
-                            ),
-                          ),
-                          ClipRRect(
-                            borderRadius:
-                                BorderRadius.circular(SizeConfig.roundness32),
-                            child: OfferCard(
-                              shimmer: true,
-                              model: PromoCardModel(1, null, null, null, null,
-                                  4294942219, null, 1, 0),
-                            ),
-                          ),
-                        ],
-                      )
-                    : PageView.builder(
-                        scrollDirection: Axis.horizontal,
-                        // padding: EdgeInsets.symmetric(
-                        //     horizontal: SizeConfig.pageHorizontalMargins),
-                        controller: model.promoPageController,
-                        itemCount: model.offerList.length,
-                        itemBuilder: (ctx, i) {
-                          return OfferCard(
-                            model: model.offerList[i],
-                          );
-                        },
-                      ),
+        return Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            title: Text(
+              'Play',
+              style: TextStyles.rajdhaniSB.title1,
+            ),
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            actions: [
+              AppBarButton(
+                svgAsset: 'assets/svg/frame_svg.svg',
+                coin: '20',
+                borderColor: Colors.white10,
+                screenWidth: SizeConfig.screenWidth * 0.18,
+                onTap: () {},
+                style: TextStyles.sourceSansSB.body2,
               ),
-              Transform.translate(
-                offset: Offset(0, -SizeConfig.padding12),
-                child: Padding(
-                  padding: EdgeInsets.only(
-                    left: SizeConfig.pageHorizontalMargins,
-                  ),
-                  child: Text(
-                    locale.playTrendingGames,
-                    style: TextStyles.title3.bold,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: ListView(
-                    shrinkWrap: true,
-                    physics: BouncingScrollPhysics(),
-                    padding:
-                        EdgeInsets.symmetric(vertical: SizeConfig.padding12),
-                    children: List.generate(
-                      BaseUtil.gamesList.length,
-                      (index) => Column(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Haptic.vibrate();
-                              AppState.delegate.parseRoute(
-                                Uri.parse(BaseUtil.gamesList[index].route),
-                              );
-                            },
-                            child: GameCard(
-                              gameData: BaseUtil.gamesList[index],
-                            ),
-                          ),
-                          (index == BaseUtil.gamesList.length - 1)
-                              ? SizedBox(
-                                  height: SizeConfig.navBarHeight * 2.4,
-                                )
-                              : SizedBox(height: SizeConfig.padding6),
-                        ],
-                      ),
-                    )),
+              AppBarButton(
+                svgAsset: 'assets/svg/token_svg.svg',
+                coin: '200',
+                borderColor: Colors.white10,
+                screenWidth: SizeConfig.screenWidth * 0.21,
+                onTap: () {},
+                style: TextStyles.sourceSansSB.body2,
               ),
             ],
+          ),
+          body: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                InkWell(
+                  onTap: () {
+                    Haptic.vibrate();
+                    AppState.delegate.parseRoute(
+                      Uri.parse(BaseUtil.gamesList[0].route),
+                    );
+                  },
+                  child: NewGameCard(
+                    thumbnailUrl: model.gamesListData[0].thumbnailUri,
+                    gameName: model.gamesListData[0].gameName,
+                    playCost: model.gamesListData[0].playCost,
+                    prizeAmount: model.gamesListData[0].prizeAmount,
+                  ),
+                ),
+                GameTitle(title: 'Trending'),
+                SizedBox(
+                  height: SizeConfig.screenWidth * 0.522,
+                  width: SizeConfig.screenWidth,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: model.gamesListData.length,
+                    padding: EdgeInsets.zero,
+                    itemBuilder: (ctx, index) {
+                      return TrendingGames(
+                        thumbnailUrl: model.gamesListData[index].thumbnailUri,
+                        gameName: model.gamesListData[index].gameName,
+                        playCost: model.gamesListData[index].playCost,
+                        prizeAmount: model.gamesListData[index].prizeAmount,
+                      );
+                    },
+                  ),
+                ),
+                GameTitle(title: 'Enjoy more Games'),
+                ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  padding: EdgeInsets.zero,
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  itemCount: 3,
+                  itemBuilder: (ctx, index) {
+                    return MoreGames(
+                      thumbnailUrl: model.gamesListData[index].thumbnailUri,
+                      gameName: model.gamesListData[index].gameName,
+                      playCost: model.gamesListData[index].playCost,
+                      prizeAmount: model.gamesListData[index].prizeAmount,
+                    );
+                  },
+                ),
+                //What to do on Play?
+                Container(
+                  width: SizeConfig.screenWidth,
+                  height: SizeConfig.screenWidth * 0.981,
+                  margin:
+                      EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+                  decoration: BoxDecoration(
+                    color: Color(0xff333333),
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: SizeConfig.padding24,
+                      ),
+                      Text(
+                        'What to do on Play?',
+                        style: TextStyles.rajdhaniSB.title4,
+                      ),
+                      SizedBox(
+                        height: SizeConfig.padding32,
+                      ),
+                      TitlesGames(
+                        asset: '',
+                        whiteText: 'Play Games ',
+                        greyText: 'with the\ntokens won',
+                        icon: SvgPicture.asset(
+                          'assets/svg/play_ludo.svg',
+                          height: SizeConfig.padding46,
+                          width: SizeConfig.padding38,
+                        ),
+                        isLast: false,
+                      ),
+                      TitlesGames(
+                        asset: 'assets/svg/play_leaderboard.svg',
+                        whiteText: 'Play Games ',
+                        greyText: 'with the\ntokens won',
+                        icon: SvgPicture.asset(
+                          'assets/svg/play_leaderboard.svg',
+                          height: SizeConfig.padding70,
+                          width: SizeConfig.padding35,
+                        ),
+                        isLast: false,
+                      ),
+                      TitlesGames(
+                        asset: 'assets/svg/play_gift.svg',
+                        whiteText: 'Play Games ',
+                        greyText: 'with the\ntokens won',
+                        icon: SvgPicture.asset(
+                          'assets/svg/play_gift.svg',
+                          height: SizeConfig.padding44,
+                          width: SizeConfig.padding35,
+                        ),
+                        isLast: true,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: SizeConfig.padding16),
+              ],
+            ),
           ),
         );
       },

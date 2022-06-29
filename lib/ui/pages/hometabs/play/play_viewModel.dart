@@ -2,14 +2,17 @@ import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/model/game_model.dart';
+import 'package:felloapp/core/model/game_model4.0.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/campaigns_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -18,6 +21,7 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class PlayViewModel extends BaseModel {
@@ -37,6 +41,9 @@ class PlayViewModel extends BaseModel {
   String _sessionId;
   bool _isOfferListLoading = true;
   List<PromoCardModel> _offerList;
+  List<GameData> _gamesListData;
+
+  List<GameData> get gamesListData => _gamesListData;
 
   List<PromoCardModel> get offerList => _offerList;
 
@@ -121,4 +128,31 @@ class PlayViewModel extends BaseModel {
       return false;
     }
   }
+  // Play 4.0 Model View
+  //final _logger = locator<CustomLogger>();
+  Future<String> _getBearerToken() async {
+    String token = await _userService.firebaseUser.getIdToken();
+    _logger.d('Justin: $token');
+    return token;
+  }
+    loadGameLists() async {
+    try {
+      final token = await _getBearerToken();
+      final response = await APIService.instance.getData(
+        ApiPath().kGames,
+        token: token,
+        cBaseUrl: 'https://4mm5ihvkz0.execute-api.ap-south-1.amazonaws.com',
+      );
+      final _responseModel = NewGameModel.fromJson(response);
+      _gamesListData = _responseModel.data.games;
+     _logger.d('Game Length: ${_responseModel.data.games.length}');
+     _logger.d('Game List Data: $_gamesListData');
+     
+    } catch (e) {
+      _logger.d('Justin: $e');
+      print("Justin: $e");
+    }
+    
+  }
+  
 }

@@ -40,6 +40,7 @@ class Constants {
   static final String COLN_APPCAMPAIGNS = "inappcampaigns";
   static final String COLN_COUPONS = 'coupons';
   static final String COLN_INAPPRESOURCES = "inappresources";
+  static final String COLN_GAMES = "games";
 
   //Sub-collections
   static final String SUBCOLN_USER_FCM = "fcm";

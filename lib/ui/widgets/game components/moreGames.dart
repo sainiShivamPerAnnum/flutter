@@ -1,16 +1,19 @@
 import 'package:felloapp/ui/widgets/button4.0/appBar_button.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class MoreGames extends StatelessWidget {
-  final String assetURL;
-  final String gameName;
+  final String thumbnailUrl, gameName;
+  final int prizeAmount, playCost;
+
+
   const MoreGames({
-    this.assetURL,
+    this.thumbnailUrl,
     this.gameName,
-    Key key,
+    this.prizeAmount, this.playCost,
+    Key key, 
   }) : super(key: key);
 
   @override
@@ -34,7 +37,7 @@ class MoreGames extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(SizeConfig.roundness8),
                 child: Image.network(
-                  assetURL,
+                  thumbnailUrl,
                   fit: BoxFit.fill,
                 ),
               ),
@@ -46,11 +49,7 @@ class MoreGames extends StatelessWidget {
             children: [
               Text(
                 gameName,
-                style: GoogleFonts.rajdhani(
-                  fontSize: SizeConfig.body2,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
+                style: TextStyles.rajdhaniSB.body2,
               ),
               Row(
                 children: [
@@ -59,11 +58,8 @@ class MoreGames extends StatelessWidget {
                     height: SizeConfig.padding16,
                   ),
                   Text(
-                    'Win upto Rs.25,000',
-                    style: GoogleFonts.sourceSansPro(
-                      fontSize: SizeConfig.body4,
-                      color: Colors.grey.shade600,
-                    ),
+                    'Win upto Rs.$prizeAmount',
+                    style: TextStyles.sourceSans.body4.colour(Colors.grey.shade600),
                   ),
                 ],
               ),
@@ -72,15 +68,11 @@ class MoreGames extends StatelessWidget {
           Spacer(),
           AppBarButton(
             svgAsset: 'assets/svg/token_svg.svg',
-            coin: '30',
+            coin: playCost.toString(),
             borderColor: Colors.transparent,
             screenWidth: SizeConfig.screenWidth * 0.18,
             onTap: () {},
-            style: GoogleFonts.sourceSansPro(
-              fontSize: SizeConfig.body2,
-              color: Colors.white,
-              fontWeight: FontWeight.w600,
-            ),
+            style: TextStyles.sourceSansSB.body2,
           ),
         ],
       ),

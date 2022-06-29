@@ -58,4 +58,5 @@ class ApiPath {
   get kNextDebitDate => "/debit";
   get kOngoingCampaigns => "/$stage/campaigns";
   get kPromos => "/$stage/promos";
+  get kGames => "/$stage/games";
 }

@@ -1,9 +1,17 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/apis_path_constants.dart';
+import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/widgets/game%20components/gameCard.dart';
+import 'package:felloapp/ui/widgets/game%20components/gameTitle.dart';
 import 'package:felloapp/ui/widgets/game%20components/moreGames.dart';
+import 'package:felloapp/ui/widgets/game%20components/titlesGames.dart';
 import 'package:felloapp/ui/widgets/game%20components/trendingGames.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,6 +25,14 @@ class PlayView extends StatefulWidget {
 }
 
 class _PlayViewState extends State<PlayView> {
+  User _firebaseUser;
+  final _logger = locator<CustomLogger>();
+  Future<String> _getBearerToken() async {
+    String token = await _firebaseUser.getIdToken();
+    _logger.d(token);
+    return token;
+  }
+
   List<String> _gameAssets = [
     'https://fello-assets.s3.ap-south-1.amazonaws.com/cricket-thumbnail-2022.png',
     'https://firebasestorage.googleapis.com/v0/b/fello-dev-station.appspot.com/o/test%2FFootball-Kickoff-Thumbnail.jpg?alt=media&token=b046ff5f-f07d-47c3-acc7-71e0c2e0bdea',
@@ -31,6 +47,28 @@ class _PlayViewState extends State<PlayView> {
     'Tamblo',
     'Pool Club'
   ];
+
+  @override
+  void initState() {
+    _getData();
+    super.initState();
+  }
+
+  _getData() async {
+    try {
+      final token = await _getBearerToken();
+      final response = await APIService.instance.getData(
+        ApiPath().kGames,
+        token: token,
+      );
+      _logger.d('Justin: ${response.body}');
+      print('Justin: ${response.body}');
+    } catch (e) {
+      _logger.d('Justin: $e');
+      print("Justin: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,10 +76,7 @@ class _PlayViewState extends State<PlayView> {
       appBar: AppBar(
         title: Text(
           'Play',
-          style: GoogleFonts.rajdhani(
-            fontSize: SizeConfig.title1,
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyles.rajdhaniSB.title1,
         ),
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -52,10 +87,7 @@ class _PlayViewState extends State<PlayView> {
             borderColor: Colors.white10,
             screenWidth: SizeConfig.screenWidth * 0.18,
             onTap: () {},
-            style: GoogleFonts.sourceSansPro(
-              fontSize: SizeConfig.body2,
-              fontWeight: FontWeight.w600,
-            ),
+            style: TextStyles.sourceSansSB.body2,
           ),
           AppBarButton(
             svgAsset: 'assets/svg/token_svg.svg',
@@ -63,10 +95,7 @@ class _PlayViewState extends State<PlayView> {
             borderColor: Colors.white10,
             screenWidth: SizeConfig.screenWidth * 0.21,
             onTap: () {},
-            style: GoogleFonts.sourceSansPro(
-              fontSize: SizeConfig.body2,
-              fontWeight: FontWeight.w600,
-            ),
+            style: TextStyles.sourceSansSB.body2,
           ),
         ],
       ),
@@ -81,11 +110,12 @@ class _PlayViewState extends State<PlayView> {
                   Uri.parse(BaseUtil.gamesList[0].route),
                 );
               },
-              child: GameCard(),
+              child: NewGameCard(),
             ),
             GameTitle(title: 'Trending'),
             SizedBox(
-              height: SizeConfig.screenWidth * 0.588,
+              //need to fix here
+              height: SizeConfig.screenWidth * 0.522,
               width: SizeConfig.screenWidth,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
@@ -93,7 +123,7 @@ class _PlayViewState extends State<PlayView> {
                 padding: EdgeInsets.zero,
                 itemBuilder: (ctx, index) {
                   return TrendingGames(
-                    networkAsset: _gameAssets[index],
+                    thumbnailUrl: _gameAssets[index],
                     gameName: _gameName[index],
                   );
                 },
@@ -108,7 +138,7 @@ class _PlayViewState extends State<PlayView> {
               itemCount: 3,
               itemBuilder: (ctx, index) {
                 return MoreGames(
-                  assetURL: _gameAssets[index],
+                  thumbnailUrl: _gameAssets[index],
                   gameName: _gameName[index],
                 );
               },
@@ -117,7 +147,7 @@ class _PlayViewState extends State<PlayView> {
             Container(
               width: SizeConfig.screenWidth,
               height: SizeConfig.screenWidth * 0.981,
-              margin:  EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+              margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
               decoration: BoxDecoration(
                 color: Color(0xff333333),
                 borderRadius: BorderRadius.circular(SizeConfig.roundness8),
@@ -130,11 +160,7 @@ class _PlayViewState extends State<PlayView> {
                   ),
                   Text(
                     'What to do on Play?',
-                    style: GoogleFonts.rajdhani(
-                      fontSize: SizeConfig.title4,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
+                    style: TextStyles.rajdhaniSB.title4,
                   ),
                   SizedBox(
                     height: SizeConfig.padding32,
@@ -183,102 +209,7 @@ class _PlayViewState extends State<PlayView> {
   }
 }
 
-class GameTitle extends StatelessWidget {
-  final String title;
-  const GameTitle({
-    this.title,
-    Key key,
-  }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: SizeConfig.padding24,
-        top: SizeConfig.padding32,
-        bottom: SizeConfig.padding20,
-      ),
-      child: Text(
-        title,
-        style: GoogleFonts.sourceSansPro(
-            fontSize: SizeConfig.title4,
-            fontWeight: FontWeight.w600,
-            color: Colors.white),
-      ),
-    );
-  }
-}
 
-class Stepper extends StatelessWidget {
-  const Stepper({
-    Key key,
-  }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
-      child: Column(
-        children: [
-          for (var val = 0; val < 5; val++)
-            Container(
-              margin: EdgeInsets.all(2.0),
-              height: (val == 0 || val == 4) ? 3 : 5,
-              width: 1.5,
-              color: Colors.white,
-            ),
-        ],
-      ),
-    );
-  }
-}
 
-class TitlesGames extends StatelessWidget {
-  final String greyText, whiteText, asset;
-  final Widget icon;
-  final bool isLast;
-  TitlesGames({
-    this.asset,
-    this.greyText,
-    this.icon,
-    this.whiteText,
-    this.isLast,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            icon,
-            SizedBox(
-              width: SizeConfig.padding20,
-            ),
-            RichText(
-              text: TextSpan(
-                text: whiteText,
-                style: GoogleFonts.sourceSansPro(
-                  fontSize: SizeConfig.body3,
-                  color: Colors.white,
-                ),
-                children: <TextSpan>[
-                  TextSpan(
-                    text: greyText,
-                    style: GoogleFonts.sourceSansPro(
-                      fontSize: SizeConfig.body3,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        if (!isLast) Stepper(),
-      ],
-    );
-  }
-}

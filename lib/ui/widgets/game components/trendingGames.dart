@@ -1,15 +1,18 @@
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class TrendingGames extends StatelessWidget {
-  final String networkAsset;
-  final String gameName;
+    final String thumbnailUrl, gameName;
+  final int prizeAmount, playCost;
+
+
   const TrendingGames({
-    this.networkAsset,
+    this.thumbnailUrl,
     this.gameName,
-    Key key,
+    this.prizeAmount, this.playCost,
+    Key key, 
   }) : super(key: key);
 
   @override
@@ -34,7 +37,7 @@ class TrendingGames extends StatelessWidget {
                 topRight: Radius.circular(SizeConfig.roundness8),
               ),
               child: Image.network(
-                networkAsset,
+                thumbnailUrl,
                 fit: BoxFit.fill,
               ),
             ),
@@ -43,14 +46,10 @@ class TrendingGames extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding:  EdgeInsets.only(left: SizeConfig.padding8,top: SizeConfig.padding12,bottom: SizeConfig.padding16),
+                padding:  EdgeInsets.only(left: SizeConfig.padding8,top: SizeConfig.padding12,),
                 child: Text(
                   '$gameName ChampionShip',
-                  style: GoogleFonts.rajdhani(
-                    fontSize: SizeConfig.body2,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
+                  style: TextStyles.rajdhaniSB.body2,
                 ),
               ),
               Padding(
@@ -65,12 +64,8 @@ class TrendingGames extends StatelessWidget {
                           height: SizeConfig.padding16,
                         ),
                         Text(
-                          '30',
-                          style: GoogleFonts.sourceSansPro(
-                            fontSize: SizeConfig.body3,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
+                          playCost.toString(),
+                          style: TextStyles.sourceSansSB.body3,
                         )
                       ],
                     ),
@@ -86,11 +81,8 @@ class TrendingGames extends StatelessWidget {
                       height: SizeConfig.padding16,
                     ),
                     Text(
-                      'Win upto Rs.25,000',
-                      style: GoogleFonts.sourceSansPro(
-                        fontSize: SizeConfig.body4,
-                        color: Colors.grey,
-                      ),
+                      'Win upto Rs.$prizeAmount',
+                      style: TextStyles.sourceSans.body3.colour(Colors.grey),
                     ),
                   ],
                 ),

@@ -1,19 +1,25 @@
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../../util/styles/size_config.dart';
 import '../button4.0/appBar_button.dart';
 
-class GameCard extends StatelessWidget {
-  const GameCard({
+class NewGameCard extends StatelessWidget {
+  final String thumbnailUrl, gameName;
+  final int prizeAmount, playCost;
+  const NewGameCard({
+    this.gameName,
+    this.thumbnailUrl,
+    this.prizeAmount,
+    this.playCost,
     Key key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin:  EdgeInsets.all(SizeConfig.padding16),
+      margin: EdgeInsets.all(SizeConfig.padding16),
       height: SizeConfig.screenWidth * 0.688,
       width: SizeConfig.screenWidth,
       decoration: BoxDecoration(
@@ -25,7 +31,7 @@ class GameCard extends StatelessWidget {
             height: SizeConfig.screenWidth * 0.474,
             width: SizeConfig.screenWidth,
             child: Image.network(
-              'https://fello-assets.s3.ap-south-1.amazonaws.com/cricket-thumbnail-2022.png',
+              thumbnailUrl, //'https://fello-assets.s3.ap-south-1.amazonaws.com/cricket-thumbnail-2022.png',
               fit: BoxFit.fill,
             ),
           ),
@@ -43,7 +49,8 @@ class GameCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Padding(
-                  padding:  EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
                   child: Container(
                     height: SizeConfig.screenWidth * 0.118,
                     width: SizeConfig.screenWidth * 0.117,
@@ -55,7 +62,7 @@ class GameCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(SizeConfig.padding4),
                     ),
                     child: Image.network(
-                      'https://fello-assets.s3.ap-south-1.amazonaws.com/cricket-thumbnail-2022.png',
+                     thumbnailUrl ,//'https://fello-assets.s3.ap-south-1.amazonaws.com/cricket-thumbnail-2022.png',
                       fit: BoxFit.fill,
                     ),
                   ),
@@ -65,12 +72,8 @@ class GameCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Cricket',
-                      style: GoogleFonts.rajdhani(
-                        fontSize: SizeConfig.title5,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
+                      gameName, // 'Cricket',
+                      style: TextStyles.rajdhaniSB.title5,
                     ),
                     Row(
                       children: [
@@ -79,11 +82,8 @@ class GameCard extends StatelessWidget {
                           height: SizeConfig.padding20,
                         ),
                         Text(
-                          'Win upto Rs.25,000',
-                          style: GoogleFonts.sourceSansPro(
-                            fontSize: SizeConfig.body4,
-                            color: Colors.grey.shade600,
-                          ),
+                          'Win upto Rs.$prizeAmount',
+                          style: TextStyles.sourceSans.body4.colour(Colors.grey.shade600),
                         ),
                       ],
                     ),
@@ -92,15 +92,11 @@ class GameCard extends StatelessWidget {
                 Spacer(),
                 AppBarButton(
                   svgAsset: 'assets/svg/token_svg.svg',
-                  coin: '30',
+                  coin: playCost.toString(),
                   borderColor: Colors.transparent,
                   screenWidth: SizeConfig.screenWidth * 0.18,
                   onTap: () {},
-                  style: GoogleFonts.sourceSansPro(
-                    fontSize: SizeConfig.title4,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: TextStyles.sourceSansSB.title4,
                 ),
               ],
             ),
