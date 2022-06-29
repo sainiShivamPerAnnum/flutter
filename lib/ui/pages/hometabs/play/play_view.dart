@@ -7,17 +7,22 @@ import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/play_offer_card.dart';
 import 'package:felloapp/ui/widgets/button4.0/appBar_button.dart';
-import 'package:felloapp/ui/widgets/game%20components/gameCard.dart';
-import 'package:felloapp/ui/widgets/game%20components/gameTitle.dart';
-import 'package:felloapp/ui/widgets/game%20components/moreGames.dart';
-import 'package:felloapp/ui/widgets/game%20components/titlesGames.dart';
-import 'package:felloapp/ui/widgets/game%20components/trendingGames.dart';
+import 'package:felloapp/ui/widgets/gameComponents/gameCard.dart';
+
+import 'package:felloapp/ui/widgets/gameComponents/gameShimmer/gameCardShimmer.dart';
+import 'package:felloapp/ui/widgets/gameComponents/gameShimmer/moreGamesShimmer.dart';
+import 'package:felloapp/ui/widgets/gameComponents/gameShimmer/trendingGamesShimmer.dart';
+import 'package:felloapp/ui/widgets/gameComponents/gameTitle.dart';
+import 'package:felloapp/ui/widgets/gameComponents/moreGames.dart';
+import 'package:felloapp/ui/widgets/gameComponents/titlesGames.dart';
+import 'package:felloapp/ui/widgets/gameComponents/trendingGames.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 
 class Play extends StatelessWidget {
   @override
@@ -70,12 +75,14 @@ class Play extends StatelessWidget {
                       Uri.parse(BaseUtil.gamesList[0].route),
                     );
                   },
-                  child: NewGameCard(
-                    thumbnailUrl: model.gamesListData[0].thumbnailUri,
-                    gameName: model.gamesListData[0].gameName,
-                    playCost: model.gamesListData[0].playCost,
-                    prizeAmount: model.gamesListData[0].prizeAmount,
-                  ),
+                  child: model.isGamesListDataLoading
+                      ? GameCardShimmer()
+                      : NewGameCard(
+                          thumbnailUrl: model.gamesListData[0].thumbnailUri,
+                          gameName: model.gamesListData[0].gameName,
+                          playCost: model.gamesListData[0].playCost,
+                          prizeAmount: model.gamesListData[0].prizeAmount,
+                        ),
                 ),
                 GameTitle(title: 'Trending'),
                 SizedBox(
@@ -83,15 +90,21 @@ class Play extends StatelessWidget {
                   width: SizeConfig.screenWidth,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: model.gamesListData.length,
+                    itemCount: model.isGamesListDataLoading
+                        ? 3
+                        : model.gamesListData.length,
                     padding: EdgeInsets.zero,
                     itemBuilder: (ctx, index) {
-                      return TrendingGames(
-                        thumbnailUrl: model.gamesListData[index].thumbnailUri,
-                        gameName: model.gamesListData[index].gameName,
-                        playCost: model.gamesListData[index].playCost,
-                        prizeAmount: model.gamesListData[index].prizeAmount,
-                      );
+                      return model.isGamesListDataLoading
+                          ? TrendingGamesShimmer()
+                          : TrendingGames(
+                              thumbnailUrl:
+                                  model.gamesListData[index].thumbnailUri,
+                              gameName: model.gamesListData[index].gameName,
+                              playCost: model.gamesListData[index].playCost,
+                              prizeAmount:
+                                  model.gamesListData[index].prizeAmount,
+                            );
                     },
                   ),
                 ),
@@ -103,12 +116,15 @@ class Play extends StatelessWidget {
                   scrollDirection: Axis.vertical,
                   itemCount: 3,
                   itemBuilder: (ctx, index) {
-                    return MoreGames(
-                      thumbnailUrl: model.gamesListData[index].thumbnailUri,
-                      gameName: model.gamesListData[index].gameName,
-                      playCost: model.gamesListData[index].playCost,
-                      prizeAmount: model.gamesListData[index].prizeAmount,
-                    );
+                    return model.isGamesListDataLoading
+                        ? MoreGamesShimmer()
+                        : MoreGames(
+                            thumbnailUrl:
+                                model.gamesListData[index].thumbnailUri,
+                            gameName: model.gamesListData[index].gameName,
+                            playCost: model.gamesListData[index].playCost,
+                            prizeAmount: model.gamesListData[index].prizeAmount,
+                          );
                   },
                 ),
                 //What to do on Play?
@@ -179,3 +195,9 @@ class Play extends StatelessWidget {
     );
   }
 }
+
+
+
+
+
+

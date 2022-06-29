@@ -40,6 +40,8 @@ class PlayViewModel extends BaseModel {
   String _message;
   String _sessionId;
   bool _isOfferListLoading = true;
+  bool _isGamesListDataLoading = true;
+
   List<PromoCardModel> _offerList;
   List<GameData> _gamesListData;
 
@@ -51,9 +53,15 @@ class PlayViewModel extends BaseModel {
   String get sessionId => _sessionId;
 
   get isOfferListLoading => this._isOfferListLoading;
+  get isGamesListDataLoading => this._isGamesListDataLoading;
 
   set isOfferListLoading(value) {
     this._isOfferListLoading = value;
+    notifyListeners();
+  }
+
+  set isGamesListDataLoading(value){
+    this._isGamesListDataLoading = value;
     notifyListeners();
   }
 
@@ -145,6 +153,8 @@ class PlayViewModel extends BaseModel {
       );
       final _responseModel = NewGameModel.fromJson(response);
       _gamesListData = _responseModel.data.games;
+      if(_gamesListData.isNotEmpty)
+      isGamesListDataLoading = false;
      _logger.d('Game Length: ${_responseModel.data.games.length}');
      _logger.d('Game List Data: $_gamesListData');
      

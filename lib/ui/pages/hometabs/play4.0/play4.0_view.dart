@@ -2,11 +2,11 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/widgets/game%20components/gameCard.dart';
-import 'package:felloapp/ui/widgets/game%20components/gameTitle.dart';
-import 'package:felloapp/ui/widgets/game%20components/moreGames.dart';
-import 'package:felloapp/ui/widgets/game%20components/titlesGames.dart';
-import 'package:felloapp/ui/widgets/game%20components/trendingGames.dart';
+import 'package:felloapp/ui/widgets/gameComponents/gameCard.dart';
+import 'package:felloapp/ui/widgets/gameComponents/gameTitle.dart';
+import 'package:felloapp/ui/widgets/gameComponents/moreGames.dart';
+import 'package:felloapp/ui/widgets/gameComponents/titlesGames.dart';
+import 'package:felloapp/ui/widgets/gameComponents/trendingGames.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
@@ -14,8 +14,6 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
-
 import '../../../../util/styles/size_config.dart';
 import '../../../widgets/button4.0/appBar_button.dart';
 

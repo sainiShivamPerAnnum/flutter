@@ -1,7 +1,8 @@
-import 'package:felloapp/ui/widgets/game%20components/stepper.dart';
+import 'package:felloapp/ui/widgets/gameComponents/stepper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
+
 class TitlesGames extends StatelessWidget {
   final String greyText, whiteText, asset;
   final Widget icon;
