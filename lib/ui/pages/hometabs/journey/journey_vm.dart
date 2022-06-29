@@ -38,7 +38,7 @@ class JourneyPageViewModel extends BaseModel {
 
   set controller(value) => this._controller = value;
 
-  get mainController => this._mainController;
+  ScrollController get mainController => this._mainController;
 
   set mainController(value) => this._mainController = value;
 
@@ -80,6 +80,7 @@ class JourneyPageViewModel extends BaseModel {
     pages = res["pages"];
     // pages = pages.sublist(0, 2);
     lastDoc = res["lastDoc"];
+    log("${lastDoc.id}");
     // pages.sublist(0, 2);
     pageWidth = SizeConfig.screenWidth;
     pageHeight = pageWidth * 2.165;
@@ -105,10 +106,11 @@ class JourneyPageViewModel extends BaseModel {
       });
 
     isLoading = false;
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    //   mainController.animateTo(_mainController.position.maxScrollExtent,
-    //       duration: const Duration(seconds: 3), curve: Curves.easeInCubic);
-    // });
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      mainController.jumpTo(300);
+      mainController.animateTo(_mainController.position.minScrollExtent,
+          duration: const Duration(seconds: 3), curve: Curves.easeOutCubic);
+    });
   }
 
   //  (pages.length - model.page) * pageHeight +
@@ -143,11 +145,11 @@ class JourneyPageViewModel extends BaseModel {
     final res = await _dbModel.fetchJourneyPage(lastDoc: lastDoc);
     pages.addAll(res["pages"]);
     logger.d("TotalPages length: ${pages.length}");
-    isEnd = pages.length >= 4;
-    // if (lastDoc == res["lastDoc"])
-    //   isEnd = true;
-    // else
-    lastDoc = res['lastDoc'];
+    // isEnd = pages.length >= 4;
+    if (res['pages'].isEmpty)
+      isEnd = true;
+    else
+      lastDoc = res['lastDoc'];
 
     await Future.delayed(Duration(seconds: 2));
     pageCount = pages.length;
@@ -162,7 +164,12 @@ class JourneyPageViewModel extends BaseModel {
     lastPage = pages[pages.length - 1].page;
     avatarPath = drawPath();
     setAvatarPostion();
-    // mainController.jumpTo(currentOffset);
+
+    mainController.animateTo(
+      mainController.offset + 100,
+      curve: Curves.easeOutCubic,
+      duration: Duration(seconds: 1),
+    );
     isLoading = false;
   }
 

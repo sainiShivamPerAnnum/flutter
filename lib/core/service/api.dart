@@ -395,7 +395,7 @@ class Api {
 
   Future addJourneyPage(JourneyPage page) async {
     DocumentReference documentReference =
-        _db.collection('journey').doc('page-${page.page}');
+        _db.collection('journey').doc('page_${page.page}');
     dev.log(page.toMap().toString());
     return await documentReference.set(page.toMap());
   }

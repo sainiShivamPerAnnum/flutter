@@ -970,7 +970,8 @@ class DBModel extends ChangeNotifier {
     } catch (e) {
       logger.e(e.toString());
     }
-    logger.d("No of pages fetched: ${pages.length}");
+    logger.d(
+        "No of pages fetched: ${pages.length} || last doc id: ${latestlastDoc?.id}");
     return {"pages": pages, "lastDoc": latestlastDoc};
   }
 

@@ -20,6 +20,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
@@ -98,24 +99,29 @@ class Root extends StatelessWidget {
                     NotificationButton(),
                     SizedBox(width: 10),
                     CircleAvatar(
+                      backgroundColor: Colors.black,
                       child: IconButton(
-                        icon: Icon(Icons.open_in_full),
+                        icon: Lottie.asset(
+                          "assets/lotties/cat-loader.json",
+                          height: SizeConfig.padding80,
+                        ),
+                        color: Colors.white,
                         onPressed: () {
                           model.openJourneyView();
                         },
                       ),
                     ),
-                    SizedBox(width: SizeConfig.padding12),
-                    CircleAvatar(
-                      child: IconButton(
-                        icon: model.isUploading
-                            ? CircularProgressIndicator(color: Colors.black)
-                            : Icon(Icons.upload),
-                        onPressed: () {
-                          model.addJourneyPage();
-                        },
-                      ),
-                    )
+                    // SizedBox(width: SizeConfig.padding12),
+                    // CircleAvatar(
+                    //   child: IconButton(
+                    //     icon: model.isUploading
+                    //         ? CircularProgressIndicator(color: Colors.black)
+                    //         : Icon(Icons.upload),
+                    //     onPressed: () {
+                    //       model.addJourneyPage();
+                    //     },
+                    //   ),
+                    // )
                   ],
                 ),
                 Positioned(
