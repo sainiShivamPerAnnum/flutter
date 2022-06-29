@@ -92,10 +92,10 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="https"
                     android:host="fello.onelink.me"
-                    android:pathPrefix="uxu0" />
+                    android:pathPrefix="/uxu0" />
                 <data android:scheme="http"
                     android:host="fello.onelink.me"
-                    android:pathPrefix="uxu0" />
+                    android:pathPrefix="/uxu0" />
             </intent-filter>
             
         </activity>

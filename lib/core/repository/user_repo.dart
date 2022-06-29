@@ -17,8 +17,9 @@ class UserRepository {
   final _appflyerService = locator<AppFlyerAnalytics>();
   final _api = locator<Api>();
   final _apiPaths = locator<ApiPath>();
-
-//Stack overflow condition when we inject _userUid from user service.
+  final _baseUrl = FlavorConfig.isDevelopment()
+      ? "https://6w37rw51hj.execute-api.ap-south-1.amazonaws.com/dev"
+      : "https://7y9layzs7j.execute-api.ap-south-1.amazonaws.com";
 
   Future<String> getBearerToken() async {
     String token = await FirebaseAuth.instance.currentUser.getIdToken();
@@ -61,11 +62,7 @@ class UserRepository {
       };
 
       final res = await APIService.instance.postData(_apiPaths.kAddNewUser,
-          cBaseUrl: FlavorConfig.isDevelopment()
-              ? "https://6w37rw51hj.execute-api.ap-south-1.amazonaws.com"
-              : "https://7y9layzs7j.execute-api.ap-south-1.amazonaws.com",
-          body: _body,
-          token: _bearer);
+          cBaseUrl: _baseUrl, body: _body, token: _bearer);
       _logger.d(res);
       final responseData = res['data'];
       _logger.d(responseData);
@@ -179,6 +176,26 @@ class UserRepository {
       _logger.d("Device added");
     } catch (e) {
       _logger.e(e);
+    }
+  }
+
+  Future<ApiResponse<String>> getUserIdByRefCode(String code) async {
+    try {
+      final String bearer = await getBearerToken();
+      final response = await APIService.instance.getData(
+        ApiPath.getUserIdByRefCode(code),
+        token: bearer,
+        cBaseUrl: _baseUrl,
+      );
+
+      final data = response['data'];
+      return ApiResponse<String>(
+        model: data['uid'],
+        code: 200,
+      );
+    } catch (e) {
+      _logger.e('getUserIdByRefCode $e');
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 }

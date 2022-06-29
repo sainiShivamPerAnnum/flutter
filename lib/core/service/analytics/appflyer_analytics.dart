@@ -55,7 +55,7 @@ class AppFlyerAnalytics extends BaseAnalyticsService {
       AppsFlyerOptions appsFlyerOptions = new AppsFlyerOptions(
         afDevKey: AnalyticsService.appFlierKey,
         appId: Platform.isIOS ? '1558445254' : 'in.fello.felloapp',
-        showDebug: true,
+        showDebug: FlavorConfig.isDevelopment(),
         disableAdvertisingIdentifier: false,
         timeToWaitForATTUserAuthorization: 0,
       );
@@ -65,13 +65,20 @@ class AppFlyerAnalytics extends BaseAnalyticsService {
         _logger.d("appsflyer setAppInviteOneLinkID callback:" + res.toString());
       });
 
-      await _appsflyerSdk.initSdk();
-      id = await _appsflyerSdk.getAppsFlyerUID();
-
       _appsflyerSdk.onDeepLinking((DeepLinkResult result) {
         _logger.d('appflyer deeplink $result');
       });
 
+      _appsflyerSdk.onInstallConversionData((res) {
+        _logger.d('appflyer onInstallConversionData $res');
+      });
+
+      await _appsflyerSdk.initSdk(
+        registerOnDeepLinkingCallback: true,
+        registerConversionDataCallback: true,
+      );
+
+      id = await _appsflyerSdk.getAppsFlyerUID();
       _logger.d('appflyer initialized');
     } catch (e) {
       _logger.e('appflyer $e');
@@ -87,7 +94,10 @@ class AppFlyerAnalytics extends BaseAnalyticsService {
       campaign: 'Referral',
       referrerName: _baseUser.name,
       customerID: _baseUser.uid,
-      customParams: {"code": 'vABo'},
+      customParams: {
+        "code": 'vABo',
+        'deep_link_value': '123',
+      },
     );
 
     final Completer<dynamic> completer = Completer();
@@ -102,3 +112,5 @@ class AppFlyerAnalytics extends BaseAnalyticsService {
     return completer.future;
   }
 }
+
+// adb shell am start -a android.intent.action.VIEW -c android.intent.category.BROWSABLE -d "https://fello.onelink.me/uxu0/g96992k5"

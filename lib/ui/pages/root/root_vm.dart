@@ -6,6 +6,7 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
@@ -49,6 +50,8 @@ class RootViewModel extends BaseModel {
   final txnService = locator<TransactionService>();
   final _analyticsService = locator<AnalyticsService>();
   final _paytmService = locator<PaytmService>();
+
+  final _userRepo = locator<UserRepository>();
 
   BuildContext rootContext;
   bool _isInitialized = false;
@@ -135,12 +138,13 @@ class RootViewModel extends BaseModel {
 
   void _showSecurityBottomSheet() {
     BaseUtil.openModalBottomSheet(
-        addToScreenStack: true,
-        isBarrierDismissable: false,
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
-        backgroundColor: UiConstants.bottomNavBarColor,
-        content: const SecurityModalSheet());
+      addToScreenStack: true,
+      isBarrierDismissable: false,
+      borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
+      backgroundColor: UiConstants.bottomNavBarColor,
+      content: const SecurityModalSheet(),
+    );
   }
 
   initialize() async {
@@ -243,6 +247,28 @@ class RootViewModel extends BaseModel {
 
   Future<dynamic> _verifyManualReferral(BuildContext context) async {
     if (BaseUtil.manualReferralCode == null) return null;
+
+    if (BaseUtil.manualReferralCode.length == 4) {
+      _verifyFirebaseManualReferral(context);
+    } else {
+      _verifyOneLinkManualReferral();
+    }
+  }
+
+  Future<dynamic> _verifyOneLinkManualReferral() async {
+    final referrerId = await _userRepo
+        .getUserIdByRefCode(BaseUtil.manualReferralCode.toUpperCase());
+
+    if (referrerId.code == 200) {
+      await _httpModel.postUserReferral(
+        _userService.baseUser.uid,
+        referrerId.model,
+        _userService.myUserName,
+      );
+    }
+  }
+
+  Future<dynamic> _verifyFirebaseManualReferral(BuildContext context) async {
     try {
       PendingDynamicLinkData dynamicLinkData =
           await FirebaseDynamicLinks.instance.getDynamicLink(Uri.parse(
@@ -251,7 +277,10 @@ class RootViewModel extends BaseModel {
       _logger.d(deepLink.toString());
       if (deepLink != null)
         return _processDynamicLink(
-            _userService.baseUser.uid, deepLink, context);
+          _userService.baseUser.uid,
+          deepLink,
+          context,
+        );
     } catch (e) {
       _logger.e(e.toString());
     }
@@ -279,23 +308,6 @@ class RootViewModel extends BaseModel {
     }
   }
 
-  _findCampaignId(String uri) {
-    int res = uri.indexOf(RegExp(r'campaign_source='));
-    int finalres = res + 16;
-    print(res);
-    print(finalres);
-    String code = '';
-    RegExp anregex = RegExp(r'^[a-zA-Z0-9]*$');
-    for (int i = finalres; i < uri.length; i++) {
-      if (anregex.hasMatch(uri[i])) {
-        code += uri[i];
-      } else {
-        break;
-      }
-    }
-    return code;
-  }
-
   _processDynamicLink(String userId, Uri deepLink, BuildContext context) async {
     String _uri = deepLink.toString();
 
@@ -318,7 +330,11 @@ class RootViewModel extends BaseModel {
 
       //Referral dynamic link
       bool _flag = await _submitReferral(
-          _userService.baseUser.uid, _userService.myUserName, _uri);
+        _userService.baseUser.uid,
+        _userService.myUserName,
+        _uri,
+      );
+
       if (_flag) {
         _logger.d('Rewards added');
         refresh();
