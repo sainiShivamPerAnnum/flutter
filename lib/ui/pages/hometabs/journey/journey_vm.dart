@@ -1,23 +1,59 @@
+import 'dart:async';
+import 'dart:developer';
+import 'dart:ui';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/model/journey_models/avatar_path_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_page.dart';
 import 'package:felloapp/core/model/journey_models/journey_path_model.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/journey_page_data.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
 class JourneyPageViewModel extends BaseModel {
+  final logger = locator<CustomLogger>();
+  final _dbModel = locator<DBModel>();
+  AnimationController _controller;
+  ScrollController _mainController;
+  Animation _avatarAnimation;
+  DocumentSnapshot lastDoc;
+
+  get avatarAnimation => this._avatarAnimation;
+
+  set avatarAnimation(value) => this._avatarAnimation = value;
   double pageWidth, pageHeight, currentFullViewHeight;
   int lastPage, startPage, pageCount;
   List<JourneyPage> pages;
   int userMilestoneLevel = 1, userJourneyLevel = 1;
   bool _isLoading = false, isEnd = false;
   Offset _avatarPosition;
+  Path _avatarPath;
+
+  get controller => this._controller;
+
+  set controller(value) => this._controller = value;
+
+  get mainController => this._mainController;
+
+  set mainController(value) => this._mainController = value;
+
   Offset get avatarPosition => this._avatarPosition;
 
   set avatarPosition(Offset value) {
     this._avatarPosition = value;
+    notifyListeners();
+  }
+
+  get avatarPath => this._avatarPath;
+
+  set avatarPath(value) {
+    this._avatarPath = value;
+    notifyListeners();
   }
 
   List<MilestoneModel> currentMilestoneList = [];
@@ -31,51 +67,102 @@ class JourneyPageViewModel extends BaseModel {
     notifyListeners();
   }
 
-  tempInit() {
-    pages = jourenyPages;
+  dump() {
+    mainController?.dispose();
+    controller?.dispose();
+  }
+
+  tempInit() async {
+    isLoading = true;
+    Future.delayed(Duration(seconds: 2));
+    Map<String, dynamic> res =
+        await _dbModel.fetchJourneyPage(lastDoc: lastDoc);
+    pages = res["pages"];
+    // pages = pages.sublist(0, 2);
+    lastDoc = res["lastDoc"];
+    // pages.sublist(0, 2);
     pageWidth = SizeConfig.screenWidth;
     pageHeight = pageWidth * 2.165;
     startPage = 0;
     pageCount = pages.length;
     currentFullViewHeight = pageHeight * pageCount;
-    startPage = jourenyPages[0].page;
-    lastPage = jourenyPages[jourenyPages.length - 1].page;
-    setCurrentMilestones(pages);
-    setCustomPathItems(pages);
-    setJourneyPathItems(pages);
+    startPage = pages[0].page;
+    lastPage = pages[pages.length - 1].page;
+    setCurrentMilestones();
+    setCustomPathItems();
+    setJourneyPathItems();
+
+    avatarPath = drawPath();
     setAvatarPostion();
+
+    createAvatarAnimationObject();
+
+    mainController = ScrollController()
+      ..addListener(() {
+        if (mainController.offset > mainController.position.maxScrollExtent &&
+            !isLoading &&
+            !isEnd) addPageToTop(mainController.offset);
+      });
+
+    isLoading = false;
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   mainController.animateTo(_mainController.position.maxScrollExtent,
+    //       duration: const Duration(seconds: 3), curve: Curves.easeInCubic);
+    // });
   }
+
+  //  (pages.length - model.page) * pageHeight +
+  //               pageHeight -
+  //               (pageHeight * model.cords[1]))
 
   init(int stPage) async {
     isLoading = true;
-    await Future.delayed(Duration(seconds: 2));
-    pages = jourenyPages.sublist(0, 2);
+    await Future.delayed(Duration(seconds: 5));
+    pages = pages.sublist(0, 2);
     pageWidth = SizeConfig.screenWidth;
     pageHeight = pageWidth * 2.165;
     startPage = stPage;
     pageCount = pages.length;
     currentFullViewHeight = pageHeight * pageCount;
-    startPage = jourenyPages[0].page;
-    lastPage = jourenyPages[jourenyPages.length - 1].page;
-    setCurrentMilestones(pages);
-    setCustomPathItems(pages);
-    setJourneyPathItems(pages);
+    startPage = pages[0].page;
+    lastPage = pages[pages.length - 1].page;
+    setCurrentMilestones();
+    setCustomPathItems();
+    setJourneyPathItems();
+    avatarPath = drawPath();
     setAvatarPostion();
+
     await Future.delayed(Duration(seconds: 2));
     isLoading = false;
   }
 
-  addPageToTop() async {
+  addPageToTop(double currentOffset) async {
+    print("Adding page to top");
     if (isEnd) return;
     isLoading = true;
+    final res = await _dbModel.fetchJourneyPage(lastDoc: lastDoc);
+    pages.addAll(res["pages"]);
+    logger.d("TotalPages length: ${pages.length}");
+    isEnd = pages.length >= 4;
+    // if (lastDoc == res["lastDoc"])
+    //   isEnd = true;
+    // else
+    lastDoc = res['lastDoc'];
+
     await Future.delayed(Duration(seconds: 2));
-    pages.addAll(jourenyPages.sublist(2));
-    isEnd = true;
     pageCount = pages.length;
     currentFullViewHeight = pageHeight * pageCount;
-    addMilestones(jourenyPages.sublist(2));
-    addCustomPathItems(jourenyPages.sublist(2));
-    addJourneyPathItems(jourenyPages.sublist(2));
+    // addMilestones(res['pages']);
+    // addCustomPathItems(res['pages']);
+    // addJourneyPathItems(res['pages']);
+    setCurrentMilestones();
+    setCustomPathItems();
+    setJourneyPathItems();
+    startPage = pages[0].page;
+    lastPage = pages[pages.length - 1].page;
+    avatarPath = drawPath();
+    setAvatarPostion();
+    // mainController.jumpTo(currentOffset);
     isLoading = false;
   }
 
@@ -91,8 +178,9 @@ class JourneyPageViewModel extends BaseModel {
   }
 
   setAvatarPostion() {
-    avatarPosition = Offset(pages.first.avatarPath.first.cords[0],
-        pages.first.avatarPath.first.cords[1]);
+    // avatarPosition = Offset(pages.first.avatarPath.first.cords[0],
+    //     pages.first.avatarPath.first.cords[1]);
+    avatarPosition = calculatePosition(0);
   }
 
   addMilestones(List<JourneyPage> pgs) {
@@ -113,22 +201,51 @@ class JourneyPageViewModel extends BaseModel {
     });
   }
 
-  setCurrentMilestones(List<JourneyPage> pages) {
+  setCurrentMilestones() {
+    currentMilestoneList.clear();
     pages.forEach((page) {
       currentMilestoneList.addAll(page.milestones);
     });
   }
 
-  setCustomPathItems(List<JourneyPage> pages) {
+  setCustomPathItems() {
+    customPathDataList.clear();
     pages.forEach((page) {
       customPathDataList.addAll(page.avatarPath);
     });
   }
 
-  setJourneyPathItems(List<JourneyPage> pages) {
+  setJourneyPathItems() {
+    journeyPathItemsList.clear();
     pages.forEach((page) {
       journeyPathItemsList.addAll(page.path);
     });
+  }
+
+  Offset calculatePosition(double value) {
+    PathMetrics pathMetrics = avatarPath.computeMetrics();
+    PathMetric pathMetric = pathMetrics.elementAt(0);
+    value = pathMetric.length * value;
+    Tangent pos = pathMetric.getTangentForOffset(value);
+    return pos.position;
+  }
+
+  void createAvatarAnimationObject() {
+    avatarAnimation = Tween(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: controller, curve: Curves.easeInOut),
+    )..addListener(() {
+        avatarPosition = calculatePosition(avatarAnimation.value);
+        // double avatarPositionFromBottom =
+        //     currentFullViewHeight - _avatarPosition.dy;
+        // double scrollPostion = currentFullViewHeight - _mainController.offset;
+        // if (avatarPositionFromBottom >= scrollPostion) {
+        //   _mainController.animateTo(scrollPostion - pageHeight * 0.5,
+        //       duration: const Duration(seconds: 2), curve: Curves.easeOutCubic);
+        // }
+        // log("Avatar Position( $avatarPositionFromBottom , $scrollPostion )");
+        //if(scrollOffsetfromBottom >= avatarBottomOffset) avatar is hidden
+        //
+      });
   }
   // setDimensions(BuildContext context) {
   //   JourneyPageViewModel.pageHeight = MediaQuery.of(context).size.width * 2.165;
@@ -149,14 +266,18 @@ class JourneyPageViewModel extends BaseModel {
   Path generateCustomPath(Path path, AvatarPathModel model, String pathType) {
     switch (pathType) {
       case "linear":
-        path.lineTo(pageWidth * model.cords[0],
-            pageHeight * (model.page - 1) + pageHeight * model.cords[1]);
+        path.lineTo(
+            pageWidth * model.cords[0],
+            (pages.length - model.page) * pageHeight +
+                pageHeight * model.cords[1]);
         return path;
       case "arc":
         return path;
       case "move":
-        path.moveTo(pageWidth * model.cords[0],
-            pageHeight * (model.page - 1) + pageHeight * model.cords[1]);
+        path.moveTo(
+            pageWidth * model.cords[0],
+            (pages.length - model.page) * pageHeight +
+                pageHeight * model.cords[1]);
         return path;
       case "rect":
         return path;

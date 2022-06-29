@@ -63,7 +63,9 @@ class JourneyPathModel {
     return {
       'asset': asset,
       'dy': dy,
+      'dx': dx,
       'width': width,
+      "height": height,
       'dz': dz,
       'page': page,
       'level': level,

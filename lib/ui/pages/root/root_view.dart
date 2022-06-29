@@ -99,11 +99,20 @@ class Root extends StatelessWidget {
                     SizedBox(width: 10),
                     CircleAvatar(
                       child: IconButton(
-                        icon: model.isUploading
-                            ? CircularProgressIndicator(color: Colors.black)
-                            : Icon(Icons.input),
+                        icon: Icon(Icons.open_in_full),
                         onPressed: () {
                           model.openJourneyView();
+                        },
+                      ),
+                    ),
+                    SizedBox(width: SizeConfig.padding12),
+                    CircleAvatar(
+                      child: IconButton(
+                        icon: model.isUploading
+                            ? CircularProgressIndicator(color: Colors.black)
+                            : Icon(Icons.upload),
+                        onPressed: () {
+                          model.addJourneyPage();
                         },
                       ),
                     )

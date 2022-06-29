@@ -5,6 +5,7 @@ import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
@@ -315,6 +316,12 @@ class StaticMilestone extends StatelessWidget {
                             top: SizeConfig.pageHorizontalMargins),
                         child: Column(children: [
                           ListTile(
+                            onTap: () {
+                              Haptic.vibrate();
+                              AppState.backButtonDispatcher.didPopRoute();
+                              AppState.delegate
+                                  .parseRoute(Uri.parse('editProfile'));
+                            },
                             leading: CircleAvatar(
                               backgroundColor: Colors.black,
                               radius: SizeConfig.avatarRadius * 2,

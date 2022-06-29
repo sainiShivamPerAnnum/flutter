@@ -1,6 +1,7 @@
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class Background extends StatefulWidget {
   final JourneyPageViewModel model;
@@ -36,8 +37,8 @@ class _BackgroundState extends State<Background> {
         child: Column(
           children: List.generate(
             widget.model.pageCount,
-            (mlIndex) => Image.asset(
-              "assets/custompathassets/bg.png",
+            (mlIndex) => SvgPicture.asset(
+              "assets/journey/bg.svg",
               // color: Colors.grey,
               fit: BoxFit.cover,
               width: widget.model.pageWidth,

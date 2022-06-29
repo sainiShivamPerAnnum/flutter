@@ -81,7 +81,9 @@ class MilestoneModel {
     return {
       'asset': asset,
       'dy': dy,
+      'dx': dx,
       'height': height,
+      'width': width,
       'rewards': rewards.map((x) => Reward.toMap(x)).toList(),
       'description': description,
       'route': route,
@@ -91,7 +93,7 @@ class MilestoneModel {
       'page': page,
       'level': level,
       'aligment': aligment,
-      'shadow': shadow,
+      'shadow': shadow?.toMap(),
       'vFlip': vFlip,
       'hFlip': hFlip
     };
@@ -114,7 +116,9 @@ class MilestoneModel {
       page: map['page']?.toInt() ?? 0,
       level: map['level']?.toInt() ?? 0,
       aligment: map['aligment'] ?? false,
-      shadow: map['shadow'],
+      shadow: map['shadow'] != null
+          ? MilestoneShadowModel.fromMap(map['shadow'])
+          : null,
       vFlip: map['vFlip'] ?? false,
       hFlip: map['hFlip'] ?? false,
     );
@@ -239,10 +243,10 @@ class MilestoneShadowModel {
   factory MilestoneShadowModel.fromMap(Map<String, dynamic> map) {
     return MilestoneShadowModel(
       asset: map['asset'] ?? '',
-      dy: double.tryParse(map['dy']),
-      dx: double.tryParse(map['dx']),
-      height: double.tryParse(map['height']),
-      width: double.tryParse(map['width']),
+      dy: map['dy'],
+      dx: map['dx'],
+      height: map['height'],
+      width: map['width'],
       animType: map['animType'] ?? '',
       isCompleted: map['isCompleted'] ?? false,
       page: map['page']?.toInt() ?? 0,

@@ -400,10 +400,18 @@ class Api {
     return await documentReference.set(page.toMap());
   }
 
-  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
-      fetchJourneyPage() async {
-    QuerySnapshot<Map<String, dynamic>> res =
-        await _db.collection('journey').get();
+  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> fetchJourneyPage(
+      DocumentSnapshot lastDoc) async {
+    Query query;
+    if (lastDoc != null)
+      query = _db
+          .collection('journey')
+          .orderBy('id')
+          .startAfterDocument(lastDoc)
+          .limit(2);
+    else
+      query = _db.collection('journey').orderBy('id').limit(2);
+    QuerySnapshot res = await query.get();
     if (res != null && res.size > 0)
       return res.docs;
     else

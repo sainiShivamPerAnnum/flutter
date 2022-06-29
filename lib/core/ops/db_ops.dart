@@ -954,12 +954,15 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<List<JourneyPage>> fetchJourneyPage() async {
+  Future<Map<String, dynamic>> fetchJourneyPage(
+      {DocumentSnapshot lastDoc}) async {
     List<JourneyPage> pages = [];
+    DocumentSnapshot latestlastDoc;
     try {
       List<QueryDocumentSnapshot<Map<String, dynamic>>> pageData =
-          await _api.fetchJourneyPage();
+          await _api.fetchJourneyPage(lastDoc);
       if (pageData != null && pageData.isNotEmpty) {
+        latestlastDoc = pageData.last;
         pageData.forEach((page) {
           pages.add(JourneyPage.fromMap(page.data()));
         });
@@ -967,7 +970,8 @@ class DBModel extends ChangeNotifier {
     } catch (e) {
       logger.e(e.toString());
     }
-    return pages;
+    logger.d("No of pages fetched: ${pages.length}");
+    return {"pages": pages, "lastDoc": latestlastDoc};
   }
 
   Future<List<FelloMilestoneModel>> getMilestonesList() async {

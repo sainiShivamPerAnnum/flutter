@@ -1,121 +1,60 @@
-import 'dart:developer';
 import 'dart:ui';
 
-import 'package:felloapp/core/model/journey_models/journey_page.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jAssetPath.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jBackground.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jMilestones.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
-import 'package:felloapp/util/journey_page_data.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
 final avatarKey = GlobalKey();
 
-class JourneyView extends StatelessWidget {
-  AnimationController _controller;
-  ScrollController _mainController;
-  Animation _animation;
-  Path _path;
-  // List<JourneyPage> pages;
-  final _dbModel = locator<DBModel>();
+class JourneyView extends StatefulWidget {
+  @override
+  State<JourneyView> createState() => _JourneyViewState();
+}
 
-  loadScreenData() async {
-    // if (!isEnd) await loadPage();
-    // JourneyPageViewModel(0, pages);
-
-    // _controller = AnimationController(
-    //     vsync: this,
-    //     duration: const Duration(seconds: 10),
-    //     animationBehavior: AnimationBehavior.preserve);
-
-    // _animation = Tween(begin: 0.0, end: 1.0).animate(
-    //   CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    // )..addListener(() {
-    //     setState(() {});
-    //     _avatarPosition = calculatePosition(_animation.value);
-    //     // log("Avatar Position( ${_avatarPosition.dx} , ${_avatarPosition.dy} )");
-    //     double avatarPositionFromBottom =
-    //         JourneyPageViewModel.currentFullViewHeight - _avatarPosition.dy;
-    //     double scrollPostion =
-    //         JourneyPageViewModel.currentFullViewHeight - _mainController.offset;
-    //     if (avatarPositionFromBottom >= scrollPostion) {
-    //       _mainController.animateTo(
-    //           scrollPostion - JourneyPageViewModel.pageHeight * 0.5,
-    //           duration: const Duration(seconds: 2),
-    //           curve: Curves.easeOutCubic);
-    //     }
-    // log("Avatar Position( $avatarPositionFromBottom , $scrollPostion )");
-    //if(scrollOffsetfromBottom >= avatarBottomOffset) avatar is hidden
-    //
-    // });
-    // _mainController.addListener(() {
-    //   // Scrollable.ensureVisible(avatarKey.currentContext);
-    //   // log(_mainController.offset.toString());
-    //   double avatarPositionFromBottom =
-    //       JourneyPageViewModel.currentFullViewHeight - _avatarPosition.dy;
-    //   double scrollPostion =
-    //       JourneyPageViewModel.currentFullViewHeight - _mainController.offset;
-    //   // if (_mainController.offset >= _mainController.position.maxScrollExtent) {
-    //   //   loadPage();
-    //   // }
-    //   // log("Avatr to Scroll Ratio( $avatarPositionFromBottom , $scrollPostion )");
-    // });
-    log("Screen: Height: ${SizeConfig.screenHeight}");
-    log("Screen Width: ${SizeConfig.screenWidth}");
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    //   _mainController.animateTo(_mainController.position.maxScrollExtent,
-    //       duration: const Duration(seconds: 3), curve: Curves.easeInCubic);
-    // });
-  }
-
+class _JourneyViewState extends State<JourneyView>
+    with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
-    // setDimensions(context);
     return BaseView<JourneyPageViewModel>(
       onModelReady: (model) async {
         // await model.init(0);
-        // _mainController = ScrollController()
-        //   ..addListener(() {
-        //     if (_mainController.offset >
-        //             _mainController.position.maxScrollExtent &&
-        //         !model.isLoading) model.addPageToTop();
-        //   });
+        model.controller = AnimationController(
+            vsync: this,
+            duration: const Duration(seconds: 10),
+            animationBehavior: AnimationBehavior.preserve);
         model.tempInit();
       },
       onModelDispose: (model) {
-        _controller.dispose();
-        _mainController.dispose();
+        model.dump();
       },
       builder: (ctx, model, child) {
-        model.drawPath();
         return Scaffold(
           backgroundColor: Colors.black,
-          // floatingActionButton: FloatingActionButton(
-          //     child: model.isLoading
-          //         ? CircularProgressIndicator()
-          //         : const Icon(Icons.play_arrow),
-          //     onPressed: model.isLoading
-          //         ? () {}
-          //         : () {
-          //             if (_controller.isCompleted)
-          //               _controller.reverse();
-          //             else if (_controller.isAnimating)
-          //               _controller.stop();
-          //             else {
-          //               _controller.forward();
-          //             }
-          //           }),
+          floatingActionButton: FloatingActionButton(
+            child: model.isLoading
+                ? CircularProgressIndicator()
+                : const Icon(Icons.play_arrow),
+            onPressed: model.isLoading
+                ? () {}
+                : () {
+                    if (model.controller.isCompleted)
+                      model.controller.reverse();
+                    else if (model.controller.isAnimating)
+                      model.controller.stop();
+                    else {
+                      model.controller.forward();
+                    }
+                  },
+          ),
           body: model.isLoading && model.pages == null
               ? Container(
                   width: SizeConfig.screenWidth,
@@ -152,43 +91,48 @@ class JourneyView extends StatelessWidget {
                       height: SizeConfig.screenHeight,
                       width: SizeConfig.screenWidth,
                       child: SingleChildScrollView(
-                        controller: _mainController,
+                        controller: model.mainController,
                         physics: const BouncingScrollPhysics(),
                         reverse: true,
-                        child: Container(
-                          height: model.currentFullViewHeight,
-                          width: SizeConfig.screenWidth,
-                          // color: Colors.black,
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Color(0xffB9D1FE),
-                                Color(0xffD6E0FF),
-                                Color(0xffF1EFFF)
-                              ],
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                            ),
-                          ),
-                          child: Stack(
-                            children: [
-                              // const Background(),
-
-                              JourneyAssetPath(model: model),
-                              Milestones(model: model),
-                              // Positioned(
-                              //   bottom: 0,
-                              //   left: 0,
-                              //   child: CustomPaint(
-                              //     size: Size(SizeConfig.screenWidth,
-                              //         model.currentFullViewHeight),
-                              //     painter: PathPainter(_path, Colors.red),
-                              //   ),
-                              // ),
-                              Avatar(
-                                model: model,
+                        child: InteractiveViewer(
+                          panEnabled: true,
+                          minScale: 1,
+                          maxScale: 4,
+                          child: Container(
+                            height: model.currentFullViewHeight,
+                            width: SizeConfig.screenWidth,
+                            // color: Colors.black,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Color(0xffB9D1FE),
+                                  Color(0xffD6E0FF),
+                                  Color(0xffF1EFFF)
+                                ],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
                               ),
-                            ],
+                            ),
+                            child: Stack(
+                              children: [
+                                Background(model: model),
+                                JourneyAssetPath(model: model),
+                                Positioned(
+                                  bottom: 0,
+                                  left: 0,
+                                  child: CustomPaint(
+                                    size: Size(SizeConfig.screenWidth,
+                                        model.currentFullViewHeight),
+                                    painter: PathPainter(
+                                        model.avatarPath, Colors.red),
+                                  ),
+                                ),
+                                Milestones(model: model),
+                                Avatar(
+                                  model: model,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -259,36 +203,20 @@ class JourneyView extends StatelessWidget {
       },
     );
   }
-
-  // Offset calculateX(value) {
-  //   PathMetrics pathMetrics = _path.computeMetrics();
-  //   PathMetric pathMetric = pathMetrics.elementAt(0);
-  //   value = pathMetric.length * value;
-  //   Tangent pos = pathMetric.getTangentForOffset(value);
-  //   return pos.position;
-  // }
-
-  Offset calculatePosition(value) {
-    PathMetrics pathMetrics = _path.computeMetrics();
-    PathMetric pathMetric = pathMetrics.elementAt(0);
-    value = pathMetric.length * value;
-    Tangent pos = pathMetric.getTangentForOffset(value);
-    return pos.position;
-  }
 }
 
 class Avatar extends StatelessWidget {
-  // final double hPos, vPos;
   final JourneyPageViewModel model;
   const Avatar({Key key, this.model}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return AnimatedPositioned(
+    print(model.avatarPosition);
+    return Positioned(
       key: avatarKey,
-      duration: Duration(seconds: 10),
-      curve: Curves.decelerate,
-      bottom: model.pageHeight * model.avatarPosition.dx,
-      left: model.pageWidth * model.avatarPosition.dy,
+      // duration: Duration(seconds: 10),
+      // curve: Curves.decelerate,
+      top: model.avatarPosition.dy,
+      left: model.avatarPosition.dx,
       child: const IgnorePointer(
         ignoring: true,
         child: CircleAvatar(
