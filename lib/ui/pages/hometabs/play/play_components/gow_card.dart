@@ -129,7 +129,7 @@ class GOWCard extends StatelessWidget {
                         Spacer(),
                         AppBarButton(
                           svgAsset: Assets.aFelloToken,
-                          size: SizeConfig.padding32,
+                          size: SizeConfig.padding28,
                           coin: model.gamesListData[0].playCost.toString(),
                           borderColor: Colors.transparent,
                           onTap: () {},
