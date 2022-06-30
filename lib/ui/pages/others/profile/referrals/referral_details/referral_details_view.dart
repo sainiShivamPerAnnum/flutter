@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -98,60 +97,40 @@ class ReferralDetailsView extends StatelessWidget {
                                   ]),
                             ),
                             SizedBox(height: SizeConfig.padding24),
-                            // model.loadingUrl
-                            //     ? SpinKitThreeBounce(
-                            //         color: UiConstants.spinnerColor2,
-                            //         size: 18.0,
-                            //       )
-                            //     : TextFormField(
-                            //         initialValue: model.getuserUrlPrefix(),
-                            //         style: TextStyles.body3.colour(Colors.grey),
-                            //       ),
-                            model.loadingUrl
+                            model.loadingRefCode
                                 ? SpinKitThreeBounce(
                                     color: UiConstants.spinnerColor2,
                                     size: 18.0,
                                   )
                                 : Container(
-                                    width: SizeConfig.navBarWidth,
+                                    alignment: Alignment.center,
                                     decoration: BoxDecoration(
                                       border: Border.all(
                                         color: UiConstants.primaryColor
                                             .withOpacity(0.5),
                                       ),
                                       borderRadius: BorderRadius.circular(
-                                          SizeConfig.roundness12),
+                                        SizeConfig.roundness12,
+                                      ),
                                     ),
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: SizeConfig.padding12),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          model.userUrlPrefix,
-                                          style: TextStyles.body3,
+                                    child: InkWell(
+                                      onTap: model.copyReferCode,
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: SizeConfig.padding8,
+                                          vertical: SizeConfig.padding8,
                                         ),
-                                        InkWell(
-                                          onTap: model.copyReferCode,
-                                          child: Container(
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: SizeConfig.padding8,
-                                              vertical: SizeConfig.padding8,
-                                            ),
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                                color:
-                                                    UiConstants.tertiarySolid),
-                                            child: Text(
-                                              model.userUrlCode,
-                                              style: TextStyles.body2.bold
-                                                  .colour(Colors.white),
-                                            ),
-                                          ),
-                                        )
-                                      ],
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        child: Text(
+                                          model.refCode,
+                                          style: TextStyles.title2.bold
+                                              .colour(Colors.black)
+                                              .copyWith(letterSpacing: 5),
+                                        ),
+                                      ),
                                     ),
                                   ),
                             SizedBox(height: SizeConfig.padding24),
@@ -355,7 +334,7 @@ class ReferralDetailsView extends StatelessWidget {
                             ),
                             InfoTile(
                               title:
-                                  "Once your friend makes their first investment of ₹${model.unlock_referral_bonus}, you receive a new Golden Ticket.",
+                                  "Once your friend makes their first investment of ₹${model.unlockReferralBonus}, you receive a new Golden Ticket.",
                               leadingAsset: Assets.tickets,
                             ),
                             SizedBox(height: SizeConfig.padding8),

@@ -1,18 +1,23 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
+import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics_service.dart';
+import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:webengage_flutter/webengage_flutter.dart';
 
 class AppFlyerAnalytics extends BaseAnalyticsService {
-  AppsflyerSdk _appsflyerSdk;
   final _logger = locator<CustomLogger>();
+  final _cacheService = new CacheService();
+
+  AppsflyerSdk _appsflyerSdk;
   Future<String> _appFlyerId;
   BaseUser _baseUser;
 
@@ -89,20 +94,28 @@ class AppFlyerAnalytics extends BaseAnalyticsService {
 
 // TTL for link generated is 31 days, so we can cache this link for 31 days.
   Future<dynamic> inviteLink() async {
+    _logger.d('appflyer get invite link');
+    final cache = await _cacheService.getData(CacheKeys.APP_FLYER_LINK);
+    if (cache != null) {
+      _logger.d('cache $cache');
+      return json.decode(cache.data);
+    }
+
     final inviteLinkParams = new AppsFlyerInviteLinkParams(
       channel: 'User_invite',
       campaign: 'Referral',
       referrerName: _baseUser.name,
       customerID: _baseUser.uid,
-      customParams: {
-        "code": 'vABo',
-        'deep_link_value': '123',
-      },
     );
 
     final Completer<dynamic> completer = Completer();
-    _appsflyerSdk.generateInviteLink(inviteLinkParams, (success) {
+    _appsflyerSdk.generateInviteLink(inviteLinkParams, (success) async {
       _logger.d('appflyer invite link $success');
+      await _cacheService.writeMap(
+        CacheKeys.APP_FLYER_LINK,
+        30 * 24 * 60,
+        success,
+      );
       completer.complete(success);
     }, (error) {
       _logger.d('appflyer invite link $error');

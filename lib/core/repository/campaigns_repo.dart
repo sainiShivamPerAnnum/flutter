@@ -1,5 +1,5 @@
 import 'package:felloapp/core/constants/apis_path_constants.dart';
-import 'package:felloapp/core/constants/cache_id.dart';
+import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/ttl.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
@@ -23,7 +23,7 @@ class CampaignRepo extends BaseRepo {
       final _queryParams = {"uid": _uid};
 
       return await _cacheService.cachedApi(
-          CacheId.CAMPAIGNS,
+          CacheKeys.CAMPAIGNS,
           TTL.TWO_HOURS,
           () => APIService.instance.getData(
                 ApiPath().kOngoingCampaigns,

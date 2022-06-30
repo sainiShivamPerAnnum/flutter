@@ -35,6 +35,7 @@ class ApiPath {
   get kCustomAuthToken => "/userOps/api/v3/trucallerAuthToken";
   static const acquisitionTracking = "/userOps/api/v3/opt-analytics";
   static String getUserIdByRefCode(String code) => "/referral/$code";
+  static String getReferralCode(String uid) => "/user/referral/$uid";
 
   //GT Rewards
   get kRedeemGtReward => "/gtRewardsOps/$stage/v2/api/redeemGtReward";
