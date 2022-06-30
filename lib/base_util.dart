@@ -40,7 +40,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flushbar/flushbar.dart';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -421,9 +421,10 @@ class BaseUtil extends ChangeNotifier {
         message: message,
         duration: Duration(seconds: seconds),
         backgroundGradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            colors: [Colors.lightBlueAccent, UiConstants.primaryColor]),
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: [Colors.lightBlueAccent, UiConstants.primaryColor],
+        ),
         boxShadows: [
           BoxShadow(
             color: UiConstants.positiveAlertColor,
@@ -529,12 +530,13 @@ class BaseUtil extends ChangeNotifier {
     )..show(context);
   }
 
-  static Future<void> openDialog(
-      {Widget content,
-      bool addToScreenStack,
-      bool hapticVibrate,
-      bool isBarrierDismissable,
-      ValueChanged<dynamic> callback}) async {
+  static Future<void> openDialog({
+    Widget content,
+    bool addToScreenStack,
+    bool hapticVibrate,
+    bool isBarrierDismissable,
+    ValueChanged<dynamic> callback,
+  }) async {
     if (addToScreenStack != null && addToScreenStack == true)
       AppState.screenStack.add(ScreenItem.dialog);
     CustomLogger().d("Added a dialog");
