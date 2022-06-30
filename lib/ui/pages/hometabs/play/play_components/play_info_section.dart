@@ -14,7 +14,10 @@ class PlayInfoSection extends StatelessWidget {
     return Container(
       width: SizeConfig.screenWidth,
       height: SizeConfig.screenWidth * 0.981,
-      margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+      margin: EdgeInsets.symmetric(
+        horizontal: SizeConfig.padding16,
+        vertical: SizeConfig.padding24,
+      ),
       decoration: BoxDecoration(
         color: Color(0xff333333),
         borderRadius: BorderRadius.circular(SizeConfig.roundness8),

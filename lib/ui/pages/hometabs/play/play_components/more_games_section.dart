@@ -63,7 +63,7 @@ class MoreGames extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.transparent,
           border: Border.all(color: Colors.white30),
-          borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+          borderRadius: BorderRadius.circular(SizeConfig.roundness12),
         ),
         child: Row(
           children: [

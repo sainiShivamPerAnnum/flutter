@@ -48,6 +48,7 @@ class GOWCard extends StatelessWidget {
                     height: SizeConfig.screenWidth * 0.474,
                     width: SizeConfig.screenWidth,
                     decoration: BoxDecoration(
+                      color: Colors.black,
                       image: DecorationImage(
                           image: CachedNetworkImageProvider(
                               model.gamesListData[0].thumbnailUri),

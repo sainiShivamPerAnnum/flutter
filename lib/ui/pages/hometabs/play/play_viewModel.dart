@@ -9,7 +9,6 @@ import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/game_model4.0.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/api_service.dart';
@@ -21,7 +20,6 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class PlayViewModel extends BaseModel {
@@ -138,10 +136,9 @@ class PlayViewModel extends BaseModel {
   }
 
   // Play 4.0 Model View
-  //final _logger = locator<CustomLogger>();
   Future<String> _getBearerToken() async {
     String token = await _userService.firebaseUser.getIdToken();
-    _logger.d('Justin: $token');
+    _logger.d('Token: $token');
     return token;
   }
 
@@ -157,12 +154,11 @@ class PlayViewModel extends BaseModel {
       final _responseModel = NewGameModel.fromJson(response);
       _logger.d(response);
       _gamesListData = _responseModel.data.games;
-      if (_gamesListData.isNotEmpty) isGamesListDataLoading = false;
       _logger.d('Game Length: ${_responseModel.data.games.length}');
-      _logger.d('Game List Data: $_gamesListData');
+      _logger.d('Game Response: $response');
+      if (_gamesListData.isNotEmpty) isGamesListDataLoading = false;
     } catch (e) {
-      _logger.d('Justin: $e');
-      print("Justin: $e");
+      _logger.d('Catch Error: $e');
     }
   }
 }

@@ -6,7 +6,6 @@ import 'package:felloapp/ui/pages/hometabs/play/play_components/trendingGames.da
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/widgets/button4.0/appBar_button.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +15,6 @@ import 'play_components/more_games_section.dart';
 class Play extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
     return BaseView<PlayViewModel>(
       onModelReady: (model) {
         model.loadGameLists();
@@ -62,7 +60,6 @@ class Play extends StatelessWidget {
                 MoreGamesSection(model: model),
                 //What to do on Play?
                 PlayInfoSection(),
-                SizedBox(height: SizeConfig.padding16),
               ],
             ),
           ),

@@ -4,9 +4,9 @@ import 'package:felloapp/ui/pages/others/games/web/web_home/web_home_vm.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/widgets/button4.0/appBar_button.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class NewWebHomeView extends StatefulWidget {
   const NewWebHomeView({Key key, @required this.game}) : super(key: key);
@@ -39,7 +39,6 @@ class _NewWebHomeViewState extends State<NewWebHomeView> {
         return RefreshIndicator(
           onRefresh: () => model.refreshLeaderboard(),
           child: Scaffold(
-            // backgroundColor: UiConstants.kBackgroundColor,
             body: Stack(
               children: [
                 NewSquareBackground(),
@@ -70,10 +69,7 @@ class _NewWebHomeViewState extends State<NewWebHomeView> {
                           borderColor: Colors.black,
                           // screenWidth: SizeConfig.screenWidth * 0.21,
                           onTap: () {},
-                          style: GoogleFonts.sourceSansPro(
-                            fontSize: SizeConfig.body2,
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: TextStyles.sourceSansSB.body2,
                         ),
                       ],
                     ),
@@ -104,11 +100,7 @@ class _NewWebHomeViewState extends State<NewWebHomeView> {
                               ),
                               Text(
                                 'Cricket',
-                                style: GoogleFonts.rajdhani(
-                                  fontSize: SizeConfig.title2,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
+                                style: TextStyles.rajdhaniB.title2,
                               ),
                               SizedBox(
                                 height: SizeConfig.padding35,
@@ -146,10 +138,7 @@ class _NewWebHomeViewState extends State<NewWebHomeView> {
                                 height: SizeConfig.screenWidth * 0.117,
                                 child: Text(
                                   'Swing your wicket, throw fast pitches, and win upto ?\nRs. 25,000 in one of our many free, online games!',
-                                  style: GoogleFonts.sourceSansPro(
-                                    fontSize: SizeConfig.body2,
-                                    color: Colors.grey.shade600,
-                                  ),
+                                  style: TextStyles.sourceSans.body2.colour(Colors.grey.shade600),
                                   maxLines: 2,
                                   textAlign: TextAlign.center,
                                 ),
@@ -172,10 +161,7 @@ class _NewWebHomeViewState extends State<NewWebHomeView> {
                                     horizontal: SizeConfig.padding16),
                                 child: Text(
                                   'Recharge Options',
-                                  style: GoogleFonts.sourceSansPro(
-                                      fontSize: SizeConfig.title5,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white),
+                                  style: TextStyles.sourceSansSB.title5,
                                 ),
                               ),
                               SizedBox(
@@ -204,10 +190,7 @@ class _NewWebHomeViewState extends State<NewWebHomeView> {
                                             ),
                                             Text(
                                               'Custom',
-                                              style: GoogleFonts.sourceSansPro(
-                                                fontSize: SizeConfig.body3,
-                                                color: Colors.white,
-                                              ),
+                                              style: TextStyles.sourceSans.body3,
                                             )
                                           ],
                                         ),
@@ -273,11 +256,7 @@ class RechargeBox extends StatelessWidget {
                   ),
                   Text(
                     coin,
-                    style: GoogleFonts.sourceSansPro(
-                      fontSize: SizeConfig.body2,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
+                    style: TextStyles.sourceSansSB.body2,
                   ),
                 ],
               ),
@@ -292,10 +271,7 @@ class RechargeBox extends StatelessWidget {
             child: Center(
               child: Text(
                 '₹$coin',
-                style: GoogleFonts.rajdhani(
-                    fontWeight: FontWeight.bold,
-                    fontSize: SizeConfig.padding12,
-                    color: Colors.white),
+                style: TextStyles.rajdhaniB.body3,
               ),
             ),
           ),
@@ -316,9 +292,6 @@ class RewardStatus extends StatelessWidget {
     this.assetHeight,
     this.assetUrl,
   }) : super(key: key);
-  // const RewardStatus({
-  //   Key key,
-  // }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -329,28 +302,19 @@ class RewardStatus extends StatelessWidget {
         children: [
           Row(
             children: [
-              //logo
               SvgPicture.asset(
                 assetUrl,
                 height: assetHeight,
               ),
-              //text
               Text(
                 coin,
-                style: GoogleFonts.sourceSansPro(
-                  fontSize: SizeConfig.title4,
-                  color: Colors.grey,
-                ),
+                style: TextStyles.sourceSans.title4.colour(Colors.grey),
               ),
             ],
           ),
-          //text
           Text(
             coinText,
-            style: GoogleFonts.sourceSansPro(
-              fontSize: SizeConfig.body3,
-              color: Colors.grey.shade600,
-            ),
+            style: TextStyles.sourceSansSB.body3,
           ),
         ],
       ),
