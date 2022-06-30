@@ -105,6 +105,7 @@ class BaseUtil extends ChangeNotifier {
   String zeroBalanceAssetUri;
   static List<GameModel> gamesList;
   static String manualReferralCode;
+  static String referrerUserId;
   static bool isNewUser, isFirstFetchDone; // = 'jdF1';
 
   ///Flags in various screens defined as global variables
@@ -639,6 +640,7 @@ class BaseUtil extends ChangeNotifier {
 
       AppState.delegate.appState.setCurrentTabIndex = 0;
       manualReferralCode = null;
+      referrerUserId = null;
       _setRuntimeDefaults();
 
       return true;

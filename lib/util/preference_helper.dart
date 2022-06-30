@@ -6,6 +6,7 @@ class PreferenceHelper {
   static const INSTALLATION_DAY = 'installation_day';
   static const CAMPAIGN_ID = 'campaign_id';
   static const REFERRAL_CODE = 'referral_code';
+  static const REFERRAL_PROCESSED = 'referral_processed';
 
   static SharedPreferences _prefs;
 
@@ -16,20 +17,20 @@ class PreferenceHelper {
     return _prefs;
   }
 
-  static void setString(String key, String value) {
-    _prefs.setString(key, value);
+  static Future<bool> setString(String key, String value) async {
+    return _prefs.setString(key, value);
   }
 
-  static void setInt(String key, int value) {
-    _prefs.setInt(key, value);
+  static Future<bool> setInt(String key, int value) async {
+    return _prefs.setInt(key, value);
   }
 
-  static void setDouble(String key, double value) {
-    _prefs.setDouble(key, value);
+  static Future<bool> setDouble(String key, double value) async {
+    return _prefs.setDouble(key, value);
   }
 
-  static void setBool(String key, bool value) {
-    _prefs.setBool(key, value);
+  static Future<bool> setBool(String key, bool value) async {
+    return _prefs.setBool(key, value);
   }
 
   static String getString(String key, {String def}) {

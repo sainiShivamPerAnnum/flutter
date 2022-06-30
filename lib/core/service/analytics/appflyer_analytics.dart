@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -76,6 +77,9 @@ class AppFlyerAnalytics extends BaseAnalyticsService {
 
       _appsflyerSdk.onInstallConversionData((res) {
         _logger.d('appflyer onInstallConversionData $res');
+        if (res['status'] == 'success') {
+          BaseUtil.referrerUserId = res['payload']['af_referrer_customer_id'];
+        }
       });
 
       await _appsflyerSdk.initSdk(

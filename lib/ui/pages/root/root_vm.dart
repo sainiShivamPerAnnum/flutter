@@ -29,6 +29,7 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -77,7 +78,7 @@ class RootViewModel extends BaseModel {
     // AppState.delegate.appState.setCurrentTabIndex = 1;
     AppState().setRootLoadValue = true;
     _initDynamicLinks(AppState.delegate.navigatorKey.currentContext);
-    _verifyManualReferral(AppState.delegate.navigatorKey.currentContext);
+    _verifyReferral(AppState.delegate.navigatorKey.currentContext);
   }
 
   onDispose() {
@@ -230,9 +231,10 @@ class RootViewModel extends BaseModel {
                 onPressed: () {
                   AppState.backButtonDispatcher.didPopRoute();
                   AppState.delegate.appState.currentAction = PageAction(
-                      widget: MyWinningsView(openFirst: true),
-                      page: MyWinnigsPageConfig,
-                      state: PageState.addWidget);
+                    widget: MyWinningsView(openFirst: true),
+                    page: MyWinnigsPageConfig,
+                    state: PageState.addWidget,
+                  );
                 },
               ),
             ),
@@ -245,13 +247,28 @@ class RootViewModel extends BaseModel {
     }
   }
 
-  Future<dynamic> _verifyManualReferral(BuildContext context) async {
-    if (BaseUtil.manualReferralCode == null) return null;
+  Future<dynamic> _verifyReferral(BuildContext context) async {
+    if (BaseUtil.referrerUserId != null) {
+      // when referrer id is fetched from one-link
+      if (PreferenceHelper.getBool(
+        PreferenceHelper.REFERRAL_PROCESSED,
+        def: false,
+      )) return;
 
-    if (BaseUtil.manualReferralCode.length == 4) {
-      _verifyFirebaseManualReferral(context);
-    } else {
-      _verifyOneLinkManualReferral();
+      await _httpModel.postUserReferral(
+        _userService.baseUser.uid,
+        BaseUtil.referrerUserId,
+        _userService.myUserName,
+      );
+
+      _logger.d('referral processed from link');
+      PreferenceHelper.setBool(PreferenceHelper.REFERRAL_PROCESSED, true);
+    } else if (BaseUtil.manualReferralCode != null) {
+      if (BaseUtil.manualReferralCode.length == 4) {
+        _verifyFirebaseManualReferral(context);
+      } else {
+        _verifyOneLinkManualReferral();
+      }
     }
   }
 
