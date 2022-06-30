@@ -4,76 +4,78 @@
 
 import 'dart:convert';
 
-NewGameModel newGameModelFromJson(String str) => NewGameModel.fromJson(json.decode(str));
+NewGameModel newGameModelFromJson(String str) =>
+    NewGameModel.fromJson(json.decode(str));
 
 String newGameModelToJson(NewGameModel data) => json.encode(data.toJson());
 
 class NewGameModel {
-    NewGameModel({
-        this.message,
-        this.data,
-    });
+  NewGameModel({
+    this.message,
+    this.data,
+  });
 
-    String message;
-    Data data;
+  String message;
+  Data data;
 
-    factory NewGameModel.fromJson(Map<String, dynamic> json) => NewGameModel(
+  factory NewGameModel.fromJson(Map<String, dynamic> json) => NewGameModel(
         message: json["message"],
         data: Data.fromJson(json["data"]),
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "message": message,
         "data": data.toJson(),
-    };
+      };
 }
 
 class Data {
-    Data({
-        this.status,
-        this.games,
-    });
+  Data({
+    this.status,
+    this.games,
+  });
 
-    bool status;
-    List<GameData> games;
+  bool status;
+  List<GameData> games;
 
-    factory Data.fromJson(Map<String, dynamic> json) => Data(
+  factory Data.fromJson(Map<String, dynamic> json) => Data(
         status: json["status"],
-        games: List<GameData>.from(json["games"].map((x) => GameData.fromJson(x))),
-    );
+        games:
+            List<GameData>.from(json["games"].map((x) => GameData.fromJson(x))),
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "status": status,
         "games": List<dynamic>.from(games.map((x) => x.toJson())),
-    };
+      };
 }
 
 class GameData {
-    GameData({
-        this.id,
-        this.order,
-        this.route,
-        this.thumbnailUri,
-        this.shadowColor,
-        this.code,
-        this.prizeAmount,
-        this.event,
-        this.playCost,
-        this.gameName,
-    });
+  GameData({
+    this.id,
+    this.order,
+    this.route,
+    this.thumbnailUri,
+    this.shadowColor,
+    this.code,
+    this.prizeAmount,
+    this.event,
+    this.playCost,
+    this.gameName,
+  });
 
-    String id;
-    int order;
-    String route;
-    String thumbnailUri;
-    String shadowColor;
-    String code;
-    int prizeAmount;
-    String event;
-    int playCost;
-    String gameName;
+  String id;
+  int order;
+  String route;
+  String thumbnailUri;
+  String shadowColor;
+  String code;
+  int prizeAmount;
+  String event;
+  int playCost;
+  String gameName;
 
-    factory GameData.fromJson(Map<String, dynamic> json) => GameData(
+  factory GameData.fromJson(Map<String, dynamic> json) => GameData(
         id: json["id"],
         order: json["order"],
         route: json["route"],
@@ -84,9 +86,9 @@ class GameData {
         event: json["event"],
         playCost: json["playCost"],
         gameName: json["gameName"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "id": id,
         "order": order,
         "route": route,
@@ -97,5 +99,9 @@ class GameData {
         "event": event,
         "playCost": playCost,
         "gameName": gameName,
-    };
+      };
+
+  String toString() {
+    return "game name: $gameName";
+  }
 }

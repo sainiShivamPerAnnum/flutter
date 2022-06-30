@@ -14,7 +14,6 @@ class GameTitle extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(
         left: SizeConfig.padding24,
-        top: SizeConfig.padding32,
         bottom: SizeConfig.padding20,
       ),
       child: Text(

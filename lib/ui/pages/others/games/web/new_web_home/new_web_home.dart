@@ -65,9 +65,10 @@ class _NewWebHomeViewState extends State<NewWebHomeView> {
                       actions: [
                         AppBarButton(
                           svgAsset: 'assets/svg/token_svg.svg',
+
                           coin: '200',
                           borderColor: Colors.black,
-                          screenWidth: SizeConfig.screenWidth * 0.21,
+                          // screenWidth: SizeConfig.screenWidth * 0.21,
                           onTap: () {},
                           style: GoogleFonts.sourceSansPro(
                             fontSize: SizeConfig.body2,
@@ -98,7 +99,9 @@ class _NewWebHomeViewState extends State<NewWebHomeView> {
                                   ),
                                 ),
                               ),
-                              SizedBox(height: SizeConfig.padding20,),
+                              SizedBox(
+                                height: SizeConfig.padding20,
+                              ),
                               Text(
                                 'Cricket',
                                 style: GoogleFonts.rajdhani(
@@ -107,8 +110,9 @@ class _NewWebHomeViewState extends State<NewWebHomeView> {
                                   color: Colors.white,
                                 ),
                               ),
-                              SizedBox(height: SizeConfig.padding35,),
-
+                              SizedBox(
+                                height: SizeConfig.padding35,
+                              ),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
@@ -134,8 +138,9 @@ class _NewWebHomeViewState extends State<NewWebHomeView> {
                                   ),
                                 ],
                               ),
-                              SizedBox(height: SizeConfig.padding32,),
-
+                              SizedBox(
+                                height: SizeConfig.padding32,
+                              ),
                               Container(
                                 width: SizeConfig.screenWidth * 0.874,
                                 height: SizeConfig.screenWidth * 0.117,
@@ -149,8 +154,9 @@ class _NewWebHomeViewState extends State<NewWebHomeView> {
                                   textAlign: TextAlign.center,
                                 ),
                               ),
-                              SizedBox(height: SizeConfig.padding32,),
-
+                              SizedBox(
+                                height: SizeConfig.padding32,
+                              ),
                             ],
                           ),
                           RewardLeaderboardView(game: widget.game),
@@ -351,4 +357,3 @@ class RewardStatus extends StatelessWidget {
     );
   }
 }
-

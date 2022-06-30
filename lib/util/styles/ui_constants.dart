@@ -10,6 +10,7 @@ class UiConstants {
   static final Color scaffoldColor = const Color(0xffF1F6FF);
   static final Color felloBlue = const Color(0xff26A6F4);
   static final Color autosaveColor = const Color(0xff6b7AA1);
+  static final Color gameCardColor = const Color(0xff39393C);
 
   static final Color accentColor = const Color(0xff333333);
   static final Color darkPrimaryColor = const Color.fromARGB(255, 58, 120, 255);

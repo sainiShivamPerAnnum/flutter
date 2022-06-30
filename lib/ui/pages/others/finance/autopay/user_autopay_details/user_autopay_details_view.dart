@@ -522,7 +522,7 @@ class AmountChips extends StatelessWidget {
                     vertical: SizeConfig.padding4),
                 child: Text(
                   'BEST',
-                  style: TextStyles.body5.bold
+                  style: TextStyles.body4.bold
                       .colour(Colors.white)
                       .letterSpace(SizeConfig.padding2),
                 ),

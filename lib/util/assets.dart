@@ -167,6 +167,9 @@ class Assets {
   static final String gtBackground = "assets/images/gtdbg.png";
   static final String gtConfetti = "assets/lotties/confetti.json";
 
+  static final String aTambolaTicket = 'assets/svg/frame_svg.svg';
+  static final String aFelloToken = 'assets/temp/token.svg';
+
   static final List<String> onboardingHeader = [
     'Save',
     'Grow',

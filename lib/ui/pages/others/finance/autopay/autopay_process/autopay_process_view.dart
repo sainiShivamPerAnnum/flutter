@@ -472,7 +472,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView>
                   child: Icon(
                     Icons.question_mark_outlined,
                     color: UiConstants.primaryColor,
-                    size: SizeConfig.body5,
+                    size: SizeConfig.body4,
                   ),
                 )
               ],

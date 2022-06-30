@@ -60,7 +60,7 @@ class PlayViewModel extends BaseModel {
     notifyListeners();
   }
 
-  set isGamesListDataLoading(value){
+  set isGamesListDataLoading(value) {
     this._isGamesListDataLoading = value;
     notifyListeners();
   }
@@ -136,6 +136,7 @@ class PlayViewModel extends BaseModel {
       return false;
     }
   }
+
   // Play 4.0 Model View
   //final _logger = locator<CustomLogger>();
   Future<String> _getBearerToken() async {
@@ -143,7 +144,9 @@ class PlayViewModel extends BaseModel {
     _logger.d('Justin: $token');
     return token;
   }
-    loadGameLists() async {
+
+  loadGameLists() async {
+    Future.delayed(Duration(seconds: 5));
     try {
       final token = await _getBearerToken();
       final response = await APIService.instance.getData(
@@ -152,17 +155,14 @@ class PlayViewModel extends BaseModel {
         cBaseUrl: 'https://4mm5ihvkz0.execute-api.ap-south-1.amazonaws.com',
       );
       final _responseModel = NewGameModel.fromJson(response);
+      _logger.d(response);
       _gamesListData = _responseModel.data.games;
-      if(_gamesListData.isNotEmpty)
-      isGamesListDataLoading = false;
-     _logger.d('Game Length: ${_responseModel.data.games.length}');
-     _logger.d('Game List Data: $_gamesListData');
-     
+      if (_gamesListData.isNotEmpty) isGamesListDataLoading = false;
+      _logger.d('Game Length: ${_responseModel.data.games.length}');
+      _logger.d('Game List Data: $_gamesListData');
     } catch (e) {
       _logger.d('Justin: $e');
       print("Justin: $e");
     }
-    
   }
-  
 }
