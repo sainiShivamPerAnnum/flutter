@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/model/game_model4.0.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
@@ -60,7 +59,7 @@ class GOWCard extends StatelessWidget {
                       color: Colors.black,
                       image: DecorationImage(
                           image: CachedNetworkImageProvider(
-                              model.gamesListData[0].thumbnailUri),
+                              model.gamesListData[1].thumbnailUri),
                           fit: BoxFit.cover),
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(SizeConfig.roundness12),
@@ -97,7 +96,7 @@ class GOWCard extends StatelessWidget {
                                   BorderRadius.circular(SizeConfig.roundness8),
                               image: DecorationImage(
                                   image: CachedNetworkImageProvider(
-                                      model.gamesListData[0].thumbnailUri),
+                                      model.gamesListData[1].thumbnailUri),
                                   fit: BoxFit.cover),
                             ),
                           ),

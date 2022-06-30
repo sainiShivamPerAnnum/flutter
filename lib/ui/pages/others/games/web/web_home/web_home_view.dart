@@ -8,8 +8,8 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shimmer/shimmer.dart';
 
 class WebHomeView extends StatelessWidget {
   const WebHomeView({Key key, @required this.game}) : super(key: key);
@@ -27,46 +27,101 @@ class WebHomeView extends StatelessWidget {
         return RefreshIndicator(
           onRefresh: () => model.refreshLeaderboard(),
           child: Scaffold(
-            body: model.isLoading
-                ? Stack(
-                    children: [
-                      NewSquareBackground(),
-                      Align(
-                        alignment: Alignment.center,
-                        child: SpinKitCircle(color: UiConstants.primaryColor),
-                      ),
-                    ],
-                  )
-                : Stack(
-                    children: [
-                      NewSquareBackground(),
-                      CustomScrollView(
-                        physics: BouncingScrollPhysics(),
-                        slivers: [
-                          SliverPersistentHeader(
-                            delegate: MySliverAppBar(
+            body: Stack(
+              children: [
+                NewSquareBackground(),
+                CustomScrollView(
+                  physics: BouncingScrollPhysics(),
+                  slivers: [
+                    SliverPersistentHeader(
+                      delegate: model.isLoading
+                          ? MySliverAppBar(
+                              expandedHeight: SizeConfig.screenHeight * 0.32,
+                              game: model.currentGameData,
+                              isLoading: true,
+                            )
+                          : MySliverAppBar(
                               expandedHeight: SizeConfig.screenHeight * 0.32,
                               game: model.currentGameData,
                             ),
+                    ),
+                    SliverList(
+                      delegate: SliverChildListDelegate(
+                        [
+                          SizedBox(
+                            height: SizeConfig.screenWidth * 0.266 / 2 +
+                                SizeConfig.padding20,
                           ),
-                          SliverList(
-                            delegate: SliverChildListDelegate(
-                              [
-                                SizedBox(
-                                  height: SizeConfig.screenWidth * 0.266 / 2 +
-                                      SizeConfig.padding20,
-                                ),
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: Text(
+                          Align(
+                            alignment: Alignment.center,
+                            child: model.isLoading
+                                ? Shimmer.fromColors(
+                                    baseColor:
+                                        UiConstants.kUserRankBackgroundColor,
+                                    highlightColor:
+                                        UiConstants.kBackgroundColor,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey.shade600,
+                                        borderRadius: BorderRadius.circular(
+                                            SizeConfig.roundness5),
+                                      ),
+                                      width: SizeConfig.screenWidth * 0.213,
+                                      height: SizeConfig.screenWidth * 0.053,
+                                    ),
+                                  )
+                                : Text(
                                     model.currentGameData.gameName,
                                     style: TextStyles.rajdhaniB.title2,
                                   ),
-                                ),
-                                SizedBox(
-                                  height: SizeConfig.padding35,
-                                ),
-                                Row(
+                          ),
+                          SizedBox(
+                            height: SizeConfig.padding35,
+                          ),
+                          model.isLoading
+                              ? Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Shimmer.fromColors(
+                                      baseColor:
+                                          UiConstants.kUserRankBackgroundColor,
+                                      highlightColor:
+                                          UiConstants.kBackgroundColor,
+                                      child: Container(
+                                        width: SizeConfig.screenWidth * 0.155,
+                                        height: SizeConfig.screenWidth * 0.120,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    //
+                                    Shimmer.fromColors(
+                                      baseColor:
+                                          UiConstants.kUserRankBackgroundColor,
+                                      highlightColor:
+                                          UiConstants.kBackgroundColor,
+                                      child: Container(
+                                        width: SizeConfig.screenWidth * 0.155,
+                                        height: SizeConfig.screenWidth * 0.120,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    //
+                                    Shimmer.fromColors(
+                                      baseColor:
+                                          UiConstants.kUserRankBackgroundColor,
+                                      highlightColor:
+                                          UiConstants.kBackgroundColor,
+                                      child: Container(
+                                        width: SizeConfig.screenWidth * 0.155,
+                                        height: SizeConfig.screenWidth * 0.120,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceAround,
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -92,10 +147,42 @@ class WebHomeView extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                SizedBox(
-                                  height: SizeConfig.padding32,
-                                ),
-                                Container(
+                          SizedBox(
+                            height: SizeConfig.padding32,
+                          ),
+                          model.isLoading
+                              ? Shimmer.fromColors(
+                                  baseColor:
+                                      UiConstants.kUserRankBackgroundColor,
+                                  highlightColor: UiConstants.kBackgroundColor,
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        margin:
+                                            EdgeInsets.all(SizeConfig.padding4),
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey.shade600,
+                                          borderRadius: BorderRadius.circular(
+                                              SizeConfig.roundness5),
+                                        ),
+                                        width: SizeConfig.screenWidth,
+                                        height: SizeConfig.screenWidth*0.021,
+                                      ),
+                                      Container(
+                                        margin:
+                                            EdgeInsets.all(SizeConfig.padding2),
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey.shade600,
+                                          borderRadius: BorderRadius.circular(
+                                              SizeConfig.roundness5),
+                                        ),
+                                        width: SizeConfig.screenWidth / 2,
+                                        height: SizeConfig.screenWidth*0.021,
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : Container(
                                   margin: EdgeInsets.symmetric(
                                       horizontal: SizeConfig.padding16),
                                   child: Text(
@@ -106,58 +193,56 @@ class WebHomeView extends StatelessWidget {
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
-                                SizedBox(
-                                  height: SizeConfig.padding32,
+                          SizedBox(
+                            height: SizeConfig.padding32,
+                          ),
+                          //   ],
+                          // ),
+                          RewardLeaderboardView(game: game),
+                          SizedBox(height: SizeConfig.padding40),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: SizeConfig.padding16),
+                                child: Text(
+                                  'Recharge Options',
+                                  style: TextStyles.sourceSansSB.title5,
                                 ),
-                                //   ],
-                                // ),
-                                RewardLeaderboardView(game: game),
-                                SizedBox(height: SizeConfig.padding40),
-                                Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: SizeConfig.padding16),
-                                      child: Text(
-                                        'Recharge Options',
-                                        style: TextStyles.sourceSansSB.title5,
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.only(
-                                        top: SizeConfig.padding24,
-                                      ),
-                                      height: SizeConfig.screenWidth * 0.277,
-                                      width: SizeConfig.screenWidth,
-                                      child: ListView.builder(
-                                        scrollDirection: Axis.horizontal,
-                                        physics: BouncingScrollPhysics(),
-                                        itemCount: 3,
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: SizeConfig.padding12),
-                                        itemBuilder: (ctx, i) {
-                                          return RechargeBox(
-                                            rechargeOption:
-                                                model.rechargeOptions[i],
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: SizeConfig.padding16,
-                                    ),
-                                  ],
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(
+                                  top: SizeConfig.padding24,
                                 ),
-                              ],
-                            ),
+                                height: SizeConfig.screenWidth * 0.277,
+                                width: SizeConfig.screenWidth,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  physics: BouncingScrollPhysics(),
+                                  itemCount: 3,
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: SizeConfig.padding12),
+                                  itemBuilder: (ctx, i) {
+                                    return RechargeBox(
+                                      rechargeOption: model.rechargeOptions[i],
+                                    );
+                                  },
+                                ),
+                              ),
+                              SizedBox(
+                                height: SizeConfig.padding16,
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -317,7 +402,12 @@ class GameInfoBlock extends StatelessWidget {
 class MySliverAppBar extends SliverPersistentHeaderDelegate {
   final double expandedHeight;
   final GameData game;
-  MySliverAppBar({@required this.expandedHeight, @required this.game});
+  final bool isLoading;
+  MySliverAppBar({
+    @required this.expandedHeight,
+    @required this.game,
+    this.isLoading = false,
+  });
 
   @override
   Widget build(
@@ -328,10 +418,18 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
       children: [
         Opacity(
           opacity: (1 - shrinkOffset / expandedHeight),
-          child: Image.network(
-            game.thumbnailUri,
-            fit: BoxFit.cover,
-          ),
+          child: isLoading
+              ? Shimmer.fromColors(
+                  baseColor: UiConstants.kUserRankBackgroundColor,
+                  highlightColor: UiConstants.kBackgroundColor,
+                  child: Container(
+                    color: Colors.grey,
+                  ),
+                )
+              : Image.network(
+                  game.thumbnailUri,
+                  fit: BoxFit.cover,
+                ),
         ),
         Positioned(
           top: expandedHeight -
@@ -340,18 +438,29 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
           left: SizeConfig.screenWidth / 2 - SizeConfig.screenWidth * 0.266 / 2,
           child: Opacity(
             opacity: 1, //(1 - shrinkOffset / expandedHeight),
-            child: Container(
-              height: SizeConfig.screenWidth * 0.266,
-              width: SizeConfig.screenWidth * 0.266,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.white, width: 3),
-                borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: NetworkImage(game.thumbnailUri),
-                ),
-              ),
-            ),
+            child: isLoading
+                ? Shimmer.fromColors(
+                    baseColor: UiConstants.kUserRankBackgroundColor,
+                    highlightColor: UiConstants.kBackgroundColor,
+                    child: Container(
+                      height: SizeConfig.screenWidth * 0.266,
+                      width: SizeConfig.screenWidth * 0.266,
+                      color: Colors.grey,
+                    ),
+                  )
+                : Container(
+                    height: SizeConfig.screenWidth * 0.266,
+                    width: SizeConfig.screenWidth * 0.266,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.white, width: 3),
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness16),
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: NetworkImage(game.thumbnailUri),
+                      ),
+                    ),
+                  ),
           ),
         ),
       ],

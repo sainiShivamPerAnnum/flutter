@@ -33,31 +33,56 @@ class PlayInfoSection extends StatelessWidget {
             height: SizeConfig.padding32,
           ),
           TitlesGames(
-            asset: '',
-            whiteText: 'Play Games ',
-            greyText: 'with the\ntokens won',
+            richText: RichText(
+              text: TextSpan(
+                text: 'Play Games ',
+                style: TextStyles.sourceSans.body3,
+                children: <TextSpan>[
+                  TextSpan(
+                    text: 'with the\ntokens won',
+                    style: TextStyles.sourceSans.body3.colour(Colors.grey),
+                  ),
+                ],
+              ),
+            ),
             icon: SvgPicture.asset(
               'assets/svg/play_ludo.svg',
               height: SizeConfig.padding46,
               width: SizeConfig.padding38,
             ),
-            isLast: false,
           ),
           TitlesGames(
-            asset: 'assets/svg/play_leaderboard.svg',
-            whiteText: 'Get listed on the game',
-            greyText: '\nleaderboard',
+            richText: RichText(
+              text: TextSpan(
+                text: 'Get listed on the game\n',
+                style: TextStyles.sourceSans.body3.colour(Colors.grey),
+                children: <TextSpan>[
+                  TextSpan(
+                    text: 'leaderboard',
+                    style: TextStyles.sourceSans.body3,
+                  ),
+                ],
+              ),
+            ),
             icon: SvgPicture.asset(
               'assets/svg/play_leaderboard.svg',
               height: SizeConfig.padding70,
               width: SizeConfig.padding35,
             ),
-            isLast: false,
           ),
           TitlesGames(
-            asset: 'assets/svg/play_gift.svg',
-            whiteText: 'Win Coupons and Cashbacks',
-            greyText: '\nas rewards',
+            richText: RichText(
+              text: TextSpan(
+                text: 'Win coupons and cashbacks\nas ',
+                style: TextStyles.sourceSans.body3.colour(Colors.grey),
+                children: <TextSpan>[
+                  TextSpan(
+                    text: 'rewards',
+                    style: TextStyles.sourceSans.body3,
+                  ),
+                ],
+              ),
+            ),
             icon: SvgPicture.asset(
               'assets/svg/play_gift.svg',
               height: SizeConfig.padding44,
