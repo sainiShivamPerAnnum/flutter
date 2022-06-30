@@ -17,6 +17,7 @@ import 'package:webengage_flutter/webengage_flutter.dart';
 class AppFlyerAnalytics extends BaseAnalyticsService {
   final _logger = locator<CustomLogger>();
   final _cacheService = new CacheService();
+  final _brandedDomain = 'app.fello.in';
 
   AppsflyerSdk _appsflyerSdk;
   Future<String> _appFlyerId;
@@ -70,6 +71,7 @@ class AppFlyerAnalytics extends BaseAnalyticsService {
       _appsflyerSdk.setAppInviteOneLinkID('uxu0', (res) {
         _logger.d("appsflyer setAppInviteOneLinkID callback:" + res.toString());
       });
+      // _appsflyerSdk.setOneLinkCustomDomain([_brandedDomain]);
 
       _appsflyerSdk.onDeepLinking((DeepLinkResult result) {
         _logger.d('appflyer deeplink $result');
@@ -110,6 +112,7 @@ class AppFlyerAnalytics extends BaseAnalyticsService {
       campaign: 'Referral',
       referrerName: _baseUser.name,
       customerID: _baseUser.uid,
+      // brandDomain: _brandedDomain,
     );
 
     final Completer<dynamic> completer = Completer();
