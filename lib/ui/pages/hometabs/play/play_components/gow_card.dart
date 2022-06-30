@@ -1,8 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/game_model4.0.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
+import 'package:felloapp/ui/pages/others/games/web/web_home/web_home_view.dart';
 import 'package:felloapp/ui/widgets/button4.0/appBar_button.dart';
+import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -26,9 +31,13 @@ class GOWCard extends StatelessWidget {
         : InkWell(
             onTap: () {
               Haptic.vibrate();
-              AppState.delegate.parseRoute(
-                Uri.parse(model.gamesListData[0].route),
-              );
+              // AppState.delegate.parseRoute(
+              //   Uri.parse(model.gamesListData[0].route),
+              // );
+              AppState.delegate.appState.currentAction = PageAction(
+                  state: PageState.addWidget,
+                  widget: WebHomeView(game: Constants.GAME_TYPE_CRICKET),
+                  page: WebHomeViewPageConfig);
             },
             child: Container(
               margin: EdgeInsets.only(
@@ -40,7 +49,7 @@ class GOWCard extends StatelessWidget {
               height: SizeConfig.screenWidth * 0.688,
               width: SizeConfig.screenWidth,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+                borderRadius: BorderRadius.circular(SizeConfig.roundness12),
               ),
               child: Column(
                 children: [
@@ -119,7 +128,7 @@ class GOWCard extends StatelessWidget {
                         ),
                         Spacer(),
                         AppBarButton(
-                          svgAsset: 'assets/svg/token_svg.svg',
+                          svgAsset: Assets.aFelloToken,
                           size: SizeConfig.padding32,
                           coin: model.gamesListData[0].playCost.toString(),
                           borderColor: Colors.transparent,

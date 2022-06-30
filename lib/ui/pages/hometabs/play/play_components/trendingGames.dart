@@ -26,6 +26,7 @@ class TrendingGamesSection extends StatelessWidget {
       margin: EdgeInsets.only(bottom: SizeConfig.padding35),
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
+        physics: BouncingScrollPhysics(),
         itemCount:
             model.isGamesListDataLoading ? 3 : model.gamesListData.length,
         padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),

@@ -17,31 +17,32 @@ class TitlesGames extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
+        SizedBox(width: SizeConfig.screenWidth * 0.16),
+        Column(
           children: [
+            SizedBox(width: SizeConfig.screenWidth * 0),
             icon,
-            SizedBox(
-              width: SizeConfig.padding20,
-            ),
-            RichText(
-              text: TextSpan(
-                text: whiteText,
-                style: TextStyles.sourceSans.body3,
-                children: <TextSpan>[
-                  TextSpan(
-                    text: greyText,
-                    style: TextStyles.sourceSans.body3,
-                  ),
-                ],
-              ),
-            ),
+            if (!isLast) GameStepper(),
           ],
         ),
-        if (!isLast) GameStepper(),
+        SizedBox(
+          width: SizeConfig.padding20,
+        ),
+        RichText(
+          text: TextSpan(
+            text: whiteText,
+            style: TextStyles.sourceSans.body3,
+            children: <TextSpan>[
+              TextSpan(
+                text: greyText,
+                style: TextStyles.sourceSans.body3.colour(Colors.grey),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }

@@ -3,6 +3,7 @@ import 'package:felloapp/core/model/game_model4.0.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/widgets/button4.0/appBar_button.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -112,7 +113,7 @@ class MoreGames extends StatelessWidget {
             ),
             Spacer(),
             AppBarButton(
-              svgAsset: 'assets/svg/token_svg.svg',
+              svgAsset: Assets.aFelloToken,
               coin: game.playCost.toString(),
               borderColor: Colors.transparent,
               onTap: () {},

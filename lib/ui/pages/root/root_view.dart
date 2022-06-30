@@ -1,16 +1,11 @@
-import 'dart:ui';
-
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
-import 'package:felloapp/ui/pages/hometabs/play4.0/play4.0_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
-
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
-
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -40,11 +35,11 @@ class Root extends StatelessWidget {
         return Scaffold(
           resizeToAvoidBottomInset: false,
           key: RootViewModel.scaffoldKey,
-        //  drawer: FDrawer(),
+          //  drawer: FDrawer(),
           drawerEnableOpenDragGesture: false,
           body: Stack(
             children: [
-            NewSquareBackground(),
+              NewSquareBackground(),
               if (FlavorConfig.isDevelopment())
                 Container(
                   width: SizeConfig.screenWidth,

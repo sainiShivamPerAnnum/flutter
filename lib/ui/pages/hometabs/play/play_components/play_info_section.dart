@@ -14,10 +14,7 @@ class PlayInfoSection extends StatelessWidget {
     return Container(
       width: SizeConfig.screenWidth,
       height: SizeConfig.screenWidth * 0.981,
-      margin: EdgeInsets.symmetric(
-        horizontal: SizeConfig.padding16,
-        vertical: SizeConfig.padding24,
-      ),
+      margin: EdgeInsets.all(SizeConfig.padding24),
       decoration: BoxDecoration(
         color: Color(0xff333333),
         borderRadius: BorderRadius.circular(SizeConfig.roundness8),
@@ -48,8 +45,8 @@ class PlayInfoSection extends StatelessWidget {
           ),
           TitlesGames(
             asset: 'assets/svg/play_leaderboard.svg',
-            whiteText: 'Play Games ',
-            greyText: 'with the\ntokens won',
+            whiteText: 'Get listed on the game',
+            greyText: '\nleaderboard',
             icon: SvgPicture.asset(
               'assets/svg/play_leaderboard.svg',
               height: SizeConfig.padding70,
@@ -59,8 +56,8 @@ class PlayInfoSection extends StatelessWidget {
           ),
           TitlesGames(
             asset: 'assets/svg/play_gift.svg',
-            whiteText: 'Play Games ',
-            greyText: 'with the\ntokens won',
+            whiteText: 'Win Coupons and Cashbacks',
+            greyText: '\nas rewards',
             icon: SvgPicture.asset(
               'assets/svg/play_gift.svg',
               height: SizeConfig.padding44,

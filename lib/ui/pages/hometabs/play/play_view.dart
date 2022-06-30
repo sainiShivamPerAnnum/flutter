@@ -50,6 +50,7 @@ class Play extends StatelessWidget {
             ],
           ),
           body: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -58,7 +59,6 @@ class Play extends StatelessWidget {
                 TrendingGamesSection(model: model),
                 GameTitle(title: 'Enjoy more Games'),
                 MoreGamesSection(model: model),
-                //What to do on Play?
                 PlayInfoSection(),
               ],
             ),
