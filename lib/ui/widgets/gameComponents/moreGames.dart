@@ -1,13 +1,12 @@
 import 'package:felloapp/ui/widgets/button4.0/appBar_button.dart';
+import 'package:felloapp/ui/widgets/gameComponents/gameRewards.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class MoreGames extends StatelessWidget {
   final String thumbnailUrl, gameName;
   final int prizeAmount, playCost;
-
 
   const MoreGames({
     this.thumbnailUrl,
@@ -51,18 +50,7 @@ class MoreGames extends StatelessWidget {
                 gameName,
                 style: TextStyles.rajdhaniSB.body2,
               ),
-              Row(
-                children: [
-                  SvgPicture.asset(
-                    'assets/svg/gift_svg.svg',
-                    height: SizeConfig.padding16,
-                  ),
-                  Text(
-                    'Win upto Rs.$prizeAmount',
-                    style: TextStyles.sourceSans.body4.colour(Colors.grey.shade600),
-                  ),
-                ],
-              ),
+              GameRewards(prizeAmount: prizeAmount),
             ],
           ),
           Spacer(),

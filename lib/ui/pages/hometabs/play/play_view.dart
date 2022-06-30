@@ -1,14 +1,9 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_remote_config.dart';
-import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
-import 'package:felloapp/ui/pages/static/game_card.dart';
-import 'package:felloapp/ui/pages/static/play_offer_card.dart';
 import 'package:felloapp/ui/widgets/button4.0/appBar_button.dart';
 import 'package:felloapp/ui/widgets/gameComponents/gameCard.dart';
-
 import 'package:felloapp/ui/widgets/gameComponents/gameShimmer/gameCardShimmer.dart';
 import 'package:felloapp/ui/widgets/gameComponents/gameShimmer/moreGamesShimmer.dart';
 import 'package:felloapp/ui/widgets/gameComponents/gameShimmer/trendingGamesShimmer.dart';
@@ -17,17 +12,14 @@ import 'package:felloapp/ui/widgets/gameComponents/moreGames.dart';
 import 'package:felloapp/ui/widgets/gameComponents/titlesGames.dart';
 import 'package:felloapp/ui/widgets/gameComponents/trendingGames.dart';
 import 'package:felloapp/util/haptic.dart';
-import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:shimmer_animation/shimmer_animation.dart';
 
 class Play extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
     return BaseView<PlayViewModel>(
       onModelReady: (model) {
         model.loadGameLists();

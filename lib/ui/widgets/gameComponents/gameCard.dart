@@ -1,7 +1,6 @@
+import 'package:felloapp/ui/widgets/gameComponents/gameRewards.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-
 import '../../../util/styles/size_config.dart';
 import '../button4.0/appBar_button.dart';
 
@@ -30,9 +29,22 @@ class NewGameCard extends StatelessWidget {
           Container(
             height: SizeConfig.screenWidth * 0.474,
             width: SizeConfig.screenWidth,
-            child: Image.network(
-              thumbnailUrl, //'https://fello-assets.s3.ap-south-1.amazonaws.com/cricket-thumbnail-2022.png',
-              fit: BoxFit.fill,
+            decoration: BoxDecoration(
+              color: Color(0xff39393C),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(SizeConfig.roundness8),
+                topRight: Radius.circular(SizeConfig.roundness8),
+              ),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(SizeConfig.roundness8),
+                topRight: Radius.circular(SizeConfig.roundness8),
+              ),
+              child: Image.network(
+                thumbnailUrl, 
+                fit: BoxFit.fill,
+              ),
             ),
           ),
           Container(
@@ -62,7 +74,7 @@ class NewGameCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(SizeConfig.padding4),
                     ),
                     child: Image.network(
-                     thumbnailUrl ,//'https://fello-assets.s3.ap-south-1.amazonaws.com/cricket-thumbnail-2022.png',
+                      thumbnailUrl, 
                       fit: BoxFit.fill,
                     ),
                   ),
@@ -72,21 +84,10 @@ class NewGameCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      gameName, // 'Cricket',
+                      gameName, 
                       style: TextStyles.rajdhaniSB.title5,
                     ),
-                    Row(
-                      children: [
-                        SvgPicture.asset(
-                          'assets/svg/gift_svg.svg',
-                          height: SizeConfig.padding20,
-                        ),
-                        Text(
-                          'Win upto Rs.$prizeAmount',
-                          style: TextStyles.sourceSans.body4.colour(Colors.grey.shade600),
-                        ),
-                      ],
-                    ),
+                    GameRewards(prizeAmount: prizeAmount),
                   ],
                 ),
                 Spacer(),

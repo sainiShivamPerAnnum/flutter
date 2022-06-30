@@ -1,24 +1,24 @@
+import 'package:felloapp/ui/widgets/gameComponents/gameRewards.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class TrendingGames extends StatelessWidget {
-    final String thumbnailUrl, gameName;
+  final String thumbnailUrl, gameName;
   final int prizeAmount, playCost;
-
 
   const TrendingGames({
     this.thumbnailUrl,
     this.gameName,
-    this.prizeAmount, this.playCost,
-    Key key, 
+    this.prizeAmount,
+    this.playCost,
+    Key key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin:  EdgeInsets.symmetric(horizontal:SizeConfig.padding16),
+      margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
       height: SizeConfig.screenWidth * 0.688,
       width: SizeConfig.screenWidth * 0.610,
       decoration: BoxDecoration(
@@ -28,9 +28,12 @@ class TrendingGames extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            margin: EdgeInsets.only(top: SizeConfig.padding4,left: SizeConfig.padding6,right: SizeConfig.padding6),
+            margin: EdgeInsets.only(
+                top: SizeConfig.padding4,
+                left: SizeConfig.padding6,
+                right: SizeConfig.padding6),
             height: SizeConfig.screenWidth * 0.309,
-            width: SizeConfig.screenWidth*0.578,
+            width: SizeConfig.screenWidth * 0.578,
             child: ClipRRect(
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(SizeConfig.roundness8),
@@ -46,14 +49,17 @@ class TrendingGames extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding:  EdgeInsets.only(left: SizeConfig.padding8,top: SizeConfig.padding12,),
+                padding: EdgeInsets.only(
+                  left: SizeConfig.padding8,
+                  top: SizeConfig.padding12,
+                ),
                 child: Text(
                   '$gameName ChampionShip',
                   style: TextStyles.rajdhaniSB.body2,
                 ),
               ),
               Padding(
-                padding:  EdgeInsets.only(right: SizeConfig.padding12),
+                padding: EdgeInsets.only(right: SizeConfig.padding12),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -73,19 +79,8 @@ class TrendingGames extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding:  EdgeInsets.only(left: SizeConfig.padding8),
-                child: Row(
-                  children: [
-                    SvgPicture.asset(
-                      'assets/svg/gift_svg.svg',
-                      height: SizeConfig.padding16,
-                    ),
-                    Text(
-                      'Win upto Rs.$prizeAmount',
-                      style: TextStyles.sourceSans.body3.colour(Colors.grey),
-                    ),
-                  ],
-                ),
+                padding: EdgeInsets.only(left: SizeConfig.padding8),
+                child: GameRewards(prizeAmount: prizeAmount),
               ),
             ],
           ),
