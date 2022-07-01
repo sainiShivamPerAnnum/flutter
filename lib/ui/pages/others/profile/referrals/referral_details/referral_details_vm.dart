@@ -11,6 +11,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/fcm_topics.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:flutter/services.dart';
@@ -53,6 +54,7 @@ class ReferralDetailsViewModel extends BaseModel {
   }
 
   void copyReferCode() {
+    Haptic.vibrate();
     _analyticsService.track(eventName: AnalyticsEvents.referCodeCopied);
     Clipboard.setData(ClipboardData(text: _refCode)).then((_) {
       BaseUtil.showPositiveAlert("Code: $_refCode", "Copied to Clipboard");
