@@ -36,6 +36,7 @@ class ApiPath {
   static const acquisitionTracking = "/userOps/api/v3/opt-analytics";
   static String getUserIdByRefCode(String code) => "/referral/$code";
   static String getReferralCode(String uid) => "/user/referral/$uid";
+  static const kDeviceId = "/device";
 
   //GT Rewards
   get kRedeemGtReward => "/gtRewardsOps/$stage/v2/api/redeemGtReward";

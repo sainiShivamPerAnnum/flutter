@@ -2,10 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/util/logger.dart';
 
-parseTimeStamp(Map data) {
-  if (data != null)
-    return Timestamp(data["_seconds"], data["_nanoseconds"]);
-  else
+parseTimeStamp(dynamic data) {
+  if (data != null) {
+    if (data.runtimeType == Timestamp)
+      return data;
+    else
+      return Timestamp(data["_seconds"], data["_nanoseconds"]);
+  } else
     return null;
 }
 

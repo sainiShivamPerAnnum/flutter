@@ -69,7 +69,7 @@ class GoldenTicketService extends ChangeNotifier {
       {@required GTSOURCE source,
       String title,
       double amount = 0,
-      bool showAutoSavePrompt}) {
+      bool showAutoSavePrompt = false}) {
     if (currentGT != null) {
       Future.delayed(Duration(milliseconds: 200), () {
         // if (source != GTSOURCE.deposit)
