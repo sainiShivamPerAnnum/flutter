@@ -301,7 +301,7 @@ class TransactionService
         token: _token,
         queryParams: _queryParams,
         cBaseUrl:
-            "https://hl4otla349.execute-api.ap-south-1.amazonaws.com/dev/users/$_uid",
+            "https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev/users/$_uid",
       );
 
       final responseData = response["data"];

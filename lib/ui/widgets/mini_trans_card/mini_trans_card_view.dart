@@ -31,7 +31,11 @@ class MiniTransactionCard extends StatelessWidget {
               children: [
                 Container(
                   child: model.state == ViewState.Busy || m.txnList == null
-                      ? Center(
+                      ? Container(
+                          alignment: Alignment.center,
+                          margin: EdgeInsets.only(
+                            bottom: SizeConfig.padding24,
+                          ),
                           child: CircularProgressIndicator(),
                         )
                       : (m.txnList.length == 0
