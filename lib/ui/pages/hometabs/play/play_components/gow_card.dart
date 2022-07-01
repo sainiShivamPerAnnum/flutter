@@ -17,8 +17,10 @@ import 'package:shimmer/shimmer.dart';
 
 class GOWCard extends StatelessWidget {
   final PlayViewModel model;
+  final int gameIndex;
   const GOWCard({
     @required this.model,
+    this.gameIndex,
     Key key,
   }) : super(key: key);
 
@@ -59,7 +61,7 @@ class GOWCard extends StatelessWidget {
                       color: Colors.black,
                       image: DecorationImage(
                           image: CachedNetworkImageProvider(
-                              model.gamesListData[1].thumbnailUri),
+                              model.gamesListData[gameIndex].thumbnailUri),
                           fit: BoxFit.cover),
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(SizeConfig.roundness12),
@@ -96,7 +98,7 @@ class GOWCard extends StatelessWidget {
                                   BorderRadius.circular(SizeConfig.roundness8),
                               image: DecorationImage(
                                   image: CachedNetworkImageProvider(
-                                      model.gamesListData[1].thumbnailUri),
+                                      model.gamesListData[gameIndex].thumbnailUri),
                                   fit: BoxFit.cover),
                             ),
                           ),

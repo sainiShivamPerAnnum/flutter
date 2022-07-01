@@ -39,6 +39,9 @@ class PlayViewModel extends BaseModel {
   String _sessionId;
   bool _isOfferListLoading = true;
   bool _isGamesListDataLoading = true;
+  bool _isGOWCheck = false;
+  int _isGOWIndex = 0;
+
 
   List<PromoCardModel> _offerList;
   List<GameData> _gamesListData;
@@ -49,6 +52,9 @@ class PlayViewModel extends BaseModel {
 
   String get message => _message;
   String get sessionId => _sessionId;
+  bool get isGOWCheck => _isGOWCheck;
+  int get isGOWIndex => _isGOWIndex;
+
 
   get isOfferListLoading => this._isOfferListLoading;
   get isGamesListDataLoading => this._isGamesListDataLoading;
@@ -156,7 +162,18 @@ class PlayViewModel extends BaseModel {
       _gamesListData = _responseModel.data.games;
       _logger.d('Game Length: ${_responseModel.data.games.length}');
       _logger.d('Game Response: $response');
-      if (_gamesListData.isNotEmpty) isGamesListDataLoading = false;
+      if (_gamesListData.isNotEmpty) {
+        // sorting games by order
+        _gamesListData.sort((a, b) => a.order.compareTo(b.order));
+        isGamesListDataLoading = false;
+        for (var item in _gamesListData) {
+          if (item.isGOW)
+          {
+            _isGOWCheck = true;
+            _isGOWIndex = item.order;
+          } 
+        }
+      }
     } catch (e) {
       _logger.d('Catch Error: $e');
     }

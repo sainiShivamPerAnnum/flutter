@@ -62,6 +62,8 @@ class GameData {
     this.event,
     this.playCost,
     this.gameName,
+    this.isGOW,
+    this.isTrending,
   });
 
   String id;
@@ -74,6 +76,8 @@ class GameData {
   String event;
   int playCost;
   String gameName;
+  bool isGOW;
+  bool isTrending;
 
   factory GameData.fromJson(Map<String, dynamic> json) => GameData(
         id: json["id"],
@@ -86,6 +90,8 @@ class GameData {
         event: json["event"],
         playCost: json["playCost"],
         gameName: json["gameName"],
+        isGOW: json["isGOW"],
+        isTrending: json["isTrending"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -99,6 +105,8 @@ class GameData {
         "event": event,
         "playCost": playCost,
         "gameName": gameName,
+        "isGOW": isGOW,
+        "isTrending": isTrending,
       };
 
   String toString() {

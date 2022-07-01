@@ -25,7 +25,6 @@ class WebHomeView extends StatelessWidget {
         model.clear();
       },
       builder: (ctx, model, child) {
-      //  var n = ;
         return RefreshIndicator(
           onRefresh: () => model.refreshLeaderboard(),
           child: Scaffold(

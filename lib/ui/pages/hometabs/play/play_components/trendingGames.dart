@@ -33,8 +33,9 @@ class TrendingGamesSection extends StatelessWidget {
         itemBuilder: (ctx, index) {
           return model.isGamesListDataLoading
               ? TrendingGamesShimmer()
-              : TrendingGames(
+              :  TrendingGames(
                   game: model.gamesListData[index],
+                  isTrending: model.gamesListData[index].isTrending,
                 );
         },
       ),
@@ -44,15 +45,16 @@ class TrendingGamesSection extends StatelessWidget {
 
 class TrendingGames extends StatelessWidget {
   final GameData game;
-
+  final bool isTrending;
   const TrendingGames({
     this.game,
+    this.isTrending,
     Key key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return isTrending? InkWell(
       onTap: () {
         Haptic.vibrate();
         AppState.delegate.parseRoute(
@@ -144,7 +146,7 @@ class TrendingGames extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ): Container();
   }
 }
 

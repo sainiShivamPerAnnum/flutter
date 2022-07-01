@@ -54,7 +54,12 @@ class Play extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                GOWCard(model: model),
+                if (model.isGOWCheck)...[
+                   GOWCard(
+                    model: model,
+                    gameIndex: model.isGOWIndex-1,
+                  ),
+              ],
                 GameTitle(title: 'Trending'),
                 TrendingGamesSection(model: model),
                 GameTitle(title: 'Enjoy more Games'),
