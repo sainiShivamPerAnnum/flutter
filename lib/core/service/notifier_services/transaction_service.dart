@@ -182,7 +182,8 @@ class TransactionService
     if (type == UserTransaction.TRAN_STATUS_COMPLETE) {
       icon = Icons.check_circle;
       iconColor = UiConstants.primaryColor;
-    } else if (type == UserTransaction.TRAN_STATUS_CANCELLED) {
+    } else if (type == UserTransaction.TRAN_STATUS_CANCELLED ||
+        type == UserTransaction.TRAN_STATUS_FAILED) {
       icon = Icons.cancel;
       iconColor = Colors.red;
     } else if (type == UserTransaction.TRAN_STATUS_PENDING ||
@@ -226,7 +227,8 @@ class TransactionService
   }
 
   Color getTileColor(String type) {
-    if (type == UserTransaction.TRAN_STATUS_CANCELLED) {
+    if (type == UserTransaction.TRAN_STATUS_CANCELLED ||
+        type == UserTransaction.TRAN_STATUS_FAILED) {
       return Colors.redAccent;
     } else if (type == UserTransaction.TRAN_STATUS_COMPLETE) {
       return UiConstants.primaryColor;
