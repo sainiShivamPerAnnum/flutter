@@ -170,6 +170,11 @@ class BaseRemoteConfig {
   static const Map<String, String> _GAME_POSITION = {
     'games_position': "FO-CR-PO-CA-TA"
   };
+
+  static const Map<String, String> _NEW_USER_GAMES_ORDER = {
+    'new_user_games_order': "FO-PO"
+  };
+
   static const Map<String, String> _MIN_WITHDRAWABLE_PRIZE = {
     'min_withdrawable_prize': '100'
   };
@@ -188,7 +193,6 @@ class BaseRemoteConfig {
     'app_share_message':
         'Hey I am gifting you ₹10 and 200 gaming tokens. Lets start saving and playing together ! '
   };
-  static const Map<String, int> _CACHE_INVALIDATION = {'invalidate_before': 0};
 
   static const Map<String, dynamic> DEFAULTS = {
     ..._DRAW_PICK_TIME,
@@ -245,7 +249,7 @@ class BaseRemoteConfig {
     ..._AMZ_VOUCHER_REDEMPTION,
     ..._APP_SHARE_MSG,
     ..._GAME_POSITION,
-    ..._CACHE_INVALIDATION
+    ..._NEW_USER_GAMES_ORDER,
   };
 
   static Future<bool> init() async {
@@ -401,7 +405,5 @@ class BaseRemoteConfig {
 
   static String get GAME_POSITION => _GAME_POSITION.keys.first;
 
-  static int get invalidationBefore {
-    return remoteConfig.getInt(_CACHE_INVALIDATION.keys.first);
-  }
+  static String get NEW_USER_GAMES_ORDER => _NEW_USER_GAMES_ORDER.keys.first;
 }

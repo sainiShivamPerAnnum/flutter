@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,6 +23,7 @@ class TransactionsHistoryViewModel extends BaseModel {
   //local variables
   int _filter = 1;
   bool _isMoreTxnsBeingFetched = false;
+  List<UserTransaction> apiTxns = [];
   List<String> _tranTypeFilterItems = [
     "All",
     "Deposits",
@@ -97,41 +101,52 @@ class TransactionsHistoryViewModel extends BaseModel {
 
   Future getTransactions() async {
     setState(ViewState.Busy);
-    await _txnService.fetchTransactions(
-      limit: 30,
-    );
+    await _txnService.fetchTransactions();
     _filteredList = _txnService.txnList;
     setState(ViewState.Idle);
   }
+
+  // getTransactionsFromApi() async {
+  //   ApiResponse<List<UserTransaction>> res;
+  //   if (apiTxns.isNotEmpty)
+  //     res = await _txnService.getUserTransactionsfromApi(
+  //         start: apiTxns[0].docKey);
+  //   else
+  //     res = await _txnService.getUserTransactionsfromApi();
+  //   if (res.model != null && res.model.isNotEmpty)
+  //     res.model.forEach((element) {
+  //       apiTxns.add(element);
+  //     });
+  //   log("Length of Transaction List: ${apiTxns.length}");
+  // }
 
   getMoreTransactions() async {
     _logger.d("fetching more transactions...");
     isMoreTxnsBeingFetched = true;
     switch (filter) {
       case 1:
-        if (_txnService.hasMoreTxns)
-          await _txnService.fetchTransactions(limit: 30);
+        if (_txnService.hasMoreTxns) await _txnService.fetchTransactions();
         break;
       case 2:
         if (_txnService.hasMoreDepositTxns)
           await _txnService.fetchTransactions(
-              limit: 30, type: UserTransaction.TRAN_TYPE_DEPOSIT);
+              type: UserTransaction.TRAN_TYPE_DEPOSIT);
         break;
       case 3:
         if (_txnService.hasMoreWithdrawalTxns)
           await _txnService.fetchTransactions(
-              limit: 30, type: UserTransaction.TRAN_TYPE_WITHDRAW);
+              type: UserTransaction.TRAN_TYPE_WITHDRAW);
         break;
       case 4:
         if (_txnService.hasMorePrizeTxns)
           await _txnService.fetchTransactions(
-              limit: 30, type: UserTransaction.TRAN_TYPE_PRIZE);
+              type: UserTransaction.TRAN_TYPE_PRIZE);
 
         break;
       case 5:
         if (_txnService.hasMoreRefundedTxns)
           await _txnService.fetchTransactions(
-              limit: 30, status: UserTransaction.TRAN_STATUS_REFUNDED);
+              status: UserTransaction.TRAN_STATUS_REFUNDED);
         break;
       default:
         // if (_txnService.hasMoreTxns)

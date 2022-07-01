@@ -14,6 +14,7 @@ import 'package:felloapp/util/custom_logger.dart';
 class TambolaHomeViewModel extends BaseModel {
   final _stats = locator<StatisticsRepository>();
   final _prizeService = locator<PrizeService>();
+  final _baseUtil = locator<BaseUtil>();
   final _logger = locator<CustomLogger>();
   final _analyticsService = locator<AnalyticsService>();
 
@@ -83,6 +84,7 @@ class TambolaHomeViewModel extends BaseModel {
 
   void openGame() {
     _analyticsService.track(eventName: AnalyticsEvents.startPlayingTambola);
+    _baseUtil.cacheGameorder('TA');
     BaseUtil().openTambolaGame();
   }
 }

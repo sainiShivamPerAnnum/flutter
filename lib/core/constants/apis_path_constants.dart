@@ -60,4 +60,6 @@ class ApiPath {
   static String tambolaTickets(String uid) => "/user/$uid/tickets";
   static String buyTambolaTicket(String uid) => "/user/$uid/tickets";
   static const String dailyPicks = '/picks';
+
+  get kSingleTransactions => "/payments";
 }

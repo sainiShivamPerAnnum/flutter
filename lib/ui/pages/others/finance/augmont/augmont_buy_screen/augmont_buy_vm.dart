@@ -317,7 +317,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   // BUY LOGIC
   fcmTransactionResponseUpdate(fcmDataPayload) async {
     //Stop loader if loading.
-    _logger.i("Updating response value.");
+    _logger.i("Updating response value. $fcmDataPayload");
     // AppState.delegate.appState.txnFunction.timeout(Duration(seconds: 1));
     AppState.delegate.appState.txnTimer.cancel();
     _logger.d("timer cancelled");
@@ -374,16 +374,19 @@ class AugmontGoldBuyViewModel extends BaseModel {
                 amount: depositFcmResponseModel.amount,
                 title:
                     "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}",
-                source: GTSOURCE.deposit);
+                source: GTSOURCE.deposit,
+                showAutoSavePrompt: depositFcmResponseModel.autosavePrompt);
           } else {
             AppState.delegate.appState.isTxnLoaderInView = false;
             showTxnSuccessScreen(depositFcmResponseModel.amount,
-                "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}");
+                "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}",
+                showAutoSavePrompt: depositFcmResponseModel.autosavePrompt);
           }
         } else {
           AppState.delegate.appState.isTxnLoaderInView = false;
           showTxnSuccessScreen(depositFcmResponseModel.amount,
-              "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}");
+              "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}",
+              showAutoSavePrompt: depositFcmResponseModel.autosavePrompt);
         }
       }
 
@@ -769,7 +772,8 @@ class AugmontGoldBuyViewModel extends BaseModel {
         amount: 500);
   }
 
-  showTxnSuccessScreen(double amount, String title) {
+  showTxnSuccessScreen(double amount, String title,
+      {bool showAutoSavePrompt = false}) {
     AppState.screenStack.add(ScreenItem.dialog);
     Navigator.of(AppState.delegate.navigatorKey.currentContext).push(
       PageRouteBuilder(
@@ -778,6 +782,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
             TxnCompletedConfirmationScreenView(
           amount: amount ?? 0,
           title: title ?? "Hurray, we saved ₹NA",
+          showAutoSavePrompt: showAutoSavePrompt,
         ),
       ),
     );

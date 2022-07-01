@@ -1,6 +1,7 @@
 //Project Imports
 //Dart & Flutter Imports
 import 'dart:async';
+import 'dart:developer' as dev;
 import 'dart:math';
 //Pub Imports
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -36,6 +37,7 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -104,6 +106,8 @@ class BaseUtil extends ChangeNotifier {
   int isOtpResendCount = 0;
   String zeroBalanceAssetUri;
   static List<GameModel> gamesList;
+  static List<GameModel> _focusGameList;
+  static List<GameModel> _restGamesList;
   static String manualReferralCode;
   static String referrerUserId;
   static bool isNewUser, isFirstFetchDone; // = 'jdF1';
@@ -196,7 +200,7 @@ class BaseUtil extends ChangeNotifier {
       await BaseRemoteConfig.init();
 
       setPackageInfo();
-      setGameDefaults();
+      await setGameDefaults();
 
       ///fetch on-boarding status and User details
       firebaseUser = _userService.firebaseUser;
@@ -231,8 +235,8 @@ class BaseUtil extends ChangeNotifier {
     packageInfo = await PackageInfo.fromPlatform();
   }
 
-  void setGameDefaults() {
-    List<GameModel> allgamesList = [
+  Future<void> setGameDefaults() async {
+    gamesList = [
       GameModel(
         gameName: "Football",
         pageConfig: THomePageConfig,
@@ -325,16 +329,67 @@ class BaseUtil extends ChangeNotifier {
       ),
     ];
     //Arrange Games according to the position defined in baseremoteconfig.
-    List<String> gamePosition = BaseRemoteConfig.remoteConfig
+    arrangeGames();
+  }
+
+  void arrangeGames() {
+    List<GameModel> tempFocusGameList = [];
+    List<GameModel> tempRestGamesList = [];
+    List<GameModel> tempGameList = [];
+    List<String> gamesOrder = BaseRemoteConfig.remoteConfig
         .getString(BaseRemoteConfig.GAME_POSITION)
         .split('-');
-    logger.d("Games List: $gamePosition");
-    gamesList = [];
-    gamePosition.forEach((code) {
-      gamesList.add(
-        allgamesList.firstWhere((game) => game.code == code),
-      );
+    gamesOrder.forEach(
+      (gameCode) {
+        tempGameList.add(
+          gamesList.firstWhere((game) => game.code == gameCode),
+        );
+      },
+    );
+
+    final String userlastPlayedGames =
+        PreferenceHelper.getString(PreferenceHelper.CACHE_LAST_PLAYED_GAMES);
+    if (userlastPlayedGames != null && userlastPlayedGames.isNotEmpty) {
+      List<String> lastgamesOrder = userlastPlayedGames.split("-");
+      lastgamesOrder.forEach((code) {
+        tempFocusGameList
+            .add(tempGameList.firstWhere((game) => game.code == code));
+      });
+      if (tempFocusGameList.length < 2) {
+        for (int i = 0; i < tempGameList.length; i++) {
+          if (!tempFocusGameList.contains(tempGameList[i])) {
+            tempFocusGameList.add(tempGameList[i]);
+            if (tempFocusGameList.length >= 2) break;
+          }
+        }
+      } else if (tempFocusGameList.length > 2) {
+        while (tempFocusGameList.length > 2) {
+          tempFocusGameList.removeLast();
+        }
+      }
+    } else {
+      List<String> newUserGamesOrder = BaseRemoteConfig.remoteConfig
+          .getString(BaseRemoteConfig.NEW_USER_GAMES_ORDER)
+          .split('-');
+      newUserGamesOrder.forEach((code) {
+        tempFocusGameList
+            .add(tempGameList.firstWhere((game) => game.code == code));
+      });
+    }
+    tempGameList.forEach((game) {
+      if (!tempFocusGameList.contains(game)) tempRestGamesList.add(game);
     });
+    focusGamesList = tempFocusGameList;
+    restGamesList = tempRestGamesList;
+    logger.d(
+        "Focused games list: $focusGamesList \nRest games List: $restGamesList");
+    // dev.log("Games List: $gamePosition");
+    // gamesList = [];
+    // gamePosition.forEach((code) {
+    //   gamesList.add(
+    //     gamesList.firstWhere((game) => game.code == code),
+    //   );
+    // });
   }
 
   Future<bool> isUnreadFreshchatSupportMessages() async {
@@ -823,6 +878,40 @@ class BaseUtil extends ChangeNotifier {
   void setEmail(String email) {
     myUser.email = email;
     notifyListeners();
+  }
+
+  List<GameModel> get focusGamesList => _focusGameList;
+
+  set focusGamesList(List<GameModel> games) {
+    _focusGameList = games;
+    notifyListeners();
+  }
+
+  List<GameModel> get restGamesList => _restGamesList;
+
+  set restGamesList(List<GameModel> games) {
+    _restGamesList = games;
+    notifyListeners();
+  }
+
+  cacheGameorder(String gameCode) {
+    String gamesOrder =
+        PreferenceHelper.getString(PreferenceHelper.CACHE_LAST_PLAYED_GAMES);
+
+    if (gamesOrder != null && gamesOrder.isNotEmpty) {
+      List<String> cachedGamesList = gamesOrder.split('-');
+
+      if (!cachedGamesList.contains(gameCode)) {
+        cachedGamesList.insert(0, gameCode);
+        while (cachedGamesList.length > 2) cachedGamesList.removeLast();
+      }
+      gamesOrder = cachedGamesList.join('-');
+    } else {
+      gamesOrder = gameCode;
+    }
+    PreferenceHelper.setString(
+        PreferenceHelper.CACHE_LAST_PLAYED_GAMES, gamesOrder);
+    arrangeGames();
   }
 
   void refreshAugmontBalance() async {

@@ -31,7 +31,11 @@ class MiniTransactionCard extends StatelessWidget {
               children: [
                 Container(
                   child: model.state == ViewState.Busy || m.txnList == null
-                      ? Center(
+                      ? Container(
+                          alignment: Alignment.center,
+                          margin: EdgeInsets.only(
+                            bottom: SizeConfig.padding24,
+                          ),
                           child: CircularProgressIndicator(),
                         )
                       : (m.txnList.length == 0
@@ -122,7 +126,9 @@ class MiniTransactionCard extends StatelessWidget {
                               ),
                             )),
                 ),
-                m.txnList == null || m.txnList.isEmpty
+                m.txnList != null &&
+                        m.txnList.isNotEmpty &&
+                        m.txnList.length > 5
                     ? SizedBox()
                     : FelloButton(
                         onPressed: () => model.viewAllTransaction(),

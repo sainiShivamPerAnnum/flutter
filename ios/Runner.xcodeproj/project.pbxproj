@@ -18,6 +18,34 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		385870BE286B48EE006AA702 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 02A736E1BDACFC0A6CAE810130768C55;
+			remoteInfo = device_info_plus;
+		};
+		385870C0286B48EE006AA702 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B0B9B9F9A300B05C115A98B19C78F963;
+			remoteInfo = google_sign_in_ios;
+		};
+		385870C2286B48EE006AA702 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 768975E636D1D2FB85622FB67DB04E5A;
+			remoteInfo = image_picker_ios;
+		};
+		385870C4286B48EE006AA702 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6BC54C3D03DEBF9C3A40965E69CAE039;
+			remoteInfo = "Libuv-gRPC";
+		};
 		537A22B5281D102500518084 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
@@ -59,13 +87,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = 514D7742C6CBB0BDBD9984AEE97DDFDE;
 			remoteInfo = "BoringSSL-GRPC";
-		};
-		53C8032B27A85D5C00190100 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 85128AF76199890A6DD56FE81089D883;
-			remoteInfo = FBSDKShareKit;
 		};
 		53C8032D27A85D5C00190100 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -165,26 +186,12 @@
 			remoteGlobalIDString = 6D3FD4746C5C4B5292B7C4C862F01EF9;
 			remoteInfo = connectivity_plus;
 		};
-		53E99BD72770AA48000F1EEC /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A900426DED1EC95760B4FAEB208BEBF9;
-			remoteInfo = device_info;
-		};
 		53E99BD92770AA48000F1EEC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 301CE63BECF831F6BE163E7136833C2F;
 			remoteInfo = device_unlock;
-		};
-		53E99BDB2770AA48000F1EEC /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = EC8F4D0BE3B0C192EBA4A93F8887D89F;
-			remoteInfo = FBSDKCoreKit;
 		};
 		53E99BDD2770AA48000F1EEC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -403,13 +410,6 @@
 			remoteGlobalIDString = 3FAD812829521C33DFCF84A664D0F1CE;
 			remoteInfo = freshchat_sdk;
 		};
-		53E99C1B2770AA48000F1EEC /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 25747090512F7844B46BF5C2636F457F;
-			remoteInfo = google_sign_in;
-		};
 		53E99C1D2770AA48000F1EEC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
@@ -437,13 +437,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = C1998E0D8085221AD87F89B614C10E52;
 			remoteInfo = GTMSessionFetcher;
-		};
-		53E99C272770AA48000F1EEC /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 82E59F73EFCFED5A91D21FE6046A6F0A;
-			remoteInfo = image_picker;
 		};
 		53E99C292770AA48000F1EEC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -679,11 +672,9 @@
 				53C8032A27A85D5C00190100 /* BoringSSL-GRPC */,
 				53E99BD42770AA48000F1EEC /* cloud_firestore */,
 				53E99BD62770AA48000F1EEC /* connectivity_plus */,
-				53E99BD82770AA48000F1EEC /* device_info */,
+				385870BF286B48EE006AA702 /* device_info_plus */,
 				53E99BDA2770AA48000F1EEC /* device_unlock */,
 				537A22B6281D102500518084 /* external_app_launcher */,
-				53E99BDC2770AA48000F1EEC /* FBSDKCoreKit */,
-				53C8032C27A85D5C00190100 /* FBSDKShareKit */,
 				53E99BDE2770AA48000F1EEC /* firebase_analytics */,
 				53E99BE02770AA48000F1EEC /* firebase_auth */,
 				53E99BE22770AA48000F1EEC /* firebase_core */,
@@ -717,7 +708,7 @@
 				53C8033027A85D5C00190100 /* fluttertoast */,
 				53E99C182770AA48000F1EEC /* FMDB */,
 				53E99C1A2770AA48000F1EEC /* freshchat_sdk */,
-				53E99C1C2770AA48000F1EEC /* google_sign_in */,
+				385870C1286B48EE006AA702 /* google_sign_in_ios */,
 				53E99C1E2770AA48000F1EEC /* GoogleDataTransport */,
 				53E99C202770AA48000F1EEC /* GoogleUtilities */,
 				53C8033227A85D5C00190100 /* gRPC-C++ */,
@@ -725,9 +716,10 @@
 				53C8033627A85D5C00190100 /* gRPC-Core */,
 				53E99C222770AA48000F1EEC /* GTMAppAuth */,
 				53E99C242770AA48000F1EEC /* GTMSessionFetcher */,
-				53E99C282770AA48000F1EEC /* image_picker */,
+				385870C3286B48EE006AA702 /* image_picker_ios */,
 				53E99C2A2770AA48000F1EEC /* in_app_review */,
 				53E99C2C2770AA48000F1EEC /* leveldb-library */,
+				385870C5286B48EE006AA702 /* Libuv-gRPC */,
 				53E99C2E2770AA48000F1EEC /* libwebp */,
 				53E99C302770AA48000F1EEC /* Mantle */,
 				53E99C322770AA48000F1EEC /* Mixpanel-swift */,
@@ -874,6 +866,38 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		385870BF286B48EE006AA702 /* device_info_plus */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = device_info_plus;
+			path = device_info_plus.framework;
+			remoteRef = 385870BE286B48EE006AA702 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		385870C1286B48EE006AA702 /* google_sign_in_ios */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = google_sign_in_ios;
+			path = google_sign_in_ios.framework;
+			remoteRef = 385870C0286B48EE006AA702 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		385870C3286B48EE006AA702 /* image_picker_ios */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = image_picker_ios;
+			path = image_picker_ios.framework;
+			remoteRef = 385870C2286B48EE006AA702 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		385870C5286B48EE006AA702 /* Libuv-gRPC */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = "Libuv-gRPC";
+			path = uv.framework;
+			remoteRef = 385870C4286B48EE006AA702 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		537A22B6281D102500518084 /* external_app_launcher */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -920,14 +944,6 @@
 			name = "BoringSSL-GRPC";
 			path = openssl_grpc.framework;
 			remoteRef = 53C8032927A85D5C00190100 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		53C8032C27A85D5C00190100 /* FBSDKShareKit */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			name = FBSDKShareKit;
-			path = FBSDKShareKit.framework;
-			remoteRef = 53C8032B27A85D5C00190100 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		53C8032E27A85D5C00190100 /* FirebaseFirestore */ = {
@@ -1042,28 +1058,12 @@
 			remoteRef = 53E99BD52770AA48000F1EEC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		53E99BD82770AA48000F1EEC /* device_info */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			name = device_info;
-			path = device_info.framework;
-			remoteRef = 53E99BD72770AA48000F1EEC /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		53E99BDA2770AA48000F1EEC /* device_unlock */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			name = device_unlock;
 			path = device_unlock.framework;
 			remoteRef = 53E99BD92770AA48000F1EEC /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		53E99BDC2770AA48000F1EEC /* FBSDKCoreKit */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			name = FBSDKCoreKit;
-			path = FBSDKCoreKit.framework;
-			remoteRef = 53E99BDB2770AA48000F1EEC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		53E99BDE2770AA48000F1EEC /* firebase_analytics */ = {
@@ -1314,14 +1314,6 @@
 			remoteRef = 53E99C192770AA48000F1EEC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		53E99C1C2770AA48000F1EEC /* google_sign_in */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			name = google_sign_in;
-			path = google_sign_in.framework;
-			remoteRef = 53E99C1B2770AA48000F1EEC /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		53E99C1E2770AA48000F1EEC /* GoogleDataTransport */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -1352,14 +1344,6 @@
 			name = GTMSessionFetcher;
 			path = GTMSessionFetcher.framework;
 			remoteRef = 53E99C232770AA48000F1EEC /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		53E99C282770AA48000F1EEC /* image_picker */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			name = image_picker;
-			path = image_picker.framework;
-			remoteRef = 53E99C272770AA48000F1EEC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		53E99C2A2770AA48000F1EEC /* in_app_review */ = {
@@ -1683,6 +1667,23 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		F1815848D2C8DF0B65254A3A /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -1775,7 +1776,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CURRENT_PROJECT_VERSION = 99;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 108;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1792,9 +1795,10 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 3.2.2;
+				MARKETING_VERSION = 3.2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "XC in fello felloappiOS ios_app_store 1639378441";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1865,7 +1869,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CURRENT_PROJECT_VERSION = 99;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 108;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
@@ -1883,9 +1889,10 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 3.2.2;
+				MARKETING_VERSION = 3.2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -1954,7 +1961,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CURRENT_PROJECT_VERSION = 99;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 108;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1971,9 +1980,10 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 3.2.2;
+				MARKETING_VERSION = 3.2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -2039,7 +2049,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CURRENT_PROJECT_VERSION = 99;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 108;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2056,9 +2068,10 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 3.2.2;
+				MARKETING_VERSION = 3.2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -2181,7 +2194,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CURRENT_PROJECT_VERSION = 99;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 108;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
@@ -2199,9 +2214,10 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 3.2.2;
+				MARKETING_VERSION = 3.2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "XC in fello felloappiOS ios_app_store 1639378441";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -2218,7 +2234,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CURRENT_PROJECT_VERSION = 99;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 108;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2235,9 +2253,10 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 3.2.2;
+				MARKETING_VERSION = 3.2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "XC in fello felloappiOS ios_app_store 1639378441";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
