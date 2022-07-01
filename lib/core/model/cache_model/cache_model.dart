@@ -23,7 +23,6 @@ class CacheModel {
   });
 
   CacheModel copyWith({
-    int id,
     String key,
     int ttl,
     int expireAfterTimestamp,
@@ -71,7 +70,6 @@ class CacheModel {
     if (identical(this, other)) return true;
 
     return other is CacheModel &&
-        other.id == id &&
         other.key == key &&
         other.ttl == ttl &&
         other.expireAfterTimestamp == expireAfterTimestamp &&
@@ -80,8 +78,7 @@ class CacheModel {
 
   @override
   int get hashCode {
-    return id.hashCode ^
-        key.hashCode ^
+    return key.hashCode ^
         ttl.hashCode ^
         expireAfterTimestamp.hashCode ^
         data.hashCode;
