@@ -108,7 +108,7 @@ class GOWCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              model.gamesListData[0].gameName, // 'Cricket',
+                              model.gamesListData[gameIndex].gameName, // 'Cricket',
                               style: TextStyles.rajdhaniSB.title5,
                             ),
                             Row(
@@ -131,7 +131,7 @@ class GOWCard extends StatelessWidget {
                         AppBarButton(
                           svgAsset: Assets.aFelloToken,
                           size: SizeConfig.padding28,
-                          coin: model.gamesListData[0].playCost.toString(),
+                          coin: model.gamesListData[gameIndex].playCost.toString(),
                           borderColor: Colors.transparent,
                           onTap: () {},
                           style: TextStyles.sourceSansSB.title4,
