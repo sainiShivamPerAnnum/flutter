@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
@@ -8,11 +9,13 @@ import 'package:felloapp/core/repository/ticket_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/elements/tambola-global/tambola_ticket.dart';
 import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_result.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
@@ -20,10 +23,6 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:felloapp/util/custom_logger.dart';
-
-import '../../../../../../core/enums/page_state_enum.dart';
-import '../../../../../../core/service/notifier_services/user_service.dart';
-import '../weekly_results/weekly_result.dart';
 
 class TambolaGameViewModel extends BaseModel {
   final _logger = locator<CustomLogger>();

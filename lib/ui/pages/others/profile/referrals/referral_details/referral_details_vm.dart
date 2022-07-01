@@ -61,7 +61,6 @@ class ReferralDetailsViewModel extends BaseModel {
 
   Future<void> fetchReferralCode() async {
     final ApiResponse res = await _userRepo.getReferralCode();
-    _logger.d('asdasd $res');
     if (res.code == 200) {
       _refCode = res.model;
     }
