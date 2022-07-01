@@ -501,7 +501,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                         textAlign: TextAlign.center,
                         textStyle: TextStyles.rajdhaniB
                             .size(SizeConfig.screenWidth * 0.1067),
-                        height: SizeConfig.screenWidth * 0.1706,
+                        // height: SizeConfig.screenWidth * 0.1706,
                       ),
                     ),
                   ],

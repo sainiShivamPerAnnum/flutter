@@ -178,9 +178,7 @@ class UserProfileForm extends StatelessWidget {
                   RegExp(r'[a-zA-Z ]'),
                 ),
               ],
-              height:
-                  model.hasInputError ? SizeConfig.screenWidth * 0.183 : null,
-              suffix: SizedBox(),
+              // suffix: SizedBox(),
               validator: (value) {
                 if (value != null && value.isNotEmpty) {
                   model.hasInputError = false;

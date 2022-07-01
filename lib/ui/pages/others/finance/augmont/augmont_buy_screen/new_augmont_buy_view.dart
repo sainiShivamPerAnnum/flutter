@@ -313,7 +313,6 @@ class EnterAmountView extends StatelessWidget {
                             FilteringTextInputFormatter.deny(
                                 RegExp(r'^0+(?!$)')),
                           ],
-                          height: SizeConfig.screenWidth * 0.1466,
                           onChanged: (String val) {
                             model.onBuyValueChanged(val);
                             // if (val.isEmpty) {
@@ -335,8 +334,9 @@ class EnterAmountView extends StatelessWidget {
                           inputDecoration: InputDecoration(
                             fillColor: UiConstants.kTextFieldColor,
                             filled: true,
-                            contentPadding: EdgeInsets.only(
-                              left: SizeConfig.padding24,
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.padding24,
+                              vertical: SizeConfig.padding16,
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.only(

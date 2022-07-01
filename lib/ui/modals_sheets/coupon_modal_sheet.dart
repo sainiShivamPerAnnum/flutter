@@ -69,12 +69,9 @@ class CouponModalSheet extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
               child: AppTextField(
-                height: SizeConfig.screenWidth * 0.1466,
                 fillColor: UiConstants.kBackgroundColor,
                 textEditingController: couponCodeController,
-
                 hintText: 'Enter coupon code here',
-                // textCapitalization: TextCapitalization.characters,
                 inputFormatters: [
                   UpperCaseTextFormatter(),
                 ],

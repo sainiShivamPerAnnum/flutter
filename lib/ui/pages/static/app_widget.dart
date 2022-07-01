@@ -36,7 +36,6 @@ class AppTextField extends StatelessWidget {
     this.autoFocus = false,
     this.keyboardType = TextInputType.text,
     this.suffixIcon,
-    this.height,
     this.prefixText,
     this.prefixTextStyle,
     this.onChanged,
@@ -61,7 +60,6 @@ class AppTextField extends StatelessWidget {
   final TextInputType keyboardType;
   final bool autoFocus;
   final Widget suffixIcon;
-  final double height;
   final String prefixText;
   final TextStyle prefixTextStyle;
   final String suffixText;
@@ -79,111 +77,108 @@ class AppTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: height == null ? SizeConfig.screenWidth * 0.1377 : height,
-      child: TextFormField(
-        validator: validator,
-        textCapitalization: textCapitalization,
-        focusNode: focusNode,
-        enabled: isEnabled,
-        controller: textEditingController,
-        cursorColor: UiConstants.kTextColor,
-        inputFormatters: inputFormatters ?? [],
-        style: textStyle == null
-            ? TextStyles.body2.colour(
-                isEnabled
-                    ? UiConstants.kTextColor
-                    : UiConstants.kTextFieldTextColor,
-              )
-            : textStyle,
-        textAlign: textAlign,
-        expands: true,
-        maxLines: null,
-        minLines: null,
-        autofocus: autoFocus,
-        keyboardType: keyboardType,
-        onChanged: onChanged,
-        decoration: inputDecoration != null
-            ? inputDecoration
-            : InputDecoration(
-                suffixIcon: Padding(
-                  padding: EdgeInsets.only(right: 10),
-                  child: suffixIcon,
-                ),
-                prefixText: prefixText,
-                prefixStyle: prefixTextStyle,
-                suffixText: suffixText,
-                suffixStyle: suffixTextStyle,
-                suffix: suffix,
-                suffixIconConstraints: suffixIconConstraints != null
-                    ? suffixIconConstraints
-                    : BoxConstraints(
-                        minWidth: 35,
-                        minHeight: 35,
-                        maxHeight: 35,
-                        maxWidth: 35,
-                      ),
-                fillColor: fillColor != null
-                    ? fillColor
-                    : isEnabled
-                        ? UiConstants.kTextFieldColor
-                        : UiConstants.kTextFieldColor.withOpacity(0.7),
-                filled: true,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-                  borderSide: BorderSide(
-                    color: UiConstants.kTextColor.withOpacity(0.1),
-                    width: SizeConfig.border1,
-                  ),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-                  borderSide: BorderSide(
-                    color: UiConstants.kTextColor.withOpacity(0.1),
-                    width: SizeConfig.border1,
-                  ),
-                ),
-                disabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-                  borderSide: BorderSide(
-                    color: UiConstants.kTextColor.withOpacity(0.1),
-                    width: SizeConfig.border1,
-                  ),
-                ),
-                errorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-                  borderSide: BorderSide(
-                    color: Colors.red,
-                    width: SizeConfig.border1,
-                  ),
-                ),
-                focusedErrorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-                  borderSide: BorderSide(
-                    color: Colors.red,
-                    width: SizeConfig.border1,
-                  ),
-                ),
-                errorStyle: TextStyle(
-                  height: 0.75,
-                  fontSize: 12,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-                  borderSide: BorderSide(
-                    color: UiConstants.kTabBorderColor,
-                    width: SizeConfig.border1,
-                  ),
-                ),
-                hintText: hintText,
-                hintStyle: TextStyles.body3.colour(UiConstants.kTextColor2),
-                contentPadding: contentPadding == null
-                    ? EdgeInsets.symmetric(
-                        horizontal: SizeConfig.padding16,
-                      )
-                    : contentPadding,
+    return TextFormField(
+      validator: validator,
+      textCapitalization: textCapitalization,
+      focusNode: focusNode,
+      enabled: isEnabled,
+      controller: textEditingController,
+      cursorColor: UiConstants.kTextColor,
+      inputFormatters: inputFormatters ?? [],
+      style: textStyle == null
+          ? TextStyles.body2.colour(
+              isEnabled
+                  ? UiConstants.kTextColor
+                  : UiConstants.kTextFieldTextColor,
+            )
+          : textStyle,
+      textAlign: textAlign,
+      maxLines: null,
+      minLines: null,
+      autofocus: autoFocus,
+      keyboardType: keyboardType,
+      onChanged: onChanged,
+      decoration: inputDecoration != null
+          ? inputDecoration
+          : InputDecoration(
+              suffixIcon: Padding(
+                padding: EdgeInsets.only(right: 10),
+                child: suffixIcon,
               ),
-      ),
+              prefixText: prefixText,
+              prefixStyle: prefixTextStyle,
+              suffixText: suffixText,
+              suffixStyle: suffixTextStyle,
+              suffix: suffix,
+              suffixIconConstraints: suffixIconConstraints != null
+                  ? suffixIconConstraints
+                  : BoxConstraints(
+                      minWidth: 35,
+                      minHeight: 35,
+                      maxHeight: 35,
+                      maxWidth: 35,
+                    ),
+              fillColor: fillColor != null
+                  ? fillColor
+                  : isEnabled
+                      ? UiConstants.kTextFieldColor
+                      : UiConstants.kTextFieldColor.withOpacity(0.7),
+              filled: true,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                borderSide: BorderSide(
+                  color: UiConstants.kTextColor.withOpacity(0.1),
+                  width: SizeConfig.border1,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                borderSide: BorderSide(
+                  color: UiConstants.kTextColor.withOpacity(0.1),
+                  width: SizeConfig.border1,
+                ),
+              ),
+              disabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                borderSide: BorderSide(
+                  color: UiConstants.kTextColor.withOpacity(0.1),
+                  width: SizeConfig.border1,
+                ),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                borderSide: BorderSide(
+                  color: Colors.red,
+                  width: SizeConfig.border1,
+                ),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                borderSide: BorderSide(
+                  color: Colors.red,
+                  width: SizeConfig.border1,
+                ),
+              ),
+              errorStyle: TextStyle(
+                height: 0.75,
+                fontSize: 12,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                borderSide: BorderSide(
+                  color: UiConstants.kTabBorderColor,
+                  width: SizeConfig.border1,
+                ),
+              ),
+              hintText: hintText,
+              hintStyle: TextStyles.body3.colour(UiConstants.kTextColor2),
+              contentPadding: contentPadding == null
+                  ? EdgeInsets.symmetric(
+                      horizontal: SizeConfig.padding16,
+                      vertical: SizeConfig.padding2,
+                    )
+                  : contentPadding,
+            ),
     );
   }
 }
