@@ -9,6 +9,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 
 class WebHomeView extends StatelessWidget {
@@ -24,6 +25,7 @@ class WebHomeView extends StatelessWidget {
         model.clear();
       },
       builder: (ctx, model, child) {
+      //  var n = ;
         return RefreshIndicator(
           onRefresh: () => model.refreshLeaderboard(),
           child: Scaffold(
@@ -134,13 +136,13 @@ class WebHomeView extends StatelessWidget {
                                       assetUrl: 'assets/svg/circle_svg.svg',
                                     ),
                                     GameInfoBlock(
-                                      coin: '25K',
+                                      coin: '${NumberFormat.compact().format(model.currentGameData.prizeAmount)}',
                                       coinText: 'Win upto',
                                       assetHeight: SizeConfig.padding20,
                                       assetUrl: 'assets/svg/reward_svg.svg',
                                     ),
                                     GameInfoBlock(
-                                      coin: '30',
+                                      coin: '${model.currentGameData.playCost}',
                                       coinText: 'Per Game',
                                       assetHeight: SizeConfig.padding20,
                                       assetUrl: Assets.aFelloToken,
