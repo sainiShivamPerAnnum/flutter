@@ -305,9 +305,10 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
       ),
       iosParameters: IosParameters(
-          bundleId: 'in.fello.felloappiOS',
-          minimumVersion: '0',
-          appStoreId: '1558445254'),
+        bundleId: 'in.fello.felloappiOS',
+        minimumVersion: '0',
+        appStoreId: '1558445254',
+      ),
     );
 
     Uri url;

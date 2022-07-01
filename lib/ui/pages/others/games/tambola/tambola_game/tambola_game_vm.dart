@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
@@ -8,10 +9,15 @@ import 'package:felloapp/core/repository/ticket_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/elements/tambola-global/tambola_ticket.dart';
 import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_result.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +30,7 @@ class TambolaGameViewModel extends BaseModel {
   final _coinService = locator<UserCoinService>();
   final _analyticsService = locator<AnalyticsService>();
   final _tambolaRepo = locator<TambolaRepo>();
+  final _userService = locator<UserService>();
 
   int get dailyPicksCount => tambolaService.dailyPicksCount;
 
@@ -138,6 +145,8 @@ class TambolaGameViewModel extends BaseModel {
       } else {
         _logger.d(tickets.errorMessage);
       }
+
+      _examineTicketsForWins();
 
       notifyListeners();
     }
@@ -316,6 +325,81 @@ class TambolaGameViewModel extends BaseModel {
     });
 
     return _bestTambolaBoards;
+  }
+
+  Future<void> _examineTicketsForWins() async {
+    if (userWeeklyBoards == null ||
+        userWeeklyBoards.isEmpty ||
+        weeklyDigits == null ||
+        weeklyDigits.toList().length != 7 * dailyPicksCount) {
+      _logger.i('Testing is not ready yet');
+      return;
+    }
+
+    Map<String, int> ticketCodeWinIndex = {};
+    userWeeklyBoards.forEach((boardObj) {
+      if (boardObj.getCornerOdds(
+              weeklyDigits.getPicksPostDate(boardObj.generatedDayCode)) ==
+          0) {
+        if (boardObj.getTicketNumber() != 'NA')
+          ticketCodeWinIndex[boardObj.getTicketNumber()] =
+              Constants.CORNERS_COMPLETED;
+      }
+      if (boardObj.getRowOdds(
+              0, weeklyDigits.getPicksPostDate(boardObj.generatedDayCode)) ==
+          0) {
+        if (boardObj.getTicketNumber() != 'NA')
+          ticketCodeWinIndex[boardObj.getTicketNumber()] =
+              Constants.ROW_ONE_COMPLETED;
+      }
+      if (boardObj.getRowOdds(
+              1, weeklyDigits.getPicksPostDate(boardObj.generatedDayCode)) ==
+          0) {
+        if (boardObj.getTicketNumber() != 'NA')
+          ticketCodeWinIndex[boardObj.getTicketNumber()] =
+              Constants.ROW_TWO_COMPLETED;
+      }
+      if (boardObj.getRowOdds(
+              2, weeklyDigits.getPicksPostDate(boardObj.generatedDayCode)) ==
+          0) {
+        if (boardObj.getTicketNumber() != 'NA')
+          ticketCodeWinIndex[boardObj.getTicketNumber()] =
+              Constants.ROW_THREE_COMPLETED;
+      }
+      if (boardObj.getFullHouseOdds(
+              weeklyDigits.getPicksPostDate(boardObj.generatedDayCode)) ==
+          0) {
+        if (boardObj.getTicketNumber() != 'NA')
+          ticketCodeWinIndex[boardObj.getTicketNumber()] =
+              Constants.FULL_HOUSE_COMPLETED;
+      }
+    });
+
+    double totalInvestedPrinciple =
+        _userService.userFundWallet.augGoldPrinciple;
+    bool _isEligible = (totalInvestedPrinciple >=
+        BaseUtil.toInt(BaseRemoteConfig.remoteConfig
+            .getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT)));
+
+    _logger.i('Resultant wins: ${ticketCodeWinIndex.toString()}');
+
+    if (!tambolaService.winnerDialogCalled)
+      AppState.delegate.appState.currentAction = PageAction(
+        state: PageState.addWidget,
+        page: TWeeklyResultPageConfig,
+        widget: WeeklyResult(
+          winningsmap: ticketCodeWinIndex,
+          isEligible: _isEligible,
+        ),
+      );
+    tambolaService.winnerDialogCalled = true;
+
+    if (ticketCodeWinIndex.length > 0) {
+      BaseUtil.showPositiveAlert(
+        'Congratulations 🎉',
+        'Your tickets have been submitted for processing your prizes!',
+      );
+    }
   }
 
   bool handleScrollNotification(ScrollNotification notification) {

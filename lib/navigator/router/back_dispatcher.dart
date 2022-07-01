@@ -17,7 +17,7 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:flushbar/flushbar.dart';
+import 'package:another_flushbar/flushbar.dart';
 //Flutter Imports
 import 'package:flutter/material.dart';
 

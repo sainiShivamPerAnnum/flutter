@@ -7,7 +7,7 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/date_helper.dart';
 
 import '../../util/flavor_config.dart';
-import '../constants/cache_id.dart';
+import '../constants/cache_keys.dart';
 import '../model/flc_pregame_model.dart';
 import '../service/cache_service.dart';
 
@@ -25,7 +25,7 @@ class TambolaRepo extends BaseRepo {
       // cache till end of week only
       final ttl = DateHelper.timeToWeekendInMinutes();
       return await _cacheService.cachedApi(
-          CacheId.TAMBOLA_TICKETS,
+          CacheKeys.TAMBOLA_TICKETS,
           ttl,
           () => APIService.instance.getData(
                 ApiPath.tambolaTickets(uid),
@@ -64,7 +64,7 @@ class TambolaRepo extends BaseRepo {
       logger.d('tambola repo $data');
 
       // clear cache
-      await _cacheService.invalidateByKey(CacheId.TAMBOLA_TICKETS);
+      await _cacheService.invalidateByKey(CacheKeys.TAMBOLA_TICKETS);
 
       FlcModel _flcModel = FlcModel.fromMap(data);
       return ApiResponse(model: _flcModel, code: 200);
@@ -83,7 +83,7 @@ class TambolaRepo extends BaseRepo {
       final ttl = ((18 - now.hour) % 24) * 60 - now.minute;
 
       return await _cacheService.cachedApi(
-          CacheId.TAMBOLA_PICKS,
+          CacheKeys.TAMBOLA_PICKS,
           ttl,
           () => APIService.instance.getData(
                 ApiPath.dailyPicks,

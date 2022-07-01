@@ -49,7 +49,9 @@ class _TambolaGameViewState extends State<TambolaGameView>
             model.currentPage = model.ticketPageController.page.toInt() + 1;
           });
         model.animationController = AnimationController(
-            vsync: this, duration: Duration(milliseconds: 300));
+          vsync: this,
+          duration: Duration(milliseconds: 300),
+        );
         model.animationController.forward();
       },
       builder: (ctx, model, child) {

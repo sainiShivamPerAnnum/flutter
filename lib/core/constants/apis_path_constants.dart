@@ -27,13 +27,15 @@ class ApiPath {
   get kGetGoldRates => "/augmontOps/$stage/api/rates";
 
   //User Ops Apis
-  get kAddNewUser => "/$stage/api/v3/newuser";
+  get kAddNewUser => "/api/v3/newuser";
   get kUpdateUserAppflyer => "/userOps/api/v3/user/appflyer";
   get kAmountTransfer => "/userOps/api/v3/accountTransfer";
   get kVerifyTransfer => "/userOps/api/v3/verifyTransfer";
   get kVerifyPan => "/userOps/api/v3/verifyPan";
   get kCustomAuthToken => "/userOps/api/v3/trucallerAuthToken";
   static const acquisitionTracking = "/userOps/api/v3/opt-analytics";
+  static String getUserIdByRefCode(String code) => "/referral/$code";
+  static String getReferralCode(String uid) => "/user/referral/$uid";
 
   //GT Rewards
   get kRedeemGtReward => "/gtRewardsOps/$stage/v2/api/redeemGtReward";

@@ -39,7 +39,7 @@ class CacheService {
     Future<dynamic> Function() apiReq,
     ApiResponse Function(dynamic) parseData,
   ) async {
-    final cachedData = await _getData(key);
+    final cachedData = await getData(key);
 
     if (cachedData != null) {
       try {
@@ -69,19 +69,23 @@ class CacheService {
   ) async {
     final response = await apiReq();
     final res = parseData(response);
-    await _write(key, ttl, response);
+    await writeMap(key, ttl, response);
 
     return res;
   }
 
-  Future<bool> _write(String key, int ttl, Map data) async {
+  Future<bool> writeMap(String key, int ttl, Map data) async {
+    return writeString(key, ttl, json.encode(data));
+  }
+
+  Future<bool> writeString(String key, int ttl, String data) async {
     try {
       final now = DateTime.now().millisecondsSinceEpoch;
       final cache = new CacheModel(
         key: key,
         ttl: ttl,
         expireAfterTimestamp: now + (ttl * 60 * 1000),
-        data: json.encode(data),
+        data: data,
       );
       _logger.d('cache: write $cache');
       await _isar.writeTxn((i) async {
@@ -130,7 +134,7 @@ class CacheService {
     }
   }
 
-  Future<CacheModel> _getData(String key) async {
+  Future<CacheModel> getData(String key) async {
     final data = await _isar.cacheModels.filter().keyEqualTo(key).findFirst();
     final now = DateTime.now().millisecondsSinceEpoch;
 
