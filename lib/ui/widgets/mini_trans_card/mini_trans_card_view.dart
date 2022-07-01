@@ -129,14 +129,14 @@ class MiniTransactionCard extends StatelessWidget {
                 m.txnList != null &&
                         m.txnList.isNotEmpty &&
                         m.txnList.length > 5
-                    ? SizedBox()
-                    : FelloButton(
+                    ? FelloButton(
                         onPressed: () => model.viewAllTransaction(),
                         defaultButtonText: "View All",
                         defaultButtonColor: Colors.white,
                         textStyle: TextStyles.body1.bold
                             .colour(UiConstants.primaryColor),
-                      ),
+                      )
+                    : SizedBox(),
                 SizedBox(
                   height: 8,
                 )
