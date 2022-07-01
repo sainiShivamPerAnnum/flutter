@@ -471,11 +471,15 @@ class LoginControllerViewModel extends BaseModel {
     }
 
     Map<String, dynamic> response = await dbProvider.initDeviceInfo();
-    final String deviceId = response["deviceId"];
-    final String platform = response["platform"];
-
-    _userRepo.setNewDeviceId(
-        uid: userService.baseUser.uid, deviceId: deviceId, platform: platform);
+    if (response != null) {
+      final String deviceId = response["deviceId"];
+      final String platform = response["platform"];
+      _userRepo.setNewDeviceId(
+        uid: userService.baseUser.uid,
+        deviceId: deviceId,
+        platform: platform,
+      );
+    }
 
     appStateProvider.currentAction =
         PageAction(state: PageState.replaceAll, page: RootPageConfig);

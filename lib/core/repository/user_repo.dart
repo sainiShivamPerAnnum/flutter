@@ -164,8 +164,11 @@ class UserRepository extends BaseRepo {
         "platform": platform,
       };
 
-      await APIService.instance
-          .postData("/setUserDeviceId", body: _body, isAwsDeviceUrl: true);
+      await APIService.instance.postData(
+        ApiPath.kDeviceId,
+        body: _body,
+        cBaseUrl: _baseUrl,
+      );
 
       logger.d("Device added");
     } catch (e) {

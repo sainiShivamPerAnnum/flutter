@@ -21,6 +21,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ReferralDetailsView extends StatelessWidget {
   @override
@@ -102,34 +103,52 @@ class ReferralDetailsView extends StatelessWidget {
                                     color: UiConstants.spinnerColor2,
                                     size: 18.0,
                                   )
-                                : Container(
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: UiConstants.primaryColor
-                                            .withOpacity(0.5),
+                                : InkWell(
+                                    onTap: model.copyReferCode,
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: SizeConfig.padding24,
+                                        vertical: SizeConfig.padding8,
                                       ),
-                                      borderRadius: BorderRadius.circular(
-                                        SizeConfig.roundness12,
+                                      height: SizeConfig.padding54,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                          SizeConfig.padding12,
+                                        ),
+                                        border: Border.all(
+                                          color: UiConstants.primaryColor
+                                              .withOpacity(0.5),
+                                        ),
                                       ),
-                                    ),
-                                    child: InkWell(
-                                      onTap: model.copyReferCode,
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: SizeConfig.padding8,
-                                          vertical: SizeConfig.padding8,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                        ),
-                                        child: Text(
-                                          model.refCode,
-                                          style: TextStyles.title2.bold
-                                              .colour(Colors.black)
-                                              .copyWith(letterSpacing: 5),
-                                        ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                            child: Text(model.refCode,
+                                                style: GoogleFonts.ubuntu(
+                                                    fontWeight: FontWeight.w800,
+                                                    fontSize: SizeConfig.title3,
+                                                    color: Colors.black54,
+                                                    letterSpacing: 5)
+                                                // TextStyles.title3.bold
+                                                //     .colour(Colors.black)
+                                                //     .copyWith(letterSpacing: 5),
+                                                ),
+                                          ),
+                                          Container(
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                              "Tap to copy",
+                                              style: TextStyles.body2.bold
+                                                  .colour(
+                                                    UiConstants.tertiarySolid
+                                                        .withOpacity(0.7),
+                                                  )
+                                                  .letterSpace(2),
+                                            ),
+                                          )
+                                        ],
                                       ),
                                     ),
                                   ),
