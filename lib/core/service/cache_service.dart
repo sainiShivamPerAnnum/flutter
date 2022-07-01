@@ -145,7 +145,7 @@ class CacheService {
       if (data.expireAfterTimestamp > now) {
         return data;
       } else {
-        await _invalidate(data.id);
+        await invalidateByKey(key);
       }
     }
 
