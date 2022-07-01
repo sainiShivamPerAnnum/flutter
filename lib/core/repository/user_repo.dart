@@ -10,7 +10,6 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 import 'base_repo.dart';
 
@@ -21,13 +20,6 @@ class UserRepository extends BaseRepo {
   final _baseUrl = FlavorConfig.isDevelopment()
       ? "https://6w37rw51hj.execute-api.ap-south-1.amazonaws.com/dev"
       : "https://7y9layzs7j.execute-api.ap-south-1.amazonaws.com";
-
-  @override
-  Future<String> getBearerToken() async {
-    String token = await FirebaseAuth.instance.currentUser.getIdToken();
-    logger.d("BearerToken: $token");
-    return token;
-  }
 
   Future<ApiResponse<String>> getCustomUserToken(String mobileNo) async {
     try {
