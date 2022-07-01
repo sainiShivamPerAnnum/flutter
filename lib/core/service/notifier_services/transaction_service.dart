@@ -423,6 +423,10 @@ class TransactionService
                 title:
                     "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}",
                 source: GTSOURCE.deposit);
+            if (AppState.screenStack.last == ScreenItem.loader) {
+              AppState.screenStack.remove(AppState.screenStack.last);
+            }
+            AppState.backButtonDispatcher.didPopRoute();
           } else {
             log("KUNJ: else _gtService.fetchAndVerifyGoldenTicketByID()");
             currentTransactionState = TransactionState.successTransaction;
