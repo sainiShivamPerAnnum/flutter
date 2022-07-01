@@ -6,6 +6,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/api_cache_manager.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -179,6 +180,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   Future<bool> signOut(Function signOut) async {
     try {
       await signOut();
+      new CacheService().invalidateAll();
       await FirebaseAuth.instance.signOut();
       await CacheManager.clearCacheMemory();
       await _apiCacheManager.clearCacheMemory();
