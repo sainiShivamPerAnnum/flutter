@@ -1,6 +1,8 @@
+import 'dart:developer';
+
 import 'package:intl/intl.dart';
 
-class TimeAgo {
+class DateHelper {
   static String timeAgoSinceDate(String dateString,
       {bool numericDates = true}) {
     DateTime notificationDate =
@@ -33,5 +35,16 @@ class TimeAgo {
     } else {
       return 'Just now';
     }
+  }
+
+  static int timeToWeekendInMinutes() {
+    final now = DateTime.now();
+    final weekEnd = now.add(Duration(
+      hours: 23 - now.hour,
+      minutes: 59 - now.minute,
+      days: DateTime.daysPerWeek - now.weekday,
+    ));
+
+    return weekEnd.difference(now).inMinutes;
   }
 }

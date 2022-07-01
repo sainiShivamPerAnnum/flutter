@@ -67,5 +67,27 @@
                 "--debug"
             ]
         },
+        {
+            "name": "felloapp-dev-release",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main_dev.dart",
+            "args": [
+                "--flavor",
+                "dev",
+                "--release"
+              ]
+        },
+        {
+            "name": "felloapp-prod-release",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main_prod.dart",
+            "args": [
+                "--flavor",
+                "prod",
+                "--release"
+              ]
+        },
     ]
 }

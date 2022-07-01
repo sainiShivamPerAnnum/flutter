@@ -1,4 +1,4 @@
-import 'package:felloapp/core/model/tambola_winners_details.dart';
+import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/core/service/lcl_db_api.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';

@@ -3,7 +3,7 @@ description: Game-based Investments
 
 publish_to: "none"
 
-version: 3.2.3+91
+version: 3.2.3+92
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -30,7 +30,7 @@ dependencies:
   firebase_remote_config: ^1.0.4
   firebase_storage: ^10.0.2
   fl_chart: ^0.36.3
-  flushbar: ^1.10.4
+  another_flushbar: 1.10.11
   flutter:
     sdk: flutter
   flutter_facebook_sdk: ^1.0.0
@@ -84,11 +84,14 @@ dependencies:
   app_install_date: ^0.1.1
   appsflyer_sdk: ^6.5.2
   external_app_launcher: ^2.0.2
-
+  isar: ^2.5.0
+  isar_flutter_libs: 2.5.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  isar_generator: 2.5.0
+  build_runner: any
 
 flutter:
   uses-material-design: true

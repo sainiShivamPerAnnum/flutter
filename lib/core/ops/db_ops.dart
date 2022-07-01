@@ -8,13 +8,11 @@ import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
-import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/faq_model.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
-import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/model/user_ticket_wallet_model.dart';
@@ -388,47 +386,6 @@ class DBModel extends ChangeNotifier {
       resultTransactionsMap['listOfTransactions'] = requestedTxns;
       resultTransactionsMap['lastDocument'] = lastDocument;
       return resultTransactionsMap;
-    }
-  }
-
-  ///////////////////////TAMBOLA TICKETING/////////////////////////
-  Future<List<TambolaBoard>> getWeeksTambolaTickets(String userId) async {
-    try {
-      logger.i("CALLING: getValidUserTickets");
-      QuerySnapshot _querySnapshot = await _api.getValidUserTickets(
-          userId, CodeFromFreq.getYearWeekCode());
-      if (_querySnapshot == null || _querySnapshot.size == 0) return null;
-
-      List<TambolaBoard> _requestedBoards = [];
-      for (QueryDocumentSnapshot _docSnapshot in _querySnapshot.docs) {
-        if (!_docSnapshot.exists || _docSnapshot.data() == null) continue;
-        TambolaBoard _board =
-            TambolaBoard.fromMap(_docSnapshot.data(), _docSnapshot.id);
-        if (_board.isValid()) _requestedBoards.add(_board);
-      }
-      return _requestedBoards;
-    } catch (err) {
-      log.error('Failed to fetch tambola boards');
-      return null;
-    }
-  }
-
-  Future<DailyPick> getWeeklyPicks() async {
-    try {
-      DateTime date = new DateTime.now();
-      int weekCde = CodeFromFreq.getYearWeekCode();
-      logger.i("CALLING: getWeekPickByCde");
-      QuerySnapshot querySnapshot = await _api.getWeekPickByCde(weekCde);
-
-      if (querySnapshot.docs.length != 1) {
-        log.error('Did not receive a single doc. Error staged');
-        return null;
-      } else {
-        return DailyPick.fromMap(querySnapshot.docs[0].data());
-      }
-    } catch (e) {
-      log.error("Error fetch Dailypick details: " + e.toString());
-      return null;
     }
   }
 

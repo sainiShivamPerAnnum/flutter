@@ -34,6 +34,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:truecaller_sdk/truecaller_sdk.dart';
 
+import '../../../util/haptic.dart';
+
 enum LoginSource { FIREBASE, TRUECALLER }
 
 class LoginControllerViewModel extends BaseModel {
@@ -685,6 +687,12 @@ class LoginControllerViewModel extends BaseModel {
           "Please enter your mobile number to authenticate.");
       loginUsingTrueCaller = false;
     });
+  }
+
+  void onTermsAndConditionsClicked() {
+    Haptic.vibrate();
+    BaseUtil.launchUrl('https://fello.in/policy/tnc');
+    _analyticsService.track(eventName: AnalyticsEvents.termsAndConditions);
   }
 
   exit() {
