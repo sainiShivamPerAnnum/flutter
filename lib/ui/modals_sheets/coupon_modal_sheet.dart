@@ -1,14 +1,21 @@
+import 'dart:developer';
+
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CouponModalSheet extends StatelessWidget {
-  const CouponModalSheet({Key key}) : super(key: key);
-
+  CouponModalSheet({Key key, @required this.model}) : super(key: key);
+  final AugmontGoldBuyViewModel model;
+  final TextEditingController couponCodeController =
+      new TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -18,7 +25,8 @@ class CouponModalSheet extends StatelessWidget {
           Align(
             alignment: Alignment.centerRight,
             child: Padding(
-              padding: EdgeInsets.only(left: SizeConfig.padding16),
+              padding: EdgeInsets.only(
+                  left: SizeConfig.padding24, top: SizeConfig.padding24),
               child: IconButton(
                 icon: Icon(
                   Icons.close,
@@ -56,58 +64,89 @@ class CouponModalSheet extends StatelessWidget {
           SizedBox(
             height: SizeConfig.padding32,
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
-            child: AppTextField(
-              height: SizeConfig.screenWidth * 0.1466,
-              fillColor: UiConstants.kBackgroundColor,
-              textEditingController: TextEditingController(),
-              inputDecoration: InputDecoration(
-                hintText: 'Enter coupon code here',
-                hintStyle: TextStyles.body3.colour(UiConstants.kTextColor2),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-                  borderSide: BorderSide(
-                    color: UiConstants.kTabBorderColor,
-                    width: SizeConfig.border1,
-                  ),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-                  borderSide: BorderSide(
-                    color: UiConstants.kTextColor.withOpacity(0.1),
-                    width: SizeConfig.border1,
-                  ),
-                ),
-                filled: true,
+          Form(
+            key: _formKey,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
+              child: AppTextField(
+                height: SizeConfig.screenWidth * 0.1466,
                 fillColor: UiConstants.kBackgroundColor,
+                textEditingController: couponCodeController,
+
+                hintText: 'Enter coupon code here',
+                // textCapitalization: TextCapitalization.characters,
+                inputFormatters: [
+                  UpperCaseTextFormatter(),
+                ],
+                suffixIcon: InkWell(
+                  child: Text(
+                    "Apply",
+                    style: TextStyles.sourceSans.body3.bold
+                        .colour(UiConstants.kPrimaryColor),
+                  ),
+                  onTap: () {
+                    if (_formKey.currentState.validate()) {
+                      model.applyCoupon(couponCodeController.text.trim());
+                      AppState.backButtonDispatcher.didPopRoute();
+                    }
+                  },
+                ),
+                suffixIconConstraints: BoxConstraints(
+                  minWidth: 40,
+                ),
+                validator: (val) {
+                  if (val.trim().length == 0 || val == null)
+                    return "Please enter a code to continue";
+                  if (val.trim().length < 3 || val.trim().length > 10)
+                    return "Invalid Coupon code";
+                  return null;
+                },
+                isEnabled: true,
+                textAlign: TextAlign.center,
               ),
-              validator: (val) {
-                return null;
-              },
-              isEnabled: true,
-              textAlign: TextAlign.center,
             ),
           ),
           SizedBox(
             height: SizeConfig.padding10,
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: 5,
+            child: ListView(
               shrinkWrap: true,
-              scrollDirection: Axis.vertical,
-              itemBuilder: (context, index) {
-                return _buildCoupenListTile();
-              },
+              padding: EdgeInsets.symmetric(vertical: SizeConfig.padding8),
+              physics: BouncingScrollPhysics(),
+              children: List.generate(
+                model.couponList.length,
+                (i) => Container(
+                  margin: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
+                  child: _buildCoupenListTile(
+                    couponCode: model.couponList[i].code,
+                    desc: model.couponList[i].description,
+                    onTap: () {
+                      model.applyCoupon(model.couponList[i].code);
+                      AppState.backButtonDispatcher.didPopRoute();
+                    },
+                  ),
+                ),
+              ),
             ),
+            // child: ListView.builder(
+            //   itemCount: 5,
+            //   shrinkWrap: true,
+            //   scrollDirection: Axis.vertical,
+            //   itemBuilder: (context, index) {
+            //     return _buildCoupenListTile();
+            //   },
+            // ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildCoupenListTile() {
+  Widget _buildCoupenListTile(
+      {@required String couponCode,
+      @required String desc,
+      @required Function onTap}) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
       padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
@@ -134,7 +173,7 @@ class CouponModalSheet extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'EXTRA1%',
+                    couponCode,
                     style: TextStyles.sourceSansSB.body2,
                   ),
                   SizedBox(
@@ -143,9 +182,9 @@ class CouponModalSheet extends StatelessWidget {
                   Container(
                     // margin:
                     //     EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
-                    width: SizeConfig.screenWidth * 0.6,
+                    width: SizeConfig.screenWidth * 0.55,
                     child: Text(
-                      'Buy above Rs. 500 & get 1% extra Digital Gold',
+                      desc,
                       style: TextStyles.sourceSans.body3
                           .setOpecity(0.6)
                           .setHeight(1.5),
@@ -154,10 +193,13 @@ class CouponModalSheet extends StatelessWidget {
                 ],
               ),
               Spacer(),
-              Text(
-                'APPLY',
-                style: TextStyles.sourceSans.body3
-                    .colour(UiConstants.kTabBorderColor),
+              TextButton(
+                onPressed: onTap,
+                child: Text(
+                  'APPLY',
+                  style: TextStyles.sourceSans.body3
+                      .colour(UiConstants.kTabBorderColor),
+                ),
               ),
             ],
           ),
@@ -170,6 +212,17 @@ class CouponModalSheet extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class UpperCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+      text: newValue.text.toUpperCase(),
+      selection: newValue.selection,
     );
   }
 }

@@ -25,30 +25,33 @@ class AppTextFieldLabel extends StatelessWidget {
 }
 
 class AppTextField extends StatelessWidget {
-  AppTextField(
-      {Key key,
-      @required this.textEditingController,
-      @required this.isEnabled,
-      @required this.validator,
-      //NOTE: Pass [] If inputformatters are not required
-      this.inputFormatters,
-      this.hintText = '',
-      this.autoFocus = false,
-      this.keyboardType = TextInputType.text,
-      this.suffixIcon,
-      this.height,
-      this.prefixText,
-      this.prefixTextStyle,
-      this.onChanged,
-      this.textAlign = TextAlign.start,
-      this.textStyle,
-      this.suffixText,
-      this.suffixTextStyle,
-      this.suffix,
-      this.contentPadding,
-      this.inputDecoration,
-      this.fillColor})
-      : super(key: key);
+  AppTextField({
+    Key key,
+    @required this.textEditingController,
+    @required this.isEnabled,
+    @required this.validator,
+    //NOTE: Pass [] If inputformatters are not required
+    this.inputFormatters,
+    this.hintText = '',
+    this.autoFocus = false,
+    this.keyboardType = TextInputType.text,
+    this.suffixIcon,
+    this.height,
+    this.prefixText,
+    this.prefixTextStyle,
+    this.onChanged,
+    this.textAlign = TextAlign.start,
+    this.textStyle,
+    this.suffixText,
+    this.suffixTextStyle,
+    this.suffix,
+    this.contentPadding,
+    this.inputDecoration,
+    this.fillColor,
+    this.focusNode,
+    this.textCapitalization = TextCapitalization.none,
+    this.suffixIconConstraints,
+  }) : super(key: key);
 
   final TextEditingController textEditingController;
   final bool isEnabled;
@@ -70,6 +73,9 @@ class AppTextField extends StatelessWidget {
   final EdgeInsets contentPadding;
   final InputDecoration inputDecoration;
   final Color fillColor;
+  final FocusNode focusNode;
+  final TextCapitalization textCapitalization;
+  final BoxConstraints suffixIconConstraints;
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +83,8 @@ class AppTextField extends StatelessWidget {
       height: height == null ? SizeConfig.screenWidth * 0.1377 : height,
       child: TextFormField(
         validator: validator,
+        textCapitalization: textCapitalization,
+        focusNode: focusNode,
         enabled: isEnabled,
         controller: textEditingController,
         cursorColor: UiConstants.kTextColor,
@@ -107,12 +115,14 @@ class AppTextField extends StatelessWidget {
                 suffixText: suffixText,
                 suffixStyle: suffixTextStyle,
                 suffix: suffix,
-                suffixIconConstraints: BoxConstraints(
-                  minWidth: 35,
-                  minHeight: 35,
-                  maxHeight: 35,
-                  maxWidth: 35,
-                ),
+                suffixIconConstraints: suffixIconConstraints != null
+                    ? suffixIconConstraints
+                    : BoxConstraints(
+                        minWidth: 35,
+                        minHeight: 35,
+                        maxHeight: 35,
+                        maxWidth: 35,
+                      ),
                 fillColor: fillColor != null
                     ? fillColor
                     : isEnabled

@@ -746,7 +746,7 @@ class DetailsView extends StatelessWidget {
                                                 txn: model.filteredList[index],
                                               ),
                                             ),
-                                          ),),
+                                          )),
                               ),
                               !model.hasMoreTxns
                                   ? SizedBox(

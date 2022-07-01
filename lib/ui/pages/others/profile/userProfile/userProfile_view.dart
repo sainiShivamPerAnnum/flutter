@@ -114,17 +114,10 @@ class UserProfileDetails extends StatelessWidget {
               onPressed: () {
                 BaseUtil.openModalBottomSheet(
                   addToScreenStack: true,
-                  enableDrag: true,
-                  boxContraints: BoxConstraints(
-                    maxHeight: SizeConfig.screenHeight * 0.9,
-                  ),
-                  backgroundColor: UiConstants.kSecondaryBackgroundColor,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(SizeConfig.roundness24),
-                    topRight: Radius.circular(SizeConfig.roundness24),
-                  ),
+                  enableDrag: false,
                   hapticVibrate: true,
-                  isBarrierDismissable: true,
+                  isBarrierDismissable: false,
+                  backgroundColor: Colors.transparent,
                   isScrollControlled: true,
                   content: RechargeModalSheet(),
                 );
