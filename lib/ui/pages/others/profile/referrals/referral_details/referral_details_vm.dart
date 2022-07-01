@@ -48,9 +48,6 @@ class ReferralDetailsViewModel extends BaseModel {
       _refUrl = value;
     });
     this.fetchReferralCode();
-    _shareMsg = (appShareMessage != null && appShareMessage.isNotEmpty)
-        ? '$appShareMessage Share this code: $_refCode with your friends. '
-        : 'Hey I am gifting you ₹10 and 200 gaming tokens. Lets start saving and playing together! Share this code: $_refCode with your friends. ';
   }
 
   void copyReferCode() {
@@ -66,6 +63,9 @@ class ReferralDetailsViewModel extends BaseModel {
     if (res.code == 200) {
       _refCode = res.model;
     }
+    _shareMsg = (appShareMessage != null && appShareMessage.isNotEmpty)
+        ? '$appShareMessage Share this code: $_refCode with your friends.\n'
+        : 'Hey I am gifting you ₹10 and 200 gaming tokens. Lets start saving and playing together! Share this code: $_refCode with your friends.\n';
 
     loadingRefCode = false;
     refresh();
@@ -75,11 +75,15 @@ class ReferralDetailsViewModel extends BaseModel {
     if (_refUrl != "") return _refUrl;
 
     String url;
-    final link = await _appFlyer.inviteLink();
-    if (link['status'] == 'success') {
-      url = link['payload']['userInviteUrl'];
+    try {
+      final link = await _appFlyer.inviteLink();
+      if (link['status'] == 'success') {
+        url = link['payload']['userInviteUrl'];
+      }
+      _logger.d('appflyer invite link as $url');
+    } catch (e) {
+      _logger.e(e);
     }
-    _logger.d('appflyer invite link as $url');
     return url;
   }
 
