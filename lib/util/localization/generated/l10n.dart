@@ -14,22 +14,23 @@ import 'intl/messages_all.dart';
 
 class S {
   S();
-  
+
   static S current;
-  
-  static const AppLocalizationDelegate delegate =
-    AppLocalizationDelegate();
+
+  static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name = (locale.countryCode?.isEmpty ?? false) ? locale.languageCode : locale.toString();
-    final localeName = Intl.canonicalizedLocale(name); 
+    final name = (locale.countryCode?.isEmpty ?? false)
+        ? locale.languageCode
+        : locale.toString();
+    final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
       S.current = S();
-      
+
       return S.current;
     });
-  } 
+  }
 
   static S of(BuildContext context) {
     return Localizations.of<S>(context, S);
@@ -1045,10 +1046,10 @@ class S {
     );
   }
 
-  /// `Prizes will be announced tomorrow. be sure to check put the leaderboard`
+  /// `Your prizes will be credited tomorrow. Be sure to check out the leaderboard!`
   String get tWinSubtitle2 {
     return Intl.message(
-      'Prizes will be announced tomorrow. be sure to check put the leaderboard',
+      'Your prizes will be credited tomorrow. Be sure to check out the leaderboard!',
       name: 'tWinSubtitle2',
       desc: '',
       args: [],

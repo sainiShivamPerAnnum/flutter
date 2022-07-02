@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -20,6 +22,7 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -332,9 +335,16 @@ class TambolaGameViewModel extends BaseModel {
         userWeeklyBoards.isEmpty ||
         weeklyDigits == null ||
         weeklyDigits.toList().length != 7 * dailyPicksCount) {
+      PreferenceHelper.setBool(PreferenceHelper.SHOW_TAMBOLA_PROCESSING, true);
       _logger.i('Testing is not ready yet');
       return;
     }
+
+    final show = PreferenceHelper.getBool(
+      PreferenceHelper.SHOW_TAMBOLA_PROCESSING,
+      def: true,
+    );
+    if (show == false) return;
 
     Map<String, int> ticketCodeWinIndex = {};
     userWeeklyBoards.forEach((boardObj) {
@@ -400,6 +410,8 @@ class TambolaGameViewModel extends BaseModel {
         'Your tickets have been submitted for processing your prizes!',
       );
     }
+
+    PreferenceHelper.setBool(PreferenceHelper.SHOW_TAMBOLA_PROCESSING, false);
   }
 
   bool handleScrollNotification(ScrollNotification notification) {
