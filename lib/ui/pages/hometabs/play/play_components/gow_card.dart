@@ -26,19 +26,14 @@ class GOWCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final GameData game = model.gamesListData[0];
     return model.isGamesListDataLoading
         ? GameCardShimmer()
         : InkWell(
             onTap: () {
               Haptic.vibrate();
-              // AppState.delegate.parseRoute(
-              //   Uri.parse(model.gamesListData[0].route),
-              // );
-              AppState.delegate.appState.currentAction = PageAction(
-                  state: PageState.addWidget,
-                  widget: WebHomeView(game: Constants.GAME_TYPE_CRICKET),
-                  page: WebHomeViewPageConfig);
+              AppState.delegate.parseRoute(
+                Uri.parse(model.gamesListData[gameIndex].route),
+              );
             },
             child: Container(
               margin: EdgeInsets.only(

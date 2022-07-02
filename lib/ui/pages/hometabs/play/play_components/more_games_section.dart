@@ -23,7 +23,7 @@ class MoreGamesSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: List.generate(
-        3,
+        model.isTrendingCount == 0 ? 3 : model.isTrendingCount,
         (index) {
           return model.isGamesListDataLoading
               ? MoreGamesShimmer()

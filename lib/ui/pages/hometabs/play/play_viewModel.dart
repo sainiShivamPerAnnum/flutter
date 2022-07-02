@@ -41,6 +41,8 @@ class PlayViewModel extends BaseModel {
   bool _isGamesListDataLoading = true;
   bool _isGOWCheck = false;
   int _isGOWIndex = 0;
+  int _isTrendingCount = 0;
+
 
 
   List<PromoCardModel> _offerList;
@@ -58,7 +60,12 @@ class PlayViewModel extends BaseModel {
 
   get isOfferListLoading => this._isOfferListLoading;
   get isGamesListDataLoading => this._isGamesListDataLoading;
+  get isTrendingCount => this._isTrendingCount;
 
+  set isTrendingCount(value){
+    this._isTrendingCount = value;
+    notifyListeners();
+  }
   set isOfferListLoading(value) {
     this._isOfferListLoading = value;
     notifyListeners();
@@ -171,7 +178,9 @@ class PlayViewModel extends BaseModel {
           {
             _isGOWCheck = true;
             _isGOWIndex = item.order;
-          } 
+          }
+          if(item.isTrending)
+          isTrendingCount += 1; 
         }
       }
     } catch (e) {
