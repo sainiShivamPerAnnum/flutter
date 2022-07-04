@@ -111,17 +111,19 @@ class Root extends StatelessWidget {
                         },
                       ),
                     ),
-                    // SizedBox(width: SizeConfig.padding12),
-                    // CircleAvatar(
-                    //   child: IconButton(
-                    //     icon: model.isUploading
-                    //         ? CircularProgressIndicator(color: Colors.black)
-                    //         : Icon(Icons.upload),
-                    //     onPressed: () {
-                    //       model.addJourneyPage();
-                    //     },
-                    //   ),
-                    // )
+                    SizedBox(width: SizeConfig.padding12),
+                    CircleAvatar(
+                      backgroundColor: Colors.black,
+                      child: IconButton(
+                        color: Colors.white,
+                        icon: model.isUploading
+                            ? CircularProgressIndicator(color: Colors.black)
+                            : Icon(Icons.upload_rounded),
+                        onPressed: () {
+                          model.addJourneyPage();
+                        },
+                      ),
+                    )
                   ],
                 ),
                 Positioned(

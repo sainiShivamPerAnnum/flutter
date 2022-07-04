@@ -112,10 +112,11 @@ class _ActiveFloatingMilestoneState extends State<ActiveFloatingMilestone>
                 transform:
                     Matrix4.rotationY(widget.milestone.hFlip ? math.pi : 0),
                 child: SvgPicture.asset(
-                  widget.milestone.shadow.asset,
-                  width: widget.model.pageWidth * widget.milestone.shadow.width,
-                  height:
-                      widget.model.pageHeight * widget.milestone.shadow.height,
+                  widget.milestone.shadow.asset.uri,
+                  width: widget.model.pageWidth *
+                      widget.milestone.shadow.asset.width,
+                  height: widget.model.pageHeight *
+                      widget.milestone.shadow.asset.height,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -141,9 +142,10 @@ class _ActiveFloatingMilestoneState extends State<ActiveFloatingMilestone>
                 transform:
                     Matrix4.rotationY(widget.milestone.hFlip ? math.pi : 0),
                 child: SvgPicture.asset(
-                  widget.milestone.asset,
-                  width: widget.model.pageWidth * widget.milestone.width,
-                  height: widget.model.pageHeight * widget.milestone.height,
+                  widget.milestone.asset.uri,
+                  width: widget.model.pageWidth * widget.milestone.asset.width,
+                  height:
+                      widget.model.pageHeight * widget.milestone.asset.height,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -207,10 +209,11 @@ class _ActiveRotatingMilestoneState extends State<ActiveRotatingMilestone>
               transform:
                   Matrix4.rotationY(widget.milestone.hFlip ? math.pi : 0),
               child: SvgPicture.asset(
-                widget.milestone.shadow.asset,
-                width: widget.model.pageWidth * widget.milestone.shadow.width,
-                height:
-                    widget.model.pageHeight * widget.milestone.shadow.height,
+                widget.milestone.shadow.asset.uri,
+                width: widget.model.pageWidth *
+                    widget.milestone.shadow.asset.width,
+                height: widget.model.pageHeight *
+                    widget.milestone.shadow.asset.height,
                 fit: BoxFit.cover,
               ),
             ),
@@ -235,9 +238,10 @@ class _ActiveRotatingMilestoneState extends State<ActiveRotatingMilestone>
                 transform:
                     Matrix4.rotationY(widget.milestone.hFlip ? math.pi : 0),
                 child: SvgPicture.asset(
-                  widget.milestone.asset,
-                  width: widget.model.pageWidth * widget.milestone.width,
-                  height: widget.model.pageHeight * widget.milestone.height,
+                  widget.milestone.asset.uri,
+                  width: widget.model.pageWidth * widget.milestone.asset.width,
+                  height:
+                      widget.model.pageHeight * widget.milestone.asset.height,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -268,9 +272,9 @@ class StaticMilestone extends StatelessWidget {
               alignment: Alignment.center,
               transform: Matrix4.rotationY(milestone.hFlip ? math.pi : 0),
               child: SvgPicture.asset(
-                milestone.shadow.asset,
-                width: model.pageWidth * milestone.shadow.width,
-                height: model.pageHeight * milestone.shadow.height,
+                milestone.shadow.asset.uri,
+                width: model.pageWidth * milestone.shadow.asset.width,
+                height: model.pageHeight * milestone.shadow.asset.height,
                 fit: BoxFit.cover,
               ),
             ),
@@ -326,7 +330,7 @@ class StaticMilestone extends StatelessWidget {
                               backgroundColor: Colors.black,
                               radius: SizeConfig.avatarRadius * 2,
                               child: SvgPicture.asset(
-                                milestone.asset,
+                                milestone.asset.uri,
                                 height: SizeConfig.avatarRadius * 2,
                                 width: SizeConfig.avatarRadius * 2,
                                 fit: BoxFit.contain,
@@ -354,9 +358,9 @@ class StaticMilestone extends StatelessWidget {
                 message: milestone.description,
                 triggerMode: TooltipTriggerMode.longPress,
                 child: SvgPicture.asset(
-                  milestone.asset,
-                  width: model.pageWidth * milestone.width,
-                  height: model.pageHeight * milestone.height,
+                  milestone.asset.uri,
+                  width: model.pageWidth * milestone.asset.width,
+                  height: model.pageHeight * milestone.asset.height,
                   fit: BoxFit.cover,
                 ),
               ),

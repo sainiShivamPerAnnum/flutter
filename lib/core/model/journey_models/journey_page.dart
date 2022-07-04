@@ -8,12 +8,12 @@ class JourneyPage {
   String bgImage;
   int page;
   int level;
-  List<JourneyPathModel> path;
+  List<JourneyPathModel> paths;
   List<AvatarPathModel> avatarPath;
   List<MilestoneModel> milestones;
   JourneyPage({
     @required this.bgImage,
-    @required this.path,
+    @required this.paths,
     @required this.page,
     @required this.level,
     @required this.avatarPath,
@@ -22,7 +22,7 @@ class JourneyPage {
 
   JourneyPage copyWith({
     String bgImage,
-    List<JourneyPathModel> path,
+    List<JourneyPathModel> paths,
     List<AvatarPathModel> avatarPath,
     int level,
     int page,
@@ -30,7 +30,7 @@ class JourneyPage {
   }) {
     return JourneyPage(
       bgImage: bgImage ?? this.bgImage,
-      path: path ?? this.path,
+      paths: paths ?? this.paths,
       page: page ?? this.page,
       level: level ?? this.level,
       avatarPath: avatarPath ?? this.avatarPath,
@@ -43,7 +43,7 @@ class JourneyPage {
       'bgImage': bgImage,
       'page': page,
       'level': level,
-      'path': path.map((x) => x.toMap()).toList(),
+      'paths': paths.map((x) => x.toMap()).toList(),
       'avatarPath': avatarPath.map((x) => x.toMap()).toList(),
       'milestones': milestones.map((x) => x.toMap()).toList(),
     };
@@ -54,8 +54,8 @@ class JourneyPage {
       page: map["page"] ?? 0,
       level: map["level"] ?? 0,
       bgImage: map['bgImage'] ?? '',
-      path: List<JourneyPathModel>.from(
-          map['path']?.map((x) => JourneyPathModel.fromMap(x))),
+      paths: List<JourneyPathModel>.from(
+          map['paths']?.map((x) => JourneyPathModel.fromMap(x))),
       avatarPath: List<AvatarPathModel>.from(
           map['avatarPath']?.map((x) => AvatarPathModel.fromMap(x))),
       milestones: List<MilestoneModel>.from(
@@ -70,7 +70,7 @@ class JourneyPage {
 
   @override
   String toString() {
-    return 'JourneyPage(bgImage: $bgImage, path: $path, level: $level, avatarPath: $avatarPath, milestones: $milestones)';
+    return 'JourneyPage(bgImage: $bgImage, paths: $paths, level: $level, avatarPath: $avatarPath, milestones: $milestones)';
   }
 
   @override
@@ -79,7 +79,7 @@ class JourneyPage {
 
     return other is JourneyPage &&
         other.bgImage == bgImage &&
-        listEquals(other.path, path) &&
+        listEquals(other.paths, paths) &&
         listEquals(other.avatarPath, avatarPath) &&
         listEquals(other.milestones, milestones);
   }
@@ -87,7 +87,7 @@ class JourneyPage {
   @override
   int get hashCode {
     return bgImage.hashCode ^
-        path.hashCode ^
+        paths.hashCode ^
         avatarPath.hashCode ^
         milestones.hashCode;
   }

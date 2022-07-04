@@ -441,9 +441,9 @@ class RootViewModel extends BaseModel {
 
   addJourneyPage() async {
     isUploading = true;
-    // jourenyPages.forEach((page) async {
-    //   await _dbModel.addJourneypage(page);
-    // });
+    jourenyPages.forEach((page) async {
+      await _dbModel.addJourneypage(page);
+    });
     isUploading = false;
   }
 

@@ -115,7 +115,7 @@ class JourneyPageViewModel extends BaseModel {
 
   //  (pages.length - model.page) * pageHeight +
   //               pageHeight -
-  //               (pageHeight * model.cords[1]))
+  //               (pageHeight * model.coords[1]))
 
   init(int stPage) async {
     isLoading = true;
@@ -185,8 +185,8 @@ class JourneyPageViewModel extends BaseModel {
   }
 
   setAvatarPostion() {
-    // avatarPosition = Offset(pages.first.avatarPath.first.cords[0],
-    //     pages.first.avatarPath.first.cords[1]);
+    // avatarPosition = Offset(pages.first.avatarPath.first.coords[0],
+    //     pages.first.avatarPath.first.coords[1]);
     avatarPosition = calculatePosition(0);
   }
 
@@ -204,7 +204,7 @@ class JourneyPageViewModel extends BaseModel {
 
   addJourneyPathItems(List<JourneyPage> pgs) {
     pgs.forEach((page) {
-      journeyPathItemsList.addAll(page.path);
+      journeyPathItemsList.addAll(page.paths);
     });
   }
 
@@ -225,7 +225,7 @@ class JourneyPageViewModel extends BaseModel {
   setJourneyPathItems() {
     journeyPathItemsList.clear();
     pages.forEach((page) {
-      journeyPathItemsList.addAll(page.path);
+      journeyPathItemsList.addAll(page.paths);
     });
   }
 
@@ -265,49 +265,49 @@ class JourneyPageViewModel extends BaseModel {
     Path path = Path();
     for (int i = 0; i < customPathDataList.length; i++) {
       path = generateCustomPath(path, customPathDataList[i],
-          i == 0 ? "move" : customPathDataList[i].pathType);
+          i == 0 ? "move" : customPathDataList[i].moveType);
     }
     return path;
   }
 
-  Path generateCustomPath(Path path, AvatarPathModel model, String pathType) {
-    switch (pathType) {
+  Path generateCustomPath(Path path, AvatarPathModel model, String moveType) {
+    switch (moveType) {
       case "linear":
         path.lineTo(
-            pageWidth * model.cords[0],
+            pageWidth * model.coords[0],
             (pages.length - model.page) * pageHeight +
-                pageHeight * model.cords[1]);
+                pageHeight * model.coords[1]);
         return path;
       case "arc":
         return path;
       case "move":
         path.moveTo(
-            pageWidth * model.cords[0],
+            pageWidth * model.coords[0],
             (pages.length - model.page) * pageHeight +
-                pageHeight * model.cords[1]);
+                pageHeight * model.coords[1]);
         return path;
       case "rect":
         return path;
       case "quadratic":
         // path.quadraticBezierTo(
-        //     pageWidth * model.cords[0],
+        //     pageWidth * model.coords[0],
         //     pageHeight * (pageCount - model.page).abs() +
-        //         pageHeight * model.cords[1],
-        //     pageWidth * model.cords[2],
+        //         pageHeight * model.coords[1],
+        //     pageWidth * model.coords[2],
         //     pageHeight * (pageCount - model.page).abs() +
-        //         pageHeight * model.cords[3]);
+        //         pageHeight * model.coords[3]);
         return path;
       case "cubic":
         // path.cubicTo(
-        //     pageWidth * model.cords[0],
+        //     pageWidth * model.coords[0],
         //     pageHeight * (pageCount - model.page).abs() +
-        //         pageHeight * model.cords[1],
-        //     pageWidth * model.cords[2],
+        //         pageHeight * model.coords[1],
+        //     pageWidth * model.coords[2],
         //     pageHeight * (pageCount - model.page).abs() +
-        //         pageHeight * model.cords[3],
-        //     pageWidth * model.cords[4],
+        //         pageHeight * model.coords[3],
+        //     pageWidth * model.coords[4],
         //     pageHeight * (pageCount - model.page).abs() +
-        //         pageHeight * model.cords[5]);
+        //         pageHeight * model.coords[5]);
         return path;
       default:
         return path;

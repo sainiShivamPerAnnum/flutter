@@ -37,7 +37,7 @@ class _BackgroundState extends State<Background> {
         child: Column(
           children: List.generate(
             widget.model.pageCount,
-            (mlIndex) => SvgPicture.asset(
+            (milestoneIndex) => SvgPicture.asset(
               "assets/journey/bg.svg",
               // color: Colors.grey,
               fit: BoxFit.cover,

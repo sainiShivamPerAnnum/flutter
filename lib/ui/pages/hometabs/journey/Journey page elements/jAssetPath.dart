@@ -9,31 +9,35 @@ class JourneyAssetPath extends StatelessWidget {
   const JourneyAssetPath({Key key, this.model}) : super(key: key);
 
   getChild(JourneyPathModel item) {
-    switch (item.type) {
+    switch (item.asset.type) {
       case "SVG":
-        return item.source == "NTWRK"
-            ? SvgPicture.network(
-                item.asset,
-                height: item.height,
-                width: item.width,
-              )
-            : SvgPicture.asset(
-                item.asset,
-                width: model.pageWidth * item.width,
-                height: model.pageHeight * item.height,
-              );
+        return
+            // item.asset.uri == "NTWRK"
+            //     ? SvgPicture.network(
+            //         item.asset.uri,
+            //         height: item.asset.height,
+            //         width: item.asset.width,
+            //       )
+            //     :
+            SvgPicture.asset(
+          item.asset.uri,
+          width: model.pageWidth * item.asset.width,
+          height: model.pageHeight * item.asset.height,
+        );
       case "PNG":
-        return item.source == "NTWRK"
-            ? Image.network(
-                item.asset,
-                height: item.height,
-                width: item.width,
-              )
-            : Image.asset(
-                item.asset,
-                width: model.pageWidth * item.width,
-                height: model.pageHeight * item.height,
-              );
+        return
+            // item.asset.source == "NTWRK"
+            //     ? Image.network(
+            //         item.asset.uri,
+            //         height: item.asset.height,
+            //         width: item.asset.width,
+            //       )
+            //     :
+            Image.asset(
+          item.asset.uri,
+          width: model.pageWidth * item.asset.width,
+          height: model.pageHeight * item.asset.height,
+        );
     }
   }
 
@@ -48,8 +52,9 @@ class JourneyAssetPath extends StatelessWidget {
           bottom: model.pageHeight * (model.journeyPathItemsList[i].page - 1) +
               model.pageHeight * model.journeyPathItemsList[i].dy,
           child: Container(
-            width: model.pageWidth * model.journeyPathItemsList[i].width,
-            height: model.pageHeight * model.journeyPathItemsList[i].height,
+            width: model.pageWidth * model.journeyPathItemsList[i].asset.width,
+            height:
+                model.pageHeight * model.journeyPathItemsList[i].asset.height,
             // decoration: BoxDecoration(
             //   border: Border.all(
             //     color: Color((math.Random().nextDouble() * 0xFFFFFF).toInt())

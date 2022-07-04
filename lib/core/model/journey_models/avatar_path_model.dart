@@ -2,49 +2,55 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 
-// enum PathType { cubic, quadratic, linear, arc, rect, move }
+// enum moveType { cubic, quadratic, linear, arc, rect, move }
 
 class AvatarPathModel {
-  final String pathType;
-  int mlIndex;
-  final List<double> cords;
+  final String moveType;
+  int milestoneIndex;
+  final List<double> coords;
   final int page;
+  final int level;
   AvatarPathModel({
-    @required this.pathType,
-    @required this.mlIndex,
-    @required this.cords,
+    @required this.moveType,
+    @required this.milestoneIndex,
+    @required this.coords,
     @required this.page,
+    @required this.level,
   });
 
   AvatarPathModel copyWith({
-    String pathType,
-    int mlIndex,
-    List<double> cords,
+    String moveType,
+    int milestoneIndex,
+    List<double> coords,
     int page,
+    int level,
   }) {
     return AvatarPathModel(
-      pathType: pathType ?? this.pathType,
-      mlIndex: mlIndex ?? this.mlIndex,
-      cords: cords ?? this.cords,
+      moveType: moveType ?? this.moveType,
+      milestoneIndex: milestoneIndex ?? this.milestoneIndex,
+      coords: coords ?? this.coords,
       page: page ?? this.page,
+      level: level ?? this.level,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'pathType': pathType,
-      'mlIndex': mlIndex,
-      'cords': cords,
-      'page': page,
+      'moveType': moveType,
+      'milestoneIndex': milestoneIndex,
+      'coords': coords,
+      // 'page': page,
+      'level': level,
     };
   }
 
   factory AvatarPathModel.fromMap(Map<String, dynamic> map) {
     return AvatarPathModel(
-      pathType: map['pathType'] ?? "linear",
-      mlIndex: map['mlIndex']?.toInt() ?? 0,
-      cords: List<double>.from(map['cords']),
+      moveType: map['moveType'] ?? "linear",
+      milestoneIndex: map['milestoneIndex']?.toInt() ?? 0,
+      coords: List<double>.from(map['coords']),
       page: map['page']?.toInt() ?? 0,
+      level: map['page']?.toInt() ?? 0,
     );
   }
 
@@ -55,7 +61,7 @@ class AvatarPathModel {
 
   @override
   String toString() {
-    return 'AvatarPathModel(pathType: $pathType, mlIndex: $mlIndex, cords: $cords, page: $page)';
+    return 'AvatarPathModel(moveType: $moveType, milestoneIndex: $milestoneIndex, coords: $coords, page: $page, level: $level)';
   }
 
   @override
@@ -63,17 +69,17 @@ class AvatarPathModel {
     if (identical(this, other)) return true;
 
     return other is AvatarPathModel &&
-        other.pathType == pathType &&
-        other.mlIndex == mlIndex &&
-        listEquals(other.cords, cords) &&
+        other.moveType == moveType &&
+        other.milestoneIndex == milestoneIndex &&
+        listEquals(other.coords, coords) &&
         other.page == page;
   }
 
   @override
   int get hashCode {
-    return pathType.hashCode ^
-        mlIndex.hashCode ^
-        cords.hashCode ^
+    return moveType.hashCode ^
+        milestoneIndex.hashCode ^
+        coords.hashCode ^
         page.hashCode;
   }
 }
