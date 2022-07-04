@@ -42,11 +42,6 @@ class Api {
     return ref.doc(Constants.DOC_USER_FCM_TOKEN).delete();
   }
 
-  Future<void> addKycName(String userId, Map<String, dynamic> data) {
-    final documentRef = _db.collection(Constants.COLN_USERS).doc(userId);
-    return documentRef.update(data);
-  }
-
   Future<QuerySnapshot> checkForLatestGoldenTicket(String userId) {
     Future<QuerySnapshot> snapshot;
     Query query = _db
@@ -187,39 +182,12 @@ class Api {
         .set(data, SetOptions(merge: true));
   }
 
-  Future<DocumentSnapshot> getUserKycDetailDocument(String userId) {
-    ref = _db
-        .collection(Constants.COLN_USERS)
-        .doc(userId)
-        .collection(Constants.SUBCOLN_USER_KYC_DETAILS);
-    return ref.doc(Constants.DOC_USER_KYC_DETAIL).get();
-  }
-
   Future<QuerySnapshot> getUserPrizeTransactionDocuments(String userId) {
     final query = _db
         .collection(Constants.COLN_USERS)
         .doc(userId)
         .collection(Constants.SUBCOLN_USER_TXNS)
         .where('tType', isEqualTo: 'PRIZE');
-    return query.get();
-  }
-
-  Future<DocumentReference> createTicketRequest(String userId, Map data) {
-    return _db.collection(Constants.COLN_TICKETREQUEST).add(data);
-  }
-
-  Stream<DocumentSnapshot> getticketRequestDocumentEvent(String docId) {
-    return _db.collection(Constants.COLN_TICKETREQUEST).doc(docId).snapshots();
-  }
-
-  Future<QuerySnapshot> getValidUserTickets(String user_id, int weekCode) {
-    Query query = _db
-        .collection(Constants.COLN_USERS)
-        .doc(user_id)
-        .collection(Constants.SUBCOLN_USER_TICKETS);
-    query = query.where(TambolaBoard.fldWeekCode, isEqualTo: weekCode);
-
-    //return query.snapshots();
     return query.get();
   }
 
@@ -291,35 +259,9 @@ class Api {
     return query.get();
   }
 
-  Future<void> addCallbackDocument(String year, String monthCde, Map data) {
-    return _db
-        .collection('callbacks')
-        .doc(year)
-        .collection(monthCde)
-        .doc()
-        .set(data, SetOptions(merge: false));
-  }
-
-  Future<void> addClaimDocument(Map data) {
-    return _db.collection('claims').doc().set(data, SetOptions(merge: false));
-  }
-
   Future<QuerySnapshot> getReferralDocs(String id) {
     ref = _db.collection(Constants.COLN_REFERRALS);
     return ref.where('ref_by', isEqualTo: id).get();
-  }
-
-  Future<DocumentSnapshot> getPollDocument(String id) {
-    ref = _db.collection(Constants.COLN_POLLS);
-    return ref.doc(id).get();
-  }
-
-  Future<dynamic> incrementPollDocument(String id, String field) {
-    ref = _db.collection(Constants.COLN_POLLS);
-    Map<String, dynamic> upObj = {};
-    upObj[field] = FieldValue.increment(1);
-
-    return ref.doc(id).update(upObj);
   }
 
   Future<DocumentSnapshot> getUserFundWalletDocById(String id) {
@@ -397,67 +339,6 @@ class Api {
 
   Future<String> getFileFromDPBucketURL(String uid, String path) {
     return _storage.ref('dps/$uid/$path').getDownloadURL();
-  }
-
-  Future<bool> deleteUserTicketsBeforeWeekCode(String uid, int weekCde) async {
-    bool flag = true;
-    Query _query = _db
-        .collection(Constants.COLN_USERS)
-        .doc(uid)
-        .collection(Constants.SUBCOLN_USER_TICKETS)
-        .where('week_code', isLessThan: weekCde);
-    List<DocumentReference> _docReferences = [];
-    try {
-      QuerySnapshot _querySnapshot = await _query.get();
-      _querySnapshot.docs.forEach((dDoc) {
-        if (dDoc.exists) _docReferences.add(dDoc.reference);
-      });
-    } catch (e) {
-      log.error('Failed to retrieve ticket documents: $e');
-      flag = false;
-    }
-
-    if (_docReferences.length > 0) {
-      try {
-        var opBatch = _db.batch();
-        for (var ref in _docReferences) {
-          opBatch.delete(ref);
-        }
-        log.debug(
-            'Deleting ${_docReferences.length.toString()} ticket documents');
-
-        await opBatch.commit();
-      } catch (e) {
-        log.error('DB Batch operation failed: $e');
-        flag = false;
-      }
-    }
-    return flag;
-  }
-
-  Future<bool> deleteUserTicketDocuments(
-      String uid, List<String> references) async {
-    if (references.length > 0) {
-      CollectionReference colnReference = _db
-          .collection(Constants.COLN_USERS)
-          .doc(uid)
-          .collection(Constants.SUBCOLN_USER_TICKETS);
-      try {
-        var opBatch = _db.batch();
-        for (String ref in references) {
-          opBatch.delete(colnReference.doc(ref));
-        }
-        log.debug('Deleting ${references.length.toString()} ticket documents');
-
-        await opBatch.commit();
-        return true;
-      } catch (e) {
-        log.error('DB Batch operation failed: $e');
-        return false;
-      }
-    } else {
-      return false;
-    }
   }
 
   Future<bool> createEmailVerificationDocument(String email, String otp) async {

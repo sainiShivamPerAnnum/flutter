@@ -554,82 +554,6 @@ class DBModel extends ChangeNotifier {
     return false;
   }
 
-  Future<bool> addCallbackRequest(
-      String uid, String name, String mobile, int callTime,
-      [int callWindow = 2]) async {
-    try {
-      DateTime today = DateTime.now();
-      String year = today.year.toString();
-      String monthCde =
-          BaseUtil.getMonthName(monthNum: today.month).toUpperCase();
-      Map<String, dynamic> data = {};
-      data['user_id'] = uid;
-      data['name'] = name;
-      data['mobile'] = mobile;
-      data['timestamp'] = Timestamp.now();
-      data['call_time'] = callTime;
-      data['call_window'] = callWindow;
-      logger.i("CALLING: addCallbackDocument");
-      await _api.addCallbackDocument(year, monthCde, data);
-      return true;
-    } catch (e) {
-      log.error("Error adding callback doc: " + e.toString());
-      return false;
-    }
-  }
-
-  Future<bool> addHelpRequest(
-      String uid, String name, String mobile, HelpType helpType) async {
-    try {
-      DateTime today = DateTime.now();
-      String year = today.year.toString();
-      String monthCde =
-          BaseUtil.getMonthName(monthNum: today.month).toUpperCase();
-      Map<String, dynamic> data = {};
-      data['user_id'] = uid;
-      data['mobile'] = mobile;
-      data['name'] = name;
-      data['issue_type'] = helpType.value();
-      data['timestamp'] = Timestamp.now();
-      logger.i("CALLING: addCallbackDocument");
-      await _api.addCallbackDocument(year, monthCde, data);
-      return true;
-    } catch (e) {
-      log.error("Error adding callback doc: " + e.toString());
-      return false;
-    }
-  }
-
-  Future<bool> addWinClaim(
-      String uid,
-      String userName,
-      String name,
-      String mobile,
-      int currentTickCount,
-      bool isEligible,
-      Map<String, int> resMap) async {
-    try {
-      int weekCde = CodeFromFreq.getYearWeekCode();
-
-      Map<String, dynamic> data = {};
-      data['user_id'] = uid;
-      data['mobile'] = mobile;
-      data['name'] = name;
-      data['username'] = userName;
-      data['tck_count'] = currentTickCount;
-      data['week_code'] = weekCde;
-      data['ticket_cat_map'] = resMap;
-      data['is_eligible'] = isEligible;
-      data['timestamp'] = Timestamp.now();
-      logger.i("CALLING: addClaimDocument");
-      await _api.addClaimDocument(data);
-      return true;
-    } catch (e) {
-      log.error("Error adding callback doc: " + e.toString());
-      return false;
-    }
-  }
-
   Future<List<ReferralDetail>> getUserReferrals(String uid) async {
     try {
       logger.i("CALLING: getReferralDocs");
@@ -649,37 +573,6 @@ class DBModel extends ChangeNotifier {
       log.error("Error fetch referrals details: " + e.toString());
     }
     return null;
-  }
-
-  Future<bool> deleteExpiredUserTickets(String userId) async {
-    try {
-      int weekNumber = BaseUtil.getWeekNumber();
-      if (weekNumber > 2) {
-        return await _lock.synchronized(() async {
-          ///eg: weekcode: 202105 -> delete all tickets older than 202103
-          int weekCde = CodeFromFreq.getYearWeekCode();
-          weekCde--;
-          logger.i("CALLING: deleteUserTicketsBeforeWeekCode");
-          return await _api.deleteUserTicketsBeforeWeekCode(userId, weekCde);
-        });
-      } else {
-        return false;
-      }
-    } catch (e) {
-      log.error('$e');
-      return false;
-    }
-  }
-
-  Future<bool> deleteSelectUserTickets(
-      String userId, List<String> ticketRef) async {
-    try {
-      logger.i("CALLING: deleteUserTicketDocuments");
-      return await _api.deleteUserTicketDocuments(userId, ticketRef);
-    } catch (e) {
-      log.error('$e');
-      return false;
-    }
   }
 
   Future<String> getUserDP(String uid) async {

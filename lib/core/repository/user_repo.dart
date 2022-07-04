@@ -144,17 +144,6 @@ class UserRepository extends BaseRepo {
     }
   }
 
-  Future<void> addKycName({String userUid, String upstreamKycName}) async {
-    try {
-      Map<String, dynamic> _data = {'mKycName': upstreamKycName};
-      await _api.addKycName(userUid, _data);
-      logger.d("Kyc name successfully added to firestore");
-    } catch (e) {
-      logger.e(e);
-      throw e;
-    }
-  }
-
   Future<void> setNewDeviceId(
       {String uid, String deviceId, String platform}) async {
     try {
