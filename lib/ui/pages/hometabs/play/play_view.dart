@@ -5,6 +5,7 @@ import 'package:felloapp/ui/pages/hometabs/play/play_components/play_title.dart'
 import 'package:felloapp/ui/pages/hometabs/play/play_components/trendingGames.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/widgets/button4.0/appBar_button.dart';
+import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -33,16 +34,12 @@ class Play extends StatelessWidget {
             elevation: 0,
             backgroundColor: Colors.transparent,
             actions: [
-              AppBarButton(
+              FelloCoinBar(
                 svgAsset: Assets.aTambolaTicket,
-                coin: '20',
-                onTap: () {},
                 size: SizeConfig.padding20,
               ),
-              AppBarButton(
+              FelloCoinBar(
                 svgAsset: Assets.aFelloToken,
-                coin: '200',
-                onTap: () {},
               ),
               SizedBox(
                 width: SizeConfig.padding20,
