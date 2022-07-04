@@ -1,18 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/hometabs/play/play_components/gameRewards.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
-import 'package:felloapp/ui/pages/others/games/web/web_home/web_home_view.dart';
 import 'package:felloapp/ui/widgets/button4.0/appBar_button.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:shimmer/shimmer.dart';
 
 class GOWCard extends StatelessWidget {
@@ -106,20 +102,7 @@ class GOWCard extends StatelessWidget {
                               model.gamesListData[gameIndex].gameName, // 'Cricket',
                               style: TextStyles.rajdhaniSB.title5,
                             ),
-                            Row(
-                              children: [
-                                SvgPicture.asset(
-                                  'assets/svg/gift_svg.svg',
-                                  height: SizeConfig.padding20,
-                                ),
-                                SizedBox(width: SizeConfig.padding2),
-                                Text(
-                                  'Win upto Rs.${model.gamesListData[0].prizeAmount}',
-                                  style: TextStyles.sourceSans.body4
-                                      .colour(Colors.grey.shade600),
-                                ),
-                              ],
-                            ),
+                           GameRewards(prizeAmount: model.gamesListData[gameIndex].prizeAmount),
                           ],
                         ),
                         Spacer(),

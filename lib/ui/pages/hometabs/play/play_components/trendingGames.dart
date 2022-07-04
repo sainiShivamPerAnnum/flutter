@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/model/game_model4.0.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/hometabs/play/play_components/gameRewards.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -102,20 +103,7 @@ class TrendingGames extends StatelessWidget {
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: SizeConfig.padding8),
-                      child: Row(
-                        children: [
-                          SvgPicture.asset(
-                            'assets/svg/gift_svg.svg',
-                            height: SizeConfig.padding20,
-                          ),
-                          SizedBox(width: SizeConfig.padding2),
-                          Text(
-                            'Win upto Rs.${game.prizeAmount}',
-                            style:
-                                TextStyles.sourceSans.body3.colour(Colors.grey),
-                          ),
-                        ],
-                      ),
+                      child: GameRewards(prizeAmount: game.prizeAmount),
                     ),
                   ],
                 ),
