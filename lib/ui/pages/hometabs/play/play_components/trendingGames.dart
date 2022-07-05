@@ -3,6 +3,7 @@ import 'package:felloapp/core/model/game_model4.0.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/gameRewards.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -116,7 +117,7 @@ class TrendingGames extends StatelessWidget {
                       Row(
                         children: [
                           SvgPicture.asset(
-                            'assets/temp/token.svg',
+                            Assets.aFelloToken,
                             height: SizeConfig.padding16,
                           ),
                           SizedBox(width: SizeConfig.padding2),

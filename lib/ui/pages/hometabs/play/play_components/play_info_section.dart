@@ -1,4 +1,5 @@
 import 'package:felloapp/ui/pages/hometabs/play/play_components/titlesGames.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +47,7 @@ class PlayInfoSection extends StatelessWidget {
               ),
             ),
             icon: SvgPicture.asset(
-              'assets/svg/play_ludo.svg',
+              Assets.ludoGameAsset,
               height: SizeConfig.padding46,
               width: SizeConfig.padding38,
             ),
@@ -65,7 +66,7 @@ class PlayInfoSection extends StatelessWidget {
               ),
             ),
             icon: SvgPicture.asset(
-              'assets/svg/play_leaderboard.svg',
+              Assets.leaderboardGameAsset,
               height: SizeConfig.padding70,
               width: SizeConfig.padding35,
             ),
@@ -84,7 +85,7 @@ class PlayInfoSection extends StatelessWidget {
               ),
             ),
             icon: SvgPicture.asset(
-              'assets/svg/play_gift.svg',
+              Assets.giftGameAsset,
               height: SizeConfig.padding44,
               width: SizeConfig.padding35,
             ),

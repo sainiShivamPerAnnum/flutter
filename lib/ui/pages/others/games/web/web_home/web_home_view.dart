@@ -132,13 +132,13 @@ class WebHomeView extends StatelessWidget {
                                       coinText: 'Playing',
                                       assetHeight: SizeConfig.padding16,
                                       isDot: true,
-                                      assetUrl: 'assets/svg/circle_svg.svg',
+                                      assetUrl: Assets.circleGameAsset,
                                     ),
                                     GameInfoBlock(
                                       coin: '${NumberFormat.compact().format(model.currentGameData.prizeAmount)}',
                                       coinText: 'Win upto',
                                       assetHeight: SizeConfig.padding20,
-                                      assetUrl: 'assets/svg/reward_svg.svg',
+                                      assetUrl: Assets.rewardGameAsset,
                                     ),
                                     GameInfoBlock(
                                       coin: '${model.currentGameData.playCost}',
