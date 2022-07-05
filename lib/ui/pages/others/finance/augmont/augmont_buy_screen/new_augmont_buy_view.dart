@@ -64,15 +64,13 @@ class NewAugmontBuyView extends StatelessWidget {
                                 height: SizeConfig.iconSize0,
                                 color: UiConstants.kpurpleTicketColor,
                               ),
-                              SizedBox(
-                                width: SizeConfig.padding8,
-                              ),
-                              Text(
-                                model.appliedCoupon.code,
-                                style: TextStyles.sourceSansSB.body2,
-                              ),
-                              SizedBox(
-                                width: SizeConfig.padding8,
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: SizeConfig.padding8),
+                                child: Text(
+                                  model.appliedCoupon.code,
+                                  style: TextStyles.sourceSansSB.body2,
+                                ),
                               ),
                               Text(
                                 "applied",

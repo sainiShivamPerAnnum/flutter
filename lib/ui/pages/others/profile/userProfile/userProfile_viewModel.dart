@@ -500,6 +500,12 @@ class UserProfileVM extends BaseModel {
     }
   }
 
+  verifyEmail() {
+    if (!isEmailVerified)
+      AppState.delegate.appState.currentAction =
+          PageAction(state: PageState.addPage, page: VerifyEmailPageConfig);
+  }
+
   _postProfilePictureUpdate(bool flag) {
     if (flag) {
       BaseAnalytics.logProfilePictureAdded();

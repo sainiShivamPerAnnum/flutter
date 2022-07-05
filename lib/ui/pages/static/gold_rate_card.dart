@@ -228,7 +228,7 @@ class _NewCurrentGoldPriceWidgetState extends State<NewCurrentGoldPriceWidget>
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                "Current rate (${animation.value.inMinutes.toString().padLeft(2, '0')}:${(animation.value.inSeconds % 60).toString().padLeft(2, '0')})",
+                "Current rate (${animation.value.inMinutes.toString().padLeft(2, '0')}:${(animation.value.inSeconds % 60).toString().padLeft(2, '0')}s)",
                 style: TextStyles.sourceSans.body4
                     .colour(UiConstants.kTextFieldTextColor),
               ),

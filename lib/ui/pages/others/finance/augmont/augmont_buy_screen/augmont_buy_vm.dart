@@ -24,6 +24,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/modals_sheets/augmont_register_modal_sheet.dart';
 import 'package:felloapp/ui/modals_sheets/coupon_modal_sheet.dart';
+import 'package:felloapp/ui/modals_sheets/recharge_modal_sheet.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/ui/pages/static/txn_completed_ui/txn_completed_view.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
@@ -315,6 +316,18 @@ class AugmontGoldBuyViewModel extends BaseModel {
     isGoldRateFetching = false;
   }
 
+  initiateBuyFromModal() {
+    return BaseUtil.openModalBottomSheet(
+      addToScreenStack: true,
+      enableDrag: false,
+      hapticVibrate: true,
+      isBarrierDismissable: false,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      content: RechargeModalSheet(),
+    );
+  }
+
   initiateBuy() async {
     //Check if user is registered on augmont
     if (status == STATUS_UNAVAILABLE) return;
@@ -584,12 +597,12 @@ class AugmontGoldBuyViewModel extends BaseModel {
       addToScreenStack: true,
       backgroundColor: UiConstants.kSecondaryBackgroundColor,
       borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(SizeConfig.roundness24),
-        topRight: Radius.circular(SizeConfig.roundness24),
+        topLeft: Radius.circular(SizeConfig.roundness12),
+        topRight: Radius.circular(SizeConfig.roundness12),
       ),
       boxContraints: BoxConstraints(
-        maxHeight: SizeConfig.screenHeight * 0.88,
-        minHeight: SizeConfig.screenHeight * 0.88,
+        maxHeight: SizeConfig.screenHeight * 0.75,
+        minHeight: SizeConfig.screenHeight * 0.75,
       ),
       isBarrierDismissable: false,
       isScrollControlled: true,
