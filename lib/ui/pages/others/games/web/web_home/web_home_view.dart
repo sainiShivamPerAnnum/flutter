@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 
 class WebHomeView extends StatelessWidget {
   const WebHomeView({Key key, @required this.game}) : super(key: key);
@@ -135,7 +136,8 @@ class WebHomeView extends StatelessWidget {
                                       assetUrl: Assets.circleGameAsset,
                                     ),
                                     GameInfoBlock(
-                                      coin: '${NumberFormat.compact().format(model.currentGameData.prizeAmount)}',
+                                      coin:
+                                          '${NumberFormat.compact().format(model.currentGameData.prizeAmount)}',
                                       coinText: 'Win upto',
                                       assetHeight: SizeConfig.padding20,
                                       assetUrl: Assets.rewardGameAsset,
@@ -167,7 +169,7 @@ class WebHomeView extends StatelessWidget {
                                               SizeConfig.roundness5),
                                         ),
                                         width: SizeConfig.screenWidth,
-                                        height: SizeConfig.screenWidth*0.021,
+                                        height: SizeConfig.screenWidth * 0.021,
                                       ),
                                       Container(
                                         margin:
@@ -178,7 +180,7 @@ class WebHomeView extends StatelessWidget {
                                               SizeConfig.roundness5),
                                         ),
                                         width: SizeConfig.screenWidth / 2,
-                                        height: SizeConfig.screenWidth*0.021,
+                                        height: SizeConfig.screenWidth * 0.021,
                                       ),
                                     ],
                                   ),
@@ -463,6 +465,17 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                     ),
                   ),
           ),
+        ),
+        AppBar(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          actions: [
+            FelloCoinBar(
+              svgAsset: Assets.aTambolaTicket,
+              size: SizeConfig.padding20,
+              borderColor: Colors.black,
+            ),
+          ],
         ),
       ],
     );
