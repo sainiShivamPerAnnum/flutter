@@ -86,6 +86,7 @@ dependencies:
   external_app_launcher: ^2.0.2
   shimmer: ^2.0.0
   animations: ^2.0.2
+  flutter_inset_box_shadow: ^1.0.8
   # flutter_switch: ^0.3.2
 
 

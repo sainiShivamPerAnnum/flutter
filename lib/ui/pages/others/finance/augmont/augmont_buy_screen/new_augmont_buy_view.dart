@@ -310,8 +310,7 @@ class EnterAmountView extends StatelessWidget {
                           keyboardType: TextInputType.numberWithOptions(
                               signed: true, decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.deny(
-                                RegExp(r'^0+(?!$)')),
+                            FilteringTextInputFormatter.digitsOnly,
                           ],
                           onChanged: (String val) {
                             model.onBuyValueChanged(val);
@@ -332,6 +331,8 @@ class EnterAmountView extends StatelessWidget {
                             // log(val);
                           },
                           inputDecoration: InputDecoration(
+                            prefixText: '₹',
+                            prefixStyle: TextStyles.rajdhaniSB.title4,
                             fillColor: UiConstants.kTextFieldColor,
                             filled: true,
                             contentPadding: EdgeInsets.symmetric(

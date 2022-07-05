@@ -67,106 +67,114 @@ class UserAutosaveDetailsView extends StatelessWidget {
             ),
           ),
           backgroundColor: UiConstants.kBackgroundColor,
-          body: SingleChildScrollView(
-            child: model.state == ViewState.Busy
-                ? Center(
-                    child: SpinKitWave(
-                      color: UiConstants.primaryColor,
-                      size: SizeConfig.padding32,
-                    ),
-                  )
-                : model.activeSubscription == null
+          body: Stack(
+            children: [
+              SingleChildScrollView(
+                child: model.state == ViewState.Busy
                     ? Center(
-                        child: NoRecordDisplayWidget(
-                          assetLottie: Assets.noData,
-                          text: "No Autosave Details available",
+                        child: SpinKitWave(
+                          color: UiConstants.primaryColor,
+                          size: SizeConfig.padding32,
                         ),
                       )
-                    : Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildAmountSavedCard(model),
-                          SizedBox(
-                            height: SizeConfig.padding40,
-                          ),
-                          _buildPaymentMethod(model),
-                          SizedBox(
-                            height: SizeConfig.padding32,
-                          ),
-                          Divider(
-                            height: SizeConfig.border1,
-                            color: Color(0xFF999999).withOpacity(0.4),
-                          ),
-                          SizedBox(
-                            height: SizeConfig.padding32,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.padding32,
+                    : model.activeSubscription == null
+                        ? Center(
+                            child: NoRecordDisplayWidget(
+                              assetLottie: Assets.noData,
+                              text: "No Autosave Details available",
                             ),
-                            child: Text(
-                              "Recent Transaction",
-                              style: TextStyles.rajdhaniSB.body1,
-                            ),
-                          ),
-                          SizedBox(
-                            height: SizeConfig.padding20,
-                          ),
-                          model.filteredList == null
-                              ? Center(
-                                  child: SpinKitWave(
-                                    color: UiConstants.primaryColor,
-                                    size: SizeConfig.padding32,
-                                  ),
-                                )
-                              : model.filteredList?.length == 0
+                          )
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildAmountSavedCard(model),
+                              SizedBox(
+                                height: SizeConfig.padding40,
+                              ),
+                              _buildPaymentMethod(model),
+                              SizedBox(
+                                height: SizeConfig.padding32,
+                              ),
+                              Divider(
+                                height: SizeConfig.border1,
+                                color: Color(0xFF999999).withOpacity(0.4),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  left: SizeConfig.padding20,
+                                  top: SizeConfig.padding20,
+                                  bottom: SizeConfig.padding20,
+                                ),
+                                child: Text(
+                                  "Recent Transaction",
+                                  style: TextStyles.rajdhaniSB.body1,
+                                ),
+                              ),
+                              model.filteredList == null
                                   ? Center(
-                                      child: NoTransactionsContent(
-                                        width: SizeConfig.screenWidth * 0.8,
+                                      child: SpinKitWave(
+                                        color: UiConstants.primaryColor,
+                                        size: SizeConfig.padding32,
                                       ),
                                     )
-                                  : Container(
-                                      color:
-                                          Color(0xFF595F5F).withOpacity(0.14),
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: SizeConfig.padding20,
-                                      ),
-                                      child: ListView.builder(
-                                        itemCount: model.filteredList?.length,
-                                        shrinkWrap: true,
-                                        physics: NeverScrollableScrollPhysics(),
-                                        itemBuilder: (context, index) {
-                                          return TransationTile(
-                                            isLast: index ==
-                                                model.filteredList.length - 1,
-                                            txn: model.filteredList[index],
-                                          );
-                                        },
-                                      ),
-                                    ),
-                          SizedBox(
-                            height: SizeConfig.padding64,
+                                  : model.filteredList?.length == 0
+                                      ? Center(
+                                          child: NoTransactionsContent(
+                                            width: SizeConfig.screenWidth * 0.8,
+                                          ),
+                                        )
+                                      : Container(
+                                          color: Color(0xFF595F5F)
+                                              .withOpacity(0.14),
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: SizeConfig.padding20,
+                                          ),
+                                          child: ListView.builder(
+                                            itemCount:
+                                                model.filteredList?.length,
+                                            shrinkWrap: true,
+                                            physics:
+                                                NeverScrollableScrollPhysics(),
+                                            itemBuilder: (context, index) {
+                                              return TransationTile(
+                                                isLast: index ==
+                                                    model.filteredList.length -
+                                                        1,
+                                                txn: model.filteredList[index],
+                                              );
+                                            },
+                                          ),
+                                        ),
+                              SizedBox(
+                                height: SizeConfig.padding80 * 2,
+                              ),
+                            ],
                           ),
-                          if (model.state == ViewState.Idle &&
-                              model.activeSubscription != null &&
-                              !model.isInEditMode)
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: SizeConfig.padding40,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: (model.activeSubscription.status ==
-                                            Constants.SUBSCRIPTION_INACTIVE &&
-                                        model.activeSubscription.resumeDate
-                                            .isEmpty)
-                                    ? _buildRestartAutoPay()
-                                    : _buildUpdateAutoPay(model),
-                              ),
-                            ),
-                        ],
-                      ),
+              ),
+              if (model.state == ViewState.Idle &&
+                  model.activeSubscription != null &&
+                  !model.isInEditMode)
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    color: UiConstants.kSecondaryBackgroundColor,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.padding40,
+                      vertical: SizeConfig.padding10,
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: (model.activeSubscription.status ==
+                                  Constants.SUBSCRIPTION_INACTIVE &&
+                              model.activeSubscription.resumeDate.isEmpty)
+                          ? _buildRestartAutoPay()
+                          : _buildUpdateAutoPay(model),
+                    ),
+                  ),
+                ),
+            ],
           ),
         );
       },
@@ -253,8 +261,10 @@ class UserAutosaveDetailsView extends StatelessWidget {
         color: UiConstants.kAutosaveBalanceColor.withOpacity(0.12),
         borderRadius: BorderRadius.circular(SizeConfig.roundness5),
       ),
-      margin: EdgeInsets.symmetric(
-        horizontal: SizeConfig.padding32,
+      margin: EdgeInsets.only(
+        right: SizeConfig.padding32,
+        left: SizeConfig.padding32,
+        top: SizeConfig.padding10,
       ),
       padding: EdgeInsets.symmetric(
         vertical: SizeConfig.padding16,
@@ -375,9 +385,6 @@ class UserAutosaveDetailsView extends StatelessWidget {
           },
           width: double.infinity,
         ),
-      SizedBox(
-        height: SizeConfig.padding20,
-      ),
       model.isResumingInProgress
           ? Container(
               height: SizeConfig.padding40,
@@ -389,6 +396,10 @@ class UserAutosaveDetailsView extends StatelessWidget {
           : Center(
               child: TextButton(
                 onPressed: () => model.pauseResume(model),
+                style: ButtonStyle(
+                  padding:
+                      MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
+                ),
                 child: Text(
                   model.activeSubscription.status ==
                           Constants.SUBSCRIPTION_INACTIVE
@@ -398,9 +409,9 @@ class UserAutosaveDetailsView extends StatelessWidget {
                 ),
               ),
             ),
-      SizedBox(
-        height: SizeConfig.padding54,
-      ),
+      // SizedBox(
+      //   height: SizeConfig.padding54,
+      // ),
     ];
   }
 }

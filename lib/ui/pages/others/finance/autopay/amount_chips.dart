@@ -52,14 +52,14 @@ class AmountChips extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   color: UiConstants.primaryColor,
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
                 ),
                 padding: EdgeInsets.symmetric(
                     horizontal: SizeConfig.padding6,
                     vertical: SizeConfig.padding4),
                 child: Text(
                   'BEST',
-                  style: TextStyles.rajdhaniB.body2
+                  style: TextStyles.rajdhaniB.body4
                       .colour(Colors.white)
                       .letterSpace(SizeConfig.padding2),
                 ),

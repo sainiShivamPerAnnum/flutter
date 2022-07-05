@@ -226,9 +226,10 @@ class UserProfileVM extends BaseModel {
             'You need to be above 18 to join',
           );
         }
-      } else
-        BaseUtil.showNegativeAlert(
-            "No changes found", "please make some changes");
+      } else {
+        inEditMode = false;
+        BaseUtil.showNegativeAlert("No changes", "please make some changes");
+      }
     } else
       BaseUtil.showNegativeAlert(
           "Invalid details", "please check the fields again");

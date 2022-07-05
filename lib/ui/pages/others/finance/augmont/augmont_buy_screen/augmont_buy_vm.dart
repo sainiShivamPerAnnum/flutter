@@ -74,7 +74,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
   AugmontRates goldRates;
   String userAugmontState;
-  FocusNode buyFieldNode;
+  FocusNode buyFieldNode = FocusNode();
   bool _augOnbRegInProgress = false;
   bool _augRegFailed = false;
   String buyNotice;
@@ -175,7 +175,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
   init() async {
     setState(ViewState.Busy);
-    buyFieldNode = _userService.buyFieldFocusNode;
+    // buyFieldNode = _userService.buyFieldFocusNode;
     goldBuyAmount = chipAmountList[1];
     goldAmountController =
         TextEditingController(text: chipAmountList[1].toInt().toString());
