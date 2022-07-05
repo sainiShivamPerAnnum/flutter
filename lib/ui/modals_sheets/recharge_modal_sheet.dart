@@ -1,24 +1,16 @@
-import 'dart:developer';
-
 import 'package:animations/animations.dart';
-import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/new_augmont_buy_view.dart';
 import 'package:felloapp/ui/pages/static/congratulatory_coin_view.dart';
 import 'package:felloapp/ui/pages/static/congratulatory_view.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/pages/static/recharge_loading_view.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
-import 'package:provider/provider.dart';
 
 class RechargeModalSheet extends StatelessWidget {
   const RechargeModalSheet({Key key}) : super(key: key);
@@ -86,10 +78,10 @@ class RechargeModalSheet extends StatelessWidget {
 
   double _getHeight(txnService) {
     if (txnService.currentTransactionState == TransactionState.idleTrasantion) {
-      return SizeConfig.screenHeight * 0.9;
+      return SizeConfig.screenHeight * 0.8;
     } else if (txnService.currentTransactionState ==
         TransactionState.ongoingTransaction) {
-      return SizeConfig.screenHeight * 0.9;
+      return SizeConfig.screenHeight * 0.8;
     } else if (txnService.currentTransactionState ==
         TransactionState.successTransaction) {
       return SizeConfig.screenHeight;

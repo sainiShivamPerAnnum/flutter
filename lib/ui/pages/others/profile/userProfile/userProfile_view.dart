@@ -10,6 +10,7 @@ import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/pages/static/profile_image.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
+import 'package:felloapp/ui/service_elements/user_service/user_email_verification_button.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -48,81 +49,52 @@ class UserProfileDetails extends StatelessWidget {
           actions: [
             Padding(
               padding: EdgeInsets.only(right: SizeConfig.padding16),
-              child: GestureDetector(
-                onTap: !model.inEditMode
-                    ? model.enableEdit
-                    : () {
+
+              child: !model.inEditMode
+                  ? TextButton.icon(
+                      icon: Icon(Icons.edit_outlined,
+                          size: SizeConfig.iconSize2,
+                          color: UiConstants.kTextColor),
+                      // SizedBox(width: SizeConfig.padding8),
+                      label: Text(
+                        'EDIT',
+                        style: TextStyles.sourceSansSB.body2,
+                      ),
+                      onPressed: () => model.enableEdit(),
+                    )
+                  : TextButton(
+                      onPressed: () {
                         if (!model.isUpdaingUserDetails) {
                           FocusScope.of(context).unfocus();
                           model.updateDetails();
                         }
                       },
-                // onTap: () {
-                //   showDialog(
-                //     context: context,
-                //     builder: (ctx) => AppCongratulatoryDialog(
-                //       title: 'Congratulations!',
-                //       description:
-                //           'Your email address abcxyz@gmail.com has been verified.',
-                //       buttonText: 'Grate!',
-                //       confirmAction: () {
-                //         // _isLoading = true;
-                //         // setState(() {});
-                //         // baseProvider.withdrawFlowStackCount = 1;
-                //         // widget.onAmountConfirmed({
-                //         //   'withdrawal_quantity':
-                //         //       baseProvider.activeGoldWithdrawalQuantity,
-                //         // });
-
-                //         return true;
-                //       },
-                //     ),
-                //   );
-                // },
-                child: !model.inEditMode
-                    ? Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Icon(
-                            Icons.edit_outlined,
-                            size: SizeConfig.iconSize2,
-                            color: UiConstants.kTextColor,
-                          ),
-                          SizedBox(width: SizeConfig.padding8),
-                          Text(
-                            'EDIT',
-                            style: TextStyles.sourceSansSB.body2,
-                          ),
-                        ],
-                      )
-                    : Center(
-                        child: Text(
-                          'DONE',
-                          style: TextStyles.sourceSansSB.body2.colour(
-                            UiConstants.kTabBorderColor,
-                          ),
+                      child: Text(
+                        'DONE',
+                        style: TextStyles.sourceSansSB.body2.colour(
+                          UiConstants.kTabBorderColor,
                         ),
                       ),
-              ),
+                    ),
+              // ),
             ),
-            IconButton(
-              icon: Icon(
-                Icons.money,
-                color: UiConstants.kTextColor,
-              ),
-              onPressed: () {
-                BaseUtil.openModalBottomSheet(
-                  addToScreenStack: true,
-                  enableDrag: false,
-                  hapticVibrate: true,
-                  isBarrierDismissable: false,
-                  backgroundColor: Colors.transparent,
-                  isScrollControlled: true,
-                  content: RechargeModalSheet(),
-                );
-              },
-            ),
+            // IconButton(
+            //   icon: Icon(
+            //     Icons.money,
+            //     color: UiConstants.kTextColor,
+            //   ),
+            //   onPressed: () {
+            //     BaseUtil.openModalBottomSheet(
+            //       addToScreenStack: true,
+            //       enableDrag: false,
+            //       hapticVibrate: true,
+            //       isBarrierDismissable: false,
+            //       backgroundColor: Colors.transparent,
+            //       isScrollControlled: true,
+            //       content: RechargeModalSheet(),
+            //     );
+            //   },
+            // ),
           ],
         ),
         backgroundColor: UiConstants.kBackgroundColor,
@@ -192,17 +164,18 @@ class UserProfileForm extends StatelessWidget {
             AppTextFieldLabel(
               locale.obEmailLabel,
             ),
-            AppTextField(
-              isEnabled: false,
-              textEditingController: model.emailController,
-              validator: (val) {
-                return null;
-              },
-              suffixIcon: SvgPicture.asset(
-                "assets/temp/verified.svg",
+            InkWell(
+              onTap: () => model.verifyEmail(),
+              child: AppTextField(
+                isEnabled: false,
+                textEditingController: model.emailController,
+                validator: (val) {
+                  return null;
+                },
+                suffixIcon: UserEmailVerificationButton(),
+                // suffixText: 'Verified',
+                inputFormatters: [],
               ),
-              // suffixText: 'Verified',
-              inputFormatters: [],
             ),
             AppTextFieldLabel(
               locale.obGenderLabel,
