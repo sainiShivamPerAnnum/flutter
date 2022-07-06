@@ -104,6 +104,13 @@ class PlayViewModel extends BaseModel {
     await _promoService.getPromoCards().then((cards) {
       _offerList = cards.model;
     });
+
+    // final response = await _promoService.getPromoCards();
+    // if (response.code == 200) {
+    //   _offerList = response.model;
+    // } else {
+    //   _offerList = [];
+    // }
     print(_offerList);
     if (_offerList != null && offerList.length > 1) initiate();
     isOfferListLoading = false;

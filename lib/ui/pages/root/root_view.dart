@@ -4,6 +4,9 @@ import 'package:felloapp/ui/elements/navbar.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
+import 'package:felloapp/ui/pages/login/login_4.0.dart';
+import 'package:felloapp/ui/pages/login/otp_4.0.dart';
+import 'package:felloapp/ui/pages/login/user_4.0.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/util/assets.dart';
@@ -19,7 +22,7 @@ import 'package:shimmer_animation/shimmer_animation.dart';
 GlobalKey felloAppBarKey = new GlobalKey();
 
 class Root extends StatelessWidget {
-  final pages = [Save(), Play(), Win()];
+  final pages = [Save(),SignUp4(), Win()];
 
   @override
   Widget build(BuildContext context) {
