@@ -9,6 +9,7 @@ import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay
 import 'package:felloapp/ui/pages/others/finance/autopay/segmate_chip.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/sub_process_text.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -66,16 +67,22 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
             actions: [],
           ),
           resizeToAvoidBottomInset: false,
-          body: PageView(
-            controller: model.pageController,
-            physics: NeverScrollableScrollPhysics(),
+          body: Stack(
             children: [
-              _buildEnterUpi(model),
-              _buildPendingUI(model),
-              _buildAmountSetUi(model),
-              _buildCompleteUI(model),
-              Center(
-                child: Text("cancelledUI", style: TextStyles.rajdhaniSB.title4),
+              NewSquareBackground(),
+              PageView(
+                controller: model.pageController,
+                physics: NeverScrollableScrollPhysics(),
+                children: [
+                  _buildEnterUpi(model),
+                  _buildPendingUI(model),
+                  _buildAmountSetUi(model),
+                  _buildCompleteUI(model),
+                  Center(
+                    child: Text("cancelledUI",
+                        style: TextStyles.rajdhaniSB.title4),
+                  ),
+                ],
               ),
             ],
           ),
@@ -115,6 +122,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
             children: [
               AppTextFieldLabel(
                 'Enter your UPI address:',
+                leftPadding: SizeConfig.padding8,
               ),
               AppTextField(
                 autoFocus: widget.page == 0,
@@ -244,7 +252,10 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              AppTextFieldLabel('Entered UPI Id'),
+              AppTextFieldLabel(
+                'Entered UPI Id',
+                leftPadding: SizeConfig.padding8,
+              ),
               AppTextField(
                 autoFocus: widget.page == 1,
                 textEditingController: model.vpaController,

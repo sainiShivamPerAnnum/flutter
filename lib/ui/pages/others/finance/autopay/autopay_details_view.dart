@@ -37,10 +37,6 @@ class _AutosaveDetailsViewState extends State<AutosaveDetailsView> {
       appBar: AppBar(
         backgroundColor: UiConstants.kBackgroundColor,
         elevation: 0.0,
-        title: Text(
-          'Setup Autopay',
-          style: TextStyles.rajdhaniSB.title4,
-        ),
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,

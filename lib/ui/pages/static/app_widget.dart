@@ -7,7 +7,8 @@ import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 
 class AppTextFieldLabel extends StatelessWidget {
   final String text;
-  AppTextFieldLabel(this.text);
+  final double leftPadding;
+  AppTextFieldLabel(this.text, {this.leftPadding});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,7 @@ class AppTextFieldLabel extends StatelessWidget {
       padding: EdgeInsets.only(
         bottom: SizeConfig.padding6,
         top: SizeConfig.padding16,
-        left: SizeConfig.padding16,
+        left: leftPadding ?? SizeConfig.padding16,
       ),
       child: Text(
         text,
@@ -78,30 +79,43 @@ class AppTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      validator: validator,
-      textCapitalization: textCapitalization,
-      focusNode: focusNode,
-      enabled: isEnabled,
-      controller: textEditingController,
-      cursorColor: UiConstants.kTextColor,
-      inputFormatters: inputFormatters ?? [],
-      style: textStyle == null
-          ? TextStyles.body2.colour(
+    return Container(
+      decoration: ShapeDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xff111112), Colors.transparent],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          stops: [0.0, 0.4],
+          tileMode: TileMode.clamp,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(SizeConfig.roundness5),
+          ),
+        ),
+      ),
+      child: TextFormField(
+        validator: validator,
+        textCapitalization: textCapitalization,
+        focusNode: focusNode,
+        enabled: isEnabled,
+        controller: textEditingController,
+        cursorColor: UiConstants.kTextColor,
+        inputFormatters: inputFormatters ?? [],
+        style: textStyle ??
+            TextStyles.body2.colour(
               isEnabled
                   ? UiConstants.kTextColor
                   : UiConstants.kTextFieldTextColor,
-            )
-          : textStyle,
-      textAlign: textAlign,
-      maxLines: null,
-      minLines: null,
-      autofocus: autoFocus,
-      keyboardType: keyboardType,
-      onChanged: onChanged,
-      decoration: inputDecoration != null
-          ? inputDecoration
-          : InputDecoration(
+            ),
+        textAlign: textAlign,
+        maxLines: null,
+        minLines: null,
+        autofocus: autoFocus,
+        keyboardType: keyboardType,
+        onChanged: onChanged,
+        decoration: inputDecoration ??
+            InputDecoration(
               suffixIcon: Padding(
                 padding: EdgeInsets.only(right: 10),
                 child: suffixIcon,
@@ -111,19 +125,16 @@ class AppTextField extends StatelessWidget {
               suffixText: suffixText,
               suffixStyle: suffixTextStyle,
               suffix: suffix,
-              suffixIconConstraints: suffixIconConstraints != null
-                  ? suffixIconConstraints
-                  : BoxConstraints(
-                      minWidth: 35,
-                      minHeight: 35,
-                      maxHeight: 35,
-                      maxWidth: 35,
-                    ),
-              fillColor: fillColor != null
-                  ? fillColor
-                  : isEnabled
-                      ? UiConstants.kTextFieldColor
-                      : UiConstants.kTextFieldColor.withOpacity(0.7),
+              suffixIconConstraints: suffixIconConstraints ??
+                  BoxConstraints(
+                    minWidth: 35,
+                    minHeight: 35,
+                    maxHeight: 35,
+                    maxWidth: 35,
+                  ),
+              fillColor: fillColor ?? isEnabled
+                  ? UiConstants.kTextFieldColor
+                  : UiConstants.kTextFieldColor.withOpacity(0.7),
               filled: true,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(SizeConfig.roundness5),
@@ -173,13 +184,13 @@ class AppTextField extends StatelessWidget {
               ),
               hintText: hintText,
               hintStyle: TextStyles.body3.colour(UiConstants.kTextColor2),
-              contentPadding: contentPadding == null
-                  ? EdgeInsets.symmetric(
-                      horizontal: SizeConfig.padding16,
-                      vertical: SizeConfig.padding2,
-                    )
-                  : contentPadding,
+              contentPadding: contentPadding ??
+                  EdgeInsets.symmetric(
+                    horizontal: SizeConfig.padding16,
+                    vertical: SizeConfig.padding2,
+                  ),
             ),
+      ),
     );
   }
 }
