@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
@@ -7,12 +5,7 @@ import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
-import 'package:felloapp/ui/pages/static/fello_appbar.dart';
-import 'package:felloapp/ui/pages/static/home_background.dart';
-import 'package:felloapp/ui/pages/static/transaction_loader.dart';
-import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
-import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
-import 'package:felloapp/ui/widgets/drawer/drawer_view.dart';
+import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -42,103 +35,117 @@ class Root extends StatelessWidget {
         return Scaffold(
           resizeToAvoidBottomInset: false,
           key: RootViewModel.scaffoldKey,
-          drawer: FDrawer(),
+          //  drawer: FDrawer(),
           drawerEnableOpenDragGesture: false,
-          body: HomeBackground(
-            whiteBackground:
-                WhiteBackground(height: SizeConfig.safeScreenHeight * 0.16),
-            child: Stack(
-              children: [
-                if (FlavorConfig.isDevelopment())
-                  Container(
-                    width: SizeConfig.screenWidth,
-                    child: Banner(
-                      message: FlavorConfig.getStage(),
-                      location: BannerLocation.topEnd,
-                      color: FlavorConfig.instance.color,
-                    ),
+          body: Stack(
+            children: [
+              NewSquareBackground(),
+              if (FlavorConfig.isDevelopment())
+                Container(
+                  width: SizeConfig.screenWidth,
+                  child: Banner(
+                    message: FlavorConfig.getStage(),
+                    location: BannerLocation.topEnd,
+                    color: FlavorConfig.instance.color,
                   ),
-                if (FlavorConfig.isQA())
-                  Container(
-                    width: SizeConfig.screenWidth,
-                    child: Banner(
-                      message: FlavorConfig.getStage(),
-                      location: BannerLocation.topEnd,
-                      color: FlavorConfig.instance.color,
-                    ),
+                ),
+              if (FlavorConfig.isQA())
+                Container(
+                  width: SizeConfig.screenWidth,
+                  child: Banner(
+                    message: FlavorConfig.getStage(),
+                    location: BannerLocation.topEnd,
+                    color: FlavorConfig.instance.color,
                   ),
-                RefreshIndicator(
-                  color: UiConstants.primaryColor,
-                  backgroundColor: Colors.black,
-                  onRefresh: model.refresh,
-                  child: Container(
-                    margin: EdgeInsets.only(
-                        top: SizeConfig.screenWidth * 0.1 +
-                            SizeConfig.viewInsets.top +
-                            SizeConfig.padding32),
-                    child: Consumer<AppState>(
-                      builder: (ctx, m, child) => IndexedStack(
-                        children: pages,
-                        index: AppState.delegate.appState.getCurrentTabIndex,
-                      ),
+                ),
+              RefreshIndicator(
+                color: UiConstants.primaryColor,
+                backgroundColor: Colors.black,
+                onRefresh: model.refresh,
+                child: Container(
+                  // margin: EdgeInsets.only(
+                  //     top: SizeConfig.screenWidth * 0.1 +
+                  //         SizeConfig.viewInsets.top +
+                  //         SizeConfig.padding32),
+                  child: Consumer<AppState>(
+                    builder: (ctx, m, child) => IndexedStack(
+                      children: pages,
+                      index: AppState.delegate.appState.getCurrentTabIndex,
                     ),
                   ),
                 ),
-                FelloAppBar(
-                  key: felloAppBarKey,
-                  leading: InkWell(
-                    onTap: () => model.showDrawer(),
-                    child: ProfileImageSE(
-                      radius: SizeConfig.avatarRadius,
-                    ),
-                  ),
-                  actions: [
-                    FelloCoinBar(),
-                    SizedBox(width: 16),
-                    NotificationButton(),
-                  ],
-                ),
-                Positioned(
-                  bottom: 0,
-                  child: Container(
-                    width: SizeConfig.screenWidth,
-                    height: SizeConfig.navBarHeight,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          begin: Alignment.bottomCenter,
-                          end: Alignment.topCenter,
-                          colors: [
-                            UiConstants.scaffoldColor.withOpacity(0.8),
-                            UiConstants.scaffoldColor.withOpacity(0.2),
-                          ],
-                          stops: [
-                            0.8,
-                            1
-                          ]),
-                    ),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                    ),
-                  ),
-                ),
-                if (SizeConfig.screenWidth < 600)
-                  WantMoreTickets(
-                    model: model,
-                  ),
-                if (SizeConfig.screenWidth < 600)
-                  SaveBaseline(
-                    model: model,
-                  ),
-                BottomNavBar(
+              ),
+              // FelloAppBar(
+              //   key: felloAppBarKey,
+              //   leading: InkWell(
+              //     onTap: () => model.showDrawer(),
+              //     child: ProfileImageSE(
+              //       radius: SizeConfig.avatarRadius,
+              //     ),
+              //   ),
+              //   actions: [
+              //     FelloCoinBar(),
+              //     SizedBox(width: 16),
+              //     NotificationButton(),
+              //   ],
+              // ),
+              // Positioned(
+              //   bottom: 0,
+              //   child: Container(
+              //     width: SizeConfig.screenWidth,
+              //     height: SizeConfig.navBarHeight,
+              //     decoration: BoxDecoration(
+              //       gradient: LinearGradient(
+              //           begin: Alignment.bottomCenter,
+              //           end: Alignment.topCenter,
+              //           colors: [
+              //             UiConstants.scaffoldColor.withOpacity(0.8),
+              //             UiConstants.scaffoldColor.withOpacity(0.2),
+              //           ],
+              //           stops: [
+              //             0.8,
+              //             1
+              //           ]),
+              //     ),
+              //     child: BackdropFilter(
+              //       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+              //     ),
+              //   ),
+              // ),
+              // if (SizeConfig.screenWidth < 600)
+              //   WantMoreTickets(
+              //     model: model,
+              //   ),
+              // if (SizeConfig.screenWidth < 600)
+              //   SaveBaseline(
+              //     model: model,
+              //   ),
+              // BottomNavBar(
+              //   model: model,
+              // ),
+              // Consumer<AppState>(
+              //     builder: (ctx, m, child) =>
+              //         AppState.delegate.appState.isTxnLoaderInView
+              //             ? TransactionLoader()
+              //             : SizedBox()),
+
+              if (SizeConfig.screenWidth < 600)
+                WantMoreTickets(
                   model: model,
                 ),
-                // Consumer<AppState>(
-                //     builder: (ctx, m, child) =>
-                //         AppState.delegate.appState.isTxnLoaderInView
-                // ? TransactionLoader()
-                //             : SizedBox()),
-              ],
-            ),
+              if (SizeConfig.screenWidth < 600)
+                SaveBaseline(
+                  model: model,
+                ),
+              BottomNavBar(
+                model: model,
+              ),
+              // Consumer<AppState>(
+              //     builder: (ctx, m, child) =>
+              //         AppState.delegate.appState.isTxnLoaderInView
+              // ? TransactionLoader()
+              //             : SizedBox()),
+            ],
           ),
         );
       },

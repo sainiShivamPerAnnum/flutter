@@ -167,6 +167,18 @@ class Assets {
   static final String gtBackground = "assets/images/gtdbg.png";
   static final String gtConfetti = "assets/lotties/confetti.json";
 
+  static final String aTambolaTicket = 'assets/svg/frame_svg.svg';
+  static final String aFelloToken = 'assets/temp/token.svg';
+
+  // Play Info Section Asset
+  static final String ludoGameAsset = 'assets/svg/play_ludo.svg';
+  static final String leaderboardGameAsset = 'assets/svg/play_leaderboard.svg';
+  static final String giftGameAsset = 'assets/svg/play_gift.svg';
+
+  // Web Home View (GameInfoBlock Asset)
+  static final String rewardGameAsset = 'assets/svg/reward_svg.svg';
+  static final String circleGameAsset = 'assets/svg/circle_svg.svg';
+
   static final List<String> onboardingHeader = [
     'Save',
     'Grow',

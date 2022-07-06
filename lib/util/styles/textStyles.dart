@@ -86,6 +86,8 @@ class TextStyles {
         color: UiConstants.kTextColor,
       );
 
+  // 3.0 Code START {Need to retire}
+
   static TextStyle get bodyFont =>
       GoogleFonts.sourceSansPro(); //TextStyle(fontFamily: "Arctick");
   static TextStyle get titleFont =>
@@ -102,11 +104,13 @@ class TextStyles {
   static TextStyle get title5 =>
       titleFont.copyWith(fontSize: SizeConfig.title5);
 
+  static TextStyle get body0 => bodyFont.copyWith(fontSize: SizeConfig.body0);
   static TextStyle get body1 => bodyFont.copyWith(fontSize: SizeConfig.body1);
   static TextStyle get body2 => bodyFont.copyWith(fontSize: SizeConfig.body2);
   static TextStyle get body3 => bodyFont.copyWith(fontSize: SizeConfig.body3);
   static TextStyle get body4 => bodyFont.copyWith(fontSize: SizeConfig.body4);
-  static TextStyle get body5 => bodyFont.copyWith(fontSize: SizeConfig.body5);
+
+  // 3.0 Code END {Need to retire}
 }
 
 extension TextStyleHelpers on TextStyle {
@@ -137,6 +141,9 @@ extension TextStyleHelpers on TextStyle {
 // }
 
 extension FontSize on TextStyle {
+  /// Title 0 Size == 40
+  TextStyle get title0 => copyWith(fontSize: SizeConfig.title0);
+
   /// Title 1 Size == 34
   TextStyle get title1 => copyWith(fontSize: SizeConfig.title1);
 
@@ -152,10 +159,10 @@ extension FontSize on TextStyle {
   /// Title 5 Size == 20
   TextStyle get title5 => copyWith(fontSize: SizeConfig.title5);
 
-  /// Body 1 Size == 18
+  TextStyle get body0 => copyWith(fontSize: SizeConfig.body0);
+
   TextStyle get body1 => copyWith(fontSize: SizeConfig.body1);
 
-  /// Body 2 Size == 16
   TextStyle get body2 => copyWith(fontSize: SizeConfig.body2);
 
   /// Body 3 Size == 14
@@ -163,7 +170,4 @@ extension FontSize on TextStyle {
 
   /// Body 4 Size == 12
   TextStyle get body4 => copyWith(fontSize: SizeConfig.body4);
-
-  /// Body 5 Size == 10
-  TextStyle get body5 => copyWith(fontSize: SizeConfig.body5);
 }

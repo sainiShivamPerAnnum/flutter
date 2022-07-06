@@ -1,0 +1,12 @@
+<svg width="39" height="47" viewBox="0 0 39 47" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect opacity="0.2" width="23.2992" height="21.2859" rx="3.4791" transform="matrix(0.866025 -0.5 0.866025 0.5 0 35.395)" fill="white"/>
+<rect width="18.915" height="19.457" rx="0.617113" transform="matrix(0.866025 -0.5 0.866025 0.5 2.09924 9.45752)" fill="white" stroke="black" stroke-width="0.462835" stroke-linejoin="bevel"/>
+<rect width="19.457" height="19.457" rx="0.617113" transform="matrix(0.866025 0.5 -2.20305e-08 1 2.21368 9.33923)" fill="#BEF9D8" stroke="black" stroke-width="0.462835"/>
+<path d="M18.5364 19.7324C18.5364 19.3923 18.7748 18.9787 19.0693 18.8076L34.8507 9.64248C35.1465 9.4707 35.3867 9.60859 35.3867 9.95012L35.3867 28.1711C35.3867 28.5119 35.1474 28.9263 34.8523 29.0968L19.0709 38.2082C18.7757 38.3786 18.5364 38.2404 18.5364 37.8996L18.5364 19.7324Z" fill="#34C3A7" stroke="black" stroke-width="0.462835" stroke-linejoin="round"/>
+<circle r="2.14027" transform="matrix(0.866025 -0.5 2.20305e-08 1 26.8314 23.8349)" fill="#232326"/>
+<circle r="1.65385" transform="matrix(0.866025 -0.5 0.866025 0.5 18.6977 6.12927)" fill="#232326"/>
+<circle r="1.65385" transform="matrix(0.866025 -0.5 0.866025 0.5 18.6977 11.1879)" fill="#232326"/>
+<circle r="1.55656" transform="matrix(0.866025 0.5 -2.20305e-08 1 10.5662 24.3212)" fill="#232326"/>
+<circle r="1.55656" transform="matrix(0.866025 0.5 -2.20305e-08 1 14.0686 30.7422)" fill="#232326"/>
+<circle r="1.55656" transform="matrix(0.866025 0.5 -2.20305e-08 1 7.06372 18.2898)" fill="#232326"/>
+</svg>

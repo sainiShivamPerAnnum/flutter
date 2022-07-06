@@ -6,6 +6,7 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 //Flutter and dart imports
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,11 +23,11 @@ class LauncherView extends StatelessWidget {
       onModelDispose: (model) => model.exit(),
       builder: (ctx, model, child) {
         return Scaffold(
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.black,
             body: Container(
               width: SizeConfig.screenWidth,
               height: SizeConfig.screenHeight,
-              color: Colors.white,
+              color: UiConstants.backgroundColor,
               child: Stack(
                 children: <Widget>[
                   Positioned(

@@ -780,8 +780,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   openWebGame(String game) {
     AppState.delegate.appState.currentAction = PageAction(
       state: PageState.addWidget,
-      widget: NewWebHomeView(game: game),
-      page: NewWebHomeViewPageConfig,
+      widget: WebHomeView(game: game),
+      page: WebHomeViewPageConfig,
     );
   }
 

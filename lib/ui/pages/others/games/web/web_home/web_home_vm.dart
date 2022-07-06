@@ -1,12 +1,15 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
+import 'package:felloapp/core/model/game_model4.0.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/prize_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -23,6 +26,14 @@ import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 
+class RechargeOption {
+  final Color color;
+  final int amount;
+  final bool isCustom;
+
+  RechargeOption({this.color, this.amount, this.isCustom = false});
+}
+
 class WebHomeViewModel extends BaseModel {
   //Dependency Injection
   final _userService = locator<UserService>();
@@ -34,6 +45,7 @@ class WebHomeViewModel extends BaseModel {
   final _logger = locator<CustomLogger>();
 
   //Local Variables
+  GameData _currentGameData;
 
   int currentPage = 0;
   int gameIndex = 0;
@@ -47,7 +59,24 @@ class WebHomeViewModel extends BaseModel {
   String _sessionId;
   String _gameEndpoint;
   String token = "";
+  bool _isLoading;
 
+  List<GameData> _gamesListData;
+  List<RechargeOption> rechargeOptions = [
+    RechargeOption(
+      color: Color(0xff5948B2),
+      amount: 100,
+    ),
+    RechargeOption(
+      color: Color(0xff9A3538),
+      amount: 200,
+    ),
+    RechargeOption(
+      isCustom: true,
+      color: Color(0xff39393C),
+      amount: 0,
+    )
+  ];
   //Getters
   String get currentGame => this._currentGame;
   PrizesModel get prizes => _prizes;
@@ -55,6 +84,17 @@ class WebHomeViewModel extends BaseModel {
   int get getGameIndex => this.gameIndex;
   String get message => _message;
   String get sessionID => _sessionId;
+  GameData get currentGameData => this._currentGameData;
+  get isLoading => this._isLoading;
+
+  set isLoading(value) {
+    this._isLoading = value;
+    notifyListeners();
+  }
+
+  set currentGameData(value) {
+    this._currentGameData = value;
+  }
 
   //Setters
   set currentGame(value) {
@@ -75,11 +115,16 @@ class WebHomeViewModel extends BaseModel {
   //Super Methods
   init(String game) async {
     currentGame = game;
+    isLoading = true;
+    await loadGameLists();
+    currentGameData =
+        _gamesListData.firstWhere((game) => game.code == currentGame);
     print(currentGame);
     scrollController = _lbService.parentController;
     pageController = new PageController(initialPage: 0);
     refreshPrizes();
     refreshLeaderboard();
+    isLoading = false;
   }
 
   newInit(String game) async {
@@ -386,5 +431,30 @@ class WebHomeViewModel extends BaseModel {
 
   refreshLeaderboard() async {
     await _lbService.fetchWebGameLeaderBoard(game: currentGame);
+  }
+
+  Future<String> _getBearerToken() async {
+    String token = await _userService.firebaseUser.getIdToken();
+    _logger.d('Token: $token');
+    return token;
+  }
+
+  loadGameLists() async {
+    Future.delayed(Duration(seconds: 5));
+    try {
+      final token = await _getBearerToken();
+      final response = await APIService.instance.getData(
+        ApiPath().kGames,
+        token: token,
+        cBaseUrl: 'https://4mm5ihvkz0.execute-api.ap-south-1.amazonaws.com',
+      );
+      final _responseModel = NewGameModel.fromJson(response);
+      _logger.d(response);
+      _gamesListData = _responseModel.data.games;
+      _logger.d('Game Length: ${_responseModel.data.games.length}');
+      _logger.d('Game Response: $response');
+    } catch (e) {
+      _logger.d('Catch Error: $e');
+    }
   }
 }
