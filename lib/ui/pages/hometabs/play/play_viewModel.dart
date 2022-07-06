@@ -4,6 +4,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/model/deposit_response_model.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
@@ -72,12 +73,12 @@ class PlayViewModel extends BaseModel {
 
   loadOfferList() async {
     isOfferListLoading = true;
-    // await _dbProvider.getPromoCards().then((cards) {
-    //   _offerList = cards;
-    // });
-    await _promoService.getPromoCards().then((cards) {
-      _offerList = cards.model;
-    });
+    final response = await _promoService.getPromoCards();
+    if (response.code == 200) {
+      _offerList = response.model;
+    } else {
+      _offerList = [];
+    }
     print(_offerList);
     if (_offerList != null && offerList.length > 1) initiate();
     isOfferListLoading = false;
