@@ -17,10 +17,8 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/dialogs/change_profile_picture_dialog.dart';
-import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
-import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
-import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/ui/dialogs/default_dialog.dart';
+import 'package:felloapp/ui/pages/static/profile_image.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -28,7 +26,6 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 //Flutter & Dart Imports
 import 'package:flutter/material.dart';
@@ -56,10 +53,11 @@ class UserProfileVM extends BaseModel {
   bool isUpdaingUserDetails = false;
   bool _isTambolaNotificationLoading = false;
   bool _isApplockLoading = false;
-  int gen;
+  bool _hasInputError = false;
+  int _gen;
   String gender;
   DateTime selectedDate;
-  String dateInputError = "";
+  String _dateInputError = "";
 
   final GlobalKey<FormState> formKey = new GlobalKey<FormState>();
 
@@ -74,6 +72,7 @@ class UserProfileVM extends BaseModel {
   bool get isSimpleKycVerified => _userService.isSimpleKycVerified;
   bool get isTambolaNotificationLoading => _isTambolaNotificationLoading;
   bool get isApplockLoading => _isApplockLoading;
+  bool get hasInputError => _hasInputError;
 
   bool get applock =>
       _userService.baseUser.userPreferences
@@ -83,6 +82,9 @@ class UserProfileVM extends BaseModel {
       _userService.baseUser.userPreferences
           .getPreference(Preferences.TAMBOLANOTIFICATIONS) ==
       1;
+  int get gen => _gen;
+
+  String get dateInputError => _dateInputError;
 
   // Setters
   set isTambolaNotificationLoading(bool val) {
@@ -92,6 +94,21 @@ class UserProfileVM extends BaseModel {
 
   set isApplockLoading(bool val) {
     _isApplockLoading = val;
+    notifyListeners();
+  }
+
+  set gen(int val) {
+    _gen = val;
+    notifyListeners();
+  }
+
+  set hasInputError(bool val) {
+    _hasInputError = val;
+    notifyListeners();
+  }
+
+  set dateInputError(String val) {
+    _dateInputError = val;
     notifyListeners();
   }
 
@@ -158,6 +175,8 @@ class UserProfileVM extends BaseModel {
     dateFieldController.text = res.day.toString().padLeft(2, '0');
     monthFieldController.text = res.month.toString().padLeft(2, '0');
     yearFieldController.text = res.year.toString();
+    dobController.text =
+        "${yearFieldController.text}-${monthFieldController.text}-${dateFieldController.text}";
     notifyListeners();
   }
 
@@ -207,9 +226,10 @@ class UserProfileVM extends BaseModel {
             'You need to be above 18 to join',
           );
         }
-      } else
-        BaseUtil.showNegativeAlert(
-            "No changes found", "please make some changes");
+      } else {
+        inEditMode = false;
+        BaseUtil.showNegativeAlert("No changes", "please make some changes");
+      }
     } else
       BaseUtil.showNegativeAlert(
           "Invalid details", "please check the fields again");
@@ -266,16 +286,16 @@ class UserProfileVM extends BaseModel {
     BaseUtil.openDialog(
       isBarrierDismissable: false,
       addToScreenStack: true,
-      content: FelloConfirmationDialog(
+      content: AppDefaultDialog(
           title: 'Confirm',
-          subtitle: 'Are you sure you want to sign out?',
-          accept: 'Yes',
-          acceptColor: UiConstants.primaryColor,
+          description: 'Are you sure you want to sign out?',
+          buttonText: 'Yes',
+          // acceptColor: UiConstants.primaryColor,
           // asset: Assets.signout,
-          reject: "No",
-          rejectColor: UiConstants.tertiarySolid,
-          showCrossIcon: false,
-          onAccept: () {
+          cancelBtnText: "No",
+          // rejectColor: UiConstants.tertiarySolid,
+          // showCrossIcon: false,
+          confirmAction: () {
             Haptic.vibrate();
 
             _analyticsService.track(eventName: AnalyticsEvents.signOut);
@@ -298,12 +318,14 @@ class UserProfileVM extends BaseModel {
                 );
               } else {
                 BaseUtil.showNegativeAlert(
-                    'Sign out failed', 'Couldn\'t signout. Please try again');
+                  'Sign out failed',
+                  'Couldn\'t signout. Please try again',
+                );
                 //log.error('Sign out process failed');
               }
             });
           },
-          onReject: () {
+          cancelAction: () {
             AppState.backButtonDispatcher.didPopRoute();
           }),
     );
@@ -352,22 +374,29 @@ class UserProfileVM extends BaseModel {
     var _status = await Permission.photos.status;
     if (_status.isRestricted || _status.isLimited || _status.isDenied) {
       BaseUtil.openDialog(
-          isBarrierDismissable: false,
-          addToScreenStack: true,
-          content: ConfirmActionDialog(
-              title: "Request Permission",
-              description:
-                  "Access to the gallery is requested. This is only required for choosing your profile picture 🤳🏼",
-              buttonText: "Continue",
-              asset: Padding(
-                padding: EdgeInsets.symmetric(vertical: 8),
-                child: Image.asset("images/gallery.png",
-                    height: SizeConfig.screenWidth * 0.24),
-              ),
-              confirmAction: () {
-                _chooseprofilePicture();
-              },
-              cancelAction: () {}));
+        isBarrierDismissable: false,
+        addToScreenStack: true,
+        content: AppDefaultDialog(
+          title: "Request Permission",
+          description:
+              "Access to the gallery is requested. This is only required for choosing your profile picture 🤳🏼",
+          buttonText: "Continue",
+          asset: Padding(
+            padding: EdgeInsets.symmetric(vertical: 8),
+            child: Image.asset(
+              "images/gallery.png",
+              height: SizeConfig.screenWidth * 0.24,
+            ),
+          ),
+          confirmAction: () {
+            AppState.backButtonDispatcher.didPopRoute();
+            _chooseprofilePicture();
+          },
+          cancelAction: () {
+            AppState.backButtonDispatcher.didPopRoute();
+          },
+        ),
+      );
     } else if (_status.isGranted) {
       await _chooseprofilePicture();
       _analyticsService.track(eventName: AnalyticsEvents.updatedProfilePicture);
@@ -387,13 +416,29 @@ class UserProfileVM extends BaseModel {
       await BaseUtil.openDialog(
         addToScreenStack: true,
         isBarrierDismissable: false,
-        content: ChangeProfilePicture(
-          image: File(selectedProfilePicture.path),
-          upload: (value) {
-            if (value)
-              _updateProfilePicture()
-                  .then((flag) => _postProfilePictureUpdate(flag));
+        content: AppDefaultDialog(
+          asset: NewProfileImage(
+            image: ClipOval(
+              child: Image.file(
+                File(selectedProfilePicture.path),
+                height: SizeConfig.screenHeight * 0.2,
+                width: SizeConfig.screenHeight * 0.2,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          buttonText: 'Save',
+          cancelBtnText: 'Discard',
+          description: 'Are you sure you want to update your profile picture',
+          confirmAction: () {
+            _updateProfilePicture().then(
+              (flag) => _postProfilePictureUpdate(flag),
+            );
           },
+          cancelAction: () {
+            AppState.backButtonDispatcher.didPopRoute();
+          },
+          title: 'Update Picture',
         ),
       );
       // _rootViewModel.refresh();
@@ -453,6 +498,12 @@ class UserProfileVM extends BaseModel {
       print('$e');
       return false;
     }
+  }
+
+  verifyEmail() {
+    if (!isEmailVerified)
+      AppState.delegate.appState.currentAction =
+          PageAction(state: PageState.addPage, page: VerifyEmailPageConfig);
   }
 
   _postProfilePictureUpdate(bool flag) {

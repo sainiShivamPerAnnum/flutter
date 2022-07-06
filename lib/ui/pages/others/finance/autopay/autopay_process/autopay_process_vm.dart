@@ -47,11 +47,13 @@ class AutosaveProcessViewModel extends BaseModel {
   String get title => this._title;
   bool _showAppLaunchButton = false;
   int counter = 0;
+  int _currentPage = 0;
   bool _showMinAlert = false;
   Timer _timer;
 
   List<AmountChipsModel> _dailyChips = [];
   List<AmountChipsModel> _weeklyChips = [];
+
   get dailyChips => this._dailyChips;
 
   set dailyChips(dailyChips) {
@@ -181,8 +183,18 @@ class AutosaveProcessViewModel extends BaseModel {
     notifyListeners();
   }
 
+  get currentPage => this._currentPage;
+
+  set currentPage(value) {
+    this._currentPage = value;
+    notifyListeners();
+  }
+
   init(int page) async {
     getChipAmounts();
+    pageController.addListener(() {
+      currentPage = pageController.page.round();
+    });
     counter = 0;
     _paytmService.isOnSubscriptionFlow = true;
     showProgressIndicator = true;

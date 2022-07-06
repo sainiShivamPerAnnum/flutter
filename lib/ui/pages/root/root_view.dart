@@ -132,11 +132,11 @@ class Root extends StatelessWidget {
                 BottomNavBar(
                   model: model,
                 ),
-                Consumer<AppState>(
-                    builder: (ctx, m, child) =>
-                        AppState.delegate.appState.isTxnLoaderInView
-                            ? TransactionLoader()
-                            : SizedBox()),
+                // Consumer<AppState>(
+                //     builder: (ctx, m, child) =>
+                //         AppState.delegate.appState.isTxnLoaderInView
+                // ? TransactionLoader()
+                //             : SizedBox()),
               ],
             ),
           ),
