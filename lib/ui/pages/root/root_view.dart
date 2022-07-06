@@ -128,6 +128,23 @@ class Root extends StatelessWidget {
               //         AppState.delegate.appState.isTxnLoaderInView
               //             ? TransactionLoader()
               //             : SizedBox()),
+
+              if (SizeConfig.screenWidth < 600)
+                WantMoreTickets(
+                  model: model,
+                ),
+              if (SizeConfig.screenWidth < 600)
+                SaveBaseline(
+                  model: model,
+                ),
+              BottomNavBar(
+                model: model,
+              ),
+              // Consumer<AppState>(
+              //     builder: (ctx, m, child) =>
+              //         AppState.delegate.appState.isTxnLoaderInView
+              // ? TransactionLoader()
+              //             : SizedBox()),
             ],
           ),
         );

@@ -126,6 +126,7 @@ extension TextStyleHelpers on TextStyle {
   TextStyle letterSpace(double value) => copyWith(letterSpacing: value);
   TextStyle weight(FontWeight weight) => copyWith(fontWeight: weight);
   TextStyle colour(Color color) => copyWith(color: color);
+  TextStyle size(double size) => copyWith(fontSize: size);
   TextStyle setHeight(double height) => copyWith(height: height);
   TextStyle setOpecity(double opacity) =>
       copyWith(color: color.withOpacity(opacity));
@@ -140,16 +141,33 @@ extension TextStyleHelpers on TextStyle {
 // }
 
 extension FontSize on TextStyle {
+  /// Title 0 Size == 40
   TextStyle get title0 => copyWith(fontSize: SizeConfig.title0);
+
+  /// Title 1 Size == 34
   TextStyle get title1 => copyWith(fontSize: SizeConfig.title1);
+
+  /// Title 2 Size == 32
   TextStyle get title2 => copyWith(fontSize: SizeConfig.title2);
+
+  /// Title 3 Size == 26
   TextStyle get title3 => copyWith(fontSize: SizeConfig.title3);
+
+  /// Title 4 Size == 24
   TextStyle get title4 => copyWith(fontSize: SizeConfig.title4);
+
+  /// Title 5 Size == 20
   TextStyle get title5 => copyWith(fontSize: SizeConfig.title5);
 
   TextStyle get body0 => copyWith(fontSize: SizeConfig.body0);
+
   TextStyle get body1 => copyWith(fontSize: SizeConfig.body1);
+
   TextStyle get body2 => copyWith(fontSize: SizeConfig.body2);
+
+  /// Body 3 Size == 14
   TextStyle get body3 => copyWith(fontSize: SizeConfig.body3);
+
+  /// Body 4 Size == 12
   TextStyle get body4 => copyWith(fontSize: SizeConfig.body4);
 }

@@ -80,7 +80,7 @@ class NewLeaderBoardView extends StatelessWidget {
         borderRadius: BorderRadius.circular(
           SizeConfig.roundness5,
         ),
-        color: UiConstants.kLeaderBoardBackgroundColor,
+        color: UiConstants.kSecondaryBackgroundColor,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -99,9 +99,10 @@ class NewLeaderBoardView extends StatelessWidget {
               currentUserRank: currentUserRank,
             ),
           RemainingRank(model: model, userProfilePicUrl: userProfilePicUrl),
-          SizedBox(
-            height: SizeConfig.padding12,
-          ),
+          if (model.scoreboard.length >= 7)
+            SizedBox(
+              height: SizeConfig.padding12,
+            ),
           if (model.scoreboard.length >= 7)
             TextButton(
               onPressed: () {

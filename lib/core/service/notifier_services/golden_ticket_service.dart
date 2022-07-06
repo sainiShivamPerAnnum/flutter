@@ -62,14 +62,16 @@ class GoldenTicketService extends ChangeNotifier {
         // if (source != GTSOURCE.deposit)
         AppState.screenStack.add(ScreenItem.dialog);
 
-        Navigator.of(AppState.delegate.navigatorKey.currentContext)
-            .push(PageRouteBuilder(
-                opaque: false,
-                pageBuilder: (BuildContext context, _, __) => GTInstantView(
-                      source: source,
-                      title: title,
-                      amount: amount,
-                    )));
+        Navigator.of(AppState.delegate.navigatorKey.currentContext).push(
+          PageRouteBuilder(
+            opaque: false,
+            pageBuilder: (BuildContext context, _, __) => GTInstantView(
+              source: source,
+              title: title,
+              amount: amount,
+            ),
+          ),
+        );
       });
     }
   }

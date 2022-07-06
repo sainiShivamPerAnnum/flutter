@@ -46,8 +46,11 @@ class UiConstants {
 
   /// New UI Colors
   static const Color kTextColor = const Color(0xFFFFFFFF);
+  static const Color kTextColor2 = const Color(0xFF919193);
+  static const Color kYellowTextColor = const Color(0xFFFEF5DC);
+
   static const Color kBackgroundColor = const Color(0xFF232326);
-  static const Color kLeaderBoardBackgroundColor = const Color(0xFF39393C);
+  static const Color kSecondaryBackgroundColor = const Color(0xFF39393C);
   static const Color kTabBorderColor = const Color(0xFF62E3C4);
   static const Color kDividerColor = const Color(0xFF9EA1A1);
   static const Color kBackgroundDividerColor = const Color(0xFF23272B);
@@ -58,5 +61,38 @@ class UiConstants {
   static const Color kWinnerPlayerPrimaryColor = const Color(0xFFFFD979);
   static const Color kWinnerPlayerLightPrimaryColor = const Color(0xFFFEF5DC);
   static const Color kOtherPlayerPrimaryColor = const Color(0xFFFFFFFF);
-  static const Color kLastUpdatedTextColor = const Color(0xFF919193);
+
+  static const Color kProfileBorderOutterColor = const Color(0xFF737373);
+  static const Color kProfileBorderColor = const Color(0xFFD9D9D9);
+  static const Color kTextFieldColor = const Color(0xFF161617);
+  static const Color kTextFieldTextColor = const Color(0xFFBDBDBE);
+  static const Color kSwitchColor = const Color(0xFF19191A);
+  static const Color kAutopayAmountActiveTabColor = const Color(0xFFF5F2ED);
+  static const Color kAutopayAmountDeactiveTabColor = const Color(0xFF39393C);
+  static const Color kBorderColor = const Color(0xFFDADADA);
+
+  // Recharge Modal Sheet
+  static const Color kRechargeModalSheetAmountSectionBackgroundColor =
+      const Color(0xFF49494C);
+
+  static const Color kpurpleTicketColor = const Color(0xFFCEC5FF);
+
+  // Autosave
+  static const Color kAutosaveBalanceColor = const Color(0xFFEFECD1);
+
+  static LinearGradient kTextFieldGradient1 = LinearGradient(
+    colors: [Color(0xff111111), Colors.transparent],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    stops: [0.0, 0.4],
+    tileMode: TileMode.clamp,
+  );
+
+  static LinearGradient kTextFieldGradient2 = LinearGradient(
+    colors: [Color(0xff111111), UiConstants.kTextFieldColor.withOpacity(0.7)],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    stops: [0.0, 0.4],
+    tileMode: TileMode.clamp,
+  );
 }
