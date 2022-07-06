@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
@@ -151,13 +153,57 @@ class UserAutosaveDetailsView extends StatelessWidget {
                             ],
                           ),
               ),
+              // Positioned(
+              //   bottom: 0,
+              //   child: Container(
+              //     width: SizeConfig.screenWidth,
+              //     height: 120,
+              //     decoration: BoxDecoration(
+              //       gradient: LinearGradient(
+              //           begin: Alignment.bottomCenter,
+              //           end: Alignment.topCenter,
+              //           colors: [
+              //             UiConstants.kSecondaryBackgroundColor
+              //                 .withOpacity(0.8),
+              //             UiConstants.kSecondaryBackgroundColor
+              //                 .withOpacity(0.2),
+              //           ],
+              //           stops: [
+              //             0.8,
+              //             1
+              //           ]),
+              //     ),
+              //     child: BackdropFilter(
+              //       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+              //     ),
+              //   ),
+              // ),
               if (model.state == ViewState.Idle &&
                   model.activeSubscription != null &&
                   !model.isInEditMode)
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
-                    color: UiConstants.kSecondaryBackgroundColor,
+                    decoration: BoxDecoration(
+                      // color: UiConstants.kSecondaryBackgroundColor,
+                      gradient: LinearGradient(
+                        colors: [
+                          UiConstants.kSecondaryBackgroundColor
+                              .withOpacity(0.2),
+                          UiConstants.kSecondaryBackgroundColor
+                              .withOpacity(0.9),
+                          UiConstants.kSecondaryBackgroundColor
+                              .withOpacity(0.2),
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        stops: [
+                          0.02,
+                          0.8,
+                          1.0,
+                        ],
+                      ),
+                    ),
                     padding: EdgeInsets.symmetric(
                       horizontal: SizeConfig.padding40,
                       vertical: SizeConfig.padding10,
