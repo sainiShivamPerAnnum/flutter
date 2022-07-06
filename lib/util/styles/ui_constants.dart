@@ -78,4 +78,20 @@ class UiConstants {
 
   // Autosave
   static const Color kAutosaveBalanceColor = const Color(0xFFEFECD1);
+
+  static LinearGradient kTextFieldGradient1 = LinearGradient(
+    colors: [Color(0xff111111), Colors.transparent],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    stops: [0.0, 0.4],
+    tileMode: TileMode.clamp,
+  );
+
+  static LinearGradient kTextFieldGradient2 = LinearGradient(
+    colors: [Color(0xff111111), UiConstants.kTextFieldColor.withOpacity(0.7)],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    stops: [0.0, 0.4],
+    tileMode: TileMode.clamp,
+  );
 }

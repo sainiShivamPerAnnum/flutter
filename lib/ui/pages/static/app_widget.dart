@@ -36,6 +36,7 @@ class AppTextField extends StatelessWidget {
     this.inputFormatters,
     this.hintText = '',
     this.autoFocus = false,
+    this.borderRadius,
     this.keyboardType = TextInputType.text,
     this.suffixIcon,
     this.prefixText,
@@ -61,6 +62,7 @@ class AppTextField extends StatelessWidget {
   final List<TextInputFormatter> inputFormatters;
   final TextInputType keyboardType;
   final bool autoFocus;
+  final BorderRadius borderRadius;
   final Widget suffixIcon;
   final String prefixText;
   final TextStyle prefixTextStyle;
@@ -81,17 +83,12 @@ class AppTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: ShapeDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xff111112), Colors.transparent],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          stops: [0.0, 0.4],
-          tileMode: TileMode.clamp,
-        ),
+        gradient: UiConstants.kTextFieldGradient1,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(SizeConfig.roundness5),
-          ),
+          borderRadius: borderRadius ??
+              BorderRadius.all(
+                Radius.circular(SizeConfig.roundness5),
+              ),
         ),
       ),
       child: TextFormField(
@@ -132,9 +129,10 @@ class AppTextField extends StatelessWidget {
                     maxHeight: 35,
                     maxWidth: 35,
                   ),
-              fillColor: fillColor ?? isEnabled
-                  ? UiConstants.kTextFieldColor
-                  : UiConstants.kTextFieldColor.withOpacity(0.7),
+              fillColor: fillColor ??
+                  (isEnabled
+                      ? UiConstants.kTextFieldColor
+                      : UiConstants.kTextFieldColor.withOpacity(0.7)),
               filled: true,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(SizeConfig.roundness5),
@@ -223,9 +221,7 @@ class AppDropDownField extends StatelessWidget {
           color: UiConstants.kTextColor.withOpacity(0.1),
           width: SizeConfig.border1,
         ),
-        color: isEnabled
-            ? UiConstants.kTextFieldColor
-            : UiConstants.kTextFieldColor.withOpacity(0.7),
+        gradient: UiConstants.kTextFieldGradient2,
       ),
       padding: EdgeInsets.symmetric(
         horizontal: SizeConfig.padding16,
@@ -282,9 +278,7 @@ class AppDatePickerField extends StatelessWidget {
             color: UiConstants.kTextColor.withOpacity(0.1),
             width: SizeConfig.border1,
           ),
-          color: isEnabled
-              ? UiConstants.kTextFieldColor
-              : UiConstants.kTextFieldColor.withOpacity(0.7),
+          gradient: UiConstants.kTextFieldGradient2,
         ),
         child: Align(
           alignment: Alignment.centerLeft,

@@ -238,7 +238,7 @@ class UserProfileForm extends StatelessWidget {
                         color: UiConstants.kTextColor.withOpacity(0.1),
                         width: SizeConfig.border1,
                       ),
-                      color: UiConstants.kTextFieldColor,
+                      gradient: UiConstants.kTextFieldGradient2,
                     ),
                     padding: EdgeInsets.symmetric(
                       horizontal: SizeConfig.padding16,

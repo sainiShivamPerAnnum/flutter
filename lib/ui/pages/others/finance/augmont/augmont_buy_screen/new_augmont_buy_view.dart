@@ -305,6 +305,8 @@ class EnterAmountView extends StatelessWidget {
                           validator: (val) {
                             return null;
                           },
+                          borderRadius:
+                              BorderRadius.circular(SizeConfig.roundness16),
                           keyboardType: TextInputType.numberWithOptions(
                               signed: true, decimal: true),
                           inputFormatters: [
