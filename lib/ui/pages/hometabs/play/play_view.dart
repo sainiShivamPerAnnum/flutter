@@ -97,7 +97,8 @@ class Play extends StatelessWidget {
                             onTap: () {
                               Haptic.vibrate();
                               AppState.delegate.parseRoute(
-                                  Uri.parse(BaseUtil.gamesList[index].route));
+                                Uri.parse(BaseUtil.gamesList[index].route),
+                              );
                             },
                             child: GameCard(
                               gameData: BaseUtil.gamesList[index],

@@ -55,6 +55,9 @@ const String AutosaveDetailsViewPath = '/autosaveDetailsView';
 const String AutosaveProcessViewPath = '/autosaveProcessView';
 const String UserAutosaveDetailsViewPath = '/userAutosaveDetailsView';
 const String AutosaveTransactionsViewPath = '/autosaveTransactionsViewPath';
+const String NewGameHomeViewPath = '/newGameHome';
+const String NewWebHomeViewPath = '/newWebHomeView';
+const String TopPlayerLeaderboard = '/topPlayerLeaderboard';
 
 enum Pages {
   Splash,
@@ -111,6 +114,8 @@ enum Pages {
   AutosaveProcessView,
   UserAutosaveDetailsView,
   AutosaveTransactionsView,
+  NewWebHomeView,
+  TopPlayerLeaderboard,
 }
 
 class PageConfiguration {
@@ -502,3 +507,17 @@ PageConfiguration AutosaveTransactionsViewPageConfig = PageConfiguration(
     path: AutosaveTransactionsViewPath,
     uiPage: Pages.AutosaveTransactionsView,
     name: "Autosave transaction Screen");
+
+PageConfiguration NewWebHomeViewPageConfig = PageConfiguration(
+  key: 'NewWebHomeView',
+  path: NewWebHomeViewPath,
+  uiPage: Pages.NewWebHomeView,
+  name: "New Web Home Screen",
+);
+
+PageConfiguration TopPlayerLeaderboardPageConfig = PageConfiguration(
+  key: 'TopPlayerLeaderboard',
+  path: TopPlayerLeaderboard,
+  uiPage: Pages.TopPlayerLeaderboard,
+  name: "Top Player Leaderboard Screen",
+);

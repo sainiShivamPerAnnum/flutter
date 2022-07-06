@@ -1,4 +1,5 @@
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -12,6 +13,79 @@ class FontSizes {
 }
 
 class TextStyles {
+  static TextStyle get sourceSansT => GoogleFonts.sourceSansPro(
+        fontWeight: FontWeight.w100,
+        color: UiConstants.kTextColor,
+      );
+  static TextStyle get rajdhaniT => GoogleFonts.rajdhani(
+        fontWeight: FontWeight.w100,
+        color: UiConstants.kTextColor,
+      );
+  static TextStyle get sourceSansEL => GoogleFonts.sourceSansPro(
+        fontWeight: FontWeight.w200,
+        color: UiConstants.kTextColor,
+      );
+  static TextStyle get rajdhaniEL => GoogleFonts.rajdhani(
+        fontWeight: FontWeight.w200,
+        color: UiConstants.kTextColor,
+      );
+  static TextStyle get sourceSansL => GoogleFonts.sourceSansPro(
+        fontWeight: FontWeight.w300,
+        color: UiConstants.kTextColor,
+      );
+  static TextStyle get rajdhaniL => GoogleFonts.rajdhani(
+        fontWeight: FontWeight.w300,
+        color: UiConstants.kTextColor,
+      );
+  static TextStyle get sourceSans => GoogleFonts.sourceSansPro(
+        fontWeight: FontWeight.w400,
+        color: UiConstants.kTextColor,
+      );
+  static TextStyle get rajdhani => GoogleFonts.rajdhani(
+        fontWeight: FontWeight.w400,
+        color: UiConstants.kTextColor,
+      );
+  static TextStyle get sourceSansM => GoogleFonts.sourceSansPro(
+        fontWeight: FontWeight.w500,
+        color: UiConstants.kTextColor,
+      );
+  static TextStyle get rajdhaniM => GoogleFonts.rajdhani(
+        fontWeight: FontWeight.w500,
+        color: UiConstants.kTextColor,
+      );
+  static TextStyle get sourceSansSB => GoogleFonts.sourceSansPro(
+        fontWeight: FontWeight.w600,
+        color: UiConstants.kTextColor,
+      );
+  static TextStyle get rajdhaniSB => GoogleFonts.rajdhani(
+        fontWeight: FontWeight.w600,
+        color: UiConstants.kTextColor,
+      );
+  static TextStyle get sourceSansB => GoogleFonts.sourceSansPro(
+        fontWeight: FontWeight.w700,
+        color: UiConstants.kTextColor,
+      );
+  static TextStyle get rajdhaniB => GoogleFonts.rajdhani(
+        fontWeight: FontWeight.w700,
+        color: UiConstants.kTextColor,
+      );
+  static TextStyle get sourceSansEB => GoogleFonts.sourceSansPro(
+        fontWeight: FontWeight.w800,
+        color: UiConstants.kTextColor,
+      );
+  static TextStyle get rajdhaniEB => GoogleFonts.rajdhani(
+        fontWeight: FontWeight.w800,
+        color: UiConstants.kTextColor,
+      );
+  static TextStyle get sourceSansBL => GoogleFonts.sourceSansPro(
+        fontWeight: FontWeight.w900,
+        color: UiConstants.kTextColor,
+      );
+  static TextStyle get rajdhaniBL => GoogleFonts.rajdhani(
+        fontWeight: FontWeight.w900,
+        color: UiConstants.kTextColor,
+      );
+
   static TextStyle get bodyFont =>
       GoogleFonts.sourceSansPro(); //TextStyle(fontFamily: "Arctick");
   static TextStyle get titleFont =>
@@ -37,6 +111,8 @@ class TextStyles {
 
 extension TextStyleHelpers on TextStyle {
   TextStyle get bold => copyWith(fontWeight: FontWeight.bold);
+  TextStyle get medium => copyWith(fontWeight: FontWeight.w500);
+  TextStyle get semiBold => copyWith(fontWeight: FontWeight.w600);
   TextStyle get extraBold => copyWith(fontWeight: FontWeight.w900);
   TextStyle get light => copyWith(fontWeight: FontWeight.w300);
   TextStyle get underline => copyWith(decoration: TextDecoration.underline);
@@ -47,4 +123,28 @@ extension TextStyleHelpers on TextStyle {
   TextStyle weight(FontWeight weight) => copyWith(fontWeight: weight);
   TextStyle colour(Color color) => copyWith(color: color);
   TextStyle setHeight(double height) => copyWith(height: height);
+  TextStyle setOpecity(double opacity) =>
+      copyWith(color: color.withOpacity(opacity));
+}
+
+// class SansPro {
+//   static TextStyle get style => GoogleFonts.sourceSansPro(color: Colors.white);
+// }
+
+// class Rajdhani {
+//   static TextStyle get style => GoogleFonts.rajdhani(color: Colors.white);
+// }
+
+extension FontSize on TextStyle {
+  TextStyle get title1 => copyWith(fontSize: SizeConfig.title1);
+  TextStyle get title2 => copyWith(fontSize: SizeConfig.title2);
+  TextStyle get title3 => copyWith(fontSize: SizeConfig.title3);
+  TextStyle get title4 => copyWith(fontSize: SizeConfig.title4);
+  TextStyle get title5 => copyWith(fontSize: SizeConfig.title5);
+
+  TextStyle get body1 => copyWith(fontSize: SizeConfig.body1);
+  TextStyle get body2 => copyWith(fontSize: SizeConfig.body2);
+  TextStyle get body3 => copyWith(fontSize: SizeConfig.body3);
+  TextStyle get body4 => copyWith(fontSize: SizeConfig.body4);
+  TextStyle get body5 => copyWith(fontSize: SizeConfig.body5);
 }

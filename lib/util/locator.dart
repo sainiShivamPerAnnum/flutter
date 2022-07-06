@@ -56,6 +56,7 @@ import 'package:felloapp/ui/pages/others/games/tambola/dailyPicksDraw/dailyPicks
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_game/tambola_game_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/picks_card/picks_card_vm.dart';
+import 'package:felloapp/ui/pages/others/games/web/reward_leaderboard/reward_leaderboard_vm.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_game/web_game_vm.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_home/web_home_vm.dart';
 import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_vm.dart';
@@ -159,6 +160,7 @@ void setupLocator() {
   locator.registerFactory(() => TambolaHomeViewModel());
   locator.registerFactory(() => TambolaGameViewModel());
   locator.registerFactory(() => WebHomeViewModel());
+  locator.registerFactory(() => RewardLeaderboardViewModel());
   locator.registerFactory(() => WebGameViewModel());
   locator.registerFactory(() => PicksCardViewModel());
   locator.registerFactory(() => ReferralDetailsViewModel());

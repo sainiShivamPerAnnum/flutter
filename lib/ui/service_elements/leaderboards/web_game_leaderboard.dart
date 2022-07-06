@@ -21,20 +21,21 @@ class WebGameLeaderBoardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<LeaderboardService,
-            LeaderBoardServiceProperties>(
-        properties: [LeaderBoardServiceProperties.WebGameLeaderBoard],
-        builder: (context, m, properties) {
-          return m.WebGameLeaderBoard == null
-              ? NoRecordDisplayWidget(
-                  asset: "images/leaderboard.png",
-                  text: "Leaderboard will be updated soon",
-                )
-              : LeaderBoardView(
-                  model: m.WebGameLeaderBoard,
-                  controller: m.parentController,
-                  ownController: m.ownController,
-                );
-        });
+        LeaderBoardServiceProperties>(
+      properties: [LeaderBoardServiceProperties.WebGameLeaderBoard],
+      builder: (context, m, properties) {
+        return m.WebGameLeaderBoard == null
+            ? NoRecordDisplayWidget(
+                asset: "images/leaderboard.png",
+                text: "Leaderboard will be updated soon",
+              )
+            : LeaderBoardView(
+                model: m.WebGameLeaderBoard,
+                controller: m.parentController,
+                ownController: m.ownController,
+              );
+      },
+    );
   }
 }
 

@@ -82,6 +82,10 @@ class WebHomeViewModel extends BaseModel {
     refreshLeaderboard();
   }
 
+  newInit(String game) async {
+    currentGame = game;
+  }
+
   clear() {}
 
   refreshPrizes() async {

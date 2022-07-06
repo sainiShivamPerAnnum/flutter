@@ -277,7 +277,8 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                                         onPressed: () {
                                           if (model.state == ViewState.Idle)
                                             model.processScreenInput(
-                                                model.currentPage);
+                                              model.currentPage,
+                                            );
                                         },
                                       ),
                                     ),
