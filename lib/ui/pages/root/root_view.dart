@@ -5,7 +5,9 @@ import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
+import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
+import 'package:felloapp/ui/widgets/drawer/drawer_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -35,7 +37,7 @@ class Root extends StatelessWidget {
         return Scaffold(
           resizeToAvoidBottomInset: false,
           key: RootViewModel.scaffoldKey,
-          //  drawer: FDrawer(),
+          drawer: FDrawer(),
           drawerEnableOpenDragGesture: false,
           body: Stack(
             children: [
@@ -75,20 +77,22 @@ class Root extends StatelessWidget {
                   ),
                 ),
               ),
-              // FelloAppBar(
-              //   key: felloAppBarKey,
-              //   leading: InkWell(
-              //     onTap: () => model.showDrawer(),
-              //     child: ProfileImageSE(
-              //       radius: SizeConfig.avatarRadius,
-              //     ),
-              //   ),
-              //   actions: [
-              //     FelloCoinBar(),
-              //     SizedBox(width: 16),
-              //     NotificationButton(),
-              //   ],
-              // ),
+              FelloAppBar(
+                key: felloAppBarKey,
+                leading: InkWell(
+                  onTap: model.showDrawer,
+                  child: Container(
+                    width: SizeConfig.padding38,
+                    height: SizeConfig.padding38,
+                    // color: Colors.red,
+                  ),
+                ),
+                // actions: [
+                //   FelloCoinBar(),
+                //   SizedBox(width: 16),
+                //   NotificationButton(),
+                // ],
+              ),
               // Positioned(
               //   bottom: 0,
               //   child: Container(

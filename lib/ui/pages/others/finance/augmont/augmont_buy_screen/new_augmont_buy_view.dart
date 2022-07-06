@@ -13,12 +13,13 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class NewAugmontBuyView extends StatelessWidget {
-  const NewAugmontBuyView({Key key}) : super(key: key);
+  final int amount;
+  const NewAugmontBuyView({Key key, this.amount}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BaseView<AugmontGoldBuyViewModel>(
-        onModelReady: (model) => model.init(),
+        onModelReady: (model) => model.init(amount),
         builder: (ctx, model, child) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.center,

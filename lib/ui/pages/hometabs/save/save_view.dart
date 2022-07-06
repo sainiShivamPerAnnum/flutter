@@ -23,7 +23,7 @@ class Save extends StatelessWidget {
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return BaseView<AugmontGoldBuyViewModel>(
-      onModelReady: (model) => model.init(),
+      onModelReady: (model) => model.init(null),
       builder: (ctx, model, child) {
         return Stack(
           children: [

@@ -272,7 +272,7 @@ class AugmontBuyCard extends StatelessWidget {
               onPressed: () async {
                 if (!model.isGoldBuyInProgress) {
                   FocusScope.of(context).unfocus();
-                  model.initiateBuyFromModal();
+                  model.initiateBuy();
                 }
               },
             ),

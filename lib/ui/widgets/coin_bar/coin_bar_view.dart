@@ -6,6 +6,7 @@ import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/service_elements/user_coin_service/coin_balance_text.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_vm.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -51,7 +52,7 @@ class FelloCoinBar extends StatelessWidget {
                   horizontal: SizeConfig.padding12,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.transparent,
+                  color: UiConstants.kTextFieldColor.withOpacity(0.4),
                   border: Border.all(color: borderColor ?? Colors.white10),
                   borderRadius: BorderRadius.circular(SizeConfig.roundness12),
                 ),
@@ -91,7 +92,7 @@ class FelloCoinBar extends StatelessWidget {
               //               Assets.tokens,
               //               height: SizeConfig.iconSize1,
               //             ),
-               //            CoinBalanceTextSE(),
+              //            CoinBalanceTextSE(),
               //             //  Text("200", style: TextStyles.body2.bold),
               //             Icon(
               //               Icons.add_circle,

@@ -174,12 +174,12 @@ class AugmontGoldBuyViewModel extends BaseModel {
     notifyListeners();
   }
 
-  init() async {
+  init(int amount) async {
     setState(ViewState.Busy);
     // buyFieldNode = _userService.buyFieldFocusNode;
     goldBuyAmount = chipAmountList[1];
-    goldAmountController =
-        TextEditingController(text: chipAmountList[1].toInt().toString());
+    goldAmountController = TextEditingController(
+        text: amount.toString() ?? chipAmountList[1].toInt().toString());
     fetchGoldRates();
     await fetchNotices();
     status = checkAugmontStatus();
