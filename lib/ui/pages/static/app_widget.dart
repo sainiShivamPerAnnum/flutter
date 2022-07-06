@@ -122,8 +122,8 @@ class AppTextField extends StatelessWidget {
               fillColor: fillColor != null
                   ? fillColor
                   : isEnabled
-                      ? UiConstants.kTextFieldColor
-                      : UiConstants.kTextFieldColor.withOpacity(0.7),
+                      ? UiConstants.kTextFieldColor.withOpacity(0.8)
+                      : UiConstants.kTextFieldColor.withOpacity(0.5),
               filled: true,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(SizeConfig.roundness5),
