@@ -156,20 +156,6 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<GoldenTicket> getLatestGoldenTicket(String userId) async {
-    try {
-      logger.i("CALLING: checkForLatestGoldenTicket");
-      QuerySnapshot gtSnapshot = await _api.checkForLatestGoldenTicket(userId);
-      if (gtSnapshot != null) {
-        GoldenTicket ticket = GoldenTicket.fromJson(
-            gtSnapshot.docs.first.data(), gtSnapshot.docs.first.id);
-        return ticket;
-      }
-    } catch (e) {
-      return null;
-    }
-  }
-
   Future<GoldenTicket> getGoldenTicketById(String userId, String gtId) async {
     GoldenTicket ticket;
     try {

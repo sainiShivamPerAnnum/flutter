@@ -187,13 +187,6 @@ class RootViewModel extends BaseModel {
         });
       }
 
-      _baseUtil.isUnreadFreshchatSupportMessages().then((flag) {
-        if (flag) {
-          BaseUtil.showPositiveAlert('You have unread support messages',
-              'Go to the Contact Us section to view',
-              seconds: 4);
-        }
-      });
       if (canExecuteStartupNotification &&
           AppState.startupNotifMessage != null) {
         canExecuteStartupNotification = false;

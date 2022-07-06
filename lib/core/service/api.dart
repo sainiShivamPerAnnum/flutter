@@ -42,20 +42,6 @@ class Api {
     return ref.doc(Constants.DOC_USER_FCM_TOKEN).delete();
   }
 
-  Future<QuerySnapshot> checkForLatestGoldenTicket(String userId) {
-    Future<QuerySnapshot> snapshot;
-    Query query = _db
-        .collection(Constants.COLN_USERS)
-        .doc(userId)
-        .collection(Constants.SUBCOLN_USER_REWARDS);
-    try {
-      snapshot = query.orderBy('timestamp', descending: true).limit(1).get();
-    } catch (e) {
-      logger.e(e);
-    }
-    return snapshot;
-  }
-
   Future<DocumentSnapshot> fetchGoldenTicketById(
       String userId, String gtId) async {
     DocumentReference docRef = _db
@@ -215,15 +201,6 @@ class Api {
     return _db.collection(Constants.COLN_FAILREPORTS).add(data);
   }
 
-  Future<QuerySnapshot> getWinnersByWeekCde(int weekCde) async {
-    Query query = _db
-        .collection(Constants.COLN_WINNERS)
-        .where('week_code', isEqualTo: weekCde)
-        .where('win_type', isEqualTo: 'tambola');
-    final response = await query.get();
-    return response;
-  }
-
   Future<QuerySnapshot> getCredentialsByTypeAndStage(
       String type, String stage, int index) {
     Query query = _db
@@ -278,6 +255,7 @@ class Api {
         .collection(Constants.COLN_USERS)
         .doc(userId)
         .collection(Constants.SUBCOLN_USER_TXNS);
+
     _query = _query
         .where(UserTransaction.fldSubType,
             isEqualTo: UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD)
@@ -285,8 +263,10 @@ class Api {
             isEqualTo: UserTransaction.TRAN_TYPE_DEPOSIT)
         .where(UserTransaction.fldTranStatus,
             isEqualTo: UserTransaction.TRAN_STATUS_COMPLETE)
-        .where(UserTransaction.fldTimestamp,
-            isGreaterThanOrEqualTo: cmpTimestamp);
+        .where(
+          UserTransaction.fldTimestamp,
+          isGreaterThanOrEqualTo: cmpTimestamp,
+        );
     // .orderBy(UserTransaction.fldTimestamp, descending: true).startAfter([cmpTimestamp]);
 
     return _query.get();
@@ -491,27 +471,12 @@ class Api {
     }
   }
 
-  Future<QuerySnapshot> fetchOngoingEvents() async {
-    Query _query =
-        _db.collection(Constants.COLN_APPCAMPAIGNS).orderBy('position');
-    return _query.get();
-  }
-
   Future<QuerySnapshot> fetchCoupons() async {
     Query _query = _db
         .collection(Constants.COLN_COUPONS)
         // .where('expiresOn', isGreaterThan: Timestamp.now())
         .orderBy('priority');
     return _query.get();
-  }
-
-  Future<DocumentSnapshot> fetchActiveSubscriptionDetails(String userid) async {
-    DocumentReference doc = _db
-        .collection(Constants.COLN_USERS)
-        .doc(userid)
-        .collection(Constants.SUBCOLN_USER_SUBSCRIPTION)
-        .doc("detail");
-    return await doc.get();
   }
 
   Future<QuerySnapshot> getAutosaveTransactions({

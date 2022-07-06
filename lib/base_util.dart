@@ -392,21 +392,6 @@ class BaseUtil extends ChangeNotifier {
     // });
   }
 
-  Future<bool> isUnreadFreshchatSupportMessages() async {
-    try {
-      var unreadCount = await Freshchat.getUnreadCountAsync;
-      return (unreadCount['count'] > 0);
-    } catch (e) {
-      logger.e('Error reading unread count variable: $e');
-      Map<String, dynamic> errorDetails = {
-        'User number': _myUser.mobile,
-        'Error Type': 'Unread message count failed'
-      };
-      _dbModel.logFailure(_myUser.uid, FailType.FreshchatFail, errorDetails);
-      return false;
-    }
-  }
-
   Future<void> refreshFunds() async {
     //TODO: ADD LOADER
     print("-----------------> I got called");

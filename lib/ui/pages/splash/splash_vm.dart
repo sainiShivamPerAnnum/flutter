@@ -62,16 +62,17 @@ class LauncherViewModel extends BaseModel {
   initLogic() async {
     try {
       await CacheService.initialize();
-      await userService.init();
-      await Future.wait([_baseUtil.init(), _fcmListener.setupFcm()]);
 
       // check if cache invalidation required
       final now = DateTime.now().millisecondsSinceEpoch;
       _logger.d(
           'cache: invalidation time $now ${BaseRemoteConfig.invalidationBefore}');
       if (now <= BaseRemoteConfig.invalidationBefore) {
-        new CacheService().invalidateAll();
+        await new CacheService().invalidateAll();
       }
+
+      await userService.init();
+      await Future.wait([_baseUtil.init(), _fcmListener.setupFcm()]);
 
       userService.firebaseUser?.getIdToken()?.then(
             (token) =>
