@@ -7,6 +7,7 @@ import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/api_cache_manager.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/cache_service.dart';
+import 'package:felloapp/core/service/notifier_services/notification_service.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -20,6 +21,7 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   final _dbModel = locator<DBModel>();
   final _logger = locator<CustomLogger>();
+  final _notificationService = locator<NotificationService>();
   final _apiCacheManager = locator<ApiCacheManager>();
 
   User _firebaseUser;
@@ -267,7 +269,9 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   checkForNewNotifications() {
     _logger.d("Looking for new notifications");
-    _dbModel.checkIfUserHasNewNotifications(baseUser.uid).then((value) {
+    _notificationService
+        .checkIfUserHasNewNotifications(baseUser.uid)
+        .then((value) {
       if (value) hasNewNotifications = true;
     });
   }

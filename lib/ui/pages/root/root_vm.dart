@@ -6,6 +6,7 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
@@ -52,7 +53,7 @@ class RootViewModel extends BaseModel {
   final _analyticsService = locator<AnalyticsService>();
   final _paytmService = locator<PaytmService>();
 
-  final _userRepo = locator<UserRepository>();
+  final _refRepo = locator<ReferralRepo>();
 
   BuildContext rootContext;
   bool _isInitialized = false;
@@ -273,7 +274,7 @@ class RootViewModel extends BaseModel {
   }
 
   Future<dynamic> _verifyOneLinkManualReferral() async {
-    final referrerId = await _userRepo
+    final referrerId = await _refRepo
         .getUserIdByRefCode(BaseUtil.manualReferralCode.toUpperCase());
 
     if (referrerId.code == 200) {

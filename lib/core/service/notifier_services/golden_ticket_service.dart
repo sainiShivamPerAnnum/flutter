@@ -8,6 +8,7 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/repository/golden_ticket_repo.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -34,6 +35,7 @@ final GlobalKey ticketImageKey = GlobalKey();
 class GoldenTicketService extends ChangeNotifier {
   final _logger = locator<CustomLogger>();
   final _dbModel = locator<DBModel>();
+  final _gtRepo = locator<GoldenTicketRepository>();
   final _userService = locator<UserService>();
   final _paytmService = locator<PaytmService>();
   // static bool hasGoldenTicket = false;
@@ -55,8 +57,9 @@ class GoldenTicketService extends ChangeNotifier {
 
   Future<bool> fetchAndVerifyGoldenTicketByID() async {
     if (goldenTicketId != null && goldenTicketId.isNotEmpty) {
-      currentGT = await _dbModel.getGoldenTicketById(
-          _userService.baseUser.uid, goldenTicketId);
+      currentGT = await _gtRepo.getGoldenTicketById(
+        goldenTicketId: goldenTicketId,
+      );
       goldenTicketId = null;
       if (currentGT != null && isGTValid(currentGT)) {
         return true;

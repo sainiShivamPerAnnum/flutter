@@ -144,9 +144,10 @@ class GoldenTicketsViewModel extends BaseModel {
           //first fetch
           //cache the latest Golden Ticket
           int timestamp = GoldenTicket.fromJson(
-                  _goldenTicketDocs[0].data(), _goldenTicketDocs[0].id)
-              .timestamp
-              .millisecondsSinceEpoch;
+                      _goldenTicketDocs[0].data(), _goldenTicketDocs[0].id)
+                  .timestamp
+                  .seconds *
+              1000;
           CacheManager.writeCache(
               key: CacheManager.CACHE_LATEST_GOLDEN_TICKET_TIME,
               value: timestamp,
@@ -169,7 +170,8 @@ class GoldenTicketsViewModel extends BaseModel {
     goldenTicketList =
         data.map((e) => GoldenTicket.fromJson(e.data(), e.id)).toList();
     arrangedGoldenTicketList = [];
-    goldenTicketList.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    goldenTicketList
+        .sort((a, b) => b.timestamp.seconds.compareTo(a.timestamp.seconds));
     goldenTicketList.forEach((e) {
       if (e.redeemedTimestamp == null) {
         arrangedGoldenTicketList.add(e);

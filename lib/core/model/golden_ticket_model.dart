@@ -8,9 +8,9 @@ class GoldenTicket {
   bool isRewarding;
   String note;
   String prizeSubtype;
-  Timestamp redeemedTimestamp;
+  CreatedAt redeemedTimestamp;
   List<Reward> rewardArr;
-  Timestamp timestamp;
+  CreatedAt timestamp;
   String userId;
   String version;
 
@@ -32,14 +32,18 @@ class GoldenTicket {
   GoldenTicket.fromJson(Map<String, dynamic> json, String docId) {
     gtId = docId;
     userId = json['userId'];
-    timestamp = json['timestamp'];
+    timestamp = json['timestamp'] != null
+        ? CreatedAt.fromJson(json['timestamp'])
+        : null;
     eventType = json['eventType'];
     gtType = json['gtType'];
     prizeSubtype = json['prizeSubtype'];
     note = json['note'];
     canTransfer = json['canTransfer'];
     isRewarding = json['isRewarding'];
-    redeemedTimestamp = json['redeemedTimestamp'];
+    redeemedTimestamp = json['redeemedTimestamp'] != null
+        ? CreatedAt.fromJson(json['redeemedTimestamp'])
+        : null;
     rewardArr =
         json['rewardArr'] != null ? Reward.objArray(json['rewardArr']) : [];
     version = json['version'];
@@ -73,6 +77,37 @@ class Reward {
   }
 }
 
+class CreatedAt {
+  CreatedAt({
+    this.seconds,
+    this.nanoseconds,
+  });
+
+  int seconds;
+  int nanoseconds;
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['_seconds'] = this.seconds;
+    data['_nanoseconds'] = this.nanoseconds;
+    return data;
+  }
+
+  factory CreatedAt.fromMap(Map<String, dynamic> json) => CreatedAt(
+        seconds: json["_seconds"],
+        nanoseconds: json["_nanoseconds"],
+      );
+
+  Map<String, dynamic> toMap() => {
+        "_seconds": seconds,
+        "_nanoseconds": nanoseconds,
+      };
+
+  factory CreatedAt.fromJson(Map<String, dynamic> json) => CreatedAt(
+        seconds: json["_seconds"],
+        nanoseconds: json["_nanoseconds"],
+      );
+}
 
 // Why a reward map, why not directly a reward array
 // with reward class object

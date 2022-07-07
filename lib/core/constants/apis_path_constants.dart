@@ -36,6 +36,9 @@ class ApiPath {
   static const acquisitionTracking = "/userOps/api/v3/opt-analytics";
   static String getUserIdByRefCode(String code) => "/referral/$code";
   static String getReferralCode(String uid) => "/user/referral/$uid";
+  static String getLatestNotication(String uid) =>
+      "/user/$uid/notification/latest";
+  static String getNotications(uid) => "/user/$uid/notifications";
   static const kDeviceId = "/device";
 
   //GT Rewards
@@ -63,4 +66,7 @@ class ApiPath {
   static const String dailyPicks = '/picks';
 
   get kSingleTransactions => "/payments";
+
+  static String getGoldenTicketById(String uid, String goldenTicketId) =>
+      "/user/$uid/gt/$goldenTicketId";
 }

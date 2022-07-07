@@ -9,7 +9,6 @@ import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/preference_helper.dart';
 
 import 'base_repo.dart';
 
@@ -162,56 +161,6 @@ class UserRepository extends BaseRepo {
       logger.d("Device added");
     } catch (e) {
       logger.e(e);
-    }
-  }
-
-  Future<ApiResponse<String>> getUserIdByRefCode(String code) async {
-    try {
-      final String bearer = await getBearerToken();
-      final response = await APIService.instance.getData(
-        ApiPath.getUserIdByRefCode(code),
-        token: bearer,
-        cBaseUrl: _baseUrl,
-      );
-
-      final data = response['data'];
-      return ApiResponse<String>(
-        model: data['uid'],
-        code: 200,
-      );
-    } catch (e) {
-      logger.e('getUserIdByRefCode $e');
-      return ApiResponse.withError(e.toString(), 400);
-    }
-  }
-
-  Future<ApiResponse<String>> getReferralCode() async {
-    try {
-      final code = PreferenceHelper.getString(PreferenceHelper.REFERRAL_CODE);
-
-      if (code != null && code != '') {
-        return ApiResponse<String>(
-          model: code,
-          code: 200,
-        );
-      }
-
-      final String bearer = await getBearerToken();
-      final response = await APIService.instance.getData(
-        ApiPath.getReferralCode(this.userService.baseUser.uid),
-        token: bearer,
-        cBaseUrl: _baseUrl,
-      );
-
-      final data = response['data']['code'];
-      PreferenceHelper.setString(PreferenceHelper.REFERRAL_CODE, data);
-      return ApiResponse<String>(
-        model: data,
-        code: 200,
-      );
-    } catch (e) {
-      logger.e('getReferralCode $e ${this.userService.baseUser.uid}');
-      return ApiResponse.withError(e.toString(), 400);
     }
   }
 }
