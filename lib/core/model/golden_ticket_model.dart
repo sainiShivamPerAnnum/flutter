@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 
 class GoldenTicket {
   String gtId;
@@ -8,9 +9,9 @@ class GoldenTicket {
   bool isRewarding;
   String note;
   String prizeSubtype;
-  CreatedAt redeemedTimestamp;
+  TimestampModel redeemedTimestamp;
   List<Reward> rewardArr;
-  CreatedAt timestamp;
+  TimestampModel timestamp;
   String userId;
   String version;
 
@@ -33,7 +34,7 @@ class GoldenTicket {
     gtId = docId;
     userId = json['userId'];
     timestamp = json['timestamp'] != null
-        ? CreatedAt.fromJson(json['timestamp'])
+        ? TimestampModel.fromMap(json['timestamp'])
         : null;
     eventType = json['eventType'];
     gtType = json['gtType'];
@@ -42,7 +43,7 @@ class GoldenTicket {
     canTransfer = json['canTransfer'];
     isRewarding = json['isRewarding'];
     redeemedTimestamp = json['redeemedTimestamp'] != null
-        ? CreatedAt.fromJson(json['redeemedTimestamp'])
+        ? TimestampModel.fromMap(json['redeemedTimestamp'])
         : null;
     rewardArr =
         json['rewardArr'] != null ? Reward.objArray(json['rewardArr']) : [];
@@ -77,37 +78,6 @@ class Reward {
   }
 }
 
-class CreatedAt {
-  CreatedAt({
-    this.seconds,
-    this.nanoseconds,
-  });
-
-  int seconds;
-  int nanoseconds;
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_seconds'] = this.seconds;
-    data['_nanoseconds'] = this.nanoseconds;
-    return data;
-  }
-
-  factory CreatedAt.fromMap(Map<String, dynamic> json) => CreatedAt(
-        seconds: json["_seconds"],
-        nanoseconds: json["_nanoseconds"],
-      );
-
-  Map<String, dynamic> toMap() => {
-        "_seconds": seconds,
-        "_nanoseconds": nanoseconds,
-      };
-
-  factory CreatedAt.fromJson(Map<String, dynamic> json) => CreatedAt(
-        seconds: json["_seconds"],
-        nanoseconds: json["_nanoseconds"],
-      );
-}
 
 // Why a reward map, why not directly a reward array
 // with reward class object

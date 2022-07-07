@@ -1,12 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/alert_model.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/model/user_notification_model.dart';
+import 'package:felloapp/core/repository/notification_repo.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
-import 'package:felloapp/core/service/notifier_services/notification_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,7 +15,7 @@ class NotificationsViewModel extends BaseModel {
   //dependencies
   final _userService = locator<UserService>();
   final _logger = locator<CustomLogger>();
-  final _notificationService = locator<NotificationService>();
+  final _notificationRepo = locator<NotificationRepository>();
 
   //local variables
   List<AlertModel> notifications;
@@ -57,17 +57,20 @@ class NotificationsViewModel extends BaseModel {
   fetchNotifications(bool more) async {
     if (more) isMoreNotificationsLoading = true;
 
-    Map<String, dynamic> aMap = await _notificationService.getUserNotifications(
-        _userService.baseUser.uid, lastAlertDocumentId, more);
-    _logger.d("no of alerts fetched: ${aMap['notifications'].length}");
+    ApiResponse<UserNotificationModel> userNotifications =
+        await _notificationRepo.getUserNotifications(
+      _userService.baseUser.uid,
+    );
+    _logger.d(
+        "no of alerts fetched: ${userNotifications.model.notifications.length}");
     if (notifications == null || notifications.length == 0) {
-      notifications = aMap['notifications'];
+      notifications = userNotifications.model.notifications;
     } else {
       postHighlightIndex = notifications.length - 1;
-      appendNotifications(aMap['notifications']);
+      appendNotifications(userNotifications.model.notifications);
     }
-    lastAlertDocumentId = aMap['lastAlertDoc'];
-    hasMoreAlerts = aMap['alertsLength'] == 20;
+    lastAlertDocumentId = userNotifications.model.lastDocId;
+    hasMoreAlerts = userNotifications.model.alertsLength == 20;
     if (!more) {
       await CacheManager.writeCache(
           key: CacheManager.CACHE_LATEST_NOTIFICATION_TIME,

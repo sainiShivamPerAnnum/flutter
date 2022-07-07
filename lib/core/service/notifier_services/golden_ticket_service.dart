@@ -17,6 +17,7 @@ import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -57,12 +58,17 @@ class GoldenTicketService extends ChangeNotifier {
 
   Future<bool> fetchAndVerifyGoldenTicketByID() async {
     if (goldenTicketId != null && goldenTicketId.isNotEmpty) {
-      currentGT = await _gtRepo.getGoldenTicketById(
+      ApiResponse<GoldenTicket> ticketResponse =
+          await _gtRepo.getGoldenTicketById(
         goldenTicketId: goldenTicketId,
       );
-      goldenTicketId = null;
-      if (currentGT != null && isGTValid(currentGT)) {
+
+      if (ticketResponse.code == 200 && isGTValid(currentGT)) {
+        currentGT = ticketResponse.model;
+        goldenTicketId = null;
         return true;
+      } else {
+        return false;
       }
     }
     return false;

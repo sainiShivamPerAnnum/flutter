@@ -170,60 +170,6 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  // Future<GoldenTicket> getGoldenTicketById(String userId, String gtId) async {
-  //   GoldenTicket ticket;
-  //   try {
-  //     logger.i("CALLING: fetchGoldenTicketById");
-  //     DocumentSnapshot goldenTicketRaw =
-  //         await _api.fetchGoldenTicketById(userId, gtId);
-  //     if (goldenTicketRaw != null) {
-  //       ticket =
-  //           GoldenTicket.fromJson(goldenTicketRaw.data(), goldenTicketRaw.id);
-  //     }
-  //     return ticket;
-  //   } catch (e) {
-  //     return ticket;
-  //   }
-  // }
-
-  // Future<bool> checkIfUserHasNewNotifications(String userId) async {
-  //   try {
-  //     logger.i("CALLING: checkForLatestNotification");
-  //     QuerySnapshot notificationSnapshot =
-  //         await _api.checkForLatestNotification(userId);
-
-  //     logger.i("CALLING: checkForLatestAnnouncment");
-  //     QuerySnapshot announcementSnapshot =
-  //         await _api.checkForLatestAnnouncment(userId);
-  //     AlertModel lastestNotification =
-  //         AlertModel.fromMap(notificationSnapshot.docs.first.data());
-  //     AlertModel lastestAnnouncement =
-  //         AlertModel.fromMap(announcementSnapshot.docs.first.data());
-
-  //     String latestNotifTime = await CacheManager.readCache(
-  //         key: CacheManager.CACHE_LATEST_NOTIFICATION_TIME);
-  //     if (latestNotifTime != null) {
-  //       int latestTimeInMilliSeconds = int.tryParse(latestNotifTime);
-  //       AlertModel latestAlert =
-  //           lastestNotification.createdTime.millisecondsSinceEpoch >
-  //                   lastestAnnouncement.createdTime.millisecondsSinceEpoch
-  //               ? lastestNotification
-  //               : lastestAnnouncement;
-  //       if (latestAlert.createdTime.millisecondsSinceEpoch >
-  //           latestTimeInMilliSeconds)
-  //         return true;
-  //       else
-  //         return false;
-  //     } else {
-  //       logger.d("No past notification time found");
-  //       return false;
-  //     }
-  //   } catch (e) {
-  //     logger.e(e);
-  //   }
-  //   return false;
-  // }
-
   Future<bool> checkIfUserHasUnscratchedGT(String userId) async {
     try {
       QuerySnapshot gtSnapshot = await _api.checkForLatestGTStatus(userId);
@@ -243,56 +189,6 @@ class DBModel extends ChangeNotifier {
       return false;
     }
   }
-
-  // Future<Map<String, dynamic>> getUserNotifications(
-  //     String userId, DocumentSnapshot lastDoc, bool more) async {
-  //   List<AlertModel> alerts = [];
-  //   List<AlertModel> announcements = [];
-  //   List<AlertModel> notifications = [];
-  //   DocumentSnapshot lastAlertDoc;
-  //   logger.d("user id - $userId");
-
-  //   try {
-  //     logger.i("CALLING: getUserNotifications");
-  // QuerySnapshot querySnapshot =
-  //     await _api.getUserNotifications(userId, lastDoc);
-  //     if (querySnapshot != null) {
-  //       lastAlertDoc = querySnapshot.docs.last;
-  //       for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
-  //         AlertModel alert = AlertModel.fromMap(documentSnapshot.data());
-  //         logger.d(alert.toString());
-  //         alerts.add(alert);
-  //       }
-  //     }
-  //   } catch (e) {
-  //     logger.e(e);
-  //   }
-  //   if (!more) {
-  //     try {
-  //       logger.i("CALLING: getAnnoucements");
-  //       QuerySnapshot querySnapshot = await _api.getAnnoucements();
-  //       for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
-  //         AlertModel announcement = AlertModel.fromMap(documentSnapshot.data());
-  //         logger.d(announcement.subtitle);
-  //         announcements.add(announcement);
-  //       }
-  //     } catch (e) {
-  //       logger.e(e);
-  //     }
-  //   }
-
-  //   notifications.addAll(alerts);
-  //   notifications.addAll(announcements);
-
-  //   notifications
-  //       .sort((a, b) => b.createdTime.seconds.compareTo(a.createdTime.seconds));
-
-  //   return {
-  //     'notifications': notifications,
-  //     'lastAlertDoc': lastAlertDoc,
-  //     'alertsLength': alerts.length
-  //   };
-  // }
 
   /// return obj:
   /// {value: GHexqwio123==, enid:2}

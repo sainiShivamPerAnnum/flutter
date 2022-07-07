@@ -9,6 +9,7 @@ import 'package:felloapp/core/repository/coupons_repo.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/repository/golden_ticket_repo.dart';
 import 'package:felloapp/core/repository/investment_actions_repo.dart';
+import 'package:felloapp/core/repository/notification_repo.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/repository/prizes_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
@@ -29,7 +30,6 @@ import 'package:felloapp/core/service/lcl_db_api.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
-import 'package:felloapp/core/service/notifier_services/notification_service.dart';
 import 'package:felloapp/core/service/notifier_services/prize_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
@@ -118,7 +118,6 @@ void setupLocator() {
   locator.registerLazySingleton(() => WinnerService());
   locator.registerLazySingleton(() => LeaderboardService());
   locator.registerLazySingleton(() => GoldenTicketService());
-  locator.registerLazySingleton(() => NotificationService());
 
   //Repository
   locator.registerLazySingleton(() => DBModel());
@@ -137,6 +136,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => PaytmRepository());
   locator.registerLazySingleton(() => ReferralRepo());
   locator.registerLazySingleton(() => GoldenTicketRepository());
+  locator.registerLazySingleton(() => NotificationRepository());
 
   // SPLASH
   locator.registerFactory(() => LauncherViewModel());
