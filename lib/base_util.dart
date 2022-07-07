@@ -5,6 +5,7 @@ import 'dart:developer' as dev;
 import 'dart:math';
 //Pub Imports
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/core/repository/augmont_repo.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
@@ -32,6 +33,7 @@ import 'package:felloapp/core/service/notifier_services/pan_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -59,6 +61,8 @@ class BaseUtil extends ChangeNotifier {
   final LocalDBModel _lModel = locator<LocalDBModel>();
   final AppState _appState = locator<AppState>();
   final UserService _userService = locator<UserService>();
+
+  final _augmontRepository = locator<AugmontRepository>();
 
   BaseUser _myUser;
   UserFundWallet _userFundWallet;
@@ -921,6 +925,14 @@ class BaseUtil extends ChangeNotifier {
         if (userFundWallet.augGoldQuantity > 0) _updateAugmontBalance();
       }
     });
+  }
+
+  Future<void> fetchUserAugmontDetail() async {
+    ApiResponse<UserAugmontDetail> augmontDetailResponse =
+        await _augmontRepository.getUserAugmontDetails();
+    if (augmontDetailResponse.code == 200) {
+      augmontDetail = augmontDetailResponse.model;
+    }
   }
 
   Future<void> _updateAugmontBalance() async {

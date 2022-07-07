@@ -213,16 +213,6 @@ class DBModel extends ChangeNotifier {
   }
 
   ///////////////////////AUGMONT/////////////////////////////
-  Future<UserAugmontDetail> getUserAugmontDetails(String id) async {
-    try {
-      logger.i("CALLING: getUserAugmontDetailDocument");
-      var doc = await _api.getUserAugmontDetailDocument(id);
-      return UserAugmontDetail.fromMap(doc.data());
-    } catch (e) {
-      log.error('Failed to fetch user Augmont details: $e');
-      return null;
-    }
-  }
 
   Future<bool> updateAugmontBankDetails(
       String userId, String accNo, String ifsc, String bankHolderName) async {

@@ -18,4 +18,11 @@ class TimestampModel extends Timestamp {
       '_nanoseconds': nanoseconds,
     };
   }
+
+  factory TimestampModel.currentTimeStamp() {
+    return TimestampModel(
+      seconds: DateTime.now().millisecondsSinceEpoch ~/ 1000,
+      nanoseconds: DateTime.now().millisecondsSinceEpoch * 1000,
+    );
+  }
 }

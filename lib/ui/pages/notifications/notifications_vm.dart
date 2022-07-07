@@ -61,24 +61,26 @@ class NotificationsViewModel extends BaseModel {
         await _notificationRepo.getUserNotifications(
       _userService.baseUser.uid,
     );
-    _logger.d(
-        "no of alerts fetched: ${userNotifications.model.notifications.length}");
-    if (notifications == null || notifications.length == 0) {
-      notifications = userNotifications.model.notifications;
-    } else {
-      postHighlightIndex = notifications.length - 1;
-      appendNotifications(userNotifications.model.notifications);
+    if (userNotifications.code == 200) {
+      _logger.d(
+          "no of alerts fetched: ${userNotifications.model.notifications.length}");
+      if (notifications == null || notifications.length == 0) {
+        notifications = userNotifications.model.notifications;
+      } else {
+        postHighlightIndex = notifications.length - 1;
+        appendNotifications(userNotifications.model.notifications);
+      }
+      lastAlertDocumentId = userNotifications.model.lastDocId;
+      hasMoreAlerts = userNotifications.model.alertsLength == 20;
+      if (!more) {
+        await CacheManager.writeCache(
+            key: CacheManager.CACHE_LATEST_NOTIFICATION_TIME,
+            value: notifications.first.createdTime.seconds.toString(),
+            type: CacheType.string);
+      }
+      highlightNewNotifications(postHighlightIndex);
+      if (more) isMoreNotificationsLoading = false;
     }
-    lastAlertDocumentId = userNotifications.model.lastDocId;
-    hasMoreAlerts = userNotifications.model.alertsLength == 20;
-    if (!more) {
-      await CacheManager.writeCache(
-          key: CacheManager.CACHE_LATEST_NOTIFICATION_TIME,
-          value: notifications.first.createdTime.seconds.toString(),
-          type: CacheType.string);
-    }
-    highlightNewNotifications(postHighlightIndex);
-    if (more) isMoreNotificationsLoading = false;
   }
 
   appendNotifications(List<AlertModel> list) {

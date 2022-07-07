@@ -5,6 +5,7 @@ import 'package:felloapp/core/model/transfer_amount_api_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/verify_amount_api_response_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/repository/augmont_repo.dart';
 import 'package:felloapp/core/repository/signzy_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics_service.dart';
@@ -85,23 +86,22 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
         setState(() {
           isLoading = true;
         });
-        dbProvider
-            .getUserAugmontDetails(_userService.baseUser.uid)
-            .then((detail) {
-          _isInitialized = false;
-          isLoading = false;
-          print(detail.bankAccNo);
-          baseProvider.augmontDetail = detail;
-          if (baseProvider.augmontDetail == null ||
-              widget.isWithdrawFlow ||
-              baseProvider.augmontDetail.bankAccNo == null ||
-              baseProvider.augmontDetail.bankAccNo == "") {
-            inEditMode = true;
-          } else {
-            inEditMode = false;
-          }
-          setState(() {});
-        });
+
+        baseProvider.fetchUserAugmontDetail().then(
+          (value) {
+            _isInitialized = false;
+            isLoading = false;
+            if (baseProvider.augmontDetail == null ||
+                widget.isWithdrawFlow ||
+                baseProvider.augmontDetail.bankAccNo == null ||
+                baseProvider.augmontDetail.bankAccNo == "") {
+              inEditMode = true;
+            } else {
+              inEditMode = false;
+            }
+            setState(() {});
+          },
+        );
       }
       if (baseProvider.augmontDetail == null)
         baseProvider.augmontDetail =

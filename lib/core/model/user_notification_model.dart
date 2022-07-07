@@ -21,8 +21,8 @@ class UserNotificationModel {
 
   factory UserNotificationModel.fromJson(Map<String, dynamic> json) =>
       UserNotificationModel(
-        notifications:
-            List<AlertModel>.from(json["notifications"].map((x) => x)),
+        notifications: List<AlertModel>.from(
+            json["notifications"].map((x) => AlertModel.fromJson(x))),
         lastDocId: json["lastDocId"],
         alertsLength: json["alertsLength"],
       );
@@ -34,7 +34,7 @@ class UserNotificationModel {
       };
   factory UserNotificationModel.fromMap(Map<String, dynamic> map) {
     return UserNotificationModel(
-      notifications: List<AlertModel>.from(map["notifications"].map((x) => x)),
+      notifications: map["notifications"],
       lastDocId: map["lastDocId"],
       alertsLength: map["alertsLength"],
     );

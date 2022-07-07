@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
@@ -11,8 +12,10 @@ import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/eligible_coupon_model.dart';
 import 'package:felloapp/core/model/paytm_models/deposit_fcm_response_model.dart';
+import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/repository/augmont_repo.dart';
 import 'package:felloapp/core/repository/coupons_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
@@ -201,8 +204,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
     }
 
     if (_baseUtil.augmontDetail == null) {
-      _baseUtil.augmontDetail =
-          await _dbModel.getUserAugmontDetails(_userService.baseUser.uid);
+      await _baseUtil.fetchUserAugmontDetail();
     }
 
     if (_baseUtil.augmontDetail == null && !_augmontSecondFetchDone)
@@ -219,8 +221,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
   delayedAugmontCall() async {
     await Future.delayed(Duration(seconds: 2));
-    _baseUtil.augmontDetail =
-        await _dbModel.getUserAugmontDetails(_userService.baseUser.uid);
+    await _baseUtil.fetchUserAugmontDetail();
     _augmontSecondFetchDone = true;
     notifyListeners();
   }

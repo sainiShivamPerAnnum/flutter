@@ -1,11 +1,13 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
+import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/repository/augmont_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
@@ -14,6 +16,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
@@ -70,8 +73,7 @@ class AugmontGoldSellViewModel extends BaseModel {
     fetchLockedGoldQnt();
 
     if (_baseUtil.augmontDetail == null) {
-      _baseUtil.augmontDetail =
-          await _dbModel.getUserAugmontDetails(_userService.baseUser.uid);
+      await _baseUtil.fetchUserAugmontDetail();
     }
     // Check if sell is locked the this particular user
     if (_baseUtil.augmontDetail != null &&
@@ -204,8 +206,7 @@ class AugmontGoldSellViewModel extends BaseModel {
     }
 
     if (_baseUtil.augmontDetail == null) {
-      _baseUtil.augmontDetail =
-          await _dbModel.getUserAugmontDetails(_userService.baseUser.uid);
+      await _baseUtil.fetchUserAugmontDetail();
     }
     if (_baseUtil.augmontDetail == null) {
       BaseUtil.showNegativeAlert(
