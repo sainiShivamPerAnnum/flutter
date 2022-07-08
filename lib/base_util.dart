@@ -44,7 +44,6 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info/package_info.dart';
@@ -194,10 +193,6 @@ class BaseUtil extends ChangeNotifier {
       //Analytics logs app open state.
       BaseAnalytics.init();
       BaseAnalytics.analytics.logAppOpen();
-
-      //remote config for various remote variables
-      logger.i('base util remote config');
-      await BaseRemoteConfig.init();
 
       setPackageInfo();
       await setGameDefaults();

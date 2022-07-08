@@ -25,7 +25,6 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 //Flutter Imports
 import 'package:flutter/material.dart';
 //Pub Imports
-import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';

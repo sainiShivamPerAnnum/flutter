@@ -62,6 +62,7 @@ class LauncherViewModel extends BaseModel {
   initLogic() async {
     try {
       await CacheService.initialize();
+      await BaseRemoteConfig.init();
 
       // check if cache invalidation required
       final now = DateTime.now().millisecondsSinceEpoch;
