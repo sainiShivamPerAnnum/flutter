@@ -73,4 +73,8 @@ class ApiPath {
   static String getAugmontDetail(String uid) => "/user/$uid/augmont";
 
   static String getMilestone(String uid) => "/user/$uid/milestones";
+
+  // Payment Apis
+  static String getWithdrawableGoldQuantity(String uid) =>
+      "/user/$uid/gold/withdrawable";
 }

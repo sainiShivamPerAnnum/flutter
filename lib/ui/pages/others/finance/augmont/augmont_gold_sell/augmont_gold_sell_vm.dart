@@ -7,6 +7,7 @@ import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
@@ -36,6 +37,7 @@ class AugmontGoldSellViewModel extends BaseModel {
   UserService _userService = locator<UserService>();
   TransactionService _txnService = locator<TransactionService>();
   final _analyticsService = locator<AnalyticsService>();
+  final _paymentRepo = locator<PaymentRepository>();
 
   bool isGoldRateFetching = false;
   bool isQntFetching = false;
@@ -135,19 +137,23 @@ class AugmontGoldSellViewModel extends BaseModel {
     isQntFetching = true;
     refresh();
     await _userService.getUserFundWalletData();
-    nonWithdrawableQnt = await _dbModel
-        .getNonWithdrawableAugGoldQuantity(_userService.baseUser.uid);
-
-    if (nonWithdrawableQnt == null || nonWithdrawableQnt < 0)
+    ApiResponse<double> qunatityApiResponse =
+        await _paymentRepo.getNonWithdrawableAugGoldQuantity();
+    if (qunatityApiResponse.code == 200) {
+      nonWithdrawableQnt = qunatityApiResponse.model;
+      if (nonWithdrawableQnt == null || nonWithdrawableQnt < 0)
+        nonWithdrawableQnt = 0.0;
+      if (userFundWallet == null ||
+          userFundWallet.augGoldQuantity == null ||
+          userFundWallet.augGoldQuantity <= 0.0)
+        withdrawableQnt = 0.0;
+      else
+        withdrawableQnt = userFundWallet.augGoldQuantity;
+      withdrawableQnt = math.max(0.0, withdrawableQnt - nonWithdrawableQnt);
+    } else {
       nonWithdrawableQnt = 0.0;
-    if (userFundWallet == null ||
-        userFundWallet.augGoldQuantity == null ||
-        userFundWallet.augGoldQuantity <= 0.0)
       withdrawableQnt = 0.0;
-    else
-      withdrawableQnt = userFundWallet.augGoldQuantity;
-
-    withdrawableQnt = math.max(0.0, withdrawableQnt - nonWithdrawableQnt);
+    }
     isQntFetching = false;
     refresh();
   }

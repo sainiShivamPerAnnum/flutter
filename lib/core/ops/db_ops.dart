@@ -546,48 +546,6 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  ///Total Gold Balance = (current total grams owned * current selling rate)
-  ///Total Gold Principle = old principle + changeAmount
-  ///it shouldnt matter if its a deposit or a sell, all based on selling rate
-
-  //TODO :
-  Future<double> getNonWithdrawableAugGoldQuantity(String userId,
-      [int dayOffset = Constants.AUG_GOLD_WITHDRAW_OFFSET]) async {
-    try {
-      DateTime _dt = DateTime.now();
-      DateTime _reqDate = DateTime(_dt.year, _dt.month, _dt.day - dayOffset,
-          _dt.hour, _dt.minute, _dt.second);
-      logger.i("CALLING: getRecentAugmontDepositTxn");
-      QuerySnapshot querySnapshot = await _api.getRecentAugmontDepositTxn(
-          userId, Timestamp.fromDate(_reqDate));
-      if (querySnapshot.size == 0)
-        return 0.0;
-      else {
-        double _netQuantity = 0.0;
-        for (QueryDocumentSnapshot snapshot in querySnapshot.docs) {
-          Map<String, dynamic> _doc = snapshot.data();
-          if (snapshot.exists && _doc != null && _doc.isNotEmpty) {
-            UserTransaction _txn =
-                UserTransaction.fromMap(snapshot.data(), snapshot.id);
-            if (_txn != null &&
-                _txn.augmnt != null &&
-                _txn.augmnt[UserTransaction.subFldAugCurrentGoldGm] != null &&
-                (_txn.rzp != null || _txn.paytmMap != null)) {
-              double _qnt = BaseUtil.toDouble(
-                  _txn.augmnt[UserTransaction.subFldAugCurrentGoldGm]);
-              _netQuantity += _qnt;
-            }
-          }
-        }
-        if (_netQuantity > 0.0)
-          _netQuantity = BaseUtil.digitPrecision(_netQuantity, 4, false);
-        return _netQuantity;
-      }
-    } catch (e) {
-      return 0.0;
-    }
-  }
-
   ///////////////////USER TICKET BALANCING///////////////////////////////////
   Future<UserTicketWallet> getUserTicketWallet(String id) async {
     try {

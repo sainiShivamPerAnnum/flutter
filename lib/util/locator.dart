@@ -10,6 +10,7 @@ import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/repository/golden_ticket_repo.dart';
 import 'package:felloapp/core/repository/investment_actions_repo.dart';
 import 'package:felloapp/core/repository/notification_repo.dart';
+import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/repository/prizes_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
@@ -136,6 +137,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => PaytmRepository());
   locator.registerLazySingleton(() => ReferralRepo());
   locator.registerLazySingleton(() => GoldenTicketRepository());
+  locator.registerLazySingleton(() => PaymentRepository());
 
   // SPLASH
   locator.registerFactory(() => LauncherViewModel());
