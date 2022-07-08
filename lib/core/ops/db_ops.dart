@@ -487,6 +487,7 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  // TODO:
   Future<bool> logFailure(
       String userId, FailType failType, Map<String, dynamic> data) async {
     try {
@@ -549,6 +550,7 @@ class DBModel extends ChangeNotifier {
   ///Total Gold Principle = old principle + changeAmount
   ///it shouldnt matter if its a deposit or a sell, all based on selling rate
 
+  //TODO :
   Future<double> getNonWithdrawableAugGoldQuantity(String userId,
       [int dayOffset = Constants.AUG_GOLD_WITHDRAW_OFFSET]) async {
     try {
@@ -660,44 +662,6 @@ class DBModel extends ChangeNotifier {
       }
     }
     return filteredcards;
-  }
-
-  Future<List<UserMilestoneModel>> getUserAchievedMilestones(String uid) async {
-    List<UserMilestoneModel> userMilestones = [];
-    try {
-      logger.i("CALLING: fetchUserAchievedTicketMilestonesList");
-      Map<String, dynamic> userMilestonesData =
-          await _api.fetchUserAchievedTicketMilestonesList(uid);
-      logger.d(userMilestonesData.toString());
-      if (userMilestonesData != null) {
-        userMilestonesData['prizeArr']
-            .forEach((e) => userMilestones.add(UserMilestoneModel.fromJson(e)));
-      }
-    } catch (e) {
-      logger.e(e.toString());
-      userMilestones = [];
-    }
-
-    return userMilestones;
-  }
-
-  Future<List<FelloMilestoneModel>> getMilestonesList() async {
-    List<FelloMilestoneModel> felloMilestones = [];
-    try {
-      logger.i("CALLING: fetchGoldenTicketMilestonesList");
-      Map<String, dynamic> felloMilestonesData =
-          await _api.fetchGoldenTicketMilestonesList();
-      logger.d(felloMilestonesData.toString());
-      if (felloMilestonesData != null) {
-        felloMilestonesData['checkpoints'].forEach(
-            (e) => felloMilestones.add(FelloMilestoneModel.fromJson(e)));
-      }
-    } catch (e) {
-      logger.e(e.toString());
-      felloMilestones = [];
-    }
-
-    return felloMilestones;
   }
 
   Future<List<CouponModel>> getCoupons() async {

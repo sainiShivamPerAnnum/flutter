@@ -380,6 +380,7 @@ class Api {
     return ref.doc(Constants.DOC_USER_WALLET_COIN_BALANCE).get();
   }
 
+  //TODO
   //Statistics
   Future<QueryDocumentSnapshot> getStatisticsByFreqGameTypeAndCode(
       String gameType, String freq, String code) async {

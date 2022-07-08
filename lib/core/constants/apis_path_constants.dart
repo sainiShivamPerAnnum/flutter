@@ -71,4 +71,6 @@ class ApiPath {
       "/user/$uid/gt/$goldenTicketId";
 
   static String getAugmontDetail(String uid) => "/user/$uid/augmont";
+
+  static String getMilestone(String uid) => "/user/$uid/milestones";
 }

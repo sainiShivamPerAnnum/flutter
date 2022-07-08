@@ -33,18 +33,22 @@ class GoldenTicket {
   GoldenTicket.fromJson(Map<String, dynamic> json, String docId) {
     gtId = docId;
     userId = json['userId'];
-    timestamp = json['timestamp'] != null
-        ? TimestampModel.fromMap(json['timestamp'])
-        : null;
+    timestamp = json['timestamp'].runtimeType == Timestamp
+        ? TimestampModel(seconds: 0, nanoseconds: 0)
+        : json['timestamp'] != null
+            ? TimestampModel.fromMap(json['timestamp'])
+            : null;
     eventType = json['eventType'];
     gtType = json['gtType'];
     prizeSubtype = json['prizeSubtype'];
     note = json['note'];
     canTransfer = json['canTransfer'];
     isRewarding = json['isRewarding'];
-    redeemedTimestamp = json['redeemedTimestamp'] != null
-        ? TimestampModel.fromMap(json['redeemedTimestamp'])
-        : null;
+    redeemedTimestamp = json['redeemedTimestamp'].runtimeType == Timestamp
+        ? TimestampModel(seconds: 0, nanoseconds: 0)
+        : json['redeemedTimestamp'] != null
+            ? TimestampModel.fromMap(json['redeemedTimestamp'])
+            : null;
     rewardArr =
         json['rewardArr'] != null ? Reward.objArray(json['rewardArr']) : [];
     version = json['version'];

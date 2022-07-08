@@ -9,6 +9,7 @@ class PrizesRepository {
   final _logger = locator<CustomLogger>();
   final _api = locator<Api>();
 
+  //TODO
   Future<ApiResponse<PrizesModel>> getPrizesPerGamePerFreq(
       String gameCode, String freq) async {
     try {
