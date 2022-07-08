@@ -1,3 +1,4 @@
+import 'package:felloapp/core/model/helper_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 
 class AlertModel {
@@ -7,6 +8,9 @@ class AlertModel {
   String subtitle;
   String title;
   bool isHighlighted = false;
+
+  static final helper =
+      HelperModel<AlertModel>((map) => AlertModel.fromMap(map));
 
   AlertModel(
       {this.id, this.actionUri, this.createdTime, this.subtitle, this.title});

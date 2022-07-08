@@ -4,7 +4,6 @@ import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
-import 'package:felloapp/core/repository/augmont_repo.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/coupons_repo.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
@@ -137,8 +136,6 @@ void setupLocator() {
   locator.registerLazySingleton(() => PaytmRepository());
   locator.registerLazySingleton(() => ReferralRepo());
   locator.registerLazySingleton(() => GoldenTicketRepository());
-  locator.registerLazySingleton(() => NotificationRepository());
-  locator.registerLazySingleton(() => AugmontRepository());
 
   // SPLASH
   locator.registerFactory(() => LauncherViewModel());

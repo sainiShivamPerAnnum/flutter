@@ -6,6 +6,7 @@ import 'dart:math';
 //Pub Imports
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/repository/augmont_repo.dart';
+import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
@@ -61,8 +62,7 @@ class BaseUtil extends ChangeNotifier {
   final LocalDBModel _lModel = locator<LocalDBModel>();
   final AppState _appState = locator<AppState>();
   final UserService _userService = locator<UserService>();
-
-  final _augmontRepository = locator<AugmontRepository>();
+  final _userRepo = locator<UserRepository>();
 
   BaseUser _myUser;
   UserFundWallet _userFundWallet;
@@ -929,7 +929,7 @@ class BaseUtil extends ChangeNotifier {
 
   Future<void> fetchUserAugmontDetail() async {
     ApiResponse<UserAugmontDetail> augmontDetailResponse =
-        await _augmontRepository.getUserAugmontDetails();
+        await _userRepo.getUserAugmontDetails();
     if (augmontDetailResponse.code == 200) {
       augmontDetail = augmontDetailResponse.model;
     }

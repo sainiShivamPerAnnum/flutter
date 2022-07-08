@@ -1,8 +1,7 @@
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/alert_model.dart';
-import 'package:felloapp/core/model/user_notification_model.dart';
-import 'package:felloapp/core/repository/notification_repo.dart';
+import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -14,8 +13,8 @@ import 'package:flutter/cupertino.dart';
 class NotificationsViewModel extends BaseModel {
   //dependencies
   final _userService = locator<UserService>();
+  final _userRepo = locator<UserRepository>();
   final _logger = locator<CustomLogger>();
-  final _notificationRepo = locator<NotificationRepository>();
 
   //local variables
   List<AlertModel> notifications;
@@ -57,21 +56,20 @@ class NotificationsViewModel extends BaseModel {
   fetchNotifications(bool more) async {
     if (more) isMoreNotificationsLoading = true;
 
-    ApiResponse<UserNotificationModel> userNotifications =
-        await _notificationRepo.getUserNotifications(
+    ApiResponse<List<AlertModel>> userNotifications =
+        await _userRepo.getUserNotifications(
       _userService.baseUser.uid,
     );
     if (userNotifications.code == 200) {
-      _logger.d(
-          "no of alerts fetched: ${userNotifications.model.notifications.length}");
+      _logger.d("no of alerts fetched: ${userNotifications.model.length}");
       if (notifications == null || notifications.length == 0) {
-        notifications = userNotifications.model.notifications;
+        notifications = userNotifications.model;
       } else {
         postHighlightIndex = notifications.length - 1;
-        appendNotifications(userNotifications.model.notifications);
+        appendNotifications(userNotifications.model);
       }
-      lastAlertDocumentId = userNotifications.model.lastDocId;
-      hasMoreAlerts = userNotifications.model.alertsLength == 20;
+      lastAlertDocumentId = userNotifications.model.last.id;
+      hasMoreAlerts = userNotifications.model.length == 20;
       if (!more) {
         await CacheManager.writeCache(
             key: CacheManager.CACHE_LATEST_NOTIFICATION_TIME,

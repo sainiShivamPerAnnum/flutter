@@ -1,11 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
+import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/fundbalance_model.dart';
+import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/api_service.dart';
+import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
@@ -161,6 +164,93 @@ class UserRepository extends BaseRepo {
       logger.d("Device added");
     } catch (e) {
       logger.e(e);
+    }
+  }
+
+  Future<ApiResponse<UserAugmontDetail>> getUserAugmontDetails() async {
+    try {
+      UserAugmontDetail augmont;
+      final augmontRespone = await APIService.instance.getData(
+        ApiPath.getAugmontDetail(
+          this.userService.baseUser.uid,
+        ),
+        cBaseUrl: _baseUrl,
+      );
+
+      augmont = UserAugmontDetail.fromMap(augmontRespone['data']);
+      return ApiResponse<UserAugmontDetail>(model: augmont, code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError("Unable to fetch augmont", 400);
+    }
+  }
+
+  Future<ApiResponse<bool>> checkIfUserHasNewNotifications() async {
+    try {
+      final latestNotificationsResponse = await APIService.instance.getData(
+        ApiPath.getLatestNotication(this.userService.baseUser.uid),
+        cBaseUrl: _baseUrl,
+      );
+
+      List<AlertModel> notifications = [];
+
+      for (var element in latestNotificationsResponse["data"]) {
+        notifications.add(AlertModel.fromMap(element));
+      }
+
+      String latestNotifTime = await CacheManager.readCache(
+          key: CacheManager.CACHE_LATEST_NOTIFICATION_TIME);
+      if (latestNotifTime != null) {
+        int latestTimeInSeconds = int.tryParse(latestNotifTime);
+        AlertModel latestAlert = notifications[0].createdTime.seconds >
+                notifications[1].createdTime.seconds
+            ? notifications[0]
+            : notifications[1];
+        if (latestAlert.createdTime.seconds > latestTimeInSeconds)
+          return ApiResponse<bool>(model: true, code: 200);
+        else
+          return ApiResponse<bool>(model: false, code: 200);
+      } else {
+        logger.d("No past notification time found");
+        return ApiResponse<bool>(model: false, code: 200);
+      }
+    } catch (e) {
+      logger.e(e);
+      return ApiResponse.withError(
+        "Unable to fetch checkIfUserHasNewNotifications",
+        400,
+      );
+    }
+  }
+
+  Future<ApiResponse<List<AlertModel>>> getUserNotifications(
+    String lastDocId,
+  ) async {
+    try {
+      // List<AlertModel> notifications = [];
+      final userNotifications = await APIService.instance.getData(
+        ApiPath.getNotications(this.userService.baseUser.uid),
+        cBaseUrl: _baseUrl,
+        queryParams: {
+          "lastDocId": lastDocId,
+        },
+      );
+
+      // for (var element in userNotifications["data"]) {
+      //   notifications.add(AlertModel.fromMap(element));
+      // }
+      final responseData = userNotifications["data"];
+
+      return ApiResponse<List<AlertModel>>(
+        model: AlertModel.helper.fromMapArray(responseData),
+        code: 200,
+      );
+    } catch (e) {
+      logger.e(e);
+      return ApiResponse.withError(
+        "Unable to fetch user notifications",
+        400,
+      );
     }
   }
 }
