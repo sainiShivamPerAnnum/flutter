@@ -397,24 +397,6 @@ class Api {
     }
   }
 
-  //Prizes
-  Future<QueryDocumentSnapshot> getPrizesPerGamePerFreq(
-      String gameCode, String freq) async {
-    Query _query = _db
-        .collection(Constants.COLN_PRIZES)
-        .where('category', isEqualTo: gameCode)
-        .where('freq', isEqualTo: freq);
-    try {
-      QuerySnapshot _querySnapshot = await _query.get();
-      if (_querySnapshot.docs != null) {
-        logger.i("No prizes for perticular category and freq");
-      }
-      return _querySnapshot.docs?.first;
-    } catch (e) {
-      throw e;
-    }
-  }
-
   Future<QueryDocumentSnapshot> fetchFaqs(String category) async {
     Query _query = _db
         .collection(Constants.COLN_FAQS)

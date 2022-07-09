@@ -12,7 +12,6 @@ import 'package:felloapp/core/repository/golden_ticket_repo.dart';
 import 'package:felloapp/core/repository/investment_actions_repo.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
-import 'package:felloapp/core/repository/prizes_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/repository/signzy_repo.dart';
 import 'package:felloapp/core/repository/ticket_repo.dart';
@@ -125,7 +124,6 @@ void setupLocator() {
   locator.registerLazySingleton(() => HttpModel());
   locator.registerLazySingleton(() => AugmontModel());
   locator.registerLazySingleton(() => UserRepository());
-  locator.registerLazySingleton(() => PrizesRepository());
   locator.registerLazySingleton(() => FlcActionsRepo());
   locator.registerLazySingleton(() => WinnersRepository());
   locator.registerLazySingleton(() => TambolaRepo());
