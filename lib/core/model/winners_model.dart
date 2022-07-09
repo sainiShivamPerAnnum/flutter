@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 
 class WinnersModel {
   List<Winners> winners;
   String code;
   String gametype;
   String freq;
-  Timestamp timestamp;
+  TimestampModel timestamp;
 
   WinnersModel(
       {this.winners, this.code, this.gametype, this.freq, this.timestamp});
@@ -20,7 +21,7 @@ class WinnersModel {
     code = json['code'];
     gametype = json['gametype'];
     freq = json['freq'];
-    timestamp = json['timestamp'];
+    timestamp = TimestampModel.fromMap(json['timestamp']);
   }
 
   Map<String, dynamic> toJson() {
@@ -29,7 +30,7 @@ class WinnersModel {
       'code': code,
       'gametype': gametype,
       'freq': freq,
-      'timestamp': timestamp.microsecondsSinceEpoch.toString(),
+      'timestamp': timestamp.toMap(),
     };
   }
 
@@ -45,8 +46,10 @@ class WinnersModel {
 
   factory WinnersModel.fromMap(Map<String, dynamic> map, String gameType) {
     return WinnersModel(
-      winners: List<Winners>.from(
-          map['winners']?.map((x) => Winners.fromMap(x, gameType))),
+      winners: map['winners'] == null
+          ? []
+          : List<Winners>.from(
+              map['winners']?.map((x) => Winners.fromMap(x, gameType))),
       code: map['code'],
       gametype: map['gametype'],
       freq: map['freq'],

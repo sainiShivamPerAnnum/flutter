@@ -80,4 +80,6 @@ class ApiPath {
 
   // Getter Apis
   static const String statistics = '/statistics';
+  static String getwinner(String type, String freq) =>
+      "/leaderboard/type/$type/freq/$freq";
 }

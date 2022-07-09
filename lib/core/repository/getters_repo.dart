@@ -31,4 +31,21 @@ class GetterRepository extends BaseRepo {
       return ApiResponse.withError("Unable to fetch statistics", 400);
     }
   }
+
+  Future<ApiResponse> getWinnerByFreqGameType({
+    String type,
+    String freq,
+  }) async {
+    try {
+      final winnersResponse = await APIService.instance.getData(
+        ApiPath.getwinner(type, freq),
+        cBaseUrl: _baseUrl,
+      );
+
+      return ApiResponse(model: winnersResponse["data"], code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError("Unable to fetch statistics", 400);
+    }
+  }
 }
