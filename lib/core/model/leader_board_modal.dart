@@ -1,122 +1,75 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 
 class LeaderBoardModal {
-  String code;
-  String gametype;
-  String freq;
-  Timestamp lastupdated;
-  List<Scoreboard> scoreboard;
-
   LeaderBoardModal({
-    this.code,
-    this.gametype,
+    this.id,
     this.freq,
-    this.lastupdated,
+    this.gametype,
+    this.code,
     this.scoreboard,
+    this.lastupdated,
   });
 
-  LeaderBoardModal.fromJson(Map<String, dynamic> json) {
-    code = json['code'];
-    gametype = json['gametype'];
-    freq = json['freq'];
-    lastupdated = json['lastupdated'];
-    if (json['scoreboard'] != null) {
-      scoreboard = <Scoreboard>[];
-      json['scoreboard'].forEach((v) {
-        scoreboard.add(new Scoreboard.fromJson(v));
-      });
-    }
-  }
+  String id;
+  String freq;
+  String gametype;
+  String code;
+  List<LeaderBoard> scoreboard;
+  TimestampModel lastupdated;
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['code'] = this.code;
-    data['gametype'] = this.gametype;
-    data['freq'] = this.freq;
-    data['lastupdated'] = this.lastupdated;
-    if (this.scoreboard != null) {
-      data['scoreboard'] = this.scoreboard.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
+  factory LeaderBoardModal.fromMap(Map<String, dynamic> map) =>
+      LeaderBoardModal(
+        id: map["id"],
+        freq: map["freq"],
+        gametype: map["gametype"],
+        code: map["code"],
+        scoreboard: List<LeaderBoard>.from(
+            map["scoreboard"].map((x) => LeaderBoard.fromMap(x))),
+        lastupdated: TimestampModel.fromMap(map["lastupdated"]),
+      );
 
-  Map<String, dynamic> toMap() {
-    return {
-      'code': code,
-      'gametype': gametype,
-      'freq': freq,
-      'lastupdated': lastupdated.millisecondsSinceEpoch,
-      'scoreboard': scoreboard?.map((x) => x.toMap())?.toList(),
-    };
-  }
-
-  factory LeaderBoardModal.fromMap(Map<String, dynamic> map) {
-    return LeaderBoardModal(
-      code: map['code'],
-      gametype: map['gametype'],
-      freq: map['freq'],
-      lastupdated: map['lastupdated'],
-      scoreboard: List<Scoreboard>.from(
-          map['scoreboard']?.map((x) => Scoreboard.fromMap(x))),
-    );
-  }
+  Map<String, dynamic> toMap() => {
+        "id": id,
+        "freq": freq,
+        "gametype": gametype,
+        "code": code,
+        "scoreboard": List<dynamic>.from(scoreboard.map((x) => x.toMap())),
+        "lastupdated": lastupdated.toMap(),
+      };
 }
 
-class Scoreboard {
+class LeaderBoard {
+  LeaderBoard({
+    this.isUserEligible,
+    this.timestamp,
+    this.userid,
+    this.username,
+    this.score,
+    this.gameDuration,
+  });
+
+  bool isUserEligible;
+  TimestampModel timestamp;
+  String userid;
+  String username;
   int score;
   int gameDuration;
-  bool isUserEligible;
-  String userid;
-  Timestamp timestamp;
-  String username;
 
-  Scoreboard(
-      {this.score,
-      this.gameDuration,
-      this.isUserEligible,
-      this.userid,
-      this.timestamp,
-      this.username});
+  factory LeaderBoard.fromMap(Map<String, dynamic> map) => LeaderBoard(
+        isUserEligible: map["isUserEligible"],
+        timestamp: TimestampModel.fromMap(map["timestamp"]),
+        userid: map["userid"],
+        username: map["username"],
+        score: map["score"],
+        gameDuration: map["gameDuration"],
+      );
 
-  Scoreboard.fromJson(Map<String, dynamic> json) {
-    score = json['score'];
-    gameDuration = json['gameDuration'];
-    isUserEligible = json['isUserEligible'];
-    userid = json['userid'];
-    timestamp = json['timestamp'];
-    username = json['username'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['score'] = this.score;
-    data['gameDuration'] = this.gameDuration;
-    data['isUserEligible'] = this.isUserEligible;
-    data['userid'] = this.userid;
-    data['timestamp'] = this.timestamp;
-    data['username'] = this.username;
-    return data;
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'score': score,
-      'gameDuration': gameDuration,
-      'isUserEligible': isUserEligible,
-      'userid': userid,
-      'timestamp': timestamp.millisecondsSinceEpoch,
-      'username': username,
-    };
-  }
-
-  factory Scoreboard.fromMap(Map<String, dynamic> map) {
-    return Scoreboard(
-      score: map['score'],
-      isUserEligible: map['isUserEligible'],
-      gameDuration: map['gameDuration'],
-      userid: map['userid'],
-      timestamp: map['timestamp'],
-      username: map['username'],
-    );
-  }
+  Map<String, dynamic> toMap() => {
+        "isUserEligible": isUserEligible,
+        "timestamp": timestamp.toMap(),
+        "userid": userid,
+        "username": username,
+        "score": score,
+        "gameDuration": gameDuration,
+      };
 }

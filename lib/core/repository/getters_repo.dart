@@ -1,0 +1,34 @@
+import 'package:felloapp/core/constants/apis_path_constants.dart';
+import 'package:felloapp/core/repository/base_repo.dart';
+import 'package:felloapp/core/service/api_service.dart';
+import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/flavor_config.dart';
+
+class GetterRepository extends BaseRepo {
+  final _baseUrl = FlavorConfig.isDevelopment()
+      ? 'https://qdp0idzhjc.execute-api.ap-south-1.amazonaws.com/dev'
+      : '';
+
+  Future<ApiResponse> getStatisticsByFreqGameTypeAndCode({
+    String type,
+    String freq,
+    String code,
+  }) async {
+    try {
+      final statisticsResponse = await APIService.instance.getData(
+        ApiPath.statistics,
+        cBaseUrl: _baseUrl,
+        queryParams: {
+          "type": type,
+          "freq": freq,
+          "code": code,
+        },
+      );
+
+      return ApiResponse(model: statisticsResponse["data"], code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError("Unable to fetch statistics", 400);
+    }
+  }
+}

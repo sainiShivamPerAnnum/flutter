@@ -9,7 +9,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class AllParticipantsView extends StatelessWidget {
-  final List<TopSavers> participants;
+  final List<TopSaver> participants;
   final String type;
   AllParticipantsView({this.participants, this.type});
   bool isInteger(num value) => value is int || value == value.roundToDouble();

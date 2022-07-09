@@ -95,7 +95,6 @@ class WinnersRepository {
               .add(WinnersModel.fromMap(_response[i].data(), gameType));
         }
       }
-
       // _logger.d(past.data().toString());
       return ApiResponse(model: pastWinnersList, code: 200);
     } catch (e) {

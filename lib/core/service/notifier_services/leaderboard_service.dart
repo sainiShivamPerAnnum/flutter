@@ -1,9 +1,12 @@
+import 'dart:developer';
+
 import 'package:felloapp/core/enums/leaderboard_service_enum.dart';
 import 'package:felloapp/core/model/leader_board_modal.dart';
 import 'package:felloapp/core/model/referral_board_modal.dart';
-import 'package:felloapp/core/repository/statistics_repo.dart';
+import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/code_from_freq.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,7 +16,7 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 class LeaderboardService
     extends PropertyChangeNotifier<LeaderBoardServiceProperties> {
   final _logger = locator<CustomLogger>();
-  final _statsRepo = locator<StatisticsRepository>();
+  final _getterRepo = locator<GetterRepository>();
   final _userService = locator<UserService>();
   final ScrollController ownController = ScrollController();
   final ScrollController parentController = ScrollController();
@@ -40,21 +43,30 @@ class LeaderboardService
   }
 
   fetchReferralLeaderBoard() async {
-    ApiResponse<ReferralBoardModal> response =
-        await _statsRepo.getReferralBoard("REF-ACTIVE", "monthly");
+    String code = CodeFromFreq.getCodeFromFreq("monthly");
+    ApiResponse response = await _getterRepo.getStatisticsByFreqGameTypeAndCode(
+      type: "REF-ACTIVE",
+      freq: "monthly",
+      code: code,
+    );
     if (response.code == 200) {
       _referralLeaderBoard.clear();
-      _referralLeaderBoard = response.model.scoreboard;
+      _referralLeaderBoard =
+          ReferralBoardModal.fromMap(response.model).scoreboard;
       setReferralLeaderBoard();
       _logger.d("Referral Leaderboard successfully fetched");
     }
   }
 
   fetchWebGameLeaderBoard({@required String game}) async {
-    ApiResponse<LeaderBoardModal> response =
-        await _statsRepo.getLeaderBoard(game, "weekly");
+    String code = CodeFromFreq.getCodeFromFreq("weekly");
+    ApiResponse response = await _getterRepo.getStatisticsByFreqGameTypeAndCode(
+      type: game,
+      freq: "weekly",
+      code: code,
+    );
     if (response.code == 200) {
-      _WebGameLeaderBoard = response.model;
+      _WebGameLeaderBoard = LeaderBoardModal.fromMap(response.model);
       setWebGameLeaderBoard();
       _logger.d("$game Leaderboard successfully fetched");
     } else {
