@@ -1,12 +1,9 @@
-import 'dart:developer';
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
-import 'package:felloapp/core/model/user_ticket_wallet_model.dart';
 import 'package:felloapp/core/repository/ticket_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
@@ -43,7 +40,6 @@ class TambolaGameViewModel extends BaseModel {
 
   List<TambolaBoard> get userWeeklyBoards => tambolaService.userWeeklyBoards;
 
-  UserTicketWallet get userTicketWallet => tambolaService.userTicketWallet;
   List<Ticket> _tambolaBoardViews;
 
   int ticketGenerationTryCount = 0;
@@ -117,15 +113,14 @@ class TambolaGameViewModel extends BaseModel {
     return int.tryParse(_tambolaCost);
   }
 
-  int get totalActiveTickets =>
-      tambolaService.userTicketWallet.getActiveTickets();
+  int get totalActiveTickets => tambolaService.ticketCount;
 
   Future<void> init() async {
     ticketCountController =
         new TextEditingController(text: buyTicketCount.toString());
 
     // Ticket wallet check
-    await tambolaService.getUserTicketWalletData();
+    await tambolaService.getTicketCount();
 
     ///Weekly Picks check
     if (weeklyDigits == null) {

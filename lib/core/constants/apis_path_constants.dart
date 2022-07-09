@@ -63,6 +63,7 @@ class ApiPath {
   //tambola game Apis
   static String tambolaTickets(String uid) => "/user/$uid/tickets";
   static String buyTambolaTicket(String uid) => "/user/$uid/tickets";
+  static String ticketCount(String uid) => "/user/$uid/tickets/count";
   static const String dailyPicks = '/picks';
 
   get kSingleTransactions => "/payments";

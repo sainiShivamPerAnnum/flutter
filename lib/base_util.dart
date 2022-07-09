@@ -23,7 +23,6 @@ import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/model/user_icici_detail_model.dart';
-import 'package:felloapp/core/model/user_ticket_wallet_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -67,7 +66,7 @@ class BaseUtil extends ChangeNotifier {
 
   BaseUser _myUser;
   UserFundWallet _userFundWallet;
-  UserTicketWallet _userTicketWallet;
+  int _ticketCount;
   User firebaseUser;
   FirebaseAnalytics baseAnalytics;
   List<FeedCard> feedCards;
@@ -672,7 +671,7 @@ class BaseUtil extends ChangeNotifier {
       isNewUser = null;
       isFirstFetchDone = null;
       _userFundWallet = null;
-      _userTicketWallet = null;
+      _ticketCount = null;
       firebaseUser = null;
       baseAnalytics = null;
       feedCards = null;
@@ -710,30 +709,6 @@ class BaseUtil extends ChangeNotifier {
       logger.e('Failed to clear data/sign out user: ' + e.toString());
       return false;
     }
-  }
-
-  int checkTicketCountValidity(List<TambolaBoard> requestedBoards) {
-    if (requestedBoards != null && _userTicketWallet.getActiveTickets() > 0) {
-      if (requestedBoards.length < _userTicketWallet.getActiveTickets()) {
-        logger.d('Requested board count is less than needed tickets');
-        int ticketCountRequired =
-            _userTicketWallet.getActiveTickets() - requestedBoards.length;
-
-        if (ticketCountRequired > 0 && !BaseUtil.ticketRequestSent) {
-          BaseUtil.ticketRequestSent = true;
-          BaseUtil.ticketCountBeforeRequest = requestedBoards.length;
-          return ticketCountRequired;
-        }
-      }
-      if (BaseUtil.ticketRequestSent) {
-        if (requestedBoards.length > BaseUtil.ticketCountBeforeRequest) {
-          logger.d(
-              'Previous request had completed and now the ticket count has increased');
-          //BaseUtil.ticketRequestSent = false; //not really needed i think
-        }
-      }
-    }
-    return 0;
   }
 
   getProfilePicture() async {
@@ -1076,10 +1051,10 @@ class BaseUtil extends ChangeNotifier {
 
   DateTime get userCreationTimestamp => _userCreationTimestamp;
 
-  UserTicketWallet get userTicketWallet => _userTicketWallet;
+  int get ticketCount => _ticketCount;
 
-  set userTicketWallet(UserTicketWallet value) {
-    _userTicketWallet = value;
+  set ticketCount(int value) {
+    _ticketCount = value;
     notifyListeners();
   }
 
