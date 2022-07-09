@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/repository/internal_ops_repo.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
@@ -50,6 +51,7 @@ class LoginControllerViewModel extends BaseModel {
   final dbProvider = locator<DBModel>();
   final _userRepo = locator<UserRepository>();
   static LocalDBModel lclDbProvider = locator<LocalDBModel>();
+  final internalOps = locator<InternalOpsRepository>();
 
   //Controllers
   PageController _controller;
@@ -470,7 +472,7 @@ class LoginControllerViewModel extends BaseModel {
       return;
     }
 
-    Map<String, dynamic> response = await dbProvider.initDeviceInfo();
+    Map<String, dynamic> response = await internalOps.initDeviceInfo();
     if (response != null) {
       final String deviceId = response["deviceId"];
       final String platform = response["platform"];

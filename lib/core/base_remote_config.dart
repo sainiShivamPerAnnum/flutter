@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/repository/internal_ops_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
@@ -11,6 +12,7 @@ class BaseRemoteConfig {
   static DBModel _dbProvider = locator<DBModel>();
   static BaseUtil _baseProvider = locator<BaseUtil>();
   static UserService _userService = locator<UserService>();
+  static final internalOps = locator<InternalOpsRepository>();
 
   ///Each config is set as a map = {name, default value}
   static const Map<String, String> _DRAW_PICK_TIME = {'draw_pick_time': '18'};
@@ -278,8 +280,11 @@ class BaseRemoteConfig {
           'error_type': 'Remote config details fetch failed',
           'error_msg': 'Remote config fetch failed, using default values.'
         };
-        _dbProvider.logFailure(_userService.baseUser.uid,
-            FailType.RemoteConfigFailed, errorDetails);
+        internalOps.logFailure(
+          _userService.baseUser.uid,
+          FailType.RemoteConfigFailed,
+          errorDetails,
+        );
       }
       return false;
     }

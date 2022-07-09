@@ -16,6 +16,7 @@ import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/coupons_repo.dart';
+import 'package:felloapp/core/repository/internal_ops_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
@@ -60,6 +61,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   final UserService _userService = locator<UserService>();
   final TransactionService _txnService = locator<TransactionService>();
   final GoldenTicketService _gtService = GoldenTicketService();
+  final internalOps = locator<InternalOpsRepository>();
 
   final _analyticsService = locator<AnalyticsService>();
   final _couponRepo = locator<CouponRepository>();
@@ -393,7 +395,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
       _txnService.updateTransactions();
     } catch (e) {
       _logger.e(e);
-      _dbModel.logFailure(
+      internalOps.logFailure(
           _userService.baseUser.uid, FailType.DepositPayloadError, e);
     }
   }

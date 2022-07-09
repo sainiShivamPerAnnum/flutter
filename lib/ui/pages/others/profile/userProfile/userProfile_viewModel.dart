@@ -2,6 +2,7 @@
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/repository/internal_ops_repo.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -53,6 +54,7 @@ class UserProfileVM extends BaseModel {
   final _paytmService = locator<PaytmService>();
   final S _locale = locator<S>();
   final BaseUtil baseProvider = locator<BaseUtil>();
+  final internalOps = locator<InternalOpsRepository>();
   double picSize;
   XFile selectedProfilePicture;
   ValueChanged<bool> upload;
@@ -449,7 +451,7 @@ class UserProfileVM extends BaseModel {
         Map<String, dynamic> errorDetails = {
           'error_msg': 'Method call to upload picture failed',
         };
-        _dbModel.logFailure(_userService.baseUser.uid,
+        internalOps.logFailure(_userService.baseUser.uid,
             FailType.ProfilePictureUpdateFailed, errorDetails);
       }
       print('$e');

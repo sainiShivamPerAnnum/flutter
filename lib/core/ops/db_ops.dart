@@ -17,6 +17,7 @@ import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/model/user_ticket_wallet_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
+import 'package:felloapp/core/repository/internal_ops_repo.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_milestones/golden_milestones_vm.dart';
@@ -39,43 +40,9 @@ class DBModel extends ChangeNotifier {
   Api _api = locator<Api>();
   Lock _lock = new Lock();
   final Log log = new Log("DBModel");
-  final logger = locator<CustomLogger>();
   final FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.instance;
-  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-  bool isDeviceInfoInitiated = false;
-  String phoneModel;
-  String softwareVersion;
-
-  Future<Map<String, dynamic>> initDeviceInfo() async {
-    String _deviceId;
-    String _platform;
-    if (!isDeviceInfoInitiated) {
-      try {
-        if (Platform.isIOS) {
-          IosDeviceInfo iosDeviceInfo;
-          iosDeviceInfo = await deviceInfo.iosInfo;
-          phoneModel = iosDeviceInfo.model;
-          softwareVersion = iosDeviceInfo.systemVersion;
-          _deviceId = iosDeviceInfo.identifierForVendor;
-          _platform = "ios";
-          logger.d(
-              "Device Information - \n $phoneModel \n $softwareVersion \n $_deviceId");
-        } else if (Platform.isAndroid) {
-          AndroidDeviceInfo androidDeviceInfo = await deviceInfo.androidInfo;
-          phoneModel = androidDeviceInfo.model;
-          softwareVersion = androidDeviceInfo.version.release;
-          _deviceId = androidDeviceInfo.androidId;
-          _platform = "android";
-          logger.d(
-              "Device Information - \n $phoneModel \n $softwareVersion \n $_deviceId");
-        }
-        isDeviceInfoInitiated = true;
-        return {"deviceId": _deviceId, "platform": _platform};
-      } catch (e) {
-        log.error('Initiating Device Info failed');
-      }
-    }
-  }
+  final logger = locator<CustomLogger>();
+  final internalOps = locator<InternalOpsRepository>();
 
   Future<bool> updateClientToken(BaseUser user, String token) async {
     try {
@@ -103,8 +70,11 @@ class DBModel extends ChangeNotifier {
       try {
         user = BaseUser.fromMap(doc.data(), id);
       } catch (e) {
-        logFailure(
-            id, FailType.UserDataCorrupted, {'message': "User data corrupted"});
+        internalOps.logFailure(
+          id,
+          FailType.UserDataCorrupted,
+          {'message': "User data corrupted"},
+        );
         return ApiResponse.withError("User data corrupted", 400);
       }
 
@@ -480,52 +450,6 @@ class DBModel extends ChangeNotifier {
       };
       logger.i("CALLING: addFeedbackDocument");
       await _api.addFeedbackDocument(fdbkMap);
-      return true;
-    } catch (e) {
-      log.error(e.toString());
-      return false;
-    }
-  }
-
-  // TODO:
-  Future<bool> logFailure(
-      String userId, FailType failType, Map<String, dynamic> data) async {
-    try {
-      Map<String, dynamic> dMap = (data == null) ? {} : data;
-      if (!isDeviceInfoInitiated) {
-        await initDeviceInfo();
-      }
-      dMap['user_id'] = userId;
-      dMap['fail_type'] = failType.value();
-      dMap['manually_resolved'] = false;
-      dMap['app_version'] =
-          '${BaseUtil.packageInfo.version}+${BaseUtil.packageInfo.buildNumber}';
-      if (phoneModel != null) {
-        dMap['phone_model'] = phoneModel;
-      }
-      if (softwareVersion != null) {
-        dMap['phone_version'] = softwareVersion;
-      }
-      dMap['timestamp'] = Timestamp.now();
-      try {
-        await firebaseCrashlytics.recordError(failType.toString(),
-            StackTrace.fromString(failType.value().toUpperCase()),
-            reason: dMap);
-      } catch (e) {
-        log.error('Crashlytics record error fail : $e');
-      }
-      if (failType == FailType.UserAugmontSellFailed ||
-          failType == FailType.UserPaymentCompleteTxnFailed ||
-          failType == FailType.UserDataCorrupted) {
-        logger.i("CALLING: addPriorityFailedReport");
-        await _api.addPriorityFailedReport(dMap);
-      } else if (failType == FailType.TambolaTicketGenerationFailed) {
-        logger.i("CALLING: addGameFailedReport");
-        await _api.addGameFailedReport(dMap);
-      } else {
-        logger.i("CALLING: addFailedReportDocument");
-        await _api.addFailedReportDocument(dMap);
-      }
       return true;
     } catch (e) {
       log.error(e.toString());

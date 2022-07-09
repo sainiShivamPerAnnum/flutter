@@ -5,6 +5,7 @@ import 'dart:developer' as dev;
 import 'dart:math';
 //Pub Imports
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/core/repository/internal_ops_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/base_remote_config.dart';
@@ -62,6 +63,7 @@ class BaseUtil extends ChangeNotifier {
   final AppState _appState = locator<AppState>();
   final UserService _userService = locator<UserService>();
   final _userRepo = locator<UserRepository>();
+  final internalOps = locator<InternalOpsRepository>();
 
   BaseUser _myUser;
   UserFundWallet _userFundWallet;
@@ -405,7 +407,7 @@ class BaseUtil extends ChangeNotifier {
         'User number': _myUser.mobile,
         'Error Type': 'Unread message count failed'
       };
-      _dbModel.logFailure(_myUser.uid, FailType.FreshchatFail, errorDetails);
+      internalOps.logFailure(_myUser.uid, FailType.FreshchatFail, errorDetails);
       return false;
     }
   }
@@ -951,7 +953,7 @@ class BaseUtil extends ChangeNotifier {
     }).catchError((err) {
       if (_myUser.uid != null) {
         var errorDetails = {'error_msg': err.toString()};
-        _dbModel.logFailure(
+        internalOps.logFailure(
             _myUser.uid, FailType.UserAugmontBalanceUpdateFailed, errorDetails);
       }
       print('$err');

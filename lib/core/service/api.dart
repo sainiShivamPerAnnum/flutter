@@ -203,18 +203,6 @@ class Api {
     return _db.collection(Constants.COLN_FEEDBACK).add(data);
   }
 
-  Future<void> addGameFailedReport(Map data) {
-    return _db.collection('gamefailreports').add(data);
-  }
-
-  Future<void> addPriorityFailedReport(Map data) {
-    return _db.collection('priorityfailreports').add(data);
-  }
-
-  Future<void> addFailedReportDocument(Map data) {
-    return _db.collection(Constants.COLN_FAILREPORTS).add(data);
-  }
-
   Future<QuerySnapshot> getWinnersByWeekCde(int weekCde) async {
     Query query = _db
         .collection(Constants.COLN_WINNERS)

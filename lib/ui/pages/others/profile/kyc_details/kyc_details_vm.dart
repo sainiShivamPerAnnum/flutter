@@ -1,11 +1,9 @@
-import 'dart:developer';
-
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/verify_pan_response_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
+import 'package:felloapp/core/repository/internal_ops_repo.dart';
 import 'package:felloapp/core/repository/signzy_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -13,7 +11,6 @@ import 'package:felloapp/core/service/notifier_services/golden_ticket_service.da
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/dialogs/augmont_confirm_register_dialog.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -21,7 +18,6 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:felloapp/util/custom_logger.dart';
 
@@ -39,6 +35,7 @@ class KYCDetailsViewModel extends BaseModel {
   final _analyticsService = locator<AnalyticsService>();
   final _signzyRepository = locator<SignzyRepository>();
   final _gtService = locator<GoldenTicketService>();
+  final internalOps = locator<InternalOpsRepository>();
   bool get isConfirmDialogInView => _userService.isConfirmationDialogOpen;
 
   FocusNode panFocusNode = FocusNode();
@@ -273,7 +270,7 @@ class KYCDetailsViewModel extends BaseModel {
         'user_pan_number': enteredPan,
         'upstream_name': upstreamName,
       };
-      _dbModel.logFailure(
+      internalOps.logFailure(
           _userService.baseUser.uid, FailType.UserKYCFlagFetchFailed, _data);
       return {'flag': _flag, 'fail_code': _failCode, 'reason': _reason};
     }
