@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
-import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/faq_model.dart';
@@ -15,19 +14,13 @@ import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
-import 'package:felloapp/core/model/user_ticket_wallet_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/api.dart';
-import 'package:felloapp/core/service/cache_manager.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_milestones/golden_milestones_vm.dart';
 import 'package:felloapp/util/api_response.dart';
-import 'package:felloapp/util/code_from_freq.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
-import 'package:felloapp/util/help_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -543,48 +536,6 @@ class DBModel extends ChangeNotifier {
     } catch (e) {
       log.error("Error fetch UserFundWallet failed: $e");
       return null;
-    }
-  }
-
-  ///////////////////USER TICKET BALANCING///////////////////////////////////
-  Future<UserTicketWallet> getUserTicketWallet(String id) async {
-    try {
-      logger.i("CALLING: getUserTicketWalletDocById");
-      var doc = await _api.getUserTicketWalletDocById(id);
-      return UserTicketWallet.fromMap(doc.data());
-    } catch (e) {
-      log.error("Error fetch UserTicketWallet failed: $e");
-      return null;
-    }
-  }
-
-  Future<UserTicketWallet> updateInitUserTicketCount(
-      String uid, UserTicketWallet userTicketWallet, int count) async {
-    if (userTicketWallet == null) return null;
-    int currentValue = userTicketWallet.initTck ?? 0;
-    try {
-      return await _lock.synchronized(() async {
-        if (count < 0 && currentValue < count) {
-          userTicketWallet.initTck = 0;
-        } else {
-          userTicketWallet.initTck = currentValue + count;
-        }
-        Map<String, dynamic> tMap = {
-          UserTicketWallet.fldInitTckCount: userTicketWallet.initTck
-        };
-        logger.i("CALLING: updateUserTicketWalletFields");
-        bool flag = await _api.updateUserTicketWalletFields(
-            uid, UserTicketWallet.fldInitTckCount, currentValue, tMap);
-        if (!flag) {
-          //revert value back as the op failed
-          userTicketWallet.initTck = currentValue;
-        }
-        return userTicketWallet;
-      });
-    } catch (e) {
-      log.error('Failed to update the user ticket count');
-      userTicketWallet.initTck = currentValue;
-      return userTicketWallet;
     }
   }
 

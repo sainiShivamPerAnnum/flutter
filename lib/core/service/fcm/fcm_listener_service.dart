@@ -173,12 +173,11 @@ class FcmListener {
       addSubscription(FcmTopic.FREQUENTFLYER)
           .then((value) => logger.d("Added frequent flyer subscription"));
 
-    if (_baseUtil.userTicketWallet != null &&
-        _baseUtil.userTicketWallet.getActiveTickets() > 0 &&
+    if (_baseUtil.ticketCount != null &&
+        _baseUtil.ticketCount > 0 &&
         _userService.baseUser.userPreferences
                 .getPreference(Preferences.TAMBOLANOTIFICATIONS) ==
             1) {
-      // if (_tambolaDrawNotifications) {
       addSubscription(FcmTopic.TAMBOLAPLAYER);
     }
 

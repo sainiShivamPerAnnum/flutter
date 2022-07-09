@@ -5,6 +5,7 @@ import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/date_helper.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../../util/flavor_config.dart';
 import '../constants/cache_keys.dart';
@@ -98,6 +99,27 @@ class TambolaRepo extends BaseRepo {
       });
     } catch (e) {
       logger.e('daily pick $e');
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<int>> getTicketCount() async {
+    try {
+      final uid = userService.baseUser.uid;
+      final String bearer = await getBearerToken();
+
+      final response = await APIService.instance.getData(
+        ApiPath.ticketCount(uid),
+        token: bearer,
+        cBaseUrl: _baseUrl,
+      );
+
+      final data = response['data'];
+      logger.d('tambola repo $data');
+
+      return ApiResponse(model: data['count'], code: 200);
+    } catch (e) {
+      logger.e(e);
       return ApiResponse.withError(e.toString(), 400);
     }
   }
