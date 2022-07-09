@@ -8,8 +8,6 @@ import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
-
-import 'package:felloapp/core/repository/winners_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -27,7 +25,6 @@ class TopSaverViewModel extends BaseModel {
   final _dbModel = locator<DBModel>();
   final _userService = locator<UserService>();
   final _getterRepo = locator<GetterRepository>();
-  final _winnersRepo = locator<WinnersRepository>();
   final _winnerService = locator<WinnerService>();
   final _campaignRepo = locator<CampaignRepo>();
 
@@ -179,20 +176,23 @@ class TopSaverViewModel extends BaseModel {
   }
 
   fetchPastWinners() async {
-    ApiResponse<List<WinnersModel>> response =
-        await _winnersRepo.getPastWinners(
-            event.type == "FPL"
-                ? Constants.GAME_TYPE_FPL
-                : Constants.GAME_TYPE_HIGHEST_SAVER,
-            saverFreq);
-    if (response != null &&
-        response.model != null &&
-        response.model.isNotEmpty) {
+    List<WinnersModel> winnerModels = await getPastWinners(
+      event.type == "FPL"
+          ? Constants.GAME_TYPE_FPL
+          : Constants.GAME_TYPE_HIGHEST_SAVER,
+      saverFreq,
+    );
+    if (winnerModels != null && winnerModels.isNotEmpty) {
       pastWinners = [];
-      for (int i = 0; i < response.model.length; i++) {
-        for (int j = 0; j < response.model[i].winners.length; j++) {
-          pastWinners.add(PastHighestSaver.fromMap(response.model[i].winners[j],
-              response.model[i].gametype, response.model[i].code));
+      for (int i = 0; i < winnerModels.length; i++) {
+        for (int j = 0; j < winnerModels[i].winners.length; j++) {
+          pastWinners.add(
+            PastHighestSaver.fromMap(
+              winnerModels[i].winners[j],
+              winnerModels[i].gametype,
+              winnerModels[i].code,
+            ),
+          );
         }
       }
     } else
@@ -244,6 +244,18 @@ class TopSaverViewModel extends BaseModel {
           return CodeFromFreq.getDayFromCode(code);
         }
     }
+  }
+
+  Future<List<WinnersModel>> getPastWinners(
+      String gameType, String freq) async {
+    ApiResponse<List<WinnersModel>> response = await _getterRepo.getPastWinners(
+      type: gameType,
+      freq: freq,
+    );
+    if (response.code == 200) {
+      return response.model;
+    } else
+      return [];
   }
 }
 

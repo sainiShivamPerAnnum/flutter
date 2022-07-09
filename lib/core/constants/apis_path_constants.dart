@@ -85,4 +85,6 @@ class ApiPath {
   static const String statistics = '/statistics';
   static String getwinner(String type, String freq) =>
       "/leaderboard/type/$type/freq/$freq";
+  static String pastWinners(String type, String freq) =>
+      "/leaderboard/past/type/$type/freq/$freq";
 }

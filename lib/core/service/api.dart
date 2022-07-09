@@ -380,23 +380,6 @@ class Api {
     return ref.doc(Constants.DOC_USER_WALLET_COIN_BALANCE).get();
   }
 
-  Future<List<QueryDocumentSnapshot>> getPastHighestSaverWinners(
-      String gameType, String freq) async {
-    Query _query = _db
-        .collection(Constants.WINNERS)
-        .where('freq', isEqualTo: freq)
-        .where('gametype', isEqualTo: gameType);
-
-    try {
-      QuerySnapshot _querySnapshot =
-          await _query.orderBy('timestamp', descending: true).limit(5).get();
-      return _querySnapshot.docs;
-    } catch (e) {
-      logger.e(e.toString());
-      throw e;
-    }
-  }
-
   Future<QueryDocumentSnapshot> fetchFaqs(String category) async {
     Query _query = _db
         .collection(Constants.COLN_FAQS)

@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:felloapp/core/constants/apis_path_constants.dart';
+import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -43,6 +46,26 @@ class GetterRepository extends BaseRepo {
       );
 
       return ApiResponse(model: winnersResponse["data"], code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError("Unable to fetch statistics", 400);
+    }
+  }
+
+  Future<ApiResponse<List<WinnersModel>>> getPastWinners({
+    String type,
+    String freq,
+  }) async {
+    try {
+      List<WinnersModel> winnerModel;
+      final winnersResponse = await APIService.instance.getData(
+        ApiPath.pastWinners(type, freq),
+        cBaseUrl: _baseUrl,
+      );
+
+      winnerModel = WinnersModel.helper.fromMapArray(winnersResponse["data"]);
+
+      return ApiResponse(model: winnerModel, code: 200);
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError("Unable to fetch statistics", 400);

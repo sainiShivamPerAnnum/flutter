@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/core/model/helper_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 
 class WinnersModel {
@@ -7,9 +8,17 @@ class WinnersModel {
   String gametype;
   String freq;
   TimestampModel timestamp;
+  static final helper = HelperModel<WinnersModel>(
+    (map) => WinnersModel.fromMap(map, map['gametype']),
+  );
 
-  WinnersModel(
-      {this.winners, this.code, this.gametype, this.freq, this.timestamp});
+  WinnersModel({
+    this.winners,
+    this.code,
+    this.gametype,
+    this.freq,
+    this.timestamp,
+  });
 
   WinnersModel.fromJson(Map<String, dynamic> json) {
     if (json['winners'] != null) {
@@ -53,10 +62,7 @@ class WinnersModel {
       code: map['code'],
       gametype: map['gametype'],
       freq: map['freq'],
-      timestamp: (map['timestamp'] is String)
-          ? Timestamp.fromDate(
-              DateTime.fromMicrosecondsSinceEpoch(int.parse(map['timestamp'])))
-          : map['timestamp'],
+      timestamp: TimestampModel.fromMap(map['timestamp']),
     );
   }
 
