@@ -7,6 +7,7 @@ import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/coupons_repo.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/repository/investment_actions_repo.dart';
+import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/repository/prizes_repo.dart';
 import 'package:felloapp/core/repository/signzy_repo.dart';
@@ -132,6 +133,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => SignzyRepository());
   locator.registerLazySingleton(() => CouponRepository());
   locator.registerLazySingleton(() => PaytmRepository());
+  locator.registerLazySingleton(() => JourneyRepository());
 
   // SPLASH
   locator.registerFactory(() => LauncherViewModel());

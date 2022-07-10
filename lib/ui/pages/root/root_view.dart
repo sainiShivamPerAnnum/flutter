@@ -1,3 +1,5 @@
+import 'dart:developer';
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:felloapp/navigator/app_state.dart';
@@ -20,6 +22,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
@@ -97,7 +100,7 @@ class Root extends StatelessWidget {
                     FelloCoinBar(),
                     SizedBox(width: 16),
                     NotificationButton(),
-                    SizedBox(width: 10),
+                    SizedBox(width: 5),
                     CircleAvatar(
                       backgroundColor: Colors.black,
                       child: IconButton(
@@ -111,7 +114,7 @@ class Root extends StatelessWidget {
                         },
                       ),
                     ),
-                    SizedBox(width: SizeConfig.padding12),
+                    SizedBox(width: 5),
                     CircleAvatar(
                       backgroundColor: Colors.black,
                       child: IconButton(
@@ -121,6 +124,19 @@ class Root extends StatelessWidget {
                             : Icon(Icons.upload_rounded),
                         onPressed: () {
                           model.addJourneyPage();
+                        },
+                      ),
+                    ),
+                    SizedBox(width: 5),
+                    CircleAvatar(
+                      backgroundColor: Colors.black,
+                      child: IconButton(
+                        color: Colors.white,
+                        icon: model.isUploading
+                            ? CircularProgressIndicator(color: Colors.black)
+                            : Icon(Icons.download_rounded),
+                        onPressed: () {
+                          model.completeNViewDownloadSaveLViewAsset();
                         },
                       ),
                     )
@@ -165,11 +181,50 @@ class Root extends StatelessWidget {
                         AppState.delegate.appState.isTxnLoaderInView
                             ? TransactionLoader()
                             : SizedBox()),
+                if (model.svgSource.isNotEmpty)
+                  Positioned.fill(child: SourceAdaptiveAsset(model: model))
               ],
             ),
           ),
         );
       },
+    );
+  }
+}
+
+class SourceAdaptiveAsset extends StatelessWidget {
+  final RootViewModel model;
+  const SourceAdaptiveAsset({this.model});
+  @override
+  Widget build(BuildContext context) {
+    log("ROOTVIEW: Build called for SourceAdaptiveAsset widget");
+    return model.svgSource.startsWith('http')
+        ? NetworkAsset(networkUrl: model.svgSource)
+        : FileAsset(filePath: model.svgSource);
+  }
+}
+
+class FileAsset extends StatelessWidget {
+  final String filePath;
+  const FileAsset({this.filePath});
+  @override
+  Widget build(BuildContext context) {
+    log("ROOTVIEW: Build called for FileAsset widget");
+    return SvgPicture.file(
+      File(filePath),
+    );
+  }
+}
+
+class NetworkAsset extends StatelessWidget {
+  final networkUrl;
+  const NetworkAsset({this.networkUrl});
+  @override
+  Widget build(BuildContext context) {
+    log("ROOTVIEW: Build called for NetworkAsset widget");
+
+    return SvgPicture.network(
+      networkUrl,
     );
   }
 }

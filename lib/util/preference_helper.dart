@@ -67,6 +67,10 @@ class PreferenceHelper {
     return _prefs.remove(key);
   }
 
+  static bool exists(String key) {
+    return _prefs.containsKey(key);
+  }
+
   static void clear() {
     _prefs.clear();
   }

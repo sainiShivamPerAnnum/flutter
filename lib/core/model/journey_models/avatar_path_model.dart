@@ -6,16 +6,14 @@ import 'package:flutter/foundation.dart';
 
 class AvatarPathModel {
   final String moveType;
-  int milestoneIndex;
   final List<double> coords;
   final int page;
-  final int level;
+  final int mlIndex;
   AvatarPathModel({
     @required this.moveType,
-    @required this.milestoneIndex,
     @required this.coords,
     @required this.page,
-    @required this.level,
+    @required this.mlIndex,
   });
 
   AvatarPathModel copyWith({
@@ -27,30 +25,27 @@ class AvatarPathModel {
   }) {
     return AvatarPathModel(
       moveType: moveType ?? this.moveType,
-      milestoneIndex: milestoneIndex ?? this.milestoneIndex,
       coords: coords ?? this.coords,
       page: page ?? this.page,
-      level: level ?? this.level,
+      mlIndex: level ?? this.mlIndex,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
       'moveType': moveType,
-      'milestoneIndex': milestoneIndex,
       'coords': coords,
       // 'page': page,
-      'level': level,
+      'level': mlIndex,
     };
   }
 
   factory AvatarPathModel.fromMap(Map<String, dynamic> map) {
     return AvatarPathModel(
       moveType: map['moveType'] ?? "linear",
-      milestoneIndex: map['milestoneIndex']?.toInt() ?? 0,
       coords: List<double>.from(map['coords']),
       page: map['page']?.toInt() ?? 0,
-      level: map['page']?.toInt() ?? 0,
+      mlIndex: map['page']?.toInt() ?? 0,
     );
   }
 
@@ -61,7 +56,7 @@ class AvatarPathModel {
 
   @override
   String toString() {
-    return 'AvatarPathModel(moveType: $moveType, milestoneIndex: $milestoneIndex, coords: $coords, page: $page, level: $level)';
+    return 'AvatarPathModel(moveType: $moveType, coords: $coords, page: $page, level: $mlIndex)';
   }
 
   @override
@@ -70,16 +65,12 @@ class AvatarPathModel {
 
     return other is AvatarPathModel &&
         other.moveType == moveType &&
-        other.milestoneIndex == milestoneIndex &&
         listEquals(other.coords, coords) &&
         other.page == page;
   }
 
   @override
   int get hashCode {
-    return moveType.hashCode ^
-        milestoneIndex.hashCode ^
-        coords.hashCode ^
-        page.hashCode;
+    return moveType.hashCode ^ coords.hashCode ^ page.hashCode;
   }
 }

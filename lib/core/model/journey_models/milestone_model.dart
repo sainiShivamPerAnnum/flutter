@@ -1,39 +1,43 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_asset_model.dart';
+import 'package:felloapp/core/model/journey_models/milestone_description.dart';
 
 class MilestoneModel {
   final String id;
   final JourneyAssetModel asset;
-  final double dx;
-  final double dy;
-  final List<Reward> rewards;
-  final String description;
+  final double x;
+  final double y;
+  List<Reward> rewards;
+  final List<MlSteps> steps;
   final String actionUri;
   final String animType;
-  final bool isCompleted;
+  final String tooltip;
+  bool isCompleted;
+  final String prizeSubType;
   final int page;
-  final int level;
-  final String aligment; //Left || Right
+  final int index;
   final MilestoneShadowModel shadow;
   final bool hFlip;
   final bool vFlip;
   MilestoneModel({
-    @required this.id,
+    this.id,
     @required this.asset,
-    @required this.dx,
-    @required this.dy,
+    @required this.x,
+    @required this.y,
     this.rewards,
-    @required this.description,
+    this.tooltip,
+    this.prizeSubType,
+    @required this.steps,
     @required this.actionUri,
-    @required this.animType,
-    this.isCompleted = false,
+    this.animType = "NONE",
+    this.isCompleted,
     @required this.page,
-    @required this.level,
-    this.aligment = 'LEFT',
+    @required this.index,
     this.shadow,
     this.hFlip = false,
     this.vFlip = false,
@@ -42,16 +46,17 @@ class MilestoneModel {
   MilestoneModel copyWith({
     String id,
     JourneyAssetModel asset,
-    double dx,
-    double dy,
+    double x,
+    double y,
     List<Reward> rewards,
-    String description,
+    List<MlSteps> description,
     String actionUri,
     String animType,
+    String tooltip,
     bool isCompleted,
+    String prizeSubType,
     int page,
-    int level,
-    String aligment,
+    int mlIndex,
     MilestoneShadowModel shadow,
     bool hFlip,
     bool vFlip,
@@ -59,16 +64,17 @@ class MilestoneModel {
     return MilestoneModel(
       id: id ?? this.id,
       asset: asset ?? this.asset,
-      dx: dx ?? this.dx,
-      dy: dy ?? this.dy,
+      x: x ?? this.x,
+      y: y ?? this.y,
       rewards: rewards ?? this.rewards,
-      description: description ?? this.description,
+      steps: description ?? this.steps,
       actionUri: actionUri ?? this.actionUri,
       animType: animType ?? this.animType,
+      tooltip: tooltip ?? this.tooltip,
       isCompleted: isCompleted ?? this.isCompleted,
+      prizeSubType: prizeSubType ?? this.prizeSubType,
       page: page ?? this.page,
-      level: level ?? this.level,
-      aligment: aligment ?? this.aligment,
+      index: mlIndex ?? this.index,
       shadow: shadow ?? this.shadow,
       hFlip: hFlip ?? this.hFlip,
       vFlip: vFlip ?? this.vFlip,
@@ -76,20 +82,21 @@ class MilestoneModel {
   }
 
   Map<String, dynamic> toMap() {
-    return {
+    return <String, dynamic>{
       'id': id,
       'asset': asset.toMap(),
-      'dx': dx,
-      'dy': dy,
-      'rewards': rewards.map((x) => Reward.toMap(x)).toList(),
-      'description': description,
+      'x': x,
+      'y': y,
+      'rewards': rewards.map((x) => x.toMap()).toList(),
+      'description': steps.map((x) => x.toMap()).toList(),
       'actionUri': actionUri,
       'animType': animType,
       'isCompleted': isCompleted,
-      // 'page': page,
-      'level': level,
-      'aligment': aligment,
-      'shadow': shadow?.toMap(),
+      'tooltip': tooltip,
+      'prizeSubType': prizeSubType,
+      'page': page,
+      'mlIndex': index,
+      'shadow': shadow.toMap(),
       'hFlip': hFlip,
       'vFlip': vFlip,
     };
@@ -97,32 +104,42 @@ class MilestoneModel {
 
   factory MilestoneModel.fromMap(Map<String, dynamic> map) {
     return MilestoneModel(
-      id: map['id'],
-      asset: JourneyAssetModel.fromMap(map['asset']),
-      dx: map['dx']?.toDouble() ?? 0.0,
-      dy: map['dy']?.toDouble() ?? 0.0,
-      rewards: Reward.objArray(map['rewards']),
-      description: map['description'] ?? '',
-      actionUri: map['actionUri'] ?? '',
-      animType: map['animType'] ?? '',
-      isCompleted: map['isCompleted'] ?? false,
-      page: map['page']?.toInt() ?? 0,
-      level: map['level']?.toInt() ?? 0,
-      aligment: map['aligment'] ?? '',
-      shadow: MilestoneShadowModel.fromMap(map['shadow']),
-      hFlip: map['hFlip'] ?? false,
-      vFlip: map['vFlip'] ?? false,
+      id: map['id'] as String,
+      asset: JourneyAssetModel.fromMap(map['asset'] as Map<String, dynamic>),
+      x: map['x'] as double,
+      y: map['y'] as double,
+      rewards: List<Reward>.from(
+        (map['rewards'] as List<int>).map<Reward>(
+          (x) => Reward.fromMap(x as Map<String, dynamic>),
+        ),
+      ),
+      steps: List<MlSteps>.from(
+        (map['description'] as List<int>).map<MlSteps>(
+          (x) => MlSteps.fromMap(x as Map<String, dynamic>),
+        ),
+      ),
+      actionUri: map['actionUri'] as String,
+      prizeSubType: map['prizeSubType'] as String,
+      tooltip: map['tooltip'] as String,
+      animType: map['animType'] as String,
+      isCompleted: map['isCompleted'] as bool,
+      page: map['page'] as int,
+      index: map['mlIndex'] as int,
+      shadow:
+          MilestoneShadowModel.fromMap(map['shadow'] as Map<String, dynamic>),
+      hFlip: map['hFlip'] as bool,
+      vFlip: map['vFlip'] as bool,
     );
   }
 
   String toJson() => json.encode(toMap());
 
   factory MilestoneModel.fromJson(String source) =>
-      MilestoneModel.fromMap(json.decode(source));
+      MilestoneModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
-    return 'MilestoneModel(id: $id, asset: $asset, dx: $dx, dy: $dy, rewards: $rewards, description: $description, actionUri: $actionUri, animType: $animType, isCompleted: $isCompleted, page: $page, level: $level, aligment: $aligment, shadow: $shadow, hFlip: $hFlip, vFlip: $vFlip)';
+    return 'MilestoneModel(id: $id, asset: $asset, x: $x, y: $y, rewards: $rewards, description: $steps, actionUri: $actionUri, animType: $animType, isCompleted: $isCompleted, page: $page, prizeSubType: $prizeSubType, mlIndex: $index, shadow: $shadow, hFlip: $hFlip, vFlip: $vFlip)';
   }
 
   @override
@@ -130,17 +147,19 @@ class MilestoneModel {
     if (identical(this, other)) return true;
 
     return other is MilestoneModel &&
+        other.id == id &&
         other.asset == asset &&
-        other.dx == dx &&
-        other.dy == dy &&
+        other.x == x &&
+        other.y == y &&
         listEquals(other.rewards, rewards) &&
-        other.description == description &&
+        listEquals(other.steps, steps) &&
         other.actionUri == actionUri &&
         other.animType == animType &&
+        other.tooltip == tooltip &&
         other.isCompleted == isCompleted &&
         other.page == page &&
-        other.level == level &&
-        other.aligment == aligment &&
+        other.prizeSubType == prizeSubType &&
+        other.index == index &&
         other.shadow == shadow &&
         other.hFlip == hFlip &&
         other.vFlip == vFlip;
@@ -148,17 +167,19 @@ class MilestoneModel {
 
   @override
   int get hashCode {
-    return asset.hashCode ^
-        dx.hashCode ^
-        dy.hashCode ^
+    return id.hashCode ^
+        asset.hashCode ^
+        x.hashCode ^
+        y.hashCode ^
         rewards.hashCode ^
-        description.hashCode ^
+        steps.hashCode ^
         actionUri.hashCode ^
         animType.hashCode ^
+        tooltip.hashCode ^
         isCompleted.hashCode ^
         page.hashCode ^
-        level.hashCode ^
-        aligment.hashCode ^
+        prizeSubType.hashCode ^
+        index.hashCode ^
         shadow.hashCode ^
         hFlip.hashCode ^
         vFlip.hashCode;
@@ -168,23 +189,21 @@ class MilestoneModel {
 class MilestoneShadowModel {
   final String id;
   final JourneyAssetModel asset;
-  final double dx, dy;
+  final double x, y;
   final String animType;
   final bool isCompleted;
   final int page;
-  final int level;
-  final bool aligment;
+  final int index;
   final bool hFlip, vFlip;
   MilestoneShadowModel({
     @required this.id,
     @required this.asset,
-    @required this.dy,
-    @required this.dx,
+    @required this.y,
+    @required this.x,
     this.animType = "none",
     this.isCompleted = false,
     @required this.page,
-    @required this.level,
-    this.aligment = true,
+    @required this.index,
     this.vFlip = false,
     this.hFlip = false,
   });
@@ -207,13 +226,12 @@ class MilestoneShadowModel {
     return MilestoneShadowModel(
       id: id ?? this.id,
       asset: asset ?? this.asset,
-      dy: dy ?? this.dy,
-      dx: dx ?? this.dx,
+      y: dy ?? this.y,
+      x: dx ?? this.x,
       animType: animType ?? this.animType,
       isCompleted: isCompleted ?? this.isCompleted,
       page: page ?? this.page,
-      level: level ?? this.level,
-      aligment: aligment ?? this.aligment,
+      index: level ?? this.index,
       vFlip: vFlip ?? this.vFlip,
       hFlip: hFlip ?? this.hFlip,
     );
@@ -223,13 +241,12 @@ class MilestoneShadowModel {
     return {
       'id': id,
       'asset': asset.toMap(),
-      'dy': dy,
-      'dx': dx,
+      'dy': y,
+      'dx': x,
       'animType': animType,
       'isCompleted': isCompleted,
       // 'page': page,
-      'level': level,
-      'aligment': aligment,
+      'level': index,
       'vFlip': vFlip,
       'hFlip': hFlip
     };
@@ -239,13 +256,12 @@ class MilestoneShadowModel {
     return MilestoneShadowModel(
       id: map['id'] ?? '',
       asset: map['asset'] ?? '',
-      dy: map['dy'],
-      dx: map['dx'],
+      y: map['dy'],
+      x: map['dx'],
       animType: map['animType'] ?? '',
       isCompleted: map['isCompleted'] ?? false,
       page: map['page']?.toInt() ?? 0,
-      level: map['level']?.toInt() ?? 0,
-      aligment: map['aligment'] ?? false,
+      index: map['level']?.toInt() ?? 0,
       vFlip: map['vFlip'] ?? false,
       hFlip: map['hFlip'] ?? false,
     );
@@ -258,7 +274,7 @@ class MilestoneShadowModel {
 
   @override
   String toString() {
-    return 'MilestoneShadowModel(id: $id, asset: $asset, dy: $dy, animType: $animType, isCompleted: $isCompleted, page: $page, level: $level, aligment: $aligment, vFlip: $vFlip, hFlip: $hFlip)';
+    return 'MilestoneShadowModel(id: $id, asset: $asset, dy: $y, animType: $animType, isCompleted: $isCompleted, page: $page, level: $index, vFlip: $vFlip, hFlip: $hFlip)';
   }
 
   @override
@@ -267,24 +283,22 @@ class MilestoneShadowModel {
 
     return other is MilestoneShadowModel &&
         other.asset == asset &&
-        other.dy == dy &&
+        other.y == y &&
         other.animType == animType &&
         other.isCompleted == isCompleted &&
         other.page == page &&
-        other.level == level &&
-        other.aligment == aligment &&
+        other.index == index &&
         other.vFlip == vFlip;
   }
 
   @override
   int get hashCode {
     return asset.hashCode ^
-        dy.hashCode ^
+        y.hashCode ^
         animType.hashCode ^
         isCompleted.hashCode ^
         page.hashCode ^
-        level.hashCode ^
-        aligment.hashCode ^
+        index.hashCode ^
         vFlip.hashCode;
   }
 }

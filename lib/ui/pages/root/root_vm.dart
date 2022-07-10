@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
@@ -7,6 +9,7 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
@@ -46,6 +49,7 @@ class RootViewModel extends BaseModel {
   final CustomLogger _logger = locator<CustomLogger>();
   final LocalDBModel _lModel = locator<LocalDBModel>();
   final DBModel _dbModel = locator<DBModel>();
+  final JourneyRepository _journeyRepo = locator<JourneyRepository>();
 
   final winnerService = locator<WinnerService>();
   final txnService = locator<TransactionService>();
@@ -56,6 +60,14 @@ class RootViewModel extends BaseModel {
   bool _isInitialized = false;
   bool _isUploading = false;
   get isUploading => this._isUploading;
+  String _svgSource = '';
+
+  String get svgSource => this._svgSource;
+
+  set svgSource(value) {
+    this._svgSource = value;
+    notifyListeners();
+  }
 
   set isUploading(value) {
     this._isUploading = value;
@@ -139,6 +151,26 @@ class RootViewModel extends BaseModel {
               seconds: 5);
         }
       });
+    }
+  }
+
+  completeNViewDownloadSaveLViewAsset() async {
+    if (_journeyRepo.checkIfAssetIsAvailableLocally('b1')) {
+      log("ROOTVM: Asset path found cached in local storage.showing asset from cache");
+      svgSource = _journeyRepo.getAssetLocalFilePath('b1');
+    } else {
+      svgSource = "https://journey-assets-x.s3.ap-south-1.amazonaws.com/b1.svg";
+      log("ROOTVM: Asset path not found in cache. Downloading and caching it now. also showing network Image for now");
+      await Future.delayed(Duration(seconds: 5));
+      final bool result = await _journeyRepo.downloadandSaveFile(
+          "https://journey-assets-x.s3.ap-south-1.amazonaws.com/b1.svg");
+      if (result) {
+        log("ROOTVM: Asset downlaoding & caching completed successfully. updating asset from local to network in widget tree");
+
+        svgSource = _journeyRepo.getAssetLocalFilePath('b1');
+      } else {
+        log("ROOTVM: Asset downlaoding & caching failed. showing asset from network this time, will try again on next startup");
+      }
     }
   }
 

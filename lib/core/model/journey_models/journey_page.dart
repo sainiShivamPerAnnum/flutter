@@ -7,7 +7,6 @@ import 'package:felloapp/core/model/journey_models/milestone_model.dart';
 class JourneyPage {
   String bgImage;
   int page;
-  int level;
   List<JourneyPathModel> paths;
   List<AvatarPathModel> avatarPath;
   List<MilestoneModel> milestones;
@@ -15,7 +14,6 @@ class JourneyPage {
     @required this.bgImage,
     @required this.paths,
     @required this.page,
-    @required this.level,
     @required this.avatarPath,
     @required this.milestones,
   });
@@ -32,7 +30,6 @@ class JourneyPage {
       bgImage: bgImage ?? this.bgImage,
       paths: paths ?? this.paths,
       page: page ?? this.page,
-      level: level ?? this.level,
       avatarPath: avatarPath ?? this.avatarPath,
       milestones: milestones ?? this.milestones,
     );
@@ -42,7 +39,6 @@ class JourneyPage {
     return {
       'bgImage': bgImage,
       'page': page,
-      'level': level,
       'paths': paths.map((x) => x.toMap()).toList(),
       'avatarPath': avatarPath.map((x) => x.toMap()).toList(),
       'milestones': milestones.map((x) => x.toMap()).toList(),
@@ -52,7 +48,6 @@ class JourneyPage {
   factory JourneyPage.fromMap(Map<String, dynamic> map) {
     return JourneyPage(
       page: map["page"] ?? 0,
-      level: map["level"] ?? 0,
       bgImage: map['bgImage'] ?? '',
       paths: List<JourneyPathModel>.from(
           map['paths']?.map((x) => JourneyPathModel.fromMap(x))),
@@ -70,7 +65,7 @@ class JourneyPage {
 
   @override
   String toString() {
-    return 'JourneyPage(bgImage: $bgImage, paths: $paths, level: $level, avatarPath: $avatarPath, milestones: $milestones)';
+    return 'JourneyPage(bgImage: $bgImage, paths: $paths, avatarPath: $avatarPath, milestones: $milestones)';
   }
 
   @override

@@ -100,10 +100,10 @@ class _ActiveFloatingMilestoneState extends State<ActiveFloatingMilestone>
       children: [
         if (widget.milestone.shadow != null)
           Positioned(
-            left: widget.model.pageWidth * widget.milestone.shadow.dx,
+            left: widget.model.pageWidth * widget.milestone.shadow.x,
             bottom:
                 widget.model.pageHeight * (widget.milestone.shadow.page - 1) +
-                    widget.model.pageHeight * widget.milestone.shadow.dy,
+                    widget.model.pageHeight * widget.milestone.shadow.y,
             child: ScaleTransition(
               scale: _floatAnimationController,
               alignment: Alignment.center,
@@ -123,9 +123,9 @@ class _ActiveFloatingMilestoneState extends State<ActiveFloatingMilestone>
             ),
           ),
         Positioned(
-          left: widget.model.pageWidth * widget.milestone.dx,
+          left: widget.model.pageWidth * widget.milestone.x,
           bottom: widget.model.pageHeight * (widget.milestone.page - 1) +
-              widget.model.pageHeight * widget.milestone.dy,
+              widget.model.pageHeight * widget.milestone.y,
           child: SlideTransition(
             position: _floatAnimation,
             child: GestureDetector(
@@ -133,7 +133,7 @@ class _ActiveFloatingMilestoneState extends State<ActiveFloatingMilestone>
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     duration: const Duration(seconds: 2),
-                    content: Text(widget.milestone.description),
+                    content: Text(widget.milestone.steps.first.title),
                   ),
                 );
               },
@@ -200,10 +200,10 @@ class _ActiveRotatingMilestoneState extends State<ActiveRotatingMilestone>
       children: [
         if (widget.milestone.shadow != null)
           Positioned(
-            left: widget.model.pageWidth * widget.milestone.shadow.dx,
+            left: widget.model.pageWidth * widget.milestone.shadow.x,
             bottom:
                 widget.model.pageHeight * (widget.milestone.shadow.page - 1) +
-                    widget.model.pageHeight * widget.milestone.shadow.dy,
+                    widget.model.pageHeight * widget.milestone.shadow.y,
             child: Transform(
               alignment: Alignment.center,
               transform:
@@ -219,9 +219,9 @@ class _ActiveRotatingMilestoneState extends State<ActiveRotatingMilestone>
             ),
           ),
         Positioned(
-          left: widget.model.pageWidth * widget.milestone.dx,
+          left: widget.model.pageWidth * widget.milestone.x,
           bottom: widget.model.pageHeight * (widget.milestone.page - 1) +
-              widget.model.pageHeight * widget.milestone.dy,
+              widget.model.pageHeight * widget.milestone.y,
           child: RotationTransition(
             turns: _floatAnimationController,
             child: GestureDetector(
@@ -229,7 +229,7 @@ class _ActiveRotatingMilestoneState extends State<ActiveRotatingMilestone>
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     duration: const Duration(seconds: 2),
-                    content: Text(widget.milestone.description),
+                    content: Text(widget.milestone.steps.first.title),
                   ),
                 );
               },
@@ -265,9 +265,9 @@ class StaticMilestone extends StatelessWidget {
       children: [
         if (milestone.shadow != null)
           Positioned(
-            left: model.pageWidth * milestone.shadow.dx,
+            left: model.pageWidth * milestone.shadow.x,
             bottom: model.pageHeight * (milestone.shadow.page - 1) +
-                model.pageHeight * milestone.shadow.dy,
+                model.pageHeight * milestone.shadow.y,
             child: Transform(
               alignment: Alignment.center,
               transform: Matrix4.rotationY(milestone.hFlip ? math.pi : 0),
@@ -280,9 +280,9 @@ class StaticMilestone extends StatelessWidget {
             ),
           ),
         Positioned(
-          left: model.pageWidth * milestone.dx,
+          left: model.pageWidth * milestone.x,
           bottom: model.pageHeight * (milestone.page - 1) +
-              model.pageHeight * milestone.dy,
+              model.pageHeight * milestone.y,
           child: Transform(
             alignment: Alignment.center,
             transform: Matrix4.rotationY(milestone.hFlip ? math.pi : 0),
@@ -337,14 +337,14 @@ class StaticMilestone extends StatelessWidget {
                               ),
                             ),
                             title: Text(
-                              "Milestone Details",
+                              milestone.steps.first.title,
                               style: GoogleFonts.rajdhani(
                                   fontSize: SizeConfig.title3,
                                   fontWeight: FontWeight.w800,
                                   color: Colors.white),
                             ),
                             subtitle: Text(
-                              milestone.description,
+                              milestone.steps.first.subtitle,
                               style: TextStyles.body3.colour(Colors.white),
                             ),
                           )
@@ -355,7 +355,7 @@ class StaticMilestone extends StatelessWidget {
                 );
               },
               child: Tooltip(
-                message: milestone.description,
+                message: milestone.tooltip ?? "Hello World!!",
                 triggerMode: TooltipTriggerMode.longPress,
                 child: SvgPicture.asset(
                   milestone.asset.uri,

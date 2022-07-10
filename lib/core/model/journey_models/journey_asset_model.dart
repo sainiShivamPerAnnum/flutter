@@ -8,7 +8,6 @@ class JourneyAssetModel {
   final double height;
   final double width;
   final int page;
-  final int level;
   final String type;
   JourneyAssetModel({
     @required this.uri,
@@ -16,7 +15,6 @@ class JourneyAssetModel {
     @required this.height,
     @required this.width,
     @required this.page,
-    @required this.level,
     this.type = 'SVG',
   });
 
@@ -35,7 +33,6 @@ class JourneyAssetModel {
       height: height ?? this.height,
       width: width ?? this.width,
       page: page ?? this.page,
-      level: level ?? this.level,
       type: type ?? this.type,
     );
   }
@@ -46,8 +43,6 @@ class JourneyAssetModel {
       'name': name,
       'height': height,
       'width': width,
-      // 'page': page,
-      'level': level,
       'type': type,
     };
   }
@@ -59,7 +54,6 @@ class JourneyAssetModel {
       height: map['height']?.toDouble() ?? 0.0,
       width: map['width']?.toDouble() ?? 0.0,
       page: map['page']?.toInt() ?? 0,
-      level: map['level']?.toInt() ?? 0,
       type: map['type'] ?? '',
     );
   }
@@ -71,7 +65,7 @@ class JourneyAssetModel {
 
   @override
   String toString() {
-    return 'JourneyAssetModel(uri: $uri, name: $name, height: $height, width: $width, page: $page, level: $level, type: $type)';
+    return 'JourneyAssetModel(uri: $uri, name: $name, height: $height, width: $width, page: $page, type: $type)';
   }
 
   @override
@@ -84,7 +78,6 @@ class JourneyAssetModel {
         other.height == height &&
         other.width == width &&
         other.page == page &&
-        other.level == level &&
         other.type == type;
   }
 
@@ -95,7 +88,6 @@ class JourneyAssetModel {
         height.hashCode ^
         width.hashCode ^
         page.hashCode ^
-        level.hashCode ^
         type.hashCode;
   }
 }

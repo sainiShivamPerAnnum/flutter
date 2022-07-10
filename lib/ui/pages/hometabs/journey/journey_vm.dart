@@ -75,12 +75,12 @@ class JourneyPageViewModel extends BaseModel {
   tempInit() async {
     isLoading = true;
     Future.delayed(Duration(seconds: 2));
-    Map<String, dynamic> res =
-        await _dbModel.fetchJourneyPage(lastDoc: lastDoc);
-    pages = res["pages"];
-    // pages = pages.sublist(0, 2);
-    lastDoc = res["lastDoc"];
-    log("${lastDoc.id}");
+    // Map<String, dynamic> res =
+    //     await _dbModel.fetchJourneyPage(lastDoc: lastDoc);
+    // pages = res["pages"];
+    pages = jourenyPages; //.sublist(0, 2);
+    // lastDoc = res["lastDoc"];
+    // log("${lastDoc.id}");
     // pages.sublist(0, 2);
     pageWidth = SizeConfig.screenWidth;
     pageHeight = pageWidth * 2.165;
@@ -93,17 +93,18 @@ class JourneyPageViewModel extends BaseModel {
     setCustomPathItems();
     setJourneyPathItems();
 
-    avatarPath = drawPath();
-    setAvatarPostion();
+    // avatarPath = drawPath();
+    // setAvatarPostion();
+    createPathForAvatarAnimation(2, 5);
 
     createAvatarAnimationObject();
 
-    mainController = ScrollController()
-      ..addListener(() {
-        if (mainController.offset > mainController.position.maxScrollExtent &&
-            !isLoading &&
-            !isEnd) addPageToTop(mainController.offset);
-      });
+    mainController = ScrollController();
+    //   ..addListener(() {
+    //     if (mainController.offset > mainController.position.maxScrollExtent &&
+    //         !isLoading &&
+    //         !isEnd) addPageToTop(mainController.offset);
+    //   });
 
     isLoading = false;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -131,8 +132,9 @@ class JourneyPageViewModel extends BaseModel {
     setCurrentMilestones();
     setCustomPathItems();
     setJourneyPathItems();
-    avatarPath = drawPath();
-    setAvatarPostion();
+    // avatarPath = drawPath();
+    // setAvatarPostion();
+    createPathForAvatarAnimation(2, 5);
 
     await Future.delayed(Duration(seconds: 2));
     isLoading = false;
@@ -162,8 +164,8 @@ class JourneyPageViewModel extends BaseModel {
     setJourneyPathItems();
     startPage = pages[0].page;
     lastPage = pages[pages.length - 1].page;
-    avatarPath = drawPath();
-    setAvatarPostion();
+    // avatarPath = drawPath();
+    // setAvatarPostion();
 
     mainController.animateTo(
       mainController.offset + 100,
@@ -229,6 +231,21 @@ class JourneyPageViewModel extends BaseModel {
     });
   }
 
+  createPathForAvatarAnimation(int start, int end) {
+    List<AvatarPathModel> requiredPathItems = [];
+    int startPos =
+        customPathDataList.lastIndexWhere((path) => path.mlIndex == start);
+    for (int i = startPos; i < customPathDataList.length; i++) {
+      if (customPathDataList[i].mlIndex <= end)
+        requiredPathItems.add(customPathDataList[i]);
+      else
+        break;
+    }
+    logger.d("Calculated Path list length: ${requiredPathItems.length}");
+    avatarPath = drawPath(requiredPathItems);
+    setAvatarPostion();
+  }
+
   Offset calculatePosition(double value) {
     PathMetrics pathMetrics = avatarPath.computeMetrics();
     PathMetric pathMetric = pathMetrics.elementAt(0);
@@ -260,12 +277,12 @@ class JourneyPageViewModel extends BaseModel {
   //   JourneyPageViewModel.currentFullViewHeight = JourneyPageViewModel.pageHeight * noOfSlides;
   // }
 
-  Path drawPath() {
+  Path drawPath(List<AvatarPathModel> pathData) {
     // Size size = Size(JourneyPageViewModel.pageWidth, JourneyPageViewModel.pageHeight);
     Path path = Path();
-    for (int i = 0; i < customPathDataList.length; i++) {
-      path = generateCustomPath(path, customPathDataList[i],
-          i == 0 ? "move" : customPathDataList[i].moveType);
+    for (int i = 0; i < pathData.length; i++) {
+      path = generateCustomPath(
+          path, pathData[i], i == 0 ? "move" : pathData[i].moveType);
     }
     return path;
   }

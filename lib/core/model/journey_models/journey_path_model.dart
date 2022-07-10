@@ -6,27 +6,25 @@ import 'package:flutter/material.dart';
 class JourneyPathModel {
   final String id;
   final JourneyAssetModel asset;
-  final String alignment; //Left || Right
-  final double dx;
-  final double dy;
+  final double x;
+  final double y;
   final bool isBase;
   final bool hFlip;
   final bool vFlip;
-  final int dz;
+  final int z;
   final int page;
-  final int level;
+  final int mlIndex;
   JourneyPathModel({
     @required this.id,
     @required this.asset,
-    this.alignment = "LEFT",
-    @required this.dx,
-    @required this.dy,
+    @required this.x,
+    @required this.y,
     this.isBase = false,
     this.hFlip = false,
     this.vFlip = false,
-    @required this.dz,
+    @required this.z,
     @required this.page,
-    @required this.level,
+    @required this.mlIndex,
   });
 
   JourneyPathModel copyWith({
@@ -45,15 +43,14 @@ class JourneyPathModel {
     return JourneyPathModel(
       id: id ?? this.id,
       asset: asset ?? this.asset,
-      alignment: alignment ?? this.alignment,
-      dx: dx ?? this.dx,
-      dy: dy ?? this.dy,
+      x: dx ?? this.x,
+      y: dy ?? this.y,
       isBase: isBase ?? this.isBase,
       hFlip: hFlip ?? this.hFlip,
       vFlip: vFlip ?? this.vFlip,
-      dz: dz ?? this.dz,
+      z: dz ?? this.z,
       page: page ?? this.page,
-      level: level ?? this.level,
+      mlIndex: level ?? this.mlIndex,
     );
   }
 
@@ -61,15 +58,14 @@ class JourneyPathModel {
     return {
       'id': id,
       'asset': asset.toMap(),
-      'alignment': alignment,
-      'dx': dx,
-      'dy': dy,
+      'dx': x,
+      'dy': y,
       'isBase': isBase,
       'hFlip': hFlip,
       'vFlip': vFlip,
-      'dz': dz,
+      'dz': z,
       // 'page': page,
-      'level': level,
+      'level': mlIndex,
     };
   }
 
@@ -77,15 +73,14 @@ class JourneyPathModel {
     return JourneyPathModel(
       id: map['id'],
       asset: JourneyAssetModel.fromMap(map['asset']),
-      alignment: map['alignment'] ?? '',
-      dx: map['dx']?.toDouble() ?? 0.0,
-      dy: map['dy']?.toDouble() ?? 0.0,
+      x: map['dx']?.toDouble() ?? 0.0,
+      y: map['dy']?.toDouble() ?? 0.0,
       isBase: map['isBase'] ?? false,
       hFlip: map['hFlip'] ?? false,
       vFlip: map['vFlip'] ?? false,
-      dz: map['dz']?.toInt() ?? 0,
+      z: map['dz']?.toInt() ?? 0,
       page: map['page']?.toInt() ?? 0,
-      level: map['level']?.toInt() ?? 0,
+      mlIndex: map['level']?.toInt() ?? 0,
     );
   }
 
@@ -96,7 +91,7 @@ class JourneyPathModel {
 
   @override
   String toString() {
-    return 'JourneyPathModel(id: $id, asset: $asset, alignment: $alignment, dx: $dx, dy: $dy, isBase: $isBase, hFlip: $hFlip, vFlip: $vFlip, dz: $dz, page: $page, level: $level)';
+    return 'JourneyPathModel(id: $id, asset: $asset, dx: $x, dy: $y, isBase: $isBase, hFlip: $hFlip, vFlip: $vFlip, dz: $z, page: $page, level: $mlIndex)';
   }
 
   @override
@@ -105,28 +100,26 @@ class JourneyPathModel {
 
     return other is JourneyPathModel &&
         other.asset == asset &&
-        other.alignment == alignment &&
-        other.dx == dx &&
-        other.dy == dy &&
+        other.x == x &&
+        other.y == y &&
         other.isBase == isBase &&
         other.hFlip == hFlip &&
         other.vFlip == vFlip &&
-        other.dz == dz &&
+        other.z == z &&
         other.page == page &&
-        other.level == level;
+        other.mlIndex == mlIndex;
   }
 
   @override
   int get hashCode {
     return asset.hashCode ^
-        alignment.hashCode ^
-        dx.hashCode ^
-        dy.hashCode ^
+        x.hashCode ^
+        y.hashCode ^
         isBase.hashCode ^
         hFlip.hashCode ^
         vFlip.hashCode ^
-        dz.hashCode ^
+        z.hashCode ^
         page.hashCode ^
-        level.hashCode;
+        mlIndex.hashCode;
   }
 }

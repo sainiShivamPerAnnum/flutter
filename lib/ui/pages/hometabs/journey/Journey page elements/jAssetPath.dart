@@ -11,6 +11,7 @@ class JourneyAssetPath extends StatelessWidget {
   getChild(JourneyPathModel item) {
     switch (item.asset.type) {
       case "SVG":
+        print("network asset used for asset ${item.asset.name}");
         return
             // item.asset.uri == "NTWRK"
             //     ? SvgPicture.network(
@@ -19,8 +20,8 @@ class JourneyAssetPath extends StatelessWidget {
             //         width: item.asset.width,
             //       )
             //     :
-            SvgPicture.asset(
-          item.asset.uri,
+            SvgPicture.network(
+          "https://journey-assets-x.s3.ap-south-1.amazonaws.com/${item.asset.name}.svg",
           width: model.pageWidth * item.asset.width,
           height: model.pageHeight * item.asset.height,
         );
@@ -43,14 +44,14 @@ class JourneyAssetPath extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    model.journeyPathItemsList.sort((a, b) => a.dz.compareTo(b.dz));
+    model.journeyPathItemsList.sort((a, b) => a.z.compareTo(b.z));
     return Stack(
       children: List.generate(
         model.journeyPathItemsList.length,
         (i) => Positioned(
-          left: model.pageWidth * model.journeyPathItemsList[i].dx,
+          left: model.pageWidth * model.journeyPathItemsList[i].x,
           bottom: model.pageHeight * (model.journeyPathItemsList[i].page - 1) +
-              model.pageHeight * model.journeyPathItemsList[i].dy,
+              model.pageHeight * model.journeyPathItemsList[i].y,
           child: Container(
             width: model.pageWidth * model.journeyPathItemsList[i].asset.width,
             height:

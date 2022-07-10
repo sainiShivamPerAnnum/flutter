@@ -10,6 +10,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
@@ -39,13 +40,11 @@ class _JourneyViewState extends State<JourneyView>
       builder: (ctx, model, child) {
         return Scaffold(
           backgroundColor: Colors.black,
-          floatingActionButton: FloatingActionButton(
-            child: model.isLoading
-                ? CircularProgressIndicator()
-                : const Icon(Icons.play_arrow),
-            onPressed: model.isLoading
-                ? () {}
-                : () {
+          floatingActionButton: model.isLoading
+              ? SizedBox()
+              : FloatingActionButton(
+                  child: const Icon(Icons.play_arrow),
+                  onPressed: () {
                     if (model.controller.isCompleted)
                       model.controller.reverse();
                     else if (model.controller.isAnimating)
@@ -54,7 +53,7 @@ class _JourneyViewState extends State<JourneyView>
                       model.controller.forward();
                     }
                   },
-          ),
+                ),
           body: model.isLoading && model.pages == null
               ? Container(
                   width: SizeConfig.screenWidth,
