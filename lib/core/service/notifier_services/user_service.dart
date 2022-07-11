@@ -8,6 +8,7 @@ import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/api_cache_manager.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/cache_service.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -23,7 +24,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   final _logger = locator<CustomLogger>();
   final _apiCacheManager = locator<ApiCacheManager>();
   final _userRepo = locator<UserRepository>();
-  final internalOps = locator<InternalOpsRepository>();
+  final _internalOpsService = locator<InternalOpsService>();
 
   User _firebaseUser;
   BaseUser _baseUser;
@@ -173,7 +174,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     } catch (e) {
       _logger.e(e.toString());
       if (baseUser != null)
-        internalOps.logFailure(baseUser.uid, FailType.UserServiceInitFailed, {
+        _internalOpsService
+            .logFailure(baseUser.uid, FailType.UserServiceInitFailed, {
           "title": "UserService initialization Failed",
           "error": e.toString(),
         });

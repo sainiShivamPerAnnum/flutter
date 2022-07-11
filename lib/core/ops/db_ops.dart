@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
@@ -15,8 +13,8 @@ import 'package:felloapp/core/model/subscription_models/subscription_transaction
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
-import 'package:felloapp/core/repository/internal_ops_repo.dart';
 import 'package:felloapp/core/service/api.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -35,7 +33,7 @@ class DBModel extends ChangeNotifier {
   final Log log = new Log("DBModel");
   final FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.instance;
   final logger = locator<CustomLogger>();
-  final internalOps = locator<InternalOpsRepository>();
+  final _internalOpsService = locator<InternalOpsService>();
 
   Future<bool> updateClientToken(BaseUser user, String token) async {
     try {
@@ -63,7 +61,7 @@ class DBModel extends ChangeNotifier {
       try {
         user = BaseUser.fromMap(doc.data(), id);
       } catch (e) {
-        internalOps.logFailure(
+        _internalOpsService.logFailure(
           id,
           FailType.UserDataCorrupted,
           {'message': "User data corrupted"},

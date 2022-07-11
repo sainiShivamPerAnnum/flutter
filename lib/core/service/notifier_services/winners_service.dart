@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/winner_service_enum.dart';
@@ -217,7 +219,7 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
 
     if (data != null) {
       _logger.d("Reading Api cache with key: $cacheKey");
-      _responseModel = WinnersModel.fromMap(data, gameType);
+      _responseModel = WinnersModel.fromMap(data);
     } else {
       _logger.d("Adding Api cache with key isCacheable: $cacheKey");
 
@@ -225,13 +227,13 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
         type: gameType,
         freq: freq,
       );
-
+      log("Kunj: ${_response.model}");
       if (_response.code == 200 && _response.model.isNotEmpty) {
-        _responseModel = WinnersModel.fromMap(data, gameType);
+        _responseModel = WinnersModel.fromMap(_response.model);
         await _apiCacheManager.writeApiCache(
           key: cacheKey,
           ttl: Duration(hours: 6),
-          value: _responseModel.toJson(),
+          value: _responseModel.toMap(),
         );
       }
     }

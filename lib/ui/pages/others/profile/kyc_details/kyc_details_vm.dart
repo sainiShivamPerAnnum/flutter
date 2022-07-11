@@ -3,11 +3,11 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/verify_pan_response_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
-import 'package:felloapp/core/repository/internal_ops_repo.dart';
 import 'package:felloapp/core/repository/signzy_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -35,7 +35,7 @@ class KYCDetailsViewModel extends BaseModel {
   final _analyticsService = locator<AnalyticsService>();
   final _signzyRepository = locator<SignzyRepository>();
   final _gtService = locator<GoldenTicketService>();
-  final internalOps = locator<InternalOpsRepository>();
+  final _internalOpsService = locator<InternalOpsService>();
   bool get isConfirmDialogInView => _userService.isConfirmationDialogOpen;
 
   FocusNode panFocusNode = FocusNode();
@@ -270,7 +270,7 @@ class KYCDetailsViewModel extends BaseModel {
         'user_pan_number': enteredPan,
         'upstream_name': upstreamName,
       };
-      internalOps.logFailure(
+      _internalOpsService.logFailure(
           _userService.baseUser.uid, FailType.UserKYCFlagFetchFailed, _data);
       return {'flag': _flag, 'fail_code': _failCode, 'reason': _reason};
     }

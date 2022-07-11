@@ -17,6 +17,7 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -51,7 +52,7 @@ class LoginControllerViewModel extends BaseModel {
   final dbProvider = locator<DBModel>();
   final _userRepo = locator<UserRepository>();
   static LocalDBModel lclDbProvider = locator<LocalDBModel>();
-  final internalOps = locator<InternalOpsRepository>();
+  final _internalOpsService = locator<InternalOpsService>();
 
   //Controllers
   PageController _controller;
@@ -472,7 +473,7 @@ class LoginControllerViewModel extends BaseModel {
       return;
     }
 
-    Map<String, dynamic> response = await internalOps.initDeviceInfo();
+    Map<String, dynamic> response = await _internalOpsService.initDeviceInfo();
     if (response != null) {
       final String deviceId = response["deviceId"];
       final String platform = response["platform"];

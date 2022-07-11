@@ -5,6 +5,7 @@ import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/code_from_freq.dart';
 import 'package:felloapp/util/flavor_config.dart';
 
 class GetterRepository extends BaseRepo {
@@ -15,9 +16,9 @@ class GetterRepository extends BaseRepo {
   Future<ApiResponse> getStatisticsByFreqGameTypeAndCode({
     String type,
     String freq,
-    String code,
   }) async {
     try {
+      final String code = CodeFromFreq.getCodeFromFreq(freq);
       final statisticsResponse = await APIService.instance.getData(
         ApiPath.statistics,
         cBaseUrl: _baseUrl,
@@ -57,13 +58,13 @@ class GetterRepository extends BaseRepo {
     String freq,
   }) async {
     try {
-      List<WinnersModel> winnerModel;
       final winnersResponse = await APIService.instance.getData(
         ApiPath.pastWinners(type, freq),
         cBaseUrl: _baseUrl,
       );
 
-      winnerModel = WinnersModel.helper.fromMapArray(winnersResponse["data"]);
+      final winnerModel =
+          WinnersModel.helper.fromMapArray(winnersResponse["data"]);
 
       return ApiResponse(model: winnerModel, code: 200);
     } catch (e) {

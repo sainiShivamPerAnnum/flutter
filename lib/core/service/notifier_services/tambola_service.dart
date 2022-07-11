@@ -2,7 +2,7 @@ import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/repository/internal_ops_repo.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
@@ -16,7 +16,7 @@ class TambolaService extends ChangeNotifier {
   DBModel _dbModel = locator<DBModel>();
   UserService _userService = locator<UserService>();
   final _tambolaRepo = locator<TambolaRepo>();
-  final internalOps = locator<InternalOpsRepository>();
+  final _internalOpsService = locator<InternalOpsService>();
 
   static int _ticketCount;
   static int _dailyPicksCount;
@@ -186,7 +186,7 @@ class TambolaService extends ChangeNotifier {
     } catch (e) {
       _logger.e('key parsing failed: ' + e.toString());
       Map<String, String> errorDetails = {'error_msg': e.toString()};
-      internalOps.logFailure(_userService.baseUser.uid,
+      _internalOpsService.logFailure(_userService.baseUser.uid,
           FailType.DailyPickParseFailed, errorDetails);
       dailyPicksCount = 3;
     }

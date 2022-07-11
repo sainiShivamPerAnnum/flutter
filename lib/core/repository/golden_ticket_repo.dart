@@ -16,7 +16,6 @@ class GoldenTicketRepository extends BaseRepo {
     String goldenTicketId,
   }) async {
     try {
-      GoldenTicket ticket;
       final goldenTicketRespone = await APIService.instance.getData(
         ApiPath.getGoldenTicketById(
           this.userService.baseUser.uid,
@@ -25,7 +24,7 @@ class GoldenTicketRepository extends BaseRepo {
         cBaseUrl: _baseUrl,
       );
 
-      ticket =
+      final ticket =
           GoldenTicket.fromJson(goldenTicketRespone['data'], goldenTicketId);
       return ApiResponse<GoldenTicket>(model: ticket, code: 200);
     } catch (e) {
@@ -36,7 +35,6 @@ class GoldenTicketRepository extends BaseRepo {
 
   Future<ApiResponse<List<UserMilestone>>> fetchMilestones() async {
     try {
-      List<UserMilestone> miletones = [];
       final milestoneRespone = await APIService.instance.getData(
         ApiPath.getMilestone(
           this.userService.baseUser.uid,
@@ -44,7 +42,9 @@ class GoldenTicketRepository extends BaseRepo {
         cBaseUrl: _baseUrl,
       );
 
-      miletones = UserMilestoneModel.fromJson(milestoneRespone).data;
+      // final miletones = UserMilestoneModel.fromJson(milestoneRespone).data;
+      final miletones =
+          UserMilestone.helper.fromMapArray(milestoneRespone["data"]);
       return ApiResponse<List<UserMilestone>>(model: miletones, code: 200);
     } catch (e) {
       logger.e(e.toString());
@@ -55,14 +55,13 @@ class GoldenTicketRepository extends BaseRepo {
   Future<ApiResponse<PrizesModel>> getPrizesPerGamePerFreq(
       String gameCode, String freq) async {
     try {
-      PrizesModel prizesModel;
       final milestoneRespone = await APIService.instance
           .getData(ApiPath.prizes, cBaseUrl: _baseUrl, queryParams: {
         'game': gameCode,
         'freq': freq,
       });
 
-      prizesModel = PrizesModel.fromJson(milestoneRespone["data"]);
+      final prizesModel = PrizesModel.fromJson(milestoneRespone["data"]);
       return ApiResponse<PrizesModel>(model: prizesModel, code: 200);
     } catch (e) {
       logger.e(e.toString());

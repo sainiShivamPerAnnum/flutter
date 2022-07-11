@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/alert_model.dart';
@@ -146,8 +148,11 @@ class UserRepository extends BaseRepo {
     }
   }
 
-  Future<void> setNewDeviceId(
-      {String uid, String deviceId, String platform}) async {
+  Future<void> setNewDeviceId({
+    String uid,
+    String deviceId,
+    String platform,
+  }) async {
     try {
       Map<String, dynamic> _body = {
         "uid": uid,
@@ -169,7 +174,6 @@ class UserRepository extends BaseRepo {
 
   Future<ApiResponse<UserAugmontDetail>> getUserAugmontDetails() async {
     try {
-      UserAugmontDetail augmont;
       final augmontRespone = await APIService.instance.getData(
         ApiPath.getAugmontDetail(
           this.userService.baseUser.uid,
@@ -177,7 +181,7 @@ class UserRepository extends BaseRepo {
         cBaseUrl: _baseUrl,
       );
 
-      augmont = UserAugmontDetail.fromMap(augmontRespone['data']);
+      final augmont = UserAugmontDetail.fromMap(augmontRespone['data']);
       return ApiResponse<UserAugmontDetail>(model: augmont, code: 200);
     } catch (e) {
       logger.e(e.toString());
@@ -192,11 +196,9 @@ class UserRepository extends BaseRepo {
         cBaseUrl: _baseUrl,
       );
 
-      List<AlertModel> notifications = [];
-
-      for (var element in latestNotificationsResponse["data"]) {
-        notifications.add(AlertModel.fromMap(element));
-      }
+      final List<AlertModel> notifications = AlertModel.helper.fromMapArray(
+        latestNotificationsResponse["data"],
+      );
 
       String latestNotifTime = await CacheManager.readCache(
           key: CacheManager.CACHE_LATEST_NOTIFICATION_TIME);
@@ -227,7 +229,6 @@ class UserRepository extends BaseRepo {
     String lastDocId,
   ) async {
     try {
-      // List<AlertModel> notifications = [];
       final userNotifications = await APIService.instance.getData(
         ApiPath.getNotications(this.userService.baseUser.uid),
         cBaseUrl: _baseUrl,
@@ -236,9 +237,6 @@ class UserRepository extends BaseRepo {
         },
       );
 
-      // for (var element in userNotifications["data"]) {
-      //   notifications.add(AlertModel.fromMap(element));
-      // }
       final responseData = userNotifications["data"];
 
       return ApiResponse<List<AlertModel>>(

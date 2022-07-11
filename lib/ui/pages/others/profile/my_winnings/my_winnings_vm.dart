@@ -13,6 +13,7 @@ import 'package:felloapp/core/repository/internal_ops_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -27,10 +28,8 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -44,7 +43,7 @@ class MyWinningsViewModel extends BaseModel {
   final _localDBModel = locator<LocalDBModel>();
   final _dbModel = locator<DBModel>();
   final _analyticsService = locator<AnalyticsService>();
-  final internalOps = locator<InternalOpsRepository>();
+  final _internalOpsService = locator<InternalOpsService>();
 
   // LOCAL VARIABLES
   PrizeClaimChoice _choice;
@@ -406,7 +405,7 @@ class MyWinningsViewModel extends BaseModel {
                   Map<String, dynamic> errorDetails = {
                     'error_msg': 'Share reward text in My winnings failed'
                   };
-                  internalOps.logFailure(_userService.baseUser.uid,
+                  _internalOpsService.logFailure(_userService.baseUser.uid,
                       FailType.FelloRewardTextShareFailed, errorDetails);
                 }
                 _logger.e(onError);
@@ -419,7 +418,7 @@ class MyWinningsViewModel extends BaseModel {
                   Map<String, dynamic> errorDetails = {
                     'error_msg': 'Share reward text in My winnings failed'
                   };
-                  internalOps.logFailure(_userService.baseUser.uid,
+                  _internalOpsService.logFailure(_userService.baseUser.uid,
                       FailType.FelloRewardTextShareFailed, errorDetails);
                 }
                 _logger.e(onError);
@@ -447,7 +446,7 @@ class MyWinningsViewModel extends BaseModel {
         Map<String, dynamic> errorDetails = {
           'error_msg': 'Share reward card creation failed'
         };
-        internalOps.logFailure(_userService.baseUser.uid,
+        _internalOpsService.logFailure(_userService.baseUser.uid,
             FailType.FelloRewardCardShareFailed, errorDetails);
       }
 
@@ -475,7 +474,7 @@ class MyWinningsViewModel extends BaseModel {
             Map<String, dynamic> errorDetails = {
               'error_msg': 'Share reward card in card.dart failed'
             };
-            internalOps.logFailure(_userService.baseUser.uid,
+            _internalOpsService.logFailure(_userService.baseUser.uid,
                 FailType.FelloRewardCardShareFailed, errorDetails);
           }
           print(onError);
@@ -501,7 +500,7 @@ class MyWinningsViewModel extends BaseModel {
             Map<String, dynamic> errorDetails = {
               'error_msg': 'Share reward card in card.dart failed'
             };
-            internalOps.logFailure(_userService.baseUser.uid,
+            _internalOpsService.logFailure(_userService.baseUser.uid,
                 FailType.FelloRewardCardShareFailed, errorDetails);
           }
           print(onError);

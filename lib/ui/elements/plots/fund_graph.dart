@@ -2,6 +2,7 @@ import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/internal_ops_repo.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/elements/network_bar.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -25,7 +26,7 @@ class LineChartWidget extends StatefulWidget {
 
 class _LineChartWidgetState extends State<LineChartWidget> {
   final _userService = locator<UserService>();
-  final internalOps = locator<InternalOpsRepository>();
+  final _internalOpsService = locator<InternalOpsService>();
   Future<List<GoldGraphPoint>> _getDataPoints() async {
     List<GoldGraphPoint> _res;
     try {
@@ -40,7 +41,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
         Map<String, dynamic> errorDetails = {
           'error_msg': 'Fetching gold rates for api for line chart failed',
         };
-        internalOps.logFailure(_userService.baseUser.uid,
+        _internalOpsService.logFailure(_userService.baseUser.uid,
             FailType.GoldRateFetchFailed, errorDetails);
       }
       print(err);

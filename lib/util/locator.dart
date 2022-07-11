@@ -29,6 +29,7 @@ import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/lcl_db_api.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/prize_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
@@ -105,6 +106,8 @@ void setupLocator() {
   locator.registerLazySingleton(() => MixpanelAnalytics());
   locator.registerLazySingleton(() => WebEngageAnalytics());
   locator.registerLazySingleton(() => AppFlyerAnalytics());
+
+  locator.registerLazySingleton(() => InternalOpsService());
 
   //Model Services
   locator.registerLazySingleton(() => BaseUtil());

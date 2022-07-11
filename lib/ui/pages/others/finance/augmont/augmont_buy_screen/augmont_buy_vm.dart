@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
@@ -12,14 +11,13 @@ import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/eligible_coupon_model.dart';
 import 'package:felloapp/core/model/paytm_models/deposit_fcm_response_model.dart';
-import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/coupons_repo.dart';
-import 'package:felloapp/core/repository/internal_ops_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -30,7 +28,6 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/modals_sheets/augmont_coupons_modal.dart';
 import 'package:felloapp/ui/modals_sheets/augmont_register_modal_sheet.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
-import 'package:felloapp/ui/pages/static/transaction_loader.dart';
 import 'package:felloapp/ui/pages/static/txn_completed_ui/txn_completed_view.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
@@ -61,7 +58,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   final UserService _userService = locator<UserService>();
   final TransactionService _txnService = locator<TransactionService>();
   final GoldenTicketService _gtService = GoldenTicketService();
-  final internalOps = locator<InternalOpsRepository>();
+  final _internalOpsService = locator<InternalOpsService>();
 
   final _analyticsService = locator<AnalyticsService>();
   final _couponRepo = locator<CouponRepository>();
@@ -395,7 +392,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
       _txnService.updateTransactions();
     } catch (e) {
       _logger.e(e);
-      internalOps.logFailure(
+      _internalOpsService.logFailure(
           _userService.baseUser.uid, FailType.DepositPayloadError, e);
     }
   }

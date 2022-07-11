@@ -4,9 +4,9 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/repository/internal_ops_repo.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -23,7 +23,7 @@ class FcmListener {
   final CustomLogger logger = locator<CustomLogger>();
   final FcmHandler _handler = locator<FcmHandler>();
   final UserService _userService = locator<UserService>();
-  final internalOps = locator<InternalOpsRepository>();
+  final _internalOpsService = locator<InternalOpsService>();
 
   FirebaseMessaging _fcm;
   bool isTambolaNotificationLoading = false;
@@ -132,7 +132,7 @@ class FcmListener {
     } catch (e) {
       logger.e(e.toString());
       if (_userService.isUserOnborded != null)
-        internalOps.logFailure(
+        _internalOpsService.logFailure(
             _userService.baseUser.uid, FailType.FcmListenerSetupFailed, {
           "title": "FcmListener setup Failed",
           "error": e.toString(),
@@ -246,7 +246,7 @@ class FcmListener {
         Map<String, dynamic> errorDetails = {
           'error_msg': 'Changing Tambola Notification Status failed'
         };
-        internalOps.logFailure(_userService.baseUser.uid,
+        _internalOpsService.logFailure(_userService.baseUser.uid,
             FailType.TambolaDrawNotificationSettingFailed, errorDetails);
       }
       BaseUtil.showNegativeAlert("Something went wrong!", "Please try again");

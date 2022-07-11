@@ -1,11 +1,9 @@
 //Project Imports
 //Dart & Flutter Imports
 import 'dart:async';
-import 'dart:developer' as dev;
 import 'dart:math';
 //Pub Imports
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:felloapp/core/repository/internal_ops_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/base_remote_config.dart';
@@ -19,7 +17,6 @@ import 'package:felloapp/core/model/feed_card_model.dart';
 import 'package:felloapp/core/model/prize_leader_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/referral_leader_model.dart';
-import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/model/user_icici_detail_model.dart';
@@ -29,6 +26,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/pan_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -48,7 +46,6 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:logger/logger.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -62,7 +59,7 @@ class BaseUtil extends ChangeNotifier {
   final AppState _appState = locator<AppState>();
   final UserService _userService = locator<UserService>();
   final _userRepo = locator<UserRepository>();
-  final internalOps = locator<InternalOpsRepository>();
+  final _internalOpsService = locator<InternalOpsService>();
 
   BaseUser _myUser;
   UserFundWallet _userFundWallet;
@@ -406,7 +403,8 @@ class BaseUtil extends ChangeNotifier {
         'User number': _myUser.mobile,
         'Error Type': 'Unread message count failed'
       };
-      internalOps.logFailure(_myUser.uid, FailType.FreshchatFail, errorDetails);
+      _internalOpsService.logFailure(
+          _myUser.uid, FailType.FreshchatFail, errorDetails);
       return false;
     }
   }
@@ -928,7 +926,7 @@ class BaseUtil extends ChangeNotifier {
     }).catchError((err) {
       if (_myUser.uid != null) {
         var errorDetails = {'error_msg': err.toString()};
-        internalOps.logFailure(
+        _internalOpsService.logFailure(
             _myUser.uid, FailType.UserAugmontBalanceUpdateFailed, errorDetails);
       }
       print('$err');

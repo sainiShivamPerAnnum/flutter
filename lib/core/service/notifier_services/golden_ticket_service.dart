@@ -10,6 +10,7 @@ import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/golden_ticket_repo.dart';
 import 'package:felloapp/core/repository/internal_ops_repo.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -40,7 +41,7 @@ class GoldenTicketService extends ChangeNotifier {
   final _gtRepo = locator<GoldenTicketRepository>();
   final _userService = locator<UserService>();
   final _paytmService = locator<PaytmService>();
-  final internalOps = locator<InternalOpsRepository>();
+  final _internalOpsService = locator<InternalOpsService>();
   // static bool hasGoldenTicket = false;
 
   static String goldenTicketId;
@@ -138,7 +139,7 @@ class GoldenTicketService extends ChangeNotifier {
                   Map<String, dynamic> errorDetails = {
                     'error_msg': 'Share reward text in My winnings failed'
                   };
-                  internalOps.logFailure(_userService.baseUser.uid,
+                  _internalOpsService.logFailure(_userService.baseUser.uid,
                       FailType.FelloRewardTextShareFailed, errorDetails);
                 }
                 _logger.e(onError);
@@ -151,7 +152,7 @@ class GoldenTicketService extends ChangeNotifier {
                   Map<String, dynamic> errorDetails = {
                     'error_msg': 'Share reward text in My winnings failed'
                   };
-                  internalOps.logFailure(_userService.baseUser.uid,
+                  _internalOpsService.logFailure(_userService.baseUser.uid,
                       FailType.FelloRewardTextShareFailed, errorDetails);
                 }
                 _logger.e(onError);
@@ -179,7 +180,7 @@ class GoldenTicketService extends ChangeNotifier {
         Map<String, dynamic> errorDetails = {
           'error_msg': 'Share reward card creation failed'
         };
-        internalOps.logFailure(_userService.baseUser.uid,
+        _internalOpsService.logFailure(_userService.baseUser.uid,
             FailType.FelloRewardCardShareFailed, errorDetails);
       }
 
@@ -207,7 +208,7 @@ class GoldenTicketService extends ChangeNotifier {
             Map<String, dynamic> errorDetails = {
               'error_msg': 'Share reward card in card.dart failed'
             };
-            internalOps.logFailure(_userService.baseUser.uid,
+            _internalOpsService.logFailure(_userService.baseUser.uid,
                 FailType.FelloRewardCardShareFailed, errorDetails);
           }
           print(onError);
@@ -233,7 +234,7 @@ class GoldenTicketService extends ChangeNotifier {
             Map<String, dynamic> errorDetails = {
               'error_msg': 'Share reward card in card.dart failed'
             };
-            internalOps.logFailure(_userService.baseUser.uid,
+            _internalOpsService.logFailure(_userService.baseUser.uid,
                 FailType.FelloRewardCardShareFailed, errorDetails);
           }
           print(onError);

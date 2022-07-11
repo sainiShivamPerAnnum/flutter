@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/leader_board_modal.dart';
+import 'package:felloapp/core/model/leaderboard_model.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -25,7 +26,7 @@ class TambolaHomeViewModel extends BaseModel {
   bool isPrizesLoading = false;
   int currentPage = 0;
   PageController pageController = new PageController(initialPage: 0);
-  LeaderBoardModal _tLeaderBoard;
+  LeaderboardModel _tLeaderBoard;
   ScrollController scrollController;
   double cardOpacity = 1;
 
@@ -45,7 +46,7 @@ class TambolaHomeViewModel extends BaseModel {
     notifyListeners();
   }
 
-  LeaderBoardModal get tlboard => _tLeaderBoard;
+  LeaderboardModel get tlboard => _tLeaderBoard;
   PrizesModel get tPrizes => _prizeService.tambolaPrizes;
 
   viewpage(int index) {
@@ -64,10 +65,12 @@ class TambolaHomeViewModel extends BaseModel {
   Future<void> getLeaderboard() async {
     isLeaderboardLoading = true;
     notifyListeners();
-    String code = CodeFromFreq.getCodeFromFreq("weekly");
+
     log("GM_TAMBOLA2020");
     ApiResponse temp = await _getterRepo.getStatisticsByFreqGameTypeAndCode(
-        type: "GM_TAMBOLA2020", freq: "weekly", code: code);
+      type: "GM_TAMBOLA2020",
+      freq: "weekly",
+    );
     _logger.d(temp.code);
     if (temp.model != null) _tLeaderBoard = temp.model;
     // else

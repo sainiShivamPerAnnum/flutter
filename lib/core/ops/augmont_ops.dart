@@ -8,12 +8,12 @@ import 'package:felloapp/core/model/deposit_response_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/repository/internal_ops_repo.dart';
 import 'package:felloapp/core/repository/investment_actions_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/augmont_invoice_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -34,7 +34,7 @@ class AugmontModel extends ChangeNotifier {
   final Log log = new Log('AugmontModel');
   final CustomLogger _logger = locator<CustomLogger>();
   final _apiPaths = locator<ApiPath>();
-  final internalOps = locator<InternalOpsRepository>();
+  final _internalOpsService = locator<InternalOpsService>();
 
   final InvestmentActionsRepository _investmentActionsRepository =
       locator<InvestmentActionsRepository>();
@@ -321,7 +321,7 @@ class AugmontModel extends ChangeNotifier {
       if (_augmontTxnProcessListener != null)
         _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
     } else {
-      internalOps.logFailure(
+      _internalOpsService.logFailure(
           _userService.baseUser.uid,
           FailType.CompleteUserDepositApiFailed,
           {'message': _initialDepositResponse?.errorMessage});
@@ -389,7 +389,7 @@ class AugmontModel extends ChangeNotifier {
       'txnDocId': _baseProvider.currentAugmontTxn.docKey
     };
 
-    await internalOps.logFailure(_userService.baseUser.uid,
+    await _internalOpsService.logFailure(_userService.baseUser.uid,
         FailType.UserRazorpayPurchaseFailed, _failMap);
     _baseProvider.currentAugmontTxn.tranStatus =
         UserTransaction.TRAN_STATUS_CANCELLED;
@@ -406,7 +406,7 @@ class AugmontModel extends ChangeNotifier {
 
     _txnService.updateTransactions();
     if (_onCancleUserDepositResponse.code == 400) {
-      internalOps.logFailure(
+      _internalOpsService.logFailure(
           _userService.baseUser.uid, FailType.CompleteUserDepositApiFailed, {
         'message': _onCancleUserDepositResponse?.errorMessage ??
             "Cancel user deposit failed"
@@ -541,7 +541,7 @@ class AugmontModel extends ChangeNotifier {
     }
 
     if (!_successFlag) {
-      internalOps.logFailure(
+      _internalOpsService.logFailure(
           _userService.baseUser.uid, FailType.WithdrawlCompleteApiFailed, {
         'message':
             _initialDepositResponse?.errorMessage ?? "Withdrawal api failed"

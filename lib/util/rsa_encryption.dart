@@ -2,8 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:encrypt/encrypt.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/repository/internal_ops_repo.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
@@ -34,7 +33,7 @@ import 'package:pointycastle/asymmetric/api.dart';
 class RSAEncryption {
   final _userService = locator<UserService>();
   // final _dbModel = locator<DBModel>();
-  final internalOps = locator<InternalOpsRepository>();
+  final _internalOpsService = locator<InternalOpsService>();
   final _logger = locator<CustomLogger>();
   Encrypter rsaEncrypter, aesEncrypter;
   static const String _chars = 'abcdef1234567890';
@@ -81,7 +80,7 @@ class RSAEncryption {
     } catch (e) {
       _logger.e(e.toString());
       if (_userService.isUserOnborded)
-        internalOps.logFailure(
+        _internalOpsService.logFailure(
             _userService.baseUser.uid, FailType.RSAEncryterInitFailed, {
           "err_message":
               "RSA Encrypter generation Failed while parsing local file",
@@ -104,7 +103,7 @@ class RSAEncryption {
     } catch (e) {
       _logger.e(e.toString());
       if (_userService.isUserOnborded)
-        internalOps.logFailure(
+        _internalOpsService.logFailure(
             _userService.baseUser.uid, FailType.AESEncryptionInitFailed, {
           "message": "AES Encrypter generation Failed",
         });
