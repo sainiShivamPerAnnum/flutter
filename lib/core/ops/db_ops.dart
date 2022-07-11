@@ -194,50 +194,6 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  /////////////////////////USER TRANSACTION/////////////////////
-
-  Future<Map<String, dynamic>> getFilteredUserTransactions(
-      {@required BaseUser user,
-      String type,
-      String subtype,
-      String status,
-      DocumentSnapshot lastDocument,
-      @required int limit}) async {
-    Map<String, dynamic> resultTransactionsMap = Map<String, dynamic>();
-    List<UserTransaction> requestedTxns = [];
-    try {
-      String _id = user.uid;
-      logger.i("CALLING: getUserTransactionsByField");
-      QuerySnapshot _querySnapshot = await _api.getUserTransactionsByField(
-        userId: _id,
-        type: type,
-        subtype: subtype,
-        status: status,
-        lastDocument: lastDocument,
-        limit: limit,
-      );
-      resultTransactionsMap['lastDocument'] = _querySnapshot.docs.last;
-      resultTransactionsMap['length'] = _querySnapshot.docs.length;
-      _querySnapshot.docs.forEach((txn) {
-        try {
-          if (txn.exists)
-            requestedTxns.add(UserTransaction.fromMap(txn.data(), txn.id));
-        } catch (e) {
-          log.error('Failed to parse user transaction $txn');
-        }
-      });
-      logger.d("No of transactions fetched: ${requestedTxns.length}");
-      resultTransactionsMap['listOfTransactions'] = requestedTxns;
-      return resultTransactionsMap;
-    } catch (err) {
-      log.error('Failed to fetch transactions:: $err');
-      resultTransactionsMap['length'] = 0;
-      resultTransactionsMap['listOfTransactions'] = requestedTxns;
-      resultTransactionsMap['lastDocument'] = lastDocument;
-      return resultTransactionsMap;
-    }
-  }
-
   ///////////////////////////CREDENTIALS//////////////////////////////
 
   Future<Map<String, String>> getActiveAwsAugmontApiKey() async {

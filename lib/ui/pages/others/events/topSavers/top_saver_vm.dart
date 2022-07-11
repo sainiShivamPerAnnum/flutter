@@ -160,8 +160,7 @@ class TopSaverViewModel extends BaseModel {
   }
 
   fetchTopSavers() async {
-    String code =
-        CodeFromFreq.getCodeFromFreq(saverFreq, isMondayCorrected: false);
+    String code = CodeFromFreq.getCodeFromFreq(saverFreq);
     ApiResponse response = await _getterRepo.getStatisticsByFreqGameTypeAndCode(
       freq: saverFreq,
       type: eventStandingsType,

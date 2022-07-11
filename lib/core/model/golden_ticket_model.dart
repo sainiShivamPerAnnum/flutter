@@ -33,22 +33,14 @@ class GoldenTicket {
   GoldenTicket.fromJson(Map<String, dynamic> json, String docId) {
     gtId = docId;
     userId = json['userId'];
-    timestamp = json['timestamp'].runtimeType == Timestamp
-        ? TimestampModel(seconds: 0, nanoseconds: 0)
-        : json['timestamp'] != null
-            ? TimestampModel.fromMap(json['timestamp'])
-            : null;
+    timestamp = TimestampModel.fromMap(json['timestamp']);
     eventType = json['eventType'];
     gtType = json['gtType'];
     prizeSubtype = json['prizeSubtype'];
     note = json['note'];
     canTransfer = json['canTransfer'];
     isRewarding = json['isRewarding'];
-    redeemedTimestamp = json['redeemedTimestamp'].runtimeType == Timestamp
-        ? TimestampModel(seconds: 0, nanoseconds: 0)
-        : json['redeemedTimestamp'] != null
-            ? TimestampModel.fromMap(json['redeemedTimestamp'])
-            : null;
+    redeemedTimestamp = TimestampModel.fromMap(json['redeemedTimestamp']);
     rewardArr =
         json['rewardArr'] != null ? Reward.objArray(json['rewardArr']) : [];
     version = json['version'];
@@ -81,7 +73,6 @@ class Reward {
     return "Type: $type || Value: $value";
   }
 }
-
 
 // Why a reward map, why not directly a reward array
 // with reward class object
