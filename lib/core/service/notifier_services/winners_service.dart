@@ -227,7 +227,6 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
         type: gameType,
         freq: freq,
       );
-      log("Kunj: ${_response.model}");
       if (_response.code == 200 && _response.model.isNotEmpty) {
         _responseModel = WinnersModel.fromMap(_response.model);
         await _apiCacheManager.writeApiCache(
