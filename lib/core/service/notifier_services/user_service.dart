@@ -209,7 +209,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   Future<void> setBaseUser() async {
     if (_firebaseUser != null) {
-      final response = await _dbModel.getUser(_firebaseUser?.uid);
+      final response = await _userRepo.getUserById(id: _firebaseUser?.uid);
       if (response.code == 400) {
         _logger.d("Unable to cast user data object.");
         return;

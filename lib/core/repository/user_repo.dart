@@ -11,9 +11,12 @@ import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'base_repo.dart';
 
@@ -21,6 +24,7 @@ class UserRepository extends BaseRepo {
   final _appsFlyerService = locator<AppFlyerAnalytics>();
   final _api = locator<Api>();
   final _apiPaths = locator<ApiPath>();
+  final _internalOpsService = locator<InternalOpsService>();
   final _baseUrl = FlavorConfig.isDevelopment()
       ? "https://6w37rw51hj.execute-api.ap-south-1.amazonaws.com/dev"
       : "https://7y9layzs7j.execute-api.ap-south-1.amazonaws.com";
@@ -70,6 +74,29 @@ class UserRepository extends BaseRepo {
     } catch (e) {
       logger.d(e);
       return ApiResponse.withError("User not added to firestore", 400);
+    }
+  }
+
+  Future<ApiResponse<BaseUser>> getUserById({@required String id}) async {
+    try {
+      final res = await APIService.instance.getData(
+        _apiPaths.kGetUserById(id),
+        cBaseUrl: _baseUrl,
+      );
+
+      try {
+        final _user = BaseUser.fromMap(res["data"], id);
+        return ApiResponse(model: _user, code: 200);
+      } catch (e) {
+        _internalOpsService.logFailure(
+          id,
+          FailType.UserDataCorrupted,
+          {'message': "User data corrupted"},
+        );
+        return ApiResponse.withError("User data corrupted", 400);
+      }
+    } catch (e) {
+      return ApiResponse.withError("Unable to get user", 400);
     }
   }
 

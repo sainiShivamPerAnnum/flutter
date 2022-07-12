@@ -71,12 +71,12 @@ class ApiPath {
   // Golden Ticket rewards Apis
   static String getGoldenTicketById(String uid, String goldenTicketId) =>
       "/user/$uid/gt/$goldenTicketId";
-
   static String getMilestone(String uid) => "/user/$uid/milestones";
-
   static const String prizes = '/prizes';
 
+  //User Ops Apis
   static String getAugmontDetail(String uid) => "/user/$uid/augmont";
+  String kGetUserById(String id) => "/$id";
 
   // Payment Apis
   static String getWithdrawableGoldQuantity(String uid) =>

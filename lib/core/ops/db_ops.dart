@@ -33,7 +33,6 @@ class DBModel extends ChangeNotifier {
   final Log log = new Log("DBModel");
   final FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.instance;
   final logger = locator<CustomLogger>();
-  final _internalOpsService = locator<InternalOpsService>();
 
   Future<bool> updateClientToken(BaseUser user, String token) async {
     try {
@@ -50,31 +49,6 @@ class DBModel extends ChangeNotifier {
   }
 
   //////////////////BASE USER//////////////////////////
-  Future<ApiResponse<BaseUser>> getUser(String id) async {
-    try {
-      logger.i("CALLING: getUserById");
-      var doc = await _api.getUserById(id);
-      BaseUser user;
-      if (doc.data() == null) {
-        return ApiResponse(model: null, code: 200);
-      }
-      try {
-        user = BaseUser.fromMap(doc.data(), id);
-      } catch (e) {
-        _internalOpsService.logFailure(
-          id,
-          FailType.UserDataCorrupted,
-          {'message': "User data corrupted"},
-        );
-        return ApiResponse.withError("User data corrupted", 400);
-      }
-
-      return ApiResponse(model: user, code: 200);
-    } catch (e) {
-      log.error("Error fetch User details: " + e.toString());
-      return ApiResponse(model: null, code: 400);
-    }
-  }
 
   Future<bool> updateUserEmail(String uid, String email, bool emailFlag) async {
     try {

@@ -129,11 +129,6 @@ class Api {
     return snapshot;
   }
 
-  Future<DocumentSnapshot> getUserById(String id) {
-    ref = _db.collection(Constants.COLN_USERS);
-    return ref.doc(id).get();
-  }
-
   Future<void> updateUserDocumentPreferenceField(
       String docId, Map<String, dynamic> data) {
     ref = _db.collection(Constants.COLN_USERS);

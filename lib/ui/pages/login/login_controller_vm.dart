@@ -389,7 +389,7 @@ class LoginControllerViewModel extends BaseModel {
     logger.d("User is set: " + userService.firebaseUser.uid);
 
     ApiResponse<BaseUser> user =
-        await dbProvider.getUser(userService.firebaseUser.uid);
+        await _userRepo.getUserById(id: userService.firebaseUser.uid);
     if (user.code == 400) {
       BaseUtil.showNegativeAlert('Your account is under maintenance',
           'Please reach out to customer support');
