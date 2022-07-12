@@ -1,15 +1,24 @@
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/cupertino.dart';
 
 class TransactionCompletedConfirmationScreenViewModel extends BaseModel {
   final _coinService = locator<UserCoinService>();
+  final _paytmService = locator<PaytmService>();
+
+  final _gtService = locator<GoldenTicketService>();
+
   bool _isAnimationInProgress = false;
 
   bool _isInvestmentAnimationInProgress = false;
   bool _isCoinAnimationInProgress = false;
+  bool isAutosaveAlreadySetup = false;
+
   bool _showPlayButton = false;
   bool get showPlayButton => this._showPlayButton;
   AnimationController lottieAnimationController;
@@ -44,8 +53,19 @@ class TransactionCompletedConfirmationScreenViewModel extends BaseModel {
 
   init(double amount) {
     Haptic.vibrate();
+    isAutosaveAlreadySetup = _paytmService.activeSubscription != null &&
+        (_paytmService.activeSubscription.status ==
+                Constants.SUBSCRIPTION_ACTIVE ||
+            (_paytmService.activeSubscription.status ==
+                    Constants.SUBSCRIPTION_INACTIVE &&
+                _paytmService.activeSubscription.resumeDate != null &&
+                _paytmService.activeSubscription.resumeDate.isNotEmpty));
     coinsCount = _coinService.flcBalance - amount.toInt();
     initDepositSuccessAnimation(amount);
+  }
+
+  showAutosavePrompt() {
+    _gtService.showAutosavePrompt();
   }
 
   initDepositSuccessAnimation(double amount) async {

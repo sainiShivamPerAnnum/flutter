@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:device_unlock/device_unlock.dart';
+// import 'package:device_unlock/device_unlock.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -23,7 +23,7 @@ import '../../../core/repository/user_repo.dart';
 class LauncherViewModel extends BaseModel {
   bool _isSlowConnection = false;
   Timer _timer3;
-  DeviceUnlock deviceUnlock;
+  // DeviceUnlock deviceUnlock;
 
   final navigator = AppState.delegate.appState;
 
@@ -81,7 +81,7 @@ class LauncherViewModel extends BaseModel {
     _timer3.cancel();
 
     try {
-      deviceUnlock = DeviceUnlock();
+      // deviceUnlock = DeviceUnlock();
     } catch (e) {
       _logger.e(
         e.toString(),
@@ -114,12 +114,12 @@ class LauncherViewModel extends BaseModel {
 
     ///Ceck if app needs to be open securely
     bool _unlocked = true;
-    if (userService.baseUser.userPreferences
-                .getPreference(Preferences.APPLOCK) ==
-            1 &&
-        deviceUnlock != null) {
-      _unlocked = await authenticateDevice();
-    }
+    // if (userService.baseUser.userPreferences
+    //             .getPreference(Preferences.APPLOCK) ==
+    //         1 &&
+    //     deviceUnlock != null) {
+    //   _unlocked = await authenticateDevice();
+    // }
 
     if (_unlocked) {
       navigator.currentAction =
@@ -130,26 +130,26 @@ class LauncherViewModel extends BaseModel {
     }
   }
 
-  Future<bool> authenticateDevice() async {
-    bool _res = false;
-    try {
-      _res = await deviceUnlock.request(
-          localizedReason:
-              'Confirm your phone screen lock pattern,PIN or password');
-    } on DeviceUnlockUnavailable {
-      BaseUtil.showPositiveAlert('No Device Authentication Found',
-          'Logging in, please enable device security to add lock');
-      _res = true;
-    } on RequestInProgress {
-      _res = false;
-      print('Request in progress');
-    } catch (e) {
-      _logger.e("error", [e]);
-      BaseUtil.showNegativeAlert(
-          'Authentication Failed', 'Please restart and try again');
-    }
-    return _res;
-  }
+  // Future<bool> authenticateDevice() async {
+  //   bool _res = false;
+  //   try {
+  //     _res = await deviceUnlock.request(
+  //         localizedReason:
+  //             'Confirm your phone screen lock pattern,PIN or password');
+  //   } on DeviceUnlockUnavailable {
+  //     BaseUtil.showPositiveAlert('No Device Authentication Found',
+  //         'Logging in, please enable device security to add lock');
+  //     _res = true;
+  //   } on RequestInProgress {
+  //     _res = false;
+  //     print('Request in progress');
+  //   } catch (e) {
+  //     _logger.e("error", [e]);
+  //     BaseUtil.showNegativeAlert(
+  //         'Authentication Failed', 'Please restart and try again');
+  //   }
+  //   return _res;
+  // }
 
   Future<bool> checkBreakingUpdate() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();

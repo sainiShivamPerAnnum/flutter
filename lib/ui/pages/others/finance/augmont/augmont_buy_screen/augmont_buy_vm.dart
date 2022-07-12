@@ -17,17 +17,16 @@ import 'package:felloapp/core/repository/coupons_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/modals_sheets/augmont_coupons_modal.dart';
 import 'package:felloapp/ui/modals_sheets/augmont_register_modal_sheet.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
-import 'package:felloapp/ui/pages/static/transaction_loader.dart';
 import 'package:felloapp/ui/pages/static/txn_completed_ui/txn_completed_view.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
@@ -317,7 +316,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   // BUY LOGIC
   fcmTransactionResponseUpdate(fcmDataPayload) async {
     //Stop loader if loading.
-    _logger.i("Updating response value.");
+    _logger.i("Updating response value. $fcmDataPayload");
     // AppState.delegate.appState.txnFunction.timeout(Duration(seconds: 1));
     AppState.delegate.appState.txnTimer.cancel();
     _logger.d("timer cancelled");
@@ -374,16 +373,19 @@ class AugmontGoldBuyViewModel extends BaseModel {
                 amount: depositFcmResponseModel.amount,
                 title:
                     "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}",
-                source: GTSOURCE.deposit);
+                source: GTSOURCE.deposit,
+                showAutoSavePrompt: depositFcmResponseModel.autosavePrompt);
           } else {
             AppState.delegate.appState.isTxnLoaderInView = false;
             showTxnSuccessScreen(depositFcmResponseModel.amount,
-                "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}");
+                "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}",
+                showAutoSavePrompt: depositFcmResponseModel.autosavePrompt);
           }
         } else {
           AppState.delegate.appState.isTxnLoaderInView = false;
           showTxnSuccessScreen(depositFcmResponseModel.amount,
-              "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}");
+              "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}",
+              showAutoSavePrompt: depositFcmResponseModel.autosavePrompt);
         }
       }
 
@@ -538,7 +540,6 @@ class AugmontGoldBuyViewModel extends BaseModel {
         _isGeneralUserAllowed = 1;
       }
     }
-    //TODO: looks like dead code
     if (_isGeneralUserAllowed == 0) {
       //General permission is denied. Check if specific user permission granted
       if (_userService.baseUser.isAugmontEnabled != null &&
@@ -769,7 +770,8 @@ class AugmontGoldBuyViewModel extends BaseModel {
         amount: 500);
   }
 
-  showTxnSuccessScreen(double amount, String title) {
+  showTxnSuccessScreen(double amount, String title,
+      {bool showAutoSavePrompt = false}) {
     AppState.screenStack.add(ScreenItem.dialog);
     Navigator.of(AppState.delegate.navigatorKey.currentContext).push(
       PageRouteBuilder(
@@ -778,6 +780,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
             TxnCompletedConfirmationScreenView(
           amount: amount ?? 0,
           title: title ?? "Hurray, we saved ₹NA",
+          showAutoSavePrompt: showAutoSavePrompt,
         ),
       ),
     );
