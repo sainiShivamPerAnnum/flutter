@@ -223,10 +223,12 @@ class UserAutosaveDetailsViewModel extends BaseModel {
   }
 
   getChipAmounts() async {
-    dailyChips =
-        await _paytmService.getAmountChips(Constants.DOC_IAR_DAILY_CHIPS);
-    weeklyChips =
-        await _paytmService.getAmountChips(Constants.DOC_IAR_WEEKLY_CHIPS);
+    dailyChips = await _paytmService.getAmountChips(
+      freq: Constants.DOC_IAR_DAILY_CHIPS,
+    );
+    weeklyChips = await _paytmService.getAmountChips(
+      freq: Constants.DOC_IAR_WEEKLY_CHIPS,
+    );
   }
 
   //==========================UPDATE METHODS==============================//

@@ -88,6 +88,7 @@ class ApiPath {
       "/leaderboard/type/$type/freq/$freq";
   static String pastWinners(String type, String freq) =>
       "/leaderboard/past/type/$type/freq/$freq";
+  static String amountChips = "/amount/chips/";
 
   // Internal Ops
   static String failureReport = '/fail/report/';

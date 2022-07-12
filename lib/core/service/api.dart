@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
-import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -366,22 +364,6 @@ class Api {
     return query.get();
   }
 
-  Future<List<AmountChipsModel>> getAmountChips(String type) async {
-    List<AmountChipsModel> amountChipList = [];
-    try {
-      DocumentSnapshot snapshot =
-          await _db.collection(Constants.COLN_INAPPRESOURCES).doc(type).get();
-      Map<String, dynamic> snapData = snapshot.data();
-      snapData["userOptions"].forEach((e) {
-        amountChipList.add(AmountChipsModel.fromMap(e));
-      });
-      amountChipList.sort((a, b) => a.order.compareTo(b.order));
-      return amountChipList;
-      // logger.d(data);
-    } catch (e) {
-      logger.e(e.toString());
-    }
-  }
   //---------------------------------------REALTIME DATABASE-------------------------------------------//
 
   Future<bool> checkUserNameAvailability(String username) async {
