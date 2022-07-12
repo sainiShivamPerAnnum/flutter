@@ -427,43 +427,6 @@ class DBModel extends ChangeNotifier {
     return couponList;
   }
 
-  Future<Map<String, dynamic>> getAutosaveTransactions(
-      {@required String uid,
-      @required String subId,
-      DocumentSnapshot lastDocument,
-      @required int limit}) async {
-    Map<String, dynamic> resultAutosaveTransactionsMap = Map<String, dynamic>();
-    List<AutosaveTransactionModel> requestedTxns = [];
-    try {
-      QuerySnapshot _querySnapshot = await _api.getAutosaveTransactions(
-        userId: uid,
-        lastDocument: lastDocument,
-        limit: limit,
-      );
-      logger.d(_querySnapshot.docs.first.data());
-      resultAutosaveTransactionsMap['lastDocument'] = _querySnapshot.docs.last;
-      resultAutosaveTransactionsMap['length'] = _querySnapshot.docs.length;
-      _querySnapshot.docs.forEach((txn) {
-        try {
-          if (txn.exists)
-            requestedTxns.add(AutosaveTransactionModel.fromMap(txn.data()));
-        } catch (e) {
-          log.error('Failed to parse user transaction $txn');
-        }
-      });
-      logger.d("No of autosave transactions fetched: ${requestedTxns.length}");
-      resultAutosaveTransactionsMap['listOfTransactions'] = requestedTxns;
-      return resultAutosaveTransactionsMap;
-    } catch (err) {
-      requestedTxns = [];
-      log.error('Failed to fetch transactions:: $err');
-      resultAutosaveTransactionsMap['length'] = 0;
-      resultAutosaveTransactionsMap['listOfTransactions'] = requestedTxns;
-      resultAutosaveTransactionsMap['lastDocument'] = lastDocument;
-      return resultAutosaveTransactionsMap;
-    }
-  }
-
 //------------------------------------------------REALTIME----------------------------
 
   Future<bool> checkIfUsernameIsAvailable(String username) async {

@@ -7,12 +7,14 @@ import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/repository/subcription_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_view.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
@@ -21,12 +23,11 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class UserAutosaveDetailsViewModel extends BaseModel {
-  final _dbModel = locator<DBModel>();
   final _userService = locator<UserService>();
   final _paytmService = locator<PaytmService>();
-  final _dBModel = locator<DBModel>();
   final _logger = locator<CustomLogger>();
   final _analyticsService = locator<AnalyticsService>();
+  final _subcriptionRepo = locator<SubcriptionRepo>();
 
   ActiveSubscriptionModel _activeSubscription;
   List<AutosaveTransactionModel> _filteredList;
@@ -211,14 +212,16 @@ class UserAutosaveDetailsViewModel extends BaseModel {
     if (activeSubscription == null) {
       return;
     }
-    final result = await _dBModel.getAutosaveTransactions(
-        uid: _userService.baseUser.uid,
-        subId: activeSubscription.subscriptionId,
-        lastDocument: null,
-        limit: 5);
-    filteredList = result['listOfTransactions'];
-    if (filteredList != null && filteredList.isNotEmpty) {
-      if (filteredList.length > 4) hasMoreTxns = true;
+    final ApiResponse<List<AutosaveTransactionModel>> result =
+        await _subcriptionRepo.getAutosaveTransactions(
+      uid: _userService.baseUser.uid,
+      lastDocument: null,
+    );
+    if (result.code == 200) {
+      filteredList = result.model;
+      if (filteredList != null && filteredList.isNotEmpty) {
+        if (filteredList.length > 4) hasMoreTxns = true;
+      }
     }
   }
 

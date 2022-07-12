@@ -92,4 +92,7 @@ class ApiPath {
 
   // Internal Ops
   static String failureReport = '/fail/report/';
+
+  /// Subcription Apis
+  String getTransaction(String uid) => "/user/$uid/transactions";
 }
