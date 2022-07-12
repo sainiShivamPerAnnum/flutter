@@ -56,6 +56,7 @@ class ApiPath {
   get kActiveSubscription => "/subscription";
   get kNextDebitDate => "/debit";
   get kOngoingCampaigns => "/$stage/campaigns";
+<<<<<<< HEAD
 
   //tambola game Apis
   static String tambolaTickets(String uid) => "/user/$uid/tickets";
@@ -63,4 +64,7 @@ class ApiPath {
   static const String dailyPicks = '/picks';
 
   get kSingleTransactions => "/payments";
+=======
+  get kPromos => "/$stage/promos";
+>>>>>>> 89976f22b907e0fe0714cb7637c3a2b1bbdc651c
 }

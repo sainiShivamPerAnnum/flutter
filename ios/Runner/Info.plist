@@ -63,7 +63,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>108</string>
+	<string>111</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<string>0</string>
 	<key>FirebaseDynamicLinksCustomDomains</key>
@@ -120,6 +120,7 @@
 	<string>$(WEBENGAGE_LICENSE_CODE)</string>
 	<key>WEGLogLevel</key>
 	<string>VERBOSE</string>
+<<<<<<< HEAD
 	<key>UIRequiresFullScreen</key>
 	<true/>
 	<key>FlutterDeepLinkingEnabled</key>
@@ -138,5 +139,14 @@
 			</array>
 			</dict>
 	</array>
+=======
+<<<<<<< HEAD
+=======
+	<key>UIRequiresFullScreen</key>
+	<true/>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+>>>>>>> b7d21fc496eb7dad8e6a50c629ce0f0a3fb059ce
+>>>>>>> 89976f22b907e0fe0714cb7637c3a2b1bbdc651c
 </dict>
 </plist>
