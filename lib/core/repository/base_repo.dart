@@ -8,7 +8,7 @@ abstract class BaseRepo {
   @protected
   final logger = locator<CustomLogger>();
   @protected
-  final userService = locator<UserService>();
+  UserService get userService => locator<UserService>();
 
   @protected
   Future<String> getBearerToken() async {

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/repository/internal_ops_repo.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
@@ -16,6 +17,7 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -50,6 +52,7 @@ class LoginControllerViewModel extends BaseModel {
   final dbProvider = locator<DBModel>();
   final _userRepo = locator<UserRepository>();
   static LocalDBModel lclDbProvider = locator<LocalDBModel>();
+  final _internalOpsService = locator<InternalOpsService>();
 
   //Controllers
   PageController _controller;
@@ -386,7 +389,7 @@ class LoginControllerViewModel extends BaseModel {
     logger.d("User is set: " + userService.firebaseUser.uid);
 
     ApiResponse<BaseUser> user =
-        await dbProvider.getUser(userService.firebaseUser.uid);
+        await _userRepo.getUserById(id: userService.firebaseUser.uid);
     if (user.code == 400) {
       BaseUtil.showNegativeAlert('Your account is under maintenance',
           'Please reach out to customer support');
@@ -470,7 +473,7 @@ class LoginControllerViewModel extends BaseModel {
       return;
     }
 
-    Map<String, dynamic> response = await dbProvider.initDeviceInfo();
+    Map<String, dynamic> response = await _internalOpsService.initDeviceInfo();
     if (response != null) {
       final String deviceId = response["deviceId"];
       final String platform = response["platform"];

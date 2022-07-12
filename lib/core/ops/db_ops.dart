@@ -1,11 +1,8 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
-import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/faq_model.dart';
@@ -15,19 +12,14 @@ import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
-import 'package:felloapp/core/model/user_ticket_wallet_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/api.dart';
-import 'package:felloapp/core/service/cache_manager.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_milestones/golden_milestones_vm.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/util/api_response.dart';
-import 'package:felloapp/util/code_from_freq.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
-import 'package:felloapp/util/help_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -39,43 +31,8 @@ class DBModel extends ChangeNotifier {
   Api _api = locator<Api>();
   Lock _lock = new Lock();
   final Log log = new Log("DBModel");
-  final logger = locator<CustomLogger>();
   final FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.instance;
-  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-  bool isDeviceInfoInitiated = false;
-  String phoneModel;
-  String softwareVersion;
-
-  Future<Map<String, dynamic>> initDeviceInfo() async {
-    String _deviceId;
-    String _platform;
-    if (!isDeviceInfoInitiated) {
-      try {
-        if (Platform.isIOS) {
-          IosDeviceInfo iosDeviceInfo;
-          iosDeviceInfo = await deviceInfo.iosInfo;
-          phoneModel = iosDeviceInfo.model;
-          softwareVersion = iosDeviceInfo.systemVersion;
-          _deviceId = iosDeviceInfo.identifierForVendor;
-          _platform = "ios";
-          logger.d(
-              "Device Information - \n $phoneModel \n $softwareVersion \n $_deviceId");
-        } else if (Platform.isAndroid) {
-          AndroidDeviceInfo androidDeviceInfo = await deviceInfo.androidInfo;
-          phoneModel = androidDeviceInfo.model;
-          softwareVersion = androidDeviceInfo.version.release;
-          _deviceId = androidDeviceInfo.androidId;
-          _platform = "android";
-          logger.d(
-              "Device Information - \n $phoneModel \n $softwareVersion \n $_deviceId");
-        }
-        isDeviceInfoInitiated = true;
-        return {"deviceId": _deviceId, "platform": _platform};
-      } catch (e) {
-        log.error('Initiating Device Info failed');
-      }
-    }
-  }
+  final logger = locator<CustomLogger>();
 
   Future<bool> updateClientToken(BaseUser user, String token) async {
     try {
@@ -92,28 +49,6 @@ class DBModel extends ChangeNotifier {
   }
 
   //////////////////BASE USER//////////////////////////
-  Future<ApiResponse<BaseUser>> getUser(String id) async {
-    try {
-      logger.i("CALLING: getUserById");
-      var doc = await _api.getUserById(id);
-      BaseUser user;
-      if (doc.data() == null) {
-        return ApiResponse(model: null, code: 200);
-      }
-      try {
-        user = BaseUser.fromMap(doc.data(), id);
-      } catch (e) {
-        logFailure(
-            id, FailType.UserDataCorrupted, {'message': "User data corrupted"});
-        return ApiResponse.withError("User data corrupted", 400);
-      }
-
-      return ApiResponse(model: user, code: 200);
-    } catch (e) {
-      log.error("Error fetch User details: " + e.toString());
-      return ApiResponse(model: null, code: 400);
-    }
-  }
 
   Future<bool> updateUserEmail(String uid, String email, bool emailFlag) async {
     try {
@@ -156,60 +91,6 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<GoldenTicket> getGoldenTicketById(String userId, String gtId) async {
-    GoldenTicket ticket;
-    try {
-      logger.i("CALLING: fetchGoldenTicketById");
-      DocumentSnapshot goldenTicketRaw =
-          await _api.fetchGoldenTicketById(userId, gtId);
-      if (goldenTicketRaw != null) {
-        ticket =
-            GoldenTicket.fromJson(goldenTicketRaw.data(), goldenTicketRaw.id);
-      }
-      return ticket;
-    } catch (e) {
-      return ticket;
-    }
-  }
-
-  Future<bool> checkIfUserHasNewNotifications(String userId) async {
-    try {
-      logger.i("CALLING: checkForLatestNotification");
-      QuerySnapshot notificationSnapshot =
-          await _api.checkForLatestNotification(userId);
-
-      logger.i("CALLING: checkForLatestAnnouncment");
-      QuerySnapshot announcementSnapshot =
-          await _api.checkForLatestAnnouncment(userId);
-      AlertModel lastestNotification =
-          AlertModel.fromMap(notificationSnapshot.docs.first.data());
-      AlertModel lastestAnnouncement =
-          AlertModel.fromMap(announcementSnapshot.docs.first.data());
-
-      String latestNotifTime = await CacheManager.readCache(
-          key: CacheManager.CACHE_LATEST_NOTIFICATION_TIME);
-      if (latestNotifTime != null) {
-        int latestTimeInMilliSeconds = int.tryParse(latestNotifTime);
-        AlertModel latestAlert =
-            lastestNotification.createdTime.millisecondsSinceEpoch >
-                    lastestAnnouncement.createdTime.millisecondsSinceEpoch
-                ? lastestNotification
-                : lastestAnnouncement;
-        if (latestAlert.createdTime.millisecondsSinceEpoch >
-            latestTimeInMilliSeconds)
-          return true;
-        else
-          return false;
-      } else {
-        logger.d("No past notification time found");
-        return false;
-      }
-    } catch (e) {
-      logger.e(e);
-    }
-    return false;
-  }
-
   Future<bool> checkIfUserHasUnscratchedGT(String userId) async {
     try {
       QuerySnapshot gtSnapshot = await _api.checkForLatestGTStatus(userId);
@@ -228,56 +109,6 @@ class DBModel extends ChangeNotifier {
       logger.e(e.toString());
       return false;
     }
-  }
-
-  Future<Map<String, dynamic>> getUserNotifications(
-      String userId, DocumentSnapshot lastDoc, bool more) async {
-    List<AlertModel> alerts = [];
-    List<AlertModel> announcements = [];
-    List<AlertModel> notifications = [];
-    DocumentSnapshot lastAlertDoc;
-    logger.d("user id - $userId");
-
-    try {
-      logger.i("CALLING: getUserNotifications");
-      QuerySnapshot querySnapshot =
-          await _api.getUserNotifications(userId, lastDoc);
-      if (querySnapshot != null) {
-        lastAlertDoc = querySnapshot.docs.last;
-        for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
-          AlertModel alert = AlertModel.fromMap(documentSnapshot.data());
-          logger.d(alert.toString());
-          alerts.add(alert);
-        }
-      }
-    } catch (e) {
-      logger.e(e);
-    }
-    if (!more) {
-      try {
-        logger.i("CALLING: getAnnoucements");
-        QuerySnapshot querySnapshot = await _api.getAnnoucements();
-        for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
-          AlertModel announcement = AlertModel.fromMap(documentSnapshot.data());
-          logger.d(announcement.subtitle);
-          announcements.add(announcement);
-        }
-      } catch (e) {
-        logger.e(e);
-      }
-    }
-
-    notifications.addAll(alerts);
-    notifications.addAll(announcements);
-
-    notifications
-        .sort((a, b) => b.createdTime.seconds.compareTo(a.createdTime.seconds));
-
-    return {
-      'notifications': notifications,
-      'lastAlertDoc': lastAlertDoc,
-      'alertsLength': alerts.length
-    };
   }
 
   /// return obj:
@@ -303,16 +134,6 @@ class DBModel extends ChangeNotifier {
   }
 
   ///////////////////////AUGMONT/////////////////////////////
-  Future<UserAugmontDetail> getUserAugmontDetails(String id) async {
-    try {
-      logger.i("CALLING: getUserAugmontDetailDocument");
-      var doc = await _api.getUserAugmontDetailDocument(id);
-      return UserAugmontDetail.fromMap(doc.data());
-    } catch (e) {
-      log.error('Failed to fetch user Augmont details: $e');
-      return null;
-    }
-  }
 
   Future<bool> updateAugmontBankDetails(
       String userId, String accNo, String ifsc, String bankHolderName) async {
@@ -328,50 +149,6 @@ class DBModel extends ChangeNotifier {
     } catch (e) {
       log.error("Failed to update user augmont detail object: " + e.toString());
       return false;
-    }
-  }
-
-  /////////////////////////USER TRANSACTION/////////////////////
-
-  Future<Map<String, dynamic>> getFilteredUserTransactions(
-      {@required BaseUser user,
-      String type,
-      String subtype,
-      String status,
-      DocumentSnapshot lastDocument,
-      @required int limit}) async {
-    Map<String, dynamic> resultTransactionsMap = Map<String, dynamic>();
-    List<UserTransaction> requestedTxns = [];
-    try {
-      String _id = user.uid;
-      logger.i("CALLING: getUserTransactionsByField");
-      QuerySnapshot _querySnapshot = await _api.getUserTransactionsByField(
-        userId: _id,
-        type: type,
-        subtype: subtype,
-        status: status,
-        lastDocument: lastDocument,
-        limit: limit,
-      );
-      resultTransactionsMap['lastDocument'] = _querySnapshot.docs.last;
-      resultTransactionsMap['length'] = _querySnapshot.docs.length;
-      _querySnapshot.docs.forEach((txn) {
-        try {
-          if (txn.exists)
-            requestedTxns.add(UserTransaction.fromMap(txn.data(), txn.id));
-        } catch (e) {
-          log.error('Failed to parse user transaction $txn');
-        }
-      });
-      logger.d("No of transactions fetched: ${requestedTxns.length}");
-      resultTransactionsMap['listOfTransactions'] = requestedTxns;
-      return resultTransactionsMap;
-    } catch (err) {
-      log.error('Failed to fetch transactions:: $err');
-      resultTransactionsMap['length'] = 0;
-      resultTransactionsMap['listOfTransactions'] = requestedTxns;
-      resultTransactionsMap['lastDocument'] = lastDocument;
-      return resultTransactionsMap;
     }
   }
 
@@ -587,51 +364,6 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> logFailure(
-      String userId, FailType failType, Map<String, dynamic> data) async {
-    try {
-      Map<String, dynamic> dMap = (data == null) ? {} : data;
-      if (!isDeviceInfoInitiated) {
-        await initDeviceInfo();
-      }
-      dMap['user_id'] = userId;
-      dMap['fail_type'] = failType.value();
-      dMap['manually_resolved'] = false;
-      dMap['app_version'] =
-          '${BaseUtil.packageInfo.version}+${BaseUtil.packageInfo.buildNumber}';
-      if (phoneModel != null) {
-        dMap['phone_model'] = phoneModel;
-      }
-      if (softwareVersion != null) {
-        dMap['phone_version'] = softwareVersion;
-      }
-      dMap['timestamp'] = Timestamp.now();
-      try {
-        await firebaseCrashlytics.recordError(failType.toString(),
-            StackTrace.fromString(failType.value().toUpperCase()),
-            reason: dMap);
-      } catch (e) {
-        log.error('Crashlytics record error fail : $e');
-      }
-      if (failType == FailType.UserAugmontSellFailed ||
-          failType == FailType.UserPaymentCompleteTxnFailed ||
-          failType == FailType.UserDataCorrupted) {
-        logger.i("CALLING: addPriorityFailedReport");
-        await _api.addPriorityFailedReport(dMap);
-      } else if (failType == FailType.TambolaTicketGenerationFailed) {
-        logger.i("CALLING: addGameFailedReport");
-        await _api.addGameFailedReport(dMap);
-      } else {
-        logger.i("CALLING: addFailedReportDocument");
-        await _api.addFailedReportDocument(dMap);
-      }
-      return true;
-    } catch (e) {
-      log.error(e.toString());
-      return false;
-    }
-  }
-
   //////////////////////USER FUNDS BALANCING////////////////////////////////////////
 
   Future<UserFundWallet> getUserFundWallet(String id) async {
@@ -642,89 +374,6 @@ class DBModel extends ChangeNotifier {
     } catch (e) {
       log.error("Error fetch UserFundWallet failed: $e");
       return null;
-    }
-  }
-
-  ///Total Gold Balance = (current total grams owned * current selling rate)
-  ///Total Gold Principle = old principle + changeAmount
-  ///it shouldnt matter if its a deposit or a sell, all based on selling rate
-
-  Future<double> getNonWithdrawableAugGoldQuantity(String userId,
-      [int dayOffset = Constants.AUG_GOLD_WITHDRAW_OFFSET]) async {
-    try {
-      DateTime _dt = DateTime.now();
-      DateTime _reqDate = DateTime(_dt.year, _dt.month, _dt.day - dayOffset,
-          _dt.hour, _dt.minute, _dt.second);
-      logger.i("CALLING: getRecentAugmontDepositTxn");
-      QuerySnapshot querySnapshot = await _api.getRecentAugmontDepositTxn(
-          userId, Timestamp.fromDate(_reqDate));
-      if (querySnapshot.size == 0)
-        return 0.0;
-      else {
-        double _netQuantity = 0.0;
-        for (QueryDocumentSnapshot snapshot in querySnapshot.docs) {
-          Map<String, dynamic> _doc = snapshot.data();
-          if (snapshot.exists && _doc != null && _doc.isNotEmpty) {
-            UserTransaction _txn =
-                UserTransaction.fromMap(snapshot.data(), snapshot.id);
-            if (_txn != null &&
-                _txn.augmnt != null &&
-                _txn.augmnt[UserTransaction.subFldAugCurrentGoldGm] != null &&
-                (_txn.rzp != null || _txn.paytmMap != null)) {
-              double _qnt = BaseUtil.toDouble(
-                  _txn.augmnt[UserTransaction.subFldAugCurrentGoldGm]);
-              _netQuantity += _qnt;
-            }
-          }
-        }
-        if (_netQuantity > 0.0)
-          _netQuantity = BaseUtil.digitPrecision(_netQuantity, 4, false);
-        return _netQuantity;
-      }
-    } catch (e) {
-      return 0.0;
-    }
-  }
-
-  ///////////////////USER TICKET BALANCING///////////////////////////////////
-  Future<UserTicketWallet> getUserTicketWallet(String id) async {
-    try {
-      logger.i("CALLING: getUserTicketWalletDocById");
-      var doc = await _api.getUserTicketWalletDocById(id);
-      return UserTicketWallet.fromMap(doc.data());
-    } catch (e) {
-      log.error("Error fetch UserTicketWallet failed: $e");
-      return null;
-    }
-  }
-
-  Future<UserTicketWallet> updateInitUserTicketCount(
-      String uid, UserTicketWallet userTicketWallet, int count) async {
-    if (userTicketWallet == null) return null;
-    int currentValue = userTicketWallet.initTck ?? 0;
-    try {
-      return await _lock.synchronized(() async {
-        if (count < 0 && currentValue < count) {
-          userTicketWallet.initTck = 0;
-        } else {
-          userTicketWallet.initTck = currentValue + count;
-        }
-        Map<String, dynamic> tMap = {
-          UserTicketWallet.fldInitTckCount: userTicketWallet.initTck
-        };
-        logger.i("CALLING: updateUserTicketWalletFields");
-        bool flag = await _api.updateUserTicketWalletFields(
-            uid, UserTicketWallet.fldInitTckCount, currentValue, tMap);
-        if (!flag) {
-          //revert value back as the op failed
-          userTicketWallet.initTck = currentValue;
-        }
-        return userTicketWallet;
-      });
-    } catch (e) {
-      log.error('Failed to update the user ticket count');
-      userTicketWallet.initTck = currentValue;
-      return userTicketWallet;
     }
   }
 
@@ -760,44 +409,6 @@ class DBModel extends ChangeNotifier {
       }
     }
     return filteredcards;
-  }
-
-  Future<List<UserMilestoneModel>> getUserAchievedMilestones(String uid) async {
-    List<UserMilestoneModel> userMilestones = [];
-    try {
-      logger.i("CALLING: fetchUserAchievedTicketMilestonesList");
-      Map<String, dynamic> userMilestonesData =
-          await _api.fetchUserAchievedTicketMilestonesList(uid);
-      logger.d(userMilestonesData.toString());
-      if (userMilestonesData != null) {
-        userMilestonesData['prizeArr']
-            .forEach((e) => userMilestones.add(UserMilestoneModel.fromJson(e)));
-      }
-    } catch (e) {
-      logger.e(e.toString());
-      userMilestones = [];
-    }
-
-    return userMilestones;
-  }
-
-  Future<List<FelloMilestoneModel>> getMilestonesList() async {
-    List<FelloMilestoneModel> felloMilestones = [];
-    try {
-      logger.i("CALLING: fetchGoldenTicketMilestonesList");
-      Map<String, dynamic> felloMilestonesData =
-          await _api.fetchGoldenTicketMilestonesList();
-      logger.d(felloMilestonesData.toString());
-      if (felloMilestonesData != null) {
-        felloMilestonesData['checkpoints'].forEach(
-            (e) => felloMilestones.add(FelloMilestoneModel.fromJson(e)));
-      }
-    } catch (e) {
-      logger.e(e.toString());
-      felloMilestones = [];
-    }
-
-    return felloMilestones;
   }
 
   Future<List<CouponModel>> getCoupons() async {

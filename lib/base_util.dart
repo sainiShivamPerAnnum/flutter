@@ -1,10 +1,10 @@
 //Project Imports
 //Dart & Flutter Imports
 import 'dart:async';
-import 'dart:developer' as dev;
 import 'dart:math';
 //Pub Imports
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
@@ -17,21 +17,21 @@ import 'package:felloapp/core/model/feed_card_model.dart';
 import 'package:felloapp/core/model/prize_leader_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/referral_leader_model.dart';
-import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/model/user_icici_detail_model.dart';
-import 'package:felloapp/core/model/user_ticket_wallet_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/pan_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -45,7 +45,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:logger/logger.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -58,10 +57,12 @@ class BaseUtil extends ChangeNotifier {
   final LocalDBModel _lModel = locator<LocalDBModel>();
   final AppState _appState = locator<AppState>();
   final UserService _userService = locator<UserService>();
+  final _userRepo = locator<UserRepository>();
+  final _internalOpsService = locator<InternalOpsService>();
 
   BaseUser _myUser;
   UserFundWallet _userFundWallet;
-  UserTicketWallet _userTicketWallet;
+  int _ticketCount;
   User firebaseUser;
   FirebaseAnalytics baseAnalytics;
   List<FeedCard> feedCards;
@@ -647,7 +648,7 @@ class BaseUtil extends ChangeNotifier {
       isNewUser = null;
       isFirstFetchDone = null;
       _userFundWallet = null;
-      _userTicketWallet = null;
+      _ticketCount = null;
       firebaseUser = null;
       baseAnalytics = null;
       feedCards = null;
@@ -685,30 +686,6 @@ class BaseUtil extends ChangeNotifier {
       logger.e('Failed to clear data/sign out user: ' + e.toString());
       return false;
     }
-  }
-
-  int checkTicketCountValidity(List<TambolaBoard> requestedBoards) {
-    if (requestedBoards != null && _userTicketWallet.getActiveTickets() > 0) {
-      if (requestedBoards.length < _userTicketWallet.getActiveTickets()) {
-        logger.d('Requested board count is less than needed tickets');
-        int ticketCountRequired =
-            _userTicketWallet.getActiveTickets() - requestedBoards.length;
-
-        if (ticketCountRequired > 0 && !BaseUtil.ticketRequestSent) {
-          BaseUtil.ticketRequestSent = true;
-          BaseUtil.ticketCountBeforeRequest = requestedBoards.length;
-          return ticketCountRequired;
-        }
-      }
-      if (BaseUtil.ticketRequestSent) {
-        if (requestedBoards.length > BaseUtil.ticketCountBeforeRequest) {
-          logger.d(
-              'Previous request had completed and now the ticket count has increased');
-          //BaseUtil.ticketRequestSent = false; //not really needed i think
-        }
-      }
-    }
-    return 0;
   }
 
   getProfilePicture() async {
@@ -903,6 +880,14 @@ class BaseUtil extends ChangeNotifier {
     });
   }
 
+  Future<void> fetchUserAugmontDetail() async {
+    ApiResponse<UserAugmontDetail> augmontDetailResponse =
+        await _userRepo.getUserAugmontDetails();
+    if (augmontDetailResponse.code == 200) {
+      augmontDetail = augmontDetailResponse.model;
+    }
+  }
+
   Future<void> _updateAugmontBalance() async {
     if (augmontDetail == null ||
         (userFundWallet.augGoldQuantity == 0 &&
@@ -920,7 +905,7 @@ class BaseUtil extends ChangeNotifier {
     }).catchError((err) {
       if (_myUser.uid != null) {
         var errorDetails = {'error_msg': err.toString()};
-        _dbModel.logFailure(
+        _internalOpsService.logFailure(
             _myUser.uid, FailType.UserAugmontBalanceUpdateFailed, errorDetails);
       }
       print('$err');
@@ -1043,10 +1028,10 @@ class BaseUtil extends ChangeNotifier {
 
   DateTime get userCreationTimestamp => _userCreationTimestamp;
 
-  UserTicketWallet get userTicketWallet => _userTicketWallet;
+  int get ticketCount => _ticketCount;
 
-  set userTicketWallet(UserTicketWallet value) {
-    _userTicketWallet = value;
+  set ticketCount(int value) {
+    _ticketCount = value;
     notifyListeners();
   }
 

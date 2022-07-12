@@ -8,6 +8,9 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/repository/golden_ticket_repo.dart';
+import 'package:felloapp/core/repository/internal_ops_repo.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -16,6 +19,7 @@ import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -34,8 +38,10 @@ final GlobalKey ticketImageKey = GlobalKey();
 class GoldenTicketService extends ChangeNotifier {
   final _logger = locator<CustomLogger>();
   final _dbModel = locator<DBModel>();
+  final _gtRepo = locator<GoldenTicketRepository>();
   final _userService = locator<UserService>();
   final _paytmService = locator<PaytmService>();
+  final _internalOpsService = locator<InternalOpsService>();
   // static bool hasGoldenTicket = false;
 
   static String goldenTicketId;
@@ -55,11 +61,17 @@ class GoldenTicketService extends ChangeNotifier {
 
   Future<bool> fetchAndVerifyGoldenTicketByID() async {
     if (goldenTicketId != null && goldenTicketId.isNotEmpty) {
-      currentGT = await _dbModel.getGoldenTicketById(
-          _userService.baseUser.uid, goldenTicketId);
-      goldenTicketId = null;
-      if (currentGT != null && isGTValid(currentGT)) {
+      ApiResponse<GoldenTicket> ticketResponse =
+          await _gtRepo.getGoldenTicketById(
+        goldenTicketId: goldenTicketId,
+      );
+
+      if (ticketResponse.code == 200 && isGTValid(currentGT)) {
+        currentGT = ticketResponse.model;
+        goldenTicketId = null;
         return true;
+      } else {
+        return false;
       }
     }
     return false;
@@ -127,7 +139,7 @@ class GoldenTicketService extends ChangeNotifier {
                   Map<String, dynamic> errorDetails = {
                     'error_msg': 'Share reward text in My winnings failed'
                   };
-                  _dbModel.logFailure(_userService.baseUser.uid,
+                  _internalOpsService.logFailure(_userService.baseUser.uid,
                       FailType.FelloRewardTextShareFailed, errorDetails);
                 }
                 _logger.e(onError);
@@ -140,7 +152,7 @@ class GoldenTicketService extends ChangeNotifier {
                   Map<String, dynamic> errorDetails = {
                     'error_msg': 'Share reward text in My winnings failed'
                   };
-                  _dbModel.logFailure(_userService.baseUser.uid,
+                  _internalOpsService.logFailure(_userService.baseUser.uid,
                       FailType.FelloRewardTextShareFailed, errorDetails);
                 }
                 _logger.e(onError);
@@ -168,7 +180,7 @@ class GoldenTicketService extends ChangeNotifier {
         Map<String, dynamic> errorDetails = {
           'error_msg': 'Share reward card creation failed'
         };
-        _dbModel.logFailure(_userService.baseUser.uid,
+        _internalOpsService.logFailure(_userService.baseUser.uid,
             FailType.FelloRewardCardShareFailed, errorDetails);
       }
 
@@ -196,7 +208,7 @@ class GoldenTicketService extends ChangeNotifier {
             Map<String, dynamic> errorDetails = {
               'error_msg': 'Share reward card in card.dart failed'
             };
-            _dbModel.logFailure(_userService.baseUser.uid,
+            _internalOpsService.logFailure(_userService.baseUser.uid,
                 FailType.FelloRewardCardShareFailed, errorDetails);
           }
           print(onError);
@@ -222,7 +234,7 @@ class GoldenTicketService extends ChangeNotifier {
             Map<String, dynamic> errorDetails = {
               'error_msg': 'Share reward card in card.dart failed'
             };
-            _dbModel.logFailure(_userService.baseUser.uid,
+            _internalOpsService.logFailure(_userService.baseUser.uid,
                 FailType.FelloRewardCardShareFailed, errorDetails);
           }
           print(onError);

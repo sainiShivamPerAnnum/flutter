@@ -11,6 +11,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/repository/ticket_repo.dart';
+
 class GoldenTicketClaimDialog extends StatefulWidget {
   final int ticketCount;
   final int cashPrize;
@@ -27,8 +29,9 @@ class GoldenTicketClaimDialog extends StatefulWidget {
 class _GoldenTicketClaimDialogState extends State<GoldenTicketClaimDialog> {
   bool showConfetti, showStamp;
   double stampOpacity = 0;
-  DBModel dbProvider;
   BaseUtil baseProvider;
+
+  final tambolaRepo = locator<TambolaRepo>();
   UserService userService = locator<UserService>();
 
   @override
@@ -73,7 +76,6 @@ class _GoldenTicketClaimDialogState extends State<GoldenTicketClaimDialog> {
 
   @override
   Widget build(BuildContext context) {
-    dbProvider = Provider.of<DBModel>(context, listen: false);
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     return Theme(
       data: ThemeData(
@@ -260,11 +262,9 @@ class _GoldenTicketClaimDialogState extends State<GoldenTicketClaimDialog> {
                         onPressed: () {
                           AppState.backButtonDispatcher.didPopRoute();
                           userService.getUserFundWalletData();
-                          return dbProvider
-                              .getUserTicketWallet(userService.baseUser.uid)
-                              .then((value) {
-                            if (value != null)
-                              baseProvider.userTicketWallet = value;
+                          return tambolaRepo.getTicketCount().then((value) {
+                            if (value.isSuccess())
+                              baseProvider.ticketCount = value.model;
                           });
                         }),
                   ),

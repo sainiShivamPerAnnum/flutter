@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
@@ -26,6 +27,7 @@ class ReferralDetailsViewModel extends BaseModel {
   final _analyticsService = locator<AnalyticsService>();
   final _appFlyer = locator<AppFlyerAnalytics>();
   final _userRepo = locator<UserRepository>();
+  final _refRepo = locator<ReferralRepo>();
 
   String appShareMessage =
       BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.APP_SHARE_MSG);
@@ -59,7 +61,7 @@ class ReferralDetailsViewModel extends BaseModel {
   }
 
   Future<void> fetchReferralCode() async {
-    final ApiResponse res = await _userRepo.getReferralCode();
+    final ApiResponse res = await _refRepo.getReferralCode();
     if (res.code == 200) {
       _refCode = res.model;
     }

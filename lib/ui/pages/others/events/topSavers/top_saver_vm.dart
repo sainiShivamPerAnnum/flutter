@@ -1,16 +1,20 @@
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/event_model.dart';
+import 'package:felloapp/core/model/leaderboard_model.dart';
+import 'package:felloapp/core/model/scoreboard_model.dart';
 import 'package:felloapp/core/model/top_saver_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
-import 'package:felloapp/core/repository/statistics_repo.dart';
-import 'package:felloapp/core/repository/winners_repo.dart';
+import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/modals_sheets/event_instructions_modal.dart';
+import 'package:felloapp/ui/service_elements/leaderboards/web_game_leaderboard.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/code_from_freq.dart';
 import 'package:felloapp/util/constants.dart';
@@ -23,8 +27,7 @@ class TopSaverViewModel extends BaseModel {
   final _logger = locator<CustomLogger>();
   final _dbModel = locator<DBModel>();
   final _userService = locator<UserService>();
-  final _statsRepo = locator<StatisticsRepository>();
-  final _winnersRepo = locator<WinnersRepository>();
+  final _getterRepo = locator<GetterRepository>();
   final _winnerService = locator<WinnerService>();
   final _campaignRepo = locator<CampaignRepo>();
 
@@ -35,7 +38,7 @@ class TopSaverViewModel extends BaseModel {
   String campaignType = Constants.HS_DAILY_SAVER;
 
   String saverFreq = "daily";
-  String freqCode;
+
   int _userRank = 0;
   String winnerTitle = "Past Winners";
   EventModel event;
@@ -43,7 +46,7 @@ class TopSaverViewModel extends BaseModel {
   String eventStandingsType = "HIGHEST_SAVER";
   String actionTitle = "Buy Digital Gold";
 
-  List<TopSavers> currentParticipants;
+  List<ScoreBoard> currentParticipants;
   List<PastHighestSaver> _pastWinners;
 
   List<PastHighestSaver> get pastWinners => _pastWinners;
@@ -160,13 +163,12 @@ class TopSaverViewModel extends BaseModel {
   }
 
   fetchTopSavers() async {
-    ApiResponse<TopSaversModel> response =
-        await _statsRepo.getTopSavers(saverFreq, type: eventStandingsType);
-    if (response != null &&
-        response.model != null &&
-        response.model.scoreboard != null) {
-      currentParticipants = response.model.scoreboard;
-      freqCode = response.model.code;
+    ApiResponse response = await _getterRepo.getStatisticsByFreqGameTypeAndCode(
+      freq: saverFreq,
+      type: eventStandingsType,
+    );
+    if (response.code == 200) {
+      currentParticipants = LeaderboardModel.fromMap(response.model).scoreboard;
       getUserRankIfAny();
     } else
       currentParticipants = [];
@@ -174,20 +176,23 @@ class TopSaverViewModel extends BaseModel {
   }
 
   fetchPastWinners() async {
-    ApiResponse<List<WinnersModel>> response =
-        await _winnersRepo.getPastWinners(
-            event.type == "FPL"
-                ? Constants.GAME_TYPE_FPL
-                : Constants.GAME_TYPE_HIGHEST_SAVER,
-            saverFreq);
-    if (response != null &&
-        response.model != null &&
-        response.model.isNotEmpty) {
+    List<WinnersModel> winnerModels = await getPastWinners(
+      event.type == "FPL"
+          ? Constants.GAME_TYPE_FPL
+          : Constants.GAME_TYPE_HIGHEST_SAVER,
+      saverFreq,
+    );
+    if (winnerModels != null && winnerModels.isNotEmpty) {
       pastWinners = [];
-      for (int i = 0; i < response.model.length; i++) {
-        for (int j = 0; j < response.model[i].winners.length; j++) {
-          pastWinners.add(PastHighestSaver.fromMap(response.model[i].winners[j],
-              response.model[i].gametype, response.model[i].code));
+      for (int i = 0; i < winnerModels.length; i++) {
+        for (int j = 0; j < winnerModels[i].winners.length; j++) {
+          pastWinners.add(
+            PastHighestSaver.fromMap(
+              winnerModels[i].winners[j],
+              winnerModels[i].gametype,
+              winnerModels[i].code,
+            ),
+          );
         }
       }
     } else
@@ -239,6 +244,18 @@ class TopSaverViewModel extends BaseModel {
           return CodeFromFreq.getDayFromCode(code);
         }
     }
+  }
+
+  Future<List<WinnersModel>> getPastWinners(
+      String gameType, String freq) async {
+    ApiResponse<List<WinnersModel>> response = await _getterRepo.getPastWinners(
+      type: gameType,
+      freq: freq,
+    );
+    if (response.code == 200) {
+      return response.model;
+    } else
+      return [];
   }
 }
 

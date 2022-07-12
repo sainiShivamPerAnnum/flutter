@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 
 import 'package:felloapp/util/logger.dart';
 
@@ -25,7 +26,7 @@ class BaseUser {
   bool isAugmontEnabled;
   bool isEmailVerified;
   UserPreferences userPreferences;
-  Timestamp createdOn;
+  TimestampModel createdOn;
   String appFlyerId;
 
   static final String fldId = "mID";
@@ -126,7 +127,7 @@ class BaseUser {
             data[fldIsEmailVerified] ?? false,
             data[fldIsBlocked] ?? false,
             UserPreferences(data[fldUserPrefs]),
-            data[fldCreatedOn],
+            TimestampModel.fromMap(data[fldCreatedOn]),
             data[fldAppFlyerId]);
 
   //to send user object to server

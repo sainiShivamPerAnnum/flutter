@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
-import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -131,11 +129,6 @@ class Api {
     return snapshot;
   }
 
-  Future<DocumentSnapshot> getUserById(String id) {
-    ref = _db.collection(Constants.COLN_USERS);
-    return ref.doc(id).get();
-  }
-
   Future<void> updateUserDocumentPreferenceField(
       String docId, Map<String, dynamic> data) {
     ref = _db.collection(Constants.COLN_USERS);
@@ -189,16 +182,13 @@ class Api {
     return _db.collection(Constants.COLN_FEEDBACK).add(data);
   }
 
-  Future<void> addGameFailedReport(Map data) {
-    return _db.collection('gamefailreports').add(data);
-  }
-
-  Future<void> addPriorityFailedReport(Map data) {
-    return _db.collection('priorityfailreports').add(data);
-  }
-
-  Future<void> addFailedReportDocument(Map data) {
-    return _db.collection(Constants.COLN_FAILREPORTS).add(data);
+  Future<QuerySnapshot> getWinnersByWeekCde(int weekCde) async {
+    Query query = _db
+        .collection(Constants.COLN_WINNERS)
+        .where('week_code', isEqualTo: weekCde)
+        .where('win_type', isEqualTo: 'tambola');
+    final response = await query.get();
+    return response;
   }
 
   Future<QuerySnapshot> getCredentialsByTypeAndStage(
@@ -280,38 +270,6 @@ class Api {
     return ref.doc(Constants.DOC_USER_WALLET_TICKET_BALANCE).get();
   }
 
-  Future<bool> updateUserTicketWalletFields(
-      String userId, String verifyFld, int verifyValue, Map data) {
-    DocumentReference _docRef = _db
-        .collection(Constants.COLN_USERS)
-        .doc(userId)
-        .collection(Constants.SUBCOLN_USER_WALLET)
-        .doc(Constants.DOC_USER_WALLET_TICKET_BALANCE);
-    return _db
-        .runTransaction((transaction) async {
-          DocumentSnapshot snapshot = await transaction.get(_docRef);
-          if (!snapshot.exists) {
-            //wallet didnt exist?
-            transaction.set(_docRef, data, SetOptions(merge: true));
-          } else {
-            Map<String, dynamic> _map = snapshot.data();
-            if (_map[verifyFld] == null) {
-              ///field doesnt exist. add the field
-              transaction.set(_docRef, data, SetOptions(merge: true));
-            } else if (_map[verifyFld] != null &&
-                _map[verifyFld] == verifyValue) {
-              ///field exists and the condition is satisfied
-              transaction.set(_docRef, data, SetOptions(merge: true));
-            } else {
-              ///field exists but there is a data discrepancy
-              throw Exception('Condition not satisfied');
-            }
-          }
-        })
-        .then((value) => true)
-        .catchError((onErr) => false);
-  }
-
   Future<QuerySnapshot> getPromoCardCollection() {
     Query _query = _db.collection(Constants.COLN_PROMOS).orderBy('position');
     return _query.get();
@@ -360,76 +318,6 @@ class Api {
     return ref.doc(Constants.DOC_USER_WALLET_COIN_BALANCE).get();
   }
 
-  //Statistics
-  Future<QueryDocumentSnapshot> getStatisticsByFreqGameTypeAndCode(
-      String gameType, String freq, String code) async {
-    Query _query = _db
-        .collection(Constants.COLN_STATISTICS)
-        .where('code', isEqualTo: code)
-        .where('freq', isEqualTo: freq)
-        .where('gametype', isEqualTo: gameType);
-
-    try {
-      QuerySnapshot _querySnapshot = await _query.get();
-
-      return _querySnapshot.docs.first;
-    } catch (e) {
-      throw e;
-    }
-  }
-
-  //Winners
-  Future<QueryDocumentSnapshot> getWinnersByGameTypeFreqAndCode(
-      String gameType, String freq, String code) async {
-    Query _query = _db
-        .collection(Constants.WINNERS)
-        .where('code', isEqualTo: code)
-        .where('freq', isEqualTo: freq)
-        .where('gametype', isEqualTo: gameType);
-
-    try {
-      QuerySnapshot _querySnapshot = await _query.get();
-      return _querySnapshot.docs.first;
-    } catch (e) {
-      throw e;
-    }
-  }
-
-  Future<List<QueryDocumentSnapshot>> getPastHighestSaverWinners(
-      String gameType, String freq) async {
-    Query _query = _db
-        .collection(Constants.WINNERS)
-        .where('freq', isEqualTo: freq)
-        .where('gametype', isEqualTo: gameType);
-
-    try {
-      QuerySnapshot _querySnapshot =
-          await _query.orderBy('timestamp', descending: true).limit(5).get();
-      return _querySnapshot.docs;
-    } catch (e) {
-      logger.e(e.toString());
-      throw e;
-    }
-  }
-
-  //Prizes
-  Future<QueryDocumentSnapshot> getPrizesPerGamePerFreq(
-      String gameCode, String freq) async {
-    Query _query = _db
-        .collection(Constants.COLN_PRIZES)
-        .where('category', isEqualTo: gameCode)
-        .where('freq', isEqualTo: freq);
-    try {
-      QuerySnapshot _querySnapshot = await _query.get();
-      if (_querySnapshot.docs != null) {
-        logger.i("No prizes for perticular category and freq");
-      }
-      return _querySnapshot.docs?.first;
-    } catch (e) {
-      throw e;
-    }
-  }
-
   Future<QueryDocumentSnapshot> fetchFaqs(String category) async {
     Query _query = _db
         .collection(Constants.COLN_FAQS)
@@ -442,33 +330,10 @@ class Api {
     }
   }
 
-  Future<Map<String, dynamic>> fetchUserAchievedTicketMilestonesList(
-      String uid) async {
-    DocumentReference docRef = _db
-        .collection(Constants.COLN_USERS)
-        .doc(uid)
-        .collection(Constants.SUBCOLN_USER_STATS)
-        .doc("prizes");
-    try {
-      DocumentSnapshot _docSnapShot = await docRef.get();
-
-      return _docSnapShot.data();
-    } catch (e) {
-      throw e;
-    }
-  }
-
-  Future<Map<String, dynamic>> fetchGoldenTicketMilestonesList() async {
-    Query _query = _db
-        .collection(Constants.COLN_PRIZES)
-        .where('category', isEqualTo: "GT_MILESTONES");
-    try {
-      QuerySnapshot _querySnapshot = await _query.get();
-
-      return _querySnapshot.docs?.first?.data();
-    } catch (e) {
-      throw e;
-    }
+  Future<QuerySnapshot> fetchOngoingEvents() async {
+    Query _query =
+        _db.collection(Constants.COLN_APPCAMPAIGNS).orderBy('position');
+    return _query.get();
   }
 
   Future<QuerySnapshot> fetchCoupons() async {
@@ -494,22 +359,6 @@ class Api {
     return query.get();
   }
 
-  Future<List<AmountChipsModel>> getAmountChips(String type) async {
-    List<AmountChipsModel> amountChipList = [];
-    try {
-      DocumentSnapshot snapshot =
-          await _db.collection(Constants.COLN_INAPPRESOURCES).doc(type).get();
-      Map<String, dynamic> snapData = snapshot.data();
-      snapData["userOptions"].forEach((e) {
-        amountChipList.add(AmountChipsModel.fromMap(e));
-      });
-      amountChipList.sort((a, b) => a.order.compareTo(b.order));
-      return amountChipList;
-      // logger.d(data);
-    } catch (e) {
-      logger.e(e.toString());
-    }
-  }
   //---------------------------------------REALTIME DATABASE-------------------------------------------//
 
   Future<bool> checkUserNameAvailability(String username) async {

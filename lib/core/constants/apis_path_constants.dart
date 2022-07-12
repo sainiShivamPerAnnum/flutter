@@ -36,6 +36,9 @@ class ApiPath {
   static const acquisitionTracking = "/userOps/api/v3/opt-analytics";
   static String getUserIdByRefCode(String code) => "/referral/$code";
   static String getReferralCode(String uid) => "/user/referral/$uid";
+  static String getLatestNotication(String uid) =>
+      "/user/$uid/notification/latest";
+  static String getNotications(uid) => "/user/$uid/notifications";
   static const kDeviceId = "/device";
 
   //GT Rewards
@@ -60,8 +63,34 @@ class ApiPath {
   //tambola game Apis
   static String tambolaTickets(String uid) => "/user/$uid/tickets";
   static String buyTambolaTicket(String uid) => "/user/$uid/tickets";
+  static String ticketCount(String uid) => "/user/$uid/tickets/count";
   static const String dailyPicks = '/picks';
 
   get kSingleTransactions => "/payments";
+
+  // Golden Ticket rewards Apis
+  static String getGoldenTicketById(String uid, String goldenTicketId) =>
+      "/user/$uid/gt/$goldenTicketId";
+  static String getMilestone(String uid) => "/user/$uid/milestones";
+  static const String prizes = '/prizes';
+
+  //User Ops Apis
+  static String getAugmontDetail(String uid) => "/user/$uid/augmont";
+  String kGetUserById(String id) => "/$id";
+
+  // Payment Apis
+  static String getWithdrawableGoldQuantity(String uid) =>
+      "/user/$uid/gold/withdrawable";
+
+  // Getter Apis
+  static const String statistics = '/statistics';
+  static String getwinner(String type, String freq) =>
+      "/leaderboard/type/$type/freq/$freq";
+  static String pastWinners(String type, String freq) =>
+      "/leaderboard/past/type/$type/freq/$freq";
+  static String amountChips = "/amount/chips/";
+
+  // Internal Ops
+  static String failureReport = '/fail/report/';
   get kPromos => "/$stage/promos";
 }

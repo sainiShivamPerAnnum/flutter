@@ -23,23 +23,25 @@ class CampaignRepo extends BaseRepo {
       final _queryParams = {"uid": _uid};
 
       return await _cacheService.cachedApi(
-          CacheKeys.CAMPAIGNS,
-          TTL.TWO_HOURS,
-          () => APIService.instance.getData(
-                ApiPath().kOngoingCampaigns,
-                token: _token,
-                cBaseUrl: _baseUrl,
-                queryParams: _queryParams,
-              ), (response) {
-        final responseData = response["data"];
-        logger.d(responseData);
-        if (responseData['status'] == true) {
-          responseData["campaigns"].forEach((e) {
-            events.add(EventModel.fromMap(e));
-          });
-        }
-        return ApiResponse<List<EventModel>>(model: events, code: 200);
-      });
+        CacheKeys.CAMPAIGNS,
+        TTL.TWO_HOURS,
+        () => APIService.instance.getData(
+          ApiPath().kOngoingCampaigns,
+          token: _token,
+          cBaseUrl: _baseUrl,
+          queryParams: _queryParams,
+        ),
+        (response) {
+          final responseData = response["data"];
+          logger.d(responseData);
+          if (responseData['status'] == true) {
+            responseData["campaigns"].forEach((e) {
+              events.add(EventModel.fromMap(e));
+            });
+          }
+          return ApiResponse<List<EventModel>>(model: events, code: 200);
+        },
+      );
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError("Unable to fetch campaings", 400);

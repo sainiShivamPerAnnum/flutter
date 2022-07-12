@@ -85,23 +85,22 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
         setState(() {
           isLoading = true;
         });
-        dbProvider
-            .getUserAugmontDetails(_userService.baseUser.uid)
-            .then((detail) {
-          _isInitialized = false;
-          isLoading = false;
-          print(detail.bankAccNo);
-          baseProvider.augmontDetail = detail;
-          if (baseProvider.augmontDetail == null ||
-              widget.isWithdrawFlow ||
-              baseProvider.augmontDetail.bankAccNo == null ||
-              baseProvider.augmontDetail.bankAccNo == "") {
-            inEditMode = true;
-          } else {
-            inEditMode = false;
-          }
-          setState(() {});
-        });
+
+        baseProvider.fetchUserAugmontDetail().then(
+          (value) {
+            _isInitialized = false;
+            isLoading = false;
+            if (baseProvider.augmontDetail == null ||
+                widget.isWithdrawFlow ||
+                baseProvider.augmontDetail.bankAccNo == null ||
+                baseProvider.augmontDetail.bankAccNo == "") {
+              inEditMode = true;
+            } else {
+              inEditMode = false;
+            }
+            setState(() {});
+          },
+        );
       }
       if (baseProvider.augmontDetail == null)
         baseProvider.augmontDetail =

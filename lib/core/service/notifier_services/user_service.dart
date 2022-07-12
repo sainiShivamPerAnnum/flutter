@@ -3,10 +3,12 @@ import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/repository/internal_ops_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/api_cache_manager.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/cache_service.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -21,6 +23,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   final _dbModel = locator<DBModel>();
   final _logger = locator<CustomLogger>();
   final _apiCacheManager = locator<ApiCacheManager>();
+  final _userRepo = locator<UserRepository>();
+  final _internalOpsService = locator<InternalOpsService>();
 
   User _firebaseUser;
   BaseUser _baseUser;
@@ -170,7 +174,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     } catch (e) {
       _logger.e(e.toString());
       if (baseUser != null)
-        _dbModel.logFailure(baseUser.uid, FailType.UserServiceInitFailed, {
+        _internalOpsService
+            .logFailure(baseUser.uid, FailType.UserServiceInitFailed, {
           "title": "UserService initialization Failed",
           "error": e.toString(),
         });
@@ -204,7 +209,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   Future<void> setBaseUser() async {
     if (_firebaseUser != null) {
-      final response = await _dbModel.getUser(_firebaseUser?.uid);
+      final response = await _userRepo.getUserById(id: _firebaseUser?.uid);
       if (response.code == 400) {
         _logger.d("Unable to cast user data object.");
         return;
@@ -267,8 +272,10 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   checkForNewNotifications() {
     _logger.d("Looking for new notifications");
-    _dbModel.checkIfUserHasNewNotifications(baseUser.uid).then((value) {
-      if (value) hasNewNotifications = true;
+    _userRepo.checkIfUserHasNewNotifications().then((value) {
+      if (value.code == 200) {
+        if (value.model) hasNewNotifications = true;
+      }
     });
   }
 

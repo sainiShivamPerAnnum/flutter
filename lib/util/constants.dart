@@ -63,8 +63,8 @@ class Constants {
   static final String DOC_USER_WALLET_FUND_BALANCE = "fndbalance";
   static final String DOC_USER_WALLET_TICKET_BALANCE = "tckbalance";
   static final String DOC_USER_WALLET_COIN_BALANCE = "coinbalance";
-  static final String DOC_IAR_DAILY_CHIPS = "SUBSCRIPTION_DAILY_CHIPS";
-  static final String DOC_IAR_WEEKLY_CHIPS = "SUBSCRIPTION_WEEKLY_CHIPS";
+  static final String DOC_IAR_DAILY_CHIPS = "daily";
+  static final String DOC_IAR_WEEKLY_CHIPS = "weekly";
 
   //Sub-Collection docs Collection docs
   static final String DOC_USER_SUBSCRIPTIONS_ORDERS = 'orders';

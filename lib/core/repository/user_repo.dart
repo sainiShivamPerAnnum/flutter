@@ -1,15 +1,22 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
+import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/fundbalance_model.dart';
+import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/api_service.dart';
+import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/preference_helper.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'base_repo.dart';
 
@@ -17,6 +24,7 @@ class UserRepository extends BaseRepo {
   final _appsFlyerService = locator<AppFlyerAnalytics>();
   final _api = locator<Api>();
   final _apiPaths = locator<ApiPath>();
+  final _internalOpsService = locator<InternalOpsService>();
   final _baseUrl = FlavorConfig.isDevelopment()
       ? "https://6w37rw51hj.execute-api.ap-south-1.amazonaws.com/dev"
       : "https://7y9layzs7j.execute-api.ap-south-1.amazonaws.com";
@@ -66,6 +74,29 @@ class UserRepository extends BaseRepo {
     } catch (e) {
       logger.d(e);
       return ApiResponse.withError("User not added to firestore", 400);
+    }
+  }
+
+  Future<ApiResponse<BaseUser>> getUserById({@required String id}) async {
+    try {
+      final res = await APIService.instance.getData(
+        _apiPaths.kGetUserById(id),
+        cBaseUrl: _baseUrl,
+      );
+
+      try {
+        final _user = BaseUser.fromMap(res["data"], id);
+        return ApiResponse(model: _user, code: 200);
+      } catch (e) {
+        _internalOpsService.logFailure(
+          id,
+          FailType.UserDataCorrupted,
+          {'message': "User data corrupted"},
+        );
+        return ApiResponse.withError("User data corrupted", 400);
+      }
+    } catch (e) {
+      return ApiResponse.withError("Unable to get user", 400);
     }
   }
 
@@ -144,8 +175,11 @@ class UserRepository extends BaseRepo {
     }
   }
 
-  Future<void> setNewDeviceId(
-      {String uid, String deviceId, String platform}) async {
+  Future<void> setNewDeviceId({
+    String uid,
+    String deviceId,
+    String platform,
+  }) async {
     try {
       Map<String, dynamic> _body = {
         "uid": uid,
@@ -165,53 +199,83 @@ class UserRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<String>> getUserIdByRefCode(String code) async {
+  Future<ApiResponse<UserAugmontDetail>> getUserAugmontDetails() async {
     try {
-      final String bearer = await getBearerToken();
-      final response = await APIService.instance.getData(
-        ApiPath.getUserIdByRefCode(code),
-        token: bearer,
+      final augmontRespone = await APIService.instance.getData(
+        ApiPath.getAugmontDetail(
+          this.userService.baseUser.uid,
+        ),
         cBaseUrl: _baseUrl,
       );
 
-      final data = response['data'];
-      return ApiResponse<String>(
-        model: data['uid'],
-        code: 200,
-      );
+      final augmont = UserAugmontDetail.fromMap(augmontRespone['data']);
+      return ApiResponse<UserAugmontDetail>(model: augmont, code: 200);
     } catch (e) {
-      logger.e('getUserIdByRefCode $e');
-      return ApiResponse.withError(e.toString(), 400);
+      logger.e(e.toString());
+      return ApiResponse.withError("Unable to fetch augmont", 400);
     }
   }
 
-  Future<ApiResponse<String>> getReferralCode() async {
+  Future<ApiResponse<bool>> checkIfUserHasNewNotifications() async {
     try {
-      final code = PreferenceHelper.getString(PreferenceHelper.REFERRAL_CODE);
-
-      if (code != null && code != '') {
-        return ApiResponse<String>(
-          model: code,
-          code: 200,
-        );
-      }
-
-      final String bearer = await getBearerToken();
-      final response = await APIService.instance.getData(
-        ApiPath.getReferralCode(this.userService.baseUser.uid),
-        token: bearer,
+      final latestNotificationsResponse = await APIService.instance.getData(
+        ApiPath.getLatestNotication(this.userService.baseUser.uid),
         cBaseUrl: _baseUrl,
       );
 
-      final data = response['data']['code'];
-      PreferenceHelper.setString(PreferenceHelper.REFERRAL_CODE, data);
-      return ApiResponse<String>(
-        model: data,
+      final List<AlertModel> notifications = AlertModel.helper.fromMapArray(
+        latestNotificationsResponse["data"],
+      );
+
+      String latestNotifTime = await CacheManager.readCache(
+          key: CacheManager.CACHE_LATEST_NOTIFICATION_TIME);
+      if (latestNotifTime != null) {
+        int latestTimeInSeconds = int.tryParse(latestNotifTime);
+        AlertModel latestAlert = notifications[0].createdTime.seconds >
+                notifications[1].createdTime.seconds
+            ? notifications[0]
+            : notifications[1];
+        if (latestAlert.createdTime.seconds > latestTimeInSeconds)
+          return ApiResponse<bool>(model: true, code: 200);
+        else
+          return ApiResponse<bool>(model: false, code: 200);
+      } else {
+        logger.d("No past notification time found");
+        return ApiResponse<bool>(model: false, code: 200);
+      }
+    } catch (e) {
+      logger.e(e);
+      return ApiResponse.withError(
+        "Unable to fetch checkIfUserHasNewNotifications",
+        400,
+      );
+    }
+  }
+
+  Future<ApiResponse<List<AlertModel>>> getUserNotifications(
+    String lastDocId,
+  ) async {
+    try {
+      final userNotifications = await APIService.instance.getData(
+        ApiPath.getNotications(this.userService.baseUser.uid),
+        cBaseUrl: _baseUrl,
+        queryParams: {
+          "lastDocId": lastDocId,
+        },
+      );
+
+      final responseData = userNotifications["data"];
+
+      return ApiResponse<List<AlertModel>>(
+        model: AlertModel.helper.fromMapArray(responseData),
         code: 200,
       );
     } catch (e) {
-      logger.e('getReferralCode $e ${this.userService.baseUser.uid}');
-      return ApiResponse.withError(e.toString(), 400);
+      logger.e(e);
+      return ApiResponse.withError(
+        "Unable to fetch user notifications",
+        400,
+      );
     }
   }
 }

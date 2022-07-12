@@ -20,7 +20,6 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 // enum STATUS { Pending, Complete, Cancel }
@@ -276,10 +275,12 @@ class AutosaveProcessViewModel extends BaseModel {
   // }
 
   getChipAmounts() async {
-    dailyChips =
-        await _paytmService.getAmountChips(Constants.DOC_IAR_DAILY_CHIPS);
-    weeklyChips =
-        await _paytmService.getAmountChips(Constants.DOC_IAR_WEEKLY_CHIPS);
+    dailyChips = await _paytmService.getAmountChips(
+      freq: Constants.DOC_IAR_DAILY_CHIPS,
+    );
+    weeklyChips = await _paytmService.getAmountChips(
+      freq: Constants.DOC_IAR_WEEKLY_CHIPS,
+    );
   }
 
   tryAgain() {

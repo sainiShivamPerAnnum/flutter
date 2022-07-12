@@ -6,6 +6,7 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -21,6 +22,7 @@ class FcmListener {
   final CustomLogger logger = locator<CustomLogger>();
   final FcmHandler _handler = locator<FcmHandler>();
   final UserService _userService = locator<UserService>();
+  final _internalOpsService = locator<InternalOpsService>();
 
   FirebaseMessaging _fcm;
   bool isTambolaNotificationLoading = false;
@@ -111,7 +113,7 @@ class FcmListener {
     } catch (e) {
       logger.e(e.toString());
       if (_userService.isUserOnborded != null)
-        _dbModel.logFailure(
+        _internalOpsService.logFailure(
             _userService.baseUser.uid, FailType.FcmListenerSetupFailed, {
           "title": "FcmListener setup Failed",
           "error": e.toString(),
@@ -154,12 +156,11 @@ class FcmListener {
       addSubscription(FcmTopic.FREQUENTFLYER)
           .then((value) => logger.d("Added frequent flyer subscription"));
 
-    if (_baseUtil.userTicketWallet != null &&
-        _baseUtil.userTicketWallet.getActiveTickets() > 0 &&
+    if (_baseUtil.ticketCount != null &&
+        _baseUtil.ticketCount > 0 &&
         _userService.baseUser.userPreferences
                 .getPreference(Preferences.TAMBOLANOTIFICATIONS) ==
             1) {
-      // if (_tambolaDrawNotifications) {
       addSubscription(FcmTopic.TAMBOLAPLAYER);
     }
 
@@ -223,7 +224,7 @@ class FcmListener {
         Map<String, dynamic> errorDetails = {
           'error_msg': 'Changing Tambola Notification Status failed'
         };
-        _dbModel.logFailure(_userService.baseUser.uid,
+        _internalOpsService.logFailure(_userService.baseUser.uid,
             FailType.TambolaDrawNotificationSettingFailed, errorDetails);
       }
       BaseUtil.showNegativeAlert("Something went wrong!", "Please try again");

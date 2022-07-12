@@ -17,6 +17,7 @@ import 'package:felloapp/core/repository/coupons_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -57,6 +58,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   final UserService _userService = locator<UserService>();
   final TransactionService _txnService = locator<TransactionService>();
   final GoldenTicketService _gtService = GoldenTicketService();
+  final _internalOpsService = locator<InternalOpsService>();
 
   final _analyticsService = locator<AnalyticsService>();
   final _couponRepo = locator<CouponRepository>();
@@ -200,8 +202,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
     }
 
     if (_baseUtil.augmontDetail == null) {
-      _baseUtil.augmontDetail =
-          await _dbModel.getUserAugmontDetails(_userService.baseUser.uid);
+      await _baseUtil.fetchUserAugmontDetail();
     }
 
     if (_baseUtil.augmontDetail == null && !_augmontSecondFetchDone)
@@ -218,8 +219,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
   delayedAugmontCall() async {
     await Future.delayed(Duration(seconds: 2));
-    _baseUtil.augmontDetail =
-        await _dbModel.getUserAugmontDetails(_userService.baseUser.uid);
+    await _baseUtil.fetchUserAugmontDetail();
     _augmontSecondFetchDone = true;
     notifyListeners();
   }
@@ -392,7 +392,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
       _txnService.updateTransactions();
     } catch (e) {
       _logger.e(e);
-      _dbModel.logFailure(
+      _internalOpsService.logFailure(
           _userService.baseUser.uid, FailType.DepositPayloadError, e);
     }
   }
