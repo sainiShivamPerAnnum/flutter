@@ -7,6 +7,7 @@ import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/coupons_repo.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
+import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/golden_ticket_repo.dart';
 import 'package:felloapp/core/repository/internal_ops_repo.dart';
@@ -144,6 +145,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => GetterRepository());
   locator.registerLazySingleton(() => InternalOpsRepository());
   locator.registerLazySingleton(() => SubcriptionRepo());
+  locator.registerLazySingleton(() => GameRepo());
 
   // SPLASH
   locator.registerFactory(() => LauncherViewModel());

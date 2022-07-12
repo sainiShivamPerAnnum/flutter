@@ -34,6 +34,7 @@ class ApiPath {
   get kVerifyPan => "/userOps/api/v3/verifyPan";
   get kCustomAuthToken => "/userOps/api/v3/trucallerAuthToken";
   static const acquisitionTracking = "/userOps/api/v3/opt-analytics";
+
   static String getUserIdByRefCode(String code) => "/referral/$code";
   static String getReferralCode(String uid) => "/user/referral/$uid";
   static String getLatestNotication(String uid) =>
@@ -96,4 +97,7 @@ class ApiPath {
   /// Subcription Apis
   String getTransaction(String uid) => "/user/$uid/transactions";
   get kPromos => "/promos";
+
+  //Game Apis
+  String get getGames => "/games";
 }

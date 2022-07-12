@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class HelperModel<T> {
   T Function(Map<String, dynamic> map) fromMap;
   HelperModel(this.fromMap);
@@ -10,5 +12,9 @@ class HelperModel<T> {
     });
 
     return list;
+  }
+
+  static Color fromColorString(String color) {
+    return Color(int.parse('0xff$color'));
   }
 }

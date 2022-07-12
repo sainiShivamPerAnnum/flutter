@@ -16,6 +16,7 @@ import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
@@ -94,7 +95,7 @@ class PlayViewModel extends BaseModel {
   void openGame(GameModel game) {
     _analyticsService.track(eventName: game.analyticEvent);
     AppState.delegate.appState.currentAction =
-        PageAction(state: PageState.addPage, page: game.pageConfig);
+        PageAction(state: PageState.addPage, page: THomePageConfig);
   }
 
   setGameListTitle() async {
