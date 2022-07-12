@@ -760,16 +760,6 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
   //------------------------------- TEST -------------------------------- //
 
-  showInstantTestGT() async {
-    GoldenTicketService.goldenTicketId =
-        (await _dbModel.getLatestGoldenTicket(_userService.baseUser.uid)).gtId;
-    await _gtService.fetchAndVerifyGoldenTicketByID();
-    _gtService.showInstantGoldenTicketView(
-        title: 'You have successfully saved ₹500.',
-        source: GTSOURCE.deposit,
-        amount: 500);
-  }
-
   showTxnSuccessScreen(double amount, String title,
       {bool showAutoSavePrompt = false}) {
     AppState.screenStack.add(ScreenItem.dialog);

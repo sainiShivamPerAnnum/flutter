@@ -6,6 +6,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/api_cache_manager.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -19,7 +20,6 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   final _dbModel = locator<DBModel>();
   final _logger = locator<CustomLogger>();
-  final _userRepo = locator<UserRepository>();
   final _apiCacheManager = locator<ApiCacheManager>();
 
   User _firebaseUser;
@@ -177,10 +177,10 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     }
   }
 
-  Future<bool> signout() async {
+  Future<bool> signOut(Function signOut) async {
     try {
-      
-      await _userRepo.removeUserFCM(_baseUser.uid);
+      await signOut();
+      new CacheService().invalidateAll();
       await FirebaseAuth.instance.signOut();
       await CacheManager.clearCacheMemory();
       await _apiCacheManager.clearCacheMemory();
@@ -307,9 +307,10 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
       ),
       iosParameters: IosParameters(
-          bundleId: 'in.fello.felloappiOS',
-          minimumVersion: '0',
-          appStoreId: '1558445254'),
+        bundleId: 'in.fello.felloappiOS',
+        minimumVersion: '0',
+        appStoreId: '1558445254',
+      ),
     );
 
     Uri url;

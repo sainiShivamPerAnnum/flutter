@@ -189,12 +189,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                                             .underline,
                                         recognizer: new TapGestureRecognizer()
                                           ..onTap = () {
-                                            Haptic.vibrate();
-                                            BaseUtil.launchUrl(
-                                                'https://fello.in/policy/tnc');
-                                            // appStateProvider.currentAction = PageAction(
-                                            //     state: PageState.addPage,
-                                            //     page: TncPageConfig);
+                                            model.onTermsAndConditionsClicked();
                                           },
                                       ),
                                     ],

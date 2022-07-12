@@ -8,13 +8,11 @@ import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
-import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/faq_model.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
-import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/model/user_ticket_wallet_model.dart';
@@ -155,20 +153,6 @@ class DBModel extends ChangeNotifier {
     } catch (e) {
       log.error("Failed to update user preference field: $e");
       return false;
-    }
-  }
-
-  Future<GoldenTicket> getLatestGoldenTicket(String userId) async {
-    try {
-      logger.i("CALLING: checkForLatestGoldenTicket");
-      QuerySnapshot gtSnapshot = await _api.checkForLatestGoldenTicket(userId);
-      if (gtSnapshot != null) {
-        GoldenTicket ticket = GoldenTicket.fromJson(
-            gtSnapshot.docs.first.data(), gtSnapshot.docs.first.id);
-        return ticket;
-      }
-    } catch (e) {
-      return null;
     }
   }
 
@@ -391,47 +375,6 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  ///////////////////////TAMBOLA TICKETING/////////////////////////
-  Future<List<TambolaBoard>> getWeeksTambolaTickets(String userId) async {
-    try {
-      logger.i("CALLING: getValidUserTickets");
-      QuerySnapshot _querySnapshot = await _api.getValidUserTickets(
-          userId, CodeFromFreq.getYearWeekCode());
-      if (_querySnapshot == null || _querySnapshot.size == 0) return null;
-
-      List<TambolaBoard> _requestedBoards = [];
-      for (QueryDocumentSnapshot _docSnapshot in _querySnapshot.docs) {
-        if (!_docSnapshot.exists || _docSnapshot.data() == null) continue;
-        TambolaBoard _board =
-            TambolaBoard.fromMap(_docSnapshot.data(), _docSnapshot.id);
-        if (_board.isValid()) _requestedBoards.add(_board);
-      }
-      return _requestedBoards;
-    } catch (err) {
-      log.error('Failed to fetch tambola boards');
-      return null;
-    }
-  }
-
-  Future<DailyPick> getWeeklyPicks() async {
-    try {
-      DateTime date = new DateTime.now();
-      int weekCde = CodeFromFreq.getYearWeekCode();
-      logger.i("CALLING: getWeekPickByCde");
-      QuerySnapshot querySnapshot = await _api.getWeekPickByCde(weekCde);
-
-      if (querySnapshot.docs.length != 1) {
-        log.error('Did not receive a single doc. Error staged');
-        return null;
-      } else {
-        return DailyPick.fromMap(querySnapshot.docs[0].data());
-      }
-    } catch (e) {
-      log.error("Error fetch Dailypick details: " + e.toString());
-      return null;
-    }
-  }
-
   ///////////////////////////CREDENTIALS//////////////////////////////
 
   Future<Map<String, String>> getActiveAwsAugmontApiKey() async {
@@ -597,82 +540,6 @@ class DBModel extends ChangeNotifier {
     return false;
   }
 
-  Future<bool> addCallbackRequest(
-      String uid, String name, String mobile, int callTime,
-      [int callWindow = 2]) async {
-    try {
-      DateTime today = DateTime.now();
-      String year = today.year.toString();
-      String monthCde =
-          BaseUtil.getMonthName(monthNum: today.month).toUpperCase();
-      Map<String, dynamic> data = {};
-      data['user_id'] = uid;
-      data['name'] = name;
-      data['mobile'] = mobile;
-      data['timestamp'] = Timestamp.now();
-      data['call_time'] = callTime;
-      data['call_window'] = callWindow;
-      logger.i("CALLING: addCallbackDocument");
-      await _api.addCallbackDocument(year, monthCde, data);
-      return true;
-    } catch (e) {
-      log.error("Error adding callback doc: " + e.toString());
-      return false;
-    }
-  }
-
-  Future<bool> addHelpRequest(
-      String uid, String name, String mobile, HelpType helpType) async {
-    try {
-      DateTime today = DateTime.now();
-      String year = today.year.toString();
-      String monthCde =
-          BaseUtil.getMonthName(monthNum: today.month).toUpperCase();
-      Map<String, dynamic> data = {};
-      data['user_id'] = uid;
-      data['mobile'] = mobile;
-      data['name'] = name;
-      data['issue_type'] = helpType.value();
-      data['timestamp'] = Timestamp.now();
-      logger.i("CALLING: addCallbackDocument");
-      await _api.addCallbackDocument(year, monthCde, data);
-      return true;
-    } catch (e) {
-      log.error("Error adding callback doc: " + e.toString());
-      return false;
-    }
-  }
-
-  Future<bool> addWinClaim(
-      String uid,
-      String userName,
-      String name,
-      String mobile,
-      int currentTickCount,
-      bool isEligible,
-      Map<String, int> resMap) async {
-    try {
-      int weekCde = CodeFromFreq.getYearWeekCode();
-
-      Map<String, dynamic> data = {};
-      data['user_id'] = uid;
-      data['mobile'] = mobile;
-      data['name'] = name;
-      data['username'] = userName;
-      data['tck_count'] = currentTickCount;
-      data['week_code'] = weekCde;
-      data['ticket_cat_map'] = resMap;
-      data['is_eligible'] = isEligible;
-      data['timestamp'] = Timestamp.now();
-      logger.i("CALLING: addClaimDocument");
-      await _api.addClaimDocument(data);
-      return true;
-    } catch (e) {
-      log.error("Error adding callback doc: " + e.toString());
-      return false;
-    }
-  }
-
   Future<List<ReferralDetail>> getUserReferrals(String uid) async {
     try {
       logger.i("CALLING: getReferralDocs");
@@ -692,37 +559,6 @@ class DBModel extends ChangeNotifier {
       log.error("Error fetch referrals details: " + e.toString());
     }
     return null;
-  }
-
-  Future<bool> deleteExpiredUserTickets(String userId) async {
-    try {
-      int weekNumber = BaseUtil.getWeekNumber();
-      if (weekNumber > 2) {
-        return await _lock.synchronized(() async {
-          ///eg: weekcode: 202105 -> delete all tickets older than 202103
-          int weekCde = CodeFromFreq.getYearWeekCode();
-          weekCde--;
-          logger.i("CALLING: deleteUserTicketsBeforeWeekCode");
-          return await _api.deleteUserTicketsBeforeWeekCode(userId, weekCde);
-        });
-      } else {
-        return false;
-      }
-    } catch (e) {
-      log.error('$e');
-      return false;
-    }
-  }
-
-  Future<bool> deleteSelectUserTickets(
-      String userId, List<String> ticketRef) async {
-    try {
-      logger.i("CALLING: deleteUserTicketDocuments");
-      return await _api.deleteUserTicketDocuments(userId, ticketRef);
-    } catch (e) {
-      log.error('$e');
-      return false;
-    }
   }
 
   Future<String> getUserDP(String uid) async {

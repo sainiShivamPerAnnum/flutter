@@ -13,7 +13,6 @@ import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
-import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:felloapp/util/custom_logger.dart';
 
 class FcmListener {
@@ -27,21 +26,7 @@ class FcmListener {
   bool isTambolaNotificationLoading = false;
 
   static Future<dynamic> backgroundMessageHandler(RemoteMessage message) async {
-    Freshchat.isFreshchatNotification(message.data).then((flag) {
-      if (flag) {
-        _handleFreshchatNotif(message.data);
-      } else {
-        //TODO Background message that is not Freshchat
-      }
-    });
     return Future<void>.value();
-  }
-
-  static _handleFreshchatNotif(Map<String, dynamic> freshChatData) {
-    print('background freshchat notif $freshChatData');
-    Freshchat.setNotificationConfig(
-        largeIcon: "ic_chat_support", smallIcon: "ic_fello_notif");
-    Freshchat.handlePushNotification(freshChatData);
   }
 
   Future<FirebaseMessaging> setupFcm() async {
@@ -96,17 +81,13 @@ class FcmListener {
 
       FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
         RemoteNotification notification = message.notification;
-        Freshchat.isFreshchatNotification(message.data).then((flag) {
-          if (flag) {
-            _handleFreshchatNotif(message.data);
-          } else if (message.data != null && message.data.isNotEmpty) {
-            _handler.handleMessage(message.data, MsgSource.Foreground);
-          } else if (notification != null) {
-            logger.d(
-                "Handle Notification: ${notification.title} ${notification.body}");
-            _handler.handleNotification(notification.title, notification.body);
-          }
-        });
+        if (message.data != null && message.data.isNotEmpty) {
+          _handler.handleMessage(message.data, MsgSource.Foreground);
+        } else if (notification != null) {
+          logger.d(
+              "Handle Notification: ${notification.title} ${notification.body}");
+          _handler.handleNotification(notification.title, notification.body);
+        }
       });
 
       FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
@@ -219,13 +200,10 @@ class FcmListener {
                 _userService.baseUser.client_token != fcmToken))) {
       logger.d("Updating FCM token to local and server db");
       _userService.baseUser.client_token = fcmToken;
-      Freshchat.setPushRegistrationToken(fcmToken);
       flag = await _dbModel.updateClientToken(_userService.baseUser, fcmToken);
     }
     return flag;
   }
-
-// TAMBOLA DRAW NOTIFICATION STATUS HANDLE CODE
 
   // TOGGLE THE SUBSCRIPTION
   Future<bool> toggleTambolaDrawNotificationStatus(bool val) async {

@@ -6,6 +6,7 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
@@ -60,6 +61,17 @@ class LauncherViewModel extends BaseModel {
 
   initLogic() async {
     try {
+      await CacheService.initialize();
+      await BaseRemoteConfig.init();
+
+      // check if cache invalidation required
+      final now = DateTime.now().millisecondsSinceEpoch;
+      _logger.d(
+          'cache: invalidation time $now ${BaseRemoteConfig.invalidationBefore}');
+      if (now <= BaseRemoteConfig.invalidationBefore) {
+        await new CacheService().invalidateAll();
+      }
+
       await userService.init();
       await Future.wait([_baseUtil.init(), _fcmListener.setupFcm()]);
 
@@ -74,7 +86,7 @@ class LauncherViewModel extends BaseModel {
         );
       }
     } catch (e) {
-      _logger.e("Splash Screen init : " + e);
+      _logger.e("Splash Screen init : $e");
     }
     _httpModel.init();
     _tambolaService.init();

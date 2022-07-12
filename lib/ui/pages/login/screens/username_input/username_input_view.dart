@@ -180,7 +180,7 @@ class UsernameState extends State<Username> {
                   ? TextFormField(
                       controller: model.referralCodeController,
                       onChanged: (val) {},
-                      //maxLength: 10,
+                      maxLength: 6,
                       decoration: InputDecoration(
                         hintText: "Enter your referral code here",
                         hintStyle: TextStyles.body3.colour(Colors.grey),

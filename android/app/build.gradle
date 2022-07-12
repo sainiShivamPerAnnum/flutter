@@ -61,12 +61,9 @@ android {
     }
 
     signingConfigs {
-<<<<<<< HEAD
-=======
 
         //Comment it before push to develop, to build using CICD 
         //Uncomment for local build and release.
->>>>>>> b7d21fc496eb7dad8e6a50c629ce0f0a3fb059ce
         debug {
             keyAlias keystoreProperties['debugkeyAlias']
             keyPassword keystoreProperties['debugkeyPassword']

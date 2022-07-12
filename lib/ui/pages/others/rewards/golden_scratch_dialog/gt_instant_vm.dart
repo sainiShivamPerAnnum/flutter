@@ -44,7 +44,7 @@ class GTInstantViewModel extends BaseModel {
   bool showMainContent = false;
   bool isAutosaveAlreadySetup = false;
 
-  int coinsCount = 200;
+  int coinsCount = 0;
   double coinScale = 1;
   bool _isShimmerEnabled = false;
   GoldenTicket _goldenTicket;
@@ -202,6 +202,7 @@ class GTInstantViewModel extends BaseModel {
   }
 
   initNormalFlow() {
+    coinsCount = _coinService.flcBalance;
     showMainContent = true;
     notifyListeners();
   }

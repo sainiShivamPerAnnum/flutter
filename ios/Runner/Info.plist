@@ -120,12 +120,25 @@
 	<string>$(WEBENGAGE_LICENSE_CODE)</string>
 	<key>WEGLogLevel</key>
 	<string>VERBOSE</string>
-<<<<<<< HEAD
-=======
+	<key>FlutterDeepLinkingEnabled</key>
+	<true/>
+	<key>CFBundleURLTypes</key>
+	<array>
+			<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>fello.onelink.me</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+			<string>http</string>
+			<string>https</string>
+			</array>
+			</dict>
+	</array>
 	<key>UIRequiresFullScreen</key>
 	<true/>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
->>>>>>> b7d21fc496eb7dad8e6a50c629ce0f0a3fb059ce
 </dict>
 </plist>

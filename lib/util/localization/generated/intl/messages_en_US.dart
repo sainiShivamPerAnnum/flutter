@@ -134,7 +134,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "tProcessingSubtitle" : MessageLookupByLibrary.simpleMessage("We are processing your tickets to see if any of your tickets has won a category.."),
     "tProcessingTitle" : MessageLookupByLibrary.simpleMessage("Prize Day"),
     "tWinSubtitle" : MessageLookupByLibrary.simpleMessage("Your tickets have been submitted\nfor processing"),
-    "tWinSubtitle2" : MessageLookupByLibrary.simpleMessage("Prizes will be announced tomorrow. be sure to check put the leaderboard"),
+    "tWinSubtitle2" : MessageLookupByLibrary.simpleMessage("Your prizes will be credited tomorrow. Be sure to check out the leaderboard!"),
     "tWinTitle" : MessageLookupByLibrary.simpleMessage("CONGRATULATIONS!"),
     "txnBankDetailsLabel" : MessageLookupByLibrary.simpleMessage("Bank Account Details"),
     "txnHistoryLabel" : MessageLookupByLibrary.simpleMessage("Transaction History"),

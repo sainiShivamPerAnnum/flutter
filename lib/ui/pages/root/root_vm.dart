@@ -6,6 +6,7 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
@@ -28,6 +29,7 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -50,6 +52,8 @@ class RootViewModel extends BaseModel {
   final _analyticsService = locator<AnalyticsService>();
   final _paytmService = locator<PaytmService>();
 
+  final _userRepo = locator<UserRepository>();
+
   BuildContext rootContext;
   bool _isInitialized = false;
 
@@ -62,7 +66,7 @@ class RootViewModel extends BaseModel {
     await _userService.getUserFundWalletData();
     txnService.signOut();
     _paytmService.getActiveSubscriptionDetails();
-    await txnService.fetchTransactions(limit: 4);
+    await txnService.fetchTransactions();
   }
 
   static final GlobalKey<ScaffoldState> scaffoldKey =
@@ -74,7 +78,7 @@ class RootViewModel extends BaseModel {
     // AppState.delegate.appState.setCurrentTabIndex = 1;
     AppState().setRootLoadValue = true;
     _initDynamicLinks(AppState.delegate.navigatorKey.currentContext);
-    _verifyManualReferral(AppState.delegate.navigatorKey.currentContext);
+    _verifyReferral(AppState.delegate.navigatorKey.currentContext);
   }
 
   onDispose() {
@@ -135,12 +139,13 @@ class RootViewModel extends BaseModel {
 
   void _showSecurityBottomSheet() {
     BaseUtil.openModalBottomSheet(
-        addToScreenStack: true,
-        isBarrierDismissable: false,
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
-        backgroundColor: UiConstants.bottomNavBarColor,
-        content: const SecurityModalSheet());
+      addToScreenStack: true,
+      isBarrierDismissable: false,
+      borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
+      backgroundColor: UiConstants.bottomNavBarColor,
+      content: const SecurityModalSheet(),
+    );
   }
 
   initialize() async {
@@ -182,13 +187,6 @@ class RootViewModel extends BaseModel {
         });
       }
 
-      _baseUtil.isUnreadFreshchatSupportMessages().then((flag) {
-        if (flag) {
-          BaseUtil.showPositiveAlert('You have unread support messages',
-              'Go to the Contact Us section to view',
-              seconds: 4);
-        }
-      });
       if (canExecuteStartupNotification &&
           AppState.startupNotifMessage != null) {
         canExecuteStartupNotification = false;
@@ -226,9 +224,10 @@ class RootViewModel extends BaseModel {
                 onPressed: () {
                   AppState.backButtonDispatcher.didPopRoute();
                   AppState.delegate.appState.currentAction = PageAction(
-                      widget: MyWinningsView(openFirst: true),
-                      page: MyWinnigsPageConfig,
-                      state: PageState.addWidget);
+                    widget: MyWinningsView(openFirst: true),
+                    page: MyWinnigsPageConfig,
+                    state: PageState.addWidget,
+                  );
                 },
               ),
             ),
@@ -241,8 +240,45 @@ class RootViewModel extends BaseModel {
     }
   }
 
-  Future<dynamic> _verifyManualReferral(BuildContext context) async {
-    if (BaseUtil.manualReferralCode == null) return null;
+  Future<dynamic> _verifyReferral(BuildContext context) async {
+    if (BaseUtil.referrerUserId != null) {
+      // when referrer id is fetched from one-link
+      if (PreferenceHelper.getBool(
+        PreferenceHelper.REFERRAL_PROCESSED,
+        def: false,
+      )) return;
+
+      await _httpModel.postUserReferral(
+        _userService.baseUser.uid,
+        BaseUtil.referrerUserId,
+        _userService.myUserName,
+      );
+
+      _logger.d('referral processed from link');
+      PreferenceHelper.setBool(PreferenceHelper.REFERRAL_PROCESSED, true);
+    } else if (BaseUtil.manualReferralCode != null) {
+      if (BaseUtil.manualReferralCode.length == 4) {
+        _verifyFirebaseManualReferral(context);
+      } else {
+        _verifyOneLinkManualReferral();
+      }
+    }
+  }
+
+  Future<dynamic> _verifyOneLinkManualReferral() async {
+    final referrerId = await _userRepo
+        .getUserIdByRefCode(BaseUtil.manualReferralCode.toUpperCase());
+
+    if (referrerId.code == 200) {
+      await _httpModel.postUserReferral(
+        _userService.baseUser.uid,
+        referrerId.model,
+        _userService.myUserName,
+      );
+    }
+  }
+
+  Future<dynamic> _verifyFirebaseManualReferral(BuildContext context) async {
     try {
       PendingDynamicLinkData dynamicLinkData =
           await FirebaseDynamicLinks.instance.getDynamicLink(Uri.parse(
@@ -251,7 +287,10 @@ class RootViewModel extends BaseModel {
       _logger.d(deepLink.toString());
       if (deepLink != null)
         return _processDynamicLink(
-            _userService.baseUser.uid, deepLink, context);
+          _userService.baseUser.uid,
+          deepLink,
+          context,
+        );
     } catch (e) {
       _logger.e(e.toString());
     }
@@ -279,23 +318,6 @@ class RootViewModel extends BaseModel {
     }
   }
 
-  _findCampaignId(String uri) {
-    int res = uri.indexOf(RegExp(r'campaign_source='));
-    int finalres = res + 16;
-    print(res);
-    print(finalres);
-    String code = '';
-    RegExp anregex = RegExp(r'^[a-zA-Z0-9]*$');
-    for (int i = finalres; i < uri.length; i++) {
-      if (anregex.hasMatch(uri[i])) {
-        code += uri[i];
-      } else {
-        break;
-      }
-    }
-    return code;
-  }
-
   _processDynamicLink(String userId, Uri deepLink, BuildContext context) async {
     String _uri = deepLink.toString();
 
@@ -318,7 +340,11 @@ class RootViewModel extends BaseModel {
 
       //Referral dynamic link
       bool _flag = await _submitReferral(
-          _userService.baseUser.uid, _userService.myUserName, _uri);
+        _userService.baseUser.uid,
+        _userService.myUserName,
+        _uri,
+      );
+
       if (_flag) {
         _logger.d('Rewards added');
         refresh();
