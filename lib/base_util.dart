@@ -44,7 +44,6 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
@@ -195,10 +194,6 @@ class BaseUtil extends ChangeNotifier {
       //Analytics logs app open state.
       BaseAnalytics.init();
       BaseAnalytics.analytics.logAppOpen();
-
-      //remote config for various remote variables
-      logger.i('base util remote config');
-      await BaseRemoteConfig.init();
 
       setPackageInfo();
       await setGameDefaults();
@@ -391,22 +386,6 @@ class BaseUtil extends ChangeNotifier {
     //     gamesList.firstWhere((game) => game.code == code),
     //   );
     // });
-  }
-
-  Future<bool> isUnreadFreshchatSupportMessages() async {
-    try {
-      var unreadCount = await Freshchat.getUnreadCountAsync;
-      return (unreadCount['count'] > 0);
-    } catch (e) {
-      logger.e('Error reading unread count variable: $e');
-      Map<String, dynamic> errorDetails = {
-        'User number': _myUser.mobile,
-        'Error Type': 'Unread message count failed'
-      };
-      _internalOpsService.logFailure(
-          _myUser.uid, FailType.FreshchatFail, errorDetails);
-      return false;
-    }
   }
 
   Future<void> refreshFunds() async {

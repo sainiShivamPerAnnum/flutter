@@ -24,7 +24,7 @@ class BaseRemoteConfig {
     'tambola_header_2': 'Pull to see the other picks'
   };
   static const Map<String, String> _TAMBOLA_DAILY_PICK_COUNT = {
-    'tambola_daily_pick_count': '5'
+    'tambola_daily_pick_count': '3'
   };
   static const Map<String, String> _FORCE_MIN_BUILD_NUMBER = {
     'force_min_build_number': '0'

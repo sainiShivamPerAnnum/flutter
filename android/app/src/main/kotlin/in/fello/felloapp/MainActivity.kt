@@ -21,7 +21,6 @@ import android.content.ContentResolver;
 
 class MainActivity: FlutterFragmentActivity() {
     private val CHANNEL = "fello.in/dev/notifications/channel/tambola"
-    private val CHANNEL_FRESHCHAT = "fello.in/dev/notifications/channel/support"
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
