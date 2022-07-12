@@ -18,10 +18,10 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
+import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -464,11 +464,18 @@ class AugmontGoldBuyViewModel extends BaseModel {
     }
     _analyticsService.track(eventName: AnalyticsEvents.buyGold);
 
+    final bool restrictPaytmAppInvoke = (FlavorConfig.isDevelopment() ||
+            BaseRemoteConfig.remoteConfig
+                    .getString(BaseRemoteConfig.RESTRICT_PAYTM_APP_INVOKE) ==
+                "true")
+        ? true
+        : false;
+
     final _status = await _paytmService.initiateTransactions(
         amount: buyAmount,
         augmontRates: goldRates,
         couponCode: appliedCoupon?.code ?? "",
-        restrictAppInvoke: FlavorConfig.isDevelopment());
+        restrictAppInvoke: restrictPaytmAppInvoke);
 
     isGoldBuyInProgress = false;
     resetBuyOptions();
@@ -540,7 +547,6 @@ class AugmontGoldBuyViewModel extends BaseModel {
         _isGeneralUserAllowed = 1;
       }
     }
-    //TODO: looks like dead code
     if (_isGeneralUserAllowed == 0) {
       //General permission is denied. Check if specific user permission granted
       if (_userService.baseUser.isAugmontEnabled != null &&

@@ -2,11 +2,15 @@ import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/model/deposit_response_model.dart';
+import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/campaigns_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -21,7 +25,8 @@ class PlayViewModel extends BaseModel {
   final _fclActionRepo = locator<FlcActionsRepo>();
   final _userCoinService = locator<UserCoinService>();
   final _userService = locator<UserService>();
-  final _dbProvider = locator<DBModel>();
+  // final _dbProvider = locator<DBModel>();
+  final _promoService = locator<CampaignService>();
   final _logger = locator<CustomLogger>();
   final _baseUtil = locator<BaseUtil>();
   final _analyticsService = locator<AnalyticsService>();
@@ -71,9 +76,12 @@ class PlayViewModel extends BaseModel {
 
   loadOfferList() async {
     isOfferListLoading = true;
-    await _dbProvider.getPromoCards().then((cards) {
-      _offerList = cards;
-    });
+    final response = await _promoService.getPromoCards();
+    if (response.code == 200) {
+      _offerList = response.model;
+    } else {
+      _offerList = [];
+    }
     print(_offerList);
     if (_offerList != null && offerList.length > 1) initiate();
     isOfferListLoading = false;
