@@ -1,6 +1,7 @@
 //Project Imports
 //Dart & Flutter Imports
 import 'dart:async';
+import 'dart:developer' as dev;
 import 'dart:math';
 //Pub Imports
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -17,7 +18,6 @@ import 'package:felloapp/core/model/prize_leader_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/referral_leader_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
-import 'package:felloapp/core/model/tambola_winners_details.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/model/user_icici_detail_model.dart';
@@ -37,13 +37,13 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flushbar/flushbar.dart';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info/package_info.dart';
@@ -85,7 +85,6 @@ class BaseUtil extends ChangeNotifier {
   AugmontRates augmontGoldRates;
 
   ///KYC global object
-  TambolaWinnersDetail tambolaWinnersDetail;
   List<PrizeLeader> prizeLeaders = [];
   List<ReferralLeader> referralLeaders = [];
   String myUserDpUrl;
@@ -106,7 +105,10 @@ class BaseUtil extends ChangeNotifier {
   int isOtpResendCount = 0;
   String zeroBalanceAssetUri;
   static List<GameModel> gamesList;
+  static List<GameModel> _focusGameList;
+  static List<GameModel> _restGamesList;
   static String manualReferralCode;
+  static String referrerUserId;
   static bool isNewUser, isFirstFetchDone; // = 'jdF1';
 
   ///Flags in various screens defined as global variables
@@ -139,12 +141,7 @@ class BaseUtil extends ChangeNotifier {
       show_game_tutorial,
       show_finance_tutorial;
   static bool isDeviceOffline, ticketRequestSent, playScreenFirst;
-  static int ticketCountBeforeRequest, infoSliderIndex
-
-      // _atomicTicketGenerationLeftCount,
-      //ticketGenerateCount,
-      // atomicTicketDeletionLeftCount
-      ;
+  static int ticketCountBeforeRequest, infoSliderIndex;
 
   _setRuntimeDefaults() {
     isNewUser = false;
@@ -197,12 +194,8 @@ class BaseUtil extends ChangeNotifier {
       BaseAnalytics.init();
       BaseAnalytics.analytics.logAppOpen();
 
-      //remote config for various remote variables
-      logger.i('base util remote config');
-      await BaseRemoteConfig.init();
-
       setPackageInfo();
-      setGameDefaults();
+      await setGameDefaults();
 
       ///fetch on-boarding status and User details
       firebaseUser = _userService.firebaseUser;
@@ -237,8 +230,8 @@ class BaseUtil extends ChangeNotifier {
     packageInfo = await PackageInfo.fromPlatform();
   }
 
-  void setGameDefaults() {
-    List<GameModel> allgamesList = [
+  Future<void> setGameDefaults() async {
+    gamesList = [
       GameModel(
         gameName: "Football",
         pageConfig: THomePageConfig,
@@ -331,31 +324,67 @@ class BaseUtil extends ChangeNotifier {
       ),
     ];
     //Arrange Games according to the position defined in baseremoteconfig.
-    List<String> gamePosition = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.GAME_POSITION)
-        .split('-');
-    logger.d("Games List: $gamePosition");
-    gamesList = [];
-    gamePosition.forEach((code) {
-      gamesList.add(
-        allgamesList.firstWhere((game) => game.code == code),
-      );
-    });
+    arrangeGames();
   }
 
-  Future<bool> isUnreadFreshchatSupportMessages() async {
-    try {
-      var unreadCount = await Freshchat.getUnreadCountAsync;
-      return (unreadCount['count'] > 0);
-    } catch (e) {
-      logger.e('Error reading unread count variable: $e');
-      Map<String, dynamic> errorDetails = {
-        'User number': _myUser.mobile,
-        'Error Type': 'Unread message count failed'
-      };
-      _dbModel.logFailure(_myUser.uid, FailType.FreshchatFail, errorDetails);
-      return false;
+  void arrangeGames() {
+    List<GameModel> tempFocusGameList = [];
+    List<GameModel> tempRestGamesList = [];
+    List<GameModel> tempGameList = [];
+    List<String> gamesOrder = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.GAME_POSITION)
+        .split('-');
+    gamesOrder.forEach(
+      (gameCode) {
+        tempGameList.add(
+          gamesList.firstWhere((game) => game.code == gameCode),
+        );
+      },
+    );
+
+    final String userlastPlayedGames =
+        PreferenceHelper.getString(PreferenceHelper.CACHE_LAST_PLAYED_GAMES);
+    if (userlastPlayedGames != null && userlastPlayedGames.isNotEmpty) {
+      List<String> lastgamesOrder = userlastPlayedGames.split("-");
+      lastgamesOrder.forEach((code) {
+        tempFocusGameList
+            .add(tempGameList.firstWhere((game) => game.code == code));
+      });
+      if (tempFocusGameList.length < 2) {
+        for (int i = 0; i < tempGameList.length; i++) {
+          if (!tempFocusGameList.contains(tempGameList[i])) {
+            tempFocusGameList.add(tempGameList[i]);
+            if (tempFocusGameList.length >= 2) break;
+          }
+        }
+      } else if (tempFocusGameList.length > 2) {
+        while (tempFocusGameList.length > 2) {
+          tempFocusGameList.removeLast();
+        }
+      }
+    } else {
+      List<String> newUserGamesOrder = BaseRemoteConfig.remoteConfig
+          .getString(BaseRemoteConfig.NEW_USER_GAMES_ORDER)
+          .split('-');
+      newUserGamesOrder.forEach((code) {
+        tempFocusGameList
+            .add(tempGameList.firstWhere((game) => game.code == code));
+      });
     }
+    tempGameList.forEach((game) {
+      if (!tempFocusGameList.contains(game)) tempRestGamesList.add(game);
+    });
+    focusGamesList = tempFocusGameList;
+    restGamesList = tempRestGamesList;
+    logger.d(
+        "Focused games list: $focusGamesList \nRest games List: $restGamesList");
+    // dev.log("Games List: $gamePosition");
+    // gamesList = [];
+    // gamePosition.forEach((code) {
+    //   gamesList.add(
+    //     gamesList.firstWhere((game) => game.code == code),
+    //   );
+    // });
   }
 
   Future<void> refreshFunds() async {
@@ -427,9 +456,10 @@ class BaseUtil extends ChangeNotifier {
         message: message,
         duration: Duration(seconds: seconds),
         backgroundGradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            colors: [Colors.lightBlueAccent, UiConstants.primaryColor]),
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: [Colors.lightBlueAccent, UiConstants.primaryColor],
+        ),
         boxShadows: [
           BoxShadow(
             color: UiConstants.positiveAlertColor,
@@ -535,12 +565,13 @@ class BaseUtil extends ChangeNotifier {
     )..show(context);
   }
 
-  static Future<void> openDialog(
-      {Widget content,
-      bool addToScreenStack,
-      bool hapticVibrate,
-      bool isBarrierDismissable,
-      ValueChanged<dynamic> callback}) async {
+  static Future<void> openDialog({
+    Widget content,
+    bool addToScreenStack,
+    bool hapticVibrate,
+    bool isBarrierDismissable,
+    ValueChanged<dynamic> callback,
+  }) async {
     if (addToScreenStack != null && addToScreenStack == true)
       AppState.screenStack.add(ScreenItem.dialog);
     CustomLogger().d("Added a dialog");
@@ -631,7 +662,6 @@ class BaseUtil extends ChangeNotifier {
       _augmontDetail = null;
       augmontGoldRates = null;
       _currentAugmontTxn = null;
-      tambolaWinnersDetail = null;
       prizeLeaders = [];
       referralLeaders = [];
       myUserDpUrl = null;
@@ -647,6 +677,7 @@ class BaseUtil extends ChangeNotifier {
 
       AppState.delegate.appState.setCurrentTabIndex = 0;
       manualReferralCode = null;
+      referrerUserId = null;
       _setRuntimeDefaults();
 
       return true;
@@ -827,6 +858,40 @@ class BaseUtil extends ChangeNotifier {
   void setEmail(String email) {
     myUser.email = email;
     notifyListeners();
+  }
+
+  List<GameModel> get focusGamesList => _focusGameList;
+
+  set focusGamesList(List<GameModel> games) {
+    _focusGameList = games;
+    notifyListeners();
+  }
+
+  List<GameModel> get restGamesList => _restGamesList;
+
+  set restGamesList(List<GameModel> games) {
+    _restGamesList = games;
+    notifyListeners();
+  }
+
+  cacheGameorder(String gameCode) {
+    String gamesOrder =
+        PreferenceHelper.getString(PreferenceHelper.CACHE_LAST_PLAYED_GAMES);
+
+    if (gamesOrder != null && gamesOrder.isNotEmpty) {
+      List<String> cachedGamesList = gamesOrder.split('-');
+
+      if (!cachedGamesList.contains(gameCode)) {
+        cachedGamesList.insert(0, gameCode);
+        while (cachedGamesList.length > 2) cachedGamesList.removeLast();
+      }
+      gamesOrder = cachedGamesList.join('-');
+    } else {
+      gamesOrder = gameCode;
+    }
+    PreferenceHelper.setString(
+        PreferenceHelper.CACHE_LAST_PLAYED_GAMES, gamesOrder);
+    arrangeGames();
   }
 
   void refreshAugmontBalance() async {

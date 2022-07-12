@@ -550,9 +550,6 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                 baseProvider.augmontDetail.ifsc = pBankIfsc.trim();
                 baseProvider.updateAugmontDetails(pBankHolderName.trim(),
                     pBankAccNo.trim(), pBankIfsc.trim());
-                // dbProvider
-                //     .updateUserAugmontDetails(
-                //         _userService.baseUser.uid, baseProvider.augmontDetail)
                 dbProvider
                     .updateAugmontBankDetails(
                         _userService.baseUser.uid,

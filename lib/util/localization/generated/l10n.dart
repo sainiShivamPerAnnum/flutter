@@ -1045,10 +1045,10 @@ class S {
     );
   }
 
-  /// `Prizes will be announced tomorrow. be sure to check put the leaderboard`
+  /// `Your prizes will be credited tomorrow. Be sure to check out the leaderboard!`
   String get tWinSubtitle2 {
     return Intl.message(
-      'Prizes will be announced tomorrow. be sure to check put the leaderboard',
+      'Your prizes will be credited tomorrow. Be sure to check out the leaderboard!',
       name: 'tWinSubtitle2',
       desc: '',
       args: [],

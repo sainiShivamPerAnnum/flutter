@@ -1,11 +1,12 @@
 import 'dart:async';
-import 'package:device_unlock/device_unlock.dart';
+// import 'package:device_unlock/device_unlock.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
@@ -23,7 +24,7 @@ import '../../../core/repository/user_repo.dart';
 class LauncherViewModel extends BaseModel {
   bool _isSlowConnection = false;
   Timer _timer3;
-  DeviceUnlock deviceUnlock;
+  // DeviceUnlock deviceUnlock;
 
   final navigator = AppState.delegate.appState;
 
@@ -60,6 +61,17 @@ class LauncherViewModel extends BaseModel {
 
   initLogic() async {
     try {
+      await CacheService.initialize();
+      await BaseRemoteConfig.init();
+
+      // check if cache invalidation required
+      final now = DateTime.now().millisecondsSinceEpoch;
+      _logger.d(
+          'cache: invalidation time $now ${BaseRemoteConfig.invalidationBefore}');
+      if (now <= BaseRemoteConfig.invalidationBefore) {
+        await new CacheService().invalidateAll();
+      }
+
       await userService.init();
       await Future.wait([_baseUtil.init(), _fcmListener.setupFcm()]);
 
@@ -74,14 +86,14 @@ class LauncherViewModel extends BaseModel {
         );
       }
     } catch (e) {
-      _logger.e("Splash Screen init : " + e);
+      _logger.e("Splash Screen init : $e");
     }
     _httpModel.init();
     _tambolaService.init();
     _timer3.cancel();
 
     try {
-      deviceUnlock = DeviceUnlock();
+      // deviceUnlock = DeviceUnlock();
     } catch (e) {
       _logger.e(
         e.toString(),
@@ -114,12 +126,12 @@ class LauncherViewModel extends BaseModel {
 
     ///Ceck if app needs to be open securely
     bool _unlocked = true;
-    if (userService.baseUser.userPreferences
-                .getPreference(Preferences.APPLOCK) ==
-            1 &&
-        deviceUnlock != null) {
-      _unlocked = await authenticateDevice();
-    }
+    // if (userService.baseUser.userPreferences
+    //             .getPreference(Preferences.APPLOCK) ==
+    //         1 &&
+    //     deviceUnlock != null) {
+    //   _unlocked = await authenticateDevice();
+    // }
 
     if (_unlocked) {
       navigator.currentAction =
@@ -130,26 +142,26 @@ class LauncherViewModel extends BaseModel {
     }
   }
 
-  Future<bool> authenticateDevice() async {
-    bool _res = false;
-    try {
-      _res = await deviceUnlock.request(
-          localizedReason:
-              'Confirm your phone screen lock pattern,PIN or password');
-    } on DeviceUnlockUnavailable {
-      BaseUtil.showPositiveAlert('No Device Authentication Found',
-          'Logging in, please enable device security to add lock');
-      _res = true;
-    } on RequestInProgress {
-      _res = false;
-      print('Request in progress');
-    } catch (e) {
-      _logger.e("error", [e]);
-      BaseUtil.showNegativeAlert(
-          'Authentication Failed', 'Please restart and try again');
-    }
-    return _res;
-  }
+  // Future<bool> authenticateDevice() async {
+  //   bool _res = false;
+  //   try {
+  //     _res = await deviceUnlock.request(
+  //         localizedReason:
+  //             'Confirm your phone screen lock pattern,PIN or password');
+  //   } on DeviceUnlockUnavailable {
+  //     BaseUtil.showPositiveAlert('No Device Authentication Found',
+  //         'Logging in, please enable device security to add lock');
+  //     _res = true;
+  //   } on RequestInProgress {
+  //     _res = false;
+  //     print('Request in progress');
+  //   } catch (e) {
+  //     _logger.e("error", [e]);
+  //     BaseUtil.showNegativeAlert(
+  //         'Authentication Failed', 'Please restart and try again');
+  //   }
+  //   return _res;
+  // }
 
   Future<bool> checkBreakingUpdate() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();

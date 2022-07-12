@@ -1,19 +1,14 @@
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
-import 'package:felloapp/core/model/tambola_ticket_generation_model.dart';
 import 'package:felloapp/core/model/user_ticket_wallet_model.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/ops/lcl_db_ops.dart';
-import 'package:felloapp/core/repository/flc_actions_repo.dart';
-import 'package:felloapp/core/repository/ticket_generation_repo.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/repository/ticket_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/notifier_services/tambola_generation_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -22,30 +17,23 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/elements/tambola-global/tambola_ticket.dart';
 import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
-import 'package:felloapp/ui/pages/others/games/tambola/show_all_tickets.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_result.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:felloapp/util/custom_logger.dart';
 
 class TambolaGameViewModel extends BaseModel {
-  TambolaService tambolaService = locator<TambolaService>();
-  DBModel _dbModel = locator<DBModel>();
-
-  // tambolaService. _tambolaService. = locator<tambolaService.>();
-  UserService _userService = locator<UserService>();
-  UserCoinService _coinService = locator<UserCoinService>();
-  CustomLogger _logger = locator<CustomLogger>();
-  LocalDBModel _localDBModel = locator<LocalDBModel>();
-  final _fclActionRepo = locator<FlcActionsRepo>();
-  final _ticketGenerationRepo = locator<TicketGenerationRepo>();
-  GoldenTicketService _goldenTicketService = GoldenTicketService();
+  final _logger = locator<CustomLogger>();
+  final tambolaService = locator<TambolaService>();
+  final _coinService = locator<UserCoinService>();
   final _analyticsService = locator<AnalyticsService>();
+  final _tambolaRepo = locator<TambolaRepo>();
+  final _userService = locator<UserService>();
 
   int get dailyPicksCount => tambolaService.dailyPicksCount;
 
@@ -58,7 +46,6 @@ class TambolaGameViewModel extends BaseModel {
   UserTicketWallet get userTicketWallet => tambolaService.userTicketWallet;
   List<Ticket> _tambolaBoardViews;
 
-  TambolaGenerationService _tambolaTicketService;
   int ticketGenerationTryCount = 0;
   TextEditingController ticketCountController;
   Ticket _currentBoardView;
@@ -110,7 +97,7 @@ class TambolaGameViewModel extends BaseModel {
     notifyListeners();
   }
 
-  Widget get cardWidet => _widget;
+  Widget get cardWidget => _widget;
 
   List<Ticket> get topFiveTambolaBoards => _topFiveTambolaBoards;
 
@@ -133,14 +120,12 @@ class TambolaGameViewModel extends BaseModel {
   int get totalActiveTickets =>
       tambolaService.userTicketWallet.getActiveTickets();
 
-  init() async {
+  Future<void> init() async {
     ticketCountController =
         new TextEditingController(text: buyTicketCount.toString());
 
-    _tambolaTicketService = new TambolaGenerationService();
     // Ticket wallet check
-    if (userTicketWallet == null)
-      await tambolaService.getUserTicketWalletData();
+    await tambolaService.getUserTicketWalletData();
 
     ///Weekly Picks check
     if (weeklyDigits == null) {
@@ -152,20 +137,22 @@ class TambolaGameViewModel extends BaseModel {
     ///next get the tambola tickets of this week
     if (!tambolaService.weeklyTicksFetched) {
       _logger.d("Fetching Tambola tickets");
-      List<TambolaBoard> _boards =
-          await _dbModel.getWeeksTambolaTickets(_userService.baseUser.uid);
-      tambolaService.weeklyTicksFetched = true;
-      if (_boards != null) {
-        tambolaService.userWeeklyBoards = _boards;
-        _logger.d(_boards.length);
+      final tickets = await _tambolaRepo.getTickets();
+      if (tickets.code == 200) {
+        List<TambolaBoard> boards = tickets.model.map((e) => e.board).toList();
+        tambolaService.weeklyTicksFetched = true;
+        tambolaService.userWeeklyBoards = boards;
+        _logger.d(boards.length);
         _currentBoard = null;
         _currentBoardView = null;
+      } else {
+        _logger.d(tickets.errorMessage);
       }
+
+      _examineTicketsForWins();
+
       notifyListeners();
     }
-
-    //check if new tambola tickets need to be generated
-    await checkIfMoreTicketNeedsToBeGenerated();
 
     ///check whether to show summary cards or not
     DateTime today = DateTime.now();
@@ -173,15 +160,6 @@ class TambolaGameViewModel extends BaseModel {
       showSummaryCards = false;
       notifyListeners();
     }
-
-    ///check if tickets need to be deleted
-    bool _isDeleted = await _tambolaTicketService
-        .processTicketDeletionRequirement(activeTambolaCardCount);
-    if (_isDeleted) {
-      notifyListeners();
-    }
-
-    checkSundayResultsProcessing();
   }
 
   _refreshTambolaTickets() async {
@@ -190,7 +168,6 @@ class TambolaGameViewModel extends BaseModel {
     ticketsBeingGenerated = true;
     tambolaService.weeklyTicksFetched = false;
     init();
-    //notifyListeners();
   }
 
   int get activeTambolaCardCount {
@@ -199,12 +176,12 @@ class TambolaGameViewModel extends BaseModel {
     return tambolaService.userWeeklyBoards.length;
   }
 
-  updateTicketCount() {
+  void updateTicketCount() {
     buyTicketCount = int.tryParse(ticketCountController.text) ?? 3;
     notifyListeners();
   }
 
-  increaseTicketCount() {
+  void increaseTicketCount() {
     if (buyTicketCount < 30)
       buyTicketCount += 1;
     else
@@ -214,7 +191,7 @@ class TambolaGameViewModel extends BaseModel {
     notifyListeners();
   }
 
-  decreaseTicketCount() {
+  void decreaseTicketCount() {
     if (buyTicketCount > 0)
       buyTicketCount -= 1;
     else
@@ -223,7 +200,7 @@ class TambolaGameViewModel extends BaseModel {
     notifyListeners();
   }
 
-  void buyTickets(BuildContext context) async {
+  Future<void> buyTickets(BuildContext context) async {
     if (ticketBuyInProgress) return;
     if (ticketCountController.text.isEmpty)
       return BaseUtil.showNegativeAlert(
@@ -239,42 +216,43 @@ class TambolaGameViewModel extends BaseModel {
           "You can purchase upto 30 tambola tickets at once");
     }
     if (ticketPurchaseCost * ticketCount > _coinService.flcBalance) {
-      // return BaseUtil.showNegativeAlert("Insufficient tokens",
-      //     "You do not have enough tokens to buy Tambola tickets");
       return earnMoreTokens();
     }
 
     ticketBuyInProgress = true;
+    tambolaService.ticketGenerateCount = ticketCount;
     notifyListeners();
+
     _analyticsService.track(eventName: AnalyticsEvents.gamePlayStarted);
     _analyticsService.track(
       eventName: AnalyticsEvents.buyTambolaTickets,
       properties: {'count': ticketCount},
     );
-    ApiResponse<FlcModel> _flcResponse = await _fclActionRepo.buyTambolaTickets(
-        cost: (-1 * ticketPurchaseCost),
-        noOfTickets: ticketCount,
-        userUid: _userService.baseUser.uid);
+
+    ApiResponse<FlcModel> _flcResponse =
+        await _tambolaRepo.buyTambolaTickets(ticketCount);
     if (_flcResponse.model != null && _flcResponse.code == 200) {
-      ticketBuyInProgress = false;
-      notifyListeners();
       BaseUtil.showPositiveAlert(
-          "Request is now processing", "Generating your tickets, please wait");
+        "Tickets successfully generated 🥳",
+        "Your weekly odds are now way better!",
+      );
 
       if (_flcResponse.model.flcBalance > 0) {
         _coinService.setFlcBalance(_flcResponse.model.flcBalance);
       }
 
       //Need to refresh the userTicketWallet object after API completes
-      tambolaService.userTicketWallet =
-          await _dbModel.getUserTicketWallet(_userService.baseUser.uid);
-      if (tambolaService.userTicketWallet != null) _refreshTambolaTickets();
+      _refreshTambolaTickets();
     } else {
-      ticketBuyInProgress = false;
-      notifyListeners();
-      return BaseUtil.showNegativeAlert("Operation Failed",
-          "Failed to buy tickets at the moment. Please try again later");
+      return BaseUtil.showNegativeAlert(
+        "Operation Failed",
+        "Failed to buy tickets at the moment. Please try again later",
+      );
     }
+
+    ticketBuyInProgress = false;
+    tambolaService.ticketGenerateCount = 0;
+    notifyListeners();
   }
 
   void earnMoreTokens() {
@@ -288,50 +266,6 @@ class TambolaGameViewModel extends BaseModel {
       backgroundColor: Colors.transparent,
       isBarrierDismissable: true,
     );
-  }
-
-  checkIfMoreTicketNeedsToBeGenerated() async {
-    tambolaService.ticketGenerateCount = 0;
-
-    if (activeTambolaCardCount != null &&
-        tambolaService.userTicketWallet.getActiveTickets() > 0) {
-      if (activeTambolaCardCount <
-          tambolaService.userTicketWallet.getActiveTickets()) {
-        _logger
-            .d('Currently generated ticket count is less than needed tickets');
-        tambolaService.ticketGenerateCount =
-            tambolaService.userTicketWallet.getActiveTickets() -
-                activeTambolaCardCount;
-      }
-    }
-
-    if (tambolaService.ticketGenerateCount > 0) {
-      //Call Generation API
-      ApiResponse<TambolaTicketGenerationModel> _response =
-          await _ticketGenerationRepo.generateTickets(
-              userId: _userService.baseUser.uid,
-              numberOfTickets: tambolaService.ticketGenerateCount);
-      if (_response.code == 200) {
-        if (_response.model.flag) {
-          _refreshTambolaTickets();
-          BaseUtil.showPositiveAlert('Tickets successfully generated 🥳',
-              'Your weekly odds are now way better!');
-        } else {
-          BaseUtil.showNegativeAlert(
-            'Tickets generation failed',
-            'Please try again after sometime',
-          );
-        }
-      } else {
-        _logger.d("Api failed");
-        BaseUtil.showNegativeAlert(
-          'Tickets generation failed',
-          'Please try again after sometime',
-        );
-      }
-    } else {
-      _logger.d("No tickets to generate");
-    }
   }
 
   Ticket buildBoardView(TambolaBoard board) {
@@ -351,69 +285,67 @@ class TambolaGameViewModel extends BaseModel {
     );
   }
 
-  showAllBoards() {
-    if (BaseUtil.showNoInternetAlert()) return;
-    _tambolaBoardViews = [];
-    tambolaService.userWeeklyBoards.forEach((board) {
-      _tambolaBoardViews.add(buildBoardView(board));
-    });
-    if (_tambolaBoardViews.isNotEmpty)
-      AppState.delegate.appState.currentAction = PageAction(
-        state: PageState.addWidget,
-        page: TShowAllTicketsPageConfig,
-        widget: ShowAllTickets(
-          tambolaBoardView: _tambolaBoardViews,
-        ),
-      );
-    else
-      BaseUtil.showNegativeAlert(
-          "No Tickets to show", "Currently there are no tickets available");
-  }
-
-  checkSundayResultsProcessing() {
-    if (userWeeklyBoards == null ||
-        userWeeklyBoards.isEmpty ||
-        weeklyDigits == null ||
-        weeklyDigits.toList().isEmpty ||
-        _localDBModel == null) {
-      _logger.d('Testing is not ready yet');
-      return false;
+  List<TambolaBoard> refreshBestBoards() {
+    if (userWeeklyBoards == null || userWeeklyBoards.isEmpty) {
+      return new List<TambolaBoard>.filled(5, null);
     }
-    DateTime date = DateTime.now();
-    if (date.weekday == DateTime.sunday) {
-      if (weeklyDigits.toList().length == 7 * dailyPicksCount) {
-        _localDBModel.isTambolaResultProcessingDone().then((flag) {
-          if (flag == 0) {
-            _logger.i('Ticket results not yet displayed. Displaying: ');
-            _examineTicketsForWins();
+    _bestTambolaBoards = [];
+    for (int i = 0; i < 5; i++) {
+      _bestTambolaBoards.add(userWeeklyBoards[0]);
+    }
 
-            ///save the status that results have been saved
-            _localDBModel.saveTambolaResultProcessingStatus(true);
-          }
+    if (weeklyDigits == null || weeklyDigits.toList().isEmpty) {
+      return _bestTambolaBoards;
+    }
 
-          ///also delete all the old tickets while we're at it
-          //no need to await
-          _dbModel.deleteExpiredUserTickets(_userService.baseUser.uid);
-        });
+    userWeeklyBoards.forEach((board) {
+      if (_bestTambolaBoards[0] == null) _bestTambolaBoards[0] = board;
+      if (_bestTambolaBoards[1] == null) _bestTambolaBoards[1] = board;
+      if (_bestTambolaBoards[2] == null) _bestTambolaBoards[2] = board;
+      if (_bestTambolaBoards[3] == null) _bestTambolaBoards[3] = board;
+      if (_bestTambolaBoards[4] == null) _bestTambolaBoards[4] = board;
+
+      if (_bestTambolaBoards[0].getRowOdds(0, weeklyDigits.toList()) >
+          board.getRowOdds(0, weeklyDigits.toList())) {
+        _bestTambolaBoards[0] = board;
       }
-    } else {
-      _localDBModel.isTambolaResultProcessingDone().then((flag) {
-        if (flag == 1) _localDBModel.saveTambolaResultProcessingStatus(false);
-      });
-    }
+      if (_bestTambolaBoards[1].getRowOdds(1, weeklyDigits.toList()) >
+          board.getRowOdds(1, weeklyDigits.toList())) {
+        _bestTambolaBoards[1] = board;
+      }
+      if (_bestTambolaBoards[2].getRowOdds(2, weeklyDigits.toList()) >
+          board.getRowOdds(2, weeklyDigits.toList())) {
+        _bestTambolaBoards[2] = board;
+      }
+      if (_bestTambolaBoards[3].getCornerOdds(weeklyDigits.toList()) >
+          board.getCornerOdds(weeklyDigits.toList())) {
+        _bestTambolaBoards[3] = board;
+      }
+      if (_bestTambolaBoards[4].getFullHouseOdds(weeklyDigits.toList()) >
+          board.getFullHouseOdds(weeklyDigits.toList())) {
+        _bestTambolaBoards[4] = board;
+      }
+    });
+
+    return _bestTambolaBoards;
   }
 
-  ///check if any of the tickets aced any of the categories.
-  ///also check if the user is eligible for a prize
-  ///if any did, add it to a list and submit the list as a win claim
-  _examineTicketsForWins() {
+  Future<void> _examineTicketsForWins() async {
     if (userWeeklyBoards == null ||
         userWeeklyBoards.isEmpty ||
         weeklyDigits == null ||
-        weeklyDigits.toList().isEmpty) {
+        weeklyDigits.toList().length != 7 * dailyPicksCount) {
+      PreferenceHelper.setBool(PreferenceHelper.SHOW_TAMBOLA_PROCESSING, true);
       _logger.i('Testing is not ready yet');
-      return false;
+      return;
     }
+
+    final show = PreferenceHelper.getBool(
+      PreferenceHelper.SHOW_TAMBOLA_PROCESSING,
+      def: true,
+    );
+    if (show == false) return;
+
     Map<String, int> ticketCodeWinIndex = {};
     userWeeklyBoards.forEach((boardObj) {
       if (boardObj.getCornerOdds(
@@ -473,71 +405,13 @@ class TambolaGameViewModel extends BaseModel {
     tambolaService.winnerDialogCalled = true;
 
     if (ticketCodeWinIndex.length > 0) {
-      _dbModel
-          .addWinClaim(
-              _userService.baseUser.uid,
-              _userService.baseUser.username,
-              _userService.baseUser.name,
-              _userService.baseUser.mobile,
-              tambolaService.userTicketWallet.getActiveTickets(),
-              _isEligible,
-              ticketCodeWinIndex)
-          .then((flag) {
-        BaseUtil.showPositiveAlert('Congratulations 🎉',
-            'Your tickets have been submitted for processing your prizes!');
-      });
-    }
-  }
-
-  List<TambolaBoard> refreshBestBoards() {
-    if (userWeeklyBoards == null || userWeeklyBoards.isEmpty) {
-      return new List<TambolaBoard>(5);
-    }
-    _bestTambolaBoards = [];
-    for (int i = 0; i < 5; i++) {
-      _bestTambolaBoards.add(userWeeklyBoards[0]);
-    }
-    //initialise
-    _bestTambolaBoards[0] = userWeeklyBoards[0];
-    _bestTambolaBoards[1] = userWeeklyBoards[0];
-    _bestTambolaBoards[2] = userWeeklyBoards[0];
-    _bestTambolaBoards[3] = userWeeklyBoards[0];
-    _bestTambolaBoards[4] = userWeeklyBoards[0];
-
-    if (weeklyDigits == null || weeklyDigits.toList().isEmpty) {
-      return _bestTambolaBoards;
+      BaseUtil.showPositiveAlert(
+        'Congratulations 🎉',
+        'Your tickets have been submitted for processing your prizes!',
+      );
     }
 
-    userWeeklyBoards.forEach((board) {
-      if (_bestTambolaBoards[0] == null) _bestTambolaBoards[0] = board;
-      if (_bestTambolaBoards[1] == null) _bestTambolaBoards[1] = board;
-      if (_bestTambolaBoards[2] == null) _bestTambolaBoards[2] = board;
-      if (_bestTambolaBoards[3] == null) _bestTambolaBoards[3] = board;
-      if (_bestTambolaBoards[4] == null) _bestTambolaBoards[4] = board;
-
-      if (_bestTambolaBoards[0].getRowOdds(0, weeklyDigits.toList()) >
-          board.getRowOdds(0, weeklyDigits.toList())) {
-        _bestTambolaBoards[0] = board;
-      }
-      if (_bestTambolaBoards[1].getRowOdds(1, weeklyDigits.toList()) >
-          board.getRowOdds(1, weeklyDigits.toList())) {
-        _bestTambolaBoards[1] = board;
-      }
-      if (_bestTambolaBoards[2].getRowOdds(2, weeklyDigits.toList()) >
-          board.getRowOdds(2, weeklyDigits.toList())) {
-        _bestTambolaBoards[2] = board;
-      }
-      if (_bestTambolaBoards[3].getCornerOdds(weeklyDigits.toList()) >
-          board.getCornerOdds(weeklyDigits.toList())) {
-        _bestTambolaBoards[3] = board;
-      }
-      if (_bestTambolaBoards[4].getFullHouseOdds(weeklyDigits.toList()) >
-          board.getFullHouseOdds(weeklyDigits.toList())) {
-        _bestTambolaBoards[4] = board;
-      }
-    });
-
-    return _bestTambolaBoards;
+    PreferenceHelper.setBool(PreferenceHelper.SHOW_TAMBOLA_PROCESSING, false);
   }
 
   bool handleScrollNotification(ScrollNotification notification) {

@@ -197,7 +197,7 @@ class AugmontGoldSellViewModel extends BaseModel {
           "Insufficient balance", "Please enter a lower amount");
       return;
     }
-    if (sellGramAmount >= withdrawableQnt) {
+    if (sellGramAmount > withdrawableQnt) {
       BaseUtil.showNegativeAlert(
           "Sell not processed", "Purchased Gold can be sold after 2 days");
       return;
@@ -261,7 +261,8 @@ class AugmontGoldSellViewModel extends BaseModel {
       onSellComplete(true);
       _augmontModel.completeTransaction();
       return true;
-    } else if (txn.tranStatus == UserTransaction.TRAN_STATUS_CANCELLED) {
+    } else if (txn.tranStatus == UserTransaction.TRAN_STATUS_CANCELLED ||
+        txn.tranStatus == UserTransaction.TRAN_STATUS_FAILED) {
       onSellComplete(false);
       _augmontModel.completeTransaction();
     }

@@ -10,10 +10,13 @@ import 'package:felloapp/util/locator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:felloapp/util/custom_logger.dart';
 
+import '../../repository/ticket_repo.dart';
+
 class TambolaService extends ChangeNotifier {
   CustomLogger _logger = locator<CustomLogger>();
   DBModel _dbModel = locator<DBModel>();
   UserService _userService = locator<UserService>();
+  final _tambolaRepo = locator<TambolaRepo>();
 
   static UserTicketWallet _userTicketWallet;
   static int _dailyPicksCount;
@@ -148,7 +151,7 @@ class TambolaService extends ChangeNotifier {
     if (!weeklyDrawFetched) {
       try {
         _logger.i('Requesting for weekly picks');
-        DailyPick _picks = await _dbModel.getWeeklyPicks();
+        final DailyPick _picks = (await _tambolaRepo.getWeeklyPicks()).model;
         weeklyDrawFetched = true;
         if (_picks != null) {
           weeklyDigits = _picks;

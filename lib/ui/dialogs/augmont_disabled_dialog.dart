@@ -35,7 +35,7 @@ class AugmontDisabledState extends State<AugmontDisabled> {
 
   dialogContent(BuildContext context) {
     return Stack(
-        overflow: Overflow.visible,
+        clipBehavior: Clip.none,
         alignment: Alignment.topCenter,
         children: <Widget>[
           SingleChildScrollView(

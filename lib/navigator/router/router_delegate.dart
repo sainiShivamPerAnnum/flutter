@@ -5,10 +5,10 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
-import 'package:felloapp/ui/pages/hamburger/chatsupport_page.dart';
 import 'package:felloapp/ui/pages/hamburger/faq_page.dart';
 import 'package:felloapp/ui/pages/hamburger/freshdesk_help.dart';
 import 'package:felloapp/ui/pages/hamburger/referral_policy_page.dart';
@@ -51,12 +51,15 @@ import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/pages/splash/splash_view.dart';
 import 'package:felloapp/ui/pages/static/poolview.dart';
 import 'package:felloapp/ui/pages/static/transactions_view.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_rating_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 //Flutter Imports
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
@@ -200,9 +203,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
         case Pages.RefPolicy:
           _addPageData(ReferralPolicy(), RefPolicyPageConfig);
-          break;
-        case Pages.ChatSupport:
-          _addPageData(ChatSupport(), ChatSupportPageConfig);
           break;
         case Pages.VerifyEmail:
           _addPageData(VerifyEmail(), VerifyEmailPageConfig);
@@ -600,21 +600,25 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           title: 'Where is my PAN Number used?',
         );
         break;
+      case "appRating":
+        if (checkForRatingDialog()) dialogWidget = FelloRatingDialog();
+        break;
     }
     if (dialogWidget != null) {
       AppState.screenStack.add(ScreenItem.dialog);
       showDialog(
-          context: navigatorKey.currentContext,
-          barrierDismissible: barrierDismissable,
-          builder: (ctx) {
-            return WillPopScope(
-                onWillPop: () {
-                  AppState.backButtonDispatcher.didPopRoute();
-                  print("Popped the dialog");
-                  return Future.value(true);
-                },
-                child: dialogWidget);
-          });
+        context: navigatorKey.currentContext,
+        barrierDismissible: barrierDismissable,
+        builder: (ctx) {
+          return WillPopScope(
+              onWillPop: () {
+                AppState.backButtonDispatcher.didPopRoute();
+                print("Popped the dialog");
+                return Future.value(true);
+              },
+              child: dialogWidget);
+        },
+      );
     }
   }
 
@@ -785,4 +789,21 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   //       ),
   //       page: WalkThroughConfig);
   // }
+
+  bool checkForRatingDialog() {
+    bool isUserAlreadyRated =
+        PreferenceHelper.exist(PreferenceHelper.CACHE_RATING_IS_RATED);
+    if (isUserAlreadyRated) return false;
+
+    if (PreferenceHelper.exist(
+        PreferenceHelper.CACHE_RATING_EXPIRY_TIMESTAMP)) {
+      int expiryTimeStampInMSE = PreferenceHelper.getInt(
+          PreferenceHelper.CACHE_RATING_EXPIRY_TIMESTAMP);
+      if (DateTime.now().millisecondsSinceEpoch < expiryTimeStampInMSE)
+        return false;
+    }
+    PreferenceHelper.setInt(PreferenceHelper.CACHE_RATING_EXPIRY_TIMESTAMP,
+        DateTime.now().add(Duration(days: 10)).millisecondsSinceEpoch);
+    return true;
+  }
 }
