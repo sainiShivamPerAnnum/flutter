@@ -95,5 +95,5 @@ class ApiPath {
 
   /// Subcription Apis
   String getTransaction(String uid) => "/user/$uid/transactions";
-  get kPromos => "/$stage/promos";
+  get kPromos => "/promos";
 }

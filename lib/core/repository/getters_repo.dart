@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
+import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
@@ -94,6 +95,28 @@ class GetterRepository extends BaseRepo {
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError("Unable to fetch statistics", 400);
+    }
+  }
+
+  Future<ApiResponse<List<PromoCardModel>>> getPromoCards() async {
+    try {
+      final response = await APIService.instance.getData(
+        ApiPath().kPromos,
+        cBaseUrl: _baseUrl,
+        queryParams: {
+          "uid": userService.baseUser.uid,
+        },
+      );
+
+      final responseData = response["data"];
+
+      logger.d(responseData);
+      final events = PromoCardModel.helper.fromMapArray(responseData['promos']);
+
+      return ApiResponse<List<PromoCardModel>>(model: events, code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError("Unable to fetch promos", 400);
     }
   }
 }

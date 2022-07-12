@@ -278,4 +278,24 @@ class UserRepository extends BaseRepo {
       );
     }
   }
+
+  Future<ApiResponse<bool>> updateUser({
+    String uid,
+    @required Map<String, dynamic> dMap,
+  }) async {
+    try {
+      await APIService.instance.putData(
+        _apiPaths.kGetUserById(uid),
+        body: dMap,
+        cBaseUrl: _baseUrl,
+      );
+      return ApiResponse<bool>(model: true, code: 200);
+    } catch (e) {
+      logger.e(e);
+      return ApiResponse.withError(
+        "Unable to fetch user notifications",
+        400,
+      );
+    }
+  }
 }

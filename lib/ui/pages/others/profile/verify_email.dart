@@ -2,14 +2,17 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
+import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/pin_input_custom_text_field.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input/name_input_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -35,6 +38,8 @@ class VerifyEmailState extends State<VerifyEmail> {
   final _userService = locator<UserService>();
   // final baseProvider = locator<BaseUtil>();
   final formKey = GlobalKey<FormState>();
+  final _userRepo = locator<UserRepository>();
+
   Timer timer;
   bool isGmailVerifying = false;
   BaseUtil baseProvider;
@@ -153,13 +158,18 @@ class VerifyEmailState extends State<VerifyEmail> {
       _userService.isEmailVerified = true;
       _userService.baseUser.isEmailVerified = true;
 
-      bool res = await dbProvider.updateUserEmail(_userService.baseUser.uid,
-          _userService.baseUser.email, _userService.baseUser.isEmailVerified);
+      ApiResponse<bool> res = await _userRepo.updateUser(
+        uid: _userService.baseUser.uid,
+        dMap: {
+          'email': _userService.baseUser.email,
+          'mIsEmailVerified': _userService.baseUser.isEmailVerified,
+        },
+      );
 
       setState(() {
         _isVerifying = false;
       });
-      if (res) {
+      if (res.model) {
         BaseUtil.showPositiveAlert(
             "Email verified", "Thank you for verifying your email");
         AppState.backButtonDispatcher.didPopRoute();
@@ -196,9 +206,15 @@ class VerifyEmailState extends State<VerifyEmail> {
         baseProvider.setEmailVerified();
         _userService.isEmailVerified = true;
         _userService.baseUser.isEmailVerified = true;
-        bool res = await dbProvider.updateUserEmail(_userService.baseUser.uid,
-            _userService.baseUser.email, _userService.baseUser.isEmailVerified);
-        if (res) {
+
+        ApiResponse<bool> res = await _userRepo.updateUser(
+          uid: _userService.baseUser.uid,
+          dMap: {
+            'email': _userService.baseUser.email,
+            'mIsEmailVerified': _userService.baseUser.isEmailVerified,
+          },
+        );
+        if (res.model) {
           setState(() {
             baseProvider.isGoogleSignInProgress = false;
           });

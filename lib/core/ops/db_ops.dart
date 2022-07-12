@@ -50,47 +50,6 @@ class DBModel extends ChangeNotifier {
 
   //////////////////BASE USER//////////////////////////
 
-  Future<bool> updateUserEmail(String uid, String email, bool emailFlag) async {
-    try {
-      String id = uid;
-      await _api.updateUserDocumentPreferenceField(id,
-          {BaseUser.fldEmail: email, BaseUser.fldIsEmailVerified: emailFlag});
-      return true;
-    } catch (e) {
-      log.error("Failed to update user email and flag: " + e.toString());
-      return false;
-    }
-  }
-
-  Future<bool> updateUserProfile(
-      String uid, String name, String dob, String gender) async {
-    try {
-      String id = uid;
-      await _api.updateUserDocumentPreferenceField(id, {
-        BaseUser.fldName: name,
-        BaseUser.fldDob: dob,
-        BaseUser.fldGender: gender
-      });
-      return true;
-    } catch (e) {
-      log.error("Failed to update user profile: " + e.toString());
-      return false;
-    }
-  }
-
-  Future<bool> updateUserPreferences(
-      String uid, UserPreferences userPreferences) async {
-    try {
-      logger.i("CALLING: updateUserDocumentPreferenceField");
-      await _api.updateUserDocumentPreferenceField(
-          uid, {BaseUser.fldUserPrefs: userPreferences.toJson()});
-      return true;
-    } catch (e) {
-      log.error("Failed to update user preference field: $e");
-      return false;
-    }
-  }
-
   Future<bool> checkIfUserHasUnscratchedGT(String userId) async {
     try {
       QuerySnapshot gtSnapshot = await _api.checkForLatestGTStatus(userId);
@@ -375,40 +334,6 @@ class DBModel extends ChangeNotifier {
       log.error("Error fetch UserFundWallet failed: $e");
       return null;
     }
-  }
-
-  Future<List<PromoCardModel>> getPromoCards() async {
-    List<PromoCardModel> _cards = [];
-    List<PromoCardModel> filteredcards = [];
-
-    try {
-      logger.i("CALLING: getPromoCardCollection");
-      QuerySnapshot querySnapshot = await _api.getPromoCardCollection();
-      if (querySnapshot != null && querySnapshot.docs.length > 0) {
-        for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
-          Map<String, dynamic> _doc = documentSnapshot.data();
-          if (documentSnapshot != null &&
-              documentSnapshot.exists &&
-              _doc != null &&
-              _doc.length > 0) {
-            PromoCardModel _card =
-                PromoCardModel.fromMap(documentSnapshot.data());
-
-            if (_card != null) _cards.add(_card);
-          }
-        }
-      }
-    } catch (e) {
-      log.error('Error Fetching Home cards: ${e.toString()}');
-    }
-    for (int i = 0; i < _cards.length; i++) {
-      if (_cards[i].minVersion == 0 ||
-          int.tryParse(BaseUtil.packageInfo.buildNumber) >=
-              _cards[i].minVersion) {
-        filteredcards.add(_cards[i]);
-      }
-    }
-    return filteredcards;
   }
 
   Future<List<CouponModel>> getCoupons() async {

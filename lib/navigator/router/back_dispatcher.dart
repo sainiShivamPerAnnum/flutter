@@ -3,7 +3,9 @@ import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -25,6 +27,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   final FelloRouterDelegate _routerDelegate;
   final CustomLogger logger = locator<CustomLogger>();
   DBModel _dbModel = locator<DBModel>();
+  final _userRepo = locator<UserRepository>();
   BaseUtil _baseUtil = locator<BaseUtil>();
   final _userService = locator<UserService>();
   final _webGameViewModel = locator<WebGameViewModel>();
@@ -81,10 +84,17 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
           _userService.baseUser != null &&
           _userService.baseUser.uid != null &&
           _userService.baseUser.userPreferences != null)
-        _dbModel
-            .updateUserPreferences(_userService.baseUser.uid,
-                _userService.baseUser.userPreferences)
-            .then((value) {
+        _userRepo.updateUser(
+          uid: _userService.baseUser.uid,
+          dMap: {
+            "userPrefsTn": _userService.baseUser.userPreferences
+                    .getPreference(Preferences.APPLOCK) ==
+                1,
+            "userPrefsAl": _userService.baseUser.userPreferences
+                    .getPreference(Preferences.TAMBOLANOTIFICATIONS) ==
+                1,
+          },
+        ).then((value) {
           AppState.unsavedPrefs = false;
           log("Preferences updated");
         });

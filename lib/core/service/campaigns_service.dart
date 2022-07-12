@@ -41,36 +41,6 @@ class CampaignService {
     }
   }
 
-  //promos
-  Future<ApiResponse<List<PromoCardModel>>> getPromoCards() async {
-    List<PromoCardModel> events = [];
-    try {
-      final String _uid = _userService.baseUser.uid;
-      final _token = await _getBearerToken();
-      final _queryParams = {"uid": _uid};
-      final response = await APIService.instance.getData(
-        ApiPath().kPromos,
-        token: _token,
-        cBaseUrl: FlavorConfig.isDevelopment()
-            ? "https://0mol3kbz59.execute-api.ap-south-1.amazonaws.com"
-            : "https://l4aighxmj3.execute-api.ap-south-1.amazonaws.com",
-        queryParams: _queryParams,
-      );
-
-      final responseData = response["data"];
-      _logger.d(responseData);
-      if (responseData['status'] == true) {
-        responseData["promos"].forEach((e) {
-          events.add(PromoCardModel.fromMap(e));
-        });
-      }
-      return ApiResponse<List<PromoCardModel>>(model: events, code: 200);
-    } catch (e) {
-      _logger.e(e.toString());
-      return ApiResponse.withError("Unable to fetch promos", 400);
-    }
-  }
-
   Future<String> _getBearerToken() async {
     String token = await _userService.firebaseUser.getIdToken();
     _logger.d(token);

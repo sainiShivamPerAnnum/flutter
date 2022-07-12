@@ -9,6 +9,7 @@ import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
+import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/campaigns_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
@@ -26,7 +27,7 @@ class PlayViewModel extends BaseModel {
   final _userCoinService = locator<UserCoinService>();
   final _userService = locator<UserService>();
   // final _dbProvider = locator<DBModel>();
-  final _promoService = locator<CampaignService>();
+  final _getterRepo = locator<GetterRepository>();
   final _logger = locator<CustomLogger>();
   final _baseUtil = locator<BaseUtil>();
   final _analyticsService = locator<AnalyticsService>();
@@ -76,7 +77,7 @@ class PlayViewModel extends BaseModel {
 
   loadOfferList() async {
     isOfferListLoading = true;
-    final response = await _promoService.getPromoCards();
+    final response = await _getterRepo.getPromoCards();
     if (response.code == 200) {
       _offerList = response.model;
     } else {

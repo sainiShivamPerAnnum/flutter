@@ -1,3 +1,4 @@
+import 'package:felloapp/core/model/helper_model.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +15,8 @@ class PromoCardModel {
   final int _gridX;
   final int minVersion;
   get position => this._position;
+  static final helper =
+      HelperModel<PromoCardModel>((map) => PromoCardModel.fromMap(map));
 
   PromoCardModel(
       this._position,
