@@ -196,6 +196,9 @@ class BaseRemoteConfig {
     'app_share_message':
         'Hey I am gifting you ₹10 and 200 gaming tokens. Lets start saving and playing together ! '
   };
+  static const Map<String, String> _RESTRICT_PAYTM_APP_INVOKE = {
+    'restrict_paytm_app_invoke': 'true'
+  };
   static const Map<String, int> _CACHE_INVALIDATION = {'invalidate_before': 0};
 
   static const Map<String, dynamic> DEFAULTS = {
@@ -253,6 +256,7 @@ class BaseRemoteConfig {
     ..._AMZ_VOUCHER_REDEMPTION,
     ..._APP_SHARE_MSG,
     ..._GAME_POSITION,
+    ..._RESTRICT_PAYTM_APP_INVOKE,
     ..._NEW_USER_GAMES_ORDER,
     ..._CACHE_INVALIDATION
   };
@@ -412,6 +416,9 @@ class BaseRemoteConfig {
   static String get APP_SHARE_MSG => _APP_SHARE_MSG.keys.first;
 
   static String get GAME_POSITION => _GAME_POSITION.keys.first;
+
+  static String get RESTRICT_PAYTM_APP_INVOKE =>
+      _RESTRICT_PAYTM_APP_INVOKE.keys.first;
 
   static String get NEW_USER_GAMES_ORDER => _NEW_USER_GAMES_ORDER.keys.first;
 

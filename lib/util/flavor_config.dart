@@ -67,6 +67,7 @@ class FlavorConfig {
       case Flavor.QA:
         return 'qa';
       case Flavor.DEV:
+        return 'dev';
       default:
         return 'dev';
     }

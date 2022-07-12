@@ -92,4 +92,5 @@ class ApiPath {
 
   // Internal Ops
   static String failureReport = '/fail/report/';
+  get kPromos => "/$stage/promos";
 }
