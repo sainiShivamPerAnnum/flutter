@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -5,8 +7,10 @@ import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
+import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
+import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
@@ -35,6 +39,7 @@ class WebHomeViewModel extends BaseModel {
   final _userCoinService = locator<UserCoinService>();
   final _logger = locator<CustomLogger>();
   final _baseUtil = locator<BaseUtil>();
+  final _gameRepo = locator<GameRepo>();
 
   //Local Variables
 
@@ -42,6 +47,7 @@ class WebHomeViewModel extends BaseModel {
   int gameIndex = 0;
   double cardOpacity = 1;
   bool _isPrizesLoading = false;
+  bool _isGameLoading = false;
   String _currentGame;
   PageController pageController;
   ScrollController scrollController;
@@ -51,6 +57,7 @@ class WebHomeViewModel extends BaseModel {
   String _gameEndpoint;
   String token = "";
   String gameCode;
+  GameModel _currentGameModel;
 
   //Getters
   String get currentGame => this._currentGame;
@@ -59,6 +66,8 @@ class WebHomeViewModel extends BaseModel {
   int get getGameIndex => this.gameIndex;
   String get message => _message;
   String get sessionID => _sessionId;
+  GameModel get currentGameModel => _currentGameModel;
+  bool get isGameLoading => this._isGameLoading;
 
   //Setters
   set currentGame(value) {
@@ -71,8 +80,18 @@ class WebHomeViewModel extends BaseModel {
     notifyListeners();
   }
 
+  set currentGameModel(GameModel value) {
+    this._currentGameModel = value;
+    notifyListeners();
+  }
+
   set isPrizesLoading(value) {
     this._isPrizesLoading = value;
+    notifyListeners();
+  }
+
+  set isGameLoading(value) {
+    this._isGameLoading = value;
     notifyListeners();
   }
 
@@ -82,6 +101,7 @@ class WebHomeViewModel extends BaseModel {
     print(currentGame);
     scrollController = _lbService.parentController;
     pageController = new PageController(initialPage: 0);
+    fetchGame(game);
     refreshPrizes();
     refreshLeaderboard();
   }
@@ -390,5 +410,20 @@ class WebHomeViewModel extends BaseModel {
 
   refreshLeaderboard() async {
     await _lbService.fetchWebGameLeaderBoard(game: currentGame);
+  }
+
+  fetchGame(String game) async {
+    isGameLoading = true;
+    currentGameModel = BaseUtil.gamesList
+        .firstWhere((element) => element.gameCode == game, orElse: null);
+
+    if (currentGameModel == null) {
+      ApiResponse<GameModel> response =
+          await _gameRepo.getGameByCode(gameCode: game);
+      if (response.code == 200) {
+        currentGameModel = response.model;
+      }
+    }
+    isGameLoading = false;
   }
 }

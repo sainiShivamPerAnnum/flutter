@@ -76,6 +76,7 @@ class ApiPath {
   static const String prizes = '/prizes';
 
   //User Ops Apis
+  static const String updateFcm = '/fcm/client_token';
   static String getAugmontDetail(String uid) => "/user/$uid/augmont";
   static String kGetUserById(String id) => "/$id";
 
@@ -95,7 +96,7 @@ class ApiPath {
   static const String failureReport = '/fail/report/';
 
   /// Subcription Apis
-  String getTransaction(String uid) => "/user/$uid/transactions";
+  static String getTransaction(String uid) => "/user/$uid/transactions";
   static const String kPromos = "/promos";
 
   //Game Apis
@@ -103,4 +104,6 @@ class ApiPath {
 
   // Coupon Apis
   static const String getCoupons = "/coupons";
+
+  static String getGameByCode(String gameCode) => "/game/$gameCode";
 }

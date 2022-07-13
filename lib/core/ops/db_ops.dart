@@ -28,20 +28,6 @@ class DBModel extends ChangeNotifier {
   final FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.instance;
   final logger = locator<CustomLogger>();
 
-  Future<bool> updateClientToken(BaseUser user, String token) async {
-    try {
-      //String id = user.mobile;
-      String id = user.uid;
-      var dMap = {'token': token, 'timestamp': Timestamp.now()};
-      logger.i("CALLING: updateUserClientToken");
-      await _api.updateUserClientToken(id, dMap);
-      return true;
-    } catch (e) {
-      log.error("Failed to update User Client Token: " + e.toString());
-      return false;
-    }
-  }
-
   //////////////////BASE USER//////////////////////////
 
   Future<bool> checkIfUserHasUnscratchedGT(String userId) async {

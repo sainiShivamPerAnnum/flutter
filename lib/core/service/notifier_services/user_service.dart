@@ -9,6 +9,7 @@ import 'package:felloapp/core/service/api_cache_manager.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -329,5 +330,10 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     }
 
     return url.toString();
+  }
+
+  Future<bool> updateClientToken(String token) async {
+    ApiResponse<bool> response = await _userRepo.updateFcmToken(token: token);
+    return response.model;
   }
 }

@@ -6,6 +6,7 @@ import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/flavor_config.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'base_repo.dart';
 
@@ -25,6 +26,21 @@ class GameRepo extends BaseRepo {
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError("Unable to fetch campaings", 400);
+    }
+  }
+
+  Future<ApiResponse<GameModel>> getGameByCode(
+      {@required String gameCode}) async {
+    try {
+      final response = await APIService.instance.getData(
+        ApiPath.getGameByCode(gameCode),
+        cBaseUrl: _baseUrl,
+      );
+      final game = GameModel.fromMap(response["data"]);
+      return ApiResponse<GameModel>(model: game, code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError("Unable to fetch game by id", 400);
     }
   }
 }
