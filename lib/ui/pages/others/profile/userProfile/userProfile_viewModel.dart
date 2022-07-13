@@ -46,7 +46,6 @@ class UserProfileVM extends BaseModel {
   final _userRepo = locator<UserRepository>();
   final _userService = locator<UserService>();
   final BaseUtil _baseUtil = locator<BaseUtil>();
-  final DBModel _dbModel = locator<DBModel>();
   final fcmlistener = locator<FcmListener>();
   final _txnService = locator<TransactionService>();
   final _tambolaService = locator<TambolaService>();

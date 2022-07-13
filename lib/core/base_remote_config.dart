@@ -1,17 +1,12 @@
-import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
-
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:felloapp/util/custom_logger.dart';
 
 class BaseRemoteConfig {
   static RemoteConfig remoteConfig;
-  static DBModel _dbProvider = locator<DBModel>();
-  static BaseUtil _baseProvider = locator<BaseUtil>();
   static UserService _userService = locator<UserService>();
   static final _internalOpsService = locator<InternalOpsService>();
 

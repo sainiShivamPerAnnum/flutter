@@ -1,32 +1,19 @@
-import 'dart:developer';
-
-import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
-import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_milestone_model.dart';
-import 'package:felloapp/core/ops/augmont_ops.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/golden_ticket_repo.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
-import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:flutter/material.dart';
 
 class GoldenMilestonesViewModel extends BaseModel {
-  final _dbModel = locator<DBModel>();
-  final _logger = locator<CustomLogger>();
   final _userService = locator<UserService>();
-  final _augModel = locator<AugmontModel>();
   final _gtService = locator<GoldenTicketService>();
   final _gtRepo = locator<GoldenTicketRepository>();
 
-  List<dynamic> _rawData;
   List<UserMilestone> _milestones;
-  UserAugmontDetail _userAugmontDetails;
 
   List<UserMilestone> get milestones => _milestones;
 

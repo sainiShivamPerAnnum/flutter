@@ -1,10 +1,9 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/verify_pan_response_model.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/repository/signzy_repo.dart';
-import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
@@ -15,11 +14,10 @@ import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:felloapp/util/custom_logger.dart';
 
 class KYCDetailsViewModel extends BaseModel {
   String stateChosenValue;
@@ -28,10 +26,8 @@ class KYCDetailsViewModel extends BaseModel {
   bool isUpadtingKycDetails = false;
   final _logger = locator<CustomLogger>();
   final _userService = locator<UserService>();
-  final _dbModel = locator<DBModel>();
   final _httpModel = locator<HttpModel>();
   final _baseUtil = locator<BaseUtil>();
-  final _userRepo = locator<UserRepository>();
   final _analyticsService = locator<AnalyticsService>();
   final _signzyRepository = locator<SignzyRepository>();
   final _gtService = locator<GoldenTicketService>();

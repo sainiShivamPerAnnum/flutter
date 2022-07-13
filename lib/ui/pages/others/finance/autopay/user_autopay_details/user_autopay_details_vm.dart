@@ -137,7 +137,6 @@ class UserAutosaveDetailsViewModel extends BaseModel {
 
   findActiveSubscription() async {
     activeSubscription = _paytmService.activeSubscription;
-    // await _dbModel.getActiveSubscriptionDetails(_userService.baseUser.uid);
     if (activeSubscription != null) {
       subIdController.text = activeSubscription.subscriptionId;
       pUpiController.text = activeSubscription.vpa;

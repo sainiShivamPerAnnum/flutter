@@ -29,7 +29,6 @@ class AutosaveProcessViewModel extends BaseModel {
   final _logger = locator<CustomLogger>();
   final _userService = locator<UserService>();
   final _analyticsService = locator<AnalyticsService>();
-  final _dbModel = locator<DBModel>();
   final GoldenTicketService _gtService = GoldenTicketService();
 
   bool _showSetAmountView = false;

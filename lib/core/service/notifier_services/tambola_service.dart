@@ -1,19 +1,17 @@
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:felloapp/util/custom_logger.dart';
 
 import '../../repository/ticket_repo.dart';
 
 class TambolaService extends ChangeNotifier {
   CustomLogger _logger = locator<CustomLogger>();
-  DBModel _dbModel = locator<DBModel>();
   UserService _userService = locator<UserService>();
   final _tambolaRepo = locator<TambolaRepo>();
   final _internalOpsService = locator<InternalOpsService>();

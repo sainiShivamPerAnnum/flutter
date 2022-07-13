@@ -7,9 +7,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/golden_ticket_repo.dart';
-import 'package:felloapp/core/repository/internal_ops_repo.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -37,7 +35,6 @@ final GlobalKey ticketImageKey = GlobalKey();
 
 class GoldenTicketService extends ChangeNotifier {
   final _logger = locator<CustomLogger>();
-  final _dbModel = locator<DBModel>();
   final _gtRepo = locator<GoldenTicketRepository>();
   final _userService = locator<UserService>();
   final _paytmService = locator<PaytmService>();

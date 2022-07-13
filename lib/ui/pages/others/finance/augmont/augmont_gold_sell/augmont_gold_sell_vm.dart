@@ -33,9 +33,7 @@ class AugmontGoldSellViewModel extends BaseModel {
   BaseUtil _baseUtil = locator<BaseUtil>();
   DBModel _dbModel = locator<DBModel>();
   AugmontModel _augmontModel = locator<AugmontModel>();
-  FcmListener _fcmListener = locator<FcmListener>();
   UserService _userService = locator<UserService>();
-  TransactionService _txnService = locator<TransactionService>();
   final _analyticsService = locator<AnalyticsService>();
   final _paymentRepo = locator<PaymentRepository>();
 

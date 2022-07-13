@@ -2,7 +2,6 @@ import 'package:confetti/confetti.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
@@ -24,7 +23,6 @@ class GTInstantViewModel extends BaseModel {
   final _logger = locator<CustomLogger>();
   final _apiPaths = locator<ApiPath>();
   final _gtService = locator<GoldenTicketService>();
-  final _dbModel = locator<DBModel>();
   final _paytmService = locator<PaytmService>();
 
   final _rsaEncryption = new RSAEncryption();

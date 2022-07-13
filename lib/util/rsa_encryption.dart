@@ -32,7 +32,6 @@ import 'package:pointycastle/asymmetric/api.dart';
 
 class RSAEncryption {
   final _userService = locator<UserService>();
-  // final _dbModel = locator<DBModel>();
   final _internalOpsService = locator<InternalOpsService>();
   final _logger = locator<CustomLogger>();
   Encrypter rsaEncrypter, aesEncrypter;

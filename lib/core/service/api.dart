@@ -107,17 +107,6 @@ class Api {
     return snapshot;
   }
 
-  Future<QuerySnapshot> checkForLatestAnnouncment(String userId) {
-    Future<QuerySnapshot> snapshot;
-    ref = _db.collection(Constants.COLN_ANNOUNCEMENTS);
-    try {
-      snapshot = ref.orderBy('created_time', descending: true).limit(1).get();
-    } catch (e) {
-      logger.e(e);
-    }
-    return snapshot;
-  }
-
   Future<QuerySnapshot> getAnnoucements() async {
     Future<QuerySnapshot> snapshot;
     ref = _db.collection(Constants.COLN_ANNOUNCEMENTS);
@@ -322,12 +311,6 @@ class Api {
     } catch (e) {
       throw e;
     }
-  }
-
-  Future<QuerySnapshot> fetchOngoingEvents() async {
-    Query _query =
-        _db.collection(Constants.COLN_APPCAMPAIGNS).orderBy('position');
-    return _query.get();
   }
 
   //---------------------------------------REALTIME DATABASE-------------------------------------------//

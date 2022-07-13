@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/eligible_coupon_model.dart';
@@ -15,6 +13,7 @@ class CouponRepository {
   final _logger = locator<CustomLogger>();
   final _userService = locator<UserService>();
   final _rsaEncryption = new RSAEncryption();
+  final _apiPaths = locator<ApiPath>();
   final String _baseUrl = FlavorConfig.isDevelopment()
       ? "https://z8gkfckos5.execute-api.ap-south-1.amazonaws.com/dev"
       : "https://mwl33qq6sd.execute-api.ap-south-1.amazonaws.com";
@@ -49,7 +48,7 @@ class CouponRepository {
         _logger.e("Encrypter initialization failed!! exiting method");
       }
       final res = await APIService.instance.postData(
-        ApiPath.kFelloCoupons,
+        _apiPaths.kFelloCoupons,
         body: _body,
         token: _bearer,
         cBaseUrl: _baseUrl,
@@ -67,7 +66,7 @@ class CouponRepository {
   Future<ApiResponse<List<CouponModel>>> getCoupons() async {
     try {
       final couponResponse = await APIService.instance.getData(
-        ApiPath.getCoupons,
+        _apiPaths.getCoupons,
         cBaseUrl: _baseUrl,
       );
       final List<CouponModel> coupons =
