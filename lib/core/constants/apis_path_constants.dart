@@ -37,9 +37,9 @@ class ApiPath {
 
   static String getUserIdByRefCode(String code) => "/referral/$code";
   static String getReferralCode(String uid) => "/user/referral/$uid";
-  static String getLatestNotication(String uid) =>
-      "/user/$uid/notification/latest";
-  static String getNotications(uid) => "/user/$uid/notifications";
+  static String getLatestNotification(String uid) =>
+      "/user/$uid/notifications/latest";
+  static String getNotifications(uid) => "/user/$uid/notifications";
   static const kDeviceId = "/device";
 
   //GT Rewards
@@ -85,10 +85,12 @@ class ApiPath {
 
   // Getter Apis
   static const String statistics = '/statistics';
-  static String getwinner(String type, String freq) =>
+  static String getWinners(String type, String freq) =>
       "/leaderboard/type/$type/freq/$freq";
+
   static String pastWinners(String type, String freq) =>
       "/leaderboard/past/type/$type/freq/$freq";
+
   static const String amountChips = "/amount/chips/";
 
   // Internal Ops

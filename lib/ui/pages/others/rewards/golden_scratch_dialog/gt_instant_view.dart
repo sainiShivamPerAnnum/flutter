@@ -71,8 +71,8 @@ class _GTInstantViewState extends State<GTInstantView>
 
   @override
   void dispose() {
-    super.dispose();
     this._controller.dispose();
+    super.dispose();
   }
 
   @override
