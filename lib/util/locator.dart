@@ -7,6 +7,7 @@ import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/coupons_repo.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
+import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/golden_ticket_repo.dart';
 import 'package:felloapp/core/repository/internal_ops_repo.dart';
@@ -15,6 +16,7 @@ import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/repository/signzy_repo.dart';
+import 'package:felloapp/core/repository/subcription_repo.dart';
 import 'package:felloapp/core/repository/ticket_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/repository/winners_repo.dart';
@@ -23,6 +25,7 @@ import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
 import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/api_cache_manager.dart';
+import 'package:felloapp/core/service/campaigns_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
@@ -121,6 +124,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => WinnerService());
   locator.registerLazySingleton(() => LeaderboardService());
   locator.registerLazySingleton(() => GoldenTicketService());
+  locator.registerLazySingleton(() => CampaignService());
 
   //Repository
   locator.registerLazySingleton(() => DBModel());
@@ -140,6 +144,8 @@ void setupLocator() {
   locator.registerLazySingleton(() => PaymentRepository());
   locator.registerLazySingleton(() => GetterRepository());
   locator.registerLazySingleton(() => InternalOpsRepository());
+  locator.registerLazySingleton(() => SubcriptionRepo());
+  locator.registerLazySingleton(() => GameRepo());
 
   // SPLASH
   locator.registerFactory(() => LauncherViewModel());

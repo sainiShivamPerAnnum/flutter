@@ -80,7 +80,7 @@ class UserRepository extends BaseRepo {
   Future<ApiResponse<BaseUser>> getUserById({@required String id}) async {
     try {
       final res = await APIService.instance.getData(
-        _apiPaths.kGetUserById(id),
+        ApiPath.kGetUserById(id),
         cBaseUrl: _baseUrl,
       );
 
@@ -270,6 +270,26 @@ class UserRepository extends BaseRepo {
         model: AlertModel.helper.fromMapArray(responseData),
         code: 200,
       );
+    } catch (e) {
+      logger.e(e);
+      return ApiResponse.withError(
+        "Unable to fetch user notifications",
+        400,
+      );
+    }
+  }
+
+  Future<ApiResponse<bool>> updateUser({
+    String uid,
+    @required Map<String, dynamic> dMap,
+  }) async {
+    try {
+      await APIService.instance.putData(
+        ApiPath.kGetUserById(uid),
+        body: dMap,
+        cBaseUrl: _baseUrl,
+      );
+      return ApiResponse<bool>(model: true, code: 200);
     } catch (e) {
       logger.e(e);
       return ApiResponse.withError(

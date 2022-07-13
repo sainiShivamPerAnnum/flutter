@@ -144,13 +144,13 @@ class APIService implements API {
   }
 
   @override
-  Future<dynamic> putData(
-    String url, {
-    Map<String, dynamic> body,
-    String token,
-    bool isAwsSubUrl = false,
-    bool isAwsTxnUrl = false,
-  }) async {
+  Future<dynamic> putData(String url,
+      {Map<String, dynamic> body,
+      String cBaseUrl,
+      String token,
+      bool isAwsSubUrl = false,
+      bool isAwsTxnUrl = false,
+      bool isAwsDeviceUrl = false}) async {
     final HttpMetric metric =
         FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Put);
     await metric.start();
@@ -159,9 +159,18 @@ class APIService implements API {
     // token = Preference.getString('token');
     try {
       logger.d("response from $url");
+      String _url = getBaseUrl(
+            isSubUrl: isAwsSubUrl,
+            isTxnUrl: isAwsTxnUrl,
+            isAwsDeviceUrl: isAwsDeviceUrl,
+          ) +
+          url;
+
+      if (cBaseUrl != null) _url = cBaseUrl + url;
       final response = await http.put(
         Uri.parse(
-            getBaseUrl(isSubUrl: isAwsSubUrl, isTxnUrl: isAwsTxnUrl) + url),
+          _url,
+        ),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           HttpHeaders.authorizationHeader: token != null ? token : '',

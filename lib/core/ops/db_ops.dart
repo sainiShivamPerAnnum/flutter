@@ -1,24 +1,18 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/faq_model.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
-import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
-import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
-import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/api.dart';
-import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/custom_logger.dart';
-import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
@@ -49,47 +43,6 @@ class DBModel extends ChangeNotifier {
   }
 
   //////////////////BASE USER//////////////////////////
-
-  Future<bool> updateUserEmail(String uid, String email, bool emailFlag) async {
-    try {
-      String id = uid;
-      await _api.updateUserDocumentPreferenceField(id,
-          {BaseUser.fldEmail: email, BaseUser.fldIsEmailVerified: emailFlag});
-      return true;
-    } catch (e) {
-      log.error("Failed to update user email and flag: " + e.toString());
-      return false;
-    }
-  }
-
-  Future<bool> updateUserProfile(
-      String uid, String name, String dob, String gender) async {
-    try {
-      String id = uid;
-      await _api.updateUserDocumentPreferenceField(id, {
-        BaseUser.fldName: name,
-        BaseUser.fldDob: dob,
-        BaseUser.fldGender: gender
-      });
-      return true;
-    } catch (e) {
-      log.error("Failed to update user profile: " + e.toString());
-      return false;
-    }
-  }
-
-  Future<bool> updateUserPreferences(
-      String uid, UserPreferences userPreferences) async {
-    try {
-      logger.i("CALLING: updateUserDocumentPreferenceField");
-      await _api.updateUserDocumentPreferenceField(
-          uid, {BaseUser.fldUserPrefs: userPreferences.toJson()});
-      return true;
-    } catch (e) {
-      log.error("Failed to update user preference field: $e");
-      return false;
-    }
-  }
 
   Future<bool> checkIfUserHasUnscratchedGT(String userId) async {
     try {
@@ -374,93 +327,6 @@ class DBModel extends ChangeNotifier {
     } catch (e) {
       log.error("Error fetch UserFundWallet failed: $e");
       return null;
-    }
-  }
-
-  Future<List<PromoCardModel>> getPromoCards() async {
-    List<PromoCardModel> _cards = [];
-    List<PromoCardModel> filteredcards = [];
-
-    try {
-      logger.i("CALLING: getPromoCardCollection");
-      QuerySnapshot querySnapshot = await _api.getPromoCardCollection();
-      if (querySnapshot != null && querySnapshot.docs.length > 0) {
-        for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
-          Map<String, dynamic> _doc = documentSnapshot.data();
-          if (documentSnapshot != null &&
-              documentSnapshot.exists &&
-              _doc != null &&
-              _doc.length > 0) {
-            PromoCardModel _card =
-                PromoCardModel.fromMap(documentSnapshot.data());
-
-            if (_card != null) _cards.add(_card);
-          }
-        }
-      }
-    } catch (e) {
-      log.error('Error Fetching Home cards: ${e.toString()}');
-    }
-    for (int i = 0; i < _cards.length; i++) {
-      if (_cards[i].minVersion == 0 ||
-          int.tryParse(BaseUtil.packageInfo.buildNumber) >=
-              _cards[i].minVersion) {
-        filteredcards.add(_cards[i]);
-      }
-    }
-    return filteredcards;
-  }
-
-  Future<List<CouponModel>> getCoupons() async {
-    List<CouponModel> couponList = [];
-    try {
-      logger.i("CALLING: fetchCoupons");
-      QuerySnapshot snapshot = await _api.fetchCoupons();
-      snapshot.docs.forEach((element) {
-        couponList.add(CouponModel.fromMap(element.data()));
-      });
-    } catch (e) {
-      logger.e(e.toString());
-      couponList = [];
-    }
-
-    return couponList;
-  }
-
-  Future<Map<String, dynamic>> getAutosaveTransactions(
-      {@required String uid,
-      @required String subId,
-      DocumentSnapshot lastDocument,
-      @required int limit}) async {
-    Map<String, dynamic> resultAutosaveTransactionsMap = Map<String, dynamic>();
-    List<AutosaveTransactionModel> requestedTxns = [];
-    try {
-      QuerySnapshot _querySnapshot = await _api.getAutosaveTransactions(
-        userId: uid,
-        lastDocument: lastDocument,
-        limit: limit,
-      );
-      logger.d(_querySnapshot.docs.first.data());
-      resultAutosaveTransactionsMap['lastDocument'] = _querySnapshot.docs.last;
-      resultAutosaveTransactionsMap['length'] = _querySnapshot.docs.length;
-      _querySnapshot.docs.forEach((txn) {
-        try {
-          if (txn.exists)
-            requestedTxns.add(AutosaveTransactionModel.fromMap(txn.data()));
-        } catch (e) {
-          log.error('Failed to parse user transaction $txn');
-        }
-      });
-      logger.d("No of autosave transactions fetched: ${requestedTxns.length}");
-      resultAutosaveTransactionsMap['listOfTransactions'] = requestedTxns;
-      return resultAutosaveTransactionsMap;
-    } catch (err) {
-      requestedTxns = [];
-      log.error('Failed to fetch transactions:: $err');
-      resultAutosaveTransactionsMap['length'] = 0;
-      resultAutosaveTransactionsMap['listOfTransactions'] = requestedTxns;
-      resultAutosaveTransactionsMap['lastDocument'] = lastDocument;
-      return resultAutosaveTransactionsMap;
     }
   }
 

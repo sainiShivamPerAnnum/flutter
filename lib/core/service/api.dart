@@ -129,12 +129,6 @@ class Api {
     return snapshot;
   }
 
-  Future<void> updateUserDocumentPreferenceField(
-      String docId, Map<String, dynamic> data) {
-    ref = _db.collection(Constants.COLN_USERS);
-    return ref.doc(docId).update(data);
-  }
-
   Future<DocumentSnapshot> getUserPrtdDocPan(String userId) {
     ref = _db
         .collection(Constants.COLN_USERS)
@@ -334,29 +328,6 @@ class Api {
     Query _query =
         _db.collection(Constants.COLN_APPCAMPAIGNS).orderBy('position');
     return _query.get();
-  }
-
-  Future<QuerySnapshot> fetchCoupons() async {
-    Query _query = _db
-        .collection(Constants.COLN_COUPONS)
-        // .where('expiresOn', isGreaterThan: Timestamp.now())
-        .orderBy('priority');
-    return _query.get();
-  }
-
-  Future<QuerySnapshot> getAutosaveTransactions({
-    @required String userId,
-    DocumentSnapshot lastDocument,
-    @required int limit,
-  }) {
-    Query query = _db
-        .collection(Constants.COLN_USERS)
-        .doc(userId)
-        .collection(Constants.SUBCOLN_USER_SUB_TXN);
-    if (limit != -1 && limit > 3) query = query.limit(limit);
-    query = query.orderBy('createdOn', descending: true);
-    if (lastDocument != null) query = query.startAfterDocument(lastDocument);
-    return query.get();
   }
 
   //---------------------------------------REALTIME DATABASE-------------------------------------------//

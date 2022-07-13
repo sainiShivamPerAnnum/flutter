@@ -21,6 +21,7 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/change_profile_picture_dialog.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -178,14 +179,15 @@ class UserProfileVM extends BaseModel {
           _userService.baseUser.dob =
               "${yearFieldController.text}-${monthFieldController.text}-${dateFieldController.text}";
           _userService.baseUser.gender = getGender();
-          await _dbModel
-              .updateUserProfile(
-                  _userService.baseUser.uid,
-                  _userService.baseUser.name,
-                  _userService.baseUser.dob,
-                  _userService.baseUser.gender)
-              .then((res) {
-            if (res) {
+          await _userRepo.updateUser(
+            uid: _userService.baseUser.uid,
+            dMap: {
+              'name': _userService.baseUser.name,
+              'dob': _userService.baseUser.dob,
+              'gender': _userService.baseUser.gender,
+            },
+          ).then((ApiResponse<bool> res) {
+            if (res.model) {
               _userService.setMyUserName(_userService.baseUser.name);
               _userService.setDateOfBirth(_userService.baseUser.dob);
               _userService.setGender(_userService.baseUser.gender);
@@ -475,12 +477,20 @@ class UserProfileVM extends BaseModel {
   onAppLockPreferenceChanged(val) async {
     if (await BaseUtil.showNoInternetAlert()) return;
     isApplockLoading = true;
-    _userService.baseUser.userPreferences
-        .setPreference(Preferences.APPLOCK, (val) ? 1 : 0);
-    await _dbModel
-        .updateUserPreferences(
-            _userService.baseUser.uid, _userService.baseUser.userPreferences)
-        .then((value) {
+    _userService.baseUser.userPreferences.setPreference(
+      Preferences.APPLOCK,
+      (val) ? 1 : 0,
+    );
+    await _userRepo.updateUser(
+      uid: _userService.baseUser.uid,
+      dMap: {
+        'userPrefsAl': val,
+        'userPrefsTn': _userService.baseUser.userPreferences.getPreference(
+              Preferences.TAMBOLANOTIFICATIONS,
+            ) ==
+            1,
+      },
+    ).then((value) {
       Log("Preferences updated");
     });
     isApplockLoading = false;
@@ -493,15 +503,23 @@ class UserProfileVM extends BaseModel {
     if (res) {
       _userService.baseUser.userPreferences
           .setPreference(Preferences.TAMBOLANOTIFICATIONS, (val) ? 1 : 0);
-      await _dbModel
-          .updateUserPreferences(
-              _userService.baseUser.uid, _userService.baseUser.userPreferences)
-          .then((value) {
-        if (val)
-          Log("Preferences updated");
-        else
-          Log("Preference update error");
-      });
+      await _userRepo.updateUser(
+        uid: _userService.baseUser.uid,
+        dMap: {
+          'userPrefsTn': val,
+          'userPrefsAl': _userService.baseUser.userPreferences.getPreference(
+                Preferences.APPLOCK,
+              ) ==
+              1,
+        },
+      ).then(
+        (value) {
+          if (val)
+            Log("Preferences updated");
+          else
+            Log("Preference update error");
+        },
+      );
     }
     isTambolaNotificationLoading = false;
   }

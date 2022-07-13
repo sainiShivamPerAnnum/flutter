@@ -34,6 +34,7 @@ class ApiPath {
   get kVerifyPan => "/userOps/api/v3/verifyPan";
   get kCustomAuthToken => "/userOps/api/v3/trucallerAuthToken";
   static const acquisitionTracking = "/userOps/api/v3/opt-analytics";
+
   static String getUserIdByRefCode(String code) => "/referral/$code";
   static String getReferralCode(String uid) => "/user/referral/$uid";
   static String getLatestNotication(String uid) =>
@@ -45,7 +46,7 @@ class ApiPath {
   get kRedeemGtReward => "/gtRewardsOps/$stage/v2/api/redeemGtReward";
 
   //Fello Coupons
-  get kFelloCoupons => "/$stage/eligible";
+  static const kFelloCoupons = "/eligible";
   //"/felloCoupons/$stage/api/eligible";
 
   //DeviceInfo
@@ -76,7 +77,7 @@ class ApiPath {
 
   //User Ops Apis
   static String getAugmontDetail(String uid) => "/user/$uid/augmont";
-  String kGetUserById(String id) => "/$id";
+  static String kGetUserById(String id) => "/$id";
 
   // Payment Apis
   static String getWithdrawableGoldQuantity(String uid) =>
@@ -88,9 +89,18 @@ class ApiPath {
       "/leaderboard/type/$type/freq/$freq";
   static String pastWinners(String type, String freq) =>
       "/leaderboard/past/type/$type/freq/$freq";
-  static String amountChips = "/amount/chips/";
+  static const String amountChips = "/amount/chips/";
 
   // Internal Ops
-  static String failureReport = '/fail/report/';
-  get kPromos => "/$stage/promos";
+  static const String failureReport = '/fail/report/';
+
+  /// Subcription Apis
+  String getTransaction(String uid) => "/user/$uid/transactions";
+  static const String kPromos = "/promos";
+
+  //Game Apis
+  static const String getGames = "/games";
+
+  // Coupon Apis
+  static const String getCoupons = "/coupons";
 }
