@@ -14,10 +14,14 @@ class GameRepo extends BaseRepo {
 
   Future<ApiResponse<List<GameModel>>> getGames() async {
     try {
+      final token = await getBearerToken();
       final response = await APIService.instance.getData(
         ApiPath.getGames,
         cBaseUrl: _baseUrl,
+        token: token,
       );
+      logger.d("Games: ${response["data"]}");
+
       final games = GameModel.helper.fromMapArray(response["data"]["games"]);
       return ApiResponse<List<GameModel>>(model: games, code: 200);
     } catch (e) {
