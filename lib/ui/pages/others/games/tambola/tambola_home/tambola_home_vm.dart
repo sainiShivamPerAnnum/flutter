@@ -72,7 +72,7 @@ class TambolaHomeViewModel extends BaseModel {
       freq: "weekly",
     );
     _logger.d(temp.code);
-    if (temp.model != null) _tLeaderBoard = temp.model;
+    if (temp.model != null && temp.model.isNotEmpty) _tLeaderBoard = temp.model;
     // else
     //   BaseUtil.showNegativeAlert(
     //       "Leaderboard failed to update", temp.errorMessage);
