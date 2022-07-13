@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';

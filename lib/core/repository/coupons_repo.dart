@@ -66,7 +66,7 @@ class CouponRepository {
   Future<ApiResponse<List<CouponModel>>> getCoupons() async {
     try {
       final couponResponse = await APIService.instance.getData(
-        _apiPaths.getCoupons,
+        ApiPath.getCoupons,
         cBaseUrl: _baseUrl,
       );
       final List<CouponModel> coupons =

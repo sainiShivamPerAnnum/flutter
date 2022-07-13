@@ -88,8 +88,17 @@ class ApiPath {
   static String pastWinners(String type, String freq) =>
       "/leaderboard/past/type/$type/freq/$freq";
   static String amountChips = "/amount/chips/";
+  static const String kPromos = "/promos";
 
   // Internal Ops
   static String failureReport = '/fail/report/';
-  get kPromos => "/$stage/promos";
+
+  //Game Apis
+  static const String getGames = "/games";
+
+  // Coupon Apis
+  static const String getCoupons = "/coupons";
+
+  /// Subcription Apis
+  static String getTransaction(String uid) => "/user/$uid/transactions";
 }
