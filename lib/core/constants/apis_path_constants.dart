@@ -104,4 +104,5 @@ class ApiPath {
   // referral
   static String getUserIdByRefCode(String code) => "/referral/$code";
   static String getReferralCode(String uid) => "/user/referral/$uid";
+  static String getReferralHistory(String uid) => "/referrals/$uid";
 }
