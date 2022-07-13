@@ -61,6 +61,12 @@ android {
     }
 
     signingConfigs {
+        // debug {
+        //     keyAlias keystoreProperties['debugkeyAlias']
+        //     keyPassword keystoreProperties['debugkeyPassword']
+        //     storeFile keystoreProperties['debugstoreFile'] ? file(keystoreProperties['debugstoreFile']) : null
+        //     storePassword keystoreProperties['debugstorePassword']
+        // }
 
         //Comment it before push to develop, to build using CICD 
         //Uncomment for local build and release.
