@@ -46,7 +46,7 @@ class ApiPath {
   get kRedeemGtReward => "/gtRewardsOps/$stage/v2/api/redeemGtReward";
 
   //Fello Coupons
-  get kFelloCoupons => "/eligible";
+  static const kFelloCoupons = "/eligible";
   //"/felloCoupons/$stage/api/eligible";
 
   //DeviceInfo

@@ -14,7 +14,6 @@ import 'package:felloapp/util/rsa_encryption.dart';
 class CouponRepository {
   final _logger = locator<CustomLogger>();
   final _userService = locator<UserService>();
-  final _apiPaths = locator<ApiPath>();
   final _rsaEncryption = new RSAEncryption();
   final String _baseUrl = FlavorConfig.isDevelopment()
       ? "https://z8gkfckos5.execute-api.ap-south-1.amazonaws.com/dev"
@@ -50,7 +49,7 @@ class CouponRepository {
         _logger.e("Encrypter initialization failed!! exiting method");
       }
       final res = await APIService.instance.postData(
-        _apiPaths.kFelloCoupons,
+        ApiPath.kFelloCoupons,
         body: _body,
         token: _bearer,
         cBaseUrl: _baseUrl,
