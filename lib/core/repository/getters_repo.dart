@@ -39,17 +39,20 @@ class GetterRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse> getWinnerByFreqGameType({
+  Future<ApiResponse<WinnersModel>> getWinnerByFreqGameType({
     String type,
     String freq,
   }) async {
     try {
       final winnersResponse = await APIService.instance.getData(
-        ApiPath.getwinner(type, freq),
+        ApiPath.getWinners(type, freq),
         cBaseUrl: _baseUrl,
       );
 
-      return ApiResponse(model: winnersResponse["data"], code: 200);
+      return ApiResponse(
+        model: WinnersModel.fromMap(winnersResponse["data"]),
+        code: 200,
+      );
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError("Unable to fetch statistics", 400);

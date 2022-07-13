@@ -207,35 +207,17 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
     String gameType,
     String freq,
   ) async {
-    String cacheKey = "winners" + gameType + freq;
-    _logger.d("Cachekey: $cacheKey");
-    Map data;
-    WinnersModel _responseModel;
-
     _logger.d("Winner Game Type : $gameType \n Frequency: $freq");
-    //Caching Mechanism
-    data = await _apiCacheManager.getApiCache(key: cacheKey);
-    _logger.d("Cache with key $cacheKey data: $data");
 
-    if (data != null) {
-      _logger.d("Reading Api cache with key: $cacheKey");
-      _responseModel = WinnersModel.fromMap(data);
-    } else {
-      _logger.d("Adding Api cache with key isCacheable: $cacheKey");
+    final ApiResponse response = await _getterRepo.getWinnerByFreqGameType(
+      type: gameType,
+      freq: freq,
+    );
 
-      final ApiResponse _response = await _getterRepo.getWinnerByFreqGameType(
-        type: gameType,
-        freq: freq,
-      );
-      if (_response.code == 200 && _response.model.isNotEmpty) {
-        _responseModel = WinnersModel.fromMap(_response.model);
-        await _apiCacheManager.writeApiCache(
-          key: cacheKey,
-          ttl: Duration(hours: 6),
-          value: _responseModel.toMap(),
-        );
-      }
+    if (response.code == 200) {
+      return response.model;
     }
-    return _responseModel;
+
+    return null;
   }
 }

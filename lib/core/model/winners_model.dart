@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:felloapp/core/model/helper_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
@@ -57,7 +58,7 @@ class WinnersModel {
       id: map['id'] as String,
       freq: map['freq'] as String,
       winners: List<Winners>.from(
-        map["winners"].map(
+        (map["winners"] ?? []).map(
           (x) => Winners.fromMap(x, map['gametype']),
         ),
       ),
