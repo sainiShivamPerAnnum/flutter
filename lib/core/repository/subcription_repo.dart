@@ -14,7 +14,7 @@ class SubcriptionRepo extends BaseRepo {
   final _baseUrl = FlavorConfig.isDevelopment()
       ? "https://2je5zoqtuc.execute-api.ap-south-1.amazonaws.com/dev"
       : "";
-  final _apiPaths = locator<ApiPath>();
+
   Future<ApiResponse<List<AutosaveTransactionModel>>> getAutosaveTransactions({
     @required String uid,
     String lastDocument,
@@ -22,7 +22,7 @@ class SubcriptionRepo extends BaseRepo {
   }) async {
     try {
       final res = await APIService.instance.getData(
-        _apiPaths.getTransaction(uid),
+        ApiPath.getTransaction(uid),
         cBaseUrl: _baseUrl,
         queryParams: {
           "lastDocId": lastDocument,

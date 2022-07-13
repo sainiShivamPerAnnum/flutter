@@ -180,8 +180,9 @@ class UserRepository extends BaseRepo {
 
       if (_querySnapshot.docs.length != 0) {
         _querySnapshot.docs.forEach((element) {
-          _userPrizeTransactions
-              .add(UserTransaction.fromMap(element.data(), element.id));
+          _userPrizeTransactions.add(
+            UserTransaction.fromMap(element.data(), element.id),
+          );
         });
         logger.d(
             "User prize transaction successfully fetched: ${_userPrizeTransactions.first.toJson().toString()}");
@@ -324,7 +325,30 @@ class UserRepository extends BaseRepo {
     } catch (e) {
       logger.e(e);
       return ApiResponse.withError(
-        "Unable to fetch user notifications",
+        "Unable to update user",
+        400,
+      );
+    }
+  }
+
+  Future<ApiResponse<bool>> updateFcmToken({
+    @required String token,
+  }) async {
+    try {
+      await APIService.instance.postData(
+        ApiPath.updateFcm,
+        body: {
+          "userId": userService.baseUser.uid,
+          "token": token,
+        },
+        cBaseUrl: _baseUrl,
+      );
+
+      return ApiResponse<bool>(model: true, code: 200);
+    } catch (e) {
+      logger.e(e);
+      return ApiResponse.withError(
+        "Unable to update fcm",
         400,
       );
     }

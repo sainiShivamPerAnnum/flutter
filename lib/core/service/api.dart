@@ -21,14 +21,6 @@ class Api {
 
   Api();
 
-  Future<void> updateUserClientToken(String userId, Map data) {
-    ref = _db
-        .collection(Constants.COLN_USERS)
-        .doc(userId)
-        .collection(Constants.SUBCOLN_USER_FCM);
-    return ref.doc(Constants.DOC_USER_FCM_TOKEN).set(data);
-  }
-
   Future<void> deleteUserClientToken(String userId) {
     ref = _db
         .collection(Constants.COLN_USERS)

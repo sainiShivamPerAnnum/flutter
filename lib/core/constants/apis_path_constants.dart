@@ -74,6 +74,9 @@ class ApiPath {
   static String getMilestone(String uid) => "/user/$uid/milestones";
   static const String prizes = '/prizes';
 
+  //User Ops Apis
+  static const String updateFcm = '/fcm/client_token';
+
   // Payment Apis
   static String getWithdrawableGoldQuantity(String uid) =>
       "/user/$uid/gold/withdrawable";
@@ -92,7 +95,7 @@ class ApiPath {
   static const String failureReport = '/fail/report/';
 
   /// Subcription Apis
-  String getTransaction(String uid) => "/user/$uid/transactions";
+  static String getTransaction(String uid) => "/user/$uid/transactions";
   static const String kPromos = "/promos";
 
   //Game Apis
@@ -101,6 +104,7 @@ class ApiPath {
   // Coupon Apis
   static const String getCoupons = "/coupons";
 
+  static String getGameByCode(String gameCode) => "/game/$gameCode";
   // referral
   static String getUserIdByRefCode(String code) => "/referral/$code";
   static String getReferralCode(String uid) => "/user/referral/$uid";

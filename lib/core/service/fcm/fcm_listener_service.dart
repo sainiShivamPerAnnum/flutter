@@ -201,7 +201,7 @@ class FcmListener {
                 _userService.baseUser.client_token != fcmToken))) {
       logger.d("Updating FCM token to local and server db");
       _userService.baseUser.client_token = fcmToken;
-      flag = await _dbModel.updateClientToken(_userService.baseUser, fcmToken);
+      flag = await _userService.updateClientToken(fcmToken);
     }
     return flag;
   }

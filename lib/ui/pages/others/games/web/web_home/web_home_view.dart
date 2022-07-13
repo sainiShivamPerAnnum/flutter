@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -69,8 +71,8 @@ class WebHomeView extends StatelessWidget {
                               curve: Curves.decelerate,
                               opacity: model.cardOpacity ?? 1,
                               child: BigGameCard(
-                                gameData: BaseUtil.gamesList.firstWhere(
-                                    (element) => element.gameCode == game),
+                                gameData: model.currentGameModel,
+                                isGameLoading: model.isGameLoading,
                               ),
                             ),
                           ),
