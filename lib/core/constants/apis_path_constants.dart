@@ -105,4 +105,5 @@ class ApiPath {
 
   // Coupon Apis
   static const String getCoupons = "/coupons";
+  static String getReferralHistory(String uid) => "/referrals/$uid";
 }
