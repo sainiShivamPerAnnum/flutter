@@ -18,6 +18,7 @@ class SubcriptionRepo extends BaseRepo {
   Future<ApiResponse<List<AutosaveTransactionModel>>> getAutosaveTransactions({
     @required String uid,
     String lastDocument,
+    int limit,
   }) async {
     try {
       final res = await APIService.instance.getData(
@@ -25,6 +26,7 @@ class SubcriptionRepo extends BaseRepo {
         cBaseUrl: _baseUrl,
         queryParams: {
           "lastDocId": lastDocument,
+          "limit": limit.toString(),
         },
       );
 

@@ -46,7 +46,7 @@ class ApiPath {
   get kRedeemGtReward => "/gtRewardsOps/$stage/v2/api/redeemGtReward";
 
   //Fello Coupons
-  get kFelloCoupons => "/$stage/eligible";
+  get kFelloCoupons => "/eligible";
   //"/felloCoupons/$stage/api/eligible";
 
   //DeviceInfo
@@ -77,7 +77,7 @@ class ApiPath {
 
   //User Ops Apis
   static String getAugmontDetail(String uid) => "/user/$uid/augmont";
-  String kGetUserById(String id) => "/$id";
+  static String kGetUserById(String id) => "/$id";
 
   // Payment Apis
   static String getWithdrawableGoldQuantity(String uid) =>
@@ -89,15 +89,18 @@ class ApiPath {
       "/leaderboard/type/$type/freq/$freq";
   static String pastWinners(String type, String freq) =>
       "/leaderboard/past/type/$type/freq/$freq";
-  static String amountChips = "/amount/chips/";
+  static const String amountChips = "/amount/chips/";
 
   // Internal Ops
-  static String failureReport = '/fail/report/';
+  static const String failureReport = '/fail/report/';
 
   /// Subcription Apis
   String getTransaction(String uid) => "/user/$uid/transactions";
-  get kPromos => "/promos";
+  static const String kPromos = "/promos";
 
   //Game Apis
-  String get getGames => "/games";
+  static const String getGames = "/games";
+
+  // Coupon Apis
+  static const String getCoupons = "/coupons";
 }

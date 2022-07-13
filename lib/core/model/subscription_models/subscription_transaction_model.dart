@@ -20,7 +20,8 @@ class AutosaveTransactionModel {
   double closingBalance;
   TimestampModel createdOn;
   static final helper = HelperModel<AutosaveTransactionModel>(
-      (map) => AutosaveTransactionModel.fromMap(map),);
+    (map) => AutosaveTransactionModel.fromMap(map),
+  );
   AutosaveTransactionModel({
     @required this.amount,
     @required this.status,

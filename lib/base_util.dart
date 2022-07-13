@@ -235,13 +235,11 @@ class BaseUtil extends ChangeNotifier {
   }
 
   Future<void> setGameDefaults() async {
-    
     final gameResponse = await _gameRepo.getGames();
     if (gameResponse.code == 200) gamesList = gameResponse.model;
 
     //Arrange Games according to the position defined in baseremoteconfig.
     arrangeGames();
-    
   }
 
   void arrangeGames() {
@@ -956,5 +954,9 @@ class BaseUtil extends ChangeNotifier {
   set isGoogleSignInProgress(value) {
     this._isGoogleSignInProgress = value;
     notifyListeners();
+  }
+
+  static Color fromColorString(String color) {
+    return Color(int.parse('0xff$color'));
   }
 }

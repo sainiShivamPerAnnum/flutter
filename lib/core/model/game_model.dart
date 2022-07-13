@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/helper_model.dart';
 import 'package:flutter/material.dart';
 
@@ -102,7 +103,7 @@ class GameModel {
       playCost: map['playCost'],
       prizeAmount: map['prizeAmount'],
       analyticEvent: map['analyticEvent'],
-      shadowColor: HelperModel.fromColorString(map['shadowColor']),
+      shadowColor: BaseUtil.fromColorString(map['shadowColor']),
       route: map['route'],
       gameCode: map['gameCode'],
       code: map['code'],

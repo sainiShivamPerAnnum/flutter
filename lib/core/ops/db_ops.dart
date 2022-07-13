@@ -1,24 +1,18 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/faq_model.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
-import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
-import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
-import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/api.dart';
-import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/custom_logger.dart';
-import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
@@ -334,22 +328,6 @@ class DBModel extends ChangeNotifier {
       log.error("Error fetch UserFundWallet failed: $e");
       return null;
     }
-  }
-
-  Future<List<CouponModel>> getCoupons() async {
-    List<CouponModel> couponList = [];
-    try {
-      logger.i("CALLING: fetchCoupons");
-      QuerySnapshot snapshot = await _api.fetchCoupons();
-      snapshot.docs.forEach((element) {
-        couponList.add(CouponModel.fromMap(element.data()));
-      });
-    } catch (e) {
-      logger.e(e.toString());
-      couponList = [];
-    }
-
-    return couponList;
   }
 
 //------------------------------------------------REALTIME----------------------------

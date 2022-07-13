@@ -725,9 +725,13 @@ class AugmontGoldBuyViewModel extends BaseModel {
 //----------------------------------------------- COUPON LOGIC -------------------------------
 
   getAvailableCoupons() async {
-    couponList = await _dbModel.getCoupons();
-    if (couponList[0].priority == 1) focusCoupon = couponList[0];
-    showCoupons = true;
+    final ApiResponse<List<CouponModel>> couponsRes =
+        await _couponRepo.getCoupons();
+    if (couponsRes.code == 200) {
+      couponList = couponsRes.model;
+      if (couponList[0].priority == 1) focusCoupon = couponList[0];
+      showCoupons = true;
+    }
   }
 
   Future applyCoupon(String couponCode) async {

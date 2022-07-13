@@ -216,11 +216,12 @@ class UserAutosaveDetailsViewModel extends BaseModel {
         await _subcriptionRepo.getAutosaveTransactions(
       uid: _userService.baseUser.uid,
       lastDocument: null,
+      limit: 5,
     );
     if (result.code == 200) {
       filteredList = result.model;
-      if (filteredList != null && filteredList.isNotEmpty) {
-        if (filteredList.length > 4) hasMoreTxns = true;
+      if (filteredList.isNotEmpty && filteredList.length > 4) {
+        hasMoreTxns = true;
       }
     }
   }

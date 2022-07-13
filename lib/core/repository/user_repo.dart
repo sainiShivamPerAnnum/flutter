@@ -80,7 +80,7 @@ class UserRepository extends BaseRepo {
   Future<ApiResponse<BaseUser>> getUserById({@required String id}) async {
     try {
       final res = await APIService.instance.getData(
-        _apiPaths.kGetUserById(id),
+        ApiPath.kGetUserById(id),
         cBaseUrl: _baseUrl,
       );
 
@@ -285,7 +285,7 @@ class UserRepository extends BaseRepo {
   }) async {
     try {
       await APIService.instance.putData(
-        _apiPaths.kGetUserById(uid),
+        ApiPath.kGetUserById(uid),
         body: dMap,
         cBaseUrl: _baseUrl,
       );

@@ -83,6 +83,7 @@ class AutosaveTransactionsViewModel extends BaseModel {
         await _subcriptionRepo.getAutosaveTransactions(
       uid: _userService.baseUser.uid,
       lastDocument: lastDocId,
+      limit: 30,
     );
     if (result.code == 200) {
       autosavetranList = result.model;
@@ -96,9 +97,6 @@ class AutosaveTransactionsViewModel extends BaseModel {
               .firstWhere((t) => t.txnId == txn.txnId, orElse: () => null);
           if (duplicate == null) filteredList.add(txn);
         });
-        autosavetranList.sort(
-          (a, b) => b.createdOn.seconds.compareTo(a.createdOn.seconds),
-        );
       }
     }
   }

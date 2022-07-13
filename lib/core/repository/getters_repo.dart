@@ -101,7 +101,7 @@ class GetterRepository extends BaseRepo {
   Future<ApiResponse<List<PromoCardModel>>> getPromoCards() async {
     try {
       final response = await APIService.instance.getData(
-        ApiPath().kPromos,
+        ApiPath.kPromos,
         cBaseUrl: _baseUrl,
         queryParams: {
           "uid": userService.baseUser.uid,

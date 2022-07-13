@@ -16,18 +16,13 @@ class GameRepo extends BaseRepo {
 
   Future<ApiResponse<List<GameModel>>> getGames() async {
     try {
-      
       final response = await APIService.instance.getData(
-        ApiPath().getGames,
+        ApiPath.getGames,
         cBaseUrl: _baseUrl,
       );
-      
-
-      final game = GameModel.helper.fromMapArray(response["data"]["games"]);
-
-      return ApiResponse<List<GameModel>>(model: game, code: 200);
+      final games = GameModel.helper.fromMapArray(response["data"]["games"]);
+      return ApiResponse<List<GameModel>>(model: games, code: 200);
     } catch (e) {
-      
       logger.e(e.toString());
       return ApiResponse.withError("Unable to fetch campaings", 400);
     }

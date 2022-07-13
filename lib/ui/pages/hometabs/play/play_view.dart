@@ -1,5 +1,4 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -12,8 +11,6 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'dart:math' as math;
 
 import 'package:provider/provider.dart';
 
