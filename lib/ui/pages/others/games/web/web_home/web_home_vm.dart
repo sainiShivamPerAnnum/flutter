@@ -162,7 +162,8 @@ class WebHomeViewModel extends BaseModel {
         initialUrl = _generatePoolClubGameUrl();
         break;
       case Constants.GAME_TYPE_CRICKET:
-        _analyticsService.track(eventName: AnalyticsEvents.startPlayingCricket);
+        _analyticsService.track(
+            eventName: AnalyticsEvents.cricketHeroGameStarts);
         initialUrl = _generateCricketGameUrl();
         break;
       case Constants.GAME_TYPE_FOOTBALL:
@@ -176,9 +177,9 @@ class WebHomeViewModel extends BaseModel {
         initialUrl = _generateCandyFiestaGameUrl();
         break;
     }
-    initialUrl = currentGame == Constants.GAME_TYPE_CRICKET
-        ? initialUrl
-        : initialUrl + "&token=$token";
+    // initialUrl = currentGame == Constants.GAME_TYPE_CRICKET
+    //     ? initialUrl
+    //     : initialUrl + "&token=$token";
     _logger.d("Game Url: $initialUrl");
     AppState.delegate.appState.currentAction = PageAction(
       state: PageState.addWidget,
@@ -186,10 +187,8 @@ class WebHomeViewModel extends BaseModel {
       widget: WebGameView(
         initialUrl: initialUrl,
         game: currentGame,
-        inLandscapeMode: currentGame == Constants.GAME_TYPE_POOLCLUB ||
-                (currentGame == Constants.GAME_TYPE_CRICKET)
-            ? true
-            : false,
+        inLandscapeMode:
+            currentGame == Constants.GAME_TYPE_POOLCLUB ? true : false,
       ),
     );
   }
@@ -197,36 +196,16 @@ class WebHomeViewModel extends BaseModel {
   //Cricket Methods -------------------------------------START----------------//
   Future<bool> _setupCricketGame() async {
     setState(ViewState.Busy);
-    String _cricPlayCost = BaseRemoteConfig.remoteConfig
+    String _cricketPlayCost = BaseRemoteConfig.remoteConfig
             .getString(BaseRemoteConfig.CRICKET_PLAY_COST) ??
         "10";
-    int _cost = -1 * int.tryParse(_cricPlayCost) ?? 10;
-    ApiResponse<FlcModel> _flcResponse =
-        await _fclActionRepo.substractFlc(_cost);
-    _message = _flcResponse.model.message;
-    if (_flcResponse.model.flcBalance != null) {
-      _userCoinService.setFlcBalance(_flcResponse.model.flcBalance);
-    } else {
-      _logger.d("Flc balance is null");
-    }
-
-    if (_flcResponse.model.sessionId != null) {
-      _sessionId = _flcResponse.model.sessionId;
-    } else {
-      _logger.d("sessionId null");
-    }
-
-    if (_flcResponse.model.gameEndpoint != null) {
-      _gameEndpoint = _flcResponse.model.gameEndpoint;
-    } else {
-      _logger.d("gameEndpoint null");
-    }
-
-    if (_flcResponse.model.canUserPlay) {
-      setState(ViewState.Idle);
+    int _cost = int.tryParse(_cricketPlayCost) ?? 10;
+    ApiResponse<FlcModel> _flcResponse = await _fclActionRepo.getCoinBalance();
+    setState(ViewState.Idle);
+    if (_flcResponse.model.flcBalance != null &&
+        _flcResponse.model.flcBalance >= _cost)
       return true;
-    } else {
-      setState(ViewState.Idle);
+    else {
       return false;
     }
   }
@@ -234,9 +213,12 @@ class WebHomeViewModel extends BaseModel {
   // add function for football to check game cost
 
   String _generateCricketGameUrl() {
-    return _gameEndpoint != null
-        ? _gameEndpoint
-        : '${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.CRICKET_GAME_URI)}?userId=${_userService.baseUser.uid}&userName=${_userService.baseUser.username}&sessionId=$_sessionId&stage=${FlavorConfig.getStage()}&gameId=cric2020';
+    String _cricketUri = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.CRICKET_GAME_URI);
+    String _loadUri =
+        "$_cricketUri?user=${_userService.baseUser.uid}&name=${_userService.baseUser.username}";
+    if (FlavorConfig.isDevelopment()) _loadUri = "$_loadUri&dev=true";
+    return _loadUri;
   }
 
   //Cricket Methods -----------------------------------END--------------------//

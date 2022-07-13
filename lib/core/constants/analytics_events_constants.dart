@@ -39,6 +39,8 @@ class AnalyticsEvents {
   static const candyFiestaEnds = "Candy Fiesta ends";
   static const candyFiestaStarts = "Candy Fiesta starts";
   static const footBallEnds = "Foot Ball ends";
+  static const cricketHeroGameStarts = "Cricket Hero game starts";
+  static const cricketHeroGameEnds = "Cricket Hero game ends";
   static const gamePlayStarted = "Game started";
 
   // profile section

@@ -75,96 +75,13 @@ class WebGameViewModel extends BaseModel {
     // setUpWebGameView(game);
   }
 
-  // setUpWebGameView(String game) {
-  //   switch (game) {
-  //     case Constants.GAME_TYPE_POOLCLUB:
-  //       break;
-  //     case Constants.GAME_TYPE_CRICKET:
-  //       break;
-  //     default:
-  //       return;
-  //   }
-  // }
-
-  // cleanUpWebGameView(String game) {
-  //   switch (game) {
-  //     case Constants.GAME_TYPE_POOLCLUB:
-  //       break;
-  //     case Constants.GAME_TYPE_CRICKET:
-  //       break;
-  //     default:
-  //       return;
-  //   }
-  // }
-
-  endWebGame(data, game) {
-    _logger.i("FCM Command received to end Cricket game");
-
-    //  check if payload has a golden ticket
+  handleCricketHeroRoundEnd(Map<String, dynamic> data, String game) async {
+    _analyticsService.track(eventName: AnalyticsEvents.cricketHeroGameEnds);
     if (data['gt_id'] != null && data['gt_id'].toString().isNotEmpty) {
-      _logger.d(data.toString());
+      _logger.d("Recived a Golden ticket with id: ${data['gt_id']}");
       GoldenTicketService.goldenTicketId = data['gt_id'];
     }
-    //Navigate back to CricketView
-    if (AppState.isWebGameLInProgress || AppState.isWebGamePInProgress) {
-      AppState.isWebGameLInProgress = false;
-      AppState.isWebGamePInProgress = false;
-      AppState.backButtonDispatcher.didPopRoute();
-
-      Future.delayed(Duration(milliseconds: 100), () async {
-        //check if there is any end game message
-        if (data[FcmCommands.GAME_END_MESSAGE_KEY] != null &&
-            data[FcmCommands.GAME_END_MESSAGE_KEY].toString().isNotEmpty) {
-          GoldenTicketService.gameEndMsgText =
-              data[FcmCommands.GAME_END_MESSAGE_KEY].toString();
-          BaseUtil.openDialog(
-            addToScreenStack: true,
-            isBarrierDismissable: false,
-            hapticVibrate: true,
-            content: ScoreRejectedDialog(
-              contentText: GoldenTicketService.gameEndMsgText,
-            ),
-          );
-          GoldenTicketService.gameEndMsgText = null;
-
-          return;
-        }
-        if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
-          _gtService.showInstantGoldenTicketView(
-              title: 'Game milestone achieved', source: GTSOURCE.cricket);
-        } else
-          BaseUtil.openDialog(
-            addToScreenStack: true,
-            isBarrierDismissable: true,
-            hapticVibrate: false,
-            content: FelloInfoDialog(
-              showCrossIcon: false,
-              title: "Game Over",
-              subtitle: (data['game_score'] != null)
-                  ? "You score was ${data['game_score']}"
-                  : "Game Over",
-              action: Container(
-                width: SizeConfig.screenWidth,
-                child: FelloButtonLg(
-                    child: Text(
-                      "OK",
-                      style: TextStyles.body2.bold.colour(Colors.white),
-                    ),
-                    onPressed: () {
-                      AppState.backButtonDispatcher.didPopRoute();
-                      // _gtService.showGoldenTicketAvailableDialog();
-                    }),
-              ),
-            ),
-          );
-      });
-    }
-    // update cricket scoreboard
-    Future.delayed(Duration(milliseconds: 2500), () {
-      _lbService
-          .fetchWebGameLeaderBoard(game: game)
-          .then((value) => _lbService.scrollToUserIndexIfAvaiable());
-    });
+    handleGameEndRound(data, game);
   }
 
   handlePoolClubRoundEnd(Map<String, dynamic> data, String game) async {

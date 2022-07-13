@@ -5,6 +5,7 @@ import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/custom_logger.dart';
 
@@ -38,7 +39,7 @@ class FlcActionsRepo {
       "user_id": _userService.baseUser.uid,
       "flc_amount": flcAmount,
       "type": "SUBTRACT",
-      "sub_type": "GM_CRIC2020",
+      "sub_type": Constants.GAME_TYPE_CRICKET,
       "user_name": _userService.baseUser.username
     };
     _logger.d("Substract FLC : $_body");
