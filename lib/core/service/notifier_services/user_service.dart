@@ -255,7 +255,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   Future<void> getUserFundWalletData() async {
     if (baseUser != null) {
-      UserFundWallet temp = await _dbModel.getUserFundWallet(baseUser.uid);
+      UserFundWallet temp = (await _userRepo.getFundBalance()).model;
       if (temp == null)
         _compileUserWallet();
       else

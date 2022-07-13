@@ -1,12 +1,11 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/constants/fcm_commands_constants.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
-import 'package:felloapp/core/repository/flc_actions_repo.dart';
+import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
@@ -17,14 +16,10 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/score_reject_dialog.dart';
 import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
-import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -33,7 +28,7 @@ class WebGameViewModel extends BaseModel {
   final _gtService = locator<GoldenTicketService>();
   final _logger = locator<CustomLogger>();
   final _lbService = locator<LeaderboardService>();
-  final _fclActionRepo = locator<FlcActionsRepo>();
+  final _userRepo = locator<UserRepository>();
   final _userCoinService = locator<UserCoinService>();
   final _analyticsService = locator<AnalyticsService>();
 
@@ -174,7 +169,7 @@ class WebGameViewModel extends BaseModel {
   //helper
 
   updateFlcBalance() async {
-    ApiResponse<FlcModel> _flcResponse = await _fclActionRepo.getCoinBalance();
+    ApiResponse<FlcModel> _flcResponse = await _userRepo.getCoinBalance();
     if (_flcResponse.model.flcBalance != null) {
       _userCoinService.setFlcBalance(_flcResponse.model.flcBalance);
     } else {
