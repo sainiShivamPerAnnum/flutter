@@ -955,8 +955,4 @@ class BaseUtil extends ChangeNotifier {
     this._isGoogleSignInProgress = value;
     notifyListeners();
   }
-
-  static Color fromColorString(String color) {
-    return Color(int.parse('0xff$color'));
-  }
 }

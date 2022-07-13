@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/helper_model.dart';
+import 'package:felloapp/util/color_util.dart';
 import 'package:flutter/material.dart';
 
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -103,7 +104,7 @@ class GameModel {
       playCost: map['playCost'],
       prizeAmount: map['prizeAmount'],
       analyticEvent: map['analyticEvent'],
-      shadowColor: BaseUtil.fromColorString(map['shadowColor']),
+      shadowColor: ColorUtil.fromColorString(map['shadowColor']),
       route: map['route'],
       gameCode: map['gameCode'],
       code: map['code'],
