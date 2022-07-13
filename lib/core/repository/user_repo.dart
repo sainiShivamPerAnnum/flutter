@@ -219,7 +219,7 @@ class UserRepository extends BaseRepo {
   Future<ApiResponse<bool>> checkIfUserHasNewNotifications() async {
     try {
       final latestNotificationsResponse = await APIService.instance.getData(
-        ApiPath.getLatestNotication(this.userService.baseUser.uid),
+        ApiPath.getLatestNotification(this.userService.baseUser.uid),
         cBaseUrl: _baseUrl,
       );
 
@@ -257,7 +257,7 @@ class UserRepository extends BaseRepo {
   ) async {
     try {
       final userNotifications = await APIService.instance.getData(
-        ApiPath.getNotications(this.userService.baseUser.uid),
+        ApiPath.getNotifications(this.userService.baseUser.uid),
         cBaseUrl: _baseUrl,
         queryParams: {
           "lastDocId": lastDocId,

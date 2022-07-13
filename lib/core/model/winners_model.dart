@@ -85,7 +85,8 @@ class Winners {
   final int flc;
   final String userid;
   final String gameType;
-  final int score;
+  final double score;
+
   Winners({
     this.amount,
     this.isMockUser,
@@ -102,7 +103,7 @@ class Winners {
       String username,
       int flc,
       String userid,
-      int score,
+      double score,
       String gameType}) {
     return Winners(
       amount: amount ?? this.amount,
@@ -134,7 +135,7 @@ class Winners {
       username: map['username'] ?? '',
       flc: map['flc'] ?? 0,
       userid: map['userid'] ?? '',
-      score: map['score'] ?? 0,
+      score: (map['score'] ?? 0).toDouble(),
       gameType: gameType ?? '',
     );
   }

@@ -37,9 +37,9 @@ class ApiPath {
 
   static String getUserIdByRefCode(String code) => "/referral/$code";
   static String getReferralCode(String uid) => "/user/referral/$uid";
-  static String getLatestNotication(String uid) =>
-      "/user/$uid/notification/latest";
-  static String getNotications(uid) => "/user/$uid/notifications";
+  static String getLatestNotification(String uid) =>
+      "/user/$uid/notifications/latest";
+  static String getNotifications(uid) => "/user/$uid/notifications";
   static const kDeviceId = "/device";
 
   //GT Rewards

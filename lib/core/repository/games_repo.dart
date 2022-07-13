@@ -1,7 +1,4 @@
-import 'dart:developer';
-
 import 'package:felloapp/core/constants/apis_path_constants.dart';
-import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -23,7 +20,7 @@ class GameRepo extends BaseRepo {
       final games = GameModel.helper.fromMapArray(response["data"]["games"]);
       return ApiResponse<List<GameModel>>(model: games, code: 200);
     } catch (e) {
-      logger.e(e.toString());
+      logger.e("Unable to fetch games ${e.toString()}");
       return ApiResponse.withError("Unable to fetch games", 400);
     }
   }

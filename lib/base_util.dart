@@ -2,7 +2,6 @@
 //Dart & Flutter Imports
 import 'dart:async';
 import 'dart:math';
-import 'dart:developer' as dev;
 //Pub Imports
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
