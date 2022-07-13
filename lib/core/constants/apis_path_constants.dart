@@ -8,7 +8,6 @@ class ApiPath {
   //felloCoins Apis
   get kSubstractFlcPreGameApi =>
       "/felloCoins/$stage/api/felloCoin/updateWallet/preGame";
-  get kGetCoinBalance => "/felloCoins/$stage/api/felloCoin/balance";
 
   //userFinanceV2Ops Apis
   get kCreateTranId => "/userFinanceV2Ops/$stage/api/transaction/id";
@@ -34,20 +33,20 @@ class ApiPath {
   get kVerifyPan => "/userOps/api/v3/verifyPan";
   get kCustomAuthToken => "/userOps/api/v3/trucallerAuthToken";
   static const acquisitionTracking = "/userOps/api/v3/opt-analytics";
-
-  static String getUserIdByRefCode(String code) => "/referral/$code";
-  static String getReferralCode(String uid) => "/user/referral/$uid";
+  static String getAugmontDetail(String uid) => "/user/$uid/augmont";
+  static String kGetUserById(String id) => "/$id";
   static String getLatestNotification(String uid) =>
       "/user/$uid/notifications/latest";
   static String getNotifications(uid) => "/user/$uid/notifications";
   static const kDeviceId = "/device";
+  static String getCoinBalance(uid) => "/$uid/wallet/coin";
+  static String getFundBalance(uid) => "/$uid/wallet/fund";
 
   //GT Rewards
   get kRedeemGtReward => "/gtRewardsOps/$stage/v2/api/redeemGtReward";
 
   //Fello Coupons
   static const kFelloCoupons = "/eligible";
-  //"/felloCoupons/$stage/api/eligible";
 
   //DeviceInfo
   get kSetUserDeviceId => "/setUserDeviceId";
@@ -75,10 +74,6 @@ class ApiPath {
   static String getMilestone(String uid) => "/user/$uid/milestones";
   static const String prizes = '/prizes';
 
-  //User Ops Apis
-  static String getAugmontDetail(String uid) => "/user/$uid/augmont";
-  static String kGetUserById(String id) => "/$id";
-
   // Payment Apis
   static String getWithdrawableGoldQuantity(String uid) =>
       "/user/$uid/gold/withdrawable";
@@ -105,4 +100,8 @@ class ApiPath {
 
   // Coupon Apis
   static const String getCoupons = "/coupons";
+
+  // referral
+  static String getUserIdByRefCode(String code) => "/referral/$code";
+  static String getReferralCode(String uid) => "/user/referral/$uid";
 }

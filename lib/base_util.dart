@@ -304,9 +304,9 @@ class BaseUtil extends ChangeNotifier {
   Future<void> refreshFunds() async {
     //TODO: ADD LOADER
     print("-----------------> I got called");
-    return _dbModel.getUserFundWallet(myUser.uid).then((aValue) {
-      if (aValue != null) {
-        userFundWallet = aValue;
+    return _userRepo.getFundBalance().then((aValue) {
+      if (aValue.code == 200) {
+        userFundWallet = aValue.model;
         if (userFundWallet.augGoldQuantity > 0)
           _updateAugmontBalance(); //setstate call in method
 
@@ -785,9 +785,9 @@ class BaseUtil extends ChangeNotifier {
   }
 
   void refreshAugmontBalance() async {
-    _dbModel.getUserFundWallet(myUser.uid).then((aValue) {
-      if (aValue != null) {
-        userFundWallet = aValue;
+    _userRepo.getFundBalance().then((aValue) {
+      if (aValue.code == 200) {
+        userFundWallet = aValue.model;
         if (userFundWallet.augGoldQuantity > 0) _updateAugmontBalance();
       }
     });

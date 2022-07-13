@@ -7,6 +7,7 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
+import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
@@ -32,7 +33,7 @@ class WebHomeViewModel extends BaseModel {
   final _analyticsService = locator<AnalyticsService>();
   final _prizeService = locator<PrizeService>();
   final _fclActionRepo = locator<FlcActionsRepo>();
-  final _userCoinService = locator<UserCoinService>();
+  final _userRepo = locator<UserRepository>();
   final _logger = locator<CustomLogger>();
   final _baseUtil = locator<BaseUtil>();
 
@@ -200,7 +201,7 @@ class WebHomeViewModel extends BaseModel {
             .getString(BaseRemoteConfig.CRICKET_PLAY_COST) ??
         "10";
     int _cost = int.tryParse(_cricketPlayCost) ?? 10;
-    ApiResponse<FlcModel> _flcResponse = await _fclActionRepo.getCoinBalance();
+    ApiResponse<FlcModel> _flcResponse = await _userRepo.getCoinBalance();
     setState(ViewState.Idle);
     if (_flcResponse.model.flcBalance != null &&
         _flcResponse.model.flcBalance >= _cost)
@@ -221,8 +222,6 @@ class WebHomeViewModel extends BaseModel {
     return _loadUri;
   }
 
-  //Cricket Methods -----------------------------------END--------------------//
-
   //FootBall Methods --------------------------------START--------------------//
   Future<bool> _setupFootBallGame() async {
     setState(ViewState.Busy);
@@ -230,7 +229,7 @@ class WebHomeViewModel extends BaseModel {
             .getString(BaseRemoteConfig.FOOTBALL_PLAY_COST) ??
         "10";
     int _cost = int.tryParse(_footballPlayCost) ?? 10;
-    ApiResponse<FlcModel> _flcResponse = await _fclActionRepo.getCoinBalance();
+    ApiResponse<FlcModel> _flcResponse = await _userRepo.getCoinBalance();
     setState(ViewState.Idle);
     if (_flcResponse.model.flcBalance != null &&
         _flcResponse.model.flcBalance >= _cost)
@@ -258,7 +257,7 @@ class WebHomeViewModel extends BaseModel {
             .getString(BaseRemoteConfig.CANDYFIESTA_PLAY_COST) ??
         "10";
     int _cost = int.tryParse(_candyFiestaCost) ?? 10;
-    ApiResponse<FlcModel> _flcResponse = await _fclActionRepo.getCoinBalance();
+    ApiResponse<FlcModel> _flcResponse = await _userRepo.getCoinBalance();
     setState(ViewState.Idle);
     if (_flcResponse.model.flcBalance != null &&
         _flcResponse.model.flcBalance >= _cost)
@@ -286,7 +285,7 @@ class WebHomeViewModel extends BaseModel {
             .getString(BaseRemoteConfig.POOLCLUB_PLAY_COST) ??
         "10";
     int _cost = int.tryParse(_poolPlayCost) ?? 10;
-    ApiResponse<FlcModel> _flcResponse = await _fclActionRepo.getCoinBalance();
+    ApiResponse<FlcModel> _flcResponse = await _userRepo.getCoinBalance();
     setState(ViewState.Idle);
     if (_flcResponse.model.flcBalance != null &&
         _flcResponse.model.flcBalance >= _cost)
