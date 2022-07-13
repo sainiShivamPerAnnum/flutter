@@ -84,29 +84,6 @@ class Api {
     return snapshot;
   }
 
-  Future<QuerySnapshot> getUserNotifications(
-      String userId, DocumentSnapshot lastDoc) async {
-    Future<QuerySnapshot> snapshot;
-    Query query = _db
-        .collection(Constants.COLN_USERS)
-        .doc(userId)
-        .collection(Constants.SUBCOLN_USER_ALERTS);
-    try {
-      if (lastDoc != null)
-        snapshot = query
-            .orderBy('created_time', descending: true)
-            .startAfterDocument(lastDoc)
-            .limit(20)
-            .get();
-      else
-        snapshot =
-            query.orderBy('created_time', descending: true).limit(20).get();
-    } catch (e) {
-      logger.e(e.toString());
-    }
-    return snapshot;
-  }
-
   Future<QuerySnapshot> checkForLatestAnnouncment(String userId) {
     Future<QuerySnapshot> snapshot;
     ref = _db.collection(Constants.COLN_ANNOUNCEMENTS);
