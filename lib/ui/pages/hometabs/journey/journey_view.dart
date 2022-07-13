@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:felloapp/core/enums/journey_service_enum.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jAssetPath.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jBackground.dart';
@@ -13,6 +15,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
 
 final avatarKey = GlobalKey();
 
@@ -40,20 +43,20 @@ class _JourneyViewState extends State<JourneyView>
       builder: (ctx, model, child) {
         return Scaffold(
           backgroundColor: Colors.black,
-          floatingActionButton: model.isLoading
-              ? SizedBox()
-              : FloatingActionButton(
-                  child: const Icon(Icons.play_arrow),
-                  onPressed: () {
-                    if (model.controller.isCompleted)
-                      model.controller.reverse();
-                    else if (model.controller.isAnimating)
-                      model.controller.stop();
-                    else {
-                      model.controller.forward();
-                    }
-                  },
-                ),
+          // floatingActionButton: FloatingActionButton(
+          //   child: const Icon(Icons.play_arrow),
+          //   onPressed: () {
+          //     // if (model.controller.isCompleted)
+          //     //   model.controller.reverse();
+          //     // else if (model.controller.isAnimating)
+          //     //   model.controller.stop();
+          //     // else {
+          //     //   model.controller.forward();
+          //     // }
+          //     // model.fetchJourneyPage();
+
+          //   },
+          // ),
           body: model.isLoading && model.pages == null
               ? Container(
                   width: SizeConfig.screenWidth,
@@ -116,16 +119,17 @@ class _JourneyViewState extends State<JourneyView>
                               children: [
                                 Background(model: model),
                                 JourneyAssetPath(model: model),
-                                Positioned(
-                                  bottom: 0,
-                                  left: 0,
-                                  child: CustomPaint(
-                                    size: Size(SizeConfig.screenWidth,
-                                        model.currentFullViewHeight),
-                                    painter: PathPainter(
-                                        model.avatarPath, Colors.red),
+                                if (model.avatarPath != null)
+                                  Positioned(
+                                    bottom: 0,
+                                    left: 0,
+                                    child: CustomPaint(
+                                      size: Size(SizeConfig.screenWidth,
+                                          model.currentFullViewHeight),
+                                      painter: PathPainter(
+                                          model.avatarPath, Colors.transparent),
+                                    ),
                                   ),
-                                ),
                                 Milestones(model: model),
                                 Avatar(
                                   model: model,
@@ -210,20 +214,25 @@ class Avatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print(model.avatarPosition);
-    return Positioned(
-      key: avatarKey,
-      // duration: Duration(seconds: 10),
-      // curve: Curves.decelerate,
-      top: model.avatarPosition.dy,
-      left: model.avatarPosition.dx,
-      child: const IgnorePointer(
-        ignoring: true,
-        child: CircleAvatar(
-          radius: 25,
-          backgroundImage: NetworkImage(
-              "https://w7.pngwing.com/pngs/312/283/png-transparent-man-s-face-avatar-computer-icons-user-profile-business-user-avatar-blue-face-heroes.png"),
-        ),
-      ),
+    return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
+      properties: [JourneyServiceProperties.AvatarPosition],
+      builder: (context, model, properties) {
+        return Positioned(
+          key: avatarKey,
+          // duration: Duration(seconds: 10),
+          // curve: Curves.decelerate,
+          top: model.avatarPosition.dy,
+          left: model.avatarPosition.dx,
+          child: const IgnorePointer(
+            ignoring: true,
+            child: CircleAvatar(
+              radius: 25,
+              backgroundImage: NetworkImage(
+                  "https://w7.pngwing.com/pngs/312/283/png-transparent-man-s-face-avatar-computer-icons-user-profile-business-user-avatar-blue-face-heroes.png"),
+            ),
+          ),
+        );
+      },
     );
   }
 }

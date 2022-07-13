@@ -9,6 +9,7 @@ import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -36,6 +37,7 @@ class WebGameViewModel extends BaseModel {
   final _fclActionRepo = locator<FlcActionsRepo>();
   final _userCoinService = locator<UserCoinService>();
   final _analyticsService = locator<AnalyticsService>();
+  final _journeyService = locator<JourneyService>();
 
   String _currentGame;
 
@@ -216,7 +218,9 @@ class WebGameViewModel extends BaseModel {
   handleGameEndRound(Map<String, dynamic> data, String game) {
     _logger.d(
         "$game round end at  ${DateFormat('yyyy-MM-dd - hh:mm a').format(DateTime.now())}");
-
+    if (data['mlIndex'] != null)
+      _journeyService.avatarRemoteMlIndex = data["mlIndex"];
+    _logger.d("MLIndex found: ${data['mlIndex']}");
     if (data[FcmCommands.GAME_END_MESSAGE_KEY] != null &&
         data[FcmCommands.GAME_END_MESSAGE_KEY].toString().isNotEmpty) {
       _logger.d("Game end message: ${data[FcmCommands.GAME_END_MESSAGE_KEY]}");

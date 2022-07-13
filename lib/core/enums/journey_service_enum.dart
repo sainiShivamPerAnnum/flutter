@@ -1,1 +1,5 @@
-enum JourneyServiceProperties { JourneyAssets }
+enum JourneyServiceProperties {
+  JourneyAssets,
+  UserJourneyStats,
+  AvatarPosition
+}

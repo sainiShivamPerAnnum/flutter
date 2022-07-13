@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
@@ -154,6 +155,24 @@ class RootViewModel extends BaseModel {
     }
   }
 
+  // uploadMilestone(){
+
+  // }
+
+  downloadJourneyPage() {
+    _journeyRepo.fetchJourneyPages(1, JourneyRepository.PAGE_DIRECTION_UP);
+  }
+
+  // uploadJourneyPage() async {
+  //   // await _journeyRepo.uploadJourneyPage(jourenyPages.first);
+  //   log(json.encode(jourenyPages.last.toMap()));
+  // }
+
+  // uploadMilestones() async {
+  //   log(json
+  //       .encode(jourenyPages.last.milestones.map((e) => e.toMap()).toList()));
+  // }
+
   completeNViewDownloadSaveLViewAsset() async {
     if (_journeyRepo.checkIfAssetIsAvailableLocally('b1')) {
       log("ROOTVM: Asset path found cached in local storage.showing asset from cache");
@@ -162,7 +181,7 @@ class RootViewModel extends BaseModel {
       svgSource = "https://journey-assets-x.s3.ap-south-1.amazonaws.com/b1.svg";
       log("ROOTVM: Asset path not found in cache. Downloading and caching it now. also showing network Image for now");
       await Future.delayed(Duration(seconds: 5));
-      final bool result = await _journeyRepo.downloadandSaveFile(
+      final bool result = await _journeyRepo.downloadAndSaveFile(
           "https://journey-assets-x.s3.ap-south-1.amazonaws.com/b1.svg");
       if (result) {
         log("ROOTVM: Asset downlaoding & caching completed successfully. updating asset from local to network in widget tree");
@@ -471,13 +490,13 @@ class RootViewModel extends BaseModel {
     );
   }
 
-  addJourneyPage() async {
-    isUploading = true;
-    jourenyPages.forEach((page) async {
-      await _dbModel.addJourneypage(page);
-    });
-    isUploading = false;
-  }
+  // addJourneyPage() async {
+  //   isUploading = true;
+  //   jourenyPages.forEach((page) async {
+  //     await _dbModel.addJourneypage(page);
+  //   });
+  //   isUploading = false;
+  // }
 
   void focusBuyField() {
     Haptic.vibrate();

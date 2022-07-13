@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/components/source_adaptive_asset/source_adaptive_asset_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
@@ -98,7 +99,7 @@ class Root extends StatelessWidget {
                   ),
                   actions: [
                     FelloCoinBar(),
-                    SizedBox(width: 16),
+                    SizedBox(width: 5),
                     NotificationButton(),
                     SizedBox(width: 5),
                     CircleAvatar(
@@ -123,23 +124,23 @@ class Root extends StatelessWidget {
                             ? CircularProgressIndicator(color: Colors.black)
                             : Icon(Icons.upload_rounded),
                         onPressed: () {
-                          model.addJourneyPage();
+                          model.downloadJourneyPage();
                         },
                       ),
                     ),
-                    SizedBox(width: 5),
-                    CircleAvatar(
-                      backgroundColor: Colors.black,
-                      child: IconButton(
-                        color: Colors.white,
-                        icon: model.isUploading
-                            ? CircularProgressIndicator(color: Colors.black)
-                            : Icon(Icons.download_rounded),
-                        onPressed: () {
-                          model.completeNViewDownloadSaveLViewAsset();
-                        },
-                      ),
-                    )
+                    // SizedBox(width: 5),
+                    // CircleAvatar(
+                    //   backgroundColor: Colors.black,
+                    //   child: IconButton(
+                    //     color: Colors.white,
+                    //     icon: model.isUploading
+                    //         ? CircularProgressIndicator(color: Colors.black)
+                    //         : Icon(Icons.download_rounded),
+                    //     onPressed: () {
+                    //       model.completeNViewDownloadSaveLViewAsset();
+                    //     },
+                    //   ),
+                    // )
                   ],
                 ),
                 Positioned(
@@ -181,50 +182,13 @@ class Root extends StatelessWidget {
                         AppState.delegate.appState.isTxnLoaderInView
                             ? TransactionLoader()
                             : SizedBox()),
-                if (model.svgSource.isNotEmpty)
-                  Positioned.fill(child: SourceAdaptiveAsset(model: model))
+                // if (model.svgSource.isNotEmpty)
+                //   Positioned.fill(child: SourceAdaptiveAssetView(asset: 'b1'),)
               ],
             ),
           ),
         );
       },
-    );
-  }
-}
-
-class SourceAdaptiveAsset extends StatelessWidget {
-  final RootViewModel model;
-  const SourceAdaptiveAsset({this.model});
-  @override
-  Widget build(BuildContext context) {
-    log("ROOTVIEW: Build called for SourceAdaptiveAsset widget");
-    return model.svgSource.startsWith('http')
-        ? NetworkAsset(networkUrl: model.svgSource)
-        : FileAsset(filePath: model.svgSource);
-  }
-}
-
-class FileAsset extends StatelessWidget {
-  final String filePath;
-  const FileAsset({this.filePath});
-  @override
-  Widget build(BuildContext context) {
-    log("ROOTVIEW: Build called for FileAsset widget");
-    return SvgPicture.file(
-      File(filePath),
-    );
-  }
-}
-
-class NetworkAsset extends StatelessWidget {
-  final networkUrl;
-  const NetworkAsset({this.networkUrl});
-  @override
-  Widget build(BuildContext context) {
-    log("ROOTVIEW: Build called for NetworkAsset widget");
-
-    return SvgPicture.network(
-      networkUrl,
     );
   }
 }

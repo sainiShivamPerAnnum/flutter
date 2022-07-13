@@ -11,7 +11,7 @@ import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/faq_model.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
-import 'package:felloapp/core/model/journey_models/journey_page.dart';
+import 'package:felloapp/core/model/journey_models/journey_page_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';

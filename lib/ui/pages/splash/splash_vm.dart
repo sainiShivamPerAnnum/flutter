@@ -5,8 +5,10 @@ import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
+import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -37,6 +39,8 @@ class LauncherViewModel extends BaseModel {
   final _analyticsService = locator<AnalyticsService>();
   final _userRepo = locator<UserRepository>();
   final _paytmService = locator<PaytmService>();
+  final _journeyService = locator<JourneyService>();
+  final _journeyRepo = locator<JourneyRepository>();
 
   //GETTERS
   bool get isSlowConnection => _isSlowConnection;
@@ -60,7 +64,9 @@ class LauncherViewModel extends BaseModel {
 
   initLogic() async {
     try {
+      _journeyService.init();
       await userService.init();
+      await _journeyRepo.init();
       await Future.wait([_baseUtil.init(), _fcmListener.setupFcm()]);
 
       userService.firebaseUser?.getIdToken()?.then(

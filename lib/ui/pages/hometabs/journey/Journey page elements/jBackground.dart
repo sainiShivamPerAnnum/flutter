@@ -34,17 +34,20 @@ class _BackgroundState extends State<Background> {
       child: SizedBox(
         height: widget.model.currentFullViewHeight,
         width: SizeConfig.screenWidth,
-        child: Column(
-          children: List.generate(
-            widget.model.pageCount,
-            (milestoneIndex) => SvgPicture.asset(
+        child: ListView.builder(
+          itemCount: widget.model.pages.length,
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.zero,
+          itemBuilder: (ctx, i) {
+            return SvgPicture.asset(
               "assets/journey/bg.svg",
               // color: Colors.grey,
               fit: BoxFit.cover,
               width: widget.model.pageWidth,
               height: widget.model.pageHeight,
-            ),
-          ),
+            );
+          },
         ),
       ),
     );

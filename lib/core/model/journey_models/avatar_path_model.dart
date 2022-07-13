@@ -35,24 +35,24 @@ class AvatarPathModel {
     return {
       'moveType': moveType,
       'coords': coords,
-      // 'page': page,
-      'level': mlIndex,
+      'mlIndex': mlIndex,
     };
   }
 
-  factory AvatarPathModel.fromMap(Map<String, dynamic> map) {
+  factory AvatarPathModel.fromMap(Map<String, dynamic> map, int page) {
     return AvatarPathModel(
       moveType: map['moveType'] ?? "linear",
-      coords: List<double>.from(map['coords']),
-      page: map['page']?.toInt() ?? 0,
-      mlIndex: map['page']?.toInt() ?? 0,
+      coords: map["coords"].cast<
+          double>(), //  List<double>.from(map['coords'] as List)?.map((item) => double.tryParse(item))?.toList(),
+      page: page ?? 0,
+      mlIndex: map['mlIndex'] ?? 0,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory AvatarPathModel.fromJson(String source) =>
-      AvatarPathModel.fromMap(json.decode(source));
+  factory AvatarPathModel.fromJson(String source, int page) =>
+      AvatarPathModel.fromMap(json.decode(source), page);
 
   @override
   String toString() {

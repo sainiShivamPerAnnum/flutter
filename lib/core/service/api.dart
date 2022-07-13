@@ -3,7 +3,7 @@ import 'dart:developer' as dev;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
-import 'package:felloapp/core/model/journey_models/journey_page.dart';
+import 'package:felloapp/core/model/journey_models/journey_page_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/util/constants.dart';
@@ -690,6 +690,17 @@ class Api {
       // logger.d(data);
     } catch (e) {
       logger.e(e.toString());
+    }
+  }
+
+  Future<bool> addMilestones(Map<String, dynamic> data) async {
+    CollectionReference colRef = _db.collection('milestones');
+    try {
+      await colRef.add(data);
+      return true;
+    } catch (e) {
+      logger.d(e.toString());
+      return false;
     }
   }
   //---------------------------------------REALTIME DATABASE-------------------------------------------//

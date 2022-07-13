@@ -56,38 +56,34 @@ class JourneyPathModel {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'asset': asset.toMap(),
-      'dx': x,
-      'dy': y,
-      'isBase': isBase,
-      'hFlip': hFlip,
-      'vFlip': vFlip,
-      'dz': z,
-      // 'page': page,
-      'level': mlIndex,
+      'x': x,
+      'y': y,
+      'z': z,
+      'isBase': isBase ?? false,
+      'assetRef': asset.name,
+      'mlIndex': mlIndex,
+      'hFlip': hFlip ?? false,
     };
   }
 
-  factory JourneyPathModel.fromMap(Map<String, dynamic> map) {
+  factory JourneyPathModel.fromMap(Map<String, dynamic> map, int page) {
     return JourneyPathModel(
+      x: map['x']?.toDouble() ?? 0.0,
+      y: map['y']?.toDouble() ?? 0.0,
+      z: map['z']?.toInt() ?? 0,
+      isBase: map['isBase'] ?? false,
+      mlIndex: map['level']?.toInt() ?? 0,
+      hFlip: map['hFlip'] ?? false,
       id: map['id'],
       asset: JourneyAssetModel.fromMap(map['asset']),
-      x: map['dx']?.toDouble() ?? 0.0,
-      y: map['dy']?.toDouble() ?? 0.0,
-      isBase: map['isBase'] ?? false,
-      hFlip: map['hFlip'] ?? false,
-      vFlip: map['vFlip'] ?? false,
-      z: map['dz']?.toInt() ?? 0,
-      page: map['page']?.toInt() ?? 0,
-      mlIndex: map['level']?.toInt() ?? 0,
+      page: page ?? 0,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory JourneyPathModel.fromJson(String source) =>
-      JourneyPathModel.fromMap(json.decode(source));
+  factory JourneyPathModel.fromJson(String source, int page) =>
+      JourneyPathModel.fromMap(json.decode(source), page);
 
   @override
   String toString() {

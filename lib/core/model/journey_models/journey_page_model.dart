@@ -1,17 +1,18 @@
 import 'dart:convert';
+import 'package:felloapp/core/model/journey_models/journey_asset_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:felloapp/core/model/journey_models/avatar_path_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_path_model.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
 
 class JourneyPage {
-  String bgImage;
+  JourneyAssetModel bgAsset;
   int page;
   List<JourneyPathModel> paths;
   List<AvatarPathModel> avatarPath;
   List<MilestoneModel> milestones;
   JourneyPage({
-    @required this.bgImage,
+    @required this.bgAsset,
     @required this.paths,
     @required this.page,
     @required this.avatarPath,
@@ -19,7 +20,7 @@ class JourneyPage {
   });
 
   JourneyPage copyWith({
-    String bgImage,
+    JourneyAssetModel bgAsset,
     List<JourneyPathModel> paths,
     List<AvatarPathModel> avatarPath,
     int level,
@@ -27,7 +28,7 @@ class JourneyPage {
     List<MilestoneModel> milestones,
   }) {
     return JourneyPage(
-      bgImage: bgImage ?? this.bgImage,
+      bgAsset: bgAsset ?? this.bgAsset,
       paths: paths ?? this.paths,
       page: page ?? this.page,
       avatarPath: avatarPath ?? this.avatarPath,
@@ -37,24 +38,45 @@ class JourneyPage {
 
   Map<String, dynamic> toMap() {
     return {
-      'bgImage': bgImage,
-      'page': page,
+      'bgAsset': bgAsset,
+      // 'page': page,
       'paths': paths.map((x) => x.toMap()).toList(),
       'avatarPath': avatarPath.map((x) => x.toMap()).toList(),
-      'milestones': milestones.map((x) => x.toMap()).toList(),
+      'milestones': {
+        "startRange": 0,
+        "items": milestones.map((x) => x.toJourneyMap()).toList()
+      },
     };
   }
 
   factory JourneyPage.fromMap(Map<String, dynamic> map) {
     return JourneyPage(
       page: map["page"] ?? 0,
-      bgImage: map['bgImage'] ?? '',
+      bgAsset: JourneyAssetModel.fromMap(map['bgAsset']),
       paths: List<JourneyPathModel>.from(
-          map['paths']?.map((x) => JourneyPathModel.fromMap(x))),
+        map['paths']?.map(
+          (x) => JourneyPathModel.fromMap(
+            x,
+            map['page'],
+          ),
+        ),
+      ),
       avatarPath: List<AvatarPathModel>.from(
-          map['avatarPath']?.map((x) => AvatarPathModel.fromMap(x))),
+        map['avatarPath']?.map(
+          (x) => AvatarPathModel.fromMap(
+            x,
+            map['page'],
+          ),
+        ),
+      ),
       milestones: List<MilestoneModel>.from(
-          map['milestones']?.map((x) => MilestoneModel.fromMap(x))),
+        map['milestones']?.map(
+          (x) => MilestoneModel.fromMap(
+            x,
+            map['page'],
+          ),
+        ),
+      ),
     );
   }
 
@@ -65,7 +87,7 @@ class JourneyPage {
 
   @override
   String toString() {
-    return 'JourneyPage(bgImage: $bgImage, paths: $paths, avatarPath: $avatarPath, milestones: $milestones)';
+    return 'JourneyPage(bgAsset: $bgAsset, paths: $paths, avatarPath: $avatarPath, milestones: $milestones)';
   }
 
   @override
@@ -73,7 +95,7 @@ class JourneyPage {
     if (identical(this, other)) return true;
 
     return other is JourneyPage &&
-        other.bgImage == bgImage &&
+        other.bgAsset == bgAsset &&
         listEquals(other.paths, paths) &&
         listEquals(other.avatarPath, avatarPath) &&
         listEquals(other.milestones, milestones);
@@ -81,7 +103,7 @@ class JourneyPage {
 
   @override
   int get hashCode {
-    return bgImage.hashCode ^
+    return bgAsset.hashCode ^
         paths.hashCode ^
         avatarPath.hashCode ^
         milestones.hashCode;

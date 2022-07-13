@@ -81,61 +81,81 @@ class MilestoneModel {
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'id': id,
-      'asset': asset.toMap(),
-      'x': x,
-      'y': y,
-      'rewards': rewards.map((x) => x.toMap()).toList(),
-      'description': steps.map((x) => x.toMap()).toList(),
-      'actionUri': actionUri,
-      'animType': animType,
-      'isCompleted': isCompleted,
-      'tooltip': tooltip,
-      'prizeSubType': prizeSubType,
-      'page': page,
-      'mlIndex': index,
-      'shadow': shadow.toMap(),
-      'hFlip': hFlip,
-      'vFlip': vFlip,
-    };
+  Map<String, dynamic> toJourneyMap() {
+    return shadow != null
+        ? <String, dynamic>{
+            'x': x,
+            'y': y,
+            'sx': shadow.x,
+            'sy': shadow.y,
+            'hFlip': hFlip ?? false
+          }
+        : <String, dynamic>{
+            'x': x,
+            'y': y,
+            'hFlip': hFlip ?? false,
+          };
   }
 
-  factory MilestoneModel.fromMap(Map<String, dynamic> map) {
+  Map<String, dynamic> toMap() {
+    return shadow != null
+        ? <String, dynamic>{
+            // 'id': id,
+            'assetRef': asset.name,
+            'animType': animType ?? "none",
+            'actionUri': actionUri ?? '',
+            'toolTip': tooltip ?? '',
+            'steps': steps.map((x) => x.toMap()).toList(),
+            'prizeSubType': prizeSubType ?? '',
+            'shadow': {'assetRef': shadow.name},
+          }
+        : <String, dynamic>{
+            // 'id': id,
+            'assetRef': asset.name,
+            'animType': animType ?? "none",
+            'actionUri': actionUri ?? '',
+            'toolTip': tooltip ?? '',
+            'steps': steps.map((x) => x.toMap()).toList(),
+            'prizeSubType': prizeSubType ?? '',
+          };
+  }
+
+  factory MilestoneModel.fromMap(Map<String, dynamic> map, int page) {
     return MilestoneModel(
-      id: map['id'] as String,
-      asset: JourneyAssetModel.fromMap(map['asset'] as Map<String, dynamic>),
+      index: map['mlIndex'] as int,
       x: map['x'] as double,
       y: map['y'] as double,
-      rewards: List<Reward>.from(
-        (map['rewards'] as List<int>).map<Reward>(
-          (x) => Reward.fromMap(x as Map<String, dynamic>),
-        ),
-      ),
+      hFlip: map['hFlip'] as bool,
+      tooltip: map['toolTip'] as String,
       steps: List<MlSteps>.from(
-        (map['description'] as List<int>).map<MlSteps>(
+        (map['steps'] as List<dynamic>).map<MlSteps>(
           (x) => MlSteps.fromMap(x as Map<String, dynamic>),
         ),
       ),
-      actionUri: map['actionUri'] as String,
       prizeSubType: map['prizeSubType'] as String,
-      tooltip: map['tooltip'] as String,
       animType: map['animType'] as String,
-      isCompleted: map['isCompleted'] as bool,
-      page: map['page'] as int,
-      index: map['mlIndex'] as int,
-      shadow:
-          MilestoneShadowModel.fromMap(map['shadow'] as Map<String, dynamic>),
-      hFlip: map['hFlip'] as bool,
-      vFlip: map['vFlip'] as bool,
+      actionUri: map['actionUri'] as String,
+      asset: JourneyAssetModel.fromMap(map['asset'] as Map<String, dynamic>),
+      page: page,
+      rewards: map["rewards"] != null
+          ? List<Reward>.from(
+              (map['rewards'] as List<int>).map<Reward>(
+                (x) => Reward.fromMap(x as Map<String, dynamic>),
+              ),
+            )
+          : null,
+      isCompleted: map['isCompleted'] ?? false,
+      shadow: map["shadow"] != null
+          ? MilestoneShadowModel.fromMap(
+              map['shadow'] as Map<String, dynamic>, map, page)
+          : null,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory MilestoneModel.fromJson(String source) =>
-      MilestoneModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory MilestoneModel.fromJson(String source, int page) =>
+      MilestoneModel.fromMap(json.decode(source) as Map<String, dynamic>, page);
 
   @override
   String toString() {
@@ -188,6 +208,7 @@ class MilestoneModel {
 
 class MilestoneShadowModel {
   final String id;
+  final String name;
   final JourneyAssetModel asset;
   final double x, y;
   final String animType;
@@ -197,6 +218,7 @@ class MilestoneShadowModel {
   final bool hFlip, vFlip;
   MilestoneShadowModel({
     @required this.id,
+    @required this.name,
     @required this.asset,
     @required this.y,
     @required this.x,
@@ -210,8 +232,9 @@ class MilestoneShadowModel {
 
   MilestoneShadowModel copyWith({
     String id,
-    String asset,
+    JourneyAssetModel asset,
     double dx,
+    String name,
     dy,
     double width,
     height,
@@ -225,6 +248,7 @@ class MilestoneShadowModel {
   }) {
     return MilestoneShadowModel(
       id: id ?? this.id,
+      name: name ?? this.name,
       asset: asset ?? this.asset,
       y: dy ?? this.y,
       x: dx ?? this.x,
@@ -239,7 +263,8 @@ class MilestoneShadowModel {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      // 'id': id,
+      'name': name,
       'asset': asset.toMap(),
       'dy': y,
       'dx': x,
@@ -252,29 +277,31 @@ class MilestoneShadowModel {
     };
   }
 
-  factory MilestoneShadowModel.fromMap(Map<String, dynamic> map) {
+  factory MilestoneShadowModel.fromMap(
+      Map<String, dynamic> map, Map<String, dynamic> parentMap, int page) {
     return MilestoneShadowModel(
       id: map['id'] ?? '',
-      asset: map['asset'] ?? '',
-      y: map['dy'],
-      x: map['dx'],
-      animType: map['animType'] ?? '',
-      isCompleted: map['isCompleted'] ?? false,
-      page: map['page']?.toInt() ?? 0,
-      index: map['level']?.toInt() ?? 0,
-      vFlip: map['vFlip'] ?? false,
-      hFlip: map['hFlip'] ?? false,
+      x: map['x'],
+      y: map['y'],
+      name: map['assetRef'] ?? '',
+      asset: JourneyAssetModel.fromMap(map['asset']),
+      animType: parentMap['animType'] ?? '',
+      isCompleted: parentMap['isCompleted'] ?? false,
+      page: page ?? 0,
+      index: parentMap['index']?.toInt() ?? 0,
+      hFlip: parentMap['hFlip'] ?? false,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory MilestoneShadowModel.fromJson(String source) =>
-      MilestoneShadowModel.fromMap(json.decode(source));
+  factory MilestoneShadowModel.fromJson(
+          String source, Map<String, dynamic> map, int page) =>
+      MilestoneShadowModel.fromMap(json.decode(source), map, page);
 
   @override
   String toString() {
-    return 'MilestoneShadowModel(id: $id, asset: $asset, dy: $y, animType: $animType, isCompleted: $isCompleted, page: $page, level: $index, vFlip: $vFlip, hFlip: $hFlip)';
+    return 'MilestoneShadowModel(id: $id, asset: $asset, name: $name, dy: $y, animType: $animType, isCompleted: $isCompleted, page: $page, level: $index, vFlip: $vFlip, hFlip: $hFlip)';
   }
 
   @override

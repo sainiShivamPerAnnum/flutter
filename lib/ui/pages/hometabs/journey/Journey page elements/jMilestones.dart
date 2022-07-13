@@ -4,6 +4,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/components/source_adaptive_asset/source_adaptive_asset_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -11,6 +12,10 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+String generateAssetUrl(String name) {
+  return "https://journey-assets-x.s3.ap-south-1.amazonaws.com/$name.svg";
+}
 
 class Milestones extends StatelessWidget {
   final JourneyPageViewModel model;
@@ -37,6 +42,7 @@ class Milestones extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("milestone build called");
     return Stack(
       children: List.generate(
         model.currentMilestoneList.length,
@@ -111,8 +117,8 @@ class _ActiveFloatingMilestoneState extends State<ActiveFloatingMilestone>
                 alignment: Alignment.center,
                 transform:
                     Matrix4.rotationY(widget.milestone.hFlip ? math.pi : 0),
-                child: SvgPicture.asset(
-                  widget.milestone.shadow.asset.uri,
+                child: SvgPicture.network(
+                  generateAssetUrl(widget.milestone.shadow.asset.name),
                   width: widget.model.pageWidth *
                       widget.milestone.shadow.asset.width,
                   height: widget.model.pageHeight *
@@ -141,8 +147,8 @@ class _ActiveFloatingMilestoneState extends State<ActiveFloatingMilestone>
                 alignment: Alignment.center,
                 transform:
                     Matrix4.rotationY(widget.milestone.hFlip ? math.pi : 0),
-                child: SvgPicture.asset(
-                  widget.milestone.asset.uri,
+                child: SvgPicture.network(
+                  generateAssetUrl(widget.milestone.asset.name),
                   width: widget.model.pageWidth * widget.milestone.asset.width,
                   height:
                       widget.model.pageHeight * widget.milestone.asset.height,
@@ -208,8 +214,8 @@ class _ActiveRotatingMilestoneState extends State<ActiveRotatingMilestone>
               alignment: Alignment.center,
               transform:
                   Matrix4.rotationY(widget.milestone.hFlip ? math.pi : 0),
-              child: SvgPicture.asset(
-                widget.milestone.shadow.asset.uri,
+              child: SvgPicture.network(
+                generateAssetUrl(widget.milestone.shadow.asset.name),
                 width: widget.model.pageWidth *
                     widget.milestone.shadow.asset.width,
                 height: widget.model.pageHeight *
@@ -237,8 +243,8 @@ class _ActiveRotatingMilestoneState extends State<ActiveRotatingMilestone>
                 alignment: Alignment.center,
                 transform:
                     Matrix4.rotationY(widget.milestone.hFlip ? math.pi : 0),
-                child: SvgPicture.asset(
-                  widget.milestone.asset.uri,
+                child: SvgPicture.network(
+                  generateAssetUrl(widget.milestone.asset.name),
                   width: widget.model.pageWidth * widget.milestone.asset.width,
                   height:
                       widget.model.pageHeight * widget.milestone.asset.height,
@@ -269,15 +275,16 @@ class StaticMilestone extends StatelessWidget {
             bottom: model.pageHeight * (milestone.shadow.page - 1) +
                 model.pageHeight * milestone.shadow.y,
             child: Transform(
-              alignment: Alignment.center,
-              transform: Matrix4.rotationY(milestone.hFlip ? math.pi : 0),
-              child: SvgPicture.asset(
-                milestone.shadow.asset.uri,
-                width: model.pageWidth * milestone.shadow.asset.width,
-                height: model.pageHeight * milestone.shadow.asset.height,
-                fit: BoxFit.cover,
-              ),
-            ),
+                alignment: Alignment.center,
+                transform: Matrix4.rotationY(milestone.hFlip ? math.pi : 0),
+                child: SourceAdaptiveAssetView(asset: milestone.shadow.asset)
+                // SvgPicture.network(
+                //   generateAssetUrl(milestone.shadow.asset.name),
+                //   width: model.pageWidth * milestone.shadow.asset.width,
+                //   height: model.pageHeight * milestone.shadow.asset.height,
+                //   fit: BoxFit.cover,
+                // ),
+                ),
           ),
         Positioned(
           left: model.pageWidth * milestone.x,
@@ -355,15 +362,16 @@ class StaticMilestone extends StatelessWidget {
                 );
               },
               child: Tooltip(
-                message: milestone.tooltip ?? "Hello World!!",
-                triggerMode: TooltipTriggerMode.longPress,
-                child: SvgPicture.asset(
-                  milestone.asset.uri,
-                  width: model.pageWidth * milestone.asset.width,
-                  height: model.pageHeight * milestone.asset.height,
-                  fit: BoxFit.cover,
-                ),
-              ),
+                  message: milestone.tooltip ?? "Hello World!!",
+                  triggerMode: TooltipTriggerMode.longPress,
+                  child: SourceAdaptiveAssetView(asset: milestone.asset)
+                  // SvgPicture.network(
+                  //   generateAssetUrl(milestone.asset.name),
+                  //   width: model.pageWidth * milestone.asset.width,
+                  //   height: model.pageHeight * milestone.asset.height,
+                  //   fit: BoxFit.cover,
+                  // ),
+                  ),
             ),
           ),
         )

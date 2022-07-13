@@ -46,9 +46,8 @@ class ApiPath {
   get kFelloCoupons => "/$stage/eligible";
   //"/felloCoupons/$stage/api/eligible";
 
-
   //DeviceInfo
-  get kSetUserDeviceId =>  "/setUserDeviceId";
+  get kSetUserDeviceId => "/setUserDeviceId";
   static const kCreatePaytmTransaction = "/transaction";
   get kCreateSubscription => "/subscription";
   get kPauseSubscription => "/subscription/pause";
@@ -58,4 +57,9 @@ class ApiPath {
   get kActiveSubscription => "/subscription";
   get kNextDebitDate => "/debit";
   get kOngoingCampaigns => "/$stage/campaigns";
+
+  //Journey
+  get kMilestones => '/milestones';
+  get kJourney => "/journey";
+  static String getJourney(int page) => "/journey/$page";
 }

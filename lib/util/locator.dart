@@ -24,6 +24,7 @@ import 'package:felloapp/core/service/campaigns_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/lcl_db_api.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
@@ -36,6 +37,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/components/source_adaptive_asset/source_adaptive_asset.vm.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
@@ -117,6 +119,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => WinnerService());
   locator.registerLazySingleton(() => LeaderboardService());
   locator.registerLazySingleton(() => GoldenTicketService());
+  locator.registerLazySingleton(() => JourneyService());
 
   //Repository
   locator.registerLazySingleton(() => DBModel());
@@ -185,4 +188,5 @@ void setupLocator() {
   locator.registerFactory(() => MiniTransactionCardViewModel());
   locator.registerFactory(() => FelloCoinBarViewModel());
   locator.registerFactory(() => FAQCardViewModel());
+  locator.registerFactory(() => SourceAdaptiveAssetViewModel());
 }
