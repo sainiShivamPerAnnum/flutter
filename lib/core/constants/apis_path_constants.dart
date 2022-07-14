@@ -67,7 +67,7 @@ class ApiPath {
   static String ticketCount(String uid) => "/user/$uid/tickets/count";
   static const String dailyPicks = '/picks';
 
-  get kSingleTransactions => "/users/payments";
+  static String kSingleTransactions(String uid) => "/users/$uid/payments";
 
   // Golden Ticket rewards Apis
   static String getGoldenTicketById(String uid, String goldenTicketId) =>

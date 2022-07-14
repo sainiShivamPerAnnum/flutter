@@ -332,7 +332,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   }
 
   Future<bool> updateClientToken(String token) async {
-    ApiResponse<bool> response = await _userRepo.updateFcmToken(token: token);
+    ApiResponse<bool> response =
+        await _userRepo.updateFcmToken(fcmToken: token);
     return response.model;
   }
 }

@@ -345,7 +345,7 @@ class UserRepository extends BaseRepo {
   }
 
   Future<ApiResponse<bool>> updateFcmToken({
-    @required String token,
+    @required String fcmToken,
   }) async {
     try {
       final token = await getBearerToken();
@@ -353,7 +353,7 @@ class UserRepository extends BaseRepo {
         ApiPath.updateFcm,
         body: {
           "userId": userService.baseUser.uid,
-          "token": token,
+          "token": fcmToken,
         },
         cBaseUrl: _baseUrl,
         token: "Bearer $token",

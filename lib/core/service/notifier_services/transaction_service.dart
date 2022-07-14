@@ -303,10 +303,10 @@ class TransactionService
         "status": status
       };
       final response = await APIService.instance.getData(
-        ApiPath().kSingleTransactions,
+        ApiPath.kSingleTransactions(_uid),
         token: _token,
         queryParams: _queryParams,
-        cBaseUrl: "$_baseUrl$_uid",
+        cBaseUrl: _baseUrl,
       );
 
       final responseData = response["data"];
