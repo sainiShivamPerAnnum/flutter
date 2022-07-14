@@ -142,7 +142,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => PaymentRepository());
   locator.registerLazySingleton(() => GetterRepository());
   locator.registerLazySingleton(() => InternalOpsRepository());
-  locator.registerLazySingleton(() => SubcriptionRepo());
+  locator.registerLazySingleton(() => SubscriptionRepo());
   locator.registerLazySingleton(() => GameRepo());
 
   // SPLASH

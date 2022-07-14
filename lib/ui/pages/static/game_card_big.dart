@@ -18,7 +18,7 @@ class BigGameCard extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: Shimmer(
-        enabled: isGameLoading,
+        enabled: isGameLoading ?? false,
         child: Container(
           width: SizeConfig.screenWidth,
           height: SizeConfig.screenWidth * 0.38,

@@ -33,6 +33,7 @@ class ApiPath {
   get kVerifyPan => "/userOps/api/v3/verifyPan";
   get kCustomAuthToken => "/userOps/api/v3/trucallerAuthToken";
   static const acquisitionTracking = "/userOps/api/v3/opt-analytics";
+  static const String updateFcm = '/fcm/client_token';
   static String getAugmontDetail(String uid) => "/user/$uid/augmont";
   static String kGetUserById(String id) => "/$id";
   static String getLatestNotification(String uid) =>
@@ -74,9 +75,6 @@ class ApiPath {
   static String getMilestone(String uid) => "/user/$uid/milestones";
   static const String prizes = '/prizes';
 
-  //User Ops Apis
-  static const String updateFcm = '/fcm/client_token';
-
   // Payment Apis
   static String getWithdrawableGoldQuantity(String uid) =>
       "/user/$uid/gold/withdrawable";
@@ -103,8 +101,8 @@ class ApiPath {
 
   // Coupon Apis
   static const String getCoupons = "/coupons";
-
   static String getGameByCode(String gameCode) => "/game/$gameCode";
+
   // referral
   static String getUserIdByRefCode(String code) => "/referral/$code";
   static String getReferralCode(String uid) => "/user/referral/$uid";

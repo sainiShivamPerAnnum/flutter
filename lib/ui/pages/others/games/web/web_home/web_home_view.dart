@@ -22,6 +22,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 class WebHomeView extends StatelessWidget {
   const WebHomeView({Key key, @required this.game}) : super(key: key);
   final String game;
+
   @override
   Widget build(BuildContext context) {
     return BaseView<WebHomeViewModel>(

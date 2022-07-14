@@ -254,27 +254,6 @@ class DBModel extends ChangeNotifier {
     return false;
   }
 
-  Future<List<ReferralDetail>> getUserReferrals(String uid) async {
-    try {
-      logger.i("CALLING: getReferralDocs");
-      QuerySnapshot querySnapshot = await _api.getReferralDocs(uid);
-      List<ReferralDetail> _refDetail = [];
-      if (querySnapshot.size > 0) {
-        for (QueryDocumentSnapshot snapshot in querySnapshot.docs) {
-          Map<String, dynamic> _doc = snapshot.data();
-          if (snapshot.exists && _doc != null && _doc.isNotEmpty) {
-            ReferralDetail _detail = ReferralDetail.fromMap(snapshot.data());
-            _refDetail.add(_detail);
-          }
-        }
-      }
-      return _refDetail;
-    } catch (e) {
-      log.error("Error fetch referrals details: " + e.toString());
-    }
-    return null;
-  }
-
   Future<String> getUserDP(String uid) async {
     try {
       logger.i("CALLING: getFileFromDPBucketURL");
