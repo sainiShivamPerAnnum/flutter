@@ -1,7 +1,4 @@
-import 'dart:developer';
-
 import 'package:felloapp/core/constants/apis_path_constants.dart';
-import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/api_response.dart';
