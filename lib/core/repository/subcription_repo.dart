@@ -10,7 +10,7 @@ import 'base_repo.dart';
 class SubscriptionRepo extends BaseRepo {
   final _baseUrl = FlavorConfig.isDevelopment()
       ? "https://2je5zoqtuc.execute-api.ap-south-1.amazonaws.com/dev"
-      : "";
+      : "https://2z48o79cm5.execute-api.ap-south-1.amazonaws.com/prod";
 
   Future<ApiResponse<List<AutosaveTransactionModel>>> getAutosaveTransactions({
     @required String uid,

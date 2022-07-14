@@ -12,7 +12,7 @@ import 'base_repo.dart';
 class ReferralRepo extends BaseRepo {
   final _baseUrl = FlavorConfig.isDevelopment()
       ? "https://2k3cus82jj.execute-api.ap-south-1.amazonaws.com/dev"
-      : "";
+      : "https://bt3lswjiw1.execute-api.ap-south-1.amazonaws.com/prod";
 
   Future<ApiResponse<String>> getReferralCode() async {
     try {

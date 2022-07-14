@@ -138,7 +138,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "tWinTitle" : MessageLookupByLibrary.simpleMessage("CONGRATULATIONS!"),
     "txnBankDetailsLabel" : MessageLookupByLibrary.simpleMessage("Bank Account Details"),
     "txnHistoryLabel" : MessageLookupByLibrary.simpleMessage("Transaction History"),
-    "winIphoneBigText" : MessageLookupByLibrary.simpleMessage("and win iPhone 13"),
+    "winIphoneBigText" : MessageLookupByLibrary.simpleMessage("and win iPad Air"),
     "winIphoneSmallText" : MessageLookupByLibrary.simpleMessage("Refer friends"),
     "winMoneyBigText" : MessageLookupByLibrary.simpleMessage("₹ 1 Lakh every week"),
     "winMoneySmallText" : MessageLookupByLibrary.simpleMessage("Play and win"),

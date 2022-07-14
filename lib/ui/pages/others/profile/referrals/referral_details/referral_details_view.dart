@@ -84,7 +84,7 @@ class ReferralDetailsView extends StatelessWidget {
                                               content: MoreInfoDialog(
                                                   title:
                                                       "To be eligible for referrer of the month",
-                                                  imagePath: Assets.iphone,
+                                                  imagePath: Assets.ipad,
                                                   imageSize: Size(
                                                     SizeConfig.padding80,
                                                     SizeConfig.padding80,
@@ -94,7 +94,7 @@ class ReferralDetailsView extends StatelessWidget {
                                         },
                                     ),
                                     TextSpan(
-                                        text: " wins a brand new iPhone 13!")
+                                        text: " wins a brand new iPad Air!")
                                   ]),
                             ),
                             SizedBox(height: SizeConfig.padding24),

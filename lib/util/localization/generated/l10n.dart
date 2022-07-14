@@ -595,10 +595,10 @@ class S {
     );
   }
 
-  /// `and win iPhone 13`
+  /// `and win iPad Air`
   String get winIphoneBigText {
     return Intl.message(
-      'and win iPhone 13',
+      'and win iPad Air',
       name: 'winIphoneBigText',
       desc: '',
       args: [],

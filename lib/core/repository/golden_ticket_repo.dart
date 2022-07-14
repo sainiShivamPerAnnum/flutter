@@ -10,7 +10,7 @@ import 'package:felloapp/util/flavor_config.dart';
 class GoldenTicketRepository extends BaseRepo {
   final _baseUrl = FlavorConfig.isDevelopment()
       ? 'https://unzrx9x548.execute-api.ap-south-1.amazonaws.com/dev'
-      : '';
+      : 'https://jad0ai2t6k.execute-api.ap-south-1.amazonaws.com/prod';
 
   Future<ApiResponse<GoldenTicket>> getGoldenTicketById({
     String goldenTicketId,

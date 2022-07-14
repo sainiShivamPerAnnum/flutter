@@ -7,7 +7,7 @@ import 'package:felloapp/util/flavor_config.dart';
 class PaymentRepository extends BaseRepo {
   final _baseUrl = FlavorConfig.isDevelopment()
       ? 'https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev'
-      : '';
+      : 'https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod';
 
   Future<ApiResponse<double>> getWithdrawableAugGoldQuantity() async {
     try {

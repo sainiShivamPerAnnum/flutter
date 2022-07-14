@@ -9,7 +9,7 @@ import 'base_repo.dart';
 class InternalOpsRepository extends BaseRepo {
   final _baseUrl = FlavorConfig.isDevelopment()
       ? 'https://qdp0idzhjc.execute-api.ap-south-1.amazonaws.com/dev'
-      : '';
+      : 'https://4ch7btxcuj.execute-api.ap-south-1.amazonaws.com/prod';
 
   final Log log = new Log("DBModel");
 

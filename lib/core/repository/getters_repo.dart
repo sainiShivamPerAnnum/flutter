@@ -12,7 +12,7 @@ import 'package:flutter/cupertino.dart';
 class GetterRepository extends BaseRepo {
   final _baseUrl = FlavorConfig.isDevelopment()
       ? 'https://qdp0idzhjc.execute-api.ap-south-1.amazonaws.com/dev'
-      : '';
+      : 'https://vbbe56oey5.execute-api.ap-south-1.amazonaws.com/prod';
 
   Future<ApiResponse> getStatisticsByFreqGameTypeAndCode({
     String type,

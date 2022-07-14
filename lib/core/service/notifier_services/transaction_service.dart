@@ -9,6 +9,7 @@ import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,9 @@ class TransactionService
   final _userService = locator<UserService>();
   final _logger = locator<CustomLogger>();
 
+  final _baseUrl = FlavorConfig.isDevelopment()
+      ? "https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev"
+      : "https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod";
   List<UserTransaction> _txnList;
   String lastTxnDocId,
       lastPrizeTxnDocId,
@@ -302,8 +306,7 @@ class TransactionService
         ApiPath().kSingleTransactions,
         token: _token,
         queryParams: _queryParams,
-        cBaseUrl:
-            "https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev/users/$_uid",
+        cBaseUrl: "$_baseUrl$_uid",
       );
 
       final responseData = response["data"];

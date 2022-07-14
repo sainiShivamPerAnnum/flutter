@@ -10,7 +10,7 @@ import 'base_repo.dart';
 class GameRepo extends BaseRepo {
   final _baseUrl = FlavorConfig.isDevelopment()
       ? "https://4mm5ihvkz0.execute-api.ap-south-1.amazonaws.com/dev"
-      : "";
+      : "https://u9c7w6pnw7.execute-api.ap-south-1.amazonaws.com/prod";
 
   Future<ApiResponse<List<GameModel>>> getGames() async {
     try {
