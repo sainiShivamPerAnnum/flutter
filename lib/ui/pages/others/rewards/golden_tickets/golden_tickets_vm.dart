@@ -1,14 +1,11 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
-import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/hero_router.dart';
@@ -17,17 +14,13 @@ import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/rsa_encryption.dart';
 import 'package:flutter/material.dart';
 
 class GoldenTicketsViewModel extends BaseModel {
   //Dependencies
   final _userService = locator<UserService>();
-  final _userCoinService = locator<UserCoinService>();
   final _logger = locator<CustomLogger>();
-  final _apiPaths = locator<ApiPath>();
   final _gtService = locator<GoldenTicketService>();
-  final _rsaEncryption = new RSAEncryption();
 
   //Local Variables
   List<GoldenTicket> _goldenTicketList;
