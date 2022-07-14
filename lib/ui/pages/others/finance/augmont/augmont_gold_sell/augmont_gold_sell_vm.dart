@@ -136,18 +136,17 @@ class AugmontGoldSellViewModel extends BaseModel {
     refresh();
     await _userService.getUserFundWalletData();
     ApiResponse<double> qunatityApiResponse =
-        await _paymentRepo.getNonWithdrawableAugGoldQuantity();
+        await _paymentRepo.getWithdrawableAugGoldQuantity();
     if (qunatityApiResponse.code == 200) {
-      nonWithdrawableQnt = qunatityApiResponse.model;
-      if (nonWithdrawableQnt == null || nonWithdrawableQnt < 0)
-        nonWithdrawableQnt = 0.0;
+      withdrawableQnt = qunatityApiResponse.model;
+      if (withdrawableQnt == null || withdrawableQnt < 0) withdrawableQnt = 0.0;
       if (userFundWallet == null ||
           userFundWallet.augGoldQuantity == null ||
           userFundWallet.augGoldQuantity <= 0.0)
-        withdrawableQnt = 0.0;
+        nonWithdrawableQnt = 0.0;
       else
-        withdrawableQnt = userFundWallet.augGoldQuantity;
-      withdrawableQnt = math.max(0.0, withdrawableQnt - nonWithdrawableQnt);
+        nonWithdrawableQnt =
+            math.max(0.0, userFundWallet.augGoldQuantity - withdrawableQnt);
     } else {
       nonWithdrawableQnt = 0.0;
       withdrawableQnt = 0.0;

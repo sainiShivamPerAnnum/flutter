@@ -9,7 +9,7 @@ class PaymentRepository extends BaseRepo {
       ? 'https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev'
       : '';
 
-  Future<ApiResponse<double>> getNonWithdrawableAugGoldQuantity() async {
+  Future<ApiResponse<double>> getWithdrawableAugGoldQuantity() async {
     try {
       final quntityResponse = await APIService.instance.getData(
         ApiPath.getWithdrawableGoldQuantity(

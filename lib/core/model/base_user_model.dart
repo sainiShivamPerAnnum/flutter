@@ -102,7 +102,7 @@ class BaseUser {
             false,
             false,
             UserPreferences(null),
-            Timestamp.now(),
+            TimestampModel.currentTimeStamp(),
             null);
 
   BaseUser.fromMap(Map<String, dynamic> data, String id, [String client_token])

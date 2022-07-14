@@ -31,9 +31,10 @@ class TimestampModel extends Timestamp {
   }
 
   factory TimestampModel.currentTimeStamp() {
+    final timeStamp = Timestamp.now();
     return TimestampModel(
-      seconds: DateTime.now().millisecondsSinceEpoch ~/ 1000,
-      nanoseconds: DateTime.now().millisecondsSinceEpoch * 1000,
+      seconds: timeStamp.seconds,
+      nanoseconds: timeStamp.nanoseconds,
     );
   }
 }

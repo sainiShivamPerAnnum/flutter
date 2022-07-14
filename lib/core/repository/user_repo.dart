@@ -85,8 +85,11 @@ class UserRepository extends BaseRepo {
       );
 
       try {
-        final _user = BaseUser.fromMap(res["data"], id);
-        return ApiResponse(model: _user, code: 200);
+        if (res['data'] != null && res['data'].isNotEmpty) {
+          final _user = BaseUser.fromMap(res["data"], id);
+          return ApiResponse(model: _user, code: 200);
+        } else
+          return ApiResponse(model: null, code: 200);
       } catch (e) {
         _internalOpsService.logFailure(
           id,
