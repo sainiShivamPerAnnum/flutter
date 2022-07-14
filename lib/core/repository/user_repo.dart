@@ -27,7 +27,7 @@ class UserRepository extends BaseRepo {
   final _internalOpsService = locator<InternalOpsService>();
   final _baseUrl = FlavorConfig.isDevelopment()
       ? "https://6w37rw51hj.execute-api.ap-south-1.amazonaws.com/dev"
-      : "https://7y9layzs7j.execute-api.ap-south-1.amazonaws.com";
+      : "https://7y9layzs7j.execute-api.ap-south-1.amazonaws.com/prod";
 
   Future<ApiResponse<String>> getCustomUserToken(String mobileNo) async {
     try {
@@ -80,11 +80,13 @@ class UserRepository extends BaseRepo {
   Future<ApiResponse<BaseUser>> getUserById({@required String id}) async {
     try {
       final token = await getBearerToken();
+      logger.d("Token: $token");
       final res = await APIService.instance.getData(
         ApiPath.kGetUserById(id),
         cBaseUrl: _baseUrl,
         token: token,
       );
+      logger.d("Get User Response: $res");
 
       try {
         if (res['data'] != null && res['data'].isNotEmpty) {

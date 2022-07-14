@@ -7,6 +7,7 @@ import 'package:another_flushbar/flushbar.dart';
 //Pub Imports
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -236,7 +237,69 @@ class BaseUtil extends ChangeNotifier {
   Future<void> setGameDefaults() async {
     final gameResponse = await _gameRepo.getGames();
     if (gameResponse.code == 200) gamesList = gameResponse.model;
-
+    if (gamesList == null || gamesList.isEmpty)
+      gamesList = [
+        GameModel(
+          gameName: "Football",
+          route: "/footballHome",
+          code: 'FO',
+          gameCode: Constants.GAME_TYPE_FOOTBALL,
+          shadowColor: Color(0xff4B489E),
+          thumbnailUri: BaseRemoteConfig.remoteConfig
+              .getString(BaseRemoteConfig.FOOTBALL_THUMBNAIL_URI),
+          playCost: 25,
+          prizeAmount: 25000,
+          analyticEvent: AnalyticsEvents.selectPlayFootball,
+        ),
+        GameModel(
+          gameName: "Cricket",
+          route: "/cricketHome",
+          code: 'CR',
+          gameCode: Constants.GAME_TYPE_CRICKET,
+          shadowColor: Color(0xff4B489E),
+          thumbnailUri: BaseRemoteConfig.remoteConfig
+              .getString(BaseRemoteConfig.CRICKET_THUMBNAIL_URI),
+          playCost: 20,
+          prizeAmount: 25000,
+          analyticEvent: AnalyticsEvents.selectPlayCricket,
+        ),
+        GameModel(
+          gameName: "Pool Club",
+          route: "/poolHome",
+          code: 'PO',
+          gameCode: Constants.GAME_TYPE_POOLCLUB,
+          shadowColor: Color(0xff00982B),
+          thumbnailUri: BaseRemoteConfig.remoteConfig
+              .getString(BaseRemoteConfig.POOLCLUB_THUMBNAIL_URI),
+          playCost: 20,
+          prizeAmount: 25000,
+          analyticEvent: AnalyticsEvents.selectPlayPoolClub,
+        ),
+        GameModel(
+          gameName: "Candy Fiesta",
+          route: "/candyFiestaHome",
+          code: 'CA',
+          gameCode: Constants.GAME_TYPE_CANDYFIESTA,
+          shadowColor: Color(0xff4B489E),
+          thumbnailUri: BaseRemoteConfig.remoteConfig
+              .getString(BaseRemoteConfig.CANDYFIESTA_THUMBNAIL_URI),
+          playCost: 20,
+          prizeAmount: 25000,
+          analyticEvent: AnalyticsEvents.selectCandyFiesta,
+        ),
+        GameModel(
+          gameName: "Tambola",
+          route: "/tambolaHome",
+          code: 'TA',
+          gameCode: Constants.GAME_TYPE_TAMBOLA,
+          shadowColor: Color(0xff1D173D),
+          thumbnailUri: BaseRemoteConfig.remoteConfig
+              .getString(BaseRemoteConfig.TAMBOLA_THUMBNAIL_URI),
+          playCost: 20,
+          prizeAmount: 25000,
+          analyticEvent: AnalyticsEvents.selectPlayTambola,
+        ),
+      ];
     //Arrange Games according to the position defined in baseremoteconfig.
     arrangeGames();
   }

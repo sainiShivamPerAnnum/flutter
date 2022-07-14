@@ -75,11 +75,13 @@ class APIService implements API {
           'platform': Platform.isAndroid ? 'android' : 'iOS',
           'version':
               _versionString.isEmpty ? await _getAppVersion() : _versionString,
-          'uid': userService?.baseUser?.uid,
+          'uid': userService?.firebaseUser?.uid,
         },
       );
       logger.d("response from $finalPath");
       logger.d("Full url: $finalPath");
+      logger.d("Get Response: ${response.statusCode}");
+      logger.d("Get Response: ${response.body}");
       responseJson = returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
