@@ -16,12 +16,14 @@ class GoldenTicketRepository extends BaseRepo {
     String goldenTicketId,
   }) async {
     try {
+      final token = await getBearerToken();
       final goldenTicketRespone = await APIService.instance.getData(
         ApiPath.getGoldenTicketById(
           this.userService.baseUser.uid,
           goldenTicketId,
         ),
         cBaseUrl: _baseUrl,
+        token: token,
       );
 
       final ticket =
@@ -35,11 +37,13 @@ class GoldenTicketRepository extends BaseRepo {
 
   Future<ApiResponse<List<UserMilestone>>> fetchMilestones() async {
     try {
+      final token = await getBearerToken();
       final milestoneRespone = await APIService.instance.getData(
         ApiPath.getMilestone(
           this.userService.baseUser.uid,
         ),
         cBaseUrl: _baseUrl,
+        token: token,
       );
 
       // final miletones = UserMilestoneModel.fromJson(milestoneRespone).data;
@@ -55,11 +59,16 @@ class GoldenTicketRepository extends BaseRepo {
   Future<ApiResponse<PrizesModel>> getPrizesPerGamePerFreq(
       String gameCode, String freq) async {
     try {
-      final milestoneRespone = await APIService.instance
-          .getData(ApiPath.prizes, cBaseUrl: _baseUrl, queryParams: {
-        'game': gameCode,
-        'freq': freq,
-      });
+      final token = await getBearerToken();
+      final milestoneRespone = await APIService.instance.getData(
+        ApiPath.prizes,
+        cBaseUrl: _baseUrl,
+        queryParams: {
+          'game': gameCode,
+          'freq': freq,
+        },
+        token: token,
+      );
 
       final prizesModel = PrizesModel.fromJson(milestoneRespone["data"]);
       return ApiResponse<PrizesModel>(model: prizesModel, code: 200);

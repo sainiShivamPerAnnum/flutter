@@ -79,9 +79,11 @@ class UserRepository extends BaseRepo {
 
   Future<ApiResponse<BaseUser>> getUserById({@required String id}) async {
     try {
+      final token = await getBearerToken();
       final res = await APIService.instance.getData(
         ApiPath.kGetUserById(id),
         cBaseUrl: _baseUrl,
+        token: token,
       );
 
       try {
@@ -214,6 +216,7 @@ class UserRepository extends BaseRepo {
     String platform,
   }) async {
     try {
+      final token = await getBearerToken();
       Map<String, dynamic> _body = {
         "uid": uid,
         "deviceId": deviceId,
@@ -224,6 +227,7 @@ class UserRepository extends BaseRepo {
         ApiPath.kDeviceId,
         body: _body,
         cBaseUrl: _baseUrl,
+        token: token,
       );
 
       logger.d("Device added");
@@ -234,11 +238,13 @@ class UserRepository extends BaseRepo {
 
   Future<ApiResponse<UserAugmontDetail>> getUserAugmontDetails() async {
     try {
+      final token = await getBearerToken();
       final augmontRespone = await APIService.instance.getData(
         ApiPath.getAugmontDetail(
           this.userService.baseUser.uid,
         ),
         cBaseUrl: _baseUrl,
+        token: token,
       );
 
       final augmont = UserAugmontDetail.fromMap(augmontRespone['data']);
@@ -251,9 +257,11 @@ class UserRepository extends BaseRepo {
 
   Future<ApiResponse<bool>> checkIfUserHasNewNotifications() async {
     try {
+      final token = await getBearerToken();
       final latestNotificationsResponse = await APIService.instance.getData(
         ApiPath.getLatestNotification(this.userService.baseUser.uid),
         cBaseUrl: _baseUrl,
+        token: token,
       );
 
       final List<AlertModel> notifications = AlertModel.helper.fromMapArray(
@@ -289,12 +297,14 @@ class UserRepository extends BaseRepo {
     String lastDocId,
   ) async {
     try {
+      final token = await getBearerToken();
       final userNotifications = await APIService.instance.getData(
         ApiPath.getNotifications(this.userService.baseUser.uid),
         cBaseUrl: _baseUrl,
         queryParams: {
           "lastDocId": lastDocId,
         },
+        token: token,
       );
 
       final responseData = userNotifications["data"];
@@ -316,10 +326,12 @@ class UserRepository extends BaseRepo {
     String uid,
     @required Map<String, dynamic> dMap,
   }) async {
+    final token = await getBearerToken();
     try {
       await APIService.instance.putData(
         ApiPath.kGetUserById(uid),
         body: dMap,
+        token: "Bearer $token",
         cBaseUrl: _baseUrl,
       );
       return ApiResponse<bool>(model: true, code: 200);
@@ -336,13 +348,15 @@ class UserRepository extends BaseRepo {
     @required String token,
   }) async {
     try {
-      await APIService.instance.postData(
+      final token = await getBearerToken();
+      await APIService.instance.putData(
         ApiPath.updateFcm,
         body: {
           "userId": userService.baseUser.uid,
           "token": token,
         },
         cBaseUrl: _baseUrl,
+        token: "Bearer $token",
       );
 
       return ApiResponse<bool>(model: true, code: 200);

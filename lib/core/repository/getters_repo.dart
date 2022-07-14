@@ -19,6 +19,7 @@ class GetterRepository extends BaseRepo {
     String freq,
   }) async {
     try {
+      final token = await getBearerToken();
       final String code = CodeFromFreq.getCodeFromFreq(freq);
       final statisticsResponse = await APIService.instance.getData(
         ApiPath.statistics,
@@ -28,6 +29,7 @@ class GetterRepository extends BaseRepo {
           "freq": freq,
           "code": code,
         },
+        token: token,
       );
 
       return ApiResponse(model: statisticsResponse["data"], code: 200);
@@ -42,9 +44,11 @@ class GetterRepository extends BaseRepo {
     String freq,
   }) async {
     try {
+      final token = await getBearerToken();
       final winnersResponse = await APIService.instance.getData(
         ApiPath.getWinners(type, freq),
         cBaseUrl: _baseUrl,
+        token: token,
       );
 
       return ApiResponse(
@@ -62,9 +66,11 @@ class GetterRepository extends BaseRepo {
     String freq,
   }) async {
     try {
+      final token = await getBearerToken();
       final winnersResponse = await APIService.instance.getData(
         ApiPath.pastWinners(type, freq),
         cBaseUrl: _baseUrl,
+        token: token,
       );
 
       final winnerModel =
@@ -81,12 +87,14 @@ class GetterRepository extends BaseRepo {
     @required String freq,
   }) async {
     try {
+      final token = await getBearerToken();
       final amountChipsResponse = await APIService.instance.getData(
         ApiPath.amountChips,
         cBaseUrl: _baseUrl,
         queryParams: {
           "freq": freq,
         },
+        token: token,
       );
 
       final amountChipsModel =
@@ -101,12 +109,14 @@ class GetterRepository extends BaseRepo {
 
   Future<ApiResponse<List<PromoCardModel>>> getPromoCards() async {
     try {
+      final token = await getBearerToken();
       final response = await APIService.instance.getData(
         ApiPath.kPromos,
         cBaseUrl: _baseUrl,
         queryParams: {
           "uid": userService.baseUser.uid,
         },
+        token: token,
       );
 
       final responseData = response["data"];

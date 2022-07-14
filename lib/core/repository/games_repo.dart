@@ -33,9 +33,11 @@ class GameRepo extends BaseRepo {
   Future<ApiResponse<GameModel>> getGameByCode(
       {@required String gameCode}) async {
     try {
+      final token = await getBearerToken();
       final response = await APIService.instance.getData(
         ApiPath.getGameByCode(gameCode),
         cBaseUrl: _baseUrl,
+        token: token,
       );
       final game = GameModel.fromMap(response["data"]);
       return ApiResponse<GameModel>(model: game, code: 200);

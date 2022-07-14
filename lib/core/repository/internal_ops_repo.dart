@@ -18,6 +18,7 @@ class InternalOpsRepository extends BaseRepo {
     String type,
     Map<String, dynamic> dMap,
   ) async {
+    final token = await getBearerToken();
     try {
       await APIService.instance.postData(
         ApiPath.failureReport,
@@ -26,6 +27,7 @@ class InternalOpsRepository extends BaseRepo {
           'report': dMap,
         },
         cBaseUrl: _baseUrl,
+        token: token,
       );
       return ApiResponse<bool>(model: true, code: 200);
     } catch (e) {
