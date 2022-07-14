@@ -10,6 +10,7 @@ import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -38,6 +39,7 @@ class LauncherViewModel extends BaseModel {
   final _analyticsService = locator<AnalyticsService>();
   final _userRepo = locator<UserRepository>();
   final _paytmService = locator<PaytmService>();
+  final _userCoinService = locator<UserCoinService>();
 
   //GETTERS
   bool get isSlowConnection => _isSlowConnection;
@@ -73,6 +75,7 @@ class LauncherViewModel extends BaseModel {
       }
 
       await userService.init();
+      await _userCoinService.init();
       await Future.wait([_baseUtil.init(), _fcmListener.setupFcm()]);
 
       userService.firebaseUser?.getIdToken()?.then(

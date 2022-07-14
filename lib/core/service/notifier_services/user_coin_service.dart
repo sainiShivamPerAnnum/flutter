@@ -15,6 +15,10 @@ class UserCoinService
 
   int get flcBalance => _flcBalance;
 
+  Future<void> init() async {
+    getUserCoinBalance();
+  }
+
   void setFlcBalance(int balance) {
     if (_flcBalance == null) {
       _flcBalance = balance;
@@ -29,6 +33,7 @@ class UserCoinService
   }
 
   Future<void> getUserCoinBalance() async {
+    _logger.d("FLC Balance called");
     final ApiResponse<FlcModel> response = await _userRepo.getCoinBalance();
     _logger.d(response.model?.toJson()?.toString());
     setFlcBalance(response.model?.flcBalance);

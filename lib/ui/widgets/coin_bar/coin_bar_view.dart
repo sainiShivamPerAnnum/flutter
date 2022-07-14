@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
@@ -17,57 +19,56 @@ import '../../../util/locator.dart';
 
 class FelloCoinBar extends StatelessWidget {
   final _analytics = locator<AnalyticsService>();
-
   FelloCoinBar();
 
   @override
   Widget build(BuildContext context) {
+    log("FLC build called");
     return BaseView<FelloCoinBarViewModel>(
-      onModelReady: (model) => model.getFlc(),
-      builder: (ctx, model, child) => model.state == ViewState.Busy
-          ? CircularProgressIndicator()
-          : GestureDetector(
-              onTap: () {
-                _analytics.track(
-                    eventName: AnalyticsEvents.addFLCTokensTopRight);
-                BaseUtil.openModalBottomSheet(
-                  addToScreenStack: true,
-                  backgroundColor: Colors.transparent,
-                  content: WantMoreTicketsModalSheet(),
-                  hapticVibrate: true,
-                  isBarrierDismissable: true,
-                );
-              },
-              child: Container(
-                height: SizeConfig.avatarRadius * 2,
-                width: SizeConfig.screenWidth * 0.258,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  color: Colors.white.withOpacity(0.4),
-                ),
-                child: model.isLoadingFlc
-                    ? SpinKitThreeBounce(
-                        size: SizeConfig.body2,
-                        color: Colors.white,
-                      )
-                    : Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          SvgPicture.asset(
-                            Assets.tokens,
-                            height: SizeConfig.iconSize1,
-                          ),
-                          CoinBalanceTextSE(),
-                          //  Text("200", style: TextStyles.body2.bold),
-                          Icon(
-                            Icons.add_circle,
-                            size: SizeConfig.iconSize1,
-                            color: UiConstants.primaryColor,
-                          ),
-                        ],
-                      ),
+      onModelReady: (model) {},
+      builder: (ctx, model, child) => GestureDetector(
+        onTap: () {
+          _analytics.track(eventName: AnalyticsEvents.addFLCTokensTopRight);
+          BaseUtil.openModalBottomSheet(
+            addToScreenStack: true,
+            backgroundColor: Colors.transparent,
+            content: WantMoreTicketsModalSheet(),
+            hapticVibrate: true,
+            isBarrierDismissable: true,
+          );
+        },
+        child: Container(
+          height: SizeConfig.avatarRadius * 2,
+          width: SizeConfig.screenWidth * 0.258,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(100),
+            color: Colors.white.withOpacity(0.4),
+          ),
+          child:
+              // model.isLoadingFlc
+              //     ? SpinKitThreeBounce(
+              //         size: SizeConfig.body2,
+              //         color: Colors.white,
+              //       )
+              //     :
+              Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              SvgPicture.asset(
+                Assets.tokens,
+                height: SizeConfig.iconSize1,
               ),
-            ),
+              CoinBalanceTextSE(),
+              //  Text("200", style: TextStyles.body2.bold),
+              Icon(
+                Icons.add_circle,
+                size: SizeConfig.iconSize1,
+                color: UiConstants.primaryColor,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
