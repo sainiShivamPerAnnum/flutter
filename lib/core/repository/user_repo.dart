@@ -254,9 +254,11 @@ class UserRepository extends BaseRepo {
 
   Future<ApiResponse<bool>> checkIfUserHasNewNotifications() async {
     try {
+      final token = await getBearerToken();
       final latestNotificationsResponse = await APIService.instance.getData(
         ApiPath.getLatestNotification(this.userService.baseUser.uid),
         cBaseUrl: _baseUrl,
+        token: token,
       );
 
       final List<AlertModel> notifications = AlertModel.helper.fromMapArray(
