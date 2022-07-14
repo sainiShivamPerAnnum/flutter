@@ -7,10 +7,11 @@ import 'package:flutter/cupertino.dart';
 
 import 'base_repo.dart';
 
-class SubcriptionRepo extends BaseRepo {
+class SubscriptionRepo extends BaseRepo {
   final _baseUrl = FlavorConfig.isDevelopment()
       ? "https://2je5zoqtuc.execute-api.ap-south-1.amazonaws.com/dev"
       : "";
+
   Future<ApiResponse<List<AutosaveTransactionModel>>> getAutosaveTransactions({
     @required String uid,
     String lastDocument,

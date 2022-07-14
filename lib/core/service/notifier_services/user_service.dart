@@ -8,6 +8,7 @@ import 'package:felloapp/core/service/api_cache_manager.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -254,7 +255,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   Future<void> getUserFundWalletData() async {
     if (baseUser != null) {
-      UserFundWallet temp = await _dbModel.getUserFundWallet(baseUser.uid);
+      UserFundWallet temp = (await _userRepo.getFundBalance()).model;
       if (temp == null)
         _compileUserWallet();
       else
@@ -328,5 +329,10 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     }
 
     return url.toString();
+  }
+
+  Future<bool> updateClientToken(String token) async {
+    ApiResponse<bool> response = await _userRepo.updateFcmToken(token: token);
+    return response.model;
   }
 }

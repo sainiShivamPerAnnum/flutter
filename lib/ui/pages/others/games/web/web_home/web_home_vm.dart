@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -5,8 +7,11 @@ import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
+import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
+import 'package:felloapp/core/repository/games_repo.dart';
+import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
@@ -32,9 +37,10 @@ class WebHomeViewModel extends BaseModel {
   final _analyticsService = locator<AnalyticsService>();
   final _prizeService = locator<PrizeService>();
   final _fclActionRepo = locator<FlcActionsRepo>();
-  final _userCoinService = locator<UserCoinService>();
+  final _userRepo = locator<UserRepository>();
   final _logger = locator<CustomLogger>();
   final _baseUtil = locator<BaseUtil>();
+  final _gameRepo = locator<GameRepo>();
 
   //Local Variables
 
@@ -42,6 +48,7 @@ class WebHomeViewModel extends BaseModel {
   int gameIndex = 0;
   double cardOpacity = 1;
   bool _isPrizesLoading = false;
+  bool _isGameLoading = false;
   String _currentGame;
   PageController pageController;
   ScrollController scrollController;
@@ -51,6 +58,7 @@ class WebHomeViewModel extends BaseModel {
   String _gameEndpoint;
   String token = "";
   String gameCode;
+  GameModel _currentGameModel;
 
   //Getters
   String get currentGame => this._currentGame;
@@ -59,6 +67,8 @@ class WebHomeViewModel extends BaseModel {
   int get getGameIndex => this.gameIndex;
   String get message => _message;
   String get sessionID => _sessionId;
+  GameModel get currentGameModel => _currentGameModel;
+  bool get isGameLoading => this._isGameLoading;
 
   //Setters
   set currentGame(value) {
@@ -71,8 +81,18 @@ class WebHomeViewModel extends BaseModel {
     notifyListeners();
   }
 
+  set currentGameModel(GameModel value) {
+    this._currentGameModel = value;
+    notifyListeners();
+  }
+
   set isPrizesLoading(value) {
     this._isPrizesLoading = value;
+    notifyListeners();
+  }
+
+  set isGameLoading(value) {
+    this._isGameLoading = value;
     notifyListeners();
   }
 
@@ -82,6 +102,7 @@ class WebHomeViewModel extends BaseModel {
     print(currentGame);
     scrollController = _lbService.parentController;
     pageController = new PageController(initialPage: 0);
+    fetchGame(game);
     refreshPrizes();
     refreshLeaderboard();
   }
@@ -162,7 +183,8 @@ class WebHomeViewModel extends BaseModel {
         initialUrl = _generatePoolClubGameUrl();
         break;
       case Constants.GAME_TYPE_CRICKET:
-        _analyticsService.track(eventName: AnalyticsEvents.startPlayingCricket);
+        _analyticsService.track(
+            eventName: AnalyticsEvents.cricketHeroGameStarts);
         initialUrl = _generateCricketGameUrl();
         break;
       case Constants.GAME_TYPE_FOOTBALL:
@@ -176,9 +198,9 @@ class WebHomeViewModel extends BaseModel {
         initialUrl = _generateCandyFiestaGameUrl();
         break;
     }
-    initialUrl = currentGame == Constants.GAME_TYPE_CRICKET
-        ? initialUrl
-        : initialUrl + "&token=$token";
+    // initialUrl = currentGame == Constants.GAME_TYPE_CRICKET
+    //     ? initialUrl
+    //     : initialUrl + "&token=$token";
     _logger.d("Game Url: $initialUrl");
     AppState.delegate.appState.currentAction = PageAction(
       state: PageState.addWidget,
@@ -186,10 +208,8 @@ class WebHomeViewModel extends BaseModel {
       widget: WebGameView(
         initialUrl: initialUrl,
         game: currentGame,
-        inLandscapeMode: currentGame == Constants.GAME_TYPE_POOLCLUB ||
-                (currentGame == Constants.GAME_TYPE_CRICKET)
-            ? true
-            : false,
+        inLandscapeMode:
+            currentGame == Constants.GAME_TYPE_POOLCLUB ? true : false,
       ),
     );
   }
@@ -197,36 +217,16 @@ class WebHomeViewModel extends BaseModel {
   //Cricket Methods -------------------------------------START----------------//
   Future<bool> _setupCricketGame() async {
     setState(ViewState.Busy);
-    String _cricPlayCost = BaseRemoteConfig.remoteConfig
+    String _cricketPlayCost = BaseRemoteConfig.remoteConfig
             .getString(BaseRemoteConfig.CRICKET_PLAY_COST) ??
         "10";
-    int _cost = -1 * int.tryParse(_cricPlayCost) ?? 10;
-    ApiResponse<FlcModel> _flcResponse =
-        await _fclActionRepo.substractFlc(_cost);
-    _message = _flcResponse.model.message;
-    if (_flcResponse.model.flcBalance != null) {
-      _userCoinService.setFlcBalance(_flcResponse.model.flcBalance);
-    } else {
-      _logger.d("Flc balance is null");
-    }
-
-    if (_flcResponse.model.sessionId != null) {
-      _sessionId = _flcResponse.model.sessionId;
-    } else {
-      _logger.d("sessionId null");
-    }
-
-    if (_flcResponse.model.gameEndpoint != null) {
-      _gameEndpoint = _flcResponse.model.gameEndpoint;
-    } else {
-      _logger.d("gameEndpoint null");
-    }
-
-    if (_flcResponse.model.canUserPlay) {
-      setState(ViewState.Idle);
+    int _cost = int.tryParse(_cricketPlayCost) ?? 10;
+    ApiResponse<FlcModel> _flcResponse = await _userRepo.getCoinBalance();
+    setState(ViewState.Idle);
+    if (_flcResponse.model.flcBalance != null &&
+        _flcResponse.model.flcBalance >= _cost)
       return true;
-    } else {
-      setState(ViewState.Idle);
+    else {
       return false;
     }
   }
@@ -234,12 +234,13 @@ class WebHomeViewModel extends BaseModel {
   // add function for football to check game cost
 
   String _generateCricketGameUrl() {
-    return _gameEndpoint != null
-        ? _gameEndpoint
-        : '${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.CRICKET_GAME_URI)}?userId=${_userService.baseUser.uid}&userName=${_userService.baseUser.username}&sessionId=$_sessionId&stage=${FlavorConfig.getStage()}&gameId=cric2020';
+    String _cricketUri = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.CRICKET_GAME_URI);
+    String _loadUri =
+        "$_cricketUri?user=${_userService.baseUser.uid}&name=${_userService.baseUser.username}";
+    if (FlavorConfig.isDevelopment()) _loadUri = "$_loadUri&dev=true";
+    return _loadUri;
   }
-
-  //Cricket Methods -----------------------------------END--------------------//
 
   //FootBall Methods --------------------------------START--------------------//
   Future<bool> _setupFootBallGame() async {
@@ -248,7 +249,7 @@ class WebHomeViewModel extends BaseModel {
             .getString(BaseRemoteConfig.FOOTBALL_PLAY_COST) ??
         "10";
     int _cost = int.tryParse(_footballPlayCost) ?? 10;
-    ApiResponse<FlcModel> _flcResponse = await _fclActionRepo.getCoinBalance();
+    ApiResponse<FlcModel> _flcResponse = await _userRepo.getCoinBalance();
     setState(ViewState.Idle);
     if (_flcResponse.model.flcBalance != null &&
         _flcResponse.model.flcBalance >= _cost)
@@ -276,7 +277,7 @@ class WebHomeViewModel extends BaseModel {
             .getString(BaseRemoteConfig.CANDYFIESTA_PLAY_COST) ??
         "10";
     int _cost = int.tryParse(_candyFiestaCost) ?? 10;
-    ApiResponse<FlcModel> _flcResponse = await _fclActionRepo.getCoinBalance();
+    ApiResponse<FlcModel> _flcResponse = await _userRepo.getCoinBalance();
     setState(ViewState.Idle);
     if (_flcResponse.model.flcBalance != null &&
         _flcResponse.model.flcBalance >= _cost)
@@ -304,7 +305,7 @@ class WebHomeViewModel extends BaseModel {
             .getString(BaseRemoteConfig.POOLCLUB_PLAY_COST) ??
         "10";
     int _cost = int.tryParse(_poolPlayCost) ?? 10;
-    ApiResponse<FlcModel> _flcResponse = await _fclActionRepo.getCoinBalance();
+    ApiResponse<FlcModel> _flcResponse = await _userRepo.getCoinBalance();
     setState(ViewState.Idle);
     if (_flcResponse.model.flcBalance != null &&
         _flcResponse.model.flcBalance >= _cost)
@@ -390,5 +391,20 @@ class WebHomeViewModel extends BaseModel {
 
   refreshLeaderboard() async {
     await _lbService.fetchWebGameLeaderBoard(game: currentGame);
+  }
+
+  fetchGame(String game) async {
+    isGameLoading = true;
+    currentGameModel = BaseUtil.gamesList
+        .firstWhere((element) => element.gameCode == game, orElse: null);
+
+    if (currentGameModel == null) {
+      ApiResponse<GameModel> response =
+          await _gameRepo.getGameByCode(gameCode: game);
+      if (response.code == 200) {
+        currentGameModel = response.model;
+      }
+    }
+    isGameLoading = false;
   }
 }

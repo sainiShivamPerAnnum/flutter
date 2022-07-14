@@ -8,7 +8,6 @@ class ApiPath {
   //felloCoins Apis
   get kSubstractFlcPreGameApi =>
       "/felloCoins/$stage/api/felloCoin/updateWallet/preGame";
-  get kGetCoinBalance => "/felloCoins/$stage/api/felloCoin/balance";
 
   //userFinanceV2Ops Apis
   get kCreateTranId => "/userFinanceV2Ops/$stage/api/transaction/id";
@@ -34,19 +33,21 @@ class ApiPath {
   get kVerifyPan => "/userOps/api/v3/verifyPan";
   get kCustomAuthToken => "/userOps/api/v3/trucallerAuthToken";
   static const acquisitionTracking = "/userOps/api/v3/opt-analytics";
-  static String getUserIdByRefCode(String code) => "/referral/$code";
-  static String getReferralCode(String uid) => "/user/referral/$uid";
-  static String getLatestNotication(String uid) =>
-      "/user/$uid/notification/latest";
-  static String getNotications(uid) => "/user/$uid/notifications";
+  static const String updateFcm = '/fcm/client_token';
+  static String getAugmontDetail(String uid) => "/user/$uid/augmont";
+  static String kGetUserById(String id) => "/$id";
+  static String getLatestNotification(String uid) =>
+      "/user/$uid/notifications/latest";
+  static String getNotifications(uid) => "/user/$uid/notifications";
   static const kDeviceId = "/device";
+  static String getCoinBalance(uid) => "/$uid/wallet/coin";
+  static String getFundBalance(uid) => "/$uid/wallet/fund";
 
   //GT Rewards
   get kRedeemGtReward => "/gtRewardsOps/$stage/v2/api/redeemGtReward";
 
   //Fello Coupons
-  get kFelloCoupons => "/$stage/eligible";
-  //"/felloCoupons/$stage/api/eligible";
+  static const kFelloCoupons = "/eligible";
 
   //DeviceInfo
   get kSetUserDeviceId => "/setUserDeviceId";
@@ -74,31 +75,36 @@ class ApiPath {
   static String getMilestone(String uid) => "/user/$uid/milestones";
   static const String prizes = '/prizes';
 
-  //User Ops Apis
-  static String getAugmontDetail(String uid) => "/user/$uid/augmont";
-  static String kGetUserById(String id) => "/$id";
   // Payment Apis
   static String getWithdrawableGoldQuantity(String uid) =>
       "/user/$uid/gold/withdrawable";
 
   // Getter Apis
   static const String statistics = '/statistics';
-  static String getwinner(String type, String freq) =>
+  static String getWinners(String type, String freq) =>
       "/leaderboard/type/$type/freq/$freq";
+
   static String pastWinners(String type, String freq) =>
       "/leaderboard/past/type/$type/freq/$freq";
-  static String amountChips = "/amount/chips/";
-  static const String kPromos = "/promos";
+
+  static const String amountChips = "/amount/chips/";
 
   // Internal Ops
-  static String failureReport = '/fail/report/';
+  static const String failureReport = '/fail/report/';
+
+  /// Subcription Apis
+  static String getTransaction(String uid) => "/user/$uid/transactions";
+  static const String kPromos = "/promos";
 
   //Game Apis
   static const String getGames = "/games";
 
   // Coupon Apis
   static const String getCoupons = "/coupons";
+  static String getGameByCode(String gameCode) => "/game/$gameCode";
 
-  /// Subcription Apis
-  static String getTransaction(String uid) => "/user/$uid/transactions";
+  // referral
+  static String getUserIdByRefCode(String code) => "/referral/$code";
+  static String getReferralCode(String uid) => "/user/referral/$uid";
+  static String getReferralHistory(String uid) => "/referrals/$uid";
 }

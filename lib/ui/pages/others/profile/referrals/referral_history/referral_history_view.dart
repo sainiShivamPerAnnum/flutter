@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
@@ -37,11 +38,12 @@ class _ReferralHistoryViewState extends State<ReferralHistoryView> {
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
+    final _referralRepo = locator<ReferralRepo>();
 
     if (!baseProvider.referralsFetched) {
-      dbProvider.getUserReferrals(_userService.baseUser.uid).then((refList) {
+      _referralRepo.getReferralHistory().then((refHisModel) {
         baseProvider.referralsFetched = true;
-        baseProvider.userReferralsList = refList ?? [];
+        baseProvider.userReferralsList = refHisModel.model ?? [];
         setState(() {});
       });
     }

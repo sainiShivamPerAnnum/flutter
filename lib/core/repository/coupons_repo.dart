@@ -13,7 +13,6 @@ class CouponRepository {
   final _logger = locator<CustomLogger>();
   final _userService = locator<UserService>();
   final _rsaEncryption = new RSAEncryption();
-  final _apiPaths = locator<ApiPath>();
   final String _baseUrl = FlavorConfig.isDevelopment()
       ? "https://z8gkfckos5.execute-api.ap-south-1.amazonaws.com/dev"
       : "https://mwl33qq6sd.execute-api.ap-south-1.amazonaws.com";
@@ -48,7 +47,7 @@ class CouponRepository {
         _logger.e("Encrypter initialization failed!! exiting method");
       }
       final res = await APIService.instance.postData(
-        _apiPaths.kFelloCoupons,
+        ApiPath.kFelloCoupons,
         body: _body,
         token: _bearer,
         cBaseUrl: _baseUrl,

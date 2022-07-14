@@ -5,7 +5,6 @@ import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/date_helper.dart';
-import 'package:flutter/cupertino.dart';
 
 import '../../util/flavor_config.dart';
 import '../constants/cache_keys.dart';

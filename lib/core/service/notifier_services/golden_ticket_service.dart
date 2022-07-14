@@ -63,7 +63,7 @@ class GoldenTicketService extends ChangeNotifier {
         goldenTicketId: goldenTicketId,
       );
 
-      if (ticketResponse.code == 200 && isGTValid(currentGT)) {
+      if (ticketResponse.code == 200 && isGTValid(ticketResponse.model)) {
         currentGT = ticketResponse.model;
         goldenTicketId = null;
         return true;

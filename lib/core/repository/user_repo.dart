@@ -2,8 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/model/fundbalance_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
+import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/core/service/api.dart';
@@ -124,16 +126,45 @@ class UserRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse> getFundBalance(
-    String userUid,
-  ) async {
+  Future<ApiResponse<UserFundWallet>> getFundBalance() async {
     try {
-      final DocumentSnapshot response = await _api.getUserFundBalance(userUid);
-      logger.d(response.data().toString());
+      final uid = userService.baseUser.uid;
+      final token = await getBearerToken();
+
+      final res = await APIService.instance.getData(
+        ApiPath.getFundBalance(uid),
+        token: token,
+        cBaseUrl: _baseUrl,
+      );
+      logger.d('fund balance $res');
+
       return ApiResponse(
-          model: FundBalanceModel.fromMap(response.data()), code: 200);
+        model: UserFundWallet.fromMap(res['data']),
+        code: 200,
+      );
     } catch (e) {
-      logger.e(e);
+      logger.e('fund balance $e');
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<FlcModel>> getCoinBalance() async {
+    try {
+      final uid = userService.baseUser.uid;
+      final token = await getBearerToken();
+
+      final res = await APIService.instance.getData(
+        ApiPath.getCoinBalance(uid),
+        token: token,
+        cBaseUrl: _baseUrl,
+      );
+
+      return ApiResponse(
+        model: FlcModel.fromMap(res['data']),
+        code: 200,
+      );
+    } catch (e) {
+      logger.e('coin balance $e');
       return ApiResponse.withError(e.toString(), 400);
     }
   }
@@ -147,8 +178,9 @@ class UserRepository extends BaseRepo {
 
       if (_querySnapshot.docs.length != 0) {
         _querySnapshot.docs.forEach((element) {
-          _userPrizeTransactions
-              .add(UserTransaction.fromMap(element.data(), element.id));
+          _userPrizeTransactions.add(
+            UserTransaction.fromMap(element.data(), element.id),
+          );
         });
         logger.d(
             "User prize transaction successfully fetched: ${_userPrizeTransactions.first.toJson().toString()}");
@@ -217,7 +249,7 @@ class UserRepository extends BaseRepo {
   Future<ApiResponse<bool>> checkIfUserHasNewNotifications() async {
     try {
       final latestNotificationsResponse = await APIService.instance.getData(
-        ApiPath.getLatestNotication(this.userService.baseUser.uid),
+        ApiPath.getLatestNotification(this.userService.baseUser.uid),
         cBaseUrl: _baseUrl,
       );
 
@@ -255,7 +287,7 @@ class UserRepository extends BaseRepo {
   ) async {
     try {
       final userNotifications = await APIService.instance.getData(
-        ApiPath.getNotications(this.userService.baseUser.uid),
+        ApiPath.getNotifications(this.userService.baseUser.uid),
         cBaseUrl: _baseUrl,
         queryParams: {
           "lastDocId": lastDocId,
@@ -291,7 +323,30 @@ class UserRepository extends BaseRepo {
     } catch (e) {
       logger.e(e);
       return ApiResponse.withError(
-        "Unable to fetch user notifications",
+        "Unable to update user",
+        400,
+      );
+    }
+  }
+
+  Future<ApiResponse<bool>> updateFcmToken({
+    @required String token,
+  }) async {
+    try {
+      await APIService.instance.postData(
+        ApiPath.updateFcm,
+        body: {
+          "userId": userService.baseUser.uid,
+          "token": token,
+        },
+        cBaseUrl: _baseUrl,
+      );
+
+      return ApiResponse<bool>(model: true, code: 200);
+    } catch (e) {
+      logger.e(e);
+      return ApiResponse.withError(
+        "Unable to update fcm",
         400,
       );
     }

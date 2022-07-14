@@ -56,8 +56,9 @@ class FcmHandler extends ChangeNotifier {
               .fcmTransactionResponseUpdate(data['payload']);
 
           break;
-        case FcmCommands.COMMAND_CRIC_GAME_END:
-          _webGameViewModel.endWebGame(data, Constants.GAME_TYPE_CRICKET);
+        case FcmCommands.COMMAND_CRICKET_HERO_GAME_END:
+          _webGameViewModel.handleCricketHeroRoundEnd(
+              data, Constants.GAME_TYPE_CRICKET);
           break;
         case FcmCommands.COMMAND_POOL_CLUB_GAME_END:
           _webGameViewModel.handlePoolClubRoundEnd(

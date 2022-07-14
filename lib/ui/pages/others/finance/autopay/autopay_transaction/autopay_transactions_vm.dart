@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 
 class AutosaveTransactionsViewModel extends BaseModel {
   final _userService = locator<UserService>();
-  final _subcriptionRepo = locator<SubcriptionRepo>();
+  final _subcriptionRepo = locator<SubscriptionRepo>();
   final _paytmService = locator<PaytmService>();
 
   String lastDocId;

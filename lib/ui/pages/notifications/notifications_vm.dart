@@ -58,7 +58,7 @@ class NotificationsViewModel extends BaseModel {
 
     ApiResponse<List<AlertModel>> userNotifications =
         await _userRepo.getUserNotifications(
-      _userService.baseUser.uid,
+      lastAlertDocumentId,
     );
     if (userNotifications.code == 200) {
       _logger.d("no of alerts fetched: ${userNotifications.model.length}");

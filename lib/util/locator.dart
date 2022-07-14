@@ -25,7 +25,6 @@ import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
 import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/api_cache_manager.dart';
-import 'package:felloapp/core/service/campaigns_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
@@ -124,7 +123,6 @@ void setupLocator() {
   locator.registerLazySingleton(() => WinnerService());
   locator.registerLazySingleton(() => LeaderboardService());
   locator.registerLazySingleton(() => GoldenTicketService());
-  locator.registerLazySingleton(() => CampaignService());
 
   //Repository
   locator.registerLazySingleton(() => DBModel());
@@ -144,7 +142,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => PaymentRepository());
   locator.registerLazySingleton(() => GetterRepository());
   locator.registerLazySingleton(() => InternalOpsRepository());
-  locator.registerLazySingleton(() => SubcriptionRepo());
+  locator.registerLazySingleton(() => SubscriptionRepo());
   locator.registerLazySingleton(() => GameRepo());
 
   // SPLASH

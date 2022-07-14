@@ -58,7 +58,7 @@ class ScoreBoard {
       timestamp: TimestampModel.fromMap(map['timestamp']),
       userid: map['userid'] ?? '',
       username: map['username'] ?? '',
-      score: map['score'] ?? 0,
+      score: (map['score'] ?? 0).toDouble(),
       gameDuration: map['gameDuration'] ?? 0,
       refCount: map['refCount'] ?? 0,
     );

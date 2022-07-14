@@ -27,7 +27,7 @@ class UserAutosaveDetailsViewModel extends BaseModel {
   final _paytmService = locator<PaytmService>();
   final _logger = locator<CustomLogger>();
   final _analyticsService = locator<AnalyticsService>();
-  final _subcriptionRepo = locator<SubcriptionRepo>();
+  final _subcriptionRepo = locator<SubscriptionRepo>();
 
   ActiveSubscriptionModel _activeSubscription;
   List<AutosaveTransactionModel> _filteredList;

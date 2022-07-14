@@ -3,12 +3,10 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
-import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/faq_model.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
-import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/credentials_stage.dart';
@@ -27,20 +25,6 @@ class DBModel extends ChangeNotifier {
   final Log log = new Log("DBModel");
   final FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.instance;
   final logger = locator<CustomLogger>();
-
-  Future<bool> updateClientToken(BaseUser user, String token) async {
-    try {
-      //String id = user.mobile;
-      String id = user.uid;
-      var dMap = {'token': token, 'timestamp': Timestamp.now()};
-      logger.i("CALLING: updateUserClientToken");
-      await _api.updateUserClientToken(id, dMap);
-      return true;
-    } catch (e) {
-      log.error("Failed to update User Client Token: " + e.toString());
-      return false;
-    }
-  }
 
   //////////////////BASE USER//////////////////////////
 
@@ -293,19 +277,6 @@ class DBModel extends ChangeNotifier {
     } catch (e) {
       log.error(e.toString());
       return false;
-    }
-  }
-
-  //////////////////////USER FUNDS BALANCING////////////////////////////////////////
-
-  Future<UserFundWallet> getUserFundWallet(String id) async {
-    try {
-      logger.i("CALLING: getUserFundWalletDocById");
-      var doc = await _api.getUserFundWalletDocById(id);
-      return UserFundWallet.fromMap(doc.data());
-    } catch (e) {
-      log.error("Error fetch UserFundWallet failed: $e");
-      return null;
     }
   }
 

@@ -133,7 +133,8 @@ class LeaderBoardView extends StatelessWidget {
                                 height: SizeConfig.iconSize3),
                           ),
                           label: Text(
-                              model.scoreboard[i].score.toString() ?? "00",
+                              model.scoreboard[i].score.toInt().toString() ??
+                                  "00",
                               style: TextStyles.body3.colour(Colors.black54)),
                           onPressed: () {}),
                     ],

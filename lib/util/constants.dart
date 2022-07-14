@@ -6,7 +6,7 @@ class Constants {
 
   static const String GAME_TYPE_CANDYFIESTA = "GM_CANDY_FIESTA";
   static const String GAME_TYPE_FOOTBALL = "GM_FOOTBALL_KICKOFF";
-  static const String GAME_TYPE_CRICKET = "GM_CRIC2020";
+  static const String GAME_TYPE_CRICKET = "GM_CRICKET_HERO";
   static const String GAME_TYPE_TAMBOLA = "GM_TAMBOLA2020";
   static const String GAME_TYPE_POOLCLUB = "GM_POOL_CLUB";
   static const String GAME_TYPE_HIGHEST_SAVER = "HIGHEST_SAVER";
