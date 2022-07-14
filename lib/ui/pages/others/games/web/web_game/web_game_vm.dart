@@ -255,7 +255,6 @@ class WebGameViewModel extends BaseModel {
   }
 
   //helper
-
   updateFlcBalance() async {
     ApiResponse<FlcModel> _flcResponse = await _fclActionRepo.getCoinBalance();
     if (_flcResponse.model.flcBalance != null) {
