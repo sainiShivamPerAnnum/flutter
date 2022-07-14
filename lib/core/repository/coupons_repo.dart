@@ -64,9 +64,11 @@ class CouponRepository {
 
   Future<ApiResponse<List<CouponModel>>> getCoupons() async {
     try {
+      final token = await _getBearerToken();
       final couponResponse = await APIService.instance.getData(
         ApiPath.getCoupons,
         cBaseUrl: _baseUrl,
+        token: token,
       );
       final List<CouponModel> coupons =
           CouponModel.helper.fromMapArray(couponResponse['data']);

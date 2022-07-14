@@ -18,6 +18,7 @@ class SubscriptionRepo extends BaseRepo {
     int limit,
   }) async {
     try {
+      final String token = await getBearerToken();
       final res = await APIService.instance.getData(
         ApiPath.getTransaction(uid),
         cBaseUrl: _baseUrl,
@@ -25,6 +26,7 @@ class SubscriptionRepo extends BaseRepo {
           "lastDocId": lastDocument,
           "limit": limit.toString(),
         },
+        token: token,
       );
 
       final result = AutosaveTransactionModel.helper.fromMapArray(res['data']);

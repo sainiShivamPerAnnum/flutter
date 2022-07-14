@@ -11,11 +11,13 @@ class PaymentRepository extends BaseRepo {
 
   Future<ApiResponse<double>> getNonWithdrawableAugGoldQuantity() async {
     try {
+      final token = await getBearerToken();
       final quntityResponse = await APIService.instance.getData(
         ApiPath.getWithdrawableGoldQuantity(
           this.userService.baseUser.uid,
         ),
         cBaseUrl: _baseUrl,
+        token: token,
       );
 
       final quantity = quntityResponse["data"]["quantity"];
