@@ -81,6 +81,7 @@ class ReferralDetailsViewModel extends BaseModel {
       final link = await _appFlyer.inviteLink();
       if (link['status'] == 'success') {
         url = link['payload']['userInviteUrl'];
+        if (url == null) url = link['payload']['userInviteURL'];
       }
       _logger.d('appflyer invite link as $url');
     } catch (e) {
