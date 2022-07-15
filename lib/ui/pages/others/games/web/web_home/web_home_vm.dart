@@ -1,9 +1,6 @@
-import 'dart:developer';
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
@@ -13,10 +10,8 @@ import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/prize_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -102,7 +97,7 @@ class WebHomeViewModel extends BaseModel {
     print(currentGame);
     scrollController = _lbService.parentController;
     pageController = new PageController(initialPage: 0);
-    fetchGame(game);
+    await fetchGame(game);
     refreshPrizes();
     refreshLeaderboard();
   }
@@ -154,23 +149,7 @@ class WebHomeViewModel extends BaseModel {
   Future<bool> setupGame() async {
     await getBearerToken();
     _baseUtil.cacheGameorder(gameCode);
-
-    switch (currentGame) {
-      case Constants.GAME_TYPE_POOLCLUB:
-        return _setupPoolClubGame();
-        break;
-      case Constants.GAME_TYPE_CRICKET:
-        return _setupCricketGame();
-        break;
-      case Constants.GAME_TYPE_FOOTBALL:
-        return _setupFootBallGame();
-        break;
-      case Constants.GAME_TYPE_CANDYFIESTA:
-        return _setupCandyFiestaGame();
-        break;
-      default:
-        return false;
-    }
+    return _setupCurrentGame();
   }
 
   launchGame() {
@@ -180,27 +159,22 @@ class WebHomeViewModel extends BaseModel {
     switch (currentGame) {
       case Constants.GAME_TYPE_POOLCLUB:
         _analyticsService.track(eventName: AnalyticsEvents.poolClubStarts);
-        initialUrl = _generatePoolClubGameUrl();
+
         break;
       case Constants.GAME_TYPE_CRICKET:
         _analyticsService.track(
             eventName: AnalyticsEvents.cricketHeroGameStarts);
-        initialUrl = _generateCricketGameUrl();
         break;
       case Constants.GAME_TYPE_FOOTBALL:
         _analyticsService.track(
             eventName: AnalyticsEvents.startPlayingFootball);
-        initialUrl = _generateFootBallGameUrl();
         break;
       case Constants.GAME_TYPE_CANDYFIESTA:
         _analyticsService.track(
             eventName: AnalyticsEvents.startPlayingCandyFiesta);
-        initialUrl = _generateCandyFiestaGameUrl();
         break;
     }
-    // initialUrl = currentGame == Constants.GAME_TYPE_CRICKET
-    //     ? initialUrl
-    //     : initialUrl + "&token=$token";
+    initialUrl = generateGameUrl();
     _logger.d("Game Url: $initialUrl");
     AppState.delegate.appState.currentAction = PageAction(
       state: PageState.addWidget,
@@ -214,105 +188,25 @@ class WebHomeViewModel extends BaseModel {
     );
   }
 
-  //Cricket Methods -------------------------------------START----------------//
-  Future<bool> _setupCricketGame() async {
+  Future<bool> _setupCurrentGame() async {
     setState(ViewState.Busy);
-    String _cricketPlayCost = BaseRemoteConfig.remoteConfig
-            .getString(BaseRemoteConfig.CRICKET_PLAY_COST) ??
-        "10";
-    int _cost = int.tryParse(_cricketPlayCost) ?? 10;
+    int _playCost = currentGameModel.playCost;
     ApiResponse<FlcModel> _flcResponse = await _userRepo.getCoinBalance();
     setState(ViewState.Idle);
     if (_flcResponse.model.flcBalance != null &&
-        _flcResponse.model.flcBalance >= _cost)
+        _flcResponse.model.flcBalance >= _playCost)
       return true;
     else {
       return false;
     }
   }
 
-  // add function for football to check game cost
-
-  String _generateCricketGameUrl() {
-    String _cricketUri = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.CRICKET_GAME_URI);
+  generateGameUrl() {
+    String _uri = currentGameModel.gameUri;
     String _loadUri =
-        "$_cricketUri?user=${_userService.baseUser.uid}&name=${_userService.baseUser.username}";
+        "$_uri?user=${_userService.baseUser.uid}&name=${_userService.baseUser.username}";
     if (FlavorConfig.isDevelopment()) _loadUri = "$_loadUri&dev=true";
     return _loadUri;
-  }
-
-  //FootBall Methods --------------------------------START--------------------//
-  Future<bool> _setupFootBallGame() async {
-    setState(ViewState.Busy);
-    String _footballPlayCost = BaseRemoteConfig.remoteConfig
-            .getString(BaseRemoteConfig.FOOTBALL_PLAY_COST) ??
-        "10";
-    int _cost = int.tryParse(_footballPlayCost) ?? 10;
-    ApiResponse<FlcModel> _flcResponse = await _userRepo.getCoinBalance();
-    setState(ViewState.Idle);
-    if (_flcResponse.model.flcBalance != null &&
-        _flcResponse.model.flcBalance >= _cost)
-      return true;
-    else {
-      return false;
-    }
-  }
-
-  String _generateFootBallGameUrl() {
-    String _footBallUri = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.FOOTBALL_GAME_URI);
-    String _loadUri =
-        "$_footBallUri?user=${_userService.baseUser.uid}&name=${_userService.baseUser.username}";
-    if (FlavorConfig.isDevelopment()) _loadUri = "$_loadUri&dev=true";
-    return _loadUri;
-  }
-
-  //FootBall Methods -----------------------------------END-------------------//
-
-  //CandyFiesta Methods --------------------------------START--------------------//
-  Future<bool> _setupCandyFiestaGame() async {
-    setState(ViewState.Busy);
-    String _candyFiestaCost = BaseRemoteConfig.remoteConfig
-            .getString(BaseRemoteConfig.CANDYFIESTA_PLAY_COST) ??
-        "10";
-    int _cost = int.tryParse(_candyFiestaCost) ?? 10;
-    ApiResponse<FlcModel> _flcResponse = await _userRepo.getCoinBalance();
-    setState(ViewState.Idle);
-    if (_flcResponse.model.flcBalance != null &&
-        _flcResponse.model.flcBalance >= _cost)
-      return true;
-    else {
-      return false;
-    }
-  }
-
-  String _generateCandyFiestaGameUrl() {
-    String _candyFiestaUri = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.CANDYFIESTA_GAME_URI);
-    String _loadUri =
-        "$_candyFiestaUri?user=${_userService.baseUser.uid}&name=${_userService.baseUser.username}";
-    if (FlavorConfig.isDevelopment()) _loadUri = "$_loadUri&dev=true";
-    return _loadUri;
-  }
-
-  //CandyFiesta Methods -----------------------------------END-------------------//
-
-  //PoolClub Methods --------------------------------START--------------------//
-  Future<bool> _setupPoolClubGame() async {
-    setState(ViewState.Busy);
-    String _poolPlayCost = BaseRemoteConfig.remoteConfig
-            .getString(BaseRemoteConfig.POOLCLUB_PLAY_COST) ??
-        "10";
-    int _cost = int.tryParse(_poolPlayCost) ?? 10;
-    ApiResponse<FlcModel> _flcResponse = await _userRepo.getCoinBalance();
-    setState(ViewState.Idle);
-    if (_flcResponse.model.flcBalance != null &&
-        _flcResponse.model.flcBalance >= _cost)
-      return true;
-    else {
-      return false;
-    }
   }
 
   getPromo() {
@@ -341,17 +235,6 @@ class WebHomeViewModel extends BaseModel {
         return null;
     }
   }
-
-  String _generatePoolClubGameUrl() {
-    String _poolClubUri = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.POOLCLUB_GAME_URI);
-    String _loadUri =
-        "$_poolClubUri?user=${_userService.baseUser.uid}&name=${_userService.baseUser.username}";
-    if (FlavorConfig.isDevelopment()) _loadUri = "$_loadUri&dev=true";
-    return _loadUri;
-  }
-
-  //PoolClub Methods -----------------------------------END-------------------//
 
   //Main Methods
   udpateCardOpacity() {

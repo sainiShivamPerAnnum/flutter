@@ -11,6 +11,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 class GameModel {
   final String id;
   final String route;
+  final String gameUri;
   final int playCost;
   final Color shadowColor;
   final String event;
@@ -30,6 +31,7 @@ class GameModel {
   GameModel({
     this.id,
     this.gameName,
+    this.gameUri,
     this.thumbnailUri,
     this.playCost,
     this.prizeAmount,
@@ -47,6 +49,7 @@ class GameModel {
   GameModel copyWith({
     String gameName,
     String tag,
+    String gameUri,
     String thumbnailUri,
     PageConfiguration pageConfig,
     String playCost,
@@ -59,6 +62,7 @@ class GameModel {
   }) {
     return GameModel(
       id: id ?? this.id,
+      gameUri: gameUri ?? this.gameUri,
       gameName: gameName ?? this.gameName,
       thumbnailUri: thumbnailUri ?? this.thumbnailUri,
       playCost: playCost ?? this.playCost,
@@ -79,6 +83,7 @@ class GameModel {
     return <String, dynamic>{
       'id': id,
       'gameName': gameName,
+      'gameUri': gameUri,
       'thumbnailUri': thumbnailUri,
       'playCost': playCost,
       'prizeAmount': prizeAmount,
@@ -100,6 +105,7 @@ class GameModel {
     return GameModel(
       id: map['id'],
       gameName: map['gameName'],
+      gameUri: map['gameUri'],
       thumbnailUri: map['thumbnailUri'],
       playCost: map['playCost'],
       prizeAmount: map['prizeAmount'],
@@ -123,7 +129,7 @@ class GameModel {
 
   @override
   String toString() {
-    return 'GameModel(id: $id, gameName: $gameName, thumbnailUri: $thumbnailUri, playCost: $playCost, prizeAmount: $prizeAmount, shadowColor: $shadowColor, route: $route, event: $event, isGOW: $isGOW, order: $order, isTrending: $isTrending, gameCode: $gameCode, code: $code, analyticEvent: $analyticEvent)';
+    return 'GameModel(id: $id, gameUri: $gameUri gameName: $gameName, thumbnailUri: $thumbnailUri, playCost: $playCost, prizeAmount: $prizeAmount, shadowColor: $shadowColor, route: $route, event: $event, isGOW: $isGOW, order: $order, isTrending: $isTrending, gameCode: $gameCode, code: $code, analyticEvent: $analyticEvent)';
   }
 
   @override
