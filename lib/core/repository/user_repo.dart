@@ -95,7 +95,7 @@ class UserRepository extends BaseRepo {
                 token: token,
               ), (dynamic res) {
         try {
-          if (res['data'] != null && res['data'].isNotEmpty) {
+          if (res != null && res['data'] != null && res['data'].isNotEmpty) {
             final _user = BaseUser.fromMap(res["data"], id);
             return ApiResponse<BaseUser>(model: _user, code: 200);
           } else
@@ -110,6 +110,7 @@ class UserRepository extends BaseRepo {
         }
       });
     } catch (e) {
+      logger.d(e.toString());
       return ApiResponse.withError("Unable to get user", 400);
     }
   }

@@ -145,8 +145,10 @@ class AugmontGoldSellViewModel extends BaseModel {
           userFundWallet.augGoldQuantity <= 0.0)
         nonWithdrawableQnt = 0.0;
       else
-        nonWithdrawableQnt =
-            math.max(0.0, userFundWallet.augGoldQuantity - withdrawableQnt);
+        nonWithdrawableQnt = BaseUtil.digitPrecision(
+            math.max(0.0, userFundWallet.augGoldQuantity - withdrawableQnt),
+            4,
+            false);
     } else {
       nonWithdrawableQnt = 0.0;
       withdrawableQnt = 0.0;

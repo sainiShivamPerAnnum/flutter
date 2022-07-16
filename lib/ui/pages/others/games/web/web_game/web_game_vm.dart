@@ -145,7 +145,7 @@ class WebGameViewModel extends BaseModel {
     if (GoldenTicketService.gameEndMsgText != null &&
         GoldenTicketService.gameEndMsgText.isNotEmpty) {
       _logger.d("Showing game end message");
-      Future.delayed(duration ?? Duration(seconds: 1), () {
+      Future.delayed(duration ?? Duration(milliseconds: 500), () {
         BaseUtil.openDialog(
           addToScreenStack: true,
           isBarrierDismissable: false,

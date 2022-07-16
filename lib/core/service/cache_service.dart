@@ -70,8 +70,9 @@ class CacheService {
     final response = await apiReq();
     final res = parseData(response);
 
-    if (response != null && response['data'].isNotEmpty)
-      await writeMap(key, ttl, response);
+    if (response != null &&
+        response['data'] != null &&
+        response['data'].isNotEmpty) await writeMap(key, ttl, response);
 
     return res;
   }
