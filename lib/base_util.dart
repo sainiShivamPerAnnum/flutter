@@ -243,6 +243,8 @@ class BaseUtil extends ChangeNotifier {
           gameName: "Football",
           route: "/footballHome",
           code: 'FO',
+          gameUri:
+              "https://d2qfyj2eqvh06a.cloudfront.net/football-kickoff/index.html",
           gameCode: Constants.GAME_TYPE_FOOTBALL,
           shadowColor: Color(0xff4B489E),
           thumbnailUri: BaseRemoteConfig.remoteConfig
@@ -255,6 +257,8 @@ class BaseUtil extends ChangeNotifier {
           gameName: "Cricket",
           route: "/cricketHome",
           code: 'CR',
+          gameUri:
+              "https://d2qfyj2eqvh06a.cloudfront.net/cricket-hero/index.html",
           gameCode: Constants.GAME_TYPE_CRICKET,
           shadowColor: Color(0xff4B489E),
           thumbnailUri: BaseRemoteConfig.remoteConfig
@@ -267,6 +271,7 @@ class BaseUtil extends ChangeNotifier {
           gameName: "Pool Club",
           route: "/poolHome",
           code: 'PO',
+          gameUri: "https://d2qfyj2eqvh06a.cloudfront.net/pool-club/index.html",
           gameCode: Constants.GAME_TYPE_POOLCLUB,
           shadowColor: Color(0xff00982B),
           thumbnailUri: BaseRemoteConfig.remoteConfig
@@ -279,6 +284,7 @@ class BaseUtil extends ChangeNotifier {
           gameName: "Candy Fiesta",
           route: "/candyFiestaHome",
           code: 'CA',
+          gameUri: "https://fl-games-candy-fiesta.onrender.com/",
           gameCode: Constants.GAME_TYPE_CANDYFIESTA,
           shadowColor: Color(0xff4B489E),
           thumbnailUri: BaseRemoteConfig.remoteConfig

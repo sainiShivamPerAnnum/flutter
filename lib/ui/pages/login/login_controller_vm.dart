@@ -327,7 +327,7 @@ class LoginControllerViewModel extends BaseModel {
                       userService.baseUser, token, cstate);
                   logger.e(response.toString());
                   if (response.code == 400) {
-                    message =
+                    message = response.errorMessage ??
                         "Unable to create account, please try again later.";
                     _usernameKey.currentState.model.enabled = true;
                     flag = false;
@@ -432,8 +432,6 @@ class LoginControllerViewModel extends BaseModel {
       if (source == LoginSource.TRUECALLER)
         _analyticsService.track(eventName: AnalyticsEvents.truecallerLogin);
       userService.baseUser = user.model;
-      _userRepo.updateUserAppFlyer(
-          user.model, await userService.firebaseUser.getIdToken());
 
       _onSignUpComplete();
     }
@@ -441,6 +439,8 @@ class LoginControllerViewModel extends BaseModel {
 
   Future _onSignUpComplete() async {
     if (_isSignup) {
+      _userRepo.updateUserAppFlyer(
+          userService.baseUser, await userService.firebaseUser.getIdToken());
       await _analyticsService.login(
           isOnBoarded: userService.isUserOnborded,
           baseUser: userService.baseUser);

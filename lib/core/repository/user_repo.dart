@@ -73,7 +73,8 @@ class UserRepository extends BaseRepo {
           model: {"flag": responseData['flag'], "gtId": responseData['gtId']});
     } catch (e) {
       logger.d(e);
-      return ApiResponse.withError("User not added to firestore", 400);
+      return ApiResponse.withError(
+          e.toString() ?? "Unable to create user account", 400);
     }
   }
 

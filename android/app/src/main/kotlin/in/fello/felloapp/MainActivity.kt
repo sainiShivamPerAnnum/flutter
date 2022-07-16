@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.media.AudioAttributes;
 import io.flutter.plugins.GeneratedPluginRegistrant
 import android.content.ContentResolver;
+import android.view.View
 
 
 class MainActivity: FlutterFragmentActivity() {
@@ -40,6 +41,16 @@ class MainActivity: FlutterFragmentActivity() {
                 result.notImplemented()
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        window.decorView.visibility = View.VISIBLE
+    }
+
+    override fun onStop() {
+        window.decorView.visibility = View.GONE
+        super.onStop()
     }
 
 

@@ -79,6 +79,7 @@ class GoldenTicketService extends ChangeNotifier {
       String title,
       double amount = 0,
       bool showAutoSavePrompt = false}) {
+    if (AppState.isWebGameLInProgress || AppState.isWebGamePInProgress) return;
     if (currentGT != null) {
       Future.delayed(Duration(milliseconds: 200), () {
         // if (source != GTSOURCE.deposit)
