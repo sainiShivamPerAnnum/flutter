@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -61,9 +63,13 @@ class TambolaGameViewModel extends BaseModel {
   int buyTicketCount = 3;
   bool _ticketsBeingGenerated = false;
 
+  bool ticketsLoaded = false;
+
   List<Ticket> get tambolaBoardViews => this._tambolaBoardViews;
 
-  set tambolaBoardViews(List<Ticket> value) => this._tambolaBoardViews = value;
+  set tambolaBoardViews(List<Ticket> value) {
+    this._tambolaBoardViews = value;
+  }
 
   get ticketsBeingGenerated => this._ticketsBeingGenerated;
 

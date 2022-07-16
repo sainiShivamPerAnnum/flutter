@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
@@ -388,17 +389,24 @@ class _TambolaGameViewState extends State<TambolaGameView>
           child: Container(
               width: double.infinity, child: model.tambolaBoardViews[0]));
     } else {
-      model.tambolaBoardViews = [];
-      model.userWeeklyBoards.forEach((board) {
-        model.tambolaBoardViews.add(Ticket(
-          bestBoards: model.refreshBestBoards(),
-          dailyPicks: model.weeklyDigits,
-          board: board,
-          calledDigits: (model.weeklyDrawFetched && model.weeklyDigits != null)
-              ? model.weeklyDigits.toList()
-              : [],
-        ));
-      });
+      if (!model.ticketsLoaded) {
+        model.ticketsLoaded = true;
+        model.tambolaBoardViews = [];
+        model.userWeeklyBoards.forEach((board) {
+          model.tambolaBoardViews.add(
+            Ticket(
+              bestBoards: model.refreshBestBoards(),
+              dailyPicks: model.weeklyDigits,
+              board: board,
+              calledDigits:
+                  (model.weeklyDrawFetched && model.weeklyDigits != null)
+                      ? model.weeklyDigits.toList()
+                      : [],
+            ),
+          );
+        });
+      }
+
       _widget = Column(
         children: [
           Container(
@@ -459,10 +467,13 @@ class _TambolaGameViewState extends State<TambolaGameView>
               children: [
                 Container(
                   height: SizeConfig.screenWidth * 1.4,
-                  child: PageView(
+                  child: PageView.builder(
                     controller: model.ticketPageController,
                     scrollDirection: Axis.horizontal,
-                    children: model.tambolaBoardViews.toList(),
+                    itemCount: model.userWeeklyBoards.length,
+                    itemBuilder: (context, index) {
+                      return model.tambolaBoardViews[index];
+                    },
                   ),
                 ),
                 if (model.ticketsBeingGenerated &&
