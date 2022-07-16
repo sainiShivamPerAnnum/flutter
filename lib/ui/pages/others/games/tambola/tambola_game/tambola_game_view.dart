@@ -467,13 +467,10 @@ class _TambolaGameViewState extends State<TambolaGameView>
               children: [
                 Container(
                   height: SizeConfig.screenWidth * 1.4,
-                  child: PageView.builder(
+                  child: PageView(
                     controller: model.ticketPageController,
                     scrollDirection: Axis.horizontal,
-                    itemCount: model.userWeeklyBoards.length,
-                    itemBuilder: (context, index) {
-                      return model.tambolaBoardViews[index];
-                    },
+                    children: model.tambolaBoardViews.toList(),
                   ),
                 ),
                 if (model.ticketsBeingGenerated &&
