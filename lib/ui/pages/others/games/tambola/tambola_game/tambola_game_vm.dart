@@ -138,6 +138,7 @@ class TambolaGameViewModel extends BaseModel {
     ///next get the tambola tickets of this week
     if (!tambolaService.weeklyTicksFetched) {
       _logger.d("Fetching Tambola tickets");
+      ticketsLoaded = false;
       final tickets = await _tambolaRepo.getTickets();
       if (tickets.code == 200) {
         List<TambolaBoard> boards = tickets.model.map((e) => e.board).toList();
