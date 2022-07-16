@@ -54,7 +54,7 @@ android {
     defaultConfig {
         applicationId "in.fello.felloapp"
         minSdkVersion 22
-        targetSdkVersion 27
+        targetSdkVersion 31
         multiDexEnabled true
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
