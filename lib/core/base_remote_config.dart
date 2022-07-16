@@ -178,7 +178,7 @@ class BaseRemoteConfig {
         'Hey I am gifting you ₹10 and 200 gaming tokens. Lets start saving and playing together ! '
   };
   static const Map<String, String> _RESTRICT_PAYTM_APP_INVOKE = {
-    'restrict_paytm_app_invoke': 'true'
+    'restrict_paytm_app_invoke': 'false'
   };
   static const Map<String, int> _CACHE_INVALIDATION = {'invalidate_before': 0};
 

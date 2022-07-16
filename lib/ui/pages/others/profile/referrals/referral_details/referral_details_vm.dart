@@ -141,9 +141,13 @@ class ReferralDetailsViewModel extends BaseModel {
     shareWhatsappInProgress = false;
     refresh();
 
-    if (url == null)
+    if (url == null) {
+      BaseUtil.showNegativeAlert(
+        'Generating link failed',
+        'Please try again in some time',
+      );
       return;
-    else
+    } else
       _logger.d(url);
     try {
       _analyticsService.track(eventName: AnalyticsEvents.whatsappShare);

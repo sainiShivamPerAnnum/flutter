@@ -15,7 +15,7 @@ class CouponRepository {
   final _rsaEncryption = new RSAEncryption();
   final String _baseUrl = FlavorConfig.isDevelopment()
       ? "https://z8gkfckos5.execute-api.ap-south-1.amazonaws.com/dev"
-      : "https://mwl33qq6sd.execute-api.ap-south-1.amazonaws.com";
+      : "https://mwl33qq6sd.execute-api.ap-south-1.amazonaws.com/prod";
 
   Future<String> _getBearerToken() async {
     try {
@@ -76,7 +76,7 @@ class CouponRepository {
       return ApiResponse<List<CouponModel>>(model: coupons, code: 200);
     } catch (e) {
       return ApiResponse.withError(
-        "Unable to fetch user notifications",
+        "Unable to fetch coupons",
         400,
       );
     }
