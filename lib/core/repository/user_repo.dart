@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
+import 'package:felloapp/core/constants/cache_keys.dart';
+import 'package:felloapp/core/enums/ttl.dart';
 import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
@@ -11,6 +13,7 @@ import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -22,6 +25,8 @@ import 'base_repo.dart';
 
 class UserRepository extends BaseRepo {
   final _appsFlyerService = locator<AppFlyerAnalytics>();
+  final _cacheService = new CacheService();
+
   final _api = locator<Api>();
   final _apiPaths = locator<ApiPath>();
   final _internalOpsService = locator<InternalOpsService>();
@@ -81,28 +86,29 @@ class UserRepository extends BaseRepo {
   Future<ApiResponse<BaseUser>> getUserById({@required String id}) async {
     try {
       final token = await getBearerToken();
-      logger.d("Token: $token");
-      final res = await APIService.instance.getData(
-        ApiPath.kGetUserById(id),
-        cBaseUrl: _baseUrl,
-        token: token,
-      );
-      logger.d("Get User Response: $res");
-
-      try {
-        if (res['data'] != null && res['data'].isNotEmpty) {
-          final _user = BaseUser.fromMap(res["data"], id);
-          return ApiResponse(model: _user, code: 200);
-        } else
-          return ApiResponse(model: null, code: 200);
-      } catch (e) {
-        _internalOpsService.logFailure(
-          id,
-          FailType.UserDataCorrupted,
-          {'message': "User data corrupted"},
-        );
-        return ApiResponse.withError("User data corrupted", 400);
-      }
+      return await _cacheService.cachedApi(
+          CacheKeys.TAMBOLA_TICKETS,
+          TTL.ONE_DAY,
+          () => APIService.instance.getData(
+                ApiPath.kGetUserById(id),
+                cBaseUrl: _baseUrl,
+                token: token,
+              ), (dynamic res) {
+        try {
+          if (res['data'] != null && res['data'].isNotEmpty) {
+            final _user = BaseUser.fromMap(res["data"], id);
+            return ApiResponse(model: _user, code: 200);
+          } else
+            return ApiResponse(model: null, code: 200);
+        } catch (e) {
+          _internalOpsService.logFailure(
+            id,
+            FailType.UserDataCorrupted,
+            {'message': "User data corrupted"},
+          );
+          return ApiResponse.withError("User data corrupted", 400);
+        }
+      });
     } catch (e) {
       return ApiResponse.withError("Unable to get user", 400);
     }
@@ -126,6 +132,9 @@ class UserRepository extends BaseRepo {
         body: body,
         token: 'Bearer $token',
       );
+
+      // clear cache
+      await _cacheService.invalidateByKey(CacheKeys.USER);
 
       return ApiResponse(code: 200);
     } catch (e) {
@@ -337,6 +346,10 @@ class UserRepository extends BaseRepo {
         token: "Bearer $token",
         cBaseUrl: _baseUrl,
       );
+
+      // clear cache
+      await _cacheService.invalidateByKey(CacheKeys.USER);
+
       return ApiResponse<bool>(model: true, code: 200);
     } catch (e) {
       logger.e(e);
