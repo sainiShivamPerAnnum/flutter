@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -61,9 +63,13 @@ class TambolaGameViewModel extends BaseModel {
   int buyTicketCount = 3;
   bool _ticketsBeingGenerated = false;
 
+  bool ticketsLoaded = false;
+
   List<Ticket> get tambolaBoardViews => this._tambolaBoardViews;
 
-  set tambolaBoardViews(List<Ticket> value) => this._tambolaBoardViews = value;
+  set tambolaBoardViews(List<Ticket> value) {
+    this._tambolaBoardViews = value;
+  }
 
   get ticketsBeingGenerated => this._ticketsBeingGenerated;
 
@@ -132,6 +138,7 @@ class TambolaGameViewModel extends BaseModel {
     ///next get the tambola tickets of this week
     if (!tambolaService.weeklyTicksFetched) {
       _logger.d("Fetching Tambola tickets");
+      ticketsLoaded = false;
       final tickets = await _tambolaRepo.getTickets();
       if (tickets.code == 200) {
         List<TambolaBoard> boards = tickets.model.map((e) => e.board).toList();

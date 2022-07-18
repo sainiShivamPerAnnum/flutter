@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
@@ -388,17 +389,24 @@ class _TambolaGameViewState extends State<TambolaGameView>
           child: Container(
               width: double.infinity, child: model.tambolaBoardViews[0]));
     } else {
-      model.tambolaBoardViews = [];
-      model.userWeeklyBoards.forEach((board) {
-        model.tambolaBoardViews.add(Ticket(
-          bestBoards: model.refreshBestBoards(),
-          dailyPicks: model.weeklyDigits,
-          board: board,
-          calledDigits: (model.weeklyDrawFetched && model.weeklyDigits != null)
-              ? model.weeklyDigits.toList()
-              : [],
-        ));
-      });
+      if (!model.ticketsLoaded) {
+        model.ticketsLoaded = true;
+        model.tambolaBoardViews = [];
+        model.userWeeklyBoards.forEach((board) {
+          model.tambolaBoardViews.add(
+            Ticket(
+              bestBoards: model.refreshBestBoards(),
+              dailyPicks: model.weeklyDigits,
+              board: board,
+              calledDigits:
+                  (model.weeklyDrawFetched && model.weeklyDigits != null)
+                      ? model.weeklyDigits.toList()
+                      : [],
+            ),
+          );
+        });
+      }
+
       _widget = Column(
         children: [
           Container(
