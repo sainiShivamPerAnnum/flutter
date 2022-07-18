@@ -87,7 +87,7 @@ class UserRepository extends BaseRepo {
     try {
       final token = await getBearerToken();
       return await _cacheService.cachedApi(
-          CacheKeys.TAMBOLA_TICKETS,
+          CacheKeys.USER,
           TTL.ONE_DAY,
           () => APIService.instance.getData(
                 ApiPath.kGetUserById(id),
