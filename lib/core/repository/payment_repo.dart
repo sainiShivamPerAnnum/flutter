@@ -20,7 +20,7 @@ class PaymentRepository extends BaseRepo {
         token: token,
       );
 
-      final quantity = quntityResponse["data"]["quantity"];
+      final quantity = quntityResponse["data"]["quantity"].toDouble();
       return ApiResponse(model: quantity, code: 200);
     } catch (e) {
       logger.e(e.toString());

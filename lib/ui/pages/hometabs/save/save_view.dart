@@ -28,12 +28,11 @@ class Save extends StatelessWidget {
         return Stack(
           children: [
             Container(
+              margin: EdgeInsets.only(top: SizeConfig.padding32),
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
-                  SizedBox(
-                      height:
-                          SizeConfig.screenWidth * 0.12 + SizeConfig.padding32),
+                  SizedBox(height: SizeConfig.screenWidth * 0.12),
                   Stack(
                     children: [
                       if (model.focusCoupon != null)
