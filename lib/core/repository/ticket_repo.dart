@@ -15,7 +15,7 @@ class TambolaRepo extends BaseRepo {
   final _cacheService = new CacheService();
   final _baseUrl = FlavorConfig.isDevelopment()
       ? 'https://qv53yko0b0.execute-api.ap-south-1.amazonaws.com/dev'
-      : '';
+      : 'https://7icbm6j9e7.execute-api.ap-south-1.amazonaws.com/prod';
 
   Future<ApiResponse<List<TambolaModel>>> getTickets() async {
     try {
