@@ -78,10 +78,11 @@ class LauncherViewModel extends BaseModel {
       await _userCoinService.init();
       await Future.wait([_baseUtil.init(), _fcmListener.setupFcm()]);
 
-      userService.firebaseUser?.getIdToken()?.then(
-            (token) =>
-                _userRepo.updateUserAppFlyer(userService.baseUser, token),
-          );
+      if (userService.isUserOnborded)
+        userService.firebaseUser?.getIdToken()?.then(
+              (token) =>
+                  _userRepo.updateUserAppFlyer(userService.baseUser, token),
+            );
       if (userService.baseUser != null) {
         await _analyticsService.login(
           isOnBoarded: userService?.isUserOnborded,
