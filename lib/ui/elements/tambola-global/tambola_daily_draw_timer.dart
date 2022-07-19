@@ -34,7 +34,7 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
   @override
   void initState() {
     if (calculateTime())
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
         timer = Timer.periodic(Duration(seconds: 1), (_) => addTime());
       });
     else

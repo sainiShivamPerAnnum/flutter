@@ -186,7 +186,7 @@ class AutosaveProcessViewModel extends BaseModel {
     if (FlavorConfig.isDevelopment()) vpaController.text = "7777777777@paytm";
     if (_paytmService.activeSubscription != null)
       vpaController.text = _paytmService.activeSubscription.vpa;
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       _paytmService.jumpToSubPage(page);
       _paytmService.fraction = page;
       if (page == 1) {

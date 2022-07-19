@@ -43,7 +43,7 @@ class AllParticipantsView extends StatelessWidget {
             children: [
               FelloAppBar(
                 leading: FelloAppBarBackButton(),
-                title: "All Participants",
+                title: "Top Participants",
               ),
               Expanded(
                 child: Container(

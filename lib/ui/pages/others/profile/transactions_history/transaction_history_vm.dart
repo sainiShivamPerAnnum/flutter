@@ -73,7 +73,7 @@ class TransactionsHistoryViewModel extends BaseModel {
 
     if (_txnService.txnList == null || _txnService.txnList.length < 5) {
       getTransactions().then((_) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
+        WidgetsBinding.instance?.addPostFrameCallback((_) {
           tranAnimWidth = 0;
           notifyListeners();
         });
@@ -81,7 +81,7 @@ class TransactionsHistoryViewModel extends BaseModel {
     }
     if (_txnService.txnList != null) {
       filteredList = _txnService.txnList;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance?.addPostFrameCallback((_) {
         tranAnimWidth = 0;
         notifyListeners();
       });

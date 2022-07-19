@@ -178,7 +178,7 @@ class GoldenTicketsViewModel extends BaseModel {
     _gtService.activeGoldenTickets = goldenTicketList;
     if (openFirst && showFirst) {
       showFirst = false;
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
         AppState.screenStack.add(ScreenItem.dialog);
         Navigator.of(AppState.delegate.navigatorKey.currentContext).push(
           HeroDialogRoute(

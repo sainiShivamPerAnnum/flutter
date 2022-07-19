@@ -23,6 +23,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../util/styles/textStyles.dart';
+import '../../../widgets/buttons/fello_button/large_button.dart';
+
 class VerifyEmail extends StatefulWidget {
   static const int index = 3;
 
@@ -59,7 +62,7 @@ class VerifyEmailState extends State<VerifyEmail> {
   @override
   void initState() {
     email = TextEditingController(text: "");
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       baseProvider.isGoogleSignInProgress = false;
       focusNode = new FocusNode();
       showEmailOptions();
@@ -476,18 +479,14 @@ class VerifyEmailState extends State<VerifyEmail> {
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: SafeArea(
-                        child: InkWell(
-                          onTap: confirmAction,
-                          child: Container(
-                            margin: EdgeInsets.symmetric(vertical: 24),
-                            width: SizeConfig.screenWidth -
-                                SizeConfig.pageHorizontalMargins * 2,
-                            height: 60,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: UiConstants.primaryColor,
-                            ),
-                            alignment: Alignment.center,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            bottom: SizeConfig.viewInsets.bottom == 0
+                                ? SizeConfig.padding24
+                                : 0,
+                          ),
+                          child: FelloButtonLg(
+                            onPressed: confirmAction,
                             child: _isVerifying || _isProcessing
                                 ? SpinKitThreeBounce(
                                     color: UiConstants.spinnerColor2,
@@ -495,11 +494,8 @@ class VerifyEmailState extends State<VerifyEmail> {
                                   )
                                 : Text(
                                     _isOtpSent ? "Verify" : "Send OTP",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: SizeConfig.mediumTextSize,
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                                    style: TextStyles.body2.bold
+                                        .colour(Colors.white),
                                   ),
                           ),
                         ),

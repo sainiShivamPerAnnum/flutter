@@ -180,7 +180,7 @@ class RootViewModel extends BaseModel {
                   .getPreference(Preferences.APPLOCK) ==
               0) {
         canExecuteStartupNotification = false;
-        WidgetsBinding.instance.addPostFrameCallback((_) {
+        WidgetsBinding.instance?.addPostFrameCallback((_) {
           _showSecurityBottomSheet();
           _localDBModel.updateSecurityPrompt(false);
         });
