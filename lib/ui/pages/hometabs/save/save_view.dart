@@ -159,12 +159,15 @@ class FocusCouponClip extends StatelessWidget {
 class GoldBalanceContainer extends StatelessWidget {
   final AugmontGoldBuyViewModel model;
   final bool showNavIcon;
-  GoldBalanceContainer({this.model, this.showNavIcon = false});
+  final bool hapticReq;
+  GoldBalanceContainer(
+      {this.model, this.showNavIcon = false, this.hapticReq = true});
 
   @override
   Widget build(BuildContext context) {
     return WinningsContainer(
       onTap: model != null ? model.navigateToGoldBalanceDetailsScreen : () {},
+      hapticRequired: hapticReq,
       borderRadius: SizeConfig.roundness16,
       shadow: true,
       color: UiConstants.tertiarySolid,

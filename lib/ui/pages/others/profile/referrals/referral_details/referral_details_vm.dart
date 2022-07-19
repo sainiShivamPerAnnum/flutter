@@ -66,7 +66,7 @@ class ReferralDetailsViewModel extends BaseModel {
       _refCode = res.model;
     }
     _shareMsg = (appShareMessage != null && appShareMessage.isNotEmpty)
-        ? '$appShareMessage Share this code: $_refCode with your friends.\n'
+        ? appShareMessage
         : 'Hey I am gifting you ₹10 and 200 gaming tokens. Lets start saving and playing together! Share this code: $_refCode with your friends.\n';
 
     loadingRefCode = false;
