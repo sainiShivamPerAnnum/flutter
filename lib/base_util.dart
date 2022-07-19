@@ -424,7 +424,7 @@ class BaseUtil extends ChangeNotifier {
 
   static showPositiveAlert(String title, String message, {int seconds = 3}) {
     // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
       Flushbar(
         flushbarPosition: FlushbarPosition.BOTTOM,
         flushbarStyle: FlushbarStyle.FLOATING,
@@ -456,7 +456,7 @@ class BaseUtil extends ChangeNotifier {
 
   static showNegativeAlert(String title, String message, {int seconds}) {
     // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
       Flushbar(
         flushbarPosition: FlushbarPosition.BOTTOM,
         flushbarStyle: FlushbarStyle.FLOATING,

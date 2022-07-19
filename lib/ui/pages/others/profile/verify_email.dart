@@ -59,7 +59,7 @@ class VerifyEmailState extends State<VerifyEmail> {
   @override
   void initState() {
     email = TextEditingController(text: "");
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       baseProvider.isGoogleSignInProgress = false;
       focusNode = new FocusNode();
       showEmailOptions();
