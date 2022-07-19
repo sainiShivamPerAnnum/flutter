@@ -45,7 +45,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.76548371644-bqosqtn2g7dgk4h880ujt243g7nk7mbd</string>
+				<string>com.googleusercontent.apps.298601110864-hn7p8jjvlolisd3jkms5ntodhmkn8l0i</string>
 			</array>
 		</dict>
 		<dict>
@@ -58,7 +58,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>111</string>
+	<string>112</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<string>0</string>
 	<key>FirebaseDynamicLinksCustomDomains</key>

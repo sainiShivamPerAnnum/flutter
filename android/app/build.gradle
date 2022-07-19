@@ -61,12 +61,12 @@ android {
     }
 
     signingConfigs {
-        // debug {
-        //     keyAlias keystoreProperties['debugkeyAlias']
-        //     keyPassword keystoreProperties['debugkeyPassword']
-        //     storeFile keystoreProperties['debugstoreFile'] ? file(keystoreProperties['debugstoreFile']) : null
-        //     storePassword keystoreProperties['debugstorePassword']
-        // }
+        debug {
+                 keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storePassword keystoreProperties['storePassword']
+        }
 
         //Comment it before push to develop, to build using CICD 
         //Uncomment for local build and release.
@@ -99,7 +99,7 @@ android {
     buildTypes {
         defaultConfig {
             minifyEnabled true
-            useProguard true
+           
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
             signingConfig signingConfigs.release
@@ -113,7 +113,7 @@ android {
             signingConfig signingConfigs.release
 
             minifyEnabled true
-            useProguard true
+            
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

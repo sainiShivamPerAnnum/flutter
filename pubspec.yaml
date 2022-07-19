@@ -6,7 +6,7 @@ publish_to: "none"
 version: 3.3.0+94
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.10.0 <3.0.0"
 
 dependencies:
   cached_network_image: ^3.1.0
@@ -74,13 +74,13 @@ dependencies:
   app_install_date: ^0.1.1
   appsflyer_sdk: ^6.5.2
   external_app_launcher: ^2.0.2
-  isar: ^2.5.0
-  isar_flutter_libs: 2.5.0
+  isar: ^2.4.0
+  isar_flutter_libs: 2.4.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  isar_generator: 2.5.0
+  isar_generator: 2.4.0
   build_runner: any
 
 flutter:

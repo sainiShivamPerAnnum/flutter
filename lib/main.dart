@@ -59,7 +59,6 @@ import 'core/service/notifier_services/user_coin_service.dart';
 //   await mainInit();
 //   runApp(MyApp());
 // }
-main() {}
 Future mainInit() async {
   setupLocator();
   WidgetsFlutterBinding.ensureInitialized();
@@ -67,7 +66,7 @@ Future mainInit() async {
     await PreferenceHelper.initiate();
     await Firebase.initializeApp();
   } catch (e) {
-    print('$e');
+    print('Firebase initialisation error: $e');
   }
   FirebaseMessaging.onBackgroundMessage(FcmListener.backgroundMessageHandler);
 }
