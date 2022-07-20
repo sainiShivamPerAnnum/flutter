@@ -1,5 +1,6 @@
 import 'package:felloapp/core/enums/leaderboard_service_enum.dart';
 import 'package:felloapp/core/model/leader_board_modal.dart';
+import 'package:felloapp/core/model/leaderboard_model.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
@@ -39,7 +40,7 @@ class WebGameLeaderBoardView extends StatelessWidget {
 }
 
 class LeaderBoardView extends StatelessWidget {
-  final LeaderBoardModal model;
+  final LeaderboardModel model;
   final ScrollController controller, ownController;
   final _userService = locator<UserService>();
 
@@ -132,7 +133,8 @@ class LeaderBoardView extends StatelessWidget {
                                 height: SizeConfig.iconSize3),
                           ),
                           label: Text(
-                              model.scoreboard[i].score.toString() ?? "00",
+                              model.scoreboard[i].score.toInt().toString() ??
+                                  "00",
                               style: TextStyles.body3.colour(Colors.black54)),
                           onPressed: () {}),
                     ],

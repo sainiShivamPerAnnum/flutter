@@ -1,8 +1,12 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/winner_service_enum.dart';
 import 'package:felloapp/core/model/winners_model.dart';
+import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/winners_repo.dart';
+import 'package:felloapp/core/service/api_cache_manager.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
@@ -12,6 +16,8 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
   final _logger = locator<CustomLogger>();
   final _winnersRepo = locator<WinnersRepository>();
+  final _apiCacheManager = locator<ApiCacheManager>();
+  final _getterRepo = locator<GetterRepository>();
 
   int _cricketWinnersLength = 0;
   int _tambolaWinnersLength = 0;
@@ -93,91 +99,96 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
 
   fetchWinners() async {
     _winners.clear();
-    ApiResponse<WinnersModel> _cricketWinners =
-        await _winnersRepo.getWinners(Constants.GAME_TYPE_CRICKET, "weekly");
+    WinnersModel _cricketWinners = await getWinners(
+      Constants.GAME_TYPE_CRICKET,
+      "weekly",
+    );
 
-    ApiResponse<WinnersModel> _tambolaWinners =
-        await _winnersRepo.getWinners(Constants.GAME_TYPE_TAMBOLA, "weekly");
+    WinnersModel _tambolaWinners = await getWinners(
+      Constants.GAME_TYPE_TAMBOLA,
+      "weekly",
+    );
 
-    ApiResponse<WinnersModel> _poolClubWinners =
-        await _winnersRepo.getWinners(Constants.GAME_TYPE_POOLCLUB, "weekly");
+    WinnersModel _poolClubWinners = await getWinners(
+      Constants.GAME_TYPE_POOLCLUB,
+      "weekly",
+    );
 
-    ApiResponse<WinnersModel> _footBallWinners =
-        await _winnersRepo.getWinners(Constants.GAME_TYPE_FOOTBALL, "weekly");
+    WinnersModel _footBallWinners = await getWinners(
+      Constants.GAME_TYPE_FOOTBALL,
+      "weekly",
+    );
 
-    ApiResponse<WinnersModel> _candyFiestaWinners = await _winnersRepo
-        .getWinners(Constants.GAME_TYPE_CANDYFIESTA, "weekly");
+    WinnersModel _candyFiestaWinners = await getWinners(
+      Constants.GAME_TYPE_CANDYFIESTA,
+      "weekly",
+    );
 
     _winners.clear();
 
     if (_cricketWinners != null &&
-        _cricketWinners.model != null &&
-        _cricketWinners.model.winners != null &&
-        _cricketWinners.model?.winners?.length != 0) {
-      _timestamp = _cricketWinners.model?.timestamp;
-      _cricketWinnersLength = _cricketWinners.model?.winners?.length;
-      _winners.addAll(_cricketWinners.model.winners);
-      _logger.d(_cricketWinners.model.winners.toString());
+        _cricketWinners.winners != null &&
+        _cricketWinners?.winners?.length != 0) {
+      _timestamp = _cricketWinners?.timestamp;
+      _cricketWinnersLength = _cricketWinners?.winners?.length;
+      _winners.addAll(_cricketWinners.winners);
+      _logger.d(_cricketWinners.winners.toString());
       _logger.d("Cricket Winners added to leaderboard");
     } else {
       _logger.i("Cricket Winners not added to leaderboard");
     }
 
     if (_tambolaWinners != null &&
-        _tambolaWinners.model != null &&
-        _tambolaWinners.model.winners != null &&
-        _tambolaWinners.model?.winners?.length != 0) {
-      _timestamp = _tambolaWinners.model.timestamp;
-      _tambolaWinnersLength = _tambolaWinners.model?.winners?.length;
-      _winners.addAll(_tambolaWinners.model.winners);
+        _tambolaWinners.winners != null &&
+        _tambolaWinners?.winners?.length != 0) {
+      _timestamp = _tambolaWinners.timestamp;
+      _tambolaWinnersLength = _tambolaWinners?.winners?.length;
+      _winners.addAll(_tambolaWinners.winners);
       _logger.d("Tambola Winners added to leaderboard");
     } else {
       _logger.i("Tambola Winners not added to leaderboard");
     }
 
     if (_poolClubWinners != null &&
-        _poolClubWinners.model != null &&
-        _poolClubWinners.model.winners != null &&
-        _poolClubWinners.model?.winners?.length != 0) {
-      _timestamp = _poolClubWinners.model?.timestamp;
-      _poolClubWinnersLength = _poolClubWinners.model?.winners?.length;
-      _winners.addAll(_poolClubWinners.model.winners);
-      _logger.d(_poolClubWinners.model.winners.toString());
+        _poolClubWinners.winners != null &&
+        _poolClubWinners?.winners?.length != 0) {
+      _timestamp = _poolClubWinners?.timestamp;
+      _poolClubWinnersLength = _poolClubWinners?.winners?.length;
+      _winners.addAll(_poolClubWinners.winners);
+      _logger.d(_poolClubWinners.winners.toString());
       _logger.d("PoolClub Winners added to leaderboard");
     } else {
       _logger.i("PoolClub Winners not added to leaderboard");
     }
 
     if (_footBallWinners != null &&
-        _footBallWinners.model != null &&
-        _footBallWinners.model.winners != null &&
-        _footBallWinners.model?.winners?.length != 0) {
-      _timestamp = _footBallWinners.model?.timestamp;
-      _footBallWinnersLength = _footBallWinners.model?.winners?.length;
-      _winners.addAll(_footBallWinners.model.winners);
-      _logger.d(_footBallWinners.model.winners.toString());
+        _footBallWinners.winners != null &&
+        _footBallWinners?.winners?.length != 0) {
+      _timestamp = _footBallWinners?.timestamp;
+      _footBallWinnersLength = _footBallWinners?.winners?.length;
+      _winners.addAll(_footBallWinners.winners);
+      _logger.d(_footBallWinners.winners.toString());
       _logger.d("FootBall Winners added to leaderboard");
     } else {
       _logger.i("FootBall Winners not added to leaderboard");
     }
 
     if (_candyFiestaWinners != null &&
-        _candyFiestaWinners.model != null &&
-        _candyFiestaWinners.model.winners != null &&
-        _candyFiestaWinners.model?.winners?.length != 0) {
-      _timestamp = _candyFiestaWinners.model?.timestamp;
-      _candyFiestaWinnersLength = _candyFiestaWinners.model?.winners?.length;
-      _winners.addAll(_candyFiestaWinners.model.winners);
-      _logger.d(_candyFiestaWinners.model.winners.toString());
+        _candyFiestaWinners.winners != null &&
+        _candyFiestaWinners?.winners?.length != 0) {
+      _timestamp = _candyFiestaWinners?.timestamp;
+      _candyFiestaWinnersLength = _candyFiestaWinners?.winners?.length;
+      _winners.addAll(_candyFiestaWinners.winners);
+      _logger.d(_candyFiestaWinners.winners.toString());
       _logger.d("CandyFiesta Winners added to leaderboard");
     } else {
       _logger.i("CandyFiesta Winners not added to leaderboard");
     }
 
-    if (_tambolaWinners.model?.winners?.length == 0 &&
-        _cricketWinners.model?.winners?.length == 0 &&
-        _poolClubWinners.model?.winners?.length == 0 &&
-        _footBallWinners.model?.winners?.length == 0) {
+    if (_tambolaWinners?.winners?.length == 0 &&
+        _cricketWinners?.winners?.length == 0 &&
+        _poolClubWinners?.winners?.length == 0 &&
+        _footBallWinners?.winners?.length == 0) {
       BaseUtil.showNegativeAlert(
           "Unable to fetch winners", "try again in sometime");
     }
@@ -190,5 +201,23 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
       _winners = [];
 
     setWinners();
+  }
+
+  Future<WinnersModel> getWinners(
+    String gameType,
+    String freq,
+  ) async {
+    _logger.d("Winner Game Type : $gameType \n Frequency: $freq");
+
+    final ApiResponse response = await _getterRepo.getWinnerByFreqGameType(
+      type: gameType,
+      freq: freq,
+    );
+
+    if (response.code == 200) {
+      return response.model;
+    }
+
+    return null;
   }
 }

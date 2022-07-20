@@ -1,7 +1,6 @@
 package `in`.fello.felloapp
 
 import android.util.Log
-import com.freshchat.consumer.sdk.flutter.FreshchatSdkPlugin
 import com.google.firebase.messaging.FirebaseMessaging
 import com.webengage.sdk.android.LocationTrackingStrategy
 import com.webengage.sdk.android.WebEngage
@@ -37,6 +36,5 @@ class Application : FlutterApplication(), PluginRegistrantCallback {
     }
 
     override fun registerWith(registry: PluginRegistry) {
-        FreshchatSdkPlugin.register(registry)
     }
 }

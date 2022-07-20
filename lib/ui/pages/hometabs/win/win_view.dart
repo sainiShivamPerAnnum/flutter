@@ -55,7 +55,7 @@ class Win extends StatelessWidget {
                           bgColor: UiConstants.tertiarySolid,
                           bigText: locale.winIphoneBigText,
                           smallText: locale.winIphoneSmallText,
-                          image: Assets.iphone,
+                          image: Assets.ipad,
                           painter: IphoneCustomPaint(),
                           onPressed: () {
                             // model.panelController.animatePanelToPosition(1);

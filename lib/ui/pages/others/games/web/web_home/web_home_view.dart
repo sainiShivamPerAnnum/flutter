@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -20,6 +22,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 class WebHomeView extends StatelessWidget {
   const WebHomeView({Key key, @required this.game}) : super(key: key);
   final String game;
+
   @override
   Widget build(BuildContext context) {
     return BaseView<WebHomeViewModel>(
@@ -69,8 +72,8 @@ class WebHomeView extends StatelessWidget {
                               curve: Curves.decelerate,
                               opacity: model.cardOpacity ?? 1,
                               child: BigGameCard(
-                                gameData: BaseUtil.gamesList.firstWhere(
-                                    (element) => element.gameCode == game),
+                                gameData: model.currentGameModel,
+                                isGameLoading: model.isGameLoading,
                               ),
                             ),
                           ),

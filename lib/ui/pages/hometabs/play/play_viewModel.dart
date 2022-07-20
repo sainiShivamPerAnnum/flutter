@@ -1,29 +1,19 @@
 import 'dart:async';
 
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/repository/flc_actions_repo.dart';
+import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/cache_manager.dart';
-import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:flutter/material.dart';
 
 class PlayViewModel extends BaseModel {
-  final _fclActionRepo = locator<FlcActionsRepo>();
-  final _userCoinService = locator<UserCoinService>();
-  final _userService = locator<UserService>();
-  final _dbProvider = locator<DBModel>();
-  final _logger = locator<CustomLogger>();
-  final _baseUtil = locator<BaseUtil>();
+  final _getterRepo = locator<GetterRepository>();
   final _analyticsService = locator<AnalyticsService>();
   String gamesListOneTitle = "Trending", gamesListTwoTitle = "More games";
   final PageController promoPageController =
@@ -71,9 +61,12 @@ class PlayViewModel extends BaseModel {
 
   loadOfferList() async {
     isOfferListLoading = true;
-    await _dbProvider.getPromoCards().then((cards) {
-      _offerList = cards;
-    });
+    final response = await _getterRepo.getPromoCards();
+    if (response.code == 200) {
+      _offerList = response.model;
+    } else {
+      _offerList = [];
+    }
     print(_offerList);
     if (_offerList != null && offerList.length > 1) initiate();
     isOfferListLoading = false;
@@ -85,7 +78,7 @@ class PlayViewModel extends BaseModel {
   void openGame(GameModel game) {
     _analyticsService.track(eventName: game.analyticEvent);
     AppState.delegate.appState.currentAction =
-        PageAction(state: PageState.addPage, page: game.pageConfig);
+        PageAction(state: PageState.addPage, page: THomePageConfig);
   }
 
   setGameListTitle() async {

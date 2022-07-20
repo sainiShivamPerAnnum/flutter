@@ -1,16 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:felloapp/util/custom_logger.dart';
-import 'package:felloapp/base_util.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class TransactionService
@@ -20,12 +23,15 @@ class TransactionService
   final _userService = locator<UserService>();
   final _logger = locator<CustomLogger>();
 
+  final _baseUrl = FlavorConfig.isDevelopment()
+      ? "https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev"
+      : "https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod";
   List<UserTransaction> _txnList;
-  DocumentSnapshot lastTxnDoc,
-      lastPrizeTxnDoc,
-      lastDepositTxnDoc,
-      lastWithdrawalTxnDoc,
-      lastRefundedTxnDoc;
+  String lastTxnDocId,
+      lastPrizeTxnDocId,
+      lastDepositTxnDocId,
+      lastWithdrawalTxnDocId,
+      lastRefundedTxnDocId;
   bool hasMoreTxns = true,
       hasMorePrizeTxns = true,
       hasMoreDepositTxns = true,
@@ -50,68 +56,67 @@ class TransactionService
   }
 
   fetchTransactions({
-    @required int limit,
     String status,
     String type,
     String subtype,
   }) async {
     if (_dBModel != null && _userService != null) {
       //fetch filtered transactions
-      Map<String, dynamic> tMap = await _dBModel.getFilteredUserTransactions(
-        user: _userService.baseUser,
+      final response = await getUserTransactionsfromApi(
         type: type,
         subtype: subtype,
         status: status,
-        lastDocument: getLastTxnDocType(status: status, type: type),
-        limit: limit,
+        start: getLastTxnDocType(status: status, type: type),
       );
+
       // if transaction list is empty
       if (_txnList == null || _txnList.length == 0) {
-        txnList = List.from(tMap['listOfTransactions']);
+        txnList = response.model.transactions;
       } else {
         // if transaction list already have some items
-        appendTxns(tMap['listOfTransactions']);
+        appendTxns(response.model.transactions);
       }
       _logger.d("Current Transaction List length: ${_txnList.length}");
       // set proper lastDocument snapshot for further fetches
-      if (tMap['lastDocument'] != null)
+      if (response.model.transactions.isNotEmpty)
         setLastTxnDocType(
-            status: status, type: type, lastDocSnapshot: tMap['lastDocument']);
+            status: status,
+            type: type,
+            lastDocId: response.model.transactions.last.docKey);
       // check and set which category has no more items to fetch
-      if (tMap['length'] < limit)
+      if (response.model.isLastPage)
         setHasMoreTxnsValue(type: type, status: status);
     }
   }
 
-  DocumentSnapshot getLastTxnDocType({String status, String type}) {
-    if (status == null && type == null) return lastTxnDoc;
-    if (status != null) return lastRefundedTxnDoc;
+  String getLastTxnDocType({String status, String type}) {
+    if (status == null && type == null) return lastTxnDocId;
+    if (status != null) return lastRefundedTxnDocId;
     if (type != null) {
-      if (type == UserTransaction.TRAN_TYPE_DEPOSIT) return lastDepositTxnDoc;
-      if (type == UserTransaction.TRAN_TYPE_PRIZE) return lastPrizeTxnDoc;
+      if (type == UserTransaction.TRAN_TYPE_DEPOSIT) return lastDepositTxnDocId;
+      if (type == UserTransaction.TRAN_TYPE_PRIZE) return lastPrizeTxnDocId;
       if (type == UserTransaction.TRAN_TYPE_WITHDRAW)
-        return lastWithdrawalTxnDoc;
+        return lastWithdrawalTxnDocId;
     }
-    return lastTxnDoc;
+    return lastTxnDocId;
   }
 
-  setLastTxnDocType(
-      {String status, String type, DocumentSnapshot lastDocSnapshot}) {
+  setLastTxnDocType({String status, String type, String lastDocId}) {
     if (status == null && type == null) {
-      lastTxnDoc = lastDocSnapshot;
-      lastRefundedTxnDoc = lastDocSnapshot;
-      lastDepositTxnDoc = lastDocSnapshot;
-      lastWithdrawalTxnDoc = lastDocSnapshot;
-      lastPrizeTxnDoc = lastDocSnapshot;
+      lastTxnDocId = lastDocId;
+      lastRefundedTxnDocId = lastDocId;
+      lastDepositTxnDocId = lastDocId;
+      lastWithdrawalTxnDocId = lastDocId;
+      lastPrizeTxnDocId = lastDocId;
     } else if (status != null)
-      lastRefundedTxnDoc = lastDocSnapshot;
+      lastRefundedTxnDocId = lastDocId;
     else if (type != null) {
       if (type == UserTransaction.TRAN_TYPE_DEPOSIT)
-        lastDepositTxnDoc = lastDocSnapshot;
+        lastDepositTxnDocId = lastDocId;
       if (type == UserTransaction.TRAN_TYPE_PRIZE)
-        lastPrizeTxnDoc = lastDocSnapshot;
+        lastPrizeTxnDocId = lastDocId;
       if (type == UserTransaction.TRAN_TYPE_WITHDRAW)
-        lastWithdrawalTxnDoc = lastDocSnapshot;
+        lastWithdrawalTxnDocId = lastDocId;
     }
   }
 
@@ -149,14 +154,14 @@ class TransactionService
   }
 
   updateTransactions() async {
-    lastTxnDoc = null;
+    lastTxnDocId = null;
     hasMoreTxns = true;
     hasMorePrizeTxns = true;
     hasMoreDepositTxns = true;
     hasMoreWithdrawalTxns = true;
     hasMoreRefundedTxns = true;
     txnList?.clear();
-    await fetchTransactions(limit: 4);
+    await fetchTransactions();
     _logger.i("Transactions got updated");
   }
 
@@ -181,7 +186,8 @@ class TransactionService
     if (type == UserTransaction.TRAN_STATUS_COMPLETE) {
       icon = Icons.check_circle;
       iconColor = UiConstants.primaryColor;
-    } else if (type == UserTransaction.TRAN_STATUS_CANCELLED) {
+    } else if (type == UserTransaction.TRAN_STATUS_CANCELLED ||
+        type == UserTransaction.TRAN_STATUS_FAILED) {
       icon = Icons.cancel;
       iconColor = Colors.red;
     } else if (type == UserTransaction.TRAN_STATUS_PENDING ||
@@ -225,7 +231,8 @@ class TransactionService
   }
 
   Color getTileColor(String type) {
-    if (type == UserTransaction.TRAN_STATUS_CANCELLED) {
+    if (type == UserTransaction.TRAN_STATUS_CANCELLED ||
+        type == UserTransaction.TRAN_STATUS_FAILED) {
       return Colors.redAccent;
     } else if (type == UserTransaction.TRAN_STATUS_COMPLETE) {
       return UiConstants.primaryColor;
@@ -270,7 +277,7 @@ class TransactionService
 
 // Clear transactions
   signOut() {
-    lastTxnDoc = null;
+    lastTxnDocId = null;
     hasMoreTxns = true;
     hasMorePrizeTxns = true;
     hasMoreDepositTxns = true;
@@ -278,4 +285,56 @@ class TransactionService
     hasMoreRefundedTxns = true;
     if (txnList != null) txnList.clear();
   }
+
+  Future<ApiResponse<TransactionResponse>> getUserTransactionsfromApi({
+    String start,
+    String type,
+    String subtype,
+    String status,
+  }) async {
+    List<UserTransaction> events = [];
+    try {
+      final String _uid = _userService.baseUser.uid;
+      final _token = await _getBearerToken();
+      final _queryParams = {
+        "type": type,
+        "subtype": subtype,
+        "start": start,
+        "status": status
+      };
+      final response = await APIService.instance.getData(
+        ApiPath.kSingleTransactions(_uid),
+        token: _token,
+        queryParams: _queryParams,
+        cBaseUrl: _baseUrl,
+      );
+
+      final responseData = response["data"];
+      responseData["transactions"].forEach((e) {
+        events.add(UserTransaction.fromMap(e, e["id"]));
+      });
+
+      final bool isLastPage = responseData["isLastPage"] ?? false;
+      final TransactionResponse txnResponse =
+          TransactionResponse(isLastPage: isLastPage, transactions: events);
+
+      return ApiResponse<TransactionResponse>(model: txnResponse, code: 200);
+    } catch (e) {
+      _logger.e(e.toString());
+      return ApiResponse.withError("Unable to fetch transactions", 400);
+    }
+  }
+
+  Future<String> _getBearerToken() async {
+    String token = await _userService.firebaseUser.getIdToken();
+    _logger.d(token);
+    return token;
+  }
+}
+
+class TransactionResponse {
+  final List<UserTransaction> transactions;
+  final bool isLastPage;
+
+  TransactionResponse({this.isLastPage, this.transactions});
 }

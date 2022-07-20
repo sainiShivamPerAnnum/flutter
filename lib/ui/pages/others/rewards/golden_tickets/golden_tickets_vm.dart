@@ -1,14 +1,11 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
-import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/hero_router.dart';
@@ -17,17 +14,13 @@ import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/rsa_encryption.dart';
 import 'package:flutter/material.dart';
 
 class GoldenTicketsViewModel extends BaseModel {
   //Dependencies
   final _userService = locator<UserService>();
-  final _userCoinService = locator<UserCoinService>();
   final _logger = locator<CustomLogger>();
-  final _apiPaths = locator<ApiPath>();
   final _gtService = locator<GoldenTicketService>();
-  final _rsaEncryption = new RSAEncryption();
 
   //Local Variables
   List<GoldenTicket> _goldenTicketList;
@@ -144,9 +137,10 @@ class GoldenTicketsViewModel extends BaseModel {
           //first fetch
           //cache the latest Golden Ticket
           int timestamp = GoldenTicket.fromJson(
-                  _goldenTicketDocs[0].data(), _goldenTicketDocs[0].id)
-              .timestamp
-              .millisecondsSinceEpoch;
+                      _goldenTicketDocs[0].data(), _goldenTicketDocs[0].id)
+                  .timestamp
+                  .seconds *
+              1000;
           CacheManager.writeCache(
               key: CacheManager.CACHE_LATEST_GOLDEN_TICKET_TIME,
               value: timestamp,
@@ -169,7 +163,8 @@ class GoldenTicketsViewModel extends BaseModel {
     goldenTicketList =
         data.map((e) => GoldenTicket.fromJson(e.data(), e.id)).toList();
     arrangedGoldenTicketList = [];
-    goldenTicketList.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    goldenTicketList
+        .sort((a, b) => b.timestamp.seconds.compareTo(a.timestamp.seconds));
     goldenTicketList.forEach((e) {
       if (e.redeemedTimestamp == null) {
         arrangedGoldenTicketList.add(e);
@@ -183,7 +178,7 @@ class GoldenTicketsViewModel extends BaseModel {
     _gtService.activeGoldenTickets = goldenTicketList;
     if (openFirst && showFirst) {
       showFirst = false;
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
         AppState.screenStack.add(ScreenItem.dialog);
         Navigator.of(AppState.delegate.navigatorKey.currentContext).push(
           HeroDialogRoute(

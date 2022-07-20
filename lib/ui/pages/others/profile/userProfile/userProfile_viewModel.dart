@@ -2,14 +2,15 @@
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/service/analytics/base_analytics.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
@@ -20,13 +21,12 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/change_profile_picture_dialog.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
-import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -37,12 +37,14 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../../../../core/repository/user_repo.dart';
+
 class UserProfileVM extends BaseModel {
   Log log = new Log('User Profile');
   bool inEditMode = false;
+  final _userRepo = locator<UserRepository>();
   final _userService = locator<UserService>();
   final BaseUtil _baseUtil = locator<BaseUtil>();
-  final DBModel _dbModel = locator<DBModel>();
   final fcmlistener = locator<FcmListener>();
   final _txnService = locator<TransactionService>();
   final _tambolaService = locator<TambolaService>();
@@ -50,6 +52,7 @@ class UserProfileVM extends BaseModel {
   final _paytmService = locator<PaytmService>();
   final S _locale = locator<S>();
   final BaseUtil baseProvider = locator<BaseUtil>();
+  final _internalOpsService = locator<InternalOpsService>();
   double picSize;
   XFile selectedProfilePicture;
   ValueChanged<bool> upload;
@@ -174,14 +177,15 @@ class UserProfileVM extends BaseModel {
           _userService.baseUser.dob =
               "${yearFieldController.text}-${monthFieldController.text}-${dateFieldController.text}";
           _userService.baseUser.gender = getGender();
-          await _dbModel
-              .updateUserProfile(
-                  _userService.baseUser.uid,
-                  _userService.baseUser.name,
-                  _userService.baseUser.dob,
-                  _userService.baseUser.gender)
-              .then((res) {
-            if (res) {
+          await _userRepo.updateUser(
+            uid: _userService.baseUser.uid,
+            dMap: {
+              'name': _userService.baseUser.name,
+              'dob': _userService.baseUser.dob,
+              'gender': _userService.baseUser.gender,
+            },
+          ).then((ApiResponse<bool> res) {
+            if (res.model) {
               _userService.setMyUserName(_userService.baseUser.name);
               _userService.setDateOfBirth(_userService.baseUser.dob);
               _userService.setGender(_userService.baseUser.gender);
@@ -276,10 +280,11 @@ class UserProfileVM extends BaseModel {
           onAccept: () {
             Haptic.vibrate();
 
-            _analyticsService.track(eventName: AnalyticsEvents.signOut);
-            _analyticsService.signOut();
-
-            _userService.signout().then((flag) async {
+            _userService.signOut(() async {
+              _analyticsService.track(eventName: AnalyticsEvents.signOut);
+              _analyticsService.signOut();
+              await _userRepo.removeUserFCM(_userService.baseUser.uid);
+            }).then((flag) async {
               if (flag) {
                 //log.debug('Sign out process complete');
                 await _baseUtil.signOut();
@@ -445,7 +450,7 @@ class UserProfileVM extends BaseModel {
         Map<String, dynamic> errorDetails = {
           'error_msg': 'Method call to upload picture failed',
         };
-        _dbModel.logFailure(_userService.baseUser.uid,
+        _internalOpsService.logFailure(_userService.baseUser.uid,
             FailType.ProfilePictureUpdateFailed, errorDetails);
       }
       print('$e');
@@ -470,12 +475,20 @@ class UserProfileVM extends BaseModel {
   onAppLockPreferenceChanged(val) async {
     if (await BaseUtil.showNoInternetAlert()) return;
     isApplockLoading = true;
-    _userService.baseUser.userPreferences
-        .setPreference(Preferences.APPLOCK, (val) ? 1 : 0);
-    await _dbModel
-        .updateUserPreferences(
-            _userService.baseUser.uid, _userService.baseUser.userPreferences)
-        .then((value) {
+    _userService.baseUser.userPreferences.setPreference(
+      Preferences.APPLOCK,
+      (val) ? 1 : 0,
+    );
+    await _userRepo.updateUser(
+      uid: _userService.baseUser.uid,
+      dMap: {
+        'userPrefsAl': val,
+        'userPrefsTn': _userService.baseUser.userPreferences.getPreference(
+              Preferences.TAMBOLANOTIFICATIONS,
+            ) ==
+            1,
+      },
+    ).then((value) {
       Log("Preferences updated");
     });
     isApplockLoading = false;
@@ -488,15 +501,23 @@ class UserProfileVM extends BaseModel {
     if (res) {
       _userService.baseUser.userPreferences
           .setPreference(Preferences.TAMBOLANOTIFICATIONS, (val) ? 1 : 0);
-      await _dbModel
-          .updateUserPreferences(
-              _userService.baseUser.uid, _userService.baseUser.userPreferences)
-          .then((value) {
-        if (val)
-          Log("Preferences updated");
-        else
-          Log("Preference update error");
-      });
+      await _userRepo.updateUser(
+        uid: _userService.baseUser.uid,
+        dMap: {
+          'userPrefsTn': val,
+          'userPrefsAl': _userService.baseUser.userPreferences.getPreference(
+                Preferences.APPLOCK,
+              ) ==
+              1,
+        },
+      ).then(
+        (value) {
+          if (val)
+            Log("Preferences updated");
+          else
+            Log("Preference update error");
+        },
+      );
     }
     isTambolaNotificationLoading = false;
   }

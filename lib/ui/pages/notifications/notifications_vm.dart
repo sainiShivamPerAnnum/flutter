@@ -1,26 +1,26 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/alert_model.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/cupertino.dart';
 
 class NotificationsViewModel extends BaseModel {
   //dependencies
-  final _dbModel = locator<DBModel>();
   final _userService = locator<UserService>();
+  final _userRepo = locator<UserRepository>();
   final _logger = locator<CustomLogger>();
 
   //local variables
   List<AlertModel> notifications;
   ScrollController _scrollController = new ScrollController();
   bool hasMoreAlerts = true;
-  DocumentSnapshot lastAlertDocument;
+  String lastAlertDocumentId;
   bool _isMoreNotificationsLoading = false;
   int postHighlightIndex = 0;
   String lastReadLatestNotificationTime;
@@ -56,26 +56,29 @@ class NotificationsViewModel extends BaseModel {
   fetchNotifications(bool more) async {
     if (more) isMoreNotificationsLoading = true;
 
-    Map<String, dynamic> aMap = await _dbModel.getUserNotifications(
-        _userService.baseUser.uid, lastAlertDocument, more);
-    _logger.d("no of alerts fetched: ${aMap['notifications'].length}");
-    if (notifications == null || notifications.length == 0) {
-      notifications = aMap['notifications'];
-    } else {
-      postHighlightIndex = notifications.length - 1;
-      appendNotifications(aMap['notifications']);
+    ApiResponse<List<AlertModel>> userNotifications =
+        await _userRepo.getUserNotifications(
+      lastAlertDocumentId,
+    );
+    if (userNotifications.code == 200) {
+      _logger.d("no of alerts fetched: ${userNotifications.model.length}");
+      if (notifications == null || notifications.length == 0) {
+        notifications = userNotifications.model;
+      } else {
+        postHighlightIndex = notifications.length - 1;
+        appendNotifications(userNotifications.model);
+      }
+      lastAlertDocumentId = userNotifications.model.last.id;
+      hasMoreAlerts = userNotifications.model.length == 20;
+      if (!more) {
+        await CacheManager.writeCache(
+            key: CacheManager.CACHE_LATEST_NOTIFICATION_TIME,
+            value: notifications.first.createdTime.seconds.toString(),
+            type: CacheType.string);
+      }
+      highlightNewNotifications(postHighlightIndex);
+      if (more) isMoreNotificationsLoading = false;
     }
-    lastAlertDocument = aMap['lastAlertDoc'];
-    hasMoreAlerts = aMap['alertsLength'] == 20;
-    if (!more) {
-      await CacheManager.writeCache(
-          key: CacheManager.CACHE_LATEST_NOTIFICATION_TIME,
-          value:
-              notifications.first.createdTime.millisecondsSinceEpoch.toString(),
-          type: CacheType.string);
-    }
-    highlightNewNotifications(postHighlightIndex);
-    if (more) isMoreNotificationsLoading = false;
   }
 
   appendNotifications(List<AlertModel> list) {
@@ -92,7 +95,7 @@ class NotificationsViewModel extends BaseModel {
   highlightNewNotifications(int indexPostHighlight) {
     if (lastReadLatestNotificationTime == null) return;
     for (int i = indexPostHighlight; i < notifications.length; i++) {
-      if (notifications[i].createdTime.millisecondsSinceEpoch >
+      if (notifications[i].createdTime.seconds >
           int.tryParse(lastReadLatestNotificationTime))
         notifications[i].isHighlighted = true;
       newNotificationsCount++;

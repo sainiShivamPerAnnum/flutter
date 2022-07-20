@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 
 class GoldenTicket {
   String gtId;
@@ -8,9 +9,9 @@ class GoldenTicket {
   bool isRewarding;
   String note;
   String prizeSubtype;
-  Timestamp redeemedTimestamp;
+  TimestampModel redeemedTimestamp;
   List<Reward> rewardArr;
-  Timestamp timestamp;
+  TimestampModel timestamp;
   String userId;
   String version;
 
@@ -32,14 +33,14 @@ class GoldenTicket {
   GoldenTicket.fromJson(Map<String, dynamic> json, String docId) {
     gtId = docId;
     userId = json['userId'];
-    timestamp = json['timestamp'];
+    timestamp = TimestampModel.fromMap(json['timestamp']);
     eventType = json['eventType'];
     gtType = json['gtType'];
     prizeSubtype = json['prizeSubtype'];
     note = json['note'];
     canTransfer = json['canTransfer'];
     isRewarding = json['isRewarding'];
-    redeemedTimestamp = json['redeemedTimestamp'];
+    redeemedTimestamp = TimestampModel.fromMap(json['redeemedTimestamp']);
     rewardArr =
         json['rewardArr'] != null ? Reward.objArray(json['rewardArr']) : [];
     version = json['version'];
@@ -72,7 +73,6 @@ class Reward {
     return "Type: $type || Value: $value";
   }
 }
-
 
 // Why a reward map, why not directly a reward array
 // with reward class object

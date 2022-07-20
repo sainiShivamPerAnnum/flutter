@@ -1,13 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/core/model/helper_model.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/util/logger.dart';
 
 class ReferralDetail {
   static Log log = new Log('ReferralDetail');
   final String _userName;
-  final Timestamp _timestamp;
+  final TimestampModel _timestamp;
   bool _isUserBonusUnlocked;
   bool _isRefereeBonusUnlocked;
   int _refCount;
+  static final helper =
+      HelperModel<ReferralDetail>((map) => ReferralDetail.fromMap(map));
   final Map<String, dynamic> _bonusMap;
 
   static const String fldUsrBonusFlag = 'usr_bonus_unlocked';
@@ -17,14 +21,24 @@ class ReferralDetail {
   ReferralDetail(this._userName, this._timestamp, this._isUserBonusUnlocked,
       this._isRefereeBonusUnlocked, this._refCount, this._bonusMap);
 
-  ReferralDetail.fromMap(Map<String, dynamic> rMap)
-      : this(
-            rMap['usr_name'],
-            rMap['timestamp'],
-            rMap[fldUsrBonusFlag],
-            rMap[fldRefereeBonusFlag],
-            rMap[fldUserReferralCount],
-            rMap['bonus_values']);
+  // ReferralDetail.fromMap(Map<String, dynamic> rMap)
+  //     : this(
+  //           rMap['usr_name'],
+  //           rMap['timestamp'],
+  //           rMap[fldUsrBonusFlag],
+  //           rMap[fldRefereeBonusFlag],
+  //           rMap[fldUserReferralCount],
+  //           rMap['bonus_values']);
+
+  factory ReferralDetail.fromMap(Map<String, dynamic> rMap) {
+    return ReferralDetail(
+        rMap['usr_name'],
+        TimestampModel.fromMap(rMap['timestamp']),
+        rMap[fldUsrBonusFlag],
+        rMap[fldRefereeBonusFlag],
+        rMap[fldUserReferralCount],
+        rMap['bonus_values']);
+  }
 
   toJson() => {
         fldUsrBonusFlag: _isUserBonusUnlocked,

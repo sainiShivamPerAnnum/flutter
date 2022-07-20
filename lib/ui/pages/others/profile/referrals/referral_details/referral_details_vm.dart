@@ -1,14 +1,18 @@
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/repository/referral_repo.dart';
+import 'package:felloapp/core/repository/user_repo.dart';
+import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/base_remote_config.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/fcm_topics.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:flutter/services.dart';
@@ -18,59 +22,75 @@ import 'package:share_plus/share_plus.dart';
 
 class ReferralDetailsViewModel extends BaseModel {
   final CustomLogger _logger = locator<CustomLogger>();
-  final _baseUtil = locator<BaseUtil>();
-  final _dbModel = locator<DBModel>();
   final _fcmListener = locator<FcmListener>();
   final _userService = locator<UserService>();
   final _analyticsService = locator<AnalyticsService>();
+  final _appFlyer = locator<AppFlyerAnalytics>();
+  final _userRepo = locator<UserRepository>();
+  final _refRepo = locator<ReferralRepo>();
 
-  String app_share_message =
+  String appShareMessage =
       BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.APP_SHARE_MSG);
-  String unlock_referral_bonus = BaseRemoteConfig.remoteConfig
+  String unlockReferralBonus = BaseRemoteConfig.remoteConfig
       .getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT);
-  String _userUrl = "";
-  String _userUrlPrefix = "";
-  String _userUrlCode = "";
+
+  String _refUrl = "";
+  String _refCode = "";
 
   String _shareMsg;
   bool shareWhatsappInProgress = false;
   bool shareLinkInProgress = false;
-  bool loadingUrl = false;
+  bool loadingRefCode = true;
 
-  get userUrl => _userUrl;
-
-  get userUrlCode => _userUrlCode;
-  get userUrlPrefix => _userUrlPrefix;
+  get refUrl => _refUrl;
+  get refCode => _refCode;
 
   init() {
-    generateLink();
-    _shareMsg = (app_share_message != null && app_share_message.isNotEmpty)
-        ? app_share_message
-        : 'Hey I am gifting you ₹10 and 200 gaming tokens. Lets start saving and playing together! ';
-  }
-
-  Future<void> generateLink() async {
-    loadingUrl = true;
-    notifyListeners();
-    _userUrl = await _userService.createDynamicLink(true, 'Other');
-    _userUrlPrefix = _userUrl;
-    _userUrlCode = _userUrlPrefix.split('/').removeLast();
-    List<String> splittedUrl = _userUrlPrefix.split('/');
-    splittedUrl.removeLast();
-    _userUrlPrefix = splittedUrl.join("/");
-    _userUrlPrefix = _userUrlPrefix + '/';
-    loadingUrl = false;
-    refresh();
+    this.generateLink().then((value) {
+      _refUrl = value;
+    });
+    this.fetchReferralCode();
   }
 
   void copyReferCode() {
+    Haptic.vibrate();
     _analyticsService.track(eventName: AnalyticsEvents.referCodeCopied);
-    Clipboard.setData(ClipboardData(text: userUrlCode)).then((_) {
-      BaseUtil.showPositiveAlert("Code: $userUrlCode", "Copied to Clipboard");
+    Clipboard.setData(ClipboardData(text: _refCode)).then((_) {
+      BaseUtil.showPositiveAlert("Code: $_refCode", "Copied to Clipboard");
     });
   }
 
-  shareLink() async {
+  Future<void> fetchReferralCode() async {
+    final ApiResponse res = await _refRepo.getReferralCode();
+    if (res.code == 200) {
+      _refCode = res.model;
+    }
+    _shareMsg = (appShareMessage != null && appShareMessage.isNotEmpty)
+        ? appShareMessage
+        : 'Hey I am gifting you ₹10 and 200 gaming tokens. Lets start saving and playing together! Share this code: $_refCode with your friends.\n';
+
+    loadingRefCode = false;
+    refresh();
+  }
+
+  Future<String> generateLink() async {
+    if (_refUrl != "") return _refUrl;
+
+    String url;
+    try {
+      final link = await _appFlyer.inviteLink();
+      if (link['status'] == 'success') {
+        url = link['payload']['userInviteUrl'];
+        if (url == null) url = link['payload']['userInviteURL'];
+      }
+      _logger.d('appflyer invite link as $url');
+    } catch (e) {
+      _logger.e(e);
+    }
+    return url;
+  }
+
+  Future<void> shareLink() async {
     if (shareLinkInProgress) return;
     if (await BaseUtil.showNoInternetAlert()) return;
 
@@ -85,10 +105,17 @@ class ReferralDetailsViewModel extends BaseModel {
     shareLinkInProgress = true;
     refresh();
 
-    _userService.createDynamicLink(true, 'Other').then((url) async {
-      _logger.d(url);
-      shareLinkInProgress = false;
-      refresh();
+    String url = await this.generateLink();
+
+    shareLinkInProgress = false;
+    refresh();
+
+    if (url == null) {
+      BaseUtil.showNegativeAlert(
+        'Generating link failed',
+        'Please try again in some time',
+      );
+    } else {
       if (Platform.isIOS) {
         Share.share(_shareMsg + url);
       } else {
@@ -96,32 +123,31 @@ class ReferralDetailsViewModel extends BaseModel {
           _logger.d(flag);
         });
       }
-    });
+    }
   }
 
-  shareWhatsApp() async {
-    ////////////////////////////////
+  Future<void> shareWhatsApp() async {
     if (await BaseUtil.showNoInternetAlert()) return;
     _fcmListener.addSubscription(FcmTopic.REFERRER);
     BaseAnalytics.analytics.logShare(
-        contentType: 'referral',
-        itemId: _userService.baseUser.uid,
-        method: 'whatsapp');
+      contentType: 'referral',
+      itemId: _userService.baseUser.uid,
+      method: 'whatsapp',
+    );
     shareWhatsappInProgress = true;
     refresh();
-    String url;
-    try {
-      url = await _userService.createDynamicLink(true, 'Whatsapp');
-    } catch (e) {
-      _logger.e('Failed to create dynamic link');
-      _logger.e(e);
-    }
+
+    String url = await this.generateLink();
     shareWhatsappInProgress = false;
     refresh();
 
-    if (url == null)
+    if (url == null) {
+      BaseUtil.showNegativeAlert(
+        'Generating link failed',
+        'Please try again in some time',
+      );
       return;
-    else
+    } else
       _logger.d(url);
     try {
       _analyticsService.track(eventName: AnalyticsEvents.whatsappShare);
@@ -141,13 +167,5 @@ class ReferralDetailsViewModel extends BaseModel {
     } catch (e) {
       _logger.d(e.toString());
     }
-
-    // FlutterShareMe()
-    //     .shareToWhatsApp4Biz(msg: _shareMsg + url)
-    //     .then((value) {
-    //   _logger.d(value);
-    // }).catchError((err) {
-    //  _logger.e('Share to whatsapp biz failed as well');
-    // });
   }
 }

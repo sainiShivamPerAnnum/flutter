@@ -28,12 +28,11 @@ class Save extends StatelessWidget {
         return Stack(
           children: [
             Container(
+              margin: EdgeInsets.only(top: SizeConfig.padding32),
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
-                  SizedBox(
-                      height:
-                          SizeConfig.screenWidth * 0.12 + SizeConfig.padding32),
+                  SizedBox(height: SizeConfig.screenWidth * 0.12),
                   Stack(
                     children: [
                       if (model.focusCoupon != null)
@@ -72,38 +71,7 @@ class Save extends StatelessWidget {
                       mini: true,
                     ),
                   ),
-                  // SizedBox(height: SizeConfig.padding32),
-                  // // Goldlinks(model: model),
-                  // TextButton(
-                  //   onPressed: () {
-                  //     model.showInstantTestGT();
-                  //   },
-                  //   child: Text("Show instant gt"),
-                  // ),
-                  // TextButton(
-                  //   onPressed: () {
-                  //     model.showTxnSuccessScreen(null, null);
-                  //   },
-                  //   child: Text("Show txn complete UI"),
-                  // ),
-                  // TextButton(
-                  //   onPressed: () {
-                  //     model.showTransactionPendingDialog();
-                  //   },
-                  //   child: Text("Show txn waiting dialog"),
-                  // ),
-
-                  // TextButton(
-                  //   onPressed: () {
-                  //     AppState.delegate.appState.currentAction = PageAction(
-                  //         state: PageState.addPage, page: PoolViewPageConfig);
-                  //   },
-                  //   child: Text("Show pool game"),
-                  // ),
                   AutosaveCard(),
-
-                  // Goldlinks(model: model),
-                  //CustomSubscriptionContainer(),
                   SizedBox(height: SizeConfig.navBarHeight * 2),
                 ],
               ),
@@ -191,12 +159,15 @@ class FocusCouponClip extends StatelessWidget {
 class GoldBalanceContainer extends StatelessWidget {
   final AugmontGoldBuyViewModel model;
   final bool showNavIcon;
-  GoldBalanceContainer({this.model, this.showNavIcon = false});
+  final bool hapticReq;
+  GoldBalanceContainer(
+      {this.model, this.showNavIcon = false, this.hapticReq = true});
 
   @override
   Widget build(BuildContext context) {
     return WinningsContainer(
       onTap: model != null ? model.navigateToGoldBalanceDetailsScreen : () {},
+      hapticRequired: hapticReq,
       borderRadius: SizeConfig.roundness16,
       shadow: true,
       color: UiConstants.tertiarySolid,

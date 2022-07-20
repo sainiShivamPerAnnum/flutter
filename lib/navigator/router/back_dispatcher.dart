@@ -1,30 +1,28 @@
 //Project Imports
 import 'dart:developer';
 
+import 'package:another_flushbar/flushbar.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_game/web_game_vm.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
-import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog_landscape.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:flushbar/flushbar.dart';
 //Flutter Imports
 import 'package:flutter/material.dart';
 
 class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   final FelloRouterDelegate _routerDelegate;
   final CustomLogger logger = locator<CustomLogger>();
-  DBModel _dbModel = locator<DBModel>();
+  final _userRepo = locator<UserRepository>();
   BaseUtil _baseUtil = locator<BaseUtil>();
   final _userService = locator<UserService>();
   final _webGameViewModel = locator<WebGameViewModel>();
@@ -81,10 +79,17 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
           _userService.baseUser != null &&
           _userService.baseUser.uid != null &&
           _userService.baseUser.userPreferences != null)
-        _dbModel
-            .updateUserPreferences(_userService.baseUser.uid,
-                _userService.baseUser.userPreferences)
-            .then((value) {
+        _userRepo.updateUser(
+          uid: _userService.baseUser.uid,
+          dMap: {
+            "userPrefsTn": _userService.baseUser.userPreferences
+                    .getPreference(Preferences.APPLOCK) ==
+                1,
+            "userPrefsAl": _userService.baseUser.userPreferences
+                    .getPreference(Preferences.TAMBOLANOTIFICATIONS) ==
+                1,
+          },
+        ).then((value) {
           AppState.unsavedPrefs = false;
           log("Preferences updated");
         });

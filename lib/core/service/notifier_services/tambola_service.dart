@@ -1,21 +1,22 @@
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
-import 'package:felloapp/core/model/user_ticket_wallet_model.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:felloapp/util/custom_logger.dart';
+
+import '../../repository/ticket_repo.dart';
 
 class TambolaService extends ChangeNotifier {
   CustomLogger _logger = locator<CustomLogger>();
-  DBModel _dbModel = locator<DBModel>();
   UserService _userService = locator<UserService>();
+  final _tambolaRepo = locator<TambolaRepo>();
+  final _internalOpsService = locator<InternalOpsService>();
 
-  static UserTicketWallet _userTicketWallet;
+  static int _ticketCount;
   static int _dailyPicksCount;
   static List<int> _todaysPicks;
   static DailyPick _weeklyDigits;
@@ -33,11 +34,11 @@ class TambolaService extends ChangeNotifier {
     _winnerDialogCalled = false;
     _weeklyDigits = null;
     _todaysPicks = null;
-    _userTicketWallet = null;
+    _ticketCount = null;
     _userWeeklyBoards = null;
   }
 
-  UserTicketWallet get userTicketWallet => _userTicketWallet;
+  int get ticketCount => _ticketCount;
 
   get atomicTicketGenerationLeftCount => _atomicTicketGenerationLeftCount;
 
@@ -51,8 +52,8 @@ class TambolaService extends ChangeNotifier {
 
   get dailyPicksCount => _dailyPicksCount;
 
-  set userTicketWallet(val) {
-    _userTicketWallet = val;
+  set setTicketCount(int val) {
+    _ticketCount = val;
     _logger.d("Ticket Wallet updated");
     notifyListeners();
   }
@@ -111,24 +112,11 @@ class TambolaService extends ChangeNotifier {
     setUpDailyPicksCount();
   }
 
-  Future<void> getUserTicketWalletData() async {
-    userTicketWallet =
-        await _dbModel.getUserTicketWallet(_userService.baseUser.uid);
-    if (_userTicketWallet == null) {
-      await _initiateNewTicketWallet();
+  Future<void> getTicketCount() async {
+    final count = await _tambolaRepo.getTicketCount();
+    if (count.code == 200) {
+      setTicketCount = count.model;
     }
-  }
-
-  Future<bool> _initiateNewTicketWallet() async {
-    userTicketWallet = UserTicketWallet.newTicketWallet();
-    int _t = userTicketWallet.initTck;
-
-    userTicketWallet = await _dbModel.updateInitUserTicketCount(
-        _userService.baseUser.uid,
-        _userTicketWallet,
-        Constants.NEW_USER_TICKET_COUNT);
-    //updateInitUserTicketCount method returns no change if operations fails
-    return (userTicketWallet.initTck != _t);
   }
 
   dump() {
@@ -148,7 +136,7 @@ class TambolaService extends ChangeNotifier {
     if (!weeklyDrawFetched) {
       try {
         _logger.i('Requesting for weekly picks');
-        DailyPick _picks = await _dbModel.getWeeklyPicks();
+        final DailyPick _picks = (await _tambolaRepo.getWeeklyPicks()).model;
         weeklyDrawFetched = true;
         if (_picks != null) {
           weeklyDigits = _picks;
@@ -196,7 +184,7 @@ class TambolaService extends ChangeNotifier {
     } catch (e) {
       _logger.e('key parsing failed: ' + e.toString());
       Map<String, String> errorDetails = {'error_msg': e.toString()};
-      _dbModel.logFailure(_userService.baseUser.uid,
+      _internalOpsService.logFailure(_userService.baseUser.uid,
           FailType.DailyPickParseFailed, errorDetails);
       dailyPicksCount = 3;
     }

@@ -9,7 +9,6 @@ import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
-import 'package:felloapp/ui/pages/hamburger/chatsupport_page.dart';
 import 'package:felloapp/ui/pages/hamburger/faq_page.dart';
 import 'package:felloapp/ui/pages/hamburger/freshdesk_help.dart';
 import 'package:felloapp/ui/pages/hamburger/referral_policy_page.dart';
@@ -204,9 +203,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
         case Pages.RefPolicy:
           _addPageData(ReferralPolicy(), RefPolicyPageConfig);
-          break;
-        case Pages.ChatSupport:
-          _addPageData(ChatSupport(), ChatSupportPageConfig);
           break;
         case Pages.VerifyEmail:
           _addPageData(VerifyEmail(), VerifyEmailPageConfig);

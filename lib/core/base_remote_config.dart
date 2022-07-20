@@ -1,16 +1,14 @@
-import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:felloapp/util/custom_logger.dart';
 
 class BaseRemoteConfig {
   static RemoteConfig remoteConfig;
-  static DBModel _dbProvider = locator<DBModel>();
-  static BaseUtil _baseProvider = locator<BaseUtil>();
   static UserService _userService = locator<UserService>();
+  static final _internalOpsService = locator<InternalOpsService>();
 
   ///Each config is set as a map = {name, default value}
   static const Map<String, String> _DRAW_PICK_TIME = {'draw_pick_time': '18'};
@@ -21,7 +19,7 @@ class BaseRemoteConfig {
     'tambola_header_2': 'Pull to see the other picks'
   };
   static const Map<String, String> _TAMBOLA_DAILY_PICK_COUNT = {
-    'tambola_daily_pick_count': '5'
+    'tambola_daily_pick_count': '3'
   };
   static const Map<String, String> _FORCE_MIN_BUILD_NUMBER = {
     'force_min_build_number': '0'
@@ -131,20 +129,6 @@ class BaseRemoteConfig {
     'poolclub_play_prize': '25,000'
   };
 
-  static const Map<String, String> _CRICKET_GAME_URI = {
-    'cricket_game_url': 'https://prod.freakx.in/fello/cricket-2021-V2/'
-  };
-
-  static const Map<String, String> _FOOTBALL_GAME_URI = {
-    'football_game_url': 'https://fl-games-football-kickoff.onrender.com/'
-  };
-  static const Map<String, String> _CANDYFIESTA_GAME_URI = {
-    'candyfiesta_game_url': 'https://fl-games-candy-fiesta.onrender.com/'
-  };
-  static const Map<String, String> _POOLCLUB_GAME_URI = {
-    'poolclub_game_url':
-        'https://d2qfyj2eqvh06a.cloudfront.net/pool-club/index.html'
-  };
   static const Map<String, String> _FOOTBALL_THUMBNAIL_URI = {
     'football_thumbnail':
         'https://img.freepik.com/free-vector/gradient-football-field-background_52683-67789.jpg?t=st=1651147964~exp=1651148564~hmac=4d7297e0201d5f1513486c39fb6b0d0beeb2b5abbe8051ded63454464e438605&w=1800'
@@ -193,6 +177,10 @@ class BaseRemoteConfig {
     'app_share_message':
         'Hey I am gifting you ₹10 and 200 gaming tokens. Lets start saving and playing together ! '
   };
+  static const Map<String, String> _RESTRICT_PAYTM_APP_INVOKE = {
+    'restrict_paytm_app_invoke': 'false'
+  };
+  static const Map<String, int> _CACHE_INVALIDATION = {'invalidate_before': 0};
 
   static const Map<String, dynamic> DEFAULTS = {
     ..._DRAW_PICK_TIME,
@@ -238,10 +226,6 @@ class BaseRemoteConfig {
     ..._TAMBOLA_THUMBNAIL_URI,
     ..._POOLCLUB_THUMBNAIL_URI,
     ..._CANDYFIESTA_THUMBNAIL_URI,
-    ..._CRICKET_GAME_URI,
-    ..._FOOTBALL_GAME_URI,
-    ..._CANDYFIESTA_GAME_URI,
-    ..._POOLCLUB_GAME_URI,
     ..._MIN_WITHDRAWABLE_PRIZE,
     ..._GAME_TAMBOLA_ANNOUNCEMENT,
     ..._GAME_CRICKET_ANNOUNCEMENT,
@@ -249,7 +233,9 @@ class BaseRemoteConfig {
     ..._AMZ_VOUCHER_REDEMPTION,
     ..._APP_SHARE_MSG,
     ..._GAME_POSITION,
+    ..._RESTRICT_PAYTM_APP_INVOKE,
     ..._NEW_USER_GAMES_ORDER,
+    ..._CACHE_INVALIDATION
   };
 
   static Future<bool> init() async {
@@ -276,8 +262,11 @@ class BaseRemoteConfig {
           'error_type': 'Remote config details fetch failed',
           'error_msg': 'Remote config fetch failed, using default values.'
         };
-        _dbProvider.logFailure(_userService.baseUser.uid,
-            FailType.RemoteConfigFailed, errorDetails);
+        _internalOpsService.logFailure(
+          _userService.baseUser.uid,
+          FailType.RemoteConfigFailed,
+          errorDetails,
+        );
       }
       return false;
     }
@@ -369,11 +358,6 @@ class BaseRemoteConfig {
 
   static String get POOLCLUB_PLAY_PRIZE => _POOLCLUB_PLAY_PRIZE.keys.first;
 
-  static String get CRICKET_GAME_URI => _CRICKET_GAME_URI.keys.first;
-  static String get FOOTBALL_GAME_URI => _FOOTBALL_GAME_URI.keys.first;
-  static String get CANDYFIESTA_GAME_URI => _CANDYFIESTA_GAME_URI.keys.first;
-  static String get POOLCLUB_GAME_URI => _POOLCLUB_GAME_URI.keys.first;
-
   static String get FOOTBALL_THUMBNAIL_URI =>
       _FOOTBALL_THUMBNAIL_URI.keys.first;
 
@@ -405,5 +389,12 @@ class BaseRemoteConfig {
 
   static String get GAME_POSITION => _GAME_POSITION.keys.first;
 
+  static String get RESTRICT_PAYTM_APP_INVOKE =>
+      _RESTRICT_PAYTM_APP_INVOKE.keys.first;
+
   static String get NEW_USER_GAMES_ORDER => _NEW_USER_GAMES_ORDER.keys.first;
+
+  static int get invalidationBefore {
+    return remoteConfig.getInt(_CACHE_INVALIDATION.keys.first);
+  }
 }

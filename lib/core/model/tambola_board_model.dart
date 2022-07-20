@@ -1,17 +1,17 @@
 import 'dart:collection';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 
 class TambolaBoard {
   static Log log = new Log('TambolaBoard');
-  BaseUtil _baseUtil = locator<BaseUtil>(); //required to fetch client token
-  TambolaService _tambolaService = locator<TambolaService>();
-  final String doc_key;
-  final Timestamp assigned_time;
+  final _baseUtil = locator<BaseUtil>(); //required to fetch client token
+  final _tambolaService = locator<TambolaService>();
+
+  final TimestampModel assigned_time;
   final String val;
   final String id;
   final int week_code;
@@ -20,7 +20,6 @@ class TambolaBoard {
   static final String fldBoardValue = 'val';
   static final String fldWeekCode = 'week_code';
 
-  ///////////
   static final int boardHeight = 3;
   static final int boardLength = 9;
   List<String> encodedTambolaList;
@@ -28,30 +27,28 @@ class TambolaBoard {
       new List.generate(boardHeight, (_) => new List(boardLength));
   Map<int, int> indexValueMap = new HashMap();
 
-  TambolaBoard(
-      this.doc_key, this.assigned_time, this.val, this.id, this.week_code) {
+  TambolaBoard(this.assigned_time, this.val, this.id, this.week_code) {
     if (this.val != null) decodeBoard(this.val);
   }
 
-  TambolaBoard.fromMap(Map<String, dynamic> data, String docKey)
-      : this(
-          docKey,
-          data[fldAssignedTime],
-          data[fldBoardValue],
-          data[fldId],
-          data[fldWeekCode],
-        );
+  factory TambolaBoard.fromMap(Map<String, dynamic> map) {
+    return TambolaBoard(
+      TimestampModel.fromMap(map['assigned_time']),
+      map['val'] ?? '',
+      map['id'] ?? 0,
+      map['week_code'] ?? 0,
+    );
+  }
 
   bool isValid() {
     return (val != null); //TODO
   }
 
-  ///////////////////////////////
   List<String> encodedStringToArray(String cde) {
     try {
       return cde.split(RegExp('(?<=[Aa-z])'));
     } catch (e) {
-      return new List();
+      return [];
     }
   }
 

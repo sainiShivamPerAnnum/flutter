@@ -6,7 +6,7 @@ class Constants {
 
   static const String GAME_TYPE_CANDYFIESTA = "GM_CANDY_FIESTA";
   static const String GAME_TYPE_FOOTBALL = "GM_FOOTBALL_KICKOFF";
-  static const String GAME_TYPE_CRICKET = "GM_CRIC2020";
+  static const String GAME_TYPE_CRICKET = "GM_CRICKET_HERO";
   static const String GAME_TYPE_TAMBOLA = "GM_TAMBOLA2020";
   static const String GAME_TYPE_POOLCLUB = "GM_POOL_CLUB";
   static const String GAME_TYPE_HIGHEST_SAVER = "HIGHEST_SAVER";
@@ -63,8 +63,8 @@ class Constants {
   static final String DOC_USER_WALLET_FUND_BALANCE = "fndbalance";
   static final String DOC_USER_WALLET_TICKET_BALANCE = "tckbalance";
   static final String DOC_USER_WALLET_COIN_BALANCE = "coinbalance";
-  static final String DOC_IAR_DAILY_CHIPS = "SUBSCRIPTION_DAILY_CHIPS";
-  static final String DOC_IAR_WEEKLY_CHIPS = "SUBSCRIPTION_WEEKLY_CHIPS";
+  static final String DOC_IAR_DAILY_CHIPS = "daily";
+  static final String DOC_IAR_WEEKLY_CHIPS = "weekly";
 
   //Sub-Collection docs Collection docs
   static final String DOC_USER_SUBSCRIPTIONS_ORDERS = 'orders';
