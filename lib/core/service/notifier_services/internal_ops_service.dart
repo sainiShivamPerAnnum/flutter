@@ -68,7 +68,7 @@ class InternalOpsService extends ChangeNotifier {
     dMap['fail_type'] = failType.value();
     dMap['manually_resolved'] = false;
     dMap['app_version'] =
-        '${BaseUtil.packageInfo.version}+${BaseUtil.packageInfo.buildNumber}';
+        '${BaseUtil?.packageInfo?.version ?? ''}+${BaseUtil?.packageInfo?.buildNumber ?? ''}';
     if (phoneModel != null) {
       dMap['phone_model'] = phoneModel;
     }
