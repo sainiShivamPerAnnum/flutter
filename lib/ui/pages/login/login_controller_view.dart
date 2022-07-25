@@ -8,6 +8,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_view.dart';
+import 'package:felloapp/ui/pages/login/screens/otp_input/otp_input_view.dart';
 import 'package:felloapp/ui/pages/login/screens/username_input/username_input_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
@@ -69,7 +70,8 @@ class _LoginControllerViewState extends State<LoginControllerView> {
         backgroundColor: UiConstants.primaryColor,
         floatingActionButton: keyboardIsOpen &&
                 Platform.isIOS &&
-                model.currentPage != Username.index
+                (model.currentPage == MobileInputScreenView.index ||
+                    model.currentPage == OtpInputScreen.index)
             ? FloatingActionButton(
                 child: Icon(
                   Icons.done,
