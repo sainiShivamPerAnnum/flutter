@@ -67,7 +67,9 @@ class _LoginControllerViewState extends State<LoginControllerView> {
       onModelDispose: (model) => model.exit(),
       builder: (ctx, model, child) => Scaffold(
         backgroundColor: UiConstants.primaryColor,
-        floatingActionButton: keyboardIsOpen && Platform.isIOS
+        floatingActionButton: keyboardIsOpen &&
+                Platform.isIOS &&
+                model.currentPage != Username.index
             ? FloatingActionButton(
                 child: Icon(
                   Icons.done,
