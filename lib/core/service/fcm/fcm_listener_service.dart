@@ -112,12 +112,11 @@ class FcmListener {
       }
     } catch (e) {
       logger.e(e.toString());
-      if (_userService.isUserOnborded != null)
-        _internalOpsService.logFailure(
-            _userService.baseUser.uid, FailType.FcmListenerSetupFailed, {
-          "title": "FcmListener setup Failed",
-          "error": e.toString(),
-        });
+      _internalOpsService.logFailure(
+          _userService.baseUser.uid, FailType.FcmListenerSetupFailed, {
+        "title": "FcmListener setup Failed",
+        "error": e.toString(),
+      });
     }
     return _fcm;
   }

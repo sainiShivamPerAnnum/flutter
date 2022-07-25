@@ -79,7 +79,8 @@ class InternalOpsService extends ChangeNotifier {
     await logOnCrashLytics(failType, dMap);
     if (failType == FailType.UserAugmontSellFailed ||
         failType == FailType.UserPaymentCompleteTxnFailed ||
-        failType == FailType.UserDataCorrupted) {
+        failType == FailType.UserDataCorrupted ||
+        failType == FailType.Splash) {
       logger.i("CALLING: addPriorityFailedReport");
       logResponse = await _internalOps.logFailure(userId, 'priority', dMap);
     } else if (failType == FailType.TambolaTicketGenerationFailed) {
