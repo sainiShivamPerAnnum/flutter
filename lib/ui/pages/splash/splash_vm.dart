@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:device_unlock/device_unlock.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
@@ -112,6 +113,14 @@ class LauncherViewModel extends BaseModel {
       return;
     }
 
+    ///check for breaking update
+    if (await checkBreakingUpdate()) {
+      AppState.isUpdateScreen = true;
+      navigator.currentAction =
+          PageAction(state: PageState.replaceAll, page: UpdateRequiredConfig);
+      return;
+    }
+
     ///check for breaking update (TESTING)
     if (await checkBreakingUpdateTest()) {
       AppState.isUpdateScreen = true;
@@ -171,8 +180,9 @@ class LauncherViewModel extends BaseModel {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String currentBuild = packageInfo.buildNumber;
     _logger.i('Current Build $currentBuild');
-    String minBuild = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER);
+    String minBuild = BaseRemoteConfig.remoteConfig.getString(Platform.isAndroid
+        ? BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER_ANDROID
+        : BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER_IOS);
     _logger.v('Min Build Required $minBuild');
     //minBuild = "50";
     try {
@@ -190,8 +200,9 @@ class LauncherViewModel extends BaseModel {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String currentBuild = packageInfo.buildNumber;
     _logger.i('Current Build $currentBuild');
-    String minBuild = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER_2);
+    String minBuild = BaseRemoteConfig.remoteConfig.getString(Platform.isAndroid
+        ? BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER_ANDROID_2
+        : BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER_IOS_2);
     _logger.v('Min Build Required $minBuild');
     //minBuild = "50";
     try {

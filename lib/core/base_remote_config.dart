@@ -21,11 +21,17 @@ class BaseRemoteConfig {
   static const Map<String, String> _TAMBOLA_DAILY_PICK_COUNT = {
     'tambola_daily_pick_count': '3'
   };
-  static const Map<String, String> _FORCE_MIN_BUILD_NUMBER = {
-    'force_min_build_number': '0'
+  static const Map<String, String> _FORCE_MIN_BUILD_NUMBER_IOS = {
+    'force_min_build_number_ios': '0'
   };
-  static const Map<String, String> _FORCE_MIN_BUILD_NUMBER_2 = {
-    'force_min_build_number_2': '0'
+  static const Map<String, String> _FORCE_MIN_BUILD_NUMBER_ANDROID = {
+    'force_min_build_number_android': '0'
+  };
+  static const Map<String, String> _FORCE_MIN_BUILD_NUMBER_IOS_2 = {
+    'force_min_build_number_ios_2': '0'
+  };
+  static const Map<String, String> _FORCE_MIN_BUILD_NUMBER_ANDROID_2 = {
+    'force_min_build_number_android_2': '0'
   };
   static const Map<String, String> _AMZ_VOUCHER_REDEMPTION = {
     'amz_voucher_redemption': '0'
@@ -187,8 +193,10 @@ class BaseRemoteConfig {
     ..._TAMBOLA_HEADER_FIRST,
     ..._TAMBOLA_HEADER_SECOND,
     ..._TAMBOLA_DAILY_PICK_COUNT,
-    ..._FORCE_MIN_BUILD_NUMBER,
-    ..._FORCE_MIN_BUILD_NUMBER_2,
+    ..._FORCE_MIN_BUILD_NUMBER_IOS,
+    ..._FORCE_MIN_BUILD_NUMBER_ANDROID,
+    ..._FORCE_MIN_BUILD_NUMBER_IOS_2,
+    ..._FORCE_MIN_BUILD_NUMBER_ANDROID_2,
     ..._DEPOSIT_UPI_ADDRESS,
     ..._PLAY_SCREEN_FIRST,
     ..._TAMBOLA_WIN_CORNER,
@@ -272,11 +280,16 @@ class BaseRemoteConfig {
     }
   }
 
-  static String get FORCE_MIN_BUILD_NUMBER =>
-      _FORCE_MIN_BUILD_NUMBER.keys.first;
+  static String get FORCE_MIN_BUILD_NUMBER_IOS =>
+      _FORCE_MIN_BUILD_NUMBER_IOS.keys.first;
 
-  static String get FORCE_MIN_BUILD_NUMBER_2 =>
-      _FORCE_MIN_BUILD_NUMBER_2.keys.first;
+  static String get FORCE_MIN_BUILD_NUMBER_ANDROID =>
+      _FORCE_MIN_BUILD_NUMBER_ANDROID.keys.first;
+
+  static String get FORCE_MIN_BUILD_NUMBER_IOS_2 =>
+      _FORCE_MIN_BUILD_NUMBER_IOS_2.keys.first;
+  static String get FORCE_MIN_BUILD_NUMBER_ANDROID_2 =>
+      _FORCE_MIN_BUILD_NUMBER_ANDROID_2.keys.first;
 
   static String get DRAW_PICK_TIME => _DRAW_PICK_TIME.keys.first;
 
