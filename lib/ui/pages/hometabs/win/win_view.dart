@@ -30,106 +30,112 @@ class Win extends StatelessWidget {
         model.clear();
       },
       builder: (ctx, model, child) {
-        return Stack(
-          children: [
-            Container(
-              margin: EdgeInsets.only(top: SizeConfig.padding20),
-              child: ListView(
-                padding: EdgeInsets.only(top: SizeConfig.screenWidth * 0.24),
-                children: [
-                  Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        BigPrizeContainer(
-                          bgColor: Color(0xff26A6F4),
-                          bigText: locale.winMoneyBigText,
-                          smallText: locale.winMoneySmallText,
-                          image: Assets.moneyBag,
-                          painter: LakhCustomPaint(),
-                          onPressed: () =>
-                              AppState.delegate.appState.setCurrentTabIndex = 1,
-                        ),
-                        SizedBox(width: SizeConfig.padding16),
-                        BigPrizeContainer(
-                          bgColor: UiConstants.tertiarySolid,
-                          bigText: locale.winIphoneBigText,
-                          smallText: locale.winIphoneSmallText,
-                          image: Assets.iphone,
-                          painter: IphoneCustomPaint(),
-                          onPressed: () {
-                            // model.panelController.animatePanelToPosition(1);
-                            // model.setCurrentPage = 1;
-                            AppState.delegate.appState.currentAction =
-                                PageAction(
-                              page: ReferralDetailsPageConfig,
-                              state: PageState.addPage,
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: SizeConfig.padding32),
-                  WinnersMarqueeStrip(),
-                  SizedBox(height: SizeConfig.padding20),
-                  if (model.ongoingEvents != null)
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.pageHorizontalMargins),
-                          child: Text(
-                            "Ongoing Campaigns",
-                            style: TextStyles.title3.bold,
+        return Container(
+          margin: EdgeInsets.only(
+              top: SizeConfig.screenWidth * 0.1 +
+                  SizeConfig.viewInsets.top +
+                  SizeConfig.padding32),
+          child: Stack(
+            children: [
+              Container(
+                margin: EdgeInsets.only(top: SizeConfig.padding20),
+                child: ListView(
+                  padding: EdgeInsets.only(top: SizeConfig.screenWidth * 0.24),
+                  children: [
+                    Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          BigPrizeContainer(
+                            bgColor: Color(0xff26A6F4),
+                            bigText: locale.winMoneyBigText,
+                            smallText: locale.winMoneySmallText,
+                            image: Assets.moneyBag,
+                            painter: LakhCustomPaint(),
+                            onPressed: () => AppState
+                                .delegate.appState.setCurrentTabIndex = 1,
                           ),
-                        ),
-                        SizedBox(height: SizeConfig.padding16),
-                        Container(
-                          height: SizeConfig.screenWidth * 0.3,
-                          width: SizeConfig.screenWidth,
-                          child: ListView(
-                            padding: EdgeInsets.zero,
-                            scrollDirection: Axis.horizontal,
-                            controller: model.eventScrollController,
-                            children: List.generate(
-                              model.ongoingEvents.length,
-                              (i) => Container(
-                                margin: EdgeInsets.only(
-                                    left: i == 0
-                                        ? SizeConfig.pageHorizontalMargins
-                                        : 0),
-                                child: EventCard(
-                                  event: model.ongoingEvents[i],
+                          SizedBox(width: SizeConfig.padding16),
+                          BigPrizeContainer(
+                            bgColor: UiConstants.tertiarySolid,
+                            bigText: locale.winIphoneBigText,
+                            smallText: locale.winIphoneSmallText,
+                            image: Assets.iphone,
+                            painter: IphoneCustomPaint(),
+                            onPressed: () {
+                              // model.panelController.animatePanelToPosition(1);
+                              // model.setCurrentPage = 1;
+                              AppState.delegate.appState.currentAction =
+                                  PageAction(
+                                page: ReferralDetailsPageConfig,
+                                state: PageState.addPage,
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: SizeConfig.padding32),
+                    WinnersMarqueeStrip(),
+                    SizedBox(height: SizeConfig.padding20),
+                    if (model.ongoingEvents != null)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: SizeConfig.pageHorizontalMargins),
+                            child: Text(
+                              "Ongoing Campaigns",
+                              style: TextStyles.title3.bold,
+                            ),
+                          ),
+                          SizedBox(height: SizeConfig.padding16),
+                          Container(
+                            height: SizeConfig.screenWidth * 0.3,
+                            width: SizeConfig.screenWidth,
+                            child: ListView(
+                              padding: EdgeInsets.zero,
+                              scrollDirection: Axis.horizontal,
+                              controller: model.eventScrollController,
+                              children: List.generate(
+                                model.ongoingEvents.length,
+                                (i) => Container(
+                                  margin: EdgeInsets.only(
+                                      left: i == 0
+                                          ? SizeConfig.pageHorizontalMargins
+                                          : 0),
+                                  child: EventCard(
+                                    event: model.ongoingEvents[i],
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: SizeConfig.padding24),
-                      ],
-                    ),
-                  SizedBox(
-                    height: SizeConfig.screenHeight * 0.24,
-                  )
-                ],
-              ),
-            ),
-            Container(
-              //margin: EdgeInsets.only(top: SizeConfig.screenHeight * 0.09),
-              child: Hero(
-                tag: "myWinnigs",
-                child: WinningsContainer(
-                  shadow: false,
-                  onTap: () => model.navigateToMyWinnings(),
+                          SizedBox(height: SizeConfig.padding24),
+                        ],
+                      ),
+                    SizedBox(
+                      height: SizeConfig.screenHeight * 0.24,
+                    )
+                  ],
                 ),
               ),
-            ),
-            WinnersLeaderBoardSE(
-              model: model,
-            )
-          ],
+              Container(
+                //margin: EdgeInsets.only(top: SizeConfig.screenHeight * 0.09),
+                child: Hero(
+                  tag: "myWinnigs",
+                  child: WinningsContainer(
+                    shadow: false,
+                    onTap: () => model.navigateToMyWinnings(),
+                  ),
+                ),
+              ),
+              WinnersLeaderBoardSE(
+                model: model,
+              )
+            ],
+          ),
         );
       },
     );

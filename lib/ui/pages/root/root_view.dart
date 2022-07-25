@@ -6,6 +6,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/source_adaptive_asset/source_adaptive_asset_view.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
@@ -31,7 +32,7 @@ import 'package:shimmer_animation/shimmer_animation.dart';
 GlobalKey felloAppBarKey = new GlobalKey();
 
 class Root extends StatelessWidget {
-  final pages = [Save(), Play(), Win()];
+  final pages = [Save(), JourneyView(), Win()];
 
   @override
   Widget build(BuildContext context) {
@@ -77,10 +78,6 @@ class Root extends StatelessWidget {
                   backgroundColor: Colors.black,
                   onRefresh: model.refresh,
                   child: Container(
-                    margin: EdgeInsets.only(
-                        top: SizeConfig.screenWidth * 0.1 +
-                            SizeConfig.viewInsets.top +
-                            SizeConfig.padding32),
                     child: Consumer<AppState>(
                       builder: (ctx, m, child) => IndexedStack(
                         children: pages,
@@ -89,60 +86,61 @@ class Root extends StatelessWidget {
                     ),
                   ),
                 ),
-                FelloAppBar(
-                  key: felloAppBarKey,
-                  leading: InkWell(
-                    onTap: () => model.showDrawer(),
-                    child: ProfileImageSE(
-                      radius: SizeConfig.avatarRadius,
+                if (AppState.delegate.appState.getCurrentTabIndex != 1)
+                  FelloAppBar(
+                    key: felloAppBarKey,
+                    leading: InkWell(
+                      onTap: () => model.showDrawer(),
+                      child: ProfileImageSE(
+                        radius: SizeConfig.avatarRadius,
+                      ),
                     ),
-                  ),
-                  actions: [
-                    FelloCoinBar(),
-                    SizedBox(width: 5),
-                    NotificationButton(),
-                    SizedBox(width: 5),
-                    CircleAvatar(
-                      backgroundColor: Colors.black,
-                      child: IconButton(
-                        icon: Lottie.asset(
-                          "assets/lotties/cat-loader.json",
-                          height: SizeConfig.padding80,
+                    actions: [
+                      FelloCoinBar(),
+                      SizedBox(width: 5),
+                      NotificationButton(),
+                      SizedBox(width: 5),
+                      CircleAvatar(
+                        backgroundColor: Colors.black,
+                        child: IconButton(
+                          icon: Lottie.asset(
+                            "assets/lotties/cat-loader.json",
+                            height: SizeConfig.padding80,
+                          ),
+                          color: Colors.white,
+                          onPressed: () {
+                            model.openJourneyView();
+                          },
                         ),
-                        color: Colors.white,
-                        onPressed: () {
-                          model.openJourneyView();
-                        },
                       ),
-                    ),
-                    SizedBox(width: 5),
-                    CircleAvatar(
-                      backgroundColor: Colors.black,
-                      child: IconButton(
-                        color: Colors.white,
-                        icon: model.isUploading
-                            ? CircularProgressIndicator(color: Colors.black)
-                            : Icon(Icons.upload_rounded),
-                        onPressed: () {
-                          model.downloadJourneyPage();
-                        },
+                      SizedBox(width: 5),
+                      CircleAvatar(
+                        backgroundColor: Colors.black,
+                        child: IconButton(
+                          color: Colors.white,
+                          icon: model.isUploading
+                              ? CircularProgressIndicator(color: Colors.black)
+                              : Icon(Icons.upload_rounded),
+                          onPressed: () {
+                            model.downloadJourneyPage();
+                          },
+                        ),
                       ),
-                    ),
-                    // SizedBox(width: 5),
-                    // CircleAvatar(
-                    //   backgroundColor: Colors.black,
-                    //   child: IconButton(
-                    //     color: Colors.white,
-                    //     icon: model.isUploading
-                    //         ? CircularProgressIndicator(color: Colors.black)
-                    //         : Icon(Icons.download_rounded),
-                    //     onPressed: () {
-                    //       model.completeNViewDownloadSaveLViewAsset();
-                    //     },
-                    //   ),
-                    // )
-                  ],
-                ),
+                      // SizedBox(width: 5),
+                      // CircleAvatar(
+                      //   backgroundColor: Colors.black,
+                      //   child: IconButton(
+                      //     color: Colors.white,
+                      //     icon: model.isUploading
+                      //         ? CircularProgressIndicator(color: Colors.black)
+                      //         : Icon(Icons.download_rounded),
+                      //     onPressed: () {
+                      //       model.completeNViewDownloadSaveLViewAsset();
+                      //     },
+                      //   ),
+                      // )
+                    ],
+                  ),
                 Positioned(
                   bottom: 0,
                   child: Container(
@@ -166,14 +164,14 @@ class Root extends StatelessWidget {
                     ),
                   ),
                 ),
-                if (SizeConfig.screenWidth < 600)
-                  WantMoreTickets(
-                    model: model,
-                  ),
-                if (SizeConfig.screenWidth < 600)
-                  SaveBaseline(
-                    model: model,
-                  ),
+                // if (SizeConfig.screenWidth < 600)
+                //   WantMoreTickets(
+                //     model: model,
+                //   ),
+                // if (SizeConfig.screenWidth < 600)
+                //   SaveBaseline(
+                //     model: model,
+                //   ),
                 BottomNavBar(
                   model: model,
                 ),
@@ -202,14 +200,12 @@ class BottomNavBar extends StatelessWidget {
     S locale = S.of(context);
     return Consumer<AppState>(
       builder: (ctx, m, child) => Positioned(
-        bottom: SizeConfig.pageHorizontalMargins,
-        left: SizeConfig.pageHorizontalMargins,
-        right: SizeConfig.pageHorizontalMargins,
+        bottom: 0, //SizeConfig.pageHorizontalMargins / 2,
         child: Container(
-          width: SizeConfig.navBarWidth,
+          width: SizeConfig.screenWidth,
           height: SizeConfig.navBarHeight,
           decoration: BoxDecoration(
-            color: UiConstants.primaryColor,
+            color: Colors.black,
             borderRadius: BorderRadius.circular(SizeConfig.roundness24),
           ),
           child: NavBar(

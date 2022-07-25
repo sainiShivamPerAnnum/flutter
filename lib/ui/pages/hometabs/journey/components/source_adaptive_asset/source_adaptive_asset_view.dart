@@ -48,8 +48,9 @@ class FileAsset extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     log("ROOTVIEW: Build called for FileAsset widget with height: ${asset.height}");
+    dynamic file = File(filePath);
     return SvgPicture.file(
-      File(filePath),
+      file,
       height: SizeConfig.screenWidth * 2.165 * asset.height,
       width: SizeConfig.screenWidth * asset.width,
     );

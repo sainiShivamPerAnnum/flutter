@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
@@ -7,7 +8,10 @@ import 'package:felloapp/core/model/journey_models/journey_page_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_path_model.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
 import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/journey_page_data.dart';
@@ -15,7 +19,9 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/animation.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
+import 'package:http/http.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 const String AVATAR_CURRENT_LEVEL = "avatarcurrentLevel";
@@ -23,6 +29,9 @@ const String AVATAR_CURRENT_LEVEL = "avatarcurrentLevel";
 class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   final JourneyRepository _journeyRepo = locator<JourneyRepository>();
   final CustomLogger _logger = locator<CustomLogger>();
+  final DBModel _dbModel = locator<DBModel>();
+  final UserService _userService = locator<UserService>();
+  static bool isAvatarAnimationInProgress = false;
   double pageWidth;
   double pageHeight;
   double currentFullViewHeight;
@@ -31,6 +40,8 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   int lastPage;
   int startPage;
   int pageCount;
+
+  List<int> levels = [1, 4, 8];
 
   List<MilestoneModel> currentMilestoneList = [];
   List<JourneyPathModel> journeyPathItemsList = [];
@@ -158,16 +169,42 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     _logger.d("Avatar Remote start level: $avatarRemoteMlIndex");
     BaseUtil.showPositiveAlert(
         "Congratulations!!", "Your level increased to $avatarRemoteMlIndex");
-    // if (checkIfThereIsALevelChange()) {
-    //   animateAvatar();
-    // }
+    if (checkIfThereIsALevelChange() && userIsAtJourneyScreen()) {
+      createPathForAvatarAnimation(avatarCachedMlIndex, avatarRemoteMlIndex);
+      createAvatarAnimationObject();
+      animateAvatar();
+    }
+  }
+
+  checkIfAnyAnimationIsLeft() {
+    log("Checking if there is any animation left to happen");
+    if (checkIfThereIsALevelChange()) {
+      createPathForAvatarAnimation(avatarCachedMlIndex, avatarRemoteMlIndex);
+      createAvatarAnimationObject();
+      animateAvatar();
+    }
+  }
+
+  userIsAtJourneyScreen() {
+    if (AppState.screenStack.length == 1 &&
+        AppState.delegate.appState.getCurrentTabIndex == 1) return true;
+    return false;
   }
 
   void placeAvatarAtTheCurrentMileStone() {
     AvatarPathModel path = customPathDataList
-        .lastWhere((path) => path.mlIndex == avatarCachedMlIndex);
+        .lastWhere((path) => path.mlIndex == avatarCachedMlIndex ?? 0);
     avatarPosition = Offset(pageWidth * path.coords[0],
         (pages.length - path.page) * pageHeight + pageHeight * path.coords[1]);
+  }
+
+  int checkForGameLevelChange() {
+    for (int i = 0; i < levels.length; i++) {
+      log("Avatar Cache Level: $avatarCachedMlIndex || ${levels[i]} || Avatar remote level: $avatarRemoteMlIndex");
+      if (avatarCachedMlIndex < levels[i] && avatarRemoteMlIndex >= levels[i])
+        return levels[i];
+    }
+    return 0;
   }
 
   getAvatarLocalLevel() {
@@ -184,9 +221,10 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   Future<void> getAvatarRemoteLevel() async {
     //MAKE API CALL TO FETCH CURRENT LEVEL
     //DUMMY LEVEL FOR TESTING
-    Future.delayed(Duration(seconds: 2));
+    avatarRemoteMlIndex =
+        await _dbModel.getRemoteMLIndex(_userService.baseUser.uid) ??
+            avatarCachedMlIndex;
     // int startLevel = 3;
-    avatarRemoteMlIndex = avatarRemoteMlIndex ?? 1;
     _logger.d("JOURNEYSERVICE: Avatar Remote Level: $avatarRemoteMlIndex");
   }
 
@@ -228,9 +266,16 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   animateAvatar() {
     if (avatarPath == null || !checkIfThereIsALevelChange()) return;
+    isAvatarAnimationInProgress = true;
     controller.reset();
-    controller.forward();
-    updateAvatarLocalLevel();
+    controller.forward().whenComplete(() {
+      isAvatarAnimationInProgress = false;
+      int gameLevelChangeResult = checkForGameLevelChange();
+      if (gameLevelChangeResult != 0)
+        BaseUtil.showPositiveAlert("Level $gameLevelChangeResult unlocked!!",
+            "New Milestones on your way!");
+      updateAvatarLocalLevel();
+    });
   }
 
   void drawPath(List<AvatarPathModel> pathData) {
@@ -249,7 +294,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
         path.lineTo(
             pageWidth * model.coords[0],
             (pages.length - model.page) * pageHeight +
-                pageHeight * model.coords[1]);
+                pageHeight * model.coords[1].toDouble());
         return path;
       case "arc":
         return path;

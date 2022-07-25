@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -28,6 +29,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   BaseUtil _baseUtil = locator<BaseUtil>();
   final _userService = locator<UserService>();
   final _webGameViewModel = locator<WebGameViewModel>();
+  final JourneyService _journeyService = locator<JourneyService>();
 
   FelloBackButtonDispatcher(this._routerDelegate) : super();
 
@@ -61,6 +63,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
   @override
   Future<bool> didPopRoute() {
+    if (JourneyService.isAvatarAnimationInProgress) return null;
     if (AppState.screenStack.last == ScreenItem.loader) return null;
 
     Future.delayed(Duration(milliseconds: 20), () {
@@ -70,25 +73,6 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
         FocusManager.instance.primaryFocus.unfocus();
       }
     });
-    // if (WinViewModel().panelController.isPanelOpen) {
-    //   WinViewModel().panelController.close();
-    //   return Future.value(true);
-    // }
-    // If user is in the profile page and preferences are changed
-
-    if (AppState.unsavedPrefs) {
-      if (_baseUtil != null &&
-          _userService.baseUser != null &&
-          _userService.baseUser.uid != null &&
-          _userService.baseUser.userPreferences != null)
-        _dbModel
-            .updateUserPreferences(_userService.baseUser.uid,
-                _userService.baseUser.userPreferences)
-            .then((value) {
-          AppState.unsavedPrefs = false;
-          log("Preferences updated");
-        });
-    }
     // If the top item is anything except a scaffold
     if (AppState.screenStack.last == ScreenItem.dialog) {
       Navigator.pop(_routerDelegate.navigatorKey.currentContext);

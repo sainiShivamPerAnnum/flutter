@@ -14,6 +14,7 @@ import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -51,6 +52,7 @@ class RootViewModel extends BaseModel {
   final LocalDBModel _lModel = locator<LocalDBModel>();
   final DBModel _dbModel = locator<DBModel>();
   final JourneyRepository _journeyRepo = locator<JourneyRepository>();
+  final JourneyService _journeyService = locator<JourneyService>();
 
   final winnerService = locator<WinnerService>();
   final txnService = locator<TransactionService>();
@@ -127,6 +129,7 @@ class RootViewModel extends BaseModel {
   }
 
   void onItemTapped(int index) {
+    if (JourneyService.isAvatarAnimationInProgress) return;
     switch (index) {
       case 0:
         _analyticsService.track(eventName: AnalyticsEvents.saveSection);
@@ -142,6 +145,7 @@ class RootViewModel extends BaseModel {
     _userService.buyFieldFocusNode.unfocus();
     AppState.delegate.appState.setCurrentTabIndex = index;
     notifyListeners();
+    _journeyService.checkIfAnyAnimationIsLeft();
   }
 
   _initAdhocNotifications() {
@@ -173,25 +177,25 @@ class RootViewModel extends BaseModel {
   //       .encode(jourenyPages.last.milestones.map((e) => e.toMap()).toList()));
   // }
 
-  completeNViewDownloadSaveLViewAsset() async {
-    if (_journeyRepo.checkIfAssetIsAvailableLocally('b1')) {
-      log("ROOTVM: Asset path found cached in local storage.showing asset from cache");
-      svgSource = _journeyRepo.getAssetLocalFilePath('b1');
-    } else {
-      svgSource = "https://journey-assets-x.s3.ap-south-1.amazonaws.com/b1.svg";
-      log("ROOTVM: Asset path not found in cache. Downloading and caching it now. also showing network Image for now");
-      await Future.delayed(Duration(seconds: 5));
-      final bool result = await _journeyRepo.downloadAndSaveFile(
-          "https://journey-assets-x.s3.ap-south-1.amazonaws.com/b1.svg");
-      if (result) {
-        log("ROOTVM: Asset downlaoding & caching completed successfully. updating asset from local to network in widget tree");
+  // completeNViewDownloadSaveLViewAsset() async {
+  //   if (_journeyRepo.checkIfAssetIsAvailableLocally('b1')) {
+  //     log("ROOTVM: Asset path found cached in local storage.showing asset from cache");
+  //     svgSource = _journeyRepo.getAssetLocalFilePath('b1');
+  //   } else {
+  //     svgSource = "https://journey-assets-x.s3.ap-south-1.amazonaws.com/b1.svg";
+  //     log("ROOTVM: Asset path not found in cache. Downloading and caching it now. also showing network Image for now");
+  //     await Future.delayed(Duration(seconds: 5));
+  //     final bool result = await _journeyRepo.downloadAndSaveFile(
+  //         "https://journey-assets-x.s3.ap-south-1.amazonaws.com/b1.svg");
+  //     if (result) {
+  //       log("ROOTVM: Asset downlaoding & caching completed successfully. updating asset from local to network in widget tree");
 
-        svgSource = _journeyRepo.getAssetLocalFilePath('b1');
-      } else {
-        log("ROOTVM: Asset downlaoding & caching failed. showing asset from network this time, will try again on next startup");
-      }
-    }
-  }
+  //       svgSource = _journeyRepo.getAssetLocalFilePath('b1');
+  //     } else {
+  //       log("ROOTVM: Asset downlaoding & caching failed. showing asset from network this time, will try again on next startup");
+  //     }
+  //   }
+  // }
 
   Future<void> openJourneyView() async {
     AppState.delegate.appState.currentAction =

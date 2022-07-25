@@ -66,7 +66,19 @@ Future mainInit() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
     await PreferenceHelper.initiate();
-    await Firebase.initializeApp();
+    await Firebase.initializeApp(
+      name: "Fello",
+      options: FirebaseOptions(
+          apiKey: "AIzaSyDx_08AOnLkIY5Ui5ENQx_wMv3VeDODwR8",
+          authDomain: "fello-dev-station.firebaseapp.com",
+          databaseURL:
+              "https://fello-dev-station-default-rtdb.asia-southeast1.firebasedatabase.app",
+          projectId: "fello-dev-station",
+          storageBucket: "fello-dev-station.appspot.com",
+          messagingSenderId: "76548371644",
+          appId: "1:76548371644:web:6d4c05206b16118b174cb9",
+          measurementId: "G-7GGFTPBVCX"),
+    );
   } catch (e) {
     print('$e');
   }
@@ -150,6 +162,7 @@ class _MyAppState extends State<MyApp> {
                         builder: DevicePreview.appBuilder,
                         title: Constants.APP_NAME,
                         theme: FelloTheme.lightMode(),
+                        useInheritedMediaQuery: true,
                         debugShowCheckedModeBanner: false,
                         backButtonDispatcher: backButtonDispatcher,
                         routerDelegate: delegate,

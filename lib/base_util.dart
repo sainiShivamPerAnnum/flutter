@@ -877,8 +877,6 @@ class BaseUtil extends ChangeNotifier {
 
   void flipSecurityValue(bool value) {
     _myUser.userPreferences.setPreference(Preferences.APPLOCK, (value) ? 1 : 0);
-    // saveSecurityValue(this.isSecurityEnabled);
-    AppState.unsavedPrefs = true;
     notifyListeners();
   }
 

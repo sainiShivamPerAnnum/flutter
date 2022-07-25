@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:felloapp/core/enums/journey_service_enum.dart';
@@ -7,12 +8,12 @@ import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jAs
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jBackground.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jMilestones.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
@@ -43,20 +44,22 @@ class _JourneyViewState extends State<JourneyView>
       builder: (ctx, model, child) {
         return Scaffold(
           backgroundColor: Colors.black,
-          // floatingActionButton: FloatingActionButton(
-          //   child: const Icon(Icons.play_arrow),
-          //   onPressed: () {
-          //     // if (model.controller.isCompleted)
-          //     //   model.controller.reverse();
-          //     // else if (model.controller.isAnimating)
-          //     //   model.controller.stop();
-          //     // else {
-          //     //   model.controller.forward();
-          //     // }
-          //     // model.fetchJourneyPage();
-
-          //   },
-          // ),
+          floatingActionButton: Container(
+            margin: EdgeInsets.only(bottom: 60),
+            child: (PreferenceHelper.getInt(AVATAR_CURRENT_LEVEL) != null &&
+                    PreferenceHelper.getInt(AVATAR_CURRENT_LEVEL) != 1)
+                ? FloatingActionButton(
+                    child: const Icon(
+                      Icons.replay,
+                      color: Colors.white,
+                    ),
+                    backgroundColor: Colors.black,
+                    onPressed: () {
+                      PreferenceHelper.setInt(AVATAR_CURRENT_LEVEL, 1);
+                    },
+                  )
+                : SizedBox(),
+          ),
           body: model.isLoading && model.pages == null
               ? Container(
                   width: SizeConfig.screenWidth,
@@ -96,46 +99,41 @@ class _JourneyViewState extends State<JourneyView>
                         controller: model.mainController,
                         physics: const BouncingScrollPhysics(),
                         reverse: true,
-                        child: InteractiveViewer(
-                          panEnabled: true,
-                          minScale: 1,
-                          maxScale: 4,
-                          child: Container(
-                            height: model.currentFullViewHeight,
-                            width: SizeConfig.screenWidth,
-                            // color: Colors.black,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  Color(0xffB9D1FE),
-                                  Color(0xffD6E0FF),
-                                  Color(0xffF1EFFF)
-                                ],
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                              ),
-                            ),
-                            child: Stack(
-                              children: [
-                                Background(model: model),
-                                JourneyAssetPath(model: model),
-                                if (model.avatarPath != null)
-                                  Positioned(
-                                    bottom: 0,
-                                    left: 0,
-                                    child: CustomPaint(
-                                      size: Size(SizeConfig.screenWidth,
-                                          model.currentFullViewHeight),
-                                      painter: PathPainter(
-                                          model.avatarPath, Colors.transparent),
-                                    ),
-                                  ),
-                                Milestones(model: model),
-                                Avatar(
-                                  model: model,
-                                ),
+                        child: Container(
+                          height: model.currentFullViewHeight,
+                          width: SizeConfig.screenWidth,
+                          // color: Colors.black,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Color(0xffB9D1FE),
+                                Color(0xffD6E0FF),
+                                Color(0xffF1EFFF)
                               ],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
                             ),
+                          ),
+                          child: Stack(
+                            children: [
+                              Background(model: model),
+                              JourneyAssetPath(model: model),
+                              if (model.avatarPath != null)
+                                Positioned(
+                                  bottom: 0,
+                                  left: 0,
+                                  child: CustomPaint(
+                                    size: Size(SizeConfig.screenWidth,
+                                        model.currentFullViewHeight),
+                                    painter: PathPainter(
+                                        model.avatarPath, Colors.transparent),
+                                  ),
+                                ),
+                              Milestones(model: model),
+                              Avatar(
+                                model: model,
+                              ),
+                            ],
                           ),
                         ),
                       ),

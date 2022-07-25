@@ -303,6 +303,17 @@ class Api {
         .set(data, SetOptions(merge: false));
   }
 
+  Future<int> getUserRemoteMlIndex(String userid) async {
+    DocumentSnapshot snapshot = await _db
+        .collection('users')
+        .doc(userid)
+        .collection('stats')
+        .doc('journey')
+        .get();
+    final Map<String, dynamic> data = snapshot.data();
+    return data["mlIndex"].toInt();
+  }
+
   Future<void> addClaimDocument(Map data) {
     return _db.collection('claims').doc().set(data, SetOptions(merge: false));
   }

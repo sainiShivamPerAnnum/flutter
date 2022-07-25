@@ -39,7 +39,6 @@ class AppState extends ChangeNotifier {
   static bool isFirstTime = true;
   static bool isRootLoaded = false;
   static bool unsavedChanges = false;
-  static bool unsavedPrefs = false;
   static bool isWebGameLInProgress = false;
   static bool isWebGamePInProgress = false;
   static bool isOnboardingInProgress = false;

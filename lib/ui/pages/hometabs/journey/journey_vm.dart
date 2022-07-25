@@ -15,6 +15,7 @@ import 'package:felloapp/util/journey_page_data.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 
 class JourneyPageViewModel extends BaseModel {
   final logger = locator<CustomLogger>();
@@ -72,7 +73,7 @@ class JourneyPageViewModel extends BaseModel {
     controller?.dispose();
   }
 
-  fetchJourneyPage() {
+  fetchJourneyPage(BuildContext context) {
     _journeyService.fetchNetworkPages();
   }
 
@@ -85,15 +86,9 @@ class JourneyPageViewModel extends BaseModel {
     logger.d("Pages length: ${_journeyService.pages.length}");
     // lastDoc = res["lastDoc"];
     // log("${lastDoc.id}");
-    // pages.sublist(0, 2);
-    // pageWidth = SizeConfig.screenWidth;
-    // pageHeight = pageWidth * 2.165;
     _journeyService.setCurrentMilestones();
     _journeyService.setCustomPathItems();
     _journeyService.setJourneyPathItems();
-
-    // avatarPath = drawPath();
-    // setAvatarPostion();
     _journeyService.getAvatarLocalLevel();
     await _journeyService.getAvatarRemoteLevel();
     if (_journeyService.checkIfThereIsALevelChange()) {

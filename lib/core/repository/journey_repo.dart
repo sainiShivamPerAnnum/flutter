@@ -174,9 +174,7 @@ class JourneyRepository {
       responseData["pages"]
           .forEach((page) => journeyPages.add(JourneyPage.fromMap(page)));
       journeyPages.forEach((page) {
-        page.paths.forEach((path) {
-          _logger.d(path.asset.assetType);
-        });
+        page.paths.forEach((path) {});
       });
 
       return ApiResponse<List<JourneyPage>>(model: journeyPages, code: 200);

@@ -1047,6 +1047,14 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  getRemoteMLIndex(String uid) {
+    try {
+      return _api.getUserRemoteMlIndex(uid);
+    } catch (e) {
+      return null;
+    }
+  }
+
 //------------------------------------------------REALTIME----------------------------
 
   Future<bool> checkIfUsernameIsAvailable(String username) async {
