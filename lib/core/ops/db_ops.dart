@@ -6,6 +6,7 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/faq_model.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -37,7 +38,9 @@ class DBModel extends ChangeNotifier {
       });
       logger.d("Latest Golden Ticket: ${gtSnapshot.docs.first.data()}");
       for (int i = 0; i < latestGTs.length; i++) {
-        if (latestGTs[i].redeemedTimestamp == null) {
+        if (latestGTs[i].redeemedTimestamp == null ||
+            latestGTs[i].redeemedTimestamp ==
+                TimestampModel(seconds: 0, nanoseconds: 0)) {
           return true;
         }
       }
