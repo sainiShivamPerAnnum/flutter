@@ -41,7 +41,7 @@ class CacheService {
   ) async {
     final cachedData = await getData(key);
 
-    if (cachedData != null) {
+    if (cachedData != null && ttl != 0) {
       try {
         _logger.d('cache: data read successfully');
         return parseData(json.decode(cachedData.data));
@@ -72,7 +72,8 @@ class CacheService {
 
     if (response != null &&
         response['data'] != null &&
-        response['data'].isNotEmpty) await writeMap(key, ttl, response);
+        response['data'].isNotEmpty &&
+        ttl != 0) await writeMap(key, ttl, response);
 
     return res;
   }

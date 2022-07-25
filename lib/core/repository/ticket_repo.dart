@@ -84,7 +84,7 @@ class TambolaRepo extends BaseRepo {
 
       return await _cacheService.cachedApi(
           CacheKeys.TAMBOLA_PICKS,
-          ttl,
+          0,
           () => APIService.instance.getData(
                 ApiPath.dailyPicks,
                 token: bearer,
