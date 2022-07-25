@@ -98,6 +98,7 @@ class APIService implements API {
       {Map<String, dynamic> body,
       String cBaseUrl,
       String token,
+      String authKey,
       bool isAuthTokenAvailable = true,
       bool isAwsSubUrl = false,
       bool isAwsTxnUrl = false,
@@ -113,6 +114,7 @@ class APIService implements API {
         'version':
             _versionString.isEmpty ? await _getAppVersion() : _versionString,
         'uid': userService?.baseUser?.uid,
+        'authKey': authKey ?? ''
       };
       logger.d(_headers);
       if (token != null)

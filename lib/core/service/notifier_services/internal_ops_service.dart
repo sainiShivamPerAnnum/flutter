@@ -75,7 +75,7 @@ class InternalOpsService extends ChangeNotifier {
     if (softwareVersion != null) {
       dMap['phone_version'] = softwareVersion;
     }
-    dMap['timestamp'] = Timestamp.now();
+    dMap['timestamp'] = Timestamp.now().millisecondsSinceEpoch;
     await logOnCrashLytics(failType, dMap);
     if (failType == FailType.UserAugmontSellFailed ||
         failType == FailType.UserPaymentCompleteTxnFailed ||

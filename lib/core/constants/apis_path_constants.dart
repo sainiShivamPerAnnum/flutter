@@ -90,7 +90,7 @@ class ApiPath {
   static const String amountChips = "/amount/chips/";
 
   // Internal Ops
-  static const String failureReport = '/fail/report/';
+  static const String failureReport = '/fail/report';
 
   /// Subcription Apis
   static String getTransaction(String uid) => "/user/$uid/transactions";
