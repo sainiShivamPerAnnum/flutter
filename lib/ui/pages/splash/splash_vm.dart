@@ -95,7 +95,7 @@ class LauncherViewModel extends BaseModel {
     } catch (e) {
       _logger.e("Splash Screen init : $e");
       _internalOpsService.logFailure(
-        userService.baseUser.uid ?? '',
+        userService.baseUser?.uid ?? '',
         FailType.Splash,
         {'error': "Splash Screen init : $e"},
       );
@@ -109,7 +109,7 @@ class LauncherViewModel extends BaseModel {
     } catch (e) {
       _logger.e(e.toString());
       _internalOpsService.logFailure(
-        userService.baseUser.uid ?? '',
+        userService.baseUser?.uid ?? '',
         FailType.Splash,
         {'error': "device unlock : $e"},
       );

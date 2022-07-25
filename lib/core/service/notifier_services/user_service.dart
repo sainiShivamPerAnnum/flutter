@@ -174,7 +174,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     } catch (e) {
       _logger.e(e.toString());
       _internalOpsService
-          .logFailure(baseUser.uid ?? '', FailType.UserServiceInitFailed, {
+          .logFailure(baseUser?.uid ?? '', FailType.UserServiceInitFailed, {
         "title": "UserService initialization Failed",
         "error": e.toString(),
       });

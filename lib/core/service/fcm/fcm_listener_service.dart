@@ -113,7 +113,7 @@ class FcmListener {
     } catch (e) {
       logger.e(e.toString());
       _internalOpsService.logFailure(
-          _userService.baseUser.uid, FailType.FcmListenerSetupFailed, {
+          _userService.baseUser?.uid ?? '', FailType.FcmListenerSetupFailed, {
         "title": "FcmListener setup Failed",
         "error": e.toString(),
       });
