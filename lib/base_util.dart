@@ -219,6 +219,11 @@ class BaseUtil extends ChangeNotifier {
       }
     } catch (e) {
       logger.e(e.toString());
+      _internalOpsService.logFailure(
+        _userService.baseUser?.uid ?? '',
+        FailType.Splash,
+        {'error': "base util init : $e"},
+      );
     }
   }
 

@@ -9,6 +9,7 @@ import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -17,6 +18,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:package_info/package_info.dart';
@@ -41,6 +43,7 @@ class LauncherViewModel extends BaseModel {
   final _userRepo = locator<UserRepository>();
   final _paytmService = locator<PaytmService>();
   final _userCoinService = locator<UserCoinService>();
+  final _internalOpsService = locator<InternalOpsService>();
 
   //GETTERS
   bool get isSlowConnection => _isSlowConnection;
@@ -92,6 +95,11 @@ class LauncherViewModel extends BaseModel {
       }
     } catch (e) {
       _logger.e("Splash Screen init : $e");
+      _internalOpsService.logFailure(
+        userService.baseUser?.uid ?? '',
+        FailType.Splash,
+        {'error': "Splash Screen init : $e"},
+      );
     }
     _httpModel.init();
     _tambolaService.init();
@@ -100,8 +108,11 @@ class LauncherViewModel extends BaseModel {
     try {
       deviceUnlock = DeviceUnlock();
     } catch (e) {
-      _logger.e(
-        e.toString(),
+      _logger.e(e.toString());
+      _internalOpsService.logFailure(
+        userService.baseUser?.uid ?? '',
+        FailType.Splash,
+        {'error': "device unlock : $e"},
       );
     }
 

@@ -173,12 +173,11 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       }
     } catch (e) {
       _logger.e(e.toString());
-      if (baseUser != null)
-        _internalOpsService
-            .logFailure(baseUser.uid, FailType.UserServiceInitFailed, {
-          "title": "UserService initialization Failed",
-          "error": e.toString(),
-        });
+      _internalOpsService
+          .logFailure(baseUser?.uid ?? '', FailType.UserServiceInitFailed, {
+        "title": "UserService initialization Failed",
+        "error": e.toString(),
+      });
     }
   }
 
