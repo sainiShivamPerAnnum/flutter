@@ -141,29 +141,29 @@ class Root extends StatelessWidget {
                       // )
                     ],
                   ),
-                Positioned(
-                  bottom: 0,
-                  child: Container(
-                    width: SizeConfig.screenWidth,
-                    height: SizeConfig.navBarHeight,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          begin: Alignment.bottomCenter,
-                          end: Alignment.topCenter,
-                          colors: [
-                            UiConstants.scaffoldColor.withOpacity(0.8),
-                            UiConstants.scaffoldColor.withOpacity(0.2),
-                          ],
-                          stops: [
-                            0.8,
-                            1
-                          ]),
-                    ),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                    ),
-                  ),
-                ),
+                // Positioned(
+                //   bottom: 0,
+                //   child: Container(
+                //     width: SizeConfig.screenWidth,
+                //     height: SizeConfig.navBarHeight,
+                //     decoration: BoxDecoration(
+                //       gradient: LinearGradient(
+                //           begin: Alignment.bottomCenter,
+                //           end: Alignment.topCenter,
+                //           colors: [
+                //             UiConstants.scaffoldColor.withOpacity(0.8),
+                //             UiConstants.scaffoldColor.withOpacity(0.2),
+                //           ],
+                //           stops: [
+                //             0.8,
+                //             1
+                //           ]),
+                //     ),
+                //     child: BackdropFilter(
+                //       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                //     ),
+                //   ),
+                // ),
                 // if (SizeConfig.screenWidth < 600)
                 //   WantMoreTickets(
                 //     model: model,

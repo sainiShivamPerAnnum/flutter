@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'package:felloapp/core/model/journey_models/journey_asset_model.dart';
+import 'package:felloapp/core/model/journey_models/journey_background_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:felloapp/core/model/journey_models/avatar_path_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_path_model.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
 
 class JourneyPage {
-  JourneyAssetModel bgAsset;
+  JourneyBackgroundModel bgAsset;
   int page;
   List<JourneyPathModel> paths;
   List<AvatarPathModel> avatarPath;
@@ -20,7 +21,7 @@ class JourneyPage {
   });
 
   JourneyPage copyWith({
-    JourneyAssetModel bgAsset,
+    JourneyBackgroundModel bgAsset,
     List<JourneyPathModel> paths,
     List<AvatarPathModel> avatarPath,
     int level,
@@ -52,7 +53,7 @@ class JourneyPage {
   factory JourneyPage.fromMap(Map<String, dynamic> map) {
     return JourneyPage(
       page: map["page"] ?? 0,
-      bgAsset: JourneyAssetModel.fromMap(map['bgAsset']),
+      bgAsset: JourneyBackgroundModel.fromMap(map['bgAsset']),
       paths: List<JourneyPathModel>.from(
         map['paths']?.map(
           (x) => JourneyPathModel.fromMap(

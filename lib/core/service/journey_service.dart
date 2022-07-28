@@ -48,7 +48,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   List<AvatarPathModel> customPathDataList = [];
   Path _avatarPath;
   Offset _avatarPosition;
-  List<JourneyPage> _pages;
+  // List<JourneyPage> _pages;
   Animation _avatarAnimation;
   AnimationController controller;
   int fcmRemoteAvatarLevel;
@@ -67,12 +67,12 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     // notifyListeners();
   }
 
-  List<JourneyPage> get pages => this._pages;
+  List<JourneyPage> get pages => jourenyPages;
 
-  set pages(List<JourneyPage> value) {
-    this._pages = value;
-    notifyListeners();
-  }
+  // set pages(List<JourneyPage> value) {
+  //   this._pages = value;
+  //   // notifyListeners();
+  // }
 
   get avatarCachedMlIndex => this._avatarCachedMlIndex;
 
@@ -94,14 +94,14 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   set avatarPath(value) {
     this._avatarPath = value;
-    notifyListeners();
+    // notifyListeners();
   }
 
   Offset get avatarPosition => this._avatarPosition;
 
   set avatarPosition(Offset value) {
     this._avatarPosition = value;
-    notifyListeners();
+    // notifyListeners();
   }
 
   Future<void> init() async {
@@ -109,6 +109,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     // getAvatarLocalLevel();
     pageWidth = SizeConfig.screenWidth;
     pageHeight = pageWidth * 2.165;
+    setPageProperties();
   }
 
   // fetchPages() {
@@ -117,17 +118,18 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   // createAvatarAnimationObject();
   // }
 
-  fetchNetworkPages() async {
-    if (pages == null || pages.isEmpty) {
-      ApiResponse<List<JourneyPage>> response = await _journeyRepo
-          .fetchJourneyPages(1, JourneyRepository.PAGE_DIRECTION_UP);
-      if (response.code == 200) {
-        pages = response.model;
-        setPageProperties();
-      } else
-        pages = [];
-    }
-  }
+  // fetchNetworkPages() async {
+  //   if (pages == null || pages.isEmpty) {
+  //     pages = jourenyPages;
+  // ApiResponse<List<JourneyPage>> response = await _journeyRepo
+  //     .fetchJourneyPages(1, JourneyRepository.PAGE_DIRECTION_UP);
+  // if (response.code == 200) {
+  //   pages = response.model;
+  // setPageProperties();
+  // } else
+  //   pages = [];
+  //   }
+  // }
 
   setPageProperties() {
     pageCount = pages.length;
@@ -155,6 +157,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     pages.forEach((page) {
       journeyPathItemsList.addAll(page.paths);
     });
+    log("Journey path item list length: ${journeyPathItemsList.length}");
   }
 
   updateUserJourneyStats(Map<String, dynamic> data) {
@@ -265,16 +268,18 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   }
 
   animateAvatar() {
-    if (avatarPath == null || !checkIfThereIsALevelChange()) return;
-    isAvatarAnimationInProgress = true;
+    if (avatarPath == null // || !checkIfThereIsALevelChange()
+        ) return;
+    // isAvatarAnimationInProgress = true;
     controller.reset();
     controller.forward().whenComplete(() {
-      isAvatarAnimationInProgress = false;
-      int gameLevelChangeResult = checkForGameLevelChange();
-      if (gameLevelChangeResult != 0)
-        BaseUtil.showPositiveAlert("Level $gameLevelChangeResult unlocked!!",
-            "New Milestones on your way!");
-      updateAvatarLocalLevel();
+      log("Animation Complete");
+      // isAvatarAnimationInProgress = false;
+      // int gameLevelChangeResult = checkForGameLevelChange();
+      // if (gameLevelChangeResult != 0)
+      //   BaseUtil.showPositiveAlert("Level $gameLevelChangeResult unlocked!!",
+      //       "New Milestones on your way!");
+      // updateAvatarLocalLevel();
     });
   }
 

@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:device_unlock/device_unlock.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
@@ -17,7 +18,6 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/custom_logger.dart';
 import 'package:package_info/package_info.dart';
 
 import '../../../core/repository/user_repo.dart';

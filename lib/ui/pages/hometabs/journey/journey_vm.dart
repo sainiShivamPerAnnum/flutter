@@ -73,16 +73,26 @@ class JourneyPageViewModel extends BaseModel {
     controller?.dispose();
   }
 
-  fetchJourneyPage(BuildContext context) {
-    _journeyService.fetchNetworkPages();
+  // fetchJourneyPage(BuildContext context) {
+  //   _journeyService.fetchNetworkPages();
+  // }
+
+  void tempReadyAvatarToPath() {
+    _journeyService.setAvatarPostion();
+    _journeyService.createAvatarAnimationObject();
+  }
+
+  void tempAnimate() {
+    _journeyService.animateAvatar();
   }
 
   tempInit() async {
     isLoading = true;
+    _journeyService.init();
     // Map<String, dynamic> res =
     //     await _dbModel.fetchJourneyPage(lastDoc: lastDoc);
     // pages = res["pages"];
-    await _journeyService.fetchNetworkPages();
+    // await _journeyService.fetchNetworkPages();
     logger.d("Pages length: ${_journeyService.pages.length}");
     // lastDoc = res["lastDoc"];
     // log("${lastDoc.id}");
@@ -90,15 +100,15 @@ class JourneyPageViewModel extends BaseModel {
     _journeyService.setCustomPathItems();
     _journeyService.setJourneyPathItems();
     _journeyService.getAvatarLocalLevel();
-    await _journeyService.getAvatarRemoteLevel();
-    if (_journeyService.checkIfThereIsALevelChange()) {
-      _journeyService.createPathForAvatarAnimation(
-          _journeyService.avatarCachedMlIndex,
-          _journeyService.avatarRemoteMlIndex);
-      _journeyService.createAvatarAnimationObject();
-    } else {
-      _journeyService.placeAvatarAtTheCurrentMileStone();
-    }
+    // await _journeyService.getAvatarRemoteLevel();
+    // if (_journeyService.checkIfThereIsALevelChange()) {
+    _journeyService.createPathForAvatarAnimation(
+        _journeyService.avatarCachedMlIndex,
+        _journeyService.avatarRemoteMlIndex);
+    _journeyService.createAvatarAnimationObject();
+    // } else {
+    //   _journeyService.placeAvatarAtTheCurrentMileStone();
+    // }
 
     mainController = ScrollController();
     //   ..addListener(() {
@@ -108,13 +118,18 @@ class JourneyPageViewModel extends BaseModel {
     //   });
     isLoading = false;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _journeyService.animateAvatar();
-    });
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       mainController.jumpTo(300);
-      mainController.animateTo(_mainController.position.minScrollExtent,
-          duration: const Duration(seconds: 3), curve: Curves.easeOutCubic);
+      Future.delayed(Duration(milliseconds: 800), () {
+        mainController.animateTo(_mainController.position.minScrollExtent,
+            duration: const Duration(seconds: 3), curve: Curves.easeOutCubic);
+      }).then((value) {
+        // _journeyService.animateAvatar();
+      });
     });
+  }
+
+  createAvatarPath(List<AvatarPathModel> pathListData) {
+    _journeyService.drawPath(pathListData);
   }
 
   //  (pages.length - model.page) * pageHeight +

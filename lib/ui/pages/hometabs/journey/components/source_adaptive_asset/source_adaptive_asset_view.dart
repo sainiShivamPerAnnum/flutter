@@ -22,20 +22,27 @@ class SourceAdaptiveAssetView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     log("ROOTVIEW: Build called for SourceAdaptiveAsset widget");
-    return BaseView<SourceAdaptiveAssetViewModel>(onModelReady: (model) {
-      model.init(asset.uri);
-    }, onModelDispose: (model) {
-      model.dump();
-    }, builder: (ctx, model, child) {
-      return model.assetUrl.startsWith('http')
-          ? NetworkAsset(
-              asset: asset,
-              networkUrl: model.assetUrl,
-            )
-          : FileAsset(
-              asset: asset,
-              filePath: model.assetUrl,
-            );
+    return BaseView<SourceAdaptiveAssetViewModel>(
+        //   onModelReady: (model) {
+        //   model.init(asset.uri);
+        // }, onModelDispose: (model) {
+        //   model.dump();
+        // },
+        builder: (ctx, model, child) {
+      return SvgPicture.asset(
+        asset.uri,
+        height: SizeConfig.screenWidth * 2.165 * asset.height,
+        width: SizeConfig.screenWidth * asset.width,
+      );
+      //  model.assetUrl.startsWith('http')
+      //     ? NetworkAsset(
+      //         asset: asset,
+      //         networkUrl: model.assetUrl,
+      //       )
+      //     : FileAsset(
+      //         asset: asset,
+      //         filePath: model.assetUrl,
+      //       );
     });
   }
 }

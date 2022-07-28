@@ -4,6 +4,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jAssetPath.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/source_adaptive_asset/source_adaptive_asset_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -43,11 +44,15 @@ class Milestones extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("milestone build called");
-    return Stack(
-      children: List.generate(
-        model.currentMilestoneList.length,
-        (i) => getMilestoneType(
-          model.currentMilestoneList[i],
+    return SizedBox(
+      width: model.pageWidth,
+      height: model.pageHeight * 2,
+      child: Stack(
+        children: List.generate(
+          model.currentMilestoneList.length,
+          (i) => getMilestoneType(
+            model.currentMilestoneList[i],
+          ),
         ),
       ),
     );
@@ -73,6 +78,7 @@ class _ActiveFloatingMilestoneState extends State<ActiveFloatingMilestone>
     with SingleTickerProviderStateMixin {
   AnimationController _floatAnimationController;
   Animation<Offset> _floatAnimation;
+  Animation<double> _scaleAnimation;
   @override
   void initState() {
     _floatAnimationController = AnimationController(
@@ -80,6 +86,15 @@ class _ActiveFloatingMilestoneState extends State<ActiveFloatingMilestone>
       vsync: this,
     );
 
+    _scaleAnimation =
+        Tween<double>(begin: 0.5, end: 0.8).animate(_floatAnimationController)
+          ..addListener(() {
+            if (_scaleAnimation.status == AnimationStatus.completed) {
+              _floatAnimationController.reverse();
+            } else if (_scaleAnimation.status == AnimationStatus.dismissed) {
+              _floatAnimationController.forward();
+            }
+          });
     _floatAnimation =
         Tween<Offset>(begin: const Offset(0, 0), end: const Offset(0.0, -0.2))
             .animate(_floatAnimationController)
@@ -97,6 +112,7 @@ class _ActiveFloatingMilestoneState extends State<ActiveFloatingMilestone>
   @override
   void dispose() {
     _floatAnimationController.dispose();
+
     super.dispose();
   }
 
@@ -111,19 +127,14 @@ class _ActiveFloatingMilestoneState extends State<ActiveFloatingMilestone>
                 widget.model.pageHeight * (widget.milestone.shadow.page - 1) +
                     widget.model.pageHeight * widget.milestone.shadow.y,
             child: ScaleTransition(
-              scale: _floatAnimationController,
+              scale: _scaleAnimation,
               alignment: Alignment.center,
               child: Transform(
                 alignment: Alignment.center,
                 transform:
                     Matrix4.rotationY(widget.milestone.hFlip ? math.pi : 0),
-                child: SvgPicture.network(
-                  generateAssetUrl(widget.milestone.shadow.asset.name),
-                  width: widget.model.pageWidth *
-                      widget.milestone.shadow.asset.width,
-                  height: widget.model.pageHeight *
-                      widget.milestone.shadow.asset.height,
-                  fit: BoxFit.cover,
+                child: SourceAdaptiveAssetView(
+                  asset: widget.milestone.shadow.asset,
                 ),
               ),
             ),
@@ -147,17 +158,20 @@ class _ActiveFloatingMilestoneState extends State<ActiveFloatingMilestone>
                 alignment: Alignment.center,
                 transform:
                     Matrix4.rotationY(widget.milestone.hFlip ? math.pi : 0),
-                child: SvgPicture.network(
-                  generateAssetUrl(widget.milestone.asset.name),
-                  width: widget.model.pageWidth * widget.milestone.asset.width,
-                  height:
-                      widget.model.pageHeight * widget.milestone.asset.height,
-                  fit: BoxFit.cover,
-                ),
+                child: SourceAdaptiveAssetView(asset: widget.milestone.asset),
               ),
             ),
           ),
         ),
+        // if (widget.milestone.isCompleted != null &&
+        //     widget.milestone.isCompleted)
+        //   Positioned(
+        //       left: widget.model.pageWidth * widget.milestone.x,
+        //       bottom: (widget.model.pageHeight * (widget.milestone.page - 1) +
+        //               widget.model.pageHeight * widget.milestone.y) -
+        //           widget.model.pageHeight * 0.02,
+        //       child: MileStoneCheck(
+        //           model: widget.model, milestone: widget.milestone))
       ],
     );
   }
@@ -211,18 +225,12 @@ class _ActiveRotatingMilestoneState extends State<ActiveRotatingMilestone>
                 widget.model.pageHeight * (widget.milestone.shadow.page - 1) +
                     widget.model.pageHeight * widget.milestone.shadow.y,
             child: Transform(
-              alignment: Alignment.center,
-              transform:
-                  Matrix4.rotationY(widget.milestone.hFlip ? math.pi : 0),
-              child: SvgPicture.network(
-                generateAssetUrl(widget.milestone.shadow.asset.name),
-                width: widget.model.pageWidth *
-                    widget.milestone.shadow.asset.width,
-                height: widget.model.pageHeight *
-                    widget.milestone.shadow.asset.height,
-                fit: BoxFit.cover,
-              ),
-            ),
+                alignment: Alignment.center,
+                transform:
+                    Matrix4.rotationY(widget.milestone.hFlip ? math.pi : 0),
+                child: SourceAdaptiveAssetView(
+                  asset: widget.milestone.shadow.asset,
+                )),
           ),
         Positioned(
           left: widget.model.pageWidth * widget.milestone.x,
@@ -243,17 +251,20 @@ class _ActiveRotatingMilestoneState extends State<ActiveRotatingMilestone>
                 alignment: Alignment.center,
                 transform:
                     Matrix4.rotationY(widget.milestone.hFlip ? math.pi : 0),
-                child: SvgPicture.network(
-                  generateAssetUrl(widget.milestone.asset.name),
-                  width: widget.model.pageWidth * widget.milestone.asset.width,
-                  height:
-                      widget.model.pageHeight * widget.milestone.asset.height,
-                  fit: BoxFit.cover,
-                ),
+                child: SourceAdaptiveAssetView(asset: widget.milestone.asset),
               ),
             ),
           ),
         ),
+        // if (widget.milestone.isCompleted != null &&
+        //     widget.milestone.isCompleted)
+        //   Positioned(
+        //       left: widget.model.pageWidth * widget.milestone.x,
+        //       bottom: (widget.model.pageHeight * (widget.milestone.page - 1) +
+        //               widget.model.pageHeight * widget.milestone.y) -
+        //           widget.model.pageHeight * 0.02,
+        //       child: MileStoneCheck(
+        //           model: widget.model, milestone: widget.milestone))
       ],
     );
   }
@@ -374,7 +385,14 @@ class StaticMilestone extends StatelessWidget {
                   ),
             ),
           ),
-        )
+        ),
+        // if (milestone.isCompleted != null && milestone.isCompleted)
+        //   Positioned(
+        //       left: model.pageWidth * milestone.x,
+        //       bottom: (model.pageHeight * (milestone.page - 1) +
+        //               model.pageHeight * milestone.y) -
+        //           model.pageHeight * 0.02,
+        //       child: MileStoneCheck(model: model, milestone: milestone))
       ],
     );
   }

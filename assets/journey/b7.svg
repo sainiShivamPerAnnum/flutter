@@ -1,20 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="158" height="108.971" viewBox="0 0 158 108.971">
-  <g id="b7" transform="translate(-5.5 -1.01)">
-    <path id="Path_94398" data-name="Path 94398" d="M57.646,108.141,9.4,79.328A8,8,0,0,1,5.5,72.46V65.5l52,33.8a13,13,0,0,0,14.06.07L161.5,42.181l2-4.681-.374,9.351a6,6,0,0,1-2.79,4.832L71.256,107.97A13,13,0,0,1,57.646,108.141Z"/>
-    <path id="Path_94399" data-name="Path 94399" d="M8.329,60.55l93.1-58.617a6,6,0,0,1,6.207-.113l52.823,30.638a6,6,0,0,1,.209,10.253l-93.06,59.168a6,6,0,0,1-6.268.1L8.476,70.795A6,6,0,0,1,8.329,60.55Z" fill="#1adab7"/>
-    <path id="Path_94400" data-name="Path 94400" d="M147.49,41.874h-2.131" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="9.682" opacity="0.2"/>
-    <path id="Path_94401" data-name="Path 94401" d="M140.287,44H139" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="5.846" opacity="0.2"/>
-    <path id="Path_94397" data-name="Path 94397" d="M8.978,62.586v-4.72" transform="translate(12 1.037)" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="6.438"/>
-    <circle id="Ellipse_1709" data-name="Ellipse 1709" cx="8" cy="8" r="8" transform="translate(13 45.037)" fill="#55af74"/>
-    <path id="Path_94402" data-name="Path 94402" d="M147.735,38.926V34.032" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="5.448"/>
-    <path id="Path_94403" data-name="Path 94403" d="M140.842,43.29V40.335" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="5.846"/>
-    <circle id="Ellipse_1711" data-name="Ellipse 1711" cx="6.2" cy="6.2" r="6.2" transform="translate(141.536 24.752)" fill="#55af74"/>
-    <circle id="Ellipse_1712" data-name="Ellipse 1712" cx="3.743" cy="3.743" r="3.743" transform="translate(137.099 35.41)" fill="#55af74"/>
-    <path id="Path_94404" data-name="Path 94404" d="M46.435,49.034,36.164,54.791a3.75,3.75,0,0,0-.34,6.326L62.794,80.3a3.75,3.75,0,0,0,3.706.366l15.234-6.826a3.75,3.75,0,0,0,.317-6.683L50.119,49.043A3.749,3.749,0,0,0,46.435,49.034Z" fill="#495db3"/>
-    <path id="Path_94405" data-name="Path 94405" d="M46.789,51.621l-9.783,5.554a3.75,3.75,0,0,0-.164,6.423l30.33,19.323a3.749,3.749,0,0,0,3.839.114L82.569,76.6a3.75,3.75,0,0,0,.044-6.527L50.507,51.63A3.749,3.749,0,0,0,46.789,51.621Z" fill="#c2d7ff"/>
-    <path id="Path_94406" data-name="Path 94406" d="M48.81,56.124l9.062,5" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="1.875"/>
-    <path id="Path_94407" data-name="Path 94407" d="M49.123,63.623l5.312,3.125" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="1.875"/>
-    <path id="Path_94408" data-name="Path 94408" d="M64.121,66.748l5.312,3.125" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="1.875"/>
-    <path id="Path_94409" data-name="Path 94409" d="M59.122,72.372,68.183,78" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="1.875"/>
-  </g>
+<svg width="133" height="80" viewBox="0 0 133 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M97.1262 61.8248C79.7901 71.8337 51.6829 71.8337 34.3469 61.8248C25.7259 56.8474 21.392 50.3323 21.3453 43.8087C21.3289 41.5306 21.3452 33.3662 21.3452 30.6055C23.2955 26.4085 28.6424 28.8726 34.3469 25.5791C51.6829 15.5702 79.7901 15.5702 97.1262 25.5791C104.37 29.7613 108.658 24.8398 109.848 30.2861C110.291 32.3139 110.244 44.5558 109.848 46.5862C108.762 52.1537 104.521 57.5551 97.1262 61.8248Z" fill="#9F4F44"/>
+<circle r="36.2456" transform="matrix(0.866025 0.5 -0.866025 0.5 65.7366 36.773)" fill="#F7C780"/>
 </svg>

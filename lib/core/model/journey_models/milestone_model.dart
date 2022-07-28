@@ -17,7 +17,7 @@ class MilestoneModel {
   final String actionUri;
   final String animType;
   final String tooltip;
-  bool isCompleted;
+  bool isCompleted = false;
   final String prizeSubType;
   final int page;
   final int index;

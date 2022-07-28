@@ -1,4 +1,5 @@
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
+import 'package:felloapp/util/journey_page_data.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -35,17 +36,28 @@ class _BackgroundState extends State<Background> {
         height: widget.model.currentFullViewHeight,
         width: SizeConfig.screenWidth,
         child: ListView.builder(
-          itemCount: widget.model.pages.length,
+          itemCount: widget.model.pages.length, //widget.model.pages.length,
           shrinkWrap: true,
+          reverse: true,
           physics: NeverScrollableScrollPhysics(),
           padding: EdgeInsets.zero,
           itemBuilder: (ctx, i) {
-            return SvgPicture.asset(
-              "assets/journey/bg.svg",
-              // color: Colors.grey,
-              fit: BoxFit.cover,
+            return Container(
               width: widget.model.pageWidth,
               height: widget.model.pageHeight,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    colors: widget.model.pages[i].bgAsset.colors,
+                    stops: widget.model.pages[i].bgAsset.stops,
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter),
+              ),
+              child: SvgPicture.asset(
+                widget.model.pages[i].bgAsset.asset.uri,
+                fit: BoxFit.cover,
+                width: widget.model.pageWidth,
+                height: widget.model.pageHeight,
+              ),
             );
           },
         ),
