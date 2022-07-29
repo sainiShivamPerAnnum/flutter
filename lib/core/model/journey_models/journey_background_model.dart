@@ -38,13 +38,13 @@ class JourneyBackgroundModel {
 
   factory JourneyBackgroundModel.fromMap(Map<String, dynamic> map) {
     return JourneyBackgroundModel(
-      // colors: List<Color>.from(
-      //   (map['colors'] as List<int>).map<Color>(
-      //     (x) => Color(x),
-      //   ),
-      // ),
-      // stops: List<double>.from((map['stops'] as List<double>)),
-      asset: JourneyAssetModel.fromMap(map),
+      colors: List<Color>.from(
+        (map['colors'] as List<String>).map<String>(
+          (x) => x.toColor(),
+        ),
+      ),
+      stops: List<double>.from((map['stops'] as List<double>)),
+      asset: JourneyAssetModel.fromMap(map['asset'] as Map<String, dynamic>),
     );
   }
 
@@ -69,4 +69,16 @@ class JourneyBackgroundModel {
 
   @override
   int get hashCode => colors.hashCode ^ stops.hashCode ^ asset.hashCode;
+}
+
+extension ColorExtension on String {
+  toColor() {
+    var hexColor = this.replaceAll("#", "");
+    if (hexColor.length == 6) {
+      hexColor = "FF" + hexColor;
+    }
+    if (hexColor.length == 8) {
+      return Color(int.parse("0x$hexColor"));
+    }
+  }
 }

@@ -1,10 +1,10 @@
 import 'dart:convert';
-import 'package:felloapp/core/model/journey_models/journey_asset_model.dart';
-import 'package:felloapp/core/model/journey_models/journey_background_model.dart';
-import 'package:flutter/foundation.dart';
+
 import 'package:felloapp/core/model/journey_models/avatar_path_model.dart';
+import 'package:felloapp/core/model/journey_models/journey_background_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_path_model.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
+import 'package:flutter/foundation.dart';
 
 class JourneyPage {
   JourneyBackgroundModel bgAsset;

@@ -10,8 +10,11 @@ import 'package:felloapp/core/model/journey_models/milestone_description.dart';
 class MilestoneModel {
   final String id;
   final JourneyAssetModel asset;
+  final JourneyAssetModel animAsset;
   final double x;
   final double y;
+  final double ax;
+  final double ay;
   List<Reward> rewards;
   final List<MlSteps> steps;
   final String actionUri;
@@ -27,8 +30,11 @@ class MilestoneModel {
   MilestoneModel({
     this.id,
     @required this.asset,
+    this.animAsset,
     @required this.x,
     @required this.y,
+    this.ax,
+    this.ay,
     this.rewards,
     this.tooltip,
     this.prizeSubType,
@@ -46,8 +52,11 @@ class MilestoneModel {
   MilestoneModel copyWith({
     String id,
     JourneyAssetModel asset,
+    JourneyAssetModel animAsset,
     double x,
     double y,
+    double ax,
+    double ay,
     List<Reward> rewards,
     List<MlSteps> description,
     String actionUri,
@@ -64,8 +73,11 @@ class MilestoneModel {
     return MilestoneModel(
       id: id ?? this.id,
       asset: asset ?? this.asset,
+      animAsset: animAsset ?? this.animAsset,
       x: x ?? this.x,
       y: y ?? this.y,
+      ax: ax ?? this.ax,
+      ay: ay ?? this.ay,
       rewards: rewards ?? this.rewards,
       steps: description ?? this.steps,
       actionUri: actionUri ?? this.actionUri,
@@ -86,6 +98,8 @@ class MilestoneModel {
         ? <String, dynamic>{
             'x': x,
             'y': y,
+            'ax': ax,
+            'ay': ay,
             'sx': shadow.x,
             'sy': shadow.y,
             'hFlip': hFlip ?? false
@@ -93,6 +107,8 @@ class MilestoneModel {
         : <String, dynamic>{
             'x': x,
             'y': y,
+            'ax': ax,
+            'ay': ay,
             'hFlip': hFlip ?? false,
           };
   }
@@ -102,6 +118,7 @@ class MilestoneModel {
         ? <String, dynamic>{
             // 'id': id,
             'assetRef': asset.name,
+            'animAssetRef': animAsset.name,
             'animType': animType ?? "none",
             'actionUri': actionUri ?? '',
             'toolTip': tooltip ?? '',
@@ -112,6 +129,7 @@ class MilestoneModel {
         : <String, dynamic>{
             // 'id': id,
             'assetRef': asset.name,
+            'animAssetRef': animAsset.name,
             'animType': animType ?? "none",
             'actionUri': actionUri ?? '',
             'toolTip': tooltip ?? '',
@@ -125,6 +143,8 @@ class MilestoneModel {
       index: map['mlIndex'] as int,
       x: map['x'] as double,
       y: map['y'] as double,
+      ax: map['ax'] as double,
+      ay: map['ay'] as double,
       hFlip: map['hFlip'] as bool,
       tooltip: map['toolTip'] as String,
       steps: List<MlSteps>.from(
@@ -159,7 +179,7 @@ class MilestoneModel {
 
   @override
   String toString() {
-    return 'MilestoneModel(id: $id, asset: $asset, x: $x, y: $y, rewards: $rewards, description: $steps, actionUri: $actionUri, animType: $animType, isCompleted: $isCompleted, page: $page, prizeSubType: $prizeSubType, mlIndex: $index, shadow: $shadow, hFlip: $hFlip, vFlip: $vFlip)';
+    return 'MilestoneModel(id: $id, asset: $asset, x: $x, y: $y, ax:  $ax  ay: $ay rewards: $rewards, description: $steps, actionUri: $actionUri, animType: $animType, isCompleted: $isCompleted, page: $page, prizeSubType: $prizeSubType, mlIndex: $index, shadow: $shadow, hFlip: $hFlip, vFlip: $vFlip)';
   }
 
   @override
@@ -169,8 +189,11 @@ class MilestoneModel {
     return other is MilestoneModel &&
         other.id == id &&
         other.asset == asset &&
+        other.animAsset == animAsset &&
         other.x == x &&
         other.y == y &&
+        other.ax == ax &&
+        other.ay == ay &&
         listEquals(other.rewards, rewards) &&
         listEquals(other.steps, steps) &&
         other.actionUri == actionUri &&
@@ -191,6 +214,9 @@ class MilestoneModel {
         asset.hashCode ^
         x.hashCode ^
         y.hashCode ^
+        animAsset.hashCode ^
+        ax.hashCode ^
+        ay.hashCode ^
         rewards.hashCode ^
         steps.hashCode ^
         actionUri.hashCode ^

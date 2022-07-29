@@ -6,8 +6,11 @@ import 'package:flutter/material.dart';
 class JourneyPathModel {
   final String id;
   final JourneyAssetModel asset;
+  final JourneyAssetModel animAsset;
   final double x;
   final double y;
+  final double ax;
+  final double ay;
   final bool isBase;
   final bool hFlip;
   final bool vFlip;
@@ -19,6 +22,9 @@ class JourneyPathModel {
     @required this.asset,
     @required this.x,
     @required this.y,
+    this.animAsset,
+    this.ax,
+    this.ay,
     this.isBase = false,
     this.hFlip = false,
     this.vFlip = false,
@@ -31,8 +37,11 @@ class JourneyPathModel {
     String id,
     JourneyAssetModel asset,
     String alignment,
-    double dx,
-    double dy,
+    double x,
+    double y,
+    JourneyAssetModel animAsset,
+    double ax,
+    double ay,
     bool isBase,
     bool hFlip,
     bool vFlip,
@@ -43,8 +52,11 @@ class JourneyPathModel {
     return JourneyPathModel(
       id: id ?? this.id,
       asset: asset ?? this.asset,
-      x: dx ?? this.x,
-      y: dy ?? this.y,
+      x: x ?? this.x,
+      y: y ?? this.y,
+      animAsset: animAsset ?? this.animAsset,
+      ax: ax ?? this.ax,
+      ay: ay ?? this.ay,
       isBase: isBase ?? this.isBase,
       hFlip: hFlip ?? this.hFlip,
       vFlip: vFlip ?? this.vFlip,
@@ -58,9 +70,12 @@ class JourneyPathModel {
     return {
       'x': x,
       'y': y,
+      'ax': ax,
+      'ay': ay,
       'z': z,
       'isBase': isBase ?? false,
       'assetRef': asset.name,
+      'animAssetRef': animAsset.name,
       'mlIndex': mlIndex,
       'hFlip': hFlip ?? false,
     };
@@ -70,12 +85,15 @@ class JourneyPathModel {
     return JourneyPathModel(
       x: map['x']?.toDouble() ?? 0.0,
       y: map['y']?.toDouble() ?? 0.0,
+      ax: map['ax']?.toDouble() ?? 0.0,
+      ay: map['ay']?.toDouble() ?? 0.0,
       z: map['z']?.toInt() ?? 0,
       isBase: map['isBase'] ?? false,
       mlIndex: map['level']?.toInt() ?? 0,
       hFlip: map['hFlip'] ?? false,
       id: map['id'],
       asset: JourneyAssetModel.fromMap(map['asset']),
+      animAsset: JourneyAssetModel.fromMap(map['animAsset']),
       page: page ?? 0,
     );
   }
