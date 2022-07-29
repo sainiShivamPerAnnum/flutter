@@ -186,12 +186,12 @@ class JourneyRepository {
 
   Future<void> uploadJourneyPage(JourneyPage page) async {
     try {
-      final String _uid = _userService.baseUser.uid;
+      // final String _uid = _userService.baseUser.uid;
       final _token = await _getBearerToken();
       final _body = page.toMap();
       dev.log(json.encode(_body));
       final response = await APIService.instance.postData(
-        ApiPath.getJourney(1),
+        ApiPath.getJourney(2),
         token: _token,
         body: _body,
         cBaseUrl: "https://i2mkmm61d4.execute-api.ap-south-1.amazonaws.com/dev",

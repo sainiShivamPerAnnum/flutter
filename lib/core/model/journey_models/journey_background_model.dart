@@ -38,13 +38,13 @@ class JourneyBackgroundModel {
 
   factory JourneyBackgroundModel.fromMap(Map<String, dynamic> map) {
     return JourneyBackgroundModel(
-      colors: List<Color>.from(
-        (map['colors'] as List<int>).map<Color>(
-          (x) => Color(x),
-        ),
-      ),
-      stops: List<double>.from((map['stops'] as List<double>)),
-      asset: JourneyAssetModel.fromMap(map['asset'] as Map<String, dynamic>),
+      // colors: List<Color>.from(
+      //   (map['colors'] as List<int>).map<Color>(
+      //     (x) => Color(x),
+      //   ),
+      // ),
+      // stops: List<double>.from((map['stops'] as List<double>)),
+      asset: JourneyAssetModel.fromMap(map),
     );
   }
 

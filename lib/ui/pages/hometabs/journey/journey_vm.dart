@@ -40,7 +40,7 @@ class JourneyPageViewModel extends BaseModel {
   int get lastPage => _journeyService.lastPage;
   int get startPage => _journeyService.startPage;
   int get pageCount => _journeyService.pageCount;
-
+  int get avatarActiveMilestoneLevel => _journeyService.avatarRemoteMlIndex;
   int userMilestoneLevel = 1, userJourneyLevel = 1;
   bool _isLoading = false, isEnd = false;
 
@@ -77,38 +77,40 @@ class JourneyPageViewModel extends BaseModel {
   //   _journeyService.fetchNetworkPages();
   // }
 
-  void tempReadyAvatarToPath() {
-    _journeyService.setAvatarPostion();
-    _journeyService.createAvatarAnimationObject();
-  }
-
-  void tempAnimate() {
-    _journeyService.animateAvatar();
-  }
-
-  tempInit() async {
+  init(TickerProvider vsync) async {
+    log("Journey VM init Called");
+    // baseGlow = 0;
     isLoading = true;
-    _journeyService.init();
+    await Future.delayed(Duration(seconds: 2));
+
     // Map<String, dynamic> res =
     //     await _dbModel.fetchJourneyPage(lastDoc: lastDoc);
     // pages = res["pages"];
-    // await _journeyService.fetchNetworkPages();
+    _journeyService.fetchNetworkPages();
     logger.d("Pages length: ${_journeyService.pages.length}");
     // lastDoc = res["lastDoc"];
     // log("${lastDoc.id}");
     _journeyService.setCurrentMilestones();
     _journeyService.setCustomPathItems();
     _journeyService.setJourneyPathItems();
-    _journeyService.getAvatarLocalLevel();
-    // await _journeyService.getAvatarRemoteLevel();
-    // if (_journeyService.checkIfThereIsALevelChange()) {
-    _journeyService.createPathForAvatarAnimation(
-        _journeyService.avatarCachedMlIndex,
-        _journeyService.avatarRemoteMlIndex);
-    _journeyService.createAvatarAnimationObject();
-    // } else {
-    //   _journeyService.placeAvatarAtTheCurrentMileStone();
-    // }
+    _journeyService.getAvatarCachedMilestoneIndex();
+    await _journeyService.getAvatarRemoteMilestoneIndex();
+    if (_journeyService.checkIfThereIsALevelChange()) {
+      controller = AnimationController(
+        vsync: vsync,
+        duration: Duration(
+            seconds: 2 *
+                (_journeyService.avatarRemoteMlIndex -
+                    _journeyService.avatarCachedMlIndex)),
+      );
+      _journeyService.createPathForAvatarAnimation(
+          _journeyService.avatarCachedMlIndex,
+          _journeyService.avatarRemoteMlIndex);
+      _journeyService.createAvatarAnimationObject();
+    } else {
+      _journeyService.placeAvatarAtTheCurrentMileStone();
+      // baseGlow = 1;
+    }
 
     mainController = ScrollController();
     //   ..addListener(() {
@@ -119,17 +121,13 @@ class JourneyPageViewModel extends BaseModel {
     isLoading = false;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       mainController.jumpTo(300);
-      Future.delayed(Duration(milliseconds: 800), () {
+      Future.delayed(Duration(seconds: 1), () {
         mainController.animateTo(_mainController.position.minScrollExtent,
             duration: const Duration(seconds: 3), curve: Curves.easeOutCubic);
       }).then((value) {
-        // _journeyService.animateAvatar();
+        _journeyService.animateAvatar();
       });
     });
-  }
-
-  createAvatarPath(List<AvatarPathModel> pathListData) {
-    _journeyService.drawPath(pathListData);
   }
 
   //  (pages.length - model.page) * pageHeight +
@@ -226,6 +224,20 @@ class JourneyPageViewModel extends BaseModel {
     });
   }
 
+  ///---------- TEST METHODS [[ ONLY FOR DEV USE ]]  ----------///
+
+  testCreateAvatarPath(List<AvatarPathModel> pathListData) {
+    _journeyService.drawPath(pathListData);
+  }
+
+  void testReadyAvatarToPath() {
+    _journeyService.setAvatarPostion();
+    _journeyService.createAvatarAnimationObject();
+  }
+
+  void testAnimate() {
+    _journeyService.animateAvatar();
+  }
   // setDimensions(BuildContext context) {
   //   JourneyPageViewModel.pageHeight = MediaQuery.of(context).size.width * 2.165;
   //   JourneyPageViewModel.pageWidth = MediaQuery.of(context).size.width;

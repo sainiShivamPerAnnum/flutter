@@ -150,6 +150,29 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     );
   }
 
+  MaterialPage _insertPage(Widget child, PageConfiguration pageConfig) {
+    return MaterialPage(
+      child: child,
+      key: Key(pageConfig.key),
+      name: pageConfig.path,
+      arguments: pageConfig,
+    );
+  }
+
+  void _insertPageData(Widget child, PageConfiguration pageConfig,
+      {int index}) {
+    AppState.screenStack
+        .insert(index ?? AppState.screenStack.length, ScreenItem.page);
+    print("Inseted a page ${pageConfig.key} to Index $index");
+    log("Current Stack: ${AppState.screenStack}");
+    _analytics.trackScreen(screen: pageConfig.name);
+    _pages.insert(
+      index ?? _pages.length - 1,
+      _insertPage(child, pageConfig),
+    );
+    //notifyListeners();
+  }
+
   void _addPageData(Widget child, PageConfiguration pageConfig) {
     AppState.screenStack.add(ScreenItem.page);
     print("Added a page ${pageConfig.key}");
@@ -348,6 +371,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     routes.forEach((route) {
       addPage(route);
     });
+  }
+
+  void pushBelow(Widget child, PageConfiguration newRoute, {int index}) {
+    _insertPageData(child, newRoute, index: index);
   }
 
   // 7
@@ -568,6 +595,11 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         _setPageAction(appState.currentAction);
         pushWidget(appState.currentAction.widget, appState.currentAction.page);
         break;
+      case PageState.addBelow:
+        _setPageAction(appState.currentAction);
+        pushBelow(appState.currentAction.widget, appState.currentAction.page);
+
+        break;
       case PageState.addAll:
         // 9
         addAll(appState.currentAction.pages);
@@ -731,6 +763,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case 'pop':
         AppState.backButtonDispatcher.didPopRoute();
+        break;
+      case 'goldDetails':
+        pageConfiguration = AugmontGoldDetailsPageConfig;
         break;
       case 'autosaveDetails':
         pageConfiguration = AutosaveDetailsViewPageConfig;

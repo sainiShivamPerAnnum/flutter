@@ -40,6 +40,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   int lastPage;
   int startPage;
   int pageCount;
+  double _baseGlow = 0;
 
   List<int> levels = [1, 4, 8];
 
@@ -48,7 +49,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   List<AvatarPathModel> customPathDataList = [];
   Path _avatarPath;
   Offset _avatarPosition;
-  // List<JourneyPage> _pages;
+  List<JourneyPage> _pages;
   Animation _avatarAnimation;
   AnimationController controller;
   int fcmRemoteAvatarLevel;
@@ -67,20 +68,29 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     // notifyListeners();
   }
 
-  List<JourneyPage> get pages => jourenyPages;
+  List<JourneyPage> get pages => _pages;
 
-  // set pages(List<JourneyPage> value) {
-  //   this._pages = value;
-  //   // notifyListeners();
-  // }
+  set pages(List<JourneyPage> value) {
+    this._pages = value;
+    notifyListeners();
+  }
 
   get avatarCachedMlIndex => this._avatarCachedMlIndex;
 
   set avatarCachedMlIndex(value) => this._avatarCachedMlIndex = value;
 
   get avatarRemoteMlIndex => this._avatarRemoteMlIndex;
+  double get baseGlow => this._baseGlow;
 
-  set avatarRemoteMlIndex(value) => this._avatarRemoteMlIndex = value;
+  set baseGlow(double value) {
+    this._baseGlow = value;
+    notifyListeners(JourneyServiceProperties.BaseGlow);
+  }
+
+  set avatarRemoteMlIndex(value) {
+    this._avatarRemoteMlIndex = value;
+    // notifyListeners();
+  }
 
   UserJourneyStatsModel _userJourneyStats;
   UserJourneyStatsModel get userJourneyStats => this._userJourneyStats;
@@ -101,7 +111,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   set avatarPosition(Offset value) {
     this._avatarPosition = value;
-    // notifyListeners();
+    notifyListeners();
   }
 
   Future<void> init() async {
@@ -109,7 +119,6 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     // getAvatarLocalLevel();
     pageWidth = SizeConfig.screenWidth;
     pageHeight = pageWidth * 2.165;
-    setPageProperties();
   }
 
   // fetchPages() {
@@ -118,18 +127,19 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   // createAvatarAnimationObject();
   // }
 
-  // fetchNetworkPages() async {
-  //   if (pages == null || pages.isEmpty) {
-  //     pages = jourenyPages;
-  // ApiResponse<List<JourneyPage>> response = await _journeyRepo
-  //     .fetchJourneyPages(1, JourneyRepository.PAGE_DIRECTION_UP);
-  // if (response.code == 200) {
-  //   pages = response.model;
-  // setPageProperties();
-  // } else
-  //   pages = [];
-  //   }
-  // }
+  fetchNetworkPages() async {
+    // if (pages == null || pages.isEmpty) {
+    pages = jourenyPages;
+    ApiResponse<List<JourneyPage>> response = await _journeyRepo
+        .fetchJourneyPages(1, JourneyRepository.PAGE_DIRECTION_UP);
+    _logger.d(response);
+    // if (response.code == 200) {
+    //   pages = response.model;
+    // setPageProperties();
+    // } else
+    //   pages = [];
+    //}
+  }
 
   setPageProperties() {
     pageCount = pages.length;
@@ -210,7 +220,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     return 0;
   }
 
-  getAvatarLocalLevel() {
+  getAvatarCachedMilestoneIndex() {
     if (PreferenceHelper.exists(AVATAR_CURRENT_LEVEL))
       avatarCachedMlIndex = PreferenceHelper.getInt(AVATAR_CURRENT_LEVEL);
     else {
@@ -221,12 +231,12 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     _logger.d("JOURNEYSERVICE: Avatar Local Level: $avatarCachedMlIndex");
   }
 
-  Future<void> getAvatarRemoteLevel() async {
+  Future<void> getAvatarRemoteMilestoneIndex() async {
     //MAKE API CALL TO FETCH CURRENT LEVEL
     //DUMMY LEVEL FOR TESTING
     avatarRemoteMlIndex =
-        await _dbModel.getRemoteMLIndex(_userService.baseUser.uid) ??
-            avatarCachedMlIndex;
+        //await _dbModel.getRemoteMLIndex(_userService.baseUser.uid) ??
+        3;
     // int startLevel = 3;
     _logger.d("JOURNEYSERVICE: Avatar Remote Level: $avatarRemoteMlIndex");
   }
@@ -268,18 +278,18 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   }
 
   animateAvatar() {
-    if (avatarPath == null // || !checkIfThereIsALevelChange()
-        ) return;
-    // isAvatarAnimationInProgress = true;
+    if (avatarPath == null || !checkIfThereIsALevelChange()) return;
+    isAvatarAnimationInProgress = true;
     controller.reset();
     controller.forward().whenComplete(() {
       log("Animation Complete");
-      // isAvatarAnimationInProgress = false;
-      // int gameLevelChangeResult = checkForGameLevelChange();
-      // if (gameLevelChangeResult != 0)
-      //   BaseUtil.showPositiveAlert("Level $gameLevelChangeResult unlocked!!",
-      //       "New Milestones on your way!");
-      // updateAvatarLocalLevel();
+      isAvatarAnimationInProgress = false;
+      int gameLevelChangeResult = checkForGameLevelChange();
+      if (gameLevelChangeResult != 0)
+        BaseUtil.showPositiveAlert("Level $gameLevelChangeResult unlocked!!",
+            "New Milestones on your way!");
+      updateAvatarLocalLevel();
+      baseGlow = 1;
     });
   }
 
@@ -339,7 +349,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   void createAvatarAnimationObject() {
     avatarAnimation = Tween(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: controller, curve: Curves.easeInOut),
+      CurvedAnimation(parent: controller, curve: Curves.easeInCirc),
     )..addListener(() {
         avatarPosition = calculatePosition(avatarAnimation.value);
         notifyListeners(JourneyServiceProperties.AvatarPosition);

@@ -65,15 +65,16 @@ List<String> background = [
 List<JourneyPage> get jourenyPages => [
       JourneyPage(
         bgAsset: JourneyBackgroundModel(
-            colors: [Color(0xff168A7F), Color(0xff289D88)],
-            stops: [0, 1],
-            asset: JourneyAssetModel(
-                uri: "assets/journey/bg1.svg",
-                height: 1,
-                width: 1,
-                name: 'bg',
-                page: 1,
-                assetType: "SVG")),
+          colors: [Color(0xff168A7F), Color(0xff289D88)],
+          stops: [0, 1],
+          asset: JourneyAssetModel(
+              uri: "assets/journey/bg1.svg",
+              height: 1,
+              width: 1,
+              name: 'bg2',
+              page: 1,
+              assetType: "SVG"),
+        ),
         page: 1,
         paths: [
           JourneyPathModel(
@@ -138,7 +139,7 @@ List<JourneyPage> get jourenyPages => [
             page: 1,
             z: 5,
             mlIndex: 3,
-            isBase: true,
+            isBase: false,
           ),
           JourneyPathModel(
             id: 'b3',
@@ -207,33 +208,21 @@ List<JourneyPage> get jourenyPages => [
         ],
         avatarPath: [
           AvatarPathModel(
-              moveType: "linear", coords: [0.32, 0.8], page: 1, mlIndex: 1),
+              moveType: "linear", coords: [0.53, 0.63], page: 1, mlIndex: 1),
           AvatarPathModel(
-              moveType: "linear", coords: [0.24, 0.7], page: 1, mlIndex: 2),
+              moveType: "linear", coords: [0.4, 0.5], page: 1, mlIndex: 2),
           AvatarPathModel(
-              moveType: "linear", coords: [0.05, 0.66], page: 1, mlIndex: 2),
+              moveType: "linear", coords: [0.2, 0.45], page: 1, mlIndex: 2),
           AvatarPathModel(
-              moveType: "linear", coords: [0.33, 0.58], page: 1, mlIndex: 2),
+              moveType: "linear", coords: [0.73, 0.31], page: 1, mlIndex: 3),
           AvatarPathModel(
-              moveType: "linear", coords: [0.48, 0.55], page: 1, mlIndex: 3),
+              moveType: "linear", coords: [0.5, 0.22], page: 1, mlIndex: 3),
           AvatarPathModel(
-              moveType: "linear", coords: [0.7, 0.41], page: 1, mlIndex: 3),
+              moveType: "linear", coords: [0.32, 0.1], page: 1, mlIndex: 4),
           AvatarPathModel(
-              moveType: "linear", coords: [0.42, 0.32], page: 1, mlIndex: 4),
+              moveType: "linear", coords: [0.18, 0.06], page: 1, mlIndex: 4),
           AvatarPathModel(
-              moveType: "linear", coords: [0.26, 0.3], page: 1, mlIndex: 4),
-          AvatarPathModel(
-              moveType: "linear", coords: [0.26, 0.17], page: 1, mlIndex: 5),
-          AvatarPathModel(
-              moveType: "linear", coords: [0.12, 0.14], page: 1, mlIndex: 5),
-          AvatarPathModel(
-              moveType: "linear", coords: [0.08, 0.1], page: 1, mlIndex: 6),
-          AvatarPathModel(
-              moveType: "linear", coords: [0.65, 0.05], page: 1, mlIndex: 6),
-          AvatarPathModel(
-              moveType: "linear", coords: [0.7, 0.03], page: 1, mlIndex: 7),
-          AvatarPathModel(
-              moveType: "linear", coords: [0.58, 0.0], page: 1, mlIndex: 7),
+              moveType: "linear", coords: [0.3, 0.02], page: 1, mlIndex: 5),
         ],
         milestones: [
           MilestoneModel(
@@ -295,7 +284,7 @@ List<JourneyPage> get jourenyPages => [
             steps: [
               //steps
               MlSteps(
-                title: "Watch Walkthrough and win 100 Tokens to get started!",
+                title: "Complete Your Profile",
                 subtitle: "Description of the milestone",
               )
             ],
@@ -337,15 +326,15 @@ List<JourneyPage> get jourenyPages => [
             isCompleted: true,
             steps: [
               MlSteps(
-                title: "Watch Walkthrough and win 100 Tokens to get started!",
-                subtitle: "Description of the milestone",
+                title: "Play your first game",
+                subtitle: "You can play any game you wish",
               )
             ],
             rewards: [
               Reward(value: 200, type: "FLC"),
               Reward(value: 50, type: "Money"),
             ],
-            actionUri: "/profile",
+            actionUri: "/play",
             shadow: MilestoneShadowModel(
               id: 'ms3',
               name: 'ms3',
@@ -378,7 +367,7 @@ List<JourneyPage> get jourenyPages => [
             animType: "FLOAT",
             steps: [
               MlSteps(
-                title: "Watch Walkthrough and win 100 Tokens to get started!",
+                title: "Buy a Tambola Ticket",
                 subtitle: "Description of the milestone",
               )
             ],
@@ -386,7 +375,7 @@ List<JourneyPage> get jourenyPages => [
               Reward(value: 200, type: "FLC"),
               Reward(value: 50, type: "Money"),
             ],
-            actionUri: "/task",
+            actionUri: "/tambolaHome",
             shadow: MilestoneShadowModel(
               id: 'ms4',
               name: 'ms4',
@@ -413,7 +402,7 @@ List<JourneyPage> get jourenyPages => [
               uri: "assets/journey/bg2.svg",
               height: 1,
               width: 1,
-              name: 'bg',
+              name: 'bg2',
               page: 2,
               assetType: "SVG"),
         ),
@@ -455,8 +444,8 @@ List<JourneyPage> get jourenyPages => [
             id: 'b6',
             asset: JourneyAssetModel(
               uri: base6,
-              width: 0.4048,
-              height: 0.1145,
+              width: 0.3386,
+              height: 0.1133,
               name: "b6",
               page: 2,
             ),
@@ -553,7 +542,7 @@ List<JourneyPage> get jourenyPages => [
               uri: base9,
               width: 0.4506,
               height: 0.1431,
-              name: "b4",
+              name: "b9",
               page: 2,
             ),
             x: 0.4145,
@@ -627,142 +616,26 @@ List<JourneyPage> get jourenyPages => [
             z: 2,
             isBase: true,
           ),
-          // JourneyPathModel(
-          //     id: 'p11',
-          //     asset: JourneyAssetModel(
-          //       uri: path4,
-          //       width: 0.3674,
-          //       height: 0.1151,
-          //       name: "p4",
-          //       page: 2,
-          //     ),
-          //     x: 0.2853,
-          //     y: 0.4525,
-          //     page: 2,
-          //     mlIndex: 11,
-          //     z: 1,
-          //     hFlip: true),
-
-          // JourneyPathModel(
-          //   id: 'p12',
-          //   asset: JourneyAssetModel(
-          //     uri: path1,
-          //     width: 0.5262,
-          //     height: 0.1549,
-          //     name: "p1",
-          //     page: 2,
-          //   ),
-          //   x: 0.2506,
-          //   y: 0.5901,
-          //   page: 2,
-          //   mlIndex: 12,
-          //   z: 1,
-          //   isBase: false,
-          // ),
-          // JourneyPathModel(
-          //   id: 'p13',
-          //   asset: JourneyAssetModel(
-          //     name: 'p2',
-          //     uri: path2,
-          //     width: 0.2674,
-          //     height: 0.0991,
-          //     page: 2,
-          //   ),
-          //   x: 0.26,
-          //   y: 0.7142,
-          //   page: 2,
-          //   mlIndex: 12,
-          //   z: 0,
-          //   isBase: false,
-          // ),
-          // JourneyPathModel(
-          //   id: 'b12',
-          //   asset: JourneyAssetModel(
-          //     name: 'b4',
-          //     uri: base4,
-          //     width: 0.2598,
-          //     height: 0.0847,
-          //     page: 2,
-          //   ),
-          //   x: 0.4213,
-          //   y: 0.7711,
-          //   page: 2,
-          //   mlIndex: 12,
-          //   z: 1,
-          //   isBase: true,
-          // ),
-          // JourneyPathModel(
-          //   id: 'p14',
-          //   asset: JourneyAssetModel(
-          //     name: 'p3',
-          //     uri: path3,
-          //     width: 0.4905,
-          //     height: 0.1429,
-          //     page: 2,
-          //   ),
-          //   x: 0.488,
-          //   y: 0.8241,
-          //   page: 2,
-          //   mlIndex: 13,
-          //   z: 0,
-          //   isBase: false,
-          // ),
-          // JourneyPathModel(
-          //   id: 'b13',
-          //   asset: JourneyAssetModel(
-          //     name: 'b3',
-          //     uri: base3,
-          //     width: 0.2948,
-          //     height: 0.0894,
-          //     page: 2,
-          //   ),
-          //   x: 0.704,
-          //   y: 0.9204,
-          //   page: 2,
-          //   mlIndex: 13,
-          //   z: 1,
-          //   isBase: true,
-          // ),
-          // JourneyPathModel(
-          //   id: 'p15',
-          //   asset: JourneyAssetModel(
-          //     name: 'p6',
-          //     uri: path6,
-          //     width: 0.4853,
-          //     height: 0.0677,
-          //     page: 2,
-          //   ),
-          //   x: 0.2853,
-          //   y: 0.9655,
-          //   page: 2,
-          //   mlIndex: 14,
-          //   z: 0,
-          //   isBase: false,
-          // ),
-          // JourneyPathModel(
-          //   id: 'b14',
-          //   asset: JourneyAssetModel(
-          //     name: 'b6',
-          //     uri: base6,
-          //     width: 0.3386,
-          //     height: 0.1133,
-          //     page: 2,
-          //   ),
-          //   x: 0.0373,
-          //   y: 0.9913,
-          //   page: 2,
-          //   mlIndex: 14,
-          //   z: 4,
-          //   isBase: true,
-          // ),
         ],
         avatarPath: [
           AvatarPathModel(
-              moveType: "linear", coords: [0.26, 0.98], page: 2, mlIndex: 7),
+              moveType: "linear", coords: [0.5, 0.9], page: 2, mlIndex: 5),
           AvatarPathModel(
-              moveType: "linear", coords: [0.4, 0.9], page: 2, mlIndex: 8),
+              moveType: "linear", coords: [0.65, 0.86], page: 2, mlIndex: 5),
           AvatarPathModel(
-              moveType: "linear", coords: [0.6, 0.84], page: 2, mlIndex: 8),
+              moveType: "linear", coords: [0.12, 0.78], page: 2, mlIndex: 6),
+          AvatarPathModel(
+              moveType: "linear", coords: [0.55, 0.68], page: 2, mlIndex: 7),
+          AvatarPathModel(
+              moveType: "linear", coords: [0.2, 0.42], page: 2, mlIndex: 8),
+          AvatarPathModel(
+              moveType: "linear", coords: [0.6, 0.28], page: 2, mlIndex: 9),
+          AvatarPathModel(
+              moveType: "linear", coords: [0.35, 0.15], page: 2, mlIndex: 10),
+          AvatarPathModel(
+              moveType: "linear", coords: [0.15, 0.1], page: 2, mlIndex: 10),
+          AvatarPathModel(
+              moveType: "linear", coords: [0.5, 0.0], page: 2, mlIndex: 11),
         ],
         milestones: [
           MilestoneModel(
@@ -781,15 +654,15 @@ List<JourneyPage> get jourenyPages => [
             animType: "NONE",
             steps: [
               MlSteps(
-                title: "Watch Walkthrough and win 100 Tokens to get started!",
-                subtitle: "Description of the milestone",
+                title: "Explore about Digital Gold",
+                subtitle: "Check out our Digital Gold Asset",
               )
             ],
             rewards: [
               Reward(value: 200, type: "FLC"),
               Reward(value: 50, type: "Money"),
             ],
-            actionUri: "/task",
+            actionUri: "/goldDetails",
             shadow: MilestoneShadowModel(
               id: 'ms5',
               name: 'ms5',
@@ -822,7 +695,7 @@ List<JourneyPage> get jourenyPages => [
             animType: "FLOAT",
             steps: [
               MlSteps(
-                title: "Watch Walkthrough and win 100 Tokens to get started!",
+                title: "Make your first Digital Gold Savings",
                 subtitle: "Description of the milestone",
               )
             ],
@@ -830,7 +703,7 @@ List<JourneyPage> get jourenyPages => [
               Reward(value: 200, type: "FLC"),
               Reward(value: 50, type: "Money"),
             ],
-            actionUri: "/task",
+            actionUri: "/save",
             shadow: MilestoneShadowModel(
               id: 'ms6',
               name: 'ms6',
@@ -858,7 +731,7 @@ List<JourneyPage> get jourenyPages => [
             ),
             steps: [
               MlSteps(
-                title: "Watch Walkthrough and win 100 Tokens to get started!",
+                title: "Complete a Daily Challenge",
                 subtitle: "Description of the milestone",
               )
             ],
@@ -871,7 +744,7 @@ List<JourneyPage> get jourenyPages => [
               Reward(value: 200, type: "FLC"),
               Reward(value: 50, type: "Money"),
             ],
-            actionUri: "/task",
+            actionUri: "/win",
             shadow: MilestoneShadowModel(
               id: 'ms7',
               name: 'ms7',
@@ -899,7 +772,7 @@ List<JourneyPage> get jourenyPages => [
             ),
             steps: [
               MlSteps(
-                title: "Watch Walkthrough and win 100 Tokens to get started!",
+                title: "Make to the weekly leaderboard of Cricket",
                 subtitle: "Description of the milestone",
               )
             ],
@@ -912,7 +785,7 @@ List<JourneyPage> get jourenyPages => [
               Reward(value: 200, type: "FLC"),
               Reward(value: 50, type: "Money"),
             ],
-            actionUri: "/profile",
+            actionUri: "/play",
             shadow: MilestoneShadowModel(
               id: 'ms8',
               name: 'ms8',
@@ -940,7 +813,7 @@ List<JourneyPage> get jourenyPages => [
             ),
             steps: [
               MlSteps(
-                title: "Watch Walkthrough and win 100 Tokens to get started!",
+                title: "Invite a friend to Fello",
                 subtitle: "Description of the milestone",
               )
             ],
@@ -981,7 +854,7 @@ List<JourneyPage> get jourenyPages => [
             ),
             steps: [
               MlSteps(
-                title: "Watch Walkthrough and win 100 Tokens to get started!",
+                title: "Reach a score of 100 in Fello Cricket",
                 subtitle: "Description of the milestone",
               )
             ],
@@ -995,7 +868,7 @@ List<JourneyPage> get jourenyPages => [
               Reward(value: 200, type: "FLC"),
               Reward(value: 50, type: "Money"),
             ],
-            actionUri: "/task",
+            actionUri: "/cricketHome",
             shadow: MilestoneShadowModel(
               id: 'm10',
               name: 'ms10',
@@ -1012,130 +885,6 @@ List<JourneyPage> get jourenyPages => [
               page: 2,
             ),
           ),
-          // MilestoneModel(
-          //   id: 'm11',
-          //   asset: JourneyAssetModel(
-          //     uri: ml7,
-          //     name: 'm7',
-          //     width: 0.213,
-          //     height: 0.0868,
-          //     page: 2,
-          //   ),
-          //   steps: [
-          //     MlSteps(
-          //       title: "Watch Walkthrough and win 100 Tokens to get started!",
-          //       subtitle: "Description of the milestone",
-          //     )
-          //   ],
-          //   x: 0.5786,
-          //   y: 0.581,
-          //   page: 2,
-          //   index: 11,
-          //   hFlip: true,
-          //   animType: "NONE",
-          //   rewards: [
-          //     Reward(value: 200, type: "FLC"),
-          //     Reward(value: 50, type: "Money"),
-          //   ],
-          //   actionUri: "/task",
-          //   shadow: MilestoneShadowModel(
-          //       id: 'ms11',
-          //       name: 'ms7',
-          //       asset: JourneyAssetModel(
-          //         uri: mls7,
-          //         name: 'ms7',
-          //         width: 0.0714,
-          //         height: 0.0179,
-          //         page: 2,
-          //       ),
-          //       x: 0.6272,
-          //       y: 0.5719,
-          //       index: 11,
-          //       page: 2,
-          //       hFlip: true),
-          // ),
-          // MilestoneModel(
-          //   id: 'm12',
-          //   asset: JourneyAssetModel(
-          //     uri: ml4,
-          //     name: 'm14',
-          //     width: 0.1107,
-          //     height: 0.0591,
-          //     page: 2,
-          //   ),
-          //   steps: [
-          //     MlSteps(
-          //       title: "Watch Walkthrough and win 100 Tokens to get started!",
-          //       subtitle: "Description of the milestone",
-          //     )
-          //   ],
-          //   x: 0.4929,
-          //   y: 0.8213,
-          //   page: 2,
-          //   index: 12,
-          //   animType: "ROTATE",
-          //   rewards: [
-          //     Reward(value: 200, type: "FLC"),
-          //     Reward(value: 50, type: "Money"),
-          //   ],
-          //   actionUri: "/task",
-          //   shadow: MilestoneShadowModel(
-          //     id: 'ms12',
-          //     name: 'ms4',
-          //     asset: JourneyAssetModel(
-          //       uri: mls4,
-          //       name: 'm1s4',
-          //       width: 0.0775,
-          //       height: 0.0327,
-          //       page: 2,
-          //     ),
-          //     x: 0.4826,
-          //     y: 0.8082,
-          //     index: 12,
-          //     page: 2,
-          //   ),
-          // ),
-          // MilestoneModel(
-          //   id: 'm13',
-          //   asset: JourneyAssetModel(
-          //     uri: ml2,
-          //     name: 'm2',
-          //     width: 0.1491,
-          //     height: 0.0816,
-          //     page: 2,
-          //   ),
-          //   steps: [
-          //     MlSteps(
-          //       title: "Watch Walkthrough and win 100 Tokens to get started!",
-          //       subtitle: "Description of the milestone",
-          //     )
-          //   ],
-          //   x: 0.776,
-          //   y: 0.9627,
-          //   page: 2,
-          //   index: 13,
-          //   animType: "FLOAT",
-          //   rewards: [
-          //     Reward(value: 200, type: "FLC"),
-          //     Reward(value: 50, type: "Money"),
-          //   ],
-          //   actionUri: "/profile",
-          //   shadow: MilestoneShadowModel(
-          //     id: 'ms13',
-          //     name: 'ms2',
-          //     asset: JourneyAssetModel(
-          //       uri: mls2,
-          //       name: 'ms2',
-          //       width: 0.1225,
-          //       height: 0.0308,
-          //       page: 2,
-          //     ),
-          //     x: 0.7895,
-          //     y: 0.9539,
-          //     index: 13,
-          //     page: 2,
-          //   ),
-          // ),
         ],
       ),
       // JourneyPage(

@@ -1,13 +1,16 @@
 import 'dart:developer';
 import 'dart:math' as math;
+import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/model/journey_models/journey_asset_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_path_model.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/source_adaptive_asset/source_adaptive_asset_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
 
 class JourneyAssetPath extends StatelessWidget {
   final JourneyPageViewModel model;
@@ -77,25 +80,35 @@ class ActiveMilestoneBackgroundGlow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-      left: model.pageWidth * asset.x,
-      bottom: model.pageHeight * (asset.page - 1) + model.pageHeight * asset.y,
-      child: Container(
-        height: SizeConfig.screenWidth * asset.asset.width,
-        width: SizeConfig.screenWidth * asset.asset.width,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle, //color: Colors.black
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xff62E3C4).withOpacity(0.8),
-              spreadRadius: 0,
-              blurRadius: SizeConfig.screenWidth * radius * 2,
-              offset: const Offset(0, 0),
-            )
-          ],
-        ),
-      ),
-    );
+    return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
+        properties: [JourneyServiceProperties.BaseGlow],
+        builder: (context, journeyModel, properties) {
+          return Positioned(
+            left: model.pageWidth * asset.x,
+            bottom: model.pageHeight * (asset.page - 1) +
+                model.pageHeight * asset.y,
+            child: AnimatedOpacity(
+              opacity: journeyModel.baseGlow,
+              duration: Duration(milliseconds: 700),
+              curve: Curves.easeInCubic,
+              child: Container(
+                height: SizeConfig.screenWidth * asset.asset.width,
+                width: SizeConfig.screenWidth * asset.asset.width,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle, //color: Colors.black
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xff62E3C4).withOpacity(0.8),
+                      spreadRadius: 0,
+                      blurRadius: SizeConfig.screenWidth * radius * 2,
+                      offset: const Offset(0, 0),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
   }
 }
 
@@ -111,44 +124,57 @@ class ActiveMilestoneBaseGlow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-      left: model.pageWidth * base.x,
-      bottom: (model.pageHeight * (base.page - 1) + model.pageHeight * base.y),
-      child: Container(
-        width: model.pageWidth * base.asset.width,
-        height: model.pageHeight * base.asset.height * 2,
-        // color: Colors.black,
-        child: Stack(
-          children: [
-            Align(
-              alignment: Alignment.center,
-              child: ClipPath(
-                clipper: const BackBeamClipper(),
-                child: Container(
-                  width: model.pageWidth * base.asset.width * 4,
-                  height: model.pageHeight * base.asset.height * 1.5,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [
-                      const Color(0xff62E3C4).withOpacity(0.01),
-                      const Color(0xff62E3C4).withOpacity(0.5),
-                      const Color(0xff62E3C4).withOpacity(0.3),
-                      const Color(0xff62E3C4).withOpacity(0.1),
-                      const Color(0xff62E3C4).withOpacity(0.01)
-                    ], begin: Alignment.bottomCenter, end: Alignment.topCenter),
-                  ),
+    return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
+        properties: [JourneyServiceProperties.BaseGlow],
+        builder: (context, journeyModel, properties) {
+          return Positioned(
+            left: model.pageWidth * base.x,
+            bottom: (model.pageHeight * (base.page - 1) +
+                model.pageHeight * base.y),
+            child: AnimatedOpacity(
+              opacity: journeyModel.baseGlow,
+              curve: Curves.easeInCubic,
+              duration: Duration(milliseconds: 700),
+              child: Container(
+                width: model.pageWidth * base.asset.width,
+                height: model.pageHeight * base.asset.height * 2,
+                // color: Colors.black,
+                child: Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: ClipPath(
+                        clipper: const BackBeamClipper(),
+                        child: Container(
+                          width: model.pageWidth * base.asset.width * 4,
+                          height: model.pageHeight * base.asset.height * 1.5,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                                colors: [
+                                  const Color(0xff62E3C4).withOpacity(0.01),
+                                  const Color(0xff62E3C4).withOpacity(0.5),
+                                  const Color(0xff62E3C4).withOpacity(0.3),
+                                  const Color(0xff62E3C4).withOpacity(0.1),
+                                  const Color(0xff62E3C4).withOpacity(0.01)
+                                ],
+                                begin: Alignment.bottomCenter,
+                                end: Alignment.topCenter),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: BaseRings(
+                        size: model.pageWidth * base.asset.width * 0.6,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: BaseRings(
-                size: model.pageWidth * base.asset.width * 0.6,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+          );
+        });
   }
 }
 

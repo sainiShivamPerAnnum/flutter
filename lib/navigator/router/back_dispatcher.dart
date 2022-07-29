@@ -63,6 +63,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
   @override
   Future<bool> didPopRoute() {
+    log("Back Request called");
     if (JourneyService.isAvatarAnimationInProgress) return null;
     if (AppState.screenStack.last == ScreenItem.loader) return null;
 
@@ -123,12 +124,12 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     // If the root tab is not 0 at the time of exit
     else if (_baseUtil.isUserOnboarded &&
         AppState.screenStack.length == 1 &&
-        (AppState.delegate.appState.rootIndex != 1 ||
-            RootViewModel.scaffoldKey.currentState.isDrawerOpen)) {
+        (AppState.delegate.appState.rootIndex != 1)) {
       logger.w("Checking if app can be closed");
-      if (RootViewModel.scaffoldKey.currentState.isDrawerOpen)
-        RootViewModel.scaffoldKey.currentState.openEndDrawer();
-      else if (AppState.delegate.appState.rootIndex != 1)
+      // if (RootViewModel.scaffoldKey.currentState.isDrawerOpen)
+      //   RootViewModel.scaffoldKey.currentState.openEndDrawer();
+      // else
+      if (AppState.delegate.appState.rootIndex != 1)
         AppState.delegate.appState.setCurrentTabIndex = 1;
       return Future.value(true);
     }

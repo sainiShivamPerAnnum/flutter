@@ -49,7 +49,7 @@ class JourneyAssetModel {
 
   factory JourneyAssetModel.fromMap(Map<String, dynamic> map) {
     return JourneyAssetModel(
-      uri: map['uri'] ?? '',
+      uri: map['bgImage'] ?? '',
       name: map['name'] ?? '',
       height: map['height']?.toDouble() ?? 0.0,
       width: map['width']?.toDouble() ?? 0.0,

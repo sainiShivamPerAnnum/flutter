@@ -86,61 +86,48 @@ class Root extends StatelessWidget {
                     ),
                   ),
                 ),
-                if (AppState.delegate.appState.getCurrentTabIndex != 1)
-                  FelloAppBar(
-                    key: felloAppBarKey,
-                    leading: InkWell(
-                      onTap: () => model.showDrawer(),
-                      child: ProfileImageSE(
-                        radius: SizeConfig.avatarRadius,
+                // if (AppState.delegate.appState.getCurrentTabIndex != 1)
+                FelloAppBar(
+                  key: felloAppBarKey,
+                  leading: InkWell(
+                    onTap: () => model.showDrawer(),
+                    child: ProfileImageSE(
+                      radius: SizeConfig.avatarRadius,
+                    ),
+                  ),
+                  actions: [
+                    FelloCoinBar(),
+                    SizedBox(width: 5),
+                    NotificationButton(),
+                    SizedBox(width: 5),
+
+                    CircleAvatar(
+                      backgroundColor: Colors.black,
+                      child: IconButton(
+                        color: Colors.white,
+                        icon: model.isUploading
+                            ? CircularProgressIndicator(color: Colors.black)
+                            : Icon(Icons.upload_rounded),
+                        onPressed: () {
+                          model.uploadJourneyPage();
+                        },
                       ),
                     ),
-                    actions: [
-                      FelloCoinBar(),
-                      SizedBox(width: 5),
-                      NotificationButton(),
-                      SizedBox(width: 5),
-                      CircleAvatar(
-                        backgroundColor: Colors.black,
-                        child: IconButton(
-                          icon: Lottie.asset(
-                            "assets/lotties/cat-loader.json",
-                            height: SizeConfig.padding80,
-                          ),
-                          color: Colors.white,
-                          onPressed: () {
-                            model.openJourneyView();
-                          },
-                        ),
-                      ),
-                      SizedBox(width: 5),
-                      CircleAvatar(
-                        backgroundColor: Colors.black,
-                        child: IconButton(
-                          color: Colors.white,
-                          icon: model.isUploading
-                              ? CircularProgressIndicator(color: Colors.black)
-                              : Icon(Icons.upload_rounded),
-                          onPressed: () {
-                            model.downloadJourneyPage();
-                          },
-                        ),
-                      ),
-                      // SizedBox(width: 5),
-                      // CircleAvatar(
-                      //   backgroundColor: Colors.black,
-                      //   child: IconButton(
-                      //     color: Colors.white,
-                      //     icon: model.isUploading
-                      //         ? CircularProgressIndicator(color: Colors.black)
-                      //         : Icon(Icons.download_rounded),
-                      //     onPressed: () {
-                      //       model.completeNViewDownloadSaveLViewAsset();
-                      //     },
-                      //   ),
-                      // )
-                    ],
-                  ),
+                    // SizedBox(width: 5),
+                    // CircleAvatar(
+                    //   backgroundColor: Colors.black,
+                    //   child: IconButton(
+                    //     color: Colors.white,
+                    //     icon: model.isUploading
+                    //         ? CircularProgressIndicator(color: Colors.black)
+                    //         : Icon(Icons.download_rounded),
+                    //     onPressed: () {
+                    //       model.completeNViewDownloadSaveLViewAsset();
+                    //     },
+                    //   ),
+                    // )
+                  ],
+                ),
                 // Positioned(
                 //   bottom: 0,
                 //   child: Container(

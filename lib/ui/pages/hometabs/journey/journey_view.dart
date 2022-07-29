@@ -2,20 +2,16 @@ import 'dart:developer';
 import 'dart:ui';
 
 import 'package:felloapp/core/enums/journey_service_enum.dart';
-import 'package:felloapp/core/model/journey_models/avatar_path_model.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jAssetPath.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jBackground.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jMilestones.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
-import 'package:felloapp/util/journey_page_data.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
@@ -29,128 +25,56 @@ class JourneyView extends StatefulWidget {
 
 class _JourneyViewState extends State<JourneyView>
     with SingleTickerProviderStateMixin {
-  Path generateCustomPath(Path path, AvatarPathModel model, String moveType) {
-    switch (moveType) {
-      case "linear":
-        path.lineTo(
-            SizeConfig.screenWidth * model.coords[0],
-            (2 - model.page) * SizeConfig.screenWidth * 2.165 +
-                SizeConfig.screenWidth * 2.165 * model.coords[1].toDouble());
-        return path;
-      case "arc":
-        return path;
-      case "move":
-        path.moveTo(
-            SizeConfig.screenWidth * model.coords[0],
-            (2 - model.page) * SizeConfig.screenWidth * 2.165 +
-                SizeConfig.screenWidth * 2.165 * model.coords[1]);
-        return path;
-      case "rect":
-        return path;
-      case "quadratic":
-        // path.quadraticBezierTo(
-        //     pageWidth * model.coords[0],
-        //     pageHeight * (pageCount - model.page).abs() +
-        //         pageHeight * model.coords[1],
-        //     pageWidth * model.coords[2],
-        //     pageHeight * (pageCount - model.page).abs() +
-        //         pageHeight * model.coords[3]);
-        return path;
-      case "cubic":
-        // path.cubicTo(
-        //     pageWidth * model.coords[0],
-        //     pageHeight * (pageCount - model.page).abs() +
-        //         pageHeight * model.coords[1],
-        //     pageWidth * model.coords[2],
-        //     pageHeight * (pageCount - model.page).abs() +
-        //         pageHeight * model.coords[3],
-        //     pageWidth * model.coords[4],
-        //     pageHeight * (pageCount - model.page).abs() +
-        //         pageHeight * model.coords[5]);
-        return path;
-      default:
-        return path;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    log("Journey View BUILD called");
     return BaseView<JourneyPageViewModel>(
       onModelReady: (model) async {
-        // await model.init(0);
-        model.controller = AnimationController(
-            vsync: this,
-            duration: const Duration(seconds: 4),
-            animationBehavior: AnimationBehavior.preserve);
-        model.tempInit();
+        await model.init(this);
       },
       onModelDispose: (model) {
         model.dump();
       },
       builder: (ctx, model, child) {
-        List<AvatarPathModel> avatarPath = [
-          // AvatarPathModel(
-          //     moveType: "linear", coords: [0.53, 0.63], page: 1, mlIndex: 1),
-          // AvatarPathModel(
-          //     moveType: "linear", coords: [0.4, 0.5], page: 1, mlIndex: 2),
-          // AvatarPathModel(
-          //     moveType: "linear", coords: [0.2, 0.45], page: 1, mlIndex: 2),
-          // AvatarPathModel(
-          //     moveType: "linear", coords: [0.73, 0.31], page: 1, mlIndex: 3),
-          // AvatarPathModel(
-          //     moveType: "linear", coords: [0.5, 0.22], page: 1, mlIndex: 3),
-          // AvatarPathModel(
-          //     moveType: "linear", coords: [0.32, 0.1], page: 1, mlIndex: 4),
-          // AvatarPathModel(
-          //     moveType: "linear", coords: [0.18, 0.06], page: 1, mlIndex: 4),
-          // AvatarPathModel(
-          //     moveType: "linear", coords: [0.3, 0.02], page: 1, mlIndex: 5),
-          // AvatarPathModel(
-          //     moveType: "linear", coords: [0.5, 0.9], page: 2, mlIndex: 5),
-          AvatarPathModel(
-              moveType: "linear", coords: [0.65, 0.86], page: 2, mlIndex: 5),
-          AvatarPathModel(
-              moveType: "linear", coords: [0.12, 0.78], page: 2, mlIndex: 6),
-          AvatarPathModel(
-              moveType: "linear", coords: [0.65, 0.6], page: 2, mlIndex: 6),
-          // AvatarPathModel(
-          //     moveType: "linear", coords: [0.7, 0.03], page: 1, mlIndex: 7),
-          // AvatarPathModel(
-          //     moveType: "linear", coords: [0.58, 0.0], page: 1, mlIndex: 7),
-        ];
-        model.createAvatarPath(avatarPath);
-        model.tempReadyAvatarToPath();
+        log("Journey View BUILD called");
+
         return Scaffold(
           backgroundColor: Colors.black,
-          // floatingActionButton: Container(
-          //   margin: EdgeInsets.only(bottom: 60),
-          //   child: (PreferenceHelper.getInt(AVATAR_CURRENT_LEVEL) != null &&
-          //           PreferenceHelper.getInt(AVATAR_CURRENT_LEVEL) != 1)
-          //       ? FloatingActionButton(
-          //           child: const Icon(
-          //             Icons.replay,
-          //             color: Colors.white,
-          //           ),
-          //           backgroundColor: Colors.black,
-          //           onPressed: () {
-          //             PreferenceHelper.setInt(AVATAR_CURRENT_LEVEL, 1);
-          //           },
-          //         )
-          //       : SizedBox(),
-          // ),
           floatingActionButton: Container(
-            margin: EdgeInsets.only(bottom: 80, left: 50),
-            child: Row(
-              children: [
-                FloatingActionButton(
-                    child: Icon(Icons.stop), onPressed: model.controller.stop),
-                SizedBox(width: 20),
-                FloatingActionButton(
-                    child: Icon(Icons.animation), onPressed: model.tempAnimate),
-              ],
-            ),
+            margin: EdgeInsets.only(bottom: 60),
+            child: (PreferenceHelper.getInt(AVATAR_CURRENT_LEVEL) != null &&
+                    PreferenceHelper.getInt(AVATAR_CURRENT_LEVEL) != 1)
+                ? FloatingActionButton(
+                    child: const Icon(
+                      Icons.replay,
+                      color: Colors.white,
+                    ),
+                    backgroundColor: Colors.black,
+                    onPressed: () {
+                      PreferenceHelper.setInt(AVATAR_CURRENT_LEVEL, 1);
+                    },
+                  )
+                : SizedBox(),
           ),
+          // floatingActionButton: Container(
+          //   margin: EdgeInsets.only(bottom: 80, left: 50),
+          //   child: Row(
+          //     children: [
+          //       FloatingActionButton(
+          //           child: Icon(Icons.stop),
+          //           onPressed: //model.controller.stop
+          //               () {
+          //             print(AppState.screenStack);
+          //             AppState.delegate.appState.currentAction = PageAction(
+          //                 page: ReferralDetailsPageConfig,
+          //                 widget: ReferralDetailsView(),
+          //                 state: PageState.addBelow);
+          //           }),
+          //       SizedBox(width: 20),
+          //       FloatingActionButton(
+          //           child: Icon(Icons.animation), onPressed: model.testAnimate),
+          //     ],
+          //   ),
+          // ),
           body: model.isLoading && model.pages == null
               ? Container(
                   width: SizeConfig.screenWidth,
@@ -213,17 +137,18 @@ class _JourneyViewState extends State<JourneyView>
                                 model: model,
                                 asset: model.journeyPathItemsList.firstWhere(
                                     (element) =>
-                                        element.mlIndex == 5 && element.isBase),
+                                        element.mlIndex ==
+                                            model.avatarActiveMilestoneLevel &&
+                                        element.isBase),
                               ),
                               JourneyAssetPath(model: model),
-
                               if (model.avatarPath != null)
                                 Positioned(
                                   bottom: 0,
                                   left: 0,
                                   child: CustomPaint(
-                                    size: Size(model.pageWidth,
-                                        model.pageHeight * model.pageCount),
+                                    size: Size(
+                                        model.pageWidth, model.pageHeight * 2),
                                     painter: PathPainter(
                                         model.avatarPath, Colors.red),
                                   ),
@@ -232,16 +157,19 @@ class _JourneyViewState extends State<JourneyView>
                                 model: model,
                                 base: model.journeyPathItemsList.firstWhere(
                                     (element) =>
-                                        element.mlIndex == 5 && element.isBase),
+                                        element.mlIndex ==
+                                            model.avatarActiveMilestoneLevel &&
+                                        element.isBase),
                                 color: UiConstants.primaryColor,
                               ),
                               Milestones(model: model),
                               // ActiveMilestoneFrontGlow(
                               //   milestone: model.currentMilestoneList
-                              //       .firstWhere(
-                              //           (element) => element.index == 2),
+                              //       .firstWhere((element) =>
+                              //           element.index ==
+                              //           model.avatarActiveMilestoneLevel),
                               //   model: model,
-                              // )
+                              // ),
                               Avatar(
                                 model: model,
                               ),

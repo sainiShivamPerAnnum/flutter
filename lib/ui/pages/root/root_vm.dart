@@ -167,10 +167,10 @@ class RootViewModel extends BaseModel {
     _journeyRepo.fetchJourneyPages(1, JourneyRepository.PAGE_DIRECTION_UP);
   }
 
-  // uploadJourneyPage() async {
-  //   // await _journeyRepo.uploadJourneyPage(jourenyPages.first);
-  //   log(json.encode(jourenyPages.last.toMap()));
-  // }
+  uploadJourneyPage() async {
+    await _journeyRepo.uploadJourneyPage(jourenyPages[1]);
+    log(json.encode(jourenyPages.last.toMap()));
+  }
 
   // uploadMilestones() async {
   //   log(json
