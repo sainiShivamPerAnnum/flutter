@@ -30,29 +30,32 @@ class JourneyBackgroundModel {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'colors': colors.map((x) => x.value).toList(),
+      'colors':
+          colors.map((x) => x.value.toRadixString(16).substring(2)).toList(),
       'stops': stops,
       'asset': asset.toMap(),
     };
   }
 
-  factory JourneyBackgroundModel.fromMap(Map<String, dynamic> map) {
+  factory JourneyBackgroundModel.fromMap(Map<String, dynamic> map, int page) {
     return JourneyBackgroundModel(
       colors: List<Color>.from(
-        (map['colors'] as List<String>).map<String>(
-          (x) => x.toColor(),
+        (map['colors'] as List<dynamic>).map<Color>(
+          (x) => x.toString().toColor(),
         ),
       ),
-      stops: List<double>.from((map['stops'] as List<double>)),
-      asset: JourneyAssetModel.fromMap(map['asset'] as Map<String, dynamic>),
+      stops: List<double>.from(
+          (map['stops'] as List<dynamic>).map((e) => e.toDouble()).toList()),
+      asset:
+          JourneyAssetModel.fromMap(map['asset'] as Map<String, dynamic>, page),
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory JourneyBackgroundModel.fromJson(String source) =>
+  factory JourneyBackgroundModel.fromJson(String source, int page) =>
       JourneyBackgroundModel.fromMap(
-          json.decode(source) as Map<String, dynamic>);
+          json.decode(source) as Map<String, dynamic>, page);
 
   @override
   String toString() =>
@@ -72,7 +75,7 @@ class JourneyBackgroundModel {
 }
 
 extension ColorExtension on String {
-  toColor() {
+  Color toColor() {
     var hexColor = this.replaceAll("#", "");
     if (hexColor.length == 6) {
       hexColor = "FF" + hexColor;

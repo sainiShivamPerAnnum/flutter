@@ -47,21 +47,21 @@ class JourneyAssetModel {
     };
   }
 
-  factory JourneyAssetModel.fromMap(Map<String, dynamic> map) {
+  factory JourneyAssetModel.fromMap(Map<String, dynamic> map, int page) {
     return JourneyAssetModel(
-      uri: map['bgImage'] ?? '',
+      uri: map['uri'] ?? '',
       name: map['name'] ?? '',
       height: map['height']?.toDouble() ?? 0.0,
       width: map['width']?.toDouble() ?? 0.0,
-      page: map['page']?.toInt() ?? 0,
+      page: page ?? 0,
       assetType: map['assetType'] ?? '',
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory JourneyAssetModel.fromJson(String source) =>
-      JourneyAssetModel.fromMap(json.decode(source));
+  factory JourneyAssetModel.fromJson(String source, int page) =>
+      JourneyAssetModel.fromMap(json.decode(source), page);
 
   @override
   String toString() {

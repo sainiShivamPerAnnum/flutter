@@ -3,18 +3,25 @@ import 'dart:developer';
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/journey_models/avatar_path_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_page_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_path_model.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/journey_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/modal_router.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/journey_page_data.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:path/path.dart';
 
 class JourneyPageViewModel extends BaseModel {
@@ -86,7 +93,7 @@ class JourneyPageViewModel extends BaseModel {
     // Map<String, dynamic> res =
     //     await _dbModel.fetchJourneyPage(lastDoc: lastDoc);
     // pages = res["pages"];
-    _journeyService.fetchNetworkPages();
+    await _journeyService.fetchNetworkPages();
     logger.d("Pages length: ${_journeyService.pages.length}");
     // lastDoc = res["lastDoc"];
     // log("${lastDoc.id}");
@@ -222,6 +229,70 @@ class JourneyPageViewModel extends BaseModel {
     pgs.forEach((page) {
       journeyPathItemsList.addAll(page.paths);
     });
+  }
+
+  showMilestoneDetailsModalSheet(
+      MilestoneModel milestone, BuildContext context) {
+    AppState.screenStack.add(ScreenItem.modalsheet);
+    log("Current Screen Stack: ${AppState.screenStack}");
+
+    // Navigator.of(context).push(TutorialOverlay());
+    return showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      // isBarrierDismissable: true,
+      // enableDrag: true,
+      useRootNavigator: true,
+      context: context,
+      builder: (ctx) {
+        return WillPopScope(
+          onWillPop: () async {
+            log("I am closing");
+            AppState.screenStack.removeLast();
+            return Future.value(true);
+          },
+          child: Container(
+            margin: EdgeInsets.symmetric(
+                horizontal: SizeConfig.pageHorizontalMargins),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(SizeConfig.roundness24),
+                    topLeft: Radius.circular(SizeConfig.roundness24)),
+                color: Colors.black54),
+            padding: EdgeInsets.only(top: SizeConfig.pageHorizontalMargins),
+            child: Column(children: [
+              ListTile(
+                onTap: () {
+                  Haptic.vibrate();
+                  AppState.backButtonDispatcher.didPopRoute();
+                  AppState.delegate.parseRoute(Uri.parse(milestone.actionUri));
+                },
+                leading: CircleAvatar(
+                  backgroundColor: Colors.black,
+                  radius: SizeConfig.avatarRadius * 2,
+                  child: SvgPicture.asset(
+                    milestone.asset.uri,
+                    height: SizeConfig.avatarRadius * 2,
+                    width: SizeConfig.avatarRadius * 2,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                title: Text(
+                  milestone.steps.first.title,
+                  style: GoogleFonts.rajdhani(
+                      fontSize: SizeConfig.title3,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white),
+                ),
+                subtitle: Text(
+                  milestone.steps.first.subtitle,
+                  style: TextStyles.body3.colour(Colors.white),
+                ),
+              )
+            ]),
+          ),
+        );
+      },
+    );
   }
 
   ///---------- TEST METHODS [[ ONLY FOR DEV USE ]]  ----------///

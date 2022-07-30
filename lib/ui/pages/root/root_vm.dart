@@ -168,14 +168,18 @@ class RootViewModel extends BaseModel {
   }
 
   uploadJourneyPage() async {
-    await _journeyRepo.uploadJourneyPage(jourenyPages[1]);
+    // await _journeyRepo.uploadJourneyPage(jourenyPages.first);
     log(json.encode(jourenyPages.last.toMap()));
   }
 
-  // uploadMilestones() async {
-  //   log(json
-  //       .encode(jourenyPages.last.milestones.map((e) => e.toMap()).toList()));
-  // }
+  uploadMilestones() async {
+    // jourenyPages.forEach((page) => page.milestones.forEach((milestone) {
+    //       log(milestone.toMap().toString());
+    //     }));
+    log(json.encode(jourenyPages
+        .map((e) => e.milestones.map((m) => m.toMap(e.page)).toList())
+        .toList()));
+  }
 
   // completeNViewDownloadSaveLViewAsset() async {
   //   if (_journeyRepo.checkIfAssetIsAvailableLocally('b1')) {

@@ -42,8 +42,8 @@ class AvatarPathModel {
   factory AvatarPathModel.fromMap(Map<String, dynamic> map, int page) {
     return AvatarPathModel(
       moveType: map['moveType'] ?? "linear",
-      coords: map["coords"].cast<
-          double>(), //  List<double>.from(map['coords'] as List)?.map((item) => double.tryParse(item))?.toList(),
+      coords: List<double>.from(
+          (map['coords'] as List<dynamic>).map((e) => e.toDouble()).toList()),
       page: page ?? 0,
       mlIndex: map['mlIndex'] ?? 0,
     );

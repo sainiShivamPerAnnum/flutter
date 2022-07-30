@@ -132,15 +132,15 @@ class _JourneyViewState extends State<JourneyView>
                           child: Stack(
                             children: [
                               Background(model: model),
-                              ActiveMilestoneBackgroundGlow(
-                                radius: SizeConfig.screenWidth * 0.5,
-                                model: model,
-                                asset: model.journeyPathItemsList.firstWhere(
-                                    (element) =>
-                                        element.mlIndex ==
-                                            model.avatarActiveMilestoneLevel &&
-                                        element.isBase),
-                              ),
+                              // ActiveMilestoneBackgroundGlow(
+                              //   radius: SizeConfig.screenWidth * 0.5,
+                              //   model: model,
+                              //   asset: model.journeyPathItemsList.firstWhere(
+                              //       (element) =>
+                              //           element.mlIndex ==
+                              //               model.avatarActiveMilestoneLevel &&
+                              //           element.isBase),
+                              // ),
                               JourneyAssetPath(model: model),
                               if (model.avatarPath != null)
                                 Positioned(
@@ -150,18 +150,18 @@ class _JourneyViewState extends State<JourneyView>
                                     size: Size(
                                         model.pageWidth, model.pageHeight * 2),
                                     painter: PathPainter(
-                                        model.avatarPath, Colors.red),
+                                        model.avatarPath, Colors.transparent),
                                   ),
                                 ),
-                              ActiveMilestoneBaseGlow(
-                                model: model,
-                                base: model.journeyPathItemsList.firstWhere(
-                                    (element) =>
-                                        element.mlIndex ==
-                                            model.avatarActiveMilestoneLevel &&
-                                        element.isBase),
-                                color: UiConstants.primaryColor,
-                              ),
+                              // ActiveMilestoneBaseGlow(
+                              //   model: model,
+                              //   base: model.journeyPathItemsList.firstWhere(
+                              //       (element) =>
+                              //           element.mlIndex ==
+                              //               model.avatarActiveMilestoneLevel &&
+                              //           element.isBase),
+                              //   color: UiConstants.primaryColor,
+                              // ),
                               Milestones(model: model),
                               // ActiveMilestoneFrontGlow(
                               //   milestone: model.currentMilestoneList

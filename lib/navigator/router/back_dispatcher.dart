@@ -75,7 +75,8 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       }
     });
     // If the top item is anything except a scaffold
-    if (AppState.screenStack.last == ScreenItem.dialog) {
+    if (AppState.screenStack.last == ScreenItem.dialog ||
+        AppState.screenStack.last == ScreenItem.modalsheet) {
       Navigator.pop(_routerDelegate.navigatorKey.currentContext);
       AppState.screenStack.removeLast();
       print("Current Stack: ${AppState.screenStack}");

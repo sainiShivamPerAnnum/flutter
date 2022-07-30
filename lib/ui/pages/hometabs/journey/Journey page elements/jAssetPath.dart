@@ -16,34 +16,37 @@ class JourneyAssetPath extends StatelessWidget {
   final JourneyPageViewModel model;
   const JourneyAssetPath({Key key, this.model}) : super(key: key);
 
-  getChild(JourneyPathModel item) {
-    switch (item.asset.assetType) {
-      case "svg":
-        print("network asset used for asset ${item.asset.name}");
-        return SvgPicture.network(
-          item.asset.uri,
-          width: model.pageWidth * item.asset.width,
-          height: model.pageHeight * item.asset.height,
-        );
-      case "PNG":
-        return Image.asset(
-          item.asset.uri,
-          width: model.pageWidth * item.asset.width,
-          height: model.pageHeight * item.asset.height,
-        );
-      case "":
-        return SvgPicture.network(
-          item.asset.uri,
-          width: model.pageWidth * item.asset.width,
-          height: model.pageHeight * item.asset.height,
-        );
-    }
-  }
+  // getChild(JourneyPathModel item) {
+  //   switch (item.asset.assetType) {
+  //     case "svg":
+  //       print("network asset used for asset ${item.asset.name}");
+  //       return SvgPicture.network(
+  //         item.asset.uri,
+  //         width: model.pageWidth * item.asset.width,
+  //         height: model.pageHeight * item.asset.height,
+  //       );
+  //     case "PNG":
+  //       return Image.asset(
+  //         item.asset.uri,
+  //         width: model.pageWidth * item.asset.width,
+  //         height: model.pageHeight * item.asset.height,
+  //       );
+  //     case "":
+  //       return SvgPicture.network(
+  //         item.asset.uri,
+  //         width: model.pageWidth * item.asset.width,
+  //         height: model.pageHeight * item.asset.height,
+  //       );
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
     model.journeyPathItemsList.sort((a, b) => a.z.compareTo(b.z));
     log("Journey path item list length ${model.journeyPathItemsList.length}");
+    log(model.journeyPathItemsList
+        .firstWhere((element) => element.asset.name == "b7" && element.isBase)
+        .toString());
     return SizedBox(
       height: model.pageHeight * 2,
       width: model.pageWidth,
@@ -59,9 +62,15 @@ class JourneyAssetPath extends StatelessWidget {
             //   alignment: Alignment.center,
             //   transform: Matrix4.rotationY(
             //       model.journeyPathItemsList[i].hFlip ? math.pi : 0),
-            child: SourceAdaptiveAssetView(
-              asset: model.journeyPathItemsList[i].asset,
-              //),
+            child: Container(
+              height:
+                  model.pageHeight * model.journeyPathItemsList[i].asset.height,
+              width:
+                  model.pageWidth * model.journeyPathItemsList[i].asset.width,
+              child: SourceAdaptiveAssetView(
+                asset: model.journeyPathItemsList[i].asset,
+                //),
+              ),
             ),
           ),
         ),

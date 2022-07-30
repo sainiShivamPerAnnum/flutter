@@ -128,17 +128,17 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   // }
 
   fetchNetworkPages() async {
-    // if (pages == null || pages.isEmpty) {
-    pages = jourenyPages;
-    ApiResponse<List<JourneyPage>> response = await _journeyRepo
-        .fetchJourneyPages(1, JourneyRepository.PAGE_DIRECTION_UP);
-    _logger.d(response);
-    // if (response.code == 200) {
-    //   pages = response.model;
-    // setPageProperties();
-    // } else
-    //   pages = [];
-    //}
+    if (pages == null || pages.isEmpty) {
+      // pages = jourenyPages;
+      ApiResponse<List<JourneyPage>> response = await _journeyRepo
+          .fetchJourneyPages(1, JourneyRepository.PAGE_DIRECTION_UP);
+      _logger.d("Journey page fetch response $response");
+      if (response.code == 200) {
+        pages = response.model;
+        setPageProperties();
+      } else
+        pages = [];
+    }
   }
 
   setPageProperties() {
@@ -235,8 +235,8 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     //MAKE API CALL TO FETCH CURRENT LEVEL
     //DUMMY LEVEL FOR TESTING
     avatarRemoteMlIndex =
-        //await _dbModel.getRemoteMLIndex(_userService.baseUser.uid) ??
-        3;
+        await _dbModel.getRemoteMLIndex(_userService.baseUser.uid) ??
+            avatarCachedMlIndex;
     // int startLevel = 3;
     _logger.d("JOURNEYSERVICE: Avatar Remote Level: $avatarRemoteMlIndex");
   }

@@ -32,7 +32,7 @@ import 'package:shimmer_animation/shimmer_animation.dart';
 GlobalKey felloAppBarKey = new GlobalKey();
 
 class Root extends StatelessWidget {
-  final pages = [Save(), JourneyView(), Win()];
+  final pages = [Play(), JourneyView(), Save()];
 
   @override
   Widget build(BuildContext context) {

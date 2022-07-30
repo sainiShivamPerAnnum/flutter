@@ -48,12 +48,25 @@ class Milestones extends StatelessWidget {
       width: model.pageWidth,
       height: model.pageHeight * 2,
       child: Stack(
-        children: List.generate(
-          model.currentMilestoneList.length,
-          (i) => getMilestoneType(
-            model.currentMilestoneList[i],
-          ),
-        ),
+        children: List.generate(model.currentMilestoneList.length, (i) {
+          switch (model.currentMilestoneList[i].animType) {
+            case "ROTATE":
+              return ActiveRotatingMilestone(
+                milestone: model.currentMilestoneList[i],
+                model: model,
+              );
+            case "FLOAT":
+              return ActiveFloatingMilestone(
+                milestone: model.currentMilestoneList[i],
+                model: model,
+              );
+            default:
+              return StaticMilestone(
+                milestone: model.currentMilestoneList[i],
+                model: model,
+              );
+          }
+        }),
       ),
     );
   }
@@ -305,73 +318,8 @@ class StaticMilestone extends StatelessWidget {
             alignment: Alignment.center,
             transform: Matrix4.rotationY(milestone.hFlip ? math.pi : 0),
             child: GestureDetector(
-              onTap: () {
-                // ScaffoldMessenger.of(context)
-                //     .showSnackBar(SnackBar(content: Text(milestone.description)));
-                AppState.screenStack.add(ScreenItem.dialog);
-                log("Current Screen Stack: ${AppState.screenStack}");
-                showModalBottomSheet(
-                  // addToScreenStack: true,
-                  backgroundColor: Colors.transparent,
-                  // hapticVibrate: true,
-                  // isBarrierDismissable: true,
-                  enableDrag: true,
-                  useRootNavigator: true,
-                  context: context,
-                  builder: (ctx) {
-                    return WillPopScope(
-                      onWillPop: () async {
-                        log("I am closing");
-                        return Future.value(true);
-                      },
-                      child: Container(
-                        margin: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.pageHorizontalMargins),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                                topRight:
-                                    Radius.circular(SizeConfig.roundness24),
-                                topLeft:
-                                    Radius.circular(SizeConfig.roundness24)),
-                            color: Colors.black54),
-                        padding: EdgeInsets.only(
-                            top: SizeConfig.pageHorizontalMargins),
-                        child: Column(children: [
-                          ListTile(
-                            onTap: () {
-                              Haptic.vibrate();
-                              AppState.backButtonDispatcher.didPopRoute();
-                              AppState.delegate
-                                  .parseRoute(Uri.parse('editProfile'));
-                            },
-                            leading: CircleAvatar(
-                              backgroundColor: Colors.black,
-                              radius: SizeConfig.avatarRadius * 2,
-                              child: SvgPicture.asset(
-                                milestone.asset.uri,
-                                height: SizeConfig.avatarRadius * 2,
-                                width: SizeConfig.avatarRadius * 2,
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                            title: Text(
-                              milestone.steps.first.title,
-                              style: GoogleFonts.rajdhani(
-                                  fontSize: SizeConfig.title3,
-                                  fontWeight: FontWeight.w800,
-                                  color: Colors.white),
-                            ),
-                            subtitle: Text(
-                              milestone.steps.first.subtitle,
-                              style: TextStyles.body3.colour(Colors.white),
-                            ),
-                          )
-                        ]),
-                      ),
-                    );
-                  },
-                );
-              },
+              onTap: () =>
+                  model.showMilestoneDetailsModalSheet(milestone, context),
               child: Tooltip(
                   message: milestone.tooltip ?? "Hello World!!",
                   triggerMode: TooltipTriggerMode.longPress,

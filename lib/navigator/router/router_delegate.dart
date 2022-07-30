@@ -74,6 +74,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
   FelloRouterDelegate(this.appState) : navigatorKey = GlobalKey() {
     appState.addListener(() {
+      log(navigatorKey.currentState.toString());
       notifyListeners();
     });
   }
@@ -665,14 +666,14 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     PageConfiguration pageConfiguration;
     switch (screenKey) {
       case 'save':
-        appState.setCurrentTabIndex = 0;
-        break;
-      case 'play':
-        appState.setCurrentTabIndex = 1;
-        break;
-      case 'win':
         appState.setCurrentTabIndex = 2;
         break;
+      case 'play':
+        appState.setCurrentTabIndex = 0;
+        break;
+      // case 'win':
+      //   appState.setCurrentTabIndex = 2;
+      //   break;
       case 'editProfile':
         pageConfiguration = UserProfileDetailsConfig;
         break;

@@ -39,8 +39,7 @@ class JourneyPage {
 
   Map<String, dynamic> toMap() {
     return {
-      'bgImage': bgAsset.asset.name,
-      // 'page': page,
+      'bgImage': bgAsset.toMap(),
       'paths': paths.map((x) => x.toMap()).toList(),
       'avatarPath': avatarPath.map((x) => x.toMap()).toList(),
       'milestones': {
@@ -53,7 +52,7 @@ class JourneyPage {
   factory JourneyPage.fromMap(Map<String, dynamic> map) {
     return JourneyPage(
       page: map["page"] ?? 0,
-      bgAsset: JourneyBackgroundModel.fromMap(map),
+      bgAsset: JourneyBackgroundModel.fromMap(map["bg"], map['page']),
       paths: List<JourneyPathModel>.from(
         map['paths']?.map(
           (x) => JourneyPathModel.fromMap(

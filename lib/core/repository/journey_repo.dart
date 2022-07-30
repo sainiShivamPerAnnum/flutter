@@ -122,66 +122,66 @@ class JourneyRepository {
     return PreferenceHelper.getString(assetKey);
   }
 
-  Future<bool> uploadMilestones(MilestoneModel milestone) async {
-    return await _api.addMilestones(milestone.toMap());
-    // try {
-    //   final String _uid = _userService.baseUser.uid;
-    //   final _token = await _getBearerToken();
-    //   final _body = milestone.toMap();
-    //   final response = await APIService.instance.postData(
-    //     ApiPath().kMilestones,
-    //     token: _token,
-    //     body: _body,
-    //     cBaseUrl: "https://i2mkmm61d4.execute-api.ap-south-1.amazonaws.com/dev",
-    //   );
+  // Future<bool> uploadMilestones(MilestoneModel milestone) async {
+  //   return await _api.addMilestones(milestone.toMap());
+  // try {
+  //   final String _uid = _userService.baseUser.uid;
+  //   final _token = await _getBearerToken();
+  //   final _body = milestone.toMap();
+  //   final response = await APIService.instance.postData(
+  //     ApiPath().kMilestones,
+  //     token: _token,
+  //     body: _body,
+  //     cBaseUrl: "https://i2mkmm61d4.execute-api.ap-south-1.amazonaws.com/dev",
+  //   );
 
-    //   // final responseData = response["data"];
-    //   _logger.d(response);
-    //   // if (responseData['status'] == true) {
-    //   //   responseData["campaigns"].forEach((e) {
-    //   //     events.add(EventModel.fromMap(e));
-    //   //   });
-    //   // }
-    //   return true;
-    // } catch (e) {
-    //   _logger.e(e.toString());
-    //   return false;
-    // }
-  }
+  //   // final responseData = response["data"];
+  //   _logger.d(response);
+  //   // if (responseData['status'] == true) {
+  //   //   responseData["campaigns"].forEach((e) {
+  //   //     events.add(EventModel.fromMap(e));
+  //   //   });
+  //   // }
+  //   return true;
+  // } catch (e) {
+  //   _logger.e(e.toString());
+  //   return false;
+  // }
+  // }
 
   Future<ApiResponse<List<JourneyPage>>> fetchJourneyPages(
       int start, String direction) async {
     List<JourneyPage> journeyPages = [];
-    try {
-      final _token = await _getBearerToken();
-      final _queryParams = {"page": start.toString(), "direction": direction};
-      final response = await APIService.instance.getData(
-        ApiPath().kJourney,
-        token: _token,
-        cBaseUrl: FlavorConfig.isDevelopment()
-            ? "https://i2mkmm61d4.execute-api.ap-south-1.amazonaws.com/dev"
-            : "not yet found",
-        queryParams: _queryParams,
-      );
+    // try {
+    final _token = await _getBearerToken();
+    final _queryParams = {"page": start.toString(), "direction": direction};
+    final response = await APIService.instance.getData(
+      ApiPath().kJourney,
+      token: _token,
+      cBaseUrl: FlavorConfig.isDevelopment()
+          ? "https://i2mkmm61d4.execute-api.ap-south-1.amazonaws.com/dev"
+          : "not yet found",
+      queryParams: _queryParams,
+    );
 
-      final responseData = response["data"];
-      _logger.d(responseData);
-      // if (responseData['status'] == true) {
-      //   responseData["campaigns"].forEach((e) {
-      //     events.add(EventModel.fromMap(e));
-      //   });
-      // }
-      responseData["pages"]
-          .forEach((page) => journeyPages.add(JourneyPage.fromMap(page)));
-      journeyPages.forEach((page) {
-        page.paths.forEach((path) {});
-      });
+    final responseData = response["data"];
+    dev.log("Journey Response Data: $responseData");
+    // if (responseData['status'] == true) {
+    //   responseData["campaigns"].forEach((e) {
+    //     events.add(EventModel.fromMap(e));
+    //   });
+    // }
+    responseData["pages"]
+        .forEach((page) => journeyPages.add(JourneyPage.fromMap(page)));
+    journeyPages.forEach((page) {
+      page.paths.forEach((path) {});
+    });
 
-      return ApiResponse<List<JourneyPage>>(model: journeyPages, code: 200);
-    } catch (e) {
-      _logger.e(e.toString());
-      return ApiResponse.withError("Unable to fetch campaings", 400);
-    }
+    return ApiResponse<List<JourneyPage>>(model: journeyPages, code: 200);
+    // } catch (e) {
+    //   _logger.e(e.toString());
+    //   return ApiResponse.withError("Unable to journey pages", 400);
+    // }
   }
 
   Future<void> uploadJourneyPage(JourneyPage page) async {

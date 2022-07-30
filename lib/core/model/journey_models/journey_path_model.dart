@@ -67,18 +67,28 @@ class JourneyPathModel {
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'x': x,
-      'y': y,
-      'ax': ax,
-      'ay': ay,
-      'z': z,
-      'isBase': isBase ?? false,
-      'assetRef': asset.name,
-      'animAssetRef': animAsset.name,
-      'mlIndex': mlIndex,
-      'hFlip': hFlip ?? false,
-    };
+    return animAsset != null
+        ? {
+            'x': x,
+            'y': y,
+            'ax': ax,
+            'ay': ay,
+            'z': z,
+            'isBase': isBase ?? false,
+            'assetRef': asset?.name,
+            'animAssetRef': animAsset?.name,
+            'mlIndex': mlIndex,
+            'hFlip': hFlip ?? false,
+          }
+        : {
+            'x': x,
+            'y': y,
+            'z': z,
+            'isBase': isBase ?? false,
+            'assetRef': asset?.name ?? '',
+            'mlIndex': mlIndex,
+            'hFlip': hFlip ?? false,
+          };
   }
 
   factory JourneyPathModel.fromMap(Map<String, dynamic> map, int page) {
@@ -92,8 +102,10 @@ class JourneyPathModel {
       mlIndex: map['level']?.toInt() ?? 0,
       hFlip: map['hFlip'] ?? false,
       id: map['id'],
-      asset: JourneyAssetModel.fromMap(map['asset']),
-      animAsset: JourneyAssetModel.fromMap(map['animAsset']),
+      asset: JourneyAssetModel.fromMap(map['asset'], page),
+      animAsset: map.containsKey('animAsset')
+          ? JourneyAssetModel.fromMap(map['animAsset'], page)
+          : null,
       page: page ?? 0,
     );
   }

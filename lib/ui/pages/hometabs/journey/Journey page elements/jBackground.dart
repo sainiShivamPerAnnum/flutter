@@ -1,3 +1,4 @@
+import 'package:felloapp/ui/pages/hometabs/journey/components/source_adaptive_asset/source_adaptive_asset_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
 import 'package:felloapp/util/journey_page_data.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -43,22 +44,18 @@ class _BackgroundState extends State<Background> {
           padding: EdgeInsets.zero,
           itemBuilder: (ctx, i) {
             return Container(
-              width: widget.model.pageWidth,
-              height: widget.model.pageHeight,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    colors: widget.model.pages[i].bgAsset.colors,
-                    stops: widget.model.pages[i].bgAsset.stops,
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter),
-              ),
-              child: SvgPicture.asset(
-                widget.model.pages[i].bgAsset.asset.uri,
-                fit: BoxFit.cover,
                 width: widget.model.pageWidth,
                 height: widget.model.pageHeight,
-              ),
-            );
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      colors: widget.model.pages[i].bgAsset.colors,
+                      stops: widget.model.pages[i].bgAsset.stops,
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter),
+                ),
+                child: SourceAdaptiveAssetView(
+                  asset: widget.model.pages[i].bgAsset.asset,
+                ));
           },
         ),
       ),
