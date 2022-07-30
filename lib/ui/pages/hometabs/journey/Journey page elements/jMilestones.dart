@@ -159,14 +159,16 @@ class _ActiveFloatingMilestoneState extends State<ActiveFloatingMilestone>
           child: SlideTransition(
             position: _floatAnimation,
             child: GestureDetector(
-              onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    duration: const Duration(seconds: 2),
-                    content: Text(widget.milestone.steps.first.title),
-                  ),
-                );
-              },
+              // onTap: () {
+              //   ScaffoldMessenger.of(context).showSnackBar(
+              //     SnackBar(
+              //       duration: const Duration(seconds: 2),
+              //       content: Text(widget.milestone.steps.first.title),
+              //     ),
+              //   );
+              // },
+              onTap: () => widget.model
+                  .showMilestoneDetailsModalSheet(widget.milestone, context),
               child: Transform(
                 alignment: Alignment.center,
                 transform:
@@ -252,14 +254,16 @@ class _ActiveRotatingMilestoneState extends State<ActiveRotatingMilestone>
           child: RotationTransition(
             turns: _floatAnimationController,
             child: GestureDetector(
-              onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    duration: const Duration(seconds: 2),
-                    content: Text(widget.milestone.steps.first.title),
-                  ),
-                );
-              },
+              onTap: () => widget.model
+                  .showMilestoneDetailsModalSheet(widget.milestone, context),
+              //() {
+              //   ScaffoldMessenger.of(context).showSnackBar(
+              //     SnackBar(
+              //       duration: const Duration(seconds: 2),
+              //       content: Text(widget.milestone.steps.first.title),
+              //     ),
+              //   );
+              // },
               child: Transform(
                 alignment: Alignment.center,
                 transform:

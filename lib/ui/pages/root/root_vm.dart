@@ -145,7 +145,8 @@ class RootViewModel extends BaseModel {
     _userService.buyFieldFocusNode.unfocus();
     AppState.delegate.appState.setCurrentTabIndex = index;
     notifyListeners();
-    _journeyService.checkIfAnyAnimationIsLeft();
+    if (AppState.delegate.appState.getCurrentTabIndex == 1)
+      _journeyService.checkIfAnyAnimationIsLeft();
   }
 
   _initAdhocNotifications() {

@@ -10,6 +10,7 @@ import 'package:felloapp/core/model/journey_models/milestone_model.dart';
 import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -172,13 +173,13 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   updateUserJourneyStats(Map<String, dynamic> data) {
     _logger.d("User journey stats update called");
-    userJourneyStats = UserJourneyStatsModel(
-        page: 1,
-        level: 1,
-        mlIndex: int.tryParse(data["level"]),
-        mlId: "00${int.tryParse(data["level"])}",
-        nextPrizeSubtype: "HESOYAM");
-    avatarRemoteMlIndex = userJourneyStats.mlIndex;
+    // userJourneyStats = UserJourneyStatsModel(
+    //     page: 1,
+    //     level: 1,
+    //     mlIndex: int.tryParse(data["level"]),
+    //     mlId: "00${int.tryParse(data["level"])}",
+    //     nextPrizeSubtype: "HESOYAM");
+    avatarRemoteMlIndex = int.tryParse(data["mlIndex"]); //.mlIndex;
     _logger.d("Avatar Remote start level: $avatarRemoteMlIndex");
     BaseUtil.showPositiveAlert(
         "Congratulations!!", "Your level increased to $avatarRemoteMlIndex");

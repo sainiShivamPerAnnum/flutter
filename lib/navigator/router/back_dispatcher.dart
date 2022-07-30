@@ -123,6 +123,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       return _routerDelegate.popRoute();
     }
     // If the root tab is not 0 at the time of exit
+
     else if (_baseUtil.isUserOnboarded &&
         AppState.screenStack.length == 1 &&
         (AppState.delegate.appState.rootIndex != 1)) {

@@ -674,7 +674,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       // case 'win':
       //   appState.setCurrentTabIndex = 2;
       //   break;
-      case 'editProfile':
+      case 'profile':
         pageConfiguration = UserProfileDetailsConfig;
         break;
       case 'augDetails':

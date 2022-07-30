@@ -88,6 +88,7 @@ class JourneyPageViewModel extends BaseModel {
     log("Journey VM init Called");
     // baseGlow = 0;
     isLoading = true;
+
     await Future.delayed(Duration(seconds: 2));
 
     // Map<String, dynamic> res =
@@ -102,14 +103,14 @@ class JourneyPageViewModel extends BaseModel {
     _journeyService.setJourneyPathItems();
     _journeyService.getAvatarCachedMilestoneIndex();
     await _journeyService.getAvatarRemoteMilestoneIndex();
+    controller = AnimationController(
+      vsync: vsync,
+      duration: Duration(
+          seconds: 2 *
+              (_journeyService.avatarRemoteMlIndex -
+                  _journeyService.avatarCachedMlIndex)),
+    );
     if (_journeyService.checkIfThereIsALevelChange()) {
-      controller = AnimationController(
-        vsync: vsync,
-        duration: Duration(
-            seconds: 2 *
-                (_journeyService.avatarRemoteMlIndex -
-                    _journeyService.avatarCachedMlIndex)),
-      );
       _journeyService.createPathForAvatarAnimation(
           _journeyService.avatarCachedMlIndex,
           _journeyService.avatarRemoteMlIndex);
@@ -264,6 +265,7 @@ class JourneyPageViewModel extends BaseModel {
                 onTap: () {
                   Haptic.vibrate();
                   AppState.backButtonDispatcher.didPopRoute();
+                  log(milestone.actionUri);
                   AppState.delegate.parseRoute(Uri.parse(milestone.actionUri));
                 },
                 leading: CircleAvatar(
