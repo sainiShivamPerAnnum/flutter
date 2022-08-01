@@ -5,8 +5,10 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/modals_sheets/recharge_modal_sheet.dart';
 import 'package:felloapp/ui/pages/others/games/web/reward_leaderboard/reward_leaderboard_view.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_home/web_home_vm.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -246,6 +248,23 @@ class WebHomeView extends StatelessWidget {
                       ),
                     ),
                   ],
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: SizeConfig.padding24),
+                    child: AppPositiveBtn(
+                      btnText: 'Play',
+                      onPressed: () async {
+                        Haptic.vibrate();
+                        if (await model.setupGame()) {
+                          model.launchGame();
+                        }
+                        // model.pageController.jumpToPage(1);
+                      },
+                      width: SizeConfig.screenWidth * 0.8,
+                    ),
+                  ),
                 ),
               ],
             ),

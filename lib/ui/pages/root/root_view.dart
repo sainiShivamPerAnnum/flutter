@@ -13,6 +13,7 @@ import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
+import 'package:felloapp/ui/pages/static/transaction_loader.dart';
 import 'package:felloapp/ui/widgets/drawer/drawer_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -135,11 +136,11 @@ class Root extends StatelessWidget {
               // BottomNavBar(
               //   model: model,
               // ),
-              // Consumer<AppState>(
-              //     builder: (ctx, m, child) =>
-              //         AppState.delegate.appState.isTxnLoaderInView
-              //             ? TransactionLoader()
-              //             : SizedBox()),
+              Consumer<AppState>(
+                  builder: (ctx, m, child) =>
+                      AppState.delegate.appState.isTxnLoaderInView
+                          ? TransactionLoader()
+                          : SizedBox()),
 
               // if (SizeConfig.screenWidth < 600)
               //   WantMoreTickets(

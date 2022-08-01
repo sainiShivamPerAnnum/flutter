@@ -161,7 +161,7 @@ class MilestoneModel {
 
   factory MilestoneModel.fromMap(Map<String, dynamic> map, int page) {
     return MilestoneModel(
-      index: map['mlIndex'] as int,
+      index: map['index'] as int,
       x: map['x'] as double,
       y: map['y'] as double,
       ax: map.containsKey('ax') && map['ax'] != 0 ? map['ax'] as double : null,

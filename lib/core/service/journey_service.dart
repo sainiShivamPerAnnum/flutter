@@ -90,7 +90,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   set avatarRemoteMlIndex(value) {
     this._avatarRemoteMlIndex = value;
-    // notifyListeners();
+    notifyListeners();
   }
 
   UserJourneyStatsModel _userJourneyStats;
@@ -236,8 +236,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     //MAKE API CALL TO FETCH CURRENT LEVEL
     //DUMMY LEVEL FOR TESTING
     avatarRemoteMlIndex =
-        await _dbModel.getRemoteMLIndex(_userService.baseUser.uid) ??
-            avatarCachedMlIndex;
+        await _journeyRepo.getUserMlIndex() ?? avatarCachedMlIndex;
     // int startLevel = 3;
     _logger.d("JOURNEYSERVICE: Avatar Remote Level: $avatarRemoteMlIndex");
   }
@@ -250,14 +249,14 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   bool checkIfThereIsALevelChange() =>
       avatarRemoteMlIndex > (avatarCachedMlIndex ?? 1);
 
-  Future<bool> getUserJourneyStats() async {
-    userJourneyStats = UserJourneyStatsModel(
-        page: 1,
-        level: 1,
-        mlIndex: 3,
-        mlId: "003",
-        nextPrizeSubtype: "AEZAKMI");
-  }
+  // Future<bool> getUserJourneyStats() async {
+  //   userJourneyStats = UserJourneyStatsModel(
+  //       page: 1,
+  //       level: 1,
+  //       mlIndex: 3,
+  //       mlId: "003",
+  //       nextPrizeSubtype: "AEZAKMI");
+  // }
 
   createPathForAvatarAnimation(int start, int end) {
     List<AvatarPathModel> requiredPathItems = [];
@@ -350,7 +349,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   void createAvatarAnimationObject() {
     avatarAnimation = Tween(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: controller, curve: Curves.easeInCirc),
+      CurvedAnimation(parent: controller, curve: Curves.easeIn),
     )..addListener(() {
         avatarPosition = calculatePosition(avatarAnimation.value);
         notifyListeners(JourneyServiceProperties.AvatarPosition);

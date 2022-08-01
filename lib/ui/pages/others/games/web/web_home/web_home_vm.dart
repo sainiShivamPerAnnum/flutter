@@ -121,8 +121,8 @@ class WebHomeViewModel extends BaseModel {
     isLoading = true;
     // await loadGameLists();
     await getGameDetails(game);
-    scrollController = _lbService.parentController;
-    pageController = new PageController(initialPage: 0);
+    // scrollController = _lbService.parentController;
+    // pageController = new PageController(initialPage: 0);
     refreshPrizes();
     refreshLeaderboard();
     isLoading = false;
@@ -425,8 +425,8 @@ class WebHomeViewModel extends BaseModel {
   void viewpage(int index) {
     currentPage = index;
     print(currentPage);
-    pageController.animateToPage(currentPage,
-        duration: Duration(milliseconds: 200), curve: Curves.decelerate);
+    // pageController.animateToPage(currentPage,
+    //     duration: Duration(milliseconds: 200), curve: Curves.decelerate);
     refresh();
   }
 

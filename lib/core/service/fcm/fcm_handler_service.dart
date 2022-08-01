@@ -65,9 +65,11 @@ class FcmHandler extends ChangeNotifier {
           if (_txnService.currentTransactionState ==
               TransactionState.idleTrasantion) showSnackbar = true;
           _txnService.fcmTransactionResponseUpdate(data['payload']);
-          log("KUNJ: FcmCommands.DEPOSIT_TRANSACTION_RESPONSE");
           break;
         case FcmCommands.COMMAND_JOURNEY_UPDATE:
+          _journeyService.updateUserJourneyStats(data);
+          break;
+        case FcmCommands.COMMAND_GOLDEN_TICKET_WIN:
           _journeyService.updateUserJourneyStats(data);
           break;
         case FcmCommands.COMMAND_CRIC_GAME_END:

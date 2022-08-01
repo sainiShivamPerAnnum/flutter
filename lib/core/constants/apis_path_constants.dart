@@ -65,4 +65,5 @@ class ApiPath {
   get kMilestones => '/milestones';
   get kJourney => "/journey";
   static String getJourney(int page) => "/journey/$page";
+  static String journeyStats(String uid) => "/user/$uid/journey/stats";
 }
